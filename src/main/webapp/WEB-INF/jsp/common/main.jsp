@@ -120,7 +120,7 @@
 		{
             dataField: "period",
             headerText: "Period",
-            width: "7.4%",
+            width: "8.3%",
             editable: false
         },
         {
@@ -246,7 +246,7 @@
                     editable: true
                 }
             ],
-            width: "20%",
+            width: "19%",
             editable: false
         },
         {
@@ -260,7 +260,7 @@
                     style: "aui-grid-user-custom-right ",
                     dataType : "numeric",
                     formatString : "#,##0",
-                    width: "6.7%",
+                    width: "6.5%",
                     editable: false
                 },
                 {
@@ -269,7 +269,7 @@
                     style: "aui-grid-user-custom-right ",
                     dataType : "numeric",
                     formatString : "#,##0",
-                    width: "6.7%",
+                    width: "6.5%",
                     editable: true
                 }
             ],
