@@ -58,6 +58,17 @@ public class ExcelReadComponent {
 				.collect(Collectors.toList());
 	}
 
+	public <T> List<T> readExcelToList(final MultipartFile multipartFile, int startRow,
+									   final Function<Row, T> rowFunc) throws IOException, InvalidFormatException {
+
+		final Workbook workbook = readWorkbook(multipartFile);
+		final Sheet sheet = workbook.getSheetAt(0);
+		final int rowCount = sheet.getPhysicalNumberOfRows();
+
+		return IntStream.range(startRow, rowCount).mapToObj(rowIndex -> rowFunc.apply(sheet.getRow(rowIndex)))
+				.collect(Collectors.toList());
+	}
+
 	public <T> List<T> readExcelToList(final MultipartFile multipartFile, final Function<Row, T> rowFunc)
 			throws IOException, InvalidFormatException {
 		return this.readExcelToList(multipartFile, false, rowFunc);
