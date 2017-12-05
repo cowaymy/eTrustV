@@ -325,8 +325,8 @@
 							    AND B.PROMO_ITM_STUS_ID = '1'
 							    AND A.PROMO_TYPE_ID = '2282'    
 							    AND A.PROMO_APP_TYPE_ID = '2288'
-							    AND A.PROMO_DT_FROM <= SYSDATE        
-							    AND A.PROMO_DT_END >= SYSDATE 
+							    AND  to_char(A.PROMO_DT_FROM ,'yyyymmdd') <=  to_char(SYSDATE,'yyyymmdd')        
+							    AND  to_char(A.PROMO_DT_END,'yyyymmdd')  >= to_char( SYSDATE ,'yyyymmdd')
 							    AND B.PROMO_ITM_STK_ID = C.ITM_STK_ID
 							    AND C.SALES_ORD_ID =  #{SALES_ORD_ID}
 							    AND A.PROMO_SRV_MEM_PAC_ID = #{SRV_MEM_PAC_ID}       
@@ -352,9 +352,8 @@
 						FROM SAL0017D  A 
 						WHERE  A.PROMO_SRV_MEM_PAC_ID = #{PROMO_SRV_MEM_PAC_ID}  
 						AND    A.PROMO_APP_TYPE_ID = '2290'   
-						AND    A.PROMO_APP_TYPE_ID = '2288'
-						AND    A.PROMO_DT_FROM< = SYSDATE
-						AND    A.PROMO_DT_END > = SYSDATE
+						AND    to_char( A.PROMO_DT_FROM,'yyyymmdd')< = to_char( SYSDATE,'yyyymmdd')
+						AND    to_char(A.PROMO_DT_END ,'yyyymmdd') > =  to_char(SYSDATE,'yyyymmdd')
 						AND    A.PROMO_STUS_ID  = '1'
                           ]]>
                           

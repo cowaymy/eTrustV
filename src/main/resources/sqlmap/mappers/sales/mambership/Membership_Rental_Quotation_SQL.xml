@@ -343,8 +343,8 @@
 			                        WHERE  A.PROMO_SRV_MEM_PAC_ID = #{PROMO_SRV_MEM_PAC_ID}  
 			                        AND    A.PROMO_TYPE_ID = '2282'
 			                        AND    A.PROMO_APP_TYPE_ID = '2744'
-			                        AND    A.PROMO_DT_FROM< = SYSDATE
-			                        AND    A.PROMO_DT_END > = SYSDATE
+			                        AND    to_char(A.PROMO_DT_FROM,'yyyymmdd')< =  to_char(SYSDATE,'yyyymmdd')
+			                        AND    to_char( A.PROMO_DT_END ,'yyyymmdd') > =  to_char(SYSDATE,'yyyymmdd')
 			                        AND    A.PROMO_STUS_ID  = '1'
 			                          ]]>
 			                          
