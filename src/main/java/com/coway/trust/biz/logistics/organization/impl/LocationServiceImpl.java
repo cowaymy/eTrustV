@@ -73,5 +73,12 @@ public class LocationServiceImpl extends EgovAbstractServiceImpl implements Loca
 		// TODO Auto-generated method stub
 		return locMapper.selectLocationCodeList(params);
 	}
+	
+	@Override
+	public int selectLocationChk(String params) {
+		// TODO Auto-generated method stub
+		return locMapper.selectLocationChk(params);
+	}
+	
 
 }
