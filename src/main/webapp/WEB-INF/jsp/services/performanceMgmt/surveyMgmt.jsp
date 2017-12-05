@@ -21,16 +21,26 @@
         $("#search").click(function(){  
         	//var cmbMemberTypeId22 = $("#cmbMemberTypeId").val();
         	//alert(cmbMemberTypeId22);
-        	
-        	//var eventDate22 = $("#eventDate").val();
-        	//alert(eventDate22);
-        	
+
         	Common.ajax("GET", "/services/performanceMgmt/selectSurveyEventList", $("#listSForm").serialize(), function(result) {
         		console.log("성공.");
         		console.log("data : " + result);
         		AUIGrid.setGridData(myGridID, result);
         	});
        }); 
+        
+        $("#clear").click(function(){
+            $("#cmbMemberTypeId").val('');
+            $("#eventName").val('');
+            $("#eventDate").val('');
+            $("#eventMemCode").val('');
+            $("#cmbSurveyStusId").val('');
+        });
+        
+        //excel Download
+        $('#excelDown').click(function() {        
+           GridCommon.exportTo("grid_wrap", 'xlsx', "Survey Management");
+        });
 
         
     });//Ready
@@ -61,11 +71,16 @@
         formatString : "dd/mm/yyyy",
         editable : false
     },{
-        dataField : "id",
+        dataField : "surveyStatus",
         headerText : 'Survey Status',
         editable : false
     }];
     
+    
+    //New Pop 호출
+    function fn_newEvent(){
+        Common.popupDiv("/services/performanceMgmt/surveyEventCreatePop.do", $("#popSForm").serializeJSON(), null, true, "surveyEventCreatePop");
+    }
 
 </script>
 
@@ -81,9 +96,18 @@
 <h2>Survey Event Log Search</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" id="search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#"  id="popSForm" name="popSForm" method="post">
+<input type="hidden" id="popEvtTypeDesc" name="popEvtTypeDesc"/>
+<input type="hidden" id="popMemCode" name="popMemCode"/>
+<input type="hidden" id="popCodeDesc" name="popCodeDesc"/>
+<input type="hidden" id="popEvtDt" name="popEvtDt"/>
+<input type="hidden" id="popServeyStatus" name="popServeyStatus"/>
+</form>
 
 
 <section class="search_table"><!-- search_table start -->
@@ -139,8 +163,8 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">Excel Download</a></p></li>
-    <li><p class="btn_grid"><a href="#">New Event</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excelDown">Excel Download</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li>
     <li><p class="btn_grid"><a href="#">Edit Event</a></p></li>
 </ul>
 

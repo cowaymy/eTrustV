@@ -64,5 +64,10 @@ public class SurveyMgmtController {
 		selectSurveyEventList = surveyMgmtService.selectSurveyEventList(params);
 		return ResponseEntity.ok(selectSurveyEventList);
 	}
+	
+	@RequestMapping(value = "/surveyEventCreatePop.do")
+	public String surveyEventCreatePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		return "services/performanceMgmt/surveyEventCreatePop";
+	}
 
 }

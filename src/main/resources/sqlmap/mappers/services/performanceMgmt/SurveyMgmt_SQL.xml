@@ -31,7 +31,7 @@
 		AND A.EVT_TYPE_DESC LIKE '%' || #{eventName} || '%'
 		</if>
 		<if test="eventDate != null and eventDate != '' ">
-		AND TO_CHAR(A.EVT_DT, 'DD/MM/YYYY') > #{eventDate}  
+		<![CDATA[ AND TO_DATE(TO_CHAR(A.EVT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') > TO_DATE(#{eventDate}, 'DD/MM/YYYY') ]]>
 		</if>
 		<if test="eventMemCode != null and eventMemCode != '' ">
 		AND B.MEM_CODE = #{eventMemCode}
