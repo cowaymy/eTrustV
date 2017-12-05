@@ -1271,8 +1271,81 @@ and cust.cust_id = custCnt.cust_id
 
 
         <select id="afterServiceParts" parameterType="Map" resultType="egovMap">
+			SELECT
+			    DISTINCT MST.*
+			    , TO_CHAR (A.SRV_FILTER_LAST_SERIAL) AS filter_Barcd_Serial_No
+			    , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Chg_Date
+			    , TO_CHAR (A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time
+			    , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'YYYYMMDD') AS last_Chg_Date_Origin
+			    , TO_CHAR (A.SRV_FILTER_EXPR_DT, 'HHMM') AS last_Chg_Time_Origin
+			FROM
+			(
+			    SELECT
+			        TO_CHAR (B.CUST_ID) as CUST_ID,
+			        TO_CHAR (B.SALES_ORD_ID) AS sales_Orderid,
+			        TO_CHAR (B.SALES_ORD_NO) AS sales_Order_No,
+			        TO_CHAR (A.AS_NO) AS service_No,
+			        TO_CHAR (D.STK_CODE) AS product_Code,
+			        TO_CHAR (F.STK_CODE) AS part_Code,
+			        TO_CHAR (F.STK_ID) AS part_Id,
+			        TO_CHAR (F.STK_DESC) AS part_Name,
+			        TO_CHAR (NVL(H.SERIALCHK, '')) AS filter_Barcd_Chk_YN,
+			        TO_CHAR (F.STK_TYPE_ID) AS part_Type,
+			        TO_CHAR (E.INTNL_CNTR) AS parts_Period,
+			        TO_CHAR (E.COMPNT_QTY) AS quanity
+			    FROM
+			    (
+			        SELECT
+			            *
+			        FROM
+			            SVC0001D
+			        WHERE AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userId})
+			        AND AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) AND LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' ))
+			    ) A
+			    INNER JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
+			    INNER JOIN SAL0002D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
+			    INNER JOIN SYS0026M D ON C.ITM_STK_ID = D.STK_ID
+			    INNER JOIN (
+			        SELECT
+			            LOG43.MATRL_NO
+			            , LOG44.*
+			        FROM 
+			            LOG0043M LOG43 INNER JOIN LOG0044D LOG44 ON LOG43.BOM = LOG44.BOM
+			    ) E ON D.STK_CODE = E.MATRL_NO
+			    INNER JOIN SYS0026M F ON E.BOM_COMPNT = F.STK_CODE
+			    LEFT OUTER JOIN SVC0004D G ON A.AS_ID = G.AS_ENTRY_ID AND A.AS_SO_ID = G.AS_SO_ID
+			    LEFT OUTER JOIN (
+			        SELECT 
+			           S26.STK_CODE,
+			           S28.WH_LOC_CODE,
+			           CASE 
+			              WHEN S26.STK_TYPE_ID = 61 THEN
+			                 CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N'
+			                 END
+			              WHEN S26.STK_TYPE_ID = 62 THEN
+			                 CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N'
+			                 END
+			              WHEN S26.STK_TYPE_ID = 63 THEN
+			                 CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N'
+			                 END
+			              ELSE 'N'
+			           END AS SERIALCHK
+			        FROM SYS0028M S28, SYS0026M S26
+			        WHERE 1 = 1
+			     ) H ON F.STK_CODE = H.STK_CODE AND H.WH_LOC_CODE = #{userId}
+			) MST
+			LEFT OUTER JOIN (
+			    SELECT
+			        A.SRV_SO_ID
+			        , B.*
+			    FROM
+			        SAL0090D A
+			        , SAL0087D B
+			    WHERE A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
+			) A ON MST.sales_Orderid = A.SRV_SO_ID AND MST.part_Id = A.SRV_FILTER_STK_ID
+			ORDER BY MST.sales_Orderid
 
-
+				<!-- 
 				SELECT MST.*, to_char(BOM_DTL.COMPNT_QTY) AS quanity
 				  FROM (SELECT ROW_NUMBER() OVER(PARTITION BY G.SALES_ORD_ID, A.AS_NO ,D.STK_ID ,D.STK_CODE ORDER BY C.SRV_FILTER_PRV_CHG_DT DESC) rn,
 				               to_char (G.CUST_ID) as CUST_ID,
@@ -1311,7 +1384,7 @@ and cust.cust_id = custCnt.cust_id
 				                                        AND LAST_DAY( TO_DATE( #{requestDate}, 'YYYYMM' )) ORDER BY A.AS_NO ASC ) MST
 				 , ( SELECT LOG43.MATRL_NO , LOG44.* FROM LOG0043M LOG43 , LOG0044D LOG44 WHERE LOG43.BOM = LOG44.BOM ) BOM_DTL
 				 WHERE MST.PRODUCT_CODE = BOM_DTL.MATRL_NO AND MST.PART_CODE = BOM_DTL.BOM_COMPNT and  rn = 1
-
+ -->
 
 
 <!-- 					SELECT
