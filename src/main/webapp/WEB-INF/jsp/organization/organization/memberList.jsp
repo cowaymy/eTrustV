@@ -11,7 +11,7 @@ function fn_memberListNew(){
 }
 
 function fn_memberListSearch(){
-	Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
+ 	Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID, result);
@@ -61,19 +61,19 @@ function fn_requestVacationPop(){
             MemberType : memberType
     };
     //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
-    
+
      Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType }, function(result) {
          console.log("성공.");
          console.log( result);
-         
+
          if(result !="" ){
              Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
         	  fn_memberListSearch();
          }
      });
-     
+
 }
-/*By KV start - traineeToMemberRegistPop*/
+/*By KV end - traineeToMemberRegistPop*/
 
 
 
@@ -249,8 +249,10 @@ function fn_searchPosition(selectedData){
 				    "/organization/positionList.do",
 				    "memberType="+selectedData,
 				    function(result) {
+				    	/* By KV - user able use "select account" */
+				    	$("#position").append("<option value=''>Select Account</option> " );
 				        for(var idx=0; idx < result.length ; idx++){
-				            $("#position").append("<option value=' " +result[idx].positionLevel+ " '> "+result[idx].positionName+ "</option>");
+				            $("#position").append("<option value='" +result[idx].positionLevel+ "'> "+result[idx].positionName+ "</option>");
 				        }
 				    }
 		   );
@@ -258,7 +260,8 @@ function fn_searchPosition(selectedData){
 		   /*position button disable*/
 		   $("#position").attr("disabled",true);
 		   /* If you want to set position default value remove under comment.*/
-		   $("#position").append("<option value=' '  '>Select Account</option> " );
+		   $("#position").append("<option value=''>Select Account</option> " );
+
 	   }
 }
 /*By KV end - Position - This is for display Position data only in Position selection.*/
