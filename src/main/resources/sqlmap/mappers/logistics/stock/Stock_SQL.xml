@@ -20,6 +20,7 @@
 			    Project1.Name AS Name, 
 			    Project1.IsSirim AS IsSirim, 
 			    Project1.IsNCV AS IsNCV, 
+			    Project1.serialchk AS serialchk, 
 			    Project1.QtyPerCarton AS QtyPerCarton, 
 			    Project1.Updator AS Updator, 
 			    Project1.C1 AS C1, 
@@ -49,6 +50,7 @@
 			       stk.STUS_CODE_ID AS StatusCodeID,
 			       stk.IS_SIRIM AS IsSirim,
 			       stk.IS_NCV AS IsNCV,
+			       stk.SERIAL_CHK AS serialchk,
 			       stk.QTY_PER_CARTON AS QtyPerCarton,
 			       stk.UPD_USER_ID AS Updator,
 			       stk.UPD_DT AS Updated,
@@ -189,6 +191,7 @@
 		          statusid,		          
 		       inv.IS_SIRIM issirim,
 		       inv.IS_NCV isncv,
+		       nvl(inv.SERIAL_CHK,'N') serialchk,
 		       inv.STK_CODE stockcode,
 		       <choose>
                      <when test="mode !=null and mode == 'edit'">
@@ -426,6 +429,7 @@
                  , STK_CTGRY_ID = #{stock_category}
                  , IS_SIRIM     = #{cbSirim}
                  , IS_NCV       = #{cbNCV}
+                 , SERIAL_CHK       = #{cbSerial}
                  , NET_WT       = #{netweight}
                  , GROS_WT      = #{grossweight}
                  , STUS_CODE_ID = #{statusselect}

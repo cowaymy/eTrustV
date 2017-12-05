@@ -307,7 +307,7 @@ function searchlocationFunc(){
             </colgroup>
             <tbody>
                 <tr>
-                   <th scope="row">Location</th>
+                   <th scope="row">Location Type</th>
                    <td>
                         <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select>                        
 <!--                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc"> -->

@@ -42,6 +42,7 @@
                         {dataField:"statuscodeid"      ,headerText:"statuscodeid"    ,width:120 ,height:30 , visible : false},
                         {dataField:"issirim"           ,headerText:"IsSirim"           ,width:90 ,height:30},
                         {dataField:"isncv"             ,headerText:"IsNCV"             ,width:90 ,height:30},
+                        {dataField:"serialchk"             ,headerText:"Serial Chk"             ,width:90 ,height:30},
                         {dataField:"qtypercarton"      ,headerText:"Qty Per Carton" ,width:120 ,height:30},
                         {dataField:"netweight"         ,headerText:"Net Wgt"         ,width:100 ,height:30},
                         {dataField:"grossweight"       ,headerText:"Gross Wgt"       ,width:100 ,height:30},
@@ -596,6 +597,15 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                     'cbNCV' : '0'
                 });
             }
+            if ($("#cbSerial").is(":checked") == true) {
+                $.extend(fdata, {
+                    'cbSerial' : 'Y'
+                });
+            } else {
+                $.extend(fdata, {
+                    'cbSerial' : null
+                });
+            }
         }
         $.extend(fdata, {
             'stockId' : key
@@ -811,8 +821,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             if (data[0].issirim == 1) {
                 $("#cbSirim").prop("checked", true);
             }
+            if (data[0].serialchk == "Y") {
+                $("#cbSerial").prop("checked", true);
+            }
             $("#cbNCV").prop("disabled", true);
             $("#cbSirim").prop("disabled", true);
+            $("#cbSerial").prop("disabled", true);
 
             $("#typeid").val(data[0].typeid);
         } else if (v == 'ES') {
@@ -820,6 +834,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         	
             $("#cbNCV").prop("disabled", false);
             $("#cbSirim").prop("disabled", false);
+            $("#cbSerial").prop("disabled", false);
 
             $("#txtStockType").text(data[0].typenm);
             $("#txtStockType")
@@ -867,6 +882,9 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             }
             if (data[0].issirim == 1) {
                 $("#cbSirim").prop("checked", true);
+            }
+            if (data[0].serialchk == "Y") {
+                $("#cbSerial").prop("checked", true);
             }
             $("#typeid").val(data[0].typeid);
             $("#stock_info_edit").text("SAVE");
@@ -1065,6 +1083,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         $("#txtMeasurement").text();
         $("#cbNCV").prop("checked", false);
         $("#cbSirim").prop("checked", false);
+        $("#cbSerial").prop("checked", false);
         $("#txtCost").text();
         $("#txtNormalPrice").text();
         $("#txtPV").text();
@@ -1429,6 +1448,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                         <td colspan="2">
                             <label><input type="checkbox" id="cbSirim"/><span>Sirim Certificate</span></label>
                             <label><input type="checkbox" id="cbNCV" /><span>NCV</span></label>
+                            <label><input type="checkbox" id="cbSerial" /><span>Serial</span></label>
                         </td>
                     </tr>
                     <tr>

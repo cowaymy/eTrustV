@@ -1214,7 +1214,10 @@
 	    </select>
 
     <select id="selectStockLocationList" parameterType="Map" resultType="egovMap">
-        SELECT WH_LOC_ID CODE_ID, WH_LOC_CODE CODE , DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) CODE_NAME
+        SELECT 
+                WH_LOC_ID CODE_ID, 
+                WH_LOC_CODE CODE , 
+               WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
           FROM SYS0028M S28M
          WHERE 1 = 1
            AND S28M.WH_LOC_STUS_ID = 1
