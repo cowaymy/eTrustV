@@ -36,4 +36,8 @@ public interface HolidayMapper {
 	List<EgovMap> selectBranch();
 	
 	List<EgovMap> selectBranchWithNM();
+
+	EgovMap selectBeforeToday(Map<String, Object> params);
+
+	List<EgovMap> selectAlreadyHoliday(Map<String, Object> params);
 }
