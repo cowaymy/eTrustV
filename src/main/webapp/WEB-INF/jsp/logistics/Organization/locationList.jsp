@@ -43,6 +43,7 @@
     var insDialog;
     // 수정창
     var dialog;
+    var locchkcnt; 
     
     var pagestate="";
 
@@ -369,13 +370,20 @@
       });    
   }    
   function inValidation(){
-   
+	    
 	   var inwarecd     = $("#inwarecd").val().trim();
 	   var inwarenm     = $("#inwarenm").val().trim();
 	   var instockgrade = $("#instockgrade").val().trim();
 	   var inwarebranch = $("#inwarebranch1").val().trim();
 	   var incontact1   = $("#incontact1").val().trim();  
 	   var incontact2   = $("#incontact2").val().trim();   
+
+	   fn_locchk(inwarecd);
+	  	   
+	   if(locchkcnt > 0){
+		   Common.alert('Location Code Duplicate,Please Check code!');
+		   return false;
+	   }
 	   
 	   if(inwarecd == null || inwarecd == "" ){
            Common.alert('Some required fields are empty. Please fill up all the required fields. ');
@@ -503,7 +511,8 @@
      
      function fn_insertGrid(){
     	 
-    	 if(inValidation()){ 
+    	 if(inValidation()){
+    		 
     		 console.log($("#insForm").serialize());
              //$('#instockgrade').attr("disabled",false)
                Common.ajax("GET", "/logistics/organization/insLocation.do", $("#insForm").serialize(), function(result) { 
@@ -517,7 +526,8 @@
                     
                     alert(jqXHR.responseJSON.message);
                     
-                });                        
+                });        
+        
            }
     	 
      }
@@ -556,7 +566,16 @@
 //     	 alert("rowid :   "+rowid);
 //       fn_deleteWare(rowid);
 // 	}
-     
+
+    function fn_locchk(loccode){
+        var param = {"loccode" : loccode};
+        
+        Common.ajaxSync("POST", "/logistics/organization/locationchk.do", param, function(_data) {   	
+             locchkcnt = _data.loccnt;
+        });
+        
+    }
+ 
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
