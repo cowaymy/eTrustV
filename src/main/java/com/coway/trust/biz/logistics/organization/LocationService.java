@@ -24,4 +24,7 @@ public interface LocationService {
 	void deleteLocationInfo(Map<String, Object> params);
 
 	List<EgovMap> selectLocationCodeList(Map<String, Object> params);
+	
+	int selectLocationChk(String params);
+		
 }
