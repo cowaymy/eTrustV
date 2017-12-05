@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.importbl.impl.ImportMapper">
+
+    <select id="importBLList" parameterType="map" resultType="EgovMap">
+                    
+<![CDATA[                   
+            SELECT   ROWNUM RNUM
+                        ,S28.WH_LOC_ID
+                        ,S28.WH_LOC_CODE
+                        ,S28.WH_LOC_DESC
+                        ,L83.PLANT
+                        ,L83.BL_NO
+                        ,L84.ITM_SEQ
+                        ,L84.MATRL_NO
+                        ,S26.STK_TYPE_ID
+                        , (SELECT CODE_NAME
+                                      FROM SYS0013M
+                                      WHERE CODE_ID = S26.STK_TYPE_ID) TYPENAME
+                        ,S26.STK_CTGRY_ID
+                        , (SELECT CODE_NAME
+                                      FROM SYS0013M
+                                      WHERE CODE_ID = S26.STK_CTGRY_ID) CTGRYNAME
+                        ,S26.STK_DESC STKDESC
+                        ,S26.STK_ID STKID
+                        ,L84.QTY
+                        ,NVL (REQ.REQST_QTY, 0) REQED_QTY
+                        , (L84.QTY - NVL (REQ.REQST_QTY, 0) ) AVRQTY
+                        ,L84.UOM
+                        , (SELECT CODE_NAME
+                                    FROM SYS0013M
+                                    WHERE CODE_ID = L84.UOM) UOMNM
+                FROM LOG0083M L83
+                        ,LOG0084D L84
+                        ,SYS0026M S26
+                        ,SYS0028M S28
+                        , (SELECT   L48.ITM_CODE
+                                   ,SUM (L48.REQST_QTY) REQST_QTY
+                                   ,L48.BL_NO
+                                   ,L48.BL_ITM_SEQ
+                               FROM LOG0047M L47, LOG0048D L48
+                              WHERE L47.REQST_NO = L48.REQST_NO
+                                AND NVL (L47.REQST_DEL, 'N') <> 'Y'
+                                AND L48.BL_NO IS NOT NULL
+                                AND L48.BL_ITM_SEQ IS NOT NULL
+                           GROUP BY L48.ITM_CODE, L48.BL_NO, L48.BL_ITM_SEQ) REQ
+               WHERE L83.AP_CMPLT = 'X'
+                     AND L83.GR_CMPLT = 'X'
+                     AND NVL (L83.DEL_FLAG, 'Y') <> 'X'
+]]>                    
+                     AND S28.WH_LOC_GB = '06'
+                     AND L83.BL_NO = L84.BL_NO
+                     AND L83.INV_NO = L84.INV_NO
+                     AND L84.MATRL_NO = S26.STK_CODE
+                     AND L83.PLANT = S28.PLANT
+                     AND L84.BL_NO = REQ.BL_NO(+)
+                     AND L84.ITM_SEQ = REQ.BL_ITM_SEQ(+)
+                     AND L84.MATRL_NO = REQ.ITM_CODE(+)
+                     <if test="invno != null and invno != ''">
+                     AND L83.INV_NO LIKE #{invno}||'%'
+                    </if>
+                     <if test="blno != null and blno != ''">
+                     AND L83.BL_NO LIKE #{blno}||'%'
+                    </if>
+                     <if test="location != null and location != ''">
+                     AND S28.WH_LOC_ID =  #{location} 
+                    </if>
+                     <if test="grsdt != null and grsdt != '' and gredt != null and gredt != ''">
+                     AND L83.GR_DT BETWEEN TO_CHAR(TO_DATE(#{grsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{gredt},'DD/MM/YYYY'),'YYYYMMDD') 
+                    </if>
+                     <if test="blsdt != null and blsdt != '' and bledt != null and bledt != ''">
+                     AND L83.SHIP_DT BETWEEN TO_CHAR(TO_DATE(#{blsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{bledt},'DD/MM/YYYY'),'YYYYMMDD') 
+                    </if>
+            ORDER BY L83.BL_NO, L84.ITM_SEQ
+    </select>
+    
+    <select id="importLocationList" parameterType="map" resultType="EgovMap">
+        SELECT
+                 WH_LOC_ID CODE_ID
+                ,WH_LOC_CODE
+                ,WH_LOC_DESC CODE_NAME
+        FROM SYS0028M
+        WHERE WH_LOC_GB IN    
+              <choose>
+                  <when test="groupCode eq 'port'.toString()">
+                  ('06')   
+                  </when>
+                  <otherwise>
+                  ('01', '05')     
+                  </otherwise>
+              </choose>
+          ORDER BY WH_LOC_ID
+    </select>
+    
+     <select id="searchSMO" parameterType="Map" resultType="EgovMap">
+         SELECT 
+                    L47.REQST_NO,
+                    L47.TRNSC_TYPE,
+                    L47.TRNSC_TYPE_DTL,
+                    L47.PRIDIC_FRQNCY,
+                    TO_CHAR(L47.REQST_CRT_DT,'DD/MM/YYYY') REQST_CRT_DT,
+                    TO_CHAR(L47.REQST_REQUIRE_DT,'DD/MM/YYYY') REQST_REQUIRE_DT,
+                    L47.REF_DOC_NO,
+                    L47.DOC_HDER_TXT,
+                    L47.GOODS_RCIPT,
+                    L47.RCIV_CDC_RDC,
+                    (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=L47.RCIV_CDC_RDC) RCIV_CDC_RDC2,
+                    L47.REQST_CDC_RDC,
+                    (SELECT WH_LOC_DESC FROM SYS0028M WHERE WH_LOC_ID=L47.REQST_CDC_RDC) REQST_CDC_RDC2,
+                    L47.REQST_REM_,
+                    L47.RETN_DEFECT_RESN,
+                    L47.RETN_PRSN_CT_CODY,
+                    L47.CRT_USER_ID, 
+                    TO_CHAR(L47.CRT_DT,'DD/MM/YYYY') CRT_DT,
+                    L47.REQST_STUS,
+                    L47.REQST_DEL,
+                    L47.REQST_TYPE,
+                    L47.REQST_TYPE_DTL,
+                    L48.REQST_NO,
+                    L48.REQST_NO_ITM,
+                    L48.ITM_CODE,
+                    L48.ITM_NAME,
+                    L48.REQST_QTY,
+                    L48.UOM,
+                    (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=L48.UOM ) UOMNAME,
+                    L48.ITM_TXT,
+                    L48.REQST_DEL,
+                    L48.FINAL_CMPLT,
+                    L48.CRT_USER_ID,
+                    TO_CHAR(L48.CRT_DT,'DD/MM/YYYY') CRT_DT,
+                    L48.UPD_USER_ID,
+                    L48.UPD_DT,
+                    L48.RCIPT_QTY,
+                    L48.BL_NO
+            FROM  LOG0047M L47, LOG0048D L48
+            WHERE  1=1
+                AND L47.REQST_NO=L48.REQST_NO
+                AND L47.REQST_TYPE='PO'
+                AND L47.RCIV_CDC_RDC =#{whLocId}
+                AND L48.BL_NO = #{blNo}
+                AND L48.ITM_CODE =#{matrlNo}
+                AND L48.BL_ITM_SEQ=#{itmSeq}
+            ORDER BY   L47.REQST_NO
+    </select>
+    
+    <select id="selectStockTransferSeq" resultType="String">
+        SELECT
+                   'SMO' 
+                   ||TO_CHAR (SYSDATE, 'YYMMDD')
+                   || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
+           FROM LOG0047M
+          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') 
+    </select>
+
+    <update id="CreateReqM" parameterType="Map">
+        MERGE INTO LOG0047M  a
+             USING dual
+                on (a.REQST_NO=#{reqNo}) 
+              WHEN MATCHED THEN
+                   UPDATE SET
+                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') 
+                       ,  a.CRT_USER_ID     =   #{userId}                                                                     
+                       ,  a.CRT_DT          =   SYSDATE 
+              WHEN NOT MATCHED THEN
+                       INSERT (
+                              REQST_NO,
+                              TRNSC_TYPE,
+                              TRNSC_TYPE_DTL,
+                              PRIDIC_FRQNCY,
+                              REQST_CRT_DT,
+                              REQST_REQUIRE_DT,
+                              RCIV_CDC_RDC,
+                              REQST_CDC_RDC,
+                              REQST_STUS,
+                              CRT_USER_ID,
+                              CRT_DT,
+                              REQST_TYPE,
+                              REQST_TYPE_DTL
+                              )
+                            VALUES (  
+                                   #{reqNo}
+                                    , 'UM'
+                                    , 'UM03'
+                                    , 'M'
+                                    , SYSDATE
+                                    , SYSDATE
+                                    , #{flocation}
+                                    , #{tlocation}
+                                    , 'O'
+                                    , #{userId}
+                                    , SYSDATE
+                                    , 'PO'
+                                    ,  'PO03'
+                                    )
+    </update>
+
+    <insert id="CreateReqD" parameterType="Map">
+        MERGE INTO LOG0048D A
+             USING DUAL
+                ON (A.REQST_NO = #{reqNo} and REQST_NO_ITM = #{resnoitm})
+            WHEN MATCHED THEN
+                UPDATE SET 
+                       A.REQST_QTY = #{reqQty}
+                     , A.UOM       = #{uom}
+                     , A.CRT_USER_ID = #{userId}
+                     , A.CRT_DT      = SYSDATE
+            WHEN NOT MATCHED THEN 
+                INSERT ( 
+                            REQST_NO, 
+                            REQST_NO_ITM,
+                            ITM_CODE, 
+                            ITM_NAME, 
+                            REQST_QTY, 
+                            UOM, 
+                            CRT_USER_ID, 
+                            CRT_DT,
+                            BL_NO,
+                            BL_ITM_SEQ
+                            )
+                VALUES ( 
+                            #{reqNo} , 
+                            (SELECT DECODE(COUNT(REQST_NO_ITM) , 0 , 1 , MAX(REQST_NO_ITM +1)) FROM LOG0048D WHERE REQST_NO = #{reqNo})
+                            ,#{matrlNo} , 
+                            #{stkdesc}, 
+                            #{reqQty} ,
+                            #{uom} , 
+                            #{userId} ,
+                             SYSDATE,
+                             #{blNo},
+                             #{itmSeq}
+                             )
+    </insert> 
+    
+    <update id="updateReqStatus" parameterType="String">
+        UPDATE LOG0047M 
+           SET REQST_STUS = 'P'
+         WHERE REQST_NO = #{param}
+     </update>
+     <select id="selectDeliverySeq" resultType="String">
+       SELECT
+               'DVR' 
+               ||TO_CHAR (SYSDATE, 'YYMMDD')
+               || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
+        FROM LOG0054M
+    WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
+    </select>
+    <insert id="CreateDeliveryM" parameterType="Map">
+                     INSERT INTO LOG0054M
+                     (
+                                DELVRY_NO
+                              , TRNSC_TYPE
+                              , TRNSC_TYPE_DTL
+                              , DELVRY_DT
+                              , CRT_USER_ID
+                              , CRT_DT
+                     )        
+                            SELECT 
+                                        #{deliveryNo}
+                                      , TRNSC_TYPE
+                                      , TRNSC_TYPE_DTL
+                                      , TO_CHAR(SYSDATE , 'YYYYMMDD')
+                                      , #{userId}
+                                      , SYSDATE
+                                      FROM LOG0047M
+                              WHERE REQST_NO= #{reqNo} 
+    </insert>
+    <select id="selectDeliveryList"  parameterType="Map" resultType="EgovMap">
+      SELECT 
+              REQST_NO,
+              REQST_NO_ITM,
+              ITM_CODE
+    FROM  LOG0048D
+    WHERE REQST_NO= #{reqNo}          
+    </select>
+    <insert id="CreateDeliveryD" parameterType="Map">
+                     INSERT  INTO LOG0055D
+                                ( 
+                                DELVRY_NO, 
+                                DELVRY_NO_ITM, 
+                                ITM_CODE, 
+                                ITM_NAME, 
+                                DELVRY_QTY, 
+                                REQST_NO, 
+                                CRT_USER_ID, 
+                                CRT_DT
+                                )
+                     SELECT                       
+                                #{deliveryNo} , 
+                                (SELECT DECODE(COUNT(DELVRY_NO_ITM) , 0 , 1 , MAX(DELVRY_NO_ITM +1)) FROM LOG0055D WHERE DELVRY_NO = #{deliveryNo}),
+                               ITM_CODE , 
+                               ITM_NAME, 
+                               REQST_QTY , 
+                               REQST_NO , 
+                               #{userId} , 
+                               SYSDATE
+                     FROM LOG0048D
+                     WHERE REQST_NO= #{reqstNo}
+                         AND REQST_NO_ITM = #{reqstNoItm}
+                         AND ITM_CODE = #{itmCode}          
+    </insert> 
+   </mapper>
