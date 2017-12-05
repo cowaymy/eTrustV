@@ -2392,6 +2392,12 @@ function addOutSrvcToFinal(){
                     <input id="keyInPayDateOnline" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                  </td>
              </tr>
+			  <tr>
+				<th scope="row">Commission</th>
+				<td colspan="3">
+					<label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+				</td>
+			</tr>
         </tbody>
     </table>
     </form>
@@ -2482,6 +2488,12 @@ function addOutSrvcToFinal(){
                        <input id="keyInPayDateCash" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                   </td>
                </tr>
+			    <tr>
+				<th scope="row">Commission</th>
+				<td colspan="3">
+					<label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+				</td>
+			</tr>
         </tbody>
     </table>
     </form>
@@ -2572,6 +2584,12 @@ function addOutSrvcToFinal(){
                         <input id="keyInPayDateCheque" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly /> 
                   </td>
               </tr>
+			  <tr>
+				<th scope="row">Commission</th>
+				<td colspan="3">
+					<label><input type="checkbox" id="keyInIsCommChk" name="keyInIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+				</td>
+			</tr>
         </tbody>
     </table>
     </form>
@@ -2918,9 +2936,6 @@ function addOutSrvcToFinal(){
                                 <input type="text" name="outSrvcQuotNo" id="outSrvcQuotNo" title="" placeholder="Quotation Number" class="readonly" readonly />
                                     <p class="btn_sky">
                                         <a href="javascript:fn_quotationSearchPop();" id="search">Search</a>
-                                    </p>
-                                    <p class="btn_sky">
-                                           <a href="javascript:viewOutSrvcLedger();" id="viewLedger">View Ledger</a>
                                     </p>
                             </td>
                         </tr>

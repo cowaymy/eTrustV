@@ -1190,7 +1190,8 @@
             BANK_SLIP_NO,
             EFT_NO,
             THRD_PARTY_IC,
-            BANK_BRNCH_ID            
+            BANK_BRNCH_ID,
+			IS_COMM_CHK
         ) VALUES (
 			#{seq},
 			#{keyInPayType},
@@ -1227,7 +1228,8 @@
 			#{keyInBankSlipNo},
 			#{keyInEftNo},
 			#{keyInThrdPartyIc},
-			#{keyInBankBrnchId}
+			#{keyInBankBrnchId},
+			#{keyInIsCommChk}
 			
         )
     </insert>  
@@ -1258,7 +1260,8 @@
             STUS_ID,
             IS_FUND_TRNSF,
             SKIP_RECON,
-            PAY_ITM_CARD_TYPE
+            PAY_ITM_CARD_TYPE,
+			IS_COMM_CHK
         )
         VALUES
         (
@@ -1285,7 +1288,8 @@
             #{payItemStatusId},
             #{isFundTransfer},
             #{skipRecon},
-            #{payItemCardTypeId}
+            #{payItemCardTypeId},
+			#{keyInIsCommChk}
         )
     </insert>
     

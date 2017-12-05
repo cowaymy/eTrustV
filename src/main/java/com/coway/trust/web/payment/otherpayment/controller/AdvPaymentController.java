@@ -90,6 +90,7 @@ public class AdvPaymentController {
     		formInfo.put("keyInRefDtl",  String.valueOf(formInfo.get("cashRefDetails")));
     		formInfo.put("keyInBankType",  String.valueOf(formInfo.get("cashBankType")));
     		formInfo.put("keyInVaAccNo",  String.valueOf(formInfo.get("cashVAAccount")));
+    		formInfo.put("keyInIsCommChk",  formInfo.get("cashIsCommChk"));
     		
     	}//Cheque
     	else if("106".equals(String.valueOf(formInfo.get("keyInPayChequeType")))){
@@ -107,6 +108,7 @@ public class AdvPaymentController {
     		formInfo.put("keyInRefDtl",  String.valueOf(formInfo.get("chequeRefDetails")));
     		formInfo.put("keyInBankType",  String.valueOf(formInfo.get("chequeBankType")));
     		formInfo.put("keyInVaAccNo",  String.valueOf(formInfo.get("chequeVAAccount")));
+    		formInfo.put("keyInIsCommChk",  formInfo.get("chequeIsCommChk"));
     		
     	}//Online
     	else if("108".equals(String.valueOf(formInfo.get("keyInPayOnlineType")))){
@@ -126,6 +128,7 @@ public class AdvPaymentController {
     		formInfo.put("keyInRefDtl",  String.valueOf(formInfo.get("onlineRefDetails")));
     		formInfo.put("keyInBankType",  String.valueOf(formInfo.get("onlineBankType")));
     		formInfo.put("keyInVaAccNo",  String.valueOf(formInfo.get("onlineVAAccount")));
+    		formInfo.put("keyInIsCommChk",  formInfo.get("onlineIsCommChk"));
     	}
 		
 		// 저장

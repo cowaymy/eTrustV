@@ -2477,9 +2477,6 @@ function addOutSrvcToFinal(){
                                     <p class="btn_sky">
                                         <a href="javascript:fn_quotationSearchPop();" id="search">Search</a>
                                     </p>
-                                    <p class="btn_sky">
-                                           <a href="javascript:viewOutSrvcLedger();" id="viewLedger">View Ledger</a>
-                                    </p>
                             </td>
                         </tr>
                         
@@ -2665,6 +2662,12 @@ function addOutSrvcToFinal(){
                                 <input id="cashPayDate" name="cashPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
                         </tr>
+						<tr>
+					        <th scope="row">Commission</th>
+					        <td colspan="3">
+								<label><input type="checkbox" id="cashIsCommChk" name="cashIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+					        </td>
+					    </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -2771,6 +2774,12 @@ function addOutSrvcToFinal(){
                                 <input id="chequePayDate" name="chequePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
                             </td>
                         </tr>
+						<tr>
+					        <th scope="row">Commission</th>
+					        <td colspan="3">
+								<label><input type="checkbox" id="chequeIsCommChk" name="chequeIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+					        </td>
+					    </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
@@ -2886,6 +2895,12 @@ function addOutSrvcToFinal(){
 	                            <input id="onlinePayDate" name="onlinePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 	                        </td>
 	                    </tr>
+						<tr>
+					        <th scope="row">Commission</th>
+					        <td colspan="3">
+								<label><input type="checkbox" id="onlineIsCommChk" name="onlineIsCommChk" value="1"  checked="checked"/><span>Allow commssion for this payment</span></label>
+					        </td>
+					    </tr>
                     </tbody>
                 </table>
                 <!-- table end -->
