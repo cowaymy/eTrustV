@@ -1675,13 +1675,17 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	params.put("opt", "1");
         	EgovMap callEntryMap1 = orderRequestMapper.selectCallEntry(params);
         	
-        	LatestOrderCallEntryID = CommonUtils.intNvl(callEntryMap1.get("callEntryId"));
+        	if(callEntryMap1 != null) {
+        		LatestOrderCallEntryID = CommonUtils.intNvl(callEntryMap1.get("callEntryId"));
+        	}
         }
         else {
         	//Complete
         	EgovMap ineMap = orderRequestMapper.selectInstallEntry(params);
         	
-        	LatestOrderCallEntryID = CommonUtils.intNvl(String.valueOf((BigDecimal)ineMap.get("callEntryId")));
+        	if(ineMap != null) {
+        		LatestOrderCallEntryID = CommonUtils.intNvl(String.valueOf((BigDecimal)ineMap.get("callEntryId")));
+        	}
         }
         
 		SalesReqCancelVO salesReqCancelVO = new SalesReqCancelVO();
