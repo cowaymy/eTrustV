@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.order.impl.OrderColorGridMapper">
+
+    <select id="colorGridList" parameterType="Map" resultType="egovMap">
+ 
+        SELECT D1.ORD_ID ,
+	               D1.ORD_NO ,         
+			       D1.APP_TYPE_CODE ,  
+			       D1.CUST_NAME ,      
+			       D1.CUST_IC   ,      
+			       D1.STK_CODE   ,     
+			       D1.SALESMAN_CODE   ,
+			       D1.TOP_ORG_CODE   , 
+			       D1.ORG_CODE   ,     
+			       D1.GRP_CODE   ,     
+			       D1.DEPT_CODE   ,    
+			       D1.IS_NET   ,       
+			       D1.NET_MONTH   ,    
+			       D1.INSTALL_STUS_ID ,
+			       D1.INSTALL_STUS ,   
+			       D1.INSTALL_FAIL_RESN,
+			       D1.COM_DT ,         
+			       D1.PAY_COM_DT ,     
+			       D1.PROMO_CODE ,     
+			       D1.PROMO_DESC ,     
+			       D1.MAIL_CNT_TEL_M , 
+			       D1.MAIL_CNT_TEL_O , 
+			       D1.MAIL_CNT_TEL_R , 
+			       D1.MAIL_CNT_TEL_F , 
+			       D1.INST_CNT_TEL_M , 
+			       D1.INST_CNT_TEL_O , 
+			       D1.INST_CNT_TEL_R , 
+			       D1.INST_CNT_TEL_F , 
+			       D1.CUST_ID ,
+			       D1.C1 ,
+			       D1.ORD_DT ,
+			       D1.STUS_ID ,
+			       D1.STUS_CODE ,
+			       D1.C5 ,
+			       D1.C6 ,
+			       D1.C7 ,
+			       D1.C8 ,
+			       D1.C9 
+	       FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID  ,
+	                   F1.ORD_NO ,
+	                   F1.APP_TYPE_CODE ,
+	                   F1.CUST_NAME ,
+	                   F1.CUST_IC   ,
+	                   F1.STK_CODE   ,
+	                   F1.SALESMAN_CODE   ,
+	                   F1.TOP_ORG_CODE   ,
+	                   F1.ORG_CODE   ,
+	                   F1.GRP_CODE   ,
+	                   F1.DEPT_CODE   ,
+	                   F1.IS_NET   ,
+	                   F1.NET_MONTH   ,
+	                   F1.INSTALL_STUS_ID ,
+	                   F1.INSTALL_STUS ,
+	                   F1.INSTALL_FAIL_RESN ,
+	                   F1.COM_DT ,
+	                   F1.PAY_COM_DT ,
+	                   F1.PROMO_CODE ,
+	                   F1.PROMO_DESC ,
+	                   F1.MAIL_CNT_TEL_M ,
+	                   F1.MAIL_CNT_TEL_O ,
+	                   F1.MAIL_CNT_TEL_R ,
+	                   F1.MAIL_CNT_TEL_F ,
+	                   F1.INST_CNT_TEL_M ,
+	                   F1.INST_CNT_TEL_O ,
+	                   F1.INST_CNT_TEL_R ,
+	                   F1.INST_CNT_TEL_F ,
+	                   E4.CUST_ID ,
+	                   1 C1  ,
+	                   CASE WHEN ( F1.ORD_DT IS NOT NULL ) THEN F1.ORD_DT
+	                   ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END ORD_DT  ,
+	                   CASE WHEN ( F1.STUS_ID IS NOT NULL ) THEN F1.STUS_ID
+	                   ELSE 0 END STUS_ID  ,
+	                   CASE WHEN ( F1.STUS_CODE IS NOT NULL ) THEN F1.STUS_CODE
+	                   ELSE ' ' END STUS_CODE  ,
+	                   CASE WHEN ( F1.APP_TYPE_ID IS NOT NULL ) THEN F1.APP_TYPE_ID
+	                   ELSE 0 END C5  ,
+	                   CASE WHEN ( F1.STK_ID IS NOT NULL ) THEN F1.STK_ID
+	                   ELSE 0 END C6  ,
+	                   F1.PV_MONTH C7 ,
+	                   F1.PV_YEAR C8 ,
+	                   F1.TOT_OTSTND C9
+		       FROM ( SELECT E1.ORD_ID  OrderID1 ,
+					                 E1.ORD_NO  ,
+					                 E1.ORD_DT  ,
+					                 E1.APP_TYPE_ID  ,
+					                 E1.APP_TYPE_CODE  ,
+					                 E1.CUST_NAME  ,
+					                 E1.CUST_IC  ,
+					                 E1.STK_ID  ,
+					                 E1.STK_CODE  ,
+					                 E1.SALESMAN_CODE  ,
+					                 E1.STUS_ID  ,
+					                 E1.STUS_CODE  ,
+					                 E1.TOP_ORG_CODE  ,
+					                 E1.ORG_CODE  ,
+					                 E1.GRP_CODE  ,
+					                 E1.DEPT_CODE  ,
+					                 E1.IS_NET  ,
+					                 E1.NET_MONTH  ,
+					                 E1.PV_MONTH  ,
+					                 E1.PV_YEAR  ,
+					                 E1.INSTALL_STUS_ID  ,
+					                 E1.INSTALL_STUS  ,
+					                 E1.INSTALL_FAIL_RESN  ,
+					                 E1.COM_DT  ,
+					                 E1.PAY_COM_DT  ,
+					                 E1.TOT_OTSTND  ,
+					                 E1.PROMO_CODE  ,
+					                 E1.PROMO_DESC ,
+					                 E2.MAIL_CNT_TEL_M  ,
+					                 E2.MAIL_CNT_TEL_O  ,
+					                 E2.MAIL_CNT_TEL_R  ,
+					                 E2.MAIL_CNT_TEL_F  ,
+					                 E3.INST_CNT_TEL_M ,
+					                 E3.INST_CNT_TEL_O ,
+					                 E3.INST_CNT_TEL_R ,
+					                 E3.INST_CNT_TEL_F
+		                     FROM ( SELECT vC.ORD_ID ,
+								                   vC.ORD_NO ,
+								                   vC.ORD_DT ,
+								                   vC.APP_TYPE_ID ,
+								                   vC.APP_TYPE_CODE ,
+								                   vC.CUST_NAME ,
+								                   vC.CUST_IC ,
+								                   vC.STK_ID ,
+								                   vC.STK_CODE ,
+								                   vC.SALESMAN_CODE ,
+								                   vC.STUS_ID ,
+								                   vC.STUS_CODE ,
+								                   vC.TOP_ORG_CODE ,
+								                   vC.ORG_CODE ,
+								                   vC.GRP_CODE ,
+								                   vC.DEPT_CODE ,
+								                   vC.IS_NET ,
+								                   vC.NET_MONTH ,
+								                   vC.PV_MONTH ,
+								                   vC.PV_YEAR ,
+								                   vC.INSTALL_STUS_ID ,
+								                   vC.INSTALL_STUS ,
+								                   vC.INSTALL_FAIL_RESN ,
+								                   vC.COM_DT ,
+								                   vC.PAY_COM_DT ,
+								                   vC.TOT_CNT ,
+								                   vC.TOT_OTSTND ,
+								                   vC.PROMO_CODE ,
+								                   vC.PROMO_DESC 
+		                                   FROM SAL1008V vC ) E1
+										    JOIN ( SELECT vM.ORD_ID ,
+												                vM.MAIL_CNTY ,
+												                vM.MAIL_STATE ,
+												                vM.MAIL_AREA ,
+												                vM.MAIL_POST_CODE ,
+												                vM.MAIL_CNT_NAME ,
+												                vM.MAIL_CNT_NRIC ,
+												                vM.MAIL_CNT_EMAIL ,
+												                vM.MAIL_CNT_TEL_M ,
+												                vM.MAIL_CNT_TEL_O ,
+												                vM.MAIL_CNT_TEL_R ,
+												                vM.MAIL_CNT_TEL_F ,
+												                vM.MAIL_CNT_GENDER ,
+												                vM.BILL_GRP_NO ,
+												                vM.BILL_STATE_EMAIL ,
+												                vM.BILL_STATE ,
+												                vM.BILL_SMS ,
+												                vM.BILL_POST ,
+												                vM.MAIL_CNTC_ID ,
+												                vM.MAIL_ADDR_ID ,
+												                vM.MAIL_CNT_DEPT ,
+												                vM.MAIL_CNT_POST 
+		                                                FROM SAL1011V vM ) E2   ON E2.ORD_ID = E1.ORD_ID
+														 JOIN ( SELECT vI.ORD_ID ,
+															                vI.INST_COUNTRY ,
+															                vI.INST_STATE ,
+															                vI.INST_AREA ,
+															                vI.INST_POSTCODE ,
+															                vI.INST_CNT_NAME ,
+															                vI.INST_CNT_NRIC ,
+															                vI.INST_CNT_EMAIL ,
+															                vI.INST_CNT_TEL_M ,
+															                vI.INST_CNT_TEL_O ,
+															                vI.INST_CNT_TEL_R ,
+															                vI.INST_CNT_TEL_F ,
+															                vI.INST_CNT_GENDER ,
+															                vI.FIRST_INSTALL_NO ,
+															                vI.FIRST_INSTALL_CT_CODE ,
+															                vI.FIRST_INSTALL_CT_NAME ,
+															                vI.FIRST_INSTALL_DT ,
+															                vI.FIRST_INSTALL_REM ,
+															                vI.FIRST_INSTALL_SIRIM_NO ,
+															                vI.FIRST_INSTALL_SERIAL_NO ,
+															                vI.LAST_INSTALL_NO ,
+															                vI.LAST_INSTALL_CT_CODE ,
+															                vI.LAST_INSTALL_CT_NAME ,
+															                vI.LAST_INSTALL_DT ,
+															                vI.LAST_INSTALL_REM ,
+															                vI.LAST_INSTALL_SIRIM_NO ,
+															                vI.LAST_INSTALL_SERIAL_NO ,
+															                vI.DSC_ID ,
+															                vI.DSC_CODE ,
+															                vI.DSC_NAME ,
+															                vI.INSTCT ,
+															                vI.PREFER_INST_DT ,
+															                vI.PREFER_INST_TM ,
+															                vI.INSTALL_ADDR_ID ,
+															                vI.INSTALL_CNTC_ID ,
+															                vI.INST_CNT_DEPT ,
+															                vI.INST_CNT_POST ,
+															                vI.VRIFY_REM
+														            FROM SAL1010V vI ) E3   ON E3.ORD_ID = E1.ORD_ID
+		                               WHERE  ( ( 144 = (CASE WHEN ( E1.APP_TYPE_ID IS NOT NULL ) THEN E1.APP_TYPE_ID
+		                        ELSE 0 END) )
+		                                        OR ( 145 = (CASE WHEN ( E1.APP_TYPE_ID IS NOT NULL ) THEN E1.APP_TYPE_ID
+		                        ELSE 0 END) )
+		                                        OR ( 68 = (CASE WHEN ( E1.APP_TYPE_ID IS NOT NULL ) THEN E1.APP_TYPE_ID
+		                        ELSE 0 END) ) )
+		                                        AND ( 10 = (CASE WHEN ( E1.STUS_ID IS NOT NULL ) THEN E1.STUS_ID
+		                        ELSE 0 END) ) ) F1
+		                              JOIN ( SELECT vB.ORD_ID ,
+		                                            vB.ORD_NO ,
+		                                            vB.RENTAL_STUS ,
+		                                            vB.ORD_STUS_ID ,
+		                                            vB.ORD_STUS_CODE ,
+		                                            vB.ORD_STUS_NAME ,
+		                                            vB.ORD_DT ,
+		                                            vB.INSTLMT_PRIOD ,
+		                                            vB.ORD_AMT ,
+		                                            vB.ORD_MTH_RENTAL ,
+		                                            vB.ORD_PV ,
+		                                            vB.ORD_PV_MONTH ,
+		                                            vB.ORD_PV_YEAR ,
+		                                            vB.ORD_REF_NO ,
+		                                            vB.ORD_PO_NO ,
+		                                            vB.ORD_DEPT_CODE ,
+		                                            vB.ORD_GRP_CODE ,
+		                                            vB.ORD_ORG_CODE ,
+		                                            vB.ORD_CRT_USER_ID ,
+		                                            vB.ORD_CRT_DT ,
+		                                            vB.APP_TYPE_ID ,
+		                                            vB.APP_TYPE_CODE ,
+		                                            vB.APP_TYPE_DESC ,
+		                                            vB.STOCK_ID ,
+		                                            vB.STOCK_CODE ,
+		                                            vB.STOCK_DESC ,
+		                                            vB.CUST_ID ,
+		                                            vB.CUST_TYPE ,
+		                                            vB.CUST_NAME ,
+		                                            vB.CUST_NRIC ,
+		                                            vB.CUST_DOB ,
+		                                            vB.CUST_NATION ,
+		                                            vB.CUST_GENDER ,
+		                                            vB.CUST_RACE ,
+		                                            vB.CUST_EMAIL ,
+		                                            vB.CUST_VA_NO ,
+		                                            vB.CUST_PASSPORT_EXPR ,
+		                                            vB.CUST_VISA_EXPR ,
+		                                            vB.ORD_PROMO_ID ,
+		                                            vB.ORD_PROMO_CODE ,
+		                                            vB.ORD_PROMO_DESC ,
+		                                            vB.ORD_MEM_ID ,
+		                                            vB.ORD_MEM_CODE ,
+		                                            vB.ORD_MEM_NAME ,
+		                                            vB.ORD_MEM_NRIC ,
+		                                            vB.ORD_MEM_TYPE_ID ,
+		                                            vB.ORD_MEM_TYPE_CODE ,
+		                                            vB.ORD_MEM_TYPE_NAME ,
+		                                            vB.COOL_OFF_PRIOD ,
+		                                            vB.KEYIN_BRNCH_ID ,
+		                                            vB.KEYIN_BRNCH_CODE ,
+		                                            vB.KEYIN_BRNCH_NAME ,
+		                                            vB.ORD_REM ,
+		                                            vB.RENT_CHK_ID ,
+		                                            vB.ORD_HM_ID ,
+		                                            vB.ORD_SM_ID ,
+		                                            vB.ORD_GM_ID ,
+		                                            vB.ORD_ADDR_ID ,
+		                                            vB.ORD_CNTC_ID ,
+		                                            vB.ORD_PROMO_RELATED_NO ,
+		                                            vB.UPD_DT ,
+		                                            vB.UPD_USER_ID ,
+		                                            vB.JOM_PAY_REF ,
+		                                            vB.STK_CTGRY_ID ,
+		                                            vB.STK_CTGRY_NAME ,
+		                                            vB.CUST_TYPE_ID ,
+		                                            vB.CUST_BILL_ID ,
+		                                            vB.OBLIGT_YEAR   
+		                                     FROM SAL1006V vB ) E4   ON E4.ORD_ID = F1.OrderID1
+	          WHERE 1=1
+	          <if test="orgCode != null and orgCode != ''">
+	              AND F1.ORG_CODE = #{orgCode}
+	          </if>
+	          <if test="grpCode != null and grpCode != ''">
+	              AND F1.GRP_CODE = #{grpCode}
+	          </if>
+	          <if test="deptCode != null and deptCode != ''">
+	              AND F1.DEPT_CODE = #{deptCode}
+	          </if>
+	          <if test="ordNo != null and ordNo != ''">
+	              AND F1.ORD_NO = #{ordNo}
+	          </if>
+	          <if test="custName != null and custName != ''">
+	              AND UPPER(F1.CUST_NAME) LIKE '%'|| UPPER(#{custName}) || '%'
+	          </if>
+	          <if test="custIc != null and custIc != ''">
+	              AND UPPER(F1.CUST_IC) LIKE '%'|| UPPER(#{custIc}) || '%'
+	          </if>
+	          <if test="ordNo != null and ordNo != ''">
+	              AND F1.ORD_NO = #{ordNo}
+	          </if>
+	          <if test="createStDate != null and createStDate != ''">
+	              AND  F1.ORD_DT <![CDATA[>=]]> TO_DATE( #{createStDate} , 'DD/MM/YYYY')
+	          </if>
+	          <if test="createEnDate != null and createEnDate != ''">
+	              AND F1.ORD_DT <![CDATA[<=]]> TO_DATE( #{createEnDate} , 'DD/MM/YYYY')
+	          </if>
+	          <if test="ordNo != null and ordNo != ''">
+	              AND F1.ORD_NO = #{ordNo}
+	          </if>
+	          <if test="stkId != null and stkId != ''">
+	              AND F1.STK_ID = #{cmbProduct}
+	          </if>
+	          <if test="netSalesMonth != null and netSalesMonth != ''">
+	              AND F1.PV_YEAR = #{pvYear} 
+	              AND F1.PV_MONTH = #{pvMonth} 
+	          </if>
+	          <if test="salesmanCode != null and salesmanCode != ''">
+	              AND F1.SALESMAN_CODE = #{salesmanCode}
+	          </if>
+	          <if test="contactNum != null and contactNum != ''">
+	              AND (F1.MAIL_CNT_TEL_M = #{contactNum}
+	                      OR F1.MAIL_CNT_TEL_O = #{contactNum}
+	                      OR F1.MAIL_CNT_TEL_F = #{contactNum}
+	                      OR F1.MAIL_CNT_TEL_R = #{contactNum}
+	                      OR F1.INST_CNT_TEL_M = #{contactNum}
+	                      OR F1.INST_CNT_TEL_F = #{contactNum}
+	                      OR F1.INST_CNT_TEL_O = #{contactNum}
+	                      OR F1.INST_CNT_TEL_R = #{contactNum})
+	          </if>
+	          <if test="promoCode != null and promoCode != ''">
+	              AND F1.PROMO_CODE = #{promoCode}
+	          </if>
+	          <if test="cmbCondition != null and cmbCondition != ''">
+	              AND F1.INSTALL_STUS_ID = #{cmbCondition}
+	          </if>
+               ) D1
+        ORDER BY D1.ORD_ID DESC
+              
+    </select>
+    
+</mapper>
