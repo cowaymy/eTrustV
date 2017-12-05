@@ -151,7 +151,7 @@
 		         LEFT JOIN SYS0028M t1   ON t1.WH_LOC_ID = t0.WH_ID
 		 WHERE  t1.WH_LOC_CODE NOT LIKE 'CT%' 
 	 <if test="cdcCbBox != null and cdcCbBox !=''">
-		   AND t0.CDC= #{cdcCbBox} 
+		   AND t0.CDC= DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','') 
 	 </if>
 	 
   </select> 

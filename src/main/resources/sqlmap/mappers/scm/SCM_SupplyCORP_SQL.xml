@@ -40,7 +40,7 @@
       FROM SCM0005M 
      WHERE PLAN_YEAR = #{scmYearCbBox}
        AND PLAN_WEEK = #{scmPeriodCbBox}
-       AND CDC = #{cdcCbBox}
+       AND CDC = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','') 
   </select> 
   
   <select id="selectSalesPlanMaster" parameterType="Map" resultType="egovMap">
@@ -69,7 +69,7 @@
                                 FROM SCM0005M  
                                WHERE PLAN_YEAR = #{scmYearCbBox} 
                                  AND PLAN_WEEK = #{scmPeriodCbBox} 
-                                 AND CDC = #{cdcCbBox} 
+                                 AND CDC = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','') 
                              )
        AND CMPLT = 0
   </select> 
@@ -140,7 +140,7 @@
                                 FROM SCM0005M  
                                WHERE PLAN_YEAR = #{scmYearCbBox} 
                                  AND PLAN_WEEK = #{scmPeriodCbBox} 
-                                 AND CDC = #{cdcCbBox} 
+                                 AND CDC = DECODE(#{cdcCbBox},'1001','KL','1002','PN','1003','JB','1004','KK','1005','KC','') 
                             )
         AND S06D.STOCK_CODE = S26M.STK_CODE
       <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
