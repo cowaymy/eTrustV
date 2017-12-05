@@ -128,7 +128,12 @@
                             dataField : "codyBrnchCode",
                             headerText : "Branch Code",
                             width : 120
-                    }, {
+                    },{
+                        dataField : "codyMangrUserId",
+                        headerText : "Cody Manager",
+                        width : 120
+                    },
+                    {
                         dataField : "address",
                         headerText : "Installation Address",
                         width : 120}
