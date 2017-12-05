@@ -2639,9 +2639,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               FULL_NAME = #{fullName},
               DOB = TO_DATE(#{Birth},'yyyy-mm-dd'),              
               GENDER = #{gender},
-              RACE=TO_NUMBER(#{cmbRace}),
-              MARTL = TO_NUMBER(#{marrital}),
-              NATION = TO_NUMBER(#{national}),
+              RACE=TO_NUMBER(TRIM(#{cmbRace})),
+              MARTL = TO_NUMBER(TRIM(#{marrital})),
+              NATION = TO_NUMBER(TRIM(#{national})),
               ]]>
               <!--
               ADDR1 = #{},
@@ -2656,9 +2656,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               ADDR_DTL = #{addrDtl1},
               STREET = #{streetDtl1},
               
-              TEL_OFFICE = TO_NUMBER(#{officeNo}),
-              TEL_HUSE = TO_NUMBER(#{residenceNo}),
-              TEL_MOBILE = TO_NUMBER(#{mobileNo}),
+              TEL_OFFICE = #{officeNo},
+              TEL_HUSE = #{residenceNo},
+              TEL_MOBILE = #{mobileNo},
               EMAIL = #{email},
               SPUSE_CODE = #{spouseCode},
               SPOUSE_NAME = #{sponsorNm},
@@ -2667,26 +2667,26 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               SPOUSE_TEL_CNTC = #{spouseContat},
               ]]>
             <if test="spouseDOB != null and spouseDOB != '' and spouseDOB != '01/01/1900'" >
-            SPOUSE_DOB = TO_DATE(#{spouseDob},'dd-mm-yyyy'),
+            SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
             </if>
              <if test="spouseDOB != null and spouseDOB != '' and spouseDOB == '01/01/1900'" >
-            SPOUSE_DOB = TO_DATE(#{spouseDob},'dd-mm-yyyy'),
+            SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
             </if>
             <![CDATA[                            
-              EDC_LEV = TO_NUMBER(#{educationLvl}),
-              LANG = TO_NUMBER(#{language}),
+              EDC_LEV = TO_NUMBER(TRIM(#{educationLvl})),
+              LANG = TO_NUMBER(TRIM(#{language})),
               BANK_ACC_NO = #{bankAccNo},
               SPONS_CODE = #{sponsorCd},
               AGRMNT_NO = #{agrmntNo},
-              BRNCH = TO_NUMBER(#{branch}),
-              SYNC_CHK = TO_NUMBER(#{syncChk}),
-              TRNSPRT = TO_NUMBER(#{transportCd}), 
+              BRNCH = TO_NUMBER(TRIM(#{branch})),
+              SYNC_CHK = TO_NUMBER(TRIM(#{syncChk})),
+              TRNSPRT = TO_NUMBER(TRIM(#{transportCd})), 
               TR_NO = #{trNo},
               UPD_DT = SYSDATE,
-              UPD_USER_ID = TO_NUMBER(#{user_id}),
+              UPD_USER_ID = TO_NUMBER(TRIM(#{user_id})),
               JOIN_DT = TO_DATE(#{joinDate},'yyyy-mm-dd'),
-              RANK = TO_NUMBER(#{rank})
-        WHERE  ( MEM_ID = TO_NUMBER(#{MemberID}) )
+              RANK = TO_NUMBER(TRIM(#{rank}))
+        WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
         
         ]]>
     </update>

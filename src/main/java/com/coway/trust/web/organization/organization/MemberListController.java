@@ -673,7 +673,8 @@ public class MemberListController {
 		//memberListService.saveDocSubmission(memberListVO,params, sessionVO);
 
 		Boolean success = false;
-		String msg = "";
+		String msg = "";		
+		
 		
 
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -681,6 +682,9 @@ public class MemberListController {
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		
+		int userId = sessionVO.getUserId();
+		formMap.put("user_id", userId);
 
 		logger.debug("udtList : {}", updList);
 		logger.debug("formMap : {}", formMap);
@@ -716,7 +720,7 @@ public class MemberListController {
    	if(memCode.equals("") && memCode.equals(null)){
    		message.setMessage("fail saved");
    	}else{
-   		message.setMessage("Compelete to Create a Member Code : " +memCode);
+   		message.setMessage("Compelete to Edit a Member Code : " +memCode);
    	}
    	logger.debug("message : {}", message);
 

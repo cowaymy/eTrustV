@@ -73,8 +73,8 @@ function fn_departmentCode(value){
                 memberLvl : 3,
                 flag :  "%CCS%"
         };
-           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-           doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+           //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
 	   case 3 :
@@ -84,8 +84,8 @@ function fn_departmentCode(value){
                 memberLvl : 3,
                 flag :  "%CTS%"
         };
-           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-           doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
+           //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           //doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
            
@@ -96,7 +96,7 @@ function fn_departmentCode(value){
                 memberLvl : 100,
                 flag :  "-"
         };
-           doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
+           //doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
            break;
            
 	   case 5 :
@@ -106,8 +106,8 @@ function fn_departmentCode(value){
                 memberLvl : 3,
                 flag :  "%CCS%"
         };
-           doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-           doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+           //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+           //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
            break;
 	}
@@ -165,10 +165,11 @@ $(document).ready(function() {
     //$("#cmbRace").val(race_no).attr("selected", true);
     /**/
     
-    
+    /*
     $("#deptCd").change(function (){
     	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
+    */
     
 	createAUIGridDoc();
 	fn_docSubmission();
@@ -212,8 +213,8 @@ function fn_setMemInfo(data){
 	fn_departmentCode(data.memType);
 	
 	var jsonObj =  GridCommon.getEditData(myGridID_Doc);
-    doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-    doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
+    //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+    //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
     doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
 
 	if(data.gender=="F"){
@@ -225,9 +226,12 @@ function fn_setMemInfo(data){
 
     $("#cmbRace option[value="+ data.c61 +"]").attr("selected", true);
     
-    $("#national option[value="+ data.c35 +"]").attr("selected", true);
+    
+    //$("#national option[value="+ data.c35 +"]").attr("selected", true);
     
     $("#nric").val(data.nric);
+    
+    $("#fullName").val(data.c65);
     
     $("#marrital option[value="+ data.c27 +"]").attr("selected", true);
     
@@ -245,10 +249,13 @@ function fn_setMemInfo(data){
     
     $("#sponsorNric").val(data.c53);
     
+    
+    
+    /*
     if(data.c4!=null&&jQuery.trim(data.c4).length>0){
         $("#branch option[value="+ data.c4 +"]").attr("selected", true);
     }
-    
+    */
     if(data.c41!=null&&jQuery.trim(data.c41).length>0){
         $("#deptCd option[value="+ data.c41 +"]").attr("selected", true);
     }
@@ -437,7 +444,6 @@ function fn_saveValidation(){
         valid = false;
         message += "* Please select marrital. \n ";
     }
-	alert($("#Birth").val());
     if ($("#Birth").val() == ""){
         valid = false;
         message += "* Please select DOB. \n ";
@@ -504,16 +510,16 @@ function fn_saveValidation(){
     //endregion
 
     //region Check Phone No
-    if (jQuery.trim($("#mobileNo").val()) &&
-        jQuery.trim($("#officeNo").val()) &&
-        jQuery.trim($("#residenceNo").val()))
+    if (!(jQuery.trim($("#mobileNo").val()).length>0) &&
+        !(jQuery.trim($("#officeNo").val()).length>0) &&
+        !(jQuery.trim($("#residenceNo").val()).length>0))
     {
         valid = false;
         message += "* Please key in the at least one contact no. \n ";
     }
     else
     {
-        if (jQuery.trim($("#mobileNo").val()))
+        if (jQuery.trim($("#officeNo").val()).length>0)
         {
         	
             if(!jQuery.isNumeric(jQuery.trim($("#mobileNo").val())))            
@@ -522,7 +528,7 @@ function fn_saveValidation(){
                 message += "* Invalid telephone number (Mobile).  \n ";
             }
         }
-        if (jQuery.trim($("#officeNo").val()))
+        if ((jQuery.trim($("#officeNo").val())).length>0)
         {
         	if(!jQuery.isNumeric(jQuery.trim($("#officeNo").val())))
             {
@@ -530,7 +536,7 @@ function fn_saveValidation(){
                 message += "* Invalid telephone number (Office). \n ";
             }
         }
-        if (jQuery.trim($("#residenceNo").val()))
+        if ((jQuery.trim($("#residenceNo").val())).length>0)
         {
         	if(!jQuery.isNumeric(jQuery.trim($("#residenceNo").val())))
             {
@@ -540,7 +546,7 @@ function fn_saveValidation(){
         }
     }
     
-    if (jQuery.trim($("#spouseContat").val()))
+    if ((jQuery.trim($("#spouseContat").val())).length>0)
     {
     	if(!jQuery.isNumeric(jQuery.trim($("#spouseContat").val())))
         {
@@ -551,7 +557,7 @@ function fn_saveValidation(){
     //endregion
 
     //region Check Email
-    if (jQuery.trim($("#email").val()))
+    if ((jQuery.trim($("#email").val())).length>0)
     {
         if (!regEmail.test($("#email").val()))
         {
@@ -571,7 +577,7 @@ function fn_saveValidation(){
                 valid = false;
                 message += "* Please select the issued bank. \n ";
             }
-            if (!jQuery.trim($("#bankAccNo").val()))
+            if (!(jQuery.trim($("#bankAccNo").val())).length>0)
             {
                 valid = false;
                 message += "* Please key in the bank account no. \n ";
@@ -589,7 +595,7 @@ function fn_saveValidation(){
                 valid = false;
                 message += "* Please select the issued bank. \n ";
             }
-        	if (!jQuery.trim($("#bankAccNo").val()))
+        	if (!(jQuery.trim($("#bankAccNo").val())).length>0)
             {
                 valid = false;
                 message += "* Please key in the bank account no. \n ";
@@ -675,7 +681,7 @@ function fn_saveValidation(){
     //region Check Cody PA Date  codyPaExpr
     if (action == "2") //cyc 01/03/2017
     {
-    	if (jQuery.trim($("#codyPaExpr").val()))
+    	if ((jQuery.trim($("#codyPaExpr").val())).length>0)
         {
             valid = false;
             message = "Cody agreement PA date are compulsory";
@@ -857,9 +863,11 @@ function fn_selectState(selVal){
 <input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="memCode" name="memCode"/>
 <input type="hidden" value="<c:out value="${memberView.c64}"/> "  id="userId" name="userId"/>
 <input type="hidden" value="<c:out value="${memberView.rank}"/> "  id="rank" name="rank"/>
-<input type="hidden" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
+<input type="text" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
 <input type="hidden" value="<c:out value="${memberView.c66}"/> "  id="agrmntNo" name="agrmntNo"/>
 <input type="hidden" value="<c:out value="${memberView.c67}"/> "  id="syncChk" name="syncChk"/>
+<input type="hidden" value="<c:out value="${memberView.c35}"/> "  id="national" name="national"/>
+<input type="text" value="<c:out value="${memberView.c3} " /> "  id="branch" name="branch"/>
 <input type="hidden"   id="groupCode[memberLvl]" name="groupCode[memberLvl]"/>
 <input type="hidden"   id="groupCode[flag]" name="groupCode[flag]"/>
 
@@ -929,7 +937,7 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c29}"/>" />
+    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c58}"/>" />
     </td>
     <th scope="row">Race<span class="must">*</span></th>
     <td>
@@ -940,8 +948,11 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Nationality<span class="must">*</span></th>
     <td>
+    <span><c:out value="${memberView.c36} " /></span>
+    <!-- 
     <select class="w100p" id="national" name="national">
     </select>
+     -->
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
@@ -1043,14 +1054,25 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Branch<span class="must">*</span></th>
     <td>
+     <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>
+    </td>
+    <!-- 
+    <td>
     <select class="w100p" id="branch" name="branch">
     </select>
     </td>
+    -->
     <th scope="row">Department Code<span class="must">*</span></th>
+    <td>
+     <span><c:out value="${memberView.c41}"/></span>
+     <!-- <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span> -->
+    </td>
+    <!-- 
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
     </select>
     </td>
+    -->
     <th scope="row">Transport Code<span class="must">*</span></th>
     <td>
     <select class="w100p disabled"  id="transportCd" name="transportCd">
@@ -1197,8 +1219,9 @@ function fn_selectState(selVal){
 <tbody>
 <tr>
     <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
-    <td  class="hideContent"> 
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/>
+    <td  class="hideContent">
+    <span><span><c:out value="${PAExpired.agExprDt}"/></span></span> 
+    <!-- <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/> -->
     </td>
 </tr>
 </tbody>
@@ -1227,29 +1250,29 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">MCode</th>
     <td>
-    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode" />
+    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode"  value="<c:out value="${memberView.spouseCode}"/> "/>
     </td>
     <th scope="row">Spouse Name</th>
     <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName"/>
+    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName" value="<c:out value="${memberView.spouseName}"/> "/>
     </td>
     <th scope="row">NRIC / Passport No.</th>
     <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNRIC" name="spouseNRIC"/>
+    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNRIC" name="spouseNRIC" />
     </td>
 </tr>
 <tr>
     <th scope="row">Occupation</th>
     <td>
-    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" name="spouseOcc"/>
+    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" value="<c:out value="${memberView.spouseOcpat}"/> " />
     </td>
     <th scope="row">Date of Birth</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDOB" name="spouseDOB" />
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDOB" name="spouseDOB" value="<c:out value="${memberView.c58}"/> " />
     </td>
     <th scope="row">Contact No.</th>
     <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" />
+    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" value="<c:out value="${memberView.spouseTelCntc}"/> " />
     </td>
 </tr>
 </tbody>
