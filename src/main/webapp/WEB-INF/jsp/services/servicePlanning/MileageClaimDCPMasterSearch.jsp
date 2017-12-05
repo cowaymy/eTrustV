@@ -95,7 +95,7 @@ function DCPMasterGrid() {
                           { dataField : "memType", headerText  : "Member Type",    width : 100 , editable: false,
                                   editRenderer : {
                                       type : "ComboBoxRenderer",
-                                      showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                      showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                       listFunction : function(rowIndex, columnIndex, item, dataField) {
                                           var list = getTypeComboList();
                                           return list;
@@ -105,7 +105,7 @@ function DCPMasterGrid() {
                           { dataField : "brnchCode", headerText  : "Branch",width : 100, editable: false,
                                   editRenderer : {
                                       type : "ComboBoxRenderer",
-                                      showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                      showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                       listFunction : function(rowIndex, columnIndex, item, dataField) {
                                           var list = getBrnchComboList();
                                           return list;
@@ -118,7 +118,7 @@ function DCPMasterGrid() {
                           { dataField : "cityFrom", headerText  : "CITY From",  width  : 150, editable: false,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
-                                          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                          showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                           listFunction : function(rowIndex, columnIndex, item, dataField) {
                                               var list = getAreaComboList(); // 임의값
                                               return list;
@@ -128,7 +128,7 @@ function DCPMasterGrid() {
                           { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200, editable: false,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
-                                          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                          showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                           listFunction : function(rowIndex, columnIndex, item, dataField) {
                                               var list = getAreaComboList();
                                               return list;
@@ -138,27 +138,27 @@ function DCPMasterGrid() {
                           { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100, editable: false,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
-                                          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                          showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                           listFunction : function(rowIndex, columnIndex, item, dataField) {
                                               var list = getAreaComboList(); // 임의값
                                               return list;
                                           },
                                           keyField : "id1"
                                       }},
-                          { dataField : "cityTo", headerText  : "CITY TO",  width  : 150, editable: false,
+                          { dataField : "cityTo", headerText  : "CITY To",  width  : 150, editable: false,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
-                                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                              showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                               listFunction : function(rowIndex, columnIndex, item, dataField) {
                                                   var list = getAreaComboList(); // 임의값
                                                   return list;
                                               },
                                               keyField : "id1"
                                           }},
-                          { dataField : "dcpTo",       headerText  : "DCP TO",  width  : 200, editable: false,
+                          { dataField : "dcpTo",       headerText  : "DCP To",  width  : 200, editable: false,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
-                                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                              showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                               listFunction : function(rowIndex, columnIndex, item, dataField) {
                                                   var list = getAreaComboList();
                                                   return list;
@@ -168,7 +168,7 @@ function DCPMasterGrid() {
                           { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100, editable: false,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
-                                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                              showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
                                               listFunction : function(rowIndex, columnIndex, item, dataField) {
                                                   var list = getAreaComboList(); // 임의값
                                                   return list;
@@ -286,7 +286,7 @@ function DCPMasterGrid() {
      // 171123 :: 선한이
      // 엑셀 내보내기(Export);
      function fn_exportTo() {
-         GridCommon.exportTo("calculation_DCPMaster_grid_wap", 'xlsx', "Mileage Claim Master");
+         GridCommon.exportTo("calculation_DCPMaster_grid_wap", 'xlsx', "DCP Mgmt");
      };
      
      // 엑셀 업로드
@@ -318,7 +318,7 @@ function DCPMasterGrid() {
              var cnt = result;
              if(cnt > 0){
                  //var fileName = $("#fileName").val() +"_"+today;
-                 var fileName="Mileage Claim Master.xlsx";
+                 var fileName="DCP Mgmt.xlsx";
                  var searchDt = $("#CMM0006T_Dt").val();
                  var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
                  var month = searchDt.substr(0,searchDt.indexOf("/"));
@@ -344,12 +344,12 @@ function DCPMasterGrid() {
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
-    <li>Mileage Claim Master</li>
+    <li>DCP Mgmt.</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Mileage Claim Master</h2>
+<h2>DCP Mgmt.</h2>
 <ul class="right_btns">
 
     <!-- 171123 :: 선한이 -->
