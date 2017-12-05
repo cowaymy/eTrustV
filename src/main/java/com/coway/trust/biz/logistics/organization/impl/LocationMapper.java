@@ -21,5 +21,7 @@ public interface LocationMapper {
 	int locCreateSeq();
 
 	List<EgovMap> selectLocationCodeList(Map<String, Object> params);
+	
+	int selectLocationChk(String params);
 
 }
