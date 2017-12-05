@@ -229,4 +229,10 @@
 		       </if>
         ORDER BY WH_LOC_CODE        
     </select>
+    
+    <select id="selectLocationChk" parameterType="String"  resultType="integer">
+        select count(*) cnt from sys0028m where WH_LOC_CODE=#{loccode}
+    </select>
+    
+    
 </mapper>
