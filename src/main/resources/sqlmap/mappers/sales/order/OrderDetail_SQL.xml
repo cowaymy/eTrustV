@@ -785,7 +785,7 @@
                     , T1.DOC_TYPE_ID DOC_TYPE_ID  
                     , T1.DOC_SO_ID DOC_SO_ID  
                     , T2.CODE_NAME CODE_NAME  
-                    , NVL(T1.DOC_SUB_DT, TO_DATE('1900-01-01', 'YYYY-MM-DD')) DOC_SUB_DT
+                    , DECODE(T1.DOC_SUB_DT, NULL, '01/01/1900', TO_CHAR(T1.DOC_SUB_DT, 'DD/MM/YYYY')) DOC_SUB_DT
                     , NVL(T1.DOC_COPY_QTY, 0) DOC_COPY_QTY
                  FROM ORG0010D T1
                  JOIN SYS0013M T2   ON T2.CODE_ID = T1.DOC_TYPE_ID
