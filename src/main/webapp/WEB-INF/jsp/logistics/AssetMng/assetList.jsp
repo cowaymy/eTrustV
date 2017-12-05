@@ -783,23 +783,11 @@
     
     function getAssetListAjax() {
         var param = $('#searchForm').serialize();
-        $.ajax({
-            type : "POST",
-            url : "/logistics/assetmng/assetList.do?" + param,
-            //url : "/stock/StockList.do",
-            //data : param,
-            dataType : "json",
-            contentType : "application/json;charset=UTF-8",
-            success : function(data) {
-                var gridData = data             
-            
-                AUIGrid.setGridData(myGridID, gridData.data);
-            },
-            error : function(jqXHR, textStatus, errorThrown) {
-                alert("실패하였습니다.");
-            },
-           
-        });
+        var url = "/logistics/assetmng/assetList.do"
+        Common.ajax("GET" , url , param , function(data){
+        	 var gridData = data;     
+        	AUIGrid.setGridData(myGridID, gridData.data);
+        }); 
     }
 
     
