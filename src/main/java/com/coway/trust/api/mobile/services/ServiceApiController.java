@@ -313,6 +313,14 @@ public class ServiceApiController {
         String strToday = sdf.format(cal.getTime());
         
 		//현재 년도, 월, 일
+	    StringBuffer today2 = new StringBuffer();
+        today2.append(String.format("%02d", cal.get(cal.DATE)));
+	    today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+	    today2.append(String.format("%04d", cal.get(cal.YEAR)));
+	    
+	    String toSetlDt = today2.toString(); 
+	    
+	    
 		int year = cal.get ( cal.YEAR );
 		int month = cal.get ( cal.MONTH ) + 1 ;
 		int date = cal.get ( cal.DATE ) ;
@@ -367,7 +375,8 @@ public class ServiceApiController {
 				params.put("hidschdulId", getHsBasic.get("schdulId"));
 				params.put("hidSalesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
 				params.put("hidCodyId", (String)userId);
-				params.put("settleDate", todate2);
+//				params.put("settleDate", todate2);
+				params.put("settleDate", toSetlDt);
 				params.put("resultIsSync", '0');
 				params.put("resultIsEdit", '0');
 				params.put("resultStockUse", '1');
@@ -978,7 +987,7 @@ public class ServiceApiController {
 		String transactionId = "";
 		
 		Calendar cal = Calendar.getInstance();
-		 
+	    
 		//현재 년도, 월, 일
 		int year = cal.get ( cal.YEAR );
 		int month = cal.get ( cal.MONTH ) + 1 ;
