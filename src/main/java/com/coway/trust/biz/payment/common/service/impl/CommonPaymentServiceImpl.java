@@ -1097,6 +1097,40 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	return returnList;    	
     }
     
+    
+    /*****************************************************************************
+	 * Outright Membership 
+	 ******************************************************************************/
+    /**
+	 * Payment - Outright Membership Order 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	@Override
+	public List<EgovMap>  selectOutSrvcOrderInfo(Map<String, Object> params) {
+		//return commonPaymentMapper.selectOutSrvcOrderInfo(params);
+		
+		
+		List<EgovMap> rcList = commonPaymentMapper.selectOutSrvcOrderInfo(params);
+		
+		Map<String, Object> paymentInfo = null;
+		
+		if(rcList != null && rcList.size() > 0){
+			for (EgovMap obj : rcList) 
+			{
+				paymentInfo = commonPaymentMapper.selectOutSrvcBillInfo(obj);
+				
+				obj.put("packageCharge", paymentInfo.get("packageCharge"));
+				obj.put("filterCharge", paymentInfo.get("filterCharge"));
+				obj.put("packagePaid", paymentInfo.get("packagePaid"));
+				obj.put("filterPaid", paymentInfo.get("filterPaid"));				
+			}	
+		}		
+		return rcList;
+	}
+    
     /**
 	 * Payment - 처리 
 	 * @param params

@@ -144,4 +144,66 @@ public class CommonPopupPaymentController {
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
 	}
+	
+	/******************************************************
+	 * Payment - Outright Membership Search
+	 *****************************************************/	
+	/**
+	 * Payment - Outright Membership Search Pop-up 초기화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initCommonQuotationSearchPop.do")
+	public String initCommonQuotationSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("callPrgm", params.get("callPrgm"));
+		return "payment/common/quotationSearchPop";
+	}
+	
+	/**
+	 * Payment - Outright Membership Search Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectCommonQuotationSearchPop.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectCommonQuotationSearchPop(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+			, @RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = commonPopupPaymentService.selectCommonQuotationSearchPop(params);
+		int totalRowCount = commonPopupPaymentService.countCommonQuotationSearchPop(params);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("resultList", resultList);
+		result.put("totalRowCount", totalRowCount);
+
+		return ResponseEntity.ok(result);
+		
+		
+	}
+	
+	
+	/**
+	 * Payment - Outright Membership Search Pop-up 페이지 이동
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectCommonQuotationSearchPagingPop.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectCommonQuotationSearchPagingPop(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+			, @RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = commonPopupPaymentService.selectCommonQuotationSearchPop(params);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("resultList", resultList);
+
+		return ResponseEntity.ok(result);
+	}
 }

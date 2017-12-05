@@ -128,7 +128,8 @@
             CUST_NM,
             DSCNT_AMT,
             SRV_LDGR_CNTRCT_ID,
-            BILL_AS_ID
+            BILL_AS_ID,            
+            SRV_MEM_ID
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
             #{seq},
@@ -154,7 +155,8 @@
             #{custNm},
             #{discountAmt},
             #{srvcContractID},
-            #{billAsId}
+            #{billAsId},
+            #{srvMemId}
         )
     </insert>
     

@@ -48,5 +48,29 @@ public class CommonPopupPaymentServiceImpl extends EgovAbstractServiceImpl imple
 		return commonPopupPaymentMapper.selectCommonContractSearchPop(params);
 	}
 	
+	 /**
+	 * Payment - Outright Membership Search Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public List<EgovMap>  selectCommonQuotationSearchPop(Map<String, Object> params) {
+		return commonPopupPaymentMapper.selectCommonQuotationSearchPop(params);
+	}
+	
+	/**
+	 * Payment - Outright Membership Search Pop-up 리스트 카운트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public int countCommonQuotationSearchPop(Map<String, Object> params) {
+		return commonPopupPaymentMapper.countCommonQuotationSearchPop(params);
+	}
+	
 	
 }

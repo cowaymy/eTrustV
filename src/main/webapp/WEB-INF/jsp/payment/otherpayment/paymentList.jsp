@@ -1,0 +1,192 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form"   uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="ui"     uri="http://egovframework.gov/ctl/ui"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<style type="text/css">
+.my-custom-up div{
+    color:#FF0000;
+}
+</style>
+<script type="text/javaScript">
+	//AUIGrid 그리드 객체
+	var myGridID;
+	
+	//Grid Properties 설정
+	var gridPros = {
+	        // 편집 가능 여부 (기본값 : false)
+	        editable : false,        
+	        // 상태 칼럼 사용
+	        showStateColumn : false,
+	        // 기본 헤더 높이 지정
+	        headerHeight : 35,
+	        
+	        softRemoveRowMode:false
+	
+	};
+
+	// AUIGrid 칼럼 설정
+	var columnLayout = [ 
+        {dataField : "groupSeq",headerText : "Payment<br>Group No.",width : 100 , editable : false},
+        {dataField : "appType",headerText : "App. Type",width : 130 , editable : false},
+        {dataField : "payItmModeId",headerText : "Pay Type ID",width : 240 , editable : false, visible : false},
+        {dataField : "payItmModeNm",headerText : "Pay Type",width : 120 , editable : false},
+        {dataField : "custId",headerText : "Customer<br>ID",width : 100 , editable : false},
+		{dataField : "salesOrdNo",headerText : "Sales<br>Order", editable : false},
+		{dataField : "payItmRefDt",headerText : "Transaction<br>Date",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "orNo",headerText : "WOR No.",width : 120,editable : false},
+		{dataField : "brnchId",headerText : "Key In<br>Branch",width : 100,editable : false},
+		{dataField : "crcStateMappingId",headerText : "CRC State.<br>ID",width : 110,editable : false},
+		{dataField : "crcStateMappingDt",headerText : "CRC Mapping<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "bankStateMappingId",headerText : "Bank State.<br>ID",width : 110,editable : false},
+		{dataField : "bankStateMappingDt",headerText : "Bank Mapping<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "revStusId",headerText : "Reverse Status ID",width : 110,editable : false, visible : false},
+		{dataField : "revStusNm",headerText : "Reverse<br>Status",width : 110,editable : false},
+		{dataField : "revDt",headerText : "Reverse<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"}
+	];
+	
+    
+	$(document).ready(function(){
+		
+		
+		//그리드 생성
+	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+	    
+	});
+
+    // ajax list 조회.
+    function searchList(){
+    	
+    	if(FormUtil.checkReqValue($("#ordId"))){
+            Common.alert('* Please search order number first. <br />');
+            return;
+        }
+        
+        if(FormUtil.checkReqValue($("#tranDateFr")) ||
+			FormUtil.checkReqValue($("#tranDateTo"))){
+            Common.alert('* Please input Transaction Date <br />');
+            return;
+        }
+    	
+    	Common.ajax("POST","/payment/selectPaymentList.do",$("#searchForm").serializeJSON(), function(result){    		
+    		AUIGrid.setGridData(myGridID, result);
+    	});
+    }
+    
+    // 화면 초기화
+    function clear(){
+    	//화면내 모든 form 객체 초기화
+    	$("#searchForm")[0].reset();
+    	
+    	//그리드 초기화
+    	//AUIGrid.clearGridData(myGridID);
+    }
+    
+    //Search Order 팝업
+    function fn_orderSearchPop(){
+    	Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "RENTAL_PAYMENT", indicator : "SearchOrder"});
+    }
+    
+    //Search Order 팝업에서 결과값 받기
+    function fn_callBackRentalOrderInfo(ordNo, ordId){
+    	$("#ordId").val(ordId);
+        $("#ordNo").val(ordNo);
+   }
+    
+
+  //Search Order confirm
+  function fn_orderConfirm(){
+      
+	  var ordNo = $("#ordNo").val();
+      
+      if(ordNo != ''){
+          //Order Basic 정보 조회
+          Common.ajax("GET", "/payment/common/selectOrdIdByNo.do", {"ordNo" : ordNo}, function(result) {        
+              if(result != null && result.salesOrdId != ''){
+                  $("#ordId").val(result.salesOrdId);
+                  $("#ordNo").val(result.salesOrdNo);
+              }            
+          });
+      }
+  }
+    
+    
+
+</script>
+<!-- content start -->
+<section id="content">
+    <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li>Payment</li>
+        <li>Other Payment</li>        
+        <li>Payment List</li>
+    </ul>
+
+    <!-- title_line start -->
+    <aside class="title_line">
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <h2>Payment List</h2>
+        <ul class="right_btns">
+            <li><p class="btn_blue"><a href="">Request DCF</a></p></li>
+            <li><p class="btn_blue"><a href="">Request F/T</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>     
+            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
+        </ul>
+    </aside>
+    <!-- title_line end -->
+
+    <!-- search_table start -->
+    <section class="search_table">
+        <!-- search_table start -->
+        <form id="searchForm" action="#" method="post">
+            <input type="hidden" name="ordId" id="ordId" />
+            <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Sales Order No</th>
+                        <td>
+                            <input type="text" id="ordNo" name="ordNo" class="" />
+                            <p class="btn_sky">
+                                 <a href="javascript:fn_orderConfirm();" id="confirm">Confirm</a>
+                             </p>
+                             <p class="btn_sky">
+                                 <a href="javascript:fn_orderSearchPop();" id="search">Search</a>
+                             </p>
+                        </td>
+                        <th scope="row">Transaction Date</th>
+                        <td>
+                            <!-- date_set start -->
+                            <div class="date_set w100p">
+                            <p><input type="text" id="tranDateFr" name="tranDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="tranDateTo" name="tranDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- table end -->
+        </form>
+    </section>
+    <!-- search_table end -->
+
+    <!-- search_result start -->
+    <section class="search_result">
+        <!-- grid_wrap start -->
+        <article id="grid_wrap" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- search_result end -->
+
+</section>
+<!-- content end -->
+
+

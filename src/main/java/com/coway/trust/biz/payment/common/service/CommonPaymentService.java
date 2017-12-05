@@ -80,6 +80,15 @@ public interface CommonPaymentService{
     List<EgovMap> selectOrderInfoBillPayment(Map<String, Object> params);
     
     /**
+	 * Payment - Outright Membership Order 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+    List<EgovMap> selectOutSrvcOrderInfo(Map<String, Object> params);
+    
+    /**
    	 * Payment - 등록 처리 
    	 * @param params
    	 * @param model

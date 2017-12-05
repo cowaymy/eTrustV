@@ -436,6 +436,8 @@ public class ClaimController {
 		// Claim Detail List 조회
 		List<EgovMap> claimDetailList = claimService.selectClaimDetailById(claimMap);
 		
+		System.out.println("This is Claim Controller create Claim File size  : " + claimDetailList.size());
+		
 		// 파일 생성하기
 		this.createClaimFileMain(claimMap,claimDetailList);
 		
@@ -1166,7 +1168,7 @@ public class ClaimController {
 		String sFile2nd = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd" , "ddMMyyyy") + "01.DTR";
 		
 		//파일 디렉토리
-		File file2nd = new File("C:/COWAY_PROJECT/TOBE/CRT/PBB/ClaimBank/" + sFile2nd);
+		File file2nd = new File(filePath + "/PBB/ClaimBank/" + sFile2nd);
 		
 		// 디렉토리 생성
 		if (!file2nd.getParentFile().exists()) {
@@ -1232,7 +1234,7 @@ public class ClaimController {
 		String sFile = "AB_00035_Datafile_" + todayDate + "_001.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/RHB/ClaimBank/" + sFile);
+		File file = new File(filePath +"/RHB/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -1358,7 +1360,7 @@ public class ClaimController {
 		String sFile = "BSN" + todayDate + "B01.txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/BSN/ClaimBank/" + sFile);
+		File file = new File(filePath +"/BSN/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -1466,7 +1468,7 @@ public class ClaimController {
 		String sFile = "MyClear_Billing_" + todayDate + ".txt";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/MyClear/ClaimBank/" + sFile);
+		File file = new File(filePath +"/MyClear/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
@@ -1588,7 +1590,7 @@ public class ClaimController {
 				
 				if(rowNo == 0){
 					//파일 디렉토리
-					file = new File("C:/COWAY_PROJECT/TOBE/CRC/CRC_" + todayDate + "_" + fileNo + ".csv");
+					file = new File(filePath +"/CRC/CRC_" + todayDate + "_" + fileNo + ".csv");
 					
 					if (!file.getParentFile().exists()) {
 						file.getParentFile().mkdirs();
@@ -1646,7 +1648,7 @@ public class ClaimController {
 		String sFile = "CFT" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "SE00000293" + "01.dat";
 		
 		//파일 디렉토리
-		File file = new File("C:/COWAY_PROJECT/TOBE/CRT/FPX/ClaimBank/" + sFile);
+		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
 		
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {

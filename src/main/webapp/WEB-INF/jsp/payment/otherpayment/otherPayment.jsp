@@ -29,6 +29,7 @@ var targetOutMstGridID;
 var targetSrvcMstGridID;
 var targetSrvcDetGridID;
 var targetBillMstGridID;
+var targetOutSrvcMstGridID;
 var targetFinalBillGridID;
 
 var maxSeq = 0; //billing ADD 될 시퀀스
@@ -87,7 +88,8 @@ $(document).ready(function(){
     targetOutMstGridID = GridCommon.createAUIGrid("target_out_grid_wrap", targetOutMstColumnLayout,null,gridPros3);
     targetSrvcMstGridID = GridCommon.createAUIGrid("target_srvc_grid_wrap", targetSrvcMstColumnLayout,null,gridPros3);
     targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros3);
-    targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
+    targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros3);
+	targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros3);
     targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
     
     // Master Grid 셀 클릭시 이벤트
@@ -528,6 +530,22 @@ var columnLayout = [
 	        }
 	    }
 	];
+
+	//AUIGrid 칼럼 설정 : targetOutSrvcMstGridID
+	var targetOutSrvcMstColumnLayout = [
+		{ dataField:"quotId" ,headerText:"Quotation ID" ,editable : false , width : 100, visible : false },    
+		{ dataField:"cnvrMemId" ,headerText:"Service Membership ID" ,editable : false , width : 100, visible : false },
+		{ dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
+		{ dataField:"quotNo" ,headerText:"Quotation<br>Number" ,editable : false , width : 150},
+		{ dataField:"ordNo" ,headerText:"Order<br>Number" ,editable : false , width : 150 },
+		{ dataField:"cntName" ,headerText:"Customer<br>Name" ,editable : false , width : 250},          
+		{ dataField:"totAmt" ,headerText:"Total<br>Amount" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},      
+		{ dataField:"packageCharge" ,headerText:"Package<br>Amount" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},      
+		{ dataField:"packagePaid" ,headerText:"Package<br>Paid" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},      
+		{ dataField:"filterCharge" ,headerText:"Filter<br>Amount" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"},      
+		{ dataField:"filterPaid" ,headerText:"Filter<br>Paid" ,editable : false , width : 150 , dataType : "numeric", formatString : "#,##0.00"}
+	];
+
 	
 	//AUIGrid 칼럼 설정 : targetFinalBillGridID
 	var targetFinalBillColumnLayout = [
@@ -554,6 +572,7 @@ var columnLayout = [
 	    { dataField:"srvcContractID" ,headerText:"SrvcContractID" ,editable : false , width : 100 , visible : false },
 	    { dataField:"billAsId" ,headerText:"Bill AS Id" ,editable : false , width : 150 , visible : false },
 	    { dataField:"discountAmt" ,headerText:"discountAmt" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00" , visible : false },
+	    { dataField:"srvMemId" ,headerText:"Service Membership Id" ,editable : false , width : 150 , visible : false }
 	];
 	
 	//AUIGrid 칼럼 설정 : targetBillMstGridID
@@ -909,6 +928,7 @@ var columnLayout = [
 	                     item.targetAmt   = mstRpf - mstRpfPaid;
 	                     item.srvcContractID   = 0;
 	                     item.billAsId    = 0;
+	 					 item.srvMemId	=0;
 	                     
 	                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                     
@@ -948,6 +968,7 @@ var columnLayout = [
 	                        item.targetAmt   = AUIGrid.getCellValue(targetRenDetGridID, j ,"targetAmt");
 	                        item.srvcContractID   = 0;
 	                        item.billAsId    = 0;
+							item.srvMemId	=0;
 
 	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                        
@@ -983,6 +1004,7 @@ var columnLayout = [
 	                    item.targetAmt   = $("#rentalAdvAmt").val();
 	                    item.srvcContractID   = 0;
 	                    item.billAsId    = 0;
+						item.srvMemId	=0;
 	                    
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                    
@@ -1038,6 +1060,7 @@ var columnLayout = [
 	                item.targetAmt   = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
 	                item.srvcContractID   = 0;
 	                item.billAsId    = 0;
+					item.srvMemId	=0;
 	                
 	                AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                
@@ -1098,6 +1121,7 @@ var columnLayout = [
 	                     item.targetAmt   = mstFilterCharges - mstFilterChargesPaid;
 	                     item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
 	                     item.billAsId    = 0;
+						 item.srvMemId	=0;
 	                     
 	                     AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                     
@@ -1131,6 +1155,7 @@ var columnLayout = [
 	                    item.targetAmt   = mstPenaltyCharges - mstPenaltyChargesPaid;
 	                    item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
 	                    item.billAsId    = 0;
+						item.srvMemId	=0;
 	                    
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                    
@@ -1165,6 +1190,7 @@ var columnLayout = [
 	                    item.targetAmt   = $("#srvcAdvAmt").val();
 	                    item.srvcContractID   = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctId");
 	                    item.billAsId    = 0;
+						item.srvMemId	=0;
 	                    
 	                    AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                    
@@ -1204,6 +1230,7 @@ var columnLayout = [
 	                        item.targetAmt   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"targetAmt");
 	                        item.srvcContractID   = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrCntrctId");
 	                        item.billAsId    = 0;
+							item.srvMemId	=0;
 
 	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                        
@@ -1265,6 +1292,7 @@ var columnLayout = [
 	                        item.targetAmt   = targetAmt;
 	                        item.srvcContractID   = 0;
 	                        item.billAsId    = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAsId");
+							item.srvMemId	=0;
 
 	                        AUIGrid.addRow(targetFinalBillGridID, item, "last");
 	                        
@@ -1574,24 +1602,28 @@ var columnLayout = [
         $("#outSearch").hide();
         $("#srvcSearch").hide();
         $("#billSearch").hide();
+		$("#outSrvcSearch").hide();	 
         
         //Form 초기화
         $("#rentalSearchForm")[0].reset();
         $("#outSearchForm")[0].reset();
         $("#srvcSearchForm")[0].reset();
         $("#billSearchForm")[0].reset();
+		$("#outSrvcSearchForm")[0].reset();
         
         //그리드 초기화
         resetRentalGrid();
         resetOutGrid();
         resetSrvcGrid();
         resetBillGrid();
+		resetOutSrvcGrid();
         
         //금액 표시 초기화     
         $("#rentalTotalAmtTxt").text("RM " + $.number(0,2));
         $("#outTotalAmtTxt").text("RM " + $.number(0,2));
         $("#srvcTotalAmtTxt").text("RM " + $.number(0,2));
         $("#billTotalAmtTxt").text("RM " + $.number(0,2));
+		$("#outSrvcTotalAmtTxt").text("RM " + $.number(0,2));
         
         if(appType == 1 ){
             $("#rentalSearch").show();
@@ -1607,7 +1639,10 @@ var columnLayout = [
         }else if(appType == 4){
             $("#billSearch").show();
             AUIGrid.resize(targetBillMstGridID);
-        }
+        }else if(appType == 5){
+			$("#outSrvcSearch").show();
+			AUIGrid.resize(targetOutSrvcMstGridID);
+		}
    }
   //Rental Order Info 조회
     function fn_rentalOrderInfo(){
@@ -2009,6 +2044,154 @@ var columnLayout = [
       $("#online").find("#spAcc").text("");
       $("#online").find("#spVa").text("");
   }
+
+
+
+//**************************************************
+//**************************************************
+//Outright Membership 관련 Script 
+//**************************************************
+//**************************************************
+//Quotation Search 팝업
+function fn_quotationSearchPop(){
+  Common.popupDiv('/payment/common/initCommonQuotationSearchPop.do', {callPrgm : "MEMBERSHIP_PAYMENT"}, null , true ,'_serviceContract');
+}
+
+//Quotation Search 팝업에서 결과값 받기
+function fn_callBackQuotInfo(quotId, ordId, quotNo,ordNo){
+  $('#outSrvcQuotId').val(quotId);
+  $('#outSrvcOrdId').val(ordId);
+  $('#outSrvcQuotNo').val(quotNo);
+  $('#outSrvcOrdNo').val(ordNo);
+  
+  //팝업 숨기기 및 remove
+  $('#_serviceContract').hide();
+  $('#_serviceContract').remove();
+  
+  //Order Info 및 Payment Info 조회
+  fn_outSrvcOrderInfo();
+}
+
+//Outright Membership Order Info 조회
+function fn_outSrvcOrderInfo(){
+    var data;
+    data = {"quotId" : $("#outSrvcQuotId").val() };
+    
+    //Outright : Order 정보 조회
+    Common.ajax("GET", "/payment/common/selectOutSrvcOrderInfo.do", data, function(result) {
+        //Outright : Order Info 세팅
+        AUIGrid.setGridData(targetOutSrvcMstGridID, result);
+    
+        //총 금액 계산
+        recalculateOutSrvcTotalAmt();
+    });    
+}
+    
+//Outright Amount 계산
+function recalculateOutSrvcTotalAmt(){
+    var rowCnt = AUIGrid.getRowCount(targetOutSrvcMstGridID);
+    var totalAmt = 0;
+
+    if(rowCnt > 0){
+        for(var i = 0; i < rowCnt; i++){
+            totalAmt += (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid"))
+				        +(AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid"));
+        }
+    }
+
+    $("#outSrvcTotalAmtTxt").text("RM " + $.number(totalAmt,2));    
+}
+
+function resetOutSrvcGrid(){
+    AUIGrid.clearGridData(targetOutSrvcMstGridID);
+}
+
+
+function addOutSrvcToFinal(){
+	var addedCount = 0;
+    var rowCnt = AUIGrid.getRowCount(targetOutSrvcMstGridID);    
+    maxSeq = maxSeq + 1;
+
+    if(rowCnt > 0){
+        for(i = 0 ; i < rowCnt ; i++){
+
+			var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid"); 
+        	
+        	if(packageAmt > 0){
+	        	var item = new Object();
+	        	item.procSeq = maxSeq;
+	            item.appType = "OUT_MEM";
+	            item.advMonth = 0;
+	            item.mstRpf = 0;
+	            item.mstRpfPaid = 0;
+	            
+	            item.assignAmt = 0;
+	            item.billAmt   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge");
+	            item.billDt   = "1900-01-01";
+	            item.billGrpId = 0;
+	            item.billId = 0;
+	            item.billNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo");                        
+	            item.billStatus = "";   
+	            item.billTypeId = 164;   
+	            item.billTypeNm   = "Membership Package"; 
+	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cntName");
+	            item.discountAmt = 0;
+	            item.installment  = 0;                        
+	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
+	            item.ordNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordNo");
+	            item.paidAmt     = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
+	            item.targetAmt   = packageAmt;
+	            item.srvcContractID   = 0;
+	            item.billAsId    = 0;
+				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+	            
+	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	            addedCount++;
+        	}
+
+			var filterAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid"); 
+        	
+        	if(filterAmt > 0){
+	        	var item = new Object();
+	        	item.procSeq = maxSeq;
+	            item.appType = "OUT_MEM";
+	            item.advMonth = 0;
+	            item.mstRpf = 0;
+	            item.mstRpfPaid = 0;
+	            
+	            item.assignAmt = 0;
+	            item.billAmt   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge");
+	            item.billDt   = "1900-01-01";
+	            item.billGrpId = 0;
+	            item.billId = 0;
+	            item.billNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo");                        
+	            item.billStatus = "";   
+	            item.billTypeId = 542;   
+	            item.billTypeNm   = "Filter (1st BS)"; 
+	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cntName");
+	            item.discountAmt = 0;
+	            item.installment  = 0;                        
+	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
+	            item.ordNo = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordNo");
+	            item.paidAmt     = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid");
+	            item.targetAmt   = filterAmt;
+	            item.srvcContractID   = 0;
+	            item.billAsId    = 0;
+				item.srvMemId	=AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cnvrMemId");
+	            
+	            AUIGrid.addRow(targetFinalBillGridID, item, "last");
+	            addedCount++;
+        	}
+        }
+    }
+    
+
+    if(addedCount == 0){
+    	Common.alert("There is no billing data and can not be selected.");
+    }
+    
+    recalculatePaymentTotalAmt();
+}
 </script>
 <!-- content start -->
 
@@ -2421,6 +2604,7 @@ var columnLayout = [
                             <option value="2">Outright</option>
                             <option value="3">Rental Membership</option>
                             <option value="4">Bill Payment</option>
+                            <option value="5">Outright Membership</option>
                         </select>
                     </td>                        
                 </tr>
@@ -2703,6 +2887,69 @@ var columnLayout = [
         </ul>
     </section>    
     
+	    
+    <!-- 
+    ***************************************************************************************
+    ***************************************************************************************
+    *************                                          Outright Membership Payment Area                                      ****
+    ***************************************************************************************
+    ***************************************************************************************
+    -->
+    <section id="outSrvcSearch" style="display:none;">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- search_table start -->
+            <form id="outSrvcSearchForm" action="#" method="post">				
+				<input type="hidden" name="outSrvcOrdId" id="outSrvcOrdId" />
+	            <input type="hidden" name="outSrvcQuotId" id="outSrvcQuotId" />
+	            <input type="hidden" name="outSrvcOrdNo" id="outSrvcOrdNo" />
+                <table class="type1">
+                    <caption>table</caption>
+                    <colgroup>
+                        <col style="width:180px" />
+                        <col style="width:*" />                    
+                        <col style="width:280px" />
+                        <col style="width:*" />
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Quotation No</th>
+                            <td>
+                                <input type="text" name="outSrvcQuotNo" id="outSrvcQuotNo" title="" placeholder="Quotation Number" class="readonly" readonly />
+                                    <p class="btn_sky">
+                                        <a href="javascript:fn_quotationSearchPop();" id="search">Search</a>
+                                    </p>
+                                    <p class="btn_sky">
+                                           <a href="javascript:viewOutSrvcLedger();" id="viewLedger">View Ledger</a>
+                                    </p>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+                <!-- table end -->
+            </form>
+        </section>
+        <!-- search_table end -->
+        
+        <ul class="right_btns">
+           <li><p class="btn_grid"><a href="javascript:addOutSrvcToFinal();">ADD</a></p></li>
+        </ul>
+        
+        <!-- grid_wrap start -->
+        <article class="grid_wrap">
+            <div id="target_outSrvc_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+        </article>
+        <!-- grid_wrap end -->   
+        
+        <ul class="right_btns">
+            <li><p class="amountTotalSttl">Amount Total :</p></li>
+            <li><strong id="outSrvcTotalAmtTxt">RM 0.00</strong></li>
+        </ul>
+    </section>  
+    
+    
+
         <!-- 
     ***************************************************************************************
     ***************************************************************************************

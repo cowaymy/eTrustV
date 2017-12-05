@@ -204,6 +204,27 @@ public class CommonPaymentController {
 	}
 	
 	
+	/******************************************************
+	 * Payment - Outright Membership 
+	 *****************************************************/	
+	/**
+	 * Payment - Outright Membership Order Info  조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectOutSrvcOrderInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOutSrvcOrderInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = commonPaymentService.selectOutSrvcOrderInfo(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
 	/**
 	 * Payment 처리
 	 * @param Map

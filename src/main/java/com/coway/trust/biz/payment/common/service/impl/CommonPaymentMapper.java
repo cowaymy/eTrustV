@@ -431,6 +431,27 @@ public interface CommonPaymentMapper {
 	 */	
 	List<EgovMap> selectOrderInfoBillPaymentHP (Map<String, Object> params);
 	
+	/****************************************************************************
+	 * Payment : Outright Membership 
+	 ****************************************************************************/
+	/**
+	 * Payment - Outright Membership Order 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	List<EgovMap> selectOutSrvcOrderInfo(Map<String, Object> params);
+	
+	/**
+	 * Payment - Outright Membership Bill 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	EgovMap selectOutSrvcBillInfo(Map<String, Object> params);
+	
 	/**
 	 * Payment 임시정보 Sequence 가져오기
 	 * @return

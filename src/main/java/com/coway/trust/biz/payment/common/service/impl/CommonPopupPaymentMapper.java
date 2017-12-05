@@ -26,4 +26,23 @@ public interface CommonPopupPaymentMapper {
 	 */
 	List<EgovMap> selectCommonContractSearchPop(Map<String, Object> params);
 	
+	/**
+	 * Payment - Outright Membership Search Pop-up 리스트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	List<EgovMap> selectCommonQuotationSearchPop(Map<String, Object> params);
+	
+	
+	/**
+	 * Payment - Outright Membership Search Pop-up 리스트 카운트 조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	int countCommonQuotationSearchPop(Map<String, Object> params);
+	
 }

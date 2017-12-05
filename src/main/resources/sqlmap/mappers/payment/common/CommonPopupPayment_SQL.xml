@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.common.service.impl.CommonPopupPaymentMapper">
 
+    <sql id="pagingStart">
+        SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                                ,Z.*
+                    FROM (  
+    </sql>
+    <sql id="pagingEnd">
+         ) Z
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </sql>
+
     <select id="selectCommonSearchInvoicePop" parameterType="Map" resultType="egovMap">
         SELECT
             TAX_INVC_ID  ,
@@ -155,6 +167,66 @@
 		                  </if>
 				          ) Project1
 				  ORDER BY Project1.SRV_CNTRCT_ID ASC
+    </select>
+    
+    <select id="selectCommonQuotationSearchPop" parameterType="Map" resultType="egovMap">
+        <include refid="pagingStart" />
+        SELECT 
+            QUOT_ID,QTY_FILTER_CHRG,QUOT_NO,PAC_ID,PAC_CODE,PAC_DESC,
+			ORD_ID,ORD_NO,PAC_AMT,FILTER_AMT,TOT_AMT,DUR,REM,VALID_DT,
+			CRT_DT,CRT_USER_ID,QUOT_STUS_ID,QUOT_STUS_CODE,UPD_DT,UPD_USER_ID,
+			CNT_ID,CNT_NAME,CNT_NRIC,CNT_TEL_MOB,CNT_TEL_OFF,CNT_TEL_FAX,
+			CNT_TEL_RES,CNT_EMAIL,CNT_GENDER,CNT_RACE,PAC_PROMO_ID,
+			PAC_PROMO_CODE,PAC_PROMO_DESC,PROMO_ID,PROMO_CODE,PROMO_DESC,
+			BS_FREQ,MEM_ID,MEM_CODE,MEM_NAME,VALID_STUS,VALID_STUS_ID,CNVR_MEM_ID,CNVR_MEM_NO,
+			STK_ID,STK_CODE,STK_DESC,CUST_NAME,CUST_IC,TOT_CNT,REF_NO
+        FROM 
+            SAL1005V 
+        WHERE 
+            1=1
+            <if test="quoNo != null and quoNo != '' ">
+                AND  QUOT_NO = #{quoNo} 
+            </if>
+            <if test="status != null and status != '' ">
+	             AND VALID_STUS_ID = #{status}
+	        </if>  
+	        <if test="ordNo != null and ordNo != '' ">
+                AND  ORD_NO = #{ordNo} 
+            </if>
+            <if test="creator != null and creator != '' ">
+                AND  CRT_USER_ID = #{creator} 
+            </if>
+             <if test="createDateFr != null and createDateFr != '' and createDateTo != null and createDateTo != '' "> 
+                AND CRT_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{createDateFr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND CRT_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDateTo},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            </if>
+        ORDER BY QUOT_ID             
+        <include refid="pagingEnd" />                
+    </select>
+    
+    <select id="countCommonQuotationSearchPop" parameterType="Map" resultType="int">    
+         SELECT 
+           COUNT(1) AS CNT
+        FROM 
+            SAL1005V 
+        WHERE 
+            1=1
+            <if test="quoNo != null and quoNo != '' ">
+                AND  QUOT_NO = #{quoNo} 
+            </if>
+            <if test="status != null and status != '' ">
+                 AND VALID_STUS_ID = #{status}
+            </if>  
+            <if test="ordNo != null and ordNo != '' ">
+                AND  ORD_NO = #{ordNo} 
+            </if>
+            <if test="creator != null and creator != '' ">
+                AND  CRT_USER_ID = #{creator} 
+            </if>
+             <if test="createDateFr != null and createDateFr != '' and createDateTo != null and createDateTo != '' "> 
+                AND CRT_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{createDateFr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND CRT_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDateTo},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+            </if>       
     </select>
 	
 </mapper>

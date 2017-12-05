@@ -1116,6 +1116,37 @@
             BILL_AMT <![CDATA[ > ]]> PAID_AMT             
     </select>
     
+    
+    <select id="selectOutSrvcOrderInfo" parameterType="Map" resultType="egovMap">
+        SELECT 
+            QUOT_ID,QTY_FILTER_CHRG,QUOT_NO,PAC_ID,PAC_CODE,PAC_DESC,
+            ORD_ID,ORD_NO,PAC_AMT,FILTER_AMT,TOT_AMT,DUR,REM,VALID_DT,
+            CRT_DT,CRT_USER_ID,QUOT_STUS_ID,QUOT_STUS_CODE,UPD_DT,UPD_USER_ID,
+            CNT_ID,CNT_NAME,CNT_NRIC,CNT_TEL_MOB,CNT_TEL_OFF,CNT_TEL_FAX,
+            CNT_TEL_RES,CNT_EMAIL,CNT_GENDER,CNT_RACE,PAC_PROMO_ID,
+            PAC_PROMO_CODE,PAC_PROMO_DESC,PROMO_ID,PROMO_CODE,PROMO_DESC,
+            BS_FREQ,MEM_ID,MEM_CODE,MEM_NAME,VALID_STUS,VALID_STUS_ID,CNVR_MEM_ID,CNVR_MEM_NO,
+            STK_ID,STK_CODE,STK_DESC,CUST_NAME,CUST_IC,TOT_CNT,REF_NO
+        FROM 
+            SAL1005V 
+        WHERE 
+            QUOT_ID = #{quotId}            
+    </select>
+    
+    <select id="selectOutSrvcBillInfo" parameterType="Map" resultType="egovMap">
+        SELECT 
+            SRV_MEM_ID , 
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT <![CDATA[ >= ]]> 0 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_CHARGE,
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT <![CDATA[ >= ]]> 0 THEN SRV_MEM_AMT ELSE 0 END) AS FILTER_CHARGE,    
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END) AS PACKAGE_PAID,
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END) AS FILTER_PAID
+        FROM 
+            PAY0024D 
+        WHERE 
+            SRV_MEM_ID = #{cnvrMemId}
+        GROUP BY SRV_MEM_ID          
+    </select>
+    
     <!-- Payment 임시정보 Sequence 가져오기  -->
     <select id="getPayTempSEQ" resultType="int">
         SELECT PAY0240T_SEQ.NEXTVAL FROM DUAL
@@ -1284,7 +1315,9 @@
 			CUST_NM,
 			DSCNT_AMT,
 			SRV_LDGR_CNTRCT_ID,
-			BILL_AS_ID
+			BILL_AS_ID,
+			SRV_MEM_ID
+			
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
 			#{seq},
@@ -1310,7 +1343,8 @@
 			#{custNm},
 			#{discountAmt},
 			#{srvcContractID},
-			#{billAsId}
+			#{billAsId},
+			#{srvMemId}
 			
         )
     </insert>

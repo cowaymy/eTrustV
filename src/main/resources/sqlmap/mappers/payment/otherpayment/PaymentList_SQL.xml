@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.PaymentListMapper">
+    
+    <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ, 
+            (SELECT APP_TYPE FROM PAY0241T WHERE SEQ = A.GROUP_SEQ AND PRCSS_SEQ = A.PRCSS_SEQ AND ROWNUM <![CDATA[ <= ]]> 1) AS APP_TYPE,         
+            D.PAY_ITM_MODE_ID,
+            F.CODE_NAME AS PAY_ITM_MODE_NM,
+            E.CUST_ID,
+            E.SALES_ORD_NO,
+            D.PAY_ITM_REF_DT,
+            C.OR_NO,
+            C.BRNCH_ID,
+            A.CRC_STATE_MAPPING_ID,        
+            A.CRC_STATE_MAPPING_DT,
+            A.BANK_STATE_MAPPING_ID,
+            A.BANK_STATE_MAPPING_DT,
+            A.REV_STUS_ID,
+            G.NAME AS REV_STUS_NM,
+            A.REV_DT
+        FROM 
+            PAY0252T A
+            JOIN PAY0064D C ON A.PAY_ID = C.PAY_ID
+            JOIN PAY0065D D ON A.PAY_ITM_ID = D.PAY_ITM_ID
+            JOIN SAL0001D E ON C.SALES_ORD_ID = E.SALES_ORD_ID
+            JOIN SYS0013M F ON D.PAY_ITM_MODE_ID = F.CODE_ID
+            LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID         
+        WHERE 
+            A.GROUP_SEQ IN (
+                SELECT 
+                    DISTINCT A.GROUP_SEQ
+                FROM 
+                    PAY0252T A
+                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID    
+                WHERE 
+                    B.SALES_ORD_ID = #{ordId}    
+                    AND C.PAY_ITM_REF_DT BETWEEN TO_DATE(#{tranDateFr},'DD/MM/YYYY') AND TO_DATE(#{tranDateTo},'DD/MM/YYYY')
+            )          
+        
+    </select>
+    
+    
+</mapper>
