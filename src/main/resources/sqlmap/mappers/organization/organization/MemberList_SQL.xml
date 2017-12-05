@@ -2227,7 +2227,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        Limit1.C64 C64,
        Limit1.C65 C65,
        Limit1.C66 C66,
-       Limit1.C67 C67
+       Limit1.C67 C67,
+       Limit1.C68 c68
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -2570,7 +2571,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent25.USER_ID c64,
                  Extent1.FULL_NAME c65,
                  Extent1.AGRMNT_NO c66,
-                 Extent1.SYNC_CHK c67
+                 Extent1.SYNC_CHK c67,
+                 Extent26.AREA_ID c68
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE

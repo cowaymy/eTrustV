@@ -248,8 +248,8 @@ function fn_setMemInfo(data){
     $("#sponsorNm").val(data.c52);
     
     $("#sponsorNric").val(data.c53);
-    
-    
+    alert(data.c68);
+    $("#searchSt").val(data.c68);
     
     /*
     if(data.c4!=null&&jQuery.trim(data.c4).length>0){
@@ -863,11 +863,11 @@ function fn_selectState(selVal){
 <input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="memCode" name="memCode"/>
 <input type="hidden" value="<c:out value="${memberView.c64}"/> "  id="userId" name="userId"/>
 <input type="hidden" value="<c:out value="${memberView.rank}"/> "  id="rank" name="rank"/>
-<input type="text" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
+<input type="hidden" value="<c:out value="${memberView.c65}"/> "  id="fullName" name="fullName"/>
 <input type="hidden" value="<c:out value="${memberView.c66}"/> "  id="agrmntNo" name="agrmntNo"/>
 <input type="hidden" value="<c:out value="${memberView.c67}"/> "  id="syncChk" name="syncChk"/>
 <input type="hidden" value="<c:out value="${memberView.c35}"/> "  id="national" name="national"/>
-<input type="text" value="<c:out value="${memberView.c3} " /> "  id="branch" name="branch"/>
+<input type="hidden" value="<c:out value="${memberView.c3} " /> "  id="branch" name="branch"/>
 <input type="hidden"   id="groupCode[memberLvl]" name="groupCode[memberLvl]"/>
 <input type="hidden"   id="groupCode[flag]" name="groupCode[flag]"/>
 
@@ -1316,19 +1316,19 @@ function fn_selectState(selVal){
             <tr>
                 <th scope="row">Area search<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" value="<c:out value="${memberView.areaId}"/> "/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
             <tr>
                 <th scope="row" >Address Detail<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/> " />
                 </td>
             </tr>
             <tr>
                 <th scope="row" >Street</th>
                 <td colspan="3">
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/> " />
                 </td>
             </tr>
             <tr>
