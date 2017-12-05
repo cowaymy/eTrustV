@@ -281,5 +281,27 @@ public class LocationController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	
+	@RequestMapping(value = "/locationchk.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> locationchk(@RequestBody Map<String, Object> params, ModelMap model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		
+		//String loccode = request.getParameter("loccode");
+		
+		String loccode = (String) params.get("loccode");
+		
+		logger.debug("loccode    값 : {}", loccode);
+		
+		int loccnt = loc.selectLocationChk(loccode);
+
+		logger.debug("loccnt    값 : {}", loccnt);
+		
+		Map<String, Object> map = new HashMap();
+		map.put("loccnt", loccnt);
+
+		return ResponseEntity.ok(map);
+	}
+	
 
 }
