@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.SurveyMgmtMapper">
+    
+    <select id="selectMemberTypeList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME 
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = 1
+    </select>
+    
+    <select id="selectSurveyStusList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME 
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = 388
+    </select>
+    
+    
+    <select id="selectSurveyEventList" parameterType="Map" resultType="egovMap">
+	<![CDATA[
+		SELECT A.EVT_TYPE_DESC, B.MEM_CODE, C.CODE_DESC, A.EVT_DT
+        FROM CCR0001D A, ORG0001D B, SYS0013M C
+        WHERE A.HC_TYPE_ID = 2718
+        AND A.EVT_MEM_ID = B.MEM_ID
+        AND B.MEM_TYPE = C.CODE_ID
+        AND B.MEM_TYPE = 1
+		]]>
+		<if test="cmbMemberTypeId != null and cmbMemberTypeId != '' ">
+        AND C.CODE_DESC = #{cmbMemberTypeId}
+        </if>
+		<if test="eventName != null and eventName != '' ">
+		AND A.EVT_TYPE_DESC LIKE '%' || #{eventName} || '%'
+		</if>
+		<if test="eventDate != null and eventDate != '' ">
+		AND TO_CHAR(A.EVT_DT, 'DD/MM/YYYY') > #{eventDate}  
+		</if>
+		<if test="eventMemCode != null and eventMemCode != '' ">
+		AND B.MEM_CODE = #{eventMemCode}
+		</if>
+	</select>
+    
+</mapper>
