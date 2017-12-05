@@ -173,7 +173,18 @@ $(document).ready(function(){
     function fn_holidaySave(){
 	    	if(fnValidationCheck()){
 	    		Common.ajax("POST", "/services/holiday/saveHoliday.do", GridCommon.getEditData(gridID), function(result) {
-	            console.log("성공.");
+	    			 var checkbeforeToday = {code: "00", message: "Already Gone"};
+	    	         var checkExistHoliday={code: "00", message: "Already Exist"}   
+	                console.log(result);
+	    	         if(JSON.stringify(result) === JSON.stringify(checkbeforeToday) )  {
+	                	 Common.alert("Already Gone");
+	                 }
+	    	         
+	    	         if(JSON.stringify(result) === JSON.stringify(checkExistHoliday) )  {
+                         Common.alert("The Holiday Exist Already");
+                     }
+	    			
+	    			console.log("성공.");
 	            console.log("data : " + result);
 	        });
     	}
@@ -240,6 +251,7 @@ $(document).ready(function(){
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday' htmlEscape='false'/>");
                 break;
               }
+              var today = new Date();
               
         }
 

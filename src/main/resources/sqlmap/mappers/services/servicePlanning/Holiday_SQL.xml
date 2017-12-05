@@ -255,7 +255,7 @@
         GROUP BY CODE
         ORDER BY CODE 
     </select>
-    
+  
     <select id="selectBranchWithNM"  parameterType="Map" resultType="egovMap">
         SELECT DISTINCT CODE CODE_ID,
                     CODE || '-' || NAME  CODE_NAME
@@ -264,4 +264,20 @@
           AND TYPE_ID= 43
         ORDER BY CODE
     </select>
+ <select id="selectBeforeToday"  parameterType="Map" resultType="egovMap">
+    select case when (NEWDATE <![CDATA[<]]>  SYSDATE) then 't'  
+     else 'f' end CHECKDATE
+        from ( 
+        select to_date(#{holiday},'YY/MM/DD') as NEWDATE  from Dual 
+       )
+ </select> 
+ 
+ <select id="selectAlreadyHoliday"  parameterType="Map" resultType="egovMap">
+    select *
+    from sys0081M
+    where holiday = TO_DATE (#{holiday}, 'YYYY-MM-DD') 
+ </select> 
+
+   
+ 
 </mapper>

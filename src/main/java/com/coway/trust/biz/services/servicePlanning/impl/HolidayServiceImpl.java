@@ -162,6 +162,39 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		
 		return holidayMapper.selectBranchWithNM();
 	}
+
+	@Override
+	public boolean checkBeforeToday(Map<String, Object> insertValue) {
+		Map<String, Object>  checkValue = null;
+		
+		checkValue = holidayMapper.selectBeforeToday(insertValue);
+		
+		String checkDate = checkValue.get("checkdate").toString();
+		
+		
+		// 오늘 날짜보다 느리다
+		if(checkDate.equals("t")){
+			
+			return true;
+		}
+		else return false;
+		
+		
+		
+	}
+
+	@Override
+	public boolean checkAlreadyHoliday(Map<String, Object> insertValue) {
+		List<EgovMap>  checkValue = null;
+		checkValue = holidayMapper.selectAlreadyHoliday(insertValue);
+		
+		//중복 날짜 존재
+		if(checkValue != null  && checkValue.size() == 0){
+			
+			return true;
+		}
+		else return false;
+	}
 	
 	
 	

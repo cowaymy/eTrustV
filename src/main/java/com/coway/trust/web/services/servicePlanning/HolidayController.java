@@ -68,20 +68,57 @@ public class HolidayController {
 		boolean addSuccess = false;
 		boolean updateSuccess = false;
 		boolean delSuccess = false;
+		boolean beforeToday= false;
+		boolean alreadyHoliday=false;
 		EgovMap rtm = new EgovMap();
 		
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
+		logger.debug("params {}", params);
 		
 		logger.debug("addList {}", addList);
 		if(addList != null){
+			for(int i=0; i< addList.size(); i++){
+    			Map<String, Object>  insertValue = (Map<String, Object>) addList.get(i);
+    			
+    			logger.debug("insertValue  {}", insertValue);
+    			beforeToday = holidayService.checkBeforeToday(insertValue);
+    			//오늘보다 전날짜면
+    			if(beforeToday){
+    				message.setMessage("Already Gone");
+    				return ResponseEntity.ok(message);
+    			}
+    			
+    			alreadyHoliday =holidayService.checkAlreadyHoliday(insertValue);
+    			
+    			if(!alreadyHoliday){
+    				message.setMessage("Already Exist");
+    				return ResponseEntity.ok(message);
+    			}
+    			
+    			
+			}
+			
 			addSuccess = holidayService.insertHoliday(addList,sessionVO);
 		}
 		if(addList != null){
 			updateSuccess = holidayService.updateHoliday(udtList,sessionVO);
 		}
 		if(delList != null){
+			
+			for(int i=0; i< delList.size(); i++){
+    			Map<String, Object>  delValue = (Map<String, Object>) delList.get(i);
+    			
+    			logger.debug("delValue  {}", delValue);
+    			beforeToday = holidayService.checkBeforeToday(delValue);
+    			//오늘보다 전날짜면
+    			if(beforeToday){
+    				message.setMessage("Already Gone");
+    				return ResponseEntity.ok(message);
+    			}
+			
+		}
 			delSuccess = holidayService.deleteHoliday(delList,sessionVO);
 		}
 		
@@ -118,7 +155,7 @@ public class HolidayController {
 		String[] branchList = request.getParameterValues("branchId");
 		params.put("stateList", stateList);
 		params.put("branchList", branchList);
-		logger.debug("params22222222222222 {}", params);
+		logger.debug("params {}", params);
 		List<EgovMap> holidayList = holidayService.selectHolidayList(params);
 		logger.debug("holidayList {}", holidayList);
 		return ResponseEntity.ok(holidayList);

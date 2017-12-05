@@ -36,4 +36,8 @@ public interface HolidayService {
 	
 	List<EgovMap> selectBranchWithNM();
 
+	boolean checkBeforeToday(Map<String, Object> insertValue);
+
+	boolean checkAlreadyHoliday(Map<String, Object> insertValue);
+
 }
