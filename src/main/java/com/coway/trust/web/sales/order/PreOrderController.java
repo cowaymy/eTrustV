@@ -148,4 +148,17 @@ public class PreOrderController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/convertToOrderPop.do")
+	public String convertToOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
+		EgovMap result = preOrderService.selectPreOrderInfo(params);
+		
+		model.put("preOrderInfo", result);
+		model.put("CONV_TO_ORD_YN", "Y");
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
+		return "sales/order/orderRegisterPop";
+	}
 }

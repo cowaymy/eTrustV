@@ -577,6 +577,9 @@
 		  LEFT JOIN SYS0013M T10 ON T10.CODE_ID = T1.CUST_BILL_PAY_TRM
 		 WHERE 1 = T1.CUST_BILL_STUS_ID
 		   AND T1.CUST_BILL_CUST_ID = #{custId}
+         <if test='custBillId != null and custBillId !=""'>
+           AND T1.CUST_BILL_ID = #{custBillId}
+         </if>
          <if test='searchWord != null and searchWord !=""'>
            AND (UPPER(T1.CUST_BILL_GRP_NO)  LIKE '%' || UPPER(#{searchWord}) || '%'
              OR UPPER(T2.ADDR_DTL)          LIKE '%' || UPPER(#{searchWord}) || '%'

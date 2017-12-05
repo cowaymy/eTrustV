@@ -47,6 +47,35 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	}
 
 	@Override
+	public EgovMap selectPreOrderInfo(Map<String, Object> params) {
+		
+		EgovMap rslt = preOrderMapper.selectPreOrderInfo(params);
+		
+		if(rslt.get("preTm") != null) {
+			rslt.put("preTm", this.convert12Tm((String) rslt.get("preTm")));
+		}
+		
+		return preOrderMapper.selectPreOrderInfo(params);
+	}
+	
+	private String convert12Tm(String TM) {
+		String HH = "", MI = "", cvtTM = "";
+		
+		if(CommonUtils.isNotEmpty(TM)) {
+			HH = CommonUtils.left(TM, 2);
+			MI = TM.substring(3, 5);
+			
+			if(Integer.parseInt(HH) > 12) {
+				cvtTM = CommonUtils.getFillString((Integer.parseInt(HH) - 12), "0", 2) + ":" + String.valueOf(MI) + " PM";
+			}
+			else {
+				cvtTM = HH + ":" + String.valueOf(MI) + " AM";
+			}
+		}
+		return cvtTM;
+	}
+
+	@Override
 	public int selectExistSofNo(Map<String, Object> params) {
 		return preOrderMapper.selectExistSofNo(params);
 	}

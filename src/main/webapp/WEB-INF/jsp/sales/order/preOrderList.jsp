@@ -27,7 +27,7 @@
     	//AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  }
-          , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 80  }
+          , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 100 }
           , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  }
           , { headerText : "Pre-Order Date",  dataField : "requestDt",  editable : false, width : 100 }
           , { headerText : "Product",         dataField : "product",    editable : false}
@@ -53,7 +53,7 @@
                     valueField : "name"        //value 에 해당되는 필드명
                 }
             }
-          , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : true}
+          , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : false}
             ];
 
         //그리드 속성 설정
@@ -87,7 +87,20 @@
         $('#_btnSearch').click(function() {
         	fn_getPreOrderList();
         });
+        $('#_btnConvOrder').click(function() {
+            fn_convToOrderPop();
+        });
     });
+
+    function fn_convToOrderPop() {
+        var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
+        if(selIdx > -1) {
+            Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
+        }
+        else {
+            Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+        }
+    }
     
     function fn_statusCodeSearch(){
         Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 14, parmDisab : 0}, function(result) {

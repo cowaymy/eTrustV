@@ -1,7 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<!--FROM Pre-Order List-->
+<c:if test="${CONV_TO_ORD_YN == 'Y'}">
+<%@ include file="/WEB-INF/jsp/sales/order/convertToOrderInc.jsp" %>
+</c:if>
 
 <script type="text/javaScript" language="javascript">
+
+    var convToOrdYn = "${CONV_TO_ORD_YN}";
 
     var docGridID;
     var docDefaultChk = false;
@@ -29,6 +35,12 @@
         
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
+        
+        //FROM Pre-Order List
+        if(convToOrdYn == 'Y') {
+            fn_loadPreOrderInfo();
+        }
+
     });
 
     function createAUIGrid() {
@@ -1543,7 +1555,7 @@
     function fn_isExistESalesNo() {
         var isExist = false, msg = "";
 
-        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", {sofNo:$("#refereNo").val()}, function(rsltInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectExistSofNo.do", {sofNo:$("#refereNo").val(), selType:'2'}, function(rsltInfo) {
             if(rsltInfo != null) {
                 isExist = rsltInfo.isExist;
             }

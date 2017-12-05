@@ -63,6 +63,8 @@
             if(!fn_validConfirm())  return false;
             if(fn_isExistESalesNo() == 'true') return false;
             
+            $('#scPreOrdArea').removeClass("blind");
+            
             $('#refereNo').val($('#sofNo').val().trim())
             
             fn_loadCustomer(null, $('#nric').val());
@@ -205,7 +207,10 @@
 
                             break;
                     }
-                    doGetComboData('/common/selectCodeList.do', {groupCode :appSubType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+
+                    var pType = $("#appType").val() == '66' ? '1' : '2';
+                    //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+                    doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
                     $('#ordProudct ').removeAttr("disabled");
                 }
@@ -804,23 +809,25 @@
     
     function fn_doSavePreOrder() {
         
-        var vCustCRCID = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
-        var vCustAccID = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
-        var vBankID    = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCBankId').val() : $('#rentPayMode').val() == '132' ? $('#hiddenAccBankId').val() : 0;
+        var vAppType    = $('#appType').val();
+        var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
+        var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
+        var vBankID     = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCBankId').val() : $('#rentPayMode').val() == '132' ? $('#hiddenAccBankId').val() : 0;
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
+        var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         
         var orderVO = {
             sofNo                : $('#sofNo').val().trim(),
             custPoNo             : $('#poNo').val().trim(),
-            appTypeId            : $('#appType').val(),
+            appTypeId            : vAppType,
             srvPacId             : $('#srvPacId').val(),
             instPriod            : $('#installDur').val().trim(),
             custId               : $('#hiddenCustId').val(),
             empChk               : $('#empChk').val(),
             gstChk               : $('#gstChk').val(),
 //          atchFileGrpId        :
-            custCntId            : $('#hiddenCustCntcId').val(),
+            custCntcId           : $('#hiddenCustCntcId').val(),
 //          keyinBrnchId         :
             instAddId            : $('#hiddenCustAddId').val(),
             dscBrnchId           : $('#dscBrnchId').val(),
@@ -838,16 +845,17 @@
             norRntFee            : $('#normalOrdRentalFees').val().trim(),
             discRntFee           : $('#ordRentalFees').val().trim(),
             totPv                : $('#ordPv').val().trim(),
+            totPvGst             : $('#ordPvGST').val().trim(),
             prcId                : $('#ordPriceId').val(),
             memCode              : $('#salesmanCd').val(),
             advBill              : $('input:radio[name="advPay"]:checked').val(),
             custCrcId            : vCustCRCID,
             bankId               : vBankID,
             custAccId            : vCustAccID,
-            is3RdParty           : vIs3rdParty,
-            rentpayCustId        : vCustomerId,
-            modeId               : $('#rentPayMode').val(),
-//          custBillId           :
+            is3rdParty           : vIs3rdParty,
+            rentPayCustId        : vCustomerId,
+            rentPayModeId        : $('#rentPayMode').val(),
+            custBillId           : vCustBillId,
             custBillCustId       : $('#hiddenCustId').val(),
             custBillCntId        : $("#hiddenCustCntcId").val(),
             custBillAddId        : $("#hiddenBillAddId").val(),
@@ -1415,7 +1423,7 @@
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">    
-    
+    <input id="selType" name="selType" type="hidden" value="1" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1437,7 +1445,7 @@
 <!------------------------------------------------------------------------------
     Pre-Order Regist Content START
 ------------------------------------------------------------------------------->
-<section id="scPreOrdArea" class="">
+<section id="scPreOrdArea" class="blind">
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">

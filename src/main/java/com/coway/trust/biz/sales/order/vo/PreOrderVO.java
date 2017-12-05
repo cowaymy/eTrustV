@@ -39,7 +39,7 @@ public class PreOrderVO implements Serializable {
     
     private int atchFileGrpId;
     
-    private int custCntId;
+    private int custCntcId;
     
     private int keyinBrnchId;
     
@@ -75,6 +75,8 @@ public class PreOrderVO implements Serializable {
     
     private BigDecimal totPv;
     
+    private BigDecimal totPvGst;
+    
     private int prcId;
     
     private String memCode;
@@ -87,11 +89,13 @@ public class PreOrderVO implements Serializable {
     
     private int custAccId;
     
-    private int is3RdParty;
+    private int is3rdParty;
     
-    private int rentpayCustId;
+    private int rentPayCustId;
 
-    private int modeId;
+    private int rentPayModeId;
+    
+    private int custBillId;
     
     private int custBillCustId;
     
@@ -241,12 +245,12 @@ public class PreOrderVO implements Serializable {
 		this.atchFileGrpId = atchFileGrpId;
 	}
 
-	public int getCustCntId() {
-		return custCntId;
+	public int getCustCntcId() {
+		return custCntcId;
 	}
 
-	public void setCustCntId(int custCntId) {
-		this.custCntId = custCntId;
+	public void setCustCntcId(int custCntId) {
+		this.custCntcId = custCntId;
 	}
 
 	public int getKeyinBrnchId() {
@@ -433,28 +437,28 @@ public class PreOrderVO implements Serializable {
 		this.custAccId = custAccId;
 	}
 
-	public int getIs3RdParty() {
-		return is3RdParty;
+	public int getIs3rdParty() {
+		return is3rdParty;
 	}
 
-	public void setIs3RdParty(int is3RdParty) {
-		this.is3RdParty = is3RdParty;
+	public void setIs3rdParty(int is3rdParty) {
+		this.is3rdParty = is3rdParty;
 	}
 
-	public int getRentpayCustId() {
-		return rentpayCustId;
+	public int getRentPayCustId() {
+		return rentPayCustId;
 	}
 
-	public void setRentpayCustId(int rentpayCustId) {
-		this.rentpayCustId = rentpayCustId;
+	public void setRentPayCustId(int rentPayCustId) {
+		this.rentPayCustId = rentPayCustId;
 	}
 
-	public int getModeId() {
-		return modeId;
+	public int getRentPayModeId() {
+		return rentPayModeId;
 	}
 
-	public void setModeId(int modeId) {
-		this.modeId = modeId;
+	public void setRentPayModeId(int rentPayModeId) {
+		this.rentPayModeId = rentPayModeId;
 	}
 
 	public int getCustBillCustId() {
@@ -599,6 +603,22 @@ public class PreOrderVO implements Serializable {
 
 	public void setRem2(String rem2) {
 		this.rem2 = rem2;
+	}
+
+	public BigDecimal getTotPvGst() {
+		return totPvGst;
+	}
+
+	public void setTotPvGst(BigDecimal totPvGst) {
+		this.totPvGst = totPvGst;
+	}
+
+	public int getCustBillId() {
+		return custBillId;
+	}
+
+	public void setCustBillId(int custBillId) {
+		this.custBillId = custBillId;
 	}
 
 }
