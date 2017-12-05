@@ -134,7 +134,7 @@
 			Project1.UPD_DT Updated,
 			Project1.STUS Status,
 
-            /*By KV*/
+            /*By KV - Position*/
 			Project1.position_name,
 	        Project1.brnch_id,
 	        Project1.ct_sub_grp,
@@ -182,7 +182,7 @@
 			        INNER JOIN SYS0038M Extent3 ON Extent1.STUS = Extent3.STUS_CODE_ID   /*StatusCode	eg.active, not active*/
 
 			         /* By KV - add Position*/
-			        INNER JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
+			        LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
 			        LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
 
 			        CROSS JOIN  (SELECT
@@ -236,7 +236,7 @@
                          </if>
 
                          /* By KV - Position */
-                         <if test="position != null and position != ''">
+                         <if test="position != null and position != ' ' ">
                             AND Extent7.MEM_LVL= #{position}
                          </if>
 
@@ -2136,7 +2136,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
    <select id="afterSelTrainee" resultType="egovMap">
         SELECT MEM_CODE  FROM ORG0001D  WHERE MEM_ID =#{memberId}
   </select>
-  
+
   <select id="getMemberListView" parameterType="Map" resultType="egovMap">
     <![CDATA[
     SELECT Limit1.MEM_ID MEM_ID  ,
@@ -2556,9 +2556,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                      WHEN ( Extent24.CODE_NAME IS NULL ) THEN ''
                 ELSE Extent24.CODE_NAME
                    END C60 ,
-                CASE 
-                 WHEN ( Extent18.code_id IS NOT NULL ) THEN Extent18.code_id 
-                 ELSE 0 
+                CASE
+                 WHEN ( Extent18.code_id IS NOT NULL ) THEN Extent18.code_id
+                 ELSE 0
                END                     C61,
                CASE
                      WHEN ( Extent19.CODE_ID IS NOT NULL ) THEN Extent19.CODE_ID
@@ -2617,13 +2617,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     <update id="memberListUpdate_user" parameterType="Map">
      <![CDATA[
         UPDATE SYS0047M
-        
+
             SET USER_UPD_USER_ID = #{user_id}, USER_UPD_DT = SYSDATE
-            
+
         WHERE ( User_ID = #{userId} )
         ]]>
     </update>
-    
+
     <update id="memberListUpdate_memorg" parameterType="Map">
      <![CDATA[
         UPDATE ORG0005D
@@ -2631,15 +2631,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         WHERE  ( MEM_ID = #{MemberID} )
         ]]>
     </update>
-    
+
     <update id="memberListUpdate_member" parameterType="Map">
      <![CDATA[
         UPDATE ORG0001D
-        SET 
-                      
+        SET
+
               NAME = #{memberNm},
               FULL_NAME = #{fullName},
-              DOB = TO_DATE(#{Birth},'yyyy-mm-dd'),              
+              DOB = TO_DATE(#{Birth},'yyyy-mm-dd'),
               GENDER = #{gender},
               RACE=TO_NUMBER(TRIM(#{cmbRace})),
               MARTL = TO_NUMBER(TRIM(#{marrital})),
@@ -2651,13 +2651,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               ADDR3 = #{},
               ADDR4 = #{},
               AREAL = #{},
-              
+
               -->
-              <![CDATA[                       
+              <![CDATA[
               AREA_ID = #{searchSt1},
               ADDR_DTL = #{addrDtl1},
               STREET = #{streetDtl1},
-              
+
               TEL_OFFICE = #{officeNo},
               TEL_HUSE = #{residenceNo},
               TEL_MOBILE = #{mobileNo},
@@ -2674,7 +2674,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              <if test="spouseDOB != null and spouseDOB != '' and spouseDOB == '01/01/1900'" >
             SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
             </if>
-            <![CDATA[                            
+            <![CDATA[
               EDC_LEV = TO_NUMBER(TRIM(#{educationLvl})),
               LANG = TO_NUMBER(TRIM(#{language})),
               BANK_ACC_NO = #{bankAccNo},
@@ -2682,17 +2682,17 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               AGRMNT_NO = #{agrmntNo},
               BRNCH = TO_NUMBER(TRIM(#{branch})),
               SYNC_CHK = TO_NUMBER(TRIM(#{syncChk})),
-              TRNSPRT = TO_NUMBER(TRIM(#{transportCd})), 
+              TRNSPRT = TO_NUMBER(TRIM(#{transportCd})),
               TR_NO = #{trNo},
               UPD_DT = SYSDATE,
               UPD_USER_ID = TO_NUMBER(TRIM(#{user_id})),
               JOIN_DT = TO_DATE(#{joinDate},'yyyy-mm-dd'),
               RANK = TO_NUMBER(TRIM(#{rank}))
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
-        
+
         ]]>
     </update>
-    
+
     <update id="updateDocSubmissionDel" parameterType="docSubmissionVO">
        UPDATE ORG0010D
           SET STUS_ID     = 8
