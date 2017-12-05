@@ -196,8 +196,7 @@ function fnSearchBtnList()
               console.log("성공 fnSearchBtnList: " + result.selectSupplyPlanCDCList.length);
               console.log("성공 selectSupplyCdcSaveFlag: " + result.selectSupplyCdcSaveFlag[0].saveFlag);
               console.log("성공 selectSalesPlanMasterList_Length: " + result.selectSalesPlanMasterList.length);
-              console.log("성공 selectSupplyPlanMasterList_Length: " + result.selectSupplyPlanMasterList.length
-                          +"plan status: " +  result.selectSupplyPlanMasterList[0].planStus );
+              console.log("성공 selectSupplyPlanMasterList_Length: " + result.selectSupplyPlanMasterList.length);
               
               AUIGrid.setGridData(myGridID, result.selectSupplyPlanCDCList);
               if ( result != null)
@@ -223,7 +222,6 @@ function fnSearchBtnList()
 	                	  $("#cir_save").attr('class','circle circle_grey');
 	                  }
 	                  
-	                 // $("#cir_cinfirm").attr('class','circle circle_blue');
 	              }
 
 	              // salses
@@ -656,6 +654,8 @@ function fnSettiingHeader()
                   var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);   
                   
                   var iLootCnt = 1;
+                  var iLootCnt2 = 1; //Next Year
+                  var nextRowFlag = "";                  
                   var iLootDataFieldCnt = 0;
                   var intToStrFieldCnt ="";
                   var fieldStr ="";
@@ -665,13 +665,11 @@ function fnSettiingHeader()
                   var groupM_0 = {
                      headerText : "<spring:message code='sys.scm.salesplan.M0' />",
                      style : "my-header", 
-                    // width : 20, 
                      children : []
                   }
                   
                  for(var i=0; i < 5; i++) 
                  {
-                    fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
                     // console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
                     //           +" / fieldStr: " +  fieldStr  
                     //           +" / field_Name_with: " +  result.header[0][fieldStr]  
@@ -706,131 +704,236 @@ function fnSettiingHeader()
                            headerText : strWeekTh + result.getChildField[i].weekTh,
                            editable: false,
                            style : "my-backColumn2"  
-                           // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
                       }); 
    
                       continue;
                     }
                     else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
                     {
-                      groupM_0.children.push(
-                                              {
-                                                 dataField : "w" + intToStrFieldCnt,   // "w00"
-                                                 headerText :result.header[0][fieldStr], 
-                                                 editable: false,
-                                                 style : "my-backColumn3"  
-                                              });
+                        if (nextRowFlag == "R2")
+                        {
+                           fieldStr = "w" + iLootCnt2 + "WeekSeq";
+                          
+                           groupM_0.children.push({
+											                              dataField : "w" + intToStrFieldCnt,   // "w00"
+											                              headerText :result.header[1][fieldStr], 
+											                              editable: false,
+											                              style : "my-backColumn3"  
+											                           });
+
+                           iLootCnt2++;
+                        }
+                        else
+                        {
+                        	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+
+                          groupM_0.children.push({
+											                             dataField : "w" + intToStrFieldCnt,   // "w00"
+											                             headerText :result.header[0][fieldStr], 
+											                             editable: false,
+											                             style : "my-backColumn3"  
+											                          });
+                          iLootCnt++;
+                        }                        
                     }
                     else 
-                    { 
-                      groupM_0.children.push(
-                                              {
-                                                 dataField : "w" + intToStrFieldCnt,   // "w00"
-                                                 headerText :result.header[0][fieldStr], 
-                                                 style : "my-backColumn3"
-                                              });
+                    {
+                        if (nextRowFlag == "R2")
+                        {
+                           fieldStr = "w" + iLootCnt2 + "WeekSeq";
+                          
+                           groupM_0.children.push({
+                                                    dataField : "w" + intToStrFieldCnt,   // "w00"
+                                                    headerText :result.header[1][fieldStr], 
+                                                    style : "my-backColumn3"
+                                                  });
+
+                           iLootCnt2++;
+                        }
+                        else
+                        {
+                        	fieldStr = "w" + iLootCnt + "WeekSeq"; 
+                        	
+                          groupM_0.children.push({
+										                                 dataField : "w" + intToStrFieldCnt,   // "w00"
+										                                 headerText :result.header[0][fieldStr], 
+										                                 style : "my-backColumn3"
+										                            });
+                          iLootCnt++;  
+                        } 
                     }
                     
-                    iLootCnt++;
+                    if (result.header[0][fieldStr] == "W52")
+                    {
+                      console.log("M+0..W52..START");
+                      nextRowFlag = "R2";
+                    } 
+                    
                     iLootDataFieldCnt++;
                  }
                  dynamicLayout.push(groupM_0);
-               
-                  // M+1
+
+                 /////////////////////////////////////////
+                 // M+1
+                 /////////////////////////////////////////
                  var groupM_1 = {
                      headerText : "M+1",
                      style : "my-header", 
-                   //  width : 20,
                      children : []
                  }
   
                  for(var i=0; i<iM1TotCnt ; i++) 
                  {
-                    fieldStr = "w" + iLootCnt + "WeekSeq";  
-                    
                     intToStrFieldCnt = iLootDataFieldCnt.toString();
                       
                     if (intToStrFieldCnt.length == 1)
                     {
                       intToStrFieldCnt =  "0" + intToStrFieldCnt;
                     }
-   
-                    groupM_1.children.push(
-                                            {
-                                             dataField : "w" + intToStrFieldCnt,
-                                             headerText :  result.header[0][fieldStr], 
-                                             style : "my-backColumn3"
-                                            }); 
-  
-                    iLootCnt ++;
+                    
+                    if (nextRowFlag == "R2")
+                    {
+                      fieldStr = "w" + iLootCnt2 + "WeekSeq";  
+                      
+                      groupM_1.children.push({
+								                               dataField : "w" + intToStrFieldCnt,
+								                               headerText :  result.header[1][fieldStr], 
+								                               style : "my-backColumn3"
+								                            }); 
+                        
+                      iLootCnt2 ++;                  
+                    }
+                    else
+                    {
+                    	fieldStr = "w" + iLootCnt + "WeekSeq";  
+                    	
+	                    groupM_1.children.push({
+	                                             dataField : "w" + intToStrFieldCnt,
+	                                             headerText :  result.header[0][fieldStr], 
+	                                             style : "my-backColumn3"
+	                                          }); 
+	  
+	                    iLootCnt++;
+                    }  
+
+                    if (result.header[0][fieldStr] == "W52")
+                    {
+                        console.log("M+1..W52..START");
+                        nextRowFlag = "R2";
+                    }                     
+                    
                     iLootDataFieldCnt++;
                   }
                   dynamicLayout.push(groupM_1);
   
-                  
+
+                  ///////////////////////////////
                   // M+2
+                  ///////////////////////////////
+                  
                   var groupM_2 = {
                      headerText : "M+2",
                      style : "my-header", 
-                 //    width : 20,
                      children : []
                   }
                   
                  for(var i=0; i<iM2TotCnt ; i++) 
                  {
-                   fieldStr = "w" + iLootCnt + "WeekSeq";  
-  
                    intToStrFieldCnt = iLootDataFieldCnt.toString();
                       
                    if (intToStrFieldCnt.length == 1)
                    {
                      intToStrFieldCnt =  "0" + intToStrFieldCnt;
                    }
-  
-                   groupM_2.children.push(
-                                           {
-                                                    dataField : "w" + intToStrFieldCnt,
-                                                    headerText :  result.header[0][fieldStr],
-                                                    style : "my-backColumn1"
+
+                   if (nextRowFlag == "R2")
+                   {
+                     fieldStr = "w" + iLootCnt2 + "WeekSeq";  
+                     
+                     groupM_2.children.push({
+											                         dataField : "w" + intToStrFieldCnt,
+											                         headerText :  result.header[1][fieldStr],
+											                         style : "my-backColumn1"
+											                      });
+                       
+                     iLootCnt2 ++;                  
+                   }
+                   else
+                   {
+                	   fieldStr = "w" + iLootCnt + "WeekSeq"; 
+                	   
+                     groupM_2.children.push({
+				                                      dataField : "w" + intToStrFieldCnt,
+				                                      headerText :  result.header[0][fieldStr],
+				                                      style : "my-backColumn1"
                                            });
-  
-                   iLootCnt ++;
+
+                     iLootCnt ++;
+                   }
+                       
+                   if (result.header[0][fieldStr] == "W52")
+                   {
+                     console.log("M+2..W52..START");
+                     nextRowFlag = "R2";
+                   }  
+
                    iLootDataFieldCnt++;
                 }
                  dynamicLayout.push(groupM_2);
                
-  
+                 ////////////////////////////
                  // M+3
+                 ////////////////////////////
                  var groupM_3 = {
-                    headerText : "M+3",
-                    style : "my-header",
-                 //   width : 20,
-                    children : []
-                 }
+							                    headerText : "M+3",
+							                    style : "my-header",
+							                    children : []
+							                  }
                  
-                  for(var i=0; i< iM3TotCnt ; i++) 
-                 {
-                    fieldStr = "w" + iLootCnt + "WeekSeq";  
-                    
-                  intToStrFieldCnt = iLootDataFieldCnt.toString();
-                      
-                  if (intToStrFieldCnt.length == 1)
-                  {
-                    intToStrFieldCnt =  "0" + intToStrFieldCnt;
-                  }
-                   
-                  groupM_3.children.push(
-                                          {
-                                              dataField : "w" + intToStrFieldCnt,
-                                              headerText :  result.header[0][fieldStr],
-                                              style : "my-backColumn1"
-                                          });
-  
-                  iLootCnt ++;
-                  iLootDataFieldCnt++;                                   
+                 for(var i=0; i< iM3TotCnt ; i++) 
+                 {                    
+	                  intToStrFieldCnt = iLootDataFieldCnt.toString();
+	                      
+	                  if (intToStrFieldCnt.length == 1)
+	                  {
+	                    intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	                  }
+	
+	                  if (nextRowFlag == "R2")
+	                  {
+	                    fieldStr = "w" + iLootCnt2 + "WeekSeq";  
+	                    
+	                    groupM_3.children.push({
+									                              dataField : "w" + intToStrFieldCnt,
+									                              headerText :  result.header[1][fieldStr],
+									                              style : "my-backColumn1"
+									                          });
+	                      
+	                    iLootCnt2++;                  
+	                  }
+	                  else
+	                  {
+	                	  fieldStr = "w" + iLootCnt + "WeekSeq";  
+	                	  
+		                  groupM_3.children.push({
+		                                            dataField : "w" + intToStrFieldCnt,
+		                                            headerText :  result.header[0][fieldStr],
+		                                            style : "my-backColumn1"
+		                                         });
+		  
+		                  iLootCnt++;
+	                  }
+	
+	                  if (result.header[0][fieldStr] == "W52")
+	                  {
+	                    console.log("M+3..W52..START");
+	                    nextRowFlag = "R2";
+	                  }     
+	                   
+	                  iLootDataFieldCnt++;                                   
                  }
-
                  dynamicLayout.push(groupM_3);
+                 
   
                 //Dynamic Grid Event Biding
                 myGridID = AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
@@ -870,11 +973,6 @@ function fnSettiingHeader()
   
 
               fnSearchBtnList();
-               // summaryHead Setting.
-               // fnSelectSummaryHeadList(result.header[0]);
-               // summary Data Select
-               // selectStockCtgrySummaryList();
-              
             }
           }
         ,function(jqXHR, textStatus, errorThrown) 

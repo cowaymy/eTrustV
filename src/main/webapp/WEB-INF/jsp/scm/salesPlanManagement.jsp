@@ -13,11 +13,13 @@
 }
 
 .my-backColumn1 {
+  text-align:right;
   background:#818284;
   color:#000;
 }
 
 .my-backColumn2 {
+  text-align:right;
   background:#a1a2a3;
   color:#000;
 }
@@ -156,7 +158,6 @@ var options = {
             $("#mstCdId").val( event.value);
             
             fn_getDetailCode(gInsertGridID, event.rowIndex);
-
         
     });
 
@@ -173,14 +174,12 @@ var options = {
 
 function fnShowGrid()
 {
-    alert('show');
   $("#dynamic_DetailGrid_wrap").hide();
   fnInsertGridCreate();
   $("#insertGridDivID").show();
 }
 function fnHideGrid()
 {
-  alert('hide');
   if(AUIGrid.isCreated(gInsertGridID)){
       AUIGrid.destroy(gInsertGridID);
   }
@@ -411,13 +410,6 @@ function auiCellEditignHandler(event)
   if(event.type == "cellEditBegin") 
   {
       console.log("에디팅 시작(cellEditBegin) : (rowIdx: " + event.rowIndex + ",columnIdx: " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-
-/*       var authSeq = AUIGrid.getCellValue(myGridID, event.rowIndex, "zreExptId");
-      
-      if (AUIGrid.isAddedById(myGridID,authSeq) == false && authSeq.indexOf("Input zreExptId") == -1 && event.columnIndex == 0 )// edit
-      {
-        return false;  // edit모드일 때만 zreExptId를 수정할수 있다.
-      } */
   } 
   else if(event.type == "cellEditEnd") 
   {
@@ -634,12 +626,13 @@ function fnSetParamAuthCd(myGridID, rowIndex)
   console.log("zreExptId: "+ $("#zreExptId").val() + "dealerName: "+ $("#dealerName").val() );     
 }
 
-function fnSelectSummaryHeadList(summaryHeadList)
+function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 {
   var dynamicSummaryLayout = [];
   var dynamicSummaryOption = {}; 
   var dynamicSummaryFooterLayout = [];
   var dynamicSummaryHeadList = {};
+  var dynamicSummaryHeadList2 = {};
 
 	// 이전에 그리드가 생성되었다면 제거함.
   if(AUIGrid.isCreated(summaryGridID)) 
@@ -648,6 +641,7 @@ function fnSelectSummaryHeadList(summaryHeadList)
   }
 
   dynamicSummaryHeadList = summaryHeadList; 
+  dynamicSummaryHeadList2 = summaryHeadList2; 
 
 	dynamicSummaryOption = {
 										       // 푸터 보이게 설정
@@ -672,25 +666,33 @@ function fnSelectSummaryHeadList(summaryHeadList)
 														        dataField : dynamicSummaryHeadList.m1H2,
 														        positionField : dynamicSummaryHeadList.m1H2,
 														        operation : "SUM",
-														        formatString : "#,##0"
+														        formatString : "#,##0",
+                                    dataType : "numeric",
+                                    style : "my-column", 
 														     }
 														   , {  // m+2
 														        dataField : dynamicSummaryHeadList.m2H2,
 														        positionField : dynamicSummaryHeadList.m2H2,
 														        operation : "SUM",
-														        formatString : "#,##0"
+														        formatString : "#,##0",
+                                    dataType : "numeric",
+                                    style : "my-column", 														        
 														     }
 														   , {  // m+3
 														        dataField : dynamicSummaryHeadList.m3H3,
 														        positionField : dynamicSummaryHeadList.m3H3,
 														        operation : "SUM",
-														        formatString : "#,##0"
+														        formatString : "#,##0",
+														        dataType : "numeric",
+							                      style : "my-column",
 														     }
 														   , {  // m+4
 														        dataField : dynamicSummaryHeadList.m4H4,
 														        positionField : dynamicSummaryHeadList.m4H4,
 														        operation : "SUM",
-														        formatString : "#,##0"
+														        formatString : "#,##0",
+														        dataType : "numeric",
+							                      style : "my-column",
 														     }
 														     
                                 ]  
@@ -711,7 +713,9 @@ function fnSelectSummaryHeadList(summaryHeadList)
 			                                   dataField : "w"+intToStrSummaryFieldCnt,
 			                                   positionField : "w"+intToStrSummaryFieldCnt,
 			                                   operation : "SUM",
-			                                   formatString : "#,##0"
+			                                   formatString : "#,##0",
+			                                   dataType : "numeric",
+			                                   style : "my-column",
 			                                }); 
      iSummaryLoopCnt++;
      iSummaryLoopFieldCnt++;
@@ -719,29 +723,25 @@ function fnSelectSummaryHeadList(summaryHeadList)
 
 	  if(dynamicSummaryHeadList != null )
     {
-        dynamicSummaryLayout.push({                            
+        dynamicSummaryLayout.push(  {                            
 	                                    dataField : dynamicSummaryHeadList.categoryH1  // category
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
 	                                 ,{                            
 	                                     dataField : dynamicSummaryHeadList.isuueorderH
 	                                     ,headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />"
 	                                     ,editable : true
-	                                     //,width : "8%"
 	                                  }
 	                                , {     //m1_Issue_Order   
 	                                    dataField : dynamicSummaryHeadList.beforeDayH2
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder_summery' />"   
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.todayH2
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />"
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
 	
 	                                , {                            
@@ -749,60 +749,101 @@ function fnSelectSummaryHeadList(summaryHeadList)
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1' />" 
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
+		                                  ,style : "my-column"
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.m2H2
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
+	                                    ,style : "my-column"
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.m3H3
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
 	                                    ,dataType : "numeric"
-	                                    ,formatString : "#,##0"                                        
+	                                    ,formatString : "#,##0"
+	                                    ,style : "my-column"                                        
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
 	                                , {                            
 	                                    dataField : dynamicSummaryHeadList.m4H4
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
 	                                    ,dataType : "numeric"
-	                                    ,formatString : "#,##0"                                        
+	                                    ,formatString : "#,##0"
+		                                  ,style : "my-column"                                        
 	                                    ,editable : true
-	                                    //,width : "5%"
 	                                  }
                                 ) //push
                                 
         var iLootCnt = 1;
+        var iLootCnt2 = 1;
+        var nextRowFlag = "";
         var fieldStr = "";
         var iLootDataFieldCnt = 0;
         var intToStrFieldCnt ="";
         
+        
         for (var i=0; i < 31; i++) 
         {
-          fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
-          
-          intToStrFieldCnt = iLootDataFieldCnt.toString();
-          
-          if (intToStrFieldCnt.length == 1)
-          {
-            intToStrFieldCnt =  "0" + intToStrFieldCnt;
-          }
+          //2016 41 DST WP
            
-           dynamicSummaryLayout.push({
+          if (nextRowFlag == "R2")
+			    {
+            fieldStr = "w" + iLootCnt2 + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+            
+            intToStrFieldCnt = iLootDataFieldCnt.toString();
+            
+            if (intToStrFieldCnt.length == 1)
+            {
+              intToStrFieldCnt =  "0" + intToStrFieldCnt;
+            }
+
+           // console.log("summary_fieldStr222222: " + fieldStr + " /headerText: " + dynamicSummaryHeadList2[fieldStr]  +" /dataField: " + "w"+intToStrFieldCnt);            
+			    
+        	  dynamicSummaryLayout.push({
+                  dataField : "w"+intToStrFieldCnt,   
+                  headerText : dynamicSummaryHeadList2[fieldStr],  // "w00"
+                  editable: false,
+                  dataType : "numeric",
+                  formatString : "#,##0",
+                  style : "my-column"   
+              }); 
+              
+			      iLootCnt2++;                  
+			    }
+			    else 
+          {
+
+            fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+            
+            intToStrFieldCnt = iLootDataFieldCnt.toString();
+            
+            if (intToStrFieldCnt.length == 1)
+            {
+              intToStrFieldCnt =  "0" + intToStrFieldCnt;
+            }
+		                   
+            dynamicSummaryLayout.push({
 				                                  dataField : "w"+intToStrFieldCnt,   
 				                                  headerText : dynamicSummaryHeadList[fieldStr],  // "w00"
 				                                  editable: false,
 			                                    dataType : "numeric",
-			                                    formatString : "#,##0"   
-				                                // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
+			                                    formatString : "#,##0",  
+                                          style : "my-column"
 				                              }); 
+
            iLootCnt++;
+          }
+           
+          if (dynamicSummaryHeadList[fieldStr] == "W52")
+          {
+               console.log("<<<summary Header W52>>>>");
+               nextRowFlag = "R2";
+          }
+
            iLootDataFieldCnt++;
         }
         
@@ -868,6 +909,8 @@ function fnSettiingHeader()
 	              $("#planCreatedAt").text(result.planInfo[0].crtDt);
 			       }
 
+	           console.log("seperaionInfo: " + result.seperaionInfo.length + " /getChildField: " + result.getChildField.length );
+
              if( (result.seperaionInfo == null || result.seperaionInfo.length < 1) 
                 || (result.getChildField == null || result.getChildField.length < 1))
              {
@@ -895,7 +938,6 @@ function fnSettiingHeader()
               {
 		            	  dynamicLayout.push({ 
 		                			                 headerText : "Stock"
-		                			              // , width : 10 
 		                			               , children : [
 																													{ 
 																													    dataField : result.header[0].planMasterIdH
@@ -908,33 +950,27 @@ function fnSettiingHeader()
 																													    dataField : result.header[0].teamH1
 																													   ,headerText : "<spring:message code='sys.scm.salesplan.Team' />"
 																													   ,editable : true
-																													   //,width : "5%"
 	                                                           
 																													  }
 																													, { 
 																													    dataField : result.header[0].stkTypeIdH1
 																													   ,headerText : "<spring:message code='sys.scm.interface.stockType' />"
 																													   ,editable : true
-																													   //,width : "5%"
 																													  } 
 																													, {                            
 																													    dataField : result.header[0].categoryH1
 																													    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
 																													    ,editable : true
-																													    //,width : "5%"
-																													      ,idx:1
 																													  }
 																													, {                            
 																													    dataField : result.header[0].codeH1
 																													    ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
 																													    ,editable : true
-																													    //,width : "5%"
 																													  }
 																													, {                            
 																													    dataField : result.header[0].nameH1
 																													    ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
 																													    ,editable : true
-																													    //,width : "5%"
 																													  }
 		
 		                              			              ]
@@ -943,7 +979,6 @@ function fnSettiingHeader()
 		       			                        ,{                            
 		                                          dataField : result.header[0].isuueorderH
 		                                          ,headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />"
-		                                        	//,width : 15
 		                                          ,editable : false
 		                                     }
 		                                            
@@ -1062,38 +1097,31 @@ function fnSettiingHeader()
 		                                                         dataField : result.header[0].beforeDayH2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder' />"   
 		                                                         ,editable : false
-		                                                         //,width : "5%"
-		                                                         //,visible: false
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].todayH2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />"
 		                                                         ,editable : false
-		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m1H2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1' />" 
 		                                                         ,editable : true
-		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m2H2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
 		                                                         ,editable : true
-		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m3H3
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
 		                                                         ,editable : true
-		                                                         //,width : "5%"
 		                                                       }
 		                                                     , {                            
 		                                                         dataField : result.header[0].m4H4
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
 		                                                         ,editable : true
-		                                                         //,width : "5%"
 		                                                       }
 		                                                     ] // child                  	  
 		                                    }
@@ -1108,6 +1136,8 @@ function fnSettiingHeader()
                     var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);   
 				            
 							      var iLootCnt = 1;
+							      var iLootCnt2 = 1; //Next Year
+							      var nextRowFlag = "";
 							      var iLootDataFieldCnt = 0;
 										var intToStrFieldCnt ="";
 										var fieldStr ="";
@@ -1116,13 +1146,11 @@ function fnSettiingHeader()
 				            // M+0   : 당월    remainCnt
 		                var groupM_0 = {
 		                   headerText : "<spring:message code='sys.scm.salesplan.M0' />",
-		                  // width : 15 ,
 		                   children : []
 		                }
 		                
 		               for(var i=0; i < 5; i++) 
 		               {
-		               	  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
 		                  /* console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
 		                             +" / fieldStr: " +  fieldStr  
 		                             +" / field_Name_with: " +  result.header[0][fieldStr]  
@@ -1149,37 +1177,89 @@ function fnSettiingHeader()
 
 		                    sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq 
 
-		                    console.log("sumWeekThStr: " + sumWeekThStr);
-		                         
-		                 	  groupM_0.children.push(
-		                    {
-		                         dataField :  sumWeekThStr,   // bef1WeekTh
-		                         headerText : strWeekTh + result.getChildField[i].weekTh,
-		                         editable: false,
-		                         style : "my-backColumn1"
-		                         // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
-		                    }); 
+		                 	  groupM_0.children.push({
+														                     dataField :  sumWeekThStr,   // bef1WeekTh
+														                     headerText : strWeekTh + result.getChildField[i].weekTh,
+														                     dataType : "numeric",
+							                                   formatString : "#,##0",
+														                     editable: false,
+														                     style : "my-backColumn1"
+														                  }); 
 		
 		                    continue;
 			                }
 		                  else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
 		                  {
-		                	  groupM_0.children.push({
-									                                 dataField : "w" + intToStrFieldCnt,   // "w00"
-									                                 headerText :result.header[0][fieldStr], 
-									                                 editable: false,
-									                                 style : "my-backColumn2"  
-									                            });
+		                    if (nextRowFlag == "R2")
+		                    {
+		                    	 fieldStr = "w" + iLootCnt2 + "WeekSeq";
+		                    	
+	                         groupM_0.children.push({
+									                                  dataField : "w" + intToStrFieldCnt,   // "w00"
+									                                  headerText :result.header[1][fieldStr],
+									                                  dataType : "numeric",
+									                                  formatString : "#,##0",
+									                                  editable: false,
+									                                  style : "my-backColumn2"   
+									                               });
+
+	                         iLootCnt2++;
+				                }
+		                	  else
+			                	{
+		                		  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+		                		  
+                          groupM_0.children.push({
+								                                    dataField : "w" + intToStrFieldCnt,   // "w00"
+								                                    headerText :result.header[0][fieldStr],
+								                                    dataType : "numeric", 
+								                                    formatString : "#,##0",
+								                                    editable: false,
+								                                    style : "my-backColumn2"  
+								                                });
+                          
+                          iLootCnt++;
+				                }
+
 		                  }
 			                else 
 			                { 
-		                	  groupM_0.children.push({
+
+                        if (nextRowFlag == "R2")
+                        {
+                           fieldStr = "w" + iLootCnt2 + "WeekSeq";
+                          
+                           groupM_0.children.push({
+										                               dataField : "w" + intToStrFieldCnt,   // "w00"
+										                               headerText :result.header[1][fieldStr] ,
+										                               dataType : "numeric",
+										                               formatString : "#,##0",
+										                               style : "my-column",
+										                             });
+
+                           iLootCnt2++;
+                        }
+                        else
+				                {
+                        	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+
+                          groupM_0.children.push({
 														                       dataField : "w" + intToStrFieldCnt,   // "w00"
-														                       headerText :result.header[0][fieldStr] 
-														                  });
+														                       headerText :result.header[0][fieldStr],
+														                       dataType : "numeric",
+														                       formatString : "#,##0",
+														                       style : "my-column", 
+													  	                  });
+                          iLootCnt++;
+				                }
 			                }
-		                  
-		                  iLootCnt++;
+
+                      if (result.header[0][fieldStr] == "W52")
+                      {
+                    	  console.log("M+0..W52..START");
+                        nextRowFlag = "R2";
+                      } 
+
 		                  iLootDataFieldCnt++;
 		               }
 		               dynamicLayout.push(groupM_0);
@@ -1195,93 +1275,176 @@ function fnSettiingHeader()
 		                                   }); 
 		                
 		               } */
-		             
+
+	                 /////////////////////////////////
+			             
 		                // M+1
 		               var groupM_1 = {
 		                   headerText : "M+1",
-		                  // width : 15 ,
 		                   children : []
 		               }
 		
 		               for(var i=0; i<iM1TotCnt ; i++) 
 		               {
-		              	  fieldStr = "w" + iLootCnt + "WeekSeq";  
-		                  
-		              	  intToStrFieldCnt = iLootDataFieldCnt.toString();
-		                    
-		                  if (intToStrFieldCnt.length == 1)
-		                  {
-		                    intToStrFieldCnt =  "0" + intToStrFieldCnt;
-		                  }
-		
-		                  groupM_1.children.push({
+		                  //M+1_header_Push: w03 /fieldStr: W48-2
+		                  intToStrFieldCnt = iLootDataFieldCnt.toString();
+
+                      if (intToStrFieldCnt.length == 1)
+                      {
+                        intToStrFieldCnt =  "0" + intToStrFieldCnt;
+                      }
+		                  		                  
+		                  if (nextRowFlag == "R2")
+                      {
+                        fieldStr = "w" + iLootCnt2 + "WeekSeq";  
+                        
+                        groupM_1.children.push({
+									                                dataField : "w" + intToStrFieldCnt,
+									                                headerText :  result.header[1][fieldStr],
+									                                dataType : "numeric",
+									                                formatString : "#,##0",
+									                                style : "my-column",
+									                             });   
+                        iLootCnt2 ++;                  
+                      }
+		                  else
+			                {
+
+		                    fieldStr = "w" + iLootCnt + "WeekSeq";  
+				                
+		                    groupM_1.children.push({
 														                   dataField : "w" + intToStrFieldCnt,
-														                   headerText :  result.header[0][fieldStr] 
+														                   headerText :  result.header[0][fieldStr],
+														                   dataType : "numeric",
+														                   formatString : "#,##0",
+														                   style : "my-column", 
 														                  });
-		
-		                  iLootCnt ++;
+
+		                    iLootCnt ++;
+			                }
+
+		                /*   console.log("M+1_header_DataField: " + "w" + intToStrFieldCnt + " /fieldStr: " + fieldStr
+		                             +" /Main_Result.header: " + result.header[0][fieldStr]); */
+
+                      if (result.header[0][fieldStr] == "W52")
+                      {
+                          console.log("M+1..W52..START");
+                          nextRowFlag = "R2";
+                      }
+		                 
 		                  iLootDataFieldCnt++;
 		                }
 		                dynamicLayout.push(groupM_1);
 		
+
+                    /////////////////////////////////
 		                
 		                // M+2
 		                var groupM_2 = {
 		                   headerText : "M+2",
-		                  // width : 15 ,
 		                   children : []
 		                }
 		                
 		               for(var i=0; i<iM2TotCnt ; i++) 
 		               {
-		                 fieldStr = "w" + iLootCnt + "WeekSeq";  
-		
 		                 intToStrFieldCnt = iLootDataFieldCnt.toString();
 		                    
 		                 if (intToStrFieldCnt.length == 1)
 		                 {
 		                   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 		                 }
-		
-		                 groupM_2.children.push({
-														                          dataField : "w" + intToStrFieldCnt,
-														                          headerText :  result.header[0][fieldStr] 
+
+	                   if (nextRowFlag == "R2")
+	                   {
+                       fieldStr = "w" + iLootCnt2 + "WeekSeq";
+                       groupM_2.children.push({
+											                          dataField : "w" + intToStrFieldCnt,
+											                          headerText :  result.header[1][fieldStr],
+											                          dataType : "numeric",
+											                          formatString : "#,##0",
+											                          style : "my-column",
+                          });   
+                       
+                       iLootCnt2 ++;                  
+	                   }
+	                   else
+		                 {
+	                	   fieldStr = "w" + iLootCnt + "WeekSeq";  
+	                	   
+		                   groupM_2.children.push({
+											                          dataField : "w" + intToStrFieldCnt,
+											                          headerText :  result.header[0][fieldStr],
+											                          dataType : "numeric",
+											                          formatString : "#,##0",
+											                          style : "my-column", 
 														                 });
-		
-		                 iLootCnt ++;
+		                   iLootCnt++;
+		                 }
+
+                     if (result.header[0][fieldStr] == "W52")
+                     {
+                       console.log("M+2..W52..START");
+                       nextRowFlag = "R2";
+                     }
+		                 
 		                 iLootDataFieldCnt++;
 		              }
 		               dynamicLayout.push(groupM_2);
-		             
+
+	                /////////////////////////////////
 		
 		               // M+3
 		               var groupM_3 = {
 		                  headerText : "M+3",
-		                //  width : 15 ,
 		                  children : []
 		               }
 		               
 		                for(var i=0; i< iM3TotCnt ; i++) 
 		               {
-		              	  fieldStr = "w" + iLootCnt + "WeekSeq";  
-		                  
 			                intToStrFieldCnt = iLootDataFieldCnt.toString();
 			                    
 			                if (intToStrFieldCnt.length == 1)
 			                {
 			                  intToStrFieldCnt =  "0" + intToStrFieldCnt;
 			                }
-			                 
-			                groupM_3.children.push({
-															                	  dataField : "w" + intToStrFieldCnt,
-															                    headerText :  result.header[0][fieldStr] 
-															                });
+
+	                    if (nextRowFlag == "R2")
+	                    {
+	                      fieldStr = "w" + iLootCnt2 + "WeekSeq";
+	                      groupM_3.children.push({
+											                           dataField : "w" + intToStrFieldCnt,
+											                           headerText :  result.header[1][fieldStr],
+											                           dataType : "numeric",
+											                           formatString : "#,##0",
+											                           style : "my-column", 
+											                         });   
+	                       
+	                      iLootCnt2 ++;                  
+	                    }
+	                    else
+		                  {
+	                    	 fieldStr = "w" + iLootCnt + "WeekSeq";  
+	                    	
+	                       groupM_3.children.push({
+									                                dataField : "w" + intToStrFieldCnt,
+									                                headerText :  result.header[0][fieldStr],
+									                                dataType : "numeric",
+									                                formatString : "#,##0",
+									                                style : "my-column",
+									                             });
+                            
+	                       iLootCnt ++;
+			                }
+
+                     if (result.header[0][fieldStr] == "W52")
+                     {
+                       console.log("M+3..W52..START");
+                       nextRowFlag = "R2";
+                     }		                 
 			
-			                iLootCnt ++;
-			                iLootDataFieldCnt++;					                         
+			               iLootDataFieldCnt++;					                         
 		               }
-		               
-		               dynamicLayout.push(groupM_3);
+		              dynamicLayout.push(groupM_3);
 		
 		          	  //Dynamic Grid Event Biding
 		          	  myGridID = AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
@@ -1316,12 +1479,11 @@ function fnSettiingHeader()
 		         	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 		         	    });   
 		
-		         	    
-		             fnSearchBtnList();
-		             // summaryHead Setting.
-		         	   fnSelectSummaryHeadList(result.header[0]);
-		             // summary Data Select
-		         	   selectStockCtgrySummaryList();
+			            fnSearchBtnList();
+		              // summaryHead Setting.
+		         	    fnSelectSummaryHeadList(result.header[0], result.header[1]);
+		              // summary Data Select
+		         	    selectStockCtgrySummaryList();
 		         	  
 		          }
            }
@@ -1702,8 +1864,8 @@ function fnSelectSalesCnt(inputCode)
 
 function fnChangeEventPeriod(object)
 {
-	//alert("fnChangeEventPeriod: " + object.value );
-	gWeekThValue = object.value
+	gWeekThValue = object.value;
+	cosole.log("gWeekThValue: " + gWeekThValue);
 }
 
 
