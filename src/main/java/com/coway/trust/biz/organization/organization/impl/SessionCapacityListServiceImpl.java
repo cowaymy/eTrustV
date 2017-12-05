@@ -82,6 +82,54 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
     		}
 		}
 	}
+	
+	@Override
+	public void updateCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO) {
+		if(updateList.size() > 0){
+    		for(int i=0; i< updateList.size(); i++){
+    			Map<String, Object>  updateValue = (Map<String, Object>) updateList.get(i);
+    			updateValue.put("userId", sessionVO.getUserId());
+    			
+    			if( (updateValue.get("morngSesionAs") != null && updateValue.get("morngSesionAs").toString().length() > 0)
+    					|| (updateValue.get("morngSesionIns") != null && updateValue.get("morngSesionIns").toString().length() > 0)
+    					|| (updateValue.get("morngSesionRtn") != null && updateValue.get("morngSesionRtn").toString().length() > 0)
+    					|| (updateValue.get("aftnonSesionAs") != null && updateValue.get("aftnonSesionAs").toString().length() > 0)
+    					|| (updateValue.get("aftnonSesionIns") != null && updateValue.get("aftnonSesionIns").toString().length() > 0)
+    					|| (updateValue.get("aftnonSesionRtn") != null && updateValue.get("aftnonSesionRtn").toString().length() > 0)
+    					|| (updateValue.get("evngSesionAs") != null && updateValue.get("evngSesionAs").toString().length() > 0)
+    					|| (updateValue.get("evngSesionIns") != null && updateValue.get("evngSesionIns").toString().length() > 0)
+    					|| (updateValue.get("evngSesionRtn") != null && updateValue.get("evngSesionRtn").toString().length() > 0) ) {
+    				
+    				updateValue.put("codeId", ParseInteger(updateValue.get("codeId")));
+    				updateValue.put("memId", ParseInteger(updateValue.get("memId")));
+    				updateValue.put("morngSesionAs", ParseInteger(updateValue.get("morngSesionAs")));
+    				updateValue.put("morngSesionIns", ParseInteger(updateValue.get("morngSesionIns")));
+    				updateValue.put("morngSesionRtn", ParseInteger(updateValue.get("morngSesionRtn")));
+    				updateValue.put("aftnonSesionAs", ParseInteger(updateValue.get("aftnonSesionAs")));
+    				updateValue.put("aftnonSesionIns", ParseInteger(updateValue.get("aftnonSesionIns")));
+    				updateValue.put("aftnonSesionRtn", ParseInteger(updateValue.get("aftnonSesionRtn")));
+    				updateValue.put("evngSesionAs", ParseInteger(updateValue.get("evngSesionAs")));
+    				updateValue.put("evngSesionIns", ParseInteger(updateValue.get("evngSesionIns")));
+    				updateValue.put("evngSesionRtn", ParseInteger(updateValue.get("evngSesionRtn")));
+    				
+    				logger.debug("updateValue {}", updateValue);
+    				sessionCapacityListMapper.updateCapacity(updateValue);
+    				
+    			}
+    		}
+		}
+	}
+	
+	Object ParseInteger(Object object) {
+		if (object != null && object.toString().length() > 0) {
+			try {
+				return (int) Double.parseDouble(object.toString());
+	       } catch(Exception e) {
+	    	   return -1;
+	       }
+	   }
+	   else return null;
+	}
 
 	@Override
 	public void deleteCapacity(List<Object> params, SessionVO sessionVO) {

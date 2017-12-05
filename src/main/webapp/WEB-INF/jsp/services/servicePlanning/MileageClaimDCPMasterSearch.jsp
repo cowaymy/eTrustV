@@ -102,7 +102,7 @@ function DCPMasterGrid() {
                                       },
                                       keyField : "id1"
                               }},
-                          { dataField : "brnchCode", headerText  : "Branch",width : 100,
+                          { dataField : "brnchCode", headerText  : "Branch",width : 100, editable: false,
                                   editRenderer : {
                                       type : "ComboBoxRenderer",
                                       showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -115,7 +115,7 @@ function DCPMasterGrid() {
                                       },
                                       keyField : "id1"
                                   }},
-                          { dataField : "cityFrom", headerText  : "CITY From",  width  : 150,
+                          { dataField : "cityFrom", headerText  : "CITY From",  width  : 150, editable: false,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -125,7 +125,7 @@ function DCPMasterGrid() {
                                           },
                                           keyField : "id1"
                                       }},
-                          { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200,
+                          { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200, editable: false,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -135,7 +135,7 @@ function DCPMasterGrid() {
                                           },
                                           keyField : "id1"
                                       }},
-                          { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100,
+                          { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100, editable: false,
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -145,7 +145,7 @@ function DCPMasterGrid() {
                                           },
                                           keyField : "id1"
                                       }},
-                          { dataField : "cityTo", headerText  : "CITY TO",  width  : 150,
+                          { dataField : "cityTo", headerText  : "CITY TO",  width  : 150, editable: false,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
                                               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -155,7 +155,7 @@ function DCPMasterGrid() {
                                               },
                                               keyField : "id1"
                                           }},
-                          { dataField : "dcpTo",       headerText  : "DCP TO",  width  : 200,
+                          { dataField : "dcpTo",       headerText  : "DCP TO",  width  : 200, editable: false,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
                                               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -165,7 +165,7 @@ function DCPMasterGrid() {
                                               },
                                               keyField : "id1"
                                           }},
-                          { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100,
+                          { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100, editable: false,
                                           editRenderer : {
                                               type : "ComboBoxRenderer",
                                               showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -175,14 +175,14 @@ function DCPMasterGrid() {
                                               },
                                               keyField : "id1"
                                           }},
-                          { dataField : "distance",       headerText  : "Distance",  width  :100},
-                          { dataField : "memType1",       headerText  : "memType1",  width  : 0},
-                          { dataField : "brnchCode1",       headerText  : "brnchCode1",  width  : 0},
-                          { dataField : "dcpFrom1",       headerText  : "dcpFrom1",  width  : 0},
-                          { dataField : "dcpFromId1",       headerText  : "dcpFromId1",  width  : 0},
-                          { dataField : "dcpTo1",       headerText  : "dcpTo1",  width  : 0},
-                          { dataField : "dcpToId1",       headerText  : "dcpToId1",  width  : 0},
-                          { dataField : "distance1",       headerText  : "distance1",  width  : 0},
+                          { dataField : "distance",       headerText  : "Distance",  width  :100, editable: true},
+                          { dataField : "memType1",       headerText  : "memType1",  width  : 0, editable: false},
+                          { dataField : "brnchCode1",       headerText  : "brnchCode1",  width  : 0, editable: false},
+                          { dataField : "dcpFrom1",       headerText  : "dcpFrom1",  width  : 0, editable: false},
+                          { dataField : "dcpFromId1",       headerText  : "dcpFromId1",  width  : 0, editable: false},
+                          { dataField : "dcpTo1",       headerText  : "dcpTo1",  width  : 0, editable: false},
+                          { dataField : "dcpToId1",       headerText  : "dcpToId1",  width  : 0, editable: false},
+                          { dataField : "distance1",       headerText  : "distance1",  width  : 0, editable: false},
        ];
 
         var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  

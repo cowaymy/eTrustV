@@ -205,7 +205,8 @@
      // 에디팅 정상 종료, 취소 이벤트 바인딩
         AUIGrid.bind(myGridID, ["cellEditEnd", "cellEditCancel"], auiCellEditingHandler);
     });
- // 편집 핸들러
+     
+    // 편집 핸들러
     function auiCellEditingHandler(event) {
        //document.getElementById("ellapse").innerHTML = event.type  + ": ( " + event.rowIndex  + ", " + event.columnIndex + ") : " + event.value;
         
@@ -328,6 +329,26 @@
         	}
         }, null, {async : false});
     }
+    
+    // 171204 :: 선한이
+    // 엑셀 업로드
+    function fn_uploadFile() {
+        var formData = new FormData();
+          console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+          formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+          
+        Common.ajaxFile("/organization/excel/saveCapacityByExcel.do"
+                  , formData
+                  , function (result) 
+                   {
+                        //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                        if(result.code == "99"){
+                            Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+                        }else{
+                            Common.alert(result.message);
+                        }
+               });
+    };
 
     
     </script>
@@ -351,6 +372,15 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>Search Option</h3>
 <ul class="right_btns">
+
+    <!-- 171204 :: 선한이 -->
+    <li>
+    <div class="auto_file"><!-- auto_file start -->
+    <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
+    </div><!-- auto_file end -->
+    </li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">Update Request</a></p></li>
+
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getSsCapacityBrListAjax();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->

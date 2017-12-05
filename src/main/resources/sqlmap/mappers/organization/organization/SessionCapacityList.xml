@@ -165,7 +165,9 @@
 			AFTNON_SESION_RTN = #{aftnonSesionRtn},
 			EVNG_SESION_AS =   #{evngSesionAs},
 			EVNG_SESION_INS = #{evngSesionIns},
-			EVNG_SESION_RTN = #{evngSesionRtn}
+			EVNG_SESION_RTN = #{evngSesionRtn},
+			UPD_DT = SYSDATE,
+			UPD_USER_ID = #{userId}
 		  WHERE BRNCH_ID = TO_NUMBER(#{codeId})
           AND CT_ID  = TO_NUMBER(#{memId})
 		WHEN NOT MATCHED THEN
@@ -179,7 +181,11 @@
 						AFTNON_SESION_RTN,
 						EVNG_SESION_AS,
 						EVNG_SESION_INS,
-						EVNG_SESION_RTN
+						EVNG_SESION_RTN,
+						CRT_DT,
+						CRT_USER_ID,
+						UPD_DT,
+						UPD_USER_ID
 						)
 		  VALUES(
 						TO_NUMBER(#{codeId}),
@@ -192,7 +198,11 @@
 						#{aftnonSesionRtn},
 						#{evngSesionAs},
 						#{evngSesionIns},
-						#{evngSesionRtn}
+						#{evngSesionRtn},
+						SYSDATE,
+						#{userId},
+						SYSDATE,
+						#{userId}
 						)
     </update>
     

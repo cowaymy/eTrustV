@@ -17,6 +17,9 @@ public interface SessionCapacityListService {
 	
 	void deleteCapacity(List<Object> params, SessionVO sessionVO);
 	
+	// 171205 :: 선한이
+	void updateCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
+	
 	List<EgovMap> seleCtCodeSearch(Map<String, Object>params);
 	
 	List<EgovMap> seleCtCodeSearch2(Map<String, Object> params);

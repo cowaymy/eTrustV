@@ -292,52 +292,8 @@ $(document).ready(function() {
 	 $("#dscCode").change(function (){
 	        doGetCombo('/services/serviceGroup/selectCTMByDSC',  $("#dscCode").val(), '','memCode', 'S' ,  ''); 
 	        doGetCombo('/services/serviceGroup/selectCTSubGrb',  $("#dscCode").val(), '','ctSubGrp', 'S' ,  ''); 
-	   });
+	 });
 	 
-
-	    
-	    // 파일 선택하기
-	    $('#fileSelector').on('change', function(evt) {
-	        if (!checkHTML5Brower()) {
-	            alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
-	            return;
-	        } else {
-	            var data = null;
-	            var file = evt.target.files[0];
-	            if (typeof file == "undefined") {
-	                alert("파일 선택 시 오류 발생!!");
-	                return;
-	            }
-	            var reader = new FileReader();
-	
-	            reader.onload = function(e) {
-	                var data = e.target.result;
-	
-	                /* 엑셀 바이너리 읽기 */
-	                
-	                var workbook;
-	
-	                if(rABS) { // 일반적인 바이너리 지원하는 경우
-	                    workbook = XLSX.read(data, {type: 'binary'});
-	                } else { // IE 10, 11인 경우
-	                    var arr = fixdata(data);
-	                    workbook = XLSX.read(btoa(arr), {type: 'base64'});
-	                }
-	
-	                var jsonObj = process_wb(workbook);
-	
-	                //console.log(JSON.stringify(jsonObj.Sheet1, 2, 2));
-	                
-	                createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
-	            };
-	
-	            if(rABS) reader.readAsBinaryString(file);
-	            else reader.readAsArrayBuffer(file);
-	            
-	        }
-	    });
-	    
-	
 });
 
 function fn_CTSubGroupSearch(){
