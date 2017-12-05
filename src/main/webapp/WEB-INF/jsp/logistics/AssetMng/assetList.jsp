@@ -224,7 +224,7 @@
     var asstMoveTrnsLayout = [ {dataField:"cardId" ,headerText:"cardId",width:120 ,height:30, visible:false},
                                {dataField:"crtDt" ,headerText:"Date",width:"15%" ,height:30},
                                {dataField:"userName" ,headerText:"Creator",width:"15%" ,height:30},
-                               {dataField:"codeName" ,headerText:"Type",width:"20%" ,height:30},
+                               {dataField:"codeName" ,headerText:"Type",width:"15%" ,height:30},
                                {dataField:"brnchId" ,headerText:"Branch",width:120 ,height:30, visible:false},
                                {dataField:"deptId" ,headerText:"Department",width:120 ,height:30, visible:false},
                                {dataField:"assetId" ,headerText:"assetId",width:120 ,height:30, visible:false},
@@ -303,6 +303,7 @@
     
 
     $(document).ready(function(){
+    	/* 2017-12-05 log */
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
@@ -401,7 +402,6 @@
             });
                
          $("#insert").click(function(){
-        	 alert("??????");
            div="N";
            $("#detailHead").text("AssetMng Information Registration");
            fn_setVisiable(div);
@@ -410,9 +410,7 @@
            $("#Details_info").hide();
            $("#Update_info").hide();
            $("#CopyAssetInfo").hide();         
-           $("#trnasInfo").hide(); 
-           $("#saveTrnsBtn").hide(); 
-           $("#saveStatusBtn").hide();           
+           $("#trnasInfo").hide();         
            AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
           // $("#Insert_info").click();
           });
@@ -487,7 +485,7 @@
              if (selectedItem[0] > -1){
                  fn_assetDetail(selectedItem[0]);
                  fn_setVisiable(div);
-                 $("#masterWindow").show();    
+                 $("#masterWindow").show();
              }else{
              Common.alert('Choice Data please..');
              }
@@ -509,8 +507,6 @@
                  $("#saveStatusBtn").hide();
                  $("#trnasInfo").hide();
                  $("#statusInfo").hide();
-                 $("#a1").show();
-                 
              }else{
              Common.alert('Choice Data please..');
              }
@@ -781,79 +777,30 @@
                 return;
             }
             
-        });  
-        
-        $('#masterpurchaseamount').keypress(function() {
-            if (event.which == '13') {
-                var findStr=".";
-                var sublen;
-                var prices = $("#masterpurchaseamount").val();
-                var priceslen=prices.length;
-                //alert("????"+prices.indexOf(findStr));
-                if (prices.indexOf(findStr) > 0) {  
-                  sublen= prices.indexOf('.');
-                  sublen=sublen+1;
-                  var sums = priceslen - sublen;
-                //  alert("sums :  "+sums);
-                  if(sums == 0 ){
-                      $("#masterpurchaseamount").val(prices+"00");  
-                  }else if(sums == 1 ){
-                      $("#masterpurchaseamount").val(prices+"0");  
-                  }else if(sums == 2){
-                        
-                  }else{
-                      Common.alert("Please enter only the second decimal place.");
-                      $("#masterpurchaseamount").val("");
-                  }
-                 
-                  }else if(prices.indexOf(findStr) == 0){
-                      Common.alert('You can not enter decimal numbers first.');
-                      $("#masterpurchaseamount").val("");
-                  }else{
-                    //  alert('Not Found!!');
-                      $("#masterpurchaseamount").val($.number(prices,2));  
-                  } 
-    
-            }
-        }); 
-        
+        });                
     });
     
     
-//     function getAssetListAjax() {
-//         var param = $('#searchForm').serialize();
-//         $.ajax({
-//             type : "POST",
-//             url : "/logistics/assetmng/assetList.do?" + param,
-//             //url : "/stock/StockList.do",
-//             //data : param,
-//             dataType : "json",
-//             contentType : "application/json;charset=UTF-8",
-//             success : function(data) {
-//                 var gridData = data             
+    function getAssetListAjax() {
+        var param = $('#searchForm').serialize();
+        $.ajax({
+            type : "POST",
+            url : "/logistics/assetmng/assetList.do?" + param,
+            //url : "/stock/StockList.do",
+            //data : param,
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+                var gridData = data             
             
-//                 AUIGrid.setGridData(myGridID, gridData.data);
-//             },
-//             error : function(jqXHR, textStatus, errorThrown) {
-//                 alert("실패하였습니다.");
-//             },
+                AUIGrid.setGridData(myGridID, gridData.data);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert("실패하였습니다.");
+            },
            
-//         });
-//     }
-    
-     function getAssetListAjax() {
-    	
-    	 var param = $('#searchForm').serialize();
-    	 var url = "/logistics/assetmng/assetList.do?";
-    	    Common.ajax("GET" , url , param , function(data){
-             var gridData = data             
-                
-             AUIGrid.setGridData(myGridID, gridData.data);
-    	        
-    	    });
-
-     }
-    
+        });
+    }
 
     
      function getDetailAssetListAjax(rowid,div) {
@@ -932,25 +879,21 @@
    } 
     
    function f_others(url, v){
-//            $.ajax({
-//                type : "POST",
-//                url : url,
-//                dataType : "json",
-//                contentType : "application/json;charset=UTF-8",
-//                success : function(result) {
-//             	   Common.alert(result.msg);
+           $.ajax({
+               type : "POST",
+               url : url,
+               dataType : "json",
+               contentType : "application/json;charset=UTF-8",
+               success : function(_data) {
+                   //var data = _data.data;
 
-//                   // f_info(data, v);
-//                },
-//                error : function(jqXHR, textStatus, errorThrown) {
-//                    alert("실패하였습니다.");
-//                }
-//            });
-
-       Common.ajax("POST" , url , '' , function(data){
-    	   Common.alert(data.msg);
-              
-          });   
+                  // f_info(data, v);
+               },
+               error : function(jqXHR, textStatus, errorThrown) {
+                   alert("실패하였습니다.");
+               }
+           });
+       
    }
    
       
@@ -1091,11 +1034,8 @@
 			$("#trinserthide2").show();
 			$("#savePopbtn").hide();
 			$("#saveTrnsBtn").hide();
-			$("#returnTrnsBtn").hide();
-			$("#saveStatusBtn").hide();
+			 $("#returnTrnsBtn").hide();
 			$("#updatePopbtn").show();
-            $("#statusInfo").hide();
-            $("#a1").hide();
 		} else if (div == "N") {
 			$('#masterForm')[0].reset();
 			$("#trinserthide1").hide();
@@ -1118,8 +1058,7 @@
 			$("#savePopbtn").show();
 			$("#updatePopbtn").hide();
 			$("#insertdetail").show();
-            $("#statusInfo").hide();
-            $("#a1").hide();
+
 			combReset();
 		}
 	}
@@ -1808,7 +1747,7 @@
 <tr id="trinserthide1"> 
     <th scope="row">Assert Status</th>
     <td colspan="2" id="tdassertstatus"><input type="text" title="" placeholder=""  class="w100p" id="masterstatus" name="assetstatus"/></td>
-    <th scope="row">Branch (Belong To)</th>
+    <th scope="row">Breanch (Belong To)</th>
     <td colspan="2" id="tdbreanch"><input type="text" title="" placeholder=""  class="w100p" id="masterbreanch" name="masterbreanch"/></td>  
 </tr>
 <tr id="trinserthide2">
@@ -1890,7 +1829,7 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line" id="a1"><!-- title_line start -->
+<aside class="title_line"><!-- title_line start -->
 <h2>Copy/Duplicate Informaton</h2>
 </aside><!-- title_line end -->
     <table class="type1" id="CopyAssetInfo">
