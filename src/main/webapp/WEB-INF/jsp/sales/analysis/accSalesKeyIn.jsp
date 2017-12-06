@@ -20,13 +20,12 @@ function fn_report(){
 }
 </script>
 
-<div id="wrap"><!-- wrap start -->
+
 <form id="dataForm">
 <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusHP_Adv.rpt" /><!-- Report Name  -->
 <input type="hidden" id="viewType" name="viewType" value="WINDOW" /><!-- View Type  -->
 </form>
 
-<section id="container"><!-- container start -->
 <section id="content"><!-- content start -->
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
@@ -44,7 +43,3 @@ function fn_report(){
 
 
 </section><!-- content end -->
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
