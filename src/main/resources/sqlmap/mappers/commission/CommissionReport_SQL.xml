@@ -482,8 +482,6 @@
                 where t1.EMPLY_TYPE_CODE = 'CD' 
                     and t3.F_MEM_ID is null 
                     and t1.EMPLY_STUS_ID<>3  
-                    and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-                        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
                     and t1.EMPLY_TYPE_ID=2 
         ]]>
                     and t1.EMPLY_LEV = #{level}
@@ -498,8 +496,6 @@
                 where t1.EMPLY_TYPE_CODE = 'CD' 
                     and t3.F_MEM_ID is null 
                     and t1.EMPLY_STUS_ID<>3  
-                    and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-                        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25)>0
                     and t1.EMPLY_TYPE_ID=2 
         ]]>
                     and t1.EMPLY_LEV = #{level}
@@ -607,8 +603,6 @@
 		            left join CMM0038T t3 
 		                on t3.F_MEM_ID =  t1.EMPLY_ID 
 		    where t1.EMPLY_TYPE_CODE in ('HP','ST') 
-		        and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R33+t0.R34)>0
 		         and t3.F_MEM_ID is null 
 		         and t1.EMPLY_STUS_ID<>3) t1
 		    left join (
@@ -658,8 +652,6 @@
 		            left join CMM0038T t3 
 		                on t3.F_MEM_ID =  t1.EMPLY_ID 
 		    where t1.EMPLY_TYPE_CODE in ('HP','ST') 
-		        and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
-		        +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R33+t0.R34)>0
 		         and t3.F_MEM_ID is null 
 		         and t1.EMPLY_STUS_ID<>3)t2
     ]]>
@@ -775,7 +767,6 @@
 		            join SYS0005M t6 on t6.BRNCH_ID = t2.BRNCH 
 		        WHERE t1.EMPLY_TYPE_CODE = 'CT'
 		          AND t1.COMM_TASK_ID =#{taskId}
-		          AND (t5.R1 + t5.R2 + t5.R3 +t5.R4 +t5.R5 +t5.R6 +t5.R7 +t5.R8) > 0
 		    ) t1
 		    LEFT JOIN (
 		        SELECT t1.COMM_TASK_ID as TASK_ID ,  
@@ -818,7 +809,6 @@
 		            join SYS0005M t6 on t6.BRNCH_ID = t2.BRNCH 
 		         WHERE t1.EMPLY_TYPE_CODE = 'CT'
 		          AND t1.COMM_TASK_ID =#{taskId}
-		          AND (t5.R1 + t5.R2 + t5.R3 +t5.R4 +t5.R5 +t5.R6 +t5.R7 +t5.R8) > 0
 		    ) t2
 		ON t1.TASK_ID = t2.TASK_ID
 		    AND t1.M_CODE = t2.M_CODE
