@@ -36,7 +36,7 @@
         
         
         $('#search').click(function(){
-        	if($("#memCode").val() != null && $("#memCode").val() != ""){
+        	//if($("#memCode").val() != null && $("#memCode").val() != ""){
 	        	Common.ajax("GET", "/commission/report/selectHPRawData", $("#myForm").serializeJSON() , function(result) {
 	        		
 	        	    destroyGrid();
@@ -48,10 +48,10 @@
                     AUIGrid.setGridData(gridID, result);
                     
 	        	});
-        	}else{
+        	/* }else{
         		Common.alert("Please select the member code.");
         		$('input:radio[name="actionType"][value="'+radio+'"]').prop('checked', true);
-        	}
+        	} */
         });
         
         $('#actionTypeA').click(function(){
