@@ -583,4 +583,16 @@ public class SalesTrBookController {
 		
 		return ResponseEntity.ok(resultList);
 	}
+	
+	@RequestMapping(value="/trBookMgmtSummaryListingPop.do")
+	public String trBookMgmtSummaryListingPop(){
+		
+		return "sales/trBook/trBookMgmtSummaryListingPop";
+	}
+	
+	@RequestMapping(value="/trBookMgmtLostReportListPop.do")
+	public String trBookMgmtLostReportListPop(){
+		
+		return "sales/trBook/trBookMgmtLostReportListPop";
+	}
 }

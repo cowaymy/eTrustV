@@ -7,6 +7,13 @@ var trBookGridID;
 $(document).ready(function(){
 
     creatGrid();
+    
+    $('#summaryListing').click(function() {
+        Common.popupDiv("/sales/trBook/trBookMgmtSummaryListingPop.do", null, null, true);
+    });
+    $('#lostListing').click(function() {
+        Common.popupDiv("/sales/trBook/trBookMgmtLostReportListPop.do", null, null, true);
+    });
      
 });
 
@@ -192,6 +199,7 @@ function fn_getBookActionValidation(){
     
     return valid;
 }
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -278,8 +286,8 @@ function fn_getBookActionValidation(){
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#">Summary Listing</a></p></li>
-		<li><p class="link_btn"><a href="#">Lost Listing</a></p></li>
+		<li><p class="link_btn"><a href="#" id="summaryListing">Summary Listing</a></p></li>
+		<li><p class="link_btn"><a href="#" id="lostListing">Lost Listing</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

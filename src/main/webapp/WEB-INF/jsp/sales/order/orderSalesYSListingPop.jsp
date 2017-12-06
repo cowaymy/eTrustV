@@ -55,7 +55,8 @@ function validRequiredField(){
 	}
 	
 	if(valid == false){
-        alert(message);
+		Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+
     }
     
     return valid;	
