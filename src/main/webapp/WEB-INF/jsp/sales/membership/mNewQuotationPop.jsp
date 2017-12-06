@@ -1197,7 +1197,7 @@ function  fn_DoSaveProcess(_saveOption){
         	 
         	 if(_saveOption == "1"){
         		 
-        		  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.data + "<br/> System will auto redirect to payment process after 3 seconds. ");
+        		  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.message + "<br/> System will auto redirect to payment process after 3 seconds. ");
 
         		  setTimeout(function(){ fn_saveResultTrans(result.data) ;}, 3000); 
         		  
