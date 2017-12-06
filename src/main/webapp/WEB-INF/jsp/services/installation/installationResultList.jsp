@@ -244,6 +244,37 @@ function fn_installFreeGiftList(){
 function fn_DscReport(){
     Common.popupDiv("/services/installationDscReportPop.do"  , null, null , true , '');
 }
+
+function fn_editInstallation(){//active 일때만 열림
+    
+    
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No Installation record selected.</b>");
+        return ;
+    }
+    
+
+    if(selectedItems.length  > 1) {
+        Common.alert("<b>only select one row plz</b>");
+        return ;
+    }
+    
+      
+    var   installEntryId =   selectedItems[0].item.installEntryId;
+    var   codeid1 =  selectedItems[0].item.codeid1;   
+    var  orderId =   selectedItems[0].item.salesOrdId;    
+    var docId =  selectedItems[0].item.c1;   
+    var  statusCode =  selectedItems[0].item.code1; 
+    var  salesOrderId =  selectedItems[0].item.salesOrdId;
+    
+    if(statusCode == "COM"){
+               Common.popupDiv("/services/editInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+    }else{
+        Common.alert("<b>Only completed installation result is allowed to edit.</b>");
+    }
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -368,6 +399,7 @@ function fn_DscReport(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_addInstallation()" id="addInstallation">Add Installation Result</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_editInstallation()" id="editInstallation">Edit Installation Result</a></p></li>        
        <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
