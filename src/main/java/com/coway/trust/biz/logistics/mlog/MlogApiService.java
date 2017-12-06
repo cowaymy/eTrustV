@@ -65,6 +65,8 @@ public interface MlogApiService {
 	List<EgovMap> getBarcodeCList(String invenAdjustLocId);
 	
 	List<EgovMap> getUsedPartsList(Map<String, Object> params);
+	
+	List<EgovMap> getMiscPartList();
 
 	/**
 	 * 현창배 추가
