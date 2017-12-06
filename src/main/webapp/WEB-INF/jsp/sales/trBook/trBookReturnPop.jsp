@@ -463,7 +463,7 @@ function fn_validRequiredField(rowIndex)
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="trReBookGridID" style="width:100%; height:200px; margin:0 auto;"</div>
+<div id="trReBookGridID" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
