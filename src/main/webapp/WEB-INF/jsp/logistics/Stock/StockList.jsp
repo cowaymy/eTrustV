@@ -601,7 +601,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                 });
             } else {
                 $.extend(fdata, {
-                    'cbSerial' : null
+                    'cbSerial' : ' '
                 });
             }
         }
@@ -646,8 +646,15 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         for (i = 0; i < selectedItems.length; i++) {
             selcell = selectedItems[i].rowIndex;
         }
+        Common.ajax("GET" , "/stock/StockList.do" , param , function(data){
+                var gridData = data;
+                AUIGrid.setGridData(myGridID, gridData.data);
+                AUIGrid.setSelectionByIndex(myGridID, selcell, 3);
+
+                $("#" + _da.revalue).click();
+        });
         
-        console.log(_da);
+/*         console.log(_da);
 
         $.ajax({
             type : "GET",
@@ -668,7 +675,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             },
             complete : function() {
             }
-        });
+        }); */
     }
 
     // AUIGrid 를 생성합니다.
