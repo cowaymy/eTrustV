@@ -101,6 +101,12 @@
                         <if test="cityTo != null and cityTo != '' ">
                            AND BB.CITY = #{cityTo}
                         </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                        </if>
 <![CDATA[ 
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
@@ -163,6 +169,12 @@
                         <if test="cityTo != null and cityTo != '' ">
                            AND BB.CITY = #{cityTo}
                         </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                        </if>
 <![CDATA[ 
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
@@ -215,6 +227,12 @@
                         <if test="cityTo != null and cityTo != '' ">
                            AND BB.CITY = #{cityTo}
                         </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                        </if>
 <![CDATA[ 
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
@@ -261,6 +279,12 @@
                         </if>
                         <if test="cityTo != null and cityTo != '' ">
                            AND BB.CITY = #{cityTo}
+                        </if>
+                        <if test="mcpFromID != null and mcpFromID != '' ">
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                        </if>
+                        <if test="mcpToID != null and mcpToID != '' ">
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
                         </if>
 <![CDATA[ 
                         AND AA.AREA_ID <> BB.AREA_ID) C
