@@ -117,6 +117,7 @@
 			    WHERE 1=1
 			     AND P.SRV_MEM_QOTAT_ID = S.SRV_MEM_QUOT_ID
 			     AND S.SRV_MEM_QUOT_ID =#{srvMemQuotId}
+			     AND  rownum =1 
     </select>
     
      <select id="getSAL0093D_Data" parameterType="Map" resultType="egovMap">

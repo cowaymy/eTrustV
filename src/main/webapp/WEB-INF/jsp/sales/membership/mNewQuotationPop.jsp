@@ -1162,9 +1162,7 @@ function  fn_DoSaveProcess(_saveOption){
 	$("#srvMemPv").val(0);
 	$("#srvDuration").val($("#cYear").val());
 	$("#srvRemark").val($("#txtRemark").val());
-
 	$("#srvQuotStatusId").val(1);
-	
 	$("#srvMemBS12Amt").val(0);
 
 	if($("#cPromotionpac").val() > 0 ) $("#srvPacPromoId").val( $("#cPromotionpac").val());
@@ -1217,9 +1215,11 @@ function  fn_DoSaveProcess(_saveOption){
 
 
 function fn_saveResultTrans(quot_id){
+	
 	$("#_alertOk").click();
 	$("#_NewQuotDiv1").remove();
-    Common.popupDiv("/sales/membership/mAutoConvSale.do" ,{QUOT_ID : quot_id}, null , true , '_transDiv1');
+    
+	Common.popupDiv("/sales/membership/mAutoConvSale.do" ,{QUOT_ID : quot_id}, null , true , '_mConvSaleDiv1');
 }
 
 
@@ -1775,8 +1775,7 @@ function createAUIGridOList() {
 
 		<ul class="center_btns">
 		    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
-		    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_back()">Back</a></p></li>
-		  
+		    
 		 <!--  <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
 		</ul>
 </form>		

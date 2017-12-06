@@ -444,7 +444,7 @@ function fn_Sale_processing(){
 	
     
 	var mSaveForm={
-								srvMemQuotId : $("#QUOT_ID").val() ,
+								srvMemQuotId :   $("#QUOT_ID").val() =="" ?  '${QUOT_ID}' : $("#QUOT_ID").val()  ,
 							    srvSalesOrdId: $("#ORD_ID").val() ,
 								srvMemQuotNo:packageInfo.quotNo,
 							    srvMemQuotCntName:pMInfo.cntName,
@@ -535,7 +535,7 @@ function fn_getHasBill (){
 <!-- get param Form  -->
 <form id="getParamForm" method="get">
 
-<div  style="display:inline">
+<div  style="display:none">
 <input type="hidden" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
 <input type="hidden" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
 <input type="hidden" name="BranchID"  id="BranchID"  />

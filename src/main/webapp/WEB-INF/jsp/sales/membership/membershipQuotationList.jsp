@@ -11,16 +11,12 @@
 
     
     $(document).ready(function(){
+        createAUIGrid();
         
-    	createAUIGrid();
-
-    	
-    	  
         AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
             console.log(event.rowIndex);
             fn_doViewQuotation();
         });
-        
         
     });
     
@@ -28,18 +24,19 @@
     // 리스트 조회.
    function fn_selectListAjax() {        
     	
-    	if( $("#QUOT_NO").val() ==""  &&  $("#L_ORD_NO").val() ==""  &&  $("#CRT_SDT").val() ==""  ){
     	
-    	   Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
-    		   
+	   AUIGrid.refreshRows() ;
+    	if( $("#QUOT_NO").val() ==""  &&  $("#L_ORD_NO").val() ==""  &&  $("#CRT_SDT").val() ==""  ){
+    	 Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
     		return ;
     	}
-    	
     	
        Common.ajax("GET", "/sales/membership/quotationList", $("#listSForm").serialize(), function(result) {
             console.log( result);
 	        AUIGrid.setGridData(gridID, result);
        });
+       
+       
    }
     
    
@@ -50,18 +47,19 @@
                      {dataField :"ordNo",  headerText : "Order No",    width: 100, editable : false },
                      {dataField :"custName", headerText : "Customer Name",   width: 150, editable : false },
                      {dataField :"validStus", headerText : "Status",  width: 80, editable : false },
-                     {dataField :"validDt", headerText : "Valid Date",width: 150, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
-                     {dataField :"pacDesc", headerText : "Package", width: 100, editable : false },
-                     {dataField :"dur", headerText : "Duration (Mth)",width: 80, editable : false },
-                     {dataField :"crtDt", headerText : "Create Date", width: 100,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
-                     {dataField :"crtUserId", headerText : "Package" , width: 150, editable : false },
                      {dataField :"hasbill", headerText : "HasBill" , width: 100, editable : false ,
-                    	 renderer : {
+                         renderer : {
                              type : "CheckBoxEditRenderer",
                              editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
                              checkValue : "1"  
                          }
-                     }
+                     },
+                     {dataField :"validDt", headerText : "Valid Date",width: 150, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
+                     {dataField :"pacDesc", headerText : "Package", width: 100, editable : false },
+                     {dataField :"dur", headerText : "Duration (Mth)",width: 80, editable : false },
+                     {dataField :"crtDt", headerText : "Create Date", width: 100,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+                     {dataField :"crtUserId", headerText : "Package" , width: 150, editable : false }
+                    
           ];
 
            //그리드 속성 설정
@@ -120,7 +118,6 @@ function fn_goConvertSale(){
 	   
 	   var pram  ="?QUOT_ID="+selectedItems[0].item.quotId+"&ORD_ID="+selectedItems[0].item.ordId +"&MBRSH_ID="+selectedItems[0].item.memId; 
 	   Common.popupDiv("/sales/membership/mConvSale.do"+pram,null, null , true , '_mConvSaleDiv1');
-	   
        
    }
  }
