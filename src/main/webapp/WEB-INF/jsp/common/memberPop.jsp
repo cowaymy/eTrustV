@@ -17,7 +17,14 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             
-        	if(callPrgm == 'PAYMENT_PROCESS' ) {
+        	if(callPrgm=="TR_BOOK_ASSIGN"){
+        		fn_loadOrderSalesman($("#popMemType").val(), $('select[name="memType"] :selected').text(), 
+                		AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), 
+                        AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"),
+                        AUIGrid.getCellValue(myGridID , event.rowIndex , "name"));
+                
+            }
+        	else if(callPrgm == 'PAYMENT_PROCESS' ) {
         		fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), 
         			    AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"),
         			    AUIGrid.getCellValue(myGridID , event.rowIndex , "name"));
