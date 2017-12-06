@@ -3898,5 +3898,135 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
         <select id="selectInstallationNoteListing" parameterType="Map" resultType="egovMap" statementType="CALLABLE" >
         call  SP_CR_GEN_INS_NOTE_LIST(#{V_DSCCODE},#{V_APPDATE},#{V_ORDERDATE},#{V_WHERESQL},#{V_ORDERBYSQL},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=installationNoteListing})
         </select>
+        
+        <select id="selectInstallInfo" parameterType="Map" resultType="egovMap">
+    <![CDATA[     
+
+        SELECT Limit1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+       CASE 
+            WHEN ( Limit1.ALLOW_COMM IS NOT NULL ) THEN Limit1.ALLOW_COMM
+       ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+          END C1  ,
+       Limit1.CRT_DT CRT_DT  ,
+       CASE 
+            WHEN ( Limit1.USER_ID IS NOT NULL ) THEN Limit1.USER_NAME
+       ELSE 'N'
+          END C2  ,
+       Limit1.CRT_USER_ID CRT_USER_ID  ,
+       Limit1.CT_ID CT_ID  ,
+       CASE 
+            WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEM_CODE
+       ELSE 'N'
+          END C3  ,
+       CASE 
+            WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME1
+       ELSE 'N'
+          END C4  ,
+        CASE
+            WHEN (Limit1.INSTALL_ENTRY_NO IS NOT NULL) THEN Limit1.INSTALL_ENTRY_NO
+        ELSE '0'
+         END C14 ,  
+       
+       CASE 
+            WHEN ( Limit1.FAIL_ID IS NOT NULL ) THEN Limit1.FAIL_ID
+       ELSE 0
+          END C5  ,
+       CASE 
+            WHEN ( Limit1.INSTALL_DT IS NOT NULL ) THEN UTILS.CONVERT_TO_DATETIME(Limit1.INSTALL_DT)
+       ELSE sysdate
+          END C6  ,
+       CASE 
+            WHEN ( Limit1.IS_TRADE_IN IS NOT NULL ) THEN Limit1.IS_TRADE_IN
+       ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+          END C7  ,
+       CASE 
+            WHEN ( Limit1.NEXT_CALL_DT IS NOT NULL ) THEN UTILS.CONVERT_TO_DATETIME(Limit1.NEXT_CALL_DT)
+       ELSE sysdate
+          END C8  ,
+       Limit1.DOC_REF_NO1 DOC_REF_NO1  ,
+       Limit1.DOC_REF_NO2 DOC_REF_NO2  ,
+       Limit1.REM REM  ,
+       CASE 
+            WHEN ( Limit1.REQUIRE_SMS IS NOT NULL ) THEN Limit1.REQUIRE_SMS
+       ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
+          END C9  ,
+       Limit1.RESULT_ID RESULT_ID  ,
+       Limit1.SERIAL_NO SERIAL_NO  ,
+       Limit1.SIRIM_NO SIRIM_NO  ,
+       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
+       Limit1.NAME NAME  ,
+       CASE 
+            WHEN ( Limit1.UPD_USER_ID IS NOT NULL ) THEN Limit1.UPD_USER_ID
+       ELSE 0
+          END C10  ,
+       CASE 
+            WHEN ( Limit1.USERID1 IS NOT NULL ) THEN Limit1.USERNAME1
+       ELSE 'N'
+          END C11  ,
+       CASE 
+            WHEN ( Limit1.UPD_DT IS NOT NULL ) THEN UTILS.CONVERT_TO_DATETIME(Limit1.UPD_DT)
+       ELSE sysdate
+          END C12  ,
+       Limit1.INSTALL_STK_ID INSTALL_STK_ID  ,
+       CASE 
+            WHEN ( Limit1.IS_SIRIM IS NOT NULL ) THEN UTILS.CONVERT_TO_NUMBER(Limit1.IS_SIRIM,10,0)
+       ELSE 0
+          END C13  
+  FROM (
+  SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
+                Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
+                Extent1.INSTALL_STK_ID INSTALL_STK_ID  ,
+                Extent2.IS_SIRIM IS_SIRIM  ,
+                Extent3.RESULT_ID RESULT_ID  ,
+                Extent3.STUS_CODE_ID STUS_CODE_ID  ,
+                Extent3.CT_ID CT_ID  ,
+                Extent3.INSTALL_DT INSTALL_DT  ,
+                Extent3.REM REM  ,
+                Extent3.CRT_USER_ID CRT_USER_ID  ,
+                Extent3.CRT_DT CRT_DT  ,
+                Extent3.SIRIM_NO SIRIM_NO  ,
+                Extent3.SERIAL_NO SERIAL_NO  ,
+                Extent3.FAIL_ID FAIL_ID  ,
+                Extent3.NEXT_CALL_DT NEXT_CALL_DT  ,
+                Extent3.ALLOW_COMM ALLOW_COMM  ,
+                Extent3.IS_TRADE_IN IS_TRADE_IN  ,
+                Extent3.REQUIRE_SMS REQUIRE_SMS  ,
+                Extent3.DOC_REF_NO1 DOC_REF_NO1  ,
+                Extent3.DOC_REF_NO2 DOC_REF_NO2  ,
+                Extent3.UPD_DT UPD_DT  ,
+                Extent3.UPD_USER_ID UPD_USER_ID  ,
+                Extent4.NAME NAME  ,
+                Extent5.MEM_ID MEM_ID  ,
+                Extent5.MEM_CODE MEM_CODE  ,
+                Extent5.NAME NAME1  ,
+                Extent6.USER_ID USER_ID  ,
+                Extent6.USER_NAME USER_NAME  ,
+                Extent7.USER_ID USERID1  ,
+                Extent7.USER_NAME USERNAME1  
+         FROM SAL0046D Extent1
+                JOIN SYS0026M Extent2   ON Extent2.STK_ID = Extent1.INSTALL_STK_ID
+                JOIN SAL0047D Extent3   ON Extent3.ENTRY_ID = Extent1.INSTALL_ENTRY_ID
+                JOIN SYS0038M Extent4   ON Extent4.STUS_CODE_ID = Extent3.STUS_CODE_ID
+                LEFT JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent3.CT_ID
+                LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent3.CRT_USER_ID
+                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent3.UPD_USER_ID
+          WHERE  Extent1.INSTALL_ENTRY_ID = TO_NUMBER(TRIM(#{installEntryId})) AND ROWNUM <= 1 ) Limit1  
+
+          ]]>
+    </select>
+    
+    <update id="updateInstallResultEdit" parameterType="Map">
+         UPDATE SAL0047D
+           SET REM = #{remark},
+               SIRIM_NO = #{sirimNo},
+               SERIAL_NO = #{serialNo},
+               DOC_REF_NO1 = #{refNo1},
+               DOC_REF_NO2 = #{refNo1},
+               UPD_DT = SYSDATE,
+               UPD_USER_ID = #{user_id}
+         WHERE  ( RESULT_ID = #{resultId} )
+         </update>
+        
+        
 
     </mapper>
