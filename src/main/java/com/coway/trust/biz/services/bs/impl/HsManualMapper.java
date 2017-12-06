@@ -130,4 +130,6 @@ public interface HsManualMapper {
 
 	void updateSrvCodyId(Map<String, Object> params);
 
+	void insertCcr0001d(Map<String, Object> callMas);
+
 }

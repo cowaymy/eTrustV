@@ -534,20 +534,35 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
         //SrvConfiguration
 		EgovMap srvConfiguration = hsManualMapper.selectSrvConfiguration(params);
 
+
+
 		if(srvConfiguration.size()> 0){
-			if(getHsResultMList.get("resultStusCodeId").equals("4")){
+			
+			if(getHsResultMList.get("resultStusCodeId").toString().equals("4")){
 //                    //COMPLETE
 //                    qryConfig.SrvRemark = bsInstruction;
 //                    qryConfig.SrvPreviousDate = bsResultMas.SettleDate;
 //                    qryConfig.SrvBSWeek = bsPreferWeek;
 //                    entity.SaveChanges();
-
+				
 				EgovMap insertHsSrvConfigM = new EgovMap();
 				insertHsSrvConfigM.put("salesOrdId", getHsResultMList.get("salesOrdId"));
 				insertHsSrvConfigM.put("srvRem", params.get("instruction"));
 				insertHsSrvConfigM.put("srvPrevDt", params.get("settleDate"));
 				insertHsSrvConfigM.put("srvBsWeek", params.get("srvBsWeek"));
-
+				
+				
+				
+				EgovMap callMas = new EgovMap();
+				callMas.put("hcsoid",  getHsResultMList.get("salesOrdId") );
+				callMas.put("hcTypeNo", params.get("hidSalesOrdCd") );
+				callMas.put("crtUserId",  sessionVO.getUserId());
+				callMas.put("updUserId",  sessionVO.getUserId());
+				
+				hsManualMapper.insertCcr0001d(callMas);
+				
+				
+				
 //				hsManualMapper.updateHsSrvConfigM(insertHsSrvConfigM);
 
 //                    HappyCallM callMas = new HappyCallM();
@@ -566,7 +581,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //                    callMas.Created = DateTime.Now;
 //                    callMas.Updator = bsResultMas.ResultCreator;
 //                    callMas.Updated = DateTime.Now;
-//                    callMas.HCNoService = false;
+//                    callMas.HCNoService = false; 
 //                    callMas.HCLock = false;
 //                    callMas.HCCloseID = 0;
 //                    entity.HappyCallMs.Add(callMas);

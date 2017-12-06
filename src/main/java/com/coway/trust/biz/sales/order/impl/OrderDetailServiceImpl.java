@@ -88,7 +88,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		EgovMap orderCfgInfo 	 = orderDetailMapper.selectOrderConfigInfo(params);
 		EgovMap gstCertInfo      = orderDetailMapper.selectGSTCertInfo(params);
 		
-		if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode"))) {
+		if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode").toString())) {
 			
 			rentPaySetInf = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
 

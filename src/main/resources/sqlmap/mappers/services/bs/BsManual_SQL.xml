@@ -1201,7 +1201,7 @@
 					                JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
 					                JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
 					                JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
-					                JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
+					                LEFT  JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
 					                AND ( 1 = Extent8.SRV_STUS_ID )
 					                JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
 					                JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
@@ -2485,6 +2485,50 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                                  SET a.SRV_CODY_ID  = #{hscodyId}
 
                      </update>
+                     <insert id="insertCcr0001d" parameterType="Map">
+                            INSERT INTO CCR0001D (
+	                            HC_ID
+	                            , HCSOID
+	                            , HC_CALL_ENTRY_ID
+	                            , HC_TYPE_NO
+	                            , HC_TYPE_ID
+	                            , HC_STUS_ID
+	                            , HC_COMMENT_TYPE_ID
+	                            , HC_COMMENT_GID
+	                            , HC_COMMENT_SID
+	                            , HC_COMMENT_DID
+	                            , CRT_USER_ID
+	                            , CRT_DT
+	                            , UPD_USER_ID
+	                            , UPD_DT
+	                            , HC_NO_SVC
+	                            , HC_LOK
+	                            , HC_CLOS_ID
+                            )
+                            VALUES(
+	                            CCR0001D_HC_ID_SEQ.NEXTVAL
+	                            , #{hcsoid}
+	                            , 0
+	                            , #{hcTypeNo}   
+	                            , 509  
+	                            , 33    
+	                            , 0
+	                            , 0
+	                            , 0   
+	                            , 0  
+	                            , #{crtUserId} 
+	                            , SYSDATE
+	                            , #{updUserId} 
+	                            , SYSDATE    
+	                            , 0      
+	                            , 1
+	                            , 81
+                            )
+                     
+                     
+                     
+                     
+                     </insert>
                     
 
 </mapper>
