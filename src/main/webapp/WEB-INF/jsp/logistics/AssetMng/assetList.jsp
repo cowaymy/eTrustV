@@ -562,7 +562,7 @@
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              if (selectedItem[0] > -1){
                        var stusId=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'stusid');
-                      doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+                      doGetComboSepa('/common/selectBranchCodeList.do', '9' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
                       doDefCombos('', '' ,'transdepartment', 'S', '');
                       //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
                  if(stusId=="1"){
@@ -711,8 +711,8 @@
              destory(assetMoveTrnsBulkGrid);
              assetMoveTrnsBulkGrid  = GridCommon.createAUIGrid("assetMoveTrnsBulkGrid", bulkLayout,"", subgridpros);
              AUIGrid.resize(assetMoveTrnsBulkGrid,1205,300);
-             doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchidFrom', 'S' , ''); //청구처 리스트 조회
-             doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchidTo', 'S' , ''); //청구처 리스트 조회
+             doGetComboSepa('/common/selectBranchCodeList.do', '9' , ' - ' , '','trnsbranchidFrom', 'S' , ''); //청구처 리스트 조회
+             doGetComboSepa('/common/selectBranchCodeList.do', '9' , ' - ' , '','trnsbranchidTo', 'S' , ''); //청구처 리스트 조회
              doDefCombos('', '' ,'transdepartmentFrom', 'S', '');
              doDefCombos('', '' ,'transdepartmentTo', 'S', '');
              $("#asstMoveTrnsBulkDiv").show();  
@@ -1649,7 +1649,7 @@
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input id="searchpurchasedate1" name="searchpurchasedate1" type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
-    <span>to</span>
+    <span>To</span>
     <p><input id="searchpurchasedate2" name="searchpurchasedate2"  type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
     </div><!-- date_set end -->
     </td>
@@ -1717,7 +1717,7 @@
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input id="searchcreatedate1" name="searchcreatedate1" type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
-    <span>to</span>
+    <span>To</span>
     <p><input id="searchcreatedate2" name="searchcreatedate2"  type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
     </div><!-- date_set end -->
     </td>
