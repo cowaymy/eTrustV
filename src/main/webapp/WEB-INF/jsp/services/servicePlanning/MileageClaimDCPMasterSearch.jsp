@@ -43,12 +43,6 @@ $(document).ready(function(){
     
 });
 
-function getTypeComboList() {
-    //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
-    var list = [ "CODY","CT"];
-    return list;
-}
-
 //편집 핸들러
 function auiCellEditingHandler(event) {
    //document.getElementById("ellapse").innerHTML = event.type  + ": ( " + event.rowIndex  + ", " + event.columnIndex + ") : " + event.value;
@@ -81,100 +75,17 @@ function fn_selectArea(){
         //AUIGrid.setGridData(gridID1, result);
     });
 }
-function getBrnchComboList(){
-       var list = [ "CDB-04","CDB-02"];
-        return list;
-}
 
-function getAreaComboList(){
-    var list = [ "CDB-Ampang","Bentong", "Raub"];
-     return list;
-}
 function DCPMasterGrid() { 
     var columnLayout = [
-                          { dataField : "memType", headerText  : "Member Type",    width : 100 , editable: false,
-                                  editRenderer : {
-                                      type : "ComboBoxRenderer",
-                                      showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                      listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                          var list = getTypeComboList();
-                                          return list;
-                                      },
-                                      keyField : "id1"
-                              }},
-                          { dataField : "brnchCode", headerText  : "Branch",width : 100, editable: false,
-                                  editRenderer : {
-                                      type : "ComboBoxRenderer",
-                                      showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                      listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                          var list = getBrnchComboList();
-                                          return list;
-                                      },
-                                      onchange : function(rowIndex, columnIndex, value, item) {
-                                         alert(222); 
-                                      },
-                                      keyField : "id1"
-                                  }},
-                          { dataField : "cityFrom", headerText  : "CITY From",  width  : 150, editable: false,
-                                      editRenderer : {
-                                          type : "ComboBoxRenderer",
-                                          showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                          listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                              var list = getAreaComboList(); // 임의값
-                                              return list;
-                                          },
-                                          keyField : "id1"
-                                      }},
-                          { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200, editable: false,
-                                      editRenderer : {
-                                          type : "ComboBoxRenderer",
-                                          showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                          listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                              var list = getAreaComboList();
-                                              return list;
-                                          },
-                                          keyField : "id1"
-                                      }},
-                          { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100, editable: false,
-                                      editRenderer : {
-                                          type : "ComboBoxRenderer",
-                                          showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                          listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                              var list = getAreaComboList(); // 임의값
-                                              return list;
-                                          },
-                                          keyField : "id1"
-                                      }},
-                          { dataField : "cityTo", headerText  : "CITY To",  width  : 150, editable: false,
-                                          editRenderer : {
-                                              type : "ComboBoxRenderer",
-                                              showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                              listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                                  var list = getAreaComboList(); // 임의값
-                                                  return list;
-                                              },
-                                              keyField : "id1"
-                                          }},
-                          { dataField : "dcpTo",       headerText  : "DCP To",  width  : 200, editable: false,
-                                          editRenderer : {
-                                              type : "ComboBoxRenderer",
-                                              showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                              listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                                  var list = getAreaComboList();
-                                                  return list;
-                                              },
-                                              keyField : "id1"
-                                          }},
-                          { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100, editable: false,
-                                          editRenderer : {
-                                              type : "ComboBoxRenderer",
-                                              showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-                                              listFunction : function(rowIndex, columnIndex, item, dataField) {
-                                                  var list = getAreaComboList(); // 임의값
-                                                  return list;
-                                              },
-                                              keyField : "id1"
-                                          }},
+                          { dataField : "memType", headerText  : "Member Type", width : 100 , editable: false },
+                          { dataField : "brnchCode", headerText  : "Branch", width : 100, editable: false },
+                          { dataField : "cityFrom", headerText  : "CITY From",  width  : 150, editable: false },
+                          { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200, editable: false },
+                          { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100, editable: false },
+                          { dataField : "cityTo", headerText  : "CITY To",  width  : 150, editable: false },
+                          { dataField : "dcpTo",       headerText  : "DCP To",  width  : 200, editable: false },
+                          { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100, editable: false },
                           { dataField : "distance",       headerText  : "Distance",  width  :100, editable: true},
                           { dataField : "memType1",       headerText  : "memType1",  width  : 0, editable: false},
                           { dataField : "brnchCode1",       headerText  : "brnchCode1",  width  : 0, editable: false},
@@ -185,7 +96,7 @@ function DCPMasterGrid() {
                           { dataField : "distance1",       headerText  : "distance1",  width  : 0, editable: false},
        ];
 
-        var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
+        var gridPros = { usePaging : false,  pageRowCount: 20, editable: true,  showRowNumColumn : true, showStateColumn : false};  
         
         gridID1 = GridCommon.createAUIGrid("calculation_DCPMaster_grid_wap", columnLayout  ,"" ,gridPros);
     }
@@ -213,6 +124,7 @@ function DCPMasterGrid() {
         Common.ajax("POST", "/services/mileageCileage/saveDCPMaster.do", GridCommon.getEditData(gridID1), function(result) {
             console.log("성공.");
             console.log("data : " + result);
+            fn_DCPMasterSearch(1);
         });
     }
     
@@ -394,7 +306,6 @@ function DCPMasterGrid() {
     </td>
    <th scope="row">Branch</th>
     <td>
-        <div class="search_100p"><!-- search_100p start -->
         <select class="w100p" id="brnch" name="brnch" >
        <%-- <c:forEach var="list" items="${branchList }">
              <option value="${list.codeId}">${list.codeName}</option>
@@ -419,8 +330,10 @@ function DCPMasterGrid() {
          </c:forEach>
         </select> --%>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">DCP From ID</th>
+    <td>
+        <input type="text" title="" placeholder="DCP From ID" class="w100p" id="mcpFromID" name="mcpFromID">
+    </td>
 </tr>
 <tr>
     <th scope="row">City To</th>
@@ -436,8 +349,10 @@ function DCPMasterGrid() {
          </c:forEach>
         </select> --%>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">DCP To ID</th>
+    <td>
+        <input type="text" title="" placeholder="DCP To ID" class="w100p" id="mcpToID" name="mcpToID">
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
