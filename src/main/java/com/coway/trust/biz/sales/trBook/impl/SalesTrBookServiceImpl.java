@@ -391,4 +391,54 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		
 		return null;
 	}
+
+	@Override
+	public String saveTranBulk(Map<String, Object> params) {
+		params.put("docNoId", 69);
+		String docNo=salesTrBookMapper.getDocNo(params);
+		
+		params.put("docNo", docNo);
+		
+		params.put("trTrnsitTypeId", 750);
+		params.put("trTrnsitStusId", 1);
+		params.put("trTrnsitFrom", params.get("branchFrom"));
+		params.put("trTrnsitTo", params.get("branchTo"));
+		params.put("trCurierCode", params.get("courier"));
+		params.put("trTrnsitResultStusId", 44);
+		params.put("closDt", "1900-01-01");
+		
+		params.put("trBookId", params.get("tranTrBookId"));
+		
+		salesTrBookMapper.insertTrTransitM(params);
+
+		List<Object> list = (List<Object>) params.get("gridData");
+		
+		
+		logger.debug("list ========>> " + list);
+
+		for (Object obj : list) 
+		{
+			Map<String, Object> param = new HashMap();
+			
+			param.put("docNo", docNo);
+			param.put("trTrnsitResultStusId", 44);
+			param.put("userId", params.get("userId"));
+			param.put("trTrnsitId", params.get("trTrnsitId"));
+			param.put("trBookId",  ((Map<String, Object>) obj).get("trBookId"));
+			
+			salesTrBookMapper.insertTrTransitD(param);		
+			
+			param.put("trTypeId", 754);
+			param.put("trLocCode", params.get("branchFrom"));
+			param.put("trRcordQyt", -1);
+			salesTrBookMapper.insertTrRecord(param);
+
+			param.put("trLocCode", params.get("courier"));
+			param.put("trRcordQyt", 1);
+			salesTrBookMapper.insertTrRecord(param);
+			
+		}
+		
+		return docNo;
+	}
 }

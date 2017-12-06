@@ -44,6 +44,8 @@ public interface SalesTrBookService {
 
 	String saveTranSingle(Map<String, Object> params);
 
+	String saveTranBulk(Map<String, Object> params);
+
 	
 	
 }

@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 function fn_tranSingleSave(){
 	
-     if ($("#branch").val() == "" || $("#curier").val() == "")
+     if ($("#branch").val() == "" || $("#courier").val() == "")
      {
     	 $("#msg").html("* Some required fields are empty.");
     	 $("#msg").attr("style", "color:red");

@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -575,7 +576,11 @@ public class SalesTrBookController {
 		logger.debug("in  selectTrBookTranList ");
 		logger.debug("params =====================================>>  " + params);
 		
-		params.put("trHolder", params.get("branchFrom"));
+		if(StringUtils.isEmpty(params.get("branchFrom"))){
+			params.put("trBookHolder", sessionVO.getCode());
+		}else{
+			params.put("trBookHolder", params.get("branchFrom"));
+		}
 		params.put("trHolderType", "Branch");
 		params.put("stutusId", 1);
 
@@ -583,6 +588,28 @@ public class SalesTrBookController {
 		
 		return ResponseEntity.ok(resultList);
 	}
+	
+	@RequestMapping(value = "/saveTranBulk", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> saveTranBulk (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		logger.debug("in  saveReTrBook ");
+		logger.debug("params =====================================>>  " + params);
+		
+		EgovMap result = new EgovMap();
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		String reqNo = salesTrBookService.saveTranBulk(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(reqNo);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+
 	
 	@RequestMapping(value="/trBookMgmtSummaryListingPop.do")
 	public String trBookMgmtSummaryListingPop(){
@@ -595,4 +622,5 @@ public class SalesTrBookController {
 		
 		return "sales/trBook/trBookMgmtLostReportListPop";
 	}
+
 }

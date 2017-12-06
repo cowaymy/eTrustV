@@ -36,7 +36,7 @@
               <if test="trBookCrtUser != null and trBookCrtUser != '' ">
               AND TR_BOOK_CRT_USER_NAME = #{trBookCrtUser}
 	          </if>
-               <if test="trHolder != null and trHolder != '' ">
+               <if test="trBookHolder != null and trBookHolder != '' ">
                AND TR_HOLDER = #{trBookHolder}
 	          </if>
               <if test="trHolderType != null and trHolderType != '' ">
@@ -340,7 +340,15 @@
 		             #{userId},
 		             #{trTrnsitStusId},
 		             #{docNo},
-		             SYSDATE
+		             <choose>
+		                  <when test="closDt !=null and closDt !=''">                   
+		                    TO_DATE(#{closDt}, 'yyyy-mm-dd')
+		                  </when>
+		                  <otherwise>  
+		                    SYSDATE
+		                  </otherwise>
+		            </choose>  
+		             
 		    )
     </insert>  
     
