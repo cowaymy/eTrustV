@@ -903,8 +903,10 @@
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
-				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">HS Count Forecast Listing</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">HS Report(Single)</a></p></li>
+				        <!-- <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
+				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li> -->
 				    </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
