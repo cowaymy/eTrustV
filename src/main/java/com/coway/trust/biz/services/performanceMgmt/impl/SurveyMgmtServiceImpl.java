@@ -38,6 +38,21 @@ public class SurveyMgmtServiceImpl extends EgovAbstractServiceImpl implements Su
 	public List<EgovMap> selectSurveyEventList(Map<String, Object> params) throws Exception {
 		return surveyMgmtMapper.selectSurveyEventList(params);
 	}
+	
+	@Override
+	public int addSurveyEventCreate(List<Object> addList,String loginId) {	
+		
+		int cnt=0;
+		
+		for (Object obj : addList) {
+
+			((Map<String, Object>) obj).put("crtUserId", loginId);
+			((Map<String, Object>) obj).put("updUserId", loginId);
+			
+			cnt=cnt+surveyMgmtMapper.addSurveyEventCreate((Map<String, Object>) obj);
+		}
+		return cnt;
+	}
 
 
 }

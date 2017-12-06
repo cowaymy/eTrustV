@@ -15,4 +15,5 @@ public interface SurveyMgmtMapper {
 	
 	List<EgovMap> selectSurveyEventList(Map<String, Object> params) throws Exception;
 
+	int addSurveyEventCreate(Map<String, Object> params);
 }

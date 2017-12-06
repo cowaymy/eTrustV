@@ -1,5 +1,6 @@
 package com.coway.trust.web.services.performanceMgmt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -12,13 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.services.performanceMgmt.SurveyMgmtService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -68,6 +75,37 @@ public class SurveyMgmtController {
 	@RequestMapping(value = "/surveyEventCreatePop.do")
 	public String surveyEventCreatePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 		return "services/performanceMgmt/surveyEventCreatePop";
+	}
+	
+
+	@RequestMapping(value = "/saveSurveyEventCreate.do", method = RequestMethod.POST)
+	public  ResponseEntity<ReturnMessage> saveSurveyEventCreate(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+
+		String dt = CommonUtils.getNowDate();	
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		
+		int cnt = 0;
+		
+		if (addList.size() > 0) {			
+			cnt = surveyMgmtService.addSurveyEventCreate(addList, loginId);
+		}
+		
+		model.addAttribute("searchDt", dt);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
 	}
 
 }

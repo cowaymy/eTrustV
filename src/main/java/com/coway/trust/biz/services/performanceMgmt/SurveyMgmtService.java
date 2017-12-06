@@ -16,5 +16,7 @@ public interface SurveyMgmtService {
 	List<EgovMap> selectSurveyStusList();
 	
 	List<EgovMap> selectSurveyEventList(Map<String, Object> params) throws Exception;
+	
+	int addSurveyEventCreate(List<Object> updateList , String loginId);
 
 }

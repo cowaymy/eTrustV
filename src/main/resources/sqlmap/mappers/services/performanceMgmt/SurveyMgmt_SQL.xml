@@ -37,5 +37,57 @@
 		AND B.MEM_CODE = #{eventMemCode}
 		</if>
 	</select>
+	
+	
+	<insert id="addSurveyEventCreate" parameterType="Map">
+        INSERT INTO CCR0001D (
+            HC_ID
+            , HCSOID
+            , HC_CALL_ENTRY_ID
+            , HC_TYPE_NO
+            , HC_TYPE_ID
+            , HC_STUS_ID
+            , HC_COMMENT_TYPE_ID
+            , HC_COMMENT_GID
+            , HC_COMMENT_SID
+            , HC_COMMENT_DID
+            , CRT_USER_ID
+            , CRT_DT
+            , UPD_USER_ID
+            , UPD_DT
+            , HC_NO_SVC
+            , HC_LOK
+            , HC_CLOS_ID
+            , EVT_COMP_RQST_DATE
+            , EVT_COMP_RATE
+            , EVT_TYPE_DESC
+            , EVT_MEM_ID
+            , EVT_DT
+        )
+       VALUES(
+           CCR0001D_HC_ID_SEQ.NEXTVAL
+           , 2718
+           , 0
+           , 2718
+           , 2718
+           , 33
+           , 0
+           , 0
+           , 0
+           , 0
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE        
+           , 0
+           , 1
+           , 81
+           , #{evtCompRqstDate}
+           , #{evtCompRate}
+           , #{evtTypeDesc}
+           , #{evtMemId}
+           , #{evtDt}
+       )
+	</insert>
     
 </mapper>

@@ -7,26 +7,26 @@ var myGridID_Target;
 
 
 var columnLayout_info=[             
- {dataField:"eventType", headerText:'Event Type', width: 130, editable : true},
- {dataField:"eventName", headerText:'Event Name', width: 170, editable : true},
- {dataField:"inCharge", headerText:'In Charge of</br>the Event', width: 130, editable : true },
- {dataField:"date", headerText:'Date for</br>The Event', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} },
- {dataField:"request", headerText:'Requested</br>Complete Date', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true}  },
- {dataField:"rate", headerText:'Complete</br>Condition Rate', width: 130, editable : true },
+ {dataField:"hcTypeId", headerText:'Event Type', width: 130, editable : true},
+ {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : true},
+ {dataField:"evtMemId", headerText:'In Charge of</br>the Event', width: 130, editable : true },
+ {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} },
+ {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true}  },
+ {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : true },
  {dataField:"com", headerText:'Complete</br>Status', editable : false},
 ];
 
 var columnLayout_q=[             
- {dataField:"q1", headerText:'Question</br>Number', width: 100, editable : false},
+ {dataField:"q1", headerText:'Question</br>Number', width: 100, editable : true},
  {dataField:"q2", headerText:'Feedback</br>Type', width: 200, editable : true},
- {dataField:"q3", headerText:'Question', editable : false},
+ {dataField:"q3", headerText:'Question', editable : true},
 ];
 
 var columnLayout_target=[             
- {dataField:"t1", headerText:'Sales Order', width: 250, editable : false},
+ {dataField:"t1", headerText:'Sales Order', width: 250, editable : true},
  {dataField:"t2", headerText:'Name', width: 250, editable : true},
- {dataField:"t3", headerText:'Contact Number', width: 250, editable : false },
- {dataField:"t4", headerText:'Calling Agent', editable : false},
+ {dataField:"t3", headerText:'Contact Number', width: 250, editable : true },
+ {dataField:"t4", headerText:'Calling Agent', editable : true},
 ];
 
 
@@ -64,33 +64,112 @@ $(document).ready(function(){
     myGridID_Target = GridCommon.createAUIGrid("grid_wrap_target", columnLayout_target, "", gridOptions2);
 
     
-    var item_info = { "eventType" :  "", "eventName" : "", "inCharge" : "", "date" :  "", "request" :  "", "rate" :  "", "com" :  ""}; //row 추가
+    var item_info = { "hcTypeId" :  "2718", "evtTypeDesc" : "", "evtMemId" : "", "evtDt" :  "", "evtCompRqstDate" :  "", "evtCompRate" :  "", "com" :  ""}; //row 추가
     AUIGrid.addRow(myGridID_Info, item_info, "last");
     
     AUIGrid.bind(myGridID_Q, "removeRow_q", auiRemoveRowHandler);
     AUIGrid.bind(myGridID_Target, "removeRow_target", auiRemoveRowHandler);
     
     
-    //아이템 grid 행 추가
+    //두번째 grid 행 추가
      $("#addRow_q").click(function() { 
     	var item_q = { "q1" :  "", "q2" : "", "q3" : ""}; //row 추가
     	AUIGrid.addRow(myGridID_Q, item_q, "last");
     });
     
-     //아이템 grid 행 추가
+     //세번째 grid 행 추가
      $("#addRow_target").click(function() { 
         var item_target = { "t1" :  "", "t2" : "", "t3" : "", "t4" : ""}; //row 추가
         AUIGrid.addRow(myGridID_Target, item_target, "last");
     });
      
-   //excel Download
+     //세번째 grid의 excel Download
      $('#excelDown_target').click(function() {
     	 GridCommon.exportTo("grid_wrap_target", 'xlsx', "Survey Target and Calling Agent");
      });
+   
+     //save
+     $("#save_create").click(function() {
+         if (validation_info()) {
+             Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_create);
+          }
+     }); 
   
   
 }); //Ready
 
+function fn_saveGridData_create(){
+    Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventCreate.do", GridCommon.getEditData(myGridID_Info), function(result) {
+        // 공통 메세지 영역에 메세지 표시.
+        Common.setMsg("<spring:message code='sys.msg.success'/>");
+        $("#search").trigger("click");
+        Common.alert("<spring:message code='sys.msg.success'/>");
+    }, function(jqXHR, textStatus, errorThrown) {
+        try {
+            console.log("status : " + jqXHR.status);
+            console.log("code : " + jqXHR.responseJSON.code);
+            console.log("message : " + jqXHR.responseJSON.message);
+            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+        } catch (e) {
+            console.log(e);
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);             
+    });
+} 
+
+
+/*  validation */
+function validation_info() {
+    var result = true;
+    var addList = AUIGrid.getAddedRowItems(myGridID_Info);
+    
+    if(!validationCom_info(addList)){
+        return false;
+   }      
+    
+    return result;
+}  
+function validationCom_info(list){
+    var result = true;
+
+    for (var i = 0; i < list.length; i++) {
+           var v_hcTypeId = list[i].hcTypeId;
+           var v_evtTypeDesc = list[i].evtTypeDesc;
+           var v_evtMemId = list[i].evtMemId;
+           var v_evtDt = list[i].evtDt;
+           var v_evtCompRqstDate = list[i].evtCompRqstDate;
+           var v_evtCompRate = list[i].evtCompRate;
+           
+           
+           if (v_evtTypeDesc == "") {
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Event Name' htmlEscape='false'/>");
+               break;
+           } else if(v_evtMemId == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='In Charge of the Event' htmlEscape='false'/>");
+               break;
+           } else if(v_evtDt == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Date for the Event' htmlEscape='false'/>");
+               break;
+           } else if(v_evtCompRqstDate == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Requested Complete Date' htmlEscape='false'/>");
+               break;
+           } else if(v_evtCompRate == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Complete Condition Rate' htmlEscape='false'/>");
+               break;
+           } else if(v_evtCompRate > 100){
+        	   result = false;
+        	   Common.alert("Please Enter Complete Condition Rate under 100");
+               break;
+           }
+    }
+    
+    return result;
+}
 
 
 function removeRow_q(){
@@ -158,7 +237,7 @@ function auiRemoveRowHandler(){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="save">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="save_create">Save</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
