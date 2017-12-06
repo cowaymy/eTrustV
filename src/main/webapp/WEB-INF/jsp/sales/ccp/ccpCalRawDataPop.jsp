@@ -19,8 +19,6 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
@@ -259,6 +257,8 @@ function fn_report(){
         $("#reportFileName").val("/sales/CCPAssignB2BRaw.rpt");
 
 	}
+    
+	$("#viewType").val("EXCEL");
 	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {

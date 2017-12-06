@@ -124,6 +124,7 @@ function btnGenerate_Click(){
     
     $("#reportDownFileName").val("OrderCancellationRequestRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#reportFileName").val("/sales/OrderCancellationRequestRawData.rpt");
+    $("#viewType").val("EXCEL");
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {

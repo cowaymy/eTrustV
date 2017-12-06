@@ -185,6 +185,9 @@ function fn_report(){
     } 
     $("#reportDownFileName").val("RentPaySetUpdateList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
+    $("#viewType").val("EXCEL");
+    $("#reportFileName").val("/sales/RentPaySetLastUpdateList.rpt");
+    
     $("#V_WHERESQL").val(whereSQL);
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.

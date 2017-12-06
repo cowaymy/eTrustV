@@ -57,6 +57,8 @@ function fn_report(){
     if(date.toString().length == 1){
         date = "0" + date;
     } 
+    $("#viewType").val("EXCEL");
+    $("#reportFileName").val("/sales/GovContratAgrRaw.rpt");
     $("#reportDownFileName").val("AgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#V_WHERESQL").val(whereSQL);
 	

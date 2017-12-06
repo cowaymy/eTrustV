@@ -114,6 +114,10 @@ function fn_report(){
     if(date.toString().length == 1){
         date = "0" + date;
     } 
+    
+    $("#viewType").val("PDF");
+    $("#reportFileName").val("/sales/GovContractAgrSummaryPDF.rpt");
+    
     $("#reportDownFileName").val("ContractArgSummary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#V_WHERESQL").val(whereSQL);
     $("#V_GROUPBYSQL").val(groupSQL);

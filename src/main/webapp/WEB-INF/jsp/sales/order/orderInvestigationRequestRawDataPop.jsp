@@ -125,7 +125,7 @@ function btnGenerate_Click(){
     }
 	
     $("#V_WHERESQL").val(whereSQL);
-    
+    $("#viewType").val("EXCEL");
     $("#reportDownFileName").val("InvestigateRequestRawData");
     $("#reportFileName").val("/sales/InvestigateRequestRawData.rpt");
     

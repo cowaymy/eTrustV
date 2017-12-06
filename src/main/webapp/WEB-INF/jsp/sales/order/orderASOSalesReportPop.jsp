@@ -34,6 +34,7 @@ function fn_report(){
     } 
 	$("#reportDownFileName").val("ASOSalesReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	$("#reportFileName").val("/sales/ASONetSalesReport.rpt");
+	$("#viewType").val("PDF");
 	
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {

@@ -114,13 +114,14 @@ function fn_report() {
 	   orderSQL = " ORDER BY ArgM.GOV_AG_PRGRS_ID";
    }
    
-   
-   alert(whereSQL);
-   
 	var date = new Date().getDate();
     if(date.toString().length == 1){
 		date = "0" + date;
 	} 
+    
+    $("#viewType").val("PDF");
+    $("#reportFileName").val("/sales/GovAgreementPDF.rpt");
+    
     $("#reportDownFileName").val("AgrReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	$("#V_WHERESQL").val(whereSQL);
 	$("#V_ORDERBYSQL").val(orderSQL);

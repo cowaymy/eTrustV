@@ -140,6 +140,8 @@ function fn_report_1(){
         $("#reportFileName").val("/sales/CCPPerformanceReportByServiceBranch.rpt");
         
 	}
+	
+	$("#viewType").val("PDF");
 
 	$("#V_ORDERDATEFROM").val(orderDateFrom);
     $("#V_ORDERDATETO").val(orderDateTo);
@@ -202,6 +204,8 @@ function fn_report_2(){
         $("#reportFileName").val("/sales/CCPSummary_ByRegion.rpt");
         
     }
+    
+    $("#viewType").val("PDF");
 
     $("#V_ORDERDATEFR").val(dpDateFr);
     $("#V_ORDERDATETO").val(dpDateTo);
@@ -247,6 +251,8 @@ function fn_report_3(){
         $("#reportFileName").val("/sales/CCPSummary_ByDayTime.rpt");
     }
     
+	$("#viewType").val("PDF");
+	
 	$("#V_PASSDATE").val(passDate);
 	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
@@ -274,9 +280,12 @@ function fn_report_4(){
     passDate = $("#dpOrderMonth").val();
     passDate = passDate.substring(3, 7)+"-"+passDate.substring(0,2)+"-01";
 
+    $("#viewType").val("PDF");
+
     $("#V_PASSDATE").val(passDate);
     $("#reportDownFileName").val("CCPSummary_ByStandardRemark_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#reportFileName").val("/sales/CCPSummary_ByStandardRemark.rpt");
+    
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
@@ -310,6 +319,8 @@ function fn_report_5(){ /////error
     if(date.toString().length == 1){
         date = "0" + date;
     }
+    $("#viewType").val("PDF");
+    
     $("#V_PASSDATE").val(passDate);
     $("#reportDownFileName").val("CCP3_Days_Summary_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#reportFileName").val("/sales/RptCCPCurrentStatus.rpt");
@@ -407,6 +418,8 @@ function fn_report_6(){ /////error 5랑 같은 error 같음
         $("#reportFileName").val("/sales/RptCCPDSCDailyUpdate.rpt");
     	
     }
+	
+	$("#viewType").val("PDF");
 	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {

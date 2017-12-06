@@ -69,7 +69,7 @@ function btnGenerate_Click(){
         whereSQL += " AND u.USER_NAME = '"+$("#txtRequestBy").val().trim().replace("'", "''")+"' ";
     }
 	
-	
+	$("#viewType").val("EXCEL");
     $("#V_WHERESQL").val(whereSQL);
     
     $("#reportDownFileName").val("OrderExchangeRawData_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
