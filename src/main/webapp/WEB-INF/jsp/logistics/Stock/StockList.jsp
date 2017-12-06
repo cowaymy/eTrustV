@@ -342,7 +342,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             $("#service_point_div").show();
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             var item = selectedItems[0].item;
-            console.log(item);
             $("#as").text(item.c6);
             $("#osas").text(item.c7);
             $("#hs").text(item.c8);
@@ -575,7 +574,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             fdata = $("#" + v).serializeJSON();
         }
         
-        console.log(" ::: " + fdata);
         var keys = Object.keys(fdata);
         
         if (v == "stockInfo") {
@@ -739,8 +737,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 
     function getSampleListAjax() {
 
-        //$.blockUI({ message:"<img src='/resources/images/common/CowayLeftLogo.png' alt='Coway Logo' style='max-height: 46px;width:160px' />" }); 
-        //f_showModal();
 
      var param = $('#searchForm').serialize();
         console.log(param);
@@ -749,26 +745,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
         	AUIGrid.setGridData(myGridID, gridData.data);
         });
         
-//         $.ajax({
-//             type : "POST",
-//             url : "/stock/StockList.do?" + param,
-//             //url : "/stock/StockList.do",
-//             //data : param,
-//             dataType : "json",
-//             contentType : "application/json;charset=UTF-8",
-//             success : function(data) {
-//                 var gridData = data;
-
-//                 AUIGrid.setGridData(myGridID, gridData.data);
-//             },
-//             error : function(jqXHR, textStatus, errorThrown) {
-//                 alert("실패하였습니다.");
-//             },
-//             complete : function() {
-//                 hideModal();
-//                 //$.unblockUI();
-//             }
-//         });
     }
 
     
@@ -780,7 +756,6 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(_data) {
-                //var data = _data.data;
                 f_info(_data, v);
             },
             error : function(jqXHR, textStatus, errorThrown) {
