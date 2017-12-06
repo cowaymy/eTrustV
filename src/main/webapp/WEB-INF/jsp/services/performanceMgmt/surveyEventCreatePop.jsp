@@ -33,15 +33,24 @@ var columnLayout_target=[
 var gridOptions = {
 	  headerHeight : 30,
       showStateColumn: false,
-      showRowNumColumn    : false,
-      usePaging : true,
+      showRowNumColumn: false,
+      usePaging : false,
       pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
       showFooter : false
 };
+
+var gridOptions_q = {
+	      headerHeight : 30,
+	      showStateColumn: false,
+	      showRowNumColumn: false,
+	      usePaging : true,
+	      pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
+	      showFooter : false
+	};
   
 var gridOptions2 = {
       showStateColumn: false,
-      showRowNumColumn    : false,
+      showRowNumColumn: false,
       usePaging : true,
       pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
       showFooter : false
@@ -51,12 +60,16 @@ var gridOptions2 = {
 $(document).ready(function(){
 
     myGridID_Info = GridCommon.createAUIGrid("grid_wrap_info", columnLayout_info, "", gridOptions);
-    myGridID_Q = GridCommon.createAUIGrid("grid_wrap_q", columnLayout_q, "", gridOptions);
+    myGridID_Q = GridCommon.createAUIGrid("grid_wrap_q", columnLayout_q, "", gridOptions_q);
     myGridID_Target = GridCommon.createAUIGrid("grid_wrap_target", columnLayout_target, "", gridOptions2);
 
     
     var item_info = { "eventType" :  "", "eventName" : "", "inCharge" : "", "date" :  "", "request" :  "", "rate" :  "", "com" :  ""}; //row 추가
     AUIGrid.addRow(myGridID_Info, item_info, "last");
+    
+    AUIGrid.bind(myGridID_Q, "removeRow_q", auiRemoveRowHandler);
+    AUIGrid.bind(myGridID_Target, "removeRow_target", auiRemoveRowHandler);
+    
     
     //아이템 grid 행 추가
      $("#addRow_q").click(function() { 
@@ -66,12 +79,32 @@ $(document).ready(function(){
     
      //아이템 grid 행 추가
      $("#addRow_target").click(function() { 
-        var item_q = { "t1" :  "", "t2" : "", "t3" : "", "t4" : ""}; //row 추가
-        AUIGrid.addRow(myGridID_Q, item_q, "last");
+        var item_target = { "t1" :  "", "t2" : "", "t3" : "", "t4" : ""}; //row 추가
+        AUIGrid.addRow(myGridID_Target, item_target, "last");
     });
+     
+   //excel Download
+     $('#excelDown_target').click(function() {
+    	 GridCommon.exportTo("grid_wrap_target", 'xlsx', "Survey Target and Calling Agent");
+     });
   
   
 }); //Ready
+
+
+
+function removeRow_q(){
+    AUIGrid.removeRow(myGridID_Q, "selectedIndex");
+    AUIGrid.removeSoftRows(myGridID_Q);
+}
+
+function removeRow_target(){
+    AUIGrid.removeRow(myGridID_Target, "selectedIndex");
+    AUIGrid.removeSoftRows(myGridID_Target);
+}
+
+function auiRemoveRowHandler(){
+}
 
 
 </script>   
@@ -93,7 +126,7 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap_info" style="width:100%; height:180px; margin:0 auto;"></div>
+    <div id="grid_wrap_info" style="width:100%; height:58px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -102,11 +135,11 @@ $(document).ready(function(){
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="addRow_q">add</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="delRow_q()">del</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_q()">del</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap_q" style="width:100%; height:180px; margin:0 auto;"></div>
+    <div id="grid_wrap_q" style="width:100%; height:120px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -114,14 +147,14 @@ $(document).ready(function(){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excelDown_target">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#" id="addRow_target">add</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="delRow_target()">del</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_target()">del</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap_target" style="width:100%; height:180px; margin:0 auto;"></div>
+    <div id="grid_wrap_target" style="width:100%; height:120px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
