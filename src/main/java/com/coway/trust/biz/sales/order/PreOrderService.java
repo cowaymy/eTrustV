@@ -25,4 +25,6 @@ public interface PreOrderService {
 
 	EgovMap selectPreOrderInfo(Map<String, Object> params);
 
+	void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO);
+
 }

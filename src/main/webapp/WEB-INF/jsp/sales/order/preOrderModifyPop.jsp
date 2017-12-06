@@ -10,19 +10,21 @@
 
         createAUIGridStk();
         
-        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
-        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '${preOrderInfo.appTypeId}', 'appType',     'S', ''); //Common Code
+        doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
-        doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
-        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
+        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '${preOrderInfo.empChk}',  'empChk',  'S'); //EMP_CHK
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
+        doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '${preOrderInfo.gstChk}',  'gstChk',  'S'); //GST_CHK
+        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period
 
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
-
+        
+        
+        fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
     });
 
     function createAUIGridStk() {
@@ -181,7 +183,8 @@
 
                             $('[name="advPay"]').removeAttr("disabled");
                             
-                            $('#scPayInfo').removeClass("blind");
+                          //fn_tabOnOffSet('PAY_CHA', 'SHOW');
+                          //fn_tabOnOffSet('REL_CER', 'HIDE');
                             
                             appSubType = '370';
 
@@ -500,6 +503,26 @@
             $('#sctDirectDebit').removeClass("blind");
             Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
         }
+    }
+    
+    function fn_loadBankAccount(bankAccId) {
+        console.log("fn_loadBankAccount START");
+        
+        Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
+
+            if(rsltInfo != null) {
+                console.log("fn_loadBankAccount Setting");
+                
+                $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
+                $("#rentPayBankAccNo").val(rsltInfo.custAccNo);
+                $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
+                $("#rentPayBankAccType").val(rsltInfo.codeName);
+                $("#accName").val(rsltInfo.custAccOwner);
+                $("#accBranch").val(rsltInfo.custAccBankBrnch);
+                $("#accBank").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankName);
+                $("#hiddenAccBankId").val(rsltInfo.custAccBankId);
+            }
+        });
     }
     
     function fn_loadCreditCard2(custCrcId) {
@@ -832,6 +855,7 @@
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         
         var orderVO = {
+            preOrdId             : $('#hiddenPreOrdId').val().trim(),
             sofNo                : $('#sofNo').val().trim(),
             custPoNo             : $('#poNo').val().trim(),
             appTypeId            : vAppType,
@@ -883,8 +907,8 @@
             custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
             custBillCustCareCntId: $("#hiddenBPCareId").val()
         };
-        Common.ajax("POST", "/sales/order/registerPreOrder.do", orderVO, function(result) {
-            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);            
+        Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
+            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);            
         },
         function(jqXHR, textStatus, errorThrown) {
             try {
@@ -896,9 +920,9 @@
         });
     }
     
-    function fn_closePreOrdRegPop() {
+    function fn_closePreOrdModPop() {
         fn_getPreOrderList();
-        $('#_divPreOrdRegPop').remove();
+        $('#_divPreOrdModPop').remove();
     }
 
     function fn_setBillGrp(grpOpt) {
@@ -1027,7 +1051,7 @@
                 $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
 
-                $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
+               //$("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
         });
@@ -1189,9 +1213,61 @@
         $('#rentPayCRCCardType').val('');
     }
 
-    function fn_loadCustomer(custId, nric){
+    function fn_loadBillingGroupById(custId, custBillId){
+        Common.ajax("GET", "/sales/customer/selectBillingGroupByKeywordCustIDList.do", {custId : custId, custBillId : custBillId}, function(result) {
+            if(result != null && result.length > 0) {
+                fn_loadBillingGroup(result[0].custBillId, result[0].custBillGrpNo, result[0].billType, result[0].billAddrFull, result[0].custBillRem, result[0].custBillAddId);
+            }
+        });
+    }
+    
+	function fn_getSvrPacCombo(selVal, srvPacId){
 
-        Common.ajax("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
+        switch(selVal) {
+            case '66' : //RENTAL
+                $('#scPayInfo').removeClass("blind");
+                $('[name="advPay"]').removeAttr("disabled");
+                
+                appSubType = '367';                
+                break;
+            case '67' : //OUTRIGHT
+                appSubType = '368';
+                break;
+            case '68' : //INSTALLMENT
+                appSubType = '369';                
+                break;
+            case '1412' : //Outright Plus
+                $('#scPayInfo').removeClass("blind");
+                $('[name="advPay"]').removeAttr("disabled");
+                $('#installDur').val('').prop("readonly", true).addClass("readonly");
+                appSubType = '370';
+                break;
+            case '142' : //Sponsor                        
+                appSubType = '371';    
+                break;                            
+            case '143' : //Service
+                appSubType = '372';
+                break;
+            case '144' : //Education
+                appSubType = '373';
+                break;
+            case '145' : //Free Trial
+                appSubType = '374';
+                break;
+            default :
+                break;
+        }
+        
+        var pType = $("#appType").val() == '66' ? '1' : '2';
+        //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
+        doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
+    }
+    
+    function fn_loadPreOrderInfo(custId, nric){
+        
+        var vCustTypeId = '';
+        
+        Common.ajaxSync("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
 
             if(result != null && result.length == 1) {
                 
@@ -1211,17 +1287,15 @@
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
                 
+                vCustTypeId = custInfo.typeId;
+                
                 $("#nationNm").val(custInfo.name2); //Nationality
-//              $("#raceId").val(custInfo.raceId); //Nationality
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
                 $("#gender").val(custInfo.gender); //Gender
                 $("#pasSportExpr").val(custInfo.pasSportExpr == '01/01/1900' ? '' : custInfo.pasSportExpr); //Passport Expiry
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
-//              $("#custRem").val(custInfo.rem); //Remark
-                $("#empChk").val('0'); //Employee
-//              $("#gstChk").val('0').prop("disabled", true);
 
                 if(custInfo.corpTypeId > 0) {
                     $("#corpTypeNm").val(custInfo.codeName); //Industry Code
@@ -1229,26 +1303,17 @@
                 else {
                     $("#corpTypeNm").val(""); //Industry Code
                 }
-/*
-                if($('#hiddenTypeId').val() == '965') { //Company
-                    $('#sctBillPrefer').removeClass("blind");
-                } else {
-                    $('#sctBillPrefer').addClass("blind");
-                }
-*/
-                if(custInfo.custAddId > 0) {
 
+                if(custInfo.custAddId > 0) {
                     //----------------------------------------------------------
                     // [Billing Detail] : Billing Address SETTING
                     //----------------------------------------------------------
-//                  $('#billAddrForm').clearForm();
-                    fn_loadBillAddr(custInfo.custAddId);
+                    fn_loadBillAddr('${preOrderInfo.custBillAddId}');
 
                     //----------------------------------------------------------
                     // [Installation] : Installation Address SETTING
                     //----------------------------------------------------------
-//                  fn_clearInstallAddr();
-                    fn_loadInstallAddr(custInfo.custAddId);
+                    fn_loadInstallAddr('${preOrderInfo.instAddId}');
                 }
 
                 if(custInfo.custCntcId > 0) {
@@ -1256,20 +1321,16 @@
                     // [Master Contact] : Owner & Purchaser Contact
                     //                    Additional Service Contact
                     //----------------------------------------------------------
-                    $('#custCntcForm').clearForm();
-                    //$('#liMstCntcNewAddr').addClass("blind");
-                    //$('#liMstCntcSelAddr').addClass("blind");
-                    //$('#liMstCntcNewAddr2').addClass("blind");
-                    //$('#liMstCntcSelAddr2').addClass("blind");
-
                     fn_loadMainCntcPerson(custInfo.custCntcId);
-                    fn_loadCntcPerson(custInfo.custCntcId);
+                    fn_loadCntcPerson('${preOrderInfo.custCntcId}');
                     
-                    //----------------------------------------------------------
-                    // [Installation] : Installation Contact Person
-                    //----------------------------------------------------------
-                  //$('#instCntcForm').clearForm();
-                  //fn_loadInstallationCntcPerson(custInfo.custCntcId);
+                    if('${preOrderInfo.custCntcId}' != custInfo.custCntcId) {
+                        $('#chkSameCntc').prop("checked", false);
+                        $('#scAnothCntc').removeClass("blind");
+                    }
+                    
+                    // Salesman
+                    fn_loadOrderSalesman(null, '${preOrderInfo.memCode}');
                 }
 
                 if(custInfo.codeName == 'Government') {
@@ -1280,6 +1341,133 @@
                 Common.confirm('<b>* This customer is existing customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop);
             }
         });
+        
+        //--------------------------------------------------------------
+        // [Order Info]
+        //--------------------------------------------------------------
+        //$('#appType').val('${preOrderInfo.appTypeId}');
+        
+        fn_getSvrPacCombo('${preOrderInfo.appTypeId}', '${preOrderInfo.srvPacId}');
+        
+      //$('#srvPacId').val('${preOrderInfo.srvPacId}');
+      
+        $('#ordProudct').removeAttr("disabled");
+      
+        var stkType = $("#appType").val() == '66' ? '1' : '2';
+        doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+      
+        $('#installDur').val('${preOrderInfo.instPriod}');
+        $('#poNo').val('${preOrderInfo.custPoNo}');
+        $('#refereNo').val('${preOrderInfo.sofNo}');
+
+      //fn_loadProductPrice('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}');
+      //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
+        
+        $('#ordPromo').removeAttr("disabled");
+        doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
+                                                                        ,stkId:'${preOrderInfo.itmStkId}'
+                                                                        ,empChk:'${preOrderInfo.empChk}'
+                                                                        ,promoCustType:vCustTypeId
+                                                                        ,exTrade:'${preOrderInfo.exTrade}'
+                                                                        ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
+        
+        
+        $('#ordRentalFees').val('${preOrderInfo.mthRentAmt}');
+        $('#promoDiscPeriodTp').val('${preOrderInfo.promoDiscPeriodTp}');
+        $('#promoDiscPeriod').val('${preOrderInfo.promoDiscPeriod}');
+        $('#ordPrice').val('${preOrderInfo.totAmt}');
+        $('#normalOrdPrice').val('${preOrderInfo.norAmt}');
+        $('#normalOrdRentalFees').val('${preOrderInfo.norRntFee}');
+        $('#ordRentalFees').val('${preOrderInfo.discRntFee}');
+        $('#ordPv').val('${preOrderInfo.totPv}');
+        $('#ordPvGST').val('${preOrderInfo.totPvGst}');
+        $('#ordPriceId').val('${preOrderInfo.prcId}');
+        
+        $("input:radio[name='advPay']:radio[value='${preOrderInfo.advBill}']").prop("checked", true);
+        
+        if('${preOrderInfo.is3rdParty}' == '1') {
+            $('#thrdParty').attr("checked", true);
+            $('#sctThrdParty').removeClass("blind");
+            fn_loadThirdParty('${preOrderInfo.rentPayCustId}', 2);
+        }
+   
+        if('${preOrderInfo.rentPayModeId}' == '131') {
+            $('#sctCrCard').removeClass("blind");
+            fn_loadCreditCard2('${preOrderInfo.custCrcId}');
+        }
+        else if('${preOrderInfo.rentPayModeId}' == '132') {
+            $('#sctDirectDebit').removeClass("blind");
+            fn_loadBankAccount('${preOrderInfo.custAccId}');
+        }
+        
+        if('${preOrderInfo.custBillId}' == '' || '${preOrderInfo.custBillId}' == '0') {
+
+            $('#grpOpt1').prop("checked", true);
+
+            $('#sctBillMthd').removeClass("blind");
+            $('#sctBillAddr').removeClass("blind");
+//          $('#sctBillPrefer').removeClass("blind");
+
+            $('#billMthdEmailTxt1').val($('#custCntcEmail').val().trim());
+          //$('#billMthdEmailTxt2').val($('#srvCntcEmail').val().trim());
+
+            if($('#hiddenTypeId').val() == '965') { //Company
+
+                console.log("fn_setBillGrp 1 typeId : "+$('#typeId').val());
+
+                $('#sctBillPrefer').removeClass("blind");
+                
+                if('${preOrderInfo.custBillCustCareCntId}' != '' && '${preOrderInfo.custBillCustCareCntId}' != '0') {
+                    fn_loadBillingPreference('${preOrderInfo.custBillCustCareCntId}');
+                }
+
+                $('#billMthdEstm').prop("checked", true);
+                $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
+                $('#billMthdEmail2').removeAttr("disabled");
+                $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
+                $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
+                
+                if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
+                    $('#billMthdEmail2').prop("checked", true);
+                }
+            }
+            else if($('#hiddenTypeId').val() == '964') { //Individual
+
+                console.log("fn_setBillGrp 2 typeId : "+$('#typeId').val());
+                console.log("custCntcEmail : "+$('#custCntcEmail').val());
+                console.log(FormUtil.isNotEmpty($('#custCntcEmail').val().trim()));
+
+                if(FormUtil.isNotEmpty($('#custCntcEmail').val().trim())) {
+                    $('#billMthdEstm').prop("checked", true);
+                    $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
+                    $('#billMthdEmail2').removeAttr("disabled");
+                    $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
+                    $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
+                    
+                    if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
+                        $('#billMthdEmail2').prop("checked", true);
+                    }
+                }
+
+                $('#billMthdSms').prop("checked", true);
+                $('#billMthdSms1').prop("checked", true).removeAttr("disabled").val('${preOrderInfo.custBillIsSms}');
+                $('#billMthdSms2').removeAttr("disabled").val('${preOrderInfo.CustBillIsSms2}');
+                
+                if(FormUtil.isNotEmpty('${preOrderInfo.CustBillIsSms2}')) {
+                    $('#billMthdSms2').prop("checked", true);
+                }
+            }
+        }
+        else {
+
+            $('#grpOpt2').prop("checked", true);
+
+            $('#sctBillSel').removeClass("blind");
+
+            $('#billRem').prop("readonly", true).addClass("readonly");
+            
+            fn_loadBillingGroupById('${preOrderInfo.custBillCustId}', '${preOrderInfo.custBillId}');
+        }
     }
     
     function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
@@ -1338,16 +1526,17 @@
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
                 
-                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+                $("#dscBrnchId").val('${preOrderInfo.dscBrnchId}'); //DSC Branch
                 
 //              if(!$("#gstChk").is('[disabled]')) {
-
+/*
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
                     }
                     else {
                         $("#gstChk").val('0').removeAttr("disabled");
                     }
+*/
 //              }
             }
         });
@@ -1408,15 +1597,6 @@
             default :
                 break;
         }
-        /*
-        if(tabNm != 'ins') {
-            if(!$('#pBtnCal').hasClass("blind")) {                
-                //$('#aTabIN').click();
-                Common.alert('<b>Please press the Calculation button</b>', fn_goInstallTab);
-                return false;
-            }
-        }
-        */
     }
 </script>
 
@@ -1433,8 +1613,8 @@
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-	<li><p class="btn_blue"><a id="btnConfirm" href="#">Confirm</a></p></li>
-	<li><p class="btn_blue"><a href="#">Clear</a></p></li>
+	<li><p class="btn_blue blind"><a id="btnConfirm" href="#">Confirm</a></p></li>
+	<li><p class="btn_blue blind"><a href="#">Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">    
@@ -1450,9 +1630,9 @@
 <tbody>
 <tr>
 	<th scope="row">NRIC/Company No</th>
-	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="nric" name="nric" type="text" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
 	<th scope="row">eSales(SOF) No</th>
-	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="sofNo" name="sofNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1460,7 +1640,7 @@
 <!------------------------------------------------------------------------------
     Pre-Order Regist Content START
 ------------------------------------------------------------------------------->
-<section id="scPreOrdArea" class="blind">
+<section id="scPreOrdArea" class="">
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
@@ -1473,8 +1653,9 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="frmPreOrdReg" name="frmPreOrdReg" action="#" method="post">
-    <input id="hiddenCustId" name="custId"   type="hidden"/>
-    <input id="hiddenTypeId" name="typeId"   type="hidden"/>
+    <input id="hiddenPreOrdId" name="preOrdId" type="hidden" value="${preOrderInfo.preOrdId}" />
+    <input id="hiddenCustId" name="custId" type="hidden"/>
+    <input id="hiddenTypeId" name="typeId" type="hidden"/>
     <input id="hiddenCustCntcId" name="custCntcId" type="hidden" />
     <input id="hiddenCustAddId" name="custAddId" type="hidden" />
 
@@ -1704,11 +1885,11 @@
 </tr>
 <tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>
-    <td><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" /></td>
+    <td><input id="prefInstDt" name="prefInstDt" type="text" value="${preOrderInfo.preDt}" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" /></td>
     <th scope="row">Prefer Install Time<span class="must">*</span></th>
     <td>
     <div class="time_picker"><!-- time_picker start -->
-    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
+    <input id="prefInstTm" name="prefInstTm" type="text" value="${preOrderInfo.preTm}" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
     <ul>
         <li>Time Picker</li>
         <li><a href="#">12:00 AM</a></li>
@@ -1741,7 +1922,7 @@
 </tr>
 <tr>
     <th scope="row">Special Instruction<span class="must">*</span></th>
-    <td colspan="3"><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
+    <td colspan="3"><textarea id="speclInstct" name="speclInstct" value="${preOrderInfo.instct}" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1780,13 +1961,13 @@
 </tr>
 <tr>
 	<th scope="row">Installment Duration<span class="must">*</span></th>
-	<td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
+	<td><input id="installDur" name="installDur" type="text" value="${preOrderInfo.instPriod}" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
 	<th scope="row">PO No</th>
 	<td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
 	<th scope="row">SOF No<span class="must">*</span></th>
-	<td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	<td><input id="refereNo" name="refereNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly/></td>
 	<th scope="row">Salesman Code / Name<span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class="" />
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
@@ -2237,7 +2418,7 @@
 <tr>
     <th scope="row">Billing Group<span class="must">*</span></th>
     <td><input id="billGrp" name="billGrp" type="text" title="" placeholder="Billing Group" class="readonly" readonly/><a id="billGrpBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <input id="hiddenBillGrpId" name="billGrpId" type="hidden" /></td>
+        <input id="hiddenBillGrpId" name="billGrpId" type="hidden" value="${preOrderInfo.custBillId}"/></td>
     <th scope="row">Billing Type<span class="must">*</span></th>
     <td><input id="billType" name="billType" type="text" title="" placeholder="Billing Type" class="w100p readonly" readonly/></td>
 </tr>

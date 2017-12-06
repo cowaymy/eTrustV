@@ -13,7 +13,7 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
-            //fn_setDetail(listMyGridID, event.rowIndex);
+            fn_setDetail(listGridID, event.rowIndex);
         });
         
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
@@ -21,6 +21,11 @@
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
     });
+    
+    function fn_setDetail(gridID, rowIdx){
+        //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
+        Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
+    }
     
     function createAUIGrid() {
         

@@ -88,6 +88,14 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		preOrderMapper.insertPreOrder(preOrderVO);
 	}
 	
+	@Override
+	public void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
+		
+		this.preprocPreOrder(preOrderVO, sessionVO);
+		
+		preOrderMapper.updatePreOrder(preOrderVO);;
+	}
+	
 	private void preprocPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
 		
 		preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);

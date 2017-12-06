@@ -59,6 +59,20 @@ public class PreOrderController {
 		return "sales/order/preOrderList";
 	}
 	
+	@RequestMapping(value = "/preOrderModifyPop.do")
+	public String preOrderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		//[Tap]Basic Info
+		EgovMap result = preOrderService.selectPreOrderInfo(params);
+
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+
+		model.put("toDay", toDay);
+		model.put("preOrderInfo", result);
+
+		return "sales/order/preOrderModifyPop";
+	}
+	
 	@RequestMapping(value = "/selectPreOrderList.do")
 	public ResponseEntity<List<EgovMap>> selectPreOrderList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 		
@@ -136,6 +150,55 @@ public class PreOrderController {
     	}
 		
         msg += "Order successfully saved.<br />";
+        msg += "SOF No : " + preOrderVO.getSofNo() + "<br />";
+        msg += "Application Type : " + appTypeName + "<br />";
+		
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/modifyPreOrder.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> modifyPreOrder(@RequestBody PreOrderVO preOrderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		preOrderService.updatePreOrder(preOrderVO, sessionVO);
+
+		String msg = "", appTypeName = "";
+		
+		switch(preOrderVO.getAppTypeId()) {
+    		case SalesConstants.APP_TYPE_CODE_ID_RENTAL :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_RENTAL_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHT_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_INSTALLMENT_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_SPONSOR :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_SPONSOR_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_SERVICE :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_SERVICE_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_EDUCATION :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_EDUCATION_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_FREE_TRIAL :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_FREE_TRIAL_FULL;
+    			break;
+    		case SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS :
+    			appTypeName = SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS_FULL;
+    			break;
+    		default :
+    			break;
+    	}
+		
+        msg += "Order successfully updated.<br />";
         msg += "SOF No : " + preOrderVO.getSofNo() + "<br />";
         msg += "Application Type : " + appTypeName + "<br />";
 		

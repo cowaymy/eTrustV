@@ -35,4 +35,6 @@ public interface PreOrderMapper {
 	
 	void insertPreOrder(PreOrderVO preOrderVO);
 	
+	void updatePreOrder(PreOrderVO preOrderVO);
+	
 }
