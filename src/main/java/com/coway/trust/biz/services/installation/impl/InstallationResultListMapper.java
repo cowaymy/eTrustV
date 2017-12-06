@@ -167,4 +167,8 @@ public interface InstallationResultListMapper {
 	List<EgovMap>selectInstallationNoteListing(Map<String, Object> params);
 
 	String  getInvoiceNum( Map<String,Object>params);
+	
+	EgovMap  selectInstallInfo(Map<String,Object>params);
+	
+	int updateInstallResultEdit (Map<String, Object> params);
 }

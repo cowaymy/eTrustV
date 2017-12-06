@@ -1781,4 +1781,16 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 		return installationResultListMapper.selectInstallationNoteListing(params);
 	}
+	
+	@Override
+	public EgovMap selectInstallInfo(Map<String, Object> params) {
+		return installationResultListMapper.selectInstallInfo(params);
+	}
+	
+	@Override
+	public int editInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+		int resultValue =installationResultListMapper.updateInstallResultEdit(params); 
+
+		return resultValue;
+	}
 }
