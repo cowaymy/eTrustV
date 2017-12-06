@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
     
+    
+    <select id="getMiscPartList"  resultType="egovMap">
+       SELECT  s26.stk_code parts_code,s26.stk_id parts_id,s26.stk_desc parts_name,s26.stk_type_id part_type,l78.purchs_prc sales_price
+        FROM SYS0026M S26,LOG0078M L78
+		WHERE 1=1 
+		AND S26.STK_CODE =L78.MATRL_MST(+) 
+		AND S26.STK_TYPE_ID ='64'
+    </select>
+    
+    
     <select id="getUsedPartsList" parameterType="Map" resultType="egovMap">
         SELECT l82.STK_ID parts_Id,s26.STK_CODE parts_Code,s26.STK_DESC parts_Name,s29.NAME cust_Name,l82.QTY used_Qty,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=s26.UOM) currency,l82.OLD_SERIAL serial_No,l82.NEW_SERIAL 
         FROM log0082m l82, SVC0008D s08, org0001d o01,sys0026m s26, sal0029d s29
