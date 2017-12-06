@@ -384,5 +384,10 @@ public class SalesConstants {
 	public static final String MSG_NO_ORDNO = "sales.msg.noOrdNo";
 	public static final String MSG_STUS_MISMATCH = "sales.msg.stusMismatch";
 	public static final String MSG_RENTAL_REM = "sales.msg.rem";
+	
+	public static final String MSG_DCF_OUTO_REM = "sales.msg.dcfRem"; // System Auto Approve for TR Lost
+	public static final String MSG_DCF_SETTLED = "sales.msg.settled"; // Approval result has settled.
+	public static final String MSG_DCF_SUCC = "sales.msg.dcfSucc"; // TR book lost result successfully saved.
+	public static final String MSG_DCF_UNABLE = "sales.msg.dcfUnable"; // Unable to find DCF request record.
 
 }
