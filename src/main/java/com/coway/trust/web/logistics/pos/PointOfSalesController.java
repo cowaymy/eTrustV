@@ -1,7 +1,10 @@
 package com.coway.trust.web.logistics.pos;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -53,11 +56,17 @@ public class PointOfSalesController {
 		String reqno = request.getParameter("reqno");
 		String reqtype = request.getParameter("reqtype");
 		String reqloc = request.getParameter("reqloc");
-
+		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+			
+		
 		Map<String, Object> map = new HashMap();
 		map.put("reqno", reqno);
 		map.put("reqtype", reqtype);
 		map.put("reqloc", reqloc);
+		map.put("today", today);
 
 		model.addAttribute("searchVal", map);
 
