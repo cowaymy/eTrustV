@@ -84,10 +84,6 @@
                            <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
                             AND (SAL1004V.MBRSH_CRT_DT <![CDATA[ <=  ]]>  TO_DATE(TO_CHAR(TO_DATE(#{MBRSH_CRT_DT},'DD/MM/YYYY'),'YYYYMMDD') || '235959','yyyymmddhh24miss'))
                         </if>
-                          
-                        <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
-                             AND ( 4 = (CASE   WHEN ( SAL1004V.MBRSH_STUS_ID IS NOT NULL ) THEN SAL1004V.MBRSH_STUS_ID        ELSE 0  END) )
-                        </if>
                       
 			    ) PJ
 			  ORDER BY ORD_ID  ASC
