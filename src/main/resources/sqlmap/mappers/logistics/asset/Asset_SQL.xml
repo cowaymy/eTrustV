@@ -318,16 +318,16 @@
         ,#{curr_dept_id}
         ,#{curr_user_id}    
         <!-- ,#{masterpurchasedate} -->
-        ,TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'), 'YYYY-MM-DD') 
+        ,TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD/MM/YYYY'), 'YYYY-MM-DD') 
         ,#{masterpurchaseamount}      
         ,#{masterimeino}
         ,#{masterwarrantyno}  
         ,#{masterserialno}  
         ,#{masterrefno}
         ,#{masterremark}
-        ,#{crt_user_id}      
+        ,#{loginId}      
         ,SYSDATE
-        ,#{upd_user_id}
+        ,#{loginId}
         ,SYSDATE 
         ,#{mastermodelname}
         ,#{mastermacaddress}
