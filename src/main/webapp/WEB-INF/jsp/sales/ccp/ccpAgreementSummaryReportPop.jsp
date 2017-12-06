@@ -12,6 +12,8 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
+	$("#cboAgmStatus").multipleSelect("checkAll");
+	
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -19,13 +21,32 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
     });
 };
+
+function validRequiredField(){
+	
+	var valid = true;
+	var message = "";
+	
+	if($("input[name='searchby']:checked").val() == "btnMonthly"){
+		if($("#dpMthYear").val() == null || $("#dpMthYear").val().length == 0){
+			
+			valid = false;
+			message += "* Please select the month/year.\n";
+		}
+	}
+		
+	if(valid == false){
+        Common.alert("Contract Agreement Summary" + DEFAULT_DELIMITER + message);
+    }else{
+    	fn_report();
+    }
+	
+}
 
 
 function fn_report(){
@@ -140,7 +161,7 @@ function fn_report(){
     <th scope="row">Agreement Type</th>
     <td>
     <select class="w100p" id="cmbAgrType">
-        <option value="" hidden>Agreement Type</option>
+        <option data-placeholder="true" hidden>Agreement Type</option>
         <option value="949">New</option>
         <option value="950">Renew</option>
     </select>
@@ -189,7 +210,7 @@ function fn_report(){
 </tr>
 <tr>
     <th scope="row">Month / Year</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="dpMthYear"/></td>
+    <td><input type="text" title="Create start Date" placeholder="Month&Year" class="j_date w100p" id="dpMthYear"/></td>
     <th scope="row"></th>
     <td></td>
 </tr>

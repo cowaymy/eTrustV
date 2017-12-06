@@ -2,6 +2,14 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
+
+var date = new Date().getDate();
+if(date.toString().length == 1){
+    date = "0" + date;
+} 
+$("#dpDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+$("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+
 $.fn.clearForm = function() {
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
@@ -15,6 +23,8 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
+        $("#dpDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        $("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
     });
 };
 
@@ -24,10 +34,10 @@ function fn_report(){
     var whereSQL = "";
 	
     if(!($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0)){
-        whereSQL += " AND ArgM.GOV_AG_START_DT >= TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy')";
+        whereSQL += " AND ArgM.GOV_AG_START_DT >= TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yy')";
     }
     if(!($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
-    	whereSQL += " AND ArgM.GOV_AG_START_DT <= TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy')";
+    	whereSQL += " AND ArgM.GOV_AG_START_DT <= TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yy')";
     }
     
     if(!($("#txtAgrNoFrom").val() == null || $("#txtAgrNoFrom").val().length == 0) && !($("#txtAgrNoTo").val() == null || $("#txtAgrNoTo").val().length == 0)){
@@ -42,7 +52,7 @@ function fn_report(){
     if(!($("#txtCreator").val() == null || $("#txtCreator").val().length == 0)){
     	whereSQL += " AND Usr1.USER_NAME = '"+$("#txtCreator").val()+"'";
     }
-	
+    	
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -60,15 +70,17 @@ function fn_report(){
 
 function ValidRequiredField(){
 	var valid = true;
+	var message = "";
 	
 	if($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0){
 		valid = false;
-		alert("* Please key in the Agreement Start Date.");
-		return false;
+		message += "* Please key in the Agreement Start Date.\n";
     }
 
 	if(valid == true){
 		fn_report();
+	}else{
+		Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
 	}
 }
 

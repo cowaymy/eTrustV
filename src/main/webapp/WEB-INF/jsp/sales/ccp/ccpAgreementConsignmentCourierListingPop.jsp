@@ -39,10 +39,10 @@ function fn_report(){
         }
     }
     
-    if($("#cmbAgrType option:selected").index() > 0){
+    if($("#cmbAgrType option:selected").index() > 1){
         whereSQL += " AND ArgM.GOV_AG_TYPE_ID = '"+$("#cmbAgrType option:selected").val()+"'";
     }
-	if($("#cmbRequestor option:selected").index() > 0){
+	if($("#cmbRequestor option:selected").index() > 1){
 		whereSQL += " AND Cons.AG_REQSTER_TYPE_ID = '"+$("#cmbRequestor option:selected").val()+"'";
 	}
 	if(!($("#dpDateFrom").val() == null || $("#dpDateFrom").val().length == 0) && !($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
@@ -82,19 +82,20 @@ function fn_report(){
 
 function ValidRequiredField(){
     var valid = true;
+    var message = "";
     
     if(($("#dpDateFrom").val() == null || $("#dpDateFrom").val().length == 0) && !($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
         valid = false;
-        alert("* Please key in the Receive Date From.");
-        return false;
+        message += "* Please key in the Receive Date From. \n";
     }else if(!($("#dpDateFrom").val() == null || $("#dpDateFrom").val().length == 0) && ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
         valid = false;
-        alert("* Please key in the Receive Date To.");
-        return false;
+        message += "* Please key in the Receive Date To. \n";
     }
 
     if(valid == true){
         fn_report();
+    }else{
+    	Common.alert("Consignment Courier Generate Summary" + DEFAULT_DELIMITER + message);
     }
 }
 
@@ -140,7 +141,7 @@ function ValidRequiredField(){
     <th scope="row">Agreement Type</th>
     <td>
     <select class="w100p" id="cmbAgrType">
-        <option value="" hidden>Agreement Type</option>
+        <option data-placeholder="true" hidden>Agreement Type</option>
         <option value="949">New</option>
         <option value="950">Renew</option>
     </select>
@@ -158,7 +159,7 @@ function ValidRequiredField(){
     <th scope="row">AGM Requestor</th>
     <td>
     <select class="w100p" id="cmbRequestor">
-        <option value="" hidden>AGM Requestor</option>
+        <option data-placeholder="true" hidden>AGM Requestor</option>
         <option value="1">HP</option>
         <option value="2">CODY</option>
         <option value="1234">Customer</option>

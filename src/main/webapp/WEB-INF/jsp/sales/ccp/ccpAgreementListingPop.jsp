@@ -3,6 +3,12 @@
 
 <script type="text/javascript">
 
+var date = new Date().getDate();
+if(date.toString().length == 1){
+    date = "0" + date;
+} 
+$("#dpDateFrom").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+$("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 
 /* 멀티셀렉트 플러그인 start */
 $('.multy_select').change(function() {
@@ -26,6 +32,8 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
+        $("#dpDateFrom").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        $("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
     });
 };
 
@@ -60,13 +68,13 @@ function fn_report() {
     }
    
     if(!($("#dpDateFrom").val() == null || $("#dpDateFrom").val().length == 0) && !($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
-    	whereSQL += " AND ArgM.GOV_AG_CRT_DT BETWEEN TO_DATE('"+$("#dpDateFrom").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy')";
+    	whereSQL += " AND ArgM.GOV_AG_CRT_DT BETWEEN TO_DATE('"+$("#dpDateFrom").val()+"', 'dd/MM/yy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yy')";
     }
     if(!($("#dtAgmStartFr").val() == null || $("#dtAgmStartFr").val().length == 0) && !($("#dtAgmStartTo").val() == null || $("#dtAgmStartTo").val().length == 0)){
-    	whereSQL += " AND ArgM.GOV_AG_START_DT BETWEEN TO_DATE('"+$("#dtAgmStartFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dtAgmStartTo").val()+"', 'dd/MM/yyyy')";
+    	whereSQL += " AND ArgM.GOV_AG_START_DT BETWEEN TO_DATE('"+$("#dtAgmStartFr").val()+"', 'dd/MM/yy') AND TO_DATE('"+$("#dtAgmStartTo").val()+"', 'dd/MM/yy')";
     }
     if(!($("#dtAgmExpiryFr").val() == null || $("#dtAgmExpiryFr").val().length == 0) && !($("#dtAgmExpiryTo").val() == null || $("#dtAgmExpiryTo").val().length == 0)){
-    	whereSQL += " AND ArgM.GOV_AG_END_DT BETWEEN TO_DATE('"+$("#dtAgmExpiryFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dtAgmExpiryTo").val()+"', 'dd/MM/yyyy')";
+    	whereSQL += " AND ArgM.GOV_AG_END_DT BETWEEN TO_DATE('"+$("#dtAgmExpiryFr").val()+"', 'dd/MM/yy') AND TO_DATE('"+$("#dtAgmExpiryTo").val()+"', 'dd/MM/yy')";
     }
     
    if($('#cboAgmStatus :selected').length > 0){
@@ -106,6 +114,9 @@ function fn_report() {
 	   orderSQL = " ORDER BY ArgM.GOV_AG_PRGRS_ID";
    }
    
+   
+   alert(whereSQL);
+   
 	var date = new Date().getDate();
     if(date.toString().length == 1){
 		date = "0" + date;
@@ -125,15 +136,17 @@ function fn_report() {
 
 function ValidRequiredField(){
     var valid = true;
+    var message = "";
     
     if($("#dpDateFrom").val() == null || $("#dpDateFrom").val().length == 0){
         valid = false;
-        alert("* Please key in the Created Date.");
-        return false;
+        message += "* Please key in the Created Date.\n";
     }
 
     if(valid == true){
         fn_report();
+    }else{
+    	Common.alert("Contract Agreement Generate Summary" + DEFAULT_DELIMITER + message);
     }
 }
 

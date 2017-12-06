@@ -14,6 +14,9 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
+	$("#cmbYSAging").multipleSelect("checkAll");
+	$("#cmbCustType").multipleSelect("checkAll");
+	
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -21,14 +24,22 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
         
         $("#dpInstallDateFrom").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
         $("#dpInstallDateTo").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
+
+        $("#cmbOrgCode").empty();
+        $("#cmbGrpCode").empty();
+        $("#cmbDeptCode").empty();
+        $("#cmbOrgCode").append("<option value='0' selected>All</option>");
+        $("#cmbGrpCode").append("<option value='0' selected>All</option>");
+        $("#cmbDeptCode").append("<option value='0' selected>All</option>");
+        
+         $("#cmbGrpCode").addClass("disabled");
+        $("#cmbDeptCode").addClass("disabled");
     });
 };
 
@@ -56,11 +67,14 @@ function cmbMemberType_SelectedIndexChanged(){
 	$("#cmbDeptCode").append("<option value='0' selected>All</option>");
 	
 	$("#cmbGrpCode").prop("disabled", true);
+	$("#cmbGrpCode").addClass("disabled");
 	$("#cmbDeptCode").prop("disabled", true);
+	$("#cmbDeptCode").addClass("disabled");
 	
 	CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType :selected").val()} , '');
 	
 	$("#cmbOrgCode").prop("disabled", false);
+	$("#cmbOrgCode").removeClass("disabled");
 }
 
 function cmbOrgCode_SelectedIndexChanged(){
@@ -68,8 +82,11 @@ function cmbOrgCode_SelectedIndexChanged(){
 	CommonCombo.make('cmbGrpCode', '/sales/order/getGrpCodeList', {memLvl : 2, memType : $("#cmbMemberType").val(), upperLineMemberID : $("#cmbOrgCode").val()}, '');
 
 	$("#cmbDeptCode").prop("disabled", false);
+	$("#cmbDeptCode").removeClass("disabled");
     $("#cmbGrpCode").prop("disabled", false);
+    $("#cmbGrpCode").removeClass("disabled");
     $("#cmbDeptCode").prop("disabled", true);
+    $("#cmbDeptCode").addClass("disabled");
 }
 
 function cmbGrpCode_SelectedIndexChanged(){
@@ -77,6 +94,7 @@ function cmbGrpCode_SelectedIndexChanged(){
 	CommonCombo.make('cmbDeptCode', '/sales/order/getGrpCodeList', {memLvl : 3, memType : $("#cmbMemberType").val(), upperLineMemberID : $("#cmbGrpCode").val()}, '');
 
 	$("#cmbDeptCode").prop("disabled", false);
+	$("#cmbDeptCode").removeClass("disabled");
 }
 
 function btnGeneratePDF_Click(){
@@ -424,7 +442,7 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
     </td>
     <th scope="row">Grp Code</th>
     <td>
-    <select class="w100p" id="cmbGrpCode" onchange="cmbGrpCode_SelectedIndexChanged()" disabled>
+    <select class="w100p disabled" id="cmbGrpCode" onchange="cmbGrpCode_SelectedIndexChanged()" disabled>
         <option value="0">All</option>
     </select>
     </td>
@@ -440,7 +458,7 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
     </td>
     <th scope="row">Dept Code</th>
     <td>
-    <select class="w100p" id="cmbDeptCode" disabled>
+    <select class="w100p disabled" id="cmbDeptCode" disabled>
         <option value="0">All</option>
     </select>
     </td>

@@ -14,6 +14,12 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
+	$("#cmbPaymode").multipleSelect("checkAll");
+	$("#cmbBank").multipleSelect("uncheckAll");
+	$("#cmbOrderSts").multipleSelect("uncheckAll");
+	$("#cmbAppType").multipleSelect("uncheckAll");
+	$("#cmbRentalSts").multipleSelect("uncheckAll");
+	
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -21,8 +27,6 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
@@ -73,40 +77,145 @@ function validRequiredField(){
  
 function fn_report(){
 	
+	var whereSQL = "";
+	
+	var runPay = 0;
+	if($('#cmbPaymode :selected').length > 0){
+		whereSQL = " AND (";
+		$('#cmbPaymode :selected').each(function(i, mul){ 
+            if(runPay > 0){
+            	whereSQL += " OR r.MODE_ID = '"+$(mul).val()+"' ";
+            }else{
+            	whereSQL += " r.MODE_ID = '"+$(mul).val()+"' ";
+            }
+            runPay += 1;
+        });
+        whereSQL += ") ";   
+	}
+	
+	var runBank = 0;
+	if($('#cmbBank :selected').length > 0){
+        whereSQL = " AND (";
+        $('#cmbBank :selected').each(function(i, mul){ 
+            if(runBank > 0){
+                whereSQL += " OR rb.BANK_ID = '"+$(mul).val()+"' ";
+            }else{
+                whereSQL += " rb.BANK_ID = '"+$(mul).val()+"' ";
+            }
+            runBank += 1;
+        });
+        whereSQL += ") ";   
+    }
+	
+	var runApp = 0;
+	if($('#cmbAppType :selected').length > 0){
+        whereSQL = " AND (";
+        $('#cmbAppType :selected').each(function(i, mul){ 
+            if(runApp > 0){
+                whereSQL += " OR som.APP_TYPE_ID = '"+$(mul).val()+"' ";
+            }else{
+                whereSQL += " som.APP_TYPE_ID = '"+$(mul).val()+"' ";
+            }
+            runApp += 1;
+        });
+        whereSQL += ") ";   
+    }
+	
+	var runOrd = 0;
+	if($('#cmbOrderSts :selected').length > 0){
+        whereSQL = " AND (";
+        $('#cmbOrderSts :selected').each(function(i, mul){ 
+            if(runOrd > 0){
+                whereSQL += " OR s.STUS_CODE_ID = '"+$(mul).val()+"' ";
+            }else{
+                whereSQL += " s.STUS_CODE_ID = '"+$(mul).val()+"' ";
+            }
+            runOrd += 1;
+        });
+        whereSQL += ") ";   
+    }
+	
+	var runRen = 0;
+	if($('#cmbRentalSts :selected').length > 0 && $("#cmbRentalSts").prop("disabled", false)){
+        whereSQL = " AND (";
+        $('#cmbRentalSts :selected').each(function(i, mul){ 
+            if(runRen > 0){
+                whereSQL += " OR rs.STUS_CODE_ID = '"+$(mul).val()+"' ";
+            }else{
+                whereSQL += " rs.STUS_CODE_ID = '"+$(mul).val()+"' ";
+            }
+            runRen += 1;
+        });
+        whereSQL += ") ";   
+    }
+	
+    if(!($("#dpUpdateDateFr").val() == null || $("#dpUpdateDateFr").val().length == 0) && !($("#dpUpdateDateTo").val() == null || $("#dpUpdateDateTo").val().length == 0)){
+        
+        var frArr = $("#dpUpdateDateFr").val().split("/");
+        var toArr = $("#dpUpdateDateTo").val().split("/");
+        var dpUpdateDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
+        var dpUpdateDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
+        
+        whereSQL += " AND (r.UPD_DT BETWEEN TO_DATE('"+dpUpdateDateFr+"', 'MM/dd/YY') AND TO_DATE('"+dpUpdateDateTo+"', 'MM/dd/YY'))";
+    }
+    
+    if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) && !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
+    	
+    	whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNoFr").val().trim()+"' AND '"+$("#txtOrderNoTo").val().trim()+"')";
+    }
+    
+    if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
+        
+        var frArr = $("#dpOrderDateFr").val().split("/");
+        var toArr = $("#dpOrderDateTo").val().split("/");
+        var dpOrderDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
+        var dpOrderDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2];
+        
+        whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+dpOrderDateFr+"', 'MM/dd/YY') AND TO_DATE('"+dpOrderDateTo+"', 'MM/dd/YY'))";
+    }
+    
+    if($("#cmbKeyBranch :selected").index() > 0){ 
+        whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";       
+    }
 	
 	
-	
+	var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    } 
+    $("#reportDownFileName").val("RentPaySetUpdateList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+
+    $("#V_WHERESQL").val(whereSQL);
+    
+    // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+    var option = {
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+    };
+    
+    Common.report("form", option);
 	
 }
 
-function cmbAppType_OnItemChecked(){ ////////////
-	
-	alert("111 : " +$('#cmbAppType :selected').val());
+function cmbAppType_OnItemChecked(){ 
 	
 	if($("#cmbAppType :selected").length == 0){
-		$("#cmbRentalSts").prop("disabled", false);
+		$("#cmbRentalSts").multipleSelect("enable");
 	}
 
 	$('#cmbAppType :selected').each(function(i, mul){
-		alert($('#cmbAppType :selected').val());
-		
 	    if($(mul).val() == "67" || $(mul).val() == "1412" || $("#cmbAppType :selected").length > 1){
-	    	alert("1");
-	    	$("#cmbRentalSts").prop("disabled", true);
-	 //   	$("#cmbRentalSts").prop("selected", false);
-	//    	$("#cmbRentalSts").text("");
+	    	$('#cmbRentalSts').multipleSelect("disable");
+	    	$("#cmbRentalSts").multipleSelect("uncheckAll");
+	
 	    }else{
-	    	alert("2");
-	    	$("#cmbRentalSts").prop("disabled", false);
+	    	$("#cmbRentalSts").multipleSelect("enable");
 	    }
 	});
 	
 }
-
  
  CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
  CommonCombo.make('cmbBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
- 
  
 </script>
 
@@ -225,10 +334,14 @@ function cmbAppType_OnItemChecked(){ ////////////
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 
-<input type="hidden" id="reportFileName" name="reportFileName" value="" />
-<input type="hidden" id="viewType" name="viewType" value="PDF" />
+<input type="hidden" id="reportFileName" name="reportFileName" value="/sales/RentPaySetLastUpdateList.rpt" />
+<input type="hidden" id="viewType" name="viewType" value="EXCEL" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
+<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="" />
+<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" value="" />
+<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
+<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" value="" />
 
 </form>
 

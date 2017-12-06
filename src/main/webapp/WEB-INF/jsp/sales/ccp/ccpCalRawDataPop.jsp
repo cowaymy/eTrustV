@@ -4,6 +4,13 @@
 
 <script type="text/javascript">
 
+var date = new Date().getDate();
+if(date.toString().length == 1){
+    date = "0" + date;
+} 
+$("#dpDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+$("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+
 $.fn.clearForm = function() {
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
@@ -17,6 +24,20 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
+        
+        $("#dpDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        $("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+        
+        $("#cmbType").removeClass("disabled");
+        $("#txtOrderNumberFrom").removeAttr("disabled");
+        $("#txtOrderNumberTo").removeAttr("disabled");
+        $("#cmbRegion").removeClass("disabled");
+        $("#cmbbranch").removeClass("disabled");
+        
+        $('#cmbType').prop("disabled", false);
+        $('#cmbRegion').prop("disabled", false);
+        $('#cmbbranch').prop("disabled", false);
+
     });
 };
 
@@ -24,47 +45,67 @@ function cmbType_SelectedIndexChanged(){
 	
 	if($("#cmbType :selected").val() == "1"){
 		$("#cmbType").prop('disabled', true);
+		$("#cmbType").addClass("disabled");
 		$("#txtOrderNumberFrom").prop('disabled', true);
+		$("#txtOrderNumberFrom").addClass("disabled");
 		$("#txtOrderNumberTo").prop('disabled', true);
+		$("#txtOrderNumberTo").addClass("disabled");
 		$("#dpDateFr").prop('disabled', false);
 		$("#dpDateTo").prop('disabled', false);
 		$("#tpTimeFr").prop('disabled', false);
 		$("#tpTimeTo").prop('disabled', false);
 		$("#cmbRegion").prop('disabled', true);
+		$("#cmbRegion").addClass("disabled");
 		$("#cmbbranch").prop('disabled', true);
+		$("#cmbbranch").addClass("disabled");
 		
 	}else if($("#cmbType :selected").val() == "2"){
 		$("#cmbType").prop('disabled', true);
+		$("#cmbType").addClass("disabled");
         $("#txtOrderNumberFrom").prop('disabled', true);
+        $("#txtOrderNumberFrom").addClass("disabled");
         $("#txtOrderNumberTo").prop('disabled', true);
+        $("#txtOrderNumberTo").addClass("disabled");
         $("#dpDateFr").prop('disabled', false);
         $("#dpDateTo").prop('disabled', false);
         $("#tpTimeFr").prop('disabled', false);
         $("#tpTimeTo").prop('disabled', false);
         $("#cmbRegion").prop('disabled', true);
+        $("#cmbRegion").addClass("disabled");
         $("#cmbbranch").prop('disabled', true);
-		
+        $("#cmbbranch").addClass("disabled");
+        
     }else if($("#cmbType :selected").val() == "3"){
     	$("#cmbType").prop('disabled', true);
+    	$("#cmbType").addClass("disabled");
         $("#txtOrderNumberFrom").prop('disabled', true);
+        $("#txtOrderNumberFrom").addClass("disabled")
         $("#txtOrderNumberTo").prop('disabled', true);
+        $("#txtOrderNumberTo").addClass("disabled")
         $("#dpDateFr").prop('disabled', false);
         $("#dpDateTo").prop('disabled', false);
         $("#tpTimeFr").prop('disabled', false);
         $("#tpTimeTo").prop('disabled', false);
         $("#cmbRegion").prop('disabled', true);
+        $("#cmbRegion").addClass("disabled");
         $("#cmbbranch").prop('disabled', true);
-    	
+        $("#cmbbranch").addClass("disabled");
+        
     }else if($("#cmbType :selected").val() == "4"){
     	$("#cmbType").prop('disabled', true);
+    	$("#cmbType").addClass("disabled");
         $("#txtOrderNumberFrom").prop('disabled', true);
+        $("#txtOrderNumberFrom").addClass("disabled");
         $("#txtOrderNumberTo").prop('disabled', true);
+        $("#txtOrderNumberTo").addClass("disabled");
         $("#dpDateFr").prop('disabled', false);
         $("#dpDateTo").prop('disabled', false);
         $("#tpTimeFr").prop('disabled', false);
         $("#tpTimeTo").prop('disabled', false);
         $("#cmbRegion").prop('disabled', true);
+        $("#cmbRegion").addClass("disabled");
         $("#cmbbranch").prop('disabled', true);
+        $("#cmbbranch").addClass("disabled");
     	
     }
 	
@@ -76,7 +117,7 @@ function validRequiredField(){
 	var valid = true;
 	var message = "";
 	
-	if($("#cmbType :selected").val() == null || $("#cmbType :selected").val().length == 0){
+	if($("#cmbType :selected").index() < 1){
 		valid = false;
 		message += "* Please select a report type.\n";
 	}
@@ -89,7 +130,7 @@ function validRequiredField(){
 	if(valid == true){
         fn_report();
     }else{
-        alert(message);
+    	Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
     }
 }
 
@@ -133,8 +174,9 @@ function fn_report(){
 			
 		    dpDateFr = frArr[2]+"/"+frArr[1]+"/"+frArr[0]; // yyyy/MM/dd
 		    dpDateTo = toArr[2]+"/"+toArr[1]+"/"+toArr[0];
-		    
-			whereSQL += " AND (som.SALES_DT BETWEEN '"+dpDateFr+"' AND '"+dpDateTo+"')";
+
+		    whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd//MM/yyyy'))";
+		
 		}
 		
 		$("#V_ORDERDATETOSQL").val(orderDateTo);
@@ -150,7 +192,7 @@ function fn_report(){
 	}else if($("#cmbType :selected").val() == "2"){
 		
 		if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
-			whereSQL += " AND (NVL(som.SALES_DT, '01/01/19') BETWEEN TO_DATE('"+orderDateFr+"', 'MM/dd/yyyy') AND TO_DATE('"+orderDateTo+"', 'MM/dd/yyyy'))";
+			whereSQL += " AND (NVL(som.SALES_DT, TO_DATE('01/01/1900', 'dd/MM/YY')) BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy'))";
 		}
 		if(!($("#txtOrderNumberFrom").val() == null || $("#txtOrderNumberFrom").val().length == 0) && !($("#txtOrderNumberTo").val() == null || $("#txtOrderNumberTo").val().length == 0)){
 			whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNumberFrom").val()+"' AND '"+$("#txtOrderNumberTo").val()+"')";
@@ -175,7 +217,7 @@ function fn_report(){
 	}else if($("#cmbType :selected").val() == "3"){
 		
 		if(!(dpDateFr == null || dpDateFr.length == 0) && !(dpDateTo == null || dpDateTo.length == 0)){
-			whereSQL += " AND (NVL(som.SALES_DT, '01/01/19') BETWEEN TO_DATE('"+orderDateFr+"', 'MM/dd/yyyy') AND TO_DATE('"+orderDateTo+"', 'MM/dd/yyyy'))";
+			whereSQL += " AND (NVL(som.SALES_DT, TO_DATE('01/01/1900', 'dd/MM/YY')) BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yyyy'))";
 		}
         if(!($("#txtOrderNumberFrom").val() == null || $("#txtOrderNumberFrom").val().length == 0) && !($("#txtOrderNumberTo").val() == null || $("#txtOrderNumberTo").val().length == 0)){
             whereSQL += " AND (som.SALES_ORD_NO BETWEEN '"+$("#txtOrderNumberFrom").val()+"' AND '"+$("#txtOrderNumberTo").val()+"')";
@@ -264,7 +306,7 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
     <th scope="row">Report Type</th>
     <td>
     <select class="" id="cmbType" onchange="cmbType_SelectedIndexChanged()">
-        <option value="" hidden>Report/Raw Data Type</option>
+        <option data-placeholder="true" hidden>Report/Raw Data Type</option>
         <option value="1">CCP -Customer Information Raw Data</option>
         <option value="2">CCP -Order Information Raw Data</option>
         <option value="3">CCP -CCP Information Raw Data</option>

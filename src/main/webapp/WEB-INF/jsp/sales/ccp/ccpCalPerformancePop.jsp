@@ -20,18 +20,18 @@ $.fn.clearForm = function() {
     });
 };
 
-function ValidRequiredField(){
+function ValidRequiredField(){   //////6이후 것들 validation 추가 필요!!!
     var valid = true;
     var message = "";
     var cmbTypeVal = $("#cmbType :selected").val();
     
     
-    if($("#cmbType option:selected").index() <= 0){
+    if($("#cmbType option:selected").index() < 1){
     	valid = false;
     	message += "* Please select a report type.\n";
     }else{
     	if(cmbTypeVal == '1' || cmbTypeVal == '2' || cmbTypeVal == '3' || cmbTypeVal == '4'){
-    		if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) && !($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){	
+    		if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){	
     			valid = false;
                 message += "* Please key in the Order Date.\n";
     		}
@@ -45,13 +45,27 @@ function ValidRequiredField(){
     			valid = false;
                 message += "* Please key in the Order Date.\n";
             }
-    	}
+    	}else if(cmbTypeVal == '8'){
+            if($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0){
+                valid = false;
+                message += "* Please key in the Order Date.\n";
+            }
+        }else if(cmbTypeVal == "9" || cmbTypeVal == "10" || cmbTypeVal == "11" || cmbTypeVal == "12" || cmbTypeVal == "13"){
+        	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){   
+                valid = false;
+                message += "* Please key in the Order Date.\n";
+            }
+        	if($("#dpOrderMonth").val() == null || $("#dpOrderMonth").val().length == 0){
+                valid = false;
+                message += "* Please select the order month.\n";
+            }
+        }
     }
 
     if(valid == true){
         fn_report();
     }else{
-    	alert(message);
+    	Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
     }
 }
 
@@ -113,12 +127,9 @@ function fn_report_1(){
 		
 		orderDateFrom = frArr[0]+"/"+frArr[1]+"/"+frArr[2]; // dd/MM/yyyy
 		orderDateTo = toArr[0]+"/"+toArr[1]+"/"+toArr[2];
-		
-		dpDateFr = frArr[2]+"/"+frArr[1]+"/"+frArr[0]; // yyyy/MM/dd
-        dpDateTo = toArr[2]+"/"+toArr[1]+"/"+toArr[0];
-        whereSQL += " AND (som.SALES_DT BETWEEN '"+dpDateFr+"' AND '"+dpDateTo+"')";
-		
-	}
+
+		whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd//MM/yyyy'))";
+    }
 	
 	if($("#cmbType :selected").val() == "1"){
 		$("#reportDownFileName").val("CCPPerformance_KeyInBranch_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
@@ -277,18 +288,24 @@ function fn_report_4(){
 	
 }
 
-function fn_report_5(){ 
+function fn_report_5(){ /////error
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
     var passDate = "";
     
     $("#reportParameter").append('<input type="hidden" id="V_PASSDATE" name="V_PASSDATE" value="" />');
-
     
     passDate = $("#dpDateTo").val();
     passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
-	
+
+    console.log(passDate);
+    console.log(typeof passDate);
+    passDate = "TO_DATE('"+passDate+"', 'yyyy-MM-dd')";
+    //passDate = "TO_CHAR(TO_DATE('"+passDate+"', 'yyyy-MM-dd'))";
+    console.log(passDate);
+    console.log(typeof passDate);
+    
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -306,7 +323,7 @@ function fn_report_5(){
     
 }
 
-function fn_report_6(){ 
+function fn_report_6(){ /////error 5랑 같은 error 같음
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -339,6 +356,9 @@ function fn_report_6(){
 		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
         $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
 
+        console.log(date1);
+        console.log(strdate);
+        
         $("#V_INPUTDATE").val(date1);
         $("#V_DATESTRING").val(strdate);
 		
@@ -430,7 +450,7 @@ function fn_report_6(){
     <th scope="row">Report Type</th>
     <td>
     <select class="" id="cmbType">
-        <option value="" hidden>Report/Raw Data Type</option>
+        <option data-placeholder="true" hidden>Report/Raw Data Type</option>
         <option value="" style="background-color: DarkGray; font-color:black; font-weight:bold" disabled>CCP Performance Report</option>
         <option value="1">By Key-In Branch</option>
         <option value="2">By Service Branch</option>

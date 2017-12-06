@@ -20,6 +20,10 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
+	$("#cmbReqStage").multipleSelect("checkAll");
+	$("#cmbAppType").multipleSelect("checkAll");
+    $("#cmbKeyBranch").multipleSelect("uncheckAll");
+	
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -27,13 +31,12 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
         $("#dpRequestDtFrom").val("01/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
         $("#dpRequestDtTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+
     });
 };
 
@@ -53,6 +56,7 @@ function btnGenerate_Click(){
     		}
     		runNo += 1;
     	});
+    	
     	whereSQL += ") ";
         runNo = 0;    	
     }

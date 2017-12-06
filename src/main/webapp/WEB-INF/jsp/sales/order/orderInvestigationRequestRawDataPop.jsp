@@ -19,6 +19,10 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
+	$("#cmbReqStatus").multipleSelect("uncheckAll");
+    $("#cmbAppType").multipleSelect("uncheckAll");
+    $("#cmbRejectReason").multipleSelect("uncheckAll");
+	
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -26,8 +30,6 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
@@ -121,8 +123,6 @@ function btnGenerate_Click(){
 	if(!($("#txtCustIC").val().trim() == null || $("#txtCustIC").val().trim().length == 0)){
         whereSQL += " AND c.NRIC LIKE '%"+$("#txtCustIC").val().trim().replace("'", "''")+"%' ";
     }
-	
-	
 	
     $("#V_WHERESQL").val(whereSQL);
     

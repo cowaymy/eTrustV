@@ -20,6 +20,8 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
+	$("#cmbCCPFeedbackCode").multipleSelect("checkAll");
+	
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -27,8 +29,6 @@ $.fn.clearForm = function() {
         }
         if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
             this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
         }else if (tag === 'select'){
             this.selectedIndex = 0;
         }
@@ -204,11 +204,48 @@ function fn_report(viewType){
     }
     
     
+    orderNoFrom = ($("#txtOrderNumberFrom").val().trim() == null || $("#txtOrderNumberFrom").val().trim().length == 0) ? "" : $("#txtOrderNumberFrom").val().trim();
+    orderNoTo = ($("#txtOrderNumberFrom").val().trim() == null || $("#txtOrderNumberTo").val().trim().length == 0) ? "" : $("#txtOrderNumberTo").val().trim(); 
+   
+    var frArr = $("#dpDateFr").val().split("/");
+    var dpDateFr = frArr[1]+"/"+frArr[0]+"/"+frArr[2]; // MM/dd/yyyy
+    orderDateFrom = (dpDateFr == null || dpDateFr.length == 0) ? "" : dpDateFr;
+    var toArr = $("#dpDateTo").val().split("/");
+    var dpDateTo = toArr[1]+"/"+toArr[0]+"/"+toArr[2]; // MM/dd/yyyy
+    orderDateTo = (dpDateTo == null || dpDateTo.length == 0) ? "" : dpDateTo;
     
-    
-    ////////////////////////변수에 값 넣기 필요
-    
-    
+    branchRegion = ($("#cmbRegion :selected").index() > 0) ? $("#cmbRegion :selected").text().trim() : "";
+    keyInBranch = ($("#cmbbranch :selected").index() > 0) ? $("#cmbbranch :selected").text().trim() : "";
+    groupCode = ($("#txtGrpCode").val().trim() == null || $("#txtGrpCode").val().trim().length == 0) ? "" : $("#txtGrpCode").val().trim();
+    ccpProgStatus = ($("#cmbprogress :selected").index() > 0) ? $("#cmbprogress :selected").text().trim() : "";
+    ccpPointFrom = ($("#txtPointFrom").val().trim() == null || $("#txtPointFrom").val().trim().length == 0) ? "" : $("#txtPointFrom").val().trim();
+    ccpPointTo = ($("#txtPointTo").val().trim() == null || $("#txtPointTo").val().trim().length == 0) ? "" : $("#txtPointTo").val().trim();
+    rejStatus = ($("#cmbRjtStatus :selected").index() > 0) ? $("#cmbRjtStatus :selected").text().trim() : "";
+   
+    if($("#cmbSort :selected").index() > 0){
+        if($("#cmbSort :selected").val() == "1"){
+        	sortBy = "Region";
+        }else if($("#cmbSort :selected").val() == "2"){
+        	sortBy = "Branch";
+        }else if($("#cmbSort :selected").val() == "3"){
+        	sortBy = "Order Date";
+        }else if($("#cmbSort :selected").val() == "4"){
+        	sortBy = "Order Number";
+        }else if($("#cmbSort :selected").val() == "5"){
+        	sortBy = "CCP Progress Status";
+        }else if($("#cmbSort :selected").val() == "6"){
+        	sortBy = "Username";
+        }else if($("#cmbSort :selected").val() == "7"){
+        	sortBy = "Customer Name";
+        }else if($("#cmbSort :selected").val() == "8"){
+        	sortBy = "DSC Branch Code";
+        }else if($("#cmbSort :selected").val() == "9"){
+        	sortBy = "Product";
+        }else{
+        	sortBy = "";
+        }
+    }	
+    	
     
     $("#reportDownFileName").val("CCPListing_PDF_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     if(viewType == "PDF"){

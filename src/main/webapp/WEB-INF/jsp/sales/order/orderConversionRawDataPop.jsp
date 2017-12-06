@@ -44,7 +44,7 @@ function fn_report(){
 		
 		$('#cmbAgingMonth :selected').each(function(i, mul){ 
 			if($(mul).val() == "7"){
-				text1 = "AA.AGINGMONTH  >= 7";
+				text1 = "AA.AGINGMONTH  >= 7"; /////?
 			}else{
 				if(text2 == null || text2.length == 0){
 					text2 = $(mul).val().trim();
@@ -55,7 +55,7 @@ function fn_report(){
 		});
 		
 		if(!(text2 == null || text2.length == 0)){
-			rentalAgingMonth += "AA.AGINGMONTH IN ("+text2+")";
+			rentalAgingMonth += "AA.AGINGMONTH IN ("+text2+")"; //////?
 			if(!(text1 == null || text1.length == 0)){
 				rentalAgingMonth += " OR ";
 			}
