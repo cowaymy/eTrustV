@@ -364,7 +364,7 @@ public class  MembershipQuotationController {
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setMessage("New contact successfully saved.");
+		message.setMessage((String)params.get("SAL0093D_NO"));
 		message.setData(params.get("SAL0093D_SEQ"));
 		 
 		        
