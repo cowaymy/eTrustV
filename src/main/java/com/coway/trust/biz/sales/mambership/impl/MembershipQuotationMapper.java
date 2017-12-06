@@ -76,4 +76,7 @@ public interface MembershipQuotationMapper {
 	
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
 	
+	EgovMap   getEntryDocNo(Map<String, Object> params);
+	
+	
 }

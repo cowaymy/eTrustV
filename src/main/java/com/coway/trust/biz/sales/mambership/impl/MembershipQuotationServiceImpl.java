@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.common.impl.CommonServiceImpl;
 import com.coway.trust.biz.sales.mambership.MembershipQuotationService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
@@ -174,6 +173,10 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		 }
 		
 		
+		params.put("DOCNO", "20");
+		EgovMap  docNoMp = membershipQuotationMapper.getEntryDocNo(params); 
+		
+		params.put("srvMemQuotNo",docNoMp.get("docno"));
 		EgovMap   seqMap = membershipQuotationMapper.getSAL0093D_SEQ (params);
 		
 		logger.debug("seqMap =============>" +seqMap.toString());
@@ -186,8 +189,12 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		
 		logger.debug("SAL0093D_SEQ =============>");
 		logger.debug("SAL0093D_SEQ : {}", SAL0093D_SEQ);
+		logger.debug("SAL0093D_NO : {}", docNoMp.get("docno"));
 		
 		params.put("SAL0093D_SEQ" , SAL0093D_SEQ);
+		params.put("SAL0093D_NO" , 		docNoMp.get("docno"));
+		
+
 		
 		//1. insert 
 		membershipQuotationMapper.insertQuotationInfo(params);
