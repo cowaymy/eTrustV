@@ -51,6 +51,8 @@ import com.coway.trust.api.mobile.logistics.itembank.ItemBankLocationListDto;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankLocationListForm;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankResultListDto;
 import com.coway.trust.api.mobile.logistics.itembank.ItemBankResultListForm;
+import com.coway.trust.api.mobile.logistics.miscPart.MiscPartDto;
+import com.coway.trust.api.mobile.logistics.miscPart.MiscPartListForm;
 import com.coway.trust.api.mobile.logistics.mystock.MyStockListDto;
 import com.coway.trust.api.mobile.logistics.mystock.MyStockListForm;
 import com.coway.trust.api.mobile.logistics.rdcstock.RdcStockListDto;
@@ -644,6 +646,28 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+	
+	@ApiOperation(value = "miscPart Master 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/miscPartList", method = RequestMethod.GET)
+	public ResponseEntity<List<MiscPartDto>> miscPartList(@ModelAttribute MiscPartListForm miscPartListForm ) throws Exception {
+
+		Map<String, Object> params = MiscPartListForm.createMap(miscPartListForm);
+
+		List<EgovMap> miscPartList = MlogApiService.getMiscPartList();
+
+		for (int i = 0; i < miscPartList.size(); i++) {
+			LOGGER.debug("miscPartList    값 : {}", miscPartList.get(i));
+
+		}
+
+		List<MiscPartDto> list = miscPartList.stream().map(r -> MiscPartDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
 	
 	
 
