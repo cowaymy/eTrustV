@@ -244,6 +244,16 @@ $(document).ready(function() {
     	//Pos Sales  AND Deduction
     	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) { 
 			
+    		
+    		if($("#_insPosModuleType").val() == 2391){
+    			
+    			var memSize = AUIGrid.getGridData(memGridID);
+    			if(memSize == null || memSize.length <= 0){
+    				Common.alert("* Please Key in meber(s) first.");
+    				return;
+    			}
+    		}
+    		
     		if($("#_insPosSystemType").val() == 1352){ //Pos Filter / Spare Part / Miscellaneous
     			
     			// 창고 Validation

@@ -407,6 +407,13 @@ $(document).ready(function() { //***********************************************
     	 
     	 
      }
+     
+     
+     /***  Report ***/
+     $("#_posRawDataBtn").click(function() {
+    	 Common.popupDiv("/sales/pos/posRawDataPop.do", '', null, null, true);
+	});
+     
 });//Doc ready Func End ****************************************************************************************************************************************
 
 
@@ -874,7 +881,7 @@ function fn_getPosListAjax(){
     </ul>
     <ul class="btns">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">POS Payment Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">POS Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a id="_posRawDataBtn">POS Raw Data</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

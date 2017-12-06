@@ -305,7 +305,7 @@
                         Project1.STK_TYPE_ID,
                         Project1.STK_CTGRY_ID,
                         <!-- NVL(Project1.QTY, 0 ) QTY, -->
-                        NVL(Project1.QTY, 0) QTY,
+                        NVL(Project1.QTY, 0 ) QTY
                         Project1.MOV_QTY,
                         NVL(Project1.AMT , 0) AMT,                     
                         (AMT * 100) / 106 SUB_CHANGES,
@@ -321,7 +321,8 @@
                                 Extent1.STK_CTGRY_ID,
                                 (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
                                 Extent2.MOV_QTY,
-                                NVL(Extent3.AMT, 0) AMT,
+                                <!-- NVL(Extent3.AMT, 0) AMT, -->
+                                 NVL(Extent3.AMT, 0) AMT,
                                 Extent1.SERIAL_CHK
                             FROM                     
                                 SYS0026M Extent1 
@@ -1827,7 +1828,8 @@
 	   UPDATE 
 	        SAL0057D
 	   SET
-	        STUS_ID = #{stusId}
+	        STUS_ID = #{stusId},
+	        UPD_DT = SYSDATE
 	   WHERE 
 	        POS_ID = #{posId}
 	</update>
@@ -1836,7 +1838,8 @@
 	   UPDATE 
 	       SAL0058D 
 	   SET 
-	       RCV_STUS_ID = #{changeStatus}
+	       RCV_STUS_ID = #{changeStatus},
+	       UPD_DT = SYSDATE
 	   WHERE 
 	       POS_ID = #{posId}
 	</update>

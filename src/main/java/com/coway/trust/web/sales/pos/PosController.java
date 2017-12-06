@@ -557,4 +557,11 @@ public class PosController {
 		return ResponseEntity.ok(memMap);
 		
 	}
+	
+	
+	@RequestMapping(value = "/posRawDataPop.do")
+	public String posRawDataPop (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/pos/posRawDataPop";
+	}
 }

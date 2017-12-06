@@ -362,28 +362,62 @@ $(document).ready(function() {
 	//Check Amt Can be Modifiy
 	AUIGrid.bind(basketGridID, "cellEditBegin", function( event ) {
 		
-		var chkParam = {stkId : event.item.stkId};
-		var isEdit = false;
-		var ajaOpt = { async : false};
-		Common.ajax("GET", "/sales/pos/chkAllowSalesKeyInPrc", chkParam, function (result){
-			 isEdit =  result;
-		}, null, ajaOpt);
-		
-		//Force Editing
-		AUIGrid.forceEditingComplete(basketGridID, null, false);
-		
-		return isEdit;
+		if(event.dataField == 'amt'){
+			var chkParam = {stkId : event.item.stkId};
+	        var isEdit = false;
+	        var ajaOpt = { async : false};
+	        Common.ajax("GET", "/sales/pos/chkAllowSalesKeyInPrc", chkParam, function (result){
+	             isEdit =  result;
+	        }, null, ajaOpt);
+	        
+	        //Force Editing
+	        AUIGrid.forceEditingComplete(basketGridID, null, false);
+	        
+	        return isEdit;
+		}else if(event.dataField == 'inputQty'){
+			return true;
+		}else{
+			return false;
+		}
 	});
 	
 	//Edit Grid by Half Round
 	AUIGrid.bind(basketGridID, "cellEditEndBefore", function( event ) {
-	      
-		var fixVal = 0 ;
-		fixVal = event.value.toFixed(2);
+	    
+		console.log("event.dataField : " + JSON.stringify(event.dataField));
 		
-		console.log("event.value : " + event.value);
-		console.log("fixVal : " + fixVal);
-		return fixVal; // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용
+		if(event.dataField == 'amt'){
+			var fixVal = 0 ;
+	        fixVal = event.value.toFixed(2);
+	        
+	        console.log("event.value : " + event.value);
+	        console.log("fixVal : " + fixVal);
+	        return fixVal; // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용	
+		}
+		
+		if(event.dataField == 'inputQty'){
+			var inputQty = event.value;
+			var times = 1;
+			var girdLeng;
+			if($("#_insPosModuleType").val() == 2391){
+				girdLeng = AUIGrid.getGridData(memGridID);
+				times = girdLeng.length;
+			}
+			
+			if(isNaN(inputQty)){
+				inputQty = 0;
+			}else{
+				if(inputQty <= 0){
+	                inputQty = 0;
+	            }else{
+	                inputQty = Math.ceil(inputQty);
+	            }
+			}
+			
+			console.log("inputQty : " + inputQty);
+			console.log("times : " + times);
+			return inputQty*times;
+		}
 	});
 	
 });//Doc Ready Func End
@@ -489,7 +523,7 @@ function fn_createBasketGrid(){
 	                            {dataField : "stkCode", headerText : "Item Code", width : '10%' , editable : false}, 
 	                            {dataField : "stkDesc", headerText : "Item Description", width : '30%', editable : false},
 	                            {dataField : "qty", headerText : "Inventory", width : '10%', editable : false},
-	                            {dataField : "inputQty", headerText : "Qty", width : '10%', editable : true, dataType : "numeric", renderer : {type : "NumberStepRenderer", min : 0 ,step : 1 }},
+	                            {dataField : "inputQty", headerText : "Qty", width : '10%', editable : true, dataType : "numeric"},
 	                            {dataField : "amt", headerText : "Unit Price", width : '10%', dataType : "numeric", formatString : "#,##0.00",editRenderer : {
 	                                type : "InputEditRenderer",
 	                                onlyNumeric : true,

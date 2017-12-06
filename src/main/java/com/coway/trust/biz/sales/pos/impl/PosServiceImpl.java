@@ -160,7 +160,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		BigDecimal calGst = new BigDecimal(SalesConstants.POS_INV_ITM_GST_RATE);
 		BigDecimal tempCal = calHundred.add(calGst);
 		
-		BigDecimal deducSize = new BigDecimal(basketGrid.size()); // Deduction Size
+	//	BigDecimal deducSize = new BigDecimal(basketGrid.size()); // Deduction Size
 		LOGGER.info("########################## tempCal : " + tempCal);
 		for (int i = 0; i < basketGrid.size(); i++) {
 			Map<String, Object> amtMap  = null;
@@ -184,12 +184,14 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			
 		}
 		
-		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
+/*		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
+			
+			LOGGER.info("########################### deducSize : " + deducSize);
 			
 			tempTotalAmt = tempTotalAmt.multiply(deducSize);
 			tempTotalTax = tempTotalTax.multiply(deducSize);
 			tempTotalCharge = tempTotalCharge.multiply(deducSize);
-		}
+		}*/
 		
 
 		double rtnAmt = tempTotalAmt.doubleValue();
