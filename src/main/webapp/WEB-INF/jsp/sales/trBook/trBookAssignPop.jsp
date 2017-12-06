@@ -1,0 +1,158 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javaScript" language="javascript">
+$(document).ready(function(){      
+	
+//	fn_memberTypeChn("1");
+
+	//Member Search Popup
+	$('#memBtn').click(function() {
+	    Common.popupDiv("/common/memberPop.do", {"callPrgm":"TR_BOOK_ASSIGN"}, null, true);
+	});
+	
+	if ("${detailInfo.trHolderType}" != "Branch")
+    {
+        $("#trBookAssignPop").remove();
+	    Common.alert("TR Book Informtion" + DEFAULT_DELIMITER + "[ ${detailInfo.trBookNo} ] is holding by [ ${detailInfo.trHolder} ]. Book assign is disallowed.</b>");
+    }
+});
+
+function fn_memberTypeChn(val){
+	
+    CommonCombo.initById("member");    
+    CommonCombo.make("member", "/sales/trBook/selectMember", {"memberType" : val}, "", {
+        id: "memCode",
+        name: "name"
+    });
+
+}
+
+function fn_loadOrderSalesman(typeId, text, memId, memCode, name) {
+	$("#memTypeId").val(typeId);
+	$("#memTypeText").val(text);
+	$("#assignMemId").val(memId);
+	$("#assignMemCode").val(memCode);
+	$("#assignMemName").val(name);
+	
+}
+
+function fn_assignSave(){
+	
+     if ($("#assignMemCode").val() == "")
+     {
+    	 $("#msg").html("* Some required fields are empty.");
+    	 $("#msg").attr("style", "color:red");
+    	 return false;
+     }
+     Common.ajax("POST", "/sales/trBook/saveAssign", $("#saveForm").serializeJSON(), function(result) {
+         
+         console.log("성공.");
+         console.log( result);        
+
+         if(result.saveYn == "N"){
+
+             $("#msg").attr("style", "color:red");
+         }else{
+
+             $("#msg").attr("style", "color:green");
+         }
+         $("#msg").html(result.msg);
+         $("#memBtn").hide();
+         $("#btnSave").hide();
+         
+    },
+    function(jqXHR, textStatus, errorThrown){
+         try {
+             console.log("Fail Status : " + jqXHR.status);
+             console.log("code : "        + jqXHR.responseJSON.code);
+             console.log("message : "     + jqXHR.responseJSON.message);
+             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+             }
+         catch (e)
+         {
+           console.log(e);
+         }
+         alert("Fail : " + jqXHR.responseJSON.message);
+
+         $("#msg").attr("style", "color:red");
+         $("#msg").html("* Failed to save. Please try again later.");
+     });
+          
+}
+
+</script>
+<div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>Assign</h1>
+<ul class="right_opt">
+	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
+
+<section class="pop_body"><!-- pop_body start -->
+<form action="#" method="post" id="saveForm" name="saveForm">
+<input type="hidden" id="assignHTrBookId" name="assignHTrBookId" value="${trBookId}">
+<input type="hidden" id="memTypeId" name="memTypeId">
+<input type="hidden" id="memTypeText" name="memTypeText">
+<input type="hidden" id="assingHolder" name="assingHolder" value="${detailInfo.trHolder}">
+<span id="msg"> </span>
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:160px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">TR Book No</th>
+	<td>${detailInfo.trBookNo}</td>
+</tr>
+<tr>
+	<th scope="row">TR Prefix No</th>
+	<td>${detailInfo.trBookPrefix}</td>
+</tr>
+<tr>
+	<th scope="row">No of Page(s)</th>
+	<td>${detailInfo.trBookPge}</td>
+</tr>
+<tr>
+	<th scope="row">TR No</th>
+	<td>${detailInfo.trBookNoStart} To ${detailInfo.trBookNoEnd}</td>
+</tr>
+<tr>
+	<th scope="row">TR Book Holder</th>
+	<td> ${detailInfo.trHolder}</td>
+</tr>
+<!-- <tr>
+	<th scope="row">Assign Member Type</th>
+	<td>
+		<select class="" id="memberType" name="memberType" onchange="javascript:fn_memberTypeChn(this.value);">
+			<option value="" selected="selected">Member Type</option>
+			<option value="1">Health Planner</option>
+			<option value="2">Cody</option>
+			<option value="3">Coway Technician</option>
+			<option value="4">Staff</option>
+		</select>
+	</td>
+</tr> -->
+<tr>
+	<th scope="row">Assign Member</th>
+	<td>
+	<input type="hidden" id="assignMemId" name="assignMemId"/>
+	<input type="hidden" id="assignMemCode" name="assignMemCode"/>
+	<input type="text" id="assignMemName" name="assignMemName" readonly="readonly"/>
+	<a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+	</td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+<ul class="center_btns">
+	<li><p class="btn_blue2 big"><a href="#" id="btnSave" onclick="javascript:fn_assignSave();">SAVE</a></p></li>
+</ul>
+
+</section><!-- pop_body end -->
+
+</div><!-- popup_wrap end -->
