@@ -65,8 +65,6 @@ public class StockListController {
 		String[] status = request.getParameterValues("cmbStatus");
 		String stkNm = request.getParameter("stkNm");
 		String stkCd = request.getParameter("stkCd");
-		
-		System.out.println("69Line ::::: " + stkCd);
 
 		Map<String, Object> smap = new HashMap();
 		smap.put("cateList", cate);
@@ -259,12 +257,12 @@ public class StockListController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/modifyServicePoint.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> modifyServicePoint(@RequestBody Map<String, Object> params, Model model) {
-		
+
 		String retMsg = AppConstants.MSG_SUCCESS;
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -274,7 +272,7 @@ public class StockListController {
 		}
 
 		int stockId = (int) params.get("stockId");
-		
+
 		logger.debug("stockId id : {}", params);
 		params.put("userid", loginId);
 
@@ -291,7 +289,7 @@ public class StockListController {
 		}
 
 		return ResponseEntity.ok(map);
-		
+
 	}
 
 	@SuppressWarnings({ "unchecked", "unused", "null" })
@@ -381,7 +379,7 @@ public class StockListController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/nonvalueStockIns.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> nonvalueStockIns(@RequestBody Map<String, Object> params, Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
@@ -396,17 +394,16 @@ public class StockListController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/nonvaluedItemCodeChk.do", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> nonvaluedItemCodeChk(@RequestParam Map<String, Object> params){
+	public ResponseEntity<EgovMap> nonvaluedItemCodeChk(@RequestParam Map<String, Object> params) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		params.put("loginId", loginId);
 
 		EgovMap result = stock.nonvaluedItemCodeChk(params);
-		
+
 		return ResponseEntity.ok(result);
 	}
-	
 
 }
