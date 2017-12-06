@@ -365,15 +365,15 @@ public class  MembershipQuotationController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage("New contact successfully saved.");
-		message.setData(params.get("SAL0093D_NO"));
-		
-		logger.debug("mNewQuotationSave SAL0093D_NO {}", params.get("SAL0093D_NO"));
+		message.setData(params.get("SAL0093D_SEQ"));
+		        
+		logger.debug("mNewQuotationSave SAL0093D_SEQ {}", params.get("SAL0093D_SEQ"));
 		
 		return ResponseEntity.ok(message);   
 	}
 	
 	
-
+   
 	
 	
 	@Autowired
