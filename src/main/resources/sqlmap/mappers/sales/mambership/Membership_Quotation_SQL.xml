@@ -586,7 +586,7 @@
 							                      EMP_CHK)             
 			  VALUES   (             #{SAL0093D_SEQ},
 			                               #{srvSalesOrderId},
-								            FN_GET_DOCNO(20) ,
+								            #{srvMemQuotNo}  ,
 								            #{srvMemPacId},
 								            #{srvMemPacNetAmt},
 								            #{srvMemPacTaxes},
@@ -1223,5 +1223,11 @@
       </insert>
      
      
-    
+     <select id="getEntryDocNo" parameterType="Map" resultType="egovMap">
+       <![CDATA[ 
+                SELECT FN_GET_DOCNO(#{DOCNO})  docno  FROM DUAL
+        ]]> 
+     </select>
+     
+     
 </mapper>
