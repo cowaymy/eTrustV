@@ -18,6 +18,11 @@ public class AnalysisController {
 		return "sales/analysis/accSalesKeyIn";
 	}
 	
+	@RequestMapping(value = "/moveAutoDebitAndAging.do")
+	public String moveAutoDebitAndAging(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/analysis/autoDebitAndAging";
+	}
+	
 	@RequestMapping(value = "/moveAccmulated.do")
 	public String moveAccmulated (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 		

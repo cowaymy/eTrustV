@@ -168,8 +168,9 @@ function fn_goLEDGER(){
      
 }
 
+//Report
 function fn_goKey_in_List(){
-	 alert('The program is under development');  
+	Common.popupDiv("/sales/membershipRental/membershipKeyInListPop.do" ,null, null , true , '_rptDiv1');
 }
 
 function fn_goYSList(){

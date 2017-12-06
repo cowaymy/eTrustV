@@ -577,10 +577,10 @@ public class  MembershipRentalController {
 		return ResponseEntity.ok(map);
 	}
 	
-	
-	
-	
-	
+	@RequestMapping(value = "/membershipKeyInListPop.do")
+	public String membershipKeyInListPop (@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/membership/membershipKeyInListPop";
+	}
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;

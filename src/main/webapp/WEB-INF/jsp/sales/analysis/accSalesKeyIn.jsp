@@ -13,16 +13,16 @@
 function fn_report(){
 	
 	var option = {
-            isProcedure : true 
+            isProcedure : false 
     };
 	Common.report("dataForm", option);
 	
-}
+ }
 </script>
 
 
 <form id="dataForm">
-<input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusHP_Adv.rpt" /><!-- Report Name  -->
+<input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusCody.rpt" /><!-- Report Name  -->
 <input type="hidden" id="viewType" name="viewType" value="WINDOW" /><!-- View Type  -->
 </form>
 
