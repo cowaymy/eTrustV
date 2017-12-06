@@ -135,47 +135,47 @@
                             } 
                         }]; */
         var updateLayout = [ {dataField:"codeName"      ,headerText:"Type"          ,width:120 ,height:30 , style :"aui-grid-user-custom-left", 
-							             labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-							                var retStr = "";
-							                for (var i = 0, len = srvMembershipList.length; i < len; i++) {
-							                    if (srvMembershipList[i]["codeId"] == value) {
-							                        retStr = srvMembershipList[i]["codeName"];
-							                        break;
-							                    }
-							                }
-							                return retStr == "" ? value : retStr;
-							            },  
-							          editRenderer : {
-							              type : "ComboBoxRenderer",
-							              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-							              listFunction : function(rowIndex, columnIndex, item, dataField) {
-							                  return srvMembershipList ;
-							              },
-							              keyField : "codeId",
-							              valueField : "codeName"
-							                          }
-							                },   
+                                         labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+                                            var retStr = "";
+                                            for (var i = 0, len = srvMembershipList.length; i < len; i++) {
+                                                if (srvMembershipList[i]["codeId"] == value) {
+                                                    retStr = srvMembershipList[i]["codeName"];
+                                                    break;
+                                                }
+                                            }
+                                            return retStr == "" ? value : retStr;
+                                        },  
+                                      editRenderer : {
+                                          type : "ComboBoxRenderer",
+                                          showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                          listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                              return srvMembershipList ;
+                                          },
+                                          keyField : "codeId",
+                                          valueField : "codeName"
+                                                      }
+                                            },   
                         {dataField:"name"      ,headerText:"Brand"           ,width:120 ,height:30 , style :"aui-grid-user-custom-left", 
-		                                         labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-		                                             var retStr = "";
-		                                             for (var i = 0, len = upBramdList.length; i < len; i++) {
-		                                                 if (upBramdList[i]["codeId"] == value) {
-		                                                     retStr = upBramdList[i]["codeName"];
-		                                                     break;
-		                                                 }
-		                                             }
-		                                             return retStr == "" ? value : retStr;
-		                                         },  
-		                                       editRenderer : {
-		                                           type : "ComboBoxRenderer",
-		                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-		                                           listFunction : function(rowIndex, columnIndex, item, dataField) {
-		                                               return upBramdList ;
-		                                           },
-		                                           keyField : "codeId",
-		                                           valueField : "codeName"
-		                                                       }
-		                                         }, 
+                                                 labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+                                                     var retStr = "";
+                                                     for (var i = 0, len = upBramdList.length; i < len; i++) {
+                                                         if (upBramdList[i]["codeId"] == value) {
+                                                             retStr = upBramdList[i]["codeName"];
+                                                             break;
+                                                         }
+                                                     }
+                                                     return retStr == "" ? value : retStr;
+                                                 },  
+                                               editRenderer : {
+                                                   type : "ComboBoxRenderer",
+                                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                                   listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                                       return upBramdList ;
+                                                   },
+                                                   keyField : "codeId",
+                                                   valueField : "codeName"
+                                                               }
+                                                 }, 
                        {dataField:"name1"    ,headerText:"Model Name"    ,width:120 ,height:30 , visible:true},
                        {dataField:"assetDRem"        ,headerText:"Remark1"        ,width:120 ,height:30 , visible:true},
                        {dataField:"name3"   ,headerText:"Name"         ,width:120 ,height:30 , visible:true},
@@ -224,7 +224,7 @@
     var asstMoveTrnsLayout = [ {dataField:"cardId" ,headerText:"cardId",width:120 ,height:30, visible:false},
                                {dataField:"crtDt" ,headerText:"Date",width:"15%" ,height:30},
                                {dataField:"userName" ,headerText:"Creator",width:"15%" ,height:30},
-                               {dataField:"codeName" ,headerText:"Type",width:"15%" ,height:30},
+                               {dataField:"codeName" ,headerText:"Type",width:"20%" ,height:30},
                                {dataField:"brnchId" ,headerText:"Branch",width:120 ,height:30, visible:false},
                                {dataField:"deptId" ,headerText:"Department",width:120 ,height:30, visible:false},
                                {dataField:"assetId" ,headerText:"assetId",width:120 ,height:30, visible:false},
@@ -303,7 +303,7 @@
     
 
     $(document).ready(function(){
-    	/* 2017-12-05 log */
+    	/* 2017-12-06 log */
         // masterGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         
@@ -340,6 +340,7 @@
                 $("#detailHead").text("AssetMng Information Details");
                 fn_setVisiable(div); 
                 fn_assetDetail(selectedItem[0]);
+                 //$("#Master_info").trigger("click");
                  $("#masterWindow").show();
                  $("#Details_info").show();
                  $("#Insert_info").hide();
@@ -362,7 +363,7 @@
         $(function(){
             //all select 값 주기
             $('#searchcategory').change(function() {
-            	$('#searchtype').multipleSelect("enable");
+                $('#searchtype').multipleSelect("enable");
                 $('#searchtype').multipleSelect("checkAll");
                 
             });
@@ -410,7 +411,10 @@
            $("#Details_info").hide();
            $("#Update_info").hide();
            $("#CopyAssetInfo").hide();         
-           $("#trnasInfo").hide();         
+           $("#trnasInfo").hide(); 
+           $("#saveTrnsBtn").hide(); 
+           $("#saveStatusBtn").hide(); 
+           $("#returnTrnsBtn").hide();
            AddDetailGrid = AUIGrid.create("#addDetail_grid", insDetailLayout,"", gridoptions);
           // $("#Insert_info").click();
           });
@@ -441,7 +445,7 @@
      });
          //Update_info tap
          $("#Update_info").click(function(){
-        	 //destory(upitemGrid);
+             //destory(upitemGrid);
              div="upitem"
              $("#Updadte_div_tap").show();
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -456,7 +460,7 @@
          
            
           $("#item_info_add").click(function(){
-        	  $("#AddItemForm")[0].reset();
+              $("#AddItemForm")[0].reset();
              $("#regUpdateWindow").show(); 
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              var itemtype = AUIGrid.getCellValue(myGridID ,selectedItem[0],'typeid');
@@ -485,7 +489,7 @@
              if (selectedItem[0] > -1){
                  fn_assetDetail(selectedItem[0]);
                  fn_setVisiable(div);
-                 $("#masterWindow").show();
+                 $("#masterWindow").show();    
              }else{
              Common.alert('Choice Data please..');
              }
@@ -507,6 +511,8 @@
                  $("#saveStatusBtn").hide();
                  $("#trnasInfo").hide();
                  $("#statusInfo").hide();
+                 $("#a1").show();
+                 
              }else{
              Common.alert('Choice Data please..');
              }
@@ -553,156 +559,156 @@
          });
          
          $("#transAssetOpen").click(function(){
-        	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              if (selectedItem[0] > -1){
-            	       var stusId=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'stusid');
-	                  doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
-	                  doDefCombos('', '' ,'transdepartment', 'S', '');
-	                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
-            	 if(stusId=="1"){
-	                 div="V";              
-	                 $("#detailHead").text("Transfer Asset");
-	                 fn_setVisiable(div); 
-	                 fn_assetDetail(selectedItem[0]);
-	                  $("#masterWindow").show();
-	                  $("#Details_info").show();
-	                  $("#Insert_info").hide();
-	                  $("#Update_info").hide();
-	                  $("#CopyAssetInfo").hide();
-	                  $("#cancelPopbtn").hide();
-	                  //$("#ViewTrnsBtn").show();
-	                  $("#transH3_01").show();
-	                  $("#saveTrnsBtn").show();
-	                  $("#returnTrnsBtn").hide();
-	                  $("#saveStatusBtn").hide();
-	                  $("#trnasInfo").show();
-	                  $("#statusInfo").hide();
-            		 
-            	 }else{
-		             Common.alert('This asset is not active. Transfer asset is disallowed.');
-            	 }
+                       var stusId=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'stusid');
+                      doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+                      doDefCombos('', '' ,'transdepartment', 'S', '');
+                      //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
+                 if(stusId=="1"){
+                     div="V";              
+                     $("#detailHead").text("Transfer Asset");
+                     fn_setVisiable(div); 
+                     fn_assetDetail(selectedItem[0]);
+                      $("#masterWindow").show();
+                      $("#Details_info").show();
+                      $("#Insert_info").hide();
+                      $("#Update_info").hide();
+                      $("#CopyAssetInfo").hide();
+                      $("#cancelPopbtn").hide();
+                      //$("#ViewTrnsBtn").show();
+                      $("#transH3_01").show();
+                      $("#saveTrnsBtn").show();
+                      $("#returnTrnsBtn").hide();
+                      $("#saveStatusBtn").hide();
+                      $("#trnasInfo").show();
+                      $("#statusInfo").hide();
+                     
+                 }else{
+                     Common.alert('This asset is not active. Transfer asset is disallowed.');
+                 }
              }else{
              Common.alert('Choice Data please..');
              }
          });
          
          $("#returnAssetOpen").click(function(){
-        	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              if (selectedItem[0] > -1){
-	        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
-	        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
-		                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
-		                  //doDefCombos('', '' ,'transdepartment', 'S', '');
-		                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
-            	 if(currbrnchid == '42' && currbrnchid == '38'){
-		             Common.alert('This asset is already at IT Department store.');
-            	 }else{
-	                 div="V";              
-	                 $("#detailHead").text("Return Asset");
-	                 fn_setVisiable(div); 
-	                 fn_assetDetail(selectedItem[0]);
-	                  $("#masterWindow").show();
-	                  $("#Details_info").show();
-	                  $("#Insert_info").hide();
-	                  $("#Update_info").hide();
-	                  $("#CopyAssetInfo").hide();
-	                  $("#cancelPopbtn").hide();
-	                  //$("#ViewTrnsBtn").show();
-	                  $("#transH3_01").show();
-	                  $("#saveTrnsBtn").hide();
-	                  $("#returnTrnsBtn").show();
-	                  $("#saveStatusBtn").hide();
-	                  $("#trnasInfo").hide();
-	                  $("#statusInfo").hide();
-            	 }
+                 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
+                 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
+                          //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+                          //doDefCombos('', '' ,'transdepartment', 'S', '');
+                          //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
+                 if(currbrnchid == '42' && currbrnchid == '38'){
+                     Common.alert('This asset is already at IT Department store.');
+                 }else{
+                     div="V";              
+                     $("#detailHead").text("Return Asset");
+                     fn_setVisiable(div); 
+                     fn_assetDetail(selectedItem[0]);
+                      $("#masterWindow").show();
+                      $("#Details_info").show();
+                      $("#Insert_info").hide();
+                      $("#Update_info").hide();
+                      $("#CopyAssetInfo").hide();
+                      $("#cancelPopbtn").hide();
+                      //$("#ViewTrnsBtn").show();
+                      $("#transH3_01").show();
+                      $("#saveTrnsBtn").hide();
+                      $("#returnTrnsBtn").show();
+                      $("#saveStatusBtn").hide();
+                      $("#trnasInfo").hide();
+                      $("#statusInfo").hide();
+                 }
              }else{
              Common.alert('Choice Data please..');
              }
          });
          $("#statusAssetOpen").click(function(){
-        	 $("#status").val("");
-        	 $("#statusremark").val("");
-        	 var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+             $("#status").val("");
+             $("#statusremark").val("");
+             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              if (selectedItem[0] > -1){
-	        	 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
-	        	 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
-		                  //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
-		                  //doDefCombos('', '' ,'transdepartment', 'S', '');
-		                  //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
-            	 if(currbrnchid == '42' && currbrnchid == '38'){
-		             Common.alert('Only IT Department Store asset can be');
-            	 }else{
-	                 div="V";              
-	                 $("#detailHead").text("Asset - Report Obsolete/Lost");
-	                 fn_setVisiable(div); 
-	                 fn_assetDetail(selectedItem[0]);
-	                  $("#masterWindow").show();
-	                  $("#saveStatusBtn").show();
-	                  $("#Details_info").show();
-	                  $("#Insert_info").hide();
-	                  $("#Update_info").hide();
-	                  $("#CopyAssetInfo").hide();
-	                  $("#cancelPopbtn").hide();
-	                  //$("#ViewTrnsBtn").show();
-	                  $("#transH3_01").show();
-	                  $("#saveTrnsBtn").hide();
-	                  $("#returnTrnsBtn").hide();
-	                  $("#trnasInfo").hide();
+                 var currbrnchid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currbrnchid');
+                 var currdeptid=AUIGrid.getCellValue(myGridID ,selectedItem[0] ,'currdeptid');
+                          //doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchid', 'S' , ''); //청구처 리스트 조회
+                          //doDefCombos('', '' ,'transdepartment', 'S', '');
+                          //doGetCombo(comUrl, '11', '','categoryPop', 'S' , ''); 
+                 if(currbrnchid == '42' && currbrnchid == '38'){
+                     Common.alert('Only IT Department Store asset can be');
+                 }else{
+                     div="V";              
+                     $("#detailHead").text("Asset - Report Obsolete/Lost");
+                     fn_setVisiable(div); 
+                     fn_assetDetail(selectedItem[0]);
+                      $("#masterWindow").show();
+                      $("#saveStatusBtn").show();
+                      $("#Details_info").show();
+                      $("#Insert_info").hide();
+                      $("#Update_info").hide();
+                      $("#CopyAssetInfo").hide();
+                      $("#cancelPopbtn").hide();
+                      //$("#ViewTrnsBtn").show();
+                      $("#transH3_01").show();
+                      $("#saveTrnsBtn").hide();
+                      $("#returnTrnsBtn").hide();
+                      $("#trnasInfo").hide();
                       $("#statusInfo").show();
-            		 
-            	 }
+                     
+                 }
              }else{
              Common.alert('Choice Data please..');
              }
          });
          $("#ViewMoveTrns").click(function(){
-        	 destory(assetMoveTrnsGrid);
-        	 assetMoveTrnsGrid  = GridCommon.createAUIGrid("assetMoveTrnsGrid", asstMoveTrnsLayout,"", subgridpros);
-        	 $("#asstMoveTrnsDiv").show();  
+             destory(assetMoveTrnsGrid);
+             assetMoveTrnsGrid  = GridCommon.createAUIGrid("assetMoveTrnsGrid", asstMoveTrnsLayout,"", subgridpros);
+             $("#asstMoveTrnsDiv").show();  
                 searchAssetMoveTransacton();
          });
      
          $("#saveTrnsBtn").click(function(){
-        	 var branch = $("#trnsbranchid").val();
-        	 var dept = $("#transdepartment").val();
-        	 if(null == branch || ''==branch){
-        		 Common.alert("Please Select Branch.");
-        		 return false;
-        	 }else if( branch == "42"){
-	        	 if(null == dept || ''==dept){
-        		 Common.alert("Please Select Current Department.");
-        		 return false;
-	        	 }
-        	 }
-        	 $("#cardTypeId").val("TR");
-        	 saveTrns();
-        	 
+             var branch = $("#trnsbranchid").val();
+             var dept = $("#transdepartment").val();
+             if(null == branch || ''==branch){
+                 Common.alert("Please Select Branch.");
+                 return false;
+             }else if( branch == "42"){
+                 if(null == dept || ''==dept){
+                 Common.alert("Please Select Current Department.");
+                 return false;
+                 }
+             }
+             $("#cardTypeId").val("TR");
+             saveTrns();
+             
          });
          $("#saveStatusBtn").click(function(){
-        	 var status = $("#status").val();
-        	 var statusremark = $("#statusremark").val();
-        	 if(null == status || ''==status){
-        		 Common.alert("Please Select Status.");
-        		 return false;
-        	 }
-        	 if("7"==status){
-        		 $("#cardTypeId").val("OB");
-        	 }else if("67"==status){
-        		 $("#cardTypeId").val("LS");
-        	 }else{
-        		 $("#cardTypeId").val("DE");
-        	 }
-        	 saveStatus();
-        	 
+             var status = $("#status").val();
+             var statusremark = $("#statusremark").val();
+             if(null == status || ''==status){
+                 Common.alert("Please Select Status.");
+                 return false;
+             }
+             if("7"==status){
+                 $("#cardTypeId").val("OB");
+             }else if("67"==status){
+                 $("#cardTypeId").val("LS");
+             }else{
+                 $("#cardTypeId").val("DE");
+             }
+             saveStatus();
+             
          });
          $("#returnTrnsBtn").click(function(){
-        	 $("#cardTypeId").val("RT");
-        	 saveTrnsRe();
-        	 
+             $("#cardTypeId").val("RT");
+             saveTrnsRe();
+             
          });
          
          $("#transBulkAssetOpen").click(function(){
-        	 destory(assetMoveTrnsBulkGrid);
+             destory(assetMoveTrnsBulkGrid);
              assetMoveTrnsBulkGrid  = GridCommon.createAUIGrid("assetMoveTrnsBulkGrid", bulkLayout,"", subgridpros);
              AUIGrid.resize(assetMoveTrnsBulkGrid,1205,300);
              doGetComboSepa('/common/selectBranchCodeList.do', '3' , ' - ' , '','trnsbranchidFrom', 'S' , ''); //청구처 리스트 조회
@@ -713,49 +719,49 @@
                // searchAssetMoveTransacton();
          });
          $("#transAsset").click(function(){
-        	 var selectedItem = AUIGrid.getSelectedIndex(assetMoveTrnsBulkGrid);
+             var selectedItem = AUIGrid.getSelectedIndex(assetMoveTrnsBulkGrid);
              //var tmp = AUIGrid.getCellValue(assetMoveTrnsBulkGrid ,selectedItem[0],'assetid');
-        	 var branchF = $("#trnsbranchidFrom").val();
-        	 var branchT = $("#trnsbranchidTo").val();
-        	 var deptF = $("#transdepartmentFrom").val();
-        	 var deptT = $("#transdepartmentTo").val();
-        	 if(null == branchF || ''==branchF){
-        		 Common.alert("Please Select Transfer From Branch.");
-        		 return false;
-        	 }else if( branchF == "42"){
-	        	 if(null == deptF || ''==deptF){
-        		 Common.alert("Please Select Transfer From Department.");
-        		 return false;
-	        	 }
-        	 }
-        	 if(null == branchT || ''==branchT){
-        		 Common.alert("Please Select Transfer To Branch.");
-        		 return false;
-        	 }else if( branchT == "42"){
-	        	 if(null == deptT || ''==deptT){
-        		 Common.alert("Please Select Transfer To Department.");
-        		 return false;
-	        	 }
-        	 }
-        	 if(branchF == branchT){
-        		 if(branchT=="42"){
-	        		 Common.alert("Same department is disallowed.");
-	        		 return false;
-        		 }else{
-	        		 Common.alert("Same branch is disallowed.");
-	        		 return false;
-        		 }
-        		 
-        	 }
+             var branchF = $("#trnsbranchidFrom").val();
+             var branchT = $("#trnsbranchidTo").val();
+             var deptF = $("#transdepartmentFrom").val();
+             var deptT = $("#transdepartmentTo").val();
+             if(null == branchF || ''==branchF){
+                 Common.alert("Please Select Transfer From Branch.");
+                 return false;
+             }else if( branchF == "42"){
+                 if(null == deptF || ''==deptF){
+                 Common.alert("Please Select Transfer From Department.");
+                 return false;
+                 }
+             }
+             if(null == branchT || ''==branchT){
+                 Common.alert("Please Select Transfer To Branch.");
+                 return false;
+             }else if( branchT == "42"){
+                 if(null == deptT || ''==deptT){
+                 Common.alert("Please Select Transfer To Department.");
+                 return false;
+                 }
+             }
+             if(branchF == branchT){
+                 if(branchT=="42"){
+                     Common.alert("Same department is disallowed.");
+                     return false;
+                 }else{
+                     Common.alert("Same branch is disallowed.");
+                     return false;
+                 }
+                 
+             }
              var assetid=AUIGrid.getCellValue(assetMoveTrnsBulkGrid ,selectedItem[0],'assetid');
-        	 var asset = $("#masterassetidBulk").val(assetid);
-        	 if(null == asset || ''==asset || 0>selectedItem[0]){
-        		 Common.alert('Choice Data please..');
+             var asset = $("#masterassetidBulk").val(assetid);
+             if(null == asset || ''==asset || 0>selectedItem[0]){
+                 Common.alert('Choice Data please..');
                   return false;
-        	 }
-        	 $("#cardTypeIdBulk").val("TR");
-        	 saveTrnsBulk();
-        	 
+             }
+             $("#cardTypeIdBulk").val("TR");
+             saveTrnsBulk();
+             
          });
         $(".numberAmt").keyup(function(e) {
             regex = /[^.0-9]/gi;
@@ -777,18 +783,79 @@
                 return;
             }
             
-        });                
+        });  
+        
+        $('#masterpurchaseamount').keypress(function() {
+            if (event.which == '13') {
+                var findStr=".";
+                var sublen;
+                var prices = $("#masterpurchaseamount").val();
+                var priceslen=prices.length;
+                //alert("????"+prices.indexOf(findStr));
+                if (prices.indexOf(findStr) > 0) {  
+                  sublen= prices.indexOf('.');
+                  sublen=sublen+1;
+                  var sums = priceslen - sublen;
+                //  alert("sums :  "+sums);
+                  if(sums == 0 ){
+                      $("#masterpurchaseamount").val(prices+"00");  
+                  }else if(sums == 1 ){
+                      $("#masterpurchaseamount").val(prices+"0");  
+                  }else if(sums == 2){
+                        
+                  }else{
+                      Common.alert("Please enter only the second decimal place.");
+                      $("#masterpurchaseamount").val("");
+                  }
+                 
+                  }else if(prices.indexOf(findStr) == 0){
+                      Common.alert('You can not enter decimal numbers first.');
+                      $("#masterpurchaseamount").val("");
+                  }else{
+                    //  alert('Not Found!!');
+                      $("#masterpurchaseamount").val($.number(prices,2));  
+                  } 
+    
+            }
+        }); 
+        
     });
     
     
-    function getAssetListAjax() {
-        var param = $('#searchForm').serialize();
-        var url = "/logistics/assetmng/assetList.do"
-        Common.ajax("GET" , url , param , function(data){
-        	 var gridData = data;     
-        	AUIGrid.setGridData(myGridID, gridData.data);
-        }); 
-    }
+//     function getAssetListAjax() {
+//         var param = $('#searchForm').serialize();
+//         $.ajax({
+//             type : "POST",
+//             url : "/logistics/assetmng/assetList.do?" + param,
+//             //url : "/stock/StockList.do",
+//             //data : param,
+//             dataType : "json",
+//             contentType : "application/json;charset=UTF-8",
+//             success : function(data) {
+//                 var gridData = data             
+            
+//                 AUIGrid.setGridData(myGridID, gridData.data);
+//             },
+//             error : function(jqXHR, textStatus, errorThrown) {
+//                 alert("실패하였습니다.");
+//             },
+           
+//         });
+//     }
+    
+     function getAssetListAjax() {
+        
+         var param = $('#searchForm').serialize();
+         var url = "/logistics/assetmng/assetList.do";
+            Common.ajax("GET" , url , param , function(data){
+             var gridData = data             
+                
+             AUIGrid.setGridData(myGridID, gridData.data);
+                
+            });
+
+     }
+    
 
     
      function getDetailAssetListAjax(rowid,div) {
@@ -832,34 +899,34 @@
             param = GridCommon.getEditData(AddDetailGrid);
             param.form = $("#masterForm").serializeJSON();
         }else if(div=="U"){
-        	param= $("#masterForm").serializeJSON();
+            param= $("#masterForm").serializeJSON();
         }else if(div=="D"){
-        	param= $("#masterForm").serializeJSON();
+            param= $("#masterForm").serializeJSON();
         }else if(div=="MI"){
-        	param = GridCommon.getEditData(upitemGrid);
+            param = GridCommon.getEditData(upitemGrid);
         }else if(div=="EI"){
-        	param = GridCommon.getEditData(upitemGrid);
+            param = GridCommon.getEditData(upitemGrid);
         }
 
        if(div=="N"){
-    	   url="/logistics/assetmng/insertAssetMng.do";    
+           url="/logistics/assetmng/insertAssetMng.do";    
        }else if(div=="U"){ //마스터 인서트
-    	   url="/logistics/assetmng/motifyAssetMng.do";
+           url="/logistics/assetmng/motifyAssetMng.do";
        }else if(div=="D"){ //딜리트
            url="/logistics/assetmng/deleteAssetMng.do";
        }else if(div=="MI"){
-    	   url="/logistics/assetmng/addItemAssetMng.do";
+           url="/logistics/assetmng/addItemAssetMng.do";
        }else if(div=="RI"){
-    	   url="/logistics/assetmng/RemoveItemAssetMng.do";
+           url="/logistics/assetmng/RemoveItemAssetMng.do";
        }else if(div=="EI"){
            url="/logistics/assetmng/updateItemAssetMng.do";
        }    
        Common.ajax("POST",url,param,function(result){
            Common.alert(result.msg);
            if(div=="AI"){
-        	   
+               
            }else{
-           $("#masterWindow").hide();        	   
+           $("#masterWindow").hide();              
            }
            $("#search").trigger("click");
           
@@ -867,21 +934,25 @@
    } 
     
    function f_others(url, v){
-           $.ajax({
-               type : "POST",
-               url : url,
-               dataType : "json",
-               contentType : "application/json;charset=UTF-8",
-               success : function(_data) {
-                   //var data = _data.data;
+//            $.ajax({
+//                type : "POST",
+//                url : url,
+//                dataType : "json",
+//                contentType : "application/json;charset=UTF-8",
+//                success : function(result) {
+//                 Common.alert(result.msg);
 
-                  // f_info(data, v);
-               },
-               error : function(jqXHR, textStatus, errorThrown) {
-                   alert("실패하였습니다.");
-               }
-           });
-       
+//                   // f_info(data, v);
+//                },
+//                error : function(jqXHR, textStatus, errorThrown) {
+//                    alert("실패하였습니다.");
+//                }
+//            });
+
+       Common.ajax("POST" , url , '' , function(data){
+           Common.alert(data.msg);
+              
+          });   
    }
    
       
@@ -927,7 +998,7 @@
     }
 //멀티 셀렉트 세팅 함수들    
      function f_multiCombo() {
-    	 
+         
          $(function() {
              $('#searchstatus').change(function() {
 
@@ -938,372 +1009,380 @@
          });
      }
      
-	function f_deptmultiCombo() {
+    function f_deptmultiCombo() {
 
-		$(function() {
+        $(function() {
 
-			$('#searchdepartment').change(function() {
+            $('#searchdepartment').change(function() {
 
-			}).multipleSelect({
-				selectAll : true,
-				width : '80%'
-			}).multipleSelect("disable");
+            }).multipleSelect({
+                selectAll : true,
+                width : '80%'
+            }).multipleSelect("disable");
 
-		});
-	}
-	   function f_DepartmentList() {
-	        $('#searchdepartment')
-	        .multipleSelect()
-	        .multipleSelect("enable")
-	        .multipleSelect("checkAll");
-	    }
-	   
-	   function f_TypeMultiCombo() {
-		   $(function() {
-	             $('#searchtype').change(function() {
+        });
+    }
+       function f_DepartmentList() {
+            $('#searchdepartment')
+            .multipleSelect()
+            .multipleSelect("enable")
+            .multipleSelect("checkAll");
+        }
+       
+       function f_TypeMultiCombo() {
+           $(function() {
+                 $('#searchtype').change(function() {
 
-	             }).multipleSelect({
-	                 selectAll : true,
-	                 width : '80%'
-	             }).multipleSelect("disable");      
-	         
-	         });	   
+                 }).multipleSelect({
+                     selectAll : true,
+                     width : '80%'
+                 }).multipleSelect("disable");      
+             
+             });       
        }
-	
+    
 
-	function fn_setVisiable(div) {
-		if (div == "V") {
-			$("#masterstatus").prop('readonly', true);
-			$("#masterbreanch").prop('readonly', true);
-			$("#masterdepartment").prop('readonly', true);
-			$("#masteruser").prop('readonly', true);
-			$("#mastercategory").prop('disabled', true);
-			$("#mastertype").prop('disabled', true);
-			$("#mastermodelname").prop('readonly', true);
-			$("#mastercolor").prop('disabled', true);
-			$("#masterinvoiceno").prop('readonly', true);
-			$("#masterdealer").prop('disabled', true);
-			$("#masterpurchasedate").prop('disabled', true);
-			$("#masterbrand").prop('disabled', true);
-			$("#masterpurchaseamount").prop('readonly', true);
-			$("#masterrefno").prop('readonly', true);
-			$("#masterserialno").prop('readonly', true);
-			$("#masterwarrantyno").prop('readonly', true);
-			$("#mastermacaddress").prop('readonly', true);
-			$("#masterimeino").prop('readonly', true);
-			$("#masterremark").prop('readonly', true);
-			$("#trinserthide1").show();
-			$("#trinserthide2").show();
-			$("#savePopbtn").hide();
-			$("#saveTrnsBtn").hide();
-			 $("#returnTrnsBtn").hide();
-			$("#updatePopbtn").hide();
-		} else if (div == "U") {
-			$("#masterstatus").prop('readonly', true);
-			$("#masterbreanch").prop('readonly', true);
-			$("#masterdepartment").prop('readonly', true);
-			$("#masteruser").prop('readonly', false);
-			$("#mastercategory").prop('disabled', true);
-			$("#mastertype").prop('disabled', true);
-			$("#mastermodelname").prop('readonly', false);
-			$("#mastercolor").prop('disabled', false);
-			$("#masterinvoiceno").prop('readonly', false);
-			$("#masterdealer").prop('disabled', false);
-			$("#masterpurchasedate").prop('disabled', false);
-			$("#masterbrand").prop('disabled', false);
-			$("#masterpurchaseamount").prop('readonly', false);
-			$("#masterrefno").prop('readonly', false);
-			$("#masterserialno").prop('readonly', false);
-			$("#masterwarrantyno").prop('readonly', false);
-			$("#mastermacaddress").prop('readonly', false);
-			$("#masterimeino").prop('readonly', false);
-			$("#masterremark").prop('readonly', false);
-			$("#trinserthide1").show();
-			$("#trinserthide2").show();
-			$("#savePopbtn").hide();
-			$("#saveTrnsBtn").hide();
-			 $("#returnTrnsBtn").hide();
-			$("#updatePopbtn").show();
-		} else if (div == "N") {
-			$('#masterForm')[0].reset();
-			$("#trinserthide1").hide();
-			$("#trinserthide2").hide();
-			$("#mastercategory").prop('disabled', false);
-			//$("#mastertype").prop('disabled', false);
-			$("#mastermodelname").prop('readonly', false);
-			$("#mastercolor").prop('disabled', false);
-			$("#masterinvoiceno").prop('readonly', false);
-			$("#masterdealer").prop('disabled', false);
-			$("#masterpurchasedate").prop('disabled', false);
-			$("#masterbrand").prop('disabled', false);
-			$("#masterpurchaseamount").prop('readonly', false);
-			$("#masterrefno").prop('readonly', false);
-			$("#masterserialno").prop('readonly', false);
-			$("#masterwarrantyno").prop('readonly', false);
-			$("#mastermacaddress").prop('readonly', false);
-			$("#masterimeino").prop('readonly', false);
-			$("#masterremark").prop('readonly', false);
-			$("#savePopbtn").show();
-			$("#updatePopbtn").hide();
-			$("#insertdetail").show();
+    function fn_setVisiable(div) {
+        if (div == "V") {
+            $("#masterstatus").prop('readonly', true);
+            $("#masterbreanch").prop('readonly', true);
+            $("#masterdepartment").prop('readonly', true);
+            $("#masteruser").prop('readonly', true);
+            $("#mastercategory").prop('disabled', true);
+            $("#mastertype").prop('disabled', true);
+            $("#mastermodelname").prop('readonly', true);
+            $("#mastercolor").prop('disabled', true);
+            $("#masterinvoiceno").prop('readonly', true);
+            $("#masterdealer").prop('disabled', true);
+            $("#masterpurchasedate").prop('disabled', true);
+            $("#masterbrand").prop('disabled', true);
+            $("#masterpurchaseamount").prop('readonly', true);
+            $("#masterrefno").prop('readonly', true);
+            $("#masterserialno").prop('readonly', true);
+            $("#masterwarrantyno").prop('readonly', true);
+            $("#mastermacaddress").prop('readonly', true);
+            $("#masterimeino").prop('readonly', true);
+            $("#masterremark").prop('readonly', true);
+            $("#trinserthide1").show();
+            $("#trinserthide2").show();
+            $("#savePopbtn").hide();
+            $("#saveTrnsBtn").hide();
+             $("#returnTrnsBtn").hide();
+            $("#updatePopbtn").hide();
+            $("#saveStatusBtn").hide();
+            $("#statusInfo").hide();
+            $("#a1").hide();
+        } else if (div == "U") {
+            $("#masterstatus").prop('readonly', true);
+            $("#masterbreanch").prop('readonly', true);
+            $("#masterdepartment").prop('readonly', true);
+            $("#masteruser").prop('readonly', false);
+            $("#mastercategory").prop('disabled', true);
+            $("#mastertype").prop('disabled', true);
+            $("#mastermodelname").prop('readonly', false);
+            $("#mastercolor").prop('disabled', false);
+            $("#masterinvoiceno").prop('readonly', false);
+            $("#masterdealer").prop('disabled', false);
+            $("#masterpurchasedate").prop('disabled', false);
+            $("#masterbrand").prop('disabled', false);
+            $("#masterpurchaseamount").prop('readonly', false);
+            $("#masterrefno").prop('readonly', false);
+            $("#masterserialno").prop('readonly', false);
+            $("#masterwarrantyno").prop('readonly', false);
+            $("#mastermacaddress").prop('readonly', false);
+            $("#masterimeino").prop('readonly', false);
+            $("#masterremark").prop('readonly', false);
+            $("#trinserthide1").show();
+            $("#trinserthide2").show();
+            $("#savePopbtn").hide();
+            $("#saveTrnsBtn").hide();
+            $("#returnTrnsBtn").hide();
+            $("#saveStatusBtn").hide();
+            $("#updatePopbtn").show();
+            $("#statusInfo").hide();
+            $("#a1").hide();
+        } else if (div == "N") {
+            $('#masterForm')[0].reset();
+            $("#trinserthide1").hide();
+            $("#trinserthide2").hide();
+            $("#mastercategory").prop('disabled', false);
+            //$("#mastertype").prop('disabled', false);
+            $("#mastermodelname").prop('readonly', false);
+            $("#mastercolor").prop('disabled', false);
+            $("#masterinvoiceno").prop('readonly', false);
+            $("#masterdealer").prop('disabled', false);
+            $("#masterpurchasedate").prop('disabled', false);
+            $("#masterbrand").prop('disabled', false);
+            $("#masterpurchaseamount").prop('readonly', false);
+            $("#masterrefno").prop('readonly', false);
+            $("#masterserialno").prop('readonly', false);
+            $("#masterwarrantyno").prop('readonly', false);
+            $("#mastermacaddress").prop('readonly', false);
+            $("#masterimeino").prop('readonly', false);
+            $("#masterremark").prop('readonly', false);
+            $("#savePopbtn").show();
+            $("#updatePopbtn").hide();
+            $("#insertdetail").show();
+            $("#statusInfo").hide();
+            $("#a1").hide();
+            $("#Insert_info").show();
+            combReset();
+        }
+    }
+    function combReset() {
+        doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S', '');//brand
+        doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','insdetailBrand', 'S', '');//detailbrand
+        doGetCombo('/common/selectCodeList.do', '111', '', 'mastertype', 'S',''); //Type 리스트 조회
+        doGetCombo('/common/selectCodeList.do', '112', '', 'mastercolor', 'S',''); //Color 리스트 조회
+        doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S', '');//dealer 
+    }
 
-			combReset();
-		}
-	}
-	function combReset() {
-		doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','masterbrand', 'S', '');//brand
-		doGetCombo('/logistics/assetmng/selectBrandList.do', '', '','insdetailBrand', 'S', '');//detailbrand
-		doGetCombo('/common/selectCodeList.do', '111', '', 'mastertype', 'S',''); //Type 리스트 조회
-		doGetCombo('/common/selectCodeList.do', '112', '', 'mastercolor', 'S',''); //Color 리스트 조회
-		doGetCombo('/logistics/assetmng/selectDealerList.do', '1', '','masterdealer', 'S', '');//dealer 
-	}
+    function valiedcheck() {
+        if ($("#mastercategory").val() == "") {
+            Common.alert("Please select the category.");
+            $("#mastercategory").focus();
+            return false;
+        }
+        if ($("#mastertype").val() == "") {
+            Common.alert("Please select the type.");
+            $("#mastertype").focus();
+            return false;
+        }
+        if ($("#mastermodelname").val() == "") {
+            Common.alert("Please key in the model name.");
+            $("#mastermodelname").focus();
+            return false;
+        }
+        if ($("#mastercolor").val() == "") {
+            Common.alert("Please select the color.");
+            $("#mastercolor").focus();
+            return false;
+        }
+        if ($("#masterinvoiceno").val() == "") {
+            Common.alert("Please key in the invoice.");
+            $("#masterinvoiceno").focus();
+            return false;
+        }
+        if ($("#masterdealer").val() == "") {
+            Common.alert("Please select the Dealer.");
+            $("#masterdealer").focus();
+            return false;
+        }
+        if ($("#masterpurchasedate").val() == "") {
+            Common.alert("Please select purchase date");
+            $("#masterpurchasedate").focus();
+            return false;
+        }
+        if ($("#masterbrand").val() == "") {
+            Common.alert("Please select the brand.");
+            $("#masterbrand").focus();
+            return false;
+        }
+        if ($("#masterpurchaseamount").val() == "") {
+            Common.alert("Please key in purchase Amount.");
+            $("#masterpurchaseamount").focus();
+            return false;
+        }
 
-	function valiedcheck() {
-		if ($("#mastercategory").val() == "") {
-			Common.alert("Please select the category.");
-			$("#mastercategory").focus();
-			return false;
-		}
-		if ($("#mastertype").val() == "") {
-			Common.alert("Please select the type.");
-			$("#mastertype").focus();
-			return false;
-		}
-		if ($("#mastermodelname").val() == "") {
-			Common.alert("Please key in the model name.");
-			$("#mastermodelname").focus();
-			return false;
-		}
-		if ($("#mastercolor").val() == "") {
-			Common.alert("Please select the color.");
-			$("#mastercolor").focus();
-			return false;
-		}
-		if ($("#masterinvoiceno").val() == "") {
-			Common.alert("Please key in the invoice.");
-			$("#masterinvoiceno").focus();
-			return false;
-		}
-		if ($("#masterdealer").val() == "") {
-			Common.alert("Please select the Dealer.");
-			$("#masterdealer").focus();
-			return false;
-		}
-		if ($("#masterpurchasedate").val() == "") {
-			Common.alert("Please select purchase date");
-			$("#masterpurchasedate").focus();
-			return false;
-		}
-		if ($("#masterbrand").val() == "") {
-			Common.alert("Please select the brand.");
-			$("#masterbrand").focus();
-			return false;
-		}
-		if ($("#masterpurchaseamount").val() == "") {
-			Common.alert("Please key in purchase Amount.");
-			$("#masterpurchaseamount").focus();
-			return false;
-		}
+        return true;
+    }
+    function detailvaliedcheck() {
+        if ($("#insdetailtype").val() == "") {
+            Common.alert("Please select the details type.");
+            $("#insdetailtype").focus();
+            return false;
+        }
+        if ($("#insdetailBrand").val() == "") {
+            Common.alert("Please select the details brand.");
+            $("#insdetailBrand").focus();
+            return false;
+        }
+        if ($("#insdetailmodel").val() == "") {
+            Common.alert("Please key in the details model name.");
+            $("#insdetailmodel").focus();
+            return false;
+        }
 
-		return true;
-	}
-	function detailvaliedcheck() {
-		if ($("#insdetailtype").val() == "") {
-			Common.alert("Please select the details type.");
-			$("#insdetailtype").focus();
-			return false;
-		}
-		if ($("#insdetailBrand").val() == "") {
-			Common.alert("Please select the details brand.");
-			$("#insdetailBrand").focus();
-			return false;
-		}
-		if ($("#insdetailmodel").val() == "") {
-			Common.alert("Please key in the details model name.");
-			$("#insdetailmodel").focus();
-			return false;
-		}
-
-		return true;
-	}
-	
-	   function itemvaliedcheck(div) {
-		 if(div==""){
-			 if ($("#additemtype").val() == "") {
-	                Common.alert("Please select the details type.");
-	                $("#additemtype").focus();
-	                return false;
-	            }
-	            if ($("#additemBrand").val() == "") {
-	                Common.alert("Please select the details brand.");
-	                $("#additemBrand").focus();
-	                return false;
-	            }
-	            if ($("#additemmodel").val() == "") {
-	                Common.alert("Please key in the details model name.");
-	                $("#additemmodel").focus();
-	                return false;
-	            } 
-		 }else if(div=="MI"){
-		   if ($("#multyitemname").val() == "") {
+        return true;
+    }
+    
+       function itemvaliedcheck(div) {
+         if(div==""){
+             if ($("#additemtype").val() == "") {
+                    Common.alert("Please select the details type.");
+                    $("#additemtype").focus();
+                    return false;
+                }
+                if ($("#additemBrand").val() == "") {
+                    Common.alert("Please select the details brand.");
+                    $("#additemBrand").focus();
+                    return false;
+                }
+                if ($("#additemmodel").val() == "") {
+                    Common.alert("Please key in the details model name.");
+                    $("#additemmodel").focus();
+                    return false;
+                } 
+         }else if(div=="MI"){
+           if ($("#multyitemname").val() == "") {
                   Common.alert("Please key in the details model name.");
                   $("#multyitemname").focus();
                   return false;
               } 
-		 }
-	        return true;
-	    }
-	
-	
-	
+         }
+            return true;
+        }
+    
+    
+    
 
-	/*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
-	function getComboRelays(obj, value, tag, selvalue) {
-		var robj = '#' + obj;
-		$(robj).attr("disabled", false);
-		if (value == "42") {
-			doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag, value, selvalue, obj, 'M', 'f_DepartmentList'); //Department 리스트 조회	
-		}else{
-			  $('#searchdepartment').multipleSelect("disable");  
-		}
-	}
-	function getComboRelayTrns(obj, value, tag, selvalue) {
-		var robj = '#' + obj;
-		$(robj).attr("disabled", false);
-		if (value == "42") {
-			doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag, value, selvalue, obj, 'S', ''); //Department 리스트 조회	
-		}else{
-			$(robj).val("");
-			$(robj).attr("disabled", true);
-		}
-		if(obj=="transdepartmentFrom"){
-		     if(value != "42"){
- 	    		searchAssetBulkList(value,'');
-	         }
-		}
-	}
+    /*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
+    function getComboRelays(obj, value, tag, selvalue) {
+        var robj = '#' + obj;
+        $(robj).attr("disabled", false);
+        if (value == "42") {
+            doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag, value, selvalue, obj, 'M', 'f_DepartmentList'); //Department 리스트 조회    
+        }else{
+              $('#searchdepartment').multipleSelect("disable");  
+        }
+    }
+    function getComboRelayTrns(obj, value, tag, selvalue) {
+        var robj = '#' + obj;
+        $(robj).attr("disabled", false);
+        if (value == "42") {
+            doGetComboSelBox('/logistics/assetmng/selectDepartmentList.do', tag, value, selvalue, obj, 'S', ''); //Department 리스트 조회    
+        }else{
+            $(robj).val("");
+            $(robj).attr("disabled", true);
+        }
+        if(obj=="transdepartmentFrom"){
+             if(value != "42"){
+                searchAssetBulkList(value,'');
+             }
+        }
+    }
  
-	function getComboRelayTrnsBulk(obj, value, tag, selvalue) {
-			 var brachId=$('#trnsbranchidFrom').val();
-		     if(brachId == "42"){
-	             if(null == value || ''==value){
-	             Common.alert("Please Select Transfer From Department.");
-	             return false;
-	             }
-	         }
-			 searchAssetBulkList(brachId,value);
-	}
+    function getComboRelayTrnsBulk(obj, value, tag, selvalue) {
+             var brachId=$('#trnsbranchidFrom').val();
+             if(brachId == "42"){
+                 if(null == value || ''==value){
+                 Common.alert("Please Select Transfer From Department.");
+                 return false;
+                 }
+             }
+             searchAssetBulkList(brachId,value);
+    }
  
-	
-	   function getComboRelayss(obj, value, tag, selvalue) {
-	        var robj = '#' + obj;
-	        $(robj).attr("disabled", false);    
-	        doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //detail type 리스트 조회      	        
-	    }
+    
+       function getComboRelayss(obj, value, tag, selvalue) {
+            var robj = '#' + obj;
+            $(robj).attr("disabled", false);    
+            doGetComboSelBox('/logistics/assetmng/selectTypeList.do', tag , value , selvalue,obj, 'S', ''); //detail type 리스트 조회                
+        }
 
-	function doGetComboSelBox(url, groupCd, codevalue, selCode, obj, type,
-			callbackFn) {
-		$.ajax({
-			type : "GET",
-			url : url,
-			data : {
-				groupCode : codevalue
-			},
-			dataType : "json",
-			contentType : "application/json;charset=UTF-8",
-			success : function(data) {
-				var rData = data;
-				doDefCombos(rData, selCode, obj, type, callbackFn);
-			},
-			error : function(jqXHR, textStatus, errorThrown) {
-				alert("Draw ComboBox['" + obj
-						+ "'] is failed. \n\n Please try again.");
-			},
-			complete : function() {
-			}
-		});
-	};
+    function doGetComboSelBox(url, groupCd, codevalue, selCode, obj, type,
+            callbackFn) {
+        $.ajax({
+            type : "GET",
+            url : url,
+            data : {
+                groupCode : codevalue
+            },
+            dataType : "json",
+            contentType : "application/json;charset=UTF-8",
+            success : function(data) {
+                var rData = data;
+                doDefCombos(rData, selCode, obj, type, callbackFn);
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                alert("Draw ComboBox['" + obj
+                        + "'] is failed. \n\n Please try again.");
+            },
+            complete : function() {
+            }
+        });
+    };
 
-	function doDefCombos(data, selCode, obj, type, callbackFn) {
-		var targetObj = document.getElementById(obj);
-		var custom = "";
-		for (var i = targetObj.length - 1; i >= 0; i--) {
-			targetObj.remove(i);
-		}
-		obj = '#' + obj;
-		if (type && type != "M") {
-			custom = (type == "S") ? eTrusttext.option.choose
-					: ((type == "A") ? eTrusttext.option.all : "");
-			$("<option />", {
-				value : "",
-				text : custom
-			}).appendTo(obj);
-		} else {
-			$(obj).attr("multiple", "multiple");
-		}
+    function doDefCombos(data, selCode, obj, type, callbackFn) {
+        var targetObj = document.getElementById(obj);
+        var custom = "";
+        for (var i = targetObj.length - 1; i >= 0; i--) {
+            targetObj.remove(i);
+        }
+        obj = '#' + obj;
+        if (type && type != "M") {
+            custom = (type == "S") ? eTrusttext.option.choose
+                    : ((type == "A") ? eTrusttext.option.all : "");
+            $("<option />", {
+                value : "",
+                text : custom
+            }).appendTo(obj);
+        } else {
+            $(obj).attr("multiple", "multiple");
+        }
 
-		$.each(data, function(index, value) {
-			//CODEID , CODE , CODENAME ,,description
-			if (selCode == data[index].codeId) {
-				$('<option />', {
-					value : data[index].codeId,
-					text : data[index].codeName
-				}).appendTo(obj).attr("selected", "true");
-			} else {
-				$('<option />', {
-					value : data[index].codeId,
-					text : data[index].codeName
-				}).appendTo(obj);
-			}
-		});
-		if(obj=="#transdepartmentFrom" ||  obj=="#transdepartmentTo"  ||  obj=="#transdepartment" ){
-		//$("#selBox option:eq(2)").before("<option ;value='38'>** IT Department Store **</option>");
-		var setVal=obj +" option:eq(1)"
-		$(setVal).before("<option value='38'>** IT Department Store **</option>");
-		}
-		if (callbackFn) {
-			var strCallback = callbackFn + "()";
-			eval(strCallback);
-		}
-	};
+        $.each(data, function(index, value) {
+            //CODEID , CODE , CODENAME ,,description
+            if (selCode == data[index].codeId) {
+                $('<option />', {
+                    value : data[index].codeId,
+                    text : data[index].codeName
+                }).appendTo(obj).attr("selected", "true");
+            } else {
+                $('<option />', {
+                    value : data[index].codeId,
+                    text : data[index].codeName
+                }).appendTo(obj);
+            }
+        });
+        if(obj=="#transdepartmentFrom" ||  obj=="#transdepartmentTo"  ||  obj=="#transdepartment" ){
+        //$("#selBox option:eq(2)").before("<option ;value='38'>** IT Department Store **</option>");
+        var setVal=obj +" option:eq(1)"
+        $(setVal).before("<option value='38'>** IT Department Store **</option>");
+        }
+        if (callbackFn) {
+            var strCallback = callbackFn + "()";
+            eval(strCallback);
+        }
+    };
 
-	/* -----------------------------------------------  셀렉트 박스 이벤트 끝 -------------------------------------------------------------------- */
+    /* -----------------------------------------------  셀렉트 박스 이벤트 끝 -------------------------------------------------------------------- */
 
-	function typeallchek() {
-		var typesize = $("#searchtype option").size();
-		for (var int = 0; int < array.length; int++) {
+    function typeallchek() {
+        var typesize = $("#searchtype option").size();
+        for (var int = 0; int < array.length; int++) {
 
-		}
+        }
 
-	}
+    }
 
-	function addRowFileter() {
-		var item = new Object();
-		item.codeName = $("#insdetailtype option:selected").text();
-		item.name = $("#insdetailBrand option:selected").text();
-		item.typeid = $("#insdetailtype option:selected").val();
-		item.brandid = $("#insdetailBrand option:selected").val();
-		item.name1 = $("#insdetailmodel").val();
-		item.assetDRem = $("#insdetailremark").val();
-		if (detailvaliedcheck()) {
-			AUIGrid.addRow(AddDetailGrid, item, "last");
-			$("#regDetailWindow").hide();
-		}
-	}
-	
-	
-	
-	   function addRowItem() {
-		   div="AI";
-	        var item = new Object();
-	        //$("#addassetid").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'assetid'));
-	        item.codeName = $("#additemtype option:selected").text();
-	        item.name = $("#additemBrand option:selected").text();
-	        item.typeid = $("#additemtype option:selected").val();
-	        item.brandid = $("#additemBrand option:selected").val();     
-	        item.name1 = $("#additemmodel").val();
-	        item.assetDRem = $("#addremark").val();
-	        item.name3 = $("#additemname").val();
+    function addRowFileter() {
+        var item = new Object();
+        item.codeName = $("#insdetailtype option:selected").text();
+        item.name = $("#insdetailBrand option:selected").text();
+        item.typeid = $("#insdetailtype option:selected").val();
+        item.brandid = $("#insdetailBrand option:selected").val();
+        item.name1 = $("#insdetailmodel").val();
+        item.assetDRem = $("#insdetailremark").val();
+        if (detailvaliedcheck()) {
+            AUIGrid.addRow(AddDetailGrid, item, "last");
+            $("#regDetailWindow").hide();
+        }
+    }
+    
+    
+    
+       function addRowItem() {
+           div="AI";
+            var item = new Object();
+            //$("#addassetid").val(AUIGrid.getCellValue(myGridID ,selectedItem[0],'assetid'));
+            item.codeName = $("#additemtype option:selected").text();
+            item.name = $("#additemBrand option:selected").text();
+            item.typeid = $("#additemtype option:selected").val();
+            item.brandid = $("#additemBrand option:selected").val();     
+            item.name1 = $("#additemmodel").val();
+            item.assetDRem = $("#addremark").val();
+            item.name3 = $("#additemname").val();
             item.valu = $("#additemvalue").val();
             item.assetDItmRem = $("#additemremark").val();
             item.assetid = $("#addassetid").val();
@@ -1311,191 +1390,191 @@
             AUIGrid.addRow(upitemGrid, item, "last");
             $("#regUpdateWindow").hide();      
             }
-	     //$("#AddItemForm")[0].reset();  
-	    }
-	   
+         //$("#AddItemForm")[0].reset();  
+        }
+       
 
-	function cancelRowFileter() {
-		$("#regDetailWindow").hide();
-	}
+    function cancelRowFileter() {
+        $("#regDetailWindow").hide();
+    }
 
-	function detail_info_insert() {
-		$("#savePopbtn").click();
-	}
+    function detail_info_insert() {
+        $("#savePopbtn").click();
+    }
 
-	function destory(gridNm) {
-		AUIGrid.destroy(gridNm);
-		popClear();
-	}
+    function destory(gridNm) {
+        AUIGrid.destroy(gridNm);
+        popClear();
+    }
 
-	function popClear() {
-		$("#detailForm")[0].reset();
-	}
+    function popClear() {
+        $("#detailForm")[0].reset();
+    }
 
-	function colShowHide(gridNm, fied, checked) {
-		if (checked) {
-			AUIGrid.showColumnByDataField(gridNm, fied);
-		} else {
-			AUIGrid.hideColumnByDataField(gridNm, fied);
-		}
-	}
-	function removeRow(rowIndex, gridNm) {
-	    
-		AUIGrid.removeRow(gridNm, rowIndex);
-		AUIGrid.removeSoftRows(gridNm);
-	}
-	 function UpremoveRow(rowIndex, gridNm) {
-	   var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
-	   var assetDId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId');
-	   var assetDItmId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDItmId');
-		   if(assetDId== undefined || assetDItmId== undefined){
-	        AUIGrid.removeRow(gridNm, rowIndex);
-	        AUIGrid.removeSoftRows(gridNm);	   
-		   }else{
-			   Common.alert("can not delete an existing registered item.");
-		   }
-	   }
+    function colShowHide(gridNm, fied, checked) {
+        if (checked) {
+            AUIGrid.showColumnByDataField(gridNm, fied);
+        } else {
+            AUIGrid.hideColumnByDataField(gridNm, fied);
+        }
+    }
+    function removeRow(rowIndex, gridNm) {
+        
+        AUIGrid.removeRow(gridNm, rowIndex);
+        AUIGrid.removeSoftRows(gridNm);
+    }
+     function UpremoveRow(rowIndex, gridNm) {
+       var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
+       var assetDId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId');
+       var assetDItmId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDItmId');
+           if(assetDId== undefined || assetDItmId== undefined){
+            AUIGrid.removeRow(gridNm, rowIndex);
+            AUIGrid.removeSoftRows(gridNm);    
+           }else{
+               Common.alert("can not delete an existing registered item.");
+           }
+       }
     
    function removeItem(rowIndex, gridNm) {
-	   div="RI";
-	   var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
-	   $("#multyassetid").val(AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId'));
+       div="RI";
+       var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
+       $("#multyassetid").val(AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId'));
        $("#itemassetdid").val(AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDItmId'));
-	   assetsaveAjax(div);
-	    
-	}
-	
+       assetsaveAjax(div);
+        
+    }
+    
   function updateItem(flag) {
-	var addList = AUIGrid.getAddedRowItems(upitemGrid);
-	    // 수정된 행 아이템들(배열)
-	var updateList = AUIGrid.getEditedRowColumnItems(upitemGrid); 
+    var addList = AUIGrid.getAddedRowItems(upitemGrid);
+        // 수정된 행 아이템들(배열)
+    var updateList = AUIGrid.getEditedRowColumnItems(upitemGrid); 
 
-		if(addList.length ==0 && updateList.length ==0){
-			Common.alert("There Are No Update Items.");
-		}else{
-			 alert(flag);
-	         if(flag=="E"){
-	            div="EI";
-	        }
-	        assetsaveAjax(div);
-		}
+        if(addList.length ==0 && updateList.length ==0){
+            Common.alert("There Are No Update Items.");
+        }else{
+             alert(flag);
+             if(flag=="E"){
+                div="EI";
+            }
+            assetsaveAjax(div);
+        }
 
-	}
+    }
 
-	   function fn_srvMembershipList(itemtype) {
-	        Common.ajaxSync("GET", "/logistics/assetmng/selectTypeList.do", { groupCode : itemtype},			
-	                function(result) {
+       function fn_srvMembershipList(itemtype) {
+            Common.ajaxSync("GET", "/logistics/assetmng/selectTypeList.do", { groupCode : itemtype},            
+                    function(result) {
 
-	        	srvMembershipList = new Array();
-	                    for (var i = 0; i < result.length; i++) {
-	                        var list = new Object();
-	                        list.codeId = result[i].codeId;
-	                        
-	                        //list.memcd = result[i].memcd;
-	                        list.codeName = result[i].codeName;
-	                       
-	                        srvMembershipList.push(list);
-	                    } 
-	                        
-	                });
-	    }
-	   
-	   function fn_BrandList() {
-	            Common.ajaxSync("GET", "/logistics/assetmng/selectBrandList.do", '',            
-	              function(result) {
-	            	upBramdList = new Array();
-	                        for (var i = 0; i < result.length; i++) {
-	                            var list = new Object();
-	                            list.codeId = result[i].codeId;
-	                            
-	                            //list.memcd = result[i].memcd;
-	                            list.codeName = result[i].codeName;
-	                            
-	                            upBramdList.push(list);
-	                        } 
-	                            
-	                    });
-	        }
-	   
-	function searchAssetMoveTransacton(){
-	      var param = $('#masterForm').serializeJSON();
-	        var url = "/logistics/assetmng/assetCard.do";
-	        console.log(param);
-	            Common.ajax("POST" , url , param , function(data){
-	                AUIGrid.setGridData(assetMoveTrnsGrid , data.dataList);
-	                AUIGrid.resize(assetMoveTrnsGrid); 
-	            });
-		
-	}
-	function saveTrns(){
-	      //$("#cardTypeId").val("TR");
-	       var param = $('#masterForm').serializeJSON();
-	        var url = "/logistics/assetmng/saveAssetCard.do";
-	        console.log(param);
-	            Common.ajax("POST" , url , param , function(data){
-	            	Common.alert("Asset has been transfered to selected branch/department.");
-	            	getAssetListAjax();  
-	            	$("#masterWindow").hide();
-	            });
-		
-	}
-	function saveTrnsRe(){
-	      //$("#cardTypeId").val("RT");
-	      var param = $('#masterForm').serializeJSON();
-	      $.extend(param, {
-	          'trnsbranchid' : 42,
-	          'transdepartment' : 38
-	      });
-	        var url = "/logistics/assetmng/saveAssetCardReturn.do";
-	        console.log(param);
-	            Common.ajax("POST" , url , param , function(data){
-	            	Common.alert("Asset has been returned to IT Department Store.");
-	            	getAssetListAjax();  
-	            	$("#masterWindow").hide();
-	            });
-		
-	}
-	function saveStatus(){
-	      var param = $('#masterForm').serializeJSON();
-	      $.extend(param, {
-	          'trnsbranchid' : 0,
-	          'transdepartment' : 0
-	      });
-	        var url = "/logistics/assetmng/saveAssetStatus.do";
-	        console.log(param);
-	            Common.ajax("POST" , url , param , function(data){
-	            	Common.alert("Asset new status successfully saved.");
-	            	getAssetListAjax();  
-	            	$("#masterWindow").hide();
-	            });
-		
-	}
-	function saveTrnsBulk(){
-	      //$("#cardTypeIdBulk").val("TR");
-	       var param = $('#bulkForm').serializeJSON();
-	        var url = "/logistics/assetmng/saveAssetCardBulk.do";
-	        console.log(param);
-	            Common.ajax("POST" , url , param , function(data){
-	            	Common.alert("Asset(s) has been transfered to selected branch/department.");
-            	    getAssetListAjax();  
+                srvMembershipList = new Array();
+                        for (var i = 0; i < result.length; i++) {
+                            var list = new Object();
+                            list.codeId = result[i].codeId;
+                            
+                            //list.memcd = result[i].memcd;
+                            list.codeName = result[i].codeName;
+                           
+                            srvMembershipList.push(list);
+                        } 
+                            
+                    });
+        }
+       
+       function fn_BrandList() {
+                Common.ajaxSync("GET", "/logistics/assetmng/selectBrandList.do", '',            
+                  function(result) {
+                    upBramdList = new Array();
+                            for (var i = 0; i < result.length; i++) {
+                                var list = new Object();
+                                list.codeId = result[i].codeId;
+                                
+                                //list.memcd = result[i].memcd;
+                                list.codeName = result[i].codeName;
+                                
+                                upBramdList.push(list);
+                            } 
+                                
+                        });
+            }
+       
+    function searchAssetMoveTransacton(){
+          var param = $('#masterForm').serializeJSON();
+            var url = "/logistics/assetmng/assetCard.do";
+            console.log(param);
+                Common.ajax("POST" , url , param , function(data){
+                    AUIGrid.setGridData(assetMoveTrnsGrid , data.dataList);
+                    AUIGrid.resize(assetMoveTrnsGrid); 
+                });
+        
+    }
+    function saveTrns(){
+          //$("#cardTypeId").val("TR");
+           var param = $('#masterForm').serializeJSON();
+            var url = "/logistics/assetmng/saveAssetCard.do";
+            console.log(param);
+                Common.ajax("POST" , url , param , function(data){
+                    Common.alert("Asset has been transfered to selected branch/department.");
+                    getAssetListAjax();  
+                    $("#masterWindow").hide();
+                });
+        
+    }
+    function saveTrnsRe(){
+          //$("#cardTypeId").val("RT");
+          var param = $('#masterForm').serializeJSON();
+          $.extend(param, {
+              'trnsbranchid' : 42,
+              'transdepartment' : 38
+          });
+            var url = "/logistics/assetmng/saveAssetCardReturn.do";
+            console.log(param);
+                Common.ajax("POST" , url , param , function(data){
+                    Common.alert("Asset has been returned to IT Department Store.");
+                    getAssetListAjax();  
+                    $("#masterWindow").hide();
+                });
+        
+    }
+    function saveStatus(){
+          var param = $('#masterForm').serializeJSON();
+          $.extend(param, {
+              'trnsbranchid' : 0,
+              'transdepartment' : 0
+          });
+            var url = "/logistics/assetmng/saveAssetStatus.do";
+            console.log(param);
+                Common.ajax("POST" , url , param , function(data){
+                    Common.alert("Asset new status successfully saved.");
+                    getAssetListAjax();  
+                    $("#masterWindow").hide();
+                });
+        
+    }
+    function saveTrnsBulk(){
+          //$("#cardTypeIdBulk").val("TR");
+           var param = $('#bulkForm').serializeJSON();
+            var url = "/logistics/assetmng/saveAssetCardBulk.do";
+            console.log(param);
+                Common.ajax("POST" , url , param , function(data){
+                    Common.alert("Asset(s) has been transfered to selected branch/department.");
+                    getAssetListAjax();  
                     $("#asstMoveTrnsBulkDiv").hide();
-	            });
-		
-	}
-	function searchAssetBulkList(branchId,deptId){
-		        var url = "/logistics/assetmng/assetBulkList.do";
-		        var param ={
-		                 'searchbranchid' : branchId,
-		                 'searchdeptid'    :deptId
-		        };
-		        console.log(param);
-		            Common.ajax("POST" , url , param , function(data){
-					     console.log(data.dataList);
-	                     AUIGrid.setGridData(assetMoveTrnsBulkGrid, data.dataList);      
-	                     //AUIGrid.resize(assetMoveTrnsBulkGrid);
-		            });
-		
-	}
+                });
+        
+    }
+    function searchAssetBulkList(branchId,deptId){
+                var url = "/logistics/assetmng/assetBulkList.do";
+                var param ={
+                         'searchbranchid' : branchId,
+                         'searchdeptid'    :deptId
+                };
+                console.log(param);
+                    Common.ajax("POST" , url , param , function(data){
+                         console.log(data.dataList);
+                         AUIGrid.setGridData(assetMoveTrnsBulkGrid, data.dataList);      
+                         //AUIGrid.resize(assetMoveTrnsBulkGrid);
+                    });
+        
+    }
 </script>
 </head>
 <div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
@@ -1735,7 +1814,7 @@
 <tr id="trinserthide1"> 
     <th scope="row">Assert Status</th>
     <td colspan="2" id="tdassertstatus"><input type="text" title="" placeholder=""  class="w100p" id="masterstatus" name="assetstatus"/></td>
-    <th scope="row">Breanch (Belong To)</th>
+    <th scope="row">Branch (Belong To)</th>
     <td colspan="2" id="tdbreanch"><input type="text" title="" placeholder=""  class="w100p" id="masterbreanch" name="masterbreanch"/></td>  
 </tr>
 <tr id="trinserthide2">
@@ -1817,7 +1896,7 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<aside class="title_line" id="a1"><!-- title_line start -->
 <h2>Copy/Duplicate Informaton</h2>
 </aside><!-- title_line end -->
     <table class="type1" id="CopyAssetInfo">
@@ -1876,11 +1955,11 @@
             <th scope="row">Status</th>
             <td colspan="3">
                  <select id="status" name="status"  class="w100p" >
-				  <option value=""></option>
-				  <option value="7">Obsolete</option>
-				  <option value="67">Lost</option>
-				  <option value="8">Deactivate</option>
-				</select>
+                  <option value=""></option>
+                  <option value="7">Obsolete</option>
+                  <option value="67">Lost</option>
+                  <option value="8">Deactivate</option>
+                </select>
             </td>
         </tr>
         <tr>
@@ -1892,8 +1971,8 @@
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a id="returnTrnsBtn">Confirm Return</a></p></li>
     <li><p class="btn_blue2 big"><a id="savePopbtn">SAVE</a></p></li>
-	<li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li>
-	<li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li>
     <li><p class="btn_blue2 big"><a id="updatePopbtn">UPDATE</a></p></li>
     <li><p class="btn_blue2 big"><a id="cancelPopbtn" onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
 </ul>
@@ -2082,8 +2161,8 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>Bulk Transfer Asset</h1>
                 <ul class="right_opt">
-		            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-		        </ul>
+                    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+                </ul>
     </header><!-- pop_header end -->
     
 <section class="pop_body"><!-- pop_body start --> 
@@ -2100,50 +2179,50 @@
                             <col style="width: *" />
                         </colgroup>
                         <tbody>
-					         <tr>
-					            <td scope="row" colspan="4"><h3>Transfer Informaton</h3></th>
-					        </tr>
-					        <tr>
-					            <th scope="row"  rowspan="2">Transfer From</th>
-					            <td colspan="3">
-					                 <select id="trnsbranchidFrom" name="trnsbranchidFrom" onchange="getComboRelayTrns('transdepartmentFrom' , this.value , '', '')" class="w100p" >
-					                 </select>
-					            </td>
-					        </tr>
-					        <tr>
-					           <!--  <th scope="row">Current Department</th> -->
-					            <td colspan="3"> 
-					                <select class="w100p" id="transdepartmentFrom" name="transdepartmentFrom"  onchange="getComboRelayTrnsBulk('' , this.value , '', '')" >
-					                </select>
-					            </td>
-					        </tr>
-					        <tr>
-					            <th scope="row"  rowspan="2">Transfer To</th>
-					            <td colspan="3">
-					                 <select id="trnsbranchidTo" name="trnsbranchidTo" onchange="getComboRelayTrns('transdepartmentTo' , this.value , '', '')" class="w100p" >
-					                 </select>
-					            </td>
-					        </tr>
-					        <tr>
-					           <!--  <th scope="row">Current Department</th> -->
-					            <td colspan="3"> 
-					                <select class="w100p" id="transdepartmentTo" name="transdepartmentTo"  >
-					                </select>
-					            </td>
-					        </tr>
-					        <tr>
-					           <td colspan="4"><h3>Asset To Transfer</h3></td>
-					        </tr>
-					       </tbody>
+                             <tr>
+                                <td scope="row" colspan="4"><h3>Transfer Informaton</h3></th>
+                            </tr>
+                            <tr>
+                                <th scope="row"  rowspan="2">Transfer From</th>
+                                <td colspan="3">
+                                     <select id="trnsbranchidFrom" name="trnsbranchidFrom" onchange="getComboRelayTrns('transdepartmentFrom' , this.value , '', '')" class="w100p" >
+                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                               <!--  <th scope="row">Current Department</th> -->
+                                <td colspan="3"> 
+                                    <select class="w100p" id="transdepartmentFrom" name="transdepartmentFrom"  onchange="getComboRelayTrnsBulk('' , this.value , '', '')" >
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"  rowspan="2">Transfer To</th>
+                                <td colspan="3">
+                                     <select id="trnsbranchidTo" name="trnsbranchidTo" onchange="getComboRelayTrns('transdepartmentTo' , this.value , '', '')" class="w100p" >
+                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                               <!--  <th scope="row">Current Department</th> -->
+                                <td colspan="3"> 
+                                    <select class="w100p" id="transdepartmentTo" name="transdepartmentTo"  >
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                               <td colspan="4"><h3>Asset To Transfer</h3></td>
+                            </tr>
+                           </tbody>
                     </table>
-					<article class="grid_wrap"><!-- grid_wrap start -->
-					    <div id="assetMoveTrnsBulkGrid"></div>
-					</article><!-- grid_wrap end -->
-					
+                    <article class="grid_wrap"><!-- grid_wrap start -->
+                        <div id="assetMoveTrnsBulkGrid"></div>
+                    </article><!-- grid_wrap end -->
+                    
                     <!-- table end -->
-					<ul class="center_btns">
-					    <li><p class="btn_blue2 big"><a id="transAsset">Transfer Asset</a></p></li>
-					</ul>
+                    <ul class="center_btns">
+                        <li><p class="btn_blue2 big"><a id="transAsset">Transfer Asset</a></p></li>
+                    </ul>
                 </form> 
     </section>  
 </div>
