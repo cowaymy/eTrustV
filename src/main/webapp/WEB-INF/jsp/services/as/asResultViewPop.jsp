@@ -11,7 +11,6 @@ $(document).ready(function(){
 	
 	fn_getASOrderInfo();
     fn_getASEvntsInfo();
-    
     fn_getCallLog();
 });
 

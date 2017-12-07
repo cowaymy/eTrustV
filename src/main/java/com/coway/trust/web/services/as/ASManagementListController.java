@@ -151,8 +151,25 @@ public class ASManagementListController {
 	 */
 	@RequestMapping(value = "/ASReceiveEntryPop.do")
 	public String initASReceiveEntry(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+			model.put("ORD_ID",(String) params.get("in_ordId"));   
+			model.put("ORD_NO",(String) params.get("in_ordNo"));
+			model.put("AS_ID", (String)params.get("in_asId"));   
+			model.put("AS_NO", (String)params.get("in_asNo")); 
+			model.put("AS_ResultNO", (String)params.get("asResultNo"));
+			model.put("AS_ResultId", (String)params.get("in_asResultId"));
+			
+			
+			if(! "".equals((String) params.get("in_ordId"))){
+				
+				return "services/as/ASReceiveEntryPop";
+			}else{
+				return "services/as/ASReceiveEntryPop";
+			}
+			
+		
 		// 호출될 화면
-		return "services/as/ASReceiveEntryPop";
+		
 	}
 	
 	@RequestMapping(value = "/asResultViewPop.do")
@@ -207,7 +224,10 @@ public class ASManagementListController {
 		model.put("AS_NO", (String)params.get("AS_NO"));     
 		model.put("AS_ID", (String)params.get("AS_ID")); 
 		model.put("MOD", (String)params.get("mod"));   
-   
+		
+		model.put("IN_AsResultId", (String)params.get("asResultId"));   
+		
+		
 		/*
 		if("VIEW".equals(params.get("mod"))){
 			asentryInfo = ASManagementListService.selASEntryView(params);
@@ -274,6 +294,32 @@ public class ASManagementListController {
 	
 	
 	
+
+	/**
+	 * Services - AS  - saveASInHouseEntry in house 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateASInHouseEntry.do" , method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> updateASInHouseEntry(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		
+		
+		logger.debug("updateASInHouseEntry in...."); 
+		logger.debug("params :"+ params.toString());
+		params.put("updator", sessionVO.getUserId());
+		
+		EgovMap sm = ASManagementListService.updateASInHouseEntry(params);
+		
+		// 호출될 화면
+		return ResponseEntity.ok(sm);
+	}
+	
+	
+	
 	/**
 	 * Services - AS  - ASReceiveEntry Order No search
 	 *
@@ -315,6 +361,9 @@ public class ASManagementListController {
 		model.put("ORD_NO",(String) params.get("ord_No"));
 		model.put("AS_NO", (String)params.get("as_No"));    
 		model.put("AS_ID", (String)params.get("as_Id"));   
+		model.put("REF_REQST", (String)params.get("refReqst"));     
+		
+		
 		return "services/as/newASResultPop";
 	}
 	
@@ -756,7 +805,7 @@ public class ASManagementListController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");  
 		
-		params.put("updator", sessionVO.getUserId());   
+		params.put("updator", sessionVO.getUserId());     
 		
 		LinkedHashMap  asResultM = (LinkedHashMap)  params.get("asResultM");
 		   

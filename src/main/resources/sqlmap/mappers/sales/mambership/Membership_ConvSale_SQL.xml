@@ -187,7 +187,7 @@
      
      <insert id="update_SAL0093D_Stus" parameterType="Map" >
             UPDATE SAL0093D 
-                   SET  SRV_QUOT_STUS_ID  = 4,
+                   SET  SRV_QUOT_STUS_ID  = 1,
                           SRV_UPD_DT  = SYSDATE,
                           SRV_UPD_USER_ID = #{userId}
              WHERE  SRV_MEM_ID =#{srvMemId}

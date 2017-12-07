@@ -26,25 +26,32 @@ function createAUIGrid() {
                         {
                             headerText : "As_Entry",
                             children : [ 
+                                        {dataField : "asNo",     headerText  : "AS No" ,width  : 120 ,  editable       : false  } ,
                                         {dataField : "asBrnchDesc",     headerText  : "DSC Branch" ,width  : 120 ,  editable       : false  } ,
-                                        { dataField : "asMemCode",     headerText  : "CT Code",  width  : 120 , editable       : false},
-                                        { dataField : "asStkDesc",       headerText  : "Product",  width  : 200   , editable       : false},
-                                        { dataField : "asDfDesc",         headerText  : "Defect Type",  width  : 100   , editable       : false},
+                                        { dataField : "memCode",     headerText  : "CT Code",  width  : 120 , editable       : false},
+                                        { dataField : "stkDesc",       headerText  : "Product",  width  : 200   , editable       : false},
                                         {dataField : "asStus",             headerText  : "AS Statu ",  width  : 120,  editable       : false}
                             ]
                         },
                         {
                             headerText : "Repair_Entry",
                             children : [ 
-                                        {dataField : "reMemCode",     headerText  : "DRM Code" ,width  : 100 ,  editable       : false  } ,
-                                        { dataField : "reStdDate",    headerText  : "In-house <br> Reg Date",  width  : 150 ,  dataType : "date", formatString : "dd/mm/yyyy"  ,editable       : false},
-                                        { dataField : "reEndDate", headerText  : "In-house <br> End Date ",  width  : 150    ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
-                                        { dataField : "rePromDatem", headerText  : "Promised <br>Com Date",  width  : 150   ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
-                                        {dataField : "rasStus", headerText  : "Repair Statu",  width  : 120 , editable    : false}
+                                        {dataField :  "inMemCode",     headerText  : "RCT Code" ,width  : 100 ,  editable       : false  } ,
+                                        { dataField : "inAsCrtDt",    headerText  : "In-house <br> Reg Date",  width  : 150 ,  dataType : "date", formatString : "dd/mm/yyyy"  ,editable       : false},
+                                        { dataField : "inAsComDt", headerText  : "In-house <br> End Date ",  width  : 150    ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
+                                        { dataField : "inHuseRepairPromisDt", headerText  : "Promised <br>Com Date",  width  : 150   ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
+                                        {dataField :  "inAsStus", headerText  : "Repair Statu",  width  : 120 , editable    : false}
+                            ]
+                        },
+                        {
+                            headerText : "OnLoan Unit_Entry",
+                            children : [ 
+                                        {dataField : "onAsNo",     headerText  : "AS No" ,width  : 100 ,  editable       : false  } ,
+                                        { dataField : "onStkDesc",    headerText  : "Product",  width  : 150  , editable       : false},
+                                        { dataField : "onInHuseRepairSerialNo", headerText  : "Serial No",  width  : 150 , editable       : false},
+                                        {dataField :  "onAsStus", headerText  : "onLoan Statu",  width  : 120 , editable    : false}
                             ]
                         }
-                        
-                        
    ];   
    
     
@@ -61,30 +68,67 @@ function createAUIGrid() {
 }
 
 
-function fn_viewResultPop(){
+function fn_viewInHouseResultPop(){
     
     var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
+    
     if(selectedItems.length <= 0) {
             Common.alert("<b>No Item selected.</b>");
          return ;
     }
     
-    Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=view" ,null, null , true , '_viewResultDiv');
+    if(selectedItems[0].item.inAsResultNo ==""){
+    	  Common.alert("<b>No in-house repiar Item selected.</b>");
+          return ;
+    }
+    
+
+    var pram ="&ORD_ID="+selectedItems[0].item.salesOrdId
+                   + "&ORD_NO="+selectedItems[0].item.salesOrdNo
+                   +"&AS_NO="+selectedItems[0].item.asNo
+                   +"&AS_ID="+selectedItems[0].item.asId
+                   +"&AS_RESULT_NO="+selectedItems[0].item.inAsResultNo
+                   +"&AS_RESULT_ID="+selectedItems[0].item.inAsResultId;
+    
+    
+    
+    Common.popupDiv("/services/inhouse/inHouseAsResultEditBasicPop.do?mode=view"+pram  ,null, null , true , '_viewResultDiv');
 
 }
 
 
 
 function fn_editResultPop(){
+var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
     
-    var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
     if(selectedItems.length <= 0) {
             Common.alert("<b>No Item selected.</b>");
          return ;
     }
-   
-    Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=edit" ,null, null , true , '_editResultDiv');
+    
+    if(selectedItems[0].item.inAsResultNo ==""){
+          Common.alert("<b>No in-house repiar Item selected.</b>");
+          return ;
+    }
+    
+  var stae =  selectedItems[0].item.inAsStus ;
+  if(stae  !="ACT"){
+      Common.alert("</br> Result entry is disallowed.</b>");
+      return ;
+  }
+  
+    
 
+    var pram ="&ORD_ID="+selectedItems[0].item.salesOrdId
+                   + "&ORD_NO="+selectedItems[0].item.salesOrdNo
+                   +"&AS_NO="+selectedItems[0].item.asNo
+                   +"&AS_ID="+selectedItems[0].item.asId
+                   +"&AS_RESULT_NO="+selectedItems[0].item.inAsResultNo
+                   +"&AS_RESULT_ID="+selectedItems[0].item.inAsResultId;
+    
+    
+    
+    Common.popupDiv("/services/inhouse/inHouseAsResultEditBasicPop.do?mode=edit"+pram  ,null, null , true , '_editResultDiv');
 }
 
 
@@ -97,7 +141,23 @@ function fn_addRepairPop(){
          return ;
     }
     
-    Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=NEW" ,null, null , true , '_addResultDiv');
+
+    var stae =  selectedItems[0].item.inAsStus ;
+   
+    if(stae  =="COM"  ){
+        Common.alert("</br> Result entry is disallowed.</b>");
+        return ;
+    }
+    
+    var pram ="&ORD_ID="+selectedItems[0].item.salesOrdId
+                   + "&ORD_NO="+selectedItems[0].item.salesOrdNo
+                   +"&AS_NO="+selectedItems[0].item.asNo
+                   +"&AS_ID="+selectedItems[0].item.asId
+                   +"&AS_RESULT_NO="+selectedItems[0].item.inAsResultNo
+                   +"&AS_RESULT_ID="+selectedItems[0].item.inAsResultId;
+    
+    Common.popupDiv("/services/inhouse/inhouseDPop.do?mode=NEW"+pram ,null, null , true , '_addResultDiv');
+    
 }
 
 
@@ -157,6 +217,10 @@ $.fn.clearForm = function() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>In House Repair Progress Display</h2>
 <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_viewInHouseResultPop()">View Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_editResultPop()">Edit Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_addRepairPop()">Add Repair</a></p></li>
+    
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#inHoForm').clearForm();" ><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -224,11 +288,7 @@ $.fn.clearForm = function() {
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-       <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewResultPop()">View Result</a></p></li> 
-       <li><p class="link_btn"><a href="#" onclick="javascript:fn_editResultPop()">Edit Result</a></p></li> 
-       <li><p class="link_btn"><a href="#" onclick="javascript:fn_addRepairPop()">Add Repair</a></p></li> 
-       
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_addSave()">gridsave</a></p></li> 
+          
     </ul>
    
     <ul class="btns">

@@ -220,6 +220,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		}
 		
 		
+		
+		
 		//물류 호출 
 		/////////////////////////물류 호출//////////////////////
 		Map<String, Object>  logPram = new HashMap<String, Object>();
@@ -313,6 +315,114 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			return em;
 		} 
+		
+		
+		
+
+		  
+		@Override
+		public EgovMap  updateASInHouseEntry(Map<String, Object> params) {
+
+			EgovMap em = new EgovMap();			
+			  
+			Map  svc0004dmap =   (Map) params.get("asResultM");//hash
+			svc0004dmap.put("updator"  ,   params.get("updator") ); 	
+			
+			
+			int update_svcCnt = ASManagementListMapper.updateInHouseSVC0004D(svc0004dmap);
+			
+			int appdtcnt = ASManagementListMapper.updateInhouseSVC0001D_appdt(svc0004dmap);
+			
+			List <EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
+			List <EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+			List <EgovMap> removeItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_REMOVE);
+			
+
+			LOGGER.debug("====params=======>" +params.toString());
+    		LOGGER.debug("====svc0004dmap=======>" +svc0004dmap.toString());
+    		LOGGER.debug("====addItemList=======>" +addItemList.toString());
+    		LOGGER.debug("====removeItemList=======>" +removeItemList.toString());
+    		LOGGER.debug("====updateItemList=======>" +updateItemList.toString());
+			
+			if(addItemList.size()>0 ){
+				this.insertSVC0005D(addItemList , String.valueOf(svc0004dmap.get("AS_RESULT_ID")),String.valueOf(params.get("updator")) );
+			}
+			
+			
+			//UPDATE 
+			if(updateItemList.size()>0){
+    				for (int i = 0; i < updateItemList.size(); i++) {
+    					
+    					Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+    					Map<String, Object> iMap = new HashMap();
+    				    
+    					if(! "".equals(updateMap.get("filterDesc") )){
+    						String temp =(String)updateMap.get("filterDesc");
+    						if(null != temp ){
+        						if(! temp.equals("API")){
+        	    					String[] animals = temp.split("-"); 
+        	    					if(animals.length>0){   
+        	    						iMap.put("ASR_ITM_PART_DESC",   animals[1] );
+        	    					}else{
+        	    						iMap.put("ASR_ITM_PART_DESC",   "");
+        	    					}  
+        						}
+    						}
+    					}
+    					
+    				  
+
+    					iMap.put("ASR_ITM_ID",    updateMap.get("filterId") ); 
+    					
+    					iMap.put("ASR_ITM_PART_QTY",   updateMap.get("filterQty") ); 
+    					iMap.put("ASR_ITM_PART_PRC",    updateMap.get("filterPrice") ); 
+    					iMap.put("ASR_ITM_CHRG_AMT",   updateMap.get("filterTotal") ); 
+    					iMap.put("ASR_ITM_REM",   		   updateMap.get("filterRemark") ); 
+    					iMap.put("ASR_ITM_CRT_USER_ID", String.valueOf(params.get("updator") ));
+    					
+    					if(updateMap.get("filterType").equals("FOC")){
+    						iMap.put("ASR_ITM_CHRG_FOC",   "1"); 
+    					}else{
+    						iMap.put("ASR_ITM_CHRG_FOC",   "0"); 
+    					}
+    					
+    					iMap.put("ASR_ITM_EXCHG_ID",    updateMap.get("filterExCode") ); 
+    					iMap.put("ASR_ITM_CLM",   		  		"0"); 
+    					iMap.put("ASR_ITM_TAX_CODE_ID",    "0" ); 
+    					iMap.put("ASR_ITM_TXS_AMT" , 			"0" ); 
+    					
+    					iMap.put("SERIAL_NO" , updateMap.get("srvFilterLastSerial")); 
+    					iMap.put("FILTER_BARCD_SERIAL_NO" , updateMap.get("srvFilterLastSerial")); 
+    					iMap.put("EXCHG_ID" , updateMap.get("filterExCode")); 
+    					
+    					
+    					
+    
+    					LOGGER.debug("					UPDATESVC0005D {} ",iMap);
+    					ASManagementListMapper.updateInhouseSVC0005D(iMap) ;
+    				}
+    				
+			}
+			
+			
+			//delete 
+			if(removeItemList.size()>0){
+				for (int i = 0; i < removeItemList.size(); i++) {
+					Map<String, Object> updateMap = (Map<String, Object>) removeItemList.get(i);
+					Map<String, Object> iMap = new HashMap();
+					
+					
+					iMap.put("ASR_ITM_ID",    updateMap.get("filterId") ); 
+					
+
+					LOGGER.debug("					delete SVC0005D {} ",iMap);
+					ASManagementListMapper.deleteInhouseSVC0005D(iMap) ;
+				}
+			}
+			
+			return em;
+		} 
+		
 		
 	
 	public Map<String, Object>  setCCR000Data(Map<String, Object> params){
@@ -592,7 +702,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     						iMap.put("ASR_ITM_PART_DESC",   animals[1] );
     					}else{
     						iMap.put("ASR_ITM_PART_DESC",   "");
-    					}
+    					}   
 					}
 					
 				}
@@ -624,8 +734,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 				LOGGER.debug("					insertSVC0005D {} ",iMap);
 				rtnValue = ASManagementListMapper.insertSVC0005D(iMap) ;
-			
-				
 			}
 		}
 	   
@@ -662,7 +770,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			    map.put("srcId","477"); 
 			    map.put("prjctId","0"); 
 			    map.put("batchNo","0"); 
-			    map.put("qty",(-1 *    Integer.parseInt( (String)(updateMap.get("filterQty") ) ))); 
+			    map.put("qty",(-1 *    Integer.parseInt( String.valueOf((updateMap.get("filterQty") )) ))); 
 			    map.put("currId","479"); 
 			    map.put("currRate","1"); 
 			    map.put("cost","0"); 
@@ -700,7 +808,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				    
 			        
 			}
-		}
+		}   
 	   
 		LOGGER.debug(" insert_stkCardLOG0014D  결과 {}",rtnValue);
 		LOGGER.debug("							===> insert_stkCardLOG0014D  out ");
@@ -1202,8 +1310,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             							Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
             							Map<String, Object> iMap = new HashMap();
             							
-            							String tempFilterTotal =String.valueOf( updateMap.get("filterTotal"));
-            							double ft =Double.parseDouble(tempFilterTotal);
+            							
+            							String tempFilterTotal = String.valueOf(updateMap.get("filterTotal"));
+            							
+            							if( tempFilterTotal.equals(null)  || "null".equals(tempFilterTotal)  ) {  
+            								tempFilterTotal ="0";
+            							}
+            							
+            							double ft =Double.parseDouble(CommonUtils.isEmpty(tempFilterTotal) == true ? "0": tempFilterTotal);
             							if( ft >0){
             							
             								    String filterCode ="";
@@ -1225,8 +1339,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 								vo_filter =  new AsResultChargesViewVO();
                 								vo_filter.setAsEntryId("");
                 								vo_filter.setAsChargesTypeId("1262");
-                								vo_filter.setAsChargeQty((String)updateMap.get("filterQty"));
-                								vo_filter.setSparePartId((String)updateMap.get("filterID") );
+                								vo_filter.setAsChargeQty(String.valueOf(updateMap.get("filterQty")));
+                								vo_filter.setSparePartId(String.valueOf(updateMap.get("filterID")) );
                 								vo_filter.setSparePartCode(filterCode);
                 								vo_filter.setSparePartName(filterName);
                 								vo_filter.setSparePartSerial("");
@@ -1255,6 +1369,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
        							Map<String, Object> iMap = new HashMap();
 
     							String tempFilterTotal =String.valueOf( updateMap.get("filterTotal"));
+    							
+    							if( tempFilterTotal.equals(null)  || "null".equals(tempFilterTotal)  ) {  
+    								tempFilterTotal ="0";
+    							}  
+    							
+    							
     							double ft =Double.parseDouble(tempFilterTotal);
     							
        							if( ft >0){
@@ -1282,8 +1402,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            								vo_filter32 =  new AsResultChargesViewVO();
            								vo_filter32.setAsEntryId("");
            								vo_filter32.setAsChargesTypeId("1262");
-           								vo_filter32.setAsChargeQty((String)updateMap.get("filterQty"));
-           								vo_filter32.setSparePartId((String)updateMap.get("filterID") );
+           								vo_filter32.setAsChargeQty(String.valueOf(updateMap.get("filterQty")));
+           								vo_filter32.setSparePartId( String.valueOf(updateMap.get("filterID")) );
            								vo_filter32.setSparePartCode(filterCode);
            								vo_filter32.setSparePartName(filterName);
            								vo_filter32.setSparePartSerial("");
@@ -1405,8 +1525,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	    
 		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")){
 			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() > 0  ){
-				  
-					 this.updateStateSVC0001D(svc0004dmap);
+				  this.updateStateSVC0001D(svc0004dmap);
 			  }
 		  }else{
 				 this.updateStateSVC0001D(svc0004dmap);
@@ -2045,7 +2164,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	public int  asResultBasic_update(Map<String, Object> params) {
 	
 		LinkedHashMap  svc0004dmap = (LinkedHashMap)  params.get("asResultM");
-		int c=  ASManagementListMapper.updateBasicSVC0004D(svc0004dmap);  
+		int c= -1;
+		
+		if(  svc0004dmap.get("AS_RESULT_STUS_ID").equals("1")){
+			
+			 c=  ASManagementListMapper.updateBasicInhouseSVC0004D(svc0004dmap);  
+			       ASManagementListMapper.updateBasicInhouseSVC0001D(svc0004dmap);  
+			 
+		}else{
+			 c=  ASManagementListMapper.updateBasicSVC0004D(svc0004dmap);  
+		}
+		
+		
+		
+		
 		return c;    
 	}
 

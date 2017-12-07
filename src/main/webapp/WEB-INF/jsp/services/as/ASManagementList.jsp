@@ -86,6 +86,8 @@ function fn_newASResultPop(){
     var asStusId     = selectedItems[0].item.code1;
     var salesOrdNo  = selectedItems[0].item.salesOrdNo;
     var salesOrdId  =selectedItems[0].item.asSoId;
+    var refReqst  =selectedItems[0].item.refReqst;
+    
     
     
     if(asStusId  !="ACT"){
@@ -93,7 +95,7 @@ function fn_newASResultPop(){
           return ;
     }
     
-    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
+    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&refReqst="+refReqst;
     Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
 }
 
@@ -175,7 +177,7 @@ function fn_asResultViewPop(){
 
 
 
-function fn_asInhouseEntryPop(){
+function fn_asInhouseAddOrderPop(){
 	
 
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -195,17 +197,29 @@ function fn_asInhouseEntryPop(){
     var asid =    selectedItems[0].item.asId;
     var asNo =    selectedItems[0].item.asNo;
     
-    var asStusId     = selectedItems[0].item.code1;
-    var salesOrdNo  = selectedItems[0].item.salesOrdNo;
-    var salesOrdId  =selectedItems[0].item.asSoId;
+    var asStusId      = selectedItems[0].item.code1;
+    var salesOrdNo  =selectedItems[0].item.salesOrdNo;
+    var salesOrdId   =selectedItems[0].item.asSoId;
+    var apptype       =selectedItems[0].item.code;
+    var asResultNo   =selectedItems[0].item.c3;
+    var asResultId    =selectedItems[0].item.asResultId;
     
-    if(asStusId  !="ACT"){
-        Common.alert("<b>[" + asNo + "] already has [" + asStusId + "] result.  .</br> Result entry is disallowed.</b>");
+    
+    
+    if(apptype  !="IHR"){
+        Common.alert("only select for In-House Repair ");
         return ;
-  }
-  
-    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
-     Common.popupDiv("/services/as/asInHouseEntryPop.do"+param ,null, null , true , '_newInHouseEntryDiv1');
+    }
+    
+    //$("#in_asResultId").val(asResultId);
+    //$("#in_asResultNo").val(asResultNo);
+     
+    
+    Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+salesOrdId+"&ordNo="+salesOrdNo+"&asResultId="+asResultId ,null, null , true , '_resultNewEntryPopDiv1');
+
+    
+    
+    //Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,$("#inHOForm").serializeJSON()  , null , true , '_newInHouseEntryDiv1');
   
 }
 
@@ -280,11 +294,16 @@ function fn_asResultEditBasicPop(){
     var salesOrdId  =selectedItems[0].item.asSoId;
     var asResultNo  =selectedItems[0].item.c3;
     var asResultId  =selectedItems[0].item.asResultId;
+    var refReqst     =selectedItems[0].item.refReqst;
+    
     
     if(asStusId  =="ACT"){
-        Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
-        return ;
-   }
+    	
+        if(  refReqst =="" ){   //inhoouse는  수정 가능 
+            Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
+            return ;
+        }
+    }
     console.log(selectedItems[0].item);
     
     
@@ -532,6 +551,18 @@ function fn_asYsList(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>AS Management</h2>
 
+<form action="#" id="inHOForm">
+<div   style="display:none" >
+
+	<input type="text" id="in_asId" name="in_asId" />
+	<input type="text" id="in_asNo" name="in_asNo" />
+	<input type="text" id="in_ordId" name="in_ordId" />
+	<input type="text" id="in_asResultId" name="in_asResultId" />
+	<input type="text" id="in_asResultNo" name="in_asResultNo" />
+	
+</div>
+</form>
+
 <!-- 
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
@@ -544,6 +575,11 @@ function fn_asYsList(){
 
 <ul class="right_btns">
     <!-- 171110 :: 선한이  -->
+    
+    
+    
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li>
+    
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
@@ -576,6 +612,8 @@ function fn_asYsList(){
     <option value="675">Auto AS</option>
     <option value="674">Normal AS</option>
     <option value="">Request AS</option>
+    <option value="2713">InHouseRepair</option>
+    
     </select>
     </td>
     <th scope="row">AS Status</th>

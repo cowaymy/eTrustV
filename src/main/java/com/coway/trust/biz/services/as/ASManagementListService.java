@@ -40,6 +40,9 @@ public interface ASManagementListService {
 	
 	EgovMap   updateASEntry(Map<String, Object> params);
 	
+	EgovMap   updateASInHouseEntry(Map<String, Object> params);
+	
+	
 	List<EgovMap> getASOrderInfo(Map<String, Object> params);
 
 	List<EgovMap> getASEvntsInfo(Map<String, Object> params);

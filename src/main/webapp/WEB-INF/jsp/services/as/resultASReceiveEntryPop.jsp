@@ -404,10 +404,11 @@ function  fn_doNewSave(){
                  "AS_REM_ADD_CNTC_SMS"      : $("#checkSms2").prop("checked") ? '1': '0',
                  "AS_SESION_CODE"           : $("#CTSSessionCode").val(),
                  "CALL_MEMBER"              : '0',
-                 "REF_REQUEST"              : '0' ,
+                 "REF_REQUEST"              : $("#IN_AsResultId").val() ,
                  "CALL_REM"                     :$("#callRem").val(),   
                  "PIC_NAME" :$("#perIncharge").val(),
                  "PIC_CNTC" :$("#perContact").val()
+                 
 		}
 		
 	    console.log(saveForm);
@@ -1159,10 +1160,11 @@ function fn_addRemark(){
 
 
 
-<div style="display:none">
+<div style="display:inline">
            <input type="text" title="" placeholder="AS_ID"  id="AS_ID" name="AS_ID"/>
            <input type="text" title="" placeholder="AS_PIC_ID"  id="AS_PIC_ID" name="AS_PIC_ID"/>
            <input type="text" title="" placeholder="CTID"  id="CTID" name="CTID"/>
+           <input type="text" title="" placeholder="CTID"  id="IN_AsResultId" name="IN_AsResultId" value="${IN_AsResultId}"/>
 </div>
 
 <ul class="center_btns" id='save_bt_div'>

@@ -57,6 +57,9 @@ public interface ASManagementListMapper {
 	 int   insertSVC0004D(Map<String, Object> params);
 	 int   updateSVC0004D(Map<String, Object> params);  
 	 int   updateBasicSVC0004D(Map<String, Object> params);
+	 int   updateBasicInhouseSVC0004D(Map<String, Object> params);
+	 int   updateBasicInhouseSVC0001D(Map<String, Object> params);
+	 
 	 
 	 int   insertSVC0005D(Map<String, Object> params);
 	 
@@ -151,10 +154,11 @@ public interface ASManagementListMapper {
 	 EgovMap   getLog0016DCount(Map<String, Object> params);	      //log0016d count
 	 List<EgovMap> selectCTByDSC(Map<String, Object> params);
 
-	 
-
-	 
-	 
+	 	 
+	 int deleteInhouseSVC0005D(Map<String, Object> params);  	
+	 int updateInhouseSVC0005D(Map<String, Object> params);  	
+	 int updateInHouseSVC0004D(Map<String, Object> params);  	
+	 int updateInhouseSVC0001D_appdt(Map<String, Object> params);   
 	 
 	 
 	 

@@ -3,136 +3,170 @@
 <mapper namespace="com.coway.trust.biz.services.as.impl.InHouseRepairMapper">
 
     <select id="selInhouseList" parameterType="Map" resultType="egovMap">
-SELECT   as_Entry.AS_ID,
-         as_Entry.AS_NO,
-         as_Entry.AS_MEM_ID,
-         as_Entry.AS_STUS_ID,
-         DECODE (as_Entry.AS_STUS_ID,
-                 '1',
-                 'ACT',
-                 '4',
-                 'COM',
-                 '21',
-                 'FAI',
-                 '10',
-                 'CAN')
-            AS AS_STUS,
-         as_Entry.AS_SO_ID,
-         as_Entry.AS_RESULT_NO,
-         as_Entry.AS_ENTRY_ID,
-         as_Entry.AS_CT_ID,
-         as_Entry.MEM_CODE,
-         as_Entry.AS_BRNCH_ID,
-         as_Entry.CODE AS_BRNCH_DESC,
-         as_Entry.AS_DF_DESC,
-         as_Entry.STK_CODE,
-         as_Entry.STK_DESC,
-         as_Entry.SALES_ORD_NO,
-         as_Entry.SALES_ORD_ID,
-         In_Entry.AS_ID AS IN_AS_ID,
-         In_Entry.AS_NO AS IN_AS_NO,
-         In_Entry.AS_MEM_ID AS IN_AS_MEM_ID,
-         In_Entry.AS_STUS_ID AS IN_AS_STUS_ID,
-         DECODE (In_Entry.AS_STUS_ID,
-                 '1',
-                 'ACT',
-                 '4',
-                 'COM',
-                 '21',
-                 'FAI',
-                 '10',
-                 'CAN')
-            AS IN_AS_STUS,
-         In_Entry.AS_SO_ID AS IN_AS_SO_ID,
-         In_Entry.AS_RESULT_NO AS IN_AS_RESULT_NO,
-         In_Entry.AS_ENTRY_ID AS IN_AS_ENTRY_ID,
-         In_Entry.AS_CT_ID AS IN_AS_CT_ID,
-         In_Entry.MEM_CODE AS IN_MEM_CODE,
-         In_Entry.AS_BRNCH_ID AS IN_AS_BRNCH_ID,
-         In_Entry.CODE AS IN_AS_BRNCH_DESC,
-         In_Entry.AS_DF_DESC AS IN_AS_DF_DESC,
-         In_Entry.STK_CODE AS IN_STK_CODE,
-         In_Entry.STK_DESC AS IN_STK_DESC,
-         In_Entry.IN_HUSE_REPAIR_PROMIS_DT,
-         In_Entry.APPNT_DT   AS IN_APPNT_DT,
-         In_Entry.AS_CRT_DT  AS IN_AS_CRT_DT
-  FROM   (SELECT   1 tKy, A.AS_ID,
-                   A.AS_NO,
-                   A.AS_MEM_ID,
-                   A.AS_STUS_ID,
-                   B.AS_SO_ID,
-                   B.AS_RESULT_NO,
-                   B.AS_ENTRY_ID,
-                   B.AS_CT_ID,
-                   B.AS_BRNCH_ID,
-                   F.CODE,
-                   E.CODE AS AS_DF_DESC,
-                   G.STK_CODE,
-                   G.STK_DESC,
-                   H.MEM_CODE,
-                   C.SALES_ORD_NO,
-                   C.SALES_ORD_ID
-            FROM   SVC0001D A,
-                   SVC0004D B,
-                   SAL0001D C,
-                   SAL0002D D,
-                   SYS0026M G,
-                   SYS0032M E,
-                   SYS0005M F,
-                   ORG0001D H
-           WHERE       1 = 1
-                   AND A.AS_ID = B.AS_ENTRY_ID
-                   AND A.AS_SO_ID = C.SALES_ORD_ID
-                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-                   AND D.ITM_STK_ID = G.STK_ID
-                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-                   AND A.AS_BRNCH_ID = F.BRNCH_ID
-                   AND B.AS_CT_ID = H.MEM_ID
-                   AND B.AS_SLUTN_RESN_ID = '454'
-                   AND A.AS_NO = #{asNo}  ) as_Entry,
-         (SELECT  1 tKy, 
-                   A.AS_ID,
-                   A.AS_NO,
-                   A.AS_MEM_ID,
-                   A.AS_STUS_ID,
-                   B.AS_SO_ID,
-                   B.AS_RESULT_NO,
-                   B.AS_ENTRY_ID,
-                   B.AS_CT_ID,
-                   B.AS_BRNCH_ID,
-                   B.IN_HUSE_REPAIR_PROMIS_DT,
-                   B.APPNT_DT,
-                   F.CODE,
-                   E.CODE AS AS_DF_DESC,
-                   G.STK_CODE,
-                   G.STK_DESC,
-                   H.MEM_CODE,
-                   A.AS_CRT_DT
-            FROM   SVC0001D A,
-                   SVC0004D B,
-                   SAL0001D C,
-                   SAL0002D D,
-                   SYS0026M G,
-                   SYS0032M E,
-                   SYS0005M F,
-                   ORG0001D H
-           WHERE       A.AS_ID = B.AS_ENTRY_ID
-                   AND A.AS_SO_ID = C.SALES_ORD_ID
-                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-                   AND D.ITM_STK_ID = G.STK_ID
-                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-                   AND A.AS_BRNCH_ID = F.BRNCH_ID
-                   AND B.AS_CT_ID = H.MEM_ID
-                   AND A.REF_REQST IN
-                            (SELECT   AS_ID
-                               FROM   SVC0001D A, SVC0004D B
-                              WHERE   AS_NO = #{asNo} AND A.AS_ID = B.AS_ENTRY_ID)
-                   AND A.AS_TYPE_ID = '2713') In_Entry
- WHERE   as_Entry.tKy = In_Entry.tKy(+)
- 
- 
+			  SELECT   as_Entry.AS_ID,
+                         as_Entry.AS_NO,
+                         as_Entry.CUST_ID,
+                         as_Entry.AS_MEM_ID,
+                         as_Entry.AS_STUS_ID,
+                         DECODE (as_Entry.AS_STUS_ID,
+                                 '1',
+                                 'ACT',
+                                 '4',
+                                 'COM',
+                                 '21',
+                                 'FAI',
+                                 '10',
+                                 'CAN')
+                            AS AS_STUS,
+                         as_Entry.AS_SO_ID,
+                         as_Entry.AS_RESULT_NO,
+                         as_Entry.AS_ENTRY_ID,
+                         as_Entry.AS_CT_ID,
+                         as_Entry.MEM_CODE,
+                         as_Entry.AS_BRNCH_ID,
+                         as_Entry.CODE AS_BRNCH_DESC,
+                         as_Entry.AS_DF_DESC,
+                         as_Entry.STK_CODE,
+                         as_Entry.STK_DESC,
+                         as_Entry.SALES_ORD_NO,
+                         as_Entry.SALES_ORD_ID,
+                         In_Entry.AS_ID AS IN_AS_ID,
+                         In_Entry.AS_NO AS IN_AS_NO,
+                         In_Entry.AS_MEM_ID AS IN_AS_MEM_ID,
+                         In_Entry.AS_STUS_ID AS IN_AS_STUS_ID,
+                         DECODE (In_Entry.AS_STUS_ID,
+                                 '1',
+                                 'ACT',
+                                 '4',
+                                 'COM',
+                                 '21',
+                                 'FAI',
+                                 '10',
+                                 'CAN')
+                            AS IN_AS_STUS,
+                         In_Entry.AS_SO_ID AS IN_AS_SO_ID,
+                         In_Entry.AS_RESULT_NO AS IN_AS_RESULT_NO,
+                         In_Entry.AS_RESULT_ID AS IN_AS_RESULT_ID,
+                         In_Entry.AS_ENTRY_ID AS IN_AS_ENTRY_ID,
+                         In_Entry.AS_CT_ID AS IN_AS_CT_ID,
+                         In_Entry.MEM_CODE AS IN_MEM_CODE,
+                         In_Entry.AS_BRNCH_ID AS IN_AS_BRNCH_ID,
+                         In_Entry.CODE AS IN_AS_BRNCH_DESC,
+                         In_Entry.AS_DF_DESC AS IN_AS_DF_DESC,
+                         In_Entry.STK_CODE AS IN_STK_CODE,
+                         In_Entry.STK_DESC AS IN_STK_DESC,
+                         In_Entry.IN_HUSE_REPAIR_PROMIS_DT,
+                         In_Entry.APPNT_DT   AS IN_APPNT_DT,
+                         In_Entry.AS_CRT_DT  AS IN_AS_CRT_DT,
+                         In_Entry.AS_COM_DT  AS IN_AS_COM_DT,
+                         On_Entry.AS_NO      AS ON_AS_NO,
+                         On_Entry.STK_DESC   AS ON_STK_DESC,
+                         On_Entry.IN_HUSE_REPAIR_SERIAL_NO   AS ON_IN_HUSE_REPAIR_SERIAL_NO,
+                         On_Entry.AS_STUS   AS  ON_AS_STUS
+                  FROM   (SELECT   1 tKy, A.AS_ID,
+                                   A.AS_NO,
+                                   A.AS_MEM_ID,
+                                   A.AS_STUS_ID,
+                                   B.AS_SO_ID,
+                                   B.AS_RESULT_NO,
+                                   B.AS_ENTRY_ID,
+                                   B.AS_CT_ID,
+                                   B.AS_BRNCH_ID,
+                                   F.CODE,
+                                   E.CODE AS AS_DF_DESC,
+                                   G.STK_CODE,
+                                   G.STK_DESC,
+                                   H.MEM_CODE,
+                                   C.SALES_ORD_NO,
+                                   C.SALES_ORD_ID,
+                                   C.CUST_ID
+                            FROM   SVC0001D A,
+                                   SVC0004D B,
+                                   SAL0001D C,
+                                   SAL0002D D,
+                                   SYS0026M G,
+                                   SYS0032M E,
+                                   SYS0005M F,
+                                   ORG0001D H
+                           WHERE       1 = 1
+                                   AND A.AS_ID = B.AS_ENTRY_ID
+                                   AND A.AS_SO_ID = C.SALES_ORD_ID
+                                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                   AND D.ITM_STK_ID = G.STK_ID
+                                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                                   AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
+                                   AND B.AS_CT_ID = H.MEM_ID
+                                   AND B.AS_SLUTN_RESN_ID = '454'
+                                   AND A.AS_NO = #{asNo}  ) as_Entry,
+                         (SELECT  1 tKy, 
+                                   A.AS_ID,
+                                   A.AS_NO,
+                                   A.AS_MEM_ID,
+                                   A.AS_STUS_ID,
+                                   B.AS_SO_ID,
+                                   B.AS_RESULT_NO,
+                                   B.AS_RESULT_ID,
+                                   B.AS_ENTRY_ID,
+                                   B.AS_CT_ID,
+                                   B.AS_BRNCH_ID,
+                                   B.IN_HUSE_REPAIR_PROMIS_DT,
+                                   B.APPNT_DT,
+                                   F.CODE,
+                                   E.CODE AS AS_DF_DESC,
+                                   G.STK_CODE,
+                                   G.STK_DESC,
+                                   H.MEM_CODE,
+                                   A.AS_CRT_DT,
+                                   CASE 
+                                        WHEN ( B.AS_RESULT_STUS_ID  ='4' ) THEN  TO_CHAR( B.AS_RESULT_UPD_DT,'dd/mm/yyyy')
+                                   ELSE '-'
+                                   END AS AS_COM_DT  
+                            FROM   SVC0001D A,
+                                   SVC0004D B,
+                                   SAL0001D C,
+                                   SAL0002D D,
+                                   SYS0026M G,
+                                   SYS0032M E,
+                                   SYS0005M F,
+                                   ORG0001D H
+                           WHERE       A.AS_ID = B.AS_ENTRY_ID
+                                   AND A.AS_SO_ID = C.SALES_ORD_ID
+                                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                   AND D.ITM_STK_ID = G.STK_ID
+                                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                                   AND A.AS_BRNCH_ID = F.BRNCH_ID
+                                   AND B.AS_CT_ID = H.MEM_ID
+                                   AND A.REF_REQST IN
+                                            (SELECT   AS_ID
+                                               FROM   SVC0001D A, SVC0004D B
+                                              WHERE   AS_NO = #{asNo} 
+                                                AND A.AS_ID = B.AS_ENTRY_ID)
+                                   AND A.AS_TYPE_ID = '2713') In_Entry,
+                            ( 
+                               SELECT   1 tKy,
+                                        A.AS_NO,
+                                        ( SELECT STK_DESC  FROM SYS0026M  X WHERE X.STK_CODE= B.IN_HUSE_REPAIR_PRODUCT_CODE ) STK_DESC ,
+                                        B.IN_HUSE_REPAIR_SERIAL_NO,
+                                        DECODE (A.AS_STUS_ID, '1','ACT',
+                                                              '4','COM',
+                                                              '21','FAI',
+                                                              '10', 'CAN')
+                                        AS AS_STUS
+                                 FROM SVC0001D  A,  SVC0004D B
+                                 WHERE  1=1
+                                 AND  REF_REQST IN ( 
+                                         SELECT  AS_RESULT_ID FROM  SVC0001D  A, SVC0004D  B  
+                                         WHERE   A.AS_ID =B.AS_ENTRY_ID   
+                                          AND  REF_REQST  IN( SELECT AS_ID  FROM  SVC0001D WHERE AS_NO = #{asNo} )
+                                 ) 
+                                 AND A.AS_ID =B.AS_ENTRY_ID
+                            )On_Entry       
+                 WHERE  1=1
+                    and   as_Entry.tKy = In_Entry.tKy(+) 
+                    and   In_Entry.tKy = On_Entry.tKy(+)
+                    
                           
           </select>
 

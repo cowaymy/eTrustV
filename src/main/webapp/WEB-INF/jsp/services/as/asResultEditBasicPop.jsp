@@ -23,6 +23,8 @@ $(document).ready(function(){
     doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
     doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
+    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
+
     
 	fn_getASOrderInfo();
 	fn_getASEvntsInfo();
@@ -63,6 +65,10 @@ function fn_getASRulstSVC0004DInfo(){
     });
     
 }
+
+
+
+var productCode ;
 
 function  fn_setSVC0004dInfo(result){
 	
@@ -107,7 +113,52 @@ function  fn_setSVC0004dInfo(result){
     $('#solut_code').val( result[0].c25); 
     $('#solut_code_text').val( result[0].c26); 
     $('#solut_code_id').val( result[0].c24); 
+    
+    
+
+    if(result[0].c25 =="B8"  || result[0].c25 =="B6" ){
+        $("#inHouseRepair_div").attr("style" ,"display:inline");
+    }
+    
+    if( result[0].inHuseRepairReplaceYn =="1"){
+        $("input:radio[name='replacement']:radio[value='1']").attr('checked', true); // 원하는 값(Y)을 체크
+    }else if (result[0].inHuseRepairReplaceYn =="0"){
+        $("input:radio[name='replacement']:radio[value='0']").attr('checked', true); // 원하는 값(Y)을 체크
+    }
+    
+        
+    $("#promisedDate").val(result[0].inHuseRepairPromisDt);
+    $("#productGroup").val( result[0].inHuseRepairGrpCode);
+    $("#productCode").val(result[0].inHuseRepairProductCode);
+    $("#serialNo").val(result[0].inHuseRepairSerialNo);
+    $("#inHouseRemark").val(result[0].inHuseRepairRem);
+    $("#APPNT_DT").val(result[0].appntDt);
+    $("#asResultCrtDt").val(result[0].asResultCrtDt);
+    
+
+    productCode = result[0].inHuseRepairProductCode;
+    
+    
+    if( typeof(productCode) !=  "undefined"){
+        doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+result[0].inHuseRepairGrpCode, '', '','productCode', 'S' , 'fn_inHouseGetProductDetails');         
+    }
+    
+    if(result[0].c25 =="B8" ){  //인하우스 데이터만 수정 가능함. 
+    	
+    }
+    
+    
 }
+
+
+
+
+function fn_inHouseGetProductDetails(){
+    $("#productCode").val(productCode);
+}
+
+
+
 
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) {
@@ -340,7 +391,16 @@ function  fn_setSaveFormData(){
 				   AS_DEFECT_PART_ID:           $('#ddlStatus').val()== 4 ? $('#def_part_id').val() : '0' , 
 				   AS_DEFECT_DTL_RESN_ID:     $('#ddlStatus').val()== 4 ? $('#def_def_id').val() : '0' , 
 				   AS_SLUTN_RESN_ID:             $('#ddlStatus').val()== 4 ? $('#solut_code_id').val() : '0' , 
-				   AS_RESULT_ID :                   $('#AS_RESULT_ID').val() 
+				   AS_RESULT_ID :                   $('#AS_RESULT_ID').val() ,
+				   IN_HUSE_REPAIR_REM:           $("#inHouseRemark").val(),
+                   IN_HUSE_REPAIR_REPLACE_YN:$("#replacement").val(),
+                   IN_HUSE_REPAIR_PROMIS_DT: $("#promisedDate").val(),
+                   IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
+                   IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
+                   IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val(),
+                   AS_RESULT_STUS_ID :  $("#ddlStatus").val()
+                   
+				   
 	}
 	
 	var  saveForm ={
@@ -625,6 +685,48 @@ function fn_doClear(){
 
 
 
+function fn_productGroup_SelectedIndexChanged(){
+    
+    var STK_CTGRY_ID = $("#productGroup").val();
+    
+     $("#serialNo").val("");
+     $("#productCode option").remove();
+    
+     doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+STK_CTGRY_ID, '', '','productCode', 'S' , '');            
+}
+
+
+
+function fn_chSeriaNo(){
+    
+    if($("#productGroup option:selected").val() ==""){
+        Common.alert("Please select the productGroup.<br/>");
+        return ;
+    }
+
+    if($("#productCode option:selected").val() ==""){
+        Common.alert("Please select the productCode.<br/>");      
+        return ;
+    }
+    
+    
+    Common.ajax("GET", "/services/as/inHouseIsAbStck.do", {PARTS_SERIAL_NO: $("#serialNo").val()  ,CT_CODE:$("#ddlCTCode").val() } , function(result) {
+        console.log("inHouseIsAbStck.");
+        console.log( result);
+       // var is =false;
+         var is =true;
+        
+        if(result != null){
+            //var is =true;
+            if(result.isStk  != "0"){
+                is= true;
+            }
+        }
+        // if(is ==false )   $("#btnSaveDiv").attr("style","display:none");
+    });
+}
+
+
 </script>
 
 
@@ -636,7 +738,7 @@ function fn_doClear(){
 <form id="resultASForm" method="post">
     <div  style="display:none">
         <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
-        <input type="text" name="ORD_NO"   id="AS_NO"  value="${ORD_NO}"/>
+        <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
         <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
         <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
         <input type="text" name="MOD"   id="MOD"  value="${MOD}"/>
@@ -869,6 +971,8 @@ function fn_doClear(){
         
 		    <select class="w100p"  id="ddlStatus" name="ddlStatus"  class="readonly"  disabled="disabled"  onChange="fn_ddlStatus_SelectedIndexChanged()">
 		         <option value=""></option>
+		         
+		        <option value="1">Active</option>
 		        <option value="4">Complete</option>
 		        <option value="10">Cancel</option>
 		        <option value="21">Failure</option>
@@ -933,7 +1037,7 @@ function fn_doClear(){
         <th scope="row">Error Code</th>
         <td>
         <select  id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">에러코드</option>
+                     <option value="9999">ErrorCode</option>
          </select>
         </td>
         <th scope="row">CT Code</th>
@@ -949,7 +1053,7 @@ function fn_doClear(){
         <th scope="row">Error Description</th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">에러코드 신규정의 필요 </option>
+             <option value="9999">Error code definition is required  </option>
         </select>
         </td>
         <th scope="row">Warehouse</th>
@@ -1042,8 +1146,63 @@ function fn_doClear(){
     </tr>
     </tbody>
     </table><!-- table end -->
-
     </dd>
+    
+    
+    
+    <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    <dt class="click_add_on"><a href="#">In-House Repair Entry</a></dt>
+    <dd  id='inHouseRepair_div' style="display:none">
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:170px" />
+        <col style="width:*" />
+        <col style="width:140px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Replacement </th>
+        <td>
+        <label> 
+                  <input type="radio"   id='replacement' name='replacement'  value='1'  /> Y
+                  <input type="radio"   id='replacement' name='replacement'  value='0'  /> N
+        </label>
+        
+        </td>
+        <th scope="row">PromisedDate </th>
+        <td> <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"  name="promisedDate"/> </td>
+    </tr>
+   
+    <tr>
+        <th scope="row">ProductGroup </th>
+        <td>
+            <select  id='productGroup' name='productGroup'  onChange="fn_productGroup_SelectedIndexChanged()"> </select>
+        </td>
+        <th scope="row">ProductCode</th>
+        <td> 
+                <select  id='productCode' name='productCode'  ></select>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">SerialNo</th>
+        <td  colspan="3"><input type="text"  id='serialNo' name='serialNo'  onChange="fn_chSeriaNo()"  />
+        </td>
+    </tr>
+    
+    <tr>
+        <th scope="row">Remark</th>
+        <td colspan="3">
+        <textarea cols="20" rows="5" placeholder=""  id='inHouseRemark' name='inHouseRemark'></textarea>
+        </td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+    </dd>
+      <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
+    
+    
 </dl>
 
 </article><!-- acodi_wrap end -->

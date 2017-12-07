@@ -153,8 +153,13 @@ function  fn_setSVC0004dInfo(result){
        $('#txtFilterCharge').val (tFilterAmt+".00");
    }
    
-   //INHOUSE 
-   $('#replacement') .val(result[0].inHuseRepairReplaceYn);
+   if( result[0].inHuseRepairReplaceYn =="1"){
+       $("input:radio[name='replacement']:radio[value='1']").attr('checked', true); // 원하는 값(Y)을 체크
+   }else if (result[0].inHuseRepairReplaceYn =="0"){
+       $("input:radio[name='replacement']:radio[value='0']").attr('checked', true); // 원하는 값(Y)을 체크
+   }
+   
+   
    $('#productGroup') .val(result[0].inHuseRepairGrpCode);
    $('#productCode') .val(result[0].inHuseRepairProductCode);
    $('#serialNo') .val(result[0].inHuseRepairSerialNo);
