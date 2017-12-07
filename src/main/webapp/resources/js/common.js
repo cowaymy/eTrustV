@@ -437,7 +437,7 @@ var Common = {
         _input.style.display = 'none';
 
         frm.appendChild(_input);
-        
+
         var olddiv = document.getElementById("isgubun");
         if(olddiv != null) frm.removeChild(olddiv);
 
@@ -446,7 +446,7 @@ var Common = {
         _input.name = "isgubun";
         _input.value = gubun;
         _input.style.display = 'none';
-        
+
         frm.appendChild(_input);
 
         frm.action = getContextPath() + _url;
@@ -473,7 +473,10 @@ var Common = {
     report: function (_formId, _options) {
 
         var option = {
-            isProcedure: false
+            isProcedure: false,
+            isShowLoader : true,
+            isBodyLoad : false,
+            bodyId : "reportBody"
         };
 
         option = $.extend(option, _options);
@@ -486,8 +489,16 @@ var Common = {
         var viewType = $("#viewType").val();
 
         if (viewType == "WINDOW") {
-            Common.popupWin(_formId, submitReportViewUrl, option);
-        }else if (viewType.match("^MAIL_")) {
+            if(option.isBodyLoad){
+                var frm = document.getElementById(_formId);
+                frm.action = getContextPath() + submitReportViewUrl;
+                frm.target = option.bodyId;
+                frm.method = "post";
+                frm.submit();
+            }else{
+                Common.popupWin(_formId, submitReportViewUrl, option);
+            }
+        } else if (viewType.match("^MAIL_")) {
 
             var reportViewUrl = "/report/view.do"; // report를 보기 위한 uri
 
@@ -499,10 +510,9 @@ var Common = {
                 Common.setMsg("<spring:message code='sys.msg.success'/>");
             });
         } else {
-
             Common.showLoader();
-            $.fileDownload(getContextPath() + submitReportViewUrl,{
-                httpMethod : "POST",
+            $.fileDownload(getContextPath() + submitReportViewUrl, {
+                httpMethod: "POST",
                 data: $("#" + _formId).serialize(),
             })
                 .done(function () {
@@ -940,7 +950,7 @@ var CommonCombo = {
 
             var dataObj = (data);
 
-            
+
             $.each(data, function (index, value) {
             	//console.log("selectArray.length(" + index + ") : " + selectArray.length + "   >    " + dataObj[index][option.id]);
 //            	console.log("selectArray :[" + selectArray[0] + "] , inArray : [" +dataObj[index][option.id]+ '] , result : ' + $.inArray(dataObj[index][option.id]+"", selectArray));
