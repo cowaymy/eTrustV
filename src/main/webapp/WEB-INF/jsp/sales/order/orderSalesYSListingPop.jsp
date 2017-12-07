@@ -38,7 +38,7 @@ $.fn.clearForm = function() {
         $("#cmbGrpCode").append("<option value='0' selected>All</option>");
         $("#cmbDeptCode").append("<option value='0' selected>All</option>");
         
-         $("#cmbGrpCode").addClass("disabled");
+        $("#cmbGrpCode").addClass("disabled");
         $("#cmbDeptCode").addClass("disabled");
     });
 };

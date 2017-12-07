@@ -3,33 +3,86 @@
 
 
 <script type="text/javascript">
-
-var date = new Date().getDate();
-if(date.toString().length == 1){
-    date = "0" + date;
-} 
-$("#rdpDateFrom").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-$("#rdpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-
-/* 멀티셀렉트 플러그인 start */
-$('.multy_select').change(function() {
-   //console.log($(this).val());
-})
-.multipleSelect({
-   width: '100%'
-});
-
-function cboMember_SelectedIndexChanged(){
 	
+function cboGroup_SelectedIndexChanged(){
+    
+    $("#cboDepartment").empty();
+    
+    var total_item = new Array();
+    var i = 0;
+    $('#cboGroup :selected').each(function(j, mul){ 
+       total_item[i] = $(mul).val();
+        i++;
+    });
+  
+    CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 3, parentID : total_item}, '', {type:'M', isCheckAll:false});
+    
+    $("#cboDepartment").multipleSelect("enable");
+ //   $("#cboMember").multipleSelect("enable");
+    
 }
 
 function cboOrganization_SelectedIndexChanged(){
+    
+    $("#cboDepartment").multipleSelect("disable");
+    $("#cboGroup").empty();
+    $("#cboDepartment").empty();
+    
+    var total_item = new Array();
+    var i = 0;
+    $('#cboOrganization :selected').each(function(j, mul){ 
+        total_item[i] = $(mul).val();
+        i++;
+    });
+
+    CommonCombo.make('cboGroup', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 2, parentID : total_item}, '', {type:'M', isCheckAll:false});
+   
+    $("#cboGroup").multipleSelect("enable");
+//    $("#cboMember").multipleSelect("enable");
+     
+}
+
+function cboMember_SelectedIndexChanged(){
+	
+	$("#cboGroup").empty();
+    $("#cboDepartment").empty();
+    $("#cboOrganization").empty();
+    $("#cboGroup").append("");
+    $("#cboDepartment").append("");
+    $("#cboOrganization").append("");
+
+    $("#cboOrganization").multipleSelect("disable");
+    $("#cboGroup").multipleSelect("disable");
+    $("#cboDepartment").multipleSelect("disable");
+   
+	if(parseInt($("#cboMember :selected").val()) < 4){
+		
+		var arrparentID0 = 3487;
+		var arrparentID1 = 31983;
+		var arrparentID2 = 23259;
+		
+		if($("#cboMember :selected").val() == "1"){
+			CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});			
+		}else if($("#cboMember :selected").val() == "2"){
+			CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID1}, '', {type:'M', isCheckAll:false});
+        }else if($("#cboMember :selected").val() == "3"){
+        	CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1, parentID : arrparentID2}, '', {type:'M', isCheckAll:false});
+        }
+		
+		$("#cboOrganization").multipleSelect("enable");
+//		$("#cboMember").multipleSelect("enable");
+	    
+	}else{
+		
+		var arrparentID0 = 0;  
+		CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
+		
+		$("#cboDepartment").multipleSelect("enable");
+   //     $("#cboMember").multipleSelect("enable");
+	}
 	
 }
 
-function cboGroup_SelectedIndexChanged(){
-	
-}
 
 function validRequiredField(){
 	
@@ -76,7 +129,7 @@ function btnGenerateExcel_Click(){
 	var whereSQL = "";
 	
 	if(!($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || !($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
-		whereSQL += " AND t.DATECLOSED >= TO_DATE('"+$("#rdpDateFrom").val()+"', 'dd/MM/YY') AND t.DATECLOSED <= TO_DATE('"+$("#rdpDateTo").val()+"', 'MM/dd/YY'))";
+		whereSQL += " AND t.DATECLOSED >= TO_DATE('"+$("#rdpDateFrom").val()+"', 'dd/MM/YY') AND t.DATECLOSED <= TO_DATE('"+$("#rdpDateTo").val()+"', 'MM/dd/YY')";
 	}
 	
 	if(!($("#txtTRFrom").val().trim() == null || $("#txtTRFrom").val().trim().length == 0) || !($("#txtTRTo").val().trim() == null || $("#txtTRTo").val().trim().length == 0)){
@@ -120,17 +173,73 @@ function btnGenerateExcel_Click(){
 		whereSQL += " AND t.BRNCH_ID = '"+keyInBranch+"' ";
 	}
 	
-	if(!($("#txtTRBookNo").val().trim() == null || $("#txtTRBookNo").val().trim().length == 0)){
-		
+	if(!($("#txtKeyInUser").val().trim() == null || $("#txtKeyInUser").val().trim().length == 0)){
+		keyInUser = $("#txtKeyInUser").val().trim();
+		whereSQL += " AND t.USER_NAME = '"+keyInUser+"' ";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
+	var showKeyDepartment = "-";
+	if($("#cboMember :selected").index() > 0){
+		
+		var mbrID = "";
+		var mbrID1 = "";
+		var mbrID2 = "";
+		var mbrID3 = "";
+		if(parseInt($("#cboMember :selected").val()) == 4){
+			
+			var cnt = 0;
+			$('#cboDepartment :selected').each(function(i, mul){ 
+				if(cnt == 0){
+					mbrID += $(mul).val();
+				}else{
+					mbrID += ", "+$(mul).val();
+				}
+				cnt += 1;
+			});
+			whereSQL += " AND t.MEM_ID IN ("+mbrID+") ";
+		}else{
+			
+			var cnt = 0;
+			if($('#cboOrganization :selected').length > 0){
+				$('#cboOrganization :selected').each(function(i, mul){ 
+					if(cnt == 0){
+						mbrID1 += " '"+$(mul).val().substring(0, 7)+"' ";
+					}else{
+						mbrID1 += ", '"+$(mul).val().substring(0, 7)+"' ";
+					}
+					cnt += 1;
+				});
+			//	whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
+			}
+			
+			if($('#cboGroup :selected').length > 0){
+				$('#cboGroup :selected').each(function(i, mul){ 
+					if(cnt == 0){
+						mbrID2 += " '"+$(mul).val().substring(0, 7)+"' ";
+                    }else{
+                    	mbrID2 += ", '"+$(mul).val().substring(0, 7)+"' ";
+                    }
+                    cnt += 1;
+				});
+			//	whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";
+			}
+			
+			if($('#cboDepartment :selected').length > 0){
+				$('#cboDepartment :selected').each(function(i, mul){ 
+					if(cnt == 0){
+						mbrID3 += " '"+$(mul).val().substring(0, 7)+"' ";
+                    }else{
+                    	mbrID3 += ", '"+$(mul).val().substring(0, 7)+"' ";
+                    }
+                    cnt += 1;
+				});
+			//   whereSQL += " AND mbr.MEM_ID IN ("+mbrID+") ";	
+			}
+			//showKeyDepartment = $('#cboDepartment :selected').text();
+			whereSQL += " AND t.DEPT_CODE IN ("+mbrID1+mbrID2+mbrID3+") ";
+		}
+	}
+		
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -151,9 +260,32 @@ function btnGenerateExcel_Click(){
 }
 
 
-CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '');
+$(document).ready(function() {
+    
+    CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '');
+    
+     /* 멀티셀렉트 플러그인 start */
+    $('.multy_select').change(function() {
+       //console.log($(this).val());
+    })
+    .multipleSelect({
+       width: '100%'
+    });
+    
+    var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    } 
+    $("#rdpDateFrom").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+    $("#rdpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+    
+});
 
-CommonCombo.make('cboOrganization', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cboMember :selected").val()} , '');
+    
+    $("#cmbLostType").multipleSelect("checkAll");
+    $("#cboOrganization").multipleSelect("disable");
+    $("#cboGroup").multipleSelect("disable");
+    $("#cboDepartment").multipleSelect("disable");
 
 </script>
 
@@ -224,7 +356,7 @@ CommonCombo.make('cboOrganization', '/sales/order/getOrgCodeList', {memLvl : 1, 
     <th scope="row">Member Type</th>
     <td>
         <select class="w100p" id="cboMember" onchange="cboMember_SelectedIndexChanged()">
-            <option data-placeholder="true" hidden>Member Type</option>
+            <option data-placeholder="true" value="0" hidden>Member Type</option>
             <option value="1">Health Planner</option>
             <option value="2">Coway Lady</option>
             <option value="3">Coway Technician</option>
@@ -233,17 +365,17 @@ CommonCombo.make('cboOrganization', '/sales/order/getOrgCodeList', {memLvl : 1, 
     </td>
     <th scope="row">Organization Code</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="cboOrganization" onchange="cboOrganization_SelectedIndexChanged()" data-placeholder="Organization Code"></select>
+        <select class="multy_select w100p" multiple="multiple" id="cboOrganization" onchange="cboOrganization_SelectedIndexChanged()" data-placeholder="Organization Code" disabled></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Group Code</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="cboGroup"onchange="cboGroup_SelectedIndexChanged()" data-placeholder="Group Code"></select>
+        <select class="multy_select w100p" multiple="multiple" id="cboGroup" onchange="cboGroup_SelectedIndexChanged()" data-placeholder="Group Code" disabled></select>
     </td>
     <th scope="row">Department Code</th>
     <td>
-        <select class="multy_select w100p" multiple="multiple" id="cboDepartment" data-placeholder="Department Code"></select>
+        <select class="multy_select w100p" multiple="multiple" id="cboDepartment" data-placeholder="Department Code" disabled></select>
     </td>
 </tr>
 </tbody>
