@@ -200,7 +200,7 @@ function fn_newPop(){
 	<div class="date_set w100p"><!-- date_set start -->
 	<p><input type="text" id="stTrmnatCrtDt" name="stTrmnatCrtDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	<span><spring:message code="sales.To" /></span>
-	<p><input type="text" id="stTrmnatCrtDt" name="stTrmnatCrtDt" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input type="text" id="edTrmnatCrtDt" name="edTrmnatCrtDt" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
 	<th scope="row"><spring:message code="sales.createUser" /></th>
