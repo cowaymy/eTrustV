@@ -393,6 +393,21 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
+	public List<EgovMap> getOrganizationCodeList(Map<String, Object> params) {
+		
+		List<EgovMap> getOrganizationCodeList = null;
+		
+		if(Integer.parseInt(String.valueOf(params.get("memType"))) == 4 ){
+			getOrganizationCodeList = salesTrBookMapper.getOrgCodeListByMemTypeStaff(params);
+		}else{
+			getOrganizationCodeList = salesTrBookMapper.getOrgCodeListByMemType(params);
+		}
+		
+		return getOrganizationCodeList;
+	}
+	
+	
+	@Override
 	public String saveTranBulk(Map<String, Object> params) {
 		params.put("docNoId", 69);
 		String docNo=salesTrBookMapper.getDocNo(params);
