@@ -19,7 +19,10 @@ function fn_openReport(reportType){
 	if(fn_Validation()){
 		var date = new Date();
         var month = date.getMonth()+1;
-        
+        var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 		var startDate = "";
 		var endDate = "";
 		var pvMonth = 0;
@@ -32,7 +35,7 @@ function fn_openReport(reportType){
 		pvMonth = parseInt($("#pvMonth").val().substring(0,2));
 		pvYear = parseInt($("#pvMonth").val().substring(3,7));
 		var reportPath = "";
-		var reportTitle = "DailyDSCReport_" +date.getDate()+month+date.getFullYear();
+		var reportTitle = "DailyDSCReport_" +day+month+date.getFullYear();
 		
 		if(reportType == "PDF" || reportType == "EXCELFORM"){
 			reportPath = "/services/NetSalesReport_PDF_2.rpt";

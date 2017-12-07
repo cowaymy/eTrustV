@@ -33,7 +33,10 @@ function fn_openReport(){
 		var whereSql = "";
 	    var date = new Date();
 	    var month = date.getMonth()+1;
-	    
+	    var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 	    if($("#orderStrDt").val() != '' && $("#orderEndDt").val() != '' && $("#orderStrDt").val() !=null && $("#orderEndDt").val() != null){
 	        whereSql +=" AND (som.sales_dt between to_date('"  + $("#orderStrDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#orderEndDt").val()  + "', 'DD/MM/YYYY') ) ";
 	    }
@@ -52,7 +55,7 @@ function fn_openReport(){
 	    $("#installationRawDataForm #V_SELECTSQL").val('');
 	    $("#installationRawDataForm #reportFileName").val('/services/InstallationRawData_Excel.rpt');
 	    $("#installationRawDataForm #viewType").val("EXCEL");
-	    $("#installationRawDataForm #reportDownFileName").val("InstallationRawData_"+date.getDate()+month+date.getFullYear());
+	    $("#installationRawDataForm #reportDownFileName").val("InstallationRawData_"+day+month+date.getFullYear());
 	    
 	    var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

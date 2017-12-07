@@ -199,6 +199,10 @@ function fn_openReport(){
 		var appDate = "";
 		var date = new Date();
 		var month = date.getMonth()+1;
+		 var day = "";
+         if(date.getDate() < 10){
+            day = "0"+date.getDate();
+            }
 		if($("#appStrDate").val() != '' && $("#appEndDate").val() != ''){
 			appDate = $("#appStrDate").val() + " To "+ $("#appEndDate").val();
 			whereSql +=" AND (ie.Install_Dt between to_date('"  + $("#appStrDate").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#appEndDate").val()  + "', 'DD/MM/YYYY') ) ";
@@ -260,7 +264,7 @@ function fn_openReport(){
 		$("#reportForm #V_ORDERBYSQL").val(orderBySql);
 		$("#reportForm #reportFileName").val('/services/InstallationNoteListing_PDF.rpt');
 	     $("#reportForm #viewType").val("PDF");
-	     $("#reportForm #reportDownFileName").val("InstallationNoteList_"+date.getDate()+month+date.getFullYear());
+	     $("#reportForm #reportDownFileName").val("InstallationNoteList_"+day+month+date.getFullYear());
 	     
 		var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -278,6 +282,10 @@ function fn_searchView(){
         var appDate = "";
         var date = new Date();
         var month = date.getMonth()+1;
+        var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
         if($("#appStrDate").val() != '' && $("#appEndDate").val() != ''){
             appDate = $("#appStrDate").val() + " To "+ $("#appEndDate").val();
             whereSql +=" AND (ie.Install_Dt between to_date('"  + $("#appStrDate").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#appEndDate").val()  + "', 'DD/MM/YYYY') ) ";
@@ -339,7 +347,7 @@ function fn_searchView(){
         $("#reportForm #V_ORDERBYSQL").val(orderBySql);
         $("#reportForm #reportFileName").val('/services/InstallationNoteListing_PDF.rpt');
          $("#reportForm #viewType").val("PDF");
-         $("#reportForm #reportDownFileName").val("InstallationNoteList_"+date.getDate()+month+date.getFullYear());
+         $("#reportForm #reportDownFileName").val("InstallationNoteList_"+day+month+date.getFullYear());
          
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

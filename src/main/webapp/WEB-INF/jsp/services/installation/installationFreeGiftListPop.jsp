@@ -18,6 +18,10 @@ $(document).ready(function(){
 function fn_openReport(){   
 		var date = new Date();
 	    var month = date.getMonth()+1;
+	    var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 	  var memberId = "";
       var promotionId = "";
       var orderNo = "";
@@ -57,7 +61,7 @@ function fn_openReport(){
       $("#reportForm #V_DSCBRANCHID").val(branchId);
       $("#reportForm #reportFileName").val('/services/InstallationFreeGiftList.rpt');
        $("#reportForm #viewType").val("PDF");
-       $("#reportForm #reportDownFileName").val("InstallationFreeGiftList_"+date.getDate()+month+date.getFullYear());
+       $("#reportForm #reportDownFileName").val("InstallationFreeGiftList_"+day+month+date.getFullYear());
        
       var option = {
               isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -76,7 +80,10 @@ function fn_openExcel(){
 	    var installDate = "";
 	    var appType="";
 	    var branchId = "";
-	    
+	    var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 	    if($("#CTCode").val() != ''){
 	    	memberId = $("#CTCode").val();
 	    }
@@ -108,7 +115,7 @@ function fn_openExcel(){
         $("#reportForm #V_DSCBRANCHID").val(branchId);
         $("#reportForm #reportFileName").val('/services/InstallationFreeGiftList.rpt');
          $("#reportForm #viewType").val("EXCEL");
-         $("#reportForm #reportDownFileName").val("InstallationFreeGiftList_"+date.getDate()+month+date.getFullYear());
+         $("#reportForm #reportDownFileName").val("InstallationFreeGiftList_"+day+month+date.getFullYear());
          
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

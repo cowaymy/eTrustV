@@ -72,6 +72,10 @@ function fn_Generate(){
 	if(fn_Validation()){
 		var date = new Date();
 		var month = date.getMonth()+1;
+		 var day = "";
+	        if(date.getDate() < 10){
+	            day = "0"+date.getDate();
+	        }
 		var runNo = 0;
 		var whereSql = "";
 		var selectListing = "";
@@ -144,7 +148,7 @@ function fn_Generate(){
 		$("#installationActiveForm #V_FULLSQL").val("A");
 		$("#installationActiveForm #reportFileName").val('/services/ActiveInstallList.rpt');
 		$("#installationActiveForm #viewType").val("PDF");
-		$("#installationActiveForm #reportDownFileName").val("DOActiveList_"+date.getDate()+month+date.getFullYear());
+		$("#installationActiveForm #reportDownFileName").val("DOActiveList_"+day+month+date.getFullYear());
 		
 		 var option = {
 	             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

@@ -57,6 +57,10 @@ function fn_openReport(){
 	    var orderBySql = "";
 	    var FullSql = "";
 	    var month = date.getMonth()+1;
+	    var day = "";
+	    if(date.getDate() < 10){
+	    	day = "0"+date.getDate();
+	    }
 	    if($("#instalStatus").val() != ''){
 	        whereSeq += "AND ientry.stus_code_id = " + $("#instalStatus").val() + "  ";
 	    }
@@ -94,7 +98,7 @@ function fn_openReport(){
 	     $("#installationNoteForm #V_FULLSQL").val(FullSql);
 	     $("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
 	     $("#installationNoteForm #viewType").val("PDF");
-	     $("#installationNoteForm #reportDownFileName").val("InstallationNote_"+date.getDate()+month+date.getFullYear());
+	     $("#installationNoteForm #reportDownFileName").val("InstallationNote_"+day+month+date.getFullYear());
 	  
 	   //report 호출
 	     var option = {

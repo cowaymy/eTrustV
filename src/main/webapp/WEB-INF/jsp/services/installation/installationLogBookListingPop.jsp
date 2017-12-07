@@ -35,7 +35,10 @@ function fn_openReport(){
 	if(fn_validation()){
 		var date = new Date();
         var month = date.getMonth()+1;
-        
+        var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 		var showAppDateFrom = "";
 		if($("#strDt").val() != '' && $("#strDt").val() != null){
 			showAppDateFrom = $("#strDt").val();
@@ -104,7 +107,7 @@ function fn_openReport(){
         $("#reportForm #V_ORDERSQL").val(orderBySql);
         $("#reportForm #reportFileName").val('/services/InstallationLogBookList.rpt');
         $("#reportForm #viewType").val("PDF");
-        $("#reportForm #reportDownFileName").val("InstallationLogBook_" +date.getDate()+month+date.getFullYear());
+        $("#reportForm #reportDownFileName").val("InstallationLogBook_" +day+month+date.getFullYear());
         
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

@@ -36,7 +36,11 @@ function fn_validation(){
 function fn_openReport(){
 	if(fn_validation()){
 		var date = new Date();
-        var month = date.getMonth()+1;
+        var monthDay = date.getMonth()+1;
+        var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 		 if($("#reportType").val() == '1' ){
 			var startDate = "";
 			var endDate="";
@@ -61,7 +65,7 @@ function fn_openReport(){
 			 $("#reportForm #v_enddate").val(endDate);
 			 $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_1_PDF.rpt');
 		     $("#reportForm #viewType").val("PDF");
-		     $("#reportForm #reportDownFileName").val("DSCReportD1_" +date.getDate()+month+date.getFullYear());
+		     $("#reportForm #reportDownFileName").val("DSCReportD1_" +day+monthDay+date.getFullYear());
 		        
 			 Common.report("reportForm");
 			}
@@ -78,7 +82,7 @@ function fn_openReport(){
              $("#reportForm #PVYear").val(year);
              $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
              $("#reportForm #viewType").val("PDF");
-             $("#reportForm #reportDownFileName").val("DSCReportD5_" +date.getDate()+month+date.getFullYear());
+             $("#reportForm #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
 
              Common.report("reportForm");
 		}
@@ -107,7 +111,7 @@ function fn_openReport(){
              $("#reportForm #EndDate").val(endDt);
              $("#reportForm #reportFileName").val('/services/DSCPerformanceReport_PDF.rpt');
               $("#reportForm #viewType").val("PDF");
-                $("#reportForm #reportDownFileName").val("DSCPerfomamnceReport_" +date.getDate()+month+date.getFullYear());
+                $("#reportForm #reportDownFileName").val("DSCPerfomamnceReport_" +day+monthDay+date.getFullYear());
             
              
              Common.report("reportForm");
@@ -118,8 +122,13 @@ function fn_openReport(){
 
 function fn_openExcel(){
 	if(fn_validation()){
+		
         var date = new Date();
-        var month = date.getMonth()+1;
+        var monthDay = date.getMonth()+1;
+        var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
         
         if($("#reportType").val() == '2' ){
             var month = $("#yearMonth").val().substring(0,2);
@@ -132,7 +141,7 @@ function fn_openExcel(){
              $("#reportForm #PVYear").val(year);               
              $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
              $("#reportForm #viewType").val("PDF");
-             $("#reportForm #reportDownFileName").val("DSCReportD5_" +date.getDate()+month+date.getFullYear());
+             $("#reportForm #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
              
          
           
@@ -150,7 +159,7 @@ function fn_openExcel(){
              $("#reportForm #PVYear").val(year);               
              $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_5_ByStock.rpt');
              $("#reportForm #viewType").val("PDF");
-             $("#reportForm #reportDownFileName").val("DSCReportD5ByStock_" +date.getDate()+month+date.getFullYear());
+             $("#reportForm #reportDownFileName").val("DSCReportD5ByStock_" +day+monthDay+date.getFullYear());
              
              Common.report("reportForm");
         }
