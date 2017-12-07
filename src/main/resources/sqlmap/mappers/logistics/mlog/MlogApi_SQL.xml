@@ -4,11 +4,14 @@
     
     
     <select id="getMiscPartList"  resultType="egovMap">
-       SELECT  s26.stk_code parts_code,s26.stk_id parts_id,s26.stk_desc parts_name,s26.stk_type_id part_type,l78.purchs_prc sales_price
-        FROM SYS0026M S26,LOG0078M L78
-		WHERE 1=1 
-		AND S26.STK_CODE =L78.MATRL_MST(+) 
-		AND S26.STK_TYPE_ID ='64'
+     SELECT  s26.stk_code parts_code,s26.stk_id parts_id,s26.stk_desc parts_name,s26.stk_type_id part_type, s16.AMT sales_price
+        FROM SYS0026M S26, sal0016m s16 
+        WHERE 1=1 
+        AND S26.STK_ID = s16.STK_ID
+        AND S26.STK_TYPE_ID =64
+        AND S16.MEM_PAC_ID = 0
+        AND S16.APP_TYPE_ID = 69
+        AND S16.STUS_CODE_ID = 1
     </select>
     
     
