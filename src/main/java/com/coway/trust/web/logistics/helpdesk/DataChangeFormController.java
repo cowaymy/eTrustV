@@ -80,6 +80,9 @@ public class DataChangeFormController {
 		params.put("searchApprovalStatus", searchApprovalStatus);
 		params.put("searchRequestBranch", searchRequestBranch);
 		params.put("searchRequestDepartment", searchRequestDepartment);
+		params.put("cmbType", 1);
+		params.put("cmbCategory", 16);
+		params.put("cmbSubject", 81);
 		
 		logger.debug("%%%%%%%%searchDcfNo%%%%%%%: {}",params.get("searchDcfNo"));
 		logger.debug("%%%%%%%%searchRequestor%%%%%%%: {}",params.get("searchRequestor"));
