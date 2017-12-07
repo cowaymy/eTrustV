@@ -74,7 +74,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
     					 		holiDayAddMap.put("oldCt", vm.get("ct") );
     					 		holiDayAddMap.put("ct", CommonUtils.nvl(vm.get("memId") ));
     					 		
-        					}else{
+        					}else {
         						
         						holiDayAddMap.put("isHoliDay",   "false");
         						holiDayAddMap.put("holiDayCtCode","" );
@@ -85,9 +85,12 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 					 }
     				
     				 mergeHolidayList.add(holiDayAddMap);
-				} // eof mergeHolidayList
+				} // eof mergeHolidayList  
+				 
+				///Collections.sort(  (ArrayList) mergeHolidayList);   
 			}
 		}// eof baseList
+		
 		
 		
 		

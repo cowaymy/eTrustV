@@ -13,7 +13,7 @@
 }
 
 
-.my-cell-style-sel {
+.my-cell-style-sel {   
     background:#86E57F;
     font-weight:bold;
     color:#fff;
@@ -308,10 +308,7 @@ function createDetailAllactionAUIGrid() {
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
                                                          
-                                                    	 if(valArray[0] == valArray[1]  && valArray[1] >0 ) {
-                                                    		 
-                                                             return "my-cell-style";
-                                                         }
+                                                    
                                                     	 if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
@@ -325,16 +322,19 @@ function createDetailAllactionAUIGrid() {
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
 
-                                                        var valArray  =new Array();
-                                                        valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                            return "my-cell-style";
-                                                        }
-                                                        if(valArray[0] > valArray[1]) {
-                                                            return "my-cell-style";
-                                                        }
-                                                        return null;
-                                                    }
+	                                                        var valArray  =new Array();
+	                                                        valArray = value.split("-");
+	                                                    
+	                                                        if(valArray[0] > valArray[1]) {
+	                                                            return "my-cell-style";
+	                                                        }
+	                                                        
+	                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                                return "my-cell-style";
+                                                            }
+	                                                        
+	                                                        return null;
+	                                                 }
                                                    }, 
                                                   {
                                                     dataField : "sumrtncnt",
@@ -344,12 +344,18 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                            return "my-cell-style";
-                                                        }
+                                                   
+                                                        
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                        
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                            return "my-cell-style";
+                                                        }
+                                                        
+                                                        
                                                         return null;
                                                     }
                                                    }
@@ -366,15 +372,16 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         
-                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                             return "my-cell-style";
-                                                         }
+                                                   
                                                          
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
                                                          
+                                                         
+                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                             return "my-cell-style";
+                                                         }
                                                          
                                                          if('AS'== '${TYPE}'){
                                                         	 return "my-cell-style-sel";
@@ -392,10 +399,12 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
+                                                 
+                                                        if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
-                                                        if(valArray[0] > valArray[1]) {
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -416,13 +425,15 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                            return "my-cell-style";
-                                                        }
+                                                   
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
                                                         
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                            return "my-cell-style";
+                                                        }
                                                         
                                                         if('RTN'== '${TYPE}'){
                                                             return "my-cell-style-sel";
@@ -445,12 +456,14 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                             return "my-cell-style";
-                                                         }
+                                                 
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
+                                                         }   
+                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                             return "my-cell-style";
                                                          }
+                                                         
                                                          
 
                                                          
@@ -471,13 +484,15 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                            return "my-cell-style";
-                                                        }
+                                              
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
                                                         
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                            return "my-cell-style";
+                                                        }
                                                         
 
                                                         if('INS'== '${TYPE}'){
@@ -496,10 +511,12 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
+                                                   
+                                                        if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
-                                                        if(valArray[0] > valArray[1]) {
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -524,10 +541,13 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
+                                                
+                                                         
+                                                         if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
-                                                         if(valArray[0] > valArray[1]) {
+                                                         
+                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
                                                              return "my-cell-style";
                                                          }
                                                          
@@ -549,15 +569,17 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                            return "my-cell-style";
-                                                        }
+                                                   
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
                                                         
                                                         if('INS'== '${TYPE}'){
                                                             return "my-cell-style-sel";
+                                                        }
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                            return "my-cell-style";
                                                         }
                                                         
                                                         return null;
@@ -571,10 +593,12 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
+                                                 
+                                                        if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
-                                                        if(valArray[0] > valArray[1]) {
+                                                        
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -598,17 +622,23 @@ function createDetailAllactionAUIGrid() {
 
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
-                                                         if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
+                                                    
+                                                         
+                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
                                                              return "my-cell-style";
                                                          }
+                                                         
                                                          if(valArray[0] > valArray[1]) {
                                                              return "my-cell-style";
                                                          }
-                                                         
+                                                   
+                                                         /*
+                                               
+                                                        
                                                          if('AS'== '${TYPE}'){
                                                              return "my-cell-style-sel";
                                                          }
-                                                         
+                                                         */
                                                          return null;
                                                      }
                                                   }, 
@@ -620,44 +650,54 @@ function createDetailAllactionAUIGrid() {
 
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
+                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         if(valArray[0] > valArray[1]) {
                                                             return "my-cell-style";
                                                         }
+                                                 
+                                                        /*
+                                                      
                                                         
+                                                        
+                                                   
                                                         
                                                         if('INS'== '${TYPE}'){
                                                             return "my-cell-style-sel";
                                                         }
-                                                        
+                                                        */
                                                         return null;
                                                     }
                                                    }, 
                                                   {
-                                                    dataField : "othrtncnt",
-                                                    headerText : "RTN",
-                                                    width : 80,
-                                                    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-
-                                                        var valArray  =new Array();
-                                                        valArray = value.split("-");
-                                                        if(valArray[0] ==valArray[1] && valArray[1] >0 ) {
-                                                            return "my-cell-style";
-                                                        }
-                                                        if(valArray[0] > valArray[1]) {
-                                                            return "my-cell-style";
-                                                        }
-                                                        
-
-                                                        if('RTN'== '${TYPE}'){
-                                                            return "my-cell-style-sel";
-                                                        }
-                                                        
-                                                        return null;
-                                                    }
-                                                   }
+	                                                    dataField : "othrtncnt",
+	                                                    headerText : "RTN",
+	                                                    width : 80,
+	                                                    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+	
+		                                                        var valArray  =new Array();
+		                                                        valArray = value.split("-");
+		                                                        
+		                                                        if(valArray[0] == 0  &&  valArray[1] ==0) {
+                                                                    return "my-cell-style";
+                                                                }
+		                                                        if(valArray[0] > valArray[1]) {
+                                                                    return "my-cell-style";
+                                                                }
+		                                                     
+		                                                        /*
+		                                                   
+		                                                        
+		                                                      
+		
+		                                                        if('RTN'== '${TYPE}'){
+		                                                            return "my-cell-style-sel";
+		                                                        }
+		                                                        */
+		                                                        return null;
+		                                                   }
+	                                                   }
                                 ]
                             }
                             
