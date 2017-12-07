@@ -44,10 +44,11 @@ public interface SalesTrBookService {
 
 	String saveTranSingle(Map<String, Object> params);
 
+	List<EgovMap> getOrganizationCodeList(Map<String, Object> params);
+	
 	String saveTranBulk(Map<String, Object> params);
 
 	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
 
-	
 	
 }
