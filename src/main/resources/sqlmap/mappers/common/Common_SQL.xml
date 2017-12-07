@@ -978,6 +978,9 @@
             <when test='groupCode == "0"'>
                ORDER BY CODE
             </when>
+            <when test='groupCode == "1"'>
+               ORDER BY BRNCH_ID
+            </when>
             <otherwise>
                ORDER BY CODE_NAME
             </otherwise>
