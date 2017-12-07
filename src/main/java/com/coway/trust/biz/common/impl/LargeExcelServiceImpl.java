@@ -1,10 +1,12 @@
 package com.coway.trust.biz.common.impl;
 
+import org.apache.ibatis.session.ResultHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.LargeExcelQuery;
 import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
 @Service
@@ -117,17 +119,17 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoad26T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0026T.getQueryId(), parameter, excelDownloadHandler);
 	}
-	
+
 	@Override
 	public void downLoad60T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0060T.getQueryId(), parameter, excelDownloadHandler);
 	}
-	
+
 	@Override
 	public void downLoad67T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0067T.getQueryId(), parameter, excelDownloadHandler);
 	}
-	
+
 	@Override
 	public void downLoad68T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0068T.getQueryId(), parameter, excelDownloadHandler);
@@ -162,7 +164,7 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoad29HP(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0029HP.getQueryId(), parameter, excelDownloadHandler);
 	}
-	
+
 	@Override
 	public void downLoad28TCD(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0028TCD.getQueryId(), parameter, excelDownloadHandler);
@@ -194,7 +196,12 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	}
 
 	@Override
-	public void downLoad(String id, Object parameter, ExcelDownloadHandler excelDownloadHandler) {
-		excelDownloadMapper.getSqlSession().select(id, parameter, excelDownloadHandler);
+	public void downLoadClaimFileALB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileCIMBHandler);
+	}
+
+	@Override
+	public void downLoad(String id, Object parameter, ResultHandler resultHandler) {
+		excelDownloadMapper.getSqlSession().select(id, parameter, resultHandler);
 	}
 }

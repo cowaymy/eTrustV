@@ -1,5 +1,8 @@
 package com.coway.trust.biz.common;
 
+import org.apache.ibatis.session.ResultHandler;
+
+import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
 public interface LargeExcelService {
@@ -45,13 +48,13 @@ public interface LargeExcelService {
 	void downLoad25T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad26T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad60T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad67T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad68T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad28CD(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad28CT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
@@ -63,7 +66,7 @@ public interface LargeExcelService {
 	void downLoad29CT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad29HP(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad28TCD(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad28TCT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
@@ -76,5 +79,7 @@ public interface LargeExcelService {
 
 	void downLoad29THP(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
-	void downLoad(String id, Object parameter, ExcelDownloadHandler excelDownloadHandler);
+	void downLoadClaimFileALB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler);
+
+	void downLoad(String id, Object parameter, ResultHandler excelDownloadHandler);
 }
