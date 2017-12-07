@@ -1577,7 +1577,6 @@
     }
 </script>
 </head>
-<div id="SalesWorkDiv" class="SalesWorkDiv" style="width: 100%; height: 960px; position: static; zoom: 1;">
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -2228,10 +2227,5 @@
 </div>
 
 </section>
-</div>
-</section><!-- content end -->
-</div>
-
-
 
 
