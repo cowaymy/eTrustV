@@ -137,7 +137,7 @@ function fn_doAllaction(){
         Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
     }
     else{
-    	Common.alert('There is no available stock to make a appointment date, should entry for recall date');
+    	Common.alert('There is no available stock to make an appointment date, should entry for recall date');
     }
 
 }
