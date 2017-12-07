@@ -10,6 +10,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
        S26.STK_DESC STK_DESC,
        S26.STK_TYPE_ID TYPE_ID,
        STYPE.CODE_NAME TYPE_NAME,
+       S28.WH_LOC_CODE,
        S26.STK_CTGRY_ID CTGRY_ID,
        SCATE.CODE_NAME CTGRY_NAME,
        L56.QTY QTY,
@@ -48,7 +49,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
     <if test="searchlocgrade != null and searchlocgrade !=''">
       AND S28.WH_LOC_STK_GRAD = #{searchlocgrade}
     </if>
-    <if test="searchLoc != null and searchLoc !=''">
+      <if test="searchLoc != null and searchLoc !=''">
         and S28.WH_LOC_CODE in
         <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
          #{item}
@@ -57,9 +58,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
     <if test="sstocknm != null and sstocknm !=''">
       AND (UPPER(S26.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(S26.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
     </if>
-    <if test="slocnm != null and slocnm !=''">
-      AND (UPPER(S28.WH_LOC_DESC) LIKE '%' || UPPER(#{slocnm}) || '%' OR UPPER(S28.WH_LOC_CODE) LIKE UPPER(#{slocnm}) || '%')
-    </if>
+    
      <if test="searchType != null and searchType !=''">
       and S26.STK_TYPE_ID in
       <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
