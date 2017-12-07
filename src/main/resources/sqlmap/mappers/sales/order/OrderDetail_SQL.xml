@@ -27,6 +27,7 @@
              , V1.APP_TYPE_ID
              , V1.APP_TYPE_CODE
              , V1.APP_TYPE_DESC
+             , V1.ITM_PRC_ID
              , V1.STOCK_ID
              , V1.STOCK_CODE
              , V1.STOCK_DESC
@@ -64,6 +65,7 @@
              , V1.ORD_GM_ID
              , V1.ORD_ADDR_ID
              , V1.ORD_CNTC_ID
+             , V1.CUST_CARE_CNT_ID
              , V1.ORD_PROMO_RELATED_NO
              , V1.UPD_DT
              , V1.UPD_USER_ID
@@ -84,6 +86,7 @@
              , V1.NOR_RNT_FEE
              , V1.DISC_RNT_FEE
              , V1.SRV_PAC_ID
+             , V1.ADV_BILL
           FROM SAL1006V V1
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>

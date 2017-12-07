@@ -29,6 +29,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.customer.CustomerService;
+import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
@@ -54,6 +55,9 @@ public class OrderRegisterController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -68,6 +72,21 @@ public class OrderRegisterController {
 		
 		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 		
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
+		return "sales/order/orderRegisterPop";
+	}
+	
+	
+	@RequestMapping(value = "/copyChangeOrder.do")
+	public String copyChangeOrder(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
+		EgovMap result = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderInfo", result);
+		model.put("COPY_CHANGE_YN", "Y");
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 		
 		return "sales/order/orderRegisterPop";

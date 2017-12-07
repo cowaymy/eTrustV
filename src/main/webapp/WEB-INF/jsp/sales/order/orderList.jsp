@@ -42,10 +42,20 @@
             AUIGrid.setGridData(listMyGridID, result);
         });
     }
+    
+    function fn_copyChangeOrderPop() {
+        var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+        if(selIdx > -1) {
+            Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
+        }
+        else {
+            Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+        }
+    }
 
     $(function(){
         $('#btnCopy').click(function() {
-            Common.alert('<b>The program is under development.</b>');
+            fn_copyChangeOrderPop();
         });
         $('#btnCopyBulk').click(function() {
             Common.alert('<b>The program is under development.</b>');

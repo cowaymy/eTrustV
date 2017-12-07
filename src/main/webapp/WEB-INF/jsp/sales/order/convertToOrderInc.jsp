@@ -86,7 +86,7 @@
                 //--------------------------------------------------------------
                 $('#appType').val('${preOrderInfo.appTypeId}');
                 
-                fn_getSvrPacCombo('${preOrderInfo.appTypeId}', '${preOrderInfo.srvPacId}');
+                fn_getSvrPacComboConv('${preOrderInfo.appTypeId}', '${preOrderInfo.srvPacId}');
                 
               //$('#srvPacId').val('${preOrderInfo.srvPacId}');
               
@@ -146,7 +146,7 @@
                     fn_loadBankAccount('${preOrderInfo.custAccId}');
                 }
                 
-                if('${preOrderInfo.rentPayModeId}' == '' || '${preOrderInfo.rentPayModeId}' == '0') {
+                if('${preOrderInfo.custBillId}' == '' || '${preOrderInfo.custBillId}' == '0') {
 
                     $('#grpOpt1').prop("checked", true);
         
@@ -212,7 +212,7 @@
         
                     $('#billRem').prop("readonly", true).addClass("readonly");
                     
-                    fn_loadBillingGroupById('${preOrderInfo.custBillCustId}', '${preOrderInfo.custBillId}');
+                    fn_loadBillingGroupByIdConv('${preOrderInfo.custBillCustId}', '${preOrderInfo.custBillId}');
                 }
 
                 $('#liMstCntcNewAddr').removeClass("blind");
@@ -240,7 +240,7 @@
         });
     }
 	
-    function fn_loadBillingGroupById(custId, custBillId){
+    function fn_loadBillingGroupByIdConv(custId, custBillId){
         Common.ajax("GET", "/sales/customer/selectBillingGroupByKeywordCustIDList.do", {custId : custId, custBillId : custBillId}, function(result) {
             if(result != null && result.length > 0) {
                 fn_loadBillingGroup(result[0].custBillId, result[0].custBillGrpNo, result[0].billType, result[0].billAddrFull, result[0].custBillRem, result[0].custBillAddId);
@@ -248,7 +248,9 @@
         });
     }
     
-	function fn_getSvrPacCombo(selVal, srvPacId){
+	function fn_getSvrPacComboConv(selVal, srvPacId){
+	    
+	    var appSubType = '';
 	    
         switch(selVal) {
             case '66' : //RENTAL

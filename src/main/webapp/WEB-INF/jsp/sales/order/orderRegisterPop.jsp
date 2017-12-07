@@ -1,13 +1,12 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-<!--FROM Pre-Order List-->
-<c:if test="${CONV_TO_ORD_YN == 'Y'}">
 <%@ include file="/WEB-INF/jsp/sales/order/convertToOrderInc.jsp" %>
-</c:if>
+<%@ include file="/WEB-INF/jsp/sales/order/copyChangeOrderInc.jsp" %>
 
 <script type="text/javaScript" language="javascript">
 
-    var convToOrdYn = "${CONV_TO_ORD_YN}";
+    var convToOrdYn  = "${CONV_TO_ORD_YN}";
+    var copyChangeYn = "${COPY_CHANGE_YN}";
 
     var docGridID;
     var docDefaultChk = false;
@@ -36,9 +35,14 @@
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
         
-        //FROM Pre-Order List
+        //Pre-Order Info
         if(convToOrdYn == 'Y') {
             fn_loadPreOrderInfo();
+        }
+
+        //Copy Change Info
+        if(copyChangeYn == 'Y') {
+            fn_loadCopyChange();
         }
 
     });
@@ -61,7 +65,7 @@
                 dataField   : "typeDesc",   headerText  : "Document",
                 editable    : false,        style       : 'left_style'
             }, {
-                dataField   : "codeId",     visible     : false
+                dataField   : "codeId",     visible     : true
             }];
 
         //그리드 속성 설정
@@ -89,7 +93,6 @@
 
     // 리스트 조회.
     function fn_selectDocSubmissionList() {
-
         Common.ajax("GET", "/sales/order/selectDocSubmissionList.do", {typeCodeId : '248'}, function(result) {
             AUIGrid.setGridData(docGridID, result);
         });
@@ -274,7 +277,7 @@
     function fn_loadInstallAddr(custAddId){
         console.log("fn_loadInstallAddr START");
 
-        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(custInfo) {
 
             if(custInfo != null) {
 
@@ -756,7 +759,8 @@
 
             var idx    = $("#appType option:selected").index();
             var selVal = $("#appType").val();
-
+            var appSubType = '';
+            
             if(idx > 0) {
                 if(FormUtil.isEmpty($('#hiddenCustId').val())) {
                     $('#appType').val('');
@@ -2492,7 +2496,7 @@
         <input id="grpMemId" name="grpMemId" type="hidden" /></td>
 </tr>
 <tr>
-    <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
+    <th scope="row">Discount Period/<br>Final Rental Fee</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
