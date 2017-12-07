@@ -1,7 +1,9 @@
 package com.coway.trust.web.logistics.assetmaster;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -224,6 +226,7 @@ public class AssetMasterController {
 			logger.debug("%%%%%%%%detailAddList%%%%%%%: {}", detailAddList.get(i));
 		}
 
+		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -251,8 +254,8 @@ public class AssetMasterController {
 	public ResponseEntity<Map<String, Object>> motifyAssetMng(@RequestBody Map<String, Object> params, ModelMap mode)
 			throws Exception {
 
-		params.put("masterpurchasedate", CommonUtils.changeFormat((String) params.get("masterpurchasedate"),
-				SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
+//		params.put("masterpurchasedate", CommonUtils.changeFormat((String) params.get("masterpurchasedate"),
+//				SalesConstants.DEFAULT_DATE_FORMAT2, SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
