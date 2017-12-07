@@ -113,7 +113,7 @@
      <select id="makeViewList" parameterType="Map" resultType="egovMap">
             <![CDATA[ 
 					SELECT CT,
-                           DECODE (#{repla}, 'true', MEM_CODE||'(REP)' , MEM_CODE) as RE_MEM_CODE,
+                           DECODE (#{repla}, 'true', RE_MEM_CODE||'(REP)' , RE_MEM_CODE) as RE_MEM_CODE,
 					       MEM_CODE,
 					       C_DATE,
 					       D_DATE,
@@ -124,10 +124,11 @@
 					FROM(
 					SELECT #{ct} CT,
 					       #{cDate}    C_DATE,
+					       (SELECT DECODE (A.TRNSPRT, '254' , MEM_CODE||'(M)' , MEM_CODE) TR     FROM ORG0001D A  WHERE  #{ct}  =A.MEM_ID )  RE_MEM_CODE,
 					       (SELECT MEM_CODE  FROM ORG0001D A  WHERE   #{ct}  =A.MEM_ID )  MEM_CODE,
 					       TO_CHAR (TO_DATE(#{cDate},'YYYY-MM-DD'),'DD/MM/YYYY')      D_DATE, 
 					       (SELECT COUNT (*) CNT  FROM  SAL0046D  AA
-					                                 WHERE  1=1
+					                                 WHERE  1=1 
 					                                 AND  AA.CT_ID =#{ct}
 					                                 AND  AA.STUS_CODE_ID =1
 					                                 AND  TO_CHAR (AA.INSTALL_DT,'YYYY-MM-DD'  ) = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))INSCNT,
