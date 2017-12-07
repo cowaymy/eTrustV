@@ -308,7 +308,7 @@ SELECT DTAB.DCFReqEntryID AS DCFReqEntryID,
                     </if>                       
                  ) T1,
                  SYS0047M S47
-           WHERE T1.DCFReqUpdateBy = S47.USER_ID(+)AND T1.DCFReqTypeID ='1' AND T1.DCFReqCatID ='16' AND T1.DCFReqSubID ='81' ) DTAB
+           WHERE T1.DCFReqUpdateBy = S47.USER_ID(+)AND T1.DCFReqTypeID =#{cmbType} AND T1.DCFReqCatID =#{cmbCategory} AND T1.DCFReqSubID =#{cmbSubject} ) DTAB
 ORDER BY DCFReqEntryID ASC
 </select>   
 
