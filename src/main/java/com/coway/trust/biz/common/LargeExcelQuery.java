@@ -14,9 +14,9 @@ public enum LargeExcelQuery {
 	, CMM0029CD("selectCMM0029DCD"), CMM0029CT("selectCMM0029DCT"), CMM0029HP("selectCMM0029DHP")
 	, CMM0028TCD("selectCMM0028TCD"), CMM0028TCT("selectCMM0028TCT"), CMM0028THP("selectCMM0028THP")
 	, CMM0029TCD("selectCMM0029TCD"), CMM0029TCT("selectCMM0029TCT"), CMM0029THP("selectCMM0029THP")
-
-	, CLAIM_DETAIL("selectClaimDetailById");
-
+	
+	, CLAIM_DETAIL("selectClaimDetailById"), ALLDCPMASTER("selectAllDCPMaster");
+	
 	private final String queryId;
 
 	LargeExcelQuery(String queryId) {

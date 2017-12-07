@@ -78,8 +78,10 @@ public interface LargeExcelService {
 	void downLoad29TCT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad29THP(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-
+	
 	void downLoadClaimFileALB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler);
+
+	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad(String id, Object parameter, ResultHandler excelDownloadHandler);
 }
