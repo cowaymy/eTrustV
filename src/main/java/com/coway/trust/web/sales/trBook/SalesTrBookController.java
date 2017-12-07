@@ -58,7 +58,7 @@ public class SalesTrBookController {
 	
 
 	@RequestMapping(value = "/trBookMgmt.do")
-	public String orderLedgerViewPop(@RequestParam Map<String, Object>params, ModelMap model){
+	public String trBookMgmt(@RequestParam Map<String, Object>params, ModelMap model){
 		
 		logger.debug("params ======================================>>> " + params);
 
