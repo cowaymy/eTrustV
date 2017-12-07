@@ -227,7 +227,7 @@
         WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{branchName} AND CT_MEM_ID=#{memId}
     </delete>
     <select id="selectCTInfo"  parameterType="Map" resultType="egovMap">
-        SELECT * FROM ORG0020D WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{brnchName} AND CT_MEM_ID=#{memId}
+        SELECT * FROM ORG0020D WHERE HOLIDAY = TO_DATE (#{holiday}, 'YYYY-MM-DD') AND HOLIDAY_TYPE = #{holidayType} AND BRNCH_CODE = #{branchName} AND CT_MEM_ID=#{memId}
     </select>
     <select id="selectState" resultType="egovMap">
     SELECT STATE CODE_ID, STATE CODE_NAME FROM SYS0064M GROUP BY STATE

@@ -93,7 +93,6 @@ function CTListGrid2() {
                             },
                           { dataField : "memCode", headerText  : "CT Code",    width : 100 },
                           { dataField : "name", headerText  : "Name",width : 200 },
-                          { dataField : "totalAssignDate", headerText  : "Total Assigned Date Count",  width  : 150},
                           { dataField : "memId", headerText  : "",  width  : 0},
                           { dataField : "holidaySeq1", headerText  : "",  width  : 0},
                           { dataField : "asignSeq", headerText  : "",  width  : 0}
