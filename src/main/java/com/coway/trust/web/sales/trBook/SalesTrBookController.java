@@ -594,9 +594,7 @@ public class SalesTrBookController {
 		
 		logger.debug("in  saveReTrBook ");
 		logger.debug("params =====================================>>  " + params);
-		
-		EgovMap result = new EgovMap();
-		
+				
 		params.put("userId", sessionVO.getUserId());
 		
 		String reqNo = salesTrBookService.saveTranBulk(params);
