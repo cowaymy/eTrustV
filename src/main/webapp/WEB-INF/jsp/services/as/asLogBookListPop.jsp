@@ -22,6 +22,10 @@ function fn_validation(){
 function fn_openGenerate(){
     var date = new Date();
     var month = date.getMonth()+1;
+    var day = "";
+    if(date.getDate() < 10){
+        day = "0"+date.getDate();
+    }
     if(fn_validation()){
         
          var ASAppDate = $("#asAppDate").val() == '' ? "" : $("#asAppDate").val();
@@ -46,7 +50,7 @@ function fn_openGenerate(){
              whereSql += " AND ae.AS_MEM_GRP =  '" + $("#CTGroup").val() + "' ";
          }
         $("#reportForm #reportFileName").val('/services/ASLogBookList.rpt');
-        $("#reportForm #reportDownFileName").val("ASLogBook_"+date.getDate()+month+date.getFullYear());
+        $("#reportForm #reportDownFileName").val("ASLogBook_"+day+month+date.getFullYear());
         $("#reportForm #viewType").val("PDF");
         $("#reportForm #V_SELECTSQL").val();
         $("#reportForm #V_WHERESQL").val(whereSql);

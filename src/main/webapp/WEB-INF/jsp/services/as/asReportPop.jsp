@@ -33,6 +33,7 @@ function fn_validation(){
 
 function fn_openGenerate(){
 	if(fn_validation()){
+		
 		var fSONO1 = $("#orderNumFrom").val();
 		var fSONO2 = $("#orderNumTo").val();
 		var fMemCTID1 = $("#CTCodeFrom").val();
@@ -66,6 +67,10 @@ function fn_openGenerate(){
 		
 		var date = new Date();
 	    var month = date.getMonth()+1;
+	    var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 	    $("#reportForm #V_FSONO1").val(fSONO1);
 	    $("#reportForm #V_FSONO2").val(fSONO2);
 	    $("#reportForm #V_FMEMCTID1").val(fMemCTID1);
@@ -75,7 +80,7 @@ function fn_openGenerate(){
 	    $("#reportForm #V_WHERESQL").val(whereSql);
 	    $("#reportForm #reportFileName").val('/services/ASReport.rpt');
 	    $("#reportForm #viewType").val("PDF");
-	    $("#reportForm #reportDownFileName").val("ASReport_" +date.getDate()+month+date.getFullYear());
+	    $("#reportForm #reportDownFileName").val("ASReport_" +day+month+date.getFullYear());
 	    
 	    var option = {
 	            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

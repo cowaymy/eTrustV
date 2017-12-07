@@ -34,6 +34,10 @@ function fn_validation(){
 function fn_openGenerate(){
 	var date = new Date();
     var month = date.getMonth()+1;
+    var day = "";
+    if(date.getDate() < 10){
+        day = "0"+date.getDate();
+    }
 	if(fn_validation()){
 		var YS= 0;
 		var nonYS= 0;
@@ -78,7 +82,7 @@ function fn_openGenerate(){
 		$("#reportForm #V_YSAGING").val(YSAging);
 		$("#reportForm #reportFileName").val('/services/ASYellowSheet.rpt');
 		$("#reportForm #viewType").val("PDF");
-		$("#reportForm #reportDownFileName").val("ASYellowSheet_"+date.getDate()+month+date.getFullYear());
+		$("#reportForm #reportDownFileName").val("ASYellowSheet_"+day+month+date.getFullYear());
 		
 		var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -92,6 +96,10 @@ function fn_openGenerate(){
 function fn_openExcel(){
     var date = new Date();
     var month = date.getMonth()+1;
+    var day = "";
+    if(date.getDate() < 10){
+        day = "0"+date.getDate();
+    }
     if(fn_validation){
         var YS= 0;
         var nonYS= 0;
@@ -133,7 +141,7 @@ function fn_openExcel(){
         $("#reportForm #V_YSAGING").val(YSAging);
         $("#reportForm #reportFileName").val('/services/ASYellowSheet_RawData.rpt');
         $("#reportForm #viewType").val("EXCEL");
-        $("#reportForm #reportDownFileName").val("ASYellowSheet_"+date.getDate()+month+date.getFullYear());
+        $("#reportForm #reportDownFileName").val("ASYellowSheet_"+day+month+date.getFullYear());
         
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.

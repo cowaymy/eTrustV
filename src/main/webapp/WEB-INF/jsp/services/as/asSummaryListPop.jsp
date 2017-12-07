@@ -42,6 +42,10 @@ function fn_validation(){
 function fn_openGenerate(){
     var date = new Date();
     var month = date.getMonth()+1;
+    var day = "";
+    if(date.getDate() < 10){
+        day = "0"+date.getDate();
+    }
     if(fn_validation()){
         
         var whereSql = "";
@@ -111,7 +115,7 @@ function fn_openGenerate(){
         var asSort = "";
         
         $("#reportForm #reportFileName").val('/services/ASSummaryList.rpt');
-        $("#reportForm #reportDownFileName").val("ASSummaryList_"+date.getDate()+month+date.getFullYear());
+        $("#reportForm #reportDownFileName").val("ASSummaryList_"+day+month+date.getFullYear());
         $("#reportForm #viewType").val("PDF");
         $("#reportForm #V_SELECTSQL").val();
         $("#reportForm #V_WHERESQL").val(whereSql);

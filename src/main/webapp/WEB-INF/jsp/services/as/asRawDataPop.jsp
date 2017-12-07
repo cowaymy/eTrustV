@@ -20,6 +20,7 @@ function fn_validation(){
 }
 
 function fn_openGenerate(){
+	
     if(fn_validation()){
     	
         var whereSql = "";
@@ -34,7 +35,10 @@ function fn_openGenerate(){
         if($("#reportType").val() == '1'){
         	var date = new Date();
             var month = date.getMonth()+1;
-            
+            var day = "";
+            if(date.getDate() < 10){
+                day = "0"+date.getDate();
+            }
             $("#reportForm").append('<input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  /> ');
             $("#reportForm").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
             $("#reportForm").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
@@ -46,7 +50,7 @@ function fn_openGenerate(){
             $("#reportForm #V_WHERESQL").val(whereSql);
             $("#reportForm #reportFileName").val('/services/ASRawData.rpt');
             $("#reportForm #viewType").val("EXCEL");
-            $("#reportForm #reportDownFileName").val("ASRawData_" +date.getDate()+month+date.getFullYear());
+            $("#reportForm #reportDownFileName").val("ASRawData_" +day+month+date.getFullYear());
             
             var option = {
                     isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -58,7 +62,10 @@ function fn_openGenerate(){
         else{
             var date = new Date();
             var month = date.getMonth()+1;
-            
+            var day = "";
+            if(date.getDate() < 10){
+                day = "0"+date.getDate();
+            }
            
             $("#reportForm").append('<input type="hidden" id="V_KEYINDATEFROM" name="V_KEYINDATEFROM" /> ');
             $("#reportForm").append('<input type="hidden" id="V_KEYINDATETO" name="V_KEYINDATETO"  /> ');
@@ -71,7 +78,7 @@ function fn_openGenerate(){
             $("#reportForm #V_DSCBRANCHID").val(0);
             $("#reportForm #reportFileName").val('/services/ASSparePartRaw.rpt');
             $("#reportForm #viewType").val("EXCEL");
-            $("#reportForm #reportDownFileName").val("ASSparePartRaw_" +date.getDate()+month+date.getFullYear());
+            $("#reportForm #reportDownFileName").val("ASSparePartRaw_" +day+month+date.getFullYear());
             
             var option = {
                     isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
