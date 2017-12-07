@@ -71,4 +71,8 @@ public interface SalesTrBookMapper {
 	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
 
 
+
+	List<EgovMap> getOrgCodeListByMemTypeStaff(Map<String, Object> params);
+	
+	List<EgovMap> getOrgCodeListByMemType(Map<String, Object> params);
 }
