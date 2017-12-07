@@ -47,20 +47,23 @@ function fn_openReport(){
 	    var orderBySql = "";
 	    var FullSql = "";
 	    var month = date.getMonth()+1;
-	    
+	    var day = "";
+        if(date.getDate() < 10){
+            day = "0"+date.getDate();
+        }
 	    var tmpforecastMonth = $("#forecastMonth").val();
 	    var forecastMonth =tmpforecastMonth.substring(3,7)+"-"+tmpforecastMonth.substring(0,2)+"-01";
 	    var branchid = 0;
 	    branchid = Number($("#brnch option:selected").val());
-	    var cmid = 0;
-	    cmid = Number($("#memCode option:selected").val());
+        var cmid = 0;
+        cmid = Number($("#memCode option:selected").val());
 	    $("#reportForm #viewType").val("PDF");
 	    if(cmid==0){
         	$("#reportForm #reportFileName").val('/services/BSCountForecastByBranch.rpt');
-        	$("#reportForm #reportDownFileName").val("BSCountForecastByBranch_"+date.getDate()+month+date.getFullYear());
+        	$("#reportForm #reportDownFileName").val("BSCountForecastByBranch_"+day+month+date.getFullYear());
 	    }else{
         	$("#reportForm #reportFileName").val('/services/BSCountForecastByCMGroup.rpt');
-        	$("#reportForm #reportDownFileName").val("BSCountForecastByCMGroup_"+date.getDate()+month+date.getFullYear());
+        	$("#reportForm #reportDownFileName").val("BSCountForecastByCMGroup_"+day+month+date.getFullYear());
 	    }
 	    /*
 	     $("#installationNoteForm #V_WHERESQL").val(whereSeq);

@@ -89,10 +89,14 @@ function fn_HSReportList(){
 function fn_Generate(){
 	var date = new Date();
     var month = date.getMonth()+1;
+    var day = "";
+    if(date.getDate() < 10){
+        day = "0"+date.getDate();
+    }
 	$("#searchHsReport #V_CODYDEPTCODE").val(BSNo);
 	$("#searchHsReport #reportFileName").val('/services/BSReport_ByBSNo.rpt');
     $("#searchHsReport #viewType").val("PDF");
-    $("#searchHsReport #reportDownFileName").val(BSNo + "_"+date.getDate()+month+date.getFullYear());
+    $("#searchHsReport #reportDownFileName").val(BSNo + "_"+day+month+date.getFullYear());
     
     var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
