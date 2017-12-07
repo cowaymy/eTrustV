@@ -808,6 +808,58 @@
 		             )
     </insert>  
     
+    
+    <select id="getOrgCodeListByMemTypeStaff" parameterType="Map" resultType="egovMap">
+		    SELECT Project2.C1 C1 ,
+					   Project2.MEM_ID CODE_ID ,
+					   Project2.C2 CODE_NAME
+			FROM
+					  (SELECT Distinct1.MEM_ID MEM_ID ,
+					               Distinct1.C1 C1 ,
+					               Distinct1.C2 C2
+					  FROM
+						    ( SELECT DISTINCT Extent2.MEM_ID MEM_ID ,
+						                  1 C1 ,
+						                  Extent1.MEM_CODE || ' - ' || Extent1.NAME C2
+						    FROM ORG0001D Extent1
+								    JOIN ORG0005D Extent2
+								    ON Extent1.MEM_ID      = Extent2.MEM_ID
+						    WHERE ( 1 = Extent1.STUS )
+								    AND ( Extent2.MEM_LVL  = #{memLvl} )
+								    AND ( Extent1.MEM_TYPE = #{memType} )
+						    ) Distinct1
+					  ) Project2
+			ORDER BY Project2.C2 ASC
+    </select>
+    
+    <select id="getOrgCodeListByMemType" parameterType="Map" resultType="egovMap">
+    	 SELECT Distinct1.C1 C1 ,
+				  Distinct1.MEM_UP_ID MEM_UP_ID ,
+				  Distinct1.MEM_ID CODE_ID ,
+				  Distinct1.C2 CODE_NAME
+		 FROM
+				  ( SELECT DISTINCT Extent2.MEM_ID MEM_ID ,
+				               Extent2.MEM_UP_ID MEM_UP_ID ,
+				               1 C1 ,
+				               Extent2.DEPT_CODE || ' - ' || Extent1.NAME C2
+				   FROM ORG0001D Extent1
+							  JOIN ORG0005D Extent2
+							  ON Extent1.MEM_ID = Extent2.MEM_ID
+				  WHERE ( 1  = Extent1.STUS )
+							  AND ( Extent2.MEM_LVL   = #{memLvl} )
+							  AND ( Extent1.MEM_TYPE  = #{memType} )
+							  
+					          <if test=" null != parentIDArray and parentIDArray.size > 0">
+                                    AND Extent2.MEM_UP_ID IN
+                                    <foreach collection="parentIDArray" item="item" open="(" separator="," close=")">
+                                        #{item}                
+                                    </foreach>
+                              </if>
+				  ) Distinct1
+    </select>
+    
+    
+    
     <select id="selectTransitInfoList" parameterType="map" resultType="EgovMap">
           SELECT A.TR_BOOK_ID   ,
 			         C.TR_TRNSIT_ID   ,
