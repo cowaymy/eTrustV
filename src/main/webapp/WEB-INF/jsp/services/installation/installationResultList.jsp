@@ -410,23 +410,15 @@ function fn_editInstallation(){//active 일때만 열림
     </ul>
     <ul class="btns">
         <!-- <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li> -->
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">DO Active List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Log Book Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')"> Installation Raw Data</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Free Gift List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Daily DSC Report</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">DSC Report</a></p></li>
         
-        <!-- <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()">DO Active List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()">DO Active List</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()">Installation Note Listing</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()">Installation Log Book Listing</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"> Installation Raw Data</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installFreeGiftList()">Installation Free Gift List</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()">DSC Report</a></p></li> -->
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()">DSC Report</a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
