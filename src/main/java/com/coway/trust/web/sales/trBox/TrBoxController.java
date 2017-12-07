@@ -76,6 +76,7 @@ public class TrBoxController {
 		String[] status   = request.getParameterValues("status");
 		String branchid   = request.getParameter("branchid");
 		String bulkholder = request.getParameter("bulkholder");
+		String boxno      = request.getParameter("boxno");
 		
 		Map<String, Object> pmap = new HashMap();
 		pmap.put("trbxnumber", trbxnumber);
@@ -85,7 +86,9 @@ public class TrBoxController {
 		pmap.put("status"    , status    );
 		pmap.put("branchid"  , branchid  );
 		pmap.put("bulkholder", bulkholder);
+		pmap.put("boxno"     , boxno);
 		
+		logger.debug("91Line :::: {}" , pmap);
 		List<EgovMap> list = trbox.selectTrboxManagementList(pmap);
 
 		Map<String, Object> map = new HashMap();

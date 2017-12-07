@@ -51,6 +51,9 @@
             <if test='bulkholder != null and bulkholder !=""'>
                 AND BOX_HOLDER = #{bulkholder}
             </if>
+            <if test='boxno != null and boxno !=""'>
+                AND BOX_NO = #{boxno}
+            </if>
 		ORDER BY BOX_ID
     </select>
     <select id="selectTrboxManageDetailList"  parameterType="Map" resultType="egovMap">
@@ -334,6 +337,9 @@
            AND T1.TR_TRNSIT_ID = #{trnsitid}
            <if test="statuschk != null and statuschk !=''">
             AND T1.TR_TRNSIT_RESULT_STUS_ID  = #{statuschk}
+           </if>
+           <if test="boxno != null and boxno !=''">
+            AND T1.TR_BOX_NO  = #{boxno}
            </if>
         GROUP BY T1.TR_TRNSIT_DET_ID , T1.TR_TRNSIT_RESULT_STUS_ID , T1.TR_BOX_ID , T1.TR_BOX_NO , T1.CODE
     </select>

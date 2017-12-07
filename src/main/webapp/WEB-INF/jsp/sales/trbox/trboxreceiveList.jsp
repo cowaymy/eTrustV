@@ -120,6 +120,9 @@
                 viewdraw(data);
             }else if (refunc == 'update'){
                 upddraw(data);
+            }else if (refunc == 'grid'){
+            	AUIGrid.setGridData(leftGrid, data.listmap);
+                AUIGrid.resize(leftGrid);
             }else{
         		AUIGrid.setGridData(viewGrid, data);
                 AUIGrid.resize(viewGrid);
@@ -317,6 +320,27 @@
     	});
     	$("#viewclose").click(function(){
             $("#view_popup_wrap").hide();
+        });
+    	$("#Btnsrch").click(function(){
+    		var selectedItems = AUIGrid.getSelectedItems(listGrid);
+    		var itm = selectedItems[0].item;
+    		var url = "/misc/TRBox/getSearchTrboxReceiveViewData.do";
+            var param = "trnsitid="+itm.trnsitid+"&boxno="+$("#pboxno").val();
+    
+            getSearchListAjax(url , param ,'grid' );
+            $("#pboxno").val('');
+    		$("#filter_popup_wrap").hide();
+        });
+    	$("#showAllBtn").click(function(){
+            var url = "/misc/TRBox/getSearchTrboxReceiveViewData.do";
+            var param = "trnsitid="+itm.trnsitid;
+    
+            getSearchListAjax(url , param ,'grid' );
+            
+           // $("#filter_popup_wrap").hide();
+        });
+    	$("#FilterBtn").click(function(){
+            $("#filter_popup_wrap").show();
         });
     });
 
@@ -642,8 +666,8 @@
 			</div><!-- divine_auto end -->
 			
 			<ul class="left_btns mt10">
-			    <li><p class="btn_blue2"><a href="#">Filter List</a></p></li>
-			    <li><p class="btn_blue2"><a href="#">Show All</a></p></li>
+			    <li><p class="btn_blue2"><a id="FilterBtn">Filter List</a></p></li>
+			    <li><p class="btn_blue2"><a id="showAllBtn">Show All</a></p></li>
 			</ul>
 			</form>
 			<ul class="center_btns mt20">
@@ -653,6 +677,42 @@
         
    </section><!-- pop_body end -->
         
+    </div><!-- popup_wrap end -->
+    
+    <div id="filter_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+
+        <header class="pop_header"><!-- pop_header start -->
+        <h1>Filter Box Book List</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+        </ul>
+        </header><!-- pop_header end -->
+        
+        <section class="pop_body"><!-- pop_body start -->
+        <form id="filterForm" name="filterForm">
+          
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:130px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Box No</th>
+            <td>
+            <input type="text" title="" id="pboxno" name="pboxno" placeholder="" class="w100p" />
+            </td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+        </form>
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a id="Btnsrch">Search</a></p></li>
+            <li><p class="btn_blue2 big"><a id="Btnclr">Clear</a></p></li>
+        </ul>
+        </section><!-- pop_body end -->
+    
     </div><!-- popup_wrap end -->
 
 </section><!-- content end -->
