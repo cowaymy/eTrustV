@@ -35,7 +35,7 @@
                  E1.MAC_ADDR macAddr,
                  E1.NAME NAME1,
                  E1.PURCHS_AMT purchsAmt,
-                 TO_CHAR(TO_DATE(E1.PURCHS_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') purchsDt,     
+                 TO_CHAR(E1.PURCHS_DT, 'DD/MM/YYYY') purchsDt,     
                  E1.REF_NO refNo,
                  E1.ASSET_REM assetRem,
                  E1.SERIAL_NO serialNo,
@@ -318,7 +318,7 @@
         ,#{curr_dept_id}
         ,#{curr_user_id}    
         <!-- ,#{masterpurchasedate} -->
-        ,TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD/MM/YYYY'), 'YYYY-MM-DD') 
+        ,TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY')
         ,#{masterpurchaseamount}      
         ,#{masterimeino}
         ,#{masterwarrantyno}  
@@ -423,7 +423,7 @@
                         COLOR_ID            =#{mastercolor},                               
                         INVC_NO              =#{masterinvoiceno},                              
                         DEALER_ID            =#{masterdealer},                             
-                        PURCHS_DT           =TO_CHAR(TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'), 'YYYY-MM-DD'),                             
+                        PURCHS_DT           =TO_DATE(#{masterpurchasedate}, 'DD-MM-YYYY'),                             
                         BRAND_ID             =#{masterbrand},                               
                         PURCHS_AMT          =#{masterpurchaseamount},                                                    
                         REF_NO                 =#{masterrefno},                            
