@@ -28,4 +28,8 @@ public interface TrboxService {
 	Map<String, Object> selectReceiveViewData(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> getSearchTrboxReceiveGridList(Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> postTrboxReceiveInsertData(Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> postTrboxTransferInsertData(Map<String, Object> params) throws Exception;
 }

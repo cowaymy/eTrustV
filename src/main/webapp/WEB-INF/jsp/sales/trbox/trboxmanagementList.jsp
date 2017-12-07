@@ -171,18 +171,19 @@
 	    $("#insSave").click(function(){
 	    	var url = "/misc/TRBox/postNewTrboxManagementSave.do";
 	        var param = $('#insForm').serializeJSON();
-	        Common.ajax("POST" , url , param , function(data){
-				console.log(data);
-	            if (data.trboxno == "")
-	            {
-					Common.alert('Failed to save. Please try again later.');
-	            }else{
-					Common.alert('New box saved.<br /> Box Number :' + data.trboxno);
-					$("#btnSrch").click();
-					$("#insClose").click();
-				}
+	        console.log(param);
+// 	        Common.ajax("POST" , url , param , function(data){
+// 				console.log(data);
+// 	            if (data.trboxno == "")
+// 	            {
+// 					Common.alert('Failed to save. Please try again later.');
+// 	            }else{
+// 					Common.alert('New box saved.<br /> Box Number :' + data.trboxno);
+// 					$("#btnSrch").click();
+// 					$("#insClose").click();
+// 				}
 	            
-	        });
+// 	        });
         });
 	    $("#btnKeep").click(function(){
 	    	var selectedItems = AUIGrid.getSelectedItems(listGrid);

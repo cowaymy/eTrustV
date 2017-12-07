@@ -59,6 +59,10 @@ public class TrBoxController {
 	public String trboxreceiveList(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return "sales/trbox/trboxreceiveList";
 	}
+	@RequestMapping(value = "/TrBoxBulkTransfer.do")
+	public String TrBoxBulkTransfer(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		return "sales/trbox/trboxbulkTransfer";
+	}
 	
 	@RequestMapping(value = "/getSearchTrboxManagementList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> getSearchTrboxManagementList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model)
@@ -71,6 +75,7 @@ public class TrBoxController {
 		
 		String[] status   = request.getParameterValues("status");
 		String branchid   = request.getParameter("branchid");
+		String bulkholder = request.getParameter("bulkholder");
 		
 		Map<String, Object> pmap = new HashMap();
 		pmap.put("trbxnumber", trbxnumber);
@@ -79,6 +84,7 @@ public class TrBoxController {
 		pmap.put("crtuser"   , crtuser   );
 		pmap.put("status"    , status    );
 		pmap.put("branchid"  , branchid  );
+		pmap.put("bulkholder", bulkholder);
 		
 		List<EgovMap> list = trbox.selectTrboxManagementList(pmap);
 
@@ -195,6 +201,8 @@ public class TrBoxController {
 			throws Exception {
 		
 		Map<String, Object> list = trbox.selectReceiveViewData(params);
+		
+		list.put("transitid", params.get("trnsitid"));
 
 		return ResponseEntity.ok(list);
 	}
@@ -208,4 +216,59 @@ public class TrBoxController {
 		return ResponseEntity.ok(list);
 	}
 	
+	@RequestMapping(value = "/postTrboxReceiveInsertData.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> postTrboxReceiveInsertData(@RequestBody Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVo)
+			throws Exception {
+		
+		int userId = sessionVo.getUserId();
+		
+		params.put("userid", userId);
+		
+		Map<String, Object> map = trbox.postTrboxReceiveInsertData(params);
+		
+		String msg = "";
+//		Transit result successfully saved.
+//		This transit was closed.	
+		String code = "";
+		if ("000".equals((String)map.get("code"))){
+			code = AppConstants.SUCCESS;
+			msg = "Transit result successfully saved.<br>This transit was closed.";
+		}else{
+			code = AppConstants.FAIL;
+			msg = "Failed to save. Please try again later.";
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setMessage(messageAccessor.getMessage(msg));
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/postTrboxTransferInsertData.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> postTrboxTransferInsertData(@RequestBody Map<String, Object>params, HttpServletRequest request, ModelMap model, SessionVO sessionVo)
+			throws Exception {
+		
+		int userId = sessionVo.getUserId();
+		
+		params.put("userid", userId);
+		
+		Map<String, Object> map = trbox.postTrboxTransferInsertData(params);
+		
+		String msg = "";
+
+		String code = "";
+		if ("000".equals((String)map.get("code"))){
+			code = AppConstants.SUCCESS;
+			msg = "Selected TR box(s) successfully transfer to courier.";
+		}else{
+			code = AppConstants.FAIL;
+			msg = "Failed to save. Please try again later.";
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setData((String)map.get("docfullno"));
+		message.setMessage(messageAccessor.getMessage(msg));
+		return ResponseEntity.ok(message);
+	}
 }

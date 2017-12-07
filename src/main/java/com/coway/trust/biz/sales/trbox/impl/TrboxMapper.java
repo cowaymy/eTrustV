@@ -46,4 +46,12 @@ public interface TrboxMapper {
 	Map selectReceiveViewCnt(Map<String, Object> params);
 	
 	List<EgovMap> selectReceiveViewList(Map<String, Object> params);
+	
+	int selectTrBoxTransitDsCnt(String param);
+	
+	void receiveTrboxRecordCardInsert(Map<String, Object> params);
+	
+	void updateTrboxTransitDetail(Map<String, Object> params);
+	
+	void TRBoxTransitMasterUpdate(Map<String, Object> params);
 }

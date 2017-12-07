@@ -16,7 +16,7 @@
     var leftGrid;
     var rightGrid;
     var statusList = [{"codeId": "1","codeName": "Active/Pending"},{"codeId": "36","codeName": "Closed"}];
-    var transtatusList = [{"codeId": "4","codeName": "Active/Pending"},{"codeId": "50","codeName": "Not Received"}];
+    var transtatusList = [{"codeId": "4","codeName": "Receive"},{"codeId": "50","codeName": "Not Received"}];
  // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"trboxno"      ,headerText:"Box No"       ,width:100   ,height:30 , visible:false},
                         {dataField:"trnsitno"     ,headerText:"Transit No"   ,width:"14%" ,height:30 , visible:true },
@@ -46,11 +46,11 @@
 	                        {dataField:"CODE"  ,headerText:"Status" ,width:"33%" ,height:30 , visible:true}
 	                       ];
     
-    var trancolumnLayout = [{dataField:"TTDI"  ,headerText:"TR_TRNSIT_DET_ID"     ,width:"14%" ,height:30 , visible:true}, //
-                            {dataField:"TTRSI" ,headerText:"Close Dt"             ,width:"14%" ,height:30 , visible:true}, //
+    var trancolumnLayout = [{dataField:"TTDI"  ,headerText:"TR_TRNSIT_DET_ID"     ,width:"14%" ,height:30 , visible:false}, //
+                            {dataField:"TTRSI" ,headerText:"Close Dt"             ,width:"14%" ,height:30 , visible:false}, //
                             {dataField:"TBN"   ,headerText:"Box No"               ,width:"33%" ,height:30 , visible:true},
-                            {dataField:"CNT"   ,headerText:"Total Book(s) In Box" ,width:"34%",height:30 , visible:true},
-                            {dataField:"TBI"   ,headerText:"trtrnsitid"           ,width:120 ,height:30 , visible:true},  //
+                            {dataField:"CNT"   ,headerText:"Total Book(s) In Box" ,width:"34%" ,height:30 , visible:true},
+                            {dataField:"TBI"   ,headerText:"trtrnsitid"           ,width:120   ,height:30 , visible:false},  //
                             {dataField:"CODE"  ,headerText:"Status"               ,width:"33%" ,height:30 , visible:true}
                            ];
     
@@ -68,7 +68,7 @@
     $(document).ready(function(){
     	doGetComboSepa('/common/selectBranchCodeList.do', '9' , ' - ' , '','branchid', 'S' , '');
         doDefCombo(statusList, '1' ,'status', 'S', '');
-        doDefCombo(transtatusList, '1' ,'utrnstatus', 'S', '');
+        doDefCombo(transtatusList, '1' ,'utrnstatuslist', 'S', '');
         listGrid  = GridCommon.createAUIGrid("grid_wrap",           columnLayout,"", gridoptions);
         viewGrid  = GridCommon.createAUIGrid("view_grid_wrap",      viewcolumnLayout,"", viewgridoptions);
         leftGrid  = GridCommon.createAUIGrid("upd_left_grid_wrap",  trancolumnLayout,"", tranoptions);
@@ -95,6 +95,20 @@
         Common.ajax("POST" , url , param , function(data){
         	console.log(data);
             AUIGrid.setGridData(listGrid, data.data);
+            
+        });
+    }
+    
+    function postActionAjax(url , param){
+    	Common.ajax("POST" , url , param , function(data){
+            console.log(data);
+            if (data.code == '00'){
+            	Common.alert(data.message);
+            	$("#upd_popup_wrap").hide();
+            	$("#btnSrch").click();
+            }else{
+            	Common.alert(data.message);
+            }
             
         });
     }
@@ -137,17 +151,23 @@
 	}
 	
 	function upddraw(data){
-        var itm = data.viewdata;
+		var itm = data.viewdata;
         var cnt = data.cntmap;
         var listdata = data.listmap;
         $("#utrnno"     ).text(itm.trnno);
+        $("#transitid"  ).val(itm.trnid);
+        $("#transitno"  ).val(itm.trnno);
         $("#utrndt"     ).text(itm.trndt);
         $("#utrnstatus" ).text(itm.trnstusnm);
+        $("#transitstatus").val(itm.trnstusid);
         $("#utrnfr"     ).text(itm.trnfr + ' - ' +itm.trnfrnm);
+        $("#sender").val(itm.trnfr);
         $("#utrnto"     ).text(itm.trnto + ' - ' +itm.trntonm);
+        $("#receiver").val(itm.trnto);
         $("#uclodt"     ).text(itm.trnclodt);
         $("#utotbox"    ).text(itm.trntotbox);
         $("#ucourier"   ).text(itm.trncurnm);
+        $("#courier").val(itm.trncur);
         $("#ucreator"   ).text(itm.trncrtuser);
         $("#utotpend"   ).text(cnt.PENDINGCNT);
         $("#utotrecv"   ).text(cnt.RECEIPTCNT);
@@ -155,7 +175,7 @@
         $("#upd_popup_wrap").show();
         AUIGrid.setGridData(leftGrid, listdata);
         AUIGrid.resize(leftGrid);
-        //AUIGrid.setGridData(rightGrid, []);
+        AUIGrid.setGridData(rightGrid, []);
         AUIGrid.resize(rightGrid);
         
     }
@@ -193,6 +213,28 @@
                 Common.alert("Selected Data");
                 return false;
             }else{
+            	$("#utrnno"     ).text('');
+                $("#transitid"  ).val('');
+                $("#transitno"  ).val('');
+                $("#utrndt"     ).text('');
+                $("#utrnstatus" ).text('');
+                $("#transitstatus").val('');
+                $("#utrnfr"     ).text('');
+                $("#sender").val('');
+                $("#utrnto"     ).text('');
+                $("#receiver").val('');
+                $("#uclodt"     ).text('');
+                $("#utotbox"    ).text('');
+                $("#ucourier"   ).text('');
+                $("#courier").val('');
+                $("#ucreator"   ).text('');
+                $("#utotpend"   ).text('');
+                $("#utotrecv"   ).text('');
+                $("#utotnotrecv").text('');
+                
+                AUIGrid.setGridData(leftGrid, []);
+                AUIGrid.setGridData(rightGrid, []);
+                
                 var itm = selectedItems[0].item;
                 var url = "/misc/TRBox/getSearchTrboxReceiveViewData.do";
                 var param = "trnsitid="+itm.trnsitid;
@@ -202,9 +244,16 @@
             }
     	});
     	$("#tranSaveBtn").click(function(){
-    		var dat = GridCommon.getEditData(rightGrid);
-            dat.form = $("#recvForm").serializeJSON();
-            console.log(dat);
+    		if ($("#utrnstatuslist").val() == ''){
+    			Common.alert('No item to update transit status.<br />Please add item to transit.');
+    		}else{
+	    		var dat = GridCommon.getEditData(rightGrid);
+	            dat.form = $("#recvForm").serializeJSON();
+	            
+	            var url = "/misc/TRBox/postTrboxReceiveInsertData.do";
+	            postActionAjax(url , dat);
+    		}
+            
     	});
     	$("#rightBtn").click(function(){
     		var selectedItems = AUIGrid.getSelectedItems(leftGrid);
@@ -262,6 +311,12 @@
                 
                 AUIGrid.addRow(leftGrid, rowList, rowPos);
             }
+        });
+    	$("#updclose").click(function(){
+    		$("#upd_popup_wrap").hide();
+    	});
+    	$("#viewclose").click(function(){
+            $("#view_popup_wrap").hide();
         });
     });
 
@@ -452,7 +507,7 @@
         <header class="pop_header"><!-- pop_header start -->
         <h1>Transit Receive View</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id="viewclose">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a id="updclose">CLOSE</a></p></li>
         </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
@@ -461,6 +516,12 @@
         <h2>Transit Information</h2>
         </aside><!-- title_line end -->
         <form id="recvForm" name="recvForm">
+        <input type="hidden" id="transitstatus" name="transitstatus"/>
+        <input type="hidden" id="sender" name="sender" >
+        <input type="hidden" id="receiver" name="receiver" >
+        <input type="hidden" id="courier" name="courier" >
+        <input type="hidden" id="transitid" name="transitid" >
+        <input type="hidden" id="transitno" name="transitno" >
         <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -481,6 +542,7 @@
             <td id="utrndt"></td>
             <th scope="row">Transit Status </th>
             <td id="utrnstatus"></td>
+            
         </tr>
         <tr>
             <th scope="row">Transit From</th>
@@ -489,23 +551,26 @@
             </td>
             <th scope="row">Transit To</th>
             <td id="utrnto"></td>
+            
             <th scope="row">Close Date</th>
             <td id="uclodt"></td>
         </tr>
         <tr>
             <th scope="row">Total Book</th>
             <td>
-            <span id="utotbox">1111</span>
+            <span id="utotbox"></span>
             </td>
             <th scope="row">Courier</th>
             <td id="ucourier"></td>
+            
+            
             <th scope="row">Creator</th>
             <td id="ucreator"></td>
         </tr>
         <tr>
             <th scope="row">Total Pending</th>
             <td>
-            <span id="utotpend">1111</span>
+            <span id="utotpend"></span>
             </td>
             <th scope="row">Total Received</th>
             <td id="utotrecv"></td>
@@ -528,7 +593,7 @@
 		<tr>
 		    <th scope="row">Transit Status</th>
 		    <td>
-		      <select id="utrnstatus" name="utrnstatus" class="w100p"></select>
+		      <select id="utrnstatuslist" name="utrnstatuslist" class="w100p"></select>
 		    </td>
 		</tr>
 		</tbody>

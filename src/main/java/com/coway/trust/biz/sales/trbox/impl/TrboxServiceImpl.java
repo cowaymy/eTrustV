@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.pos.PosService;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.sales.trbox.TrboxService;
@@ -115,6 +116,7 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		tranD.put("trsnid"    , trsnid);
 		tranD.put("statusid"  , 1);
 		tranD.put("restatusid", 44);
+		tranD.put("closedt"    , "19000101");
 		
 		trboxMapper.transferDetailInsert(tranD);
 		
@@ -162,6 +164,132 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 	public List<EgovMap> getSearchTrboxReceiveGridList(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return trboxMapper.selectReceiveViewList(params);
+	}
+
+	@Override
+	public Map<String, Object> postTrboxReceiveInsertData(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		// postTrboxReceiveInsertData
+		
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		int userid = (int)params.get("userid");
+		
+		Map<String, Object> form = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		String targetLocation = "";
+		if ("4".equals((String)form.get("utrnstatuslist"))){
+			targetLocation = (String)form.get("receiver");
+		}else{
+			targetLocation = (String)form.get("sender");
+		}
+		
+		for (int i = 0 ; i < insList.size() ; i++){
+			Map<String, Object> imap = (Map<String, Object>) insList.get(i);
+			logger.debug(" ::: {}" ,  imap);
+			Map<String, Object> pmap = new HashMap();
+			pmap.put("trboxid", imap.get("TBI"));
+			pmap.put("trtypeid", 769);
+			pmap.put("trlocation", targetLocation);
+			pmap.put("trstatusid", 1);
+			pmap.put("userid", userid);
+			pmap.put("trqty", 1);
+			pmap.put("refno", form.get("transitno"));
+			
+			trboxMapper.receiveTrboxRecordCardInsert(pmap);
+			
+			pmap.put("trlocation", form.get("courier"));
+			pmap.put("trqty", 1);
+			
+			trboxMapper.receiveTrboxRecordCardInsert(pmap);
+			
+			pmap.put("transitditid", imap.get("TTDI"));
+			pmap.put("resultstaus", form.get("utrnstatuslist"));
+			
+			trboxMapper.updateTrboxTransitDetail(pmap);
+			
+		}
+		
+		int cnt = trboxMapper.selectTrBoxTransitDsCnt((String)form.get("transitid"));
+		Map<String, Object> pmap = new HashMap();
+		pmap.put("userid", userid);
+		pmap.put("trnsitid", form.get("transitid"));
+		
+		if (cnt == 0 ){
+			if (!"36".equals((String)form.get("transitstatus"))){
+				pmap.put("status", 36);
+				trboxMapper.TRBoxTransitMasterUpdate(pmap);
+			}
+		}else{
+			if ("1".equals((String)form.get("transitstatus"))){
+				pmap.put("status", 44);
+				trboxMapper.TRBoxTransitMasterUpdate(pmap);
+			}
+		}
+		pmap.put("code", "000");
+		return pmap;
+	}
+
+	@Override
+	public Map<String, Object> postTrboxTransferInsertData(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		int userid = (int)params.get("userid");
+		Map<String, Object> form = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		String transitNo = "";
+		// DOC NO
+		Map<String, Object> map = trboxMapper.selectTrboxManageBoxNo("76");
+		
+		transitNo = (String)map.get("docfullno");
+		
+		String trsnid = (String)trboxMapper.selectTransferId();
+		Map<String, Object> tranM = new HashMap();
+		tranM.put("trsnid"     , trsnid);
+		tranM.put("typeid"     , 750);
+		tranM.put("statusid"   , 1);
+		tranM.put("closedt"    , "19000101");
+		tranM.put("tranholder" , form.get("sender"));
+		tranM.put("tbrnch"     , form.get("receiver"));
+		tranM.put("tcourier"   , form.get("courier"));
+		tranM.put("refno"      , (String)map.get("docfullno"));
+		tranM.put("userid"     , userid);
+		
+		trboxMapper.transferMaterInsert(tranM);
+		
+		for (int i = 0 ; i < insList.size(); i++){
+			Map<String, Object> ins = (Map<String, Object>)insList.get(i); 
+			Map<String, Object> tranD = new HashMap();
+			tranD.put("trsnid"     , trsnid);
+			tranD.put("tranboxid"  , ins.get("boxid"));
+			tranD.put("statusid"   , 1);
+			tranD.put("restatusid" , 44);
+			tranD.put("closedt"    , "19000101");
+			tranD.put("userid"     , userid);
+			
+			trboxMapper.transferDetailInsert(tranD);
+			
+			Map<String, Object> trancard = new HashMap();
+			trancard.put("tranboxid"  , ins.get("boxid"));
+			trancard.put("refno"   , map.get("docfullno"));
+			trancard.put("typeid"  , 769);
+			trancard.put("statusid", 1);
+			trancard.put("qty"     , -1);
+			trancard.put("locid"   , form.get("sender"));
+			trancard.put("userid"  , userid);
+			trboxMapper.transferRecordCardInsert(trancard);
+			
+			trancard.put("qty"     , 1);
+			trancard.put("locid"   , form.get("receiver"));
+			
+			trboxMapper.transferRecordCardInsert(trancard);
+			
+		}
+		
+		trboxMapper.trboxdocnoUpdate(map);
+		map.put("code", "000");
+		return map;
 	}
 
 }
