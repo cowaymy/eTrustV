@@ -595,7 +595,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap"></div>
+<div id="grid_wrap" class="mt10" ></div>
 
 </article><!-- grid_wrap end -->
 
@@ -845,8 +845,5 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 </ul>
 </section><!-- pop_body end -->
 
-</div>
 
 </div><!-- wrap end -->
-</body>
-</html>

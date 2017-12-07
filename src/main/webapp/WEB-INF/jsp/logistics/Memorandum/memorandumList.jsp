@@ -142,6 +142,9 @@
     	$("#search").click(function(){
     		SearchListAjax();
     	});
+    	$("#clear").click(function(){
+    		$("#searchForm")[0].reset();
+    	});
     	$("#vclose").click(function(){
     		$("#viewwindow").hide();
         });
@@ -194,7 +197,8 @@
                 $("#hpmemo").attr("checked" , false);
             }
 
-            $(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;")
+            //$(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;");
+            $(".htmlarea > iframe").attr("style","border-width: 1px; width:100%; height:100%;");
 			editor.setHTML("");
 			editor.insertHTML(itm.memocntnt);
             
@@ -207,7 +211,8 @@
     		$("#hpmemo").attr("checked" , false);
     		editor.setHTML("");
     		$("#editwindow").show();
-    		$(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;")
+    		//$(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;");
+    		$(".htmlarea > iframe").attr("style","border-width: 1px; width:100%; height:100%;");
     		
     		$("#vmode").val("ins");
     		
@@ -237,7 +242,7 @@
 <h2>Memorandum</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-<!--     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -264,9 +269,9 @@
     <th scope="row">Create Date</th>
     <td>
         <div class="date_set"><!-- date_set start -->
-        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-        <span> ~ </span>
-        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"></p>   
+        <span>To</span>
+        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date w100p"></p>
         </div><!-- date_set end -->                        
     </td>
 </tr>
@@ -278,7 +283,7 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
+    <%-- <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
@@ -304,37 +309,37 @@
             <colgroup>
                 <col style="width:150px" />
                 <col style="width:*" />
-                <col style="width:150px" />
+                <col style="width:180px" />
                 <col style="width:*" />
-                <col style="width:30px" />
+               <!--  <col style="width:30px" /> -->
             </colgroup>
             <tbody>
                 <tr>
                     <th scope="row">Title</th>
-                    <td id="vtitle" colspan="3"></td>    
-                    <td ><input name="pdf" type="button" value="PDF"/></td>    
+                    <td id="vtitle" colspan="2"></td>
+                   <td align="right"><div class="search_100p" align="right"><input name="pdf" type="button" value="PDF" /></div></td> 
                 </tr>
                 <tr>    
                     <th scope="row">Creator</th>
                     <td id="vcrtnm"></td>
                     <th scope="row">Create Date</th>
-                    <td id="vcrtdt" colspan="2"></td>
+                    <td id="vcrtdt"></td>
                 </tr>
                 <tr>    
                     <th scope="row">Updator</th>
                     <td id="vupdnm"></td>
                     <th scope="row">Update Date</th>
-                    <td id="vupddt" colspan="2"></td>
+                    <td id="vupddt" ></td>
                 </tr>
                 <tr>    
-                    <td id="vmemo" colspan="5"></td>
+                    <td id="vmemo" colspan="4"></td>
                 </tr>
             </tbody>
             </table>
         
-            <ul class="center_btns">
+           <!--  <ul class="center_btns">
                 <li><p class="btn_blue2 big"><a id="vclose">CLOSE</a></p></li> 
-            </ul>
+            </ul> -->
             </form>
         
         </section>
