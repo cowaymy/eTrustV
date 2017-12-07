@@ -7,6 +7,8 @@
 	var keyValueList = [];
 	
     $(document).ready(function(){
+
+        fn_statusCodeSearch();
         
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
@@ -20,7 +22,14 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 14, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
+
     });
+    
+    function fn_statusCodeSearch(){
+        Common.ajax("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 14, parmDisab : 0}, function(result) {
+            keyValueList = result;
+        }, null, {async : false});
+    }
     
     function fn_setDetail(gridID, rowIdx){
         //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
@@ -40,12 +49,12 @@
           , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  }
           , { headerText : "NRIC/Company No", dataField : "nric",       editable : false, width : 100 }
           , { headerText : "Creator",         dataField : "userName",   editable : false, width : 100 }
-          , { headerText : "Status",          dataField : "stusName",   editable : true,  width : 60  ,
+          , { headerText : "Status",          dataField : "stusCodeId", editable : true,  width : 100 ,
                     labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                     var retStr = value;
                     for(var i=0,len=keyValueList.length; i<len; i++) {
-                        if(keyValueList[i]["stateId"] == value) {
-                            retStr = keyValueList[i]["name"];
+                        if(keyValueList[i]["stusCodeId"] == value) {
+                            retStr = keyValueList[i]["codeName"];
                             break;
                         }
                     }
@@ -54,8 +63,8 @@
                 editRenderer : {
                     type       : "DropDownListRenderer",
                     list       : keyValueList, //key-value Object 로 구성된 리스트
-                    keyField   : "stateId", //key 에 해당되는 필드명
-                    valueField : "name"        //value 에 해당되는 필드명
+                    keyField   : "stusCodeId", //key 에 해당되는 필드명
+                    valueField : "codeName"        //value 에 해당되는 필드명
                 }
             }
           , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : false}
