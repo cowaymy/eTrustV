@@ -16,8 +16,12 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Tag Log Registration</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#">Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+   <ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick=""><span class="search"></span>Search</a></p></li>
+<!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
+  <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+</ul>
+  
 </ul>
 </aside><!-- title_line end -->
 

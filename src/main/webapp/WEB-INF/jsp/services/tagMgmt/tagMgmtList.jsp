@@ -2,6 +2,45 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
+
+var gridID;
+
+
+function tagMgmtGrid() {
+    
+    var columnLayout = [
+	                          { dataField : "", headerText  : "Inquiry Cont Num",    width : 150 },
+	                          { dataField : "", headerText  : "Inquiry Cust Name",width : 150 },
+	                          { dataField : "", headerText  : "Inquiry Mem Type",  width  : 150},
+	                          { dataField : "",       headerText  : "In-charge Sub Dept",  width  : 150},
+	                          { dataField : "",       headerText  : "Main Inquiry",  width  : 150},
+	                          { dataField : "",       headerText  : "FeedBack Code",  width  : 150},
+	                          { dataField : "",       headerText  : "Order Num",  width  : 150},
+	                          { dataField : "",       headerText  : "Progress Status",  width  : 150},
+                          ];
+    
+     var gridPros = {  
+    		                        usePaging           : true,         //페이징 사용
+                        	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                        	        showStateColumn     : false,             
+                        	        displayTreeOpen     : false,            
+                        	        selectionMode       : "singleRow",  //"multipleCells",            
+                        	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                        	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                        	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                          };  
+                          
+                          gridID = GridCommon.createAUIGrid("tagMgmt_grid_wap", columnLayout  ,"" ,gridPros);
+                          
+                           
+
+    }
+$(document).ready(function(){
+	
+	tagMgmtGrid(); // tagMgmt 그리드 생성 함수
+	
+});
+
 </script>
 
 
@@ -76,7 +115,7 @@
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
     <dd>
@@ -100,7 +139,7 @@
         <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
         <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
     </ul>
-    <p class="hide_btn"><a href="#"><img src="../images/common/btn_link_close.gif" alt="hide" /></a></p>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
@@ -115,8 +154,8 @@
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
 </ul>
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
+<article class="grid_wrap"><!-- grid_wrap start  그리드 영역-->
+    <div id="tagMgmt_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
