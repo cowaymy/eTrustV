@@ -29,9 +29,6 @@
              , (l48.reqst_qty - l55.delvry_qty) AS remqty
              , (CASE WHEN l54.delvry_gi_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) AS giqty
              , (CASE WHEN l54.delvry_gr_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) AS grqty
-             ,  NVL(l60.GR, 0) AS othergrqty
-              , (NVL(l60.GI, 0) * -1) othergiqty
-             , (l48.reqst_qty - (NVL(l60.GR, 0) + NVL(l60.GI, 0))) AS otherremqty
              , NVL(l54.delvry_gi_cmplt , 'N') AS gicom
              , NVL(l54.delvry_gr_cmplt , 'N') AS grcom
           FROM log0047m l47

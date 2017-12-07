@@ -12,11 +12,7 @@
     .aui-grid-main-panel .aui-grid-body-panel table tr td:hover { background:#D9E5FF; color:#000; }
 
 </style>
-
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
-
 <script type="text/javaScript" language="javascript">
 
     var listGrid;
@@ -24,26 +20,22 @@
     var rescolumnLayout= [
 	                             {dataField:"delno", headerText:"Delivery No.", width:170, height:30},
 	                             {dataField:"delnoitm", headerText:"Item No.", width:90, height:30},
+	                             {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
+                                 {dataField:"itmname", headerText:"Material Name", width:180, height:30},
+	                             {dataField:"delqty", headerText:"Delivery Qty", width:120, height:30},
+                                 {dataField:"giqty", headerText:"GI Qty", width:120, height:30},
+                                 {dataField:"grqty", headerText:"GR Qty", width:120, height:30},
 	                             {dataField:"reqstno", headerText:"STO/SMO", width:170, height:30},
 			                     {dataField:"stktrans", headerText:"Stock Transaction", width:150, height:30},
-			                     {dataField:"stkactivity", headerText:"Stock Activity", width:180, height:30},
+			                     {dataField:"stkactivity", headerText:"MVT Type", width:180, height:30},
 			                     {dataField:"frmloc", headerText:"From Location", width:220, height:30},
 			                     {dataField:"toloc", headerText:"To Location", width:220, height:30},
 			                     {dataField:"deldate", headerText:"Delivery Date", width:120, height:30},
 			                     {dataField:"gidate", headerText:"GI Date", width:120, height:30},
 			                     {dataField:"grdate", headerText:"GR Date", width:120, height:30},
-			                     {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
-			                     {dataField:"itmname", headerText:"Material Name", width:180, height:30},
 			                     {dataField:"uom", headerText:"Unit of Measurement", width:130, height:30},
 			                     {dataField:"status", headerText:"Status", width:120, height:30},
 			                     {dataField:"stkqty", headerText:"STO/SMO Qty", width:120, height:30},
-			                     {dataField:"delqty", headerText:"Delivery Qty", width:120, height:30},
-			                     {dataField:"remqty", headerText:"Remaining Qty", width:120, height:30},
-			                     {dataField:"giqty", headerText:"GI Request Qty", width:120, height:30},
-			                     {dataField:"grqty", headerText:"GR Request Qty", width:120, height:30},
-			                     {dataField:"othergrqty", headerText:"GR Qty", width:120, height:30},
-			                     {dataField:"othergiqty", headerText:"GI Qty", width:120, height:30},
-			                     {dataField:"otherremqty", headerText:"GI/GR Remaining Qty", width:120, height:30},
 			                     {dataField:"gicom", headerText:"GI Completion", width:120, height:30},
 			                     {dataField:"grcom", headerText:"GR Completion", width:120, height:30}
 			                     ];
@@ -197,11 +189,8 @@
 <aside class="title_line"><!-- title_line start -->
     <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
     <h2>Total Delivery No.</h2>
-</aside><!-- title_line end -->
-
-<aside class="title_line"><!-- title_line start -->
     <ul class="right_btns">
-            <li><p class="btn_blue2 big"><a id="search"><span class="search"></span>Search</a></p></li>
+      <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
@@ -239,7 +228,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Stock Activity Type</th>
+                    <th scope="row">MVT Type</th>
                     <td colspan="2">
                         <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
                     </td>
