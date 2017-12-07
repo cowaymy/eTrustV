@@ -112,6 +112,31 @@ public class MileageCalculationController {
 	 * @return
 	 * @throws Exception
 	 */
+	@RequestMapping(value = "/cntDCPMaster.do", method = RequestMethod.GET)
+	public ResponseEntity<Integer> cntDCPMaster( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		String[] memTypeList = request.getParameterValues("memType");
+		String[] mcpFromList = request.getParameterValues("mcpFrom");
+		String[] mcpToList = request.getParameterValues("mcpTo");
+		String[] branchCodeList = request.getParameterValues("brnch");
+		params.put("memTypeList", memTypeList);
+		params.put("mcpFromList", mcpFromList);
+		params.put("mcpToList", mcpToList);
+		params.put("branchCodeList", branchCodeList);
+		
+		int cnt = mileageCalculationService.selectDCPMasterCount(params);
+		
+		//logger.debug("totalRowCount : " + totalRowCount);
+		return ResponseEntity.ok(cnt);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "/selectDCPMaster.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectDCPMaster( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		String[] memTypeList = request.getParameterValues("memType");

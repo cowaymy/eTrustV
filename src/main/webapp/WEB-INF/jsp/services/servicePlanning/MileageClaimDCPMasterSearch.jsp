@@ -35,8 +35,6 @@ $(document).ready(function(){
     
     $('#brnch').change(function() {
         var brnch = $("#brnch").val();
-        //doGetCombo('/services/mileageCileage/selectDCPFrom.do', String(brnch), '','mcpFrom', 'S' ,  '');
-        //doGetCombo('/services/mileageCileage/selectDCPTo.do', String(brnch), '','mcpTo', 'S' ,  '');
         doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityFrom', 'S' ,  '');
         doGetCombo('/services/mileageCileage/selectCity.do', String(brnch), '','cityTo', 'S' ,  '');
     });
@@ -80,20 +78,20 @@ function DCPMasterGrid() {
     var columnLayout = [
                           { dataField : "memType", headerText  : "Member Type", width : 100 , editable: false },
                           { dataField : "brnchCode", headerText  : "Branch", width : 100, editable: false },
-                          { dataField : "cityFrom", headerText  : "CITY From",  width  : 150, editable: false },
+                          { dataField : "cityFrom", headerText  : "City From",  width  : 150, editable: false },
                           { dataField : "dcpFrom", headerText  : "DCP From",  width  : 200, editable: false },
                           { dataField : "dcpFromId", headerText  : "DCP From ID",  width  : 100, editable: false },
-                          { dataField : "cityTo", headerText  : "CITY To",  width  : 150, editable: false },
+                          { dataField : "cityTo", headerText  : "City To",  width  : 150, editable: false },
                           { dataField : "dcpTo",       headerText  : "DCP To",  width  : 200, editable: false },
                           { dataField : "dcpToId", headerText  : "DCP To ID",  width  : 100, editable: false },
-                          { dataField : "distance",       headerText  : "Distance",  width  :100, editable: true},
-                          { dataField : "memType1",       headerText  : "memType1",  width  : 0, editable: false},
+                          { dataField : "distance",       headerText  : "Distance",  width  :100, editable: true}
+                          /* { dataField : "memType1",       headerText  : "memType1",  width  : 0, editable: false},
                           { dataField : "brnchCode1",       headerText  : "brnchCode1",  width  : 0, editable: false},
                           { dataField : "dcpFrom1",       headerText  : "dcpFrom1",  width  : 0, editable: false},
                           { dataField : "dcpFromId1",       headerText  : "dcpFromId1",  width  : 0, editable: false},
                           { dataField : "dcpTo1",       headerText  : "dcpTo1",  width  : 0, editable: false},
                           { dataField : "dcpToId1",       headerText  : "dcpToId1",  width  : 0, editable: false},
-                          { dataField : "distance1",       headerText  : "distance1",  width  : 0, editable: false},
+                          { dataField : "distance1",       headerText  : "distance1",  width  : 0, editable: false} */
        ];
 
         var gridPros = { usePaging : false,  pageRowCount: 20, editable: true,  showRowNumColumn : true, showStateColumn : false};  
@@ -174,7 +172,6 @@ function DCPMasterGrid() {
       //페이징 변수 세팅
       $("#pageNo").val(goPage);
       
-      // selectDCPMasterPaging.do 만드는 거부터 해야댐!!
       Common.ajax("GET", "/services/mileageCileage/selectDCPMasterPaging.do", $("#DCPMasteForm").serialize(), function(result) {
           console.log("성공.");
           console.log("data : " + result);
@@ -222,31 +219,54 @@ function DCPMasterGrid() {
      
      // 171204 :: 선한이
      function fn_AlldownFile() {
-         var data = { "memType" : $("#memType").val() , "brnchCode": $("#brnchCode").val(), 
-                            "cityFrom": $("#cityFrom").val(), "dcpFrom": $("#dcpFrom").val(), 
-                            "cityTo": $("#cityTo").val(), "dcpTo": $("#dcpTo").val() };
-         //var data = { "searchDt" : $("#CMM0006T_Dt").val() , "code": $("#code_06T").val(), "codeId": $("#codeGroupId").val() };
-         Common.ajax("GET", "/services/mileageCileage/excel/downloadExcelFile.do", data, function(result) {
+    	 if($('#memType').val() == '') {
+             Common.alert("Please Select 'Member Type'");
+             return false;
+         }
+         
+         if($('#brnch').val() == '') {
+             Common.alert("Please Select 'Branch'");
+             return false;
+         }
+         
+         if($('#cityFrom').val() == '') {
+             Common.alert("Please Select 'City From'");
+             return false;
+         }
+         
+         if($('#cityTo').val() == '') {
+             Common.alert("Please Select 'City To'");
+             return false;
+         }
+    	 
+         Common.ajax("GET", "/services/mileageCileage/cntDCPMaster.do", $("#DCPMasteForm").serialize(), function(result) {
              var cnt = result;
              if(cnt > 0){
                  //var fileName = $("#fileName").val() +"_"+today;
                  var fileName="DCP Mgmt.xlsx";
-                 var searchDt = $("#CMM0006T_Dt").val();
-                 var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
-                 var month = searchDt.substr(0,searchDt.indexOf("/"));
-                 var code = $("#code_06T").val();
-                 var codeId = $("#codeGroupId").val();
+                 
+                 var memType = $("#memType").val();
+                 var cityFrom = $("#cityFrom").val();
+                 var mcpFrom = $("#mcpFrom").val();
+                 var mcpFromID = $("#mcpFromID").val();
+                 var cityTo = $("#cityTo").val();
+                 var mcpTo = $("#mcpTo").val();
+                 var mcpToID = $("#mcpToID").val();
+                 var brnch = $("#brnch").val();
+
                  //window.location.href="<c:url value='/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId+"'/>";
                  
                  Common.showLoader();
-                 $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId)
+                 $.fileDownload("/services/mileageCileage/excel/downloadExcelFile.do?fileName=" + fileName + "&memType=" + memType
+                		    		   + "&cityFrom=" + cityFrom + "&mcpFrom=" + mcpFrom + "&mcpFromID=" + mcpFromID
+                		    		   + "&cityTo=" + cityTo + "&mcpTo=" + mcpTo + "&mcpToID=" + mcpToID + "&brnch=" + brnch)
                  .done(function () {
-                     Common.alert('File download a success!');                
                      Common.removeLoader();            
+                     Common.alert('File download a success!');                
                  })
                  .fail(function () {
-                     Common.alert('File download failed!');                
                      Common.removeLoader();            
+                     Common.alert('File download failed!');                
                   });
              }
          });
