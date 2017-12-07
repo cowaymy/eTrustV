@@ -665,20 +665,11 @@ function fn_asYsList(){
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">AS Report</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">AS Log Book List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">AS Raw Data</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">AS Summary List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">AS YS List</a></p></li>
-        <!--
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_ASReport()">AS Report</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asLogBookList()">AS Log Book List</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asRawData()">AS Raw Data</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asSummaryList()">AS Summary List</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asYsList()">AS YS List</a></p></li>
-         <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li> -->
     </ul> 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
