@@ -66,6 +66,11 @@ $(document).ready(function(){
 	doDefCombo(claimDayData, '' ,'claimDay', 'M', '');
 
 	f_multiCombo();
+
+
+	var today = new Date();
+	$("#createDt1").val(FormUtil.lpad((today.getDate()),2,"0") + "/" + FormUtil.lpad((today.getMonth()+1),2,"0") + "/" + today.getFullYear());
+	$("#createDt2").val(FormUtil.lpad((today.getDate()),2,"0") + "/" + FormUtil.lpad((today.getMonth()+1),2,"0") + "/" + today.getFullYear());
    
 });
 
@@ -122,6 +127,10 @@ function fn_selectListAjax() {
 function fn_clear(){
 	$("#_scheduleClaimSearchPopForm")[0].reset();
 	f_multiCombo();
+
+	var today = new Date();
+	$("#createDt1").val(FormUtil.lpad((today.getDate()),2,"0") + "/" + FormUtil.lpad((today.getMonth()+1),2,"0") + "/" + today.getFullYear());
+	$("#createDt2").val(FormUtil.lpad((today.getDate()),2,"0") + "/" + FormUtil.lpad((today.getMonth()+1),2,"0") + "/" + today.getFullYear());
 }
 
 
