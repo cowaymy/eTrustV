@@ -171,8 +171,7 @@
     <select id="selectPreOrderList" parameterType="Map" resultType="egovMap">
 		SELECT T2.NAME AS CUST_NAME
 		     , T3.SALES_ORD_NO AS SALES_ORDER_NO
-             , T4.CODE_NAME AS CUSTOMER_TYPE
-             , T2.TYPE_ID   AS CUSTOMER_TYPE_ID
+             , T2.TYPE_ID AS CUSTOMER_TYPE
 		     , T5.CODE_NAME AS APP_TYPE
 		     , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DATE
 		     , T6.NAME AS PRE_ORDER_STATUS
