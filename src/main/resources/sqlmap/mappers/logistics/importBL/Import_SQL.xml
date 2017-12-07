@@ -2,8 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.importbl.impl.ImportMapper">
 
-    <select id="importBLList" parameterType="map" resultType="EgovMap">
-                    
+<select id="importBLList" parameterType="map" resultType="EgovMap">      
 <![CDATA[                   
             SELECT   ROWNUM RNUM
                         ,S28.WH_LOC_ID
@@ -30,6 +29,15 @@
                         , (SELECT CODE_NAME
                                     FROM SYS0013M
                                     WHERE CODE_ID = L84.UOM) UOMNM
+                        , L83.SHIP_DT
+                        , L83.GR_DT
+                        , L83.AP_CMPLT
+                        , L83.GR_CMPLT
+                        , L84.PUR_DOC_NO
+                        , L83.ACC_NO
+                        , L84.FREE_ITM
+                        , L83.INV_CRT_DT
+                        , L83.DEL_FLAG
                 FROM LOG0083M L83
                         ,LOG0084D L84
                         ,SYS0026M S26
@@ -71,6 +79,24 @@
                      <if test="blsdt != null and blsdt != '' and bledt != null and bledt != ''">
                      AND L83.SHIP_DT BETWEEN TO_CHAR(TO_DATE(#{blsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{bledt},'DD/MM/YYYY'),'YYYYMMDD') 
                     </if>
+                    <if test="pono != null and pono != '' ">
+                    AND L84.PUR_DOC_NO = #{pono}
+                    </if>
+                    <if test="materialcode != null and materialcode != '' ">
+                    AND L84.MATRL_ID/CODE = #{materialcode}
+                    </if>
+                    <if test="smattype !=null and smattype !=''">
+			            and s26.STK_TYPE_ID in 
+			            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+			                   #{item}
+			            </foreach>
+			        </if>
+			        <if test="smatcate !=null and smatcate !=''">
+			            and s26.STK_CTGRY_ID in 
+			            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+			                   #{item}
+			            </foreach>
+			        </if>
             ORDER BY L83.BL_NO, L84.ITM_SEQ
     </select>
     
@@ -143,159 +169,4 @@
             ORDER BY   L47.REQST_NO
     </select>
     
-    <select id="selectStockTransferSeq" resultType="String">
-        SELECT
-                   'SMO' 
-                   ||TO_CHAR (SYSDATE, 'YYMMDD')
-                   || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
-           FROM LOG0047M
-          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') 
-    </select>
-
-    <update id="CreateReqM" parameterType="Map">
-        MERGE INTO LOG0047M  a
-             USING dual
-                on (a.REQST_NO=#{reqNo}) 
-              WHEN MATCHED THEN
-                   UPDATE SET
-                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') 
-                       ,  a.CRT_USER_ID     =   #{userId}                                                                     
-                       ,  a.CRT_DT          =   SYSDATE 
-              WHEN NOT MATCHED THEN
-                       INSERT (
-                              REQST_NO,
-                              TRNSC_TYPE,
-                              TRNSC_TYPE_DTL,
-                              PRIDIC_FRQNCY,
-                              REQST_CRT_DT,
-                              REQST_REQUIRE_DT,
-                              RCIV_CDC_RDC,
-                              REQST_CDC_RDC,
-                              REQST_STUS,
-                              CRT_USER_ID,
-                              CRT_DT,
-                              REQST_TYPE,
-                              REQST_TYPE_DTL
-                              )
-                            VALUES (  
-                                   #{reqNo}
-                                    , 'UM'
-                                    , 'UM03'
-                                    , 'M'
-                                    , SYSDATE
-                                    , SYSDATE
-                                    , #{flocation}
-                                    , #{tlocation}
-                                    , 'O'
-                                    , #{userId}
-                                    , SYSDATE
-                                    , 'PO'
-                                    ,  'PO03'
-                                    )
-    </update>
-
-    <insert id="CreateReqD" parameterType="Map">
-        MERGE INTO LOG0048D A
-             USING DUAL
-                ON (A.REQST_NO = #{reqNo} and REQST_NO_ITM = #{resnoitm})
-            WHEN MATCHED THEN
-                UPDATE SET 
-                       A.REQST_QTY = #{reqQty}
-                     , A.UOM       = #{uom}
-                     , A.CRT_USER_ID = #{userId}
-                     , A.CRT_DT      = SYSDATE
-            WHEN NOT MATCHED THEN 
-                INSERT ( 
-                            REQST_NO, 
-                            REQST_NO_ITM,
-                            ITM_CODE, 
-                            ITM_NAME, 
-                            REQST_QTY, 
-                            UOM, 
-                            CRT_USER_ID, 
-                            CRT_DT,
-                            BL_NO,
-                            BL_ITM_SEQ
-                            )
-                VALUES ( 
-                            #{reqNo} , 
-                            (SELECT DECODE(COUNT(REQST_NO_ITM) , 0 , 1 , MAX(REQST_NO_ITM +1)) FROM LOG0048D WHERE REQST_NO = #{reqNo})
-                            ,#{matrlNo} , 
-                            #{stkdesc}, 
-                            #{reqQty} ,
-                            #{uom} , 
-                            #{userId} ,
-                             SYSDATE,
-                             #{blNo},
-                             #{itmSeq}
-                             )
-    </insert> 
-    
-    <update id="updateReqStatus" parameterType="String">
-        UPDATE LOG0047M 
-           SET REQST_STUS = 'P'
-         WHERE REQST_NO = #{param}
-     </update>
-     <select id="selectDeliverySeq" resultType="String">
-       SELECT
-               'DVR' 
-               ||TO_CHAR (SYSDATE, 'YYMMDD')
-               || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
-        FROM LOG0054M
-    WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
-    </select>
-    <insert id="CreateDeliveryM" parameterType="Map">
-                     INSERT INTO LOG0054M
-                     (
-                                DELVRY_NO
-                              , TRNSC_TYPE
-                              , TRNSC_TYPE_DTL
-                              , DELVRY_DT
-                              , CRT_USER_ID
-                              , CRT_DT
-                     )        
-                            SELECT 
-                                        #{deliveryNo}
-                                      , TRNSC_TYPE
-                                      , TRNSC_TYPE_DTL
-                                      , TO_CHAR(SYSDATE , 'YYYYMMDD')
-                                      , #{userId}
-                                      , SYSDATE
-                                      FROM LOG0047M
-                              WHERE REQST_NO= #{reqNo} 
-    </insert>
-    <select id="selectDeliveryList"  parameterType="Map" resultType="EgovMap">
-      SELECT 
-              REQST_NO,
-              REQST_NO_ITM,
-              ITM_CODE
-    FROM  LOG0048D
-    WHERE REQST_NO= #{reqNo}          
-    </select>
-    <insert id="CreateDeliveryD" parameterType="Map">
-                     INSERT  INTO LOG0055D
-                                ( 
-                                DELVRY_NO, 
-                                DELVRY_NO_ITM, 
-                                ITM_CODE, 
-                                ITM_NAME, 
-                                DELVRY_QTY, 
-                                REQST_NO, 
-                                CRT_USER_ID, 
-                                CRT_DT
-                                )
-                     SELECT                       
-                                #{deliveryNo} , 
-                                (SELECT DECODE(COUNT(DELVRY_NO_ITM) , 0 , 1 , MAX(DELVRY_NO_ITM +1)) FROM LOG0055D WHERE DELVRY_NO = #{deliveryNo}),
-                               ITM_CODE , 
-                               ITM_NAME, 
-                               REQST_QTY , 
-                               REQST_NO , 
-                               #{userId} , 
-                               SYSDATE
-                     FROM LOG0048D
-                     WHERE REQST_NO= #{reqstNo}
-                         AND REQST_NO_ITM = #{reqstNoItm}
-                         AND ITM_CODE = #{itmCode}          
-    </insert> 
    </mapper>

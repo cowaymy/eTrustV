@@ -36,13 +36,9 @@ var rescolumnLayout=[
                              {dataField:"rnum" ,headerText:"rnum",width:120 ,height:30,editable:false, visible:false},
                              {dataField:"whLocId" ,headerText:"whLocId",width:120 ,height:30,editable:false, visible:false},
                              {dataField:"whLocCode" ,headerText:"whLocCode",width:120 ,height:30,editable:false, visible:false},
-                             {dataField:"whLocDesc" ,headerText:"Port",width:250 ,height:30,editable:false
-                              ,cellMerge : true  },
+                             {dataField:"whLocDesc" ,headerText:"Port",width:250 ,height:30,editable:false},
                              {dataField:"plant" ,headerText:"plant",width:120 ,height:30,editable:false, visible:false},
-                             {dataField:"blNo" ,headerText:"BL No.",width:200 ,height:30,editable:false,
-                              cellMerge : true,
-                              mergeRef : "whLocDesc", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
-                              mergePolicy : "restrict"     },
+                             {dataField:"blNo" ,headerText:"BL No.",width:200 ,height:30,editable:false},
                              {dataField:"itmSeq" ,headerText:"Seq.",width:120 ,height:30,editable:false},
                              {dataField:"stkid" ,headerText:"stkid",width:120 ,height:30,editable:false, visible:false},
                              {dataField:"matrlNo" ,headerText:"Material Cd.",width:120 ,height:30,editable:false},
@@ -56,7 +52,15 @@ var rescolumnLayout=[
                              {dataField:"qty" ,headerText:"BL Qty",width:120 ,height:30,editable:false,dataType : "numeric",style:"aui-grid-user-custom-right"},
                              {dataField:"avrqty" ,headerText:"Remain Qty",width:120 ,height:30,editable:false ,dataType : "numeric",style:"aui-grid-user-custom-right"},
                              {dataField:"reqedQty" ,headerText:"Moved Qty",width:120 ,height:30,editable:false ,dataType : "numeric",style:"aui-grid-user-custom-right"},
-                             {dataField:"reqQty" ,headerText:"Req Qty",width:120 ,height:30,dataType : "numeric",style:"aui-grid-user-custom-right"}
+                             {dataField:"shipDt", headerText:"Shipping Date", width:120, height:30, editable:false},
+                             {dataField:"grDt", headerText:"GR Date", width:120, height:30, editable:false},
+                             {dataField:"apCmplt", headerText:"AP Complete", width:120, height:30, editable:false},
+                             {dataField:"grComplt", headerText:"GR Complete", width:120, height:30, editable:false},
+                             {dataField:"purDocNo", headerText:"PO No.", width:120, height:30, editable:false},
+                             {dataField:"accNo", headerText:"Vendor No.", width:120, height:30, editable:false},
+                             {dataField:"freeItem", headerText:"Free Item", width:120, height:30, editable:false},
+                             {dataField:"invCrtDt", headerText:"Invoice Cr. Date", width:120, height:30, editable:false},
+                             {dataField:"delFlag", headerText:"Deletion Flag", width :120, height:30, editable:false}
                             ];
 
 var smoLayout=[
@@ -98,7 +102,6 @@ var smoLayout=[
                         {dataField:"blNo" ,headerText:"BL No",width:120 ,height:30}
                      ];
 var reqop = {
-                    enableCellMerge : true,
                     showRowCheckColumn : true ,
                     editable : true,
                     usePaging : false ,
@@ -114,6 +117,10 @@ var smoop = {
 $(document).ready(function(){
     
    doGetCombo('/logistics/importbl/ImportLocationList', 'port', '','location', 'S' , ''); 
+   
+   doGetCombo('/common/selectCodeList.do', '15', '', 'smattype', 'M' ,'f_multiCombos');
+   doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
+   
    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, reqop);
    subGrid  = AUIGrid.create("#sub_grid_wrap", smoLayout, smoop);
     
@@ -126,31 +133,11 @@ $(document).ready(function(){
           }
     });
     AUIGrid.bind(listGrid, "cellEditEnd", function( event ) {
-        if (event.dataField != "reqQty"){
-            return false;
-        }else{
-            
-            var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqQty");
-            if (del > 0){
-                if ((Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "avrqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqQty")))){
-                    Common.alert('Req Qty can not be greater than Available Qty.');
-                    AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-                }else{
-                    
-                     var rnum = AUIGrid.getCellValue(listGrid, event.rowIndex, "rnum");
-                     AUIGrid.addCheckedRowsByValue(listGrid, "rnum" , rnum);
-                }
-            }else{
-                AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-                AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);               
-            }
-            
-            
-        }
+          AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+          AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);               
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-        //alert(event.rowIndex);
         searchSMO(event.rowIndex);
         $("#sub_grid_wrap").show();
         AUIGrid.clearGridData(subGrid);
@@ -212,59 +199,26 @@ $(function(){
        $('#blsdt').val('');
        $('#bledt').val('');
     });
-    $('#insert').click(function(){
-        var  status = true;
-        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid)
-         if(checkedItems.length <= 0) {
-            Common.alert('No data selected.');
-            return false;
-        }else{
-               for (var i = 0 ; i < checkedItems.length ; i++){
-                   if(null==checkedItems[i].reqQty || 0==checkedItems[i].reqQty){
-                       Common.alert('Please Check Req Qty.');
-                       status = false;
-                       return false;
-                       break;
-                   }
-               }
-        }
-        if(status){
-        setToCdc();
-        }
-    });
-    $('#save').click(function(){
-            createSMO();
-    });
 });
  
-    
-function SearchListAjax() {
-    var url = "/logistics/importbl/ImportBLList.do";
-    var param = $('#searchForm').serializeJSON();
-    Common.ajax("POST" , url , param , function(data){
-        AUIGrid.setGridData(listGrid, data.dataList);
+function f_multiCombos() {
+    $(function() {
+        $('#smattype').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */ 
+        $('#smatcate').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */ 
     });
 }
 
-function setToCdc(){
-    var selectedItem = AUIGrid.getSelectedIndex(listGrid);
-    var whLocId =AUIGrid.getCellValue(listGrid ,selectedItem[0] ,'whLocId');
-    doGetCombo('/logistics/importbl/ImportLocationList', 'port', whLocId,'flocation', 'S' , ''); 
-    doGetCombo('/logistics/importbl/ImportLocationList', '', '','tlocation', 'S' , ''); 
-    $("#popup_wrap").show();
-}
-
-function createSMO(){
-    var data = {};
-    var check   = AUIGrid.getCheckedRowItems(listGrid);
-    data.checked = check;
-    data.form    = $("#giForm").serializeJSON();
-    var url = "/logistics/importbl/reqSMO.do";
-    Common.ajax("POST" , url , data , function(data){
-        console.log(data);
-        Common.alert(data.message+"</br> Created : "+data.data.reqNo+"</br> Created : "+data.data.deliveryNo);
-        $("#popup_wrap").hide();
-        SearchListAjax();
+function SearchListAjax() {
+    var url = "/logistics/importbl/ImportBLList.do";
+    var param = $('#searchForm').serialize();
+    Common.ajax("GET" , url , param , function(data){
+        AUIGrid.setGridData(listGrid, data.data);
     });
 }
 
@@ -284,6 +238,8 @@ function searchSMO(index){
          AUIGrid.setGridData(subGrid, data.dataList);
     });
 }
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -295,14 +251,10 @@ function searchSMO(index){
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Import B/L</h2>
-</aside><!-- title_line end -->
-
-<aside class="title_line"><!-- title_line start -->
-<h3></h3>
-    <ul class="right_btns">
+<ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
-    </ul>
+</ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -335,7 +287,7 @@ function searchSMO(index){
                     </td>
                     <th scope="row">Location</th>
                     <td>
-                        <select class="w100p" id="location" name="location"><option value=''>Choose One</option></select>
+                        <select class="w100p" id="location" name="location"></select>
                     </td>
                 </tr>
                 <tr>
@@ -348,33 +300,41 @@ function searchSMO(index){
                         </div><!-- date_set end -->                        
                     </td>
                     <th scope="row">B/L Date</th>
-                    <td >
+                    <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="blsdt" name="blsdt" type="text" title="Create start Date"   placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> ~ </span>
                         <p><input id="bledt" name="bledt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
-                   <!--  <th scope="row">Status</th>
-                    <td>
-                        <select class="w100p" id="status" name="status">
-                           <option value="N"  selected="selected">Not Yet</option>
-                           <option value="D">Done</option>
-                        </select>
-                    </td> -->
-                    <td colspan="2">
+                     </td>
+                     <th scope="row">PO No</th>
+                     <td>
+                        <input type="text" class="w100p" id="pono" name="pono" />
                     </td>
                 </tr>
+                <tr>
+                    <th scope="row">Material Code</th>
+                    <td>
+                        <input type="text" id="materialcode" name="materialcode" title="" placeholder="Material Code" class="w100p" />
+                    </td>
+                    <th scope="row">Material Type</th>
+                    <td>
+                        <select id="smattype" name="smattype" class="multy_select w100p" multiple="multiple"></select>
+                    </td>
+                    <th scope="row">Material Category</th>
+                    <td>
+                        <select id="smatcate" name="smatcate" class="multy_select w100p" multiple="multiple"></select>
+                    </td>
+                </tr>
+                
             </tbody>
         </table><!-- table end -->
     </form>
 
     </section><!-- search_table end -->
     <section class="search_result"><!-- search_result start -->
-        <ul class="right_btns">
-            <li><p class="btn_grid"><a id="insert">Create SMO</a></p></li>            
-        </ul>
-
-    <!-- data body start -->
+     
+    <!-- search_result & data body start -->
     <section class="search_result"><!-- search_result start -->
 
         <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
@@ -388,51 +348,3 @@ function searchSMO(index){
             
 </section>
 </section>
-
-
-<div id="popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1 id="popup_title">Create SMO</h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-</ul>
-</header><!-- pop_header end -->
-<section class="pop_body"><!-- pop_body start -->
-<form id="giForm" name="giForm" method="POST">
-            <input type="hidden" name="gtype" id="gtype" value="GI"/>
-            <input type="hidden" name="serialqty" id="serialqty"/>
-            <input type="hidden" name="reqstno" id="reqstno"/>
-            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
-            <table class="type1">
-            <caption>search table</caption>
-            <colgroup>
-                <col style="width:150px" />
-                <col style="width:*" />
-                <col style="width:150px" />
-                <col style="width:*" />
-            </colgroup>
-            <tbody>
-               <tr>
-                    <th scope="row">From Location</th>
-                    <td>
-                         <select class="w100p" id="flocation" name="flocation"></select> 
-                    </td>
-                    <th scope="row">To Location</th>
-                    <td >
-                        <select class="w100p" id="tlocation" name="tlocation"></select>
-                    </td>
-                </tr>
-            </tbody>
-            </table>
-            </form>
-            <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li>
-                <!-- <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li> -->
-            </ul>
-</section><!-- pop_body end -->
-<form id='popupForm'>
-    <input type="hidden" id="sUrl" name="sUrl">
-    <input type="hidden" id="svalue" name="svalue">
-</form>
-</div><!-- popup_wrap end -->

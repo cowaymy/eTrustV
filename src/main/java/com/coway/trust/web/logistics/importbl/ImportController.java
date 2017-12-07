@@ -1,9 +1,11 @@
 package com.coway.trust.web.logistics.importbl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,28 +57,49 @@ public class ImportController {
 		return ResponseEntity.ok(data);
 	}
 	
-	@RequestMapping(value = "/ImportBLList.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> importBLList(@RequestBody Map<String, Object> params, Model model) {
-		List<EgovMap> dataList = importService.importBLList(params);
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setDataList(dataList);
-		return ResponseEntity.ok(message);
+	@RequestMapping(value = "/ImportBLList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> importBLList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+		String invno = request.getParameter("invno");
+		String blno = request.getParameter("blno");
+		String location = request.getParameter("location");
+		String grsdt = request.getParameter("grsdt");
+		String gredt = request.getParameter("gredt");
+		String blsdt = request.getParameter("blsdt");
+		String bledt = request.getParameter("bledt");
+		String pono = request.getParameter("pono");
+		String materialcode  = request.getParameter("materialcode");
+		String[] smattype      = request.getParameterValues("smattype");
+		String[] smatcate      = request.getParameterValues("smatcate");
+		
+		
+		Map<String, Object> pmap = new HashMap();
+		pmap.put("invno", invno);
+		pmap.put("blno", blno);
+		pmap.put("location", location);
+		pmap.put("grsdt", grsdt);
+		pmap.put("gredt", gredt);
+		pmap.put("blsdt", blsdt);
+		pmap.put("bledt", bledt);
+		pmap.put("pono", pono);
+		pmap.put("materialcode"  , materialcode);
+		pmap.put("smattype"      , smattype    );
+		pmap.put("smatcate"      , smatcate    );
+		
+		List<EgovMap> list = importService.importBLList(pmap);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
 	}
-	
-	@RequestMapping(value = "/reqSMO.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> reqSTO(@RequestBody Map<String, Object> params, Model model,
-			SessionVO sessionVo) {
-		params.put("userId", sessionVo.getUserId());
-		Map<String, Object> data = importService.reqSTO(params);
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setData(data);
-		return ResponseEntity.ok(message);
-	}
-	
+	/*public ResponseEntity<ReturnMessage> importBLList(@RequestBody Map<String, Object> params, Model model) {
+	List<EgovMap> dataList = importService.importBLList(params);
+	ReturnMessage message = new ReturnMessage();
+	message.setCode(AppConstants.SUCCESS);
+	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	message.setDataList(dataList);
+	return ResponseEntity.ok(message);
+}*/
 	@RequestMapping(value = "/searchSMO.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> searchSMO(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVo) {
