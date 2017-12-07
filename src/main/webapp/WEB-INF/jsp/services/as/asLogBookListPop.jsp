@@ -22,7 +22,7 @@ function fn_validation(){
 function fn_openGenerate(){
     var date = new Date();
     var month = date.getMonth()+1;
-    if(fn_validation){
+    if(fn_validation()){
         
          var ASAppDate = $("#asAppDate").val() == '' ? "" : $("#asAppDate").val();
          var ASCTCode = $("#CTCode").val() == '' ? "" : $("#CTCode option:selected").text();
