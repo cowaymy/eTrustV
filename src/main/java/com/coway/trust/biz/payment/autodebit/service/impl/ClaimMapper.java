@@ -100,5 +100,48 @@ public interface ClaimMapper {
 	 * @return
 	 */
 	void sendFaileDeduction(Map<String, Object> params);	
+	
+	/**
+	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	List<EgovMap> selectScheduleClaimBatchPop(Map<String, Object> params);
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	List<EgovMap> selectScheduleClaimSettingPop(Map<String, Object> params);
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	int isScheduleClaimSettingPop(Map<String, Object> params);
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 저장 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	void saveScheduleClaimSettingPop(Map<String, Object> params);	
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	void removeScheduleClaimSettingPop(Map<String, Object> params);
 
 }

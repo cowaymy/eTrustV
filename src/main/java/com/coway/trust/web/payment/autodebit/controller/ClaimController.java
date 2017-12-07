@@ -1838,4 +1838,145 @@ public class ClaimController {
 		// String emailTitle = "FPX Auto Debit Claim File - Batch Date" + CommonUtils.nvl(claimMap.get("ctrlBatchDt"));
 		// SendEmailAutoDebitDeduction(EmailTitle, Location);
 	}
+
+	
+	
+	/******************************************************
+	 * Claim List - Schedule Claim Batch Pop-up  
+	 *****************************************************/	
+	/**
+	 * Claim List - Schedule Claim Batch Pop-up 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initScheduleClaimBatchPop.do")
+	public String initScheduleClaimBatchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/autodebit/scheduleClaimBatchPop";
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectScheduleClaimBatchPop.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScheduleClaimBatchPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		String[] status = request.getParameterValues("status");
+		params.put("status", status);
+		
+		String[] claimType = request.getParameterValues("claimType");
+		params.put("claimType", claimType);
+		
+		String[] issueBank = request.getParameterValues("issueBank");
+		params.put("issueBank", issueBank);
+		
+		String[] claimDay = request.getParameterValues("claimDay");
+		params.put("claimDay", claimDay);
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = claimService.selectScheduleClaimBatchPop(params);
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initScheduleClaimSettingPop.do")
+	public String initScheduleClaimSettingPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/autodebit/scheduleClaimSettingPop";
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectScheduleClaimSettingPop.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScheduleClaimSettingPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		List<EgovMap> resultList = claimService.selectScheduleClaimSettingPop(params);
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/isScheduleClaimSettingPop.do", method = RequestMethod.GET)
+	public ResponseEntity<Integer> isScheduleClaimSettingPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		int resultCnt = claimService.isScheduleClaimSettingPop(params);
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultCnt);
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 저장 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveScheduleClaimSettingPop.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> saveScheduleClaimSettingPop(@RequestParam Map<String, Object> params,
+    		Model model, SessionVO sessionVO) {
+		
+		params.put("userId", sessionVO.getUserId());
+    	// 처리.
+		claimService.saveScheduleClaimSettingPop(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
+		
+    }
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/removeScheduleClaimSettingPop.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> removeScheduleClaimSettingPop(@RequestParam Map<String, Object> params,
+    		Model model, SessionVO sessionVO) {
+		
+		params.put("userId", sessionVO.getUserId());
+    	// 처리.
+		claimService.removeScheduleClaimSettingPop(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setMessage("Saved Successfully");
+    	
+    	return ResponseEntity.ok(message);
+		
+    }
+	
 }
+

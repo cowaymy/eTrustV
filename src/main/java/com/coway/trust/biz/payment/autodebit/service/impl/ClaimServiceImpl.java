@@ -144,4 +144,63 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		claimMapper.sendFaileDeduction(param);
 	}
 	
+	/**
+	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectScheduleClaimBatchPop(Map<String, Object> params) {
+		return claimMapper.selectScheduleClaimBatchPop(params);
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectScheduleClaimSettingPop(Map<String, Object> params) {
+		return claimMapper.selectScheduleClaimSettingPop(params);
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public int isScheduleClaimSettingPop(Map<String, Object> params) {
+		return claimMapper.isScheduleClaimSettingPop(params);
+	}
+	
+	 /**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 저장 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+    public void saveScheduleClaimSettingPop(Map<String, Object> param){
+		claimMapper.saveScheduleClaimSettingPop(param);
+	}
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+    public void removeScheduleClaimSettingPop(Map<String, Object> param){
+		claimMapper.removeScheduleClaimSettingPop(param);
+	}
+	
+	
 }

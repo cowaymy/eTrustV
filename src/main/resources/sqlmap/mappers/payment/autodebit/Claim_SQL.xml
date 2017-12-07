@@ -271,4 +271,158 @@
             call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} , #{userId},#{returnData, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultSMS})            
         }
     </select>
+    
+    
+    <!--Claim List - Schedule Claim Batch Pop-up 리스트 조회  -->
+    <select id="selectScheduleClaimBatchPop" parameterType="Map" resultType="egovMap">
+        SELECT 
+            Extent1.SCHDUL_CLM_ID SCHDUL_CLM_ID  ,
+            Extent1.STUS_ID STUS_ID  ,
+            Extent1.SCHDUL_ID SCHDUL_ID  ,
+            Extent1.CTRL_ID CTRL_ID  ,
+            Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+            Extent1.BANK_ID BANK_ID  ,
+            Extent1.CLM_DAY CLM_DAY  ,
+            Extent1.DEBT_DT DEBT_DT  ,
+            Extent1.REM AS REM  ,
+            CASE WHEN ( Extent1.SCHDUL_CLM_DT IS NOT NULL ) THEN Extent1.SCHDUL_CLM_DT ELSE TO_DATE('19000101','YYYYMMDD') END SCHDUL_CLM_DT   ,
+            Extent2.CODE PAY_MODE_CODE  ,
+            Extent2.CODE_NAME PAY_MODE_NM  ,
+            Extent3.CODE STUS_CODE  ,
+            Extent3.NAME STUS_NM,
+            CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END BANK_CODE  ,
+            CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.NAME ELSE ' ' END BANK_NAME
+        FROM 
+            PAY0040D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
+            JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.STUS_ID
+            LEFT JOIN SYS0004M Extent4   ON Extent4.BANK_ID = Extent1.BANK_ID
+        WHERE
+            1=1
+            <if test="status != null and status != '' ">
+            AND Extent1.STUS_ID IN
+                <foreach item="item" collection="status" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="claimType != null and claimType != '' ">
+            AND Extent1.PAY_MODE_ID IN
+                <foreach item="item" collection="claimType" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="issueBank != null and issueBank != '' ">
+            AND Extent1.BANK_ID IN
+                <foreach item="item" collection="issueBank" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+             <if test="claimDay != null and claimDay != '' ">
+            AND Extent1.CLM_DAY IN
+                <foreach item="item" collection="claimDay" index="index" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+             <if test="debitDt1 != null and debitDt1 != '' and debitDt2 != null and debitDt2 != '' ">
+             AND Extent1.DEBT_DT BETWEEN TO_DATE(#{debitDt1},'DD/MM/YYYY') AND TO_DATE(#{debitDt2},'DD/MM/YYYY')
+             </if>             
+             <if test="createDt1 != null and createDt1 != '' and createDt2 != null and createDt2 != '' ">
+             AND NVL(Extent1.SCHDUL_CLM_DT,TO_DATE('19000101','YYYYMMDD')) <![CDATA[   >= ]]>  TO_DATE(#{createDt1},'DD/MM/YYYY')
+             AND NVL(Extent1.SCHDUL_CLM_DT,TO_DATE('19000101','YYYYMMDD')) <![CDATA[   < ]]>  TO_DATE(#{createDt2},'DD/MM/YYYY') + 1
+             </if>
+         ORDER BY Extent1.SCHDUL_CLM_ID             
+    </select>
+    
+    <!--Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회   -->
+    <select id="selectScheduleClaimSettingPop" parameterType="Map" resultType="egovMap">
+        SELECT 
+	        Extent1.SCHDUL_ID SCHDUL_ID  ,
+	        Extent1.STUS_ID STUS_ID  ,
+	        Extent1.PAY_MODE_ID PAY_MODE_ID  ,
+	        Extent1.BANK_ID BANK_ID  ,
+	        Extent1.CLM_DAY CLM_DAY  ,
+	        Extent1.SCHDUL_DT SCHDUL_DT  ,
+	        Extent1.CRT_USER_ID CRT_USER_ID  ,
+	        Extent1.CRT_DT CRT_DT  ,
+	        Extent1.UPD_USER_ID UPD_USER_ID  ,
+	        Extent1.UPD_DT UPD_DT  ,
+	        Extent1.DEBT_DT DEBT_DT  ,
+	        Extent2.CODE CODE  ,
+	        Extent2.CODE_NAME CODE_NAME  ,
+	        CASE WHEN ( Extent3.BANK_ID IS NOT NULL ) THEN Extent3.CODE ELSE '' END BANK_CODE  ,
+	        CASE WHEN ( Extent3.BANK_ID IS NOT NULL ) THEN Extent3.NAME ELSE '' END BANK_NAME  ,
+	        CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END CRT_USER_NAME  ,
+	        CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END UPD_USER_NAME  
+        FROM 
+            PAY0039D Extent1
+            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
+            LEFT JOIN SYS0004M Extent3   ON Extent3.BANK_ID = Extent1.BANK_ID
+            LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
+            LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
+        WHERE  
+            Extent1.STUS_ID = 1
+            AND Extent1.SCHDUL_DT BETWEEN TRUNC(TO_DATE(#{batchMonth},'MM/YYYY')) AND LAST_DAY(TRUNC(TO_DATE(#{batchMonth},'MM/YYYY')))
+            <if test="claimType != null and claimType != '' ">
+            AND Extent1.PAY_MODE_ID = #{claimType}
+            </if>
+            <if test="issueBank != null and issueBank != '' ">
+            AND Extent1.BANK_ID = #{issueBank}
+            </if>
+        ORDER BY   Extent1.SCHDUL_DT ASC,   Extent1.SCHDUL_ID DESC     
+    </select>
+    
+    
+    <!--Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회   -->
+    <select id="isScheduleClaimSettingPop" parameterType="Map" resultType="int">
+        SELECT 
+            COUNT(1) AS CNT  
+        FROM 
+            PAY0039D Extent1
+        WHERE  
+            Extent1.STUS_ID = 1            
+            AND Extent1.SCHDUL_DT =  TO_DATE(#{new_scheduleDt},'DD/MM/YYYY')
+            AND Extent1.PAY_MODE_ID = #{new_claimType}
+            <if test="new_issueBank != null and new_issueBank != '' ">
+            AND Extent1.BANK_ID = #{new_issueBank}
+            </if> 
+    </select>
+    
+    <!--Claim List - Schedule Claim Batch Setting Pop-up 저장 -->
+    <insert id="saveScheduleClaimSettingPop" parameterType="Map" >
+        INSERT INTO PAY0039D (
+            SCHDUL_ID,
+            STUS_ID,
+            PAY_MODE_ID,
+            BANK_ID,
+            CLM_DAY,
+            SCHDUL_DT,
+            CRT_USER_ID,
+            CRT_DT,
+            UPD_USER_ID,
+            UPD_DT,
+            DEBT_DT
+        ) VALUES (
+            PAY0039D_SEQ.NEXTVAL,
+            1,
+            NVL(#{new_claimType},0),
+            NVL(#{new_issueBank},0),
+            NVL(#{new_claimDay},0),
+            TO_DATE(#{new_scheduleDt},'DD/MM/YYYY'),
+            #{userId},
+            SYSDATE,
+            #{userId},
+            SYSDATE,
+            TO_DATE(#{new_debitDt},'DD/MM/YYYY')
+        )
+    </insert>
+    
+    <!--Claim List - Schedule Claim Batch Setting Pop-up 저장 -->
+    <update id="removeScheduleClaimSettingPop" parameterType="Map" >
+        UPDATE PAY0039D SET
+            STUS_ID = 8,
+            UPD_USER_ID = #{userId},
+            UPD_DT = SYSDATE
+        WHERE
+            SCHDUL_ID = #{schdulId}
+    </update>
 </mapper>

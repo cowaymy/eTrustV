@@ -343,11 +343,7 @@ function fn_openDivPop(val){
             			  AUIGrid.setGridData(smsGridID, result);
             			  AUIGrid.resize(smsGridID);
                       });  
-            	}    
-            		
-            			
-            			     
-            
+            	} 
 			}
 			
 			//팝업 헤더 TEXT 및 버튼 설정
@@ -632,6 +628,23 @@ function fn_clear(){
     $("#searchForm")[0].reset();
 }
 
+//**************************************************
+//**************************************************
+// Schedule Claim Batch 관련 Script 
+//**************************************************
+//**************************************************
+// Schedule Claim Batch 팝업
+function fn_openDivScheduleBatchPop() {
+	Common.popupWin("searchForm", "/payment/initScheduleClaimBatchPop.do", {width : "1200px", height : "550", resizable: "no", scrollbars: "no"});
+}
+
+
+// Schedule Claim Batch Setting 팝업
+function fn_openDivScheduleSettingPop() {
+	Common.popupWin("searchForm", "/payment/initScheduleClaimSettingPop.do", {width : "1200px", height : "550", resizable: "no", scrollbars: "no"});
+}
+
+
 </script>
 
 <!-- content start -->
@@ -735,16 +748,16 @@ function fn_clear(){
                     <dd>
                     <ul class="btns">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Claim</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New Claim</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">Claim Result(Live)</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULTNEXT');">Claim Result(Next Day)</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
-                        <li><p class="link_btn"><a href="#">Schedule Setting</a></p></li>
-                        <li><p class="link_btn"><a href="#">Schedule Claim Batch</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');">Fail Deduction SMS</a></p></li>                                                                       
                     </ul>
-                    <ul class="btns">                       
-                    </ul>
+                    <ul class="btns">
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('NEW');">New Claim</a></p></li>        
+						<li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleSettingPop();">Schedule Setting</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleBatchPop();">Schedule Claim Batch</a></p></li>
+                    </ul>                    
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
