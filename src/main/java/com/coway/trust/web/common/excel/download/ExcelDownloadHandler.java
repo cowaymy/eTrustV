@@ -6,6 +6,7 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.coway.trust.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
@@ -318,7 +319,11 @@ public class ExcelDownloadHandler implements ResultHandler<Map<String, Object>> 
 			break;
 		case BIGDECIMAL:
 			cell.setCellType(CellType.NUMERIC);
-			cell.setCellValue(((BigDecimal) value).doubleValue());
+			if(CommonUtils.isEmpty(value)){
+				cell.setCellValue(new BigDecimal(0).doubleValue());
+			}else{
+				cell.setCellValue(((BigDecimal) value).doubleValue());
+			}
 			break;
 		case SHORT:
 			cell.setCellType(CellType.NUMERIC);
