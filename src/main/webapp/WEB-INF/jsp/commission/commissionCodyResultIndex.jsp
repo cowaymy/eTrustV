@@ -185,10 +185,10 @@
    **************************************************************** **/
 	
 	var columnCDActualLayout = [
-	    {dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-	    {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+	    {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+	    {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+	    {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aCrdSumPoint",      headerText : "CRD Sum Point",        style : "my-column", editable : false },
 	    {dataField : "aHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
@@ -233,10 +233,10 @@
 	];
     
     var columnCMActualLayout = [
-        {dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-        {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+        {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+        {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
         
         {dataField : "aHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
         {dataField : "aHappycallMark",    headerText : "Happycall Mark",        style : "my-column", editable : false },
@@ -276,10 +276,10 @@
     ];
 	
     var columnSCMActualLayout = [
-        {dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-        {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+        {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+        {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
         
         {dataField : "aHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
         {dataField : "aHappycallMark",    headerText : "Happycall Mark",        style : "my-column", editable : false },
@@ -319,10 +319,10 @@
     ];
 	
     var columnGCMActualLayout = [
-        {dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-        {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+        {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+        {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
         
         {dataField : "aHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
         {dataField : "aHappycallMark",    headerText : "Happycall Mark",        style : "my-column", editable : false },
@@ -366,10 +366,10 @@
 **************************************************************** **/
 
 	var columnCDSimulLayout = [
-		{dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-		{dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-		{dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-		{dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+		{dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+		{dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+		{dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
 		
 		{dataField : "sCrdSumPoint",      headerText : "CRD Sum Point",        style : "my-column", editable : false },
         {dataField : "sHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
@@ -414,10 +414,10 @@
 	];
 	
 	var columnCMSimulLayout = [
-		{dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-        {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+        {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
 		
         {dataField : "sHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "Happycall Mark",        style : "my-column", editable : false },
@@ -457,10 +457,10 @@
 	];
 	
 	var columnSCMSimulLayout = [
-		{dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-        {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+        {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
 		
         {dataField : "sHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "Happycall Mark",        style : "my-column", editable : false },
@@ -500,10 +500,10 @@
 	];
 	
 	var columnGCMSimulLayout = [
-		{dataField : "aMemCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                 headerText : "Rank",             style : "my-column", editable : false },
-        {dataField : "aNric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
+		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
+        {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
 		
         {dataField : "sHappycallRate",    headerText : "Happycall Rate",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "Happycall Mark",        style : "my-column", editable : false },
@@ -546,10 +546,10 @@
     COMPARE GRID
 **************************************************************** **/
 	var columnCDCompareLayout = [
-	    {dataField : "aMemCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
-	    {dataField : "aMemName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                 headerText : "Rank",                    style : "my-column", editable : false },
-	    {dataField : "aNric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
+	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "CRD Sum Point",   children: [{dataField: "aCrdSumPoint", headerText: "A", editable : false}, {dataField: "sCrdSumPoint", headerText: "S", editable : false}]},
 	    {headerText : "Happycall Rate",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
@@ -593,10 +593,10 @@
 	];
 	
 	var columnCMCompareLayout = [
-	    {dataField : "aMemCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
-	    {dataField : "aMemName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                 headerText : "Rank",                    style : "my-column", editable : false },
-	    {dataField : "aNric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
+	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "Happycall Rate",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
 	    {headerText : "Happycall Mark",   children: [{dataField: "aHappycallMark", headerText: "A", editable : false}, {dataField: "sHappycallMark", headerText: "S", editable : false}]},
@@ -636,10 +636,10 @@
 	];
 	
 	var columnSCMCompareLayout = [
-	    {dataField : "aMemCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
-	    {dataField : "aMemName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                 headerText : "Rank",                    style : "my-column", editable : false },
-	    {dataField : "aNric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
+	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "Happycall Rate",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
         {headerText : "Happycall Mark",   children: [{dataField: "aHappycallMark", headerText: "A", editable : false}, {dataField: "sHappycallMark", headerText: "S", editable : false}]},
@@ -679,10 +679,10 @@
 	];
 	
 	var columnGCMCompareLayout = [
-	    {dataField : "aMemCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
-	    {dataField : "aMemName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                 headerText : "Rank",                    style : "my-column", editable : false },
-	    {dataField : "aNric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
+	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "Happycall Rate",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
         {headerText : "Happycall Mark",   children: [{dataField: "aHappycallMark", headerText: "A", editable : false}, {dataField: "sHappycallMark", headerText: "S", editable : false}]},

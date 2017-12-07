@@ -196,10 +196,10 @@
     ACTUAL GRID
 **************************************************************** **/
     var columnHPPActualLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 	    {dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -221,10 +221,10 @@
 	];
 	
     var columnHPFActualLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 	    {dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -246,10 +246,10 @@
 	];
 	
     var columnHMActualLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 	    {dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -271,10 +271,10 @@
 	];
     
     var columnSMActualLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 	    {dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -297,10 +297,10 @@
 	];
     
     var columnGMActualLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 	    {dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -323,10 +323,10 @@
 	];
     
     var columnSGMActualLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false, width : 60 },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false, width : 60 },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    /* {dataField : "aPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
 	    {dataField : "aPa",                   headerText : "PA Amt",              style : "my-column", editable : false }, */
@@ -351,10 +351,10 @@
     SIMULATION GRID
 **************************************************************** **/
     var columnHPPSimulLayout = [
-        {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-        {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+        {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+        {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+        {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
         
          {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
         {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -376,10 +376,10 @@
     ];
     
     var columnHPFSimulLayout = [
-        {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-        {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+        {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+        {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+        {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
         
         {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
         {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -401,10 +401,10 @@
     ];
     
     var columnHMSimulLayout = [
-        {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-        {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+        {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+        {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+        {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
         
         {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
         {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -426,10 +426,10 @@
     ];
     
     var columnSMSimulLayout = [
-        {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-        {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+        {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+        {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+        {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
         
         {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
         {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -452,10 +452,10 @@
     ];
     
     var columnGMSimulLayout = [
-        {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-        {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+        {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+        {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+        {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
         
         {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
         {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false },
@@ -478,10 +478,10 @@
     ];
     
     var columnSGMSimulLayout = [
-        {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-        {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-        {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false, width : 60 },
-        {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+        {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+        {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+        {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false, width : 60 },
+        {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
         
         /* {dataField : "sPi",                    headerText : "PI Amt",               style : "my-column", editable : false },
         {dataField : "sPa",                   headerText : "PA Amt",              style : "my-column", editable : false }, */
@@ -506,10 +506,10 @@
     COMPARE GRID
 **************************************************************** **/
     var columnHPPCompareLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
 	    {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]},
@@ -534,10 +534,10 @@
 	];
 	
     var columnHPFCompareLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
 	    {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]},
@@ -561,10 +561,10 @@
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
     var columnHMCompareLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
 	    {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]},
@@ -588,10 +588,10 @@
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
     var columnSMCompareLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
 	    {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]},
@@ -616,10 +616,10 @@
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
     var columnGMCompareLayout = [
-	     {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	     {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	     {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false },
-	     {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	     {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	     {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	     {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false },
+	     {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	     
 	     {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
 	     {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]},
@@ -644,10 +644,10 @@
 	     /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	 ];
     var columnSGMCompareLayout = [
-	    {dataField : "aMCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
-	    {dataField : "aMemberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
-	    {dataField : "aRank",                headerText : "Rank",                 style : "my-column", editable : false, width : 60 },
-	    {dataField : "aNric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
+	    {dataField : "mCode",             headerText : "Mem Code",          style : "my-column", editable : false, width : 80 },
+	    {dataField : "memberName",     headerText : "Mem Name",         style : "my-column", editable : false, width : 260 },
+	    {dataField : "rank",                headerText : "Rank",                 style : "my-column", editable : false, width : 60 },
+	    {dataField : "nric",                 headerText : "Nric",                   style : "my-column", editable : false, width : 110 },
 	    
 	    /* {headerText : "PI Amt",            children: [{dataField: "aPi", headerText: "A", editable : false}, {dataField: "sPi", headerText: "S", editable : false}]},
 	    {headerText : "PA Amt",           children: [{dataField: "aPa", headerText: "A", editable : false}, {dataField: "sPa", headerText: "S", editable : false}]}, */
