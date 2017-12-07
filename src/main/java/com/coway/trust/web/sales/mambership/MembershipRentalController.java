@@ -577,9 +577,9 @@ public class  MembershipRentalController {
 		return ResponseEntity.ok(map);
 	}
 	
-	@RequestMapping(value = "/membershipKeyInListPop.do")
+	@RequestMapping(value = "/membershipRentalKeyInListPop.do")
 	public String membershipKeyInListPop (@RequestParam Map<String, Object> params) throws Exception{
-		return "sales/membership/membershipKeyInListPop";
+		return "sales/membership/membershipRentalKeyInListPop";
 	}
 	
 	@Autowired
