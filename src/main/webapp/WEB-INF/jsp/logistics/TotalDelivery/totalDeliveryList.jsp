@@ -230,11 +230,11 @@
                 <tr>
                     <th scope="row">MVT Type</th>
                     <td colspan="2">
-                        <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
+                        <select id="smtype" name="smtype[]" class="w100p" /></select>
                     </td>
                     <th scope="row">Stock Transaction Type</th>
-                    <td>
-                        <select class="multy_select" multiple="multiple" id="sttype" name="sttype[]" class="w100p" /></select>
+                    <td colspan="2">
+                        <select id="sttype" name="sttype[]" class="w100p" /></select>
                     </td>
                 </tr>
 
