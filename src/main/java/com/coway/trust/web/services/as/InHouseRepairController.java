@@ -73,7 +73,7 @@ public class InHouseRepairController {
 		
 		
 		// 호출될 화면
-		return "services/as/inHouseNewRepairPop"; 
+		return "services/as/inRHouseNewRepairPop"; 
 	}
 	
 	
