@@ -10,7 +10,9 @@
 	        , l75.seq
 	        , trand.code_name AS stkactivity
 	        , TO_CHAR(l75.reqst_crt_dt, 'YYYY/MM/DD') AS reqstdate
+	        , S28C.WH_LOC_CODE AS frmloccode
 	        , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) AS frmloc
+	        , S28Q.WH_LOC_CODE AS toloccode
 	        , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) AS toloc
 	        , l48.itm_code AS itmcode
 	        , l48.itm_name AS itmname

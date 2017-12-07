@@ -29,6 +29,8 @@
 	                            {dataField:"stkactivity" ,headerText:"Stock Activity",width:180 ,height:30},
 	                            {dataField:"reqstdate" ,headerText:"Request Date",width:130 ,height:30},
                                 {dataField:"frmloc", headerText:"From Location", width:230, height:30},
+                                {dateField:"frmloccode", headerText:"From Location Code", width:180, height:30},
+                                {dataField:"toloccode", headerText:"To Location Code", width:130, height:30},
                                 {dataField:"toloc", headerText:"To Location", width:230, height:30},
                                 {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
                                 {dataField:"itmname", headerText:"Material Name", width:220, height:30},
@@ -62,8 +64,7 @@
 
     $(function() {
 
-        doDefCombo([{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}], '' ,'status', 'S', '');
-
+        //doDefCombo([{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}], '' ,'status', 'S', '');
         $("#search").click(function() {
 
             searchAjax();
@@ -170,6 +171,10 @@
 	    var param = $('#searchForm').serializeJSON();
 
 	    Common.ajax("POST", url, param, function(data) {
+	    	alert(data.dataList.length);
+	    	for(var i=0; i<data.dataList.length; i++){
+	    		console.log(data.dataList[i].frmloccode);
+	    	}
 
 	        AUIGrid.setGridData(myGridID, data.dataList);
 	    });
@@ -198,12 +203,9 @@
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Booking Status</h2>
-	</aside><!-- title_line end -->
-
-	<aside class="title_line"><!-- title_line start -->
-    <ul class="right_btns">
-            <li><p class="btn_blue2 big"><a id="search"><span class="search"></span>Search</a></p></li>
-    </ul>
+		<ul class="right_btns">
+           <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+        </ul>
 	</aside><!-- title_line end -->
 
     <section class="search_table"><!-- search_table start -->
@@ -219,7 +221,7 @@
 				<caption>table</caption>
 
 				<colgroup>
-				    <col style="width:140px" />
+				    <col style="width:120px" />
 				    <col style="width:*" />
 				    <col style="width:140px" />
 				    <col style="width:*" />
@@ -244,37 +246,33 @@
                         <th scope="row">From Location</th>
                         <td colspan="3">
                             <input type="hidden"  id="flocation" name="flocation">
-                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="flocationnm" name="flocationnm">
+                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="flocationnm" name="flocationnm" />
                         </td>
 
                         <th scope="row">To Location</th>
                         <td colspan="3">
                             <input type="hidden"  id="tlocation" name="tlocation">
-                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="tlocationnm" name="tlocationnm">
+                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="tlocationnm" name="tlocationnm" />
                         </td>
                     </tr>
 					<tr>
-					    <th scope="row">Stock Activity Type</th>
-                        <td colspan="2">
-                            <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
+                        <th scope="row">Status</th>
+                        <td>
+                            <select  id="status" name="status" class="w100p" >
+                            <option id="Y" selected>Y</option>
+                            <option id="N"> N </option></select>
                         </td>
-
                         <th scope="row">Request Date</th>
                         <td colspan="2">
-                            <div class="date_set"><!-- date_set start -->
-                                <p>
-                                  <input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date">
-                                </p>
-                                    <span>~</span>
-                                <p>
-                                   <input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date">
-                                </p>
+                            <div class="date_set w100p"><!-- date_set start -->
+                                <p><input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                                <span>~</span>
+                                <p><input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                             </div><!-- date_set end -->
                         </td>
-
-                        <th scope="row">Completion Status</th>
-                        <td>
-                            <select  id="status" name="status" class="w100p" ></select>
+                         <th scope="row">Move Type</th>
+                        <td colspan="2">
+                            <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
                         </td>
 				    </tr>
 			    </tbody>
