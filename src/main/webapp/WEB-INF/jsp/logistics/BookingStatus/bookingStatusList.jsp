@@ -26,16 +26,16 @@
     var columnLayout = [
 	                            {dataField:"reqstno" ,headerText:"Request No.",width:240 ,height:30},
 	                            {dataField:"seq" ,headerText:"Item No.",width:90 ,height:30},
-	                            {dataField:"stkactivity" ,headerText:"Stock Activity",width:180 ,height:30},
+	                            {dataField:"stkactivity" ,headerText:"Move Type",width:180 ,height:30},
 	                            {dataField:"reqstdate" ,headerText:"Request Date",width:130 ,height:30},
-                                {dataField:"frmloc", headerText:"From Location", width:230, height:30},
-                                {dateField:"frmloccode", headerText:"From Location Code", width:180, height:30},
+	                            {dataField:"frmloccode", headerText:"From Location Code", width:180, height:30},
+	                            {dataField:"frmloc", headerText:"From Location", width:230, height:30},
                                 {dataField:"toloccode", headerText:"To Location Code", width:130, height:30},
                                 {dataField:"toloc", headerText:"To Location", width:230, height:30},
                                 {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
                                 {dataField:"itmname", headerText:"Material Name", width:220, height:30},
                                 {dataField:"reqstqty", headerText:"Request Qty", width:100, height:30},
-	                            {dataField:"status" ,headerText:"Status",width:90 ,height:30},
+	                            {dataField:"status" ,headerText:"Status",width:90 ,height:30}
 	                            ];
 
     var gridPros =
@@ -171,11 +171,6 @@
 	    var param = $('#searchForm').serializeJSON();
 
 	    Common.ajax("POST", url, param, function(data) {
-	    	alert(data.dataList.length);
-	    	for(var i=0; i<data.dataList.length; i++){
-	    		console.log(data.dataList[i].frmloccode);
-	    	}
-
 	        AUIGrid.setGridData(myGridID, data.dataList);
 	    });
 	}
