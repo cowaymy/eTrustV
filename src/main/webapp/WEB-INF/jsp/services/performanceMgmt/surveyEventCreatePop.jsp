@@ -20,7 +20,7 @@ var columnLayout_info=[
 ];
 
 var columnLayout_q=[             
- {dataField:"q1", headerText:'Question</br>Number', width: 100, editable : false},
+ //{dataField:"q1", headerText:'Question</br>Number', width: 100, editable : false},
  {dataField:"codeName", headerText:'Feedback</br>Type', width: 200, editable : true,
 	 renderer : {type : "DropDownListRenderer",listFunction : function(rowIndex, columnIndex, item, dataField) {return CodeList;},keyField : "codeName",valueField : "codeName"}},
 	 //renderer : {type : "DropDownListRenderer", list : ["Standard", "Special"]}},
@@ -44,11 +44,11 @@ var gridOptions = {
         showFooter : false
 };
 
-var gridOptions_q = {
+var gridOptions_q = {   
 		headerHeight : 30,
 	    selectionMode: "singleRow",
 	    showStateColumn: false,
-	    showRowNumColumn: false,
+	    //showRowNumColumn: false,
 	    usePaging : true,
 	    pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
 	    showFooter : false
@@ -70,8 +70,9 @@ $(document).ready(function(){
     myGridID_Info = GridCommon.createAUIGrid("grid_wrap_info", columnLayout_info, "", gridOptions);
     myGridID_Q = GridCommon.createAUIGrid("grid_wrap_q", columnLayout_q, "", gridOptions_q);
     myGridID_Target = GridCommon.createAUIGrid("grid_wrap_target", columnLayout_target, "", gridOptions2);
-
     
+    //var rowCount = AUIGrid.getRowPosition(myGridID_Q);
+
     var item_info = { "hcTypeId" :  "2718", "evtTypeDesc" : "", "evtMemId" : "", "evtDt" :  "", "evtCompRqstDate" :  "", "evtCompRate" :  "", "com" :  ""}; //row 추가
     AUIGrid.addRow(myGridID_Info, item_info, "last");
     
@@ -83,7 +84,9 @@ $(document).ready(function(){
     
     //두번째 grid 행 추가
      $("#addRow_q").click(function() { 
-    	var item_q = { "q1" :  "", "codeName" : "", "q3" : ""}; //row 추가
+    	//rowCount++;
+    	//var item_q = { "q1" :  rowCount, "codeName" : "", "q3" : ""}; //row 추가
+    	var item_q = {"codeName" : "", "q3" : ""}; //row 추가
     	AUIGrid.addRow(myGridID_Q, item_q, "last");
     });
     
@@ -235,7 +238,7 @@ function auiRemoveRowHandler(){
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap_q" style="width:100%; height:120px; margin:0 auto;"></div>
+    <div id="grid_wrap_q" style="width:100%; height:130px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
