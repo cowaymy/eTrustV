@@ -38,6 +38,7 @@ var userCode;
                       {dataField:"ctgryName"      ,headerText:"Category"          ,width:120    ,height:30                },
                       {dataField:"typeId"         ,headerText:"TypeID"            ,width:120    ,height:30,visible:false },
                       {dataField:"typeName"       ,headerText:"Type"              ,width:120    ,height:30 },
+                      {dataField:"whLocCode"    ,headerText:"Location Code" ,width :120 ,height : 30},
                       {dataField:"locDesc"        ,headerText:"Location"          ,width:120    ,height:30 },
                       {dataField:"whlocgb"        ,headerText:"Location Grade"    ,width:120    ,height:30 },
                       {dataField:"qty"            ,headerText:"QTY"               ,width:120    ,height:30},
@@ -193,11 +194,13 @@ function SearchListAjax() {
 
 function f_validatation(v){
              
-//             if ($("#searchLocNm").val() == null || $("#searchLocNm").val() == undefined || $("#searchLocNm").val() == ""){
-//                 Common.alert("Please Select Location.");
-//                 return false;
-//             }
-            return true;
+             if ($("#searchlocgb").val() == null || $("#searchlocgb").val() == undefined || $("#searchlocgb").val() == ""){
+                 Common.alert("Please Select Location Type.");
+                 return false;
+             }
+             else {
+            	 return true;
+             }
 }
 
 function f_multiCombo() {
