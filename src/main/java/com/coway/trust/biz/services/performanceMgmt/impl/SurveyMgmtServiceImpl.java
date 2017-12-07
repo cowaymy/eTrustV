@@ -53,6 +53,11 @@ public class SurveyMgmtServiceImpl extends EgovAbstractServiceImpl implements Su
 		}
 		return cnt;
 	}
+	
+	@Override
+	public List<EgovMap> getCodeNameList(Map<String, Object> params) {
+		return surveyMgmtMapper.selectCodeNameList(params);
+	}
 
 
 }

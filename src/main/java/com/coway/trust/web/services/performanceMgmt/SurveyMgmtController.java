@@ -26,6 +26,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -106,6 +107,18 @@ public class SurveyMgmtController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/getCodeNameList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getCodeNameList(@RequestParam Map<String, Object> params) {
+		Precondition.checkNotNull(params.get("stusCodeId"),
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "stusCodeId" }));
+
+		LOGGER.debug("stusCodeId : {}", params.get("stusCodeId"));
+
+		List<EgovMap> codeNameList = surveyMgmtService.getCodeNameList(params);
+		return ResponseEntity.ok(codeNameList);
 	}
 
 }

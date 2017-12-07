@@ -89,5 +89,11 @@
            , #{evtDt}
        )
 	</insert>
+	
+	 <select id="selectCodeNameList" parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME 
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = 102
+    </select>
     
 </mapper>

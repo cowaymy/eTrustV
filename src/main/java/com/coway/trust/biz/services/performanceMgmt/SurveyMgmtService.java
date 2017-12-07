@@ -19,4 +19,5 @@ public interface SurveyMgmtService {
 	
 	int addSurveyEventCreate(List<Object> updateList , String loginId);
 
+	List<EgovMap> getCodeNameList(Map<String, Object> params);
 }

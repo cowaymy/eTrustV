@@ -1,10 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
 <script type="text/javaScript">
 var myGridID_Info;
 var myGridID_Q;
 var myGridID_Target;
 
+
+var  CodeList = [];
 
 var columnLayout_info=[             
  {dataField:"hcTypeId", headerText:'Event Type', width: 130, editable : true},
@@ -17,8 +20,10 @@ var columnLayout_info=[
 ];
 
 var columnLayout_q=[             
- {dataField:"q1", headerText:'Question</br>Number', width: 100, editable : true},
- {dataField:"q2", headerText:'Feedback</br>Type', width: 200, editable : true},
+ {dataField:"q1", headerText:'Question</br>Number', width: 100, editable : false},
+ {dataField:"codeName", headerText:'Feedback</br>Type', width: 200, editable : true,
+	 renderer : {type : "DropDownListRenderer",listFunction : function(rowIndex, columnIndex, item, dataField) {return CodeList;},keyField : "codeName",valueField : "codeName"}},
+	 //renderer : {type : "DropDownListRenderer", list : ["Standard", "Special"]}},
  {dataField:"q3", headerText:'Question', editable : true},
 ];
 
@@ -31,34 +36,37 @@ var columnLayout_target=[
 
 
 var gridOptions = {
-	  headerHeight : 30,
-      showStateColumn: false,
-      showRowNumColumn: false,
-      usePaging : false,
-      pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
-      showFooter : false
+		headerHeight : 30,
+        showStateColumn: false,
+        showRowNumColumn: false,
+        usePaging : false,
+        pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
+        showFooter : false
 };
 
 var gridOptions_q = {
-	      headerHeight : 30,
-	      showStateColumn: false,
-	      showRowNumColumn: false,
-	      usePaging : true,
-	      pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
-	      showFooter : false
-	};
+		headerHeight : 30,
+	    selectionMode: "singleRow",
+	    showStateColumn: false,
+	    showRowNumColumn: false,
+	    usePaging : true,
+	    pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
+	    showFooter : false
+};
   
 var gridOptions2 = {
-      showStateColumn: false,
-      showRowNumColumn: false,
-      usePaging : true,
-      pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
-      showFooter : false
+		selectionMode: "singleRow",
+        showStateColumn: false,
+        showRowNumColumn: false,
+        usePaging : true,
+        pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
+        showFooter : false
 };
 
 
 $(document).ready(function(){
 
+	
     myGridID_Info = GridCommon.createAUIGrid("grid_wrap_info", columnLayout_info, "", gridOptions);
     myGridID_Q = GridCommon.createAUIGrid("grid_wrap_q", columnLayout_q, "", gridOptions_q);
     myGridID_Target = GridCommon.createAUIGrid("grid_wrap_target", columnLayout_target, "", gridOptions2);
@@ -70,10 +78,12 @@ $(document).ready(function(){
     AUIGrid.bind(myGridID_Q, "removeRow_q", auiRemoveRowHandler);
     AUIGrid.bind(myGridID_Target, "removeRow_target", auiRemoveRowHandler);
     
+    fn_getCodeSearch('');
+    
     
     //두번째 grid 행 추가
      $("#addRow_q").click(function() { 
-    	var item_q = { "q1" :  "", "q2" : "", "q3" : ""}; //row 추가
+    	var item_q = { "q1" :  "", "codeName" : "", "q3" : ""}; //row 추가
     	AUIGrid.addRow(myGridID_Q, item_q, "last");
     });
     
@@ -97,6 +107,13 @@ $(document).ready(function(){
   
   
 }); //Ready
+
+//renderer list search
+function fn_getCodeSearch(){
+    Common.ajax("GET", "/services/performanceMgmt/getCodeNameList.do",{stusCodeId: 1}, function(result) {
+        CodeList = result;
+    }, null, {async : false});
+}  
 
 function fn_saveGridData_create(){
     Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventCreate.do", GridCommon.getEditData(myGridID_Info), function(result) {
@@ -197,8 +214,8 @@ function auiRemoveRowHandler(){
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body"><!-- pop_body start -->
 
+<section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Survey Event General Info</h2>
