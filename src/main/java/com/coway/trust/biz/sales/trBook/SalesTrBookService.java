@@ -46,6 +46,8 @@ public interface SalesTrBookService {
 
 	String saveTranBulk(Map<String, Object> params);
 
+	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
+
 	
 	
 }

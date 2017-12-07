@@ -245,7 +245,7 @@ function fn_getBookActionValidation(){
 	</td>
 	<th scope="row">Create Date</th>
 	<td>
-		<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="trBoolCrtDt" name="trBoolCrtDt"/>
+		<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="trBookCrtDt" name="trBookCrtDt"/>
 	</td>
 </tr>
 <tr>
@@ -302,7 +302,7 @@ function fn_getBookActionValidation(){
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTranBulk();">Transfer(Bulk)</a></p></li>    <!-- TODO 권한 178  -->
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAssign();">Assign</a></p></li>          <!-- TODO 권한 118  -->
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReturn();">Return</a></p></li>          <!-- TODO 권한 120  -->
-	<li><p class="btn_grid"><a href="#">Transaction List</a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTransaction();">Transaction List</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

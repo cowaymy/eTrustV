@@ -441,4 +441,9 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		
 		return docNo;
 	}
+
+	@Override
+	public List<EgovMap> selectTransitInfoList(Map<String, Object> params) {
+		return salesTrBookMapper.selectTransitInfoList(params);
+	}
 }

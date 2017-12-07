@@ -30,8 +30,8 @@
 	          <if test="trBookNo != null and trBookNo != '' ">
 	          AND TR_BOOK_NO = #{trBookNo}
 	          </if>
-	          <if test="trBoolCrtDt != null and trBoolCrtDt != '' ">
-               AND TR_BOOK_CRT_DT = #{trBoolCrtDt}
+	          <if test="trBookCrtDt != null and trBookCrtDt != '' ">
+               AND TR_BOOK_CRT_DT = #{trBookCrtDt}
 	          </if>
               <if test="trBookCrtUser != null and trBookCrtUser != '' ">
               AND TR_BOOK_CRT_USER_NAME = #{trBookCrtUser}
@@ -807,4 +807,23 @@
 		             SYSDATE
 		             )
     </insert>  
+    
+    <select id="selectTransitInfoList" parameterType="map" resultType="EgovMap">
+          SELECT A.TR_BOOK_ID   ,
+			         C.TR_TRNSIT_ID   ,
+			         C.TR_TRNSIT_FROM   ,
+			         C.TR_TRNSIT_TO   ,
+			         D.CODE_NAME   ,
+			         E.CURIER_NAME   ,
+			         F.CODE   ,
+			         CASE WHEN C.TR_TRNSIT_DT IS NOT NULL THEN TO_CHAR(C.TR_TRNSIT_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END TR_TRNSIT_DT,
+			         CASE WHEN C.TR_TRNSIT_CLOS_DT IS NOT NULL THEN TO_CHAR(C.TR_TRNSIT_CLOS_DT, 'dd-mm-yyyy') ELSE '01-01-1900' END TR_TRNSIT_CLOS_DT
+			  FROM MSC1001V A
+		       JOIN MSC0038D B   ON B.TR_TRNSIT_BOOK_ID = A.TR_BOOK_ID
+		       JOIN MSC0037D C   ON C.TR_TRNSIT_ID = B.TR_TRNSIT_ID
+		       LEFT JOIN SYS0013M D   ON D.CODE_ID = C.TR_TRNSIT_TYPE_ID
+		       LEFT JOIN SYS0016M E   ON E.CURIER_CODE = C.TR_CURIER_CODE
+		       LEFT JOIN SYS0038M F   ON F.STUS_CODE_ID = C.TR_TRNSIT_STUS_ID
+		    WHERE  A.TR_BOOK_ID = #{trBookId}
+    </select>
 </mapper>

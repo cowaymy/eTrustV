@@ -32,6 +32,7 @@ import com.coway.trust.biz.sales.trBook.SalesTrBookService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.google.gson.Gson;
 
@@ -73,28 +74,37 @@ public class SalesTrBookController {
 		logger.debug("param ===================>>  " + params);
 		String branch = sessionVO.getCode();
 		String close = "";
+			
+		if(CommonUtils.isEmpty(params.get("pgm"))){
 
-		if ("".equals(branch) || null == branch) {
-			branch = "HQ";
-			params.put("trHolderType", "Member");
-		}
-		
-		String[] stutus = request.getParameterValues("status");
-		
-		//List<Object> stutus = (List<Object>) params.get("status");
-		logger.info("stutus : {} ", stutus.toString());
-		if (0 < stutus.length) {
-			for (int i = 0; i < stutus.length; i++) {
+			if ("".equals(branch) || null == branch) {
+    			branch = "HQ";
+    			params.put("trHolderType", "Member");
+			}
+			params.put("branch", branch);
+			
+			String[] stutus = request.getParameterValues("status");
+			
+			if(stutus != null){
 				
-				int tmp = Integer.parseInt(String.valueOf(stutus[i]));
-				if (36 == tmp) {
-					params.put("Close", close);
+				logger.info("stutus : {} ", stutus.toString());
+				if (0 < stutus.length) {
+					for (int i = 0; i < stutus.length; i++) {
+						
+						int tmp = Integer.parseInt(String.valueOf(stutus[i]));
+						if (36 == tmp) {
+							params.put("Close", close);
+						}
+					}
 				}
 			}
+			params.put("stutus", stutus);
+		}else{
+			params.put("stutusId", "0");
 		}
-
-		params.put("branch", branch);
-		params.put("stutus", stutus);
+		
+		
+		
 		// MBRSH_ID
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
@@ -514,11 +524,6 @@ public class SalesTrBookController {
 		return "sales/trBook/attachmentFileUploadPop";
 	}
 	
-	@RequestMapping(value = "/trBookTransactionPop.do")
-	public String trBookTransactionPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
-		return "sales/trBook/trBookTransactionPop";
-	}
-	
 	@RequestMapping(value = "/updateReportLost", method = RequestMethod.POST) 
 	public ResponseEntity<EgovMap> sampleUploadCommon(MultipartHttpServletRequest request,
 			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {	
@@ -569,25 +574,6 @@ public class SalesTrBookController {
 		
 		return "sales/trBook/trBookTranBulkPop";
 	}
-		
-	@RequestMapping(value = "/selectTrBookTranList", method = RequestMethod.GET) 
-	public ResponseEntity<List<EgovMap>> selectTrBookTranList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {		
-		
-		logger.debug("in  selectTrBookTranList ");
-		logger.debug("params =====================================>>  " + params);
-		
-		if(StringUtils.isEmpty(params.get("branchFrom"))){
-			params.put("trBookHolder", sessionVO.getCode());
-		}else{
-			params.put("trBookHolder", params.get("branchFrom"));
-		}
-		params.put("trHolderType", "Branch");
-		params.put("stutusId", 1);
-
-		List<EgovMap> resultList = salesTrBookService.selectTrBookList(params);
-		
-		return ResponseEntity.ok(resultList);
-	}
 	
 	@RequestMapping(value = "/saveTranBulk", method = RequestMethod.POST) 
 	public ResponseEntity<ReturnMessage> saveTranBulk (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
@@ -621,4 +607,39 @@ public class SalesTrBookController {
 		return "sales/trBook/trBookMgmtLostReportListPop";
 	}
 
+	
+	@RequestMapping(value = "/trBookTransactionPop.do")
+	public String trBookTransactionPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+		return "sales/trBook/trBookTransactionPop";
+	}
+	
+	@RequestMapping(value = "/selectTrBookTranList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectTrBookTranList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {		
+		
+		logger.debug("in  selectTrBookTranList ");
+		logger.debug("params =====================================>>  " + params);
+		
+		if(StringUtils.isEmpty(params.get("branchFrom"))){
+			params.put("trBookHolder", sessionVO.getCode());
+		}else{
+			params.put("trBookHolder", params.get("branchFrom"));
+		}
+		params.put("trHolderType", "Branch");
+		params.put("stutusId", 1);
+		
+		List<EgovMap> resultList = salesTrBookService.selectTrBookList(params);
+		
+		return ResponseEntity.ok(resultList);
+	}
+	
+	@RequestMapping(value = "/selectTransitInfoList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectTransitInfoList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {		
+		
+		logger.debug("in  selectTransitInfoList ");
+		logger.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> resultList = salesTrBookService.selectTransitInfoList(params);
+		
+		return ResponseEntity.ok(resultList);
+	}
 }

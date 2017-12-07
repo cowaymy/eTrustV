@@ -68,5 +68,7 @@ public interface SalesTrBookMapper {
 
 	void insertDCFResponseLogs(Map<String, Object> params);
 
+	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
+
 
 }
