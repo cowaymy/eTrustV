@@ -606,6 +606,17 @@ public class SalesTrBookController {
 		
 		return "sales/trBook/trBookMgmtLostReportListPop";
 	}
+	
+	@RequestMapping(value="/getOrganizationCodeList")
+	public ResponseEntity<List<EgovMap>> getOrganizationCodeList(@RequestParam Map<String, Object> params , @RequestParam(value = "parentID[]", required=false) List<String> arr) throws Exception{
+	
+		List<EgovMap> organizationCodeList = null;
+		params.put("parentIDArray", arr);
+		
+		organizationCodeList = salesTrBookService.getOrganizationCodeList(params);
+		
+		return ResponseEntity.ok(organizationCodeList);
+	}
 
 	
 	@RequestMapping(value = "/trBookTransactionPop.do")
