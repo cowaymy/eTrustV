@@ -69,13 +69,26 @@ public class AssetMngServiceImpl extends EgovAbstractServiceImpl implements Asse
 		int inassetid = AssetMngMapper.AssetCreateSeq();
 		int newAssetCardId = AssetMngMapper.AssetCardIdSeq();
 
+		int mastercategory = Integer.parseInt((String) params.get("mastercategory"));	
+		int mastertype = Integer.parseInt((String) params.get("mastertype"));
+		int mastercolor = Integer.parseInt((String) params.get("mastercolor"));
+		int masterbrand = Integer.parseInt((String) params.get("masterbrand"));
+		//double masterpurchaseamount = Double.parseDouble((String) params.get("masterpurchaseamount"));
+		int masterdealer = Integer.parseInt((String) params.get("masterdealer"));
+				
 		params.put("inassetid", inassetid);
 		params.put("masterstatus", 1);
 		params.put("masterbreanch", 42);
 		params.put("curr_dept_id", 38);
 		params.put("curr_user_id", 0);
 		params.put("loginId", loginId);
-
+		params.put("mastercategory", mastercategory);
+		params.put("mastertype", mastertype);
+		params.put("mastercolor", mastercolor);
+		params.put("masterbrand", masterbrand);
+//		params.put("masterpurchaseamount", masterpurchaseamount);
+		params.put("masterdealer", masterdealer);
+		
 		AssetMngMapper.insertMasterAsset(params);
 
 		Map<String, Object> cardmap = new HashMap<String, Object>();
