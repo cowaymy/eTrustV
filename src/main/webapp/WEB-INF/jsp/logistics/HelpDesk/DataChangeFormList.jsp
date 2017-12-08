@@ -444,12 +444,11 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
    	
     	var fileName = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno");
     	var subPath = AUIGrid.getCellValue(myGridID,  selectedItem[0], "c8");
-    	alert("subPath  :  "+subPath);
+//    	alert("subPath  :  "+subPath);
     	var orignlFileNm = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno")+".zip";
     	subPath =subPath.substr(0,14);
 //     	alert("fileName  :  "+fileName);
 //     	alert("subPath  :  "+subPath);
-    
 //    	alert(subPath.substr(0,14));
     	    	
      if( "N"== subPath || ""==subPath || null==subPath ||""==fileName || null==fileName){
