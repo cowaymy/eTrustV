@@ -57,7 +57,7 @@
                         {dataField:"stusid"          ,headerText:"Status Code"     ,width:140    ,height:30 , visible:false},
                         {dataField:"stuscode"        ,headerText:"Status Code"     ,width:140    ,height:30 , visible:false},
                         {dataField:"stusname"        ,headerText:"Status Code"     ,width:140    ,height:30 , visible:true},
-                        {dataField:"crtdt"           ,headerText:"Creator"         ,width:140    ,height:30 , visible:true},
+                        {dataField:"crtdt"           ,headerText:"Create Date"         ,width:140    ,height:30 , visible:true},
                         {dataField:"fcrtdt"          ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
                         {dataField:"crtuserid"       ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
                         {dataField:"crtusernm"       ,headerText:"Creator"         ,width:140    ,height:30 , visible:true},
@@ -268,10 +268,10 @@
     <td><input type="text" id="screator" name="screator" class="w100p"/></td>
     <th scope="row">Create Date</th>
     <td>
-        <div class="date_set"><!-- date_set start -->
-        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"></p>   
+        <div class="date_set w100p"><!-- date_set start -->
+        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
         <span>To</span>
-        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date w100p"></p>
+        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
         </div><!-- date_set end -->                        
     </td>
 </tr>
