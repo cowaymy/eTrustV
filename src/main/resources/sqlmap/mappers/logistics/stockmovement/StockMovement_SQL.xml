@@ -470,6 +470,30 @@
                                               AND REQST_NO =#{reqstno}                                      
                                                        
      </insert>
+     
+<!--     <insert id="insertMovementSerial" parameterType="Map"> -->
+<!--      INSERT INTO LOG0061D ( -->
+<!--                                         SERIAL_NO, -->
+<!--                                         DELVRY_NO, -->
+<!--                                         PDELVRY_NO_ITM, -->
+<!--                                         TTYPE, -->
+<!--                                         CRT_DT, -->
+<!--                                         CRT_USER_ID -->
+<!--                                         ) -->
+<!--                           SELECT -->
+<!--                                    #{serial}, -->
+<!--                                    #{delno}, -->
+<!--                                    DELVRY_NO_ITM, -->
+<!--                                     (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= LOG0055D.REQST_NO) , -->
+<!--                                     SYSDATE, -->
+<!--                                     #{userId} -->
+<!--                                     FROM LOG0055D -->
+<!--                                     WHERE 1=1 -->
+<!--                                               AND DELVRY_NO= #{delno} -->
+<!--                                               AND ITM_CODE =#{itmcd} -->
+                                                                                                                                       
+<!--      </insert>      -->
+     
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
             SELECT
                 DELVRY_NO,
@@ -553,7 +577,7 @@
      <update id="updateRequestMovement" parameterType="String">
         UPDATE LOG0047M 
            SET REQST_STUS = 'P'
-         WHERE REQST_NO = #{param}
+         WHERE REQST_NO =#{param}
      </update>
      <insert id="insertStockBooking" parameterType="Map">
         INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
