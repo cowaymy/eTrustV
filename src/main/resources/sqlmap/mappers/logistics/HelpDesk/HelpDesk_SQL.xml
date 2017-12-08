@@ -821,16 +821,22 @@ SELECT Project1.DCF_REQ_COM_FILD_ID DCF_REQ_COM_FILD_ID  ,
 <update id="updateDcfRequestM" parameterType="Map">
      UPDATE LOG0064M  
 		   SET 
+	           <if test="DCFReqStatusID !=null and DCFReqStatusID !=''">
 		       DCF_REQ_STUS_ID =#{DCFReqStatusID},
+	           </if>	
+	           <if test="DCFReqProStatusID !=null and DCFReqProStatusID !=''">
+		       DCF_REQ_PRO_STUS_ID = #{DCFReqProStatusID},
+	           </if>   
+	           <if test="insReason !=null and insReason !=''">
+		       DCF_REQ_APPV_REQ_RESN_ID=#{insReason},     
+	           </if>   
 		       DCF_REQ_UPD_DT =  SYSDATE,
 		       DCF_REQ_UPD_USER_ID = #{upuser_id} ,
 		       DCF_REQ_APPV_USER_ID = #{crtuser_id} ,
 		       DCF_REQ_APPV_DT =  SYSDATE,
 		       DCF_REQ_APPV_REM = #{dcfReqAppvRem} ,
-		       DCF_REQ_APPV_STUS_ID = #{insApprovalStatus},
-		       DCF_REQ_PRO_STUS_ID = #{DCFReqProStatusID},
-		       DCF_REQ_APPV_REQ_RESN_ID=#{insReason}       
-		   WHERE  ( DCF_REQ_ENTRY_ID = #{reqId})
+		       DCF_REQ_APPV_STUS_ID = #{insApprovalStatus}
+               WHERE  ( DCF_REQ_ENTRY_ID = #{reqId})
 </update>  
 
 <insert id="insertDcfResponseLog" parameterType="Map">
