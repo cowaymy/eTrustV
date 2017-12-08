@@ -203,6 +203,7 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0060T(Map<String, Object> params);
 	List<EgovMap> selectCMM0067T(Map<String, Object> params);
 	List<EgovMap> selectCMM0068T(Map<String, Object> params);
+	List<EgovMap> selectCMM0069T(Map<String, Object> params);
 	
 	/**
 	 * search Basic Data Count
@@ -237,6 +238,7 @@ public interface CommissionCalculationMapper {
 	int cntCMM0060T(Map<String, Object>  param);
 	int cntCMM0067T(Map<String, Object>  param);
 	int cntCMM0068T(Map<String, Object>  param);
+	int cntCMM0069T(Map<String, Object>  param);
 	
 	/**
 	 * basic Data  Exclude Update
@@ -266,6 +268,7 @@ public interface CommissionCalculationMapper {
 	void udtDataCMM0060T(Map<String, Object>  param);
 	void udtDataCMM0067T(Map<String, Object>  param);
 	void udtDataCMM0068T(Map<String, Object>  param);
+	void udtDataCMM0069T(Map<String, Object>  param);
 	
 	/**
      * Adjustment Code List
@@ -350,4 +353,6 @@ public interface CommissionCalculationMapper {
 	int cntSimulCMM0020T(Map<String, Object>  param);
 	int cntSimulCMM0021T(Map<String, Object>  param);
 	int cntSimulCMM0024T(Map<String, Object>  param);
+	
+	List<EgovMap> runningPrdCheck(Map<String, Object> params);
 }

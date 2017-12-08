@@ -566,6 +566,15 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		return commissionCalculationMapper.selectCMM0068T(params);
 	}
 	
+	@Override
+	public int cntCMM0069T(Map<String, Object> params) {
+		return commissionCalculationMapper.cntCMM0069T(params);
+	}
+	@Override
+	public List<EgovMap> selectCMM0069T(Map<String, Object> params) {
+		return commissionCalculationMapper.selectCMM0069T(params);
+	}
+	
 	
 	/**
 	 * Basic Data Exclude Update 
@@ -657,6 +666,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public void udtDataCMM0068T(Map<String, Object> params) {
 		commissionCalculationMapper.udtDataCMM0068T(params);
+	}
+	@Override
+	public void udtDataCMM0069T(Map<String, Object> params) {
+		commissionCalculationMapper.udtDataCMM0069T(params);
 	}
 
 	
@@ -890,6 +903,11 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	@Override
 	public void callIncentiveConfirm(Map<String, Object> params){
 		commissionCalculationMapper.callIncentiveConfirm(params);
+	}
+	
+	@Override
+	 public List<EgovMap> runningPrdCheck(Map<String, Object> params){
+		return commissionCalculationMapper.runningPrdCheck(params);
 	}
 	
 }

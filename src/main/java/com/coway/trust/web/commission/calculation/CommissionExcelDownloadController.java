@@ -664,9 +664,20 @@ public class CommissionExcelDownloadController {
 				columns = new String[] { "grpName","emplyCode","emplyId","tot", "outrgt", "instlmt", "rental", "pv", "pvYear", "pvMonth", "deptCode",
 						"grpCode", "orgCode", "runId", "taskId", "isExclude" };
 				titles = new String[] { "GRP NAME","EMPLY CODE","EMPLY ID","TOT", "OUTRGT", "INSTLMT", "RENTAL", "PV", "PV YEAR", "PV MONTH", "DEPT CODE",
-						"GRP CODE", "ORG CODE", "run Id", "task Id", "is Exclude" };
+						"GRP CODE", "ORG CODE", "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad68T(map, downloadHandler);
+			}else if (codeNm.equals(CommissionConstants.COMIS_BSD_P019)) {
+				map.put("codeId", request.getParameter("codeId"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
+				map.put("useYnCombo", request.getParameter("useYnCombo"));
+
+				columns = new String[] { "grpName","emplyCode","emplyId","tot", "outrgt", "instlmt", "rental", "outrgtPlus", "nnUnit","deptCode",
+						"runId", "taskId", "isExclude" };
+				titles = new String[] { "GRP NAME","EMPLY CODE","EMPLY ID","TOT", "OUTRGT", "INSTLMT", "RENTAL", "OUTRGT PLUS", "NN UNIT", "DEPT CODE",
+						 "RUN ID", "TASK ID", "IS EXCLUDE" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad69T(map, downloadHandler);
 			}
 			else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
 				map.put("ordId", request.getParameter("ordId"));
@@ -726,7 +737,622 @@ public class CommissionExcelDownloadController {
 						"CUMLT DSTRIB", "PAYOUT PRCNT", "PAYOUT AMT", "TASK ID" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad24T(map, downloadHandler);
-			} else {
+				
+				
+			/*
+			 * Result Index Excel Download
+			 */
+			} else if(codeNm.equals("result_HP")){
+				String orgCombo = request.getParameter("orgCombo");
+				map.put("memCode", request.getParameter("memCode"));
+				 
+				if(CommissionConstants.COMIS_HP_HPP_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_HP_HP_LEV);
+					map.put("empType", CommissionConstants.COMIS_HP_HPP_EMPTYPE);
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"aPi", "aPa", "aSgmAmt", "aMgrAmt", "aOutinsAmt", "aBonus", "aRenmgrAmt", "aRentalAmt", "aOutplsAmt", "aMembershipAmt", 
+								"aTbbAmt", "aAdjustAmt", "aIncentive", "aShiAmt", "aRentalmembershipAmt", "aRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPa", "sSgmAmt", "sMgrAmt", "sOutinsAmt", "sBonus", "sRenmgrAmt", "sRentalAmt", "sOutplsAmt", "sMembershipAmt", 
+								"sTbbAmt", "sAdjustAmt", "sIncentive", "sShiAmt", "sRentalmembershipAmt", "sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPi", "aPa", "sPa", "aSgmAmt", "sSgmAmt", "aMgrAmt", "sMgrAmt", "aOutinsAmt", "sOutinsAmt",
+								"aBonus", "sBonus", "aRenmgrAmt", "sRenmgrAmt", "aRentalAmt", "sRentalAmt", "aOutplsAmt", "sOutplsAmt", "aMembershipAmt", "sMembershipAmt", 
+								"aTbbAmt","sTbbAmt", "aAdjustAmt","sAdjustAmt", "aIncentive","sIncentive", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", 
+								"aRentalmembershipShiAmt","sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"(A) PI","(S) PI", "(A)PA","(S) PA", "(A)SGM AMT", "(S) SGM AMT", "(A)MGR AMT", "(S) MGR AMT", "(A)OUTINS AMT", "(S) OUTINS AMT", 
+								"(A)BONUS", "(S) BONUS", "(A)RENMGR AMT", "(S) RENMGR AMT", "(A)RENTAL AMT", "(S) RENTAL AMT", "(A)OUTPLSAMT", "(S) OUTPLSAMT", "(A)MEMBERSHIP AMT", "(S) MEMBERSHIP AMT", 
+								"(A)TBB AMT","(S) TBB AMT", "(A)ADJUST AMT", "(S) ADJUST AMT", "(A)INCENTIVE", "(S) INCENTIVE", "(A)SHI AMT", "(S) SHI AMT", "(A)RENTALMEMBERSHIP AMT", "(S) RENTALMEMBERSHIP AMT",
+								"(A)RENTALMEMBERSHIP SHI AMT", "(S) RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_HP_HPF_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_HP_HP_LEV);
+					map.put("empType", CommissionConstants.COMIS_HP_HPF_EMPTYPE);
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"aPi", "aPa", "aSgmAmt", "aMgrAmt", "aOutinsAmt", "aBonus", "aRenmgrAmt", "aRentalAmt", "aOutplsAmt", "aMembershipAmt", 
+								"aTbbAmt", "aAdjustAmt", "aIncentive", "aShiAmt", "aRentalmembershipAmt", "aRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPa", "sSgmAmt", "sMgrAmt", "sOutinsAmt", "sBonus", "sRenmgrAmt", "sRentalAmt", "sOutplsAmt", "sMembershipAmt", 
+								"sTbbAmt", "sAdjustAmt", "sIncentive", "sShiAmt", "sRentalmembershipAmt", "sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPi", "aPa", "sPa", "aSgmAmt", "sSgmAmt", "aMgrAmt", "sMgrAmt", "aOutinsAmt", "sOutinsAmt",
+								"aBonus", "sBonus", "aRenmgrAmt", "sRenmgrAmt", "aRentalAmt", "sRentalAmt", "aOutplsAmt", "sOutplsAmt", "aMembershipAmt", "sMembershipAmt", 
+								"aTbbAmt","sTbbAmt", "aAdjustAmt","sAdjustAmt", "aIncentive","sIncentive", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", 
+								"aRentalmembershipShiAmt","sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"(A) PI","(S) PI", "(A)PA","(S) PA", "(A)SGM AMT", "(S) SGM AMT", "(A)MGR AMT", "(S) MGR AMT", "(A)OUTINS AMT", "(S) OUTINS AMT", 
+								"(A)BONUS", "(S) BONUS", "(A)RENMGR AMT", "(S) RENMGR AMT", "(A)RENTAL AMT", "(S) RENTAL AMT", "(A)OUTPLSAMT", "(S) OUTPLSAMT", "(A)MEMBERSHIP AMT", "(S) MEMBERSHIP AMT", 
+								"(A)TBB AMT","(S) TBB AMT", "(A)ADJUST AMT", "(S) ADJUST AMT", "(A)INCENTIVE", "(S) INCENTIVE", "(A)SHI AMT", "(S) SHI AMT", "(A)RENTALMEMBERSHIP AMT", "(S) RENTALMEMBERSHIP AMT",
+								"(A)RENTALMEMBERSHIP SHI AMT", "(S) RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_HP_HM_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_HP_HM_LEV);
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"aPi", "aPa", "aSgmAmt", "aMgrAmt", "aOutinsAmt", "aBonus", "aRenmgrAmt", "aRentalAmt", "aOutplsAmt", "aMembershipAmt", 
+								"aTbbAmt", "aAdjustAmt", "aIncentive", "aShiAmt", "aRentalmembershipAmt", "aRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPa", "sSgmAmt", "sMgrAmt", "sOutinsAmt", "sBonus", "sRenmgrAmt", "sRentalAmt", "sOutplsAmt", "sMembershipAmt", 
+								"sTbbAmt", "sAdjustAmt", "sIncentive", "sShiAmt", "sRentalmembershipAmt", "sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPi", "aPa", "sPa", "aSgmAmt", "sSgmAmt", "aMgrAmt", "sMgrAmt", "aOutinsAmt", "sOutinsAmt",
+								"aBonus", "sBonus", "aRenmgrAmt", "sRenmgrAmt", "aRentalAmt", "sRentalAmt", "aOutplsAmt", "sOutplsAmt", "aMembershipAmt", "sMembershipAmt", 
+								"aTbbAmt","sTbbAmt", "aAdjustAmt","sAdjustAmt", "aIncentive","sIncentive", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", 
+								"aRentalmembershipShiAmt","sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"(A) PI","(S) PI", "(A)PA","(S) PA", "(A)SGM AMT", "(S) SGM AMT", "(A)MGR AMT", "(S) MGR AMT", "(A)OUTINS AMT", "(S) OUTINS AMT", 
+								"(A)BONUS", "(S) BONUS", "(A)RENMGR AMT", "(S) RENMGR AMT", "(A)RENTAL AMT", "(S) RENTAL AMT", "(A)OUTPLSAMT", "(S) OUTPLSAMT", "(A)MEMBERSHIP AMT", "(S) MEMBERSHIP AMT", 
+								"(A)TBB AMT","(S) TBB AMT", "(A)ADJUST AMT", "(S) ADJUST AMT", "(A)INCENTIVE", "(S) INCENTIVE", "(A)SHI AMT", "(S) SHI AMT", "(A)RENTALMEMBERSHIP AMT", "(S) RENTALMEMBERSHIP AMT",
+								"(A)RENTALMEMBERSHIP SHI AMT", "(S) RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_HP_SM_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_HP_SM_LEV);
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"aPi", "aPa", "aSgmAmt", "aMgrAmt", "aOutinsAmt", "aBonus", "aRenmgrAmt", "aRentalAmt", "aOutplsAmt", "aMembershipAmt", 
+								"aTbbAmt", "aAdjustAmt", "aIncentive", "aShiAmt", "aRentalmembershipAmt", "aRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPa", "sSgmAmt", "sMgrAmt", "sOutinsAmt", "sBonus", "sRenmgrAmt", "sRentalAmt", "sOutplsAmt", "sMembershipAmt", 
+								"sTbbAmt", "sAdjustAmt", "sIncentive", "sShiAmt", "sRentalmembershipAmt", "sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPi", "aPa", "sPa", "aSgmAmt", "sSgmAmt", "aMgrAmt", "sMgrAmt", "aOutinsAmt", "sOutinsAmt",
+								"aBonus", "sBonus", "aRenmgrAmt", "sRenmgrAmt", "aRentalAmt", "sRentalAmt", "aOutplsAmt", "sOutplsAmt", "aMembershipAmt", "sMembershipAmt", 
+								"aTbbAmt","sTbbAmt", "aAdjustAmt","sAdjustAmt", "aIncentive","sIncentive", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", 
+								"aRentalmembershipShiAmt","sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"(A) PI","(S) PI", "(A)PA","(S) PA", "(A)SGM AMT", "(S) SGM AMT", "(A)MGR AMT", "(S) MGR AMT", "(A)OUTINS AMT", "(S) OUTINS AMT", 
+								"(A)BONUS", "(S) BONUS", "(A)RENMGR AMT", "(S) RENMGR AMT", "(A)RENTAL AMT", "(S) RENTAL AMT", "(A)OUTPLSAMT", "(S) OUTPLSAMT", "(A)MEMBERSHIP AMT", "(S) MEMBERSHIP AMT", 
+								"(A)TBB AMT","(S) TBB AMT", "(A)ADJUST AMT", "(S) ADJUST AMT", "(A)INCENTIVE", "(S) INCENTIVE", "(A)SHI AMT", "(S) SHI AMT", "(A)RENTALMEMBERSHIP AMT", "(S) RENTALMEMBERSHIP AMT",
+								"(A)RENTALMEMBERSHIP SHI AMT", "(S) RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_HP_GM_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_HP_GM_LEV);
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"aPi", "aPa", "aSgmAmt", "aMgrAmt", "aOutinsAmt", "aBonus", "aRenmgrAmt", "aRentalAmt", "aOutplsAmt", "aMembershipAmt", 
+								"aTbbAmt", "aAdjustAmt", "aIncentive", "aShiAmt", "aRentalmembershipAmt", "aRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPa", "sSgmAmt", "sMgrAmt", "sOutinsAmt", "sBonus", "sRenmgrAmt", "sRentalAmt", "sOutplsAmt", "sMembershipAmt", 
+								"sTbbAmt", "sAdjustAmt", "sIncentive", "sShiAmt", "sRentalmembershipAmt", "sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"PI", "PA", "SGM AMT", "MGR AMT", "OUTINS AMT", "BONUS", "RENMGR AMT", "RENTAL AMT", "OUTPLSAMT", "MEMBERSHIP AMT", 
+								"TBB AMT", "ADJUST AMT", "INCENTIVE", "SHI AMT", "RENTALMEMBERSHIP AMT", "RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", 
+								"sPi", "sPi", "aPa", "sPa", "aSgmAmt", "sSgmAmt", "aMgrAmt", "sMgrAmt", "aOutinsAmt", "sOutinsAmt",
+								"aBonus", "sBonus", "aRenmgrAmt", "sRenmgrAmt", "aRentalAmt", "sRentalAmt", "aOutplsAmt", "sOutplsAmt", "aMembershipAmt", "sMembershipAmt", 
+								"aTbbAmt","sTbbAmt", "aAdjustAmt","sAdjustAmt", "aIncentive","sIncentive", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", 
+								"aRentalmembershipShiAmt","sRentalmembershipShiAmt" };
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", 
+								"(A) PI","(S) PI", "(A)PA","(S) PA", "(A)SGM AMT", "(S) SGM AMT", "(A)MGR AMT", "(S) MGR AMT", "(A)OUTINS AMT", "(S) OUTINS AMT", 
+								"(A)BONUS", "(S) BONUS", "(A)RENMGR AMT", "(S) RENMGR AMT", "(A)RENTAL AMT", "(S) RENTAL AMT", "(A)OUTPLSAMT", "(S) OUTPLSAMT", "(A)MEMBERSHIP AMT", "(S) MEMBERSHIP AMT", 
+								"(A)TBB AMT","(S) TBB AMT", "(A)ADJUST AMT", "(S) ADJUST AMT", "(A)INCENTIVE", "(S) INCENTIVE", "(A)SHI AMT", "(S) SHI AMT", "(A)RENTALMEMBERSHIP AMT", "(S) RENTALMEMBERSHIP AMT",
+								"(A)RENTALMEMBERSHIP SHI AMT", "(S) RENTALMEMBERSHIP SHI AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_HP_SGM_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_HP_SGM_LEV);
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", "aSgmAmt"};
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", "SGM AMT"};
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", "sSgmAmt"};
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC", "SGM AMT"};
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode", "memberName", "rank", "nric", "aSgmAmt", "sSgmAmt"};
+						titles = new String[] { "MEM CODE", "MEMBER NAME", "RANK", "NRIC",  "(A)SGM AMT", "(S) SGM AMT"};
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}
+				largeExcelService.downLoadHPResultIndex(map, downloadHandler);
+				
+			/*
+			 * CD Result Index
+			 */
+			} else if(codeNm.equals("result_CD")){
+				map.put("orgCombo", request.getParameter("orgCombo"));
+				map.put("memCode", request.getParameter("memCode"));
+				
+				String orgCombo = request.getParameter("orgCombo");
+				map.put("memCode", request.getParameter("memCode"));
+				 
+				if(CommissionConstants.COMIS_CD_CDN_CD.equals(orgCombo) || CommissionConstants.COMIS_CD_CDC_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_CD_CD_LEV);
+					if(actionType.equals("A")){
+						columns = new String[] { "memCode","memName","rank","nric",
+								"aCrdSumPoint","aHappycallRate","aHappycallMark",	"aHsRate","aHsMark",
+								"aRcRate","aRcMark","aNsRate","aNsMark","aOutplsAmt",
+								"aDropRate","aDropMark","aPerAmt","aSalesAmt","aBonusAmt",
+								"aCollectAmt","aMembershipAmt","aPeAmt","aHealthyFamilyAmt","aNewcodyAmt",
+								"aIntroductionFees","aMobilePhone","aStaffPurchase","aTelephoneDeduct","aIncentive",
+								"aAdj","aCodyRegistrationFees","aShiAmt","aRentalmembershipAmt","aShiRentalmembershipAmt"};
+						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
+								"CRD SUM POINT","HAPPYCALL RATE","HAPPYCALL MARK",	"HS RATE","HS MARK",
+								"RC RATE","RC MARK","NS RATE","NS MARK","OUTPLS AMT",
+								"DROP RATE","DROP MARK","PER AMT","SALES AMT","BONUS AMT",
+								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","HEALTHY FAMILY AMT","NEWCODY AMT",
+								"INTRODUCTION FEES","MOBILE PHONE","STAFF PURCHASE","TELEPHONE DEDUCT","INCENTIVE",
+								"ADJ","CODY REGISTRATION FEES","SHI AMT","RENTALMEMBERSHIP AMT","SHI RENTALMEMBERSHIP AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "memCode","memName","rank","nric",
+								"sCrdSumPoint","sHappycallRate","sHappycallMark",	"sHsRate","sHsMark",
+								"sRcRate","sRcMark","sNsRate","sNsMark","sOutplsAmt",
+								"sDropRate","sDropMark","sPerAmt","sSalesAmt","sBonusAmt",
+								"sCollectAmt","sMembershipAmt","sPeAmt","sHealthyFamilyAmt","sNewcodyAmt",
+								"sIntroductionFees","sMobilePhone","sStaffPurchase","sTelephoneDeduct","sIncentive",
+								"sAdj","sCodyRegistrationFees","sShiAmt","sRentalmembershipAmt","sShiRentalmembershipAmt"};
+						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
+								"CRD SUM POINT","HAPPYCALL RATE","HAPPYCALL MARK",	"HS RATE","HS MARK",
+								"RC RATE","RC MARK","NS RATE","NS MARK","OUTPLS AMT",
+								"DROP RATE","DROP MARK","PER AMT","SALES AMT","BONUS AMT",
+								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","HEALTHY FAMILY AMT","NEWCODY AMT",
+								"INTRODUCTION FEES","MOBILE PHONE","STAFF PURCHASE","TELEPHONE DEDUCT","INCENTIVE",
+								"ADJ","CODY REGISTRATION FEES","SHI AMT","RENTALMEMBERSHIP AMT","SHI RENTALMEMBERSHIP AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "memCode","memName","rank","nric",
+								"sCrdSumPoint","sHappycallRate","sHappycallMark",	"sHsRate","sHsMark",
+								"sRcRate","sRcMark","sNsRate","sNsMark","sOutplsAmt",
+								"sDropRate","sDropMark","sPerAmt","sSalesAmt","sBonusAmt",
+								"sCollectAmt","sMembershipAmt","sPeAmt","sHealthyFamilyAmt","sNewcodyAmt",
+								"sIntroductionFees","sMobilePhone","sStaffPurchase","sTelephoneDeduct","sIncentive",
+								"sAdj","sCodyRegistrationFees","sShiAmt","sRentalmembershipAmt","sShiRentalmembershipAmt"};
+						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
+								"CRD SUM POINT","HAPPYCALL RATE","HAPPYCALL MARK",	"HS RATE","HS MARK",
+								"RC RATE","RC MARK","NS RATE","NS MARK","OUTPLS AMT",
+								"DROP RATE","DROP MARK","PER AMT","SALES AMT","BONUS AMT",
+								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","HEALTHY FAMILY AMT","NEWCODY AMT",
+								"INTRODUCTION FEES","MOBILE PHONE","STAFF PURCHASE","TELEPHONE DEDUCT","INCENTIVE",
+								"ADJ","CODY REGISTRATION FEES","SHI AMT","RENTALMEMBERSHIP AMT","SHI RENTALMEMBERSHIP AMT" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+					largeExcelService.downLoadCDResultIndex(map, downloadHandler);
+				}else{
+					if(CommissionConstants.COMIS_CD_CM_CD.equals(orgCombo)){
+						map.put("level", CommissionConstants.COMIS_CD_CM_LEV);
+						if(actionType.equals("A")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"aHappycallRate","aHappycallMark","aBsRate","aBsMark","aRcRate",
+									"aRcMark","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityMark",
+									"aDropRate","aDropMark","aBasicSalary","aSalesAmt","aBonusAmt",
+									"aCollectAmt","aMembershipAmt","aHpAmt","aTransportAmt","aMonthlyAllowance",
+									"aMobilePhone","aIntroductionFees","aStaffPurchase","aTelephoneDeduct","aIncentive",
+									"aAdj","aShiAmt","aRentalmembershipAmt","aOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
+									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
+									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
+									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}else if(actionType.equals("S")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"sHappycallRate","sHappycallMark","sBsRate","sBsMark","sRcRate",
+									"sRcMark","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityMark",
+									"sDropRate","sDropMark","sBasicSalary","sSalesAmt","sBonusAmt",
+									"sCollectAmt","sMembershipAmt","sHpAmt","sTransportAmt","sMonthlyAllowance",
+									"sMobilePhone","sIntroductionFees","sStaffPurchase","sTelephoneDeduct","sIncentive",
+									"sAdj","sShiAmt","sRentalmembershipAmt","sOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
+									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
+									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
+									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}else if(actionType.equals("C")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"aHappycallRate","sHappycallRate", "aHappycallMark","sHappycallMark", "aBsRate","sBsRate", "aBsMark","sBsMark", "aRcRate","sRcRate",
+									"aRcMark","sRcMark", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityMark","sBsProductivityMark",
+									"aDropRate","sDropRate", "aDropMark","sDropMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
+									"aCollectAmt","sCollectAmt", "aMembershipAmt","sMembershipAmt", "aHpAmt","sHpAmt", "aTransportAmt","sTransportAmt", "aMonthlyAllowance","sMonthlyAllowance",
+									"aMobilePhone","sMobilePhone", "aIntroductionFees","sIntroductionFees", "aStaffPurchase","sStaffPurchase", "aTelephoneDeduct","sTelephoneDeduct", "aIncentive","sIncentive",
+									"aAdj","sAdj", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", "aOutplsAmt","sOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"(A) Happycall Rate","(S) Happycall Rate", "(A) Happycall Mark","(S) Happycall Mark", "(A) HS Rate","(S) HS Rate", "(A) HS Mark","(S) HS Mark",  "(A) RC Rate", "(S) RC Rate", 
+									"(A) RC Mark","(S) RC Mark", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
+									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
+									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
+									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
+									"(A) ADJ","SHI AMT","(S) ADJ","SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}
+					}else if(CommissionConstants.COMIS_CD_SCM_CD.equals(orgCombo)){
+						map.put("level", CommissionConstants.COMIS_CD_SCM_LEV);
+						if(actionType.equals("A")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"aHappycallRate","aHappycallMark","aBsRate","aBsMark","aRcRate",
+									"aRcMark","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityMark",
+									"aDropRate","aDropMark","aBasicSalary","aSalesAmt","aBonusAmt",
+									"aCollectAmt","aMembershipAmt","aHpAmt","aTransportAmt","aMonthlyAllowance",
+									"aMobilePhone","aIntroductionFees","aStaffPurchase","aTelephoneDeduct","aIncentive",
+									"aAdj","aShiAmt","aRentalmembershipAmt","aOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
+									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
+									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
+									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}else if(actionType.equals("S")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"sHappycallRate","sHappycallMark","sBsRate","sBsMark","sRcRate",
+									"sRcMark","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityMark",
+									"sDropRate","sDropMark","sBasicSalary","sSalesAmt","sBonusAmt",
+									"sCollectAmt","sMembershipAmt","sHpAmt","sTransportAmt","sMonthlyAllowance",
+									"sMobilePhone","sIntroductionFees","sStaffPurchase","sTelephoneDeduct","sIncentive",
+									"sAdj","sShiAmt","sRentalmembershipAmt","sOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
+									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
+									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
+									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}else if(actionType.equals("C")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"aHappycallRate","sHappycallRate", "aHappycallMark","sHappycallMark", "aBsRate","sBsRate", "aBsMark","sBsMark", "aRcRate","sRcRate",
+									"aRcMark","sRcMark", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityMark","sBsProductivityMark",
+									"aDropRate","sDropRate", "aDropMark","sDropMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
+									"aCollectAmt","sCollectAmt", "aMembershipAmt","sMembershipAmt", "aHpAmt","sHpAmt", "aTransportAmt","sTransportAmt", "aMonthlyAllowance","sMonthlyAllowance",
+									"aMobilePhone","sMobilePhone", "aIntroductionFees","sIntroductionFees", "aStaffPurchase","sStaffPurchase", "aTelephoneDeduct","sTelephoneDeduct", "aIncentive","sIncentive",
+									"aAdj","sAdj", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", "aOutplsAmt","sOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"(A) Happycall Rate","(S) Happycall Rate", "(A) Happycall Mark","(S) Happycall Mark", "(A) HS Rate","(S) HS Rate", "(A) HS Mark","(S) HS Mark",  "(A) RC Rate", "(S) RC Rate", 
+									"(A) RC Mark","(S) RC Mark", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
+									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
+									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
+									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
+									"(A) ADJ","SHI AMT","(S) ADJ","SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}
+					}else if(CommissionConstants.COMIS_CD_GCM_CD.equals(orgCombo)){
+						map.put("level", CommissionConstants.COMIS_CD_GCM_LEV);
+						if(actionType.equals("A")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"aHappycallRate","aHappycallMark","aBsRate","aBsMark","aRcRate",
+									"aRcMark","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityMark",
+									"aDropRate","aDropMark","aBasicSalary","aSalesAmt","aBonusAmt",
+									"aCollectAmt","aMembershipAmt","aHpAmt","aTransportAmt","aMonthlyAllowance",
+									"aMobilePhone","aIntroductionFees","aStaffPurchase","aTelephoneDeduct","aIncentive",
+									"aAdj","aShiAmt","aRentalmembershipAmt","aOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
+									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
+									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
+									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}else if(actionType.equals("S")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"sHappycallRate","sHappycallMark","sBsRate","sBsMark","sRcRate",
+									"sRcMark","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityMark",
+									"sDropRate","sDropMark","sBasicSalary","sSalesAmt","sBonusAmt",
+									"sCollectAmt","sMembershipAmt","sHpAmt","sTransportAmt","sMonthlyAllowance",
+									"sMobilePhone","sIntroductionFees","sStaffPurchase","sTelephoneDeduct","sIncentive",
+									"sAdj","sShiAmt","sRentalmembershipAmt","sOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
+									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
+									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
+									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}else if(actionType.equals("C")){
+							columns = new String[] {"memCode","memName","rank","nric",
+									"aHappycallRate","sHappycallRate", "aHappycallMark","sHappycallMark", "aBsRate","sBsRate", "aBsMark","sBsMark", "aRcRate","sRcRate",
+									"aRcMark","sRcMark", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityMark","sBsProductivityMark",
+									"aDropRate","sDropRate", "aDropMark","sDropMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
+									"aCollectAmt","sCollectAmt", "aMembershipAmt","sMembershipAmt", "aHpAmt","sHpAmt", "aTransportAmt","sTransportAmt", "aMonthlyAllowance","sMonthlyAllowance",
+									"aMobilePhone","sMobilePhone", "aIntroductionFees","sIntroductionFees", "aStaffPurchase","sStaffPurchase", "aTelephoneDeduct","sTelephoneDeduct", "aIncentive","sIncentive",
+									"aAdj","sAdj", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", "aOutplsAmt","sOutplsAmt"};
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+									"(A) Happycall Rate","(S) Happycall Rate", "(A) Happycall Mark","(S) Happycall Mark", "(A) HS Rate","(S) HS Rate", "(A) HS Mark","(S) HS Mark",  "(A) RC Rate", "(S) RC Rate", 
+									"(A) RC Mark","(S) RC Mark", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
+									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
+									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
+									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
+									"(A) ADJ","SHI AMT","(S) ADJ","SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" };
+							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+						}
+					}
+					
+					largeExcelService.downLoadCMResultIndex(map, downloadHandler);
+				}
+				
+				
+				
+			} else if(codeNm.equals("result_CT")){
+				map.put("orgCombo", request.getParameter("orgCombo"));
+				map.put("memCode", request.getParameter("memCode"));
+				
+				String orgCombo = request.getParameter("orgCombo");
+				 
+				if(CommissionConstants.COMIS_CT_CTN_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_CT_CT_LEV);
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","aAsSumCp","aBsCount","aBsSumCp","aInsCount","aInsSumCp","aPrCount","aPrSumCp","aTotalPoint","aProPercent",
+								"aPerPercent","aProFactor30","aPerFactor70","aSumFactor","aGrossComm","aRentalComm","aSrvMemComm","aBasicAndAllowance","aPerformanceIncentive","aAdjustment",
+								"aCffReward","aSeniority","aGrandTotal"};
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"sAsCount","sAsSumCp","sBsCount","sBsSumCp","sInsCount","sInsSumCp","sPrCount","sPrSumCp","sTotalPoint","sProPercent",
+								"sPerPercent","sProFactor30","sPerFactor70","sSumFactor","sGrossComm","sRentalComm","sSrvMemComm","sBasicAndAllowance","sPerformanceIncentive","sAdjustment",
+								"sCffReward","sSeniority","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","sAsCount","aAsSumCp","sAsSumCp","aBsCount","sBsCount","aBsSumCp","sBsSumCp","aInsCount","sInsCount",
+								"aInsSumCp","sInsSumCp","aPrCount","sPrCount","aPrSumCp","sPrSumCp","aTotalPoint","sTotalPoint","aProPercent","sProPercent",
+								"aPerPercent","sPerPercent","aProFactor30","sProFactor30","aPerFactor70","sPerFactor70","aSumFactor","sSumFactor","aGrossComm","sGrossComm",
+								"aRentalComm","sRentalComm","aSrvMemComm","sSrvMemComm","aBasicAndAllowance","sBasicAndAllowance","aPerformanceIncentive","sPerformanceIncentive","aAdjustment","sAdjustment",
+								"aCffReward","sCffReward","aSeniority","sSeniority","aGrandTotal","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"(A) AS Count","(S) AS Count", "(A) AS Sum Cp","(S) AS Sum Cp", "(A) BS Count","(S) BS Count", "(A) BS Sum Cp","(S) BS Sum Cp", "(A) Ins Count","(S) Ins Count",
+								"(A) Ins Sum Cp","(S) Ins Sum Cp", 	"(A) Pr Count",	"(S) Pr Count", "(A) Pr Sum Cp","(S) Pr Sum Cp", "(A) Total Point","(S) Total Point", "(A) Pro Percent","(S) Pro Percent",
+								"(A) Per Percent","(S) Per Percent", "(A) Pro Factor(30%)","(S) Pro Factor(30%)", "(A) Per Factor(70%)","(S) Per Factor(70%)", "(A) Sum Factor","(S) Sum Factor", "(A) Gross Comm","(S) Gross Comm",
+								"(A) Rental Comm","(S) Rental Comm", "(A) Srv Mem Comm","(S) Srv Mem Comm", "(A) Basic And Allowance","(S) Basic And Allowance", "(A) Performance Incentive","(S) Performance Incentive", "(A) Adjustment","(S) Adjustment",
+								"(A) CFF REWARD","(S) CFF REWARD", "(A) Seniority","(S) Seniority", "(A) Grand Total" ,"(S) Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_CT_CTR_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_CT_CT_LEV);
+					//actionType
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","aAsSumCp","aBsCount","aBsSumCp","aInsCount","aInsSumCp","aPrCount","aPrSumCp","aTotalPoint","aProPercent",
+								"aPerPercent","aProFactor30","aPerFactor70","aSumFactor","aGrossComm","aRentalComm","aSrvMemComm","aBasicAndAllowance","aPerformanceIncentive","aAdjustment",
+								"aCffReward","aSeniority","aGrandTotal"};
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"sAsCount","sAsSumCp","sBsCount","sBsSumCp","sInsCount","sInsSumCp","sPrCount","sPrSumCp","sTotalPoint","sProPercent",
+								"sPerPercent","sProFactor30","sPerFactor70","sSumFactor","sGrossComm","sRentalComm","sSrvMemComm","sBasicAndAllowance","sPerformanceIncentive","sAdjustment",
+								"sCffReward","sSeniority","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","sAsCount","aAsSumCp","sAsSumCp","aBsCount","sBsCount","aBsSumCp","sBsSumCp","aInsCount","sInsCount",
+								"aInsSumCp","sInsSumCp","aPrCount","sPrCount","aPrSumCp","sPrSumCp","aTotalPoint","sTotalPoint","aProPercent","sProPercent",
+								"aPerPercent","sPerPercent","aProFactor30","sProFactor30","aPerFactor70","sPerFactor70","aSumFactor","sSumFactor","aGrossComm","sGrossComm",
+								"aRentalComm","sRentalComm","aSrvMemComm","sSrvMemComm","aBasicAndAllowance","sBasicAndAllowance","aPerformanceIncentive","sPerformanceIncentive","aAdjustment","sAdjustment",
+								"aCffReward","sCffReward","aSeniority","sSeniority","aGrandTotal","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"(A) AS Count","(S) AS Count", "(A) AS Sum Cp","(S) AS Sum Cp", "(A) BS Count","(S) BS Count", "(A) BS Sum Cp","(S) BS Sum Cp", "(A) Ins Count","(S) Ins Count",
+								"(A) Ins Sum Cp","(S) Ins Sum Cp", 	"(A) Pr Count",	"(S) Pr Count", "(A) Pr Sum Cp","(S) Pr Sum Cp", "(A) Total Point","(S) Total Point", "(A) Pro Percent","(S) Pro Percent",
+								"(A) Per Percent","(S) Per Percent", "(A) Pro Factor(30%)","(S) Pro Factor(30%)", "(A) Per Factor(70%)","(S) Per Factor(70%)", "(A) Sum Factor","(S) Sum Factor", "(A) Gross Comm","(S) Gross Comm",
+								"(A) Rental Comm","(S) Rental Comm", "(A) Srv Mem Comm","(S) Srv Mem Comm", "(A) Basic And Allowance","(S) Basic And Allowance", "(A) Performance Incentive","(S) Performance Incentive", "(A) Adjustment","(S) Adjustment",
+								"(A) CFF REWARD","(S) CFF REWARD", "(A) Seniority","(S) Seniority", "(A) Grand Total" ,"(S) Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_CT_CTE_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_CT_CT_LEV);
+					//actionType
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","aAsSumCp","aBsCount","aBsSumCp","aInsCount","aInsSumCp","aPrCount","aPrSumCp","aTotalPoint","aProPercent",
+								"aPerPercent","aProFactor30","aPerFactor70","aSumFactor","aGrossComm","aRentalComm","aSrvMemComm","aBasicAndAllowance","aPerformanceIncentive","aAdjustment",
+								"aCffReward","aSeniority","aGrandTotal"};
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"sAsCount","sAsSumCp","sBsCount","sBsSumCp","sInsCount","sInsSumCp","sPrCount","sPrSumCp","sTotalPoint","sProPercent",
+								"sPerPercent","sProFactor30","sPerFactor70","sSumFactor","sGrossComm","sRentalComm","sSrvMemComm","sBasicAndAllowance","sPerformanceIncentive","sAdjustment",
+								"sCffReward","sSeniority","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","sAsCount","aAsSumCp","sAsSumCp","aBsCount","sBsCount","aBsSumCp","sBsSumCp","aInsCount","sInsCount",
+								"aInsSumCp","sInsSumCp","aPrCount","sPrCount","aPrSumCp","sPrSumCp","aTotalPoint","sTotalPoint","aProPercent","sProPercent",
+								"aPerPercent","sPerPercent","aProFactor30","sProFactor30","aPerFactor70","sPerFactor70","aSumFactor","sSumFactor","aGrossComm","sGrossComm",
+								"aRentalComm","sRentalComm","aSrvMemComm","sSrvMemComm","aBasicAndAllowance","sBasicAndAllowance","aPerformanceIncentive","sPerformanceIncentive","aAdjustment","sAdjustment",
+								"aCffReward","sCffReward","aSeniority","sSeniority","aGrandTotal","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"(A) AS Count","(S) AS Count", "(A) AS Sum Cp","(S) AS Sum Cp", "(A) BS Count","(S) BS Count", "(A) BS Sum Cp","(S) BS Sum Cp", "(A) Ins Count","(S) Ins Count",
+								"(A) Ins Sum Cp","(S) Ins Sum Cp", 	"(A) Pr Count",	"(S) Pr Count", "(A) Pr Sum Cp","(S) Pr Sum Cp", "(A) Total Point","(S) Total Point", "(A) Pro Percent","(S) Pro Percent",
+								"(A) Per Percent","(S) Per Percent", "(A) Pro Factor(30%)","(S) Pro Factor(30%)", "(A) Per Factor(70%)","(S) Per Factor(70%)", "(A) Sum Factor","(S) Sum Factor", "(A) Gross Comm","(S) Gross Comm",
+								"(A) Rental Comm","(S) Rental Comm", "(A) Srv Mem Comm","(S) Srv Mem Comm", "(A) Basic And Allowance","(S) Basic And Allowance", "(A) Performance Incentive","(S) Performance Incentive", "(A) Adjustment","(S) Adjustment",
+								"(A) CFF REWARD","(S) CFF REWARD", "(A) Seniority","(S) Seniority", "(A) Grand Total" ,"(S) Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_CT_CTL_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_CT_CTL_LEV);
+					//actionType
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","aAsSumCp","aBsCount","aBsSumCp","aInsCount","aInsSumCp","aPrCount","aPrSumCp","aTotalPoint","aProPercent",
+								"aPerPercent","aProFactor30","aPerFactor70","aSumFactor","aGrossComm","aRentalComm","aSrvMemComm","aBasicAndAllowance","aPerformanceIncentive","aAdjustment",
+								"aCffReward","aSeniority","aGrandTotal"};
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"sAsCount","sAsSumCp","sBsCount","sBsSumCp","sInsCount","sInsSumCp","sPrCount","sPrSumCp","sTotalPoint","sProPercent",
+								"sPerPercent","sProFactor30","sPerFactor70","sSumFactor","sGrossComm","sRentalComm","sSrvMemComm","sBasicAndAllowance","sPerformanceIncentive","sAdjustment",
+								"sCffReward","sSeniority","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","sAsCount","aAsSumCp","sAsSumCp","aBsCount","sBsCount","aBsSumCp","sBsSumCp","aInsCount","sInsCount",
+								"aInsSumCp","sInsSumCp","aPrCount","sPrCount","aPrSumCp","sPrSumCp","aTotalPoint","sTotalPoint","aProPercent","sProPercent",
+								"aPerPercent","sPerPercent","aProFactor30","sProFactor30","aPerFactor70","sPerFactor70","aSumFactor","sSumFactor","aGrossComm","sGrossComm",
+								"aRentalComm","sRentalComm","aSrvMemComm","sSrvMemComm","aBasicAndAllowance","sBasicAndAllowance","aPerformanceIncentive","sPerformanceIncentive","aAdjustment","sAdjustment",
+								"aCffReward","sCffReward","aSeniority","sSeniority","aGrandTotal","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"(A) AS Count","(S) AS Count", "(A) AS Sum Cp","(S) AS Sum Cp", "(A) BS Count","(S) BS Count", "(A) BS Sum Cp","(S) BS Sum Cp", "(A) Ins Count","(S) Ins Count",
+								"(A) Ins Sum Cp","(S) Ins Sum Cp", 	"(A) Pr Count",	"(S) Pr Count", "(A) Pr Sum Cp","(S) Pr Sum Cp", "(A) Total Point","(S) Total Point", "(A) Pro Percent","(S) Pro Percent",
+								"(A) Per Percent","(S) Per Percent", "(A) Pro Factor(30%)","(S) Pro Factor(30%)", "(A) Per Factor(70%)","(S) Per Factor(70%)", "(A) Sum Factor","(S) Sum Factor", "(A) Gross Comm","(S) Gross Comm",
+								"(A) Rental Comm","(S) Rental Comm", "(A) Srv Mem Comm","(S) Srv Mem Comm", "(A) Basic And Allowance","(S) Basic And Allowance", "(A) Performance Incentive","(S) Performance Incentive", "(A) Adjustment","(S) Adjustment",
+								"(A) CFF REWARD","(S) CFF REWARD", "(A) Seniority","(S) Seniority", "(A) Grand Total" ,"(S) Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}else if(CommissionConstants.COMIS_CT_CTM_CD.equals(orgCombo)){
+					map.put("level", CommissionConstants.COMIS_CT_CTM_LEV);
+					//actionType
+					//actionType
+					if(actionType.equals("A")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","aAsSumCp","aBsCount","aBsSumCp","aInsCount","aInsSumCp","aPrCount","aPrSumCp","aTotalPoint","aProPercent",
+								"aPerPercent","aProFactor30","aPerFactor70","aSumFactor","aGrossComm","aRentalComm","aSrvMemComm","aBasicAndAllowance","aPerformanceIncentive","aAdjustment",
+								"aCffReward","aSeniority","aGrandTotal"};
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("S")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"sAsCount","sAsSumCp","sBsCount","sBsSumCp","sInsCount","sInsSumCp","sPrCount","sPrSumCp","sTotalPoint","sProPercent",
+								"sPerPercent","sProFactor30","sPerFactor70","sSumFactor","sGrossComm","sRentalComm","sSrvMemComm","sBasicAndAllowance","sPerformanceIncentive","sAdjustment",
+								"sCffReward","sSeniority","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"AS Count","AS Sum Cp","BS Count","BS Sum Cp","Ins Count","Ins Sum Cp",	"Pr Count","Pr Sum Cp","Total Point","Pro Percent",
+								"Per Percent","Pro Factor(30%)","Per Factor(70%)",	"Sum Factor","Gross Comm","Rental Comm","Srv Mem Comm","Basic And Allowance", "Performance Incentive","Adjustment",
+								"CFF REWARD","Seniority","Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}else if(actionType.equals("C")){
+						columns = new String[] { "mCode","ctName","ctRank","nric","joinDate","serviceMonths","status","brnch",
+								"aAsCount","sAsCount","aAsSumCp","sAsSumCp","aBsCount","sBsCount","aBsSumCp","sBsSumCp","aInsCount","sInsCount",
+								"aInsSumCp","sInsSumCp","aPrCount","sPrCount","aPrSumCp","sPrSumCp","aTotalPoint","sTotalPoint","aProPercent","sProPercent",
+								"aPerPercent","sPerPercent","aProFactor30","sProFactor30","aPerFactor70","sPerFactor70","aSumFactor","sSumFactor","aGrossComm","sGrossComm",
+								"aRentalComm","sRentalComm","aSrvMemComm","sSrvMemComm","aBasicAndAllowance","sBasicAndAllowance","aPerformanceIncentive","sPerformanceIncentive","aAdjustment","sAdjustment",
+								"aCffReward","sCffReward","aSeniority","sSeniority","aGrandTotal","sGrandTotal" };
+						titles = new String[] { "Member Code","CT Name","CT Rank","Nric","Join Date","Service Months",	"Status","Branch",
+								"(A) AS Count","(S) AS Count", "(A) AS Sum Cp","(S) AS Sum Cp", "(A) BS Count","(S) BS Count", "(A) BS Sum Cp","(S) BS Sum Cp", "(A) Ins Count","(S) Ins Count",
+								"(A) Ins Sum Cp","(S) Ins Sum Cp", 	"(A) Pr Count",	"(S) Pr Count", "(A) Pr Sum Cp","(S) Pr Sum Cp", "(A) Total Point","(S) Total Point", "(A) Pro Percent","(S) Pro Percent",
+								"(A) Per Percent","(S) Per Percent", "(A) Pro Factor(30%)","(S) Pro Factor(30%)", "(A) Per Factor(70%)","(S) Per Factor(70%)", "(A) Sum Factor","(S) Sum Factor", "(A) Gross Comm","(S) Gross Comm",
+								"(A) Rental Comm","(S) Rental Comm", "(A) Srv Mem Comm","(S) Srv Mem Comm", "(A) Basic And Allowance","(S) Basic And Allowance", "(A) Performance Incentive","(S) Performance Incentive", "(A) Adjustment","(S) Adjustment",
+								"(A) CFF REWARD","(S) CFF REWARD", "(A) Seniority","(S) Seniority", "(A) Grand Total" ,"(S) Grand Total" };
+						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+					}
+				}
+				
+				largeExcelService.downLoadCTResultIndex(map, downloadHandler);
+			}else {
 				throw new ApplicationException(AppConstants.FAIL, "Invalid codeNm......");
 			}
 

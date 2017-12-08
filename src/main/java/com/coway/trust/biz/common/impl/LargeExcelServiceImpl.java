@@ -134,6 +134,11 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoad68T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0068T.getQueryId(), parameter, excelDownloadHandler);
 	}
+	
+	@Override
+	public void downLoad69T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0069T.getQueryId(), parameter, excelDownloadHandler);
+	}
 
 	@Override
 	public void downLoad28CD(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
@@ -193,6 +198,23 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	@Override
 	public void downLoad29THP(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0029THP.getQueryId(), parameter, excelDownloadHandler);
+	}
+	
+	@Override
+	public void downLoadHPResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.RESULTINDEX_HP.getQueryId(), parameter, excelDownloadHandler);
+	}
+	@Override
+	public void downLoadCDResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.RESULTINDEX_CD.getQueryId(), parameter, excelDownloadHandler);
+	}
+	@Override
+	public void downLoadCMResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.RESULTINDEX_CM.getQueryId(), parameter, excelDownloadHandler);
+	}
+	@Override
+	public void downLoadCTResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.RESULTINDEX_CT.getQueryId(), parameter, excelDownloadHandler);
 	}
 	
 	@Override

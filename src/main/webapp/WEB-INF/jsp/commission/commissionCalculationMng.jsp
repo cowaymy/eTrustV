@@ -64,37 +64,46 @@
             }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
             	Common.alert("<spring:message code='commission.alert.currentDate'/>");
             }else{
-				var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
+				/* var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
 				
 				for(var i=0;i<myGridID_CALLength ;i++){
 					if(AUIGrid.getCellValue(myGridID_CAL, i, 2) == "1"){
 						Common.alert("<spring:message code='commission.alert.calRunning'/>");
                         return false;
 					}
-				}
-				$("#batchYn").val("Y");
-				//array에 담기        
-				var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
-				var formList = $("#searchForm").serializeArray();       //폼 데이터
+				} */
+				Common.ajax("GET", "/commission/calculation/runningPrdCheck",$("#searchForm").serializeJSON(), function(result) {
+					if(result.data[0] == null){
+						
+						$("#batchYn").val("Y");
+						//array에 담기        
+						var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
+						var formList = $("#searchForm").serializeArray();       //폼 데이터
+						
+						//param data array
+						var data = {};
+						
+					    data.all = gridList;
+					    data.form = formList;
+					    
+						Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
+						             $("#search").trigger("click");
+						}, function(jqXHR, textStatus, errorThrown) {
+						
+						         console.log("실패하였습니다.");
+						         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);	
+						     
+						         if(jqXHR.status==503){
+						             Common.alert("Running... Please wait about 20 minutes ");
+						             $("#search").trigger("click");
+						          }
+						});//callBatch
+						
+					}else{
+						Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
+					}
+				});//runningPrdCheck
 				
-				//param data array
-				var data = {};
-				
-			    data.all = gridList;
-			    data.form = formList;
-			    
-				Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
-	                $("#search").trigger("click");
-				   }, function(jqXHR, textStatus, errorThrown) {
-				   
-				            console.log("실패하였습니다.");
-				            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);	
-				        
-				            if(jqXHR.status==503){
-                                Common.alert("Running... Please wait about 20 minutes ");
-                                $("#search").trigger("click");
-                             }
-	        }); 
 			}
 		});
 		
@@ -214,24 +223,32 @@
                     }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
                     	Common.alert("<spring:message code='commission.alert.currentDate'/>");
                         return false;
-                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState"))=="1"){
-                    	Common.alert("<spring:message code='commission.alert.calRunning'/>");
-	            		return false;
-	            	}else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState"))=="8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState"))=="9" ){
+                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState"))=="8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState"))=="9" ){
 	            		Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
 	            		return false;
 	            	}else {
-		            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
-		            		$("#search").trigger("click");
-		            	 }, function(jqXHR, textStatus, errorThrown) {		                       
-		                     
-		                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
-		                 
-		                          if(jqXHR.status==503){
-		                        	   Common.alert("Running... Please wait about 20 minutes ");
-		                        	   $("#search").trigger("click");
-		                          }
-		                }); 
+	            		
+	            		var data={"actionType":$("input[type=radio][name=actionType]:checked").val(),"ItemGrCd":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cd") , "prdNm":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName")};
+	            		Common.ajax("GET", "/commission/calculation/runningPrdCheck",data, function(result) {
+	            			
+	            			if(result.data[0] == null){
+				            	 Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
+				            		$("#search").trigger("click");
+				            	 }, function(jqXHR, textStatus, errorThrown) {		                       
+				                     
+				                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
+				                 
+				                          if(jqXHR.status==503){
+				                        	   Common.alert("Running... Please wait about 20 minutes ");
+				                        	   $("#search").trigger("click");
+				                          }
+				                }); //callPrd
+				                
+	            			}else{
+	            				Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
+	            			}
+	            		});//runningPrdCheck
+	            		
 	            	}
 	            }
 	        },
@@ -241,11 +258,14 @@
 			dataField : "codeId",
 	        headerText : "CODE ID",
 	        visible : false
-		},  {
-	        dataField : "code",
-	        headerText : "CODE",
-	        visible : false
-	    }];
+		}, {
+            dataField : "code",
+            headerText : "CODE",
+            visible : false
+        }, {
+            dataField : "cd",
+            visible : false
+        }];
 		 // 그리드 속성 설정
         var gridPros = {
             usePaging : true,                   // 페이징 사용       
