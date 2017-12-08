@@ -18,8 +18,8 @@
     <select id="selectSurveyEventList" parameterType="Map" resultType="egovMap">
 	<![CDATA[
 		SELECT A.EVT_TYPE_DESC, B.MEM_CODE, C.CODE_DESC, A.EVT_DT
-        FROM CCR0001D A, ORG0001D B, SYS0013M C
-        WHERE A.HC_TYPE_ID = 2718
+        FROM CCR0012M A, ORG0001D B, SYS0013M C
+        WHERE A.EVT_TYPE_ID = 2718
         AND A.EVT_MEM_ID = B.MEM_ID
         AND B.MEM_TYPE = C.CODE_ID
         AND B.MEM_TYPE = 1
@@ -39,61 +39,106 @@
 	</select>
 	
 	
-	<insert id="addSurveyEventCreate" parameterType="Map">
-        INSERT INTO CCR0001D (
-            HC_ID
-            , HCSOID
-            , HC_CALL_ENTRY_ID
-            , HC_TYPE_NO
-            , HC_TYPE_ID
-            , HC_STUS_ID
-            , HC_COMMENT_TYPE_ID
-            , HC_COMMENT_GID
-            , HC_COMMENT_SID
-            , HC_COMMENT_DID
-            , CRT_USER_ID
-            , CRT_DT
-            , UPD_USER_ID
-            , UPD_DT
-            , HC_NO_SVC
-            , HC_LOK
-            , HC_CLOS_ID
-            , EVT_COMP_RQST_DATE
-            , EVT_COMP_RATE
-            , EVT_TYPE_DESC
-            , EVT_MEM_ID
-            , EVT_DT
+    <insert id="addSurveyEventCreate" parameterType="Map">
+        INSERT INTO CCR0012M (
+           EVT_ID
+           , EVT_TYPE_ID
+           , EVT_TYPE_DESC
+           , EVT_MEM_ID
+           , EVT_DT
+           , EVT_COMP_RQST_DATE
+           , EVT_COMP_RATE
+           , CRT_USER_ID
+           , CRT_DT
+           , UPD_USER_ID
+           , UPD_DT
         )
        VALUES(
-           CCR0001D_HC_ID_SEQ.NEXTVAL
+           CCR0012M_EVT_ID_SEQ.NEXTVAL
            , 2718
-           , 0
-           , 2718
-           , 2718
-           , 33
-           , 0
-           , 0
-           , 0
-           , 0
-           , #{crtUserId}
-           , SYSDATE
-           , #{updUserId}
-           , SYSDATE        
-           , 0
-           , 1
-           , 81
-           , #{evtCompRqstDate}
-           , #{evtCompRate}
            , #{evtTypeDesc}
            , #{evtMemId}
            , #{evtDt}
+           , #{evtCompRqstDate}
+           , #{evtCompRate}
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE
        )
-	</insert>
-	
-	 <select id="selectCodeNameList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME 
-        FROM SYS0013M 
-        WHERE CODE_MASTER_ID = 102
+    </insert>
+    
+
+    <select id="selectCodeNameList" parameterType="Map" resultType="egovMap">
+       SELECT CODE_NAME 
+       FROM SYS0013M 
+       WHERE CODE_MASTER_ID = #{codeId}
     </select>
+    
+    
+    <insert id="addSurveyEventInfo" parameterType="Map">
+      <selectKey keyProperty="evtId" resultType="Integer" order="BEFORE">
+        SELECT CCR0012M_EVT_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT INTO CCR0012M (
+           EVT_ID
+           , EVT_TYPE_ID
+           , EVT_TYPE_DESC
+           , EVT_MEM_ID
+           , EVT_DT
+           , EVT_COMP_RQST_DATE
+           , EVT_COMP_RATE
+           , CRT_USER_ID
+           , CRT_DT
+           , UPD_USER_ID
+           , UPD_DT
+        )
+       VALUES(
+           #{evtId}
+           , 2718
+           , #{evtTypeDesc}
+           , #{evtMemId}
+           , #{evtDt}
+           , #{evtCompRqstDate}
+           , #{evtCompRate}
+           , #{crtUserId}
+           , SYSDATE
+           , #{updUserId}
+           , SYSDATE
+       )
+    </insert>
+    
+    <insert id="addSurveyEventTarget" parameterType="Map">
+       INSERT INTO CCR0013M (
+          EVT_ID
+          , EVT_CONT_ID
+          , EVT_TYPE_ID
+          , CONT_NO
+          , SALES_ORD_ID
+          , SALES_ORD_NO
+          , NAME
+          , CRT_DT
+          , CRT_USER_ID
+          , UPD_DT
+          , UPD_USER_ID
+          , CALL_MEM
+          , EVT_STUS_ID
+       )
+      VALUES(
+          #{evtId}
+          , CCR0013M_EVT_CONT_ID_SEQ.NEXTVAL
+          , (SELECT DISTINCT(EVT_TYPE_ID) FROM CCR0012M)
+          , #{contNo}
+          , (SELECT DISTINCT(SALES_ORD_ID) FROM SAL0001D WHERE SALES_ORD_NO= #{salesOrdNo})
+          , #{salesOrdNo}
+          , #{name}
+          , SYSDATE
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , #{callMem}
+          , 33
+      )
+   </insert>
     
 </mapper>

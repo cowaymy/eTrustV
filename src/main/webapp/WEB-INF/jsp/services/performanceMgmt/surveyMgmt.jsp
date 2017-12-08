@@ -94,116 +94,95 @@
 </script>
 
 <section id="content">
-	<!-- content start -->
-	<ul class="path">
-		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Service</li>
-		<li>Survey Event Log Search</li>
+<!-- content start -->
+<ul class="path">
+	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+	<li>Service</li>
+	<li>Survey Event Log Search</li>
+</ul>
+
+<aside class="title_line">
+	<!-- title_line start -->
+	<p class="fav">
+		<a href="#" class="click_add_on">My menu</a>
+	</p>
+	<h2>Survey Event Log Search</h2>
+	<ul class="right_btns">
+		<li><p class="btn_blue">
+				<a href="#" id="search"><span class="search"></span>Search</a>
+			</p></li>
+		<li><p class="btn_blue">
+				<a href="#" id="clear"><span class="clear"></span>Clear</a>
+			</p></li>
+	</ul>
+</aside>
+<!-- title_line end -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" id="popSForm" name="popSForm" method="post">
+	<input type="hidden" id="popEvtTypeDesc" name="popEvtTypeDesc" /> 
+	<input type="hidden" id="popMemCode" name="popMemCode" /> 
+	<input type="hidden" id="popCodeDesc" name="popCodeDesc" /> 
+	<input type="hidden" id="popEvtDt" name="popEvtDt" /> 
+	<input type="hidden" id="popServeyStatus" name="popServeyStatus" />
+</form>
+
+<form action="#" method="post" id="listSForm" name="listSForm">
+<table class="type1"><!-- table start -->
+	<caption>table</caption>
+	<colgroup>
+		<col style="width: 180px" />
+		<col style="width: *" />
+		<col style="width: 180px" />
+		<col style="width: *" />
+		<col style="width: 160px" />
+		<col style="width: *" />
+	</colgroup>
+	<tbody>
+		<tr>
+			<th scope="row">Member Type</th>
+			<td><select id="cmbMemberTypeId" name="cmbMemberTypeId" class="w100p">
+					<!-- option value="">TBD</option>
+                                <option value="">String Type</option> -->
+			</select></td>
+			<th scope="row">Event Name</th>
+			<td><input type="text" id="eventName" name="eventName" title="" placeholder="" class="w100p" /></td>
+			<th scope="row">Event Date</th>
+			<td><input type="text" id="eventDate" name="eventDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+		</tr>
+		<tr>
+			<th scope="row">Event Member Code</th>
+			<td><input type="text" id="eventMemCode" name="eventMemCode" title="" placeholder="" class="w100p" /></td>
+			<th scope="row">Survay Status</th>
+			<td><select id="cmbSurveyStusId" name="cmbSurveyStusId" class="w100p">
+					<!--<option value="">11</option>
+                                <option value="">22</option>-->
+			</select></td>
+			<th scope="row"></th>
+			<td></td>
+		</tr>
+	</tbody>
+</table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+</aside><!-- link_btns_wrap end -->
+
+</form>
+</section><!-- search_table end -->
+
+
+<section class="search_result"><!-- search_result start -->
+
+	<ul class="right_btns">
+		<li><p class="btn_grid"><a href="#" id="excelDown">EXCEL DW</a></p></li>
+		<li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li>
+		<li><p class="btn_grid"><a href="#">Edit Event</a></p></li>
 	</ul>
 
-	<aside class="title_line">
-		<!-- title_line start -->
-		<p class="fav">
-			<a href="#" class="click_add_on">My menu</a>
-		</p>
-		<h2>Survey Event Log Search</h2>
-		<ul class="right_btns">
-			<li><p class="btn_blue">
-					<a href="#" id="search"><span class="search"></span>Search</a>
-				</p></li>
-			<li><p class="btn_blue">
-					<a href="#" id="clear"><span class="clear"></span>Clear</a>
-				</p></li>
-		</ul>
-	</aside>
-	<!-- title_line end -->
+	<article class="grid_wrap"><!-- grid_wrap start -->
+		<div id="grid_wrap" style="width: 100%; height: 380px; margin: 0 auto;"></div>
+	</article><!-- grid_wrap end -->
 
-	<section class="search_table">
-		<!-- search_table start -->
-		<form action="#" id="popSForm" name="popSForm" method="post">
-			<input type="hidden" id="popEvtTypeDesc" name="popEvtTypeDesc" /> 
-			<input type="hidden" id="popMemCode" name="popMemCode" /> 
-			<input type="hidden" id="popCodeDesc" name="popCodeDesc" /> 
-			<input type="hidden" id="popEvtDt" name="popEvtDt" /> 
-			<input type="hidden" id="popServeyStatus" name="popServeyStatus" />
-		</form>
+</section><!-- search_result end -->
 
-
-		<section class="search_table">
-			<!-- search_table start -->
-			<form action="#" method="post" id="listSForm" name="listSForm">
-
-				<table class="type1">
-					<!-- table start -->
-					<caption>table</caption>
-					<colgroup>
-						<col style="width: 180px" />
-						<col style="width: *" />
-						<col style="width: 180px" />
-						<col style="width: *" />
-						<col style="width: 160px" />
-						<col style="width: *" />
-					</colgroup>
-					<tbody>
-						<tr>
-							<th scope="row">Member Type</th>
-							<td><select id="cmbMemberTypeId" name="cmbMemberTypeId" class="w100p">
-									<!-- option value="">TBD</option>
-                                    <option value="">String Type</option> -->
-							</select></td>
-							<th scope="row">Event Name</th>
-							<td><input type="text" id="eventName" name="eventName" title="" placeholder="" class="w100p" /></td>
-							<th scope="row">Event Date</th>
-							<td><input type="text" id="eventDate" name="eventDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
-						</tr>
-						<tr>
-							<th scope="row">Event Member Code</th>
-							<td><input type="text" id="eventMemCode" name="eventMemCode" title="" placeholder="" class="w100p" /></td>
-							<th scope="row">Survay Status</th>
-							<td><select id="cmbSurveyStusId" name="cmbSurveyStusId" class="w100p">
-									<!--<option value="">11</option>
-                                    <option value="">22</option>-->
-							</select></td>
-							<th scope="row"></th>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
-				<!-- table end -->
-
-				<aside class="link_btns_wrap">
-					<!-- link_btns_wrap start -->
-				</aside>
-				<!-- link_btns_wrap end -->
-
-			</form>
-		</section>
-		<!-- search_table end -->
-
-
-		<section class="search_result">
-			<!-- search_result start -->
-
-			<ul class="right_btns">
-				<li><p class="btn_grid">
-						<a href="#" id="excelDown">EXCEL DW</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#" onClick="javascript:fn_newEvent();">New Event</a>
-					</p></li>
-				<li><p class="btn_grid">
-						<a href="#">Edit Event</a>
-					</p></li>
-			</ul>
-
-			<article class="grid_wrap">
-				<!-- grid_wrap start -->
-				<div id="grid_wrap" style="width: 100%; height: 380px; margin: 0 auto;"></div>
-			</article>
-			<!-- grid_wrap end -->
-
-		</section>
-		<!-- search_result end -->
-
-	</section>
-	<!-- content end -->
+</section><!-- content end -->

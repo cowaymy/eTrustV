@@ -12,10 +12,10 @@ var  CodeList = [];
 var columnLayout_info=[             
  {dataField:"hcTypeId", headerText:'Event Type', width: 130, editable : true},
  {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : true},
- {dataField:"evtMemId", headerText:'In Charge of</br>the Event', width: 130, editable : true },
+ {dataField:"evtMemId", headerText:'In Charge of</br>the Event', width: 130, editable : true},
  {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} },
  {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true}  },
- {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : true },
+ {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : true},
  {dataField:"com", headerText:'Complete</br>Status', editable : false},
 ];
 
@@ -28,15 +28,16 @@ var columnLayout_q=[
 ];
 
 var columnLayout_target=[             
- {dataField:"t1", headerText:'Sales Order', width: 250, editable : true},
- {dataField:"t2", headerText:'Name', width: 250, editable : true},
- {dataField:"t3", headerText:'Contact Number', width: 250, editable : true },
- {dataField:"t4", headerText:'Calling Agent', editable : true},
+ {dataField:"salesOrdNo", headerText:'Sales Order', width: 250, editable : true},
+ {dataField:"name", headerText:'Name', width: 250, editable : true},
+ {dataField:"contNo", headerText:'Contact Number', width: 250, editable : true },
+ {dataField:"callMem", headerText:'Calling Agent', editable : true},
 ];
 
 
 var gridOptions = {
 		headerHeight : 30,
+		selectionMode: "singleRow",
         showStateColumn: false,
         showRowNumColumn: false,
         usePaging : false,
@@ -57,7 +58,7 @@ var gridOptions_q = {
 var gridOptions2 = {
 		selectionMode: "singleRow",
         showStateColumn: false,
-        showRowNumColumn: false,
+        //showRowNumColumn: false,
         usePaging : true,
         pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
         showFooter : false
@@ -92,8 +93,11 @@ $(document).ready(function(){
     
      //세번째 grid 행 추가
      $("#addRow_target").click(function() { 
-        var item_target = { "t1" :  "", "t2" : "", "t3" : "", "t4" : ""}; //row 추가
+        var item_target = { "salesOrdNo" :  "", "name" : "", "contNo" : "", "callMem" : ""}; //row 추가
         AUIGrid.addRow(myGridID_Target, item_target, "last");
+        
+        //var rowCount22 = AUIGrid.getRowCount(myGridID_Target);
+        //alert("rowCount"+rowCount22);
     });
      
      //세번째 grid의 excel Download
@@ -113,42 +117,126 @@ $(document).ready(function(){
 
 //renderer list search
 function fn_getCodeSearch(){
-    Common.ajax("GET", "/services/performanceMgmt/getCodeNameList.do",{stusCodeId: 1}, function(result) {
+    Common.ajax("GET", "/services/performanceMgmt/getCodeNameList.do",{codeId: 102}, function(result) {
         CodeList = result;
     }, null, {async : false});
 }  
 
 function fn_saveGridData_create(){
-    Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventCreate.do", GridCommon.getEditData(myGridID_Info), function(result) {
-        // 공통 메세지 영역에 메세지 표시.
-        Common.setMsg("<spring:message code='sys.msg.success'/>");
-        $("#search").trigger("click");
-        Common.alert("<spring:message code='sys.msg.success'/>");
-    }, function(jqXHR, textStatus, errorThrown) {
-        try {
-            console.log("status : " + jqXHR.status);
-            console.log("code : " + jqXHR.responseJSON.code);
-            console.log("message : " + jqXHR.responseJSON.message);
-            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-        } catch (e) {
-            console.log(e);
-        }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);             
-    });
+	
+	/*Target grid에서 addrow가 있다면 saveSurveyEventTarget.do를 실행*/
+	var rowCount_target = AUIGrid.getRowCount(myGridID_Target);
+	
+	
+    var params = {
+            aGrid : GridCommon.getEditData(myGridID_Info),
+            bGrid : GridCommon.getEditData(myGridID_Target)
+    };
+	
+	
+    if(rowCount_target > 0) {
+        Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventTarget.do", params, 
+       //Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventTarget.do", $("#listGForm").serialize(), 
+        function(result) {
+            // 공통 메세지 영역에 메세지 표시.
+            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            $("#search").trigger("click");
+            Common.alert("<spring:message code='sys.msg.success'/>");
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+            } catch (e) {
+                console.log(e);
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);             
+        });
+        
+    }/*Info grid 값만 저장하고 싶다면 saveSurveyEventCreate.do를 실행*/
+    else{
+	    Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventCreate.do", GridCommon.getEditData(myGridID_Info), function(result) {
+	        // 공통 메세지 영역에 메세지 표시.
+	        Common.setMsg("<spring:message code='sys.msg.success'/>");
+	        $("#search").trigger("click");
+	        Common.alert("<spring:message code='sys.msg.success'/>");
+	    }, function(jqXHR, textStatus, errorThrown) {
+	        try {
+	            console.log("status : " + jqXHR.status);
+	            console.log("code : " + jqXHR.responseJSON.code);
+	            console.log("message : " + jqXHR.responseJSON.message);
+	            console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+	        } catch (e) {
+	            console.log(e);
+	        }
+	        Common.alert("Fail : " + jqXHR.responseJSON.message);             
+	    });
+    }
+    
 } 
 
 
 /*  validation */
 function validation_info() {
     var result = true;
-    var addList = AUIGrid.getAddedRowItems(myGridID_Info);
     
+    var addList = AUIGrid.getAddedRowItems(myGridID_Info);
+    var addList_target = AUIGrid.getAddedRowItems(myGridID_Target);
+    
+    var validation_target = AUIGrid.getRowCount(myGridID_Target);
+    
+    //target validation 
+    if(validation_target > 0) {
+    	 if(!validationCom_target(addList_target)){
+    	        return false;
+    	   }      
+    }
+     
+    //info validation
     if(!validationCom_info(addList)){
-        return false;
-   }      
+    	return false;
+    }       
     
     return result;
 }  
+
+function validationCom_target(list){
+    var result = true;
+
+    for (var i = 0; i < list.length; i++) {
+           var v_salesOrdNo = list[i].salesOrdNo;
+           var v_name = list[i].name;
+           var v_contNo = list[i].contNo;
+           var v_callMem = list[i].callMem;
+           
+           
+           if (v_salesOrdNo == "") {
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Sales Order' htmlEscape='false'/>");
+               break;
+           } else if(v_name == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Name' htmlEscape='false'/>");
+               break;
+           } else if(v_contNo == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Contact Number' htmlEscape='false'/>");
+               break;
+           } else if(v_callMem == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Calling Agent' htmlEscape='false'/>");
+               break;
+           } else if(v_contNo  % 1 != 0){
+               result = false;
+               Common.alert("Please Enter 'Contact Number' with numbers");
+               break;
+           } 
+    }
+    
+    return result;
+}
+
 function validationCom_info(list){
     var result = true;
 
@@ -181,9 +269,21 @@ function validationCom_info(list){
                result = false;
                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Complete Condition Rate' htmlEscape='false'/>");
                break;
-           } else if(v_evtCompRate > 100){
+           } else if(v_hcTypeId  % 1 != 0){
+               result = false;
+               Common.alert("Please Enter 'Event Type' with numbers");
+               break;
+           } else if(v_evtMemId  % 1 != 0){
         	   result = false;
-        	   Common.alert("Please Enter Complete Condition Rate under 100");
+        	   Common.alert("Please Enter 'In Charge of the Event' with numbers");
+               break;
+           } else if(v_evtCompRate  % 1 != 0){
+        	   result = false;
+               Common.alert("Please Enter 'Complete Condition Rate' with numbers");
+               break;
+           }  else if(v_evtCompRate > 100){
+               result = false;
+               Common.alert("Please Enter 'Complete Condition Rate' under 100");
                break;
            }
     }
@@ -193,16 +293,65 @@ function validationCom_info(list){
 
 
 function removeRow_q(){
+    var selectedItems_q = AUIGrid.getSelectedItems(myGridID_Q);
+    if(selectedItems_q.length <= 0) {
+    	Common.alert("<spring:message code='expense.msg.NoData'/> ");
+        return;
+    }
     AUIGrid.removeRow(myGridID_Q, "selectedIndex");
     AUIGrid.removeSoftRows(myGridID_Q);
 }
 
 function removeRow_target(){
+	var selectedItems_t = AUIGrid.getSelectedItems(myGridID_Target);
+    if(selectedItems_t.length <= 0) {
+        Common.alert("<spring:message code='expense.msg.NoData'/> ");
+        return;
+    }
     AUIGrid.removeRow(myGridID_Target, "selectedIndex");
     AUIGrid.removeSoftRows(myGridID_Target);
 }
 
 function auiRemoveRowHandler(){
+}
+
+function fn_uploadFile() 
+{
+   var formData = new FormData();
+   console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
+   formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+   
+   var radioVal = $("input:radio[name='name']:checked").val();
+   formData.append("radioVal", radioVal );
+
+   //alert('read');
+   
+   if( radioVal == 1 ){
+       Common.ajaxFile(""
+               , formData
+               , function (result) 
+                {
+                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                     if(result.code == "99"){
+                         Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+                     }else{
+                         Common.alert(result.message);
+                     }
+            });
+   } else {
+       Common.ajaxFile(""
+               , formData
+               , function (result) 
+                {
+                    //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+                    if(result.code == "99"){
+                        Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
+                    }else{
+                        Common.alert(result.message);
+                    }
+            });
+   }
+
 }
 
 
@@ -219,6 +368,8 @@ function auiRemoveRowHandler(){
 
 
 <section class="pop_body"><!-- pop_body start -->
+
+<form action="#" method="post" id="listGForm" name="listGForm">
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Survey Event General Info</h2>
@@ -246,8 +397,16 @@ function auiRemoveRowHandler(){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="excelDown_target">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
+     <li>
+        <div class="auto_file"><!-- auto_file start -->
+            <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
+                 <input title="file add" type="file" id="uploadfile" name="uploadfile">
+                 <label><span class="label_text"><a href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
+            </form>
+         </div><!-- auto_file end -->
+    </li>
+    <li><p class="btn_grid"><a href="#">ExcelUpLoad</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excelDown_target">ExcelDownLoad</a></p></li>
     <li><p class="btn_grid"><a href="#" id="addRow_target">add</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_target()">del</a></p></li>
 </ul>
@@ -255,6 +414,8 @@ function auiRemoveRowHandler(){
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="grid_wrap_target" style="width:100%; height:120px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+
+</form>
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" id="save_create">Save</a></p></li>

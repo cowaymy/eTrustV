@@ -18,4 +18,8 @@ public interface SurveyMgmtMapper {
 	int addSurveyEventCreate(Map<String, Object> params);
 	
 	List<EgovMap> selectCodeNameList(Map<String, Object> params);
+	
+	int addSurveyEventInfo(Map<String, Object> params);
+	
+	int addSurveyEventTarget(Map<String, Object> params);
 }

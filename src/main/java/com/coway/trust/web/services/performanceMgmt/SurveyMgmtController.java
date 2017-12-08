@@ -112,13 +112,36 @@ public class SurveyMgmtController {
 	
 	@RequestMapping(value = "/getCodeNameList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getCodeNameList(@RequestParam Map<String, Object> params) {
-		Precondition.checkNotNull(params.get("stusCodeId"),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "stusCodeId" }));
+		Precondition.checkNotNull(params.get("codeId"),
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "codeId" }));
 
-		LOGGER.debug("stusCodeId : {}", params.get("stusCodeId"));
+		LOGGER.debug("codeId : {}", params.get("codeId"));
 
 		List<EgovMap> codeNameList = surveyMgmtService.getCodeNameList(params);
 		return ResponseEntity.ok(codeNameList);
+	}
+	
+	
+	@RequestMapping(value = "/saveSurveyEventTarget.do", method = RequestMethod.POST)
+	public  ResponseEntity<ReturnMessage> saveSurveyEventTarget(@RequestBody Map<String, Map<String, ArrayList<Object>>> params, Model model) {
+
+		String dt = CommonUtils.getNowDate();	
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		
+		surveyMgmtService.addSurveyEventTarget(params, loginId);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
 	}
 
 }

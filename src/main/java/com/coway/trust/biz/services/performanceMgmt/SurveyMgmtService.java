@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -20,4 +21,6 @@ public interface SurveyMgmtService {
 	int addSurveyEventCreate(List<Object> updateList , String loginId);
 
 	List<EgovMap> getCodeNameList(Map<String, Object> params);
+	
+	int addSurveyEventTarget(Map<String, Map<String, ArrayList<Object>>> params, String loginId);
 }
