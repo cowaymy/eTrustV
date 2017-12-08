@@ -520,4 +520,39 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/dscReportDataPop";
 	}
+	
+	/**
+	 * InstallationResult edit Installation Result Popup
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/editInstallationPopup.do")
+	public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		EgovMap installInfo = installationResultListService.selectInstallInfo(params);
+		model.addAttribute("installInfo", installInfo);
+		// 호출될 화면
+		return "services/installation/editInstallationResultPop";
+	}
+	
+	@RequestMapping(value = "/editInstallation.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> editInstallationResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+		int resultValue = 0;
+		
+		int userId = sessionVO.getUserId();
+		params.put("user_id", userId);
+		
+		resultValue = installationResultListService.editInstallationResult(params, sessionVO);
+		if(resultValue>0){
+			message.setMessage("Installation result successfully updated.");
+		}else{
+			message.setMessage("Failed to update installation result. Please try again later.");
+		}
+		
+		return ResponseEntity.ok(message);
+	}
 }
