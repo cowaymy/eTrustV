@@ -200,6 +200,7 @@ SELECT   T.CLM_NO
    (
         CLM_NO
        ,CLM_SEQ
+       ,CLM_TYPE
        ,EXP_TYPE
        ,EXP_TYPE_NAME
        ,GL_ACC_CODE
@@ -212,6 +213,7 @@ SELECT   T.CLM_NO
        ,TAX_AMT
        ,TOT_AMT
        ,EXP_DESC
+       ,CLAM_UN
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -221,6 +223,7 @@ SELECT   T.CLM_NO
     (
         #{clmNo}
        ,#{clmSeq}
+       ,#{clmType}
        ,#{expType}
        ,#{expTypeName}
        ,#{glAccCode}
@@ -233,6 +236,7 @@ SELECT   T.CLM_NO
        ,#{taxAmt}
        ,#{totAmt}
        ,#{expDesc}
+       ,#{clamUn}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -280,13 +284,14 @@ SELECT   T.CLM_NO
                    ,T.BUDGET_CODE_NAME
                    ,T.TAX_CODE
                    ,TT.INDUSTRY_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
-                   ,TT.TEX_RATE AS TAX_RATE
+                   ,TT.TAX_RATE
                    ,'MYR' AS CUR
                    ,T.NET_AMT
                    ,T.TAX_AMT
                    ,T.TAX_NON_CLM_AMT
                    ,T.TOT_AMT
                    ,T.EXP_DESC
+                   ,T.CLAM_UN
           FROM FCM0003D T LEFT JOIN FCM0007C TT
           ON T.TAX_CODE = TT.TAX_CODE
           WHERE CLM_NO = #{clmNo}
@@ -489,6 +494,7 @@ SELECT   T.CLM_NO
        ,APPV_AMT
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
+       ,CLAM_UN
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -518,6 +524,7 @@ SELECT   T.CLM_NO
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}
+       ,#{clamUn}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -950,9 +957,21 @@ ORDER  BY T1.APPV_LINE_SEQ
          AND T1.BUDGET_CODE = #{budgetCode}
 </select>
 
-<select id="selectTaxRate" resultType="egovMap">
+<select id="selectTaxRate" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectTaxRate */
-    SELECT TAX_CODE, TAX_RATE FROM FCM0007C WHERE TAX_CODE = #{taxCode}
+    SELECT TAX_CODE, TAX_NAME, TAX_RATE FROM FCM0007C WHERE TAX_CODE = #{taxCode}
 </select>
+
+<select id="selectClamUn" parameterType="Map" resultType="egovMap">
+/* webInvoiceMapper.selectClamUn */
+SELECT #{clmType} || NVL (TO_CHAR (MAX (SUBSTR (CLAM_UN, 3, 7) + 1), 'FM0000000'), '0000001') AS CLAM_UN 
+FROM   FCM0022M 
+WHERE  CLM_TYPE = #{clmType}
+</select>
+
+<update id="updateClamUn" parameterType="Map">
+/* webInvoiceMapper.updateClamUn */
+   UPDATE FCM0022M SET CLAM_UN = #{clamUn} WHERE CLM_TYPE = #{clmType}
+</update>
 
 </mapper>

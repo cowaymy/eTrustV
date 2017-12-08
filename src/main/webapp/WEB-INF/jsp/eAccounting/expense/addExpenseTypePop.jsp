@@ -114,7 +114,7 @@ $(document).ready(function(){
     
   //  AUIGrid.setSelectionMode(expPopGridID, "singleRow");
     
-    CommonCombo.make("claimTypeCombo", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
+    CommonCombo.make("claimTypeCombo", "/eAccounting/expense/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName"
     }

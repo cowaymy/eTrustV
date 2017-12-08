@@ -44,4 +44,6 @@ public interface CodyClaimMapper {
 	void deleteCodyClaimExpMileage(Map<String, Object> params);
 	
 	void updateCodyClaimExpTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectCodyClaimItemGrp(Map<String, Object> params);
 }

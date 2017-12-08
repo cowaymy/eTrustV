@@ -344,7 +344,7 @@ ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T
 <select id="selectTaxCodeCreditCardFlag" resultType="egovMap">
 /* creditCardMapper.selectTaxCodeCreditCardFlag */
     SELECT TAX_CODE ,
-                TAX_NAME 
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME
     FROM FCM0007C
     WHERE CRDIT_CARD_FLAG = 'X'
 </select>
@@ -444,6 +444,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
         TOT_AMT,
         ATCH_FILE_GRP_ID,
         EXP_DESC,
+        CLAM_UN,
         CRT_DT,
         CRT_USER_ID,
         UPD_DT,
@@ -456,7 +457,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{invcType}
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
-       ,#{supply}
+       ,#{supplyName}
        ,#{expType}
        ,#{expTypeName}
        ,#{glAccCode}
@@ -470,6 +471,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
+       ,#{clamUn}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -481,6 +483,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
 /* creditCardMapper.selectReimbursementItems */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T1.CLM_SEQ, 
+       T3.CRDIT_CARD_USER_ID,
        T3.COST_CENTR,
        T3.COST_CENTR_NAME,
        T1.EXP_TYPE, 
@@ -489,8 +492,7 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME, 
        T1.BUDGET_CODE, 
        T1.BUDGET_CODE_NAME, 
-       T1.SUPPLY_NAME AS SUPPLY,
-       T4.MEM_ACC_NAME AS SUPPLY_NAME, 
+       T1.SUPPLY_NAME,
        T1.INVC_TYPE, 
        ( CASE T1.INVC_TYPE 
            WHEN 'F' THEN 'Full Tax invoice' 
@@ -507,6 +509,7 @@ SELECT T1.CLM_SEQ,
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
+       T1.CLAM_UN, 
        T3.TOT_AMT  AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO 
 FROM   FCM0018D T1 
@@ -514,8 +517,6 @@ FROM   FCM0018D T1
               ON T1.TAX_CODE = T2.TAX_CODE 
        LEFT JOIN FCM0017M T3 
               ON T1.CLM_NO = T3.CLM_NO 
-       LEFT JOIN FCM0006M T4 
-              ON T1.SUPPLY_NAME = T4.MEM_ACC_ID 
 WHERE  T1.CLM_NO = #{clmNo} 
 ORDER  BY T1.CLM_SEQ 
 </select>
@@ -538,8 +539,7 @@ SELECT T1.CLM_SEQ,
        T1.INVC_TYPE,
        T1.INVC_NO, 
        TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
-       T1.SUPPLY_NAME AS SUPPLY, 
-       T4.MEM_ACC_NAME AS SUPPLY_NAME,
+       T1.SUPPLY_NAME,
        T1.EXP_TYPE, 
        T1.EXP_TYPE_NAME, 
        T1.GL_ACC_CODE, 
@@ -559,9 +559,34 @@ FROM   FCM0018D T1
               ON T1.CLM_NO = T2.CLM_NO 
        LEFT JOIN ORG0001D T3 
               ON T2.CHRG_USER_ID = T3.MEM_CODE
-       LEFT JOIN FCM0006M T4 
-              ON T1.SUPPLY_NAME = T4.MEM_ACC_ID
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
+<select id="selectReimbursementItemGrp" parameterType="Map" resultType="egovMap">
+/* creditCardMapper.selectReimbursementItemGrp */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.TAX_CODE, 
+       T2.TAX_NAME, 
+       T2.TAX_RATE, 
+       'MYR' AS CUR, 
+       T1.NET_AMT, 
+       T1.TAX_AMT, 
+       T1.TAX_NON_CLM_AMT, 
+       T1.TOT_AMT, 
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID
+FROM   FCM0018D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+WHERE  T1.CLM_NO = #{clmNo} 
+       AND CLAM_UN = #{clamUn}
 </select>
 
 <select id="selectAttachList" parameterType="String" resultType="egovMap">
@@ -603,7 +628,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,GL_ACC_CODE_NAME = #{glAccCodeName}
        ,BUDGET_CODE = #{budgetCode}
        ,BUDGET_CODE_NAME = #{budgetCodeName}
-       ,SUPPLY_NAME = #{supply}
+       ,SUPPLY_NAME = #{supplyName}
        ,INVC_TYPE = #{invcType}
        ,INVC_NO = #{invcNo}
        ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
@@ -646,6 +671,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,APPV_AMT
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
+       ,CLAM_UN
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -658,7 +684,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}
-       ,#{supply}
+       ,#{crditCardUserId}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,#{expType}
        ,#{expTypeName}
@@ -675,6 +701,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}
+       ,#{clamUn}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE

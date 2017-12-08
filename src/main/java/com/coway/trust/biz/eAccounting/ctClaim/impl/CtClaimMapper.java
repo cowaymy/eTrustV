@@ -44,4 +44,6 @@ public interface CtClaimMapper {
 	void deleteCtClaimExpMileage(Map<String, Object> params);
 	
 	void updateCtClaimExpTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectCtClaimItemGrp(Map<String, Object> params);
 }

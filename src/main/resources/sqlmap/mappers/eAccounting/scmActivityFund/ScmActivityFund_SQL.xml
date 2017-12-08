@@ -56,7 +56,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 <select id="selectTaxCodeScmActivityFundFlag" resultType="egovMap">
 /* scmActivityFundMapper.selectTaxCodeScmActivityFundFlag */
     SELECT TAX_CODE ,
-                TAX_NAME 
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
     FROM FCM0007C
     WHERE SCM_FUND_FLAG = 'X'
 </select>
@@ -140,6 +140,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,TOT_AMT
         ,ATCH_FILE_GRP_ID
         ,EXP_DESC
+        ,CLAM_UN
         ,CRT_DT
         ,CRT_USER_ID
         ,UPD_DT
@@ -168,6 +169,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
+       ,#{clamUn}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -207,6 +209,7 @@ SELECT T1.CLM_SEQ,
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
+       T1.CLAM_UN, 
        T3.TOT_AMT  AS ALL_TOT_AMT, 
        T3.APPV_PRCSS_NO 
 FROM   FCM0020D T1 
@@ -272,6 +275,33 @@ FROM   FCM0020D T1
        LEFT JOIN FCM0006M T5 
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
+<select id="selectScmActivityFundItemGrp" parameterType="Map" resultType="egovMap">
+/* scmActivityFundMapper.selectScmActivityFundItemGrp */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.TAX_CODE, 
+       T2.TAX_NAME, 
+       T2.TAX_RATE, 
+       'MYR' AS CUR, 
+       T1.NET_AMT AS GST_BEFOR_AMT, 
+       T1.TAX_AMT AS GST_AMT, 
+       T1.TAX_NON_CLM_AMT, 
+       T1.TOT_AMT, 
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID
+FROM   FCM0020D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+WHERE  T1.CLM_NO = #{clmNo} 
+       AND CLAM_UN = #{clamUn}
 </select>
 
 <select id="selectAttachList" parameterType="String" resultType="egovMap">
@@ -355,6 +385,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,APPV_AMT
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
+       ,CLAM_UN
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -384,6 +415,7 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}
+       ,#{clamUn}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE

@@ -240,4 +240,10 @@ public class CtClaimServiceImpl implements CtClaimService {
 		ctClaimMapper.updateCtClaimExpTotAmt(params);
 	}
 
+	@Override
+	public List<EgovMap> selectCtClaimItemGrp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return ctClaimMapper.selectCtClaimItemGrp(params);
+	}
+
 }

@@ -28,5 +28,7 @@ public interface SmGmClaimService {
 	void deleteSmGmClaimExpMileage(Map<String, Object> params);
 	
 	void updateSmGmClaimExpTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectSmGmClaimItemGrp(Map<String, Object> params);
 
 }

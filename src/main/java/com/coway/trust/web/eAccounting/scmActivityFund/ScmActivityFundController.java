@@ -86,9 +86,12 @@ public class ScmActivityFundController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
+		List<EgovMap> taxCodeFlagList = scmActivityFundService.selectTaxCodeScmActivityFundFlag();
+		
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		return "eAccounting/scmActivityFund/scmActivityFundNewExpensesPop";
 	}
 	
@@ -161,13 +164,14 @@ public class ScmActivityFundController {
 		
 		// TODO selectExpenseItems
 		List<EgovMap> itemList = scmActivityFundService.selectScmActivityFundItems((String) params.get("clmNo"));
+		List<EgovMap> taxCodeFlagList = scmActivityFundService.selectTaxCodeScmActivityFundFlag();
 		
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
-		model.addAttribute("expTypeName", itemList.get(0).get("expTypeName"));
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		if(itemList.size() > 0) {
 			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		}
@@ -180,6 +184,9 @@ public class ScmActivityFundController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		EgovMap info = scmActivityFundService.selectScmActivityFundInfo(params);
+		List<EgovMap> itemGrp = scmActivityFundService.selectScmActivityFundItemGrp(params);
+		
+		info.put("itemGrp", itemGrp);
 		
 		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
 		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);

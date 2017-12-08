@@ -111,9 +111,21 @@ function fn_setToMonth() {
 
 
 function fn_clearData() {
-    $("#form_newExpense").each(function() {
-        this.reset();
-    });
+    /* $("#form_newExpense").each(function() {
+    	this.reset();
+    }); */
+    
+    $("#invcDt").val("");
+    $("#sMemAccName").val("");
+    $("#gstRgistNo").val("");
+    $("#invcType").val("F");
+    $("#invcNo").val("");
+    $("#expDesc").val("");
+    
+    AUIGrid.destroy(myGridID);
+    myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
+    
+    fn_myGridSetEvent();
     
     $("#attachTd").html("");
     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
@@ -122,112 +134,10 @@ function fn_clearData() {
 }
 
 function fn_setEvent() {
-$("#amt :text").keydown(function (event) { 
-        
-        var code = window.event.keyCode;
-        
-        if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
-        {
-         window.event.returnValue = true;
-         return;
-        }
-        window.event.returnValue = false;
-        
-   });
-   
-   $("#amt :text").click(function () { 
-       var str = $(this).val().replace(/,/gi, "");
-       $(this).val(str);      
-  });
-   $("#amt :text").blur(function () { 
-       var str = $(this).val().replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-       $(this).val(str);      
-  });
-   
-    $("#form_newExpense :text").change(function(){
+	$("#form_newExpense :text").change(function(){
         var id = $(this).attr("id");
         console.log(id);
-        if(id == "gstBeforAmt" || id == "gstAmt") {
-            var str =""+ Math.floor($(this).val() * 100)/100;
-               
-               var str2 = str.split(".");
-              
-               if(str2.length == 1){
-                   str2[1] = "00";
-               }
-               
-               if(str2[0].length > 11){
-                   Common.alert('<spring:message code="pettyCashNewCustdn.Amt.msg" />');
-                   str = "";
-               }else{
-                   str = str2[0].substr(0, 11)+"."+str2[1];
-               }
-               str = str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-               
-               
-               $(this).val(str);
-               
-               str = Number(str.replace(/,/gi, ""));
-               
-               var taxAmt = 0;
-               var taxNonAmt = 0;
-               
-               var oriTaxAmt = str * (Number($("#taxRate").val()) / 100);
-               console.log("oriTaxAmt : " + oriTaxAmt);
-               if($("#invcType").val() == "S") {
-                   if(oriTaxAmt > 30) {
-                       taxAmt = "30.00"
-                       taxNonAmt = oriTaxAmt - 30;
-                       console.log("taxNonAmt : " + taxNonAmt);
-                       taxNonAmt = "" + taxNonAmt;
-                       taxNonAmt = taxNonAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-                       var temp = taxNonAmt.split(".");
-                       if(temp.length == 1){
-                           temp[1] = "00";
-                           taxNonAmt = temp[0]+"."+temp[1];
-                       }
-                   } else {
-                       taxAmt = "" + oriTaxAmt;
-                       taxAmt = taxAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-                       var temp = taxAmt.split(".");
-                       if(temp.length == 1){
-                           temp[1] = "00";
-                           taxAmt = temp[0]+"."+temp[1];
-                       }
-                       taxNonAmt = "0.00"
-                   }
-               } else {
-                   taxAmt = "" + oriTaxAmt;
-                   taxAmt = taxAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
-                   var temp = taxAmt.split(".");
-                   if(temp.length == 1){
-                       temp[1] = "00";
-                       taxAmt = temp[0]+"."+temp[1];
-                   }
-                   taxNonAmt = "0.00";
-               }
-               $("#gstAmt").val(taxAmt);
-               $("#gstNonAmt").val(taxNonAmt);
-               
-               var totAmt = 0;
-               $.each($("#amt :text"), function(i, obj) {
-                   if(obj.value != null && obj.value != ""){
-                       console.log(i);
-                       console.log(obj.value);
-                       totAmt += Number(obj.value.replace(/,/gi, ""));
-                   }
-               });
-               console.log(totAmt);
-               totAmt = totAmt + Number(taxNonAmt.replace(/,/gi, ""));
-               totAmt = "" + totAmt;
-               var str3 = totAmt.split(".");
-               if(str3.length == 1){
-                   str3[1] = "00";
-                   totAmt = str3[0]+"."+str3[1];
-               }
-               $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-               console.log(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-        } else if(id == "newClmMonth") {
+        if(id == "newClmMonth") {
             var clmMonth = $(this).val();
             console.log(clmMonth);
             var month = clmMonth.substring(0, 2);
@@ -351,14 +261,14 @@ function fn_setPopSubSupplier() {
 
 function fn_setPopExpType() {
     console.log("Action");
-    $("#budgetCode").val($("#search_budgetCode").val());
-    $("#budgetCodeName").val($("#search_budgetCodeName").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCode", $("#search_budgetCode").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCodeName", $("#search_budgetCodeName").val());
     
-    $("#expType").val($("#search_expType").val());
-    $("#expTypeName").val($("#search_expTypeName").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "expType", $("#search_expType").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "expTypeName", $("#search_expTypeName").val());
     
-    $("#glAccCode").val($("#search_glAccCode").val());
-    $("#glAccCodeName").val($("#search_glAccCodeName").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCode", $("#search_glAccCode").val());
+    AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
 }
 
 function fn_checkForCustdnNric() {
@@ -409,20 +319,20 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }
-        if(FormUtil.isEmpty($("#expType").val())) {
-        	Common.alert('<spring:message code="webInvoice.expType.msg" />');
-            checkResult = false;
-            return checkResult;
-        }
-        if(FormUtil.isEmpty($("#taxCode").val())) {
-        	Common.alert('<spring:message code="webInvoice.taxCode.msg" />');
-            checkResult = false;
-            return checkResult;
-        }
-        if(FormUtil.isEmpty($("#gstBeforAmt").val())) {
-            Common.alert('<spring:message code="pettyCashExp.amtBeforeGst.msg" />');
-            checkResult = false;
-            return checkResult;
+        var length = AUIGrid.getGridData(myGridID).length;
+        if(length > 0) {
+            for(var i = 0; i < length; i++) {
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
+                    Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "gstBeforAmt"))) {
+                    Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+            }
         }
     }
     return checkResult;
@@ -439,6 +349,21 @@ function fn_newExpensePop() {
     Common.popupDiv("/eAccounting/pettyCash/newExpensePop.do", {callType:"new"}, null, true, "newExpensePop");
 }
 
+function fn_addMyGridRow() {
+	if(AUIGrid.getRowCount(myGridID) > 0) {
+		AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),cur:"MYR",gstBeforAmt:0,gstAmt:0,nonClmGstAmt:0,totAmt:0}, "last");
+	} else {
+		Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J2"}, function(result) {
+            console.log(result);
+            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,cur:"MYR",gstBeforAmt:0,gstAmt:0,nonClmGstAmt:0,totAmt:0}, "last");
+        });
+	}
+}
+
+function fn_removeMyGridRow() {
+    AUIGrid.removeRow(myGridID, selectRowIdx);
+}
+
 function fn_addRow() {
     // 파일 업로드 전에 필수 값 체크
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
@@ -453,26 +378,16 @@ function fn_addRow() {
                     ,bankCode : $("#bankCode").val()
                     ,bankAccNo : $("#bankAccNo").val()
                     ,clmMonth : $("#newClmMonth").val()
-                    ,expType : $("#expType").val()
-                    ,expTypeName : $("#expTypeName").val()
-                    ,glAccCode : $("#glAccCode").val()
-                    ,glAccCodeName : $("#glAccCodeName").val()
-                    ,budgetCode : $("#budgetCode").val()
-                    ,budgetCodeName : $("#budgetCodeName").val()
                     ,sMemAccId : $("#sMemAccId").val()
                     ,sMemAccName : $("#sMemAccName").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
                     ,invcType : $("#invcType").val()
                     ,invcTypeName : $("#invcType option:selected").text()
                     ,invcNo : $("#invcNo").val()
                     ,invcDt : $("#invcDt").val()
-                    ,gstRgistNo : $("#gstRgistNo").val()
-                    ,taxCode : $("#taxCode").val()
-                    ,taxName : $("#taxCode option:selected").text()
                     ,cur : "MYR"
-                    ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
-                    ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
-                    ,nonClmGstAmt : Number($("#gstNonAmt").val().replace(/,/gi, ""))
                     ,expDesc : $("#expDesc").val()
+                    ,gridData : GridCommon.getEditData(myGridID)
             };
             
         	Common.ajaxFile("/eAccounting/pettyCash/attachFileUpload.do", formData, function(result) {
@@ -480,39 +395,51 @@ function fn_addRow() {
                 
                 data.atchFileGrpId = result.data.fileGroupKey
                 console.log(data);
-                AUIGrid.addRow(newGridID, data, "last");
+                
+                if(data.gridData.add.length > 0) {
+                	for(var i = 0; i < data.gridData.add.length; i++) {
+                		data.gridData.add[i].costCentr = data.costCentr;
+                		data.gridData.add[i].costCentrName = data.costCentrName;
+                		data.gridData.add[i].memAccId = data.memAccId;
+                		data.gridData.add[i].custdnNric = data.custdnNric;
+                		data.gridData.add[i].bankCode = data.bankCode;
+                		data.gridData.add[i].bankAccNo = data.bankAccNo;
+                		data.gridData.add[i].clmMonth = data.clmMonth;
+                		data.gridData.add[i].sMemAccId = data.sMemAccId;
+                		data.gridData.add[i].sMemAccName = data.sMemAccName;
+                		data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+                		data.gridData.add[i].invcDt = data.invcDt;
+                		data.gridData.add[i].invcNo = data.invcNo;
+                		data.gridData.add[i].invcType = data.invcType;
+                		data.gridData.add[i].invcTypeName = data.invcTypeName;
+                		data.gridData.add[i].cur = data.cur;
+                		data.gridData.add[i].expDesc = data.expDesc;
+                		data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
+                		AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                	}
+                }
                 
                 fn_getAllTotAmt();
             });
         } else {
         	var data = {
-                    costCentr : $("#newCostCenter").val()
+        			costCentr : $("#newCostCenter").val()
                     ,costCentrName : $("#newCostCenterText").val()
                     ,memAccId : $("#newMemAccId").val()
                     ,custdnNric : $("#custdnNric").val()
                     ,bankCode : $("#bankCode").val()
                     ,bankAccNo : $("#bankAccNo").val()
                     ,clmMonth : $("#newClmMonth").val()
-                    ,expType : $("#expType").val()
-                    ,expTypeName : $("#expTypeName").val()
-                    ,glAccCode : $("#glAccCode").val()
-                    ,glAccCodeName : $("#glAccCodeName").val()
-                    ,budgetCode : $("#budgetCode").val()
-                    ,budgetCodeName : $("#budgetCodeName").val()
                     ,sMemAccId : $("#sMemAccId").val()
                     ,sMemAccName : $("#sMemAccName").val()
+                    ,gstRgistNo : $("#gstRgistNo").val()
                     ,invcType : $("#invcType").val()
                     ,invcTypeName : $("#invcType option:selected").text()
                     ,invcNo : $("#invcNo").val()
                     ,invcDt : $("#invcDt").val()
-                    ,gstRgistNo : $("#gstRgistNo").val()
-                    ,taxCode : $("#taxCode").val()
-                    ,taxName : $("#taxCode option:selected").text()
                     ,cur : "MYR"
-                    ,gstBeforAmt : Number($("#gstBeforAmt").val().replace(/,/gi, ""))
-                    ,gstAmt : Number($("#gstAmt").val().replace(/,/gi, ""))
-                    ,nonClmGstAmt : Number($("#gstNonAmt").val().replace(/,/gi, ""))
                     ,expDesc : $("#expDesc").val()
+                    ,gridData : GridCommon.getEditData(myGridID)
             };
             
             $("#attachTd").html("");
@@ -527,7 +454,55 @@ function fn_addRow() {
                 console.log(result);
                 
                 console.log(data);
-                AUIGrid.updateRow(newGridID, data, selectRowIdx);
+                
+                if(data.gridData.add.length > 0) {
+                    for(var i = 0; i < data.gridData.add.length; i++) {
+                        data.gridData.add[i].costCentr = data.costCentr;
+                        data.gridData.add[i].costCentrName = data.costCentrName;
+                        data.gridData.add[i].memAccId = data.memAccId;
+                        data.gridData.add[i].custdnNric = data.custdnNric;
+                        data.gridData.add[i].bankCode = data.bankCode;
+                        data.gridData.add[i].bankAccNo = data.bankAccNo;
+                        data.gridData.add[i].clmMonth = data.clmMonth;
+                        data.gridData.add[i].sMemAccId = data.sMemAccId;
+                        data.gridData.add[i].sMemAccName = data.sMemAccName;
+                        data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+                        data.gridData.add[i].invcDt = data.invcDt;
+                        data.gridData.add[i].invcNo = data.invcNo;
+                        data.gridData.add[i].invcType = data.invcType;
+                        data.gridData.add[i].invcTypeName = data.invcTypeName;
+                        data.gridData.add[i].cur = data.cur;
+                        data.gridData.add[i].expDesc = data.expDesc;
+                        data.gridData.add[i].atchFileGrpId = atchFileGrpId;
+                        AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
+                    }
+                }
+                if(data.gridData.update.length > 0) {
+                    for(var i = 0; i < data.gridData.update.length; i++) {
+                        data.gridData.update[i].costCentr = data.costCentr;
+                        data.gridData.update[i].costCentrName = data.costCentrName;
+                        data.gridData.update[i].memAccId = data.memAccId;
+                        data.gridData.update[i].custdnNric = data.custdnNric;
+                        data.gridData.update[i].bankCode = data.bankCode;
+                        data.gridData.update[i].bankAccNo = data.bankAccNo;
+                        data.gridData.update[i].clmMonth = data.clmMonth;
+                        data.gridData.update[i].sMemAccId = data.sMemAccId;
+                        data.gridData.update[i].sMemAccName = data.sMemAccName;
+                        data.gridData.update[i].gstRgistNo = data.gstRgistNo;
+                        data.gridData.update[i].invcDt = data.invcDt;
+                        data.gridData.update[i].invcNo = data.invcNo;
+                        data.gridData.update[i].invcType = data.invcType;
+                        data.gridData.update[i].invcTypeName = data.invcTypeName;
+                        data.gridData.update[i].cur = data.cur;
+                        data.gridData.update[i].expDesc = data.expDesc;
+                        AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
+                    }
+                }
+                if(data.gridData.remove.length > 0) {
+                    for(var i = 0; i < data.gridData.remove.length; i++) {
+                    	AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
+                    }
+                }
                 
                 fn_getAllTotAmt();
                 
@@ -590,8 +565,9 @@ function fn_selectExpenseInfo() {
     var obj = {
             clmNo : clmNo
             ,clmSeq : clmSeq
+            ,clamUn : clamUn
     };
-    Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseInfo.do", obj, function(result) {
+    Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseInfo.do?_cacheId=" + Math.random(), obj, function(result) {
         console.log(result);
         $("#newCostCenter").val(result.costCentr);
         $("#newCostCenterText").val(result.costCentrName);
@@ -602,29 +578,15 @@ function fn_selectExpenseInfo() {
         $("#bankName").val(result.bankName);
         $("#bankAccNo").val(result.bankAccNo);
         $("#newClmMonth").val(result.clmMonth);
-        $("#expType").val(result.expType);
-        $("#expTypeName").val(result.expTypeName);
-        $("#glAccCode").val(result.glAccCode);
-        $("#glAccCodeName").val(result.glAccCodeName);
-        $("#budgetCode").val(result.budgetCode);
-        $("#budgetCodeName").val(result.budgetCodeName);
         $("#sMemAccId").val(result.sMemAccId);
         $("#sMemAccName").val(result.sMemAccName);
         $("#invcType").val(result.invcType);
         $("#invcNo").val(result.invcNo);
         $("#invcDt").val(result.invcDt);
         $("#gstRgistNo").val(result.gstRgistNo);
-        $("#taxCode").val(result.taxCode);
-        fn_selectTaxRate();
-        var gstBeforAmt = "" + result.gstBeforAmt;
-        $("#gstBeforAmt").val(gstBeforAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-        var gstAmt = "" + result.gstAmt;
-        $("#gstAmt").val(gstAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-        var gstNonAmt = "" + result.nonClmGstAmt;
-        $("#gstNonAmt").val(gstNonAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
-        var totAmt = "" + result.totAmt;
-        $("#totAmt").val(totAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
         $("#expDesc").val(result.expDesc);
+        
+        AUIGrid.setGridData(myGridID, result.itemGrp);
         
         // TODO attachFile
         attachList = result.attachList;
@@ -780,6 +742,76 @@ function fn_selectTaxRate() {
         console.log(result);
         $("#taxRate").val(result.taxRate);
     });
+}
+
+function fn_myGridSetEvent() {
+	AUIGrid.bind(myGridID, "cellClick", function( event ) 
+            {
+                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                selectRowIdx = event.rowIndex;
+            });
+    
+    AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
+        // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
+        if($("#invcType").val() == "S") {
+            if(event.dataField == "nonClmGstAmt") {
+                if(event.item.taxAmt <= 30) {
+                    Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
+                    AUIGrid.forceEditingComplete(myGridID, null, true);
+                }
+            }
+        } else {
+            if(event.dataField == "nonClmGstAmt") {
+                Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
+                AUIGrid.forceEditingComplete(myGridID, null, true);
+            }
+        }
+  });
+    
+    AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
+        if(event.dataField == "gstBeforAmt" || event.dataField == "gstAmt" || event.dataField == "nonClmGstAmt") {
+            var taxAmt = 0;
+            var taxNonClmAmt = 0;
+            if($("#invcType").val() == "S") {
+                if(event.dataField == "gstBeforAmt") {
+                    if(event.item.oriTaxAmt > 30) {
+                        taxAmt = 30;
+                        taxNonClmAmt = event.item.oriTaxAmt - 30;
+                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
+                        AUIGrid.setCellValue(myGridID, event.rowIndex, "nonClmGstAmt", taxNonClmAmt);
+                    } else {
+                        taxAmt = event.item.oriTaxAmt;
+                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
+                        AUIGrid.setCellValue(myGridID, event.rowIndex, "nonClmGstAmt", taxNonClmAmt);
+                    }
+                }
+                if(event.dataField == "gstAmt") {
+                    if(event.value > 30) {
+                        Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", 30);
+                    }
+                }
+            } else {
+                if(event.dataField == "gstBeforAmt") {
+                    taxAmt = event.item.oriTaxAmt;
+                    AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
+                    AUIGrid.setCellValue(myGridID, event.rowIndex, "nonClmGstAmt", taxNonClmAmt);
+                }
+            }
+        }
+        if(event.dataField == "taxCode") {
+            console.log("taxCode Choice Action");
+            console.log(event.item.taxCode);
+            var data = {
+                    taxCode : event.item.taxCode
+            };
+            Common.ajax("GET", "/eAccounting/webInvoice/selectTaxRate.do", data, function(result) {
+                console.log(result);
+                AUIGrid.setCellValue(myGridID, event.rowIndex, "taxRate", result.taxRate);
+                AUIGrid.setCellValue(myGridID, event.rowIndex, "taxName", result.taxName);
+            });
+        }
+  });
 }
 </script>
 

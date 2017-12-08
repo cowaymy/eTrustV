@@ -28,5 +28,7 @@ public interface StaffClaimService {
 	void deleteStaffClaimExpMileage(Map<String, Object> params);
 	
 	void updateStaffClaimExpTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params);
 
 }

@@ -45,5 +45,7 @@ public interface StaffClaimMapper {
 	
 	void updateStaffClaimExpTotAmt(Map<String, Object> params);
 	
+	List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params);
+	
 	
 }

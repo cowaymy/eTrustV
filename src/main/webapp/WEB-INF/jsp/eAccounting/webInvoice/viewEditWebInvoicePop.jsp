@@ -46,6 +46,7 @@ var obj = {
         ,taxNonClmAmt : Number("${data.taxNonClmAmt}")
         ,totAmt : Number("${data.totAmt}")
         ,expDesc : "${data.expDesc}"
+        ,clamUn : "${data.clamUn}"
 };
 gridDataList.push(obj);
 </c:forEach>
@@ -62,6 +63,9 @@ var obj = {
 attachmentList.push(obj);
 </c:forEach>
 var myColumnLayout = [ {
+    dataField : "clamUn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -161,20 +165,11 @@ var myColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        var taxAmt = 0;
-        if($("#invcType").val() == "S") {
-            if(item.oriTaxAmt > 30) {
-                taxAmt = 30;
-            } else {
-                taxAmt = item.oriTaxAmt;
-            }
-        } else {
-            taxAmt = item.oriTaxAmt;
-        }
-        return taxAmt;
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
     }
 }, {
     dataField : "taxNonClmAmt",
@@ -182,18 +177,13 @@ var myColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
-        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
-        var taxNonClmAmt = 0;
-        if($("#invcType").val() == "S") {
-            if(item.oriTaxAmt > 30) {
-                taxNonClmAmt = item.oriTaxAmt - 30;
-            }
-        }
-        return taxNonClmAmt;
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
     }
-},{
+}, {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
@@ -323,8 +313,53 @@ $(document).ready(function () {
         selectRowIdx = event.rowIndex;
     });
     
+    AUIGrid.bind(newGridID, "cellEditBegin", function( event ) {
+        // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
+        if($("#invcType").val() == "S") {
+            if(event.dataField == "taxNonClmAmt") {
+                if(event.item.taxAmt <= 30) {
+                    Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
+                    AUIGrid.forceEditingComplete(newGridID, null, true);
+                }
+            }
+        } else {
+            if(event.dataField == "taxNonClmAmt") {
+                Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
+                AUIGrid.forceEditingComplete(newGridID, null, true);
+            }
+        }
+  });
+    
     AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
-        if(event.dataField == "netAmt" || event.dataField == "taxAmt") {
+        if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt") {
+            var taxAmt = 0;
+            var taxNonClmAmt = 0;
+            if($("#invcType").val() == "S") {
+                if(event.dataField == "netAmt") {
+                    if(event.item.oriTaxAmt > 30) {
+                        taxAmt = 30;
+                        taxNonClmAmt = event.item.oriTaxAmt - 30;
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                    } else {
+                        taxAmt = event.item.oriTaxAmt;
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                    }
+                }
+                if(event.dataField == "taxAmt") {
+                    if(event.value > 30) {
+                        Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", 30);
+                    }
+                }
+            } else {
+                if(event.dataField == "netAmt") {
+                    taxAmt = event.item.oriTaxAmt;
+                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                }
+            }
             var totAmt = fn_getTotalAmount();
             $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
             console.log(totAmt);
@@ -566,7 +601,7 @@ function fn_setGridData(data) {
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off value="${webInvoiceInfo.invcNo}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
-	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
+	<th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo" value="${webInvoiceInfo.gstRgistNo}" /></td>
 </tr>
 <tr>

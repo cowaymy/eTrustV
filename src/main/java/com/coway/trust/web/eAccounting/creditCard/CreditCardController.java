@@ -253,9 +253,12 @@ public class CreditCardController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
+		List<EgovMap> taxCodeFlagList = creditCardService.selectTaxCodeCreditCardFlag();
+		
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		return "eAccounting/creditCard/creditCardNewReimbursementPop";
 	}
 	
@@ -343,12 +346,14 @@ public class CreditCardController {
 		
 		// TODO selectExpenseItems
 		List<EgovMap> itemList = creditCardService.selectReimbursementItems((String) params.get("clmNo"));
+		List<EgovMap> taxCodeFlagList = creditCardService.selectTaxCodeCreditCardFlag();
 		
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		if(itemList.size() > 0) {
 			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		}
@@ -361,6 +366,9 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		EgovMap info = creditCardService.selectReimburesementInfo(params);
+		List<EgovMap> itemGrp = creditCardService.selectReimbursementItemGrp(params);
+		
+		info.put("itemGrp", itemGrp);
 		
 		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
 		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);

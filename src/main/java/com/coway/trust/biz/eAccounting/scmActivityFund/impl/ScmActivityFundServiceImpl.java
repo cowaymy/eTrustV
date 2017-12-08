@@ -209,4 +209,10 @@ public class ScmActivityFundServiceImpl implements ScmActivityFundService {
 		scmActivityFundMapper.updateScmActivityFundExpTotAmt(params);
 	}
 
+	@Override
+	public List<EgovMap> selectScmActivityFundItemGrp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return scmActivityFundMapper.selectScmActivityFundItemGrp(params);
+	}
+
 }

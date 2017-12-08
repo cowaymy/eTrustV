@@ -50,5 +50,7 @@ public interface CreditCardService {
 	void updateReimbursementTotAmt(Map<String, Object> params);
 	
 	List<EgovMap> selectCreditCardNoToMgmt();
+	
+	List<EgovMap> selectReimbursementItemGrp(Map<String, Object> params);
 
 }

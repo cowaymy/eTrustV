@@ -240,4 +240,10 @@ public class CodyClaimServiceImpl implements CodyClaimService {
 		codyClaimMapper.updateCodyClaimExpTotAmt(params);
 	}
 
+	@Override
+	public List<EgovMap> selectCodyClaimItemGrp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return codyClaimMapper.selectCodyClaimItemGrp(params);
+	}
+
 }

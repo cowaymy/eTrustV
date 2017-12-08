@@ -71,4 +71,6 @@ public interface PettyCashMapper {
 	
 	void deletePettyCashExpItem(Map<String, Object> params);
 	
+	List<EgovMap> selectExpenseItemGrp(Map<String, Object> params);
+	
 }

@@ -221,6 +221,10 @@ public class WebInvoiceController {
 		
 		List<EgovMap> list = webInvoiceService.selectWebInvoiceList(params);
 		
+		
+		LOGGER.debug("params =====================================>>  " + list.toString());
+
+		
 		return ResponseEntity.ok(list);
 	}
 	
@@ -483,9 +487,23 @@ public class WebInvoiceController {
 		
 		LOGGER.debug("Params =====================================>>  " + params);
 		
-		EgovMap taxRate = webInvoiceService.selectTaxRate(params); 
+		EgovMap taxRate = webInvoiceService.selectTaxRate(params);
 		
 		return ResponseEntity.ok(taxRate);
+		
+	}
+	
+	@RequestMapping(value = "/selectClamUn", method = RequestMethod.GET) 
+	public ResponseEntity<EgovMap> selectClamUn (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		EgovMap clamUn = webInvoiceService.selectClamUn(params);
+		clamUn.put("clmType", params.get("clmType"));
+		
+		webInvoiceService.updateClamUn(clamUn);
+		
+		return ResponseEntity.ok(clamUn);
 		
 	}
 }

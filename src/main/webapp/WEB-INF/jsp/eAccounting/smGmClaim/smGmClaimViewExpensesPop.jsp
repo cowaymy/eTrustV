@@ -10,13 +10,19 @@
 .aui-grid-user-custom-right {
     text-align:right;
 }
+/* 특정 칼럼 드랍 리스트 왼쪽 정렬 재정의*/
+#my_grid_wrap-aui-grid-drop-list-taxCode .aui-grid-drop-list-ul {
+     text-align:left;
+
 </style>
 <script type="text/javascript">
 var clmNo = "${clmNo}";
 var clmSeq = 0;
+var clamUn = null;
 var atchFileGrpId;
 var attachList;
 var callType = "${callType}";
+var keyValueList = $.parseJSON('${taxCodeList}');
 var selectRowIdx;
 var deleteRowIdx;
 var expTypeName;
@@ -24,6 +30,9 @@ var expTypeName;
 var update = new Array();
 var remove = new Array();
 var newGridColumnLayout = [ {
+    dataField : "clamUn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -180,7 +189,240 @@ var newGridPros = {
     rowIdField : "clmSeq"
 };
 
+var myGridColumnLayout = [ {
+    dataField : "clamUn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expType",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expTypeName",
+    headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" />',
+    style : "aui-grid-user-custom-left",
+    colSpan : 2
+}, {
+    dataField : "",
+    headerText : '',
+    width: 30,
+    editable : false,
+    renderer : {
+        type : "IconRenderer",
+        iconTableRef :  {
+            "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
+        },         
+        iconWidth : 24,
+        iconHeight : 24,
+        onclick : function(rowIndex, columnIndex, value, item) {
+            console.log("CellClick rowIndex : " + rowIndex + ", columnIndex : " + columnIndex + " clicked");
+            selectRowIdx = rowIndex;
+            fn_PopExpenseTypeSearchPop();
+            }
+        },
+    colSpan : -1
+}, {
+    dataField : "glAccCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "glAccCodeName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCodeName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxCode",
+    headerText : '<spring:message code="newWebInvoice.taxCode" />',
+    renderer : {
+        type : "DropDownListRenderer",
+        list : keyValueList, //key-value Object 로 구성된 리스트
+        keyField : "taxCode", // key 에 해당되는 필드명
+        valueField : "taxName", // value 에 해당되는 필드명
+    }
+}, {
+    dataField : "taxName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxRate",
+    dataType: "numeric",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+    editable : false
+}, {
+    dataField : "gstBeforAmt",
+    headerText : '<spring:message code="newWebInvoice.netAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
+    }
+}, {
+    dataField : "oriTaxAmt",
+    dataType: "numeric",
+    visible : false, // Color 칼럼은 숨긴채 출력시킴
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.gstBeforAmt * (item.taxRate / 100));
+    }
+}, {
+    dataField : "gstAmt",
+    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
+    }
+}, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editRenderer : {
+        type : "InputEditRenderer",
+        onlyNumeric : true,
+        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
+        allowPoint : true // 소수점(.) 입력 가능 설정
+    }
+}, {
+    dataField : "totAmt",
+    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false,
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
+    },
+    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+        if(item.yN == "N") {
+            return "my-cell-style";
+        }
+        return null;
+    }
+}, {
+    dataField : "atchFileGrpId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}
+];
+
+var approvalColumnLayout = [ {
+    dataField : "clamUn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expType",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expTypeName",
+    headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" />',
+    style : "aui-grid-user-custom-left",
+    editable : false
+}, {
+    dataField : "glAccCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "glAccCodeName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCodeName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxName",
+    headerText : '<spring:message code="newWebInvoice.taxCode" />',
+    editable : false
+}, {
+    dataField : "taxRate",
+    dataType: "numeric",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+    editable : false
+}, {
+    dataField : "gstBeforAmt",
+    headerText : '<spring:message code="newWebInvoice.netAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
+    dataField : "oriTaxAmt",
+    dataType: "numeric",
+    visible : false, // Color 칼럼은 숨긴채 출력시킴
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.gstBeforAmt * (item.taxRate / 100));
+    }
+}, {
+    dataField : "gstAmt",
+    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
+}, {
+    dataField : "totAmt",
+    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false,
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
+    }
+}, {
+    dataField : "atchFileGrpId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}
+];
+
+//그리드 속성 설정
+var myGridPros = {
+    editable : true,
+    softRemoveRowMode : false,
+    rowIdField : "clmSeq",
+    headerHeight : 40,
+    height : 160
+};
+
+var myGridID;
+
 var mileageGridColumnLayout = [ {
+    dataField : "clamUn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -342,6 +584,11 @@ var mileageGridID;
 
 $(document).ready(function () {
     newGridID = AUIGrid.create("#newStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
+    if("${appvPrcssNo}" == null || "${appvPrcssNo}" == '') {
+        myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
+    } else {
+        myGridID = AUIGrid.create("#my_grid_wrap", approvalColumnLayout, myGridPros);
+    }
     
     AUIGrid.setGridData(newGridID, $.parseJSON('${itemList}'));
     console.log($.parseJSON('${itemList}'))
@@ -365,6 +612,8 @@ $(document).ready(function () {
     $("#delete_btn").click(fn_deleteStaffClaimExp);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(fn_approveLinePop);
+    $("#add_row").click(fn_addMyGridRow);
+    $("#remove_row").click(fn_removeMyGridRow);
     
     AUIGrid.bind(newGridID, "cellDoubleClick", function( event ) {
     	console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
@@ -373,6 +622,7 @@ $(document).ready(function () {
         if(clmNo != null && clmNo != "") {
             selectRowIdx = event.rowIndex;
             clmSeq = event.item.clmSeq;
+            clamUn = event.item.clamUn;
             atchFileGrpId = event.item.atchFileGrpId;
             fn_selectStaffClaimInfo();
         } else {
@@ -390,11 +640,7 @@ $(document).ready(function () {
         expTypeName = event.item.expTypeName;
     });
     
-    CommonCombo.make("taxCode", "/eAccounting/smGmClaim/selectTaxCodeSmGmClaimFlag.do", null, "", {
-        id: "taxCode",
-        name: "taxName",
-        type:"S"
-    });
+    fn_myGridSetEvent();
     
     fn_setEvent();
     
@@ -405,6 +651,8 @@ $(document).ready(function () {
     // WebInvoice Test는 Test
     if(expGrp == "1") {
         $("#noMileage").hide();
+        $("#myGird_btn").hide();
+        fn_destroyMyGrid();
         if(!FormUtil.isEmpty("${appvPrcssNo}")){
             mileageGridPros.editable = false;
         }
@@ -514,17 +762,10 @@ function fn_tempSave() {
     <td></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.expType" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="expTypeName" name="expTypeName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="expenseType_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-    <th scope="row"><spring:message code="newWebInvoice.taxCode" /></th>
-    <%-- <td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn" id="taxCode"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-    <td><select class="" id="taxCode" name="taxCode" onchange="javascript:fn_selectTaxRate()" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>></select></td>
-</tr>
-<tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="supplirName" name="supplirName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="sSupplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="supplirName" name="supplirName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" id="gstRgistNo" name="gstRgistNo" readonly="readonly"/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
@@ -536,18 +777,6 @@ function fn_tempSave() {
     </td>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-</tr>
-<tr id="amt">
-    <th scope="row"><spring:message code="pettyCashNewExp.amtBeforeGst" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstBeforAmt" name="gstBeforAmt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRm" /></th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstAmt" name="gstAmt" /></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="newWebInvoice.totalAmount" /></th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totAmt" name="totAmt" /></td>
-    <th scope="row"><spring:message code="pettyCashNewExp.taxNonClmAmt" /></th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstNonAmt" name="gstNonAmt" /></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
@@ -563,6 +792,18 @@ function fn_tempSave() {
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
+<aside class="title_line" id="myGird_btn"><!-- title_line start -->
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#" id="add_row"><spring:message code="newWebInvoice.btn.add" /></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="remove_row"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+</ul>
+</aside><!-- title_line end -->
+</c:if>
+
+<article class="grid_wrap" id="my_grid_wrap"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
 
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <aside class="title_line" id="mileage_btn" style="display: none;"><!-- title_line start -->

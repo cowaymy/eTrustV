@@ -89,4 +89,8 @@ public interface WebInvoiceMapper {
 	
 	EgovMap selectTaxRate(Map<String, Object> params);
 	
+	EgovMap selectClamUn(Map<String, Object> params);
+	
+	void updateClamUn(Map<String, Object> params);
+	
 }

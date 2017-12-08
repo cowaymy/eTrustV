@@ -56,4 +56,6 @@ public interface PettyCashService {
 	void deletePettyCashExpItem(Map<String, Object> params);
 	
 	void updatePettyCashExpTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectExpenseItemGrp(Map<String, Object> params);
 }

@@ -106,6 +106,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("clmNo", (String) params.get("clmNo"));
 				int clmSeq = webInvoiceMapper.selectNextClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
+				hm.put("clmType", "J1");
 				hm.put("userId", params.get("userId"));
 				LOGGER.debug("insertWebInvoiceDetail =====================================>>  " + params);
 				webInvoiceMapper.insertWebInvoiceDetail(hm);
@@ -136,6 +137,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("clmNo", params.get("clmNo"));
 				int clmSeq = webInvoiceMapper.selectNextClmSeq((String) params.get("clmNo"));
 				hm.put("clmSeq", clmSeq);
+				hm.put("clmType", "J1");
 				hm.put("userId", params.get("userId"));
 				LOGGER.debug("insertWebInvoiceDetail =====================================>>  " + hm);
 				webInvoiceMapper.insertWebInvoiceDetail(hm);
@@ -430,6 +432,18 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	public EgovMap selectTaxRate(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectTaxRate(params);
+	}
+
+	@Override
+	public EgovMap selectClamUn(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectClamUn(params);
+	}
+
+	@Override
+	public void updateClamUn(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		webInvoiceMapper.updateClamUn(params);
 	}
 	
 	

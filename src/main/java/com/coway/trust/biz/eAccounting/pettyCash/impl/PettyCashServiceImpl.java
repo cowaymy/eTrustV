@@ -194,6 +194,8 @@ public class PettyCashServiceImpl implements PettyCashService {
 		LOGGER.debug("masterData =====================================>>  " + masterData);
 		pettyCashMapper.insertPettyCashExp(masterData);
 		
+		String clamUn = null;
+		
 		for(int i = 0; i < gridDataList.size(); i++) {
 			Map<String, Object> item = (Map<String, Object>) gridDataList.get(i);
 			int clmSeq = pettyCashMapper.selectNextExpClmSeq(clmNo);
@@ -332,6 +334,12 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void updatePettyCashExpTotAmt(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		pettyCashMapper.updatePettyCashExpTotAmt(params);
+	}
+
+	@Override
+	public List<EgovMap> selectExpenseItemGrp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectExpenseItemGrp(params);
 	}
 	
 	

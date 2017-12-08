@@ -263,7 +263,15 @@ function fn_getTotalAmount() {
 }
 
 function fn_addRow() {
-    AUIGrid.addRow(newGridID, {cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+	if(AUIGrid.getRowCount(newGridID) > 0) {
+		console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
+		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+	} else {
+		Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
+	        console.log(result);
+	        AUIGrid.addRow(newGridID, {clamUn:result.clamUn,cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+	    });
+	}
 }
 
 function fn_removeRow() {

@@ -281,6 +281,12 @@ public class CreditCardServiceImpl implements CreditCardService {
 		// TODO Auto-generated method stub
 		return creditCardMapper.selectCreditCardNoToMgmt();
 	}
+
+	@Override
+	public List<EgovMap> selectReimbursementItemGrp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectReimbursementItemGrp(params);
+	}
 	
 	
 	

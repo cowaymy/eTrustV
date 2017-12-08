@@ -86,9 +86,12 @@ public class SmGmClaimController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
+		List<EgovMap> taxCodeFlagList = smGmClaimService.selectTaxCodeSmGmClaimFlag();
+		
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		return "eAccounting/smGmClaim/smGmClaimNewExpensesPop";
 	}
 	
@@ -161,6 +164,7 @@ public class SmGmClaimController {
 		
 		// TODO selectExpenseItems
 		List<EgovMap> itemList = smGmClaimService.selectSmGmClaimItems((String) params.get("clmNo"));
+		List<EgovMap> taxCodeFlagList = smGmClaimService.selectTaxCodeSmGmClaimFlag();
 		
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
@@ -168,6 +172,7 @@ public class SmGmClaimController {
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
 		model.addAttribute("expGrp", itemList.get(0).get("expGrp"));
+		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		if(itemList.size() > 0) {
 			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		}
@@ -180,6 +185,9 @@ public class SmGmClaimController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		EgovMap info = smGmClaimService.selectSmGmClaimInfo(params);
+		List<EgovMap> itemGrp = smGmClaimService.selectSmGmClaimItemGrp(params);
+		
+		info.put("itemGrp", itemGrp);
 		
 		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
 		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);

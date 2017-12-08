@@ -26,5 +26,7 @@ public interface ScmActivityFundService {
 	void deleteScmActivityFundExpItem(Map<String, Object> params);
 	
 	void updateScmActivityFundExpTotAmt(Map<String, Object> params);
+	
+	List<EgovMap> selectScmActivityFundItemGrp(Map<String, Object> params);
 
 }

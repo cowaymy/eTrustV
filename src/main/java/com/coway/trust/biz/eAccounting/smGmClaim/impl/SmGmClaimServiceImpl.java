@@ -240,4 +240,10 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 		smGmClaimMapper.updateSmGmClaimExpTotAmt(params);
 	}
 
+	@Override
+	public List<EgovMap> selectSmGmClaimItemGrp(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return smGmClaimMapper.selectSmGmClaimItemGrp(params);
+	}
+
 }
