@@ -156,18 +156,18 @@
                 doGetComboData('/common/selectCodeList.do', {groupCode :appSubType}, '',  'srvPacIdAexc',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
             }
 
-            $('#spInstDur').addClass("blind");
-            $("#spInstDur").val('').prop("disabled", true);
+            $('#txtInstallmentDurationAexc').addClass("blind");
+            $("#txtInstallmentDurationAexc").val('').prop("disabled", true);
 
             $('#cmbPromotionAexc option').remove();
             
-            $("#txtPriceAexc").val('');
-            $("#txtPVAexc").val('');
+          //$("#txtPriceAexc").val('');
+          //$("#txtPVAexc").val('');
             
             if($("#cmbAppTypeAexc option:selected").index() > 0) {
                 if($("#cmbAppTypeAexc").val() == '68') {
-                    $('#spInstDur').removeClass("blind");
-                    $('#spInstDur').removeAttr("disabled");
+                    $('#txtInstallmentDurationAexc').removeClass("blind");
+                    $('#txtInstallmentDurationAexc').removeAttr("disabled");
                 }
 
                 $('#cmbPromotionAexc').removeAttr("disabled");
@@ -178,7 +178,17 @@
             }
         });
         $('#cmbPromotionAexc').change(function() {
-            fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
+            
+            var promoIdIdx = $("#cmbPromotionAexc option:selected").index();
+            var promoIdVal = $("#cmbPromotionAexc").val();
+
+            if(promoIdIdx > 0 && promoIdVal != '0') {
+               fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
+            }
+            else {
+                fn_loadProductPriceAexc(APP_TYPE_ID, STOCK_ID)
+            }
+            
         });
         $('#srvPacIdAexc').change(function() {
 
@@ -2077,6 +2087,8 @@
     function fn_setDefaultSrvPacId() {
         if($('#srvPacIdAexc option').size() == 2) {
             $('#srvPacIdAexc option:eq(1)').attr('selected', 'selected');
+            
+            fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val(), $('#srvPacIdAexc').val()); 
         }
     }
 </script>
@@ -2395,7 +2407,7 @@
     <p><select id="cmbAppTypeAexc" name="cmbAppType" class="w100p"></select></select></p>
     <p><select id="srvPacIdAexc" name="srvPacId" class="w100p"></select></p>
     </td>
-    <th scope="row">Ex-Trade<span id="spInstDur" class="must blind">*</span></th>
+    <th scope="row">Ex-Trade<span class="must blind">*</span></th>
     <td><p><select id="exTradeAexc" name="exTrade" class="w100p"></select></p>
         <p><input id="relatedNoAexc" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
 </tr>
@@ -2428,7 +2440,7 @@
 <tr>
     <th scope="row">PV<span id="spPV" class="must blind">*</span></th>
     <td><input id="txtPVAexc" name="txtPV" type="text" title="" placeholder="PV" class="w100p readonly" readonly/></td>
-    <th scope="row">Discount Period/<br>Promotion Rental Fee</th>
+    <th scope="row">Discount Period/<br>Final Rental Fee</th>
     <td><p><select id="promoDiscPeriodTpAexc" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriodAexc" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFeesAexc" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
