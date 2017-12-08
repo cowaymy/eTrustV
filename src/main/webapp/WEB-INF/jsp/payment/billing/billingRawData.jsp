@@ -13,10 +13,10 @@ $(document).ready(function(){
     doDefCombo(reportTypeData, '' ,'reportType', 'S', '');        //Report Type 생성      
     
     //현재 년월 세팅
-    var currentFullDt = new Date();
-    currentFullDt.setMonth(currentFullDt.getMonth() + 1);
-    var currentDt = FormUtil.lpad(currentFullDt.getMonth(),2,"0")+"/"+currentFullDt.getFullYear();    
-    $("#issueMonth").val(currentDt);
+    var today = new Date();
+    $("#issueMonth").val(FormUtil.lpad((today.getMonth()+1),2,"0") + "/" + today.getFullYear());
+    
+    
     
 });
 

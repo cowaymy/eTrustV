@@ -147,7 +147,7 @@
 			)
 			VALUES 
 			( 
-			  PAY0015D_SEQ.NEXTVAL,
+			  PAY0015D_ID_SEQ.NEXTVAL,
 			  #{poOrderId}, 
 			  #{poReferenceNo}, 
 			  #{poStartInstallment}, 
