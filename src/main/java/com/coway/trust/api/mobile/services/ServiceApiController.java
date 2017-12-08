@@ -1044,7 +1044,13 @@ public class ServiceApiController {
 			params.put("refNo1","0"); 
 			params.put("refNo2","0"); 
 			params.put("codeId",String.valueOf(installResult.get("257")));
-			params.put("hidOutright_Price",String.valueOf(orderInfo.get("c5")));
+			
+			if(orderInfo !=null){	
+				params.put("hidOutright_Price",CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
+			}else {
+				params.put("hidOutright_Price", "0");
+			}
+			
 			params.put("hidAppTypeId",installResult.get("codeId"));
 			
 			
