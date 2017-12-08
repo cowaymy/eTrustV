@@ -5,6 +5,7 @@ package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
+import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
+import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
@@ -93,7 +96,20 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		
 		this.preprocPreOrder(preOrderVO, sessionVO);
 		
-		preOrderMapper.updatePreOrder(preOrderVO);;
+		preOrderMapper.updatePreOrder(preOrderVO);
+	}
+	
+	@Override
+	public void updatePreOrderStatus(PreOrderListVO preOrderListVO, SessionVO sessionVO) {
+		
+		GridDataSet<PreOrderVO> preOrderList = preOrderListVO.getPreOrderVOList();
+		
+		ArrayList<PreOrderVO> updateList = preOrderList.getUpdate();
+		
+		for(PreOrderVO vo : updateList) {
+			vo.setUpdUserId(sessionVO.getUserId());
+			preOrderMapper.updatePreOrderStatus(vo);
+		}
 	}
 	
 	private void preprocPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {

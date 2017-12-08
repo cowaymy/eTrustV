@@ -1277,6 +1277,8 @@
             custTypeId  : $('#typeId').val().trim(),
             raceId      : $('#raceId').val().trim(),
             billGrp     : $('input:radio[name="grpOpt"]:checked').val(),
+            preOrdId    : '${preOrdId}',
+            preOrderYN  : '${CONV_TO_ORD_YN}',
             
             salesOrderMVO : {
                 advBill                 : $('input:radio[name="advPay"]:checked').val(),
@@ -1422,6 +1424,11 @@
     }
     
     function fn_orderRegPopClose() {
+        
+        if(convToOrdYn == 'Y') {
+            fn_getPreOrderList();
+        }
+        
         $('#btnCnfmOrderClose').click();
         $('#btnOrdRegClose').click();
     }

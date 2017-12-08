@@ -80,6 +80,10 @@ public class OrderVO implements Serializable {
 	
 	private int salesOrdId;
 	
+	private int preOrdId;
+	
+	private String preOrderYN;
+	
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -326,6 +330,22 @@ public class OrderVO implements Serializable {
 
 	public void setSalesOrdId(int salesOrdId) {
 		this.salesOrdId = salesOrdId;
+	}
+
+	public int getPreOrdId() {
+		return preOrdId;
+	}
+
+	public void setPreOrdId(int preOrdId) {
+		this.preOrdId = preOrdId;
+	}
+
+	public String getPreOrderYN() {
+		return preOrderYN;
+	}
+
+	public void setPreOrderYN(String preOrderYN) {
+		this.preOrderYN = preOrderYN;
 	}
 
 }

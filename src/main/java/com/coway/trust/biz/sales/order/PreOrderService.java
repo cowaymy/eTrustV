@@ -6,6 +6,7 @@ package com.coway.trust.biz.sales.order;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -26,5 +27,7 @@ public interface PreOrderService {
 	EgovMap selectPreOrderInfo(Map<String, Object> params);
 
 	void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO);
+
+	void updatePreOrderStatus(PreOrderListVO preOrderListVO, SessionVO sessionVO);
 
 }

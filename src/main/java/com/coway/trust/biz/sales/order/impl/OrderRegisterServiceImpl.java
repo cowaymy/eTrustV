@@ -35,6 +35,7 @@ import com.coway.trust.biz.sales.order.vo.InstallEntryVO;
 import com.coway.trust.biz.sales.order.vo.InstallResultVO;
 import com.coway.trust.biz.sales.order.vo.InstallationVO;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.biz.sales.order.vo.RentPaySetVO;
 import com.coway.trust.biz.sales.order.vo.RentalSchemeVO;
 import com.coway.trust.biz.sales.order.vo.SalesOrderContractVO;
@@ -71,6 +72,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
 
+	@Resource(name = "preOrderMapper")
+	private PreOrderMapper preOrderMapper;
+	
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 	
@@ -1356,6 +1360,16 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		}
 
         this.doSaveOrder(regOrderVO);
+        
+        if("Y".equals(orderVO.getPreOrderYN())) {
+        	PreOrderVO preOrderVO = new PreOrderVO();
+        	
+        	preOrderVO.setPreOrdId(orderVO.getPreOrdId());
+        	preOrderVO.setUpdUserId(sessionVO.getUserId());
+        	preOrderVO.setStusId(SalesConstants.STATUS_COMPLETED);
+        	
+        	preOrderMapper.updatePreOrderStatus(preOrderVO);
+        }
 
 		logger.info("수정 : {}");
 		

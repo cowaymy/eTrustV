@@ -26,6 +26,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
+import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -211,6 +212,22 @@ public class PreOrderController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/modifyPreOrderStatus.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> modifyPreOrderStatus(@RequestBody PreOrderListVO preOrderListVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
+
+		preOrderService.updatePreOrderStatus(preOrderListVO, sessionVO);
+
+		String msg = "Order Status successfully updated.";
+		
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+	
 	@RequestMapping(value = "/convertToOrderPop.do")
 	public String convertToOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
@@ -220,6 +237,7 @@ public class PreOrderController {
 		
 		model.put("preOrderInfo", result);
 		model.put("CONV_TO_ORD_YN", "Y");
+		model.put("preOrdId", params.get("preOrdId"));
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 		
 		return "sales/order/orderRegisterPop";

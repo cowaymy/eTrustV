@@ -11,6 +11,10 @@ public class SalesConstants {
 	public static final int STATUS_COMPLETED = 4;
 	public static final int STATUS_INACTIVE  = 8;
 	public static final int STATUS_CANCELLED = 10;
+	public static final int STATUS_READY_TO_ORDER = 97;
+	public static final int STATUS_FAILED = 21;
+	public static final int STATUS_AUTO_CANCELLED = 98;
+	
 		
 	public static final String DEFAULT_DATE = "01/01/1900";	
 	public static final String DEFAULT_DATE2 = "1900-01-01";	

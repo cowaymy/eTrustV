@@ -37,4 +37,6 @@ public interface PreOrderMapper {
 	
 	void updatePreOrder(PreOrderVO preOrderVO);
 	
+	void updatePreOrderStatus(PreOrderVO preOrderVO);
+	
 }

@@ -36,6 +36,34 @@
         Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
     }
     
+    function fn_doSaveStatus() {
+        console.log('!@# fn_doSaveStatus START');
+        
+        var preOrderVOList = {            
+            preOrderVOList : GridCommon.getEditData(listGridID)
+        };
+        
+        Common.ajax("POST", "/sales/order/modifyPreOrderStatus.do", preOrderVOList, function(result) {
+
+            Common.alert("Pre-Order Status Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            
+            fn_getPreOrderList();
+            
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+
+                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+            }
+            catch (e) {
+                console.log(e);
+            }
+        });
+    }
+    
     function createAUIGrid() {
         
     	//AUIGrid 칼럼 설정
@@ -49,7 +77,7 @@
           , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  }
           , { headerText : "NRIC/Company No", dataField : "nric",       editable : false, width : 100 }
           , { headerText : "Creator",         dataField : "userName",   editable : false, width : 100 }
-          , { headerText : "Status",          dataField : "stusCodeId", editable : true,  width : 100 ,
+          , { headerText : "Status",          dataField : "stusId",     editable : true,  width : 100 ,
                     labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                     var retStr = value;
                     for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -103,6 +131,9 @@
         });
         $('#_btnConvOrder').click(function() {
             fn_convToOrderPop();
+        });
+        $('#_btnSave').click(function() {
+            fn_doSaveStatus();
         });
     });
 

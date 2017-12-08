@@ -3,11 +3,14 @@ package com.coway.trust.biz.sales.order.vo;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 /**
  * The persistent class for the SAL0213M database table.
  * 
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PreOrderVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
