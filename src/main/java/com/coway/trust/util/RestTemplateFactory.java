@@ -10,17 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RestTemplateFactory {
 
-	private static RestTemplate restTemplate;
+	private static RestTemplate restTemplate = new RestTemplate();;
 
 	private RestTemplateFactory() {
-	}
-
-	public static RestTemplate getInstance() {
-		if (restTemplate != null) {
-			return restTemplate;
-		}
-
-		restTemplate = new RestTemplate();
 		restTemplate.setRequestFactory(clientHttpRequestFactory());
 
 		restTemplate.getMessageConverters().stream()
@@ -30,7 +22,9 @@ public class RestTemplateFactory {
 					MappingJackson2HttpMessageConverter jsonConverter = (MappingJackson2HttpMessageConverter) converter;
 					jsonConverter.setObjectMapper(objectMapper);
 				});
+	}
 
+	public static RestTemplate getInstance() {
 		return restTemplate;
 	}
 
