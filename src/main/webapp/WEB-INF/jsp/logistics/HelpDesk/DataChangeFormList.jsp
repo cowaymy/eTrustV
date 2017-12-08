@@ -59,7 +59,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
                                   {dataField:"c2"      ,headerText:"Approve At"           ,width:"15%"  ,height:30 , visible:false},
                                   {dataField:"dcfreqstatusid"      ,headerText:"DCF_REQ_STUS_ID"           ,width:"15%"  ,height:30 , visible:false},
                                   {dataField:"dcfreqapprovereqreasonid"      ,headerText:"ApproveReqReasonID"           ,width:"15%"  ,height:30 , visible:false},
-                                                                      
+                                  {dataField:"c8"      ,headerText:"filePath"           ,width:"15%"  ,height:30 , visible:true},                                   
                                ];
     
     
@@ -437,11 +437,31 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
        
     }
     
+
+    function fileDown(){
+    	
+    	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+   	
+    	var fileName = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno");
+    	var subPath = AUIGrid.getCellValue(myGridID,  selectedItem[0], "c8");
+    	alert("subPath  :  "+subPath);
+    	var orignlFileNm = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno")+".zip";
+    	subPath =subPath.substr(0,14);
+//     	alert("fileName  :  "+fileName);
+//     	alert("subPath  :  "+subPath);
     
-    
-    
-    
-    
+//    	alert(subPath.substr(0,14));
+    	    	
+     if( "N"== subPath || ""==subPath || null==subPath ||""==fileName || null==fileName){
+         Common.alert("File is not exist.");
+         return false;
+     }
+     
+      window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
+              + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
+              + "'/>");    
+  }
+
     /*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
     function getComboRelays(obj, value, tag, selvalue) {
         var robj = '#' + obj;
@@ -724,7 +744,7 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
 <tr>
     <th scope="row">Attachment</th>
     <td colspan="5">
-    <p class="btn_sky"><a href="#">Download Attachment</a></p>
+    <p class="btn_sky"><a onclick="javascript:fileDown();">Download Attachment</a></p>
     </td>
 </tr>
 </tbody>
