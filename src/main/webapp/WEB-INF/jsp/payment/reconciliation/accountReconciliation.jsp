@@ -434,7 +434,11 @@ var journalPopLayout = [
         //그리드 초기화
         AUIGrid.clearGridData(masterListGridID);
     }
-   
+    
+    function fn_summaryViewPop(){
+    	Common.popupWin("searchForm", "/payment/initOrderCombineLedgerPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
+    }
+
 </script>
 <!-- content start -->
 <section id="content"><!-- content start -->
@@ -456,20 +460,20 @@ var journalPopLayout = [
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
-				    <col style="width:150px" />
+				    <col style="width:180px" />
 				    <col style="width:*" />
-				    <col style="width:150px" />
+				    <col style="width:180px" />
 				    <col style="width:*" />
 				</colgroup>
 				<tbody>
 					<tr>
 					    <th scope="row">Reference No</th>
 					    <td>
-					       <input type="text" title="" placeholder="Reference No" class="" name="refNo"/>
+					       <input type="text" title="" placeholder="Reference No" class="w100p" name="refNo"/>
 					    </td>
 					    <th scope="row">Status</th>
 					    <td>
-						    <select class="multy_select" multiple="multiple" id="statusId" name="statusId">
+						    <select class="multy_select w100p" multiple="multiple" id="statusId" name="statusId" >
 						       <option value="1">Active</option>
 						       <option value="36">Closed</option>
 						    </select>
@@ -478,22 +482,22 @@ var journalPopLayout = [
 					<tr>
 					    <th scope="row">Bank Account</th>
 					    <td>
-						    <select id="accountId" name="accountId">
+						    <select id="accountId" name="accountId" class="w100p">
 						    </select>
 					    </td>
 					    <th scope="row">Remark</th>
 					    <td>
-					       <input type="text" title="" placeholder="Remark" class="" id="remark" name="remark"/>
+					       <input type="text" title="" placeholder="Remark"  id="remark" name="remark" class="w100p"/>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Uploaded By</th>
 					    <td>
-					       <input type="text" title="" placeholder="Uploaded By" class="" id="uploadBy" name="uploadBy"/>
+					       <input type="text" title="" placeholder="Uploaded By"  id="uploadBy" name="uploadBy" class="w100p"/>
 					    </td>
 					    <th scope="row">Uploaded Date</th>
 					    <td>
-						    <div class="date_set"><!-- date_set start -->
+						    <div class="date_set w100p"><!-- date_set start -->
 						    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="fromUploadDate"/></p>
 						    <span>To</span>
 						    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="toUploadDate"/></p>
@@ -515,6 +519,7 @@ var journalPopLayout = [
 				    <ul class="btns">
 				        <li><p class="link_btn type2"><a href="javascript:fn_statementViewPop();">Statement View</a></p></li>
 				        <li><p class="link_btn type2"><a href="javascript:fn_journalEntryPop();">Journal Entry</a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_summaryViewPop();">Summary View</a></p></li>
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>

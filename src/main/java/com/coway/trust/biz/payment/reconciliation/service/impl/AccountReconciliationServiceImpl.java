@@ -148,4 +148,14 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		else
 			return false;
 	}
+
+	@Override
+	public String selectOrderIDByOrderNo(Map<String, Object> params) {
+		return accountReconciliationMapper.selectOrderIDByOrderNo(params);
+	}
+
+	@Override
+	public Map<String, Object> selectOutStandingView(Map<String, Object> param) {
+		return accountReconciliationMapper.selectOutStandingView(param);
+	}
 }

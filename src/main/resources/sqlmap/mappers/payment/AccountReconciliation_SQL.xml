@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.reconciliation.service.impl.AccountReconciliationMapper">
     
+    <select id="selectOrderIDByOrderNo" parameterType="Map" resultType="String">
+       SELECT 
+            Extent1.SALES_ORD_ID SALES_ORD_ID  
+        FROM SAL0001D Extent1
+        WHERE  Extent1.SALES_ORD_NO = #{orderNo} 
+        AND ROWNUM <![CDATA[<= ]]> 1
+    </select>
+    
     <select id="selectJournalMasterList" parameterType="Map" resultType="egovMap">
         SELECT 
 		       Project1.F_BANK_JRNL_ID F_BANK_JRNL_ID  ,
@@ -298,5 +306,12 @@
 		       F_TRNSC_UPD_DT = SYSDATE
 		WHERE  F_TRNSC_ID = #{fTransactionId}
     </update>
+    
+    <resultMap id="outStandMap" type="egovMap"></resultMap>
+    <select id="selectOutStandingView" parameterType="Map"  statementType="CALLABLE">
+        {
+        call  SP_SELT_ORD_OUT_STAN_VIEW(#{orderId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStandMap})
+        }
+    </select>
 
 </mapper>

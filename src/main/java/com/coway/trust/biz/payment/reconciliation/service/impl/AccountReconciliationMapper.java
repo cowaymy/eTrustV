@@ -80,4 +80,18 @@ public interface AccountReconciliationMapper {
 	 * @return
 	 */
 	EgovMap selectReconJournalTransactions(Map<String, Object> params);
+	
+	/**
+	 * selectOrderIDByOrderNo
+	 * @param params
+	 * @return
+	 */
+	String selectOrderIDByOrderNo(Map<String, Object> params);
+	
+	/**
+	 * selectOutStandingView
+	 * @param params
+	 * @return
+	 */
+	Map<String, Object> selectOutStandingView(Map<String, Object> param);
 }

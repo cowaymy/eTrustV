@@ -1,10 +1,14 @@
 package com.coway.trust.web.payment.reconciliation.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,7 +30,7 @@ public class AccountReconciliationController {
 	@Resource(name = "accountReconciliationService")
 	private AccountReconciliationService accountReconciliationService;
 	
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CRCStatementController.class);
 	/******************************************************
 	 *  Bank Account Reconciliation
 	 *****************************************************/	
@@ -40,6 +44,22 @@ public class AccountReconciliationController {
 	public String initAccountReconciliation(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/reconciliation/accountReconciliation";
 	}
+	
+	/******************************************************
+	 *  Order Summary View
+	 *****************************************************/	
+	/**
+	 *   Order Summary View 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initOrderCombineLedgerPop.do")
+	public String initOrderCombineLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/reconciliation/orderCombineLedgerPop";
+	}
+	
+	
 	
 	/******************************************************
 	 *  Bank Account Reconciliation Report
@@ -186,6 +206,31 @@ public class AccountReconciliationController {
         // 조회 결과 리턴.
     	message.setCode(AppConstants.SUCCESS);
 		return ResponseEntity.ok(message);
+	}
+	
+	/**
+	 * selectOrderOutstandingView
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectOrderOutstandingView.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectOrderOutstandingView(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		String orderId = accountReconciliationService.selectOrderIDByOrderNo(params);
+		List<EgovMap> orderOutstandingView = new ArrayList<EgovMap>();
+		
+		if(orderId != null){
+			params.put("orderId", orderId);
+			accountReconciliationService.selectOutStandingView(params);
+			
+			orderOutstandingView= (List<EgovMap>) params.get("p1");
+		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("orderOutstandingView", orderOutstandingView);
+		
+		return ResponseEntity.ok(resultMap);
 	}
 	
 }

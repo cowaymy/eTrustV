@@ -59,4 +59,18 @@ public interface AccountReconciliationService
   	 */
 	boolean updJournalExclude(Map<String, Object> params, SessionVO sessionVO);
 	
+	/**
+  	 * selectOrderIDByOrderNo 조회
+  	 * @param params
+  	 * @return
+  	 */
+	String selectOrderIDByOrderNo(Map<String, Object> params);
+	
+	/**
+  	 * selectOutStandingView 조회
+  	 * @param params
+  	 * @return
+  	 */
+	Map<String, Object> selectOutStandingView(Map<String, Object> param);
+	
 }
