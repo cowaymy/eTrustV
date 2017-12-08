@@ -11,32 +11,32 @@ var  detailGridID;
 
 
 $(document).ready(function(){
-    
+
     //AUIGrid 그리드를 생성합니다.
     createAUIGrid();
     createDetailAUIGrid();
-    
-   // doGetCombo('/common/selectCodeList.do', '45', '','comBranchType', 'S' , ''); 
-    
+
+   // doGetCombo('/common/selectCodeList.do', '45', '','comBranchType', 'S' , '');
+
     AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
         console.log(event.rowIndex);
         fn_selectDetailListAjax(AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo"))
     });
-   
+
     AUIGrid.bind(gridID, "cellClick", function(event) {
         console.log(event.rowIndex);
         reqstNo = AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo");
         brnchType = AUIGrid.getCellValue(gridID, event.rowIndex, "brnchType");
     });
-    
+
     fn_keyEvent();
-    
+
 });
 
 
 
 function fn_keyEvent(){
-	
+
     $("#SRV_CNTRCT_PAC_CODE").keydown(function(key)  {
             if (key.keyCode == 13) {
             	fn_mainSelectListAjax();
@@ -49,7 +49,7 @@ function fn_keyEvent(){
 
 
 function createAUIGrid() {
-   
+
 	var columnLayout = [
                           { dataField : "reqstNo", headerText  : "TCR No",    width : 100 ,editable : false},
                           { dataField : "brnchName", headerText  : "Branch Type",width : 200 ,editable       : false},
@@ -61,21 +61,21 @@ function createAUIGrid() {
                           { dataField : "codyBrnchCode",     headerText  : "",  width  :100},
                           { dataField : "codyMangrUserId",     headerText  : "",  width  :100},
                           { dataField : "brnchType",     headerText  : "",  width  :100} */
-                           
+
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
     }
-    
-    
-    
+
+
+
 
 function createDetailAUIGrid() {
-        
+
         var columnLayout = [
-                           
+
                             { dataField : "areaId", headerText  : "Area ID",    width : 100,  editable : false},
                             { dataField : "area", headerText  : "Area",width : 150,  editable: false },
                             { dataField : "city",   headerText  : "City",  width          : 100,   editable       : false},
@@ -88,57 +88,57 @@ function createDetailAUIGrid() {
 
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+
         detailGridID = GridCommon.createAUIGrid("detail_list_grid_wrap", columnLayout  ,"" ,gridPros);
     }
-    
+
 
 
 
 //리스트 조회.
-function fn_mainSelectListAjax() {        
+function fn_mainSelectListAjax() {
 Common.ajax("GET", "/organization/territory/selectList", $("#sForm").serialize(), function(result) {
       console.log(result);
       AUIGrid.setGridData(gridID, result);
-      
+
 
 //hash
       var rowCount = AUIGrid.getRowCount(gridID);
       if(rowCount <= 0){
         AUIGrid.clearGridData("#detail_list_grid_wrap");
       }
-      
+
    });
 }
 
 
 
 //리스트 조회.
-function fn_selectDetailListAjax(reqstNo) {        
-	
+function fn_selectDetailListAjax(reqstNo) {
+
   var selectedItems = AUIGrid.getSelectedItems(gridID);
-  
+
   if(selectedItems.length <= 0 ){
         Common.alert("There Are No selected Items.");
         return ;
   }
-  
+
   console.log(selectedItems[0]);
-  
+
   Common.ajax("GET", "/organization/territory/selectDetailList", { reqstNo: reqstNo}, function(result) {
-           
+
     console.log(result);
     AUIGrid.setGridData(detailGridID, result);
  });
-   
+
 }
- 
+
 
 function fn_Clear(){
-	
+
 	//hash
-    $("#comBranchType").val(""); 
+    $("#comBranchType").val("");
     $("#requestNo").val("");
     $("#requestUserId").val("");
     $("#requestDt").val("");
@@ -147,7 +147,7 @@ function fn_Clear(){
 
 
 function fn_New(){
-	
+
     if($("#comBranchType").val() == ''){
 			        Common.alert("Please Select Branch Type");
 			        return false;
@@ -157,7 +157,7 @@ function fn_New(){
 
 function fn_Comfirm() {
 	var selectedItems = AUIGrid.getSelectedItems(gridID);
-	  
+
 	  if(selectedItems.length <= 0 ){
 	        Common.alert("There Are No selected Items.");
 	        return ;
@@ -189,7 +189,7 @@ function fn_Cancel(){
     <!-- <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li> -->
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
-	
+
 </ul>
 </aside><!-- title_line end -->
 
@@ -262,7 +262,7 @@ function fn_Cancel(){
 
 <ul class="right_btns">
 
-	
+
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
@@ -270,7 +270,7 @@ function fn_Cancel(){
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-      <div id="list_grid_wrap" style="width:100%; height:100px; margin:0 auto;"></div>
+      <div id="list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
