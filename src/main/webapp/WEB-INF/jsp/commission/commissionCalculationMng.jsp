@@ -14,7 +14,7 @@
 <script type="text/javaScript">
 	  
 	// Make AUIGrid 
-	var myGridID_CAL_CAL;
+	var myGridID_CAL;
 	var orgList = new Array(); //그룹 리스트
 	var orgGridCdList = new Array(); //그리드 등록 그룹 리스트
 	var orgItemList = new Array();   //그리드 등록 아이템 리스트
