@@ -58,8 +58,8 @@
            , 2718
            , #{evtTypeDesc}
            , #{evtMemId}
-           , #{evtDt}
-           , #{evtCompRqstDate}
+           , TO_DATE(#{evtDt}, 'YY/MM/DD')
+           , TO_DATE(#{evtCompRqstDate}, 'YY/MM/DD')
            , #{evtCompRate}
            , #{crtUserId}
            , SYSDATE
@@ -98,8 +98,8 @@
            , 2718
            , #{evtTypeDesc}
            , #{evtMemId}
-           , #{evtDt}
-           , #{evtCompRqstDate}
+           , TO_DATE(#{evtDt}, 'YY/MM/DD')
+           , TO_DATE(#{evtCompRqstDate}, 'YY/MM/DD')
            , #{evtCompRate}
            , #{crtUserId}
            , SYSDATE
