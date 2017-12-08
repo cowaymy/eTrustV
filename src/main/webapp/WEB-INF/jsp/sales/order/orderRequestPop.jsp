@@ -1946,10 +1946,12 @@
             isValid = false;
             msg += "* Please key in the installment duration.<br>";
         }
+/*
         if($("#cmbPromotionAexc option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select the promotion option.<br>";
         }
+*/
         if($("#cmbReasonAexc option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select the reason code.<br>";
