@@ -71,31 +71,31 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 	public void insertDataChangeList(Map<String, Object> RespondMap, int loginId) {
 		int respnsIdCreateSeq = HelpDeskMapper.respnsIdCreateSeq();
 		int trRcordIdCreateSeq = HelpDeskMapper.trRcordIdCreateSeq();
-		int insReason =0;
-		if(RespondMap.get("insReason") != null){
-			insReason =Integer.parseInt((String) RespondMap.get("insReason"));
+		int insReason = 0;
+		if (RespondMap.get("insReason") != null) {
+			insReason = Integer.parseInt((String) RespondMap.get("insReason"));
 		}
-		
-		int insApprovalStatus = Integer.parseInt((String) RespondMap.get("insApprovalStatus"));	
+
+		int insApprovalStatus = Integer.parseInt((String) RespondMap.get("insApprovalStatus"));
 		String defaultDate = "19000101";
-		int DCFReqStatusID = insApprovalStatus == 6 ? 10 : insApprovalStatus == 36 ? 34 : 0;	
+		int DCFReqStatusID = insApprovalStatus == 6 ? 10 : insApprovalStatus == 36 ? 34 : 0;
 		int DCFReqProStatusID = insApprovalStatus != 61 ? insApprovalStatus : 0;
 		String todate = insApprovalStatus != 61 ? CommonUtils.getNowDate() : defaultDate;
-	
-//		Logger.debug("DCFReqStatusID  ????       : {}", DCFReqStatusID);
-//		Logger.debug("DCFReqProStatusID  ????       : {}", DCFReqProStatusID);
-//		Logger.debug("insReason  ????       : {}", insReason);
-		
+
+		// Logger.debug("DCFReqStatusID ???? : {}", DCFReqStatusID);
+		// Logger.debug("DCFReqProStatusID ???? : {}", DCFReqProStatusID);
+		// Logger.debug("insReason ???? : {}", insReason);
+
 		int dcfReqStusId = 0;
 		int dcfReqProStusId = 0;
 		String dcfReqNo = "";
 
 		List<EgovMap> DcfRequestMList = HelpDeskMapper.selectDcfRequestM(RespondMap);
 		for (int i = 0; i < DcfRequestMList.size(); i++) {
-		Logger.debug("DcfRequestMList : {}", DcfRequestMList.get(i));
-		dcfReqStusId = Integer.parseInt(String.valueOf(DcfRequestMList.get(i).get("dcfReqStusId")));
-		dcfReqProStusId = Integer.parseInt(String.valueOf(DcfRequestMList.get(i).get("dcfReqProStusId")));
-		dcfReqNo = String.valueOf(DcfRequestMList.get(i).get("dcfReqNo"));
+			Logger.debug("DcfRequestMList : {}", DcfRequestMList.get(i));
+			dcfReqStusId = Integer.parseInt(String.valueOf(DcfRequestMList.get(i).get("dcfReqStusId")));
+			dcfReqProStusId = Integer.parseInt(String.valueOf(DcfRequestMList.get(i).get("dcfReqProStusId")));
+			dcfReqNo = String.valueOf(DcfRequestMList.get(i).get("dcfReqNo"));
 		}
 
 		Logger.debug("dcfReqStusId : {}", dcfReqStusId);
@@ -105,16 +105,23 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 		if (dcfReqStusId == 10 || dcfReqStusId == 34) {
 			Logger.debug("Approval result has settled.");
 
-		}else{
+		} else {
 			Map<String, Object> updateDcfRequestMap = new HashMap<String, Object>();
 			updateDcfRequestMap.put("crtuser_id", loginId);
 			updateDcfRequestMap.put("upuser_id", loginId);
 			updateDcfRequestMap.put("dcfReqAppvRem", RespondMap.get("insApprovalRemark"));
-			updateDcfRequestMap.put("DCFReqStatusID", DCFReqStatusID);
-			updateDcfRequestMap.put("DCFReqProStatusID", DCFReqProStatusID);
 			updateDcfRequestMap.put("insApprovalStatus", insApprovalStatus);
-			updateDcfRequestMap.put("insReason", insReason);
+			if (DCFReqStatusID > 0) {
+				updateDcfRequestMap.put("DCFReqStatusID", DCFReqStatusID);
+			}
+			if (DCFReqProStatusID > 0) {
+				updateDcfRequestMap.put("DCFReqProStatusID", DCFReqProStatusID);
+			}
+			if (insReason > 0) {
+				updateDcfRequestMap.put("insReason", insReason);
+			}
 			updateDcfRequestMap.put("reqId", RespondMap.get("reqId"));
+			Logger.debug("updateDcfRequestMap : {}", updateDcfRequestMap);
 			HelpDeskMapper.updateDcfRequestM(updateDcfRequestMap);
 
 			Map<String, Object> insertResLogMap = new HashMap<String, Object>();
@@ -125,6 +132,7 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 			insertResLogMap.put("crtuser_id", loginId);
 			insertResLogMap.put("upuser_id", loginId);
 			insertResLogMap.put("DCFSettleDate", todate);
+
 			HelpDeskMapper.insertDcfResponseLog(insertResLogMap);
 
 			if (dcfReqProStusId == 36 && dcfReqStusId == 34) {
@@ -150,13 +158,13 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 				List<EgovMap> TrBookIdList = HelpDeskMapper.getTrBookId(CompulsoryField);
 				int TrBookId = Integer.parseInt(String.valueOf(TrBookIdList.get(0).get("trBookId")));
 
-//				Logger.debug("TrBookId : {}", TrBookId);
-//				for (int i = 0; i < TrBookIdList.size(); i++) {
-//				Logger.debug("TrBookIdList : {}", TrBookIdList.get(i));
-//				}
+				// Logger.debug("TrBookId : {}", TrBookId);
+				// for (int i = 0; i < TrBookIdList.size(); i++) {
+				// Logger.debug("TrBookIdList : {}", TrBookIdList.get(i));
+				// }
 
 				if (LostType == "Whole") {
-					//LOST WHOLE
+					// LOST WHOLE
 					List<EgovMap> TrBookList = HelpDeskMapper.getTrBookList(TrBookId);
 					Map<String, Object> TrBookListMap = new HashMap<String, Object>();
 
@@ -180,12 +188,12 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 					TrRecordMap.put("dcfReqNo", dcfReqNo);
 					HelpDeskMapper.insertTrRecordCard(TrRecordMap);
 
-				}else{
-					//LOST PIECES
+				} else {
+					// LOST PIECES
 					List<EgovMap> TrBookItemList = HelpDeskMapper.getTrBookItem(TrBookId);
-//					for (int i = 0; i < TrBookItemList.size(); i++) {
-//						Logger.debug("TrBookItemList ><><>< : {}", TrBookItemList.get(i));
-//					}
+					// for (int i = 0; i < TrBookItemList.size(); i++) {
+					// Logger.debug("TrBookItemList ><><>< : {}", TrBookItemList.get(i));
+					// }
 					int trBookItmId = Integer.parseInt(String.valueOf(TrBookItemList.get(0).get("trBookItmId")));
 					Map<String, Object> TrBookItemMap = new HashMap<String, Object>();
 					Logger.debug("trBookItmId ?????? : {}", trBookItmId);
@@ -197,10 +205,9 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 					}
 				}
 
-			} 
+			}
 
 		}
-
 
 	}
 
