@@ -4,30 +4,29 @@
 
 	<select id="selectDailyCount" parameterType="Map" resultType="egovMap">
 	<![CDATA[
-			WITH VIEW_COUNT
-						AS
-            (
-            SELECT
-                 /* view [Vw_NeoSales] */
-                  (SELECT COUNT(1) FROM SAL1058V) NEO_SALES
-                ,/*(rental) (66)*/
-                  (SELECT COUNT(SALES_ORD_ID)  from   SAL0001D where  PV_YEAR = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL) and PV_MONTH = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL) and APP_TYPE_ID=66) RENTAL
-                ,/*OUTRIGHT (67)*/
-                  (SELECT COUNT(SALES_ORD_ID)  from   SAL0001D where  PV_YEAR = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL) and PV_MONTH = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL) and APP_TYPE_ID=67) OUT_RIGHT
-                ,/* Installment  (68) */
-                  (SELECT COUNT(SALES_ORD_ID)  from   SAL0001D where  PV_YEAR = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL) and PV_MONTH = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL) and APP_TYPE_ID=68) INSTALLMENT
-                ,/*SALES(Key_in)*/
-                  (SELECT COUNT(SALES_ORD_ID) FROM SAL0001D WHERE EXTRACT (YEAR from CRT_DT) = (SELECT EXTRACT(YEAR from SYSDATE) FROM DUAL)  AND EXTRACT (MONTH from CRT_DT) = (SELECT EXTRACT(MONTH from SYSDATE) FROM DUAL)  AND 8 <> STUS_CODE_ID  AND APP_TYPE_ID IN (66,67,68) ) SALES
-             FROM DUAL
-             )
-             SELECT NEO_SALES
-                  , SALES
-                  , RENTAL
-                  , OUT_RIGHT
-                  , INSTALLMENT
-                  , (RENTAL + OUT_RIGHT + INSTALLMENT) TOTAL
-               FROM VIEW_COUNT
-
+			SELECT (SELECT COUNT(1) FROM SAL1058V ) NEO_SALES
+			 , (SELECT COUNT(1)
+				  FROM SAL0001D
+				 WHERE TO_CHAR(CRT_DT,'YYYY')= TO_CHAR(SYSDATE,'YYYY')
+				   AND TO_CHAR(CRT_DT,'MM') = TO_CHAR(SYSDATE,'MM')
+				   AND 8 <> STUS_CODE_ID
+				   AND APP_TYPE_ID IN (66,67,68)) SALES
+			 , NVL(A.RENTAL, 0) RENTAL
+			 , NVL(A.OUT_RIGHT, 0) OUT_RIGHT
+			 , NVL(A.INSTALLMENT, 0) INSTALLMENT
+			 , NVL(A.RENTAL, 0) + NVL(A.OUT_RIGHT, 0) + NVL(A.INSTALLMENT, 0) AS TOTAL
+		  FROM
+		  (
+			SELECT SUM(CASE WHEN APP_TYPE_ID = 66 THEN 1
+							ELSE 0 END) AS RENTAL
+				 , SUM(CASE WHEN APP_TYPE_ID = 67 THEN 1
+							ELSE 0 END) AS OUT_RIGHT
+				 , SUM(CASE WHEN APP_TYPE_ID = 68 THEN 1
+							ELSE 0 END) AS INSTALLMENT
+			  FROM SAL0001D
+			 WHERE PV_YEAR= TO_CHAR(SYSDATE,'YYYY')
+			   AND PV_MONTH = TO_NUMBER(TO_CHAR(SYSDATE,'MM'))
+		  ) A
 	]]>
 	</select>
 
