@@ -29,8 +29,7 @@ import com.coway.trust.config.handler.SessionHandler;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
-@RequestMapping(value = "logistics/importbl")
-
+@RequestMapping(value = "/logistics/importbl")
 public class ImportController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
