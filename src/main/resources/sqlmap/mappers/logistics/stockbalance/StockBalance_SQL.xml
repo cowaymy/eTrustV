@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.stockbalance.impl.StockBalanceMapper">
+    <select id="selectLocation" parameterType="Map" resultType="egovMap">
+        select
+        STK_CODE CODE_ID,
+        STK_DESC CODE_NAME
+        from sys0026m
+    </select>
+
+
+
+    <select id="stockBalanceSearchList" parameterType="Map" resultType="egovMap">
+        select
+        rownum rnum
+        , l59.matrl_doc_no
+        , l59.matrl_doc_year
+        , l59.trnsc_type_code
+        , l60.MATRL_DOC_ITM
+        , l60.delvry_no
+        , l59.REF_DOC_NO
+        , l60.STOCK_TRNSFR_REQST
+        , tt.code_name trantype
+        , l60.INVNTRY_MOV_TYPE
+        , mt.code_name movtype
+        , l60.DEBT_CRDIT_INDICT
+        , DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', 'Credit',
+                 'S', 'Debit',
+                 l60.DEBT_CRDIT_INDICT)
+          DEBT_CRDIT_INDICT  
+        , l60.AUTO_CRT_ITM
+        , DECODE (l60.AUTO_CRT_ITM,
+                 'A', 'Auto',
+                 'M', 'Manual',
+                 l60.AUTO_CRT_ITM)
+          AUTO_CRT_ITM    
+        , l60.matrl_no
+        , s26.stk_desc
+        , l60.qty
+        , l60.measure_bas_unit
+        , ut.code_name
+        , l60.storg_loc
+        , (select wh_loc_desc from sys0028m where wh_loc_id = l60.storg_loc) req_storg_nm
+        , l60.rciv_issu_storg_loc
+        , (select wh_loc_desc from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
+        , to_char(to_date(l59.USNAM , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
+        ,l59.CRT_DT
+        from log0059m l59
+        , log0060d l60
+        , sys0026m s26
+        , sys0028m f28
+        , sys0028m t28
+        , (select * from sys0013m where code_master_id = 306) tt
+        , (select * from sys0013m where code_master_id = 308) mt
+        , (select * from sys0013m where code_master_id = 42) ut
+        where 1 = 1
+        and l60.matrl_no = s26.STK_CODE(+)
+        and l60.measure_bas_unit = ut.code_id(+)
+        and l59.trnsc_type_code = tt.code
+        and l60.INVNTRY_MOV_TYPE = mt.code
+        AND l60.rciv_issu_storg_loc = t28.wh_loc_id(+)
+        AND l60.storg_loc = f28.wh_loc_id(+)
+        
+        <if test="frlocgrade !=null and frlocgrade !=''">
+            and f28.WH_LOC_STK_GRAD = #{frlocgrade}
+        </if>
+        <if test="tolocgrade !=null and tolocgrade !=''">
+            and t28.WH_LOC_STK_GRAD = #{tolocgrade}
+        </if>
+        
+        <if test="toloctype !=null and toloctype !=''">
+            and t28.wh_loc_gb in
+             <foreach item="item" collection="toloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloctype !=null and frloctype !=''">
+            and f28.wh_loc_gb in
+             <foreach item="item" collection="frloctype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        
+        <if test="toloc !=null and toloc !=''">
+            and t28.wh_loc_code in
+             <foreach item="item" collection="toloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="frloc !=null and frloc !=''">
+            and f28.wh_loc_code in
+             <foreach item="item" collection="frloc" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        
+        <if test="materialcode !=null and materialcode !=''">
+            and l60.matrl_no = #{materialcode}
+        </if>
+        <if test="smattype !=null and smattype !=''">
+            and s26.STK_TYPE_ID in 
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="smatcate !=null and smatcate !=''">
+            and s26.STK_CTGRY_ID in 
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        
+        <if test="trantype !=null and trantype !=''">
+            and l59.trnsc_type_code in 
+            <foreach item="item" collection="trantype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="movetype !=null and movetype !=''">
+            and l60.INVNTRY_MOV_TYPE in 
+            <foreach item="item" collection="movetype" index="index" open="(" separator="," close=")">
+                   #{item}
+            </foreach>
+        </if>
+        <if test="posdatefr != null and posdateto != null and posdatefr != '' and posdateto != ''" > 
+           AND l59.USNAM   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY')+1,'YYYYMMDD')
+        </if> 
+         <if test="crtdatefr != null and crtdateto != null and crtdatefr != '' and crtdateto != ''" > 
+           AND l59.CRT_DT between TO_DATE(TO_CHAR(TO_DATE(#{crtdatefr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') 
+                              AND TO_DATE(TO_CHAR(TO_DATE(#{crtdateto},'DD/MM/YYYY'),'YYYYMMDD') || '235959','yyyymmddhh24miss')
+       </if>
+        and l59.matrl_doc_no = l60.matrl_doc_no
+        <if test="sdocno !=null and sdocno !=''">
+            and l59.matrl_doc_no = #{sdocno}
+        </if>
+        <if test="sreqstno !=null and sreqstno !=''">
+            and l60.STOCK_TRNSFR_REQST = #{sreqstno}
+        </if>
+        <if test="sdelvno !=null and sdelvno !=''">
+            and l60.DELVRY_NO = #{sdelvno}
+        </if>
+        order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
+    </select>
+    
+    <select id="stockBalanceMovementType" parameterType="Map" resultType="egovMap">
+       SELECT S8.CODE , S8.CODE_NAME
+         FROM (SELECT *
+                 FROM SYS0013M
+                WHERE CODE_MASTER_ID = '308') S8,
+              (SELECT *
+                 FROM SYS0013M
+                WHERE CODE_MASTER_ID = '306'
+                <if test="strctype != null and strctype !=''">
+                  AND CODE IN
+                  <foreach item="item" collection="strctype" index="index" open="(" separator="," close=")">
+                   #{item}
+                   </foreach>
+               </if>
+               ) S6
+        WHERE S8.CODE LIKE S6.CODE || '%'
+     ORDER BY S8.CODE
+    </select>
+    
+</mapper>
