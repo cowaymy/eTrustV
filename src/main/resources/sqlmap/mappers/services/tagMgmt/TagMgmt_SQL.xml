@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.tagMgmt.impl.TagMgmtMapper">
+    
+  
+  <select id="selectTagStatus" parameterType="Map" resultType="egovMap">
+  
+  SELECT Z.customer,
+               Z.main_inquiry,
+               Z.sub_inquiry,
+               Z.sales_order,
+               Z.main_department,
+               Z.sub_department,
+               Z.claim_note,
+               Z.status
+      FROM ( SELECT A.CUST_NO as customer,
+                            D.CD_NM as main_inquiry,
+                            E.CD_NM as sub_inquiry,
+                            A.ORD_NO as sales_order,
+                            B.CODE_NAME as main_department,
+                            C.CODE_NAME as sub_department,
+                            F.MEMO as claim_note,
+                            'Active' as status
+                    FROM CALLCENTERUSER.T_CUR_HIST A,
+                            SYS0013M B,
+                            SYS0013M C,
+                            CALLCENTERUSER.T_CNSL_CD  D,
+                            CALLCENTERUSER.T_CNSL_CD  E,
+                            CALLCENTERUSER.T_RMK_HIST F
+                  WHERE B.CODE            = A.DEPT_CODE
+                      AND C.CODE            = A.SUB_DEPT_CDE
+                      AND A.CNSL_LRGCLAS_CD = D.CNSL_CD
+                      AND A.CUR_SEQNO       = F.CUR_SEQNO
+                      AND A.TR_DVCD         = 'T'
+                   ORDER BY A.REG_DTM DESC
+               ) Z
+        WHERE 1=1
+      <if test="customer != null and customer != '' ">
+            AND Z.customer = #{customer}
+        </if>
+        <if test="main_inquiry != null and main_inquiry != '' ">
+           AND LOWER(Z.main_inquiry) = LOWER(#{main_inquiry})
+        </if>
+        <if test="sub_inquiry != null and sub_inquiry != '' ">
+          AND LOWER(Z.sub_inquiry) = LOWER(#{sub_inquiry})
+        </if>
+        <if test="sales_order != null and sales_order != '' ">
+           AND  Z.sales_order = #{sales_orde}
+        </if>
+         <if test="main_department != null and main_department != '' ">
+           AND  LOWER(Z.main_department) = LOWER(#{main_department})
+        </if>
+         <if test="sub_department != null and sub_department != '' ">
+           AND  LOWER(Z.sub_department) = LOWER(#{sub_department})
+        </if>
+         <if test="claim_note != null and claim_note != '' ">
+           AND  LOWER(Z.claim_note) = LOWER(#{claim_note})
+        </if>
+            <if test="status != null and status != '' ">
+           AND  Z.status = #{status}
+        </if>
+  
+  
+  </select>
+  
+    
+</mapper>

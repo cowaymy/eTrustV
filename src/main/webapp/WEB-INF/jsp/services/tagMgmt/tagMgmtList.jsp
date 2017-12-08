@@ -8,16 +8,51 @@ var gridID;
 
 function tagMgmtGrid() {
     
-    var columnLayout = [
-	                          { dataField : "", headerText  : "Inquiry Cont Num",    width : 150 },
-	                          { dataField : "", headerText  : "Inquiry Cust Name",width : 150 },
-	                          { dataField : "", headerText  : "Inquiry Mem Type",  width  : 150},
-	                          { dataField : "",       headerText  : "In-charge Sub Dept",  width  : 150},
-	                          { dataField : "",       headerText  : "Main Inquiry",  width  : 150},
-	                          { dataField : "",       headerText  : "FeedBack Code",  width  : 150},
-	                          { dataField : "",       headerText  : "Order Num",  width  : 150},
-	                          { dataField : "",       headerText  : "Progress Status",  width  : 150},
-                          ];
+    var columnLayout =[
+                       {
+                           dataField: "customer",
+                           headerText: "Customer",
+                           width: "8%"
+                       },
+                       {
+                           dataField: "mainInquiry",
+                           headerText: "Main Inquiry",
+                           width: "13%"
+                       },
+                       {
+                           dataField: "subInquiry",
+                           headerText: "Sub Inquiry",
+                           style: "aui-grid-user-custom-left ",
+                           width: "13%"
+                       },
+                       {
+                           dataField: "salesOrder",
+                           headerText: "Sales Order",
+                           width: "10%"
+                       },
+                       {
+                           dataField: "mainDepartment",
+                           headerText: "Main Department",
+                           style: "aui-grid-user-custom-left ",
+                           width: "13%"
+                       },
+                       {
+                           dataField: "subDepartment",
+                           headerText: "Sub Department",
+                           style: "aui-grid-user-custom-left ",
+                           width: "15%"
+                       },
+                       {
+                           dataField: "claimNote",
+                           headerText: "Claim Note",
+                           style: "aui-grid-user-custom-left ",
+                           width: "18%"
+                       },
+                       {
+                           dataField: "status",
+                           headerText: "Status"
+                       }
+                   ];
     
      var gridPros = {  
     		                        usePaging           : true,         //페이징 사용
@@ -39,7 +74,45 @@ $(document).ready(function(){
 	
 	tagMgmtGrid(); // tagMgmt 그리드 생성 함수
 	
+	   //search
+    $("#search").click(function() {
+                                        
+        Common.ajax("GET","/services/tagMgmt/selectTagStatus",$("#tagMgmtForm").serialize(),function(result) {
+            console.log("성공.");
+            console.log("data : "+ result);
+            AUIGrid.setGridData(gridID,result);
+        });
+                                    
+    });
+	
+    //excel Download
+    $('#excelDown').click(function() {
+        GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
+    });
+    
+    
+	
+	
 });
+
+
+
+function fn_tagLog() {
+
+/*     var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    if(selectedItems.length  <= 0) {
+        Common.alert("<b>No HS selected.</b>");
+        return ;
+    } */
+
+
+
+       //Common.popupDiv("/services/tagMgmt/tagLogRegist.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
+       Common.popupDiv("/services/tagMgmt/tagLogRegistPop.do", null, null , true , "tagLogRegistPop");
+
+}
+
+
 
 </script>
 
@@ -55,9 +128,11 @@ $(document).ready(function(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Tag Mgmt</h2>
+<h2>Tag Log Search</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick=""><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_tagLog()" >View Respond Ticket</a></p></li>
+    <li><p class="btn_blue"><a href="#" id ="search"><span class="search"></span>Search</a></p></li>
+ 
 <!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 
@@ -66,7 +141,7 @@ $(document).ready(function(){
 
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form id="tagMgmtForm" name="tagMgmtForm" method="post">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -80,37 +155,38 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Inquiry Contact Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Inquiry Customer Name</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Inquiry Member Type</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-</tr>
-<tr>
-    <th scope="row">In-charge Main Dept.</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">In-charge Sub Dept.</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Customer </th>
+    <td><input type="text" id="customer" name="customer" placeholder="customer" class="w100p" /></td>
     <th scope="row">Main Inquiry</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <td><input type="text" id="main_inquiry" name="main_inquiry" title="" placeholder="main_inquiry" class="w100p" /></td>
+    <th scope="row">Sub Inquiry</th>
+    <td><input type="text" id="sub_inquiry" name="sub_inquiry" title="" placeholder="sub_inquiry" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Customer Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Order Number</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Sub Main Inquiry</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Sales Order</th>
+    <td><input type="text" id="sales_order" name="sales_order" title="" placeholder="sales_order" class="w100p" /></td>
+    <th scope="row">Main Dept</th>
+    <td><input type="text" id="main_department" name="main_department" title="" placeholder="main_department" class="w100p" /></td>
+    <th scope="row">Sub Dept</th>
+    <td><input type="text" id="" name="sub_department" title="sub_department" placeholder="sub_department" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Progress Status</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Complete Key-in Date</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Feedback Code</th>
-    <td><input type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Claim Note</th>
+    <td><input type="text" id="claim_note" name="claim_note" title="" placeholder="claim_note" class="w100p" /></td>
+    <th scope="row">Status</th>
+    <td>
+         <select class="w100p"  id="status" name="status">
+            <option value="">Choose One</option>
+            <option value="Active">Active</option>
+            <option value="Complete">Complete</option>
+        </select>
+    
+    </td>
+       <th scope="row"></th>
+    <td></td>
+    
 </tr>
+
 </tbody>
 </table><!-- table end -->
 
@@ -120,25 +196,10 @@ $(document).ready(function(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn"><a href="#">menu2</a></p></li>
-        <li><p class="link_btn"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn"><a href="#">menu8</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_tagLog()" id="basicInfo">View Respond Ticket</a></p></li>
+      
     </ul>
-    <ul class="btns">
-        <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-        <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-        <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-    </ul>
+ 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
@@ -151,7 +212,7 @@ $(document).ready(function(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excelDown">EXCEL DW</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start  그리드 영역-->
