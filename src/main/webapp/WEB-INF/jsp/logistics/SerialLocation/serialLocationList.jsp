@@ -171,11 +171,8 @@
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Serial Location</h2>
-    </aside><!-- title_line end -->
-
-    <aside class="title_line"><!-- title_line start -->
-        <ul class="right_btns">
-            <li><p class="btn_blue"><a id="search">Search</a></p></li>
+         <ul class="right_btns">
+             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -209,7 +206,7 @@
                         </td>
                         <th scope="row">Category Type</th>
                         <td colspan="2">
-                            <select class="multy_select" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" class="w100p" /></select>
+                            <select id="srchcatagorytype" name="srchcatagorytype[]" class="w100p" /></select>
                         </td>
                     </tr>
 
@@ -221,7 +218,7 @@
 
                         <th scope="row">Material Type</th>
                         <td colspan="2">
-                            <select class="multy_select" multiple="multiple" id="materialtype" name="materialtype[]"  class="w100p" /></select>
+                            <select id="materialtype" name="materialtype[]"  class="w100p" /></select>
                         </td>
                     </tr>
 
@@ -237,7 +234,7 @@
                                 <p>
                                   <input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
                                 </p>
-                                    <span>~</span>
+                                    <span>To</span>
                                 <p>
                                    <input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
                                 </p>
@@ -251,7 +248,7 @@
 
     <section class="search_result"><!-- search_result start -->
 
-        <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
     </section><!-- search_result end -->
 

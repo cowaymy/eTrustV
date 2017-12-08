@@ -257,7 +257,7 @@
                     <td colspan="2">
                         <div class="date_set"><!-- date_set start -->
 	                        <p><input id="crtsdt" name="crtsdt" type="text" title="Delivery Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-	                        <span> ~ </span>
+	                        <span> To </span>
 	                        <p><input id="crtedt" name="crtedt" type="text" title="Delivery End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>
@@ -265,7 +265,7 @@
                     <td colspan="2">
                         <div class="date_set"><!-- date_set start -->
 	                        <p><input id="reqsdt" name="reqsdt" type="text" title="Required Start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
-	                        <span> ~ </span>
+	                        <span> To </span>
 	                        <p><input id="reqedt" name="reqedt" type="text" title="Required End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>

@@ -69,7 +69,7 @@ var resop = {
         showBranchOnGrouping : false
         };
 var reqop = {editable : false,usePaging : false ,showStateColumn : false};
-var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false };
+var gridoptions = {showStateColumn : false , editable : false, usePaging : false, useGroupingPanel : false };
 var paramdata;
 
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
@@ -359,7 +359,7 @@ function f_multiCombos() {
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="PostingDt2" name="PostingDt2" type="text" title="Posting End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->                        
                     </td>
@@ -367,7 +367,7 @@ function f_multiCombos() {
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>

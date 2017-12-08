@@ -59,19 +59,11 @@ var columnLayout = [{dataField:"matrlNo"             ,headerText:"Material Code"
                     {dataField:"dcfreqstatusid"      ,headerText:"DCF_REQ_STUS_ID"            ,width:"15%"  ,height:30 , visible:false},
                    ];
 
-var resop = {
-        rowIdField : "rnum",            
-        groupingFields : ["reqstno", "staname"],
-        displayTreeOpen : true,
-        enableCellMerge : true,
-        showBranchOnGrouping : false
-        };
-var reqop = {editable : false,usePaging : false ,showStateColumn : false};
-var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false };
-var paramdata;
+var gridoptions = {showStateColumn : false , editable : false, usePaging : false, useGroupingPanel : false };
 
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
 var paramdata;
+
 $(document).ready(function(){
     
     // masterGrid 그리드를 생성합니다.
@@ -113,9 +105,6 @@ $(document).ready(function(){
     });
     
 });
-
-
-
 
 $(function(){
     $("#search").click(function() {
@@ -329,7 +318,7 @@ function f_multiCombos() {
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="PostingDt2" name="PostingDt2" type="text" title="Posting End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->                        
                     </td>
@@ -337,7 +326,7 @@ function f_multiCombos() {
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>

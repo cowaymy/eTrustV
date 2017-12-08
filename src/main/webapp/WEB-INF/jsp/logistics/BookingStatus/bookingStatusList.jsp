@@ -22,16 +22,16 @@
     var columnLayout = [
 	                            {dataField:"reqstno" ,headerText:"Request No.",width:240 ,height:30},
 	                            {dataField:"seq" ,headerText:"Item No.",width:90 ,height:30},
+	                            {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
+                                {dataField:"itmname", headerText:"Material Name", width:220, height:30},
+                                {dataField:"reqstqty", headerText:"Request Qty", width:100, height:30},
+                                {dataField:"status" ,headerText:"Status",width:90 ,height:30},
 	                            {dataField:"stkactivity" ,headerText:"Move Type",width:180 ,height:30},
 	                            {dataField:"reqstdate" ,headerText:"Request Date",width:130 ,height:30},
 	                            {dataField:"frmloccode", headerText:"From Location Code", width:180, height:30},
 	                            {dataField:"frmloc", headerText:"From Location", width:230, height:30},
                                 {dataField:"toloccode", headerText:"To Location Code", width:130, height:30},
-                                {dataField:"toloc", headerText:"To Location", width:230, height:30},
-                                {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
-                                {dataField:"itmname", headerText:"Material Name", width:220, height:30},
-                                {dataField:"reqstqty", headerText:"Request Qty", width:100, height:30},
-	                            {dataField:"status" ,headerText:"Status",width:90 ,height:30}
+                                {dataField:"toloc", headerText:"To Location", width:230, height:30}                                
 	                            ];
 
     var gridPros =
@@ -257,7 +257,7 @@
                         <td colspan="2">
                             <div class="date_set w100p"><!-- date_set start -->
                                 <p><input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                                <span>~</span>
+                                <span>To</span>
                                 <p><input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                             </div><!-- date_set end -->
                         </td>
@@ -276,7 +276,7 @@
 
 	<section class="search_result"><!-- search_result start -->
 
-	    <div id="main_grid_wrap" class="mt10" style="height:400px"></div>
+	    <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
 	</section><!-- search_result end -->
 

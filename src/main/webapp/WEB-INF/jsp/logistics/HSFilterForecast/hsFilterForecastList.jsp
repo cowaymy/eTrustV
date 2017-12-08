@@ -19,9 +19,6 @@
     #detailWindow fieldset { padding:0; border:0; margin-top:10px; }
 
 </style>
-
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 
 <script type="text/javaScript" language="javascript">
@@ -53,7 +50,8 @@
 						    		fixedColumnCount : 2,
 						    		editable : false,
 						    		useGroupingPanel : false,
-						    		selectionMode : "singleRow"
+						    		selectionMode : "singleRow",
+						    	    usePaging : false
 						    	 };
 
 
@@ -74,7 +72,8 @@
 							           editable : false,
 							           useGroupingPanel : false,
 							           isFitColumnSizeHeaderText : true,
-							           width : '80%'
+							           width : '80%',
+							           usePaging : false
 							       };
 
 

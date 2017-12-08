@@ -51,9 +51,7 @@ var userCode;
 var gridoptions = {
         showStateColumn : false , 
         editable : false, 
-        pageRowCount : 30, 
-        usePaging : true, 
-        useGroupingPanel : false,
+        useGroupingPanel : false
         };
         
 var subgridpros = {
@@ -110,7 +108,7 @@ $(document).ready(function(){
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);    
     
     
-    $("#sub_grid_wrap").hide(); 
+    //$("#sub_grid_wrap").hide(); 
 
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
@@ -354,7 +352,7 @@ function searchlocationFunc(){
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:500px"></div>
         
 
     </section><!-- search_result end -->

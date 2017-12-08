@@ -295,7 +295,7 @@ function searchSMO(index){
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="grsdt" name="grsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="gredt" name="gredt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->                        
                     </td>
@@ -303,7 +303,7 @@ function searchSMO(index){
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="blsdt" name="blsdt" type="text" title="Create start Date"   placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="bledt" name="bledt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                      </td>
@@ -337,7 +337,7 @@ function searchSMO(index){
     <!-- search_result & data body start -->
     <section class="search_result"><!-- search_result start -->
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
         
 
     </section><!-- search_result end -->
