@@ -143,6 +143,46 @@
         });
     }
     
+    // Report Download
+    function fn_downloadReport(method){
+    	//Validation
+    	//Non Click Check
+    	var gridObj = AUIGrid.getSelectedItems(listGrid);
+    	if(gridObj == null || gridObj.length <= 0 ){
+            Common.alert("* No Data Selected. ");
+            return;
+        }
+    	
+    	var boxId = gridObj[0].item.boxid;
+    	var boxno = gridObj[0].item.boxno;
+    	
+    	//VIEW
+        if(method == "PDF"){
+            $("#viewType").val("PDF");//method  
+        }
+        if(method == "EXCEL"){
+            $("#viewType").val("EXCEL");//method
+        }
+        
+        //CURRENT DATE 
+        var date = new Date().getDate();
+        if(date.toString().length == 1){
+            date = "0" + date;
+        }
+        //Report Params
+        //Essen
+        $("#reportFileName").val("/sales/BoxTRBookListing_Excel.rpt"); //File Name   
+        $("#reportDownFileName").val(boxno+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
+        //params
+        $("#BoxID").val(boxId);
+        var option = {
+                isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        };
+        
+        Common.report("dataForm", option);
+    	
+    }
+    
     $(function(){
 	    $("#btnSrch").click(function(){
 	        getSearchListAjax();
@@ -376,6 +416,19 @@
 <!--****************************************************************************
     CONTENT START
 *****************************************************************************-->
+
+<form id="dataForm">
+    <!-- essential -->
+    <input type="hidden" id="reportFileName" name="reportFileName"  />
+    <input type="hidden" id="viewType" name="viewType" />
+    
+    <!--param  -->
+    <input type="hidden" id="BoxID" name="BoxID"  />
+    
+    <!--common param  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+</form>
+
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -456,6 +509,8 @@
 <!--                 </ul> -->
                 <ul class="btns">
                     <li><p class="link_btn"><a href="/misc/TRBox/TrBoxReceive.do">Receive</a></p></li>
+                    <li><p class="link_btn"><a  onclick="javascript : fn_downloadReport('EXCEL')">TR Box Excel</a></p></li>
+                    <li><p class="link_btn"><a  onclick="javascript : fn_downloadReport('PDF')">TR Box PDF</a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
