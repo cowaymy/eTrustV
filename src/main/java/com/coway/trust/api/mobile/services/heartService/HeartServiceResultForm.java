@@ -69,6 +69,44 @@ public class HeartServiceResultForm {
 	@ApiModelProperty(value = "Transaction ID 값(체계 : USER_ID + SALES_ORDER_NO + SERVICE_NO + 현재시간_YYYYMMDDHHMMSS)")
 	private String transactionId;
 	
+	
+	private String checkInDate;
+	private String checkInTime;
+	private String checkInGps;
+	
+	
+	public String getCheckInDate() {
+		return checkInDate;
+	}
+
+	public void setCheckInDate(String checkInDate) {
+		this.checkInDate = checkInDate;
+	}
+
+	public String getCheckInTime() {
+		return checkInTime;
+	}
+
+	public void setCheckInTime(String checkInTime) {
+		this.checkInTime = checkInTime;
+	}
+
+	public String getCheckInGps() {
+		return checkInGps;
+	}
+
+	public void setCheckInGps(String checkInGps) {
+		this.checkInGps = checkInGps;
+	}
+
+
+
+
+
+	
+	
+	
+	
 	@ApiModelProperty(value = "heartDtails")
 	private List<HeartServiceResultDetailForm> heartDtails;
 	
