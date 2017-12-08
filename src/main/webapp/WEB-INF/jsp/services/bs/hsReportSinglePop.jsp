@@ -89,7 +89,7 @@ function fn_HSReportList(){
 function fn_Generate(){
 	var date = new Date();
     var month = date.getMonth()+1;
-    var day = "";
+    var day = date.getDate();
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
