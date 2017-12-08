@@ -31,10 +31,6 @@ public class MileageExcelUploaderDataVO {
 		vo.setDCPTo(getValue(row.getCell(7)));
 		vo.setDCPToID(getValue(row.getCell(8)));
 		vo.setDistance(getValue(row.getCell(9)));
-//		if (row.getCell(9).getCellTypeEnum() == CellType.NUMERIC)
-//			vo.setDistance(String.valueOf((int)row.getCell(9).getNumericCellValue()));
-//		else if (row.getCell(10).getCellTypeEnum() == CellType.STRING)
-//			vo.setDistance(getValue(row.getCell(9)));
 		
 		return vo;
 	}
