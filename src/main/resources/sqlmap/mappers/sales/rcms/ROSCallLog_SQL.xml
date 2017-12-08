@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.rcms.impl.ROSCallLogMapper">
+
+<select id="getAppTypeList" parameterType="Map" resultType="egovMap">
+    SELECT 
+       Extent1.CODE_ID   ,
+       Extent1.CODE_MASTER_ID   ,
+       Extent1.CODE   ,
+       Extent1.CODE_NAME   ,
+       Extent1.CODE_DESC   ,
+       Extent1.DISAB   ,
+       Extent1.CRT_DT   ,
+       Extent1.CRT_USER_ID   ,
+       Extent1.UPD_DT   ,
+       Extent1.UPD_USER_ID   ,
+       Extent1.OLD_CODE_ID   
+  FROM SYS0013M Extent1
+ WHERE  ( 0 = Extent1.DISAB )
+          AND ( Extent1.CODE_MASTER_ID = #{codeMasterId})
+</select>
+
+<select id="selectRosCallLogList" parameterType="Map" resultType="egovMap">
+    SELECT Project1.ORD_ID   ,
+       Project1.ORD_NO   ,
+       Project1.ORD_DT,
+       Project1.APP_TYPE_ID   ,
+       Project1.APP_TYPE_CODE   ,
+       Project1.APP_TYPE_DESC   ,
+       Project1.CUST_ID   ,
+       Project1.CUST_NAME   ,
+       Project1.CUST_NRIC   ,
+       Project1.ORD_PO_NO   ,
+       Project1.ORD_REF_NO   ,
+       Project1.BRNCH_ID   ,
+       Project1.STOCK_CODE   ,
+       Project1.STOCK_DESC   ,
+       Project1.RENTAL_STUS   ,
+       Project1.CUST_BILL_ID   ,
+       Project1.ORD_STUS_ID   
+  FROM ( SELECT Project1.ORD_ID   ,
+                Project1.ORD_NO   ,
+                Project1.RENTAL_STUS   ,
+                Project1.ORD_REF_NO   ,
+                Project1.ORD_PO_NO   ,
+                Project1.APP_TYPE_CODE   ,
+                Project1.APP_TYPE_DESC   ,
+                Project1.STOCK_CODE   ,
+                Project1.STOCK_DESC   ,
+                Project1.CUST_ID   ,
+                Project1.CUST_NAME   ,
+                Project1.CUST_NRIC   ,
+                Project1.APP_TYPE_ID   ,
+                Project1.ORD_DT   ,
+                Project1.BRNCH_ID   ,
+                Project1.CUST_BILL_ID   ,
+                Project1.ORD_STUS_ID   
+         FROM ( SELECT Extent1.ORD_ID   ,
+                       Extent1.ORD_NO   ,
+                       Extent1.RENTAL_STUS   ,
+                       Extent1.ORD_REF_NO   ,
+                       Extent1.ORD_PO_NO   ,
+                       Extent1.APP_TYPE_CODE   ,
+                       Extent1.APP_TYPE_DESC   ,
+                       Extent1.STOCK_CODE   ,
+                       Extent1.STOCK_DESC   ,
+                       Extent1.CUST_ID   ,
+                       Extent1.CUST_NAME   ,
+                       Extent1.CUST_NRIC   ,
+                       Extent2.APP_TYPE_ID   ,
+                       CASE  WHEN ( Extent1.ORD_DT IS NOT NULL ) THEN TO_CHAR(Extent1.ORD_DT, 'DD/MM/YYYY') ELSE '01/01/1900' END ORD_DT  ,
+                       CASE  WHEN ( Extent2.BRNCH_ID IS NOT NULL ) THEN Extent2.BRNCH_ID  ELSE 0 END BRNCH_ID  ,
+                       CASE  WHEN ( Extent2.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent2.CUST_BILL_ID END CUST_BILL_ID  ,
+                       CASE  WHEN ( Extent1.ORD_STUS_ID IS NOT NULL ) THEN Extent1.ORD_STUS_ID ELSE 0 END ORD_STUS_ID  
+                FROM ( SELECT vOrderBasicInfo.ORD_ID   ,
+                              vOrderBasicInfo.ORD_NO   ,
+                              vOrderBasicInfo.RENTAL_STUS   ,
+                              vOrderBasicInfo.ORD_STUS_ID   ,
+                              vOrderBasicInfo.ORD_STUS_CODE   ,
+                              vOrderBasicInfo.ORD_STUS_NAME   ,
+                              vOrderBasicInfo.ORD_DT   ,
+                              vOrderBasicInfo.INSTLMT_PRIOD   ,
+                              vOrderBasicInfo.ORD_AMT   ,
+                              vOrderBasicInfo.ORD_MTH_RENTAL   ,
+                              vOrderBasicInfo.ORD_PV   ,
+                              vOrderBasicInfo.ORD_PV_MONTH   ,
+                              vOrderBasicInfo.ORD_PV_YEAR   ,
+                              vOrderBasicInfo.ORD_REF_NO   ,
+                              vOrderBasicInfo.ORD_PO_NO   ,
+                              vOrderBasicInfo.ORD_DEPT_CODE   ,
+                              vOrderBasicInfo.ORD_GRP_CODE   ,
+                              vOrderBasicInfo.ORD_ORG_CODE   ,
+                              vOrderBasicInfo.ORD_CRT_USER_ID   ,
+                              vOrderBasicInfo.ORD_CRT_DT   ,
+                              vOrderBasicInfo.APP_TYPE_ID   ,
+                              vOrderBasicInfo.APP_TYPE_CODE   ,
+                              vOrderBasicInfo.APP_TYPE_DESC   ,
+                              vOrderBasicInfo.STOCK_ID   ,
+                              vOrderBasicInfo.STOCK_CODE   ,
+                              vOrderBasicInfo.STOCK_DESC   ,
+                              vOrderBasicInfo.CUST_ID   ,
+                              vOrderBasicInfo.CUST_TYPE   ,
+                              vOrderBasicInfo.CUST_NAME   ,
+                              vOrderBasicInfo.CUST_NRIC   ,
+                              vOrderBasicInfo.CUST_DOB   ,
+                              vOrderBasicInfo.CUST_NATION   ,
+                              vOrderBasicInfo.CUST_GENDER   ,
+                              vOrderBasicInfo.CUST_RACE   ,
+                              vOrderBasicInfo.CUST_EMAIL   ,
+                              vOrderBasicInfo.CUST_VA_NO   ,
+                              vOrderBasicInfo.CUST_PASSPORT_EXPR   ,
+                              vOrderBasicInfo.CUST_VISA_EXPR   ,
+                              vOrderBasicInfo.ORD_PROMO_ID   ,
+                              vOrderBasicInfo.ORD_PROMO_CODE   ,
+                              vOrderBasicInfo.ORD_PROMO_DESC   ,
+                              vOrderBasicInfo.ORD_MEM_ID   ,
+                              vOrderBasicInfo.ORD_MEM_CODE   ,
+                              vOrderBasicInfo.ORD_MEM_NAME   ,
+                              vOrderBasicInfo.ORD_MEM_NRIC   ,
+                              vOrderBasicInfo.ORD_MEM_TYPE_ID   ,
+                              vOrderBasicInfo.ORD_MEM_TYPE_CODE   ,
+                              vOrderBasicInfo.ORD_MEM_TYPE_NAME   ,
+                              vOrderBasicInfo.COOL_OFF_PRIOD   ,
+                              vOrderBasicInfo.KEYIN_BRNCH_ID   ,
+                              vOrderBasicInfo.KEYIN_BRNCH_CODE   ,
+                              vOrderBasicInfo.KEYIN_BRNCH_NAME   ,
+                              vOrderBasicInfo.ORD_REM   ,
+                              vOrderBasicInfo.RENT_CHK_ID   ,
+                              vOrderBasicInfo.ORD_HM_ID   ,
+                              vOrderBasicInfo.ORD_SM_ID   ,
+                              vOrderBasicInfo.ORD_GM_ID   ,
+                              vOrderBasicInfo.ORD_ADDR_ID   ,
+                              vOrderBasicInfo.ORD_CNTC_ID   ,
+                              vOrderBasicInfo.ORD_PROMO_RELATED_NO   ,
+                              vOrderBasicInfo.UPD_DT   ,
+                              vOrderBasicInfo.UPD_USER_ID   ,
+                              vOrderBasicInfo.JOM_PAY_REF   ,
+                              vOrderBasicInfo.STK_CTGRY_ID   ,
+                              vOrderBasicInfo.STK_CTGRY_NAME   ,
+                              vOrderBasicInfo.CUST_TYPE_ID   ,
+                              vOrderBasicInfo.CUST_BILL_ID   ,
+                              vOrderBasicInfo.OBLIGT_YEAR   
+                       FROM SAL1006V vOrderBasicInfo ) Extent1
+                       JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.ORD_ID
+                 WHERE 1 = 1  
+                 <if test=" ordNo != null and ordNo != '' ">
+                    AND  Extent1.ORD_NO = #{ordNo}
+                 </if>
+                 <if test=" appTypeArr != null and appTypeArr.length > 0 ">
+                    AND  Extent2.APP_TYPE_ID IN
+                    <foreach collection="appTypeArr" item="item" open="(" separator="," close=")">
+                    #{item}
+                    </foreach>
+                 </if>
+                 <if test=" custId != null and custId != '' ">
+                    AND  Extent1.CUST_ID = #{custId}
+                 </if>
+                 <if test=" custName != null and custName != '' ">
+                    AND  UPPER(Extent1.CUST_NAME) LIKE '%'||UPPER(#{custName}) ||'%'
+                 </if>
+                 <if test=" custNric != null and custNric != '' ">
+                    AND  Extent1.CUST_NRIC LIKE '%'||#{custNric}||'%'
+                 </if>
+                 <if test=" rentalArr != null and rentalArr.length > 0  ">
+                    AND Extent1.RENTAL_STUS IN
+                    <foreach collection="rentalArr" item="item" open="(" separator="," close=")">
+                        #{item}
+                    </foreach>
+                 </if>
+                          ) Project1 ) Project1
+  ORDER BY Project1.ORD_ID ASC
+</select>
+
+</mapper>

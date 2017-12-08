@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.rcms.impl.RCMSAgentManageMapper">
+
+<select id="selectAgentTypeList" parameterType="Map" resultType="egovMap">
+	SELECT 
+	    CODE_ID,
+	    CODE,
+	    CODE_NAME,
+	    DISAB
+	FROM 
+	    SYS0013M
+	WHERE
+	    CODE_MASTER_ID = #{codeMasterId}
+</select>
+
+
+</mapper>
