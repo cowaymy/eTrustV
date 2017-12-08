@@ -5,8 +5,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.coway.trust.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.MainNoticeService;
@@ -23,6 +25,7 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
 	private MainNoticeMapper mainNoticeMapper;
 
 	@Override
+	@Cacheable(value = AppConstants.PERIODICAL_CACHE)
 	public List<EgovMap> selectDailyCount(Map<String, Object> params) {
 		LOGGER.debug("ServiceImple MainNotice Info");
 		return mainNoticeMapper.selectDailyCount(params);

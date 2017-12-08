@@ -82,6 +82,7 @@ public class AppConstants {
 	 */
 	public static final String LEFT_MENU_CACHE = "menu_cache";
 	public static final String LEFT_MY_MENU_CACHE = "my_menu_cache";
+	public static final String PERIODICAL_CACHE = "periodical_cache";
 
 	/**
 	 * session info
