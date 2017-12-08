@@ -24,7 +24,6 @@ function cboGroup_SelectedIndexChanged(){
 
 function cboOrganization_SelectedIndexChanged(){
     
-    $("#cboDepartment").multipleSelect("disable");
     $("#cboGroup").empty();
     $("#cboDepartment").empty();
     
@@ -38,6 +37,7 @@ function cboOrganization_SelectedIndexChanged(){
     CommonCombo.make('cboGroup', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 2, parentID : total_item}, '', {type:'M', isCheckAll:false});
    
     $("#cboGroup").multipleSelect("enable");
+    $("#cboDepartment").multipleSelect("disable");
 //    $("#cboMember").multipleSelect("enable");
      
 }
@@ -70,6 +70,8 @@ function cboMember_SelectedIndexChanged(){
         }
 		
 		$("#cboOrganization").multipleSelect("enable");
+		$("#cboGroup").multipleSelect("disable");
+	    $("#cboDepartment").multipleSelect("disable");
 //		$("#cboMember").multipleSelect("enable");
 	    
 	}else{
@@ -77,6 +79,8 @@ function cboMember_SelectedIndexChanged(){
 		var arrparentID0 = 0;  
 		CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
 		
+		$("#cboOrganization").multipleSelect("disable");
+	    $("#cboGroup").multipleSelect("disable");
 		$("#cboDepartment").multipleSelect("enable");
    //     $("#cboMember").multipleSelect("enable");
 	}
@@ -168,7 +172,7 @@ function btnGenerateExcel_Click(){
          whereSQL += ") ";
 	 }
 	
-	if($("#cmbBranch :selected").val() != "0"){
+	if($("#cmbBranch :selected").index() > 0){
 		keyInBranch = parseInt($("#cmbBranch :selected").val());
 		whereSQL += " AND t.BRNCH_ID = '"+keyInBranch+"' ";
 	}
@@ -248,6 +252,8 @@ function btnGenerateExcel_Click(){
     $("#viewType").val("EXCEL");
     $("#reportFileName").val("/sales/TRBook_LostReport.rpt");
                
+    
+    console.log(whereSQL);
     $("#V_WHERESQL").val(whereSQL);
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
@@ -261,8 +267,8 @@ function btnGenerateExcel_Click(){
 
 
 $(document).ready(function() {
-    
-    CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '');
+
+	CommonCombo.make('cmbBranch', '/sales/ccp/getBranchCodeList', '' , '');
     
      /* 멀티셀렉트 플러그인 start */
     $('.multy_select').change(function() {
@@ -279,13 +285,17 @@ $(document).ready(function() {
     $("#rdpDateFrom").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
     $("#rdpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
     
-});
+    CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 1}, '', {type:'M', isCheckAll:false});
+    CommonCombo.make('cboGroup', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 2}, '', {type:'M', isCheckAll:false});
+    CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 3}, '', {type:'M', isCheckAll:false});
 
-    
     $("#cmbLostType").multipleSelect("checkAll");
-    $("#cboOrganization").multipleSelect("disable");
+    $("#cboOrganization").multipleSelect("enable");
     $("#cboGroup").multipleSelect("disable");
     $("#cboDepartment").multipleSelect("disable");
+
+});
+
 
 </script>
 
@@ -344,7 +354,10 @@ $(document).ready(function() {
         </div><!-- date_set end -->
     </td>
     <th scope="row">Key-In Branch</th>
-    <td><select data-placeholder="Key-In Branch" class="w100p" id="cmbBranch"></select></td>
+    <td><select data-placeholder="Key-In Branch" class="w100p" id="cmbBranch">
+                <option value="0">All</option>
+           </select>
+    </td>
 </tr>
 <tr>
     <th scope="row">TR Book No.</th>
@@ -356,7 +369,7 @@ $(document).ready(function() {
     <th scope="row">Member Type</th>
     <td>
         <select class="w100p" id="cboMember" onchange="cboMember_SelectedIndexChanged()">
-            <option data-placeholder="true" value="0" hidden>Member Type</option>
+  <!--           <option data-placeholder="true" value="0" hidden>Member Type</option> -->
             <option value="1">Health Planner</option>
             <option value="2">Coway Lady</option>
             <option value="3">Coway Technician</option>
