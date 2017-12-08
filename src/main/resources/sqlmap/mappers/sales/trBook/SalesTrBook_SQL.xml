@@ -31,7 +31,7 @@
 	          AND TR_BOOK_NO = #{trBookNo}
 	          </if>
 	          <if test="trBookCrtDt != null and trBookCrtDt != '' ">
-               AND TR_BOOK_CRT_DT = #{trBookCrtDt}
+               AND TO_CHAR(TR_BOOK_CRT_DT, 'dd/mm/yyyy') = #{trBookCrtDt}
 	          </if>
               <if test="trBookCrtUser != null and trBookCrtUser != '' ">
               AND TR_BOOK_CRT_USER_NAME = #{trBookCrtUser}
