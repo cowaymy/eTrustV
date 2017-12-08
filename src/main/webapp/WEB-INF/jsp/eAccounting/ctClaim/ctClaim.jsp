@@ -103,7 +103,7 @@ function fn_setToMonth() {
     }
     
     month = mm + "/" + yyyy;
-    $("#clmMonth").val(month)
+    $("#clmMonth").val(month);
 }
 
 function fn_clearData() {
@@ -1018,7 +1018,7 @@ function fn_checkExpGrp() {
 }
 
 function fn_myGridSetEvent() {
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+	AUIGrid.bind(myGridID, "cellClick", function( event ) 
             {
                 console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 selectRowIdx = event.rowIndex;
@@ -1085,6 +1085,7 @@ function fn_myGridSetEvent() {
             });
         }
   });
+}
 }
 </script>
 
