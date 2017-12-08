@@ -37,7 +37,7 @@ function fn_openReport(){
 	if(fn_validation()){
 		var date = new Date();
         var monthDay = date.getMonth()+1;
-        var day = "";
+        var day = date.getDate();
         if(date.getDate() < 10){
             day = "0"+date.getDate();
         }
@@ -125,7 +125,7 @@ function fn_openExcel(){
 		
         var date = new Date();
         var monthDay = date.getMonth()+1;
-        var day = "";
+        var day = date.getDate();
         if(date.getDate() < 10){
             day = "0"+date.getDate();
         }
