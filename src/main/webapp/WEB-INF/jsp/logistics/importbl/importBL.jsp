@@ -55,7 +55,7 @@ var rescolumnLayout=[
                              {dataField:"shipDt", headerText:"Shipping Date", width:120, height:30, editable:false},
                              {dataField:"grDt", headerText:"GR Date", width:120, height:30, editable:false},
                              {dataField:"apCmplt", headerText:"AP Complete", width:120, height:30, editable:false},
-                             {dataField:"grComplt", headerText:"GR Complete", width:120, height:30, editable:false},
+                             {dataField:"grCmplt", headerText:"GR Complete", width:120, height:30, editable:false},
                              {dataField:"purDocNo", headerText:"PO No.", width:120, height:30, editable:false},
                              {dataField:"accNo", headerText:"Vendor No.", width:120, height:30, editable:false},
                              {dataField:"freeItem", headerText:"Free Item", width:120, height:30, editable:false},
