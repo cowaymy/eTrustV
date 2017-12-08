@@ -34,7 +34,7 @@ function fn_validation(){
 function fn_openGenerate(){
 	var date = new Date();
     var month = date.getMonth()+1;
-    var day = "";
+    var day = date.getDate();
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
@@ -96,7 +96,7 @@ function fn_openGenerate(){
 function fn_openExcel(){
     var date = new Date();
     var month = date.getMonth()+1;
-    var day = "";
+    var day = date.getDate();
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
