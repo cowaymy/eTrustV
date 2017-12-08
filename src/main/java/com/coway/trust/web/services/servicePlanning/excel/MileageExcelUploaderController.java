@@ -59,13 +59,10 @@ public class MileageExcelUploaderController {
 			updateMap.put("memType",vo.getMemberType());
 			updateMap.put("brnchCode",vo.getBranch());
 			updateMap.put("dcpFrom",vo.getDCPFrom());
+			updateMap.put("dcpFromId",vo.getDCPFromID());
 			updateMap.put("dcpTo",vo.getDCPTo());
+			updateMap.put("dcpToId",vo.getDCPToID());
 			updateMap.put("distance",vo.getDistance());
-			updateMap.put("memType1",vo.getMemType1());
-			updateMap.put("brnchCode1",vo.getBrnchCode1());
-			updateMap.put("dcpFrom1",vo.getDcpFrom1());
-			updateMap.put("dcpTo1",vo.getDcpTo1());
-			updateMap.put("distance1",vo.getDistance1());
 			
 			// update datas
 			updateList.add(updateMap);
@@ -73,19 +70,19 @@ public class MileageExcelUploaderController {
 		
 		// 파일 유효성 검사
 		List<MileageExcelUploaderDataVO> vosValid = excelReadComponent.readExcelToList(multipartFile, false, MileageExcelUploaderDataVO::create);
-		String memType1Valid = vosValid.get(0).getMemType1();
-		String brnchCode1Valid = vosValid.get(0).getBrnchCode1();
-		String dcpFrom1Valid = vosValid.get(0).getDcpFrom1();
-		String dcpTo1Valid = vosValid.get(0).getDcpTo1();
-		String distance1Valid = vosValid.get(0).getDistance1();
-		LOGGER.debug("memType1Valid : " + memType1Valid + " / brnchCode1Valid : " + brnchCode1Valid
-								+ " / dcpFrom1Valid : " + dcpFrom1Valid + " / dcpTo1Valid : " + dcpTo1Valid + " / distance1Valid : " + distance1Valid);
+		String memTypeValid = vosValid.get(0).getMemberType();
+		String brnchCodeValid = vosValid.get(0).getBranch();
+		String cityFromValid = vosValid.get(0).getCityFrom();
+		String dcpFromValid = vosValid.get(0).getDCPFrom();
+		String dcpFromIdValid = vosValid.get(0).getDCPFromID();
+		LOGGER.debug("memTypeValid : " + memTypeValid + " / brnchCodeValid : " + brnchCodeValid
+								+ " / cityFromValid : " + cityFromValid + " / dcpFromValid : " + dcpFromValid + " / dcpFromIdValid : " + dcpFromIdValid);
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		
-		if (memType1Valid.equals("memType1") && brnchCode1Valid.equals("brnchCode1") 
-				&& dcpFrom1Valid.equals("dcpFrom1") && dcpTo1Valid.equals("dcpTo1") && distance1Valid.equals("distance1")) {
+		if (memTypeValid.equals("Member Type") && brnchCodeValid.equals("Branch") 
+				&& cityFromValid.equals("City From") && dcpFromValid.equals("DCP From") && dcpFromIdValid.equals("DCP From ID")) {
 			//updateCTSubGroupArea
 			LOGGER.debug("udtList {}", updateList);
 			mileageCalculationService.updateDCPMasterByExcel(updateList,sessionVO);
