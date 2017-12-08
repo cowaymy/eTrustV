@@ -171,7 +171,7 @@ hideViewPopup=function(val){
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Individual Rental Statementt</h1>
+<h1>Individual Rental Statement</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 </ul>
