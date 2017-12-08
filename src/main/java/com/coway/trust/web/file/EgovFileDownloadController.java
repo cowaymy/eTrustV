@@ -60,13 +60,13 @@ public class EgovFileDownloadController {
 	 */
 	private String getBrowser(HttpServletRequest request) {
 		String header = request.getHeader("User-Agent");
-		if (header.indexOf("MSIE") > -1) {
+		if (header.contains("MSIE")) {
 			return "MSIE";
-		} else if (header.indexOf("Trident") > -1) { // IE11 문자열 깨짐 방지
+		} else if (header.contains("Trident")) { // IE11 문자열 깨짐 방지
 			return "Trident";
-		} else if (header.indexOf("Chrome") > -1) {
+		} else if (header.contains("Chrome")) {
 			return "Chrome";
-		} else if (header.indexOf("Opera") > -1) {
+		} else if (header.contains("Opera")) {
 			return "Opera";
 		}
 		return "Firefox";
@@ -96,7 +96,7 @@ public class EgovFileDownloadController {
 		} else if (browser.equals("Opera")) {
 			encodedFilename = "\"" + new String(filename.getBytes("UTF-8"), "8859_1") + "\"";
 		} else if (browser.equals("Chrome")) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < filename.length(); i++) {
 				char c = filename.charAt(i);
 				if (c > '~') {

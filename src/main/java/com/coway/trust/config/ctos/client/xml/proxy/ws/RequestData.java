@@ -13,18 +13,17 @@ public class RequestData {
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("<batch output=\"0\" no=\"" + batchNo + "\" xmlns=\"http://ws.cmctos.com.my/ctosnet/request\">"
-				+ "\r\n");
-		sb.append("<company_code>" + companyCode + "</company_code>" + "\r\n");
-		sb.append("<account_no>" + accountNo + "</account_no>" + "\r\n");
-		sb.append("<user_id>" + userId + "</user_id>" + "\r\n");
+		sb.append("<batch output=\"0\" no=\"").append(batchNo).append("\" xmlns=\"http://ws.cmctos.com.my/ctosnet/request\">").append("\r\n");
+		sb.append("<company_code>").append(companyCode).append("</company_code>").append("\r\n");
+		sb.append("<account_no>").append(accountNo).append("</account_no>").append("\r\n");
+		sb.append("<user_id>").append(userId).append("</user_id>").append("\r\n");
 		sb.append("<record_total>1</record_total>" + "\r\n");
 		sb.append("<records>" + "\r\n");
 		sb.append("<type>I</type>" + "\r\n");// I-individual,C-company,B-business
 		sb.append("<ic_lc></ic_lc>" + "\r\n");// Old IC number(for individual)
 												// or local number(for company)
 												// or blank for business
-		sb.append("<nic_br>" + nric + "</nic_br>" + "\r\n");// New IC/Passport
+		sb.append("<nic_br>").append(nric).append("</nic_br>").append("\r\n");// New IC/Passport
 															// number for
 															// individual, blank
 															// for company,
@@ -32,7 +31,7 @@ public class RequestData {
 															// registration
 															// number for
 															// business
-		sb.append("<name>" + customerName + "</name>" + "\r\n");
+		sb.append("<name>").append(customerName).append("</name>").append("\r\n");
 		sb.append("<mphone_nos>" + "\r\n");
 		sb.append("<mphone_no/>" + "\r\n");
 		sb.append("</mphone_nos>" + "\r\n");

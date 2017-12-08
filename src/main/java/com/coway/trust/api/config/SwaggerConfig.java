@@ -62,20 +62,10 @@ public class SwaggerConfig {
 //	}
 
 	private Predicate<String> excludePath(final String path) {
-		return new Predicate<String>() {
-			@Override
-			public boolean apply(String input) {
-				return !input.contains(path);
-			}
-		};
+		return input -> !input.contains(path);
 	}
 
 	private Predicate<String> includePath(final String path) {
-		return new Predicate<String>() {
-			@Override
-			public boolean apply(String input) {
-				return input.contains(path);
-			}
-		};
+		return input -> input.contains(path);
 	}
 }

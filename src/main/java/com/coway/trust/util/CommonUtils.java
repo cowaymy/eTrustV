@@ -376,7 +376,7 @@ public final class CommonUtils {
 	}
 
 	private String reformat(int n) {
-		StringBuffer sb = new StringBuffer(2);
+		StringBuilder sb = new StringBuilder(2);
 
 		if (n < 10) {
 			sb.append("0").append(n);
@@ -600,7 +600,7 @@ public final class CommonUtils {
 		} else if (value instanceof BigInteger) {
 			return ((BigInteger) value).longValue();
 		} else if (value instanceof Long) {
-			return ((Long) value).longValue();
+			return (Long) value;
 		}
 		return (Long) value;
 	}
@@ -768,7 +768,7 @@ public final class CommonUtils {
 				return true;
 			}
 		} else if (val instanceof Integer) {
-			if (((Integer) val).intValue() < 1) {
+			if ((Integer) val < 1) {
 				return false;
 			}
 			return true;
@@ -803,7 +803,7 @@ public final class CommonUtils {
 				return true;
 			}
 		} else if (val instanceof Integer) {
-			if (((Integer) val).intValue() == 1) {
+			if ((Integer) val == 1) {
 				return true;
 			}
 		}
@@ -933,7 +933,7 @@ public final class CommonUtils {
 		Random random = new Random();
 		char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < size; i++) {
 			int num = random.nextInt(chars.length);
 			sb.append(chars[num]);

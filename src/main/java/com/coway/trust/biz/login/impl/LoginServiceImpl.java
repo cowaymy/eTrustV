@@ -105,18 +105,18 @@ public class LoginServiceImpl implements LoginService {
 
 		// for (Object obj : addList)
 		// {
-		((Map<String, Object>) params).put("crtUserId", crtUserId);
-		((Map<String, Object>) params).put("updUserId", crtUserId);
+		params.put("crtUserId", crtUserId);
+		params.put("updUserId", crtUserId);
 
 		LOGGER.debug(" >>>>> insertUserExceptAuthMapping ");
-		LOGGER.debug(" Login_UserId : {}", ((Map<String, Object>) params).get("newUserIdTxt"));
+		LOGGER.debug(" Login_UserId : {}", params.get("newUserIdTxt"));
 
 		// String tmpStr = (String) ((Map<String, Object>) obj).get("hidden");
 		// ((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
 
 		saveCnt++;
 
-		loginMapper.updatePassWord((Map<String, Object>) params);
+		loginMapper.updatePassWord(params);
 		// }
 
 		return saveCnt;
@@ -126,13 +126,13 @@ public class LoginServiceImpl implements LoginService {
 	public int updateUserSetting(Map<String, Object> params, Integer crtUserId) {
 		int saveCnt = 0;
 
-		((Map<String, Object>) params).put("crtUserId", crtUserId);
-		((Map<String, Object>) params).put("updUserId", crtUserId);
+		params.put("crtUserId", crtUserId);
+		params.put("updUserId", crtUserId);
 
 		LOGGER.debug(" >>>>> updateUserSetting ");
-		LOGGER.debug(" Login_UserId : {}", ((Map<String, Object>) params).get("newUserIdTxt"));
+		LOGGER.debug(" Login_UserId : {}", params.get("newUserIdTxt"));
 
-		saveCnt = loginMapper.updateUserSetting((Map<String, Object>) params);
+		saveCnt = loginMapper.updateUserSetting(params);
 
 		return saveCnt;
 	}

@@ -169,7 +169,7 @@ public final class BeanConverter {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 		int v = 0;
 		if (paramType == Integer.class) {
-			v = ((Integer) value).intValue();
+			v = (Integer) value;
 		} else if (paramType == Double.class) {
 			v = ((Double) value).intValue();
 		} else if (paramType == Float.class) {
