@@ -35,11 +35,11 @@
                     dataType : "date",
                     formatString : "dd/mm/yyyy"       
               }, {                        
-                    dataField : "userName",
+                    dataField : "c3",
                     headerText : "Update By",
                     width : 240         
               }, {                        
-                    dataField : "srvFilterUpdDt",
+                    dataField : "c2",
                     headerText : "Update At",
                     width : 240,
                     dataType : "date",
@@ -183,6 +183,27 @@
 		
 		
         
+/*         function fn_getAddFilter(){
+                Common.ajax("GET", "/services/bs/getAddFilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+                Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterAddPop');
+                
+                console.log("getInActivefilterInfo.");
+                console.log( result);
+                AUIGrid.setGridData(myDetailGridIDInActive, result);        
+            });
+        
+        } */
+        
+        
+        
+       function fn_getAddFilter() {
+            Common.popupDiv("/services/bs/hSAddFilterSetPop.do?&salesOrdId=" + ${hSOrderView.ordId} +"&stkId="+ ${hSOrderView.stkId} , null, null , true , '_AddFilterPop');
+       }
+        
+        
+        
+        
+        
 		$(document).ready(function() {
 		    createAUIGridInactive();
 		    createAUIGridActive();
@@ -255,6 +276,7 @@
     <th scope="row">Product Name</th>
     <td colspan="3">
     <input type="text" title="" id="entry_stockDesc" name="entry_stockDesc"  value="${hSOrderView.stockDesc}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input  type='hidden' id='stkId' name='stkId'  value='${hSOrderView.stkId}'></textarea>
     </td>
 </tr>
 <tr>
@@ -281,7 +303,7 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>Filter Setting</h2>
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">Add Filter</a></p></li>
+    <li><p class="btn_grid"><a href="javascript:fn_getAddFilter()"  id="addFilter">Add Filter</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
