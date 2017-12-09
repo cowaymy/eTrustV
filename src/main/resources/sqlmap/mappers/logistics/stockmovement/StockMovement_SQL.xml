@@ -3,12 +3,12 @@
 <mapper namespace="com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper">
    
     <select id="selectStockMovementSeq" resultType="String">
-		SELECT
-		       'SMO' 
-		       ||TO_CHAR (SYSDATE, 'YYMMDD')
-		       || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
-		  FROM LOG0047M
-		  WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') 
+        SELECT
+               'SMO' 
+               ||TO_CHAR (SYSDATE, 'YYMMDD')
+               || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
+          FROM LOG0047M
+          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') 
     </select>
     <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
@@ -155,9 +155,9 @@
                               REQST_CDC_RDC,
                               REQST_STUS,
                               CRT_USER_ID,
-			                  CRT_DT,
-			                  REQST_TYPE,
-			                  REQST_TYPE_DTL
+                              CRT_DT,
+                              REQST_TYPE,
+                              REQST_TYPE_DTL
                               )
                             VALUES (  #{reqno}
                                     , #{sttype}
@@ -170,7 +170,7 @@
                                     , #{flocation}
                                     , 'O'
                                     , #{userId}
-					                , SYSDATE
+                                    , SYSDATE
                                     , #{sttype}
                                     , #{smtype}
                                     )
@@ -249,11 +249,11 @@
     </select>
     <select id="selectDeliveryStockMovementSeq" resultType="String">
         SELECT
-		       'DVR' 
-		       ||TO_CHAR (SYSDATE, 'YYMMDD')
-		       || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
-		  FROM LOG0054M
-		 WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
+               'DVR' 
+               ||TO_CHAR (SYSDATE, 'YYMMDD')
+               || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
+          FROM LOG0054M
+         WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
     </select>
 <!--       
     <select id="selectDeliveryNobyReqsNo" parameterType="Map" resultType="String">
@@ -470,30 +470,6 @@
                                               AND REQST_NO =#{reqstno}                                      
                                                        
      </insert>
-     
-<!--     <insert id="insertMovementSerial" parameterType="Map"> -->
-<!--      INSERT INTO LOG0061D ( -->
-<!--                                         SERIAL_NO, -->
-<!--                                         DELVRY_NO, -->
-<!--                                         PDELVRY_NO_ITM, -->
-<!--                                         TTYPE, -->
-<!--                                         CRT_DT, -->
-<!--                                         CRT_USER_ID -->
-<!--                                         ) -->
-<!--                           SELECT -->
-<!--                                    #{serial}, -->
-<!--                                    #{delno}, -->
-<!--                                    DELVRY_NO_ITM, -->
-<!--                                     (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= LOG0055D.REQST_NO) , -->
-<!--                                     SYSDATE, -->
-<!--                                     #{userId} -->
-<!--                                     FROM LOG0055D -->
-<!--                                     WHERE 1=1 -->
-<!--                                               AND DELVRY_NO= #{delno} -->
-<!--                                               AND ITM_CODE =#{itmcd} -->
-                                                                                                                                       
-<!--      </insert>      -->
-     
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
             SELECT
                 DELVRY_NO,
@@ -577,7 +553,7 @@
      <update id="updateRequestMovement" parameterType="String">
         UPDATE LOG0047M 
            SET REQST_STUS = 'P'
-         WHERE REQST_NO =#{param}
+         WHERE REQST_NO = #{param}
      </update>
      <insert id="insertStockBooking" parameterType="Map">
         INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
