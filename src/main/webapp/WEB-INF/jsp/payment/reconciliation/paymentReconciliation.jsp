@@ -316,7 +316,7 @@ var maintenancePopLayout = [
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Reconciliation Search</h2>
+		<h2>Payment Reconciliation</h2>
 		<ul class="right_opt">
 		    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
 		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
