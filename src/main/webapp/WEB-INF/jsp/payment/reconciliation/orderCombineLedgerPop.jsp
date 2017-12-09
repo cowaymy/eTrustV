@@ -183,11 +183,11 @@
 			    </td>
 			    <th scope="row">Customer Name</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="custName" name="custName"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custName" name="custName"/>
 			    </td>
 			    <th scope="row">Order Status</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="orderStatus" name="orderStatus" />
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="orderStatus" name="orderStatus" />
 			    </td>
 			</tr>
 			<tr>
@@ -206,33 +206,33 @@
 			<tr>
 			    <th scope="row">Application Type</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="appType" name="appType"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="appType" name="appType"/>
 			    </td>
 			    <th scope="row">Product</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="productName" name="productName"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="productName" name="productName"/>
 			    </td>
 			    <th scope="row">*Pay by 3rd Party Name</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="thirdPartyName" name="thirdPartyName"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="thirdPartyName" name="thirdPartyName"/>
 			    </td>
 			    <th scope="row">Rental Paymode</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="rentalPayMode" name="rentalPayMode"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalPayMode" name="rentalPayMode"/>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">VA Number</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="custVANo" name="custVANo"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custVANo" name="custVANo"/>
 			    </td>
 			    <th scope="row">JOMPay Ref 1</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="jomPayRefNo1" name="jomPayRefNo1"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="jomPayRefNo1" name="jomPayRefNo1"/>
 			    </td>
 			    <th scope="row">Outright Fees</th>
 			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="w100p" id="outrightFees" name="outrightFees"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="outrightFees" name="outrightFees"/>
 			    </td>
 			</tr>
 			</tbody>
@@ -258,55 +258,55 @@
 			<tr>
 			    <th scope="row">RPF Fees</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="rpfFees" name="rpfFees"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rpfFees" name="rpfFees"/>
 			    </td>
 			    <th scope="row">RPF Paid</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="rpfPaid" name="rpfPaid"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rpfPaid" name="rpfPaid"/>
 			    </td>
 			    <th scope="row">Rental Fees</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="rentalFees" name="rentalFees"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalFees" name="rentalFees"/>
 			    </td>
 			    <th scope="row">AS O/S</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="ASOutstanding" name="ASOutstanding"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ASOutstanding" name="ASOutstanding"/>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Penalty Charge</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="penaltyCharges" name="penaltyCharges"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyCharges" name="penaltyCharges"/>
 			    </td>
 			    <th scope="row">Penalty Paid</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="penaltyPaid" name="penaltyPaid"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyPaid" name="penaltyPaid"/>
 			    </td>
 			    <th scope="row">Penalty Adjustment</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="penaltyAdjustment" name="penaltyAdjustment"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyAdjustment" name="penaltyAdjustment"/>
 			    </td>
 			    <th scope="row">Balance Penalty</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="penaltyBalance" name="penaltyBalance"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyBalance" name="penaltyBalance"/>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Unbill Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="unbillAmount" name="unbillAmount" />
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="unbillAmount" name="unbillAmount" />
 			    </td>
 			    <th scope="row">Total O/S Balance</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="totalOutstanding" name="totalOutstanding"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totalOutstanding" name="totalOutstanding"/>
 			    </td>
 			    <th scope="row">Total O/S Month</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="outstandingMonth" name="outstandingMonth"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="outstandingMonth" name="outstandingMonth"/>
 			    </td>
 			    <th scope="row">Total :</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="rentalGrandTotal" name="rentalGrandTotal"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalGrandTotal" name="rentalGrandTotal"/>
 			    </td>
 			</tr>
 			</tbody>
@@ -330,29 +330,29 @@
 			<tr>
 			    <th scope="row">Package Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmQuotPacAmount" name="svmQuotPacAmount"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotPacAmount" name="svmQuotPacAmount"/>
 			    </td>
 			    <th scope="row">Filter Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmQuotFilterAmount" name="svmQuotFilterAmount"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotFilterAmount" name="svmQuotFilterAmount"/>
 			    </td>
 			    <th scope="row">Total</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmQuotTotalAmount" name="svmQuotTotalAmount"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotTotalAmount" name="svmQuotTotalAmount"/>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Quotation Number</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmQuotNo" name="svmQuotNo"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotNo" name="svmQuotNo"/>
 			    </td>
 			    <th scope="row">Status</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmQuotStatus" name="svmQuotStatus"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly"" id="svmQuotStatus" name="svmQuotStatus"/>
 			    </td>
 			    <th scope="row">Create Date</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmCreateDate" name="svmCreateDate"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
 			    </td>
 			</tr>
 			</tbody>
@@ -378,33 +378,33 @@
 			<tr>
 			    <th scope="row">Package Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmPacAmount" name="svmPacAmount"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmPacAmount" name="svmPacAmount"/>
 			    </td>
 			    <th scope="row">Filter Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p"id="svmFilterAmount" name="svmFilterAmount" />
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmFilterAmount" name="svmFilterAmount" />
 			    </td>
 			    <th scope="row">Status</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmStatus" name="svmStatus"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmStatus" name="svmStatus"/>
 			    </td>
 			    <th scope="row">Create Date</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmCreateDate" name="svmCreateDate"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Duration</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmDuration" name="svmDuration"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmDuration" name="svmDuration"/>
 			    </td>
 			    <th scope="row">Valid Date</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="svmValidDate" name="svmValidDate"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmValidDate" name="svmValidDate"/>
 			    </td>
 			    <th scope="row">Total :</th>
 			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="w100p" id="svmTotalOutstanding" name="svmTotalOutstanding"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmTotalOutstanding" name="svmTotalOutstanding"/>
 			    </td>
 			</tr>
 			</tbody>
@@ -430,33 +430,33 @@
 			<tr>
 			    <th scope="row">Package Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractPacAmount" name="srvContractPacAmount"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractPacAmount" name="srvContractPacAmount"/>
 			    </td>
 			    <th scope="row">Filter Amount</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractFilterAmount" name="srvContractFilterAmount"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractFilterAmount" name="srvContractFilterAmount"/>
 			    </td>
 			    <th scope="row">Status</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractStatus" name="srvContractStatus"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractStatus" name="srvContractStatus"/>
 			    </td>
 			    <th scope="row">Create Date</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractCreateDate" name="srvContractCreateDate" />
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractCreateDate" name="srvContractCreateDate" />
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row">Duration (Mth)</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractDuration" name="srvContractDuration" />
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractDuration" name="srvContractDuration" />
 			    </td>
 			    <th scope="row">Valid Date</th>
 			    <td>
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractValidDate" name="srvContractValidDate"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractValidDate" name="srvContractValidDate"/>
 			    </td>
 			    <th scope="row">Total :</th>
 			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="w100p" id="srvContractTotalOutstanding" name="srvContractTotalOutstanding"/>
+			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractTotalOutstanding" name="srvContractTotalOutstanding"/>
 			    </td>
 			</tr>
 			</tbody>
