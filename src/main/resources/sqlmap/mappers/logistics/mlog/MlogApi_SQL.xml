@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
     
+    <select id="getFilterNotChangeList"  resultType="egovMap">
+       SELECT
+           <if test="querytype eq 'sum'.toString() ">
+                 SUM(BS_RESULT_PART_QTY) total_Tobe_Change_Qty 
+           </if>
+           <if test="querytype eq 'list'.toString() ">
+                  BS_RESULT_PART_ID parts_Id, STK_CODE parts_Code, STK_DESC parts_Name,  to_char(BS_RESULT_CRT_DT,'YYYY-MM-DD') fail_Date , SALES_ORD_NO order_No, NAME cust_Name,MEM_CODE, RDC_CODE rdc_Code
+           </if>
+         FROM (
+        SELECT S7.BS_RESULT_PART_ID , S26.STK_CODE , S26.STK_DESC , S7.BS_RESULT_CRT_DT , S1.SALES_ORD_NO , S29.NAME ,O1.MEM_CODE, S28.RDC_CODE , S7.BS_RESULT_PART_QTY 
+          FROM SVC0006D S6 ,SVC0007D S7 , SVC0008D S8 , SAL0001D S1 , SAL0029D S29 , SYS0026M S26 , SYS0028M S28 , ORG0001D O1
+         WHERE  1 = 1
+           AND O1.MEM_CODE     = S28.WH_LOC_CODE
+           AND S8.CODY_ID      = O1.MEM_ID
+           AND S1.CUST_ID      = S29.CUST_ID
+           AND S6.SALES_ORD_ID = S1.SALES_ORD_ID
+           AND S7.BS_RESULT_PART_ID = S26.STK_ID
+           AND S8.SCHDUL_ID    = S6.SCHDUL_ID
+           AND S7.BS_RESULT_ID = S6.RESULT_ID
+           AND S26.STK_TYPE_ID = 62
+           AND S8.STUS_CODE_ID = 21
+           AND S7.BS_RESULT_PART_ID > 0
+           AND O1.MEM_CODE = #{userId}
+           <if test="searchFromDate !=null and searchFromDate !=''">
+           AND S7.BS_RESULT_CRT_DT BETWEEN TO_DATE(#{searchFromDate}||'000000' , 'YYYYMMDDHH24MISS') 
+           </if>
+           <if test="searchToDate !=null and searchToDate !=''">
+           AND TO_DATE(#{searchToDate}||'235959' , 'YYYYMMDDHH24MISS')
+           </if>
+           <!-- AND S7.BS_RESULT_CRT_DT BETWEEN TO_DATE('20140411'||'000000' , 'YYYYMMDDHH24MISS') AND TO_DATE('20140417'||'235959' , 'YYYYMMDDHH24MISS') -->
+           )
+    </select>
     
     <select id="getMiscPartList"  resultType="egovMap">
      SELECT  s26.stk_code parts_code,s26.stk_id parts_id,s26.stk_desc parts_name,s26.stk_type_id part_type, s16.AMT sales_price
@@ -49,7 +81,7 @@
 	       S28Q.WH_LOC_DESC,
 	       DECODE (l47.PRIDIC_FRQNCY,'A', 'Auto','M', 'Manual',l47.PRIDIC_FRQNCY) REQ_TYPE,
 	       NVL (S47.USER_FULL_NAME, L54.CRT_USER_ID) GI_CUST_NAME,
-	       L47.REQST_STUS req_Status,
+	        (CASE                         WHEN l54.DELVRY_GI_CMPLT = 'Y' AND l54.DELVRY_GR_CMPLT = 'Y' THEN 'C'   ELSE 'P' END) req_Status,
 	       (SELECT WH_LOC_ID FROM sys0028m WHERE WH_LOC_CODE = S28r.rdc_code) rdc_code
 	  from log0054m l54 
 	     , log0047m l47
@@ -212,7 +244,7 @@
 			        GROUP BY LOC_ID, ITM_CODE,MOV_QTY) L75 ,
 			        CRDC
 			 WHERE     1 = 1
-			       AND L56.LOC_ID = L75.LOC_ID(+)
+			       AND L56.LOC_ID = L75.LOC_ID
 			       AND L56.STK_CODE = L75.ITM_CODE(+)
 			       AND S28.WH_LOC_ID = L56.LOC_ID(+)
 			       AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE)
@@ -479,7 +511,7 @@
 		       SY28M.WH_LOC_DESC gi_Location_Name,
 		       LG54M.DELVRY_GI_DT GI_DATE,
 		       LG54M.DELVRY_GR_DT GR_DATE,
-		      s47m.USER_FULL_NAME gi_Cust_Name,
+		      SY28M.WH_LOC_DESC gi_Cust_Name,
 		       LG47M.REQST_CRT_DT,
 		       LG47M.TRNSC_TYPE_DTL,
 		       (SELECT WH_LOC_ID
@@ -488,8 +520,7 @@
 		          rdc_code
 		  FROM LOG0047M LG47M,
 		       SYS0028M SY28M,
-		       LOG0054M LG54M,
-		         sys0047m s47m
+		       LOG0054M LG54M
 		 WHERE     1 = 1
 		       AND LG47M.REQST_NO = LG54M.REQST_NO(+)
 		       AND LG47M.TRNSC_TYPE = LG54M.TRNSC_TYPE(+)
@@ -500,8 +531,7 @@
 		       <if test="reqStatus eq 'MROL'.toString() ">
                AND LG47M.RCIV_CDC_RDC = SY28M.WH_LOC_ID
                </if>
-		       AND SY28M.WH_LOC_ID = s47m.USER_ID
-		       AND SY28M.WH_LOC_CODE=#{userId}
+		       AND SY28M.WH_LOC_ID =  (select wh_LOC_ID From sys0028m where WH_LOC_CODE = #{userId})
 		       <if test="searchStatus == 1 ">
 		       AND LG47M.REQST_STUS ='O'
 		       </if>
@@ -1107,6 +1137,5 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	<select id="dateParsing" parameterType="String" resultType="String">
 	   SELECT TO_CHAR(TO_DATE(#{param} , 'YYYYMMDD') , 'DD/MM/YYYY')  FROM DUAL
 	</select>
-	
 	
 </mapper>
