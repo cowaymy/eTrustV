@@ -312,7 +312,7 @@ var maintenancePopLayout = [
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	    <li>Payment</li>
-	    <li>Reconciliation Search</li>
+	    <li>Payment Reconciliation</li>
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
@@ -359,14 +359,17 @@ var maintenancePopLayout = [
 					</tr>
 					<tr>
 					    <th scope="row">Status</th>
-					    <td colspan="3">
-						    <select class="multy_select" multiple="multiple" id="statusId" name="statusId">
+					    <td>
+						    <select class="multy_select w100p" multiple="multiple" id="statusId" name="statusId">
 						        <option value="44">Pending</option>
 						        <option value="6">Rejected</option>
 						        <option value="10">Cancelled</option>
 						        <option value="5">Approved</option>
 						    </select>
 					    </td>
+					    <th scope="row"></th>
+                        <td>
+                        </td>
 					</tr>
 				</tbody>
 			</table><!-- table end -->
