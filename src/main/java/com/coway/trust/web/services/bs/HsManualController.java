@@ -595,6 +595,56 @@ public class HsManualController {
 		}
 
 
+
+		@RequestMapping(value = "/hSAddFilterSetPop.do" )
+		public String hSAddFilterSetInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+
+			logger.debug("params : {}", params.toString());
+			params.put("orderNo", params.get("salesOrdId"));
+
+			List<EgovMap>  hSAddFilterSetInfo = hsManualService.selectHSAddFilterSetInfo(params);
+			model.put("_salesOrdId",(String) params.get("salesOrdId"));   
+			model.put("_stkId",(String) params.get("stkId"));
+			model.put("hSAddFilterSetInfo", hSAddFilterSetInfo);
+
+			return "services/bs/hsFilterAddPop";
+		}
+		
+		
+
+		@RequestMapping(value = "/addSrvFilterID.do" )
+		public ResponseEntity<List<EgovMap>>  addSrvFilterIdCnt(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
+
+			List<EgovMap> addSrvFilterIdCnt = hsManualService.addSrvFilterIdCnt(params);
+			
+			return ResponseEntity.ok(addSrvFilterIdCnt);
+		}			
+
+		
+		
+		
+		@RequestMapping(value = "/doSaveFilterInfo.do",method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> saveHsFilterInfoAdd(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+			ReturnMessage message = new ReturnMessage();
+			params.put("updator", sessionVO.getUserId());
+			
+			logger.debug("params : {}", params);
+//			List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+			
+			int resultValue = hsManualService.saveHsFilterInfoAdd(params);
+			
+			if(resultValue>0){
+				message.setCode(AppConstants.SUCCESS);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			}else{
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
+			return ResponseEntity.ok(message);
+		}		
+		
+		
+		
 	/**
 	 *
 	 *

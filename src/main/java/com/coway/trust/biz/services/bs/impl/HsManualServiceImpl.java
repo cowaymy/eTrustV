@@ -985,4 +985,100 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return cnt;
 	}
 
+	
+	@Override
+	public List<EgovMap> selectHSAddFilterSetInfo(Map<String, Object> params) {
+		return hsManualMapper.selectHSAddFilterSetInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> addSrvFilterIdCnt(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.addSrvFilterIdCnt(params);
+	}
+
+	@Override
+	public int updateFilterInfo(Map<String, Object> params, SessionVO sessionVO) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.updateFilterInfo(params);
+	}
+
+	@Override
+	public String getSrvConfigId_SAL009(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.getSrvConfigId_SAL009(params);
+	}
+
+	@Override
+	public String getbomPartPriod_LOG0001M(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.getbomPartPriod_LOG0001M(params);
+	}
+
+	@Override
+	public String getSalesDtSAL_0001D(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.getSalesDtSAL_0001D(params);
+	}
+
+	@Override
+	public EgovMap getSrvConfigFilter_SAL0087D(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.getSrvConfigFilter_SAL0087D(params);
+	}
+
+	@Override
+	public int saveHsFilterInfoAdd(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		int result = -1;
+		
+		String configID = hsManualMapper.getSrvConfigId_SAL009(params);
+		String filterPeriod = hsManualMapper.getbomPartPriod_LOG0001M(params);
+		String orderdate = hsManualMapper.getSalesDtSAL_0001D(params);
+		
+//        DateTime CutOffDate = DateTime.ParseExact("04/27/2016", "MM/dd/yyyy", CultureInfo.InvariantCulture);
+		String productID = String.valueOf(params.get("productID"));
+		String filterCode = String.valueOf(params.get("filterCode"));
+		
+//		if (ProductID == 892 || orderdate < CutOffDate)
+		if(productID == "892"){
+			if(filterCode == "303" || filterCode == "901"){
+				filterPeriod = "6";
+			}
+		}
+		
+		Map<String, Object> send_sal0087D = new HashMap();
+		
+		if(configID != null && !"0".equals(configID)){
+			EgovMap sal0087D = hsManualMapper.getSrvConfigFilter_SAL0087D(params);
+			
+			if( sal0087D != null){
+				send_sal0087D.put("SRV_FILTER_PRIOD", filterPeriod);
+				send_sal0087D.put("SRV_FILTER_PRV_CHG_DT", params.get("lastChangeDate"));
+				send_sal0087D.put("SRV_FILTER_STUS_ID", 1);
+				send_sal0087D.put("SRV_FILTER_UPD_USER_ID" , params.get("updator"));
+				send_sal0087D.put("SRV_FILTER_REM", params.get("remark"));
+				
+                hsManualMapper.saveChanges(send_sal0087D);
+
+			}else {
+				send_sal0087D.put("SRV_FILTER_ID"          ,0);
+				send_sal0087D.put("SRV_CONFIG_ID"          ,configID);
+				send_sal0087D.put("SRV_FILTER_STK_ID"      ,filterCode);
+				send_sal0087D.put("SRV_FILTER_PRIOD"       ,filterPeriod);
+				send_sal0087D.put("SRV_FILTER_PRV_CHG_DT"  ,params.get("lastChangeDate"));
+				send_sal0087D.put("SRV_FILTER_STUS_ID"     ,1);
+				send_sal0087D.put("SRV_FILTER_REM"         ,params.get("remark"));
+//				send_sal0087D.put("SRV_FILTER_CRT_DT"      ,); sysdate
+				send_sal0087D.put("SRV_FILTER_CRT_USER_ID" , params.get("updator"));
+//				send_sal0087D.put("SRV_FILTER_UPD_DT"      ,);sysdate
+				send_sal0087D.put("SRV_FILTER_UPD_USER_ID" ,params.get("updator"));
+
+				hsManualMapper.saveChanges(send_sal0087D);
+			}
+		}
+		
+		return result;
+	}
+	
 }

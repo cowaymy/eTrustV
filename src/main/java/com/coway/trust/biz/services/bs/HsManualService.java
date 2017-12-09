@@ -85,5 +85,20 @@ public interface HsManualService {
 
 	int updateSrvCodyId(Map<String, Object> params);
 
+	List<EgovMap> selectHSAddFilterSetInfo(Map<String, Object> params);
+
+	List<EgovMap> addSrvFilterIdCnt(Map<String, Object> params);
+
+	int updateFilterInfo(Map<String, Object> params, SessionVO sessionVO);
+
+	String getSrvConfigId_SAL009(Map<String, Object> params);
+
+	String getbomPartPriod_LOG0001M(Map<String, Object> params);
+
+	String getSalesDtSAL_0001D(Map<String, Object> params);
+
+	EgovMap getSrvConfigFilter_SAL0087D(Map<String, Object> params);
+
+	int saveHsFilterInfoAdd(Map<String, Object> params);	
 
 }
