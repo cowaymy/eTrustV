@@ -177,9 +177,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
 
 		if (checkList.size() > 0) {
-			
-			logger.info(" checkList :::: {}", checkList.size());
-			
+
 			Map<String, Object> insMap = null;
 
 			for (int i = 0; i < checkList.size(); i++) {
@@ -194,15 +192,10 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				insMap.put("delno", deliSeq);
 				insMap.put("userId", params.get("userId"));
 				stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
-				
-				stockMoveMapper.updateRequestMovement((String) insMap.get("reqstno"));
-		
 			}
 
 			if (serialList.size() > 0) {
-				
-				logger.info(" serialList.size() :::: {}", serialList.size());
-				
+
 				for (int j = 0; j < serialList.size(); j++) {
 
 					Map<String, Object> insSerial = null;
@@ -217,7 +210,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			}
 
 			stockMoveMapper.insertDeliveryStockMovement(insMap);
-//			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
+			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
 		}
 		String[] delvcd = { deliSeq };
 
@@ -227,7 +220,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("refdocno", "");
 		formMap.put("salesorder", "");
 
-//		stockMoveMapper.StockMovementIssue(formMap);
+		stockMoveMapper.StockMovementIssue(formMap);
 
 		return formMap;
 
