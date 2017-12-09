@@ -10,10 +10,17 @@
     });
     
     function fn_searchOutStandView(){
+    	
+    	if($('#orderNo').val() == ""){
+    		Common.alert("Please key in the order number.");
+    		return;
+    	}
+    	
         Common.ajax("GET","/payment/selectOrderOutstandingView.do", $("#orderForm").serialize(), function(result){
             console.log(result);
             
-            if(result != null){
+            if(result.orderOutstandingView.length > 0){
+            	$("#ledgerForm #ordId").val(result.orderOutstandingView[0].orderid);
             	$('#orderId').val(result.orderOutstandingView[0].orderid);
             	$('#custName').val(result.orderOutstandingView[0].customername);
             	$('#orderStatus').val(result.orderOutstandingView[0].orderstatus);
@@ -39,7 +46,7 @@
                 
                 var rentalGrandTotal = Number(0.00);
                 rentalGrandTotal = result.orderOutstandingView[0].orderUnbillamt + result.orderOutstandingView[0].orderTotaloutstanding;
-                $('#rentalGrandTotal').val($.number(rentalGrandTotal,2));
+                $('#rentalGrandTotal').val($.number(rentalGrandTotal, 2));
                 
                 //SVM Quotation
                 if(Number(result.orderOutstandingView[0].srvmemquotpackageamount) == 0 && Number(result.orderOutstandingView[0].srvmemquotid) == 0){
@@ -112,9 +119,35 @@
                 }
                 $('#srvContractCreateDate').val(result.orderOutstandingView[0].srvcontractcreated);
                 $('#srvContractTotalOutstanding').val(result.orderOutstandingView[0].srvcontracttotalamount);
+                
+            }else{
+            	Common.alert("* Please enter an valid order no.");
             }
             
         });
+    }
+    
+    function viewRentalLedger(){
+        if($("#ordId").val() != ''){
+            Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+        }else{
+            Common.alert('* Please enter an order no.');
+            return;
+        }
+    }
+    
+    function viewRentalLedger2(){
+        if($("#ordId").val() != ''){
+            Common.popupWin("ledgerForm", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+        }else{
+            Common.alert('* Please enter an order no.');
+            return;
+        }
+    }
+    
+    function fn_clear(){
+    	$("#orderForm")[0].reset();
+    	$("#ledgerForm")[0].reset();
     }
     
 </script>    
@@ -146,7 +179,7 @@
 			    <td colspan="3">
 			    <input type="text" title="" placeholder="" class="" id="orderNo" name="orderNo"/>
 			    <p class="btn_sky"><a href="javascript:fn_searchOutStandView();">Search</a></p>
-			    <p class="btn_sky"><a href="#">Clear</a></p>
+			    <p class="btn_sky"><a href="javascript:fn_clear();">Clear</a></p>
 			    </td>
 			    <th scope="row">Customer Name</th>
 			    <td>
@@ -160,8 +193,8 @@
 			<tr>
 			    <th scope="row">Summary</th>
 			    <td colspan="7">
-			    <p class="btn_sky"><a href="#">View Ledger (1)</a></p>
-			    <p class="btn_sky"><a href="#">View Ledger (2)</a></p>
+			    <p class="btn_sky"><a href="javascript:viewRentalLedger();">View Ledger (1)</a></p>
+			    <p class="btn_sky"><a href="javascript:viewRentalLedger2();">View Ledger (2)</a></p>
 			    <p class="btn_sky"><a href="#">Payment Listing</a></p>
 			    <p class="btn_sky"><a href="#">Quotation Listing</a></p>
 			    <p class="btn_sky"><a href="#">Outright Membership</a></p>
@@ -432,6 +465,8 @@
 	</section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
+<form id="ledgerForm" action="#" method="post">
+    <input type="hidden" id="ordId" name="ordId" />
+</form>
 </body>
 </html>

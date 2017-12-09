@@ -513,7 +513,7 @@ var journalPopLayout = [
 				    <dd>
 				    <ul class="btns">
 				        <li><p class="link_btn"><a href="javascript:fn_bankAccRclReportPop();">Bank Account Reconciliation Report</a></p></li>
-				        <li><p class="link_btn"><a href="#">Branches Collection Summary Report</a></p></li>
+				        <!-- <li><p class="link_btn"><a href="#">Branches Collection Summary Report</a></p></li> -->
 				        <li><p class="link_btn"><a href="javascript:fn_rclStatisticReportPop();">Reconciliation Statistic Report</a></p></li>
 				    </ul>
 				    <ul class="btns">

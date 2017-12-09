@@ -68,6 +68,16 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
         var valid = true;
         var message = "";
         
+        /* alert("value : " + $("#branchId").val());
+        
+        alert("value : " + $("#branchId option:selected").text());
+        
+        alert("mode value : " + $("#modeId").val());
+        
+        alert("mode value : " + $("#modeId option:selected").text());
+        
+        return false; */
+        
         if(reportType == ""){
             valid = false;
             message += "* Please select the report type.<br />";
@@ -96,11 +106,11 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
                 $("#reportPendingForm #reportFileName").val("/reconciliation/RCL_Pending_PDF.rpt");
                 
                 $("#reportPendingForm #V_BRANCHID").val(branchId);
-                //$("#reportPendingForm #V_BRANCHCODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportPendingForm #V_BRANCHCODE").val("");
                 $("#reportPendingForm #V_ACCOUNTID").val(account);
-                //$("#reportPendingForm #V_ACCOUNTCODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportPendingForm #V_ACCOUNTCODE").val("");
                 $("#reportPendingForm #V_MODEID").val(modeId);
-                //$("#reportPendingForm #V_MODECODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportPendingForm #V_MODECODE").val("");
                 $("#reportPendingForm #V_STARTDATE").val(startDate);
                 $("#reportPendingForm #V_ENDDATE").val(endDate);
                 
@@ -109,9 +119,9 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
                 $("#reportUnknownForm #reportFileName").val("/reconciliation/RCL_UnKnown_PDF.rpt");
                 
                 $("#reportUnknownForm #V_ACCOUNTID").val(account);
-                //$("#reportUnknownForm #V_ACCOUNTCODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportUnknownForm #V_ACCOUNTCODE").val("");
                 $("#reportUnknownForm #V_MODEID").val(modeId);
-                //$("#reportUnknownForm #V_MODECODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportUnknownForm #V_MODECODE").val("");
                 $("#reportUnknownForm #V_STARTDATE").val(startDate);
                 $("#reportUnknownForm #V_ENDDATE").val(endDate);
                 
@@ -120,9 +130,9 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
                 $("#reportUnmatchForm #reportFileName").val("/reconciliation/RCL_UnMatch_PDF.rpt");
                 
                 $("#reportUnmatchForm #V_ACCOUNTID").val(account);
-                //$("#reportUnmatchForm #V_ACCOUNTCODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportUnmatchForm #V_ACCOUNTCODE").val("");
                 $("#reportUnmatchForm #V_MODEID").val(modeId);
-                //$("#reportUnmatchForm #V_MODECODE").val("/reconciliation/RCL_Pending_PDF.rpt");
+                //$("#reportUnmatchForm #V_MODECODE").val("");
                 $("#reportUnmatchForm #V_STARTDATE").val(startDate);
                 $("#reportUnmatchForm #V_ENDDATE").val(endDate);
             }
@@ -140,8 +150,7 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
             	Common.report("reportUnmatchForm", option);
             }
             
-            
-        }else{alert(1);
+        }else{
         	Common.alert(message);
         }
         
@@ -211,7 +220,6 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
 	<form action="#" method="post" id="reportPendingForm">
 	   <input type="hidden" id="reportFileName" name="reportFileName" value="" />
        <input type="hidden" id="viewType" name="viewType" value="" />
-       
        <input type="hidden" id="V_BRANCHID" name="V_BRANCHID" value="" />
        <input type="hidden" id="V_BRANCHCODE" name="V_BRANCHCODE" value="" />
        <input type="hidden" id="V_ACCOUNTID" name="V_ACCOUNTID" value="" />
@@ -225,7 +233,6 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
 	<form action="#" method="post" id="reportUnknownForm">
        <input type="hidden" id="reportFileName" name="reportFileName" value="" />
        <input type="hidden" id="viewType" name="viewType" value="" />
-       
        <input type="hidden" id="V_ACCOUNTID" name="V_ACCOUNTID" value="" />
        <input type="hidden" id="V_ACCOUNTCODE" name="V_ACCOUNTCODE" value="" />
        <input type="hidden" id="V_MODEID" name="V_MODEID" value="" />
@@ -237,7 +244,6 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
     <form action="#" method="post" id="reportUnmatchForm">
        <input type="hidden" id="reportFileName" name="reportFileName" value="" />
        <input type="hidden" id="viewType" name="viewType" value="" />
-       
        <input type="hidden" id="V_ACCOUNTID" name="V_ACCOUNTID" value="" />
        <input type="hidden" id="V_ACCOUNTCODE" name="V_ACCOUNTCODE" value="" />
        <input type="hidden" id="V_MODEID" name="V_MODEID" value="" />
