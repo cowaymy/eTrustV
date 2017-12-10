@@ -12,8 +12,10 @@
                                 /* By KV -mobile- get job list */
 						
   
-						    SELECT    <!-- SVC0008D st -->
-						            TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
+						    SELECT   
+						    	DISTINCT
+						    <!-- SVC0008D st -->
+						           TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
 						           A.NO AS service_No,
 						           A.STUS_CODE_ID AS job_Status,
 						           A.APPNT_TM AS appointment_Time,
@@ -45,7 +47,8 @@
 						           G.CUST_VA_NO AS customer_Va_No,
 						<!--               SAL0029D end -->                
 						<!--               SAL0045D  st -->    
-						           H.BRNCH_ID AS dsc_Code,
+									H.BRNCH_ID AS dsc_Code,
+									H.INSTCT AS instruction,
 						<!--                 SAL0045D end -->
 						<!--            SAL0047D st -->
 						           J.SIRIM_NO AS sirim_No,
@@ -65,11 +68,11 @@
 						           k.RESULT_MOBILE_NO AS resultIcMobileNo,
 						           k.RESULT_RPT_EMAIL_NO AS resultReportEmailNo,
 						           k.RESULT_ACEPT_NAME AS resultAcceptanceName,
-						           k.SGN_DT AS signData,
+						           '' AS signData,
 						           TO_CHAR (k.NEXT_APPNT_DT, 'YYYYMMDD') AS nextAppointmentDate,
 					<!-- 	          SVC0006D end  -->                    
 					<!-- 	          ORG0001D st --> 
-						           L.MEM_CODE AS settled_By,
+						           '' AS settled_By,
 						<!--           ORG0001D end -->                            
 						<!--           SYS0026M st -->                
 						           M.STK_DESC AS product_Name,
@@ -88,11 +91,17 @@
 						           TO_CHAR (R.SRV_DUR) AS contract_Duration,
 						           TO_CHAR (R.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry,
 						<!--           SAL0071D st -->                      
-						           S.STUS_CODE_ID AS rental_Status
+						           S.STUS_CODE_ID AS rental_Status,
 						<!--          SAL0071D end -->                   
-						  , 'HS' as job_Type
+						  			'HS' as job_Type
 						FROM
-						  SVC0008D A
+						  (
+						      SELECT A.* FROM SVC0008D A, ORG0001D B
+						      WHERE A.CODY_ID = B.MEM_ID
+						      AND A.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
+						      AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
+						      AND B.MEM_CODE = #{userId}
+						  ) A
 						  , SAL0001D B
 						  , SAL0002D C
 						  , SAL0017D D
@@ -112,43 +121,77 @@
 						      WHERE DUM_SEQ = 1 ) F
 						  , SAL0029D G
 						  , SAL0045D H
-						  , (SELECT * FROM
-						      (
-						        SELECT SALES_ORD_ID, INSTALL_ENTRY_ID,
-						              ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY CRT_DT DESC) AS DUM_SEQ
+						  , (
+						        SELECT MAX(INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
 						        FROM SAL0046D
-						      ) SAL46D
-						      WHERE DUM_SEQ = 1 ) I
-						  , SAL0047D J
-						  , (SELECT * FROM
-						      (
-						        SELECT SCHDUL_ID, REN_COLCT_ID, SALES_ORD_ID, FAIL_RESN_ID, RESULT_REM,
-				                       TEMPERATE_SETNG,
-				                       NEXT_APPNT_DT,
-				                       NEXT_APPNT_TM,
-				                       OWNER_CODE,
-				                       RESULT_CUST_NAME,
-				                       RESULT_MOBILE_NO,
-				                       RESULT_RPT_EMAIL_NO,
-				                       RESULT_ACEPT_NAME,
-				                       SGN_DT,
-						              ROW_NUMBER() OVER(PARTITION BY SALES_ORD_ID ORDER BY SCHDUL_ID DESC) AS DUM_SEQ
-						        FROM SVC0006D
-						      ) SAL06D
-						      WHERE DUM_SEQ = 1 ) K
-						  , ORG0001D L
+						        GROUP BY SALES_ORD_ID
+						    ) I
+						  , (
+						        SELECT
+						            A.ENTRY_ID
+						            , A.SIRIM_NO
+						            , A.SERIAL_NO
+						            , A.RESULT_CUST_NAME
+						            , A.RESULT_REP_EMAIL_NO
+						            , A.RESULT_ACEPT_NAME
+						        FROM
+						            SAL0047D A
+						            , (
+						                SELECT MAX(A.RESULT_ID) AS RESULT_ID, A.ENTRY_ID 
+						                FROM
+						                    SAL0047D A,
+						                    (
+						                        SELECT
+						                            MAX(C.INSTALL_ENTRY_ID) AS ENTRY_ID
+						                            , C.SALES_ORD_ID
+						                        FROM
+						                            SVC0008D A
+						                            INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
+						                            INNER JOIN SAL0046D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+						                        WHERE     A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+						                        AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+						                        GROUP BY C.INSTALL_ENTRY_ID, C.SALES_ORD_ID
+						                    ) B
+						                WHERE A.ENTRY_ID = B.ENTRY_ID
+						                GROUP BY A.ENTRY_ID
+						            ) B
+						        WHERE A.ENTRY_ID = B.ENTRY_ID
+						        AND A.RESULT_ID = B.RESULT_ID
+						  ) J
+						  , SVC0006D K
+						  , (
+						      SELECT C.SALES_ORD_ID AS SALES_ORD_ID, MAX(C.SCHDUL_ID) AS SCHDUL_ID
+						      FROM SVC0008D A, ORG0001D B, SVC0006D C
+						      WHERE A.CODY_ID = B.MEM_ID
+						      AND A.SCHDUL_ID = C.SCHDUL_ID
+						      AND A.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
+						      AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
+						      AND B.MEM_CODE = #{userId}
+						      GROUP BY C.SALES_ORD_ID, C.SCHDUL_ID
+						  ) K2
 						  , SYS0026M M
 						  , SAL0024D N
 						  , SAL0074D O
 						  , SYS0013M P
 						  , SAL0023D Q
-						  , (SELECT * FROM
-						      (
-						        SELECT SRV_SALES_ORD_ID, SRV_DUR, SRV_EXPR_DT,
-						              ROW_NUMBER() OVER(PARTITION BY SRV_SALES_ORD_ID ORDER BY SRV_EXPR_DT DESC) AS DUM_SEQ
-						        FROM SAL0095D
-						      ) SAL95D
-						      WHERE DUM_SEQ = 1 ) R
+						  , (
+						    SELECT SRV_DUR, SRV_EXPR_DT, A.SRV_SALES_ORD_ID
+						      FROM SAL0095D A
+						           INNER JOIN
+						           (  SELECT C.SRV_SALES_ORD_ID, MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
+						                FROM SVC0008D A
+						                     INNER JOIN ORG0001D B
+						                        ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
+						                     LEFT OUTER JOIN SAL0095D C
+						                        ON     A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
+						                           AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
+						                           AND C.SRV_STUS_CODE_ID = 4
+						               WHERE     A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+						                     AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+						            GROUP BY C.SRV_SALES_ORD_ID) B
+						              ON     A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID
+						                 AND A.SRV_MEM_ID = B.SRV_MEM_ID
+						   ) R
 						  , SAL0071D S
 						WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
 						  AND B.SALES_ORD_ID = C.SALES_ORD_ID
@@ -159,18 +202,16 @@
 						  AND B.SALES_ORD_ID = H.SALES_ORD_ID
 						  AND B.SALES_ORD_ID = I.SALES_ORD_ID
 						  AND I.INSTALL_ENTRY_ID = J.ENTRY_ID
-						  AND A.SCHDUL_ID = K.SCHDUL_ID(+)
-						  AND A.CODY_ID = L.MEM_ID
+						  AND A.SCHDUL_ID = K2.SCHDUL_ID(+)
+						  AND K2.SCHDUL_ID = K.SCHDUL_ID
+						  AND K2.SALES_ORD_ID = K.SALES_ORD_ID
 						  AND C.ITM_STK_ID = M.STK_ID
 						  AND B.CUST_BILL_ID = N.CUST_BILL_ID(+)
 						  AND B.SALES_ORD_ID = O.SALES_ORD_ID(+)
 						  AND O.MODE_ID = P.CODE_ID(+)
 						  AND B.CUST_ADD_ID = Q.CUST_ADD_ID
-						  AND B.SALES_ORD_ID = R.SRV_SALES_ORD_ID
+						  AND B.SALES_ORD_ID = R.SRV_SALES_ORD_ID(+)
 						  AND B.SALES_ORD_ID = S.SALES_ORD_ID(+)
-						  AND L.MEM_CODE = #{userId}
-						  AND A.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
-						  AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
 						  ORDER BY A.NO
      </select>
 
