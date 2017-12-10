@@ -126,8 +126,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			logger.debug("s88dCnt  ==>"+s88dCnt);
 			
 			logger.debug("params  ==>"+params.toString());
-			//int s90upDataCnt =membershipConvSaleMapper.update_SAL0090D_Stus(params);
-			//logger.debug("s90upDataCnt  ==>"+s90upDataCnt);
+			 int s90upDataCnt =membershipConvSaleMapper.update_SAL0090D_Stus(params);
+			logger.debug("s90upDataCnt  ==>"+s90upDataCnt);
 			
 		 }
 		 
@@ -135,11 +135,12 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		 if(null !=sal0093dData ){
 			 
 			 Map<String , Object> sal0093dDataMap = new HashMap<String , Object> ();
-			 sal0093dDataMap.put ("srvMemId" , sal0093dData.get("srvMemId"));
-		     
-			 //logger.debug("sal0093dDataMap  ==>"+sal0093dDataMap.toString());
-			 //int  s93upDataCnt =membershipConvSaleMapper.update_SAL0093D_Stus(sal0093dDataMap);   
-		     //logger.debug("s93upDataCnt  ==>"+s93upDataCnt); 
+			 sal0093dDataMap.put ("srvMemId" , srvMemId);
+			 sal0093dDataMap.put ("srvMemQuotID" , sal0093dData.get("srvMemQuotId"));  
+			 
+			 logger.debug("sal0093dDataMap  ==>"+sal0093dDataMap.toString());
+			 int  s93upDataCnt =membershipConvSaleMapper.update_SAL0093D_Stus(sal0093dDataMap);   
+		     logger.debug("s93upDataCnt  ==>"+s93upDataCnt); 
 		 }
 		   
 		 /////////////processBills/////////////////// 

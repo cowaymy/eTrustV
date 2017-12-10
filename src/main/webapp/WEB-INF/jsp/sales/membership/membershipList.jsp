@@ -99,13 +99,15 @@
 	                            	   headerText  : "Start Date",          
 	                            	   width       : 150,                 
 	                            	   editable    : false,     
-	                            	   style           : 'left_style'
+	                            	   style           : 'left_style',
+	                            	   dataType : "date", formatString : "dd/mm/yyyy"
 	                            }, 
 	                            {      dataField   : "mbrshExprDt",          
 	                            	   headerText  : "Expire Date",           
 	                            	   width       : 150,                 
 	                            	   editable    : false,     
-	                            	   style           : 'left_style'
+	                            	   style           : 'left_style',
+	                            	   dataType : "date", formatString : "dd/mm/yyyy"
 	                            }, 
 	                            {      dataField   : "pacName",                  
 	                            	   headerText  : "Package",           
@@ -123,7 +125,8 @@
 	                            	    headerText  : "Create Date",           
 	                            	    width       : 150,                 
 	                            	    editable    : false,     
-	                            	    style           : 'left_style'
+	                            	    style           : 'left_style',
+	                            	    	dataType : "date", formatString : "dd/mm/yyyy"
 	                            }, 
 	                            {      dataField   : "mbrshCrtUserId",   
 			                            headerText  : "Creator",           
@@ -188,6 +191,12 @@
 		    var _option = {   width : "1200px",  height : "800px"   };
 	        
 		    var selectedItems = AUIGrid.getSelectedItems(gridID);
+		    
+		    if(selectedItems.length <= 0) {
+	              Common.alert(" No membership  selected. ");
+	              return;  
+	          }
+		    
 		    
 		    Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do?MBRSH_ID="+selectedItems[0].item.mbrshId, _option);
 	  }

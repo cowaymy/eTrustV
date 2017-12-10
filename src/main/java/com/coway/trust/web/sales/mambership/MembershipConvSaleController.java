@@ -63,6 +63,7 @@ public class  MembershipConvSaleController {
 		
 		model.addAttribute("ORD_ID",params.get("ORD_ID"));
 		model.addAttribute("QUOT_ID",params.get("QUOT_ID"));
+		model.addAttribute("MBRSH_ID",params.get("MBRSH_ID"));
 		
 		return "sales/membership/mQuotConvSalePop";  
 	}

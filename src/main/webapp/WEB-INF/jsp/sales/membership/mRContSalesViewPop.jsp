@@ -71,12 +71,12 @@ function fn_doback(){
 
 
 
-
+<!-- 
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doback()">Back</a></p></li>
 </ul>
-
+ -->
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

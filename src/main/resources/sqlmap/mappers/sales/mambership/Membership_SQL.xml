@@ -73,16 +73,24 @@
                             AND SAL1004V.MBRSH_CRT_USER_ID = #{MBRSH_CRT_USER_ID}
                         </if>
                         
-                        <if test="MBRSH_OTSTND != null and MBRSH_OTSTND != ''">
-                            AND (SAL1004V.MBRSH_OTSTND > #{MBRSH_OTSTND} )
+                        <if test="MBRSH_OTSTND  ==1 ">
+                            AND (SAL1004V.MBRSH_OTSTND <![CDATA[ > ]]>   0)
                         </if>
                         
-                         <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">   
-                          
-                            AND (SAL1004V.MBRSH_CRT_DT <![CDATA[  >=   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{MBRSH_CRT_DT},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss'))        
+                        <if test="MBRSH_OTSTND  == 2 ">
+                            AND (SAL1004V.MBRSH_OTSTND = 0)
                         </if>
-                           <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
-                            AND (SAL1004V.MBRSH_CRT_DT <![CDATA[ <=  ]]>  TO_DATE(TO_CHAR(TO_DATE(#{MBRSH_CRT_DT},'DD/MM/YYYY'),'YYYYMMDD') || '235959','yyyymmddhh24miss'))
+                        
+                        <if test="MBRSH_OTSTND  ==3 ">
+                            AND (SAL1004V.MBRSH_OTSTND <![CDATA[ <  ]]> 0 )
+                        </if>
+                      
+                      
+                       <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">   
+                                  AND  CRT_DT  <![CDATA[  >=   ]]>       to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY')    
+                       </if>
+                       <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
+                                       AND  CRT_DT  <![CDATA[  <=   ]]>       to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY')   
                         </if>
                       
 			    ) PJ

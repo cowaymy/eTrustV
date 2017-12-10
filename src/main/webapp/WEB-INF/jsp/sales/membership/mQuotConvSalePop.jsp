@@ -548,12 +548,15 @@ function fn_getHasBill (){
 
 <section class="tap_wrap"><!-- tap_wrap start -->  
 <ul class="tap_type1">
-   <li><a href="#" class="on">Membership Info</a></li>
-    <li><a href="#" >Package Info</a></li>
+   <!--  <li><a href="#" class="on">Membership Info</a></li> -->
+    <li><a href="#"  class="on">Package Info</a></li>
     <li><a href="#">Order Info</a></li>
     <li><a href="#">Contact Info</a></li>
     <li><a href="#">Filter Charge Info</a></li>
 </ul>
+
+
+
 
 <article class="tap_area"><!-- tap_area start -->
 

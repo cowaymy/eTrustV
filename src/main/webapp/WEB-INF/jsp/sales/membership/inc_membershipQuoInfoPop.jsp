@@ -108,5 +108,3 @@ if('${quotInfo.validStus}' == 'ACT' ){
 
  
  </script>
-
-</script>
