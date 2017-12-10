@@ -159,7 +159,6 @@ function fn_asaAssignCtList(){
 	var  brnch_id ;
 	brnch_id =selectedItems[0].item.asBrnchId;
 	
-	
     Common.ajax("GET", "/services/as/assignCtList.do",{BRNCH_ID:brnch_id}, function(result) {
         console.log("fn_asaAssignCtList.");
         console.log(result);

@@ -25,7 +25,7 @@ $(document).ready(function(){
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
     
    //doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');    
-    doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
+    //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
     doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
     
@@ -1425,17 +1425,23 @@ function fn_productGroup_SelectedIndexChanged(){
         </td>
         <th scope="row">DSC Code</th>
         <td>
+        
+        
+         <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
+         <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}'/>
+             <!-- 
+         
         <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >
         
-        <!-- 
-        
+   
         
         params.put("BRANCH_NAME", sessionVO.getBranchName());
         params.put("BRANCH_ID", sessionVO.getUserBranchId());
         
-         -->
+     
         
     </select>
+        -->
         </td>
     </tr>
     <tr>

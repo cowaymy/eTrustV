@@ -609,8 +609,8 @@ function fn_close(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Membership Info</a></li>
-	<li><a href="#"   id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" >Order Info</a></li>
+    <!--  <li><a href="#" class="on">Membership Info</a></li> -->
+	<li><a href="#"   class="on" id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" >Order Info</a></li>
 	<li><a href="#">Contact Person</a></li>
 	<li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1120,400); " >BS History</a></li>
 	
@@ -618,10 +618,6 @@ function fn_close(){
 
 
  
-<!-- inc_membershipInfo  tab  start...-->
-     <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_membershipInfo.do?MBRSH_ID=${MBRSH_ID}'/>   
-<!--  inc_membershipInfotab  end...-->
-
 
 
 

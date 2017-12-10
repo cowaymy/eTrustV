@@ -25,7 +25,7 @@ $(document).ready(function(){
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
     
    // doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');    
-    doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
+  // doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
     doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
     
@@ -37,6 +37,17 @@ $(document).ready(function(){
     
     fn_DisablePageControl();
     $("#ddlStatus").attr("disabled", false); 
+    
+    
+    
+    var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
+
+    $("#asOpenAsNo").val(selectedItems[0].item.asNo) ;
+    $("#asInAsNo").val(selectedItems[0].item.inAsNo) ;
+    $("#asCloseAsNo").val(selectedItems[0].item.onAsNo);
+    $("#custId").val(selectedItems[0].item.custId);
+    
+    
 
     AUIGrid.resize(myFltGrd10, 950,200);
 });
@@ -977,19 +988,18 @@ function fn_productGroup_SelectedIndexChanged(){
     </td>
     <th scope="row">Order No</th>
     <td >  
-            <input title="" class="readonly w100p" type="text" placeholder="" disabled="disabled"    id="asOrdNo"  name="asOrdNo" >
+            <input title="" class="readonly w100p" type="text" placeholder="" disabled="disabled"    id="asInAsNo"  name=asInAsNo >
     </td>
  </tr>
-
 
 <tr>
     <th scope="row"> Open AS Order No </th>
     <td >
-         <input type="text" title="" placeholder="Open AS Order No "  disabled="disabled"  class="readonly" id="asOpenOrdNo" name="asOpenOrdNo"/>
+         <input type="text" title="" placeholder="Open AS Order No "  disabled="disabled"  class="readonly" id="asOpenAsNo" name="asOpenAsNo"/>
     </td>
     <th scope="row">Close AS Order No </th>
     <td >
-            <input type="text" title="" placeholder="Close AS Order No"disabled="disabled"  class="readonly"id="asCloseOrdNo" name="asCloseOrdNo"/>
+            <input type="text" title="" placeholder="Close AS Order No"disabled="disabled"  class="readonly"id="asCloseAsNo" name="asCloseAsNo"/>
     </td>
  </tr>
  
@@ -1296,17 +1306,11 @@ function fn_productGroup_SelectedIndexChanged(){
         </td>
         <th scope="row">DSC Code</th>
         <td>
-        <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >
+          <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
+         <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}'/>
+    
         
-        <!-- 
-        
-        
-        params.put("BRANCH_NAME", sessionVO.getBranchName());
-        params.put("BRANCH_ID", sessionVO.getUserBranchId());
-        
-         -->
-        
-    </select>
+    
         </td>
     </tr>
     <tr>
@@ -1318,12 +1322,8 @@ function fn_productGroup_SelectedIndexChanged(){
         </td>
         <th scope="row">CT Code</th>
         <td>
-        <input type="text" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
-        <input type="hidden" title="" placeholder="" class=""  id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
-        
-        
-        
-        
+        <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+        <input type="text" title="" placeholder="" class=""  id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
     </select> 
         </td>
     </tr>

@@ -100,6 +100,11 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			 //master 
 			 o = membershipConvSaleMapper.SAL0095D_insert(params) ;
 			 
+			logger.debug("=================SAL0095D_insert  =========== ==>");
+			logger.debug("["+	o+"]");
+			logger.debug("hasBill  =================================>");
+			 
+			 
 		 }
 		 
 		 sal0001dData = membershipConvSaleMapper.getSAL0001D_Data(params);

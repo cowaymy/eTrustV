@@ -720,7 +720,7 @@
 						   #{AS_MEM_GRP}, 
 						   TO_DATE(#{AS_REQST_DT},'DD/MM/YYYY'), 
 						   #{AS_REQST_TM}, 
-						   TO_DATE(#{APPNT_DT},'DD/MM/YYYY'), 
+						   TO_DATE(#{AS_APPNT_DT},'DD/MM/YYYY'), 
 						   #{AS_APPNT_TM}, 
 						   #{AS_BRNCH_ID}, 
 						   #{AS_MALFUNC_ID}, 
@@ -2050,8 +2050,8 @@
                WHERE  A.BRNCH_ID = #{BRNCH_ID}
                    AND A.BRNCH_ID = B.BRNCH_ID
                    AND A.MEM_ID =C.MEM_ID
-                   AND C.MEM_TYPE = 2
-                   AND A.MEM_LVL  = 3
+                   AND C.MEM_TYPE =3
+                   AND A.MEM_LVL  = 4
                    AND B.CODE =D.CT_BRNCH_CODE 
                    AND C.STUS =1
      </select>

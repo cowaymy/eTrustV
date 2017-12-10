@@ -19,16 +19,14 @@ $(document).ready(function(){
     AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
-    
-    doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
+    doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
     
     doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');    
     doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
-    
+             
     doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
-    
     
     
 	fn_getASOrderInfo();
@@ -374,13 +372,27 @@ function fn_cmbLabourChargeAmt_SelectedIndexChanged(){
 
 function fn_ddlStatus_SelectedIndexChanged(){
 	
-	fn_clearPageField();
+	//fn_clearPageField();
 	
     switch ($("#ddlStatus").val()) {
+        case "1":
+            //COMPLETE
+            fn_openField_Complete();
+
+            var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
+           // $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+            $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+            
+            break;
         case "4":
             //COMPLETE
             fn_openField_Complete();
+
+            var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
+           // $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+            $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
             break;
+            
         case "10":
             //CANCEL
             fn_openField_Cancel();
@@ -503,6 +515,12 @@ function fn_doSave(){
           if (! fn_validRequiredField_Save_DefectiveInfo()) {
                  return ;
           }
+	     
+          
+          if($("#solut_code_id").val() !="452"){  
+              Common.alert("Please select the Delivered Back After A/S ");
+              return ;
+          }
 	   
    }
    
@@ -611,7 +629,7 @@ function  fn_setSaveFormData(){
 function   fn_clearPanelField_ASChargesFees(){
 	
 	  $('#ddlFilterCode').val("") ;
-	  $('#ddlFilterQty').val(""); 
+	  $('#ddlFilterQty').val("1"); 
 	  $('#ddlFilterPayType').val("") ;
 	  $('#ddlFilterExchangeCode').val("") ;
 	  $('#txtFilterRemark').val("") ;
@@ -720,7 +738,7 @@ function fn_validRequiredField_Save_ResultInfo(){
         rtnValue =false; 
     }else{
     	
-    	if($("#ddlStatus").val()==4){
+    	if($("#ddlStatus").val()==4   ||  $("#ddlStatus").val()==1){
     		
     		 if(FormUtil.checkReqValue($("#dpSettleDate"))){
     		        rtnMsg  +="Please select the dpSettleDate.<br/>" ;
@@ -872,6 +890,8 @@ function fn_chSeriaNo(){
 }
 
 
+
+
 function fn_productGroup_SelectedIndexChanged(){
     
     var STK_CTGRY_ID = $("#productGroup").val();
@@ -881,6 +901,7 @@ function fn_productGroup_SelectedIndexChanged(){
     
      doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+STK_CTGRY_ID, '', '','productCode', 'S' , '');            
 }
+
 
 
 </script>
@@ -901,7 +922,7 @@ function fn_productGroup_SelectedIndexChanged(){
 </form>
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New AS Result Entry</h1>
+<h1> In-House New  AS Result Entry   </h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -1123,6 +1144,7 @@ function fn_productGroup_SelectedIndexChanged(){
         
 		    <select class="w100p"  id="ddlStatus" name="ddlStatus"  onChange="fn_ddlStatus_SelectedIndexChanged()">
 		         <option value=""></option>
+		        <option value="1">InProcess</option>
 		        <option value="4">Complete</option>
 		        <option value="10">Cancel</option>
 		        <option value="21">Failure</option>
@@ -1187,14 +1209,14 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Error Code</th>
         <td>
         <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">에러코드</option>
+                     <option value="9999">ErrorCode</option>
          </select>
         </td>
         <th scope="row">CT Code</th>
         <td>
-        <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
-        <input type="hidden" title="" placeholder="" class=""  id='HiddenCTID' name='HiddenCTID'/>
         
+         <input type="text" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+        <input type="hidden" title="" placeholder="" class=""  id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
         
     </select> 
         </td>
@@ -1203,7 +1225,7 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Error Description</th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">에러코드 신규정의 필요 </option>
+             <option value="9999">Error code definition is required  </option>
         </select>
         </td>
         <th scope="row">Warehouse</th>
@@ -1337,7 +1359,7 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Quantity</th>
         <td>
         <select  id='ddlFilterQty' name='ddlFilterQty'>
-            <option value="1">1</option>
+             <option value="1" selected>1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>

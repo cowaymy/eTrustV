@@ -20,8 +20,8 @@ $(document).ready(function(){
     //doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , '');  // Customer Type Combo Box
     //doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
-    doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
-    doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
+    //doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
+   // doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
     
     doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
 
@@ -1028,9 +1028,12 @@ function fn_chSeriaNo(){
         </td>
         <th scope="row">DSC Code</th>
         <td>
-        <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >
+       <!-- <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >  </select>-->
+         <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
+         <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}'/>
+    
         
-    </select>
+    
         </td>
     </tr>
     <tr>
@@ -1042,8 +1045,13 @@ function fn_chSeriaNo(){
         </td>
         <th scope="row">CT Code</th>
         <td>
-        <select   id='ddlCTCode' name='ddlCTCode' class="readonly"  disabled="disabled" >
-        <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
+        
+        
+         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+         
+         <!--   <select   id='ddlCTCode' name='ddlCTCode' class="readonly"  disabled="disabled" > -->
+         <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
         
         
     </select> 

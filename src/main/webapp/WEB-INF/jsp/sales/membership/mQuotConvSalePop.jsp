@@ -535,7 +535,7 @@ function fn_getHasBill (){
 <!-- get param Form  -->
 <form id="getParamForm" method="get">
 
-<div  style="display:none">
+<div  style="display:inline">
 <input type="hidden" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
 <input type="hidden" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
 <input type="hidden" name="BranchID"  id="BranchID"  />

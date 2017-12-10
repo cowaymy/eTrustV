@@ -2,6 +2,8 @@ package com.coway.trust.biz.organization.organization.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -56,14 +58,24 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
     				 EgovMap e = iterator.next();
     				 
     				 logger.debug(e.toString());
+    				 
+
+    				 
+    				 //objV.setCt(CommonUtils.nvl(e.get("ct")));
+    				// objV.setcDate((String)e.get("cDate"));
+    				// objV.setCtSubGrp( (String)e.get("ctSubGrp"));
+    				// objV.setBrnchId((String)e.get("brnchId"));
+    				 
     			
     				 holiDayAddMap.put("ct",     CommonUtils.nvl(e.get("ct")));
     				 holiDayAddMap.put("cDate", (String)e.get("cDate"));
     				 holiDayAddMap.put("ctSubGrp", (String)e.get("ctSubGrp"));
     				 holiDayAddMap.put("brnchId", CommonUtils.nvl(e.get("brnchId"))); 
-
+    			
+    				 
     				 try{
     					 	EgovMap vm = this.isMergeHoliDay(holiDayAddMap);
+    					 	
     					 	
     					 	logger.debug(" isMergeHoliDay ==> "+vm.toString());
         					
@@ -74,7 +86,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
     					 		holiDayAddMap.put("oldCt", vm.get("ct") );
     					 		holiDayAddMap.put("ct", CommonUtils.nvl(vm.get("memId") ));
     					 		
-        					}else {
+        					}else{
         						
         						holiDayAddMap.put("isHoliDay",   "false");
         						holiDayAddMap.put("holiDayCtCode","" );
@@ -142,6 +154,7 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		//level 5  setViewList 
 		rtnList = new ArrayList<EgovMap>();
 		fList= new ArrayList<EgovMap>();
+		
 		if(null !=mergeVacationList){
 			if(mergeVacationList.size()>0){  
 				for (Iterator<EgovMap> iterator = mergeVacationList.iterator(); iterator.hasNext();) {
@@ -161,6 +174,8 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		}
 		
 		
+		
+		
 		//level5  중복 제거 
 		HashSet<EgovMap> hs = new HashSet<EgovMap>(fList); 
 		Iterator it = hs.iterator(); 
@@ -170,6 +185,10 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		}
 		
 		
+		 Collections.sort(rtnList, new VComparator());		
+		 
+		 
+
 		return rtnList;
 	}
 	
@@ -218,5 +237,24 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 		
 		return allocationMapper.selectBaseList(params);
 	} 
-	
+    	
+    	
+            
+   static   class   VComparator implements Comparator<EgovMap> {
+		
+		@Override
+		public int compare(EgovMap o1, EgovMap o2) {
+			
+		    if ( Integer.parseInt((String)o1.get("ct") )   < Integer.parseInt((String)o2.get("ct") ) ) {
+		    	
+		        return -1;
+		        
+		    }else  if ( Integer.parseInt((String)o1.get("ct") ) >Integer.parseInt((String)o2.get("ct") ) ) {
+		        return 1;
+		    }
+		    return 0;
+		}
+	}
+
 }
+

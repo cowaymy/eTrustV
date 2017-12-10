@@ -85,14 +85,10 @@
                             AND (SAL1004V.MBRSH_OTSTND <![CDATA[ <  ]]> 0 )
                         </if>
                       
-                      
                        <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">   
-                                  AND  CRT_DT  <![CDATA[  >=   ]]>       to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY')    
+                                  AND  SAL1004V.MBRSH_CRT_DT <![CDATA[  >=   ]]>       to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY')    
                        </if>
-                       <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">
-                                       AND  CRT_DT  <![CDATA[  <=   ]]>       to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY')   
-                        </if>
-                      
+                    
 			    ) PJ
 			  ORDER BY ORD_ID  ASC
 			  

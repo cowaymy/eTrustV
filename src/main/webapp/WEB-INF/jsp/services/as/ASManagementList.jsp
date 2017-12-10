@@ -476,7 +476,8 @@ function asManagementGrid() {
                pageRowCount : 20,
                // 전체 체크박스 표시 설정
                showRowAllCheckBox : true,
-               editable :  false
+               editable :  false,
+               selectionMode:"multipleCells"
     };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);

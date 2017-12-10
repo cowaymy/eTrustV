@@ -37,6 +37,8 @@ function createAUIGrid() {
                             headerText : "Repair_Entry",
                             children : [ 
                                         {dataField :  "inMemCode",     headerText  : "RCT Code" ,width  : 100 ,  editable       : false  } ,
+                                        {dataField :  "inAsNo",     headerText  : "Repair As No" ,width  : 100 ,  editable       : false  } ,
+
                                         { dataField : "inAsCrtDt",    headerText  : "In-house <br> Reg Date",  width  : 150 ,  dataType : "date", formatString : "dd/mm/yyyy"  ,editable       : false},
                                         { dataField : "inAsComDt", headerText  : "In-house <br> End Date ",  width  : 150    ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
                                         { dataField : "inHuseRepairPromisDt", headerText  : "Promised <br>Com Date",  width  : 150   ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
@@ -242,13 +244,13 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">AS Ticket Number</th>
+    <th scope="row">AS Number</th>
     <td>
-         <input type="text" title="" placeholder="AS Ticket Number" class="w100p" id="asNo" name="asNo"/>
+         <input type="text" title="" placeholder="AS No" class="w100p" id="asNo" name="asNo"/>
     </td>
-    <th scope="row">DSC Branch</th>
+    <th scope="row">Ord No</th>
     <td>
-          <input type="text" title="" placeholder="DSC Branch" class="w100p" id="asBrnchId" name="asBrnchId"/>
+          <input type="text" title="" placeholder="Ord No" class="w100p" id="ordNo" name="ordNo"/>
     </td>
     <th scope="row">Registration CT Code</th>
      <td>

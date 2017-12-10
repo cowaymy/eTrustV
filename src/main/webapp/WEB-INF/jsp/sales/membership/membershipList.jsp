@@ -190,15 +190,15 @@
 	  function  fn_doMFree(){
 		    var _option = {   width : "1200px",  height : "800px"   };
 	        
-		    var selectedItems = AUIGrid.getSelectedItems(gridID);
-		    
-		    if(selectedItems.length <= 0) {
-	              Common.alert(" No membership  selected. ");
-	              return;  
-	          }
-		    
-		    
-		    Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do?MBRSH_ID="+selectedItems[0].item.mbrshId, _option);
+		    //var selectedItems = AUIGrid.getSelectedItems(gridID);
+		   // 
+		   // if(selectedItems.length <= 0) {
+	        //      Common.alert(" No membership  selected. ");
+	        //      return;  
+	       //   }
+		   Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do" ,_option);
+
+		   // Common.popupWin("listSForm", "/sales/membership/membershipFreePop.do?MBRSH_ID="+selectedItems[0].item.mbrshId, _option);
 	  }
 	  
 	  

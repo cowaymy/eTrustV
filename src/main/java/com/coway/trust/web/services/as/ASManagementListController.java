@@ -80,9 +80,18 @@ public class ASManagementListController {
 
 	
 	@RequestMapping(value = "/asResultInfoEdit.do")
-	public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
 		// 호출될 화면
 				
+
+		
+
+		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_NAME", sessionVO.getUserName());
+
+		model.put("BRANCH_NAME", sessionVO.getBranchName());
+		model.put("BRANCH_ID", sessionVO.getUserBranchId());
+		
 		return "services/as/inc_asResultEditPop";
 	}
 	
@@ -354,7 +363,7 @@ public class ASManagementListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/ASNewResultPop.do")
-	public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String insertASResult(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
 		// 호출될 화면
 		
 		model.put("ORD_ID",(String) params.get("ord_Id"));   
@@ -363,6 +372,13 @@ public class ASManagementListController {
 		model.put("AS_ID", (String)params.get("as_Id"));   
 		model.put("REF_REQST", (String)params.get("refReqst"));     
 		
+
+		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_NAME", sessionVO.getUserName());
+
+		model.put("BRANCH_NAME", sessionVO.getBranchName());
+		model.put("BRANCH_ID", sessionVO.getUserBranchId());
+		
 		
 		return "services/as/newASResultPop";
 	}
@@ -370,7 +386,7 @@ public class ASManagementListController {
 	
 
 	@RequestMapping(value = "/asResultEditViewPop.do")
-	public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model  ,SessionVO sessionVO) {
 		// 호출될 화면
 		
 		model.put("ORD_ID",(String) params.get("ord_Id"));   
@@ -380,6 +396,15 @@ public class ASManagementListController {
 		model.put("AS_RESULT_NO", (String)params.get("as_Result_No"));
 		model.put("AS_RESULT_ID", (String)params.get("as_Result_Id"));     
 		model.put("MOD", (String)params.get("mod")); 
+		
+		
+
+		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_NAME", sessionVO.getUserName());
+
+		model.put("BRANCH_NAME", sessionVO.getBranchName());
+		model.put("BRANCH_ID", sessionVO.getUserBranchId());
+		
 		
 		
 		
@@ -387,7 +412,7 @@ public class ASManagementListController {
 	}
 	
 	@RequestMapping(value = "/asResultEditBasicPop.do")
-	public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model  ,SessionVO sessionVO) {
 		// 호출될 화면
 		
 		model.put("ORD_ID",(String) params.get("ord_Id"));   
@@ -398,6 +423,13 @@ public class ASManagementListController {
 		model.put("AS_RESULT_ID", (String)params.get("as_Result_Id"));     
 		model.put("MOD", (String)params.get("mod")); 
 		
+		
+
+		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_NAME", sessionVO.getUserName());
+
+		model.put("BRANCH_NAME", sessionVO.getBranchName());
+		model.put("BRANCH_ID", sessionVO.getUserBranchId());
 		
 		
 		return "services/as/asResultEditBasicPop";

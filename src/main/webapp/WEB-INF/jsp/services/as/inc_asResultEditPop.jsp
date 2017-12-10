@@ -15,8 +15,8 @@ $(document).ready(function(){
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
     
-   doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
-   doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
+   //doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
+   //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
    
       
    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
@@ -883,32 +883,42 @@ function  fn_setSaveFormData(){
         </td>
         <th scope="row">DSC Code</th>
         <td>
-        <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >
         
-    </select>
+        
+         <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
+         <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}'/>
+    
+    
         </td>
     </tr>
     <tr>
         <th scope="row">Error Code</th>
         <td>
         <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">에러코드</option>
+                     <option value="9999">ErrorCode</option>
          </select>
         </td>
         <th scope="row">CT Code</th>
         <td>
-        <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
-        <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
         
+        <!-- 
+	        <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
+	        <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
+	         </select> 
+         -->
         
-    </select> 
+         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+         
+    
+   
         </td>
     </tr>
     <tr>
         <th scope="row">Error Description</th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">에러코드 신규정의 필요 </option>
+             <option value="9999">Error code definition is required  </option>
         </select>
         </td>
         <th scope="row">Warehouse</th>
