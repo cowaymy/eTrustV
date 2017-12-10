@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.organization.organization.AllocationService;
+import com.coway.trust.biz.organization.organization.orgUts.VComparator;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -220,12 +221,6 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
 	}
 	
 	
-	
-	
-	
-	
-	
-	
 	@Override
 	public List<EgovMap> selectDetailList(Map<String, Object> params) {
 		return allocationMapper.selectDetailList(params);
@@ -240,21 +235,6 @@ public class AllocationServiceImpl extends EgovAbstractServiceImpl implements Al
     	
     	
             
-   static   class   VComparator implements Comparator<EgovMap> {
-		
-		@Override
-		public int compare(EgovMap o1, EgovMap o2) {
-			
-		    if ( Integer.parseInt((String)o1.get("ct") )   < Integer.parseInt((String)o2.get("ct") ) ) {
-		    	
-		        return -1;
-		        
-		    }else  if ( Integer.parseInt((String)o1.get("ct") ) >Integer.parseInt((String)o2.get("ct") ) ) {
-		        return 1;
-		    }
-		    return 0;
-		}
-	}
 
 }
 
