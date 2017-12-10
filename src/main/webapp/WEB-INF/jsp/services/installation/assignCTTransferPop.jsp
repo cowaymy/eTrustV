@@ -157,8 +157,7 @@ function fn_asaAssignCtList(){
 	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 	
 	var  brnch_id ;
-	brnch_id =selectedItems[0].item.asBrnchId;
-	
+	brnch_id =selectedItems[0].item.brnchId;
 	
     Common.ajax("GET", "/services/assignCtList.do",{BRNCH_ID:brnch_id}, function(result) {
         console.log("fn_asaAssignCtList.");
