@@ -486,7 +486,7 @@ function fn_Sale_processing(){
        if(result !="" ){
            Common.alert("Membership successfully saved.");
            $("#_mConvSaleDiv1").remove();
-           fn_selectListAjax() ;
+           //fn_selectListAjax() ;
        }
        
     
