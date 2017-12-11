@@ -6,7 +6,17 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.common.LargeExcelQuery;
 import com.coway.trust.biz.common.LargeExcelService;
+import com.coway.trust.web.common.claim.ClaimFileALBHandler;
+import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
+import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
+import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
+import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
+import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
+import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
+import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
 @Service
@@ -223,8 +233,58 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	}
 
 	@Override
-	public void downLoadClaimFileALB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler) {
+	public void downLoadClaimFileALB(Object parameter, ClaimFileALBHandler claimFileALBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileALBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileNewALB(Object parameter, ClaimFileNewALBHandler claimFileNewALBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileNewALBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileCIMB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler) {
 		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileCIMBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileHLBB(Object parameter, ClaimFileHLBBHandler claimFileHLBBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileHLBBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileMBB(Object parameter, ClaimFileMBBHandler claimFileMBBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileMBBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFilePBB(Object parameter, ClaimFilePBBHandler claimFilePBBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFilePBBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileRHB(Object parameter, ClaimFileRHBHandler claimFileRHBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileRHBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileBSN(Object parameter, ClaimFileBSNHandler claimFileBSNHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileBSNHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileMyClear(Object parameter, ClaimFileMyClearHandler claimFileMyClearHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileMyClearHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileCrcCIMB(Object parameter, ClaimFileCrcCIMBHandler claimFileCrcCIMBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileCrcCIMBHandler);
+	}
+	
+	@Override
+	public void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileFPXHandler);
 	}
 
 	@Override

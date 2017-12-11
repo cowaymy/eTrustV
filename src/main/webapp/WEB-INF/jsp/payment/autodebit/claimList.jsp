@@ -22,7 +22,8 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
                 {"codeId": "21","codeName": "Maybank"},
                 {"codeId": "6","codeName": "Public Bank"},
                 {"codeId": "7","codeName": "RHB Bank"},
-                {"codeId": "9","codeName": "BSN Bank"}
+                {"codeId": "9","codeName": "BSN Bank"},
+                {"codeId": "46","codeName": "My Clear"}
                 ];
                 
 //SMS Combo Data

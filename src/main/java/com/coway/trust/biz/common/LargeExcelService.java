@@ -2,7 +2,17 @@ package com.coway.trust.biz.common;
 
 import org.apache.ibatis.session.ResultHandler;
 
+import com.coway.trust.web.common.claim.ClaimFileALBHandler;
+import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
+import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
+import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
+import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
+import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
+import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
+import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
 public interface LargeExcelService {
@@ -89,7 +99,27 @@ public interface LargeExcelService {
 	
 	void downLoadCTResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 	
-	void downLoadClaimFileALB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler);
+	void downLoadClaimFileALB(Object parameter, ClaimFileALBHandler claimFileALBHandler);
+	
+	void downLoadClaimFileNewALB(Object parameter, ClaimFileNewALBHandler claimFileNewALBHandler);
+	
+	void downLoadClaimFileCIMB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler);
+	
+	void downLoadClaimFileHLBB(Object parameter, ClaimFileHLBBHandler claimFileHLBBHandler);
+	
+	void downLoadClaimFileMBB(Object parameter, ClaimFileMBBHandler claimFileMBBHandler);
+	
+	void downLoadClaimFilePBB(Object parameter, ClaimFilePBBHandler claimFilePBBHandler);
+	
+	void downLoadClaimFileRHB(Object parameter, ClaimFileRHBHandler claimFilePBBHandler);
+	
+	void downLoadClaimFileBSN(Object parameter, ClaimFileBSNHandler claimFileBSNHandler);
+	
+	void downLoadClaimFileMyClear(Object parameter, ClaimFileMyClearHandler claimFileMyClearHandler);
+	
+	void downLoadClaimFileCrcCIMB(Object parameter, ClaimFileCrcCIMBHandler claimFileCrcCIMBHandler);
+	
+	void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler);
 
 	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
