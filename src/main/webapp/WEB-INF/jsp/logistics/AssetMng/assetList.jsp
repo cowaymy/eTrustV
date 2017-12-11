@@ -39,6 +39,7 @@
     var assetMoveTrnsBulkGrid;
     var srvMembershipList = new Array();
     var upBramdList = new Array();
+    var upitemGrid;
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "67","codeName": "Lost"},{"codeId": "8","codeName": "Inactive"}];
    // var categorycomboData = [{"codeId": "1199","codeName": "IT Equipment"}];
@@ -349,6 +350,7 @@
                  $("#trnasInfo").hide();
                  $("#transH3_01").hide();
                  $("#cancelPopbtn").hide();
+                 $("#trigger").trigger("click");
             }else{
             Common.alert('Choice Data please..');
             }
@@ -372,6 +374,12 @@
             $("#search").click(function(){
                 getAssetListAjax();    
             });
+            $("#masterClose").click(function(){
+                AUIGrid.destroy(upitemGrid);
+                $("#trigger").trigger("click");
+         
+            });
+            
             $("#clear").click(function(){
                 $("#searchassetid").val('');
                 $("#searchbrand").val('');
@@ -445,7 +453,7 @@
      });
          //Update_info tap
          $("#Update_info").click(function(){
-             //destory(upitemGrid);
+             AUIGrid.destroy(upitemGrid);
              div="upitem"
              $("#Updadte_div_tap").show();
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
@@ -489,7 +497,8 @@
              if (selectedItem[0] > -1){
                  fn_assetDetail(selectedItem[0]);
                  fn_setVisiable(div);
-                 $("#masterWindow").show();    
+                 $("#masterWindow").show();
+                 $("#trigger").trigger("click");
              }else{
              Common.alert('Choice Data please..');
              }
@@ -552,7 +561,31 @@
              selectedItem = AUIGrid.getSelectedIndex(myGridID);
               if (selectedItem[0] > -1){
                  fn_assetDetail(selectedItem[0]);
-                 assetsaveAjax(div);
+                 //assetsaveAjax(div);
+            	  if(Common.confirm("<spring:message code='sys.common.alert.delete'/>", function(){     
+                      
+                      $("#prefix").attr("disabled", false);
+                      
+                     Common.ajax("POST", "/logistics/assetmng/deleteAssetMng.do", param= $("#masterForm").serializeJSON(), function(result){
+                    	 Common.alert(result.msg);
+                       
+                     }
+                     , function(jqXHR, textStatus, errorThrown){
+                         try {
+                             console.log("Fail Status : " + jqXHR.status);
+                             console.log("code : "        + jqXHR.responseJSON.code);
+                             console.log("message : "     + jqXHR.responseJSON.message);
+                             console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                             }
+                         catch (e)
+                         {
+                           console.log(e);
+                         }
+                         alert("Fail : " + jqXHR.responseJSON.message);
+   
+                     });
+
+                 }));          
              }else{
              Common.alert('Choice Data please..');
              } 
@@ -1133,6 +1166,7 @@
             $("#updatePopbtn").show();
             $("#statusInfo").hide();
             $("#a1").hide();
+            $("#Update_info").show();
         } else if (div == "N") {
             $('#masterForm')[0].reset();
             $("#trinserthide1").hide();
@@ -1459,7 +1493,7 @@
        var selectedItem = AUIGrid.getSelectedIndex(upitemGrid);
        var assetDId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDId');
        var assetDItmId=  AUIGrid.getCellValue(upitemGrid ,selectedItem[0],'assetDItmId');
-           if(assetDId== undefined || assetDItmId== undefined){
+           if(assetDId != undefined || assetDItmId != undefined){
             AUIGrid.removeRow(gridNm, rowIndex);
             AUIGrid.removeSoftRows(gridNm);    
            }else{
@@ -1484,7 +1518,7 @@
         if(addList.length ==0 && updateList.length ==0){
             Common.alert("There Are No Update Items.");
         }else{
-             alert(flag);
+   
              if(flag=="E"){
                 div="EI";
             }
@@ -1501,9 +1535,9 @@
                         for (var i = 0; i < result.length; i++) {
                             var list = new Object();
                             list.codeId = result[i].codeId;
+                            list.codeName = result[i].codeName;
                             
                             //list.memcd = result[i].memcd;
-                            list.codeName = result[i].codeName;
                            
                             srvMembershipList.push(list);
                         } 
@@ -1813,14 +1847,14 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1 id="detailHead"></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="masterClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <h3 id="transH3_01" style="display: none;">Asset Informaton</h3>
 <section class="tap_wrap"><!-- tap_wrap start -->
             <ul class="tap_type1">
-                <li id="Master_info" class="on"><a href="#"> Master info </a></li>
+                <li id="Master_info" class="on"><a href="#" id="trigger"> Master info </a></li>
                 <li id="Details_info"><a href="#"> Details Info</a></li>
                 <li id="Insert_info"><a href="#"> insert Info</a></li>
                 <li id="Update_info"><a href="#"> update Info</a></li>
@@ -2057,7 +2091,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>Add Details Info</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a id="regDetailclose">CLOSE</a></p></li>
         </ul>
     </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->  
@@ -2109,7 +2143,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>Add Equipment Info</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" id="regUpdateClose">CLOSE</a></p></li>
         </ul>
     </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->  
