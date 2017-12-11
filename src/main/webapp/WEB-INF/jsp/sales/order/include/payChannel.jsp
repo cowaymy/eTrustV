@@ -56,7 +56,7 @@
     <td><span>${orderDetail.rentPaySetInf.rentPayRejctDt}</span></td>
     <th scope="row">Reject Code</th>
     <td><span>${orderDetail.rentPaySetInf.rentPayRejct}</span></td>
-    <th scope="row">Payment Team</th>
+    <th scope="row">Payment Term</th>
     <td><span>${orderDetail.rentPaySetInf.payTrm} month(s)</span></td>
 </tr>
 <tr>
