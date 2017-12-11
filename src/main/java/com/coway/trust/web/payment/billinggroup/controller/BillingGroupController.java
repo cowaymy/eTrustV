@@ -49,6 +49,19 @@ public class BillingGroupController {
 	}
 	
 	/**
+	 * initChangeBillingTypePop.do 초기 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initChangeBillingTypePop.do")
+	public String initChangeBillingTypePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("callPrgm", params.get("callPrgm"));
+		model.put("custBillId", params.get("custBillId"));
+		return "payment/billinggroup/changeBillingTypePop";
+	}
+	
+	/**
 	 * 주문 조회
 	 * @param 
 	 * @param params
