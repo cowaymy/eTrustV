@@ -290,7 +290,7 @@
   enableSorting : true,
   showRowCheckColumn : true,
   */
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false ,exportURL : "/common/exportGrid.do" };
+    var gridoptions = {showStateColumn : false , editable : false, usePaging : false, useGroupingPanel : false ,exportURL : "/common/exportGrid.do" };
     
     var subgridpros = {
             // 페이지 설정
@@ -852,8 +852,11 @@
             }
         }); 
         
+        $("#download").click(function(){
+        	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Asset List");
+        });
         
-        $('#exportTo').click(function() {
+        /*$('#exportTo').click(function() {
             
         	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
         	
@@ -882,7 +885,7 @@
                 Common.alert('No item to export.');
             }
 
-        });
+        });*/
         
     });
     
@@ -1823,8 +1826,8 @@
 <ul class="right_btns">
 
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
-<%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
-    <li><p class="btn_grid"><a id="exportTo">Export Search List</a></p></li>
+    <li><p class="btn_grid"><a href="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+    <!-- <li><p class="btn_grid"><a id="exportTo">Export Search List</a></p></li> -->
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
     <%-- <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
@@ -1832,7 +1835,7 @@
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap"></div>
+    <div id="grid_wrap" style="height:450px"></div>
 </article><!-- grid_wrap end -->
 
 <!-- <article id="detailView"> -->
