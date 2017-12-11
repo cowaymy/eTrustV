@@ -938,6 +938,11 @@ public class CommissionExcelDownloadController {
 				map.put("memCode", request.getParameter("memCode"));
 				 
 				if(CommissionConstants.COMIS_CD_CDN_CD.equals(orgCombo) || CommissionConstants.COMIS_CD_CDC_CD.equals(orgCombo)){
+					if(CommissionConstants.COMIS_CD_CDN_CD.equals(orgCombo)){
+						map.put("bizType", CommissionConstants.COMIS_CD_CDN_BIZTYPE);
+					}else if(CommissionConstants.COMIS_CD_CDC_CD.equals(orgCombo)){
+						map.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
+					}
 					map.put("level", CommissionConstants.COMIS_CD_CD_LEV);
 					if(actionType.equals("A")){
 						columns = new String[] { "memCode","memName","rank","nric",

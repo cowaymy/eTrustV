@@ -169,12 +169,31 @@
         }else if(type == "C"){
         	fileNm = "CDresultIndex_Actual_N_Simul_"+today;
         }
+        fileNm=fileNm+".xlsx"
         
-        if(Number(grdLength) > 0){
+        /* if(Number(grdLength) > 0){
             GridCommon.exportTo("grid_wrap", "xlsx", fileNm);
         }else{
             Common.alert("No Data");
-        }
+        } */
+        
+        var codeNm = "result_CD";
+        var searchDt = $("#searchDt").val();
+        var year = searchDt.substr(searchDt.indexOf("/")+1,searchDt.length);
+        var month = searchDt.substr(0,searchDt.indexOf("/"));
+        var orgCombo = $("#orgCombo").val();
+        var memCode = $("#memCode").val();
+        
+        Common.showLoader();
+        $.fileDownload("/commExcelFile.do?fileName=" + fileNm + "&code="+codeNm+"&year="+year+"&month="+month+"&orgCombo="+orgCombo+"&memCode="+memCode+"&actionType="+checkedValue)
+        .done(function () {
+            Common.alert('File download a success!');                
+            Common.removeLoader();            
+        })
+        .fail(function () {
+            Common.alert('File download failed!');                
+            Common.removeLoader();            
+         });
     }
 	
 	
