@@ -9,6 +9,7 @@
         fn_report();
     }); */
 
+    var cnt = 0;
 
     function fn_report() {
 
@@ -21,14 +22,38 @@
         Common.report("dataForm", option);
     }
     
+    function fn_procedureReport(){
+    	var option = {
+                isProcedure: true,
+                isBodyLoad : true,
+                bodyId : "reportIframe"
+            };
+            
+            Common.report("dataForm", option);
+    }
+    
     function fn_onLoad() {
-        alert("iframe onload");
+        
+    	if(cnt == 0){
+        	try {
+        		//Common.showLoader();
+        		//fn_report();
+        		fn_procedureReport();
+                cnt++;
+			} catch (e) {
+			   // Common.removeLoader();
+	            cnt = 0;
+			}
+        }else{
+        	//Common.removeLoader();
+        	cnt = 0;
+        }
     }
 </script>
 
 
-<form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusCody.rpt"/>
+<form id="dataForm"> <!-- CowayDailySalesStatusHP_Adv.rpt --> <!--CowayDailySalesStatusCody.rpt  -->
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusHP_Adv.rpt"/>
     <!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="WINDOW"/><!-- View Type  -->
 </form>
@@ -43,12 +68,7 @@
         </ul>
     </aside><!-- title_line end -->
 
-    <a href="javascript:void(0);" onclick="javascript:fn_report();"><span class="clear"></span>리포트 팝업</a>
-    <object width="100%" height="300" data="">
-        <param name="" value=""></param>
-    </object>
-
-    <iframe onload="fn_onLoad();" name="reportIframe"  width="700px" height="600px" src="" scrolling="auto" frameborder="0"></iframe>
+    <iframe onload="fn_onLoad()" name="reportIframe"  width="950px" height="600px" src="" scrolling="auto" frameborder="0"></iframe>
 
 </section>
 <!-- content end -->
