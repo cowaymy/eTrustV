@@ -66,5 +66,10 @@ public interface PaymentReconciliationMapper {
 	 */
 	int updReconDepositMs(Map<String, Object> params);
 	
-	
+	/**
+	 * selectReconciliationMasterListCount
+	 * @param params
+	 * @return
+	 */
+	int selectReconciliationMasterListCount(Map<String, Object> params);
 }

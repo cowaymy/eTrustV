@@ -42,5 +42,12 @@ public interface PaymentReconciliationService
   	 */
 	boolean saveExcludeDepositItem(Map<String, Object> params);
 	
+	/**
+  	 * selectReconciliationMasterListCount
+  	 * @param params
+  	 * @return
+  	 */
+	int selectReconciliationMasterListCount(Map<String, Object> params);
+	
 	
 }

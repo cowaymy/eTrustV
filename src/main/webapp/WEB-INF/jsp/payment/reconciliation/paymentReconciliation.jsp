@@ -18,9 +18,14 @@
 var masterListGridID;
 var maintenanceGridID;
 var selectedGridValue;
+
+//페이징에 사용될 변수
+var _totalRowCount;
+
 var gridPros = {
-        // 상태 칼럼 사용
-        showStateColumn : false
+        editable: false,
+        showStateColumn: false,
+        usePaging : false
 };
 
 var keyValueList = [{"code":"105", "value":"CASH"}, {"code":"106", "value":"CHEQUE"}, {"code":"108", "value":"ONLINE"}];
@@ -211,10 +216,48 @@ var maintenancePopLayout = [
         visible : false
     }];
 
-    function searchList(){
+    function searchList(goPage){
+    	
+    	//페이징 변수 세팅
+        $("#pageNo").val(goPage);   
+    	
     	Common.ajax("GET","/payment/selectReconciliationMasterList.do", $("#searchForm").serialize(), function(result){
-    		AUIGrid.setGridData(masterListGridID, result);
+    		console.log(result);
+    		AUIGrid.setGridData(masterListGridID, result.masterList);
+
+    		//전체건수 세팅
+            _totalRowCount = result.totalRowCount;
+            
+            //페이징 처리를 위한 옵션 설정
+            var pagingPros = {
+                    // 1페이지에서 보여줄 행의 수
+                    rowCount : $("#rowCount").val()
+            };
+            
+            GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+    		
     	});
+    }
+    
+  //마스터 그리드 페이지 이동
+    function moveToPage(goPage){
+      //페이징 변수 세팅
+      $("#pageNo").val(goPage);
+      
+      Common.ajax("GET","/payment/selectReconciliationMasterList.do", $("#searchForm").serialize(), function(result){
+    	  AUIGrid.setGridData(masterListGridID, result.masterList);
+          
+          //전체건수 세팅
+          _totalRowCount = result.totalRowCount;
+          
+          //페이징 처리를 위한 옵션 설정
+          var pagingPros = {
+                  // 1페이지에서 보여줄 행의 수
+                  rowCount : $("#rowCount").val()
+          };
+          
+          GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);  
+      });    
     }
     
     function fn_depositMaintenancePop(){
@@ -318,12 +361,14 @@ var maintenancePopLayout = [
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Payment Reconciliation</h2>
 		<ul class="right_opt">
-		    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
+		    <li><p class="btn_blue"><a href="javascript:searchList(1);"><span class="search"></span>Search</a></p></li>
 		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	<section class="search_table"><!-- search_table start -->
 		<form action="#" method="post" id="searchForm">
+		    <input type="hidden" name="rowCount" id="rowCount" value="20" />
+            <input type="hidden" name="pageNo" id="pageNo" />
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
@@ -394,6 +439,7 @@ var maintenancePopLayout = [
 	<section class="search_result"><!-- search_result start -->
 		<article class="grid_wrap" id="master_grid_wrap"><!-- grid_wrap start -->
 		</article><!-- grid_wrap end -->
+		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 	</section><!-- search_result end -->
 
 </section><!-- content end -->

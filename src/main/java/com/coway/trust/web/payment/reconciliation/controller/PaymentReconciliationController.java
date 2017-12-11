@@ -47,16 +47,21 @@ public class PaymentReconciliationController {
 	 * @return
 	 */
 	@RequestMapping(value = "/selectReconciliationMasterList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectReconciliationMasterList(@RequestParam Map<String, Object> params, ModelMap model, 
+	public ResponseEntity<Map> selectReconciliationMasterList(@RequestParam Map<String, Object> params, ModelMap model, 
 			HttpServletRequest request) {
 		
 		String[] statusId = request.getParameterValues("statusId");
 		params.put("statusId", statusId);
 		
 		List<EgovMap> masterList = paymentReconciliationService.selectReconciliationMasterList(params);
+		int totalRowCount = paymentReconciliationService.selectReconciliationMasterListCount(params);
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("masterList", masterList);
+		result.put("totalRowCount", totalRowCount);
 		
         // 조회 결과 리턴.
-        return ResponseEntity.ok(masterList);
+		return ResponseEntity.ok(result);
 	}
 	
 	/**

@@ -68,4 +68,9 @@ public class PaymentReconciliationServiceImpl extends EgovAbstractServiceImpl im
 		}
 	}
 
+	@Override
+	public int selectReconciliationMasterListCount(Map<String, Object> params) {
+		return paymentReconciliationMapper.selectReconciliationMasterListCount(params);
+	}
+
 }
