@@ -9,6 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "OrderCustomerDto", description = "공통코드 Dto")
 public class OrderCustomerDto {
 
+	@ApiModelProperty(value = "custExistYN")
+	private String custExistYN;
+	
 	@ApiModelProperty(value = "custName")
 	private String custName;
 	
@@ -50,6 +53,14 @@ public class OrderCustomerDto {
 	
 	@ApiModelProperty(value = "addrDtl")
 	private String addrDtl;
+
+	public String getCustExistYN() {
+		return custExistYN;
+	}
+
+	public void setCustExistYN(String custExistYN) {
+		this.custExistYN = custExistYN;
+	}
 
 	public String getCustName() {
 		return custName;
