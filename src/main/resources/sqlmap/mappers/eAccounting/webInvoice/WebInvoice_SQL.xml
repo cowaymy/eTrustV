@@ -739,6 +739,7 @@ ORDER  BY T1.APPV_LINE_SEQ
                       ,T3.APPV_AMT
                       ,T7.TOT_AMT
                       ,T3.EXP_DESC
+                      ,T3.CLAM_UN
           FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
           LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
           LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
