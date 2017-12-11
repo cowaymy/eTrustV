@@ -567,6 +567,11 @@ public class MembershipController {
 		//결과 
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/membershipOutrightKeyInListPop.do")
+	public String membershipOutrightKeyInList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "sales/membership/membershipOutrightKeyInRPop";
+	}
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
