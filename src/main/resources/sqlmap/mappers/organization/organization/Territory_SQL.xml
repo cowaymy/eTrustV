@@ -183,8 +183,8 @@
         ,AREA_ID
         ,REQST_DT
         ,REQST_USER_ID
-        ,CODY_BRNCH_CODE
-        ,CODY_MANGR_USER_ID
+        ,CT_BRNCH_CODE
+        ,CT_SUB_GRP
         ,BRNCH_TYPE
         ,CNFM_STUS
         )
