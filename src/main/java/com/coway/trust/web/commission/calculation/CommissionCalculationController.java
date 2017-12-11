@@ -208,6 +208,24 @@ public class CommissionCalculationController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/runPrdTimeValid", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> runPrdTimeValid(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		ReturnMessage message = new ReturnMessage();
+		
+		params.put("stateId",CommissionConstants.COMIS_RUNNING);
+		if(CommissionConstants.COMIS_ACTION_TYPE.equals( params.get("actionType")) ){
+			params.put("mstId",CommissionConstants.COMIS_PRO_CD_A);
+		}else if(CommissionConstants.COMIS_SIMUL_TYPE.equals( params.get("actionType")) ){
+			params.put("mstId",CommissionConstants.COMIS_PRO_CD_S);
+		}
+		
+		List<EgovMap> map = commissionCalculationService.runPrdTimeValid(params);
+		System.out.println(map);
+		message.setData(map);
+		
+		return ResponseEntity.ok(message);
+	}
 
 	/**
 	 * call Procedure Batch

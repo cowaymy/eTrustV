@@ -247,5 +247,7 @@ public interface CommissionCalculationService
     void incentiveDeactivate(Map<String, Object> params);
     void callIncentiveConfirm(Map<String, Object> params);
     
-	List<EgovMap> runningPrdCheck(Map<String, Object> params);
+    List<EgovMap> runningPrdCheck(Map<String, Object> params);
+    
+    List<EgovMap> runPrdTimeValid(Map<String, Object> params);
 }

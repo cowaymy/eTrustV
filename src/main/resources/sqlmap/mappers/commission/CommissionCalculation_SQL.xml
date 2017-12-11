@@ -36,36 +36,6 @@
      ]]>
     </select>
     
-    <select id="runningPrdCheck"  parameterType="Map" resultType="EgovMap">
-        SELECT 
-		    A.CAL_SEQ,
-		    C.CD,
-		    A.CAL_NAME,
-		    A.CAL_STATE,
-		    A.CAL_START_TIME,
-		    A.CAL_END_TIME,
-		    to_char(to_date(A.CAL_YEAR_MONTH,'mmyyyy'),'mm/yyyy') CAL_YEAR_MONTH
-		FROM CMM0053M A
-		    JOIN (
-		            SELECT CAL_SEQ,CAL_NAME FROM CMM0053M 
-                     WHERE CAL_STATE= #{stateId}
-	                     AND CAL_START_TIME BETWEEN SYSDATE-30/(24*60) 
-	                     AND SYSDATE AND CAL_NAME NOT LIKE 'BS%' 
-                     group by CAL_SEQ,CAL_NAME
-		        ) B ON A.CAL_SEQ=B.CAL_SEQ
-		    JOIN (
-		            SELECT CODE,SUBSTR(CODE,0,2) CD,CODE_NAME FROM SYS0013M
-		            <if test="mstId != null and mstId != ''">
-		              WHERE CODE_MASTER_ID= #{mstId}
-		            </if>
-		        ) C ON A.CAL_NAME=C.CODE_NAME
-		WHERE CD = #{ItemGrCd}
-		  <if test="prdNm != null and prdNm != ''">
-		      AND A.CAL_NAME = #{prdNm}
-		  </if>
-		  
-    </select>
-    
     <!-- search Calculation Procedure List -->
     <select id="selectCalculationList" parameterType="Map" resultType="EgovMap">
     <![CDATA[
@@ -2699,4 +2669,54 @@
           </if>
     </select>
     
+    <select id="runningPrdCheck"  parameterType="Map" resultType="EgovMap">
+        SELECT 
+            A.CAL_SEQ,
+            C.CD,
+            A.CAL_NAME,
+            A.CAL_STATE,
+            A.CAL_START_TIME,
+            A.CAL_END_TIME,
+            to_char(to_date(A.CAL_YEAR_MONTH,'mmyyyy'),'mm/yyyy') CAL_YEAR_MONTH
+        FROM CMM0053M A
+            JOIN (
+                    SELECT CAL_SEQ,CAL_NAME FROM CMM0053M 
+                     WHERE CAL_STATE= #{stateId}
+                         AND CAL_START_TIME BETWEEN SYSDATE-30/(24*60) 
+                         AND SYSDATE AND CAL_NAME NOT LIKE 'BS%' 
+                     group by CAL_SEQ,CAL_NAME
+                ) B ON A.CAL_SEQ=B.CAL_SEQ
+            JOIN (
+                    SELECT CODE,SUBSTR(CODE,0,2) CD,CODE_NAME FROM SYS0013M
+                    <if test="mstId != null and mstId != ''">
+                      WHERE CODE_MASTER_ID= #{mstId}
+                    </if>
+                ) C ON A.CAL_NAME=C.CODE_NAME
+        WHERE CD = #{ItemGrCd}
+          <if test="prdNm != null and prdNm != ''">
+              AND A.CAL_NAME = #{prdNm}
+          </if>
+    </select>
+    
+    <select id="runPrdTimeValid"  parameterType="Map" resultType="EgovMap">
+        SELECT 
+            to_char(to_date(A.CAL_YEAR_MONTH,'mmyyyy'),'mm/yyyy') CAL_YEAR_MONTH
+        FROM CMM0053M A
+            JOIN (
+                SELECT  CAL_CODE,MAX(CAL_SEQ) AS CAL_SEQ 
+                FROM CMM0053M 
+                GROUP BY CAL_CODE
+                ) B ON A.CAL_SEQ=B.CAL_SEQ
+            JOIN (
+                    SELECT CODE,SUBSTR(CODE,0,2) CD,CODE_NAME FROM SYS0013M
+                    <if test="mstId != null and mstId != ''">
+                      WHERE CODE_MASTER_ID= #{mstId}
+                    </if>
+                ) C ON A.CAL_NAME=C.CODE_NAME
+        WHERE c.CD = #{ItemGrCd}
+            and a.CAL_STATE= #{stateId}
+             <![CDATA[ AND sysdate > a.CAL_START_TIME-30/(24*60)]]> 
+             AND a.CAL_NAME NOT LIKE 'BS%' 
+        group by CAL_YEAR_MONTH
+    </select>
 </mapper>

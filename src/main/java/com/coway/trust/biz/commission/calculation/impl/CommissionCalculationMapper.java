@@ -355,4 +355,5 @@ public interface CommissionCalculationMapper {
 	int cntSimulCMM0024T(Map<String, Object>  param);
 	
 	List<EgovMap> runningPrdCheck(Map<String, Object> params);
+	List<EgovMap> runPrdTimeValid(Map<String, Object> params);
 }

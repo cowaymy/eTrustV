@@ -72,32 +72,24 @@
                         return false;
 					}
 				} */
+				
+				//Check : Run procedure in 20 minutes
 				Common.ajax("GET", "/commission/calculation/runningPrdCheck",$("#searchForm").serializeJSON(), function(result) {
 					if(result.data[0] == null){
 						
 						$("#batchYn").val("Y");
-						//array에 담기        
-						var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
-						var formList = $("#searchForm").serializeArray();       //폼 데이터
-						
-						//param data array
-						var data = {};
-						
-					    data.all = gridList;
-					    data.form = formList;
 					    
-						Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
-						             $("#search").trigger("click");
-						}, function(jqXHR, textStatus, errorThrown) {
-						
-						         console.log("실패하였습니다.");
-						         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);	
-						     
-						         if(jqXHR.status==503){
-						             Common.alert("Running... Please wait about 20 minutes ");
-						             $("#search").trigger("click");
-						          }
-						});//callBatch
+						//Check : Running is more than 30 minutes
+						Common.ajax("GET", "/commission/calculation/runPrdTimeValid", $("#searchForm").serializeJSON(), function(result2) {
+							//message settting
+							var msg = "";
+							if(result2.data[0] != null){
+								msg = "The procedure is already running("+result2.data[0].calYearMonth+"). Do you want to run it again?"
+							}else{
+								msg = "Do you want to run the batch?"
+							}
+							Common.confirm(msg,runBatch);//batch function call
+						});
 						
 					}else{
 						Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
@@ -115,6 +107,30 @@
         });
 		
 	});//Ready
+	
+	function runBatch(){
+		var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
+        var formList = $("#searchForm").serializeArray();       //폼 데이터
+        
+        //param data array
+        var data = {};
+        
+        data.all = gridList;
+        data.form = formList;
+        
+		Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	
+            $("#search").trigger("click");
+		}, function(jqXHR, textStatus, errorThrown) {
+		
+		        console.log("실패하였습니다.");
+		        console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);    
+		    
+		        if(jqXHR.status==503){
+		            Common.alert("Running... Please wait about 20 minutes ");
+		            $("#search").trigger("click");
+		         }
+		});
+	}
 	
 
 	//event management
