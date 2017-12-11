@@ -248,7 +248,7 @@
 			        GROUP BY LOC_ID, ITM_CODE,MOV_QTY) L75 ,
 			        CRDC
 			 WHERE     1 = 1
-			       AND L56.LOC_ID = L75.LOC_ID
+			       AND L56.LOC_ID = L75.LOC_ID(+)
 			       AND L56.STK_CODE = L75.ITM_CODE(+)
 			       AND S28.WH_LOC_ID = L56.LOC_ID(+)
 			       AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE)
@@ -286,7 +286,7 @@
     
 	<select id="getAllStockList" parameterType="Map" resultType="egovMap">
 		SELECT
-		L43M.MATRL_NO,n26m.STK_ID parts_Id,L44D.BOM_COMPNT,n26m.STK_CODE parts_Code,n26m.STK_DESC parts_Name,l56.qty stock_Qty,l56.serial_no serial_No,s28m.WH_LOC_CODE location_Code,s28m.WH_LOC_DESC location_Name,s28m.WH_LOC_BRNCH_ID branch_Code,
+		L43M.MATRL_NO,n26m.STK_ID parts_Id,L44D.BOM_COMPNT,n26m.STK_CODE parts_Code,n26m.STK_DESC parts_Name,(CASE   WHEN l56.serial_no is not null THEN 1  ELSE  L56.QTY  END) STOCK_QTY,l56.serial_no serial_No,s28m.WH_LOC_CODE location_Code,s28m.WH_LOC_DESC location_Name,s28m.WH_LOC_BRNCH_ID branch_Code,
 		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= s28m.rdc_code)
 		rdc_code
 		FROM LOG0043M L43M,LOG0044D L44D,sys0026m s26m,sys0026m n26m,sys0028m
