@@ -333,12 +333,12 @@
 			(l61d.CRT_DT, 'DD/MM/YYYY') CRT_DT, l61d.CRT_USER_ID -->
 		s26m.STK_ID PARTS_ID	
 		FROM LOG0055D l55d, LOG0061D l61d,sys0026m s26m
-		WHERE l55d.DELVRY_NO = l61d.DELVRY_NO
-		AND l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM
+		WHERE l55d.DELVRY_NO = l61d.DELVRY_NO(+)
+		AND l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM(+)
 		AND l55d.ITM_CODE=s26m.STK_CODE
-		AND l61d.DELVRY_NO =  #{smoNo} 
+		AND l55d.DELVRY_NO =  #{smoNo} 
 		<!-- AND l61d.DELVRY_NO in ('DVR20170925151548077305','DVR20170928143958079780','DVR20170928163735999750') -->
-		ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
+		ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO 
 	</select>
 
 	<select id="getMyStockList" parameterType="Map" resultType="egovMap">
@@ -392,7 +392,8 @@
 		l56.STK_DESC PARTS_NAME,
 		l56.STK_TYPE_ID,
 		l56.STK_CTGRY_ID,
-		l56.QTY STOCK_QTY,
+		<!-- l56.QTY STOCK_QTY, -->
+		(case when l56.QTY  is not null then 1 else l56.QTY END) STOCK_QTY,
 		S26.STK_ID PARTS_ID,
 		L63.SERIAL_NO,
 		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= s28m.rdc_code) rdc_code  
