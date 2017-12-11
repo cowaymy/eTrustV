@@ -53,6 +53,16 @@ $(document).ready(function(){
   
 });
 
+$(function(){
+    $('#changeBillPopCloseBtn').click(function() {
+        
+        if(callPrgm == 'BILLING_GROUP'){
+            searchList();
+        }
+        
+    });
+});
+
 function changeBillingInfo(custBillId){
 	
 	Common.ajax("GET","/payment/selectChangeBillType.do", {"custBillId":custBillId}, function(result){
@@ -97,7 +107,6 @@ function fn_changeBillSave(){
     var reasonUpd = $("#changePop_Reason").val();
     var custBillId = $("#changeTypeForm #custBillId").val();
     var custTypeId = $('#changeTypeForm #custTypeId').val();
-    
     if($("#changePop_post").is(":checked")){
         $("#changePop_post").val(1);
     }else{
@@ -200,16 +209,6 @@ function fn_newReqSave(){
 function fn_estmReqPopClose(){
 	Common.popupDiv('/payment/initChangeBillingTypePop.do', {"custBillId":custBillId, "callPrgm" : "BILLING_GROUP"}, null , true ,'_editDiv3New');
 }
-
-$(function(){
-    $('#changeBillPopCloseBtn').click(function() {
-    	
-    	if(callPrgm == 'BILLING_GROUP'){
-    		searchList();
-    	}
-        
-    });
-});
 
 </script>
 
