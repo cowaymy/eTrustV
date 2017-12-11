@@ -1,5 +1,6 @@
 package com.coway.trust.web.organization.organization;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,22 +11,30 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.organization.organization.ComplianceCallLogService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -43,6 +52,13 @@ public class ComplianceCallLogController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
+	
+	@Autowired
+	private FileApplication fileApplication;
+	
 	/**
 	 * Organization Compliance Call Log 
 	 *
@@ -99,12 +115,10 @@ public class ComplianceCallLogController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getMemberDetail.do", method = RequestMethod.GET)
-	public ResponseEntity <Map<String, EgovMap>> gettMemberDetail(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+	public ResponseEntity <EgovMap> gettMemberDetail(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
 		EgovMap complianceMemDetail = complianceCallLogService.getMemberDetail(params);
 		logger.debug("complianceList : {}",complianceMemDetail);
-		Map<String, EgovMap> resultList = new HashMap<String, EgovMap>();
-		resultList.put("complianceMemDetail",complianceMemDetail);
-		return ResponseEntity.ok(resultList);
+		return ResponseEntity.ok(complianceMemDetail);
 	}
 	
 	/**
@@ -128,11 +142,12 @@ public class ComplianceCallLogController {
 		/*logger.debug("updList : {}",updList);
 		logger.debug("remList : {}",remList);*/
 		
-		complianceCallLogService.insertCompliance(formMap,sessionVo,insList);
+		String comPlianceNo = complianceCallLogService.insertCompliance(formMap,sessionVo,insList);
+		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+		message.setData(comPlianceNo);
 		return ResponseEntity.ok(message);
 	}
 	
@@ -183,6 +198,58 @@ public class ComplianceCallLogController {
 		return "organization/organization/complianceOrderFullDetailPop";
 	}
 	
+	/**
+	 * Compliance Call Log Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/uploadAttachPop.do", method = {RequestMethod.POST,RequestMethod.GET})
+	public String uploadAttachPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception {
+		
+		return "organization/organization/attachmentFileUploadPop";
+	}
 	
-	
+	/**
+	 * Compliance Call Log Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/updateFile", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> sampleUploadCommon(MultipartHttpServletRequest request,
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {	
+		logger.debug("in  updateReTrBook ");
+		logger.debug("params =====================================>>  " + params);
+		
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "ComplianceLog" + File.separator + "ComplianceLog", 1024 * 1024 * 6);
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("branchId", sessionVO.getUserBranchId());
+		params.put("deptId", sessionVO.getUserDeptId());	
+		
+		params.put("list", list);	
+		
+		logger.debug("list SIZE=============" + list.size());
+
+		if(list.size() > 0){
+
+			params.put("hasAttach", 1);
+			params.put("fileName", params.get("fileName").toString());			
+
+			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+		}
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+
 }
