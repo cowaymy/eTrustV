@@ -118,7 +118,7 @@ function fn_complianceNew(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Compliance Call Log</h2>
 <ul class="right_btns">
-    <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li> -->
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
