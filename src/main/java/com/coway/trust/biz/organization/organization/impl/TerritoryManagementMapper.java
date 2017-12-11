@@ -17,7 +17,7 @@ public interface TerritoryManagementMapper {
 	EgovMap  dream43Vaild(Map<String, Object> params);
 	
 	void insertCody(Map<String, Object> params);
-	
+
 	String selectRequestNo();
 	
 	List<EgovMap> selectTerritory(Map<String, Object> params);
@@ -33,6 +33,6 @@ public interface TerritoryManagementMapper {
 	void updateORG0019MFlag(EgovMap params);
 	
 	void insertDreamServiceCenter(Map<String, Object> params);
-	
+
 	void updateSYS0064MDream(EgovMap params);
 }

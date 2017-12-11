@@ -1,13 +1,17 @@
 package com.coway.trust.biz.organization.organization.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
+import com.coway.trust.util.BeanConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,115 +47,94 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 		return territoryManagementMapper.selectMagicAddress(params);
 	}
 	
-	
-	
-	@Transactional
 	@Override
-	public  EgovMap  uploadVaild(Map<String, Object> params,SessionVO sessionVO ){
-		
-		String bType = (String)params.get("comBranchTypep");
-		List<TerritoryRawDataVO> vos =(List)params.get("voList");
-		
-		
-		EgovMap  reslutMap = null; 
-		EgovMap  rtnMap =new EgovMap(); 
-		
+	public EgovMap uploadVaild(Map<String, Object> params, SessionVO sessionVO) {
+
+		String bType = (String) params.get("comBranchTypep");
+		List<TerritoryRawDataVO> vos = (List) params.get("voList");
+
+		EgovMap rtnMap = new EgovMap();
+
 		EgovMap requestNo = getDocNo("156");
-		String nextDocNo= getNextDocNo("TCR",requestNo.get("docNo").toString());
+		String nextDocNo = getNextDocNo("TCR", requestNo.get("docNo").toString());
 		requestNo.put("nextDocNo", nextDocNo);
 		memberListMapper.updateDocNo(requestNo);
-		List<TerritoryRawDataVO> vo =  vos;
-		//for (TerritoryRawDataVO vo : vos) {
-		for ( int i=1; i<vo.size(); i++) {
-			   logger.debug("vo {}", vo.toString());
-			   
-			   Map<String,Object> q = new HashMap<String, Object>();
-			   q.put("areaId", vo.get(i).getAreaId());
-			   q.put("branch",vo.get(i).getBranch());
-			   q.put("extBranch", vo.get(i).getExtBranch());
-			   q.put("brnchId", Integer.parseInt(bType.toString()));
-			   q.put("reqstNo",  requestNo.get("docNo"));
-			   q.put("requester", sessionVO.getUserId());
-			   if("42".equals(bType)){  //Cody Branch
-				   
-				  // reslutMap =	territoryManagementMapper.cody42Vaild(q);
-				   
-				   boolean isErr =false;
-				  StringBuffer msg = new StringBuffer();
-				  
-				  /* if("0".equals( String.valueOf(reslutMap.get("acnt"))) ){
-					   
-					   isErr =true;
-					   msg.append("["+vo.get(i).getAreaId() +"]code does not exist \n");
-				   }*/
-				   
-				  /* if("0".equals( String.valueOf( reslutMap.get("bcnt"))) ){
-					   isErr =true;
-					   msg.append("["+vo.get(i).getBranch() +"]code does not exist \n");
-					   
-				   }
-  
-                   if("0".equals( String.valueOf( reslutMap.get("ucnt")) )){
-                	   isErr =true;
-					   msg.append("["+vo.get(i).getExtBranch() +"]code does not exist \n");
-					   
-                   }*/
-                  
-                  
-				  territoryManagementMapper.insertCody(q);
-                   
-                   if(isErr){
-                       rtnMap.put("isErr", isErr);
-                       rtnMap.put("errMsg", msg.toString());
-                       return   rtnMap;
-                   }
-                   
-                   
-			   }else if("43".equals(bType)){  //Dream Service Center
-				   
-					//reslutMap =	 territoryManagementMapper.dream43Vaild(q);
 
-				   /*boolean isErr =false;
-				   StringBuffer msg = new StringBuffer();*/
-				  
-				  /* if("0".equals( String.valueOf(reslutMap.get("acnt"))) ){
-					   
-					   isErr =true;
-					   msg.append("["+vo.get(i).getAreaId() +"]code does not exist \n");
-				   }*/
-				   
-				   /*if("0".equals( String.valueOf( reslutMap.get("bcnt"))) ){
-					   isErr =true;
-					   msg.append("["+vo.get(i).getBranch() +"]code does not exist \n");
-					   
-				   }
-  
-                   if("0".equals( String.valueOf( reslutMap.get("ucnt")) )){
-                	   isErr =true;
-					   msg.append("["+vo.get(i).getExtBranch() +"]code does not exist \n");
-					   
-                   }*/
-                   
-				   territoryManagementMapper.insertDreamServiceCenter(q);
-				   
-                  /* if(isErr){
-                       rtnMap.put("isErr", isErr);
-                       rtnMap.put("errMsg", msg.toString());
-                       return   rtnMap;
-                   }*/
-			   }else{
-					
-				}
-		}  
-		
-		  
-		 rtnMap.put("isErr", false);
-		 rtnMap.put("errMsg", "upload success");
-		   
+		List<Map> list = vos.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			map.put("brnchId", bType);
+			map.put("reqstNo", requestNo.get("docNo"));
+			map.put("requester", sessionVO.getUserId());
+			return map;
+		})	.collect(Collectors.toList());
+
+		int size = 1000;
+		int page = list.size() / size;
+
+		switch (bType) {
+		case "42": // Cody Branch
+			Map<String, Object> list42 = new HashMap<>();
+
+			for (int i = 0; i < page; i++) {
+				list42.put("list",
+						list.stream().skip(i * size).limit(size).collect(Collectors.toCollection(ArrayList::new)));
+				territoryManagementMapper.insertCody(list42);
+			}
+
+			break;
+		case "43": // Dream Service Center
+
+			Map<String, Object> list43 = new HashMap<>();
+
+			for (int i = 0; i < page; i++) {
+				list43.put("list",
+						list.stream().skip(i * size).limit(size).collect(Collectors.toCollection(ArrayList::new)));
+				territoryManagementMapper.insertDreamServiceCenter(list43);
+			}
+			break;
+		default:
+			logger.info("Unknown type...... bType : {}", bType);
+			break;
+		}
+
+
+
+		/*
+		Map<String, Object> q = new HashMap<>();
+		int i =0;
+		for (TerritoryRawDataVO vo : vos) {
+			logger.debug("i : {}", i);
+			i++;
+
+			q.put("areaId", vo.getAreaId());
+			q.put("branch", vo.getBranch());
+			q.put("extBranch", vo.getExtBranch());
+			q.put("brnchId", bType);
+			q.put("reqstNo", requestNo.get("docNo"));
+			q.put("requester", sessionVO.getUserId());
+
+			switch (bType) {
+			case "42": // Cody Branch
+				territoryManagementMapper.insertCody(q);
+				break;
+			case "43": // Dream Service Center
+				territoryManagementMapper.insertDreamServiceCenter(q);
+				break;
+			default:
+				logger.info("Unknown type...... bType : {}", bType);
+				break;
+			}
+		}
+		*/
+
+		rtnMap.put("isErr", false);
+		rtnMap.put("errMsg", "upload success");
+
 		return rtnMap;
-		
-		//return territoryManagementMapper.selectList();
+
+		// return territoryManagementMapper.selectList();
 	}
+
 	@Transactional
 	@Override
 	public boolean updateMagicAddressCode(Map<String, Object> params) {

@@ -41,7 +41,7 @@
           ]]>
     </select>
 	
-	<insert id="insertCody" parameterType="Map">
+	<insert id="insertCody" parameterType="java.util.List">
 	       INSERT INTO ORG0019M(
 	       REQST_NO
 	       ,AREA_ID
@@ -52,17 +52,19 @@
 	       ,BRNCH_TYPE
 	       ,CNFM_STUS
 	       )
-	       VALUES(
-	        #{reqstNo}
-	       ,#{areaId}
-	       ,SYSDATE
-	       ,#{requester}
-	       ,#{branch}
-	       ,#{extBranch}
-	       ,#{brnchId}
-	       ,'1'
-	       )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+            ,#{item.areaId}
+            ,SYSDATE
+            ,#{item.requester}
+            ,#{item.branch}
+            ,#{item.extBranch}
+            ,#{item.brnchId}
+            ,'1'
+            FROM DUAL
+        </foreach>
 	</insert>
+
 	<select id="selectRequestNo"  resultType="String">
 	   SELECT MAX(REQST_NO) FROM ORG0019M
 	</select>
@@ -175,27 +177,28 @@
           WHERE AREA_ID=#{areaId} AND BRNCH_TYPE= #{brnchType}
 	</update>
 	
-	<insert id="insertDreamServiceCenter" parameterType="Map">
-	 INSERT INTO ORG0019M(
-           REQST_NO
-           ,AREA_ID
-           ,REQST_DT
-           ,REQST_USER_ID
-           ,CT_BRNCH_CODE
-           ,CT_SUB_GRP
-           ,BRNCH_TYPE
-           ,CNFM_STUS
-           )
-           VALUES(
-            #{reqstNo}
-           ,#{areaId}
-           ,SYSDATE
-           ,#{requester}
-           ,#{branch}
-           ,#{extBranch}
-           ,#{brnchId}
-           ,'1'
-           )
+	<insert id="insertDreamServiceCenter" parameterType="java.util.List">
+        INSERT INTO ORG0019M(
+        REQST_NO
+        ,AREA_ID
+        ,REQST_DT
+        ,REQST_USER_ID
+        ,CODY_BRNCH_CODE
+        ,CODY_MANGR_USER_ID
+        ,BRNCH_TYPE
+        ,CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+            ,#{item.areaId}
+            ,SYSDATE
+            ,#{item.requester}
+            ,#{item.branch}
+            ,#{item.extBranch}
+            ,#{item.brnchId}
+            ,'1'
+            FROM DUAL
+        </foreach>
 	</insert>
 	
 	<update id="updateSYS0064MDream" parameterType="Map">
@@ -204,5 +207,5 @@
        CT_SUB_GRP = #{ctSubGrp}
        WHERE AREA_ID=#{areaId}
     </update>
-	
+
 </mapper>
