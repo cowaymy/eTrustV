@@ -120,7 +120,7 @@ function fn_openDivPop(){
         $('input:radio[name=advance]').attr("checked", false);
         //$('input:radio[name=printMethod]').eq(0).attr("checked", false);
         
-        $('#popup_wrap').show();
+        $('#popup_wrap2').show();
     }else{
         Common.alert('<b>No print type selected.</b>');
     }  
@@ -129,7 +129,7 @@ function fn_openDivPop(){
 //크리스탈 레포트
 function fn_generateStatement(){    
     //옵션 팝업 닫기
-    $('#popup_wrap').hide();
+    $('#popup_wrap2').hide();
     
     //report form에 parameter 세팅
     //옵션 초기화
@@ -358,12 +358,12 @@ hideViewPopup=function(val){
     POP-UP (PRINT OPTION)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
-<div class="popup_wrap" id="popup_wrap" style="display:none;">
+<div class="popup_wrap" id="popup_wrap2" style="display:none;">
     <!-- pop_header start -->
     <header class="pop_header" id="pop_header">
         <h1>PRINT OPTION</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#popup_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#popup_wrap2')">CLOSE</a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
