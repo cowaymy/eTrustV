@@ -427,7 +427,7 @@ var maintenancePopLayout = [
 					        <li><p class="link_btn"><a href="#">menu1</a></p></li>
 					    </ul> -->
 					    <ul class="btns">
-					        <li><p class="link_btn type2"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
+					        <li><p class="link_btn type"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
 					    </ul>
 					    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
