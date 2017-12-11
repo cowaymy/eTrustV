@@ -20,19 +20,22 @@
     }
 
     function fn_onLoad() {
-        
-    	if(cnt == 0){
-        	try {
-        		Common.showLoader();
-        		fn_procedureReport();
+        setTimeout("loader();", 100);
+    }
+
+    function loader(){
+        if(cnt == 0){
+            try {
+                Common.showLoader();
+                fn_procedureReport();
                 cnt++;
-			} catch (e) {
-			   Common.removeLoader();
-	            cnt = 0;
-			}
+            } catch (e) {
+                Common.removeLoader();
+                cnt = 0;
+            }
         }else{
-        	Common.removeLoader();
-        	cnt = 0;
+            Common.removeLoader();
+            cnt = 0;
         }
     }
 </script>
