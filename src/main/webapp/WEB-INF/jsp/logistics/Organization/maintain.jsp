@@ -305,7 +305,7 @@ $(document).ready(function(){
                      }
                     ,{dataField:"ptype"     ,headerText:"ptype"  ,  editable : false , visible:false}
                    ];
-    var options = {usePaging : true,useGroupingPanel : false , showStateColumn : true};
+    var options = {usePaging : false ,useGroupingPanel : false , showStateColumn : true};
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"ptype", options);
     
     AUIGrid.bind(myGridID, "addRow", function(event){});
@@ -381,6 +381,11 @@ $(function(){
         doDefCombo(mtypedata, '' ,"smtype", 'A', '');
         //SearchListAjax();
     });
+    
+    $("#download").click(function() {
+        GridCommon.exportTo("grid_wrap", 'xlsx', "Maintain Movement Type");
+    });
+    
     $('#add').click(function() {
         addRow();
     });
@@ -532,7 +537,7 @@ function f_getTtype(g , v){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
     <li><p class="btn_grid"><a id="add"><spring:message code='sys.btn.add' /></a></p></li>
     <li><p class="btn_grid"><a id="save"><spring:message code='sys.btn.save' /></a></p></li>

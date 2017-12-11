@@ -269,6 +269,10 @@ $(function(){
         //}
     });
  
+    $("#download").click(function() {
+    	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Other GI/GR Request List");
+    });
+    
     $('#insert').click(function(){
          document.searchForm.action = '/logistics/pos/PosOfSalesIns.do';
          document.searchForm.submit();
@@ -751,7 +755,7 @@ function f_addrow(){
                    <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><select class="w100p" id="searchOthersReq1" name="searchOthersReq1"   onchange="f_onchange('' , this.value , '', '')"></select></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><select class="w100p" id="searchOthersReq2" name="searchOthersReq2"></select></p>
                          </div> <!-- date_set end -->
                     </td> 
@@ -778,7 +782,7 @@ function f_addrow(){
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->                        
                     </td>
@@ -786,7 +790,7 @@ function f_addrow(){
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date" value="${searchVal.reqsdt}" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date" value="${searchVal.reqedt}" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>              
@@ -802,12 +806,13 @@ function f_addrow(){
     <section class="search_result"><!-- search_result start -->
     
         <ul class="right_btns">
-         <li><p class="btn_grid"><a id="insert">INS</a></p></li>            
+         <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+         <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.ins' /></a></p></li>            
          <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
          <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
         
 
     </section><!-- search_result end -->

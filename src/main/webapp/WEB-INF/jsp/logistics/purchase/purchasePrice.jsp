@@ -134,7 +134,7 @@
   enableSorting : true,
   showRowCheckColumn : true,
   */
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false,
+    var gridoptions = {showStateColumn : false , editable : false, usePaging : false, useGroupingPanel : false,
 		  noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>"	  
   
   };
@@ -258,6 +258,9 @@
                 $("#mstcd").val('');
             });
      
+            $("#download").click(function() {
+                GridCommon.exportTo("grid_wrap", 'xlsx', "Purchase Price List");
+            });
         }); 
     }); 
     function getListAjax() {
@@ -391,9 +394,12 @@
 
 <section class="search_result"><!-- search_result start -->
 
+ <ul class="right_btns">
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap"></div>
+    <div id="grid_wrap" style="height:450px"></div>
 </article><!-- grid_wrap end -->
 
 

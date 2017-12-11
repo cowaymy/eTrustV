@@ -228,8 +228,7 @@ var popLayout = [
 //그리드 속성 설정
 var gridPros = {
     // 페이지 설정
-    usePaging : true,               
-    pageRowCount : 10,              
+    usePaging : false,                  
     //fixedColumnCount : 1,
     // 편집 가능 여부 (기본값 : false)
     editable : false,                
@@ -407,9 +406,10 @@ $(document).ready(function(){
 	        };
 	        
 	        //AUIGrid.exportToXlsx(myGridIDHide, excelProps);
-	        AUIGrid.exportToXlsx(myGridIDExcelHide, excelProps);
-	        //GridCommon.exportTo("grid_wrap", "xlsx", "test");
+	        //AUIGrid.exportToXlsx(myGridIDExcelHide, excelProps);
+	        GridCommon.exportTo("grid_wrap", "xlsx", "Serial Number");
 	    });
+	    
 	    $('#saveExcel').click(function() {
 	        //giFunc();
 	        fn_excelSave();
@@ -752,10 +752,6 @@ function changeRowStyleFunction() {
 
 //최초 그리드 생성..
 function createInitGrid() {
-    // 그리드 속성 설정
-    var gridPros = {
-        //noDataMessage : "로컬 PC의 엑셀 파일을 선택하십시오."
-    };
 
     // 실제로 #grid_wrap 에 그리드 생성
     myGridIDExcel = AUIGrid.create("#popup_wrap_excel", excelLayout, gridPros);
@@ -835,7 +831,7 @@ function f_multiCombo() {
 		    <p>
 		      <input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
 		    </p>
-	            <span>~</span>
+	            <span>To</span>
 		    <p>
 		       <input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date">
 		    </p>
@@ -874,7 +870,7 @@ function f_multiCombo() {
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="grid_wrap" style="height:430px"></div>
+        <div id="grid_wrap" style="height:450px"></div>
         <div id="grid_wrap_hide" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 

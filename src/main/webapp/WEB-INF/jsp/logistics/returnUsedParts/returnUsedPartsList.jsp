@@ -75,10 +75,9 @@ var oldSerial;
 var subgridpros = {
         // 페이지 설정
         rowIdField : "rnum",
-        usePaging : true,                
-        pageRowCount : 20,                
+        usePaging : false,                   
         editable : true,                
-        noDataMessage : "출력할 데이터가 없습니다.",
+        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>",
         //enableSorting : true,
         //selectionMode : "multipleRows",
         //selectionMode : "multipleCells",
@@ -87,6 +86,7 @@ var subgridpros = {
         showRowCheckColumn : true,
         // 전체 체크박스 표시 설정
         showRowAllCheckBox : true,
+        showFooter : false,
         //softRemoveRowMode:false
         rowCheckableFunction : function(rowIndex, isChecked, item) {
         	oldQty=item.qty;
@@ -231,6 +231,10 @@ $(document).ready(function(){
 		        //업데이트 쿼리 	
 		        }		        
 		});
+        
+        $("#download").click(function() {
+        	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Return Used Parts List")
+        });
 		
 	$('#cancle').click(function() {
 		
@@ -404,7 +408,7 @@ $(document).ready(function(){
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="servicesdt" name="servicesdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="serviceedt" name="serviceedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
                         </div><!-- date_set end -->                        
                     </td>
@@ -412,7 +416,7 @@ $(document).ready(function(){
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="returnsdt" name="returnsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="returnedt" name="returnedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>     
@@ -444,10 +448,11 @@ $(document).ready(function(){
     <section class="search_result"><!-- search_result start -->
     
         <ul class="right_btns">
+         <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
         
 
     </section><!-- search_result end -->

@@ -98,7 +98,6 @@
     var gridoptions = {
     		showStateColumn : true , 
     		editable : true, 
-    		pageRowCount : 30,
     		usePaging : false, /* NOTE: true 설정시 셀병합 실행 안됨*/
     		useGroupingPanel : false , 
     		fixedColumnCount:2,
@@ -167,6 +166,9 @@
             $("#srchmtrcd").val('');
             doGetCombo('/logistics/bom/selectCodeList', '15', '','srchcatagorytype', 'A' , '');
             $("#srchValid").val('');      
+        });
+        $("#download").click(function() {
+            GridCommon.exportTo("grid_wrap", 'xlsx', "BOM List");
         });
        $("#material_info").click(function(){
                f_removeclass();
@@ -441,10 +443,12 @@
 			</form>
 		</section>
 		<section class="search_result">
-
+		<ul class="right_btns">
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+        </ul>
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
-				<div id="grid_wrap"></div>
+				<div id="grid_wrap" style="height:500px"></div>
 			</article>
 			    <!--<section id="subDiv" style="display:none;" class="tap_wrap"> tap_wrap start -->
 			    <section id="subDiv"class="tap_wrap"><!-- tap_wrap start -->

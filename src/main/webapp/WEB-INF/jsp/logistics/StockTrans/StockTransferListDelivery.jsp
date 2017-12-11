@@ -341,6 +341,9 @@ $(function(){
 //     	}
 //     });
 
+    $("#download").click(function() {
+    	GridCommon.exportTo("main_grid_wrap", "xlsx", "Stock Transfer Delivery List");
+    });
     $('#delivery').click(function(){
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);     
 //      if(checkedItems.length <= 0) {
@@ -719,7 +722,7 @@ function f_addrow(){
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
 					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-					    <span> ~ </span>
+					    <span> To </span>
 					    <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
 					    </div><!-- date_set end -->                        
                     </td>
@@ -727,7 +730,7 @@ function f_addrow(){
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date" value="${searchVal.reqsdt}" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> ~ </span>
+                        <span> To </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date" value="${searchVal.reqedt}" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>
@@ -754,10 +757,11 @@ function f_addrow(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
             <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>                        
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
+        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
     </section><!-- search_result end -->
     

@@ -169,6 +169,10 @@ $(function(){
     	var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
     	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
+    
+    $("#download").click(function() {
+    	GridCommmon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
+    });
 });
 
 function SearchSessionAjax() {
@@ -349,6 +353,7 @@ function searchlocationFunc(){
     <section class="search_result"><!-- search_result start -->
     
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 

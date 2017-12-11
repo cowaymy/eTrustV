@@ -155,6 +155,11 @@
             $("#mthCount").val('1');
 
         });
+        
+        $("#download").click(function() {
+            GridCommon.exportTo("grid_wrap", 'xlsx', "HS Filter Forecast List");
+        });
+        
     });
 
     function fn_loadDetails(rowID, colID) {
@@ -331,8 +336,10 @@
 	</section><!-- search_table end -->
 
  	<section class="search_result">
-
-        <div id="grid_wrap" style="height:500px"></div>
+        <ul class="right_btns">
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+        </ul>
+        <div id="grid_wrap" class="mt10" style="height:500px"></div>
 
     </section>
 

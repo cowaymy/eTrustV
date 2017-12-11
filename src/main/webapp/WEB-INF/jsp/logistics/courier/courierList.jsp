@@ -61,7 +61,7 @@
                          ];
     
     
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false , fixedColumnCount:2};
+    var gridoptions = {showStateColumn : false , editable : false, usePaging : false, showFooter : false, useGroupingPanel : false , fixedColumnCount:2};
     
     var pdata;
 
@@ -98,6 +98,11 @@
               doDefCombo('', '' ,'srchPstCd', 'S', '');   
 
         });
+        
+        $("#download").click(function() {
+        	GridCommon.exportTo("grid_wrap", 'xlsx', "Courier List");
+        });
+        
         $("#view").click(function(){
         	div="V";
         	$("#detailHead").text("Courier Information Details");
@@ -430,13 +435,14 @@
 
 <ul class="right_btns">
 
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a id="view"><spring:message code='sys.btn.view' /></a></p></li>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="grid_wrap"></div>
+    <div id="grid_wrap" style="height:450px"></div>
 </article><!-- grid_wrap end -->
                 
 <div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->

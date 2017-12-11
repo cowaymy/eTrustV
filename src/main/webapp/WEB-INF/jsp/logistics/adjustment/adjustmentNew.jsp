@@ -188,6 +188,11 @@ $(function(){
     	$('#srch_adjno').val('');
     	$('#srch_bsadjdate').val('');
     });
+    
+    $("#download").click(function() {
+    	GridCommon.exportTo("grid_wrap", 'xlsx', "Stock Audit List");
+    });
+    
     $('#save').click(function() {
     	if(""==$('#eventtype').val() || null==$('#eventtype').val()){
     	      Common.alert("Please select the Location Type.");
@@ -631,9 +636,11 @@ function fn_subGrid(invntryNo){
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-
+<ul class="right_btns">
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="grid_wrap"></div>
+        <div id="grid_wrap" style="height:450px"></div>
 </article>
 <aside class="title_line" id="grid_wrap_sub_asi"><!-- title_line start -->
 <h3>Stock Audit Location Detail</h3>

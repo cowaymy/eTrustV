@@ -190,8 +190,8 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
  // 그리드 속성 설정
     var gridPros = {
         // 페이지 설정
-        usePaging : true,               
-        pageRowCount : 30,              
+        usePaging : false,
+        showFooter : false,
         fixedColumnCount : 1,
         // 편집 가능 여부 (기본값 : false)
         editable : false,                
@@ -260,6 +260,11 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     }
 
     $(function(){
+    	
+    	$("#download").click(function(){
+    		GridCommon.exportTo("grid_wrap", 'xlsx',"Stocks List");
+    	});
+    	
     	$("#stockIns").click(function(){
     		$("#editWindow").show();
     		doGetCombo('/common/selectCodeList.do', '42', '','insUom', 'S'); //청구처 리스트 조회
@@ -1383,13 +1388,14 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
-<!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL DW</a></p></li> -->
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
-            <li><p class="btn_grid"><a id="stockIns">INS</a></p></li>
+            <li><p class="btn_grid"><a id="stockIns"><spring:message code='sys.btn.ins' /></a></p></li>
+            
 <!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()">Add</p></li> -->
         </ul>
 
-        <div id="grid_wrap" class="mt10" style="height:350px"></div>
+        <div id="grid_wrap" class="mt10" style="height:450px"></div>
 
         <section id="subDiv" style="display:none;" class="tap_wrap"><!-- tap_wrap start -->
         

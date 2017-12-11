@@ -155,6 +155,10 @@ $(function(){
     	
     });
     
+    $("#download").click(function() {
+    	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Materia Document List");
+    });
+    
     $("#searchTrcType").change(function(){
     	
     	CommonCombo.make("searchMoveType", "/logistics/materialDoc/selectTrntype.do", $("#searchForm").serialize(), "", {
@@ -438,6 +442,7 @@ function f_multiCombos() {
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
             <!-- <li><p class="btn_grid"><a id="insert">INS</a></p></li> -->            
         </ul>
 

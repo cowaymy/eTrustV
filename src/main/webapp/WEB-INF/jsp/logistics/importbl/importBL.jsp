@@ -199,6 +199,10 @@ $(function(){
        $('#blsdt').val('');
        $('#bledt').val('');
     });
+    $("#download").click(function() {
+        GridCommon.exportTo("main_grid_wrap", 'xlsx', "Import B/L List");
+    });
+    
 });
  
 function f_multiCombos() {
@@ -337,6 +341,9 @@ function searchSMO(index){
     <!-- search_result & data body start -->
     <section class="search_result"><!-- search_result start -->
 
+        <ul class="right_btns">
+            <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+        </ul>
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
         
 

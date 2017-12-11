@@ -127,7 +127,7 @@
   enableSorting : true,
   showRowCheckColumn : true,
   */
-    var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false };
+    var gridoptions = {showStateColumn : false , editable : false, usePaging : false, showFooter : false, useGroupingPanel : false };
     
 
     $(document).ready(function(){
@@ -239,7 +239,11 @@
         	 fn_insertWare();
         	 
         	$("#registWindow").show();
-	     });     
+	     });    
+         
+         $("#download").click(function() {
+        	 GridCommon.exportTo("grid_wrap", 'xlsx', "Location List");
+         });
         
         $("#delete").click(function(){
             
@@ -654,7 +658,7 @@
 <ul class="right_btns">
 
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
-<%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
