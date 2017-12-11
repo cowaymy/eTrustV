@@ -410,6 +410,7 @@ var addOrderLayout = [
                         
                         $("#displayVisible").show();
                         $("#orderNo").addClass('readonly');
+                        $("#orderNo").prop('readonly', true);
                         $("#custBillId").val(result.data.custBillId);//히든값
                         $("#custBillCustId").val(result.data.selectBasicInfo.custBillCustId);//히든값
                         $("#custBillGrpNo").text(result.data.selectBasicInfo.custBillGrpNo);
@@ -475,6 +476,7 @@ var addOrderLayout = [
                     }else{
                         $("#displayVisible").hide();
                         $("#orderNo").removeClass('readonly');
+                        $("#orderNo").prop('readonly', false);
                         Common.alert("No billing group found for this order.");
                     }
                     
