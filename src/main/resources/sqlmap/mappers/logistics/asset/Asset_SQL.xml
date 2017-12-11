@@ -111,8 +111,8 @@
                      AND E1.NAME = #{searchmodelname}
          </if>
       <if test="searchpurchasedate1 != null and searchpurchasedate2 != null and searchpurchasedate1 != '' and searchpurchasedate2 != ''" > 
-	     <![CDATA[  AND E1.PURCHS_DT   >= TO_CHAR(TO_DATE(#{searchpurchasedate1},'DD/MM/YYYY'),'YYYY-MM-DD') 
-	      AND E1.PURCHS_DT   <   TO_CHAR(TO_DATE(#{searchpurchasedate2},'DD/MM/YYYY'),'YYYY-MM-DD') ]]>
+	     <![CDATA[  AND E1.PURCHS_DT   >= TO_DATE(#{searchpurchasedate1},'DD/MM/YYYY') 
+	      AND E1.PURCHS_DT   <=   TO_DATE(#{searchpurchasedate2},'DD/MM/YYYY') ]]>
        </if> 
          <if test="searchrefno != null and searchrefno !=''">
                      AND E1.REF_NO = #{searchrefno}
