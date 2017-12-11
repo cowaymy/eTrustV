@@ -6,7 +6,7 @@
 	
 function cboGroup_SelectedIndexChanged(){
     
-    $("#cboDepartment").empty();
+    $("#cboDepartment").multipleSelect("uncheckAll");
     
     var total_item = new Array();
     var i = 0;
@@ -24,8 +24,8 @@ function cboGroup_SelectedIndexChanged(){
 
 function cboOrganization_SelectedIndexChanged(){
     
-    $("#cboGroup").empty();
-    $("#cboDepartment").empty();
+    $("#cboGroup").multipleSelect("uncheckAll");
+    $("#cboDepartment").multipleSelect("uncheckAll");
     
     var total_item = new Array();
     var i = 0;
@@ -44,12 +44,9 @@ function cboOrganization_SelectedIndexChanged(){
 
 function cboMember_SelectedIndexChanged(){
 	
-	$("#cboGroup").empty();
-    $("#cboDepartment").empty();
-    $("#cboOrganization").empty();
-    $("#cboGroup").append("");
-    $("#cboDepartment").append("");
-    $("#cboOrganization").append("");
+    $("#cboGroup").multipleSelect("uncheckAll");
+    $("#cboOrganization").multipleSelect("uncheckAll");
+    $("#cboDepartment").multipleSelect("uncheckAll");
 
     $("#cboOrganization").multipleSelect("disable");
     $("#cboGroup").multipleSelect("disable");
@@ -77,7 +74,7 @@ function cboMember_SelectedIndexChanged(){
 	}else{
 		
 		var arrparentID0 = 0;  
-		CommonCombo.make('cboOrganization', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
+		CommonCombo.make('cboDepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#cboMember").val(), memLvl : 4, parentID : arrparentID0}, '', {type:'M', isCheckAll:false});
 		
 		$("#cboOrganization").multipleSelect("disable");
 	    $("#cboGroup").multipleSelect("disable");
@@ -133,7 +130,7 @@ function btnGenerateExcel_Click(){
 	var whereSQL = "";
 	
 	if(!($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || !($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
-		whereSQL += " AND t.DATECLOSED >= TO_DATE('"+$("#rdpDateFrom").val()+"', 'dd/MM/YY') AND t.DATECLOSED <= TO_DATE('"+$("#rdpDateTo").val()+"', 'MM/dd/YY')";
+		whereSQL += " AND t.DATECLOSED >= TO_DATE('"+$("#rdpDateFrom").val()+"', 'dd/MM/YY') AND t.DATECLOSED <= TO_DATE('"+$("#rdpDateTo").val()+"', 'dd/MM/YY')";
 	}
 	
 	if(!($("#txtTRFrom").val().trim() == null || $("#txtTRFrom").val().trim().length == 0) || !($("#txtTRTo").val().trim() == null || $("#txtTRTo").val().trim().length == 0)){
@@ -251,14 +248,12 @@ function btnGenerateExcel_Click(){
     $("#reportDownFileName").val("TRBookLostReport_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#viewType").val("EXCEL");
     $("#reportFileName").val("/sales/TRBook_LostReport.rpt");
-               
     
-    console.log(whereSQL);
     $("#V_WHERESQL").val(whereSQL);
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  
     };
     
     Common.report("form", option);
@@ -368,8 +363,7 @@ $(document).ready(function() {
 <tr>
     <th scope="row">Member Type</th>
     <td>
-        <select class="w100p" id="cboMember" onchange="cboMember_SelectedIndexChanged()">
-  <!--           <option data-placeholder="true" value="0" hidden>Member Type</option> -->
+        <select class="w100p" id="cboMember" onchange="cboMember_SelectedIndexChanged()" data-placeholder="Member Type">
             <option value="1">Health Planner</option>
             <option value="2">Coway Lady</option>
             <option value="3">Coway Technician</option>

@@ -461,4 +461,14 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectTransitInfoList(Map<String, Object> params) {
 		return salesTrBookMapper.selectTransitInfoList(params);
 	}
+
+	@Override
+	public List<EgovMap> getCreateByList() throws Exception {
+		return salesTrBookMapper.getCreateByList();
+	}
+
+	
+
+
+
 }

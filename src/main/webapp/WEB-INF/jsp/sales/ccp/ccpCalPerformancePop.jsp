@@ -20,7 +20,7 @@ $.fn.clearForm = function() {
     });
 };
 
-function ValidRequiredField(){   //////6이후 것들 validation 추가 필요!!!
+function ValidRequiredField(){  
     var valid = true;
     var message = "";
     var cmbTypeVal = $("#cmbType :selected").val();
@@ -155,7 +155,7 @@ function fn_report_1(){
    
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-            isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+            isProcedure : true // procedure 로 구성된 리포트 인경우 필수. 
     };
     
     Common.report("form", option);
@@ -214,7 +214,7 @@ function fn_report_2(){
    
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
 	var option = {
-	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
 	};
 	
     Common.report("form", option);
@@ -257,7 +257,7 @@ function fn_report_3(){
 	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수. 
     };
 
     Common.report("form", option);
@@ -289,7 +289,7 @@ function fn_report_4(){
     
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.
     };
 
     Common.report("form", option);
@@ -297,7 +297,7 @@ function fn_report_4(){
 	
 }
 
-function fn_report_5(){ /////error
+function fn_report_5(){ 
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -308,13 +308,6 @@ function fn_report_5(){ /////error
     passDate = $("#dpDateTo").val();
     passDate = passDate.substring(6,10)+"-"+passDate.substring(3,5)+"-"+passDate.substring(0,2);
 
-    console.log(passDate);
-    console.log(typeof passDate);
-    passDate = "TO_DATE('"+passDate+"', 'yyyy-MM-dd')";
-    //passDate = "TO_CHAR(TO_DATE('"+passDate+"', 'yyyy-MM-dd'))";
-    console.log(passDate);
-    console.log(typeof passDate);
-    
     var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
@@ -327,14 +320,14 @@ function fn_report_5(){ /////error
 	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수
     };
 
     Common.report("form", option);
     
 }
 
-function fn_report_6(){ /////error 5랑 같은 error 같음
+function fn_report_6(){ 
 	
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -366,9 +359,6 @@ function fn_report_6(){ /////error 5랑 같은 error 같음
 		
 		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');
         $("#reportParameter").append('<input type="hidden" id="V_DATESTRING" name="V_DATESTRING" value="" />');
-
-        console.log(date1);
-        console.log(strdate);
         
         $("#V_INPUTDATE").val(date1);
         $("#V_DATESTRING").val(strdate);
@@ -387,7 +377,7 @@ function fn_report_6(){ /////error 5랑 같은 error 같음
 		$("#reportDownFileName").val("CCP_ScoringPerformance_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 	    $("#reportFileName").val("/sales/RptCCPSummary_ByDay.rpt");
 		
-    }else if(cmbTypeVal == "12"){
+    }else if(cmbTypeVal == "12"){ 
         
     	var dpDateFr = $("#dpDateFr").val();
     	var strdate2 = dpDateFr.substring(6,10)+"-"+month[parseInt(dpDateFr.substring(3,5))-1]+"-"+dpDateFr.substring(0,2);
@@ -423,7 +413,7 @@ function fn_report_6(){ /////error 5랑 같은 error 같음
 	
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수
     };
 
     Common.report("form", option);

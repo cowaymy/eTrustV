@@ -50,5 +50,5 @@ public interface SalesTrBookService {
 
 	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
 
-	
+	List<EgovMap> getCreateByList() throws Exception;
 }

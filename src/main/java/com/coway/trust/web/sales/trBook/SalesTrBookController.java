@@ -653,4 +653,15 @@ public class SalesTrBookController {
 		
 		return ResponseEntity.ok(resultList);
 	}
+	
+	@RequestMapping(value = "/getCreateByList")
+	public ResponseEntity<List<EgovMap>> getCreateByList() throws Exception{
+		
+		List<EgovMap> createByList = null;
+		
+		createByList = salesTrBookService.getCreateByList();
+		
+		return ResponseEntity.ok(createByList);
+		
+	}
 }

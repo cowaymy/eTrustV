@@ -75,4 +75,6 @@ public interface SalesTrBookMapper {
 	List<EgovMap> getOrgCodeListByMemTypeStaff(Map<String, Object> params);
 	
 	List<EgovMap> getOrgCodeListByMemType(Map<String, Object> params);
+	
+	List<EgovMap> getCreateByList() throws Exception;
 }
