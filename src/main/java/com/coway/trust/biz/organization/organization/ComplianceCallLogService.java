@@ -13,7 +13,7 @@ public interface ComplianceCallLogService {
 	
 	EgovMap getMemberDetail(Map<String, Object> params);
 	
-	void insertCompliance(Map<String, Object> params,SessionVO sessionVo, List<EgovMap> gridOrder);
+	String insertCompliance(Map<String, Object> params,SessionVO sessionVo, List<EgovMap> gridOrder);
 	
 	EgovMap selectCheckOrder(Map<String, Object> params);
 	
