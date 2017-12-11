@@ -266,10 +266,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				String clmType = clmNo.substring(0, 2);
 				LOGGER.debug("clmType =====================================>>  " + clmType);
 				if("J1".equals(clmType) || "J2".equals(clmType) || "J3".equals(clmType) || "J4".equals(clmType) || "J5".equals(clmType) || "J6".equals(clmType)) {
-					String ifKey = webInvoiceMapper.selectNextAppvIfKey();
 					// appvPrcssNo의 items get
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
 					for(int j = 0; j < appvInfoAndItems.size(); j++) {
+						String ifKey = webInvoiceMapper.selectNextAppvIfKey();
 						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
 						invoAppvItems.put("ifKey", ifKey);
 						invoAppvItems.put("userId", params.get("userId"));
@@ -277,10 +277,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 						webInvoiceMapper.insertAppvInterface(invoAppvItems);
 					}
 				} else if("R1".equals(clmType)) {
-					String ifKey = webInvoiceMapper.selectNextReqstIfKey();
 					// appvPrcssNo의 items get
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
 					for(int j = 0; j < appvInfoAndItems.size(); j++) {
+						String ifKey = webInvoiceMapper.selectNextReqstIfKey();
 						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
 						invoAppvItems.put("ifKey", ifKey);
 						invoAppvItems.put("userId", params.get("userId"));
