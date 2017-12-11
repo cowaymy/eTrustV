@@ -878,4 +878,13 @@
 		       LEFT JOIN SYS0038M F   ON F.STUS_CODE_ID = C.TR_TRNSIT_STUS_ID
 		    WHERE  A.TR_BOOK_ID = #{trBookId}
     </select>
+    
+    
+    <select id="getCreateByList" resultType="EgovMap">
+	    SELECT DISTINCT tm.TR_BOOK_CRT_USER_ID CODE_ID,
+	                            tm.TR_BOOK_CRT_USER_ID||'-'||USER_FULL_NAME CODE_NAME
+	    FROM MSC0028D tm  
+	            JOIN SYS0047M usr 
+	            ON usr.USER_ID = tm.TR_BOOK_CRT_USER_ID
+    </select>
 </mapper>
