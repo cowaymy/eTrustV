@@ -158,53 +158,53 @@ function fn_setEvent() {
             }
         }
    });
-	    
-	 // 파일 선택하기
-	    $('#file').on('change', function(evt) {
-	        var data = null;
-	        var file = evt.target.files[0];
-	        if (typeof file == "undefined") {
-	            console.log("파일 선택 시 취소!!");
-	            
-	            delete myFileCaches[selectRowIdx + 1];
+        
+     // 파일 선택하기
+        $('#file').on('change', function(evt) {
+            var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                console.log("파일 선택 시 취소!!");
+                
+                delete myFileCaches[selectRowIdx + 1];
 
-	            AUIGrid.updateRow(mileageGridID, {
-	                atchFileName :  ""
-	            }, selectRowIdx);
-	            return;
-	        }
-	        
-	        /* if(file.size > 2048000) {
-	            alert("개별 파일은 2MB 를 초과해선 안됩니다.");
-	            return;
-	        } */
-	        
-	        console.log(recentGridItem);
-	        
-	        // 서버로 보낼 파일 캐시에 보관
-	        myFileCaches[selectRowIdx + 1  ] = {
-	            file : file
-	        };
-	        
-	        // 파일 수정이라면 수정하는 파일 아이디 보관
-	        if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
+                AUIGrid.updateRow(mileageGridID, {
+                    atchFileName :  ""
+                }, selectRowIdx);
+                return;
+            }
+            
+            /* if(file.size > 2048000) {
+                alert("개별 파일은 2MB 를 초과해선 안됩니다.");
+                return;
+            } */
+            
+            console.log(recentGridItem);
+            
+            // 서버로 보낼 파일 캐시에 보관
+            myFileCaches[selectRowIdx + 1  ] = {
+                file : file
+            };
+            
+            // 파일 수정이라면 수정하는 파일 아이디 보관
+            if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
                 update.push(recentGridItem.atchFileId);
                 console.log(JSON.stringify(update));
             }
 
-	        console.log("업로드 할 파일 선택 : \r\n" + file.name);
-	        console.log(myFileCaches);
-	        
-	        // 선택 파일명 그리드에 출력 시킴
-	        AUIGrid.updateRow(mileageGridID, {
-	            atchFileName :  file.name
-	        }, selectRowIdx);
-	    });
-	 
-	    $(":input:radio[name=expGrp]").on('change', function(evt) {
-	         fn_checkExpGrp();
-	     });
-	}
+            console.log("업로드 할 파일 선택 : \r\n" + file.name);
+            console.log(myFileCaches);
+            
+            // 선택 파일명 그리드에 출력 시킴
+            AUIGrid.updateRow(mileageGridID, {
+                atchFileName :  file.name
+            }, selectRowIdx);
+        });
+     
+        $(":input:radio[name=expGrp]").on('change', function(evt) {
+             fn_checkExpGrp();
+         });
+}
 
 function fn_supplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM08"}, null, true, "supplierSearchPop");
@@ -426,6 +426,7 @@ function fn_addMyGridRow() {
 
 function fn_removeMyGridRow() {
     AUIGrid.removeRow(myGridID, selectRowIdx);
+}
 
 function fn_addRow() {
     // 파일 업로드 전에 필수 값 체크
@@ -1085,7 +1086,6 @@ function fn_myGridSetEvent() {
             });
         }
   });
-}
 }
 </script>
 

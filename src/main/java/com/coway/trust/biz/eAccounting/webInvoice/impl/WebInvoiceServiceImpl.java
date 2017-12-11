@@ -271,9 +271,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
 					for(int j = 0; j < appvInfoAndItems.size(); j++) {
 						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
-						int seq = webInvoiceMapper.selectNextAppvSeq(ifKey);
 						invoAppvItems.put("ifKey", ifKey);
-						invoAppvItems.put("seq", seq);
 						invoAppvItems.put("userId", params.get("userId"));
 						LOGGER.debug("insertAppvInterface =====================================>>  " + invoAppvItems);
 						webInvoiceMapper.insertAppvInterface(invoAppvItems);
@@ -284,9 +282,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
 					for(int j = 0; j < appvInfoAndItems.size(); j++) {
 						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
-						int seq = webInvoiceMapper.selectNextReqstSeq(ifKey);
 						invoAppvItems.put("ifKey", ifKey);
-						invoAppvItems.put("seq", seq);
 						invoAppvItems.put("userId", params.get("userId"));
 						LOGGER.debug("insertReqstInterface =====================================>>  " + invoAppvItems);
 						webInvoiceMapper.insertReqstInterface(invoAppvItems);

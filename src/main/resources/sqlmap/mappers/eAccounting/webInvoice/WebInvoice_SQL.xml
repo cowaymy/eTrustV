@@ -825,6 +825,7 @@ ORDER  BY T1.APPV_LINE_SEQ
        ,CARDCODE
        ,LINEID
        ,INVONO
+       ,CLAM_UN
        ,REGINO
        ,REFDATE
        ,LINEMEMO
@@ -832,6 +833,7 @@ ORDER  BY T1.APPV_LINE_SEQ
        ,ACCTNAME
        ,AMT
        ,VATAMT
+       ,VAT_NON
        ,TAMT
        ,VATCODE
        ,DIMENSION1
@@ -841,7 +843,7 @@ ORDER  BY T1.APPV_LINE_SEQ
     values
     (
         #{ifKey}
-       ,#{seq}
+       ,1
        ,'700'
        ,'10'
        ,TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -856,6 +858,7 @@ ORDER  BY T1.APPV_LINE_SEQ
        ,#{memAccId}
        ,#{appvItmSeq}
        ,#{invcNo}
+       ,#{clamUn}
        ,#{clmNo}
        ,TO_CHAR(TO_DATE(#{payDueDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
        ,#{expDesc}
@@ -863,6 +866,7 @@ ORDER  BY T1.APPV_LINE_SEQ
        ,#{glAccCodeName}
        ,#{netAmt}
        ,#{taxAmt}
+       ,#{taxNonClmAmt}
        ,#{appvAmt}
        ,#{taxCode}
        ,#{costCentr}
@@ -908,7 +912,7 @@ ORDER  BY T1.APPV_LINE_SEQ
     values
     (
         #{ifKey}
-       ,#{seq}
+       ,1
        ,'961'
        ,'10'
        ,TO_CHAR(SYSDATE, 'YYYYMMDD')
