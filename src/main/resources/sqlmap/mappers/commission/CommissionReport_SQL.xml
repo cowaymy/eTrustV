@@ -752,9 +752,10 @@
                  --   +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
 		         and t3.F_MEM_ID is null 
 		         and t1.EMPLY_STUS_ID<>3)t2
-    ]]>
             ON t0.comm_task_id=t2.task_id and t0.emply_code = t2.S_M_CODE
-		WHERE T0.COMM_TASK_ID=#{taskId}
+		WHERE T0.EMPLY_STUS_ID<>3
+    ]]>
+		    AND T0.COMM_TASK_ID=#{taskId}
             AND T0.EMPLY_LEV = #{level}
             <if test="empType != null and empType != ''">
              AND T0.EMPLY_LEV_RANK = #{empType}
