@@ -326,7 +326,7 @@
 		        WHERE 1=1
 		          AND   A.ADD_ID =  B.CUST_ADD_ID 
 		          AND   B.AREA_ID = C.AREA_ID
-		          AND  A.SALES_ORD_ID = #{srvSalesOrdId}
+		          AND  A.SALES_ORD_ID = #{srvSalesOrderId}
        </select>
        
        
