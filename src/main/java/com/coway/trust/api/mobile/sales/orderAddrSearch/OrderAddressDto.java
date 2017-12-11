@@ -24,8 +24,8 @@ public class OrderAddressDto {
 	@ApiModelProperty(value = "area")
 	private String area;
 	
-	@ApiModelProperty(value = "areaCode")
-	private String areaCode;
+	@ApiModelProperty(value = "areaId")
+	private String areaId;
 
 	public String getCountry() {
 		return country;
@@ -67,12 +67,12 @@ public class OrderAddressDto {
 		this.area = area;
 	}
 
-	public String getAreaCode() {
-		return areaCode;
+	public String getAreaId() {
+		return areaId;
 	}
 
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
 	}
 
 	public static OrderAddressDto create(EgovMap egvoMap) {

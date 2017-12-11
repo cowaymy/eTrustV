@@ -12,7 +12,7 @@ public class OrderAddressForm {
 	@ApiModelProperty(value = "searchAreaKeyword [default : '' 전체] 예) rusa ", example = "1, 2, 3")
 	private String searchAreaKeyword;
 	
-	@ApiModelProperty(value = "searchPostCode [default : '' 전체] 예) 80000 ", example = "1, 2, 3")
+	@ApiModelProperty(value = "searchPostCode [default : '' 전체] 예) 68100 ", example = "1, 2, 3")
 	private String searchPostCode;
 
 	public static Map<String, Object> createMap(OrderAddressForm OrderAddressForm){
