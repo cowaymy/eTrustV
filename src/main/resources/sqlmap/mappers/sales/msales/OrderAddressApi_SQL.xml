@@ -4,7 +4,7 @@
 
     <select id="orderAddressList" parameterType="Map" resultType="egovMap">
             SELECT 
-	                AREA_ID AS area_Code,
+	                AREA_ID,
 	                ISO,
 	                COUNTRY,
 	                STATE,
