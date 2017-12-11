@@ -4,6 +4,7 @@
 
     <select id="orderCustInfo" parameterType="Map" resultType="egovMap">
             SELECT 
+                        DECODE(project1.CUSTOMER_ID, 0, 'N', 'Y') AS CUST_EXIST_Y_N, 
                         project1.CUST_ADDR_ID,
                         project1.CUSTOMER_ID,
                         project1.CUST_NAME,
@@ -24,7 +25,9 @@
                         project1.MAIN_YN,
                         project1.STUS_CODE_ID
                     FROM 
-                        (SELECT Extent1.CUST_ADD_ID CUST_ADDR_ID  ,
+                        (
+                        SELECT 
+                               Extent1.CUST_ADD_ID CUST_ADDR_ID  ,
                                Extent1.CUST_ID CUSTOMER_ID  ,
                                Extent2.NAME CUST_NAME,
                                Extent2.NRIC NRIC_COMPANY_NO,
@@ -52,7 +55,26 @@
                               Extent2.TYPE_ID = #{customerType}
                         AND  
                               Extent2.NRIC = #{nricCompanyNo}
+                        Union All 
+                        SELECT 
+                                 0 AS CUST_ADDR_ID  ,
+                                 0 AS CUSTOMER_ID  ,
+                                 '' AS CUST_NAME,
+                                 '' AS NRIC_COMPANY_NO,
+                                 '' AS CUST_BIRTH_DAY,
+                                 '' AS CUST_GENDER,
+                                 0 AS TYPE_ID,
+                                 '' AS CUSTOMER_TYPE,
+                                 '' AS AREA_ID,
+                                 '' AS ADDR_DTL,
+                                 '' AS ADDR,
+                                 '' AS STREET, '' AS AREA, '' AS POST_CODE, '' AS CITY, '' AS STATE,
+                                 '' AS COUNTRY,
+                                 '' AS  MAIN_YN,
+                                 0 AS STUS_CODE_ID
+                          FROM DUAL
                         ) project1
+               WHERE ROWNUM =1
                ORDER BY project1.STUS_CODE_ID DESC
     </select>
     
