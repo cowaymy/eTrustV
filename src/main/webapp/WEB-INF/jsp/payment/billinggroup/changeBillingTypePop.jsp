@@ -49,7 +49,7 @@ var estmHisPopColumnLayout = [
 $(document).ready(function(){
 
 	changeBillingInfo(custBillId);
-	$('#changeTypeForm #custBillId').val(custBillId);//히든값
+	$('#changeTypeForm #custBillId').val(custBillId);//hidden
   
 });
 
