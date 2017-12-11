@@ -68,16 +68,6 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
         var valid = true;
         var message = "";
         
-        /* alert("value : " + $("#branchId").val());
-        
-        alert("value : " + $("#branchId option:selected").text());
-        
-        alert("mode value : " + $("#modeId").val());
-        
-        alert("mode value : " + $("#modeId option:selected").text());
-        
-        return false; */
-        
         if(reportType == ""){
             valid = false;
             message += "* Please select the report type.<br />";
@@ -97,20 +87,20 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
         	var startDate = $("#fromUploadDate").val();
         	var endDate = $("#toUploadDate").val();
         	
-        	//var branchCode = $("#branchId option:selected").text();
-        	//var accountCode = $("#account option:selected").text();
-        	//var modeCode = $("#modeId option:selected").text();
+        	var branchCode = $("#branchId").multipleSelect("getSelects", "text");
+        	var accountCode = $("#account").multipleSelect("getSelects", "text");
+        	var modeCode = $("#modeId").multipleSelect("getSelects", "text");
         	
         	if(reportType == "1"){
                 $("#reportPendingForm #viewType").val("PDF");
                 $("#reportPendingForm #reportFileName").val("/reconciliation/RCL_Pending_PDF.rpt");
                 
                 $("#reportPendingForm #V_BRANCHID").val(branchId);
-                //$("#reportPendingForm #V_BRANCHCODE").val("");
+                $("#reportPendingForm #V_BRANCHCODE").val(branchCode);
                 $("#reportPendingForm #V_ACCOUNTID").val(account);
-                //$("#reportPendingForm #V_ACCOUNTCODE").val("");
+                $("#reportPendingForm #V_ACCOUNTCODE").val(accountCode);
                 $("#reportPendingForm #V_MODEID").val(modeId);
-                //$("#reportPendingForm #V_MODECODE").val("");
+                $("#reportPendingForm #V_MODECODE").val(modeCode);
                 $("#reportPendingForm #V_STARTDATE").val(startDate);
                 $("#reportPendingForm #V_ENDDATE").val(endDate);
                 
@@ -119,9 +109,9 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
                 $("#reportUnknownForm #reportFileName").val("/reconciliation/RCL_UnKnown_PDF.rpt");
                 
                 $("#reportUnknownForm #V_ACCOUNTID").val(account);
-                //$("#reportUnknownForm #V_ACCOUNTCODE").val("");
+                $("#reportUnknownForm #V_ACCOUNTCODE").val(accountCode);
                 $("#reportUnknownForm #V_MODEID").val(modeId);
-                //$("#reportUnknownForm #V_MODECODE").val("");
+                $("#reportUnknownForm #V_MODECODE").val(modeCode);
                 $("#reportUnknownForm #V_STARTDATE").val(startDate);
                 $("#reportUnknownForm #V_ENDDATE").val(endDate);
                 
@@ -130,9 +120,9 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
                 $("#reportUnmatchForm #reportFileName").val("/reconciliation/RCL_UnMatch_PDF.rpt");
                 
                 $("#reportUnmatchForm #V_ACCOUNTID").val(account);
-                //$("#reportUnmatchForm #V_ACCOUNTCODE").val("");
+                $("#reportUnmatchForm #V_ACCOUNTCODE").val(accountCode);
                 $("#reportUnmatchForm #V_MODEID").val(modeId);
-                //$("#reportUnmatchForm #V_MODECODE").val("");
+                $("#reportUnmatchForm #V_MODECODE").val(modeCode);
                 $("#reportUnmatchForm #V_STARTDATE").val(startDate);
                 $("#reportUnmatchForm #V_ENDDATE").val(endDate);
             }
