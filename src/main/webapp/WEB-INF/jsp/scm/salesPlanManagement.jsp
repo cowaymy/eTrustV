@@ -1865,7 +1865,7 @@ function fnSelectSalesCnt(inputCode)
 function fnChangeEventPeriod(object)
 {
 	gWeekThValue = object.value;
-	cosole.log("gWeekThValue: " + gWeekThValue);
+	console.log("gWeekThValue: " + gWeekThValue);
 }
 
 
