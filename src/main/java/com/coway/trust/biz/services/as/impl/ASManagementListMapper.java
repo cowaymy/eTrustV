@@ -159,6 +159,7 @@ public interface ASManagementListMapper {
 	 int updateInhouseSVC0005D(Map<String, Object> params);  	
 	 int updateInHouseSVC0004D(Map<String, Object> params);  	
 	 int updateInhouseSVC0001D_appdt(Map<String, Object> params);   
+	 int updateState_SERIAL_NO_SVC0004D(Map<String, Object> params);   
 	 
 	 
 	 

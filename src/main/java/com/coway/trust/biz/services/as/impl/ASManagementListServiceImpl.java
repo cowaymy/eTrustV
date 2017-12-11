@@ -532,6 +532,19 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
+
+	/**
+	 * /svc0001d 상태 업데이트 
+	 * @param params
+	 * @return
+	 */
+	public int updateState_SERIAL_NO_SVC0004D(Map<String, Object> params){
+		//svc0001d 상태 업데이트 
+		int b=  ASManagementListMapper.updateState_SERIAL_NO_SVC0004D(params);
+		return b;
+	}
+	
+	
 	
 	/**
 	 * SVC0004D insert
@@ -1191,17 +1204,98 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		LOGGER.debug("									===> geGST_CHK   out");	
 		
 		return isgST;
+	}
 	
+	
+	
+	public boolean  chkInHouseOpenComp(Map<String, Object>  svc0004dmap ){
+		
+		boolean chkInHouseOpenComp =false;
+
+		
+		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")  &&  !  "WEB".equals(svc0004dmap.get("CHANGBN"))){
+			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  != 0  ){
+				  
+				    svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+				    
+				    this.updateStateSVC0001D(svc0004dmap);
+				    this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
+				    
+				    //물류 호출   add by hgham
+			        Map<String, Object>  logPram = null ;
+					/////////////////////////물류 호출/////////////////////////
+					logPram =new HashMap<String, Object>();
+		            logPram.put("ORD_ID",     svc0004dmap.get("AS_ENTRY_ID") );
+		            logPram.put("RETYPE", "COMPLET");  
+		            logPram.put("P_TYPE", "OD03");  
+		            logPram.put("P_PRGNM", "ASCOM");  
+		            logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));   
+		            
+		            LOGGER.debug("ORDERCALL   in house 물류 차감 호출 PRAM ===>"+ logPram.toString());
+		            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+		            LOGGER.debug("ORDERCALL   in house 물류 차감 호출 완료   ===>");
+		            /////////////////////////물류 호출 END //////////////////////   	
+				  
+		            chkInHouseOpenComp = true;
+		            
+			  }
+		  }
+		  
+		  //모바일 api 
+		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("452") &&  !  "WEB".equals(svc0004dmap.get("CHANGBN"))){
+			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  != 0  ){
+				  
+				    svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+				    
+				    this.updateStateSVC0001D(svc0004dmap);
+				    //this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
+				    
+				    //물류 호출   add by hgham
+			        Map<String, Object>  logPram = null ;
+					/////////////////////////물류 호출/////////////////////////
+					logPram =new HashMap<String, Object>();
+		            logPram.put("ORD_ID",     svc0004dmap.get("AS_ENTRY_ID") );
+		            logPram.put("RETYPE", "COMPLET");  
+		            logPram.put("P_TYPE", "OD03");  
+		            logPram.put("P_PRGNM", "ASCOM");  
+		            logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));   
+		            
+		            LOGGER.debug("ORDERCALL   in house 물류 차감 호출 PRAM ===>"+ logPram.toString());
+		            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+		            LOGGER.debug("ORDERCALL   in house 물류 차감 호출 완료   ===>");
+		            /////////////////////////물류 호출 END //////////////////////   	
+				  
+		            chkInHouseOpenComp = true;
+		            
+			  }
+		  }
+		  
+		return   chkInHouseOpenComp ;
 	}
 		
 	@Override
 	public EgovMap  asResult_insert(Map<String, Object> params) {
 		
      	LOGGER.debug("==========asResult_insert  Log  in================");
-
-     	
 	
 		String m ="";
+		Map  svc0004dmap =   (Map) params.get("asResultM");//hash
+		svc0004dmap.put("updator",params.get("updator"));
+		
+		
+		
+		//인하우스  oepen close 
+		if(chkInHouseOpenComp(svc0004dmap)){
+			
+			EgovMap em = new EgovMap();
+			em.put("AS_NO",String.valueOf(svc0004dmap.get("asno")));
+			  
+	     	LOGGER.debug("==========asResult_insert  Log  out================");
+			return em;
+			
+		}
+		
+		
 		
 		params.put("DOCNO", "21");
 		EgovMap  eMap = ASManagementListMapper.getASEntryDocNo(params); 		
@@ -1218,11 +1312,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		ArrayList<AsResultChargesViewVO>  vewList = new ArrayList<AsResultChargesViewVO>();
 		
 		List <EgovMap> addItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
-		Map  svc0004dmap =   (Map) params.get("asResultM");//hash
+	
 		
 		svc0004dmap.put("AS_RESULT_ID", AS_RESULT_ID);
 		svc0004dmap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
-		svc0004dmap.put("updator",params.get("updator"));
 		  
 
 		//HappyCallM
@@ -1524,33 +1617,57 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	      
 	    
 		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")){
-			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length() > 0  ){
-				  this.updateStateSVC0001D(svc0004dmap);
+			 
+			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  == 0  ){
+				  	
+				    svc0004dmap.put("AS_RESULT_STUS_ID", "1");
+				    
+					  this.updateStateSVC0001D(svc0004dmap);
+				  
+				   //물류 호출   add by hgham
+			        Map<String, Object>  logPram = null ;
+					/////////////////////////물류 호출//////////////////////
+					logPram =new HashMap<String, Object>();
+		            logPram.put("ORD_ID",     svc0004dmap.get("AS_ENTRY_ID") );
+		            logPram.put("RETYPE", "COMPLET");  
+		            logPram.put("P_TYPE", "OD03");  
+		            logPram.put("P_PRGNM", "ASCOM");  
+		            logPram.put("USERID", String.valueOf(params.get("updator")));   
+		            
+		            LOGGER.debug("ORDERCALL in house  물류 이관  호출 PRAM ===>"+ logPram.toString());
+		            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+		            LOGGER.debug("ORDERCALL in house  물류 이관   호출 결과 ===>");
+		            /////////////////////////물류 호출 END //////////////////////   		
 			  }
+			  
 		  }else{
-				 this.updateStateSVC0001D(svc0004dmap);
-		  }
 
-		
-		
-		
-		if(svc0004dmap.get("AS_RESULT_STUS_ID").equals("04") ){
-			
-			//물류 호출   add by hgham
-	        Map<String, Object>  logPram = null ;
-			/////////////////////////물류 호출//////////////////////
-			logPram =new HashMap<String, Object>();
-            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
-            logPram.put("RETYPE", "COMPLET");  
-            logPram.put("P_TYPE", "OD03");  
-            logPram.put("P_PRGNM", "ASCOM");  
-            logPram.put("USERID", String.valueOf(params.get("updator")));   
-            
-            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
-            /////////////////////////물류 호출 END //////////////////////   			
-		}
+			  //인하우스 결과 등록 
+			  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("452")){
+				  svc0004dmap.put("AS_RESULT_STUS_ID", "1");
+			  }
+			  
+			  
+			  this.updateStateSVC0001D(svc0004dmap);
+			  
+			  if(svc0004dmap.get("AS_RESULT_STUS_ID").equals("04") ){
+					
+					//물류 호출   add by hgham
+			        Map<String, Object>  logPram = null ;
+					/////////////////////////물류 호출//////////////////////
+					logPram =new HashMap<String, Object>();
+		            logPram.put("ORD_ID",    svc0004dmap.get("AS_ENTRY_ID"));
+		            logPram.put("RETYPE", "COMPLET");  
+		            logPram.put("P_TYPE", "OD03");  
+		            logPram.put("P_PRGNM", "ASCOM");  
+		            logPram.put("USERID", String.valueOf(params.get("updator")));   
+		            
+		            LOGGER.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+		            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
+		            LOGGER.debug("ORDERCALL 물류 호출 결과 ===>");
+		            /////////////////////////물류 호출 END //////////////////////   			
+				}
+		  }  
 		
 		
 		EgovMap em = new EgovMap();

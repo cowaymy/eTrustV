@@ -92,8 +92,6 @@ function fn_viewInHouseResultPop(){
                    +"&AS_RESULT_NO="+selectedItems[0].item.inAsResultNo
                    +"&AS_RESULT_ID="+selectedItems[0].item.inAsResultId;
     
-    
-    
     Common.popupDiv("/services/inhouse/inHouseAsResultEditBasicPop.do?mode=view"+pram  ,null, null , true , '_viewResultDiv');
 
 }

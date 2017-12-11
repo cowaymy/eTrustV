@@ -211,6 +211,13 @@ function fn_asInhouseAddOrderPop(){
         return ;
     }
     
+    
+   // if(asStusId  !="ACT"){
+   //     Common.alert("<b> already has [" + asResultNo + "] result.  .</br> Result entry is disallowed.</b>");
+    //    return ;
+  //}
+	 
+    
     //$("#in_asResultId").val(asResultId);
     //$("#in_asResultNo").val(asResultNo);
      

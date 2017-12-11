@@ -216,22 +216,23 @@ public class AfterServiceJobDto {
 	private String inHouseRepairRemark;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 Replacement 여부_170906 추가")
-	private String inHouseRepairReplacementYn;
+	private String inhouserepairreplacementyn;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 약속일자_170906 추가")
 	private String inHouseRepairPromisedDate;
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품대그룹 코드_170906 추가")
-	private String inHouseRepairProductGroupCode;
+	private String inhouserepairproductgroupcode;   
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품코드_170906 추가")
 	private String inHouseRepairProductCode;
+
 
 	@ApiModelProperty(value = "inHouseRepair 처리시 등록되는 제품 SN_170906 추가")
 	private String inHouseRepairSerialNo;
 
 	@ApiModelProperty(value = "inHouseRepair 대상 여부(작업처리시, 대상이 Y 이면, 보여주기만하고 Complete)")
-	private String inHouseRepairYN;
+	private String inhouserepairyn;
 
 	private int renCollectionId;
 
@@ -844,13 +845,6 @@ public class AfterServiceJobDto {
 
 
 
-	public String getInHouseRepairReplacementYn() {
-		return inHouseRepairReplacementYn;
-	}
-
-	public void setInHouseRepairReplacementYn(String inHouseRepairReplacementYn) {
-		this.inHouseRepairReplacementYn = inHouseRepairReplacementYn;
-	}
 
 	public String getInHouseRepairPromisedDate() {
 		return inHouseRepairPromisedDate;
@@ -860,13 +854,6 @@ public class AfterServiceJobDto {
 		this.inHouseRepairPromisedDate = inHouseRepairPromisedDate;
 	}
 
-	public String getInHouseRepairProductGroupCode() {
-		return inHouseRepairProductGroupCode;
-	}
-
-	public void setInHouseRepairProductGroupCode(String inHouseRepairProductGroupCode) {
-		this.inHouseRepairProductGroupCode = inHouseRepairProductGroupCode;
-	}
 
 	public String getInHouseRepairProductCode() {
 		return inHouseRepairProductCode;
@@ -882,14 +869,6 @@ public class AfterServiceJobDto {
 
 	public void setInHouseRepairSerialNo(String inHouseRepairSerialNo) {
 		this.inHouseRepairSerialNo = inHouseRepairSerialNo;
-	}
-
-	public String getInHouseRepairYN() {
-		return inHouseRepairYN;
-	}
-
-	public void setInHouseRepairYN(String inHouseRepairYN) {
-		this.inHouseRepairYN = inHouseRepairYN;
 	}
 
 	public int getRenCollectionId() {
@@ -939,6 +918,33 @@ public class AfterServiceJobDto {
 	public void setTotalAmount(int totalAmount) {
 		this.totalAmount = totalAmount;
 	}
+	
+
+	public String getInhouserepairreplacementyn() {
+		return inhouserepairreplacementyn;
+	}
+
+	public void setInhouserepairreplacementyn(String inhouserepairreplacementyn) {
+		this.inhouserepairreplacementyn = inhouserepairreplacementyn;
+	}
+
+	public String getInhouserepairproductgroupcode() {
+		return inhouserepairproductgroupcode;
+	}
+
+	public void setInhouserepairproductgroupcode(String inhouserepairproductgroupcode) {
+		this.inhouserepairproductgroupcode = inhouserepairproductgroupcode;
+	}
+
+	public String getInhouserepairyn() {
+		return inhouserepairyn;
+	}
+
+	public void setInhouserepairyn(String inhouserepairyn) {
+		this.inhouserepairyn = inhouserepairyn;
+	}
+	
+	
 
 	public static AfterServiceJobDto create(EgovMap egovMap) {
 		return BeanConverter.toBean(egovMap, AfterServiceJobDto.class);

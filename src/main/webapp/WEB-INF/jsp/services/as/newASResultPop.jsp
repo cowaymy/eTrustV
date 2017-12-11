@@ -765,7 +765,8 @@ function  fn_setSaveFormData(){
 	               IN_HUSE_REPAIR_PROMIS_DT: $("#promisedDate").val(),
 	               IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
 	               IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
-	               IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val()
+	               IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val(),
+	               CHANGBN:'WEB'
 	}
 	
 	var  saveForm ={

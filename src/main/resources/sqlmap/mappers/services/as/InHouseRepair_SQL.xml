@@ -84,7 +84,7 @@
 			                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
 			                   AND D.ITM_STK_ID = G.STK_ID
 			                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-			                   AND A.AS_BRNCH_ID = F.BRNCH_ID
+			                   AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
 			                   AND B.AS_CT_ID = H.MEM_ID
 			                   AND A.AS_TYPE_ID = '2713'
 			),
@@ -525,6 +525,7 @@
              
              
             </select>
+            
             
             
               

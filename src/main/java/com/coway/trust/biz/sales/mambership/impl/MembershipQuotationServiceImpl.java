@@ -256,7 +256,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 						 eFilterMap.put("StkTaxes", rMap.get("0"));
 					 }else {
 						 
-						 double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
+						 double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 						 double   stkNetAmt  =  0;
 						 
 						 stkNetAmt = Math.round((float)(chargePrice  * 100 / 106 ));
@@ -269,9 +269,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 				 }
 			 }
 		 }
-		 
 	}
-	
+	   
 	
 	@Override
 	public EgovMap    getMembershipFilterChargeList(Map<String, Object> params) {
