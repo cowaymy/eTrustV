@@ -33,7 +33,9 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	@Resource(name = "membershipQuotationMapper")
 	private MembershipQuotationMapper membershipQuotationMapper;
 	
-	
+
+	@Resource(name = "membershipConvSaleMapper")
+	private MembershipConvSaleMapper membershipConvSaleMapper;
 
 	@Override
 	public List<EgovMap> quotationList(Map<String, Object> params) {
@@ -130,10 +132,22 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	@Override
 	public void    insertQuotationInfo(Map<String, Object> params) {
 		 
-		boolean isVerifyGSTEURCertificate = true;
+		boolean isVerifyGSTEURCertificate   = true;
 		boolean verifyGSTZeroRateLocation = true;
 		
 		
+		
+
+		  ////////	 get taxRate////////////////
+		 int  TAXRATE = membershipConvSaleMapper.getTaxRate(params);
+		  ////////	 InvoiceNum  채번 ////////////////
+		 
+		 if( TAXRATE ==6){
+			 isVerifyGSTEURCertificate =false;
+			 verifyGSTZeroRateLocation =false;
+		 }
+		  
+		  
 		if(verifyGSTZeroRateLocation){
 		
     		 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));

@@ -42,6 +42,12 @@ $(document).ready(function() {
 	         $("#_closeOrdPop").click();
              $("#_salesOrderNo").val(event.item.ordNo);
              $("#_confirm").click();
+             
+             //add by hghm callbackFun 
+             try{
+            	 fn_callbackOrdSearchFunciton(event.item);
+             }catch(e){}
+             
 	  });
 	 
 	 doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code

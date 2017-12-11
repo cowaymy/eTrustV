@@ -45,6 +45,20 @@ $(document).ready(function(){
      });
         
         
+
+    AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+            console.log(event);
+               // fn_setDetail(listMyGridID, event.rowIndex);
+               
+            if('${resultFun}' == 'C'){
+                fn_doCollecterResult(event.item);
+            } else if('${resultFun}' == 'S'){
+                fn_doSalesResult(event.item);
+            }
+            $("#pcl_close").click();
+    });
+        
+        
 });
 
 

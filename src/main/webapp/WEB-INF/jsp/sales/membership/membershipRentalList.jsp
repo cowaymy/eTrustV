@@ -15,7 +15,7 @@ $(document).ready(function(){
 
     AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
     	console.log(event.rowIndex);
-           // fn_setDetail(listMyGridID, event.rowIndex);
+    	fn_goSVMDetails(gridID, event.rowIndex);
     });
     
     f_multiCombo();

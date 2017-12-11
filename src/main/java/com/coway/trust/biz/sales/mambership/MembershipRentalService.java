@@ -26,7 +26,6 @@ public interface MembershipRentalService {
 	List<EgovMap> selectCallLogList(Map<String, Object> params);
 	List<EgovMap> selectPaymentDetailList(Map<String, Object> params);
 	
-	  
 	EgovMap selectCcontactSalesInfo(Map<String, Object> params);
 	EgovMap selectConfigInfo(Map<String, Object> params);
 	EgovMap selectPatsetInfo(Map<String, Object> params);

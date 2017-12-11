@@ -177,12 +177,13 @@
 	  function fn_doViewLegder(){
 		   
 		  var selectedItems = AUIGrid.getSelectedItems(gridID);
+		  console.log(selectedItems);
 		  
 		  if(selectedItems.length <= 0) {
 		      Common.alert(" No membership  selected. ");
 			  return;  
 		  }
-		  Common.popupDiv("/sales/membership/selMembershipViewLeader.do?MBRSH_ID="+selectedItems[0].item.mbrshId);
+		  Common.popupDiv("/sales/membership/selMembershipViewLeader.do?MBRSH_ID="+selectedItems[0].item.mbrshId, null, null , true, '_ViewLegder');
 	  }
 	  
 	  
@@ -378,7 +379,7 @@ function fn_clear(){
 	<ul class="btns">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li>
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')">Invoice</a></p></li>
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" >Key-in List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: alert('The program is under development')" >Key-in List</a></p></li>
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: alert('The program is under development')">YS List</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

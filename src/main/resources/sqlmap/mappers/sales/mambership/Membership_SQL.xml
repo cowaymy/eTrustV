@@ -86,7 +86,7 @@
                         </if>
                       
                        <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">   
-                                  AND  SAL1004V.MBRSH_CRT_DT <![CDATA[  >=   ]]>       to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY')    
+                                 AND to_char(SAL1004V.MBRSH_CRT_DT,'yyyymmdd') =  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd') 
                        </if>
                     
 			    ) PJ

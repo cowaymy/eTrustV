@@ -70,6 +70,24 @@ function fn_keyEvent(){
 }
 
 
+
+
+function  fn_goCustSearch(){
+Common.popupDiv('/sales/ccp/searchOrderNoPop.do' , null, null , true, '_searchDiv');
+}
+
+
+function fn_callbackOrdSearchFunciton(item){
+console.log(item);
+$("#entry_orderNo").val(item.ordNo);
+fn_confirmOrder();
+
+}
+
+
+
+
+
 function fn_loadPageControl(){
     
     
@@ -139,7 +157,7 @@ function fn_loadPageControl(){
 <tbody>
 <tr>
     <th scope="row">Order No</th>
-    <td><input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo"/><p class="btn_sky"><a href="#" onClick="fn_confirmOrder()">Confirm</a></p><p class="btn_sky"><a href="#">Search</a></p></td>
+    <td><input type="text" title="" placeholder="" class="" id="entry_orderNo" name="entry_orderNo"/><p class="btn_sky"><a href="#" onClick="fn_confirmOrder()">Confirm</a></p><p class="btn_sky"><a href="#"  onclick="fn_goCustSearch()">Search</a></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->

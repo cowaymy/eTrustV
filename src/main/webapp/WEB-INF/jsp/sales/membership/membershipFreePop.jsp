@@ -185,11 +185,17 @@ function fn_getDatabsHistory(){
     });
  }
  
- function  fn_goCustSearch(){
-     Common.alert(" 차후 오더 조회  공통팝업 호출[미 개발] !!!  ");
- }
-  
+function  fn_goCustSearch(){
+    Common.popupDiv('/sales/ccp/searchOrderNoPop.do' ,null, null , true, '_searchDiv');
+}
 
+
+function fn_callbackOrdSearchFunciton(item){
+    console.log(item);
+    $("#ORD_NO").val(item.ordNo);
+    fn_doConfirm();
+    
+}
 
 function setText(result){
 

@@ -200,7 +200,15 @@ function setText(result){
 
 
 function  fn_goCustSearch(){
-    Common.alert(" 차후 오더 조회  공통팝업 호출[미 개발] !!!  ");
+    Common.popupDiv('/sales/ccp/searchOrderNoPop.do' , $('#_searchForm_').serializeJSON(), null , true, '_searchDiv');
+}
+
+
+function fn_callbackOrdSearchFunciton(item){
+	console.log(item);
+	$("#ORD_NO").val(item.ordNo);
+	fn_doConfirm();
+	
 }
 
 

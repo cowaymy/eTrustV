@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-	var gridID;
+	var gridPopID;
 	
 	$(document).ready(function(){
 	    
@@ -44,7 +44,7 @@
 	                groupingMessage     : "Here groupping"
 	            };
 	    
-	        gridID = GridCommon.createAUIGrid("m_grid_wrap",columnLayout,'', gridPros);  
+	        gridPopID = GridCommon.createAUIGrid("m_popgrid_wrap",columnLayout,'', gridPros);  
 	    }
 	    
 	    
@@ -52,7 +52,7 @@
 		 Common.ajax("GET", "/sales/membership/selectMembershipViewLeader",$("#getParamForm").serialize(), function(result) {
 			 
 			   console.log(result)
-	            AUIGrid.setGridData(gridID, result);  
+	            AUIGrid.setGridData(gridPopID, result);  
 	     });
 	}
 
@@ -77,7 +77,7 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-   <div id="m_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+   <div id="m_popgrid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- pop_body end -->

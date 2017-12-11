@@ -198,7 +198,7 @@
 							                  </if>
 							                  
 							                   <if test="salesDate != null and salesDate != ''">
-                                                      AND (TO_DATE(FL.SRV_CNTRCT_CRT_DT,'dd/mm/yyyy' ) = to_date(#{salesDate},'dd/mm/yyyy' ) )
+                                                      AND to_char(FL.SRV_CNTRCT_CRT_DT ,'yyyymmdd') =  to_char( to_date(#{salesDate},'dd/mm/yyyy'),'yyyymmdd' )
                                               </if>
                                               
                                                <if test="orderNo != null and orderNo != ''">

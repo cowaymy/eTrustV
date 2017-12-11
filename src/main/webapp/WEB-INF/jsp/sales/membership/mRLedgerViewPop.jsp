@@ -27,9 +27,7 @@ function fn_goLedgerPrint(){
 
 
 function vChange(obj){
-    $(obj).change(function(){
-        fn_getmRLedgerProcessGridAjax ();
-   }); 
+	   fn_getmRLedgerProcessGridAjax ();
  }
 
 
