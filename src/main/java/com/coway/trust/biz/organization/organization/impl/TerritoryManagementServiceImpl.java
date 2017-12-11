@@ -70,14 +70,23 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 
 		int size = 1000;
 		int page = list.size() / size;
+		int start;
+		int end;
 
 		switch (bType) {
 		case "42": // Cody Branch
 			Map<String, Object> list42 = new HashMap<>();
 
-			for (int i = 0; i < page; i++) {
+			for (int i = 0; i <= page; i++) {
+				start = i * size;
+				end = size;
+
+				if(i == page){
+					end = list.size();
+				}
+
 				list42.put("list",
-						list.stream().skip(i * size).limit(size).collect(Collectors.toCollection(ArrayList::new)));
+						list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
 				territoryManagementMapper.insertCody(list42);
 			}
 
@@ -86,9 +95,16 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 
 			Map<String, Object> list43 = new HashMap<>();
 
-			for (int i = 0; i < page; i++) {
+			for (int i = 0; i <= page; i++) {
+				start = i * size;
+				end = size;
+
+				if(i == page){
+					end = list.size();
+				}
+
 				list43.put("list",
-						list.stream().skip(i * size).limit(size).collect(Collectors.toCollection(ArrayList::new)));
+						list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
 				territoryManagementMapper.insertDreamServiceCenter(list43);
 			}
 			break;
