@@ -377,4 +377,17 @@ public class OrderRegisterController {
 		List<EgovMap> codeList = orderRegisterService.selectServicePackageList(params);
 		return ResponseEntity.ok(codeList);
 	}
+
+	@RequestMapping(value = "/prevOrderNoPop.do")
+	public String prevOrderNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.put("custId", params.get("custId"));
+		
+		return "sales/order/prevOrderNoPop";
+	}
+	@RequestMapping(value = "/selectPrevOrderNoList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPrevOrderNoList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> result = orderRegisterService.selectPrevOrderNoList(params);
+		return ResponseEntity.ok(result);
+	}
 }

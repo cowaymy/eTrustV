@@ -48,4 +48,6 @@ public interface OrderRegisterService {
 
 	List<EgovMap> selectServicePackageList(Map<String, Object> params);
 
+	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
+
 }

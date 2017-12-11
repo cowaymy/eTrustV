@@ -541,6 +541,9 @@
     }
 
     $(function(){
+        $('#btnRltdNo').click(function() {
+            Common.popupDiv("/sales/order/prevOrderNoPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+        });
         $('#custBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_CUST_CUST"}, null, true);
@@ -953,10 +956,13 @@
             $('#ordPromo option').remove();
             
             if($("#exTrade").val() == '1') {
-                $('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
+                $('#btnRltdNo').removeClass("blind");
             }
             else {
-                $('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                //$('#relatedNo').val('').prop("readonly", true).addClass("readonly");
+                $('#relatedNo').val('');
+                $('#btnRltdNo').addClass("blind");
             }
             $('#ordProudct').val('');
 
@@ -2447,7 +2453,8 @@
     <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
     </td>
     <th scope="row">Ex-Trade/Related No</th>
-    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
+    <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p><p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p>
+        <a id="btnRltdNo" href="#" class="search_btn blind"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>

@@ -1954,20 +1954,36 @@
     </select>
     
     <select id="selectServiceContractPackage" parameterType="Map" resultType="egovMap">
-		SELECT T1.SRV_CNTRCT_PAC_ID
-		     , T1.SRV_CNTRCT_PAC_CODE
-		     , T1.SRV_CNTRCT_PAC_DESC
-		     , T1.SRV_CNTRCT_PAC_DUR
-		     , T1.SRV_CNTRCT_PAC_STUS_ID
-		     , T1.SRV_CNTRCT_PAC_CRT_DT
-		     , T1.SRV_CNTRCT_PAC_CRT_USER_ID
-		     , T1.SRV_CNTRCT_PAC_START_DT
-		     , T1.SRV_CNTRCT_PAC_END_DT
-		     , T1.PAC_TYPE
-		     , T1.OBLIGT_PRIOD
-		  FROM SAL0081D T1
-		 WHERE T1.SRV_CNTRCT_PAC_ID = #{srvCntrctPacId}
-		   AND T1.SRV_CNTRCT_PAC_STUS_ID = 1
+        SELECT T1.SRV_CNTRCT_PAC_ID
+             , T1.SRV_CNTRCT_PAC_CODE
+             , T1.SRV_CNTRCT_PAC_DESC
+             , T1.SRV_CNTRCT_PAC_DUR
+             , T1.SRV_CNTRCT_PAC_STUS_ID
+             , T1.SRV_CNTRCT_PAC_CRT_DT
+             , T1.SRV_CNTRCT_PAC_CRT_USER_ID
+             , T1.SRV_CNTRCT_PAC_START_DT
+             , T1.SRV_CNTRCT_PAC_END_DT
+             , T1.PAC_TYPE
+             , T1.OBLIGT_PRIOD
+          FROM SAL0081D T1
+         WHERE T1.SRV_CNTRCT_PAC_ID = #{srvCntrctPacId}
+           AND T1.SRV_CNTRCT_PAC_STUS_ID = 1
     </select>
     
+    <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
+		SELECT T1.SALES_ORD_NO
+		     , T4.CODE_NAME AS APP_TYPE
+		     , T3.STK_CODE
+		     , T3.STK_DESC
+		  FROM SAL0001D T1
+		  JOIN SAL0002D T2
+		    ON T2.SALES_ORD_ID = T1.SALES_ORD_ID
+		  JOIN SYS0026M T3
+		    ON T3.STK_ID = T2.ITM_STK_ID
+		  JOIN SYS0013M T4
+		    ON T4.CODE_ID = T1.APP_TYPE_ID
+		 WHERE T1.CUST_ID = #{custId}
+		   AND T1.STUS_CODE_ID = '4'
+    </select>
+
 </mapper>
