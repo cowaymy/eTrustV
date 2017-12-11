@@ -290,9 +290,11 @@ public class AssetMasterController {
 		String retMsg = AppConstants.MSG_SUCCESS;
 
 		Map<String, Object> map = new HashMap();
+		
+		logger.debug("masterassetid  : {}", params.get("masterassetid"));
 
 		try {
-			// ams.deleteAssetMng(params);
+			 ams.deleteAssetMng(params);
 		} catch (Exception ex) {
 			retMsg = AppConstants.MSG_FAIL;
 		} finally {
@@ -352,11 +354,11 @@ public class AssetMasterController {
 
 		List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
 		for (int i = 0; i < updateItemList.size(); i++) {
-			// logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
+			 logger.debug("%%%%%%%%updateItemList%%%%%%%: {}", updateItemList.get(i));
 		}
 		List<EgovMap> ItemAddList = (List<EgovMap>) params.get(AppConstants.AUIGRID_ADD);
 		for (int i = 0; i < ItemAddList.size(); i++) {
-			// logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
+			 logger.debug("@@@@@@@ItemAddList@@@@@: {}", ItemAddList.get(i));
 		}
 
 		// logger.debug("addassetid : {}", params.get("addassetid"));
