@@ -561,6 +561,7 @@ SELECT T.APPV_PRCSS_NO
       ,T.APPV_AMT
       ,T.APPV_PRCSS_STUS
       ,T.APPV_PRCSS_STUS_CODE
+      ,T.CLAM_UN
       ,T.ATCH_FILE_GRP_ID
       ,T.ATCH_FILE_ID
       ,T.ATCH_FILE_NAME
@@ -598,6 +599,7 @@ SELECT T.APPV_PRCSS_NO
                    END
                   ) APPV_PRCSS_STUS
                 ,T2.APPV_STUS AS APPV_PRCSS_STUS_CODE
+                ,T3.CLAM_UN
                 ,T3.ATCH_FILE_GRP_ID
                 ,T6.ATCH_FILE_ID
                 ,T6.ATCH_FILE_NAME

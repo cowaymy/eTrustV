@@ -28,6 +28,9 @@ var invoAprveGridColLayout = [ {
     dataField : "appvLineSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
+    dataField : "clamUn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
     dataField : "isActive",
     headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
     width: 30,
