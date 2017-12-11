@@ -199,8 +199,18 @@
 		  , #{complianceStatusId}
 		  , #{complianceActionId}
 		  , #{complianceFollowUpId}
-		  , #{complianceReceivedDate}
-		  , #{complianceClosedDate}
+		  <if test="complianceReceivedDate != null and complianceReceivedDate != '' " >
+            , TO_DATE(#{complianceReceivedDate},'dd-mm-yyyy')
+          </if>
+          <if test="complianceReceivedDate == null " >
+            , #{complianceReceivedDate}
+          </if>
+          <if test="complianceClosedDate != null and complianceClosedDate != '' " >
+            , TO_DATE(#{complianceClosedDate},'dd-mm-yyyy')
+          </if>
+          <if test="complianceClosedDate == null " >
+            , #{complianceClosedDate}
+          </if>
 		  , #{complianceRemark}
 		  , #{complianceCaseCategory}
 		  , #{complianceDocType}
