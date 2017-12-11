@@ -207,7 +207,7 @@ function fn_newReqSave(){
 }
 
 function fn_estmReqPopClose(){
-	Common.popupDiv('/payment/initChangeBillingTypePop.do', {"custBillId":custBillId, "callPrgm" : "BILLING_GROUP"}, null , true ,'_editDiv3New');
+	Common.popupDiv('/payment/initChangeBillingTypePop.do', {"custBillId":custBillId, "callPrgm" : "BILLING_GROUP"}, null , true);
 }
 
 </script>
