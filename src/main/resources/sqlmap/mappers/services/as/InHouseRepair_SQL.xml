@@ -122,7 +122,7 @@
 										                                                    AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
 										                                                    AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
 										                                                    AND B.AS_CT_ID = H.MEM_ID
-										                                                    AND B.AS_SLUTN_RESN_ID = '454'
+										                                                    AND B.AS_SLUTN_RESN_ID  IN('454' ,'452')
 										                                                 
 										                                                  <if test="ordNo != null and ordNo  != '' " >    
 																			                     AND  C.SALES_ORD_NO = #{ordNo}
