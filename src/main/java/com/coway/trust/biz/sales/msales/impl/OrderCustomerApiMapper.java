@@ -10,4 +10,11 @@ public interface OrderCustomerApiMapper {
 
 	EgovMap orderCustInfo(Map<String, Object> params);
 	
+	int custIdSeq();
+	
+	void insertCustomer(Map<String, Object> params);
+	
+	void insertContactInfo(Map<String, Object> params);
+	
+	void insertCareContactInfo(Map<String, Object> params);
 }
