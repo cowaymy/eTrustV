@@ -3,24 +3,11 @@
 
 <script type="text/javascript">
 
-    /* $(document).ready(function() {
-
-        //init
-        fn_report();
-    }); */
+    $(document).ready(function() {
+    });
 
     var cnt = 0;
 
-    function fn_report() {
-
-        var option = {
-            isProcedure: false,
-            isBodyLoad : true,
-            bodyId : "reportIframe"
-        };
-        
-        Common.report("dataForm", option);
-    }
     
     function fn_procedureReport(){
     	var option = {
@@ -31,21 +18,20 @@
             
             Common.report("dataForm", option);
     }
-    
+
     function fn_onLoad() {
         
     	if(cnt == 0){
         	try {
-        		//Common.showLoader();
-        		//fn_report();
+        		Common.showLoader();
         		fn_procedureReport();
                 cnt++;
 			} catch (e) {
-			   // Common.removeLoader();
+			   Common.removeLoader();
 	            cnt = 0;
 			}
         }else{
-        	//Common.removeLoader();
+        	Common.removeLoader();
         	cnt = 0;
         }
     }
@@ -56,6 +42,7 @@
     <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusHP_Adv.rpt"/>
     <!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="WINDOW"/><!-- View Type  -->
+    <input type="hidden" id="V_PARAM" name="V_PARAM" value="TEMP" /><br />
 </form>
 
 <section id="content"><!-- content start -->
