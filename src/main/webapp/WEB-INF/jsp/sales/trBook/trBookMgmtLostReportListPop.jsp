@@ -6,8 +6,6 @@
 	
 function cboGroup_SelectedIndexChanged(){
     
-    $("#cboDepartment").multipleSelect("uncheckAll");
-    
     var total_item = new Array();
     var i = 0;
     $('#cboGroup :selected').each(function(j, mul){ 
@@ -23,9 +21,6 @@ function cboGroup_SelectedIndexChanged(){
 }
 
 function cboOrganization_SelectedIndexChanged(){
-    
-    $("#cboGroup").multipleSelect("uncheckAll");
-    $("#cboDepartment").multipleSelect("uncheckAll");
     
     var total_item = new Array();
     var i = 0;
@@ -43,10 +38,6 @@ function cboOrganization_SelectedIndexChanged(){
 }
 
 function cboMember_SelectedIndexChanged(){
-	
-    $("#cboGroup").multipleSelect("uncheckAll");
-    $("#cboOrganization").multipleSelect("uncheckAll");
-    $("#cboDepartment").multipleSelect("uncheckAll");
 
     $("#cboOrganization").multipleSelect("disable");
     $("#cboGroup").multipleSelect("disable");
