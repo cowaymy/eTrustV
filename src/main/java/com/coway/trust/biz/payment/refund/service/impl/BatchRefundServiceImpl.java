@@ -1,5 +1,7 @@
 package com.coway.trust.biz.payment.refund.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +77,7 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 				batchRefundMapper.insertBatchRefundD(detailList.get(i));
 			}
 			//CALL PROCEDURE
-			//batchRefundMapper.callBatchRefundVerifyDet(master);
+			batchRefundMapper.callBatchRefundVerifyDet(master);
 		}
 		return mastetSeq;
 	}
@@ -105,7 +107,7 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 				
 				if(isConvert) {
 					//CALL PROCEDURE
-					//batchRefundMapper.callConvertBatchRefund(master);
+					batchRefundMapper.callConvertBatchRefund(master);
 				}
 				
 				return result;
