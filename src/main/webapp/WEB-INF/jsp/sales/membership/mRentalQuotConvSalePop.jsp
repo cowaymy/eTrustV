@@ -24,10 +24,12 @@ var option = {
         $("#chkDiv").hide();
         if($("#appTypeId").val() != 66  && $("#custBillId").val() == 0){
         	$("#groupDiv").show();
+        	$("#radioNo").show();
         	$("#groupVal").val('1');   // Group Option 필수 Validation check값
         }else{
-            $("#groupDiv").hide();    // Group Option 필수 Validation check값
-            $("#groupVal").val('0');
+            $("#groupDiv").hide();
+            $("#radioNo").hide();
+            $("#groupVal").val('0');    // Group Option 필수 Validation check값
         }
         $("#radio1").hide();
         $("#radio2").hide();
