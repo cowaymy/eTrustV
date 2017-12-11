@@ -457,10 +457,10 @@
     </update>   
     
     
-  <!--   <delete id="deleteAssetMng" parameterType="Map">
+     <delete id="deleteAssetMng" parameterType="Map">
         DELETE FROM LOG0050M 
         WHERE ASSET_ID = #{masterassetid} 
-    </delete> -->
+    </delete> 
     
     
     
