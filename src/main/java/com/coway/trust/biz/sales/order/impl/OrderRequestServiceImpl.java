@@ -1074,6 +1074,14 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	EgovMap cenMap = orderRequestMapper.selectCallEntry(params); 
         	EgovMap insMapMax = orderRequestMapper.selectInstallEntry(params);
         	
+        	int srvConfigId = 0;
+        	int callEntryId = 0;
+        	
+        	if(scfMap != null) {
+        		srvConfigId = CommonUtils.intNvl(scfMap.get("srvConfigId"));
+        		callEntryId = CommonUtils.intNvl(cenMap.get("callEntryId"));
+        	}
+        	
         	//EXCHANGE MASTER
         	orderExchangeMasterVO.setInstallEntryId(CommonUtils.intNvl(insMapMax.get("installEntryId")));
         	orderExchangeMasterVO.setSoExchgOldPrcId(CommonUtils.intNvl(sodMap.get("itmPrcId")));
@@ -1081,10 +1089,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	orderExchangeMasterVO.setSoExchgOldPv((BigDecimal) somMap.get("totPv"));
         	orderExchangeMasterVO.setSoExchgOldRentAmt((BigDecimal) somMap.get("mthRentAmt"));
         	orderExchangeMasterVO.setSoExchgOldPromoId(CommonUtils.intNvl(somMap.get("promoId")));
-        	orderExchangeMasterVO.setSoExchgOldSrvConfigId(CommonUtils.intNvl(scfMap.get("srvConfigId")));
-        	orderExchangeMasterVO.setSoExchgNwSrvConfigId(CommonUtils.intNvl(scfMap.get("srvConfigId")));
-        	orderExchangeMasterVO.setSoExchgOldCallEntryId(CommonUtils.intNvl(cenMap.get("callEntryId")));
-        	orderExchangeMasterVO.setSoExchgNwCallEntryId(CommonUtils.intNvl(cenMap.get("callEntryId")));
+        	orderExchangeMasterVO.setSoExchgOldSrvConfigId(srvConfigId);
+        	orderExchangeMasterVO.setSoExchgNwSrvConfigId(srvConfigId);
+        	orderExchangeMasterVO.setSoExchgOldCallEntryId(callEntryId);
+        	orderExchangeMasterVO.setSoExchgNwCallEntryId(callEntryId);
         	orderExchangeMasterVO.setSoExchgOldDefRentAmt((BigDecimal) somMap.get("defRentAmt"));
         	orderExchangeMasterVO.setSoExchgOldCustId(CommonUtils.intNvl(somMap.get("custId")));
         	orderExchangeMasterVO.setSoExchgNwCustId(CommonUtils.intNvl(somMap.get("custId")));
