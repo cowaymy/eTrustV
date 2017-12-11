@@ -160,7 +160,7 @@
 	<select id="getInventoryStockByHolder" parameterType="Map" resultType="egovMap">
 	   SELECT ROWNUM RNUM , T.* FROM (
 		SELECT L56.LOC_ID , S28.WH_LOC_CODE , O01.NAME CT_CODY_NAME,O01.MEM_CODE CT_CODY_ID, BOM.BOM_COMPNT PARTS_CODE , BOM.STK_DESC PARTS_NAME
-		         ,  L56.QTY STOCK_QTY , L63.SERIAL_NO SERIAL_NO, BOM.STK_ID PARTS_ID
+		         ,(CASE   WHEN L63.SERIAL_NO is not null THEN 1  ELSE  L56.QTY  END) STOCK_QTY, L63.SERIAL_NO SERIAL_NO, BOM.STK_ID PARTS_ID
 		         , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = S28.RDC_CODE) rdc_code
 		  FROM SYS0028M S28
 		       , LOG0056M L56
@@ -204,8 +204,11 @@
         AND L56.STK_CODE=S26.STK_CODE
         AND L56.STK_TYPE_ID = S26.STK_TYPE_ID
         AND L56.STK_CTGRY_ID = S26.STK_CTGRY_ID
-        AND O01.BRNCH= (SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_CODE =
-        #{userId})
+<!--         AND O01.BRNCH= (SELECT WH_LOC_BRNCH_ID FROM SYS0028M WHERE WH_LOC_CODE =
+        #{userId}) -->
+         AND S28.RDC_CODE=(SELECT RDC_CODE
+                          FROM SYS0028M
+                         WHERE WH_LOC_CODE = #{userId})
         AND L56.STK_CODE= #{partsCode}
         AND S26.STK_ID=#{partsId}
 	</select>
@@ -232,7 +235,8 @@
 			       NVL(QTY , 0),
 			       NVL (BOOKQTY, 0) BOOKQTY,
 			       QTY -NVL(BOOKQTY , 0) AVAIL_QTY,
-			       L75.MOV_QTY INTRANSIT_QTY,
+			       <!-- L75.MOV_QTY INTRANSIT_QTY, -->
+			       NVL(L56.MOV_QTY,0) INTRANSIT_QTY,
 			       (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code
 			  FROM LOG0056M L56,
 			       SYS0028M S28,
@@ -343,11 +347,12 @@
 		L56.STK_DESC,
 		L56.STK_TYPE_ID PARTS_TYPE,
 		L56.STK_CTGRY_ID,
-		QTY STOCK_QTY,
+		<!-- QTY STOCK_QTY, -->
+		(case when L63.SERIAL_NO is not null then 1else QTY end) STOCK_QTY,
 		WH_LOC_DESC,
 		L63.SERIAL_NO PARTS_SERIAL_NO,
 		T1.REF_DOC_NO SERVICE_NO,
-		QTY - NVL (L75.BOOKING_QTY, 0) STOCK_QTY,
+		QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
 		S26.STK_ID PARTS_ID,
 		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code
 		FROM LOG0056M L56,
@@ -435,7 +440,7 @@
         AND L44.ALTER_ITM_GRP IS NOT NULL
         AND l44.use_probabiltiy != 100 and alter_itm_rank_ord != 1
         AND  L44.VALID_FROM_DT <![CDATA[<=]]>   sysdate 
-        AND  L44.VALID_TO_DT <![CDATA[<=]]>  sysdate
+        AND  L44.VALID_TO_DT <![CDATA[>=]]>  sysdate
 	</select> 
 	
 
@@ -649,7 +654,7 @@
             AND L47.REQST_STUS='O'
         </if>
         <if test="searchStatus == 2 ">
-            AND L47.REQST_STUS='P'
+            AND L47.REQST_STUS='C'
         </if>
         <if test="searchFromDate !=null and searchFromDate !=''">
             AND TO_CHAR( L47.REQST_CRT_DT,'YYYYMMDD') 
