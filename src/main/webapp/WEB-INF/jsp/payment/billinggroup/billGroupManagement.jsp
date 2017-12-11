@@ -1021,15 +1021,12 @@ var addOrderLayout = [
             $("#btnApprReq").show();
             $("#btnCancelReq").hide();
             
-            
             Common.ajax("GET","/payment/selectEstmReqHisView.do", {"reqId":val}, function(result){
             	$("#estmDetailHisPop").show();
-                
                 $("#apprReq_refNo").text(result.data.estmReqHisView.refNo);
                 $("#apprReq_crtDt").text(result.data.estmReqHisView.crtDt);
                 $("#apprReq_email").text(result.data.estmReqHisView.email);
                 $("#apprReq_creBy").text(result.data.estmReqHisView.crtUserId);
-                
             });
             
         }else{
@@ -1038,10 +1035,8 @@ var addOrderLayout = [
             $("#btnApprReq").hide();
             $("#btnCancelReq").show();
             
-            
             Common.ajax("GET","/payment/selectEstmReqHisView.do", {"reqId":val}, function(result){
             	$("#estmDetailHisPop").show();
-                
                 $("#apprReq_refNo").text(result.data.estmReqHisView.refNo);
                 $("#apprReq_crtDt").text(result.data.estmReqHisView.crtDt);
                 $("#apprReq_email").text(result.data.estmReqHisView.email);
@@ -1049,7 +1044,6 @@ var addOrderLayout = [
                 
             });
         }
-        
     }
     
     function fn_approveRequest(val){
@@ -1101,7 +1095,6 @@ var addOrderLayout = [
 
                 },function(jqXHR, textStatus, errorThrown) {
                     Common.alert("Failed to approve this E-Statement request. Please try again later.");
-
                 });
                 
             }else{
@@ -1112,11 +1105,9 @@ var addOrderLayout = [
             
             if(valid){
                 Common.ajax("GET","/payment/saveCancelRequest.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqId" : reqId}, function(result){
-                    console.log(result);
-
-                        Common.alert(result.message);
-                        $("#apprReq_reasonUpd").val("");
-                        $("#btnCancelReq").hide();
+                    Common.alert(result.message);
+                    $("#apprReq_reasonUpd").val("");
+                    $("#btnCancelReq").hide();
                     
                 },function(jqXHR, textStatus, errorThrown) {
                     Common.alert("Failed to cancel this E-Statement request. Please try again later.");
