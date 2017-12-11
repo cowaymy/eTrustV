@@ -323,6 +323,7 @@
                                         ,sal0023d sal023
                                         ,SYS0064M sys064
                                         ,SAL0045D  sal45
+                                        ,SAL0090D sal090
                                 WHERE 1=1
                             AND SOM.CUST_ID = C.CUST_ID
                                  /*  AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
@@ -337,6 +338,7 @@
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
+                                and SOM.SALES_ORD_ID = SRV_SO_ID
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8
                                 and rownum  < 500 ]]>
                              <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
