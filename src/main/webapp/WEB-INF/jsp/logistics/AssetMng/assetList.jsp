@@ -887,6 +887,19 @@
 
         });*/
         
+       $('#currentAsset').click(function() {
+            
+            $("#reportPDFForm #reportFileName").val('/logistics/BranchDeptCurrentAsset.rpt');
+
+            //report 호출
+            var option = {
+                    isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+            };
+            
+            Common.report("reportPDFForm", option);
+       
+        });
+     
     });
     
     
@@ -1826,6 +1839,7 @@
 <ul class="right_btns">
 
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
+    <li><p class="btn_grid"><a id="currentAsset">Branch/Department Current Asset</a></p></li>
     <li><p class="btn_grid"><a href="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <!-- <li><p class="btn_grid"><a id="exportTo">Export Search List</a></p></li> -->
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
@@ -2295,7 +2309,10 @@
                 </form> 
     </section>  
 </div>
-
+<form name="reportPDFForm" id="reportPDFForm"  method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />    
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /> 
+</form>
 </section>
 
 
