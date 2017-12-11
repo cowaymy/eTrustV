@@ -85,7 +85,7 @@ $(document).ready(function () {
 	
 	$("#deactivate_btn").click(fn_deactivate);
 	
-	$("#confirm_btn").click(fn_confirm);
+	$("#pConfirm_btn").click(fn_confirm);
 	
 	console.log('${bRefundInfo.totalValidAmt}');
 	var str =""+ Number('${bRefundInfo.totalValidAmt}').toFixed(2);
@@ -130,35 +130,42 @@ function setFilterByValues(validStusId) {
 }
 
 function fn_deactivate() {
-	Common.ajax("GET", "/payment/batchRefundDeactivate.do", $("#form_bRefundConfirm").serialize(), function(result) {
-        console.log(result);
-        
-        Common.alert(result.message);
-        
-        fn_closePop();
-        
-        fn_selectBatchRefundList();
-    });
+	Common.confirm('Are you sure want to deactivate this refund batch ?',function (){
+		Common.ajax("GET", "/payment/batchRefundDeactivate.do", $("#form_bRefundConfirm").serialize(), function(result) {
+	        console.log(result);
+	        
+	        Common.alert(result.message);
+	        
+	        fn_closePop();
+	        
+	        fn_selectBatchRefundList();
+	    });
+	});
 }
 
 function fn_confirm() {
-	if(Number($("#totInvalidCount").text()) > 0) {
-		Common.alert('There is some invalid item exist.<br />Batch confirm is disallowed.');
-	} else {
-		if(Number($("#totValidCount").text()) > 0) {
-			Common.ajax("GET", "/payment/batchRefundConfirm.do", $("#form_bRefundConfirm").serialize(), function(result) {
-		        console.log(result);
-		        
-		        Common.alert(result.message);
-		        
-		        fn_closePop();
-		        
-		        fn_selectBatchRefundList();
-		    });
-		} else {
-			Common.alert('No valid item found.<br />Batch confirm is disallowed.');
-		}
-	}
+	Common.confirm('Are you sure want to confirm this refund batch ?',function (){
+		if(Number($("#totInvalidCount").text()) > 0) {
+	        Common.alert('There is some invalid item exist.<br />Batch confirm is disallowed.');
+	    } else {
+	        if(Number($("#totValidCount").text()) > 0) {
+	            Common.ajax("GET", "/payment/batchRefundConfirm.do", $("#form_bRefundConfirm").serialize(), function(result) {
+	                console.log(result);
+	                
+	                //$('#btnConf').hide();
+                    //$('#btnDeactivate').hide();
+	                
+	                Common.alert(result.message);
+	                
+	                fn_closePop();
+	                
+	                fn_selectBatchRefundList();
+	            });
+	        } else {
+	            Common.alert('No valid item found.<br />Batch confirm is disallowed.');
+	        }
+	    }
+	});
 }
 </script>
 
@@ -251,10 +258,12 @@ function fn_confirm() {
 
 </section><!-- search_result end -->
 
+<c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="confirm_btn">Confirm</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="pConfirm_btn">Confirm</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="deactivate_btn">Deactivate</a></p></li>
 </ul>
+</c:if>
 
 </section><!-- pop_body end -->
 

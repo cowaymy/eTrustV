@@ -227,6 +227,8 @@ public class BatchRefundController {
 		master.put("convertDate", "1900/01/01");
 		master.put("convertBy", 0);
 		
+		master.put("userId", sessionVO.getUserId());
+		
 		int result = batchRefundService.batchRefundConfirm(master, true);
 		if(result > 0){
     		//File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());

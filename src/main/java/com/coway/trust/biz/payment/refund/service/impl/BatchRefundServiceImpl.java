@@ -99,6 +99,7 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 	public int batchRefundConfirm(Map<String, Object> master, Boolean isConvert) {
 		// TODO Auto-generated method stub
 		EgovMap bRefundInfo = batchRefundMapper.selectBatchRefundInfo(master);
+		List<EgovMap> bRefundItem = batchRefundMapper.selectBatchRefundItem(master);
 		int result = 0;
 		
 		if(!bRefundInfo.isEmpty()) {
@@ -108,6 +109,13 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 				if(isConvert) {
 					//CALL PROCEDURE
 					batchRefundMapper.callConvertBatchRefund(master);
+				}
+				
+				for (EgovMap egovMap : bRefundItem) {
+					egovMap.put("refnDate", bRefundInfo.get("crtDt"));
+					egovMap.put("userId", master.get("userId"));
+					// INSERT INTERFACE
+					batchRefundMapper.insertInterface(egovMap);
 				}
 				
 				return result;

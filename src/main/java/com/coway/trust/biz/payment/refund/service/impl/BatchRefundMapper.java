@@ -32,5 +32,7 @@ public interface BatchRefundMapper {
 	int batchRefundConfirm(Map<String, Object> master);
 	
 	void callConvertBatchRefund(Map<String, Object> params);
+	
+	void insertInterface(EgovMap params);
 
 }

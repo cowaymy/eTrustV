@@ -391,5 +391,52 @@
     <update id="callConvertBatchRefund" statementType="CALLABLE" parameterType="Map">
         {call SP_UPD_CNVR_BATCH_REFUND(#{batchId}, #{confirmBy})}
     </update>
+    
+    <select id="selectNextIfKey" resultType="String">
+    SELECT    941
+       || TO_CHAR (SYSDATE, 'yymmdd')
+       || '_'
+       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
+  FROM ITF0941M
+ WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
+</select>
+
+<insert id="insertInterface" parameterType="egovMap">
+<!-- CMM0042C_ITEM_SEQ.nextval -->
+   INSERT INTO ITF0941M
+   (
+        IF_KEY
+        ,SEQ
+       ,IF_TYPE
+       ,TRAN_STATUS_CD
+       ,RGST_DT
+       ,RGST_TM
+       ,RGST_ID
+       ,REFN_DATE
+       ,REFN_SEQ
+       ,ORDER_NO
+       ,WOR_NO
+       ,RBATCH_ID
+       ,CUST_NO
+       ,REFN_AMT
+    )
+    values
+    (
+        #{ifKey}
+       ,1
+       ,'941'
+       ,'10'
+       ,TO_CHAR(SYSDATE, 'YYYYMMDD')
+       ,TO_CHAR(SYSDATE, 'HH24MISS')
+       ,#{userId}
+       ,#{refnDate}
+       ,#{detId}
+       ,#{salesOrdId}
+       ,#{worNo}
+       ,#{batchId}
+       ,#{salesOrdId}
+       ,#{amt}
+    )
+</insert>
 
 </mapper>
