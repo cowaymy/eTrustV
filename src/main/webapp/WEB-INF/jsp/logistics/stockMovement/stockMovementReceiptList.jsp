@@ -29,6 +29,10 @@
 var listGrid;
 var serialGrid;
 
+var gradeGrid;
+
+var gradeList = new Array();
+
 var rescolumnLayout=[{dataField:"rnum"         ,headerText:"rownum"                      ,width:120    ,height:30 , visible:false},
                      {dataField:"delyno"       ,headerText:"Delivery No"                 ,width:120    ,height:30                },
                      {dataField:"grcmplt"      ,headerText:"GR COMPLET"                  ,width:120    ,height:30 },
@@ -67,6 +71,40 @@ var serialcolumnLayout =[
                          
                         ];
                      
+var serialcolumnLayout2 =[
+                         {dataField:"delvryNo"           ,headerText:"Delivery No"      ,width:"15%"    ,height:30   ,cellMerge : true    ,editable : false         },
+                         {dataField:"itmCode"            ,headerText:"Material Code"      ,width:"15%"    ,height:30   ,cellMerge : true    ,editable : false         },
+                         {dataField:"itmName"            ,headerText:"Material Name"      ,width:"25%"    ,height:30   ,cellMerge : true  ,editable : false          },
+                         {dataField:"pdelvryNoItm"      ,headerText:"Delivery No. Item"      ,width:120    ,height:30   , visible:false     ,editable : false       },
+                         {dataField:"ttype"                ,headerText:"Transaction Type"      ,width:120    ,height:30   , visible:false    ,editable : false       },
+                         {dataField:"serialNo"             ,headerText:"Serial No."      ,width:"20%"    ,height:30             ,editable : false  },
+                         {dataField:"grade"                ,headerText:"Grade"      ,width:"12%"    ,height:30 
+                        	,   labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+                                var retStr = "";
+                                for (var i = 0, len = gradeList.length; i < len; i++) {
+                                    if (gradeList[i]["code"] == value) {
+                                        retStr = gradeList[i]["codeName"];
+                                        break;
+                                    }
+                                }
+                                return retStr == "" ? value : retStr;
+                            }, 
+                        	editRenderer : {
+                                 type : "DropDownListRenderer",
+                                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                               listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                     return gradeList ;
+                                 },  
+                               //  list : gradeList,
+                                 keyField : "code",
+                                 valueField : "codeName"
+                                             }	    
+                         },
+                         {dataField:"crtDt"                ,headerText:"Create Date"      ,width:"13%"    ,height:30    ,editable : false           },
+                         {dataField:"crtUserId"           ,headerText:"Create User"      ,width:120   ,height:30   , visible:false      ,editable : false     },
+                         
+                        ];
+                     
                      
                      
 var resop = {
@@ -82,7 +120,7 @@ var resop = {
 
 var serialop = {
         //rowIdField : "rnum",            
-        editable : false,
+        editable : true,
         displayTreeOpen : true,
         //showRowCheckColumn : true ,
         enableCellMerge : true,
@@ -113,12 +151,12 @@ $(document).ready(function(){
     
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumnLayout, serialop);
+    gradeGrid = AUIGrid.create("#receipt_grid", serialcolumnLayout2, serialop);
     
     
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
     	var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
         AUIGrid.clearGridData(serialGrid);
-        AUIGrid.resize(serialGrid,980,380); 
     	fn_ViewSerial(delno);
     	
     });
@@ -136,17 +174,67 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
-        
-        var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
-        
-        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
-        	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
-        }else{
-        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
-        	for (var i = 0 ; i < rown.length ; i++){
-        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
-        	}
-        }
+    	var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
+    	var checked = AUIGrid.getCheckedRowItems(listGrid);
+	    var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
+    	if(checked.length>1){
+	        for(var i = 0 ; i < checked.length ; i++){
+	        	 if(checked[i].item.mtype !=event.item.mtype){
+	                Common.alert("Please Check Movement Type.");
+	                //AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+		        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+		        	for (var i = 0 ; i < rown.length ; i++){
+		        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+		        	}
+	                return false;
+	        	 }else if(event.item.mtype== "UM93"){
+		        	 if(checked[i].item.delyno !=event.item.delyno){
+		                Common.alert("Please Check Movement Type.");
+		                //AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+			        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+			        	for (var i = 0 ; i < rown.length ; i++){
+			        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+			        	}
+		                return false;
+		        	 }
+	        }
+		        
+		        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
+		        	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
+		        }else{
+		        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+		        	for (var i = 0 ; i < rown.length ; i++){
+		        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+		        	}
+		        }
+	        }       
+    	}else{
+    		  var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
+
+    		  if(event.item.mtype== "UM93"){
+    			  for(var i = 0 ; i < checked.length ; i++){ 
+    			  if(checked[i].item.delyno !=event.item.delyno){
+                Common.alert("Please Check Movement Type.2");
+                //AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+		        	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+		        	for (var i = 0 ; i < rown.length ; i++){
+		        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+		        	}
+                return false;
+    			  }
+		     }
+    		  }
+              
+              if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
+                  AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
+              }else{
+                  var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
+                  for (var i = 0 ; i < rown.length ; i++){
+                      AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
+                  }
+              }
+    		
+    	}
     });
     
     AUIGrid.bind(listGrid, "cellDoubleClick", function( event ) {
@@ -201,6 +289,17 @@ $(function(){
         	$('#grForm #gtype').val("GR");
         	$("#dataTitle").text("Good Receipt Posting Data");
         	$("#gropenwindow").show();
+        	
+        	if(checkedItems[0].mtype=="UM93"){
+        		fn_gradeSerial(checkedItems[0].delyno);
+        		$("#receipt_body").show();
+        	    //fn_gradComb();    
+        		AUIGrid.resize(gradeGrid); 
+        	        
+        	}else{
+        		$("#receipt_body").hide();
+        		   AUIGrid.clearGridData(gradeGrid);
+        	}
         }
     });
     $("#receiptcancel").click(function(){
@@ -315,11 +414,41 @@ function grFunc(){
 	var data = {};
 	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
+	var addedItems = AUIGrid.getColumnValues(gradeGrid,"grade");
+	var getRow = AUIGrid.getRowCount(gradeGrid);
+	console.log(addedItems);
+	console.log(getRow);
+	var gradchk=false;
+	for(var i = 0 ; i < check.length ; i++){
+        if(check[i].item.mtype =="UM93"){
+        	gradchk=true;
+        }
+   }
+	var graddata;
+	if(gradchk){
+		if(addedItems.length<1){
+                    Common.alert("Please select Grade.");
+                    return false;
+		}else{
+			for(var i =0; i < getRow ; i++){
+					console.log(addedItems[i]);
+				if(""==addedItems[i] || null==addedItems[i]){
+	                    Common.alert("Please select Grade.");
+	                    return false;
+				}
+			}
+		}
+	graddata=GridCommon.getEditData(gradeGrid);
+	}
 	
 	data.check   = check;
 	data.checked = check;
+	data.grade    = graddata;
 	
 	data.form    = $("#grForm").serializeJSON();
+	
+	console.log(data);
+	
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
 		var reparam = (result.rdata).split("∈");
 		console.log(reparam.length);
@@ -373,6 +502,7 @@ function fn_ViewSerial(str){
 		        AUIGrid.setGridData(serialGrid, result.data);
 			    
 		        $("#serialopenwindow").show();
+		        AUIGrid.resize(serialGrid);
 		  
     },  function(jqXHR, textStatus, errorThrown) {
         try {
@@ -381,6 +511,39 @@ function fn_ViewSerial(str){
         Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
 }
+function fn_gradeSerial(str){
+	
+    var data = { delno : str };
+    
+    Common.ajax("GET", "/logistics/stockMovement/StockMovementDeliverySerialView.do",
+    		data,
+    		function(result) {
+		        AUIGrid.setGridData(gradeGrid, result.data);
+		        fn_gradComb();
+		  
+    },  function(jqXHR, textStatus, errorThrown) {
+        try {
+        } catch (e) {
+        }
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
+    });
+}
+
+function fn_gradComb(){
+	var paramdata = { groupCode : '390' , orderValue : 'CODE_ID'};
+    Common.ajaxSync("GET", "/common/selectCodeList.do", paramdata,
+            function(result) {
+                for (var i = 0; i < result.length; i++) {
+                    var list = new Object();
+                    list.code = result[i].code;
+                    list.codeId = result[i].codeId;
+                    list.codeName = result[i].codeName;
+                    list.description = result[i].description;
+                    gradeList.push(list);
+                }                
+            });
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -528,7 +691,9 @@ function fn_ViewSerial(str){
 		        </tr>
 		    </tbody>
 		    </table>
-		
+            <article class="grid_wrap" id="receipt_body" style="display: none;"><!-- grid_wrap start -->
+            <div id="receipt_grid" class="mt10" style="width:100%;"></div>
+            </article><!-- grid_wrap end -->
 		    <ul class="center_btns">
 		        <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li> 
 		    </ul>
