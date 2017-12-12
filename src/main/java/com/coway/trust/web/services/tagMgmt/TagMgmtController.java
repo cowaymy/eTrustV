@@ -48,6 +48,7 @@ public class TagMgmtController {
 	 ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params) {
 		logger.debug("paramsJINMU {}", params);
 		List<EgovMap> notice = tagMgmtService.getTagStatus(params);
+		logger.debug("paramsJINMU {}", notice );
 		return ResponseEntity.ok(notice);
 	}
 	

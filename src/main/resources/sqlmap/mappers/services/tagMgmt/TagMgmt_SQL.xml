@@ -4,39 +4,41 @@
     
   
   <select id="selectTagStatus" parameterType="Map" resultType="egovMap">
-  
-  SELECT Z.customer,
-               Z.main_inquiry,
-               Z.sub_inquiry,
-               Z.sales_order,
-               Z.main_department,
-               Z.sub_department,
-               Z.claim_note,
-               Z.status
-      FROM ( SELECT A.CUST_NO as customer,
-                            D.CD_NM as main_inquiry,
-                            E.CD_NM as sub_inquiry,
-                            A.ORD_NO as sales_order,
-                            B.CODE_NAME as main_department,
-                            C.CODE_NAME as sub_department,
-                            F.MEMO as claim_note,
-                            'Active' as status
-                    FROM CALLCENTERUSER.T_CUR_HIST A,
-                            SYS0013M B,
-                            SYS0013M C,
-                            CALLCENTERUSER.T_CNSL_CD  D,
-                            CALLCENTERUSER.T_CNSL_CD  E,
-                            CALLCENTERUSER.T_RMK_HIST F
-                  WHERE B.CODE            = A.DEPT_CODE
-                      AND C.CODE            = A.SUB_DEPT_CDE
-                      AND A.CNSL_LRGCLAS_CD = D.CNSL_CD
-                      AND A.CUR_SEQNO       = F.CUR_SEQNO
-                      AND A.TR_DVCD         = 'T'
-                   ORDER BY A.REG_DTM DESC
-               ) Z
+			 
+	SELECT      Z.Counseling_No , Z.Customer_No , Z.classify_mem 
+                     , Z.Customer_name, Z.Main_inquiry, Z.Sub_inquiry 
+                     , Z.Feedback_code, Z.MAIN_DEPT, Z.SUB_DEPT
+                     , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
+                     ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
+        
+        FROM      (
+             SELECT A.CUR_SEQNO   Counseling_No 
+                , A.CUST_NO as Customer_No   
+                , DECODE(FN_GET_COMMCD(1, TGT_DVCD), '', FN_GET_COMMCD(8, TGT_DVCD), FN_GET_COMMCD(1, TGT_DVCD)) AS classify_mem  
+                , A.CUST_NM Customer_name 
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS Main_inquiry 
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry 
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS MAIN_DEPT    
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT   
+                , A.DEPT_CODE
+                , A.SUB_DEPT_CDE  
+                , DECODE(B.CC_TIC_STUS_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.CC_TIC_STUS_ID)) as Status
+                , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                FROM CALLCENTERUSER.T_CUR_HIST A   
+                LEFT OUTER JOIN CCR0010M B     
+                ON A.CUR_SEQNO = B.CUR_SEQ_NO  
+                WHERE A.TR_DVCD         = 'T'
+                AND CUR_SEQNO NOT IN (
+                    SELECT CUR_SEQ_NO
+                    FROM CCR0010M
+                    WHERE CUR_SEQ_NO IS NOT NULL 
+                    AND CC_TIC_STUS_ID NOT IN (1, 35, 44)
+                )
+        ) Z
         WHERE 1=1
-      <if test="customer != null and customer != '' ">
-            AND Z.customer = #{customer}
+	   <if test="customer != null and customer != '' ">
+            AND Z.Customer_name = upper(#{customer})
         </if>
         <if test="main_inquiry != null and main_inquiry != '' ">
            AND LOWER(Z.main_inquiry) = LOWER(#{main_inquiry})
@@ -44,21 +46,25 @@
         <if test="sub_inquiry != null and sub_inquiry != '' ">
           AND LOWER(Z.sub_inquiry) = LOWER(#{sub_inquiry})
         </if>
-        <if test="sales_order != null and sales_order != '' ">
-           AND  Z.sales_order = #{sales_orde}
+        <if test="counseling_no != null and counseling_no != '' ">
+           AND  LOWER(Z.Counseling_No)= LOWER(#{counseling_no})
         </if>
          <if test="main_department != null and main_department != '' ">
-           AND  LOWER(Z.main_department) = LOWER(#{main_department})
+           AND  LOWER(Z.MAIN_DEPT) = LOWER(#{main_department})
         </if>
          <if test="sub_department != null and sub_department != '' ">
-           AND  LOWER(Z.sub_department) = LOWER(#{sub_department})
+           AND  LOWER(Z.sub_dept) = LOWER(#{sub_department})
         </if>
-         <if test="claim_note != null and claim_note != '' ">
-           AND  LOWER(Z.claim_note) = LOWER(#{claim_note})
+          <if test="feedback_code != null and feedback_code != '' ">
+           AND  LOWER(Z.Feedback_code) = LOWER(#{feedback_code})
         </if>
-            <if test="status != null and status != '' ">
-           AND  Z.status = #{status}
+        <if test="regDt != null and regDt != '' ">
+            and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') = TO_CHAR(TO_DATE (#{regDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
         </if>
+           
+			
+
+      
   
   
   </select>

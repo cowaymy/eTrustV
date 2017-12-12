@@ -10,14 +10,19 @@ function tagMgmtGrid() {
     
     var columnLayout =[
                        {
-                           dataField: "customer",
+                           dataField: "counselingNo",
+                           headerText: "CounselingNo",
+                           width: "10%"
+                       },
+                       {
+                           dataField: "customerName",
                            headerText: "Customer",
-                           width: "8%"
+                           width: "13%"
                        },
                        {
                            dataField: "mainInquiry",
                            headerText: "Main Inquiry",
-                           width: "13%"
+                           width: "12%"
                        },
                        {
                            dataField: "subInquiry",
@@ -26,31 +31,26 @@ function tagMgmtGrid() {
                            width: "13%"
                        },
                        {
-                           dataField: "salesOrder",
-                           headerText: "Sales Order",
+                           dataField: "feedbackCode",
+                           headerText: "Feedback Code",
                            width: "10%"
                        },
                        {
-                           dataField: "mainDepartment",
+                           dataField: "mainDept",
                            headerText: "Main Department",
                            style: "aui-grid-user-custom-left ",
                            width: "13%"
                        },
                        {
-                           dataField: "subDepartment",
+                           dataField: "subDept",
                            headerText: "Sub Department",
                            style: "aui-grid-user-custom-left ",
                            width: "15%"
                        },
                        {
-                           dataField: "claimNote",
-                           headerText: "Claim Note",
-                           style: "aui-grid-user-custom-left ",
-                           width: "18%"
-                       },
-                       {
-                           dataField: "status",
-                           headerText: "Status"
+                           dataField: "regDate",
+                           headerText: "Register Date",
+                           dataType : "date"
                        }
                    ];
     
@@ -155,35 +155,35 @@ function fn_tagLog() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer </th>
-    <td><input type="text" id="customer" name="customer" placeholder="customer" class="w100p" /></td>
+    <th scope="row">Counseling No</th>
+    <td><input type="text" id="customer" name="counseling_no" placeholder="counseling_no" class="w100p" /></td>
     <th scope="row">Main Inquiry</th>
     <td><input type="text" id="main_inquiry" name="main_inquiry" title="" placeholder="main_inquiry" class="w100p" /></td>
     <th scope="row">Sub Inquiry</th>
     <td><input type="text" id="sub_inquiry" name="sub_inquiry" title="" placeholder="sub_inquiry" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Sales Order</th>
-    <td><input type="text" id="sales_order" name="sales_order" title="" placeholder="sales_order" class="w100p" /></td>
+    <th scope="row">Customer</th>
+    <td><input type="text" id="customer" name="customer" placeholder="customer" class="w100p" /></td>
     <th scope="row">Main Dept</th>
     <td><input type="text" id="main_department" name="main_department" title="" placeholder="main_department" class="w100p" /></td>
     <th scope="row">Sub Dept</th>
     <td><input type="text" id="" name="sub_department" title="sub_department" placeholder="sub_department" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Claim Note</th>
-    <td><input type="text" id="claim_note" name="claim_note" title="" placeholder="claim_note" class="w100p" /></td>
-    <th scope="row">Status</th>
+    <th scope="row">Feedback Code</th>
+    <td><input type="text" id="feedback_code" name="feedback_code" title="" placeholder="feedback_code" class="w100p" /></td>
+   <!--  <th scope="row">Status</th>
     <td>
          <select class="w100p"  id="status" name="status">
             <option value="">Choose One</option>
             <option value="Active">Active</option>
             <option value="Complete">Complete</option>
-        </select>
+        </select> -->
     
-    </td>
-       <th scope="row"></th>
-    <td></td>
+    
+       <th scope="row">Regist Date</th>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regDt" name="regDt"/></td>
     
 </tr>
 
