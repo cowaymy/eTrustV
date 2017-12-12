@@ -27,4 +27,10 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
 	public EgovMap selectOrderNum() {
 		return ASReportMapper.selectOrderNum();
 	}
+	
+	@Override
+	public List<EgovMap> selectViewLedger(Map<String, Object> params) {
+		return ASReportMapper.selectViewLedger(params);
+	}
+	
 }
