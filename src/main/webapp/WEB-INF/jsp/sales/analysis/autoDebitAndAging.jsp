@@ -65,7 +65,7 @@ function fn_setParameter(method){
 	    $("#V_PVYEAR").val(year);
 	    $("#V_WHERESQL").val(whereSQL);
 	}
-	if($("#_rptType").val() == '1'){
+	if($("#_rptType").val() == '1'){      
 		$("#reportFileName").val("/sales/RegDailyAgingMonthMov.rpt"); //File Name
 		$("#reportDownFileName").val("RegularDailyAgeingMovemet"+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
 		

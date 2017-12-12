@@ -171,4 +171,118 @@
   ORDER BY Project1.ORD_ID ASC
 </select>
 
+
+<select id="getRentInstallLatestNo" parameterType="Map" resultType="egovMap">
+				SELECT 
+				    T1.RENT_INST_NO
+				FROM(
+				        SELECT 
+				            RENT_INST_NO
+				        FROM 
+				            SAL0070D 
+				        WHERE 
+				            SALES_ORD_ID = #{ordId} 
+				        ORDER BY RENT_INST_DT DESC ) T1
+				<![CDATA[     
+				WHERE ROWNUM <= 1
+				]]>
+</select>
+
+<select id="getRentalStatus" parameterType="Map" resultType="egovMap">
+    SELECT 
+        RENTAL_STUS 
+    FROM 
+        SAL1006V 
+    WHERE ORD_ID = #{ordId}
+    <![CDATA[
+    AND ROWNUM <= 1
+    ]]>
+</select>
+
+<select id="selectROSSMSCodyTicketLogList" parameterType="Map" resultType="egovMap"> 
+				   SELECT Project4.C1   ,
+				       Project4.TYPE_ID   ,
+				       Project4.CODE   ,
+				       Project4.CODE_NAME   ,
+				       Project4.REM   ,
+				       Project4.USER_ID   ,
+				       Project4.USER_NAME   ,
+				       TO_CHAR(Project4.CALL_CRT_DT , 'DD/MM/YYYY') CALL_CRT_DT   
+				  FROM ( SELECT Project4.C1   ,
+				                Project4.TYPE_ID   ,
+				                Project4.CODE   ,
+				                Project4.CODE_NAME   ,
+				                Project4.REM   ,
+				                Project4.USER_ID   ,
+				                Project4.USER_NAME   ,
+				                Project4.CALL_CRT_DT   
+				         FROM ( SELECT Distinct1.C1   ,
+				                       Distinct1.TYPE_ID   ,
+				                       Distinct1.CODE   ,
+				                       Distinct1.CODE_NAME   ,
+				                       Distinct1.REM   ,
+				                       Distinct1.USER_ID   ,
+				                       Distinct1.USER_NAME   ,
+				                       Distinct1.CALL_CRT_DT   
+				                FROM ( SELECT DISTINCT UnionAll1.C1   ,
+				                                       UnionAll1.TYPE_ID   ,
+				                                       UnionAll1.CODE CODE  ,
+				                                       UnionAll1.CODE_NAME   ,
+				                                       UnionAll1.REM   ,
+				                                       UnionAll1.USER_ID   ,
+				                                       UnionAll1.USER_NAME   ,
+				                                       UnionAll1.CALL_CRT_DT   
+				                       FROM ( SELECT 1 C1  ,
+				                                     Extent1.TYPE_ID TYPE_ID  ,
+				                                     Extent3.CODE CODE  ,
+				                                     Extent3.CODE_NAME CODE_NAME  ,
+				                                     CASE WHEN ( Extent2.CALL_SMS_REM IS NOT NULL ) THEN Extent2.CALL_SMS_REM ELSE ' ' END REM  ,
+				                                     CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_ID ELSE 0 END USER_ID  ,
+				                                     CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END USER_NAME  ,
+				                                     Extent2.CALL_CRT_DT CALL_CRT_DT  
+				                              FROM CCR0006D Extent1
+				                                     JOIN CCR0007D Extent2   ON ( Extent2.CALL_ENTRY_ID = Extent1.CALL_ENTRY_ID ) AND ( 1 = Extent2.CALL_SMS )
+				                                     JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.TYPE_ID
+				                                     LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent2.CALL_CRT_USER_ID
+				                               WHERE  Extent1.SALES_ORD_ID = #{ordId}
+				                              UNION ALL 
+				                              SELECT 1 C1  ,
+				                                     Extent7.TYPE_ID   ,
+				                                     Extent8.CODE   ,
+				                                     Extent8.CODE_NAME   ,
+				                                     CASE WHEN ( Extent5.CRCT_REM IS NOT NULL ) THEN Extent5.CRCT_REM ELSE ' ' END REM  ,
+				                                     CASE WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_ID ELSE 0 END USER_ID  ,
+				                                     CASE WHEN ( Extent9.USER_ID IS NOT NULL ) THEN Extent9.USER_NAME ELSE ' ' END USER_NAME  ,
+				                                     Extent5.CRT_DT CRT_DT  
+				                              FROM CCR0014M Extent5
+				                                     JOIN CCR0007D Extent6   ON Extent6.CALL_RESULT_ID = Extent5.CALL_RESULT_ID
+				                                     JOIN CCR0006D Extent7   ON ( Extent7.CALL_ENTRY_ID = Extent6.CALL_ENTRY_ID )
+				                                     AND ( Extent7.SALES_ORD_ID = #{ordId} )
+				                                     JOIN SYS0013M Extent8   ON Extent8.CODE_ID = Extent5.CALL_TYPE_ID
+				                                     LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Extent5.CRT_USER_ID ) UnionAll1 ) Distinct1 ) Project4 ) Project4
+				      ORDER BY Project4.CALL_CRT_DT DESC
+</select>
+
+<select id="getReasonCodeList" parameterType="Map" resultType="egovMap">
+			  SELECT
+			     Extent1.RESN_ID CODE_ID  ,
+			     Extent1.CODE CODE  ,
+			     Extent1.CODE || ' - ' || Extent1.RESN_DESC CODE_NAME  
+			  FROM 
+			     SYS0032M Extent1
+			  WHERE  
+			      Extent1.RESN_TYPE_ID = #{typeId} 
+			  AND  
+			      Extent1.STUS_CODE_ID = #{stusCodeId} 
+</select>
+
+<select id="getFeedbackCodeList" parameterType="Map" resultType="egovMap">
+			    SELECT Extent2.RESN_ID CODE_ID  ,
+			       Extent2.CODE CODE  ,
+			       Extent2.CODE || ' - ' || Extent2.RESN_DESC CODE_NAME  
+			  FROM SYS0034M Extent1
+			         JOIN SYS0032M Extent2   ON Extent2.RESN_ID = Extent1.RESN_ID
+			 WHERE  ( Extent1.PARENT_RESN_ID = #{resnId} )
+			          AND ( 0 = Extent1.DISAB )
+</select>
 </mapper>

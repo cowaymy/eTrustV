@@ -13,4 +13,13 @@ public interface ROSCallLogMapper {
 	
 	List<EgovMap> selectRosCallLogList(Map<String, Object> params);
 	
+	EgovMap getRentInstallLatestNo(Map<String, Object> params);
+	
+	EgovMap getRentalStatus(Map<String, Object> params);
+	
+	List<EgovMap> selectROSSMSCodyTicketLogList(Map<String, Object> params);
+	
+	List<EgovMap> getReasonCodeList (Map<String, Object> params);
+	
+	List<EgovMap> getFeedbackCodeList(Map<String, Object> params);
 }

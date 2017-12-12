@@ -13,7 +13,23 @@ var optionModule = {
         isShowChoose: false  
 };
 
-
+var gridPros = {
+        usePaging           : true,         //페이징 사용
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+        editable            : false,            
+        fixedColumnCount    : 0,            
+        showStateColumn     : true,             
+        displayTreeOpen     : false,            
+        selectionMode       : "singleRow",  //"multipleCells",            
+        headerHeight        : 30,       
+        useGroupingPanel    : false,        //그룹핑 패널 사용
+        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        noDataMessage       : "No order found.",
+        groupingMessage     : "Here groupping"
+    };
+    
 $(document).ready(function() {/////////////////////////////////////////////////////////////// Document Ready Func Start
 	
 	createRosCallGrid();
@@ -31,6 +47,64 @@ $(document).ready(function() {//////////////////////////////////////////////////
 	});
 });////////////////////////////////////////////////////////////////////////////////////////////////// Document Ready Func End
 
+function chgGridTab(tabNm) {
+    switch(tabNm) {
+        case 'custInfo' :
+            AUIGrid.resize(custInfoGridID, 920, 300);
+            break;
+        case 'memInfo' :
+            AUIGrid.resize(memInfoGridID, 920, 300);
+            break;
+        case 'docInfo' :
+            AUIGrid.resize(docGridID, 920, 300);
+            if(AUIGrid.getRowCount(docGridID) <= 0) {
+                fn_selectDocumentList();
+            }
+            break;
+        case 'callLogInfo' :
+            AUIGrid.resize(callLogGridID, 920, 300);
+            if(AUIGrid.getRowCount(callLogGridID) <= 0) {
+                fn_selectCallLogList();
+            }
+            break;
+        case 'payInfo' :
+            AUIGrid.resize(payGridID, 920, 300);
+            if(AUIGrid.getRowCount(payGridID) <= 0) {
+                fn_selectPaymentList();
+            }
+            break;
+        case 'transInfo' :
+            AUIGrid.resize(transGridID, 920, 300);
+            if(AUIGrid.getRowCount(transGridID) <= 0) {
+                fn_selectTransList();
+            }
+            break;
+        case 'autoDebitInfo' :
+            AUIGrid.resize(autoDebitGridID, 920, 300);
+            if(AUIGrid.getRowCount(autoDebitGridID) <= 0) {
+                fn_selectAutoDebitList();
+            }
+            break;
+        case 'discountInfo' :
+            AUIGrid.resize(discountGridID, 920, 300);
+            if(AUIGrid.getRowCount(discountGridID) <= 0) {
+                fn_selectDiscountList();
+            }
+            break;
+        case 'afterList' :
+            AUIGrid.resize(afterServceGridID, 940, 300);
+            break;
+        case 'beforeList' :
+            AUIGrid.resize(beforeServceGridID, 940, 300);
+            break;
+        case 'rentalfulldetail' :
+        	AUIGrid.resize(agmHistoryGridID, 940, 180);
+            AUIGrid.resize(billingGroupLatestSummaryGridID, 940, 180);
+            AUIGrid.resize(agreementGridID, 940, 180);
+            break;    
+    };
+}
+
 function fn_underDevelop(){
 	Common.alert("This Program is Under Development.");
 }
@@ -44,6 +118,9 @@ function createRosCallGrid(){
 	                            {dataField : "custName", headerText : "Customer Name", width : '20%' , editable : false},
 	                            {dataField : "custNric", headerText : "NRIC/Company No", width : '20%' , editable : false}, 
 	                            {dataField : "rentalStus", headerText : "Rental Status", width : '10%' , editable : false},
+	                            {dataField : "ordId", visible : false},
+	                            {dataField : "custId", visible : false},
+	                            {dataField : "custBillId", visible : false}
 	                           ];
 	    
 	    //그리드 속성 설정
@@ -66,6 +143,35 @@ function createRosCallGrid(){
 	    
 	    rosGridID = GridCommon.createAUIGrid("#rosCall_grid_wrap", rosColumnLayout,'', gridPros);  // address list
 }
+
+function fn_newROSCall(){
+	
+	//Validation
+	var selectedItem = AUIGrid.getSelectedItems(rosGridID);
+    if(selectedItem.length <= 0){
+        Common.alert(" No result selected. ");
+        return;
+    }
+    //Popup
+    Common.popupDiv("/sales/rcms/newRosCallPop.do", {salesOrderId : selectedItem[0].item.ordId , ordNo : selectedItem[0].item.ordNo, custId : selectedItem[0].item.custId}, null , true , '_newDiv');
+}
+
+function fn_chargeOrderBillingType(){
+	
+	//Validation
+    var selectedItem = AUIGrid.getSelectedItems(rosGridID);
+    if(selectedItem.length <= 0){
+        Common.alert(" No result selected. ");
+        return;
+    }
+    //Popup
+	Common.popupDiv('/payment/initChangeBillingTypePop.do', {custBillId : selectedItem[0].item.custBillId , callPrgm : "BILLING_GROUP"}, null , true);
+	
+}
+
+function searchList(){
+	$("#_searchBtn").click();
+}
 </script>
 
 
@@ -81,8 +187,8 @@ function createRosCallGrid(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>ROS Call Log</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a onclick="javascript:fn_underDevelop()"><span ></span>NEW ROS Call</a></p></li>
-    <li><p class="btn_blue"><a onclick="javascript:fn_underDevelop()"><span ></span>Change Order Billing Type</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_newROSCall()"><span ></span>NEW ROS Call</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_chargeOrderBillingType()"><span ></span>Charge Order Billing Type</a></p></li>
     <li><p class="btn_blue"><a onclick="javascript:fn_underDevelop()"><span ></span>Order Remark Upload Batch</a></p></li>
     <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a onclick="javascript:fn_underDevelop()"><span class="clear"></span>Clear</a></p></li>

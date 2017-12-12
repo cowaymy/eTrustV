@@ -19,15 +19,45 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 	private ROSCallLogMapper rosCallLogMapper;
 
 	@Override
-	public List<EgovMap> getAppTypeList(Map<String, Object> params) {
+	public List<EgovMap> getAppTypeList(Map<String, Object> params) throws Exception {
 		
 		return rosCallLogMapper.getAppTypeList(params);
 	}
 
 	@Override
-	public List<EgovMap> selectRosCallLogList(Map<String, Object> params) {
+	public List<EgovMap> selectRosCallLogList(Map<String, Object> params) throws Exception {
 		
 		return rosCallLogMapper.selectRosCallLogList(params);
+	}
+
+	@Override
+	public EgovMap getRentInstallLatestNo(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.getRentInstallLatestNo(params);
+	}
+
+	@Override
+	public EgovMap getRentalStatus(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.getRentalStatus(params);
+	}
+
+	@Override
+	public List<EgovMap> selectROSSMSCodyTicketLogList(Map<String, Object> params) throws Exception{
+		
+		return rosCallLogMapper.selectROSSMSCodyTicketLogList(params);
+	}
+
+	@Override
+	public List<EgovMap> getReasonCodeList(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.getReasonCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> getFeedbackCodeList(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.getFeedbackCodeList(params);
 	}
 	
 }

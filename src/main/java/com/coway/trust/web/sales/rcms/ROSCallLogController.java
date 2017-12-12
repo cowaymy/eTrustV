@@ -10,10 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.rcms.ROSCallLogService;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -25,6 +30,12 @@ public class ROSCallLogController {
 	
 	@Resource(name = "rosCallLogService")
 	private ROSCallLogService rosCallLogService;
+	
+	@Resource(name = "orderDetailService")
+	private OrderDetailService orderDetailService;
+	
+	@Resource(name = "orderLedgerService")
+	private OrderLedgerService orderLedgerService;
 	
 	@RequestMapping(value = "/rosCallLogList.do")
 	public String rosCallLogList (@RequestParam Map<String, Object> params) throws Exception{
@@ -62,5 +73,99 @@ public class ROSCallLogController {
 		
 		return ResponseEntity.ok(rosCallList);
 		
+	}
+	
+	
+	@RequestMapping(value = "/newRosCallPop.do")
+	public String newRosCallPop (@RequestParam Map<String, Object> params, SessionVO sessionVO, ModelMap model) throws Exception{
+		
+		/*** Billing Group (Grid Params)***/
+		model.put("ordNo", params.get("ordNo"));
+		model.put("ordId", params.get("salesOrderId"));
+		
+		
+		/****  Order Detail  ****/ 
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+		
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		
+		EgovMap basicMap = (EgovMap)orderDetail.get("basicInfo");
+		
+		params.put("ordId", params.get("salesOrderId"));
+		params.put("salesOrdId", params.get("salesOrderId"));//sixmonth
+		params.put("appTypeId", basicMap.get("appTypeId"));//sixmonth
+		
+		/**** OUTSTANDING ****/
+		List<EgovMap> ordOutInfoList = orderLedgerService.getOderOutsInfo(params);
+		EgovMap ordOutInfo = ordOutInfoList.get(0);
+		LOGGER.debug("ordOutInfo =====================>>> " + ordOutInfo);
+		model.addAttribute("ordOutInfo", ordOutInfo);
+		
+		/*** LAST 6 MONTH ***/
+		List<EgovMap> resultList = orderDetailService.selectLast6MonthTransListNew(params);
+		
+		EgovMap sixMonthMap = new EgovMap();
+		if(resultList != null && resultList.size() > 1 ){
+			sixMonthMap = resultList.get(1);
+		}else{
+			sixMonthMap.put("curMonth", 0);
+			sixMonthMap.put("prev1Month", 0);
+		}
+		model.addAttribute("sixMonthMap", sixMonthMap);
+		
+		/*** BILL MONTH(S)***/
+		EgovMap billMonthMap = null;
+		billMonthMap = rosCallLogService.getRentInstallLatestNo(params);
+		model.addAttribute("billMonthMap", billMonthMap);
+		
+		/*** RENTAL STATUS ***/
+		EgovMap rentalMap = null;
+		rentalMap = rosCallLogService.getRentalStatus(params);
+		model.addAttribute("rentalMap", rentalMap);
+		
+		/*** AGREEMENT LIST ***/
+		List<EgovMap> agreList = orderLedgerService.selectAgreInfo(params);
+		model.addAttribute("agreList", new Gson().toJson(agreList));
+		
+		return "sales/rcms/newRosCallPop";
+	}
+	
+	
+	@RequestMapping(value = "/selectROSSMSCodyTicketLogList")
+	public ResponseEntity<List<EgovMap>> selectROSSMSCodyTicketLogList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> smsList = null;
+		smsList = rosCallLogService.selectROSSMSCodyTicketLogList(params);
+		
+		return ResponseEntity.ok(smsList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/getReasonCodeList")
+	public ResponseEntity<List<EgovMap>> getReasonCodeList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> reasonList = null;
+		
+		reasonList = rosCallLogService.getReasonCodeList(params);
+		
+		return ResponseEntity.ok(reasonList);
+		
+	}
+	
+	
+	@RequestMapping(value = "/getFeedbackCodeList")
+	public ResponseEntity<List<EgovMap>> getFeedbackCodeList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> feedbackList = null;
+		
+		feedbackList = rosCallLogService.getFeedbackCodeList(params);
+		
+		return ResponseEntity.ok(feedbackList);
 	}
 }
