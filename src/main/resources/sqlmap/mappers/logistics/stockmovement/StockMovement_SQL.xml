@@ -238,6 +238,9 @@
                #{item}
                </foreach>
            </if>
+            <if test="mcode != null and mcode != '' ">
+           and l56.stk_code = #{mcode}
+           </if>
     </select>
     
   <select id="selectStockMovementItemDeliveryQty" parameterType="Map" resultType="egovMap">
