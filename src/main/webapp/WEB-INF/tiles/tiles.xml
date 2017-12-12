@@ -91,6 +91,10 @@
     <definition name="error/nomenu/*" extends="layout.empty">
         <put-attribute name="body" value="/WEB-INF/jsp/error/nomenu/{1}.jsp" />
     </definition>
+
+    <definition name="message/*" extends="layout.empty">
+        <put-attribute name="body" value="/WEB-INF/jsp/message/{1}.jsp" />
+    </definition>
     
     <definition name="login/*" extends="layout.empty.script">
         <put-attribute name="body" value="/WEB-INF/jsp/login/{1}.jsp" />

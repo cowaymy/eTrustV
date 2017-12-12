@@ -69,8 +69,69 @@ public class BillingGroupController {
 	 */
 	@RequestMapping(value = "/initbillGroupMngEstmConfirm.do")
 	public String initbillGroupMngEstmConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.put("reqId", params.get("reqId"));
-		return "payment/billinggroup/billGroupMngEstmConfirm";
+
+		EgovMap selectEStatementReqs = billGroupService.selectEStatementReqs(params);
+		String stusCodeId = selectEStatementReqs.get("stusCodeId") != null ? String.valueOf(selectEStatementReqs.get("stusCodeId")) : "";
+		String message;
+
+		if(selectEStatementReqs != null){
+
+			if("44".equals(stusCodeId)){
+
+				Map<String, Object> insHisMap = new HashMap<String, Object>();
+				insHisMap.put("custBillId", String.valueOf(selectEStatementReqs.get("custBillId")));
+				insHisMap.put("userId", params.get("userId"));
+				insHisMap.put("reasonUpd", "[System] Customer confirmed E-Statement.");
+				insHisMap.put("salesOrderIDOld", 0);
+				insHisMap.put("salesOrderIDNew", 0);
+				insHisMap.put("contactIDOld", 0);
+				insHisMap.put("contactIDNew", 0);
+				insHisMap.put("addressIDOld", 0);
+				insHisMap.put("addressIDNew", 0);
+				insHisMap.put("statusIDOld", 0);
+				insHisMap.put("statusIDNew", 0);
+				insHisMap.put("remarkOld", "");
+				insHisMap.put("remarkNew", "");
+				insHisMap.put("emailOld", "");
+				insHisMap.put("emailNew", String.valueOf(selectEStatementReqs.get("email")));
+				insHisMap.put("isEStatementOld", 0);
+				insHisMap.put("isEStatementNew", 1);
+				insHisMap.put("isSMSOld", 0);
+				insHisMap.put("isSMSNew", 0);
+				insHisMap.put("isPostOld", 0);
+				insHisMap.put("isPostNew", 0);
+				insHisMap.put("typeId", 1047);
+				insHisMap.put("sysHisRemark", "[System] E-Statement Confirm");
+
+				boolean updResult = billGroupService.updEStatementConfirm(selectEStatementReqs, insHisMap);
+
+				if(updResult){
+					message = "<span style='font-size:20px;font-family:Arial;font-weight:bold'>Registration successful.</span><br /><br />" +
+							"<span style='font-size:20px;font-family:Arial;font-weight:bold'>Thank You.</span><br /><br /><br />" +
+							"<span style='font-size:12px;font-family:Arial;'>Your subscription has been confirmed. You have been added to our system listing.</span><br />" +
+							"<span style='font-size:12px;font-family:Arial;'>E-invoice will be sent to your registered email on next billing cycle.</span><br /><br />" +
+							"<span style='font-size:12px;font-family:Arial;'>This message is an automated reply to your registration request.</span><br />";
+				}else{
+					message = "* Sorry! Verification is unsuccessful.<br />" +
+							"Please try again later or kindly contact Coway customer hotline 1800-888-111 for assistance.";
+				}
+
+			}else if("5".equals(stusCodeId)){
+				message = "* Invalid request. Your e-mail is already registered.<br />" +"For other query, kindly contact Coway customer hotline 1800-888-111 for assistance.";
+			}else if("10".equals(stusCodeId)){
+				message = "* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
+			}else{
+				message = "* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
+			}
+
+
+		}else{
+			message = "* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
+		}
+
+		model.addAttribute("message", message);
+
+		return "message/paymentConfirmation";
 	}
 	
 	/**
@@ -863,79 +924,4 @@ public class BillingGroupController {
 		
 		return ResponseEntity.ok(message);
 	}
-	
-	/**
-	 * 
-	 * @param updEStatementConfirm
-	 * @param params
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/updEStatementConfirm.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> updEStatementConfirm(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		
-		 ReturnMessage message = new ReturnMessage();
-		 
-		 EgovMap selectEStatementReqs = billGroupService.selectEStatementReqs(params);
-		 String stusCodeId = selectEStatementReqs.get("stusCodeId") != null ? String.valueOf(selectEStatementReqs.get("stusCodeId")) : "";
-		 
-		 if(selectEStatementReqs != null){
-			 
-			 if("44".equals(stusCodeId)){
-				 
-				 Map<String, Object> insHisMap = new HashMap<String, Object>();
-				 insHisMap.put("custBillId", String.valueOf(selectEStatementReqs.get("custBillId")));
-				 insHisMap.put("userId", sessionVO.getUserId());
-				 insHisMap.put("reasonUpd", "[System] Customer confirmed E-Statement.");
-				 insHisMap.put("salesOrderIDOld", 0);
-				 insHisMap.put("salesOrderIDNew", 0);
-				 insHisMap.put("contactIDOld", 0);
-				 insHisMap.put("contactIDNew", 0);
-				 insHisMap.put("addressIDOld", 0);
-				 insHisMap.put("addressIDNew", 0);
-				 insHisMap.put("statusIDOld", 0);
-				 insHisMap.put("statusIDNew", 0);
-				 insHisMap.put("remarkOld", "");
-				 insHisMap.put("remarkNew", "");
-				 insHisMap.put("emailOld", "");
-				 insHisMap.put("emailNew", String.valueOf(selectEStatementReqs.get("email")));
-				 insHisMap.put("isEStatementOld", 0);
-				 insHisMap.put("isEStatementNew", 1);
-				 insHisMap.put("isSMSOld", 0);
-				 insHisMap.put("isSMSNew", 0);
-				 insHisMap.put("isPostOld", 0);
-				 insHisMap.put("isPostNew", 0);
-				 insHisMap.put("typeId", 1047);
-				 insHisMap.put("sysHisRemark", "[System] E-Statement Confirm");
-				 
-				 boolean updResult = billGroupService.updEStatementConfirm(selectEStatementReqs, insHisMap);
-				 
-				 if(updResult){
-					 message.setMessage("<span style='font-size:20px;font-family:Arial;font-weight:bold'>Registration successful.</span><br /><br />" +
-                               "<span style='font-size:20px;font-family:Arial;font-weight:bold'>Thank You.</span><br /><br /><br />" +
-                               "<span style='font-size:12px;font-family:Arial;'>Your subscription has been confirmed. You have been added to our system listing.</span><br />" +
-                               "<span style='font-size:12px;font-family:Arial;'>E-invoice will be sent to your registered email on next billing cycle.</span><br /><br />" +
-                               "<span style='font-size:12px;font-family:Arial;'>This message is an automated reply to your registration request.</span><br />");
-				 }else{
-					 message.setMessage("* Sorry! Verification is unsuccessful.<br />" +
-                    "Please try again later or kindly contact Coway customer hotline 1800-888-111 for assistance.");
-				 }
-				 
-				 
-			 }else if("5".equals(stusCodeId)){
-				 message.setMessage("* Invalid request. Your e-mail is already registered.<br />" +"For other query, kindly contact Coway customer hotline 1800-888-111 for assistance.");
-			 }else if("10".equals(stusCodeId)){
-				 message.setMessage("* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.");
-			 }else{
-				 message.setMessage("* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.");
-			 }
-			 
-			 
-		 }else{
-			 message.setMessage("* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.");
-		 }
-		 
-		return ResponseEntity.ok(message);
-	}
-	
 }
