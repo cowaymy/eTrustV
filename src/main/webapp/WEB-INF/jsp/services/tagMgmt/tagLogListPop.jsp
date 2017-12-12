@@ -2,16 +2,325 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<header class="pop_header"><!-- pop_header start -->
+<h1>tag Log List </h1>
+<ul class="right_opt">
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+</ul>
+</header><!-- pop_header end -->
 
 
+<section class="pop_body"><!-- pop_body start -->
 
-<section id="content"><!-- content start -->
-<ul class="path">
-    <li><img src="${pageContext.request.contextPath}/images/common/path_home.gif" alt="Home" /></li>
-    <li>Service</li>
-    <li>Tag Mgmt</li>
+<section class="tap_wrap"><!-- tap_wrap start -->
+<ul class="tap_type1">
+    <li><a href="#" class="on">Tag Info</a></li>
+    <li><a href="#">Respond Info</a></li>
 </ul>
 
+<!-- Tag Info Start -->
+<article class="tap_area"><!-- tap_area start -->
+    <section class="tap_wrap mt0"><!-- tap_wrap start -->
+    <ul class="tap_type1">
+        <li><a href="#" class="on">Tag Basic Info</a></li>
+        <li><a href="#">Caller Info</a></li>
+    </ul>
+    <!-- Tag Basic Info Start -->
+    <article class="tap_area"><!-- tap_area start -->
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:180px" />
+            <col style="width:*" />
+            <col style="width:180px" />
+            <col style="width:*" />
+            <col style="width:160px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Inquiry Contact Number</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Inquiry Customer Name</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Inquiry Member Type</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+        </tr>
+        <tr>
+            <th scope="row">In-charge Main Dept.</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">In-charge Sub Dept.</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Main Inquiry</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+        </tr>
+        <tr>
+            <th scope="row">Customer Code</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Order Number</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Sub Main Inquiry</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+        </tr>
+        <tr>
+            <th scope="row">Progress Status</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Complete Key-in Date</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <th scope="row">Feedback Code</th>
+            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+        <section class="tap_wrap"><!-- tap_wrap start -->
+            <ul class="tap_type1">
+                <li><a href="#" class="on">Order Info</a></li>
+                <li><a href="#">HP/Cody Info</a></li>
+            </ul>
+            <!-- Order Info Start -->
+            <article class="tap_area"><!-- tap_area start -->
+                <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                    <col style="width:180px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                <tr>
+                    <th scope="row">Order No</th>
+                    <td>Text</td>
+                    <th scope="row">App Type</th>
+                    <td>Text</td>
+                    <th scope="row">Product</th>    
+                    <td>Text</td>
+                </tr>
+                <tr>
+                    <th scope="row">Customer Name</th>
+                    <td>Text</td>
+                    <th scope="row">NRC Company No</th>
+                    <td colspan="3">Text</td>
+                </tr>
+                </tbody>
+                </table><!-- table end -->
+            </article><!-- tap_area end -->
+            <!-- Order Info End -->
 
+            <!-- HP/Cody Info Start -->
+            <article class="tap_area"><!-- tap_area start -->
+                <article class="grid_wrap"><!-- grid_wrap start -->
+                    <div class="divine_auto"><!-- divine_auto start -->
+                        <div style="width:50%;">
+                            <aside class="title_line"><!-- title_line start -->
+                            <h3 class="pt0">Salesman Info</h3>
+                            </aside><!-- title_line end -->
+
+                            <table class="type1"><!-- table start -->
+                            <caption>table</caption>
+                            <colgroup>
+                                <col style="width:180px" />
+                                <col style="width:*" />
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th scope="row" rowspan="3">Order Made By</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Salesman Code</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Salesman Name</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Salesman NRIC</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Mobile No</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Office No</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">House No</th>
+                                <td>Text</td>
+                            </tr>
+                            </tbody>
+                            </table><!-- table end -->
+                        </div>
+                        <div style="width:50%;">
+                            <aside class="title_line"><!-- title_line start -->
+                            <h3 class="pt0">Cody Info</h3>
+                            </aside><!-- title_line end -->
+
+                            <table class="type1"><!-- table start -->
+                            <caption>table</caption>
+                            <colgroup>
+                                <col style="width:180px" />
+                                <col style="width:*" />
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <th scope="row" rowspan="3">Service By</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Cody Code</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Cody Name</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Cody NRIC</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Mobile No</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Office No</th>
+                                <td>Text</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">House No</th>
+                                <td>Text</td>
+                            </tr>
+                            </tbody>
+                            </table><!-- table end -->
+                        </div>
+                    </div><!-- divine_auto end -->
+                </article><!-- grid_wrap end -->
+            </article><!-- tap_area end -->
+            <!-- HP/Cody Info End -->
+
+        </section><!-- tap_wrap end -->
+    </article><!-- tap_area end -->
+    <!-- Tag Basic Info End -->
+
+    <!-- Caller Info Start -->
+    <article class="tap_area"><!-- tap_area start -->
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:180px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Name</th>
+            <td>Text</td>
+            <th scope="row">NRIC</th>
+            <td>Text</td>
+            <th scope="row">Company Name</th>
+            <td>Text</td>
+        </tr>
+        <tr>
+            <th scope="row">Contact(1)</th>
+            <td>Text</td>
+            <th scope="row">Contact(2)</th>
+            <td>Text</td>
+            <th scope="row">Email</th>
+            <td>Text</td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+    </article><!-- tap_area end -->
+    <!-- Caller Info End -->
+
+    </section><!-- tap_wrap end -->
+</article><!-- tap_area end -->
+<!-- Tag Info End -->
+
+<!-- Respond Info Start -->
+<article class="tap_area"><!-- tap_area start -->
+    <aside class="title_line"><!-- title_line start -->
+    <h3>Respond Info</h3>
+    </aside><!-- title_line end -->
+
+    <article class="grid_wrap"><!-- grid_wrap start -->
+    그리드 영역
+    </article><!-- grid_wrap end -->
+
+    <aside class="title_line"><!-- title_line start -->
+    <h3>Add Respond</h3>
+    </aside><!-- title_line end -->
+
+    <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:180px" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Status<span class="must">*</span></th>
+        <td>
+            <select>
+                <option value="">Open</option>
+                <option value="">Pending</option>
+                <option value="">Solve</option>
+                <option value="">Not yet to solve</option>
+                <option value="">Close</option>
+                <option value="">Cancel</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">Remark<span class="must">*</span></th>
+        <td><textarea cols="20" rows="5" placeholder=""></textarea></td>
+    </tr>
+    </tbody>
+    </table><!-- table end -->
+</article><!-- tap_area end -->
+<!-- Respond Info End -->
+
+</section><!-- tap_wrap end -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+
+</form>
+</section><!-- search_table end -->
+
+
+<section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+그리드 영역
+</article><!-- grid_wrap end -->
+
+</section><!-- search_result end -->
 
 </section><!-- content end -->
+
+</div>

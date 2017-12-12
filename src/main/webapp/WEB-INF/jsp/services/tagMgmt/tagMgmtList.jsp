@@ -143,6 +143,9 @@ function fn_tagLog() {
 <section class="search_table"><!-- search_table start -->
 <form id="tagMgmtForm" name="tagMgmtForm" method="post">
 
+
+
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
