@@ -450,6 +450,29 @@
              group by l63.serial_no
          )
      </select>
+<!--      <insert id="insertMovementSerial" parameterType="Map"> -->
+<!--      INSERT INTO LOG0061D ( -->
+<!--                                         SERIAL_NO, -->
+<!--                                         DELVRY_NO, -->
+<!--                                         PDELVRY_NO_ITM, -->
+<!--                                         TTYPE, -->
+<!--                                         CRT_DT, -->
+<!--                                         CRT_USER_ID -->
+<!--                                         ) -->
+<!--                           SELECT -->
+<!--                                    #{serial}, -->
+<!--                                    #{delno}, -->
+<!--                                    DELVRY_NO_ITM, -->
+<!--                                     (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) , -->
+<!--                                     SYSDATE, -->
+<!--                                     #{userId} -->
+<!--                                     FROM LOG0055D -->
+<!--                                     WHERE 1=1 -->
+<!--                                     AND DELVRY_NO= #{delno} -->
+<!--                                     AND ITM_CODE =#{itmcd} -->
+<!--                                     AND REQST_NO =#{reqstno}                                       -->
+                                                       
+<!--      </insert> -->
      <insert id="insertMovementSerial" parameterType="Map">
      INSERT INTO LOG0061D (
                                         SERIAL_NO,
@@ -462,16 +485,20 @@
                           SELECT
                                    #{serial},
                                    #{delno},
-                                    l55.DELVRY_NO_ITM,
-                                    <!-- (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) , -->
-                                    l47.TRNSC_TYPE,
+                                   DELVRY_NO_ITM,
+                                    (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
                                     SYSDATE,
                                     #{userId}
-                                    FROM LOG0055D l55, log0047m l47
+                                    FROM LOG0055D
                                     WHERE 1=1
-                                              AND  l55.DELVRY_NO= #{delno}
-                                              AND  l55.ITM_CODE =#{itmcd}
-                                              <!-- AND REQST_NO =#{reqstno}   -->                                    
+                                    AND DELVRY_NO= #{delno}
+                                    AND ITM_CODE = #{itmcd}
+                                    AND DELVRY_NO_ITM = (select max(DELVRY_NO_ITM) from log0055d where DELVRY_NO = #{delno})
+                                    AND REQST_NO = #{reqstno}
+                                     AND (SELECT serial_no
+							                FROM LOG0061D
+							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serial})
+							                 IS NULL                                   
                                                        
      </insert>
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
@@ -483,8 +510,12 @@
             FROM LOG0055D
             WHERE 1=1
                         AND DELVRY_NO = #{delno}
+                        <if test="itmcd != null and itmcd != ''">
                         AND ITM_CODE  =  #{itmcd}
+                        </if>
+                        <if test="reqstno != null and reqstno != ''">
                         AND REQST_NO  =  #{reqstno}
+                        </if>
      </select>
      
      <select id="selectStockMovementDeliverySerial" parameterType="Map" resultType="egovMap">
