@@ -268,4 +268,11 @@ public interface BillingGroupMapper {
 	 * @return
 	 */
 	String selectDocNo24Seq();
+	
+	/**
+	 * updCustBillMaster
+	 * @param params
+	 * @return
+	 */
+    void updCustBillMaster(Map<String, Object> params);
 }

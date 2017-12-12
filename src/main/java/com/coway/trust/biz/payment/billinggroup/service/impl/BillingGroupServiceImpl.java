@@ -5,11 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.cmmn.model.EmailVO;
@@ -44,7 +45,12 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	@Value("${autodebit.email.receiver}")
 	private String emailReceiver;
-
+	
+	@Value("${billing.type.confirm.url}")
+	private String billingTypeConfirmUrl;
+	
+	private static final Logger logger = LoggerFactory.getLogger(BillingGroupServiceImpl.class);
+	
 	
 	/**
 	 * selectCustBillId 조회
@@ -987,7 +993,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			email.setText("Dear Sir/Madam, <br /><br />" +
                "Thank you for registering for e-Invoice and go green together with Coway. <br /><br />" +
                "To complete registration, please verify the email address you have registered in our system by clicking the link shown below.<br /><br />" +
-               "<a href='http://web.coway.com.my/Payment/Billing/BillingGroupManagement_EStatementConfirm.aspx?ReqID=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
+               "<a href='" +  billingTypeConfirmUrl  + "reqId=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
                "This link will be expired in 24 hours.<br /><br />" +
                "This is an automatically generated email, please do not reply.<br /><br />" +
                "Shall you encounter any query, kindly contact us for more information.<br />" +
@@ -1969,6 +1975,44 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
     		return "";
     	
     	}
+	}
+
+	@Transactional
+	public boolean updEStatementConfirm(EgovMap requestMaster, Map<String, Object> history){
+		
+		Map<String, Object> custMsMap = new HashMap<String, Object>();
+		custMsMap.put("custBillId", String.valueOf(requestMaster.get("custBillId")));
+		EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(custMsMap);
+		
+		String custBillId = selectCustBillMaster.get("custBillId") != null ? String.valueOf(selectCustBillMaster.get("custBillId")) : "0";
+		String masterCustBillId = String.valueOf(requestMaster.get("custBillId"));
+		if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
+			
+			if(requestMaster != null && Integer.parseInt(masterCustBillId) > 0 ){
+				
+				history.put("isSMSOld", String.valueOf(selectCustBillMaster.get("custBillIsSms")));
+				history.put("isSMSNew", String.valueOf(selectCustBillMaster.get("custBillIsSms")));
+				history.put("isPostOld", String.valueOf(selectCustBillMaster.get("custBillIsPost")));
+				history.put("isPostNew", String.valueOf(selectCustBillMaster.get("custBillIsPost")));
+				history.put("emailOld", String.valueOf(selectCustBillMaster.get("custBillEmail")));
+				history.put("isEStatementOld", String.valueOf(selectCustBillMaster.get("custBillIsEstm")));
+				billingGroupMapper.insHistory(history);
+				
+				Map<String, Object> updCustMap = new HashMap<String, Object>();
+				updCustMap.put("custBillId", String.valueOf(requestMaster.get("custBillId")));
+				updCustMap.put("custBillEmail", String.valueOf(requestMaster.get("email")));
+				updCustMap.put("userId", history.get("userId"));
+				updCustMap.put("custBillIsEstm", "1");
+				billingGroupMapper.updCustBillMaster(updCustMap);
+				
+				Map<String, Object> updReqMap = new HashMap<String, Object>();
+				updReqMap.put("reqId", String.valueOf(requestMaster.get("reqId")));
+				updReqMap.put("stusCodeId", "5");
+				billingGroupMapper.updReqEstm(updReqMap);
+			}
+		}
+		
+		return true;
 	}
 
 }

@@ -331,4 +331,12 @@ public interface BillingGroupService{
 	 * @return
 	 */
     String saveAddOrder(Map<String, Object> params, SessionVO sessionVO);
+    
+    /**
+	 * updEStatementConfirm
+	 * @param params
+	 * @return
+	 */
+    boolean updEStatementConfirm(EgovMap requestMaster, Map<String, Object> history);
+    
 }
