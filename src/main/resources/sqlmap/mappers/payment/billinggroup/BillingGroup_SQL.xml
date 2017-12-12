@@ -1789,5 +1789,15 @@
                 </if>
 	          AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
     </select>
+
+    <update id="updCustBillMaster" parameterType="Map">
+        UPDATE SAL0024D
+        SET
+        CUST_BILL_UPD_DT = SYSDATE
+        , CUST_BILL_UPD_USER_ID = #{userId}
+        , CUST_BILL_EMAIL = #{custBillEmail}
+        , CUST_BILL_IS_ESTM = #{custBillIsEstm}
+        WHERE CUST_BILL_ID = #{custBillId}
+    </update>
     
 </mapper>
