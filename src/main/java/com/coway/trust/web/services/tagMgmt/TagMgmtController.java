@@ -39,6 +39,11 @@ public class TagMgmtController {
 	public String viewTagLogRegistPop (@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("params", params);
 		// 호출될 화면
+		logger.debug("paramsJINMU1 {}", params);
+		EgovMap tagMgmtDetail = tagMgmtService.getDetailTagStatus(params);
+		model.addAttribute("tagMgmtDetail" , tagMgmtDetail );
+		logger.debug("paramsJINMU1 {}", tagMgmtDetail );
+		
 		return "services/tagMgmt/tagLogListPop";
 	}
 	

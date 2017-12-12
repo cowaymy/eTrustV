@@ -4,7 +4,7 @@
 <script type="text/javaScript">
 
 var gridID;
-
+var counselingId;
 
 function tagMgmtGrid() {
     
@@ -90,25 +90,28 @@ $(document).ready(function(){
         GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
     });
     
-    
-	
-	
+    // cell click
+         AUIGrid.bind(gridID, "cellClick", function(event) {
+        	 counselingId = AUIGrid.getCellValue(gridID, event.rowIndex, "counselingNo");
+        	 console.log(counselingId);
+         });
 });
 
 
 
 function fn_tagLog() {
 
-/*     var selectedItems = AUIGrid.getSelectedItems(myGridID);
+    var selectedItems = AUIGrid.getSelectedItems(gridID);
     if(selectedItems.length  <= 0) {
         Common.alert("<b>No HS selected.</b>");
         return ;
-    } */
+    }
 
 
 
+    
        //Common.popupDiv("/services/tagMgmt/tagLogRegist.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
-       Common.popupDiv("/services/tagMgmt/tagLogRegistPop.do", null, null , true , "tagLogRegistPop");
+       Common.popupDiv("/services/tagMgmt/tagLogRegistPop.do?counselingId="+counselingId+"", null, null , true , "tagLogRegistPop");
 
 }
 
@@ -158,7 +161,7 @@ function fn_tagLog() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Counseling No</th>
+    <th scope="row">Counselling No</th>
     <td><input type="text" id="customer" name="counseling_no" placeholder="counseling_no" class="w100p" /></td>
     <th scope="row">Main Inquiry</th>
     <td><input type="text" id="main_inquiry" name="main_inquiry" title="" placeholder="main_inquiry" class="w100p" /></td>

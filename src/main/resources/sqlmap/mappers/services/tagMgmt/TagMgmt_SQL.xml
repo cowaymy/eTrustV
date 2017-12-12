@@ -10,6 +10,7 @@
                      , Z.Feedback_code, Z.MAIN_DEPT, Z.SUB_DEPT
                      , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
+                     ,z.ord_no
         
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No 
@@ -23,17 +24,18 @@
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT   
                 , A.DEPT_CODE
                 , A.SUB_DEPT_CDE  
-                , DECODE(B.CC_TIC_STUS_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.CC_TIC_STUS_ID)) as Status
+                , A.Ord_no
+                , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
                 , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
                 FROM CALLCENTERUSER.T_CUR_HIST A   
-                LEFT OUTER JOIN CCR0010M B     
-                ON A.CUR_SEQNO = B.CUR_SEQ_NO  
-                WHERE A.TR_DVCD         = 'T'
-                AND CUR_SEQNO NOT IN (
-                    SELECT CUR_SEQ_NO
-                    FROM CCR0010M
-                    WHERE CUR_SEQ_NO IS NOT NULL 
-                    AND CC_TIC_STUS_ID NOT IN (1, 35, 44)
+				LEFT OUTER JOIN GBSLCVD.CCR0006D B    
+				ON A.CUR_SEQNO = B.CUR_SEQ_NO
+				WHERE A.TR_DVCD         = 'T'
+				AND CUR_SEQNO NOT IN (
+				SELECT CUR_SEQ_NO
+				FROM GBSLCVD.CCR0006D
+				WHERE CUR_SEQ_NO IS NOT NULL 
+				AND STUS_CODE_ID NOT IN (1, 35, 44)
                 )
         ) Z
         WHERE 1=1
@@ -62,12 +64,48 @@
             and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') = TO_CHAR(TO_DATE (#{regDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
         </if>
            
-			
-
-      
-  
-  
+	
   </select>
+  
+  
+    <select id="selectDetailTagStatus" parameterType="Map" resultType="egovMap">
+             
+    SELECT      Z.Counseling_No , Z.Customer_No , Z.classify_mem 
+                     , Z.Customer_name, Z.Main_inquiry, Z.Sub_inquiry 
+                     , Z.Feedback_code, Z.MAIN_DEPT, Z.SUB_DEPT
+                     , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
+                     ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
+                     ,z.ord_no
+        
+        FROM      (
+             SELECT A.CUR_SEQNO   Counseling_No 
+                , A.CUST_NO as Customer_No   
+                , DECODE(FN_GET_COMMCD(1, TGT_DVCD), '', FN_GET_COMMCD(8, TGT_DVCD), FN_GET_COMMCD(1, TGT_DVCD)) AS classify_mem  
+                , A.CUST_NM Customer_name 
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS Main_inquiry 
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry 
+                , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS MAIN_DEPT    
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT   
+                , A.DEPT_CODE
+                , A.SUB_DEPT_CDE  
+                , A.Ord_no
+                , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
+                , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                FROM CALLCENTERUSER.T_CUR_HIST A   
+                LEFT OUTER JOIN GBSLCVD.CCR0006D B    
+                ON A.CUR_SEQNO = B.CUR_SEQ_NO
+                WHERE A.TR_DVCD         = 'T'
+                AND CUR_SEQNO NOT IN (
+                SELECT CUR_SEQ_NO
+                FROM GBSLCVD.CCR0006D
+                WHERE CUR_SEQ_NO IS NOT NULL 
+                AND STUS_CODE_ID NOT IN (1, 35, 44)
+                )
+        ) Z
+        WHERE 1=1
+        and z.Counseling_No = #{counselingId}
+        </select>
   
     
 </mapper>

@@ -11,4 +11,6 @@ public interface TagMgmtMapper {
 
 	public List<EgovMap> selectTagStatus(Map<String, Object> params);
 
+	public EgovMap selectDetailTagStatus(Map<String, Object> params);
+
 }

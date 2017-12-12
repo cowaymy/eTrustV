@@ -27,6 +27,12 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 		
 		return tagMgmtMapper.selectTagStatus(params);
 	}
+
+	@Override
+	public EgovMap getDetailTagStatus(Map<String, Object> params) {
+		
+		return tagMgmtMapper.selectDetailTagStatus(params);
+	}
 	
 	
 }

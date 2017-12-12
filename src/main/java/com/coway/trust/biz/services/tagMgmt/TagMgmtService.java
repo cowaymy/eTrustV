@@ -8,6 +8,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface TagMgmtService {
 
 	List<EgovMap> getTagStatus(Map<String, Object> params);
+
+	EgovMap getDetailTagStatus(Map<String, Object> params);
 	
 
 }

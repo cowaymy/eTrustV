@@ -42,35 +42,35 @@
         <tbody>
         <tr>
             <th scope="row">Inquiry Contact Number</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.counselingNo}"/></span></td>
             <th scope="row">Inquiry Customer Name</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.customerName}"/></span></td>
             <th scope="row">Inquiry Member Type</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.classifyMem }"/></span></td>
         </tr>
         <tr>
             <th scope="row">In-charge Main Dept.</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.mainDept }"/></span></td>
             <th scope="row">In-charge Sub Dept.</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.subDept }"/></span></td>
             <th scope="row">Main Inquiry</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.mainInquiry }"/></span></td>
         </tr>
         <tr>
             <th scope="row">Customer Code</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.customerNo }"/></span></td>
             <th scope="row">Order Number</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.ordNo }"/></span></td>
             <th scope="row">Sub Main Inquiry</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.subInquiry }"/></span></td>
         </tr>
         <tr>
             <th scope="row">Progress Status</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.status }"/></span></td>
             <th scope="row">Complete Key-in Date</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.regDate }"/></span></td>
             <th scope="row">Feedback Code</th>
-            <td><input type="text" title="" placeholder="" class="w100p" /></td>
+            <td><span><c:out value="${tagMgmtDetail.feedbackCode }"/></span></td>
         </tr>
         </tbody>
         </table><!-- table end -->
@@ -94,7 +94,7 @@
                 <tbody>
                 <tr>
                     <th scope="row">Order No</th>
-                    <td>Text</td>
+                    <td><span><c:out value="${tagMgmtDetail.ordNo }"/></span></td>
                     <th scope="row">App Type</th>
                     <td>Text</td>
                     <th scope="row">Product</th>    
@@ -266,7 +266,28 @@
     그리드 영역
     </article><!-- grid_wrap end -->
 
-    <aside class="title_line"><!-- title_line start -->
+  
+</article><!-- tap_area end -->
+<!-- Respond Info End -->
+
+</section><!-- tap_wrap end -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+
+</form>
+</section><!-- search_table end -->
+
+
+<section class="search_result"><!-- search_result start -->
+
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
+</ul>
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+  <aside class="title_line"><!-- title_line start -->
     <h3>Add Respond</h3>
     </aside><!-- title_line end -->
 
@@ -296,27 +317,6 @@
     </tr>
     </tbody>
     </table><!-- table end -->
-</article><!-- tap_area end -->
-<!-- Respond Info End -->
-
-</section><!-- tap_wrap end -->
-
-<section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
-
-
-</form>
-</section><!-- search_table end -->
-
-
-<section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-그리드 영역
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
