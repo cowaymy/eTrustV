@@ -411,8 +411,8 @@
     <update id="updateAssetDetail" parameterType="Map">
            UPDATE LOG0051D
                     SET      
-                        TYPE_ID                   =#{typeId},
-                        BRAND_ID            =#{brandId}, 
+                        TYPE_ID                   =#{codeName},
+                        BRAND_ID            =#{name}, 
                         NAME=               #{name1}, 
                         ASSET_D_REM =    #{assetDRem},                           
                         UPD_USER_ID              =#{upuser_id},
