@@ -576,4 +576,21 @@ public class MembershipController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
+	
+	
+	@RequestMapping(value="/membershipOutrightYSListingPop.do")
+	public String membershipOutrightYSListingPop(){
+		
+		return "sales/membership/membershipOutrightYSListingPop";
+	}
+	
+	@RequestMapping(value="/getOGDCodeList")
+	public ResponseEntity<List<EgovMap>> getOGDCodeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> ogdCodeList = null;
+		
+		ogdCodeList = membershipService.getOGDCodeList(params);
+		
+		return ResponseEntity.ok(ogdCodeList);
+	}
 }

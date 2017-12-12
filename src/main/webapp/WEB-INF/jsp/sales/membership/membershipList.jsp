@@ -255,8 +255,9 @@
 		Common.popupDiv("/sales/membership/membershipOutrightKeyInListPop.do" ,null, null , true , '_rptDiv1');
 	}
     
-
-	
+    function fn_YSListing(){
+        Common.popupDiv("/sales/membership/membershipOutrightYSListingPop.do", null, null, true);
+    }
 
 function fn_keyEvent(){
     
@@ -379,8 +380,8 @@ function fn_clear(){
 	<ul class="btns">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li>
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')">Invoice</a></p></li>
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: alert('The program is under development')" >Key-in List</a></p></li>
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: alert('The program is under development')">YS List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" >Key-in List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_YSListing()">YS List</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

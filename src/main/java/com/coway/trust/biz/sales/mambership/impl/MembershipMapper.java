@@ -154,4 +154,6 @@ public interface MembershipMapper {
 	int  membershipNewContatSave(Map<String, Object> params);
 	
 	int  membershipNewContatUpdate(Map<String, Object> params);
+	
+	List<EgovMap> getOGDCodeList(Map<String, Object> params);
 }

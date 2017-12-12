@@ -269,6 +269,20 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 	public  int    membershipNewContatUpdate(Map<String, Object> params) {
 		return membershipMapper.membershipNewContatUpdate(params);
 	}
+
+	@Override
+	public List<EgovMap> getOGDCodeList(Map<String, Object> params) {
+		
+		List<EgovMap> a = membershipMapper.getOGDCodeList(params);
+		
+		System.out.println("=========");
+		for(EgovMap e : a){
+			System.out.println(e);
+		}
+		
+		return a;
+	//	return membershipMapper.getOGDCodeList(params);
+	}
 	
 	
 	

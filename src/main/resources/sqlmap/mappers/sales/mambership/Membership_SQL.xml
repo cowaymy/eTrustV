@@ -1419,5 +1419,38 @@
 			 WHERE  CUST_ID = #{NEW_CUST_ID} 
    </insert>
    
+   
+   <select id="getOGDCodeList" parameterType="Map" resultType="egovMap">
+        SELECT member.MEM_ID CODE_ID,
+		    <choose>
+                  <when test="memLvl == 4">                   
+                      member.MEM_CODE || ' - ' || member.NAME CODE_NAME
+                  </when>
+                  <otherwise>  
+                      department.DEPT_CODE || ' - ' || member.NAME CODE_NAME
+                  </otherwise>
+            </choose>  
+	    FROM ORG0005D department
+			    JOIN ORG0001D member
+			    ON department.MEM_ID = member.MEM_ID
+	    WHERE ( department.DEPT_CODE IS NOT NULL )
+				  AND ( '''' != department.DEPT_CODE )
+				  AND ( 1 = member.STUS )
+				  AND ( member.MEM_TYPE = #{memType} )
+				  AND ( department.MEM_LVL  = #{memLvl} )
+				  <choose>
+	                  <when test="parentID != null">                
+	                      AND department.MEM_UP_ID = #{parentID}
+	                      AND ( member.STUS IN ( 1,8 ) )
+	                  </when>
+	                  <otherwise>  
+	                      AND ( member.STUS = 1 )
+	                  </otherwise>
+                  </choose>
+				  <if test="deptID != 0">
+				       AND department.MEM_ID = #{deptID}
+                  </if>
+	    ORDER BY department.DEPT_CODE ASC
+   </select>
     
 </mapper>

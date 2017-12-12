@@ -95,5 +95,7 @@ public interface MembershipService {
 
 	int  membershipNewContatUpdate(Map<String, Object> params);
 	
+	List<EgovMap> getOGDCodeList(Map<String, Object> params);
+	
 }
   
