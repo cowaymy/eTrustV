@@ -392,7 +392,7 @@
 		L56.STK_TYPE_ID PARTS_TYPE,
 		L56.STK_CTGRY_ID,
 		<!-- QTY STOCK_QTY, -->
-		(case when L63.SERIAL_NO is not null then 1else QTY end) STOCK_QTY,
+		(case when L63.SERIAL_NO is not null then 1 else QTY end) STOCK_QTY,
 		WH_LOC_DESC,
 		L63.SERIAL_NO PARTS_SERIAL_NO,
 		T1.REF_DOC_NO SERVICE_NO,
@@ -437,7 +437,7 @@
 		l56.STK_TYPE_ID,
 		l56.STK_CTGRY_ID,
 		<!-- l56.QTY STOCK_QTY, -->
-		(case when l56.QTY  is not null then 1 else l56.QTY END) STOCK_QTY,
+		(case when L63.SERIAL_NO is not null then 1 else l56.QTY END) STOCK_QTY,
 		S26.STK_ID PARTS_ID,
 		L63.SERIAL_NO,
 		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= s28m.rdc_code) rdc_code  
@@ -446,7 +446,7 @@
 		AND L56.STK_CODE = L63.MATNR(+)
 		AND L56.LOC_ID = L63.LOC_ID(+)
 		AND L56.STK_CODE = S26.STK_CODE
-		AND L56.STK_TYPE_ID = 61
+		AND L56.STK_TYPE_ID in (61,62,63,64)
 		AND L56.QTY > 0
 		AND L56.LOC_ID=s28m.WH_LOC_ID
 		 <if test="searchType == 1 ">
@@ -575,6 +575,7 @@
 		       AND LG47M.REQST_NO = LG54M.REQST_NO(+)
 		       AND LG47M.TRNSC_TYPE = LG54M.TRNSC_TYPE(+)
 		       AND LG47M.TRNSC_TYPE = 'UM'
+		       AND  NVL(LG47M.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y' 
 		       <if test="reqStatus eq 'MRRL'.toString() ">
 		       AND LG47M.REQST_CDC_RDC = SY28M.WH_LOC_ID
 		       </if>
