@@ -568,7 +568,9 @@ SELECT BUDGET_PLAN_YEAR ,
   <update id="deleteAdjustmentD" parameterType="Map">
    DELETE FROM FCM0103D      
     WHERE BUDGET_DOC_NO     = #{budgetDocNo}
+    <if test="budgetDocSeq != null and budgetDocSeq !='' ">
         AND BUDGET_DOC_SEQ = #{budgetDocSeq}
+    </if>
 </update>
 
  <update id="insertApprove" parameterType="Map">

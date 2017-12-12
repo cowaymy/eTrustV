@@ -326,14 +326,23 @@ public class BudgetController {
 			model.addAttribute("adjustmentList", new Gson().toJson(adjustmentList));
 
 			model.addAttribute("budgetStatus", adjustmentList.get(0).get("status"));	
+			LOGGER.debug("status =======>>>" + adjustmentList.get(0).get("status").toString());
+			
 			if(!adjustmentList.get(0).get("status").toString().equals("Temp. Save")){
 				model.addAttribute("budgetStatus","N");
+				if(!CommonUtils.isEmpty(params.get("appvFlag")) && "Y".equals(params.get("appvFlag").toString())){		
+					model.addAttribute("appv", "Y");		
+				}
 			}else{
+/*
+				LOGGER.debug("appvFlag =======>>>" +  model.get("appvFlag"));
 				if(!CommonUtils.isEmpty(params.get("appvFlag")) && "Y".equals(params.get("appvFlag").toString())){					
 					model.addAttribute("budgetStatus", "N");					
-				}else{
+					model.addAttribute("appv", "Y");					
+					LOGGER.debug("appv =======>>>" +  model.get("appv"));
+				}else{*/
 					model.addAttribute("budgetStatus","Y");
-				}
+			//	}
 			}
 
 			model.addAttribute("budgetDocNo", params.get("gridBudgetDocNo"));
@@ -545,6 +554,25 @@ public class BudgetController {
     	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     	
     	return ResponseEntity.ok(message);
+		
+	}
+	@RequestMapping(value = "/savePopBudgetApproval", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> savePopBudgetApproval (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+				
+		budgetService.saveApproval(params);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 		
 	}
 	

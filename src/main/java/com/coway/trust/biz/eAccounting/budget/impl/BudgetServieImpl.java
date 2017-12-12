@@ -235,7 +235,10 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 			if(overbudget.equals("N")){
 				budgetMapper.insertApprove(approvalMap); 
 				budgetMapper.updateAdjustmentM(approvalMap); 
-			}	
+			}else{
+				budgetMapper.deleteAdjustmentM(approvalMap);
+				budgetMapper.deleteAdjustmentD(approvalMap);
+			}
 		}else{			
 			/*approvalMap.put("appvStus", "O");							
 			approvalMap.put("budgetDocNo", budgetDocNo);
@@ -345,6 +348,21 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		//result.put("overbudget", overbudget);
 
 		return result ;
+	}
+	
+	@Override
+	public void saveApproval(Map<String, Object> params) throws Exception {
+				
+		Map approvalMap = new HashMap<String, Object>();
+		
+		approvalMap.put("budgetDocNo", params.get("pBudgetDocNo"));
+		approvalMap.put("userId", params.get("userId"));			
+		approvalMap.put("appvStus",  params.get("appvStus"));						
+		approvalMap.put("appvPrcssStus",  params.get("appvPrcssStus"));						
+		approvalMap.put("rejectMsg",  params.get("rejectMsg"));		
+		
+		budgetMapper.insertApprove(approvalMap); 
+		budgetMapper.updateAdjustmentM(approvalMap); 
 	}
 	
 	@Override

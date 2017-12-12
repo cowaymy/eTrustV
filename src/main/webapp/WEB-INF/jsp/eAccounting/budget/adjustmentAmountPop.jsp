@@ -28,6 +28,10 @@ $(document).ready(function(){
          headerText : '<spring:message code="budget.BudgetChangeType" />',
          visible : false
      },{
+         dataField : "signal",
+         headerText : '',
+         visible : false
+     },{
          dataField : "budgetAdjTypeName",
          headerText : '<spring:message code="budget.BudgetChangeType" />',
          width : 150
@@ -91,7 +95,11 @@ $(document).ready(function(){
              var amt = 0;
              for(var i = 0; i < idx; i++){
                  if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '01'){
-                     amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                	 if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
+	                     amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");                		 
+                	 }else{
+                         amt -= AUIGrid.getCellValue(adjGridID, i, "adjAmt");      
+                	 }
                  }
              }
                          
@@ -111,7 +119,11 @@ $(document).ready(function(){
              var amt = 0;
              for(var i = 0; i < idx; i++){
                  if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") == '02'){
-                     amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                	 if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
+                         amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");                        
+                     }else{
+                         amt -= AUIGrid.getCellValue(adjGridID, i, "adjAmt");      
+                     }
                  }
              }
              

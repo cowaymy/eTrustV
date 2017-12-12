@@ -34,7 +34,7 @@ fileList.push(obj);
 </c:forEach>
 
 $(document).ready(function(){  
-		
+	
 	var adjustmentList;
 		
 	 if('${adjustmentList}'=='' || '${adjustmentList}' == null){
@@ -838,65 +838,60 @@ function fn_saveAdjustement(){
            $("#pBudgetDocNo").val(result.data.budgetDocNo);
          
            if($("#type").val() == "approval"){
-           	 if(result.data.overbudget == "Y"){
-           		 
-           		 // budget Adjustment Detail Grid Reload
-                 Common.ajax("GET", "/eAccounting/budget/selectAdjustmentPopList", $("#pAdjForm").serialize(), function(data) {
-                     console.log("성공.");
-                     console.log( data);
-                     
-                     AUIGrid.setGridData(adjPGridID, data.adjustmentList);
-                     
-                     
-                     // budget exceeded row background color set start
-                     var arryList = result.data.resultAmtList;
-                     
-                     var idx = arryList.length;
-                     
-                     for(var i = 0; i < idx; i++){
-                      var costCentr = arryList[i].costCentr;
-                         var budgetCode = arryList[i].budgetCode;
-                         var glAccCode = arryList[i].glAccCode;
-                         var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
+        	   
+        	    if(result.data.overbudget == "Y"){     
+        	    	
+        	    	var arryList = result.data.resultAmtList;
+                    
+                    var idx = arryList.length;
+                    
+                    for(var i = 0; i < idx; i++){
+                     var costCentr = arryList[i].costCentr;
+                        var budgetCode = arryList[i].budgetCode;
+                        var glAccCode = arryList[i].glAccCode;
+                        var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
+                        
+                        for(var j=0; j < AUIGrid.getRowCount(adjPGridID); j++){
                          
-                         for(var j=0; j < AUIGrid.getRowCount(adjPGridID); j++){
-                          
-                             var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
-                             var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
-                             var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
-                             var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
-                             var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
-                             
-                              if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
-                                         && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
-                                  AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
-                              }
-                          
-                         }
-                      
-                     }
+                            var gridCostCentr = AUIGrid.getCellValue(adjPGridID, j, "costCentr"); 
+                            var gridBudgetCode = AUIGrid.getCellValue(adjPGridID, j, "budgetCode"); 
+                            var gridGlAccCode = AUIGrid.getCellValue(adjPGridID, j, "glAccCode"); 
+                            var gridAdjYearMonth = AUIGrid.getCellValue(adjPGridID, j, "adjYearMonth"); 
+                            var gridBudgetAdjType = AUIGrid.getCellValue(adjPGridID, j, "budgetAdjType"); 
+                            
+                             if(gridCostCentr == costCentr && gridBudgetCode == budgetCode 
+                                        && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
+                                 AUIGrid.setCellValue(adjPGridID, j, "overBudgetFlag","Y"); 
+                             }
+                         
+                        }
                      
-                     AUIGrid.setProp(adjPGridID, "rowStyleFunction", function(rowIndex, item) {
-                      if(item.overBudgetFlag == "Y") {
-                             return "my-row-style";
-                         }
-                         return "";
+                    }
+                    
+                    AUIGrid.setProp(adjPGridID, "rowStyleFunction", function(rowIndex, item) {
+                     if(item.overBudgetFlag == "Y") {
+                            return "my-row-style";
+                        }
+                        return "";
 
-                     }); 
+                    }); 
 
-                     // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
-                     AUIGrid.update(adjPGridID);
-                  
-                     Common.alert("<spring:message code='budget.exceeded' />"); 
-                 });
-           		 
-                }else{                	 
-               	// Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+                    // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+                    AUIGrid.update(adjPGridID);
+                 
+                     alert("<spring:message code="budget.exceeded" />"); 
 
-                    fn_selectPopListAjax();
+                     $("#pBudgetDocNo").val("");
+                 
+                }else{                   
+                    Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+                    $("#pBudgetDocNo").val("");
+                    AUIGrid.clearGridData(adjPGridID);
+                    $("#pAdjForm")[0].reset();
+                    //fn_selectPopListAjax();
                 }
            }else{
-           	Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
+               Common.alert("<spring:message code="budget.BudgetAdjustment" />"+ DEFAULT_DELIMITER +"<spring:message code="budget.msg.budgetDocNo" />" + result.data.budgetDocNo);
 
                fn_selectPopListAjax();
                
@@ -939,6 +934,74 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
        }
 }
 
+function fn_popBudgetApproval(value){
+	
+	if(value == "appv"){ //approval 처리
+
+        $("#popAppvStus").val("C"); // adjustment Close
+        $("#popAppvPrcssStus").val("A"); //Approval 
+        $("#popRejectMsg").val("");
+        
+        fn_savePopApprove(value);
+        
+    }else{  //reject 처리
+                
+        var option = {
+                title : "<spring:message code="budget.RejectTitle" />" ,
+                textId : "promptText",
+                textName : "promptText"
+            }; 
+        
+        
+         Common.prompt("<spring:message code="budget.msg.reject" /> ", "", function(){
+            
+             $("#popRejectMsg").val($("#promptText").val());
+             
+             fn_savePopApprove(value);
+             
+         }, null, option);
+            
+        $("#popAppvStus").val("T"); // adjustment Close
+        $("#popAppvPrcssStus").val("J"); //Approval 
+    }
+
+}
+
+
+function fn_savePopApprove(value){	
+    
+    if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+        
+        Common.ajax("POST", "/eAccounting/budget/savePopBudgetApproval", $("#pAdjForm").serializeJSON()    , function(result){
+            console.log("성공." + JSON.stringify(result));
+            console.log("data : " + result.data);
+            
+            if(value == "appv"){ //approval 처리
+                Common.alert("<spring:message code='sales.msg.ApprovedComplete' />");
+            } else {
+                Common.alert("<spring:message code='budget.msg.rejected' />");
+            }
+            $("#btnRej").hide();
+            $("#btnApp").hide();
+                      
+      }
+      , function(jqXHR, textStatus, errorThrown){
+             try {
+                 console.log("Fail Status : " + jqXHR.status);
+                 console.log("code : "        + jqXHR.responseJSON.code);
+                 console.log("message : "     + jqXHR.responseJSON.message);
+                 console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+           }
+           catch (e)
+           {
+             console.log(e);
+           }
+           Common.alert("Fail : " + jqXHR.responseJSON.message);
+     });
+    }));
+}
+
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -958,6 +1021,11 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     <input type="hidden" id = "pAtchFileGrpId" name="pAtchFileGrpId" />
     <input type="hidden" id = "type" name="type" />
     <input type="hidden" id = "requestAmt" name="requestAmt" />
+    <input type="hidden" id = "saveType" name="saveType" value="appv"/>
+    
+    <input type="hidden" id = "popRejectMsg" name="rejectMsg" />
+    <input type="hidden" id = "popAppvStus" name="appvStus" />
+    <input type="hidden" id = "popAppvPrcssStus" name="appvPrcssStus" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1164,6 +1232,12 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
 </ul>
     </c:if> 
 
+    <c:if test="${appv ==  'Y' }">
+<ul class="center_btns mt10">
+        <li><p class="btn_blue2"><a href="#" id="btnApp" onclick="javascript:fn_popBudgetApproval('appv');"><spring:message code="budget.Approval" /></a></p></li>
+        <li><p class="btn_blue2"><a href="#" id="btnRej" onclick="javascript:fn_popBudgetApproval('reject');"><spring:message code="budget.Reject" /></a></p></li>
+</ul>
+    </c:if> 
 </form>
 </section><!-- pop_body end -->
 
