@@ -9,7 +9,6 @@ import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-
 public interface SurveyMgmtService {
 	
 	List<EgovMap> selectMemberTypeList();

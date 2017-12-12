@@ -1,6 +1,5 @@
 package com.coway.trust.web.services.performanceMgmt;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,20 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.coway.trust.AppConstants;
-import com.coway.trust.biz.services.performanceMgmt.SurveyMgmtService;
-import com.coway.trust.cmmn.model.ReturnMessage;
-import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.biz.services.performanceMgmt.HappyCallPlanningService;
 import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.util.CommonUtils;
-import com.coway.trust.util.Precondition;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -39,8 +31,8 @@ public class HappyCallPlanningController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
-	@Resource(name = "surveyMgmtService")
-	private SurveyMgmtService surveyMgmtService;
+	@Resource(name = "happyCallPlanningService")
+	private HappyCallPlanningService happyCallPlanningService;
 	
 	@Autowired
 	private SessionHandler sessionHandler;
@@ -50,14 +42,14 @@ public class HappyCallPlanningController {
 		return "services/performanceMgmt/happyCallPlanning";
 	}
 	
-//	@RequestMapping(value = "/selectMemberTypeList", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectMemberTypeList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-//		LOGGER.debug("params {}", params);
-//		List<EgovMap> selectMemberTypeList = surveyMgmtService.selectMemberTypeList();
-//		LOGGER.debug("selectMemberTypeList {}", selectMemberTypeList);
-//		return ResponseEntity.ok(selectMemberTypeList);
-//	}
-//	
+	@RequestMapping(value = "/selectCallTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCallTypeList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		LOGGER.debug("params {}", params);
+		List<EgovMap> selectCallTypeList = happyCallPlanningService.selectCallTypeList();
+		LOGGER.debug("selectCallTypeList {}", selectCallTypeList);
+		return ResponseEntity.ok(selectCallTypeList);
+	}
+	
 //	@RequestMapping(value = "/selectSurveyStusList", method = RequestMethod.GET)
 //	public ResponseEntity<List<EgovMap>> selectSurveyStusList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 //		LOGGER.debug("params {}", params);

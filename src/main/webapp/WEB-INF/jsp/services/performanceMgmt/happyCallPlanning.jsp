@@ -23,7 +23,7 @@
 		// Create AUIGrid
 		myGridID = GridCommon.createAUIGrid("grid_wrap",columnLayout, "", gridPros);
 
-		//doGetCombo('/services/performanceMgmt/selectMemberTypeList','', '', 'cmbMemberTypeId', 'S', '');
+		doGetCombo('/services/performanceMgmt/selectCallTypeList.do','', '', 'cmbCallType', 'S', '');
 		//doGetCombo('/services/performanceMgmt/selectSurveyStusList','', '', 'cmbSurveyStusId', 'S', '');
 
 						
@@ -56,7 +56,7 @@
 		});
 
 					
-	});//Ready
+	});
 
 	// AUIGrid 칼럼 설정
 	var columnLayout = [ {
@@ -100,10 +100,27 @@
         editable : false
     } ];
 
-	//New Pop 호출
-	function fn_newEvent() {
-		Common.popupDiv("/services/performanceMgmt/surveyEventCreatePop.do", $("#popSForm").serializeJSON(), null, true,"surveyEventCreatePop");
-	}
+	function addRow(){
+        var item = new Object();
+        item.callType = "";
+        item.questionNumber = "";
+        item.feedbackType = "";
+        item.evaluationCriteria = "";
+        item.question = "";
+        item.periodFrom = "";
+        item.periodTo = "";
+       
+        // parameter
+        // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+        // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+        AUIGrid.addRow(myGridID, item, "first");
+    }
+	
+	function removeRow(){
+        AUIGrid.removeRow(myGridID, "selectedIndex");
+        AUIGrid.removeSoftRows(myGridID);
+    }
+	
 </script>
 
 <section id="content">
@@ -157,13 +174,13 @@
 			<td><select id="cmbCallType" name="cmbCallType" class="w100p"></select>
 			</td>
 			<th scope="row">Feedback Type</th>
-			<td><input type="text" id="eventName" name="eventName" title="" placeholder="" class="w100p" /></td>
+			<td><input type="text" id="feedbackType" name="feedbackType" title="" placeholder="" class="w100p" /></td>
 			<th scope="row">Evaluation Criteria</th>
-			<td><input type="text" id="eventDate" name="eventDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+			<td><input type="text" id="evaluationCriteria" name="evaluationCriteria" title="" placeholder="" class="w100p" /></td>
 		</tr>
 		<tr>
 			<th scope="row">Period Month</th>
-			<td><input type="text" id="eventMemCode" name="eventMemCode" title="" placeholder="" class="w100p" /></td>
+			<td><input id="myBSMonth" name="myBSMonth" type="text" title="Period Month" placeholder="MM/YYYY" class="j_date2 w100p" readonly /></td>
 			<th scope="row"></th>
 			<td></td>
 			<th scope="row"></th>
@@ -182,9 +199,9 @@
 <section class="search_result"><!-- search_result start -->
 
 	<ul class="right_btns">
-		<li><p class="btn_grid"><a href="#" id="excelDown">Add</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">Add</a></p></li>
 		<li><p class="btn_grid"><a href="#" id="excelDown">Edit</a></p></li>
-		<li><p class="btn_grid"><a href="#" id="excelDown">Delete</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">Delete</a></p></li>
 		<li><p class="btn_grid"><a href="#" id="excelDown">EXCEL DW</a></p></li>
 		<!-- <li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li> -->
 		<!-- <li><p class="btn_grid"><a href="#">Edit Event</a></p></li> -->
