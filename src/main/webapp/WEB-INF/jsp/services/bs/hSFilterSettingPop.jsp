@@ -7,20 +7,76 @@
 
 <script type="text/javaScript" language="javascript">
 
-	var myDetailGridIDInActive;
+    var myDetailGridIDInActive;
     var myDetailGridIDActive;
     
 
 
     function createAUIGridInactive(){
         // AUIGrid 칼럼 설정
-        var columnLayout = [ {
+        var columnLayout = [ 
+                {
+                    dataField : "",
+                    headerText : "",
+                    width : 170,
+                    renderer : {
+                          type : "ButtonRenderer",
+                          labelText : "View",
+                          onclick : function(rowIndex, columnIndex, value, item) {
+                        	   
+                               if($("#orderId").val() == "" || $("#orderId").val() == undefined) {
+                                    return false;
+                               }
+                              
+                              //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
+                              Common.popupDiv("/services/bs/hSFilterUseHistoryPop.do", $("#orderInfoForm").serializeJSON(), null , true , '');
+                            }
+                     }
+                },{        
+
+                    dataField : "",
+                    headerText : "",
+                    renderer : {
+                        type : "IconRenderer",
+                        iconPosition : "aisleRight",  // 아이콘 위치 
+                        iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+                            "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif" // default
+                        },
+                        onclick : function(rowIndex, columnIndex, value, item) {
+                            
+                            var SendItem = new Object();
+                            SendItem.srvFilterId = item.srvFilterStkId;
+                            SendItem.stkCode    = item.stkCode;
+                            SendItem.stkDesc    = item.stkDesc;
+                            SendItem.c4           = "";
+                            SendItem.srvFilterPriod = "";
+                            SendItem.srvFilterPrvChgDt = "";
+                            
+                            AUIGrid.addRow(myDetailGridIDActive, SendItem, 'last');  
+                            
+                            alert(item.srvFilterStkId)
+                            
+                            Common.ajax("POST", "/services/bs/doSaveFilterUpdate.do", {srvFilterStkId : item.srvFilterStkId}, function(result) {   
+                                console.log(result);
+                                
+                                if(result.code = "00"){
+                                    $("#popClose").click();
+                                   fn_getInActivefilterInfo();
+                                   fn_getActivefilterInfo();
+                                     Common.alert("<b>Filter info successfully updated.</b>",fn_close);
+                               }else{
+                                    Common.alert("<b>Failed to update filter info. Please try again later.</b>");  
+                               } 
+                            });    
+                        }
+                    }
+                },{
                     dataField:"stkCode",
                     headerText:"Filter Code",
                     width:140,
                     height:30
                 }, {                        
-                    dataField : "stkId",
+                    dataField : "srvFilterStkId",
                     headerText : "Filter id",
                     width : 240,                             
                     visible:false 
@@ -81,6 +137,11 @@
         function createAUIGridActive(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
+                    dataField:"srvFilterId",
+                    headerText:"srvFilterId",
+                    width:110,
+                    height:30
+                }, {                        
                     dataField:"stkCode",
                     headerText:"Filter Code",
                     width:110,
@@ -118,17 +179,50 @@
                     dataField : "c3",
                     headerText : "CreateBy",
                     width : 180                                                                                
-	                },{                        
-	                dataField : "srvFilterLastSerial",
-	                headerText : "Last Serial",
-	                width : 180                                                                                
-	                },{                        
-		            dataField : "srvFilterPrevSerial",
-		            headerText : "Prev Serial",
-		            width : 180                                                                                
-	              }
-                
-                
+                    },{                        
+                    dataField : "srvFilterLastSerial",
+                    headerText : "Last Serial",
+                    width : 180                                                                                
+                    },{                        
+                    dataField : "srvFilterPrevSerial",
+                    headerText : "Prev Serial",
+                    width : 180         
+                     },{
+                        dataField : "undefined",
+                        headerText : "",
+                        width : 170,
+                        renderer : {
+                              type : "ButtonRenderer",
+                              labelText : "Deactivate",
+                              onclick : function(rowIndex, columnIndex, value, item) {
+                              
+                                 var SRV_FILTER_ID =    AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterId");
+                                 fn_clicConfirm(SRV_FILTER_ID);
+                                 
+                              }
+                       }
+                     },{
+                        dataField : "undefined",
+                        headerText : "",
+                        width : 170,
+                        renderer : {
+                              type : "ButtonRenderer",
+                              labelText : "Update",
+                              onclick : function(rowIndex, columnIndex, value, item) {
+
+                                   if(item.result == "" || item.result == undefined) {
+                                        return false;
+                                   }
+
+                                  $("#_schdulId").val(item.schdulId);
+                                  $("#_salesOrdId").val(item.salesOrdId);
+                                  $("#_openGb").val("edit");
+                                  $("#_brnchId").val(item.brnchId);
+
+                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
+                                  }
+                           }                        
+                  }
                 ];
             // 그리드 속성 설정
             var gridPros = {
@@ -160,28 +254,67 @@
     }
     
     
-		function fn_getActivefilterInfo(){
-		    
-		    Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
-		        console.log("getActivefilterInfo.");
-		        console.log( result);
-		        AUIGrid.setGridData(myDetailGridIDActive, result);         //getActivefilterInfo
-		    });
-		    
-		}
-		
-		
-		function fn_getInActivefilterInfo(){
-		    
-		    Common.ajax("GET", "/services/bs/getInActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
-		        console.log("getInActivefilterInfo.");
-		        console.log( result);
-		        AUIGrid.setGridData(myDetailGridIDInActive, result);        
-		    });
-		    
-		}
-		
-		
+    
+       function fn_clicConfirm(SRV_FILTER_ID){
+            alert("22222:"+SRV_FILTER_ID);
+            Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_clickDeactivate);
+       }
+       
+    
+       function fn_clickDeactivate(rowIndex, columnIndex, value, item){
+       
+              if(SRV_FILTER_ID == "" || SRV_FILTER_ID == undefined) {
+                  return false;
+              }
+             
+             alert("1111111111:"+SRV_FILTER_ID);
+             
+            var srvFilterForm = {
+             "SRV_FILTER_ID" : SRV_FILTER_ID
+            }
+            
+            Common.ajax("POST", "/services/bs/doSaveDeactivateFilter.do", srvFilterForm, function(result) {   
+                 console.log(result);
+                 
+                 if(result.code = "00"){
+                     $("#popClose").click();
+                    fn_getInActivefilterInfo();
+                    fn_getActivefilterInfo();
+                      Common.alert("<b>The filter successfully deactivate.</b>",fn_close);
+                }else{
+                     Common.alert("<b>Failed to deactivate this filter. Please try again later.</b>");  
+                } 
+             });
+    
+    
+        }      
+
+
+
+
+    
+        function fn_getActivefilterInfo(){
+            
+            Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+                console.log("getActivefilterInfo.");
+                console.log( result);
+                AUIGrid.setGridData(myDetailGridIDActive, result);         //getActivefilterInfo
+            });
+            
+        }
+        
+        
+        function fn_getInActivefilterInfo(){
+            
+            Common.ajax("GET", "/services/bs/getInActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+                console.log("getInActivefilterInfo.");
+                console.log( result);
+                AUIGrid.setGridData(myDetailGridIDInActive, result);        
+            });
+            
+        }
+        
+        
         
 /*         function fn_getAddFilter(){
                 Common.ajax("GET", "/services/bs/getAddFilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
@@ -204,21 +337,23 @@
         
         
         
-		$(document).ready(function() {
-		    createAUIGridInactive();
-		    createAUIGridActive();
-		    
-		    fn_getInActivefilterInfo();
-		    fn_getActivefilterInfo();
-		    
-		});
+        $(document).ready(function() {
+            createAUIGridInactive();
+            createAUIGridActive();
+            
+            fn_getInActivefilterInfo();
+            fn_getActivefilterInfo();
+            
+        });
 
-		
-		
-		
-		
-		
-		
+        
+        
+    function fn_close() {
+        $("#popClose").click();
+    }       
+        
+        
+        
 
 </script>
 
@@ -235,9 +370,10 @@
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-
-
-  
+<form action="#" method="post"  id='orderInfoForm'  name='orderInfoForm' >
+    <input type="text" name="SRV_FILTER_ID"  id="SRV_FILTER_ID" value=""/>  
+    <input type="text" name="orderId"  id="orderId" value="${hSOrderView.ordId}"/>
+    <input type="text" name="stkId"  id="stkId" value="${hSOrderView.stkId}"/>  
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Order Information</h2>
@@ -275,14 +411,14 @@
     </td>
     <th scope="row">Product Name</th>
     <td colspan="3">
-    <input type="text" title="" id="entry_stockDesc" name="entry_stockDesc"  value="${hSOrderView.stockDesc}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_stockDesc" name="entry_stockDesc"  value="${hSOrderView.stockDesc}" placeholder="" class="readonly " readonly="readonly" style="width: 306px; "/>
     <input  type='hidden' id='stkId' name='stkId'  value='${hSOrderView.stkId}'></textarea>
     </td>
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
     <td colspan="3">
-    <input type="text" title="" id="entry_custName" name="entry_custName"  value="${hSOrderView.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="entry_custName" name="entry_custName"  value="${hSOrderView.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 444px; "/>
     </td>
     <th scope="row">NRIC/Company No</th>
     <td>
@@ -311,6 +447,7 @@
 <div id="grid_wrap_active" style="width: 100%; height: 334px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
+</form>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
