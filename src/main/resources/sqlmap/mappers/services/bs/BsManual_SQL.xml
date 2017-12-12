@@ -2477,7 +2477,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 								       Distinct1.C2 C2  ,
 								       Distinct1.C3 C3  ,
 								       Distinct1.SRV_FILTER_STUS_ID SRV_FILTER_STUS_ID  ,
-								       Distinct1.SRV_FILTER_PRV_CHG_DT SRV_FILTER_PRV_CHG_DT  ,
+								       to_char(Distinct1.SRV_FILTER_PRV_CHG_DT,'yyyy/mm/dd') SRV_FILTER_PRV_CHG_DT  ,
 								       Distinct1.SRV_FILTER_PRIOD SRV_FILTER_PRIOD ,
 								       Distinct1.SRV_FILTER_LAST_SERIAL SRV_FILTER_LAST_SERIAL ,
                                        Distinct1.SRV_FILTER_PREV_SERIAL SRV_FILTER_PREV_SERIAL ,
@@ -2617,6 +2617,8 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                                  SET a.SRV_CODY_ID  = #{hscodyId}
 
                      </update>
+                     
+                     
                      <insert id="insertCcr0001d" parameterType="Map">
                             INSERT INTO CCR0001D (
 	                            HC_ID
@@ -2657,10 +2659,41 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 	                            , 81
                             )
                      
-                     
-                     
-                     
                      </insert>
+                     
+                     
+                     
+                      <update id="saveDeactivateFilter" parameterType="Map">
+
+							UPDATE SAL0087D
+							   SET SRV_FILTER_STUS_ID = #{srvFilterStusId} ,
+							       SRV_FILTER_UPD_DT = sysdate,
+							       SRV_FILTER_UPD_USER_ID = #{updator} 
+							 WHERE   SRV_FILTER_ID = #{SRV_FILTER_ID} 
+
+                     </update>
+                     
+                     
+                     
+                     
+                      <update id="saveFilterUpdate" parameterType="Map">
+
+                             UPDATE SAL0087D
+							   SET SRV_FILTER_UPD_DT = to_date(#{SRV_FILTER_UPD_DT},'yyyymmdd'),
+							       SRV_FILTER_UPD_USER_ID = #{updator} 
+							 WHERE   SRV_FILTER_ID = #{SRV_FILTER_ID}
+                             
+
+                     </update>                     
+                                          
                     
+                    
+                    
+           <resultMap id="thSFilterUseHistoryMap" type="egovMap"></resultMap>
+           <select id="selecthSFilterUseHistorycall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+                 {
+                    call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{StockID},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
+                 }
+            </select>                             
 
 </mapper>
