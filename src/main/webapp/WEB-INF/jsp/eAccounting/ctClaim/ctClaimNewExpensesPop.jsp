@@ -506,6 +506,8 @@ $(document).ready(function () {
     $("#delete_btn").click(fn_deleteStaffClaimExp);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(fn_approveLinePop);
+    $("#add_row").click(fn_addMyGridRow);
+    $("#remove_row").click(fn_removeMyGridRow);
     
     AUIGrid.bind(newGridID, "cellDoubleClick", function( event ) 
             {
