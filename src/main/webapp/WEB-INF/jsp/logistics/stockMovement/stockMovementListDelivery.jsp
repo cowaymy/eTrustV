@@ -141,7 +141,6 @@ var resop = {
 		groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
         showRowCheckColumn : true ,
-        enableCellMerge : true,
         showStateColumn : false,
         showBranchOnGrouping : false
         };
