@@ -6,7 +6,7 @@
 	</head>
 	<body>
 	    <div>
-	        <span id="resultMessage" >${message}</span>
+	       ${message}
 	    </div>
 	</body>
 </html>
