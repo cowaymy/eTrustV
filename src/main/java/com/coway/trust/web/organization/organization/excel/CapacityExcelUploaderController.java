@@ -89,8 +89,8 @@ public class CapacityExcelUploaderController {
 			//updateCTSubGroupArea
 //			LOGGER.debug("udtList {}", updateList);
 			sessionCapacityListService.updateCapacityByExcel(updateList,sessionVO);
-			sessionCapacityListService.deleteCapacityByExcel(updateList,sessionVO);
 			sessionCapacityListService.updateCTMCapacityByExcel(updateList,sessionVO);
+			sessionCapacityListService.deleteCapacityByExcel(updateList,sessionVO);
 			
 			message.setCode(AppConstants.SUCCESS);
 //			//message.setData(totCnt);

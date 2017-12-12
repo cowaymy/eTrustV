@@ -180,8 +180,8 @@ public class SessionCapacityListController {
 //		}
 		if(udtList != null){
 			sessionCapacityListService.updateCapacity(udtList,sessionVO);
-			sessionCapacityListService.deleteCapacity(udtList,sessionVO);
 			sessionCapacityListService.updateCTMCapacity(udtList,sessionVO);
+			sessionCapacityListService.deleteCapacity(udtList,sessionVO);
 		}
 //		if(delList != null){
 //			sessionCapacityListService.deleteCapacity(delList,sessionVO);
