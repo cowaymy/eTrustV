@@ -151,14 +151,9 @@
                                           type : "ComboBoxRenderer",
                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                           listFunction : function(rowIndex, columnIndex, item, dataField) {
-//                                         	  item.codeId =srvMembershipList[i]["codeId"]
-//                                         	  alert(item.codeId);                                   	  
-//                                         	  for (var i = 0, len = srvMembershipList.length; i < len; i++) {
-//                                         		  srvMembershipList[i]["codeId"] = value;
-//                                         		  srvMembershipList[i]["codeName"];
-//                                         	  }
+  
                                               return srvMembershipList ;
-                                          },
+                                          },                                    
                                           keyField : "codeId",
                                           valueField : "codeName"                                            
                                                       }
