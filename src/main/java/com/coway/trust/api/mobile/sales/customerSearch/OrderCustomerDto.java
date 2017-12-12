@@ -19,7 +19,7 @@ public class OrderCustomerDto {
 	private String nricCompanyNo;
 	
 	@ApiModelProperty(value = "customerType")
-	private String customerType;
+	private int customerType;
 	
 	@ApiModelProperty(value = "custBirthDay")
 	private String custBirthDay;
@@ -32,6 +32,9 @@ public class OrderCustomerDto {
 	
 	@ApiModelProperty(value = "customerId")
 	private int customerId;
+	
+	@ApiModelProperty(value = "areaId")
+	private String areaId;
 	
 	@ApiModelProperty(value = "country")
 	private String country;
@@ -78,11 +81,11 @@ public class OrderCustomerDto {
 		this.nricCompanyNo = nricCompanyNo;
 	}
 
-	public String getCustomerType() {
+	public int getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(String customerType) {
+	public void setCustomerType(int customerType) {
 		this.customerType = customerType;
 	}
 
@@ -116,6 +119,14 @@ public class OrderCustomerDto {
 
 	public void setCustomerId(int customerId) {
 		this.customerId = customerId;
+	}
+
+	public String getAreaId() {
+		return areaId;
+	}
+
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
 	}
 
 	public String getCountry() {
