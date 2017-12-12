@@ -28,9 +28,16 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+/* 커스텀 disable 스타일*/
+.mycustom-disable-bold {
+    font-weight: bold;
+}
 </style>
 
     <script type="text/javaScript" language="javascript">
+    
+    var ctm;
+    var ctm_row;
     
         // AUIGrid 생성 후 반환 ID
        var myGridID;
@@ -234,11 +241,24 @@
 
     // 리스트 조회.
 		function fn_getSsCapacityBrListAjax() {        
-		    Common.ajax("GET", "/organization/selectSsCapacityCtList", $("#searchForm").serialize(), function(result) {
+		    Common.ajax("GET", "/organization/selectSsCapacityCtList", $("#searchForm").serialize(), function(result1) {
 		        
-		        console.log("성공.");
-		        console.log("data : " + result);
-		        AUIGrid.setGridData(myGridID, result);
+		        console.log("성공(GridResult).");
+		        console.log("data : " + result1);
+		        AUIGrid.setGridData(myGridID, result1);
+		    
+			    Common.ajax("GET", "/organization/selectSsCapacityCTM", $("#searchForm").serialize(), function(result2) {
+	                
+	                console.log("성공(CTM).");
+	                console.log("data : " + result2);
+	                
+	                for( i in result2){
+	                    console.log(result2[i]);
+	                    ctm = result2[i]
+                    	ctm_row = AUIGrid.getRowIndexesByValue(myGridID, "memCode", result2[i]);
+	                }
+                   	//alert("CTM : " + ctm + "는 " + ctm_row + "번째 줄");
+	            });
 		    });
 		}
 		var bobj = new Object();
@@ -350,6 +370,12 @@
                });
     };
 
+    // 셀스타일 함수 정의
+    function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField) {
+	    if(rowIndex == ctm_row)
+	        return "mycustom-disable-bold";
+	    return null;
+    };
     
     </script>
 

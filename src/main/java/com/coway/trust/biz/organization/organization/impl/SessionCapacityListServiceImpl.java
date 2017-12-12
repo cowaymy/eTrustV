@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.map.ListOrderedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,13 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 	
 		return sessionCapacityListMapper.selectSsCapacityBrList(params);
 	}
+	
+	@Override
+	public EgovMap selectSsCapacityCTM(Map<String, Object> params) {
+	
+		return sessionCapacityListMapper.selectSsCapacityCTM(params);
+	}
+	
 	@Override
 	public List<EgovMap> seleCtCodeSearch(Map<String, Object> params) {
 	
@@ -114,7 +122,7 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
     				
     				logger.debug("updateValue {}", updateValue);
     				sessionCapacityListMapper.updateCapacity(updateValue);
-    				
+    				sessionCapacityListMapper.deleteCapacity(updateValue);
     			}
     		}
 		}
@@ -130,16 +138,44 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 	   }
 	   else return null;
 	}
+	
+	@Override
+	public void updateCTMCapacity(List<Object> params, SessionVO sessionVO) {
+		if(params.size() > 0){
+			Map<String, Object>  updateValue = (Map<String, Object>) params.get(0);
+			updateValue.put("userId", sessionVO.getUserId());
+			logger.debug("updateValue {}", updateValue);
+			sessionCapacityListMapper.updateCTMCapacity(updateValue);
+		}
+	}
+	
+	@Override
+	public void updateCTMCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO) {
+		if(updateList.size() > 0){
+			Map<String, Object>  updateValue = (Map<String, Object>) updateList.get(0);
+			updateValue.put("userId", sessionVO.getUserId());
+			logger.debug("updateValue {}", updateValue);
+			sessionCapacityListMapper.updateCTMCapacity(updateValue);
+		}
+	}
 
 	@Override
 	public void deleteCapacity(List<Object> params, SessionVO sessionVO) {
 		if(params.size() > 0){
-    		for(int i=0; i< params.size(); i++){
-    			Map<String, Object>  deleteValue = (Map<String, Object>) params.get(i);
-    			deleteValue.put("userId", sessionVO.getUserId());
-    			logger.debug("deleteValue {}", deleteValue);
-    			sessionCapacityListMapper.deleteCapacity(deleteValue);
-    		}
+			Map<String, Object>  deleteValue = (Map<String, Object>) params.get(0);
+//			deleteValue.put("userId", sessionVO.getUserId());
+			logger.debug("deleteValue {}", deleteValue);
+			sessionCapacityListMapper.deleteCapacity(deleteValue);
+		}
+	}
+	
+	@Override
+	public void deleteCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO) {
+		if(updateList.size() > 0){
+			Map<String, Object>  deleteValue = (Map<String, Object>) updateList.get(0);
+//			deleteValue.put("userId", sessionVO.getUserId());
+			logger.debug("deleteValue {}", deleteValue);
+			sessionCapacityListMapper.deleteCapacity(deleteValue);
 		}
 	}
 	

@@ -96,6 +96,17 @@ public class SessionCapacityListController {
 		return ResponseEntity.ok(ssCapacityCtList);
 	}	
 	
+	@RequestMapping(value = "/selectSsCapacityCTM", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectSsCapacityCTM(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		EgovMap ssCapacityCTM = null;
+		
+        // 조회.
+		ssCapacityCTM = sessionCapacityListService.selectSsCapacityCTM(params);        
+
+		return ResponseEntity.ok(ssCapacityCTM);
+	}	
+	
 	
 	
 	/**
@@ -164,31 +175,33 @@ public class SessionCapacityListController {
 		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
 		
 		logger.debug("addList {}", addList);
-		if(addList != null){
-			sessionCapacityListService.insertCapacity(addList,sessionVO);
-		}
+//		if(addList != null){
+//			sessionCapacityListService.insertCapacity(addList,sessionVO);
+//		}
 		if(udtList != null){
 			sessionCapacityListService.updateCapacity(udtList,sessionVO);
+			sessionCapacityListService.deleteCapacity(udtList,sessionVO);
+			sessionCapacityListService.updateCTMCapacity(udtList,sessionVO);
 		}
-		if(delList != null){
-			sessionCapacityListService.deleteCapacity(delList,sessionVO);
-		}
+//		if(delList != null){
+//			sessionCapacityListService.deleteCapacity(delList,sessionVO);
+//		}
 		
-		if(addSuccess){
-			message.setMessage("Save Success Holiday");
-		}else{
-			message.setMessage("Save Fail Holiday");
-		}
+//		if(addSuccess){
+//			message.setMessage("Save Success CT Session Capacity");
+//		}else{
+//			message.setMessage("Save Fail CT Session Capacity");
+//		}
 		if(updateSuccess){
-			message.setMessage("Update Success Holiday");
+			message.setMessage("Save Success CT Session Capacity");
 		}else{
-			message.setMessage("Update Fail Holiday");
+			message.setMessage("Save Fail CT Session Capacity");
 		}
-		if(delSuccess){
-			message.setMessage("Delete Success Holiday");
-		}else{
-			message.setMessage("Delete Fail Holiday");
-		}
+//		if(delSuccess){
+//			message.setMessage("Delete Success CT Session Capacity");
+//		}else{
+//			message.setMessage("Delete Fail CT Session Capacity");
+//		}
 		return ResponseEntity.ok(message);
 	}
 	

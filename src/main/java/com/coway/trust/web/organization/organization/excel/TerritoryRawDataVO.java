@@ -1,5 +1,7 @@
 package com.coway.trust.web.organization.organization.excel;
 
+import static com.coway.trust.config.excel.ExcelReadComponent.getValue;
+
 import org.apache.poi.ss.usermodel.Row;
 
 public class TerritoryRawDataVO {
@@ -13,9 +15,12 @@ public class TerritoryRawDataVO {
 	public static TerritoryRawDataVO create(Row row) {
 		
 		TerritoryRawDataVO vo = new TerritoryRawDataVO();
-		vo.setAreaId(row.getCell(1).getStringCellValue());
-		vo.setBranch(row.getCell(2).getStringCellValue());
-		vo.setExtBranch(row.getCell(3).getStringCellValue());
+		vo.setAreaId(getValue(row.getCell(1)));
+		vo.setBranch(getValue(row.getCell(2)));
+		vo.setExtBranch(getValue(row.getCell(3)));
+//		vo.setAreaId(row.getCell(1).getStringCellValue());
+//		vo.setBranch(row.getCell(2).getStringCellValue());
+//		vo.setExtBranch(row.getCell(3).getStringCellValue());
 
 		return vo;
 	}

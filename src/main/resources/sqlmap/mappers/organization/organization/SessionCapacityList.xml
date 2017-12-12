@@ -125,6 +125,15 @@
                     </choose>
         </select>
         
+        <select id="selectSsCapacityCTM" parameterType="Map" resultType="egovMap">
+                    SELECT A.MEM_CODE || ' - ' || A.NAME CTM_CODE 
+					FROM ORG0001D A, ORG0005D B
+					WHERE A.MEM_ID = B.MEM_ID 
+					AND A.BRNCH = #{cmbbranchId} 
+					AND A.MEM_TYPE = '3' 
+					AND B.MEM_LVL = '2'
+        </select>
+        
         <insert id="insertCapacity" parameterType="Map">
         INSERT INTO ORG0015M(
          BRNCH_ID,
@@ -209,10 +218,56 @@
 						)
     </update>
     
+    <update id="updateCTMCapacity" parameterType="Map">
+    MERGE INTO ORG0015M AA
+	USING (SELECT SUM(C.morng_sesion_as) SUM_M_AS, SUM(C.morng_sesion_ins) SUM_M_INS, SUM(C.morng_sesion_rtn) SUM_M_RTN, SUM(C.aftnon_sesion_as) SUM_A_AS, SUM(C.aftnon_sesion_ins) SUM_A_INS, SUM(C.aftnon_sesion_rtn) SUM_A_RTN, SUM(C.evng_sesion_as) SUM_E_AS, SUM(C.evng_sesion_ins) SUM_E_INS, SUM(C.evng_sesion_rtn) SUM_E_RTN
+		      FROM ORG0001D A, ORG0005D B, ORG0015M C
+		      WHERE A.MEM_ID = B.MEM_ID 
+		      AND C.CT_ID = A.MEM_ID
+		      AND A.BRNCH = #{codeId} 
+		      AND A.MEM_TYPE = '3' 
+		      AND B.MEM_LVL != '2') BB
+	ON (AA.CT_ID = (SELECT A.MEM_ID 
+			                FROM ORG0001D A, ORG0005D B
+			                WHERE A.MEM_ID = B.MEM_ID 
+			                AND A.BRNCH = #{codeId} 
+			                AND A.MEM_TYPE = '3' 
+			                AND B.MEM_LVL = '2' ))
+	WHEN MATCHED THEN
+	    UPDATE SET
+	    AA.morng_sesion_as = BB.SUM_M_AS, 
+	    AA.morng_sesion_ins = BB.SUM_M_INS, 
+	    AA.morng_sesion_rtn = BB.SUM_M_RTN, 
+	    AA.aftnon_sesion_as = BB.SUM_A_AS, 
+	    AA.aftnon_sesion_ins = BB.SUM_A_INS, 
+	    AA.aftnon_sesion_rtn = BB.SUM_A_RTN, 
+	    AA.evng_sesion_as = BB.SUM_E_AS, 
+	    AA.evng_sesion_ins = BB.SUM_E_INS, 
+	    AA.evng_sesion_rtn = BB.SUM_E_RTN, 
+	    AA.UPD_DT = SYSDATE,
+	    AA.UPD_USER_ID = #{userId}
+	WHEN NOT MATCHED THEN
+	    INSERT (AA.BRNCH_ID, AA.CT_ID, AA.morng_sesion_as, AA.morng_sesion_ins, AA.morng_sesion_rtn, AA.aftnon_sesion_as, AA.aftnon_sesion_ins, AA.aftnon_sesion_rtn, AA.evng_sesion_as, AA.evng_sesion_ins, AA.evng_sesion_rtn, AA.CRT_DT, AA.CRT_USER_ID, AA.UPD_DT, AA.UPD_USER_ID)
+	    VALUES (#{codeId}, (SELECT A.MEM_ID
+					                  FROM ORG0001D A, ORG0005D B
+					                  WHERE A.MEM_ID = B.MEM_ID 
+					                  AND A.BRNCH = #{codeId} 
+					                  AND A.MEM_TYPE = '3' 
+					                  AND B.MEM_LVL = '2' 
+					                  AND ROWNUM = 1), BB.SUM_M_AS, BB.SUM_M_INS, BB.SUM_M_RTN, BB.SUM_A_AS, BB.SUM_A_INS, BB.SUM_A_RTN, BB.SUM_E_AS, BB.SUM_E_INS, BB.SUM_E_RTN, SYSDATE, #{userId}, SYSDATE, #{userId})
+    </update>
+    
     <delete id="deleteCapacity" parameterType="Map">
             DELETE FROM ORG0015M
-          WHERE BRNCH_ID =TO_NUMBER(#{codeId})
-          AND CT_ID  = TO_NUMBER(#{memId})
+			WHERE (MORNG_SESION_AS = 0 OR MORNG_SESION_AS IS NULL)
+			AND (MORNG_SESION_INS = 0 OR MORNG_SESION_INS IS NULL)
+			AND (MORNG_SESION_RTN = 0 OR MORNG_SESION_RTN IS NULL)
+			AND (AFTNON_SESION_AS = 0 OR AFTNON_SESION_AS IS NULL)
+			AND (AFTNON_SESION_INS = 0 OR AFTNON_SESION_INS IS NULL)
+			AND (AFTNON_SESION_RTN = 0 OR AFTNON_SESION_RTN IS NULL)
+			AND (EVNG_SESION_AS = 0 OR EVNG_SESION_AS IS NULL)
+			AND (EVNG_SESION_INS = 0 OR EVNG_SESION_INS IS NULL)
+			AND (EVNG_SESION_RTN = 0 OR EVNG_SESION_RTN IS NULL)
     </delete>
      <select id="seleCtCodeSearch" parameterType="Map" resultType="egovMap">
            select 

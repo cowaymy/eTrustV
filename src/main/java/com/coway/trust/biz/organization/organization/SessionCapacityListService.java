@@ -17,7 +17,6 @@ public interface SessionCapacityListService {
 	
 	void deleteCapacity(List<Object> params, SessionVO sessionVO);
 	
-	// 171205 :: 선한이
 	void updateCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
 	
 	List<EgovMap> seleCtCodeSearch(Map<String, Object>params);
@@ -25,6 +24,14 @@ public interface SessionCapacityListService {
 	List<EgovMap> seleCtCodeSearch2(Map<String, Object> params);
 	
 	List<EgovMap> seleBranchCodeSearch(Map<String, Object>params);
+
+	EgovMap selectSsCapacityCTM(Map<String, Object> params);
+
+	void updateCTMCapacity(List<Object> udtList, SessionVO sessionVO);
+
+	void updateCTMCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
+
+	void deleteCapacityByExcel(List<Map<String, Object>> updateList, SessionVO sessionVO);
 
 	/*List<EgovMap> selectHpChildList(Map<String, Object> params);
 	
