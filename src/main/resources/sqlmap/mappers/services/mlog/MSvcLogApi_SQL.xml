@@ -443,21 +443,38 @@
     WHERE 1 = (CASE WHEN NVL(reqRefNo,' ') <![CDATA[<>]]> ' ' AND NVL(asr_No, ' ')  = ' ' THEN 0 ELSE 1 END)
 ) A
 LEFT OUTER JOIN (
-    SELECT
-        A.AS_NO AS AS_NO
-        , E.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark
-        , E.IN_HUSE_REPAIR_REPLACE_YN AS inhouserepairreplacementyn
-        , to_char(E.IN_HUSE_REPAIR_PROMIS_DT ,'yyyymmdd')  AS in_House_Repair_Promised_Date
-        , E.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
-        , E.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code
-        , E.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No
-    FROM
-    SVC0001D A  /* 3rd AS Order - Reference No*/
-    INNER JOIN SVC0004D B ON A.REF_REQST = B.AS_RESULT_ID   /*3rd AS Order*/
-    INNER JOIN SVC0001D C ON B.AS_ENTRY_ID = C.AS_ID
-    INNER JOIN SVC0001D D ON C.REF_REQST = D.AS_ID
-    INNER JOIN SVC0004D E ON D.AS_ID = E.AS_ENTRY_ID
+    SELECT DISTINCT * FROM
+    (
+        SELECT
+            A.AS_NO AS AS_NO
+            , B.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark
+            , B.IN_HUSE_REPAIR_REPLACE_YN AS inhouserepairreplacementyn
+            , TO_CHAR(B.IN_HUSE_REPAIR_PROMIS_DT, 'YYYYMMDD') AS in_House_Repair_Promised_Date
+            , B.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
+            , B.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code
+            , B.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No
+        FROM
+        SVC0001D A  /* 3rd AS Order - Reference No*/
+        INNER JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID   /*3rd AS Order*/
+        WHERE A.REF_REQST IS NULL
+        UNION ALL
+        SELECT
+            A.AS_NO AS AS_NO
+            , E.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark
+            , E.IN_HUSE_REPAIR_REPLACE_YN AS inhouserepairreplacementyn
+            , TO_CHAR(E.IN_HUSE_REPAIR_PROMIS_DT, 'YYYYMMDD') AS in_House_Repair_Promised_Date
+            , E.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
+            , E.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code
+            , E.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No
+        FROM
+        SVC0001D A  /* 3rd AS Order - Reference No*/
+        INNER JOIN SVC0004D B ON A.REF_REQST = B.AS_RESULT_ID   /*3rd AS Order*/
+        INNER JOIN SVC0001D C ON B.AS_ENTRY_ID = C.AS_ID
+        INNER JOIN SVC0001D D ON C.REF_REQST = D.AS_ID
+        INNER JOIN SVC0004D E ON D.AS_ID = E.AS_ENTRY_ID
+    ) 
 ) B ON A.service_No = B.AS_NO
+
 
   </select>
 
