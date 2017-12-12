@@ -462,15 +462,16 @@
                           SELECT
                                    #{serial},
                                    #{delno},
-                                   DELVRY_NO_ITM,
-                                    (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
+                                    l55.DELVRY_NO_ITM,
+                                    <!-- (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) , -->
+                                    l47.TRNSC_TYPE,
                                     SYSDATE,
                                     #{userId}
-                                    FROM LOG0055D
+                                    FROM LOG0055D l55, log0047m l47
                                     WHERE 1=1
-                                              AND DELVRY_NO= #{delno}
-                                              AND ITM_CODE =#{itmcd}
-                                              AND REQST_NO =#{reqstno}                                      
+                                              AND  l55.DELVRY_NO= #{delno}
+                                              AND  l55.ITM_CODE =#{itmcd}
+                                              <!-- AND REQST_NO =#{reqstno}   -->                                    
                                                        
      </insert>
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
@@ -574,6 +575,30 @@
                        AND L47.REQST_NO = #{reqno}
      </insert>
      
-     
+       <insert id="insertReturnGrade" parameterType="Map">
+        MERGE INTO LOG0061D A
+             USING DUAL
+                ON (A.DELVRY_NO = #{delvryNo} and A.SERIAL_NO = #{serialNo})
+            WHEN MATCHED THEN
+                UPDATE SET 
+                       A.SERGRAD = #{grade}
+                     , A.CRT_USER_ID = #{userId}
+                     , A.CRT_DT      = SYSDATE
+            WHEN NOT MATCHED THEN 
+                INSERT ( SERIAL_NO,
+                             DELVRY_NO,
+                             CRT_USER_ID, 
+                             CRT_DT,
+                             SERGRAD
+                             )
+                VALUES ( 
+                            #{serialNo} , 
+                            #{delvryNo} ,
+                             #{userId}, 
+                             SYSDATE,
+                             #{grade}
+                           )
+    </insert> 
+       
   
 </mapper>
