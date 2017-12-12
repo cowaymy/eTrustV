@@ -15,5 +15,13 @@ public interface SalesTrBookRecvMapper {
 
 	List<EgovMap> selectTransitList(Map<String, Object> params);
 
+	Object selectTransitDetailInfo(Map<String, Object> param);
+
+	void updateTransitDetail(Map<String, Object> param);
+
+	Object selectTransitM(Map<String, Object> params);
+
+	void updateTransitM(Map<String, Object> params);
+
 
 }

@@ -42,12 +42,17 @@ function creatGrid(){
               Common.popupDiv("/sales/trBookRecv/trBookRecvViewPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRecvViewPop");
               
          });
+        // 셀 더블클릭 이벤트 바인딩
+         AUIGrid.bind(recvGridID, "cellClick", function(event){            
+              $("#trnsitId").val(AUIGrid.getCellValue(recvGridID , event.rowIndex , "trnsitId"));              
+         });
 }
 
 //리스트 조회.
 function fn_selectListAjax() {
+    $("#trnsitId").val("");
     
-  Common.ajax("GET", "/sales/trBookRecv/selectTrBookRecvList", $("#listSForm").serialize(), function(result) {
+    Common.ajax("GET", "/sales/trBookRecv/selectTrBookRecvList", $("#listSForm").serialize(), function(result) {
       
        console.log("성공.");
        console.log( result);
@@ -62,8 +67,13 @@ function fn_clear(){
 }
 
 
-function fn_trBookAddSingle(){
-    Common.popupDiv("/sales/trBook/trBookRecvViewPop.do",$("#listSForm").serializeJSON(), null, true, "trBookAddSinglePop");
+function fn_updateRecv(){
+
+    if($("#trnsitId").val()==""){  
+    	Common.alert("Transit Record Missing" + DEFAULT_DELIMITER + "No transit record selected.");
+    }else{ 
+        Common.popupDiv("/sales/trBookRecv/updateRecvPop.do",$("#listSForm").serializeJSON(), null, true, "updateRecvPop");
+    }
 }
 
 </script>
@@ -79,7 +89,7 @@ function fn_trBookAddSingle(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>TR Book Management TR Book receive</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#">Update receive</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_updateRecv();">Update receive</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
 </ul>

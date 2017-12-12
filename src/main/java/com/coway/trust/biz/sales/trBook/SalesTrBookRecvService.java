@@ -13,5 +13,7 @@ public interface SalesTrBookRecvService {
 
 	List<EgovMap> selectTransitList(Map<String, Object> params);
 
+	void updateTransit(Map<String, Object> params);
+
 	
 }

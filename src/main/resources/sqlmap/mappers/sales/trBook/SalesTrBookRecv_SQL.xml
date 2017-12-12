@@ -95,4 +95,64 @@
 		          AND A.TR_TRNSIT_RESULT_STUS_ID = #{trTrnsitResultStusId}
 		          </if>		 
     </select>
+    
+    <select id="selectTransitDetailInfo" parameterType="map" resultType="EgovMap">
+		SELECT TR_TRNSIT_DET_ID   ,
+		           TR_TRNSIT_ID   ,
+		           TR_TRNSIT_BOOK_ID   ,
+		           TR_TRNSIT_STUS_ID   ,
+		           TR_TRNSIT_RESULT_STUS_ID   ,
+		           TR_TRNSIT_CRT_DT   ,
+		           TR_TRNSIT_CRT_USER_ID   ,
+		           TR_CLOS_DT   ,
+		           TR_TRNSIT_UPD_DT   ,
+		           TR_TRNSIT_UPD_USER_ID   
+		  FROM MSC0038D 		  
+	    <if test="detail !=null and detail !='' ">
+			 WHERE TR_TRNSIT_DET_ID = #{trTrnsitDetId}
+		</if>
+        <if test="detail ==null or detail =='' ">
+			 WHERE TR_TRNSIT_ID = #{trnsitId} 
+                 AND  8 <![CDATA[<>]]> TR_TRNSIT_STUS_ID 
+                 AND 44 = TR_TRNSIT_RESULT_STUS_ID 
+		</if>
+		     AND ROWNUM <![CDATA[<=]]> 1	 
+    </select>
+    
+    <select id="selectTransitM" parameterType="map" resultType="EgovMap">
+		SELECT TR_TRNSIT_ID,
+                TR_TRNSIT_TYPE_ID,
+                TR_TRNSIT_DT,
+                TR_TRNSIT_FROM,
+                TR_TRNSIT_TO,
+                TR_CURIER_CODE,
+                TR_TRNSIT_CRT_DT,
+                TR_TRNSIT_CRT_USER_ID,
+                TR_TRNSIT_UPD_DT,
+                TR_TRNSIT_UPD_USER_ID,
+                TR_TRNSIT_STUS_ID,
+                TR_TRNSIT_REF_NO,
+                TR_TRNSIT_CLOS_DT  
+		  FROM MSC0037D 
+		 WHERE TR_TRNSIT_ID = #{trnsitId}
+		     AND ROWNUM <![CDATA[<=]]> 1	 
+    </select>
+    
+    <update id="updateTransitDetail" parameterType="Map">  
+          UPDATE MSC0038D
+			   SET TR_TRNSIT_RESULT_STUS_ID = #{status},
+			       TR_CLOS_DT = SYSDATE,
+			       TR_TRNSIT_UPD_DT = SYSDATE,
+			       TR_TRNSIT_UPD_USER_ID = #{userId}
+			 WHERE TR_TRNSIT_DET_ID = #{trTrnsitDetId}      
+    </update>
+    
+    <update id="updateTransitM" parameterType="Map">  
+	    UPDATE MSC0037D
+		   SET TR_TRNSIT_UPD_DT = SYSDATE,
+		       TR_TRNSIT_UPD_USER_ID = #{userId},
+		       TR_TRNSIT_STUS_ID = #{trTrnsitStusId}
+		 WHERE  TR_TRNSIT_ID = #{trnsitId}      
+    </update>
+    
 </mapper>

@@ -100,7 +100,8 @@ var fromItems = new Array();
 var idx = 0;
 
 function fn_holdDataMove(){
-    
+
+    var delCnt=0;
 	var selectItems = AUIGrid.getSelectedItems(tranGridID);
 	
     console.log(selectItems);
@@ -108,9 +109,12 @@ function fn_holdDataMove(){
     
     for (var i in selectItems) {
     	//var value = test[i];
-        fromItems[idx] = AUIGrid.getItemByRowIndex(tranGridID, selectItems[i].rowIndex);
+        fromItems[idx] = AUIGrid.getItemByRowIndex(tranGridID, selectItems[i].rowIndex-delCnt);
 
-        AUIGrid.removeRow(tranGridID, selectItems[i].rowIndex);
+        //AUIGrid.removeRow(tranGridID, selectItems[i].rowIndex);
+
+        AUIGrid.removeRow(tranGridID, selectItems[i].rowIndex-delCnt);
+        delCnt++;
         idx++;
     }	
     
@@ -189,6 +193,9 @@ function fn_tranBulkSave(){
 
          Common.alert("Save Successful" + DEFAULT_DELIMITER + "Selected TR book(s) successfully transfer to courier.<br/>Transit Number : " + result.data );
          $("#btnSave").hide();
+         
+         fromItems = new Array();
+         idx = 0;
          
     },
     function(jqXHR, textStatus, errorThrown){

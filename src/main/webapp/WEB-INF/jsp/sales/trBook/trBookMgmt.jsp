@@ -61,6 +61,7 @@ function creatGrid(){
 
 //리스트 조회.
 function fn_selectListAjax() {
+	$("#trBookId").val("");
    	
   Common.ajax("GET", "/sales/trBook/selectTrBookMgmtList", $("#listSForm").serialize(), function(result) {
       
