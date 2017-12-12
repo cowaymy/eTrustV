@@ -27,5 +27,41 @@
 	         FROM SVC0001D Extent1
 	                JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.AS_SO_ID ) GroupBy1
 	</select>
+	<select id="selectViewLedger" parameterType="Map" resultType="egovMap">
+	<![CDATA[
+	   SELECT Project1.AS_LG_DOC_TYPE_ID AS_LG_DOC_TYPE_ID  ,
+			       Project1.AS_DOC_NO AS_DOC_NO  ,
+			       Project1.CODE_NAME CODE_NAME  ,
+			       Project1.C1 C1  ,
+			       Project1.C2 C2  ,
+			       Project1.C3 C3  ,
+			       Project1.C4 C4  
+			  FROM ( SELECT Extent1.AS_DOC_NO AS_DOC_NO  ,
+			                Extent1.AS_LG_DOC_TYPE_ID AS_LG_DOC_TYPE_ID  ,
+			                Extent2.CODE_NAME CODE_NAME  ,
+			                CASE 
+			                     WHEN ( Extent1.AS_LG_DT IS NOT NULL ) THEN TO_CHAR(Extent1.AS_LG_DT,'DD-MM-YYYY')
+			                ELSE TO_CHAR('1900-01-01','yyyy-mm-dd')
+			                   END C1  ,
+			                CASE 
+			                     WHEN ( Extent1.AS_LG_AMT >0 ) THEN Extent1.AS_LG_AMT
+			                ELSE 0
+			                   END C2  ,
+			                CASE 
+			                     WHEN ( Extent1.AS_LG_AMT <= 0 ) THEN Extent1.AS_LG_AMT
+			                ELSE 0
+			                   END C3  ,
+			                CASE 
+			                     WHEN ( Extent1.AS_ADV_PAY IS NOT NULL ) THEN Extent1.AS_ADV_PAY
+			                ELSE 0
+			                   END C4  
+			         FROM PAY0006D Extent1
+			                JOIN SYS0013M Extent2   ON Extent1.AS_LG_DOC_TYPE_ID = Extent2.CODE_ID
+			         WHERE  Extent1.AS_RESULT_NO = #{ASRNO}
+			          ) Project1
+			  ORDER BY Project1.C1 ASC
+			   ]]>
+	</select>
+	
 </mapper>
      
