@@ -80,4 +80,31 @@ public class ASReportController {
 		// 호출될 화면
 		return "services/as/asSummaryListPop";
 	}
+	
+	@RequestMapping(value = "/asLedgerPop.do")
+	public String asLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		model.addAttribute("ASRNo", params.get("ASRNO"));
+		// 호출될 화면
+		return "services/as/asLedgerPop";
+	}
+	
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/getViewLedger.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getViewLedger( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> viewLedger = ASReportService.selectViewLedger(params);
+		return ResponseEntity.ok(viewLedger);
+	}
+	
+
+	
 }
