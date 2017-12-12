@@ -110,9 +110,11 @@
           <if test="searchmodelname != null and searchmodelname !=''">
                      AND E1.NAME = #{searchmodelname}
          </if>
-      <if test="searchpurchasedate1 != null and searchpurchasedate2 != null and searchpurchasedate1 != '' and searchpurchasedate2 != ''" > 
-	     <![CDATA[  AND E1.PURCHS_DT   >= TO_DATE(#{searchpurchasedate1},'DD/MM/YYYY') 
-	      AND E1.PURCHS_DT   <=   TO_DATE(#{searchpurchasedate2},'DD/MM/YYYY') ]]>
+      <if test="searchpurchasedate1 != null and searchpurchasedate1 != ''" > 
+	       AND E1.PURCHS_DT  <![CDATA[ >= ]]>TO_DATE(#{searchpurchasedate1},'DD-MM-YYYY') 
+	  </if>
+	   <if test="searchpurchasedate2 != null and searchpurchasedate2 != ''" >
+	      AND E1.PURCHS_DT    <![CDATA[<=  ]]> TO_DATE(#{searchpurchasedate2},'DD-MM-YYYY') 
        </if> 
          <if test="searchrefno != null and searchrefno !=''">
                      AND E1.REF_NO = #{searchrefno}
@@ -144,9 +146,11 @@
           <if test="searchcreator != null and searchcreator !=''">
                      AND E1.CURR_USER_ID = #{searchcreator}
          </if>
-       <if test="searchcreatedate1 != null and searchcreatedate2 != null and searchcreatedate1 != '' and searchcreatedate2 != ''" > 
-         <![CDATA[  AND E1.CRT_DT   >= TO_CHAR(TO_DATE(#{searchcreatedate1},'DD/MM/YYYY'),'YYYY-MM-DD') 
-          AND E1.CRT_DT   <   TO_CHAR(TO_DATE(#{searchcreatedate2},'DD/MM/YYYY'),'YYYY-MM-DD') ]]>
+       <if test="searchcreatedate1 != null and searchcreatedate1 != ''" > 
+          AND E1.CRT_DT <![CDATA[  >=  ]]> TO_DATE(#{searchcreatedate1},'DD-MM-YYYY')
+        </if>
+        <if test="searchcreatedate2 != null and searchcreatedate2 != ''" > 
+          AND E1.CRT_DT <![CDATA[  <=  ]]>  TO_DATE(#{searchcreatedate2},'DD-MM-YYYY') 
         </if>  
           order by asset_id desc
     </select>
