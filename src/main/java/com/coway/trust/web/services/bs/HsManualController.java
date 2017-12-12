@@ -643,6 +643,30 @@ public class HsManualController {
 			return ResponseEntity.ok(message);
 		}		
 		
+
+		
+
+		@RequestMapping(value = "/doSaveDeactivateFilter.do",method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> doSaveDeactivateFilter(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+			ReturnMessage message = new ReturnMessage();
+			params.put("updator", sessionVO.getUserId());
+			params.put("srvFilterStusId", 8);
+			
+			logger.debug("params : {}", params);
+			
+			int resultValue = hsManualService.saveDeactivateFilter(params);
+			
+			if(resultValue>0){
+				message.setCode(AppConstants.SUCCESS);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			}else{
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
+			return ResponseEntity.ok(message);
+		}
+		
+		
 		
 		
 	/**
@@ -740,5 +764,67 @@ public class HsManualController {
 		return  ResponseEntity.ok(message);
 	}
 
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/hSFilterUseHistoryPop.do")
+	public String hSFilterUseHistoryPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		model.put("orderId",(String) params.get("orderId"));
+		model.put("stkId",(String) params.get("stkId"));
+		
+		// 호출될 화면
+		return "services/bs/hSFilterUseHistoryPop";
+	}	
+		
+	
+	@RequestMapping(value = "/hSFilterUseHistory.do")
+	public ResponseEntity<List<EgovMap>> gethSFilterUseHistory(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
 
+			logger.debug("params : {}", params.toString());
+
+			//List<EgovMap>  useHistoryInfo = hsManualService.selecthSFilterUseHistorycall(params);
+			
+			hsManualService.selecthSFilterUseHistorycall(params);
+			
+			List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
+			
+			logger.debug("============hSFilterUseHistory useHistoryInfo Start =======================================================");
+			logger.debug("==========useHistoryInfo {} " ,list ); 
+			logger.debug("============hSFilterUseHistory useHistoryInfo End =======================================================");
+			
+
+			model.put("list", list);
+	
+			return ResponseEntity.ok(list);
+		}	
+	
+	
+	@RequestMapping(value = "/doSaveFilterUpdate.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> doSaveFilterUpdate(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+		params.put("updator", sessionVO.getUserId());
+		
+		logger.debug("params : {}", params);
+		
+		params.put("srvFilterStusId", "1");
+		
+		int resultValue = hsManualService.saveDeactivateFilter(params);
+		
+		if(resultValue>0){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		return ResponseEntity.ok(message);
+	}
+	
 }
+	
+
+
