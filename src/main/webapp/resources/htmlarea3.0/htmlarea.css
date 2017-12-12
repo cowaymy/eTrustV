@@ -58,7 +58,7 @@
 
 .htmlarea .toolbar .space { width: 5px; }
 
-.htmlarea .toolbar select { font: 11px Tahoma,Verdana,sans-serif; }
+.htmlarea .toolbar select { font: 11px Tahoma,Verdana,sans-serif; width:auto; }
 
 .htmlarea .toolbar select,
 .htmlarea .toolbar select:hover,
