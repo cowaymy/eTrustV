@@ -41,8 +41,8 @@ $(document).ready(function(){
 // 리스트 조회.
 function fn_getTaxInvoiceListAjax() {   
     
-       if(FormUtil.checkReqValue($("#billingNo"))){
-        Common.alert('* Please key-In Billing No. <br />');
+    if(FormUtil.checkReqValue($("#billingNo")) && FormUtil.checkReqValue($("#orderNo"))){
+        Common.alert('* Please key-In Billing No. OR Please key-In Order No. <br />');
         return;
     }
     
