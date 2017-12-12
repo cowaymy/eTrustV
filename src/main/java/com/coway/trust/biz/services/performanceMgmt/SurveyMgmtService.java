@@ -23,4 +23,9 @@ public interface SurveyMgmtService {
 	List<EgovMap> getCodeNameList(Map<String, Object> params);
 	
 	int addSurveyEventTarget(Map<String, Map<String, ArrayList<Object>>> params, String loginId);
+	
+	List<EgovMap> selectEvtMemIdList(Map<String, Object> params);
+	
+	List<EgovMap> selectSalesOrdNotList(Map<String, Object> params);
+	
 }

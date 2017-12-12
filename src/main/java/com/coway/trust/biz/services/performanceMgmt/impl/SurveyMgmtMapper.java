@@ -22,4 +22,8 @@ public interface SurveyMgmtMapper {
 	int addSurveyEventInfo(Map<String, Object> params);
 	
 	int addSurveyEventTarget(Map<String, Object> params);
+	
+	List<EgovMap> selectEvtMemIdList(Map<String, Object> params);
+	
+	List<EgovMap> selectSalesOrdNotList(Map<String, Object> params);
 }

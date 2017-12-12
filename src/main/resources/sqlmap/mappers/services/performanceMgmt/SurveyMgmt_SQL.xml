@@ -140,5 +140,29 @@
           , 33
       )
    </insert>
-    
+   
+	<select id="selectEvtMemIdList" parameterType="Map" resultType="egovMap">
+		<![CDATA[
+		SELECT MEM_CODE
+		FROM ORG0001D
+		WHERE MEM_CODE = #{memId}
+		]]>
+	</select>
+	
+	
+	<select id="selectSalesOrdNotList" parameterType="Map" resultType="egovMap">
+	    <![CDATA[
+	    SELECT SALES_ORD_NO 
+	    FROM SAL0001D 
+	    WHERE 1=1
+        ]]>
+        <if test="null != salesOrdNo and salesOrdNo.length > 0">
+           AND SALES_ORD_NO IN
+           <foreach collection="salesOrdNo" item="item" open="(" separator="," close=")">
+               <if test="null != item">
+               #{item}
+               </if>
+           </foreach>
+        </if>
+    </select>
 </mapper>

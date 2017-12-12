@@ -1,11 +1,13 @@
 package com.coway.trust.web.services.performanceMgmt;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,5 +145,33 @@ public class SurveyMgmtController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/selectEvtMemIdList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectEvtMemIdList(@RequestParam Map<String, Object> params) {
+		Precondition.checkNotNull(params.get("memId"),
+				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "memId" }));
+
+		LOGGER.debug("memId : {}", params.get("memId"));
+
+		List<EgovMap> memIdList = surveyMgmtService.selectEvtMemIdList(params);
+		return ResponseEntity.ok(memIdList);
+	}
+
+	
+	@RequestMapping(value = "/selectSalesOrdNotList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectSalesOrdNotList(@RequestParam(value = "salesOrdNo[]") String[] salesOrdNo , @RequestParam Map<String, Object> params) throws Exception{
+		
+		//param Setting
+		params.put("salesOrdNo", salesOrdNo);
+		LOGGER.debug("salesOrdNo : {}", params.get("salesOrdNo"));
+		List<EgovMap> filterList = null;
+		filterList = surveyMgmtService.selectSalesOrdNotList(params);
+		
+		return ResponseEntity.ok(filterList);
+		
+	}
+	
+
 
 }

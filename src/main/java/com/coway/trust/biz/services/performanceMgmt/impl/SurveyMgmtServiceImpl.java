@@ -115,4 +115,15 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 		
 		return 0;
 	}
+	
+	@Override
+	public List<EgovMap> selectEvtMemIdList(Map<String, Object> params) {
+		return surveyMgmtMapper.selectEvtMemIdList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectSalesOrdNotList(Map<String, Object> params) {
+		return surveyMgmtMapper.selectSalesOrdNotList(params);
+	}
+	
 }
