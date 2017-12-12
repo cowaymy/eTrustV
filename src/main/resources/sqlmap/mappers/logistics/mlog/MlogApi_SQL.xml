@@ -296,6 +296,7 @@
 	  FROM SYS0026M S26
 	     , LOG0043M L43
 	     , LOG0044D L44
+	     , SYS0026M S26C
 	     , (select l56.loc_id , l56.stk_code , qty , serial_no , sergrad , S28.WH_LOC_CODE , S28.WH_LOC_DESC , S28.WH_LOC_BRNCH_ID , S28.RDC_CODE   
 	          from log0056m l56
 	             , log0063d l63
@@ -311,6 +312,7 @@
 	    AND S26.STK_CODE  = BAL.STK_CODE(+)
 	    AND S26.STK_CODE  = L44.BOM_COMPNT
 	    AND L43.BOM       = L44.BOM
+	    AND S26C.STK_CODE=L43.MATRL_NO 
 	    <if test="productCode != null and productCode !=''">
 	    AND L43.MATRL_NO  = #{productCode}
         </if>
@@ -322,7 +324,7 @@
             AND LTRIM(RTRIM(UPPER(S26.STK_DESC))) LIKE UPPER(#{searchKeyword}) || '%'
         </if>
         <if test="productId != null and productId !=''">
-        AND S26.STK_ID=#{productId}
+            AND S26C.STK_ID =#{productId}
         </if>
     </select>
     
