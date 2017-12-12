@@ -40,6 +40,7 @@
     var srvMembershipList = new Array();
     var upBramdList = new Array();
     var upitemGrid;
+    var copyDetails;
     
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "67","codeName": "Lost"},{"codeId": "8","codeName": "Inactive"}];
    // var categorycomboData = [{"codeId": "1199","codeName": "IT Equipment"}];
@@ -144,16 +145,22 @@
                                                     break;
                                                 }
                                             }
-                                            return retStr == "" ? value : retStr;
+                                            return retStr == "" ? value : retStr;                                         
                                         },  
                                       editRenderer : {
                                           type : "ComboBoxRenderer",
                                           showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                           listFunction : function(rowIndex, columnIndex, item, dataField) {
+//                                         	  item.codeId =srvMembershipList[i]["codeId"]
+//                                         	  alert(item.codeId);                                   	  
+//                                         	  for (var i = 0, len = srvMembershipList.length; i < len; i++) {
+//                                         		  srvMembershipList[i]["codeId"] = value;
+//                                         		  srvMembershipList[i]["codeName"];
+//                                         	  }
                                               return srvMembershipList ;
                                           },
                                           keyField : "codeId",
-                                          valueField : "codeName"
+                                          valueField : "codeName"                                            
                                                       }
                                             },   
                         {dataField:"name"      ,headerText:"Brand"           ,width:120 ,height:30 , style :"aui-grid-user-custom-left", 
@@ -377,7 +384,7 @@
             $("#masterClose").click(function(){
                 AUIGrid.destroy(upitemGrid);
                 $("#trigger").trigger("click");
-         
+                copyDetails="A";
             });
             
             $("#clear").click(function(){
@@ -449,7 +456,15 @@
              $("#DtatilGrid_div_tap").show();  
              var selectedItem = AUIGrid.getSelectedIndex(myGridID);
              detailGrid  = GridCommon.createAUIGrid("#DtatilGrid_div", detailLayout,"", gridoptions);
-             getDetailAssetListAjax(selectedItem[0],div);    
+             getDetailAssetListAjax(selectedItem[0],div);
+             if("C"==copyDetails){
+                 $("#CopyAssetInfo2").show();
+                 $("#a2").show();           	 
+             }else{
+                 $("#CopyAssetInfo2").hide();     
+                 $("#a2").hide();
+             }    
+             
      });
          //Update_info tap
          $("#Update_info").click(function(){
@@ -507,6 +522,7 @@
          
          $("#copyAssetOpen").click(function(){
              div="V";
+             copyDetails="C";
              $("#detailHead").text("Copy/Duplicate Informaton");
              selectedItem = AUIGrid.getSelectedIndex(myGridID);
              if (selectedItem[0] > -1){
@@ -514,6 +530,8 @@
                  fn_setVisiable(div);
                  $("#CopyAssetInfo").show();
                  $("#masterWindow").show();
+                 $("#Details_info").show();
+                 $("#trigger").trigger("click");
                  $("#Insert_info").hide();
                  $("#Update_info").hide();
                  $("#cancelPopbtn").hide();
@@ -548,6 +566,26 @@
             }
          });
          
+         $("#copybtn2").click(function(){
+             
+             div="V";
+             regex = /[^0-9]/gi;
+              v = $("#copyquantity2").val();
+              if (regex.test(v)) {
+                 /*  var nn = v.replace(regex, '');
+                  $("#copyquantity").val(v.replace(regex, ''));
+                  $("#copyquantity").focus();
+                  return; */
+                  Common.alert('Please Check Input Number.');
+              } 
+             var selectedItems = AUIGrid.getSelectedItems(myGridID);
+             for(i=0; i<selectedItems.length; i++) {
+              url="/logistics/assetmng/copyAsset.do?assetid="+selectedItems[i].item.assetid+"&copyquantity="+v;
+
+              f_others(url, div);
+             }
+          });
+
          
          $("#updatePopbtn").click(function(){
                 div="U";
@@ -1657,6 +1695,10 @@
                     });
         
     }
+    
+
+    
+    
 </script>
 </head>
 <section id="content"><!-- content start -->
@@ -2065,7 +2107,29 @@
 
 <article class="tap_area" id="DtatilGrid_div_tap"  style="display:none;">
 <div id="DtatilGrid_div" style="width:100%;"></div>             
-</article>
+
+<aside class="title_line" id="a2"><!-- title_line start -->
+<h2>Copy/Duplicate Informaton</h2>
+</aside><!-- title_line end -->
+    <table class="type1" id="CopyAssetInfo2">
+        <colgroup>
+        <col style="width:300px" />
+        <col style="width:*" />
+        <col style="width:120px" />
+        <col style="width:*" /> 
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Copy/Duplicate Quantity</th>
+            <td><input type="number" title="" placeholder=""  class="w100p" id="copyquantity2" name="copyquantity"/>
+            </td>
+            <td><input type="button" value="Copy Asset" id="copybtn2" name="copybtn"/> 
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</article>    
 <article class="tap_area" id ="add_info_div" style="display:none;">
 <!-- <div id="add_info_div" style="display:none;"> -->
 <div>
