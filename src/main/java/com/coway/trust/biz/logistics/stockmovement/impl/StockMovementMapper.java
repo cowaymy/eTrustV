@@ -61,4 +61,6 @@ public interface StockMovementMapper {
 
 	void insertStockBooking(Map<String, Object> params);
 
+	void insertReturnGrade(Map<String, Object> setmap);
+
 }

@@ -195,10 +195,15 @@ $(document).ready(function(){
     	}else{
     	    var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
             for(var i = 0 ; i < checklist.length ; i++){
-                if (checklist[i].reqstno != event.item.reqstno){
+   /*              if (checklist[i].reqstno != event.item.reqstno){
                 	Common.alert("Request number is different.");
                     return false;
-                }
+                } */
+                if (checklist[i].reqloc != event.item.reqloc){
+                    Common.alert("Request To Location is different.");
+                    AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+                    return false;
+                } 
             }
             
     	    if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0){
@@ -278,14 +283,21 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(listGrid, "rowCheckClick", function(event){
-    	
     	var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
         for(var i = 0 ; i < checklist.length ; i++){
+            /* 
             if (checklist[i].reqstno != event.item.reqstno){
                 Common.alert("Request number is different.");
                 AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
                 return false;
-            }
+            } 
+            */
+            if (checklist[i].reqloc != event.item.reqloc){
+                Common.alert("Request To Location is different.");
+                AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
+                return false;
+            } 
+            
         }
         
     	if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0 || AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty")){
@@ -568,9 +580,10 @@ function giFunc(){
     data.add = serials;
     data.form    = $("#giForm").serializeJSON();
     
+    console.log(data);
     Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
-            var msg = result.message + "<br>MDN NO : "+result.data[1];
-    	    Common.alert(msg , SearchListAjax);
+            //var msg = result.message + "<br>MDN NO : "+result.data[1];
+    	   // Common.alert(msg , SearchListAjax);
             AUIGrid.resetUpdatedItems(listGrid, "all");    
         $("#giopenwindow").hide();
         $('#search').click();

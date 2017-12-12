@@ -236,6 +236,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params) {
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
 		int iCnt = 0;
 		String tmpdelCd = "";
 		String delyCd = "";
@@ -271,11 +272,31 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
 
 		} else {
+			Map<String, Object> grade = (Map<String, Object>) params.get("grade");
+			logger.info(" grade : {}", grade);
+			if ("GR".equals(formMap.get("gtype")) & null != grade) {
+				List<Object> gradelist = (List<Object>) grade.get(AppConstants.AUIGRID_UPDATE);
+				logger.info(" gradelist : {}", gradelist);
+				logger.info(" gradelist size : {}", gradelist.size());
+				for (int i = 0; i < gradelist.size(); i++) {
+					Map<String, Object> getmap = (Map<String, Object>) gradelist.get(i);
+					logger.info(" getmap: {}", getmap);
+					logger.info(" getmap delvryNo: {}", getmap.get("delvryNo"));
+					Map<String, Object> setmap = new HashMap();
+					setmap.put("delvryNo", getmap.get("delvryNo"));
+					setmap.put("serialNo", getmap.get("serialNo"));
+					setmap.put("grade", getmap.get("grade"));
+					setmap.put("userId", params.get("userId"));
+					stockMoveMapper.insertReturnGrade(setmap);
+					logger.info(" setmap: {}", setmap);
+				}
+			}
 
 			stockMoveMapper.StockMovementIssue(formMap);
 		}
 
 		return formMap;
+
 	}
 
 	@Override
