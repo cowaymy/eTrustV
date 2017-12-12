@@ -448,6 +448,14 @@ function asManagementGrid() {
         headerText : "as asBrnc",
         width : 100,  visible : false
     }, {
+        dataField : "c5",
+        headerText : "asTotalAmt",
+        width : 100,  visible : false
+    }, {
+        dataField : "asResultId",
+        headerText : "asResultId",
+        width : 100,  visible : false
+    }, {
         dataField : "undefined",
         headerText : "Edit",
         width : 170,
@@ -544,6 +552,68 @@ function fn_asSummaryList(){
 }
 function fn_asYsList(){
     Common.popupDiv("/services/as/report/asYellowSheetPop.do"  , null, null , true , '');
+}
+function fn_ledger(){
+    
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    
+       if(selectedItems.length  <= 0) {
+           Common.alert("<b>No AS selected.</b>");
+           return ;
+       }
+       else{
+       
+	    var asStusId =    selectedItems[0].item.code1;
+	    var asrNo =    selectedItems[0].item.c3;
+	    var AS_NO =    selectedItems[0].item.asNo;
+	    
+	    if (asStusId == "ACT")
+        {
+	    	Common.alert("<b>[" + AS_NO + "] do no has any result yet. Ledger view is disallowed.</b>");
+        }
+	    else{
+		   Common.popupDiv("/services/as/report/asLedgerPop.do?ASRNO="+asrNo  , null, null , true , '');
+	    	
+		   }
+       }
+}
+function fn_invoice(){
+      var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+       var AS_ID =    selectedItems[0].item.asId;
+       var AS_NO =    selectedItems[0].item.asNo;
+       var asStusId =    selectedItems[0].item.code1;
+       var asrId =    selectedItems[0].item.asResultId;
+       var asTotalAmt = selectedItems[0].item.c5;
+       var date = new Date();
+       var month = date.getMonth()+1;
+       var day = date.getDate();
+       if(date.getDate() < 10){
+           day = "0"+date.getDate();
+       }
+       
+       if (asStusId != "COM")
+       {
+           Common.alert("<b>[" + AS_NO + "] is not in complete status. Print invoice is disallowed.</b>");
+       }
+       else{
+           if (asTotalAmt <= 0)
+           {
+               Common.alert("<b>[" + AS_NO + "] has no charges. Print invoice is disallowed.</b>");
+           }
+           else{
+               $("#reportForm #V_RESULTID").val(asrId);
+               $("#reportForm #reportFileName").val('/services/ASInvoice.rpt');
+               $("#reportForm #viewType").val("PDF");
+               $("#reportForm #reportDownFileName").val("ASInvoice_"+day+month+date.getFullYear());
+               
+             //report 호출
+               var option = {
+                       isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+               };
+               
+               Common.report("reportForm", option);
+           }
+       }
 }
 </script>
 
@@ -716,6 +786,8 @@ function fn_asYsList(){
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asRawData()">AS Raw Data</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asSummaryList()">AS Summary List</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asYsList()">AS YS List</a></p></li>
+         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_ledger()">View Ledger</a></p></li>
+         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_invoice()">AS Invoice</a></p></li>
     </ul> 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -737,6 +809,12 @@ function fn_asYsList(){
 <div id="grid_wrap_asList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
+</form>
+<form action="#" id="reportForm" method="post">  
+<input type="hidden" id="V_RESULTID" name="V_RESULTID" />
+<input type="hidden" id="reportFileName" name="reportFileName" />
+<input type="hidden" id="viewType" name="viewType" />
+<input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
 </form>
 </section><!-- search_table end -->
 
