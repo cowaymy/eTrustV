@@ -57,9 +57,6 @@ public class CommissionSystemController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-	@Autowired
-	private SessionHandler sessionHandler;
 
 	/**
 	 * Call commission rule book management Page 
@@ -140,15 +137,9 @@ public class CommissionSystemController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveCommissionGrid.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveCommissionGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
-
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if(sessionVO==null){
-			loginId="1000000000";			
-		}else{
-			loginId=String.valueOf(sessionVO.getUserId());
-		}
+	public ResponseEntity<ReturnMessage> saveCommissionGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model, SessionVO sessionVO) {
+		
+		String loginId = String.valueOf(sessionVO.getUserId());
 		
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
@@ -332,18 +323,12 @@ public class CommissionSystemController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveCommissionItemGrid.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveCommissionItemGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+	public ResponseEntity<ReturnMessage> saveCommissionItemGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model,SessionVO sessionVO) {
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if(sessionVO==null){
-			loginId="1000000000";			
-		}else{
-			loginId=String.valueOf(sessionVO.getUserId());
-		}
+		String loginId = String.valueOf(sessionVO.getUserId());
 		
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
@@ -380,15 +365,9 @@ public class CommissionSystemController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveCommissionRule.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveCommissionRuleData(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> saveCommissionRuleData(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) {
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if(sessionVO==null){
-			loginId="1000000000";			
-		}else{
-			loginId=String.valueOf(sessionVO.getUserId());
-		}
+		String loginId = String.valueOf(sessionVO.getUserId());
 		
 		String saveType = params.get("saveType")==null?"I":String.valueOf(params.get("saveType"));
 				
@@ -524,18 +503,12 @@ public class CommissionSystemController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveCommissionWeeklyGrid.do", method = RequestMethod.POST)
-	public  ResponseEntity<ReturnMessage>  saveCommissionWeeklyGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+	public  ResponseEntity<ReturnMessage>  saveCommissionWeeklyGrid(@RequestBody Map<String, ArrayList<Object>> params, Model model,SessionVO sessionVO) {
 
 		String dt = CommonUtils.getNowDate().substring(0, 6);	
 		dt = dt.substring(4) + "/" + dt.substring(0, 4);
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if(sessionVO==null){
-			loginId="1000000000";			
-		}else{
-			loginId=String.valueOf(sessionVO.getUserId());
-		}
+		String loginId = String.valueOf(sessionVO.getUserId());
 		
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
 		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
@@ -628,18 +601,12 @@ public class CommissionSystemController {
 	 */
 	@RequestMapping(value = "/saveCommVersionInsert.do", method = RequestMethod.POST)
 	//public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
-	public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, Object> params, Model model) {
+	public  ResponseEntity<ReturnMessage>  saveCommVersionInsert(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) {
 
 		String dt = CommonUtils.getNowDate().substring(0, 6);	
 		dt = dt.substring(4) + "/" + dt.substring(0, 4);
 
-		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if(sessionVO==null){
-			loginId="1000000000";
-		}else{
-			loginId=String.valueOf(sessionVO.getUserId());
-		}
+		String loginId = String.valueOf(sessionVO.getUserId());
 		
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> simulList = (List<Object>)params.get(AppConstants.AUIGRID_ALL); 	// Get grid addList

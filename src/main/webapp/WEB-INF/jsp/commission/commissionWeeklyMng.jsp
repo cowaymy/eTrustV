@@ -59,6 +59,38 @@
 	      item.weeks = "";
 	      item.startDt = "";
 	      item.endDt = "";
+	      
+	      var month = 0; 
+          var weekObj  = new Array();
+          var week=0;
+          var chkVal = -1;
+        
+	      for(var i=0;i< AUIGrid.getGridData(myGridID).length ;i++){
+	          month = AUIGrid.getCellValue(myGridID, i, 2);
+	          if(month == parseInt(item.month,10)){
+	        	  weekObj[i]  = AUIGrid.getCellValue(myGridID, i, 3); 
+	          }
+	      }	      
+	      
+	      if(weekObj.length>=4){
+	    	  Common.alert("All Week has already been added.");
+	    	  return;
+	      }else{
+	    	  var w1=$.inArray(1,weekObj);
+	    	  var w2=$.inArray(2,weekObj);
+	    	  var w3=$.inArray(3,weekObj);
+	    	  var w4=$.inArray(4,weekObj);
+	    	  
+	    	  if(w1==chkVal){
+	              item.weeks=1; 
+	        }else if(w2==chkVal){
+	            item.weeks=2;
+	        }else if(w3==chkVal){
+	            item.weeks=3;
+	        }else if(w4==chkVal){
+	            item.weeks=4;
+	        }
+	      }
 	   
 	      // parameter
 	      // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
