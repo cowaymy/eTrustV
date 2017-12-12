@@ -943,7 +943,8 @@ HTMLArea.prototype.generate = function () {
 	if (height < 0) {
 		height = 0;
 	}
-	iframe.style.height = height + "px";
+	//iframe.style.height = height + "px";
+	iframe.style.height = "150px"; // 강제 세팅함
 
 	// the editor including the toolbar now have the same size as the
 	// original textarea.. which means that we need to reduce that a bit.
