@@ -192,21 +192,27 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				insMap.put("delno", deliSeq);
 				insMap.put("userId", params.get("userId"));
 				stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
-			}
+				
+				if (serialList.size() > 0) {
+					int uCnt = 0;
+					for (int j = 0; j < serialList.size(); j++) {
 
-			if (serialList.size() > 0) {
-
-				for (int j = 0; j < serialList.size(); j++) {
-
-					Map<String, Object> insSerial = null;
-
-					insSerial = (Map<String, Object>) serialList.get(j);
-
-					insSerial.put("delno", deliSeq);
-					insSerial.put("reqstno", formMap.get("reqstno"));
-					insSerial.put("userId", params.get("userId"));
-					stockMoveMapper.insertMovementSerial(insSerial);
+						Map<String, Object> insSerial = null;
+						insSerial = (Map<String, Object>) serialList.get(j);
+						insSerial.put("delno"  , deliSeq);
+						insSerial.put("reqstno", insMap.get("reqstno"));
+						insSerial.put("userId" , params.get("userId"));
+						int icnt = stockMoveMapper.insertMovementSerial(insSerial);
+						logger.info(" :::: " + icnt);
+						if (icnt > 0 ){
+							uCnt = uCnt +icnt;
+							if (uCnt == (int)insMap.get("indelyqty")){
+								break;
+							}
+						}
+					}
 				}
+				
 			}
 
 			stockMoveMapper.insertDeliveryStockMovement(insMap);
