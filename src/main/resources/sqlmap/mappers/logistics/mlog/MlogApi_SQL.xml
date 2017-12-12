@@ -282,43 +282,85 @@
 		AND S26M.STK_CTGRY_ID =#{productCategoryId}
 		AND S28M.WH_LOC_CODE= #{targetUserId}
 	</select>    
-    
-    
-	<select id="getAllStockList" parameterType="Map" resultType="egovMap">
-		SELECT
-		L43M.MATRL_NO,n26m.STK_ID parts_Id,L44D.BOM_COMPNT,n26m.STK_CODE parts_Code,n26m.STK_DESC parts_Name,(CASE   WHEN l56.serial_no is not null THEN 1  ELSE  L56.QTY  END) STOCK_QTY,l56.serial_no serial_No,s28m.WH_LOC_CODE location_Code,s28m.WH_LOC_DESC location_Name,s28m.WH_LOC_BRNCH_ID branch_Code,
-		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= s28m.rdc_code)
-		rdc_code
-		FROM LOG0043M L43M,LOG0044D L44D,sys0026m s26m,sys0026m n26m,sys0028m
-		s28m,
-		(SELECT log0056m.*, log0063d.serial_no
-		FROM log0056m, log0063d
-		WHERE 1 = 1
-		AND log0056m.stk_code = log0063d.MATNR(+)
-		AND log0056m.loc_id = (select wh_loc_id from sys0028m where wh_loc_code =
-		#{userId})) l56
-		WHERE 1=1
-		AND n26m.STK_CODE=l56.stk_code(+)
-		AND l56.LOC_ID=s28m.WH_LOC_ID(+)
-		AND L43M.BOM=L44D.BOM
-		AND L43M.MATRL_NO=s26m.STK_CODE
-		AND L44D.BOM_COMPNT=n26m.STK_CODE
-		<if test="productCode != null and productCode !=''">
-		AND MATRL_NO=#{productCode}
-		</if>
-		<if test="searchType == 1 ">
-            AND n26m.STK_CODE =#{searchKeyword}
+    <select id="getAllStockList" parameterType="Map" resultType="egovMap">
+	    SELECT L43.MATRL_NO
+	     , S26.STK_ID parts_Id
+	     , S26.STK_DESC parts_Name
+	     , S26.STK_CODE parts_Code
+	     , (CASE WHEN BAL.serial_no IS NOT NULL THEN 1 ELSE BAL.QTY END) STOCK_QTY
+	     , BAL.SERIAL_NO serial_No
+	     , BAL.WH_LOC_CODE  location_Code
+	     , BAL.WH_LOC_DESC location_Name
+	     , BAL.WH_LOC_BRNCH_ID branch_Code
+	     , NVL(BAL.LOC_ID , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_loc_CODE =#{userId})) RDC_CODE
+	  FROM SYS0026M S26
+	     , LOG0043M L43
+	     , LOG0044D L44
+	     , (select l56.loc_id , l56.stk_code , qty , serial_no , sergrad , S28.WH_LOC_CODE , S28.WH_LOC_DESC , S28.WH_LOC_BRNCH_ID , S28.RDC_CODE   
+	          from log0056m l56
+	             , log0063d l63
+	             , sys0028m s28
+	         where 1 = 1
+	           and l56.loc_id   = l63.loc_id(+)
+	           and l56.stk_code = l63.matnr(+)
+	           and l56.loc_id = s28.wh_loc_id 
+	           AND L56.QTY > 0 
+	           and S28.WH_loc_CODE = #{userId}
+	         ) BAL
+	  WHERE 1 = 1
+	    AND S26.STK_CODE  = BAL.STK_CODE(+)
+	    AND S26.STK_CODE  = L44.BOM_COMPNT
+	    AND L43.BOM       = L44.BOM
+	    <if test="productCode != null and productCode !=''">
+	    AND L43.MATRL_NO  = #{productCode}
+        </if>
+        <if test="searchType == 1 ">
+            AND S26.STK_CODE =#{searchKeyword}
         </if>
         <if test="searchType == 2 ">
              <!-- AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%' -->
-            AND LTRIM(RTRIM(UPPER(n26m.STK_DESC))) LIKE UPPER(#{searchKeyword}) || '%'
+            AND LTRIM(RTRIM(UPPER(S26.STK_DESC))) LIKE UPPER(#{searchKeyword}) || '%'
         </if>
         <if test="productId != null and productId !=''">
-        AND s26m.STK_ID=#{productId}
+        AND S26.STK_ID=#{productId}
         </if>
-		group by
-		L43M.MATRL_NO,n26m.STK_ID,L44D.BOM_COMPNT,n26m.STK_CODE,n26m.STK_DESC,l56.qty,l56.serial_no,s28m.rdc_code,s28m.WH_LOC_CODE,s28m.WH_LOC_DESC,s28m.WH_LOC_BRNCH_ID
-	</select>
+    </select>
+    
+<!-- 	<select id="getAllStockList" parameterType="Map" resultType="egovMap"> -->
+<!-- 		SELECT -->
+<!-- 		L43M.MATRL_NO,n26m.STK_ID parts_Id,L44D.BOM_COMPNT,n26m.STK_CODE parts_Code,n26m.STK_DESC parts_Name,(CASE   WHEN l56.serial_no is not null THEN 1  ELSE  L56.QTY  END) STOCK_QTY,l56.serial_no serial_No,s28m.WH_LOC_CODE location_Code,s28m.WH_LOC_DESC location_Name,s28m.WH_LOC_BRNCH_ID branch_Code, -->
+<!-- 		(select WH_LOC_ID from sys0028m where WH_LOC_CODE= s28m.rdc_code) -->
+<!-- 		rdc_code -->
+<!-- 		FROM LOG0043M L43M,LOG0044D L44D,sys0026m s26m,sys0026m n26m,sys0028m -->
+<!-- 		s28m, -->
+<!-- 		(SELECT log0056m.*, log0063d.serial_no -->
+<!-- 		FROM log0056m, log0063d -->
+<!-- 		WHERE 1 = 1 -->
+<!-- 		AND log0056m.stk_code = log0063d.MATNR(+) -->
+<!-- 		AND log0056m.loc_id = (select wh_loc_id from sys0028m where wh_loc_code = -->
+<!-- 		#{userId})) l56 -->
+<!-- 		WHERE 1=1 -->
+<!-- 		AND n26m.STK_CODE=l56.stk_code(+) -->
+<!-- 		AND l56.LOC_ID=s28m.WH_LOC_ID(+) -->
+<!-- 		AND L43M.BOM=L44D.BOM -->
+<!-- 		AND L43M.MATRL_NO=s26m.STK_CODE -->
+<!-- 		AND L44D.BOM_COMPNT=n26m.STK_CODE -->
+<!-- 		<if test="productCode != null and productCode !=''"> -->
+<!-- 		AND MATRL_NO=#{productCode} -->
+<!-- 		</if> -->
+<!-- 		<if test="searchType == 1 "> -->
+<!--             AND n26m.STK_CODE =#{searchKeyword} -->
+<!--         </if> -->
+<!--         <if test="searchType == 2 "> -->
+<!--              AND (LTRIM(RTRIM(S26T.STK_DESC))) LIKE #{searchKeyword}||'%' -->
+<!--             AND LTRIM(RTRIM(UPPER(n26m.STK_DESC))) LIKE UPPER(#{searchKeyword}) || '%' -->
+<!--         </if> -->
+<!--         <if test="productId != null and productId !=''"> -->
+<!--         AND s26m.STK_ID=#{productId} -->
+<!--         </if> -->
+<!-- 		group by -->
+<!-- 		L43M.MATRL_NO,n26m.STK_ID,L44D.BOM_COMPNT,n26m.STK_CODE,n26m.STK_DESC,l56.qty,l56.serial_no,s28m.rdc_code,s28m.WH_LOC_CODE,s28m.WH_LOC_DESC,s28m.WH_LOC_BRNCH_ID -->
+<!-- 	</select> -->
 
 	<select id="selectStockReceiveSerial" parameterType="Map" resultType="egovMap">
 		SELECT l55d.DELVRY_NO,
