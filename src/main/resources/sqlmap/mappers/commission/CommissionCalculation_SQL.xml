@@ -2719,4 +2719,9 @@
              AND a.CAL_NAME NOT LIKE 'BS%' 
         group by CAL_YEAR_MONTH
     </select>
+    
+    <insert id="prdBatchSuccessHistory" parameterType="Map">
+        INSERT INTO CMM0005T(TASK_ID, COMM_SYS_ID, COMM_MEM_TYPE_ID, COMM_YEAR, COMM_MONTH, PAY_DT, STUS, CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT, IS_CNFM)
+            VALUES(#{taskId}, CMM0005T_COMM_SYS_ID_SEQ.nextval, #{ItemGrCd}, #{year}, #{month}, sysdate, 1, #{loginId}, sysdate,#{loginId},sysdate, 0)
+    </insert> 
 </mapper>

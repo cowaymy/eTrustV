@@ -88,7 +88,30 @@
 							}else{
 								msg = "Do you want to run the batch?"
 							}
-							Common.confirm(msg,runBatch);//batch function call
+							
+							Common.confirm(msg,function(){
+								var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
+						        var formList = $("#searchForm").serializeArray();       //폼 데이터
+						        
+						        //param data array
+						        var data = {};
+						        
+						        data.all = gridList;
+						        data.form = formList;
+						        
+						        Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
+						            $("#search").trigger("click");
+						        }, function(jqXHR, textStatus, errorThrown) {
+						        
+						                console.log("실패하였습니다.");
+						                console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);    
+						            
+						                if(jqXHR.status==503){
+						                    Common.alert("Running... Please wait about 20 minutes ");
+						                    $("#search").trigger("click");
+						                 }
+						        });
+						   });//batch function call
 						});
 						
 					}else{
@@ -107,30 +130,6 @@
         });
 		
 	});//Ready
-	
-	function runBatch(){
-		var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
-        var formList = $("#searchForm").serializeArray();       //폼 데이터
-        
-        //param data array
-        var data = {};
-        
-        data.all = gridList;
-        data.form = formList;
-        
-		Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	
-            $("#search").trigger("click");
-		}, function(jqXHR, textStatus, errorThrown) {
-		
-		        console.log("실패하였습니다.");
-		        console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);    
-		    
-		        if(jqXHR.status==503){
-		            Common.alert("Running... Please wait about 20 minutes ");
-		            $("#search").trigger("click");
-		         }
-		});
-	}
 	
 
 	//event management
@@ -248,16 +247,19 @@
 	            		Common.ajax("GET", "/commission/calculation/runningPrdCheck",data, function(result) {
 	            			
 	            			if(result.data[0] == null){
-				            	 Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
+
+				            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
+				            		 if(rowIndex == myGridID_CALLength-1){
+				            			 Common.ajax("GET", "/commission/calculation/prdBatchSuccessHistory", $("#searchForm").serialize());
+				            		 }
 				            		$("#search").trigger("click");
-				            	 }, function(jqXHR, textStatus, errorThrown) {		                       
-				                     
-				                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
-				                 
-				                          if(jqXHR.status==503){
-				                        	   Common.alert("Running... Please wait about 20 minutes ");
-				                        	   $("#search").trigger("click");
-				                          }
+				            	}, function(jqXHR, textStatus, errorThrown) {
+			                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
+			                 
+			                          if(jqXHR.status==503){
+			                        	   Common.alert("Running... Please wait about 20 minutes ");
+			                        	   $("#search").trigger("click");
+			                          }
 				                }); //callPrd
 				                
 	            			}else{

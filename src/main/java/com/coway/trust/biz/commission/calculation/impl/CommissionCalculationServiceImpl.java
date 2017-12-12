@@ -915,4 +915,9 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		return commissionCalculationMapper.runPrdTimeValid(params);
 	}
 	
+	@Override
+	public void prdBatchSuccessHistory(Map<String, Object> params){
+		commissionCalculationMapper.prdBatchSuccessHistory(params);
+	}
+	
 }

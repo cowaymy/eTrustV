@@ -241,12 +241,8 @@ public class CommissionCalculationController {
 		// params, Model model) {
 		EgovMap item = new EgovMap();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();
+		
 		List<Object> gridList =  params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		List<Object> formList =  params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 		
@@ -335,7 +331,6 @@ public class CommissionCalculationController {
 					prdMap.put("state",CommissionConstants.COMIS_FAIL_NEXT); //8:FAIL
 					failCntTemp = commissionCalculationService.callCommFailNextPrdLog(prdMap);
 				}else{
-					/*System.out.println(formMap.get("searchDt")+"###################################################"+prdMap.get("searchDt"));*/
 					item = (EgovMap) commissionCalculationService.callCommProcedure(prdMap); // call proceduar
 					
     				if (CommissionConstants.COMIS_SUCCESS.equals(prdMap.get("v_result"))) {
@@ -348,7 +343,34 @@ public class CommissionCalculationController {
     				}
 				}
 			}
-		}
+			
+			/*
+			 * batch success history 
+			 */
+			if(failCntTemp == 0){
+				Map historyMap = new HashMap();
+				
+				String callDt = formMap.get("searchDt").toString();
+				historyMap.put("taskId", taskId);
+				historyMap.put("year", callDt.substring(3,7));
+				historyMap.put("month", callDt.substring(0,2));
+				historyMap.put("loginId", loginId);
+				
+				String empType= "";
+				if(CommissionConstants.COMIS_CD.equals(formMap.get("ItemGrCd").toString())){
+					empType = CommissionConstants.COMIS_CD_GRCD;
+				}else if(CommissionConstants.COMIS_HP.equals(formMap.get("ItemGrCd").toString())){
+					empType = CommissionConstants.COMIS_HP_GRCD;
+				}else if(CommissionConstants.COMIS_CT.equals(formMap.get("ItemGrCd").toString())){
+					empType = CommissionConstants.COMIS_CT_GRCD;
+				}
+				
+				historyMap.put("ItemGrCd", empType);
+				
+				commissionCalculationService.prdBatchSuccessHistory(historyMap);
+			}
+			
+		} 
 		
 
 		// 결과 만들기.
@@ -356,6 +378,37 @@ public class CommissionCalculationController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/prdBatchSuccessHistory", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> prdBatchSuccessHistory(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());	
+		
+		Map historyMap = new HashMap();
+		
+		String callDt = params.get("searchDt").toString();
+		historyMap.put("taskId", sTaskID);
+		historyMap.put("year", callDt.substring(3,7));
+		historyMap.put("month", callDt.substring(0,2));
+		historyMap.put("loginId", loginId);
+		
+		String empType= "";
+		if(CommissionConstants.COMIS_CD.equals(params.get("ItemGrCd").toString())){
+			empType = CommissionConstants.COMIS_CD_GRCD;
+		}else if(CommissionConstants.COMIS_HP.equals(params.get("ItemGrCd").toString())){
+			empType = CommissionConstants.COMIS_HP_GRCD;
+		}else if(CommissionConstants.COMIS_CT.equals(params.get("ItemGrCd").toString())){
+			empType = CommissionConstants.COMIS_CT_GRCD;
+		}
+		historyMap.put("ItemGrCd", empType);
+		commissionCalculationService.prdBatchSuccessHistory(historyMap);
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	return ResponseEntity.ok(message);
 	}
 	
 	/**
@@ -372,12 +425,7 @@ public class CommissionCalculationController {
 		// params, Model model) {
 		EgovMap item = new EgovMap();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();          
 		params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 		
 		/*
@@ -1753,12 +1801,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> saveAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();          
 		params.put("loginId", loginId);
 		
 		String ordId ="0";
@@ -2057,12 +2100,7 @@ public class CommissionCalculationController {
 	@RequestMapping(value = "/removeIncentiveItem.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> removeIncentiveItem(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();
 		
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map iMap = null;
@@ -2195,13 +2233,7 @@ public class CommissionCalculationController {
 		String message = "";
 		ReturnMessage msg = new ReturnMessage();
 		msg.setCode(AppConstants.SUCCESS);
-		 
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();
 		
 		params.put("loginId", loginId);
 		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
@@ -2295,12 +2327,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> incentiveDeactivate(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();
 		params.put("loginId", loginId);
 		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_REMOVE);
 
@@ -2319,12 +2346,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> incentiveConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String loginId = "";
-		if (sessionVO == null) {
-			loginId = "1000000000";
-		} else {
-			loginId = String.valueOf(sessionVO.getUserId());
-		}
+		int loginId = sessionVO.getUserId();
 		params.put("loginId", loginId);
 
 		commissionCalculationService.callIncentiveConfirm(params);

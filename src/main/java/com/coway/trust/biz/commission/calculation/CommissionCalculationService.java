@@ -250,4 +250,6 @@ public interface CommissionCalculationService
     List<EgovMap> runningPrdCheck(Map<String, Object> params);
     
     List<EgovMap> runPrdTimeValid(Map<String, Object> params);
+    
+    void prdBatchSuccessHistory(Map<String, Object> params);
 }
