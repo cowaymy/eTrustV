@@ -993,7 +993,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			email.setText("Dear Sir/Madam, <br /><br />" +
                "Thank you for registering for e-Invoice and go green together with Coway. <br /><br />" +
                "To complete registration, please verify the email address you have registered in our system by clicking the link shown below.<br /><br />" +
-               "<a href='" +  billingTypeConfirmUrl  + "reqId=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
+               "<a href='" +  billingTypeConfirmUrl  + "?reqId=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
                "This link will be expired in 24 hours.<br /><br />" +
                "This is an automatically generated email, please do not reply.<br /><br />" +
                "Shall you encounter any query, kindly contact us for more information.<br />" +
