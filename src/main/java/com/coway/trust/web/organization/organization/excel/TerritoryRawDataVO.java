@@ -15,12 +15,9 @@ public class TerritoryRawDataVO {
 	public static TerritoryRawDataVO create(Row row) {
 		
 		TerritoryRawDataVO vo = new TerritoryRawDataVO();
-		vo.setAreaId(getValue(row.getCell(1)));
-		vo.setBranch(getValue(row.getCell(2)));
-		vo.setExtBranch(getValue(row.getCell(3)));
-//		vo.setAreaId(row.getCell(1).getStringCellValue());
-//		vo.setBranch(row.getCell(2).getStringCellValue());
-//		vo.setExtBranch(row.getCell(3).getStringCellValue());
+		vo.setAreaId(row.getCell(1).getStringCellValue());
+		vo.setBranch(row.getCell(2).getStringCellValue());
+		vo.setExtBranch(row.getCell(3).getStringCellValue());
 
 		return vo;
 	}
