@@ -23,10 +23,10 @@ var columnLayout_info=[
 
 var columnLayout_q=[             
  //{dataField:"q1", headerText:'Question</br>Number', width: 100, editable : false},
- {dataField:"codeName", headerText:'Feedback</br>Type', width: 200, editable : true,
+ {dataField:"hcDefCtgryId", headerText:'Feedback</br>Type', width: 200, editable : true,
      renderer : {type : "DropDownListRenderer",listFunction : function(rowIndex, columnIndex, item, dataField) {return CodeList;},keyField : "codeName",valueField : "codeName"}},
      //renderer : {type : "DropDownListRenderer", list : ["Standard", "Special"]}},
- {dataField:"q3", headerText:'Question', editable : true},
+ {dataField:"hcDefDesc", headerText:'Question', editable : true},
 ];
 
 var columnLayout_target=[             
@@ -117,7 +117,6 @@ $(document).ready(function(){
                      result = false;
                      Common.alert("'In Charge of the Event' is a wrong member code.");
                  } else {
-                     alert("Event type 확인성공");
                      
                      var rowCount_t = AUIGrid.getRowCount(myGridID_Target);
                      
@@ -135,15 +134,13 @@ $(document).ready(function(){
                          } 
                          
                          Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
-                             alert("result::"+result);
-                             alert("보내는길이::"+notNullcount);
-                             alert("받는길이::"+result.length);
                              if(result.length == 0 || notNullcount != result.length){
-                                 alert()
+                            	 alert("보내는길이"+notNullcount);
+                            	 alert("받는길이"+result.length);
+                            	 
                                  result = false;
                                  Common.alert("'Sales Order' is a wrong Order Number.");
                              } else {
-                                 alert("Sales Order 확인성공");
                                  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_create);
                              }
                          });
@@ -171,15 +168,17 @@ function fn_saveGridData_create(){
     
     /*Target grid에서 addrow가 있다면 saveSurveyEventTarget.do를 실행*/
     var rowCount_target = AUIGrid.getRowCount(myGridID_Target);
+    var rowCount_q = AUIGrid.getRowCount(myGridID_Q);
     
     
     var params = {
             aGrid : GridCommon.getEditData(myGridID_Info),
-            bGrid : GridCommon.getEditData(myGridID_Target)
+            bGrid : GridCommon.getEditData(myGridID_Target),
+            cGrid : GridCommon.getEditData(myGridID_Q)
     };
     
     
-    if(rowCount_target > 0) {
+    if(rowCount_target > 0 || rowCount_q > 0) {
         Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventTarget.do", params, 
        //Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventTarget.do", $("#listGForm").serialize(), 
         function(result) {

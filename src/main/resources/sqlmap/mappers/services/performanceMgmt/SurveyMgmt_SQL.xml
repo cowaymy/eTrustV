@@ -141,6 +141,46 @@
       )
    </insert>
    
+   <insert id="addSurveyEventQuestion" parameterType="Map">
+       INSERT INTO CCR0003M (
+          HC_DEF_ID
+          , HC_DEF_TYPE_ID
+          , HC_DEF_ITM_NO
+          , HC_DEF_DESC
+          , HC_DEF_STUS_ID
+          , HC_DEF_CTGRY_ID
+          , CRT_DT
+          , CRT_USER_ID
+          , UPD_DT
+          , UPD_USER_ID
+          , HC_DEF_QUES_TYPE_ID
+          , PRIOD_FROM
+          , PRIOD_TO
+          , EVT_ID
+       )
+      VALUES(
+          CCR0003M_HC_DEF_ID_SEQ.NEXTVAL
+          , 2718
+          , 1
+          , #{hcDefDesc}
+          , 1
+          <if test="hcDefCtgryId == 'Standard'">
+           , 515
+          </if>
+          <if test="hcDefCtgryId == 'Special'">
+           , 516
+          </if>
+          , SYSDATE
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , 0
+          , TO_DATE('00/01/01', 'YY/MM/DD')
+          , TO_DATE('99/12/31', 'YY/MM/DD')
+          , #{evtId}
+      )
+   </insert>
+   
 	<select id="selectEvtMemIdList" parameterType="Map" resultType="egovMap">
 		<![CDATA[
 		SELECT MEM_CODE

@@ -85,6 +85,7 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 		
 		Map<String, ArrayList<Object>> aGrid = params.get("aGrid");
 		Map<String, ArrayList<Object>> bGrid = params.get("bGrid");
+		Map<String, ArrayList<Object>> cGrid = params.get("cGrid");
 		
 		ArrayList<Object> addList = aGrid.get(AppConstants.AUIGRID_ADD);
 		
@@ -97,7 +98,7 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 			surveyMgmtMapper.addSurveyEventInfo((Map<String, Object>) masterRow);
 			
 			
-			//두번재 그리드 등록...
+			//두번째 그리드 등록...
 			ArrayList<Object> b_addList = bGrid.get(AppConstants.AUIGRID_ADD);
 			
 			for(Object row : b_addList){
@@ -107,6 +108,18 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 				((Map<String, Object>) bRow).put("crtUserId", loginId);
 				((Map<String, Object>) bRow).put("updUserId", loginId);
 				surveyMgmtMapper.addSurveyEventTarget((Map<String, Object>) bRow);
+			}
+			
+			//세번째 그리드 등록...
+			ArrayList<Object> c_addList = cGrid.get(AppConstants.AUIGRID_ADD);
+			
+			for(Object row : c_addList){
+				Map<String, Object> cRow = (Map<String, Object>) row;
+				cRow.put("evtId", masterRow.get("evtId"));
+				//xxxMapper.insertCC(cRow);
+				((Map<String, Object>) cRow).put("crtUserId", loginId);
+				((Map<String, Object>) cRow).put("updUserId", loginId);
+				surveyMgmtMapper.addSurveyEventQuestion((Map<String, Object>) cRow);
 			}
 			
 		}else{

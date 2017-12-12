@@ -167,7 +167,6 @@ public class SurveyMgmtController {
 		LOGGER.debug("salesOrdNo : {}", params.get("salesOrdNo"));
 		List<EgovMap> filterList = null;
 		filterList = surveyMgmtService.selectSalesOrdNotList(params);
-		
 		return ResponseEntity.ok(filterList);
 		
 	}
