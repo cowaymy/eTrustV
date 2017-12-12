@@ -456,7 +456,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{invcNo}
        ,NVL(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), SYSDATE)
        ,#{invcType}
-       ,#{supplirName}
+       ,#{memAccId}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,#{expType}
        ,#{expTypeName}
