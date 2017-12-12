@@ -25,7 +25,7 @@
         FROM LOG0062M lg62m, LOG0063D lg63d , SYS0026M sy26m , SYS0047M S47
         WHERE lg62m.SERIAL_NO    = lg63d.SERIAL_NO (+)
               AND sy26m.STk_CODE = lg62m.MATNR
-              AND DECODE (NVL(LG62M.CRT_USER_ID , 9999999999), 'ITF0161M', 999999999, 'DEAN', 999999999, LG62M.CRT_USER_ID) = S47.USER_ID(+)    
+              AND DECODE (NVL(TRANSLATE(LG62M.CRT_USER_ID , '0123456789' , '          '), 9999999999),NULL,LG62M.CRT_USER_ID , 9999999999) = S47.USER_ID(+)    
 	       <if test="srchmaterial !=null and srchmaterial !=''">
 	          AND lg62m.MATNR  LIKE #{srchmaterial} || '%'
 		</if>     
