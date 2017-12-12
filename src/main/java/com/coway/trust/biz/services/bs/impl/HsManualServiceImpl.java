@@ -1080,5 +1080,24 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 		return result;
 	}
+
+	@Override
+	public int saveDeactivateFilter(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.saveDeactivateFilter(params);
+	}
+
+	@Override
+	public int saveFilterUpdate(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.saveFilterUpdate(params);
+	}
+	
+	@Override
+	public List<EgovMap> selecthSFilterUseHistorycall (Map<String, Object> params){
+		return hsManualMapper.selecthSFilterUseHistorycall(params);
+	}
+	
+	
 	
 }
