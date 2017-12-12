@@ -322,6 +322,11 @@ function fn_checkEmpty() {
         var length = AUIGrid.getGridData(myGridID).length;
         if(length > 0) {
             for(var i = 0; i < length; i++) {
+            	if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "expTypeName"))) {
+                    Common.alert('<spring:message code="webInvoice.expType.msg" />' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
                 if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
                     Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
                     checkResult = false;

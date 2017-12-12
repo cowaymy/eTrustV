@@ -371,20 +371,25 @@ function fn_checkEmpty() {
                 checkResult = false;
                 return checkResult;
             }
-            if(FormUtil.isEmpty($("#expType").val())) {
-                Common.alert('<spring:message code="webInvoice.expType.msg" />');
-                checkResult = false;
-                return checkResult;
-            }
-            if(FormUtil.isEmpty($("#taxCode").val())) {
-                Common.alert('<spring:message code="webInvoice.taxCode.msg" />');
-                checkResult = false;
-                return checkResult;
-            }
-            if(FormUtil.isEmpty($("#gstBeforAmt").val())) {
-                Common.alert('<spring:message code="pettyCashExp.amtBeforeGst.msg" />');
-                checkResult = false;
-                return checkResult;
+            var length = AUIGrid.getGridData(myGridID).length;
+            if(length > 0) {
+                for(var i = 0; i < length; i++) {
+                    if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "expTypeName"))) {
+                        Common.alert('<spring:message code="webInvoice.expType.msg" />' + (i +1) + ".");
+                        checkResult = false;
+                        return checkResult;
+                    }
+                    if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
+                        Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
+                        checkResult = false;
+                        return checkResult;
+                    }
+                    if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "gstBeforAmt"))) {
+                        Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                        checkResult = false;
+                        return checkResult;
+                    }
+                }
             }
         }
     }
