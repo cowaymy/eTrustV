@@ -7,7 +7,7 @@
 
 <script type="text/javaScript" language="javascript">
 
-    var myDetailGridIDInActive;
+	var myDetailGridIDInActive;
     var myDetailGridIDActive;
     
 
@@ -18,12 +18,12 @@
                 {
                     dataField : "",
                     headerText : "",
-                    width : 170,
+                    width : 130,
                     renderer : {
                           type : "ButtonRenderer",
                           labelText : "View",
                           onclick : function(rowIndex, columnIndex, value, item) {
-                        	   
+
                                if($("#orderId").val() == "" || $("#orderId").val() == undefined) {
                                     return false;
                                }
@@ -31,20 +31,20 @@
                               //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
                               Common.popupDiv("/services/bs/hSFilterUseHistoryPop.do", $("#orderInfoForm").serializeJSON(), null , true , '');
                             }
-                     }
+			         }
                 },{        
 
-                    dataField : "",
-                    headerText : "",
-                    renderer : {
-                        type : "IconRenderer",
-                        iconPosition : "aisleRight",  // 아이콘 위치 
-                        iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
-                            "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif" // default
-                        },
-                        onclick : function(rowIndex, columnIndex, value, item) {
-                            
-                            var SendItem = new Object();
+				    dataField : "",
+				    headerText : "",
+				    width : 80,
+				    renderer : {
+				        type : "IconRenderer",
+				        iconPosition : "aisleRight",  // 아이콘 위치 
+				        iconTableRef :  { // icon 값 참조할 테이블 레퍼런스
+				            "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif" // default
+				        },
+				        onclick : function(rowIndex, columnIndex, value, item) {
+				                                        var SendItem = new Object();
                             SendItem.srvFilterId = item.srvFilterStkId;
                             SendItem.stkCode    = item.stkCode;
                             SendItem.stkDesc    = item.stkDesc;
@@ -54,9 +54,7 @@
                             
                             AUIGrid.addRow(myDetailGridIDActive, SendItem, 'last');  
                             
-                            alert(item.srvFilterStkId)
-                            
-                            Common.ajax("POST", "/services/bs/doSaveFilterUpdate.do", {srvFilterStkId : item.srvFilterStkId}, function(result) {   
+                            Common.ajax("POST", "/services/bs/doSaveFilterUpdate.do", {SRV_FILTER_ID : item.srvFilterId}, function(result) {   
                                 console.log(result);
                                 
                                 if(result.code = "00"){
@@ -76,7 +74,7 @@
                     width:140,
                     height:30
                 }, {                        
-                    dataField : "srvFilterStkId",
+                    dataField : "srvFilterId",
                     headerText : "Filter id",
                     width : 240,                             
                     visible:false 
@@ -137,56 +135,89 @@
         function createAUIGridActive(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
+                    dataField : "",
+                    headerText : "",
+                    width : 170,
+                    renderer : {
+                          type : "ButtonRenderer",
+                          labelText : "View",
+                          onclick : function(rowIndex, columnIndex, value, item) {
+                               
+                               if($("#orderId").val() == "" || $("#orderId").val() == undefined) {
+                                    return false;
+                               }
+                              
+                              //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
+                              Common.popupDiv("/services/bs/hSFilterUseHistoryPop.do", $("#orderInfoForm").serializeJSON(), null , true , '');
+                            }
+                     }
+                },{      
                     dataField:"srvFilterId",
                     headerText:"srvFilterId",
                     width:110,
-                    height:30
+                    height:30,          
+                    visible:false
                 }, {                        
                     dataField:"stkCode",
                     headerText:"Filter Code",
                     width:110,
-                    height:30
+                    height:30,          
+                    editable : false
                 }, {                        
                     dataField : "stkId",
                     headerText : "Filter id",
                     width : 240,                             
-                    visible:false 
+                    visible:false,          
+                    editable : false 
                 }, {                        
                     dataField : "stkDesc",
                     headerText : "Filter Name",
-                    width : 240
+                    width : 240,          
+                    editable : false
                 }, {                        
                     dataField : "c4",
                     headerText : "Type",
-                    width : 100
+                    width : 100,          
+                    editable : false
                 }, {                        
                     dataField : "srvFilterPriod",
                     headerText : "Change Period",
-                    width : 120                    
-                }, {                        
+                    width : 120,          
+                    editable : false                    
+		         }, {                                  
                     dataField : "srvFilterPrvChgDt",
                     headerText : "Last Change",
                     width : 180,
                     dataType : "date",
-                    formatString : "dd/mm/yyyy"               
-                }, {                        
+                    formatString : "dd/mm/yyyy" ,
+				    editRenderer : {
+				        type : "CalendarRenderer",
+				        openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+				        onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+				        showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+				    }            
+                }, {                      
                     dataField : "c2",
                     headerText : "CreateAt",
                     width : 180,
                     dataType : "date",
-                    formatString : "dd/mm/yyyy"                     
+                    formatString : "dd/mm/yyyy",          
+                    editable : false                     
                 }, {                        
                     dataField : "c3",
                     headerText : "CreateBy",
-                    width : 180                                                                                
-                    },{                        
-                    dataField : "srvFilterLastSerial",
-                    headerText : "Last Serial",
-                    width : 180                                                                                
-                    },{                        
-                    dataField : "srvFilterPrevSerial",
-                    headerText : "Prev Serial",
-                    width : 180         
+                    width : 180,          
+                    editable : false                                                                      
+	                },{                        
+	                dataField : "srvFilterLastSerial",
+	                headerText : "Last Serial",
+	                width : 180,          
+                    editable : false                                                                                 
+	                },{                        
+		            dataField : "srvFilterPrevSerial",
+		            headerText : "Prev Serial",
+		            width : 180,          
+                    editable : false         
                      },{
                         dataField : "undefined",
                         headerText : "",
@@ -210,19 +241,32 @@
                               labelText : "Update",
                               onclick : function(rowIndex, columnIndex, value, item) {
 
-                                   if(item.result == "" || item.result == undefined) {
-                                        return false;
-                                   }
+                                  /* var dtFrom = Number(item.srvFilterPrvChgDt.toString().replace(/\//g,"")); */
 
-                                  $("#_schdulId").val(item.schdulId);
-                                  $("#_salesOrdId").val(item.salesOrdId);
-                                  $("#_openGb").val("edit");
-                                  $("#_brnchId").val(item.brnchId);
-
-                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
+                                  var SRV_FILTER_ID =    AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterId");
+                                   var SRV_FILTER_UPD_DT =  AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterPrvChgDt").replace(/\//g,"");
+						           
+						           var srvFilterUpdateForm = {
+						             "SRV_FILTER_ID" : SRV_FILTER_ID,
+						             "SRV_FILTER_UPD_DT" : SRV_FILTER_UPD_DT
+						            }
+            
+						            Common.ajax("POST", "/services/bs/doSaveFilterUpdate.do", srvFilterUpdateForm, function(result) {   
+						                 console.log(result);
+						                 
+						                 if(result.code = "00"){
+						                     $("#popClose").click();
+						                    fn_getInActivefilterInfo();
+						                    fn_getActivefilterInfo();
+						                      Common.alert("<b>Filter info successfully updated.</b>",fn_close);
+						                }else{
+						                     Common.alert("<b>Failed to update filter info. Please try again later.</b>");  
+						                } 
+						             });
+                                  
                                   }
-                           }                        
-                  }
+                           }    		            
+	              }
                 ];
             // 그리드 속성 설정
             var gridPros = {
@@ -231,7 +275,7 @@
                 // 한 화면에 출력되는 행 개수 20(기본값:20)
                 //pageRowCount : 20,
                 
-                editable : false,
+                editable : true,
                 
                 //showStateColumn : true, 
                 
@@ -256,65 +300,68 @@
     
     
        function fn_clicConfirm(SRV_FILTER_ID){
-            alert("22222:"+SRV_FILTER_ID);
+
+            
+            $("#orderInfoForm #SRV_FILTER_ID").val(SRV_FILTER_ID);
+                        
             Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_clickDeactivate);
        }
        
     
-       function fn_clickDeactivate(rowIndex, columnIndex, value, item){
-       
-              if(SRV_FILTER_ID == "" || SRV_FILTER_ID == undefined) {
-                  return false;
-              }
-             
-             alert("1111111111:"+SRV_FILTER_ID);
-             
-            var srvFilterForm = {
-             "SRV_FILTER_ID" : SRV_FILTER_ID
-            }
-            
-            Common.ajax("POST", "/services/bs/doSaveDeactivateFilter.do", srvFilterForm, function(result) {   
-                 console.log(result);
-                 
-                 if(result.code = "00"){
-                     $("#popClose").click();
+	   function fn_clickDeactivate(){
+	   
+	          if($("#SRV_FILTER_ID").val() == "" || $("#SRV_FILTER_ID").val() == undefined) {
+	              return false;
+	          }
+	         
+	        
+	          
+	        var srvFilterForm = {
+	         "SRV_FILTER_ID" : $("#SRV_FILTER_ID").val()
+	        }
+	        
+	        Common.ajax("POST", "/services/bs/doSaveDeactivateFilter.do", srvFilterForm, function(result) {   
+	             console.log(result);
+	             
+	             if(result.code = "00"){
+	                 $("#popClose").click();
                     fn_getInActivefilterInfo();
                     fn_getActivefilterInfo();
-                      Common.alert("<b>The filter successfully deactivate.</b>",fn_close);
-                }else{
-                     Common.alert("<b>Failed to deactivate this filter. Please try again later.</b>");  
-                } 
-             });
-    
-    
-        }      
+	                  Common.alert("<b>The filter successfully deactivate.</b>",fn_close);
+	            }else{
+	                 Common.alert("<b>Failed to deactivate this filter. Please try again later.</b>");  
+	            } 
+	         });
+	
+	
+       	}      
 
 
 
 
     
-        function fn_getActivefilterInfo(){
-            
-            Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
-                console.log("getActivefilterInfo.");
-                console.log( result);
-                AUIGrid.setGridData(myDetailGridIDActive, result);         //getActivefilterInfo
-            });
-            
-        }
-        
-        
-        function fn_getInActivefilterInfo(){
-            
-            Common.ajax("GET", "/services/bs/getInActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
-                console.log("getInActivefilterInfo.");
-                console.log( result);
-                AUIGrid.setGridData(myDetailGridIDInActive, result);        
-            });
-            
-        }
-        
-        
+		function fn_getActivefilterInfo(){
+		    
+		    Common.ajax("GET", "/services/bs/getActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+		        console.log("getActivefilterInfo.");
+		        console.log( result);
+		        AUIGrid.setGridData(myDetailGridIDActive, result);         //getActivefilterInfo
+		    });
+		    
+		}
+		
+		
+		function fn_getInActivefilterInfo(){
+		    
+		    Common.ajax("GET", "/services/bs/getInActivefilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
+		        console.log("getInActivefilterInfo.");
+		        console.log( result);
+		        AUIGrid.setGridData(myDetailGridIDInActive, result);        
+		    });
+		    
+		}
+		
+		
         
 /*         function fn_getAddFilter(){
                 Common.ajax("GET", "/services/bs/getAddFilterInfo.do", {salesOrdId : '${hSOrderView.ordId}'}, function(result) {
@@ -337,23 +384,23 @@
         
         
         
-        $(document).ready(function() {
-            createAUIGridInactive();
-            createAUIGridActive();
-            
-            fn_getInActivefilterInfo();
-            fn_getActivefilterInfo();
-            
-        });
+		$(document).ready(function() {
+		    createAUIGridInactive();
+		    createAUIGridActive();
+		    
+		    fn_getInActivefilterInfo();
+		    fn_getActivefilterInfo();
+		    
+		});
 
-        
-        
+		
+		
     function fn_close() {
         $("#popClose").click();
-    }       
-        
-        
-        
+    }		
+		
+		
+		
 
 </script>
 
@@ -371,9 +418,11 @@
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" method="post"  id='orderInfoForm'  name='orderInfoForm' >
-    <input type="text" name="SRV_FILTER_ID"  id="SRV_FILTER_ID" value=""/>  
-    <input type="text" name="orderId"  id="orderId" value="${hSOrderView.ordId}"/>
-    <input type="text" name="stkId"  id="stkId" value="${hSOrderView.stkId}"/>  
+    <input type="hidden" name="SRV_FILTER_ID"  id="SRV_FILTER_ID" value=${srvFilterId}/>  
+    <input type="hidden" name="orderId"  id="orderId" value="${hSOrderView.ordId}"/>
+    <input type="hidden" name="stkId"  id="stkId" value="${hSOrderView.stkId}"/>  
+
+  
 
 <aside class="title_line"><!-- title_line start -->
 <h2>Order Information</h2>
