@@ -245,5 +245,35 @@ public class BatchRefundController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/batchRefundItemDisab.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> batchRefundItemDisab(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+
+		Map<String, Object> master = new HashMap<String, Object>();
+		String detId = (String) params.get("detId");
+		
+		master.put("detId", detId);
+		master.put("disabled", 1);
+		master.put("updator", sessionVO.getUserId());
+		
+		int result = batchRefundService.batchRefundItemDisab(master);
+		if(result > 0){
+    		//File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
+    		//multipartFile.transferTo(file);
+			
+			EgovMap bRefundInfo = batchRefundService.selectBatchRefundInfo(params);
+    		
+    		message.setMessage("Refund item has been removed.");
+    		message.setData(bRefundInfo);
+    		message.setCode(AppConstants.SUCCESS);
+		}else{
+			message.setMessage("Failed to remove refund item. Please try again later.");
+			message.setCode(AppConstants.FAIL);
+		}
+		
+
+		return ResponseEntity.ok(message);
+	}
+	
 
 }

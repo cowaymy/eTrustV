@@ -193,6 +193,7 @@
     <select id="selectBatchRefundItem" parameterType="Map" resultType="egovMap">
     SELECT Project1.DET_ID DET_ID  ,
        Project1.SALES_ORD_NO SALES_ORD_NO  ,
+       Project1.SALES_CUST_ID SALES_CUST_ID  ,
        Project1.DISABLED DISABLED  ,
        Project1.BATCH_ID BATCH_ID  ,
        Project1.WOR_NO WOR_NO  ,
@@ -233,6 +234,7 @@
                 Extent1.REF_DT_YEAR REF_DT_YEAR  ,
                 Extent1.PAY_ITM_ID PAY_ITM_ID  ,
                 Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+                Extent3.CUST_ID SALES_CUST_ID,
                 Extent4.ACC_CODE ACC_CODE  ,
                 Extent4.ACC_DESC ACC_DESC  ,
                 Extent5.NAME NAME  
@@ -387,9 +389,18 @@
          CNFM_STUS_ID = #{confirmStatusId},
          UPD_USER_ID = #{updator},
          UPD_DT = SYSDATE,
-         CNFM_USER_ID = #{confirmBy}
+         CNFM_USER_ID = #{confirmBy},
          CNFM_DT = SYSDATE
          WHERE  BATCH_ID = #{batchId}
+    </update>
+    
+    <update id="batchRefundItemDisab" parameterType="Map">
+         UPDATE PAY0045D
+         SET 
+         DISAB = #{disabled},
+         UPD_USER_ID = #{updator},
+         UPD_DT = SYSDATE
+         WHERE  DET_ID = #{detId}
     </update>
     
     <update id="callConvertBatchRefund" statementType="CALLABLE" parameterType="Map">
@@ -433,12 +444,12 @@
        ,TO_CHAR(SYSDATE, 'YYYYMMDD')
        ,TO_CHAR(SYSDATE, 'HH24MISS')
        ,#{userId}
-       ,#{refnDate}
+       ,TO_CHAR(TO_DATE(#{refnDate}, 'DD/MM/YYYY HH24:MI'), 'YYYYMMDD')
        ,#{detId}
-       ,#{salesOrdId}
+       ,#{salesOrdNo}
        ,#{worNo}
        ,#{batchId}
-       ,#{salesOrdId}
+       ,#{salesCustId}
        ,#{amt}
     )
 </insert>

@@ -103,7 +103,7 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 		int result = 0;
 		
 		if(!bRefundInfo.isEmpty()) {
-			if(Integer.parseInt(String.valueOf(bRefundInfo.get("batchStusId"))) == 1 && Integer.parseInt(String.valueOf(bRefundInfo.get("cnmfStusId"))) == 44) {
+			if(Integer.parseInt(String.valueOf(bRefundInfo.get("batchStusId"))) == 1 && Integer.parseInt(String.valueOf(bRefundInfo.get("cnfmStusId"))) == 44) {
 				result = batchRefundMapper.batchRefundConfirm(master);
 				
 				if(isConvert) {
@@ -112,6 +112,8 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 				}
 				
 				for (EgovMap egovMap : bRefundItem) {
+					String ifKey = batchRefundMapper.selectNextIfKey();
+					egovMap.put("ifKey", ifKey);
 					egovMap.put("refnDate", bRefundInfo.get("crtDt"));
 					egovMap.put("userId", master.get("userId"));
 					// INSERT INTERFACE
@@ -122,6 +124,12 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public int batchRefundItemDisab(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return batchRefundMapper.batchRefundItemDisab(params);
 	}
 
 }

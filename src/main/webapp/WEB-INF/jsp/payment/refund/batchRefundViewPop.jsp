@@ -65,7 +65,7 @@ var viewGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     headerHeight : 40,
-    height : 480,
+    height : 240,
     enableFilter : true
 };
 

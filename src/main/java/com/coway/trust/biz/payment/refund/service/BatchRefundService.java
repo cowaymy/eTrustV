@@ -21,4 +21,6 @@ public interface BatchRefundService {
 	
 	int batchRefundConfirm(Map<String, Object> master, Boolean isConvert);
 	
+	int batchRefundItemDisab(Map<String, Object> params);
+	
 }

@@ -13,7 +13,11 @@
 </style>
 <script type="text/javascript">
 var confirmGridID;
+var detId = 0;
 var confirmColumnLayout = [ {
+    dataField : "detId",
+    visible : false
+}, {
     dataField : "validStusId",
     headerText : 'Valid Status'
 }, {
@@ -65,7 +69,7 @@ var confirmGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     headerHeight : 40,
-    height : 480,
+    height : 240,
     enableFilter : true
 };
 
@@ -84,8 +88,8 @@ $(document).ready(function () {
     });
 	
 	$("#deactivate_btn").click(fn_deactivate);
-	
 	$("#pConfirm_btn").click(fn_confirm);
+	$("#remove_btn").click(fn_bRefundItemDisab);
 	
 	console.log('${bRefundInfo.totalValidAmt}');
 	var str =""+ Number('${bRefundInfo.totalValidAmt}').toFixed(2);
@@ -103,6 +107,13 @@ $(document).ready(function () {
 	
 	console.log($.parseJSON('${bRefundItem}'));
 	AUIGrid.setGridData(confirmGridID, $.parseJSON('${bRefundItem}'));
+	
+	AUIGrid.bind(confirmGridID, "cellClick", function( event ) {
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        console.log("CellClick detId : " + event.item.detId);
+        // TODO pettyCash Expense Info GET
+        detId = event.item.detId;
+    });
 });
 
 function fn_closePop() {
@@ -167,6 +178,55 @@ function fn_confirm() {
 	    }
 	});
 }
+
+function fn_bRefundItemDisab() {
+	console.log("remove Action");
+	if(detId > 0) {
+		Common.ajax("GET", "/payment/batchRefundItemDisab.do", {detId:detId,batchId:$("#pBatchId").val()}, function(result) {
+            console.log(result);
+            
+            //$('#btnConf').hide();
+            //$('#btnDeactivate').hide();
+            
+            Common.alert(result.message);
+            
+            $("#tBatchId").text(result.data.batchId);
+            $("#tBatchStus").text(result.data.name);
+            $("#tCnfmStus").text(result.data.name1);
+            $("#tPayMode").text(result.data.codeName);
+            $("#tUploadBy").text(result.data.username1);
+            $("#tUploadAt").text(result.data.updDt);
+            $("#tCnfmBy").text(result.data.c1);
+            $("#tCnfmAt").text(result.data.cnfmDt);
+            $("#tCnvtBy").text(result.data.c2);
+            $("#tCnvtAt").text(result.data.cnvrDt);
+            var totAmt = result.data.totalValidAmt;
+            console.log(totAmt);
+            var str =""+ totAmt.toFixed(2);
+            
+            var str2 = str.split(".");
+           
+            if(str2.length == 1){           
+                str2[1] = "00";
+            }
+            
+            str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
+            console.log(str);
+            $("#totAmt").text(str);
+            $("#totItemCount").text(result.data.totalItem);
+            $("#totValidCount").text(result.data.totalValid);
+            $("#totInvalidCount").text(result.data.totalInvalid);
+            
+            if(result.data.bRefundItem) {
+            	AUIGrid.setGridData(confirmGridID, result.data.bRefundItem);
+            }
+            
+            detId = 0;
+        });
+	} else {
+		Common.alert('No item selected.');
+	}
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -184,7 +244,7 @@ function fn_confirm() {
 <section class="search_table"><!-- search_table start -->
 
 <form action="#" id="form_bRefundConfirm">
-<input type="hidden" id="batchId" name="batchId">
+<input type="hidden" id="pBatchId" name="batchId" value="${bRefundInfo.batchId}">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -199,33 +259,33 @@ function fn_confirm() {
 <tbody>
 <tr>
 	<th scope="row">Batch ID</th>
-	<td>${bRefundInfo.batchId}</td>
+	<td id="tBatchId">${bRefundInfo.batchId}</td>
 	<th scope="row">Batch Status</th>
-	<td>${bRefundInfo.name}</td>
+	<td id="tBatchStus">${bRefundInfo.name}</td>
 	<th scope="row">Confirm Status</th>
-    <td>${bRefundInfo.name1}</td>
+    <td id="tCnfmStus">${bRefundInfo.name1}</td>
 </tr>
 <tr>
 	<th scope="row">Paymode</th>
-	<td>${bRefundInfo.codeName}</td>
+	<td id="tPayMode">${bRefundInfo.codeName}</td>
 	<th scope="row">Upload By</th>
-	<td>${bRefundInfo.username1}</td>
+	<td id="tUploadBy">${bRefundInfo.username1}</td>
 	<th scope="row">Upload At</th>
-    <td>${bRefundInfo.updDt}</td>
+    <td id="tUploadAt">${bRefundInfo.updDt}</td>
 </tr>
 <tr>
 	<th scope="row">Confirm By</th>
-	<td>${bRefundInfo.c1}</td>
+	<td id="tCnfmBy">${bRefundInfo.c1}</td>
 	<th scope="row">Confirm At</th>
-	<td>${bRefundInfo.cnfmDt}</td>
+	<td id="tCnfmAt">${bRefundInfo.cnfmDt}</td>
 	<th scope="row"></th>
     <td></td>
 </tr>
 <tr>
 	<th scope="row">Convert By</th>
-	<td>${bRefundInfo.c2}</td>
+	<td id="tCnvtBy">${bRefundInfo.c2}</td>
 	<th scope="row">Convert At</th>
-	<td>${bRefundInfo.cnvrDt}</td>
+	<td id="tCnvtAt">${bRefundInfo.cnvrDt}</td>
 	<th scope="row">Total Amount (Valid)</th>
     <td id="totAmt"></td>
 </tr>
@@ -247,6 +307,9 @@ function fn_confirm() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
+	<c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
+	<li><p class="btn_grid"><a href="#" id="remove_btn">Remove</a></p></li>
+	</c:if>
 	<li><p class="btn_grid"><a href="#" id="allItem_btn">All Items</a></p></li>
 	<li><p class="btn_grid"><a href="#" id="validItem_btn">Valid Items</a></p></li>
 	<li><p class="btn_grid"><a href="#" id="invalidItem_btn">Invalid Items</a></p></li>
