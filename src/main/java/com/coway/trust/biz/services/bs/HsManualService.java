@@ -99,6 +99,12 @@ public interface HsManualService {
 
 	EgovMap getSrvConfigFilter_SAL0087D(Map<String, Object> params);
 
-	int saveHsFilterInfoAdd(Map<String, Object> params);	
+	int saveHsFilterInfoAdd(Map<String, Object> params);
+
+	int saveDeactivateFilter(Map<String, Object> params);
+
+	int saveFilterUpdate(Map<String, Object> params);	
+	
+	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
 
 }
