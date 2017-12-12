@@ -27,6 +27,7 @@
 			  FROM MSC0010D M10 , SYS0038M S38
 			 WHERE 1 = 1
 			   AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
+			   AND M10.STUS_CODE_ID = 1
         ]]>
             <if test="stitle != null and stitle != ''">
             AND M10.MEMO_TITLE like '%'||#{stitle}||'%'
@@ -61,6 +62,11 @@
              , UPD_DT        = SYSDATE
          WHERE MEMO_ID = #{memoid}
     </update>
+    <update id="memoDelete" parameterType="Map">
+        UPDATE MSC0010D
+           SET STUS_CODE_ID = 8
+         WHERE MEMO_ID = #{memoid}
+    </update>
     
     <select id="selectMemoRandumData" parameterType="Map" resultMap="clobMap">
         SELECT M10.MEMO_ID MEMOID
@@ -85,5 +91,4 @@
            AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
            AND M10.MEMO_ID = #{memoid}             
     </select>
-    
 </mapper>

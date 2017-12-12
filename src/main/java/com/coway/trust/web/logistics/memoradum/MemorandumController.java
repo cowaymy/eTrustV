@@ -62,8 +62,7 @@ public class MemorandumController {
 	}
 
 	@RequestMapping(value = "/memoSearchList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> selectMemoList(@RequestBody Map<String, Object> params, Model model)
-			throws Exception {
+	public ResponseEntity<Map> selectMemoList(@RequestBody Map<String, Object> params, Model model) throws Exception {
 
 		List<EgovMap> list = memo.selectMemoRandumList(params);
 
@@ -72,12 +71,22 @@ public class MemorandumController {
 
 		return ResponseEntity.ok(map);
 	}
-	
-	
+
+	@RequestMapping(value = "/memoDelete.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> memoDelete(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+
+		memo.memoDelete(params);
+
+		ReturnMessage msg = new ReturnMessage();
+		msg.setCode(AppConstants.SUCCESS);
+		return ResponseEntity.ok(msg);
+	}
+
 	@RequestMapping(value = "/memoSave.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertMemoSave(@RequestBody Map<String, Object> params, Model model)
 			throws Exception {
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -85,16 +94,15 @@ public class MemorandumController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		
+
 		params.put("userid", loginId);
 
 		ReturnMessage msg = new ReturnMessage();
-		
-		Map<String , Object> data = memo.memoSave(params);
+
+		Map<String, Object> data = memo.memoSave(params);
 		msg.setData(data);
-		
+
 		return ResponseEntity.ok(msg);
 	}
 
-	
 }

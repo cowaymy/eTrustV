@@ -36,7 +36,8 @@
     _editor_area = "editorArea";        //  -> 페이지에 웹에디터가 들어갈 위치에 넣은 textarea ID
     _editor_url = "<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/'/>";
 </script>
-<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/htmlarea.js'/>"></script>
+<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/htmlarea.js'/>">
+</script>
 <!-- EDITOR -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -169,9 +170,26 @@
             	
             });
         });
+    	$("#vdelete").click(function(){
+
+            var selectedItem = AUIGrid.getSelectedIndex(listGrid);
+            var memo=AUIGrid.getCellValue(listGrid, selectedItem[0], "memoid");
+            var param ={memoid:memo };
+            Common.ajax("GET", "/logistics/memorandum/memoDelete.do", param, function (result) {
+            	$("#editwindow").hide();
+            	 SearchListAjax();
+            	
+            });
+        });
     	$("#update").click(function(){
-    		
+    		var selectIndex = AUIGrid.getSelectedIndex(listGrid);
+    		if(selectIndex[0]<0){
+    			Common.alert("Please Select data.");
+    			return false;
+    		}
+    		$("#dataTitle2").text("Memo Randum Edit");
     		$("#editwindow").show();
+            $("#vdelete").show();
     		
     		var selectedItems = AUIGrid.getSelectedItems(listGrid);
             var itm = selectedItems[0].item;
@@ -182,28 +200,31 @@
             $("#memoid").val(itm.memoid);
             
             if (itm.staffmemo == 1){
-            	$("#staffmemo").attr("checked" , true);
+            	$("#staffmemo").prop("checked" , true);
             }else{
-            	$("#staffmemo").attr("checked" , false);
+            	$("#staffmemo").prop("checked" , false);
             }
             if (itm.codymemo == 1){
-                $("#codymemo").attr("checked" , true);
+                $("#codymemo").prop("checked" , true);
             }else{
-                $("#codymemo").attr("checked" , false);
+                $("#codymemo").prop("checked" , false);
             }
             if (itm.hpmemo == 1){
-                $("#hpmemo").attr("checked" , true);
+                $("#hpmemo").prop("checked" , true);
             }else{
-                $("#hpmemo").attr("checked" , false);
+                $("#hpmemo").prop("checked" , false);
             }
 
-            //$(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;");
-            $(".htmlarea > iframe").attr("style","border-width: 1px; width:100%; height:100%;");
+            //TODO : 추후 퍼블리싱 해결 해야함
+            $(".htmlarea").attr("style","width:100%; height:100%;");
+            $(".htmlarea .toolbar > table").attr("style","width:100%;");
+            $(".htmlarea > iframe").attr("style","border-width: 1px; width:100%;");
 			editor.setHTML("");
 			editor.insertHTML(itm.memocntnt);
             
         });
     	$("#insert").click(function(){
+    		$("#vdelete").hide();
     		$("#hedtor").val('');
     		$("#memoid").val('');
     		$("#staffmemo").attr("checked" , false);
@@ -211,8 +232,12 @@
     		$("#hpmemo").attr("checked" , false);
     		editor.setHTML("");
     		$("#editwindow").show();
-    		//$(".htmlarea > iframe").attr("style","border-width: 1px; width:615px; height: 400px;");
-    		$(".htmlarea > iframe").attr("style","border-width: 1px; width:100%; height:100%;");
+    		$("#dataTitle2").text("Memo Randum New");
+            //TODO : 추후 퍼블리싱 해결 해야함
+            $(".htmlarea").attr("style","width:100%; height:100%;");
+    		$(".htmlarea .toolbar > table").attr("style","width:100%;");
+    		$(".htmlarea .toolbar > table > ㅅㄱ").attr("style","width:100%;");
+    		$(".htmlarea > iframe").attr("style","border-width: 1px; width:100%;");
     		
     		$("#vmode").val("ins");
     		
@@ -344,9 +369,9 @@
         
         </section>
     </div>
-    <div class="popup_wrap" id="editwindow"><!-- popup_wrap start -->
+    <div class="popup_wrap size_big" id="editwindow"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-            <h1 id="dataTitle">MEMO RANDUM EDIT</h1>
+            <h1 id="dataTitle2"></h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2"><a id="eclose">CLOSE</a></p></li>
             </ul>
@@ -368,7 +393,7 @@
             <tbody>
                 <tr>
                     <th scope="row">Title</th>
-                    <td colspan="3"><input type="text" id="etitle" name="etitle" value=""></td>    
+                    <td colspan="3"><input type="text" id="etitle" name="etitle" value="" class="w100p"></td>    
                 </tr>
                 <tr>    
                     <th scope="row">Memo Viewer</th>
@@ -378,14 +403,12 @@
                         <label><input type="checkbox" id='hpmemo'    name='hpmemo'/><span> Hp Memo</span></label>
                     </td>
                 </tr>
-                <tr>    
-                    <td id="ememo" colspan="4"><textarea id="editorArea" name="editorArea" cols="75" rows="14" style="width:100%; height:400px"></textarea></td>
-                </tr>
             </tbody>
             </table>
-        
-            <ul class="center_btns">
+              <textarea id="editorArea" name="editorArea" style="width:100%;"></textarea>
+              <ul class="center_btns">
                 <li><p class="btn_blue2 big"><a id="vsave">SAVE</a></p></li> 
+                <li><p class="btn_blue2 big"><a id="vdelete">DELETE</a></p></li> 
             </ul>
             </form>
         
