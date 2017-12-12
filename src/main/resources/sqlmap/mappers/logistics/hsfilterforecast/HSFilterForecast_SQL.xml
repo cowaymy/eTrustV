@@ -9,84 +9,84 @@
 		s26.STK_CODE AS stkcode,
 		s26.STK_DESC AS stkdesc,
 
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = #{fcastDate})
-                AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > #{fcastDate})
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = TO_DATE(#{fcastDate}, 'dd/mm/yyyy'))
+                AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > TO_DATE(#{fcastDate}, 'dd/mm/yyyy'))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth1,
 
         <if test="mth2 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 1))
-		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 1))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 1))
+		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 1))
 		        THEN NVL(l44.COMPNT_QTY,0)
 		        ELSE 0 END) AS mth2,
         </if>
 
         <if test="mth3 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 2))
-		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 2))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 2))
+		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 2))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth3,
         </if>
 
         <if test="mth4 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 3))
-		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 3))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 3))
+		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 3))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth4,
         </if>
 
         <if test="mth5 != 0">
- 		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 4))
-		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 4))
+ 		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 4))
+		        AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 4))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth5,
         </if>
 
         <if test="mth6 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 5))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 5))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 5))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 5))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth6,
         </if>
 
         <if test="mth7 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 6))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 6))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 6))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 6))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth7,
         </if>
 
         <if test="mth8 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 7))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 7))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 7))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 7))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth8,
         </if>
 
         <if test="mth9 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 8))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 8))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 8))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 8))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth9,
         </if>
 
         <if test="mth10 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 9))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 9))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 9))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 9))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth10,
         </if>
 
         <if test="mth11 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 10))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 10))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 10))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 10))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth11,
         </if>
 
         <if test="mth12 != 0">
-		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(#{fcastDate}, 11))
-			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(#{fcastDate}, 11))
+		SUM(CASE WHEN (ADD_MONTHS(s87.SRV_FILTER_PRV_CHG_DT, s87.SRV_FILTER_PRIOD) = ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 11))
+			    AND (TO_DATE(s88.SRV_PRD_EXPR_DT, 'dd/mm/yyyy') > ADD_MONTHS(TO_DATE(#{fcastDate}, 'dd/mm/yyyy'), 11))
 			    THEN NVL(l44.COMPNT_QTY,0)
 			    ELSE 0 END) AS mth12,
         </if>
