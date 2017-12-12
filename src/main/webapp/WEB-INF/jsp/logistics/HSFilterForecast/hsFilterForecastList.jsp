@@ -168,10 +168,11 @@
         $("#selectedMth").val(colID - 2);
 
         var paramdata = { groupCode : '339', orderValue : 'CODE' };
-        AUIGrid.resize(detailGrid);
+
         fn_searchDetails();
 
         $("#detailWindow").show();
+        AUIGrid.resize(detailGrid);
     }
 
     function searchAjax() {
@@ -390,14 +391,11 @@
 				    <li><p class="btn_blue2 big"><a onclick="javascript:fn_searchDetails();">Search</a></p></li>
 				    <li></li>
 				</ul>
-<div id="grid_wrap_details" style="width:100%"></div>
+				&nbsp;
+                <div id="grid_wrap_details" style="width:100%"></div>
+
 			</form>
 		</section>
-
-<!--         <section class="search_result">
-
-        </section> -->
-
 	</div>
 
 </section><!-- content end -->
