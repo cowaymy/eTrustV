@@ -189,6 +189,7 @@ public class PointOfSalesController {
 		String[] PosItemType = request.getParameterValues("PosItemType");
 		String[] catetype = request.getParameterValues("catetype");
 		String reqLoc = request.getParameter("reqLoc");
+		String mcode = request.getParameter("materialCode");
 
 //		logger.debug("reqLoc    값 : {}", reqLoc);
 
@@ -200,6 +201,7 @@ public class PointOfSalesController {
 		smap.put("ctype", PosItemType);
 		smap.put("catetype", catetype);
 		smap.put("reqLoc", reqLoc);
+		smap.put("mcode",  mcode);
 
 		List<EgovMap> list = PointOfSalesService.posItemList(smap);
 

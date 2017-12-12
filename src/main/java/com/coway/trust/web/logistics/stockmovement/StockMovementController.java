@@ -156,11 +156,14 @@ public class StockMovementController {
 		// TODO type SQL.xml 다이나믹 처리 필요
 		String[] type = request.getParameterValues("cType");
 		String toloc = request.getParameter("slocation");
+		String mcode = request.getParameter("materialCode");
+		
 		// logger.debug("type : {}", type);
 		Map<String, Object> smap = new HashMap();
 		smap.put("ctype", type);
 		smap.put("toloc", toloc);
-
+		smap.put("mcode", mcode);
+		
 		List<EgovMap> list = stockMovementService.selectTolocationItemList(smap);
 
 		smap.put("data", list);

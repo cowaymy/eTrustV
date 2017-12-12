@@ -491,6 +491,9 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Item Info</h3>
+<ul class="right_btns">
+        <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -504,23 +507,27 @@ function f_multiCombo() {
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
-    <col style="width:100px" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Category</th>
-    <td>
-        <select class="w100p" id="catetype" name="catetype"></select>
-    </td>
     <th scope="row">Type</th>
-    <td >
+    <td colspan="3">
     <select class="w100p" id="cType" name="cType"></select>
     </td>
-    <td>
-    <ul class="left_btns">
-        <li><p class="btn_blue2"><a id="search">Search</a></p></li>
-    </ul>
+    <th scope="row">Category</th>
+    <td colspan="3">
+        <select class="w100p" id="catetype" name="catetype"></select>
     </td>
+    
+</tr>
+<tr>
+     <th scope="row">Material Code</th>
+    <td colspan="3">
+    <input type="text" class="w100p" id="materialCode" name="materialCode" />
+    </td>
+    <td colspan="4">
+    </td>
+
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -306,12 +306,14 @@ public class StocktransferController {
 		String[] catetype = request.getParameterValues("catetype");
 		String[] type = request.getParameterValues("cType");
 		String toloc = request.getParameter("slocation");
-
+		String mcode = request.getParameter("materialCode");
+		
 		Map<String, Object> smap = new HashMap();
 		smap.put("catetype", catetype);
 		smap.put("ctype", type);
 		smap.put("toloc", toloc);
-
+		smap.put("mcode", mcode);
+		
 		List<EgovMap> list = stock.selectTolocationItemList(smap);
 
 		smap.put("data", list);

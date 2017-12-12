@@ -256,10 +256,10 @@ function SearchListAjax() {
     var url = "/logistics/stocktransfer/stockTransferTolocationItemList.do";
     var param = $('#searchForm').serialize();
     
-    /*Common.ajax("GET" , url , param , function(result){
+    Common.ajax("GET" , url , param , function(result){
     	AUIGrid.setGridData(resGrid, result.data);
-    });*/
-    Common.showLoader();
+    });
+    /*Common.showLoader();
     $.ajax({
         type : "GET",
         url : url +"?"+ param,
@@ -269,6 +269,7 @@ function SearchListAjax() {
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
             var gridData = data;
+            
 
             AUIGrid.setGridData(resGrid, gridData.data);
         },
@@ -278,7 +279,7 @@ function SearchListAjax() {
         complete : function() {
         	Common.removeLoader();
         }
-    });
+    });*/
 }
 
 function addRow() {
@@ -447,6 +448,9 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Item Info</h3>
+<ul class="right_btns">
+        <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -469,18 +473,21 @@ function f_multiCombo() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Category</th>
-    <td >
-    <select class="w100p" id="catetype" name="catetype"></select>
-    </td>
     <th scope="row">Type</th>
-    <td >
+    <td colspan="3">
     <select class="w100p" id="cType" name="cType"></select>
     </td>
-    <td>
-    <ul class="left_btns">
-        <li><p class="btn_blue2"><a id="search">Search</a></p></li>
-    </ul>
+    <th scope="row">Category</th>
+    <td colspan="3">
+    <select class="w100p" id="catetype" name="catetype"></select>
+    </td>
+</tr>
+<tr>
+<th scope="row">Material Code</th>
+    <td colspan="3">
+    <input type="text" class="w100p" id="materialCode" name="materialCode" />
+    </td>
+    <td colspan="4">
     </td>
 </tr>
 </tbody>

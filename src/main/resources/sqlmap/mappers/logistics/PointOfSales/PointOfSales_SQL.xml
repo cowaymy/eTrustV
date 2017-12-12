@@ -233,6 +233,9 @@ WHERE 1 = 1
          #{item}
          </foreach>
      </if>
+     <if test="mcode != null and mcode != ''">
+     and l56.stk_code = #{mcode}
+     </if>
         AND L56.LOC_ID = #{reqLoc}
 </select>
   
