@@ -239,6 +239,25 @@ WHERE 1 = 1
         AND L56.LOC_ID = #{reqLoc}
 </select>
   
+  <select id="selectTypeList" parameterType="Map" resultType="egovMap">
+  select code||'-'||code_name CODE_NAME, CODE_ID code_id 
+  from sys0013m
+  where DISAB = 0
+        <if test="groupCode != null and groupCode !=''">
+           AND CODE_MASTER_ID = #{groupCode}
+        </if>
+         <if test="likeValue != null and likeValue !=''">
+           AND CODE LIKE #{likeValue}||'%'
+        </if>
+        <choose>
+          <when test="orderValue !=null and orderValue !=''">
+              ORDER BY ${orderValue}
+          </when>
+          <otherwise>
+              ORDER BY CODE_NAME
+          </otherwise>
+        </choose>
+  </select>
   
   <select id="selectPointOfSalesSerial" parameterType="Map" resultType="Map">
          select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
@@ -263,16 +282,7 @@ WHERE 1 = 1
               </if>
              group by l63.serial_no
          )
-     </select>
-    <select id="selectPosReqNoList" parameterType="Map" resultType="egovMap">
-        SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) = 'SOH'    
-         <if test="groupCode != null and groupCode !=''">
-           AND reqst_no <![CDATA[>=]]> #{groupCode}
-        </if>
-        ORDER BY CRT_DT DESC
-    </select>
-     
-     
+     </select>     
   
   <insert id="insOtherReceiptHead" parameterType="Map" >
         INSERT INTO LOG0047M(

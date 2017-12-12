@@ -34,6 +34,11 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		// TODO Auto-generated method stub
 		return PointOfSalesMapper.posItemList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectTypeList(Map<String, Object> params) {
+		return PointOfSalesMapper.selectTypeList(params);
+	}
 
 	@Override
 	public List<EgovMap> selectPointOfSalesSerial(Map<String, Object> params) {
@@ -168,16 +173,6 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		String returnValue[] = reVal.split("∈");
 		return returnValue[1];
-	}
-
-	@Override
-	public List<EgovMap> selectPosReqNoList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		List<EgovMap> list = null;
-
-		list = PointOfSalesMapper.selectPosReqNoList(params);
-
-		return list;
 	}
 
 	@Override

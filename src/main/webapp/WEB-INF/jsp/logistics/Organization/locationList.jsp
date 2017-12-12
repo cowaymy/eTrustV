@@ -59,7 +59,7 @@
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"locid"       ,headerText:"WHID"           ,width:"8%"  ,height:30 , visible:true},
                         {dataField:"loccd"       ,headerText:"Code"           ,width:"12%" ,height:30 , visible:true},
-                        {dataField:"locdesc"     ,headerText:"Description"    ,width:"40%" ,height:30 , visible:true},
+                        {dataField:"locdesc"     ,headerText:"Loc.Name"    ,width:"40%" ,height:30 , visible:true},
                         {dataField:"locdtl"      ,headerText:"locaddr1"       ,width:120   ,height:30 , visible:false},
                         {dataField:"areaid"      ,headerText:"locarea"        ,width:120   ,height:30 , visible:false},
                         {dataField:"street"      ,headerText:"street"         ,width:120   ,height:30 , visible:false},
@@ -83,8 +83,8 @@
                         {dataField:"code"        ,headerText:"code"           ,width:100   ,height:30 , visible:false},
                         {dataField:"name"        ,headerText:"name"           ,width:100   ,height:30 , visible:false},
                         {dataField:"countrynm"   ,headerText:"countrynm"      ,width:100   ,height:30 , visible:false},
-                        {dataField:"branchcd"    ,headerText:"branchcd"       ,width:100   ,height:30 , visible:false},
-                        {dataField:"branchnm"    ,headerText:"Branch"         ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"branchcd"    ,headerText:"Branch Code"       ,width:100   ,height:30 , visible:true},
+                        {dataField:"branchnm"    ,headerText:"Branch Name"         ,width:"15%" ,height:30 , visible:true},
                         {dataField:"dcode"       ,headerText:"dcode"          ,width:100   ,height:30 , visible:false},
                         {dataField:"descr"       ,headerText:"descr"          ,width:100   ,height:30 , visible:false},
                         {dataField:"codenm"      ,headerText:"Type"           ,width:"15%" ,height:30 , visible:false},
@@ -630,7 +630,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row">Loc.Name</th>
     <td colspan="5">
     <input type="text" id="locdesc" name="locdesc" title="Name" placeholder="" class="w100p" />
     </td>

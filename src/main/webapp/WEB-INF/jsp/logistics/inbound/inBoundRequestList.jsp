@@ -98,14 +98,12 @@ var smoLayout=[
 						{dataField:"blNo" ,headerText:"BL No",width:120 ,height:30}
                      ];
 var reqop = {
-		            enableCellMerge : true,
 					showRowCheckColumn : true ,
 					editable : true,
 					usePaging : false ,
 					showStateColumn : false
 		         };
 var smoop = {
-		            enableCellMerge : true,
 					editable : false,
 					usePaging : false ,
 					showStateColumn : false

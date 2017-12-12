@@ -130,7 +130,6 @@ var resop = {
         groupingFields : ["reqstno"],
         displayTreeOpen : true,
         showRowCheckColumn : true ,
-        enableCellMerge : true,
         showStateColumn : false,
         showRowAllCheckBox : true,
         showBranchOnGrouping : false
@@ -147,7 +146,7 @@ var serialop = {
         };
 
         
-var paramdata;
+//var paramdata;
 
 $(document).ready(function(){
     /**********************************
@@ -156,10 +155,8 @@ $(document).ready(function(){
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
        /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
        var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-       doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
-       doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
-       doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
-       
+      doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
+      //doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');
     
     /**********************************
      * Header Setting End
@@ -255,12 +252,9 @@ $(document).ready(function(){
     
  });
     
-function f_onchange(obj, value, tag, selvalue){
-    var reqNo= value;
-    var paramdata = { groupCode : reqNo};
-    doGetComboData('/logistics/pos/selectPosReqNo.do',paramdata, '','searchOthersReq2', 'S' , '');
-}
-
+    function test() {
+    	alert($("#searchReqType").val());
+    }
 //btn clickevent
 $(function(){
     $('#search').click(function() {
@@ -390,9 +384,9 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
         /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-        doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');     
-        doGetComboData('/logistics/pos/selectPosReqNo.do','' , '','searchOthersReq1', 'S' , '');
-        doGetComboData('/logistics/pos/selectPosReqNo.do','', '','searchOthersReq2', 'S' , '');
+        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
+        $("#searchOthersReq1").val('');
+        $("#searchOthersReq2").val('');
         $("#tlocationnm").val('');
         $("#tlocation").val('');
         $("#flocationnm").val('');
@@ -754,14 +748,14 @@ function f_addrow(){
                 <th scope="row">Others Request</th>
                    <td >
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><select class="w100p" id="searchOthersReq1" name="searchOthersReq1"   onchange="f_onchange('' , this.value , '', '')"></select></p>   
+                        <p><input type="text" class="w100p" id="searchOthersReq1" name="searchOthersReq1" /></p>   
                         <span> To </span>
-                        <p><select class="w100p" id="searchOthersReq2" name="searchOthersReq2"></select></p>
+                        <p><input type="text" class="w100p" id="searchOthersReq2" name="searchOthersReq2" /></p>
                          </div> <!-- date_set end -->
                     </td> 
                     <th scope="row">Request Type</th>
                     <td>
-                        <select class="w100p" id="searchReqType" name="searchReqType"><option value=''>Choose One</option></select>
+                        <select class="w100p" id="searchReqType" name="searchReqType" onchange="test()"></select>
                     </td> 
                 </tr>
                 <tr>

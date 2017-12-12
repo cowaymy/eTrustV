@@ -11,9 +11,11 @@ public interface PointOfSalesService {
 	
 	List<EgovMap> posItemList(Map<String, Object> params);
 	
+	List<EgovMap> selectTypeList(Map<String, Object> params);
+	
 	List<EgovMap>  selectPointOfSalesSerial(Map<String, Object> params);
 	
-	List<EgovMap>  selectPosReqNoList(Map<String, Object> params);
+	//List<EgovMap>  selectPosReqNoList(Map<String, Object> params);
 	
 	String insertPosInfo(Map<String, Object> params);
 	

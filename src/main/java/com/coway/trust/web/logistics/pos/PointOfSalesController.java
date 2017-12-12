@@ -209,6 +209,15 @@ public class PointOfSalesController {
 
 		return ResponseEntity.ok(smap);
 	}
+	
+	@RequestMapping(value = "/selectTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> list = PointOfSalesService.selectTypeList(params);
+	
+		System.out.println(":::"+list);
+		return ResponseEntity.ok(list);
+		
+	}
 
 	@RequestMapping(value = "/PointOfSalesSerialCheck.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> PointOfSalesSerialCheck(@RequestParam Map<String, Object> params) {
@@ -267,15 +276,6 @@ public class PointOfSalesController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
-	}
-
-	@RequestMapping(value = "/selectPosReqNo.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
-
-//		logger.debug("selectPosReqNo : {}", params.get("groupCode"));
-
-		List<EgovMap> codeList = PointOfSalesService.selectPosReqNoList(params);
-		return ResponseEntity.ok(codeList);
 	}
 
 	@RequestMapping(value = "/PosDataDetail.do", method = RequestMethod.GET)

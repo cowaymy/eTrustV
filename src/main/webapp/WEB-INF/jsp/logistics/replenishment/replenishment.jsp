@@ -50,7 +50,6 @@ var resop = {
         //editable : true,
         //groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
-        enableCellMerge : true,
         editable : true,
         //showStateColumn : false,
         showBranchOnGrouping : false

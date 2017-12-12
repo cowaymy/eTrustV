@@ -91,7 +91,6 @@ var resop = {
         displayTreeOpen : true,
         //fixedColumnCount : 9,
         showRowCheckColumn : true ,
-        enableCellMerge : true,
         showStateColumn : false,
         showBranchOnGrouping : false
         };

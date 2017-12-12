@@ -101,9 +101,6 @@
     		usePaging : false, /* NOTE: true 설정시 셀병합 실행 안됨*/
     		useGroupingPanel : false , 
     		fixedColumnCount:2,
-    		// 셀 병합 실행
-            enableCellMerge : true
-
     		   };
     
 

@@ -79,7 +79,6 @@ var resop = {
 		groupingFields : ["delyno"],
         displayTreeOpen : true,
         showRowCheckColumn : true ,
-        enableCellMerge : true,
         showStateColumn : false,
         showBranchOnGrouping : false
         };

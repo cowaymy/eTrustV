@@ -13,6 +13,8 @@ public interface PointOfSalesMapper {
 
 	List<EgovMap> posItemList(Map<String, Object> params);
 
+	List<EgovMap> selectTypeList(Map<String, Object> params);
+	
 	List<EgovMap> selectPointOfSalesSerial(Map<String, Object> params);
 
 	String selectPosSeq();
@@ -28,8 +30,6 @@ public interface PointOfSalesMapper {
 	void GIRequestIssue(Map<String, Object> formMap);
 
 	void GICancelIssue(Map<String, Object> formMap);
-
-	List<EgovMap> selectPosReqNoList(Map<String, Object> params);
 
 	Map<String, Object> selectPosHead(String param);
 

@@ -915,6 +915,10 @@ function locationList(){
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Request Item</h3>
+
+<ul class="right_btns">
+            <li><p class="btn_blue2"><a id="attachment">Filter Attachment</a></p></li>
+</ul>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->
