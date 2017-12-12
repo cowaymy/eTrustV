@@ -80,7 +80,7 @@ public class BillingGroupController {
 
 				Map<String, Object> insHisMap = new HashMap<String, Object>();
 				insHisMap.put("custBillId", String.valueOf(selectEStatementReqs.get("custBillId")));
-				insHisMap.put("userId", params.get("userId"));
+				insHisMap.put("userId", 0);
 				insHisMap.put("reasonUpd", "[System] Customer confirmed E-Statement.");
 				insHisMap.put("salesOrderIDOld", 0);
 				insHisMap.put("salesOrderIDNew", 0);
@@ -112,21 +112,24 @@ public class BillingGroupController {
 							"<span style='font-size:12px;font-family:Arial;'>E-invoice will be sent to your registered email on next billing cycle.</span><br /><br />" +
 							"<span style='font-size:12px;font-family:Arial;'>This message is an automated reply to your registration request.</span><br />";
 				}else{
-					message = "* Sorry! Verification is unsuccessful.<br />" +
-							"Please try again later or kindly contact Coway customer hotline 1800-888-111 for assistance.";
+					message = "<span style='font-size:15px;color:red;'>* Sorry! Verification is unsuccessful.<br />" +
+							"Please try again later or kindly contact Coway customer hotline 1800-888-111 for assistance.</span>";
 				}
 
 			}else if("5".equals(stusCodeId)){
-				message = "* Invalid request. Your e-mail is already registered.<br />" +"For other query, kindly contact Coway customer hotline 1800-888-111 for assistance.";
+				message = "<span style='font-size:15px;color:red;'>* Invalid request. Your e-mail is already registered.<br />" +
+						"For other query, kindly contact Coway customer hotline 1800-888-111 for assistance.</span>";
 			}else if("10".equals(stusCodeId)){
-				message = "* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
+				message = "<span style='font-size:15px;color:red;'>* Invalid request. The link has expired.<br />" +
+						"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.</span>";
 			}else{
-				message = "* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
+				message = "<span style='font-size:15px;color:red;'>* Invalid request. The link has expired.<br />" +
+						"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.</span>";
 			}
 
 
 		}else{
-			message = "* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
+			message = "<span style='font-size:15px;color:red;'>* Invalid request. The link has expired.<br />" +"Kindly contact Coway customer hotline 1800-888-111 to request for a new link.";
 		}
 
 		model.addAttribute("message", message);
