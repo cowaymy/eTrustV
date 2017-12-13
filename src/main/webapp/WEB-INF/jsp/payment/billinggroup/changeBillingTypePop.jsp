@@ -246,24 +246,24 @@ function fn_estmReqPopClose(){
                         <tr>
                             <th scope="row" rowspan="3">Current Bill Type</th>
                             <td colspan="3">
-                            <label><input type="checkbox" id="changePop_post" name="changePop_post"/><span>Post</span></label>
+                                <label><input type="checkbox" id="changePop_post" name="changePop_post"/><span>Post</span></label>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
-                            <label><input type="checkbox" id="changePop_sms" name="changePop_sms"/><span>SMS</span></label>
+                                <label><input type="checkbox" id="changePop_sms" name="changePop_sms"/><span>SMS</span></label>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
-                            <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
-                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
+	                            <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
+	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
                             </td>
                         </tr>
                         <tr>
                             <th scope="row">Reason Update</th>
                             <td colspan="3">
-                            <textarea cols="20" rows="5" placeholder="" id="changePop_Reason"></textarea>
+                                <textarea cols="20" rows="5" placeholder="" id="changePop_Reason"></textarea>
                             </td>
                         </tr>
                         </tbody>
