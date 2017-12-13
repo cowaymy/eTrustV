@@ -46,6 +46,36 @@ public class AccountReconciliationController {
 	}
 	
 	/******************************************************
+	 *  Order Payment Listing 팝업
+	 *****************************************************/	
+	/**
+	 * Order Payment Listing 팝업
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initOrderPaymentListingPop.do")
+	public String orderPaymentListing(@RequestParam Map<String, Object>params, ModelMap model){
+		model.put("orderId", params.get("ordId"));
+		return "payment/reconciliation/orderPaymentListingPop";
+	}
+	
+	/******************************************************
+	 *  AS Listing 팝업
+	 *****************************************************/	
+	/**
+	 * AS Listing 팝업
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initOrderASListingPop.do")
+	public String initOrderASListingPop(@RequestParam Map<String, Object>params, ModelMap model){
+		model.put("orderId", params.get("ordId"));
+		return "payment/reconciliation/orderASListingPop";
+	}
+	
+	/******************************************************
 	 *  Order Summary View
 	 *****************************************************/	
 	/**
@@ -231,6 +261,21 @@ public class AccountReconciliationController {
 		resultMap.put("orderOutstandingView", orderOutstandingView);
 		
 		return ResponseEntity.ok(resultMap);
+	}
+	
+	/**
+	 * OrderASList
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectOrderASList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrderASList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap> resultList = accountReconciliationService.selectASInfoList(params);
+		
+		return ResponseEntity.ok(resultList);
 	}
 	
 }

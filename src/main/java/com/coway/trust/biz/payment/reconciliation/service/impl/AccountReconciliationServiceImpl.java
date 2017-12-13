@@ -158,4 +158,9 @@ public class AccountReconciliationServiceImpl extends EgovAbstractServiceImpl im
 	public Map<String, Object> selectOutStandingView(Map<String, Object> param) {
 		return accountReconciliationMapper.selectOutStandingView(param);
 	}
+
+	@Override
+	public List<EgovMap> selectASInfoList(Map<String, Object> params) {
+		return accountReconciliationMapper.selectASInfoList(params);
+	}
 }

@@ -1200,7 +1200,7 @@
 		#{emailFailInd}, 
 		#{emailFailDesc}, 
 		FN_GET_DOCNO('86'),
-		#{emailAdd} 
+		#{emailAdditional} 
 		)
     </insert>
     

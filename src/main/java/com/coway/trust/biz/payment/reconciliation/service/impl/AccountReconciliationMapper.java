@@ -94,4 +94,11 @@ public interface AccountReconciliationMapper {
 	 * @return
 	 */
 	Map<String, Object> selectOutStandingView(Map<String, Object> param);
+	
+	/**
+	 * selectASInfoList 조회
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectASInfoList(Map<String, Object> params);
 }

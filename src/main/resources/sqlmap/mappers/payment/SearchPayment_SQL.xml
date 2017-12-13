@@ -75,73 +75,76 @@
 	        PAY1001V 
 	    WHERE
 	        1=1
-	        <if test="orderNo != ''">
+	        <if test="orderNo != '' and orderNo != null">
 			  AND SALES_ORD_NO = #{orderNo}
 	        </if>
-	        <if test="payDate1 != '' and payDate2 != '' "> 
+	        <if test="orderId != '' and orderId != null">
+              AND SALES_ORD_ID = #{orderId}
+            </if>
+	        <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null"> 
 				AND PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
 		        AND PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
 			</if>
-	        <if test="applicationType != ''"> 
+	        <if test="applicationType != '' and applicationType != null"> 
 			AND APP_TYPE_ID = #{applicationType}
 			</if>
-	        <if test="orNo != ''"> 
+	        <if test="orNo != '' and orNo != null"> 
 			AND OR_NO = #{orNo} 
 			</if>
-	        <if test="poNo != ''">
+	        <if test="poNo != '' and poNo != null">
 			AND PO_NO = #{poNo} 
 			</if>
-	        <if test="paymentType != ''">
+	        <if test="paymentType != '' and paymentType != null">
 			AND PAY_TYPE_ID = #{paymentType}
 			</if>
-	        <if test="customerId != ''"> 
+	        <if test="customerId != '' and customerId != null"> 
 			AND CUST_ID = #{customerId}
 			</if>
-	        <if test="branchId != ''"> 
+	        <if test="branchId != '' and branchId != null"> 
 			AND KEYIN_BRNCH_ID = #{branchId}
 			</if>
-	        <if test="userId != ''"> 
+	        <if test="userId != '' and userId != null"> 
 			AND KEYIN_USER_ID = #{userId}
 			</if>
-	        <if test="customerName != ''"> 
+	        <if test="customerName != '' and customerName != null"> 
 			AND CUST_NAME LIKE '%' || #{customerName} || '%'
 			</if>
-	        <if test="customerIC != ''">
+	        <if test="customerIC != '' and customerIC != null">
 			AND CUST_IC = #{customerIC}
 			</if>
-	        <if test="trNo != ''"> 
+	        <if test="trNo != '' and trNo != null"> 
 			AND TR_NO = #{trNo}
 			</if>
-	        <if test="chequeNo != ''"> 
+	        <if test="chequeNo != '' and chequeNo != null"> 
 			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
 			</if>
-	        <if test="crcNo != ''">
+	        <if test="crcNo != '' and crcNo != null">
 			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ORI_CC_NO = #{crcNo})
 			</if>
-	        <if test="bankAccount != ''">
+	        <if test="bankAccount != '' and bankAccount != null">
 			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
 			</if>
-	        <if test="batchPaymentId != '' ">
+	        <if test="batchPaymentId != '' and batchPaymentId != null">
 			AND BATCH_PAY_ID = #{batchPaymentId}
 			</if>
 			
-			<if test="orderNo != '' 
-			             or payDate1 != '' 
-			             or payDate2 != '' 
-			             or applicationType != '' 
-			             or orNo != '' 
-			             or poNo != '' 
-			             or paymentType != '' 
-			             or customerId != '' 
-			             or branchId != ''
-			             or userId != '' 
-			             or customerName != '' 
-			             or customerIC != '' 
-			             or trNo != '' 
-			             or chequeNo != '' 
-			             or crcNo != '' 
-			             or bankAccount != '' 
-			             or batchPaymentId != '' ">
+			<if test="orderNo != '' and orderNo != null 
+			             or payDate1 != '' and payDate1 != null 
+			             or payDate2 != '' and payDate2 != null 
+			             or applicationType != '' and applicationType != null 
+			             or orNo != '' and orNo != null 
+			             or poNo != '' and poNo != null 
+			             or paymentType != '' and paymentType != null 
+			             or customerId != '' and customerId != null 
+			             or branchId != '' and branchId != null 
+			             or userId != '' and userId != null 
+			             or customerName != '' and customerName != null 
+			             or customerIC != '' and customerIC != null 
+			             or trNo != '' and trNo != null 
+			             or chequeNo != '' and chequeNo != null 
+			             or crcNo != '' and crcNo != null 
+			             or bankAccount != '' and bankAccount != null 
+			             or batchPaymentId != '' and batchPaymentId != null ">
                 ORDER BY PAY_ID
             </if>
 	    <include refid="pagingEnd" />           
@@ -156,53 +159,56 @@
             PAY1001V 
         WHERE
             1=1
-            <if test="orderNo != ''">
+            <if test="orderNo != '' and orderNo != null">
               AND SALES_ORD_NO = #{orderNo}
             </if>
-            <if test="payDate1 != '' and payDate2 != '' "> 
+            <if test="orderId != '' and orderId != null">
+              AND SALES_ORD_ID = #{orderId}
+            </if>
+            <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null"> 
                 AND PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
                 AND PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
             </if>
-            <if test="applicationType != ''"> 
+            <if test="applicationType != '' and applicationType != null"> 
             AND APP_TYPE_ID = #{applicationType}
             </if>
-            <if test="orNo != ''"> 
+            <if test="orNo != '' and orNo != null"> 
             AND OR_NO = #{orNo} 
             </if>
-            <if test="poNo != ''">
+            <if test="poNo != '' and poNo != null">
             AND PO_NO = #{poNo} 
             </if>
-            <if test="paymentType != ''">
+            <if test="paymentType != '' and paymentType != null">
             AND PAY_TYPE_ID = #{paymentType}
             </if>
-            <if test="customerId != ''"> 
+            <if test="customerId != '' and customerId != null"> 
             AND CUST_ID = #{customerId}
             </if>
-            <if test="branchId != ''"> 
+            <if test="branchId != '' and branchId != null"> 
             AND KEYIN_BRNCH_ID = #{branchId}
             </if>
-            <if test="userId != ''"> 
+            <if test="userId != '' and userId != null"> 
             AND KEYIN_USER_ID = #{userId}
             </if>
-            <if test="customerName != ''"> 
+            <if test="customerName != '' and customerName != null"> 
             AND CUST_NAME LIKE '%' || #{customerName} || '%'
             </if>
-            <if test="customerIC != ''">
+            <if test="customerIC != '' and customerIC != null">
             AND CUST_IC = #{customerIC}
             </if>
-            <if test="trNo != ''"> 
+            <if test="trNo != '' and trNo != null"> 
             AND TR_NO = #{trNo}
             </if>
-            <if test="chequeNo != ''"> 
+            <if test="chequeNo != '' and chequeNo != null"> 
             AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
             </if>
-            <if test="crcNo != ''">
+            <if test="crcNo != '' and crcNo != null">
             AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ORI_CC_NO = #{crcNo})
             </if>
-            <if test="bankAccount != ''">
+            <if test="bankAccount != '' and bankAccount != null">
             AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_ISSU_BANK_ID = #{bankAccount})
             </if>
-            <if test="batchPaymentId != '' ">
+            <if test="batchPaymentId != '' and batchPaymentId != null">
             AND BATCH_PAY_ID = #{batchPaymentId}
             </if>         
     </select>

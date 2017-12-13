@@ -923,7 +923,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		String isPostNew = custBillIsPost;
 		String typeId = "1047";
 		String sysHisRemark = "[System] E-Statement Request";
-		String emailAddtionalNew = "";
+		String emailAddtionalNew = String.valueOf(params.get("reqAdditionalEmail")).trim();
 		String emailAddtionalOld = "";
 		
 		if(selectCustBillMaster != null && Integer.parseInt(custBillId) > 0){
@@ -971,13 +971,13 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			Map<String, Object> estmMap = new HashMap<String, Object>();
 			estmMap.put("stusCodeId", "44");
 			estmMap.put("custBillId", String.valueOf(params.get("custBillId")));
-			estmMap.put("email", String.valueOf(params.get("reqEmail")));
+			estmMap.put("email", String.valueOf(params.get("reqEmail")).trim());
 			estmMap.put("cnfmCode", CommonUtils.getRandomNumber(10));
 			estmMap.put("userId", userId);
 			estmMap.put("defaultDate", defaultDate);
 			estmMap.put("emailFailInd", "0");
 			estmMap.put("emailFailDesc", "");
-			estmMap.put("emailAdd", "");
+			estmMap.put("emailAdditional", String.valueOf(params.get("reqAdditionalEmail")).trim());
 			//estmReq 인서트
 			billingGroupMapper.insEstmReq(estmMap);
 			String reqId = String.valueOf(estmMap.get("reqIdSeq"));
@@ -985,26 +985,30 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			// E-mail 전송하기
 			EmailVO email = new EmailVO();
 			List<String> toList = new ArrayList<String>();
-			toList.add(String.valueOf(params.get("reqEmail")));
+			
+			String additionalEmail = "";
+			additionalEmail = String.valueOf(params.get("reqAdditionalEmail")).trim();
+			toList.add(String.valueOf(params.get("reqEmail")).trim());
+			if(!"".equals(additionalEmail)){
+				toList.add(additionalEmail);
+			}
 			
 			email.setTo(toList);
 			email.setHtml(true);
 			email.setSubject("Coway E-Invoice Subscription Confirmation");
 			email.setText("Dear Sir/Madam, <br /><br />" +
-               "Thank you for registering for e-Invoice and go green together with Coway. <br /><br />" +
-               "To complete registration, please verify the email address you have registered in our system by clicking the link shown below.<br /><br />" +
+               "Thank you for registering for 'Go Green Go E-invoice' with Coway. <br /><br />" +
+               "Your email address have been registered as per below:- <br /><br />" +
+               "Email 1: " + String.valueOf(params.get("reqEmail")).trim() + "<br />" +
+               "Email 2: " + additionalEmail + "<br /><br /> " +
+               "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"+
                "<a href='" +  billingTypeConfirmUrl  + "?reqId=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
-               "This link will be expired in 24 hours.<br /><br />" +
-               "This is an automatically generated email, please do not reply.<br /><br />" +
-               "Shall you encounter any query, kindly contact us for more information.<br />" +
-               "Customer Hotline : 1800-888-111<br />" +
-               "Coway Website : " + "<a href='http://www.coway.com.my' target='_blank'>www.coway.com.my</a>" +
-               "<br /><br /><br />" +
+               "Should you have any enquiries, please do not hesitate to contact our toll-free number at 1800 888 111 or email to"+ 
+               "<a href='mailto:billing@coway.com.my' target='_top' style='color:blue;font-weight:bold'>billing@coway.com.my</a><br /><br /><br />"+
                "Yours faithfully,<br />" +
                "<b>Coway Malaysia</b>");
 			
 			adaptorService.sendEmail(email, false);
-			
 			
 			return true;
 			

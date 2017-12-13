@@ -313,5 +313,9 @@
         call  SP_SELT_ORD_OUT_STAN_VIEW(#{orderId},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=outStandMap})
         }
     </select>
+    
+    <select id="selectASInfoList" parameterType="Map" resultType="egovMap">
+    
+    </select>
 
 </mapper>
