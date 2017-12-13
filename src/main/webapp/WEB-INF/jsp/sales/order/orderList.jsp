@@ -58,11 +58,9 @@
             fn_copyChangeOrderPop();
         });
         $('#btnCopyBulk').click(function() {
-            Common.alert('<b>The program is under development.</b>');
+            Common.popupDiv("/sales/order/bulkOrderPop.do");
         });
         $('#btnNew').click(function() {
-            //Common.popupWin("listSearchForm", "/sales/order/orderRegisterPop.do", _option);
-            //Common.popupDiv("/sales/order/orderRegisterPop.do", $("#listSearchForm").serializeJSON());
             Common.popupDiv("/sales/order/orderRegisterPop.do");
         });
         $('#btnEdit').click(function() {
@@ -155,12 +153,32 @@
                 isValid = false;
                 msg += "* Please select order date<br/>";
             }
+            else {
+                var diffDay = fn_diffDate($('#listOrdStartDt').val(), $('#listOrdEndDt').val());
+                 
+                if(diffDay > 31) {
+                    isValid = false;
+                    msg += "* Please enter search period within one month.";
+                }
+            }
         }
-
 
         if(!isValid) Common.alert("Order Search" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
+    }
+    
+    function fn_diffDate(startDt, endDt) {
+        var arrDt1 = startDt.split("/");
+        var arrDt2 = endDt.split("/");
+
+        var dt1 = new Date(arrDt1[2], arrDt1[1]-1, arrDt1[0]);
+        var dt2 = new Date(arrDt2[2], arrDt2[1]-1, arrDt2[0]);
+
+        var diff = dt2 - dt1;
+        var day = 1000*60*60*24;
+        
+        return (diff/day);
     }
     
     function fn_orderModifyPop() {
@@ -350,9 +368,9 @@
 	<th scope="row">Order Date</th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input id="listOrdStartDt" name="ordStartDt" type="text" value="${bfDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="listOrdStartDt" name="ordStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	<span>To</span>
-	<p><input id="listOrdEndDt" name="ordEndDt" type="text" value="${toDay}" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input id="listOrdEndDt" name="ordEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
 </tr>

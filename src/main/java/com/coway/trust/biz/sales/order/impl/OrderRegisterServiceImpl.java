@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import static java.lang.Math.toIntExact;
 
 import javax.annotation.Resource;
 import org.slf4j.Logger;
@@ -21,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
@@ -49,6 +52,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.GridDataSet;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.DocTypeConstants;
@@ -64,7 +68,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("orderRegisterService")
 public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements OrderRegisterService{
 
-	private static Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(OrderRegisterServiceImpl.class);
 	
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
@@ -429,7 +433,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 //		salesOrderDVO.ItemStkID = int.Parse(cmbOrderProduct.SelectedValue);
 //		salesOrderDVO.ItemPriceID = int.Parse(hiddenOrderPriceID.Value);
 		salesOrderDVO.setItmQty(1);
-		salesOrderDVO.setItmTax(0);
+//		salesOrderDVO.setItmTax(0);
 		salesOrderDVO.setItmDscnt(0);
 //		salesOrderDVO.ItemPrice = double.Parse(txtOrderPrice.Text.Trim());
 //		salesOrderDVO.ItemPV = double.Parse(txtOrderPV.Text.Trim());
@@ -1260,7 +1264,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		this.preprocSalesOrderDetails(salesOrderDVO, sessionVO);
 		this.preprocInstallationMaster(installationVO, sessionVO);
 		
-		regOrderVO.setSalesOrderMVO(salesOrderMVO);
+		//regOrderVO.setSalesOrderMVO(salesOrderMVO);
 		regOrderVO.setSalesOrderDVO(salesOrderDVO);
 		regOrderVO.setInstallationVO(installationVO);
 		
@@ -1359,7 +1363,64 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			regOrderVO.setgSTEURCertificateVO(gSTEURCertificateVO);
 		}
 
-        this.doSaveOrder(regOrderVO);
+        //GET ORDER NUMBER
+        String salesOrdNo = "";
+        String newOrdNoFirst = "";
+        int copyQty = orderVO.getCopyQty();
+        
+        if("Y".equals(orderVO.getCopyOrderBulkYN())) {
+        	
+        	logger.debug("Multi Order Create Start!!!");
+        	
+    		Map<String, Object> pMap = new HashMap<String, Object>();
+
+        	pMap.put("copyQty", orderVO.getCopyQty());
+
+            if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
+            	pMap.put("docNoId", DocTypeConstants.CSALES_NO);
+            }
+            else {
+            	pMap.put("docNoId", DocTypeConstants.SALES_NO);
+            }
+            
+            salesOrdNo = orderRegisterMapper.selectDocNoS(pMap);
+            
+            int newOrdNo = 0;
+            
+        	for(int i = 0; i < copyQty; i++) {
+        		newOrdNo = Integer.valueOf(salesOrdNo) - copyQty + i;
+        		
+        		if(i == 0) newOrdNoFirst = String.valueOf(newOrdNo);
+        		
+        		logger.debug("newOrdNo:"+CommonUtils.intNvl(newOrdNo));
+        		
+        		salesOrderMVO.setSalesOrdNo(Integer.toString(newOrdNo));
+        		
+        		regOrderVO.setSalesOrderMVO(salesOrderMVO);
+        		
+        		this.doSaveOrder(regOrderVO);
+        	}
+
+			orderVO.setSalesOrdNoFirst(newOrdNoFirst);
+        }
+        else {
+        	logger.debug("Sigle Order Create Start!!!");
+        	
+            if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
+            	salesOrdNo = orderRegisterMapper.selectDocNo(DocTypeConstants.CSALES_NO);
+            }
+            else {
+            	salesOrdNo = orderRegisterMapper.selectDocNo(DocTypeConstants.SALES_NO);
+            }
+            
+            salesOrderMVO.setSalesOrdNo(salesOrdNo);        
+            
+            logger.info("!@#### GET NEW ORDER_NO  :"+salesOrdNo);
+            
+            regOrderVO.setSalesOrderMVO(salesOrderMVO);
+            
+            this.doSaveOrder(regOrderVO);
+        }
         
         if("Y".equals(orderVO.getPreOrderYN())) {
         	PreOrderVO preOrderVO = new PreOrderVO();
@@ -1371,7 +1432,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	preOrderMapper.updatePreOrderStatus(preOrderVO);
         }
 
-		logger.info("수정 : {}");
+		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdId());
+		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdNo() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdNo());
 		
 	}
 	
@@ -1403,22 +1465,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		SalesOrderContractVO     salesOrderContractVO   = orderVO.getSalesOrderContractVO();
 		
 		int orderAppType = orderVO.getOrderAppType();
-		
-        //GET ORDER NUMBER
-        String salesOrdNo = "";
+
         int salesOrdId = 0;
         
-        if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
-        	salesOrdNo = orderRegisterMapper.selectDocNo(DocTypeConstants.CSALES_NO);
-        }
-        else {
-        	salesOrdNo = orderRegisterMapper.selectDocNo(DocTypeConstants.SALES_NO);
-        }
-		
-        logger.info("!@#### GET NEW ORDER_NO  :"+salesOrdNo);
-        
         //SALES ORDER MASTER
-        salesOrderMVO.setSalesOrdNo(salesOrdNo);        
         logger.info("!@#### ORDER_ID  :"+salesOrderMVO.getSalesOrdId());        
         orderRegisterMapper.insertSalesOrderM(salesOrderMVO);        
         logger.info("!@#### GET NEW ORDER_ID  :"+salesOrderMVO.getSalesOrdId());

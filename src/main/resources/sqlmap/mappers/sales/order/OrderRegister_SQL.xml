@@ -6,6 +6,10 @@
         SELECT FN_GET_DOCNO(#{value}) from dual
     </select> 
 
+    <select id="selectDocNoS" parameterType="Map" resultType="String">
+        SELECT FN_GET_DOCNOS(#{docNoId}, #{copyQty}) from dual
+    </select> 
+    
     <select id="selectSrvCntcInfo" parameterType="Map" resultType="egovMap">
         SELECT T1.CUST_CARE_CNT_ID
              , T1.CUST_ID

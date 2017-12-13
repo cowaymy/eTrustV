@@ -92,6 +92,18 @@ public class OrderRegisterController {
 		return "sales/order/orderRegisterPop";
 	}
 	
+	@RequestMapping(value = "/bulkOrderPop.do")
+	public String convertToOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+
+		model.put("BULK_ORDER_YN", "Y");
+		model.put("preOrdId", params.get("preOrdId"));
+		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		
+		return "sales/order/orderRegisterPop";
+	}
+	
 	@RequestMapping(value = "/oldOrderPop.do")
 	public String oldOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "sales/order/oldOrderPop";
@@ -279,6 +291,11 @@ public class OrderRegisterController {
 		return ResponseEntity.ok(fileDto);
 	}
 	
+	@RequestMapping(value = "/copyOrderBulkPop.do")
+	public String copyOrderBulkPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		return "sales/order/copyOrderBulkPop";
+	}
+
 	@RequestMapping(value = "/registerOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> registerOrder(@RequestBody OrderVO orderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
@@ -336,7 +353,14 @@ public class OrderRegisterController {
 		
 		
         msg += "Order successfully saved.<br />";
-        msg += "Order Number : " + orderVO.getSalesOrderMVO().getSalesOrdNo() + "<br />";
+        
+        if("Y".equals(orderVO.getCopyOrderBulkYN())) {
+        	msg += "Order Number : " + orderVO.getSalesOrdNoFirst() + " ~ " + orderVO.getSalesOrderMVO().getSalesOrdNo() + "<br />";
+        }
+        else {
+        	msg += "Order Number : " + orderVO.getSalesOrderMVO().getSalesOrdNo() + "<br />";
+        }
+        
         msg += "Application Type : " + appTypeName + "<br />";
 		
 		// 결과 만들기

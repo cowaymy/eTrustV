@@ -84,6 +84,12 @@ public class OrderVO implements Serializable {
 	
 	private String preOrderYN;
 	
+	private String copyOrderBulkYN;
+	
+	private int copyQty;
+	
+	private String salesOrdNoFirst;
+	
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
 	}
@@ -346,6 +352,30 @@ public class OrderVO implements Serializable {
 
 	public void setPreOrderYN(String preOrderYN) {
 		this.preOrderYN = preOrderYN;
+	}
+
+	public String getCopyOrderBulkYN() {
+		return copyOrderBulkYN;
+	}
+
+	public void setCopyOrderBulkYN(String copyOrderBulkYN) {
+		this.copyOrderBulkYN = copyOrderBulkYN;
+	}
+
+	public int getCopyQty() {
+		return copyQty;
+	}
+
+	public void setCopyQty(int copyQty) {
+		this.copyQty = copyQty;
+	}
+
+	public String getSalesOrdNoFirst() {
+		return salesOrdNoFirst;
+	}
+
+	public void setSalesOrdNoFirst(String salesOrdNoFirst) {
+		this.salesOrdNoFirst = salesOrdNoFirst;
 	}
 
 }

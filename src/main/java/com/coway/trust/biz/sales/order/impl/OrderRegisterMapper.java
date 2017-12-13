@@ -43,6 +43,8 @@ public interface OrderRegisterMapper {
 
 	String selectDocNo(int docNoId);
 	
+	String selectDocNoS(Map<String, Object> params);
+	
 	EgovMap selectSrvCntcInfo(Map<String, Object> params);
 	
 	EgovMap selectStockPrice(Map<String, Object> params);

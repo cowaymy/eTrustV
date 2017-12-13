@@ -48,7 +48,7 @@
 </head>
 <body>
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order View</h1>

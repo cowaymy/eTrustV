@@ -7,6 +7,7 @@
 
     var convToOrdYn  = "${CONV_TO_ORD_YN}";
     var copyChangeYn = "${COPY_CHANGE_YN}";
+    var bulkOrderYn  = "${BULK_ORDER_YN}";
 
     var docGridID;
     var docDefaultChk = false;
@@ -1030,104 +1031,109 @@
             }
         });
         $('[name="ordSaveBtn"]').click(function() {
-
-//            fn_doSaveOrder();
-
-            if(!fn_validCustomer()) {
-                $('#aTabCS').click();
-                return false;
-            }
-
-            if(!fn_validMailAddress()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validContact()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validSales()) {
-                $('#aTabSO').click();
-                return false;
-            }
-
-            if(!fn_validRentPaySet()) {
-                $('#aTabPC').click();
-                return false;
-            }
-
-            if(!fn_validBillGroup()) {
-                $('#aTabBD').click();
-                return false;
-            }
-
-            if(!fn_validInstallation()) {
-                $('#aTabIN').click();
-                return false;
-            }
-
-            if(!fn_validDocument()) {
-                $('#aTabDC').click();
-                return false;
-            }
-
-            if(!fn_validCert()) {
-                $('#aTabRC').click();
-                return false;
-            }
-
-            var isValid = true, msg = "", docSelCnt = 0;
-
-            //첨부파일이 존재하면
-            if(!FormUtil.checkReqValue($('#certRefFile'))) {
-                isValid = false;
-
-                msg += "Under rare circumstances, Federal Government, State Government, Palace of Ruler and certain organizations ";
-                msg += "are given GST relief for purchase of goods under Goods and Services Tax (Relief) Order 2014 at GST rate of 0%. ";
-                msg += "\"Certificate under the Goods and Services Tax (Relief) Order 2014 \"" + "must be furnished by customers. <br /> ";
-                msg += "<b>Are you sure you want to proceed?</b> <br /><br />";
-            }
-
-            docSelCnt = fn_getDocChkCount();
-            
-            console.log('!@#### docSelCnt:'+docSelCnt);
-            
-            if(docSelCnt <= 0) {
-                isValid = false;
-
-                msg += "You are not select any document in this order.<br />";
-                msg += "<b>Are you sure want to save this order without any document submission ?</b><br /><br />";
-            }
-
-            console.log('!@#### isValid'+isValid);
-            
-            if(!isValid) {
-                Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+            if(bulkOrderYn == 'Y' && FormUtil.checkReqValue($('#hiddenCopyQty'))) {
+                Common.popupDiv("/sales/order/copyOrderBulkPop.do");
             }
             else {
+                fn_preCheckSave();
+            }
+        });
+    });
 
-                if($("#ordPromo option:selected").index() > 0) {
-                    console.log('!@#### ordSaveBtn click START 00000');
-                    if($("#exTrade").val() == 1) {
-                        console.log('!@#### ordSaveBtn click START 11111');
-                        $('#txtOldOrderID').val('');
-                        Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
-                    }
-                    else {
-                        console.log('!@#### ordSaveBtn click START 22222');
-                        Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
-                    }
+    function fn_preCheckSave() {
+        if(!fn_validCustomer()) {
+            $('#aTabCS').click();
+            return false;
+        }
+
+        if(!fn_validMailAddress()) {
+            $('#aTabBD').click();
+            return false;
+        }
+
+        if(!fn_validContact()) {
+            $('#aTabBD').click();
+            return false;
+        }
+
+        if(!fn_validSales()) {
+            $('#aTabSO').click();
+            return false;
+        }
+
+        if(!fn_validRentPaySet()) {
+            $('#aTabPC').click();
+            return false;
+        }
+
+        if(!fn_validBillGroup()) {
+            $('#aTabBD').click();
+            return false;
+        }
+
+        if(!fn_validInstallation()) {
+            $('#aTabIN').click();
+            return false;
+        }
+
+        if(!fn_validDocument()) {
+            $('#aTabDC').click();
+            return false;
+        }
+
+        if(!fn_validCert()) {
+            $('#aTabRC').click();
+            return false;
+        }
+
+        var isValid = true, msg = "", docSelCnt = 0;
+
+        //첨부파일이 존재하면
+        if(!FormUtil.checkReqValue($('#certRefFile'))) {
+            isValid = false;
+
+            msg += "Under rare circumstances, Federal Government, State Government, Palace of Ruler and certain organizations ";
+            msg += "are given GST relief for purchase of goods under Goods and Services Tax (Relief) Order 2014 at GST rate of 0%. ";
+            msg += "\"Certificate under the Goods and Services Tax (Relief) Order 2014 \"" + "must be furnished by customers. <br /> ";
+            msg += "<b>Are you sure you want to proceed?</b> <br /><br />";
+        }
+
+        docSelCnt = fn_getDocChkCount();
+        
+        console.log('!@#### docSelCnt:'+docSelCnt);
+        
+        if(docSelCnt <= 0) {
+            isValid = false;
+
+            msg += "You are not select any document in this order.<br />";
+            msg += "<b>Are you sure want to save this order without any document submission ?</b><br /><br />";
+        }
+
+        console.log('!@#### isValid'+isValid);
+        
+        if(!isValid) {
+            Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + msg, fn_hiddenSave);
+        }
+        else {
+
+            if($("#ordPromo option:selected").index() > 0) {
+                console.log('!@#### ordSaveBtn click START 00000');
+                if($("#exTrade").val() == 1) {
+                    console.log('!@#### ordSaveBtn click START 11111');
+                    $('#txtOldOrderID').val('');
+                    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
                 }
                 else {
-                    console.log('!@#### ordSaveBtn click START 33333');                    
+                    console.log('!@#### ordSaveBtn click START 22222');
                     Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
                 }
             }
-
-        });
-    });
+            else {
+                console.log('!@#### ordSaveBtn click START 33333');                    
+                Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
+            }
+        }
+    }
 
 	function fn_popOrderDetail() {	    
 	    Common.popupDiv("/sales/order/cnfmOrderDetailPop.do");
@@ -1280,11 +1286,13 @@
         
         var orderVO = {
             
-            custTypeId  : $('#typeId').val().trim(),
-            raceId      : $('#raceId').val().trim(),
-            billGrp     : $('input:radio[name="grpOpt"]:checked').val(),
-            preOrdId    : '${preOrdId}',
-            preOrderYN  : '${CONV_TO_ORD_YN}',
+            custTypeId      : $('#typeId').val().trim(),
+            raceId          : $('#raceId').val().trim(),
+            billGrp         : $('input:radio[name="grpOpt"]:checked').val(),
+            preOrdId        : '${preOrdId}',
+            preOrderYN      : '${CONV_TO_ORD_YN}',
+            copyOrderBulkYN : '${BULK_ORDER_YN}',
+            copyQty         : $('#hiddenCopyQty').val(),
             
             salesOrderMVO : {
                 advBill                 : $('input:radio[name="advPay"]:checked').val(),
@@ -2230,6 +2238,7 @@
     <input id="searchCustId" name="custId" type="hidden"/>
     <input id="hiddenCustId" name="custId"   type="hidden"/>
     <input id="hiddenOldOrderId" name="hiddenOldOrderId" type="hidden"/>
+    <input id="hiddenCopyQty" name="hiddenCopyQty" type="hidden"/>
 
 </form>
 <form id="custForm" name="custForm" action="#" method="post">
