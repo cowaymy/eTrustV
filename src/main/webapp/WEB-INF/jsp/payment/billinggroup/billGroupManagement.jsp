@@ -483,7 +483,6 @@ var addOrderLayout = [
                 },function(jqXHR, textStatus, errorThrown) {
                     Common.alert("Fail.");
                     $("#displayVisible").hide();
-
                 });
                 
             }else{
@@ -505,7 +504,6 @@ var addOrderLayout = [
     }
     
     function fn_hisClose() {
-        
         $('#viewHistorytPopup').hide();
         searchList();
     }
@@ -525,12 +523,9 @@ var addOrderLayout = [
             //Grid 셀 클릭시 이벤트
             AUIGrid.bind(changeOrderGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
-                
                 $("#salesOrdId").val(AUIGrid.getCellValue(changeOrderGridID , event.rowIndex , "salesOrdId"));
                 $("#salesOrdNo").val(AUIGrid.getCellValue(changeOrderGridID , event.rowIndex , "salesOrdNo"));
-                
             });
-            
         });
     }
     
@@ -578,7 +573,6 @@ var addOrderLayout = [
                 $("#newRem").val("");
                 $("#reasonUpd").val("");
                 fn_updRemark();
-                
             });
             
         }else{
@@ -611,7 +605,6 @@ var addOrderLayout = [
             }else{
             	$('#changeMail_currAddr').text("");
             }
-            	
         });
     }
     
@@ -632,7 +625,6 @@ var addOrderLayout = [
             $('#curr_contOffNum').text(result.data.contractInfo.telO);
             $('#curr_resNum').text(result.data.contractInfo.telR);
             $('#curr_faxNum').text(result.data.contractInfo.telf);
-            
         });
     }
     
@@ -693,10 +685,8 @@ var addOrderLayout = [
                //Remark
                var descFrom = "";
                var descTo = "";
-               
                descFrom += result.data.detailHistoryView.remOld;
                descTo += result.data.detailHistoryView.remNw;
-
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
                
@@ -855,7 +845,6 @@ var addOrderLayout = [
              
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
-               
            }
         });
     }
@@ -950,7 +939,6 @@ var addOrderLayout = [
                 $("#selectContPersonPop").hide();
                 AUIGrid.destroy(contPersonPopGridID);
                 Common.alert("New contact person selected.<br />Click save to confirm change contact person.");
-
             });
         });
     }
@@ -975,7 +963,6 @@ var addOrderLayout = [
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "* Reason to update cannot more than 200 characters.<br />";
-                
             }
         }
         
@@ -1041,7 +1028,6 @@ var addOrderLayout = [
                 $("#apprReq_crtDt").text(result.data.estmReqHisView.crtDt);
                 $("#apprReq_email").text(result.data.estmReqHisView.email);
                 $("#apprReq_creBy").text(result.data.estmReqHisView.crtUserId);
-                
             });
         }
     }
@@ -1067,7 +1053,6 @@ var addOrderLayout = [
                 valid = false;
                 message += "* This E-Statement request is no longer valid.<br />";
             }
-            
         });
         
         if($.trim(reasonUpd) ==""){
@@ -1210,10 +1195,8 @@ var addOrderLayout = [
             //Grid 셀 클릭시 이벤트
             AUIGrid.bind(addOrdPopGridID, "cellClick", function( event ){
                 selectedGridValue = event.rowIndex;
-                
                 $("#salesOrdNo").val(AUIGrid.getCellValue(addOrdPopGridID , event.rowIndex , "salesOrdNo"));
                 $("#salesOrdId").val(AUIGrid.getCellValue(addOrdPopGridID , event.rowIndex , "salesOrdId"));
-                
             });
         });
     }
@@ -1236,9 +1219,7 @@ var addOrderLayout = [
         if($.trim(reasonUpd) ==""){
             valid = false;
             message += "* Please key in the reason to update.<br />";
-            
         }else{
-            
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
                 message += "* Reason to update cannot more than 200 characters.<br />";
@@ -1264,11 +1245,9 @@ var addOrderLayout = [
             Common.confirm(message2,function (){
                 
                 Common.ajax("GET", "/payment/saveAddOrder.do", {"salesOrdNo" : salesOrdNoArr, "reasonUpd":reasonUpd, "custBillId" : custBillId, "salesOrdId" : salesOrdIdArr}, function(result) {
-                    
                     $("#addOrd_reasonUpd").val("");
                     Common.alert(result.message);
                     fn_addOrder();
-                    
                 });
             });
             
@@ -1343,7 +1322,6 @@ var addOrderLayout = [
     }
     
     function fn_custAddrClose(){
-        
         $("#selectMaillAddrPop").hide();
         $("#custAddr").val("");
     }
@@ -1353,7 +1331,6 @@ var addOrderLayout = [
     }
     
     function fn_contPerPopClose(){
-        
         $("#selectContPersonPop").hide();
         $("#contKeyword").val("");
     }
