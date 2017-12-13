@@ -143,7 +143,11 @@ $(document).ready(function(){
              var amt = 0;
              for(var i = 0; i < idx; i++){
                  if(AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '01' && AUIGrid.getCellValue(adjGridID, i, "budgetAdjType") != '02'){
-                     amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");
+                	 if(AUIGrid.getCellValue(adjGridID, i, "signal") =="+"){
+                         amt += AUIGrid.getCellValue(adjGridID, i, "adjAmt");                        
+                     }else{
+                         amt -= AUIGrid.getCellValue(adjGridID, i, "adjAmt");      
+                     }
                  }
              }             
              return amt; 
