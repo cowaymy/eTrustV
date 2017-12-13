@@ -1,5 +1,7 @@
 package com.coway.trust.web.payment.otherpayment.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.otherpayment.service.PaymentListService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -62,6 +66,135 @@ public class PaymentListController {
         return ResponseEntity.ok(resultList);
 	}
 	
+	/******************************************************
+	 * Payment List - Request DCF
+	 *****************************************************/	
+	/**
+	 * Payment List - Request DCF 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initRequestDCFPop.do")
+	public String initRequestDCFPop(@RequestParam Map<String, Object> params, ModelMap model) {		
+		
+		model.put("groupSeq", params.get("groupSeq"));		
+		LOGGER.debug("payment List params : {} ", params);
+		
+        // 조회.
+        //List<EgovMap> resultList = paymentListService.selectPaymentListByGroupSeq(params);        
+        //model.put("paymentList", resultList);        
+        
+		return "payment/otherpayment/requestDCFPop";
+	}
 	
+	/**
+	 * Payment List - Request DCF 대상 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectPaymentListByGroupSeq.do")
+	public ResponseEntity<List<EgovMap>> selectPaymentListByGroupSeq(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		
+		//조회.
+		List<EgovMap> resultList = paymentListService.selectPaymentListByGroupSeq(params);
+		
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Payment List - Request DCF 대상 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/requestDCF.do", method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> requestDCF(
+			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params : {} ", params);
+		
+		// 저장
+		params.put("userId", sessionVO.getUserId());
+    	EgovMap resultMap = paymentListService.requestDCF(params);
+		
+		// 조회 결과 리턴.
+    	return ResponseEntity.ok(resultMap);
+    	
+	}
+	
+	/******************************************************
+	 * Payment List - Confirm DCF
+	 *****************************************************/	
+	/**
+	 * Payment List - Confirm DCF 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initConfirmDCF.do")
+	public String initConfirmDCF(@RequestParam Map<String, Object> params, ModelMap model) {        
+        
+		return "payment/otherpayment/confirmDCF";
+	}
+	
+	/**
+	 * Payment List - Request DCF 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectRequestDCFList.do")
+	public ResponseEntity<List<EgovMap>> selectRequestDCFList(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		
+		//조회.
+		List<EgovMap> resultList = paymentListService.selectRequestDCFList(params);
+		
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Payment List - Confirm DCF 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initConfirmDCFPop.do")
+	public String initConfirmDCFPop(@RequestParam Map<String, Object> params, ModelMap model) {		
+		
+		model.put("groupSeq", params.get("groupSeq"));
+		model.put("reqNo", params.get("reqNo"));
+		model.put("dcfStusId", params.get("dcfStusId"));
+		
+		LOGGER.debug("payment List params : {} ", params);       
+        
+		return "payment/otherpayment/confirmDCFPop";
+	}
+	
+	/**
+	 * Payment List - Reject DCF 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/rejectDCF.do", method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> rejectDCF(
+			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params : {} ", params);
+		
+		// 저장
+		params.put("userId", sessionVO.getUserId());
+    	EgovMap resultMap = paymentListService.rejectDCF(params);
+		
+		// 조회 결과 리턴.
+    	return ResponseEntity.ok(resultMap);
+    	
+	}
 	
 }

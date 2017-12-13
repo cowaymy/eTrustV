@@ -14,6 +14,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -44,6 +45,9 @@ public class CommDeductionController {
 	
 	@Autowired
 	private CsvReadComponent csvReadComponent;
+	
+	@Value("${com.file.upload.path}")
+	private String filePath;
 	
 	
 	/******************************************************
@@ -126,13 +130,11 @@ public class CommDeductionController {
     		m.put("fileRefNo", "COM" + yy + mm + dd);
     		m.put("totalRecords", list.size());
     		m.put("totalAmount", sumAmount(vos));
-    		m.put("fileStatus", 1); 
-    		
-    		System.out.println("master : " + m);
+    		m.put("fileStatus", 1);
     		
     		int result = this.commDeductionService.addBulkData(m, list);
     		if(result > 0){
-        		File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
+        		File file = new File(filePath + "\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
         		multipartFile.transferTo(file);
         		
         		message = "Saved Successfully";
@@ -167,12 +169,7 @@ public class CommDeductionController {
         LOGGER.debug("params : {}", params);
         
         List<EgovMap> logList = commDeductionService.selectCommitionDeduction(params);
-        System.out.println(logList.get(0));
-        
         List<EgovMap> resultList = commDeductionService.selectMasterView(logList.get(0));
-        for(int i=0; i<resultList.size(); i++){
-        	System.out.println(resultList.get(i));
-        }
         
         return ResponseEntity.ok(resultList);
 	}

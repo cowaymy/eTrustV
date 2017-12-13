@@ -274,78 +274,82 @@ var crcStateLayout = [
     }
 	
 </script>
-<body>
-    <div id="wrap"><!-- wrap start -->
-        <section id="content"><!-- content start -->
-                <ul class="path">
-                    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-                    <li>Card Payment</li>
-                    <li>Payment Key-In & Credit Card Statement</li>
-                </ul>
-                <aside class="title_line"><!-- title_line start -->
-                    <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-                    <h2>Payment Key-In & Credit Card Statement</h2>
-                    <ul class="right_btns">
-                        <li><p class="btn_blue"><a href="javascript:fn_getCrcReconStateList();"><span class="search"></span>Search</a></p></li>
-                        <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
-                    </ul>
-                </aside><!-- title_line end -->
-                <section class="search_table"><!-- search_table start -->
-                    <form action="#" method="post" id="searchForm">
-	                    <table class="type1"><!-- table start -->
-	                        <caption>table</caption>
-	                        <colgroup>
-	                            <col style="width:200px" />
-	                            <col style="width:*" />
-	                            <col style="width:200px" />
-	                            <col style="width:*" />
-	                        </colgroup>
-	                        <tbody>
-	                            <tr>
-	                               <th>Transaction Date</th>
-	                               <td>
-	                                    <!-- date_set start -->
-	                                    <div class="date_set w100p">
-	                                        <p><input type="text" id="transDateFr" name="transDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	                                        <span>To</span>
-	                                        <p><input type="text" id="transDateTo" name="transDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	                                    </div>
-	                                    <!-- date_set end -->
-	                               </td>
-	                               <th>Bank Account</th>
-	                               <td>
-	                                    <select id="bankAcc" name="bankAcc" class="w100p" ></select>
-	                               </td>
-	                             </tr>
-	                        </tbody>
-	                        </table><!-- table end -->
-	                        <article id="mapping_grid_wrap" class="grid_wrap"></article>
-                        </form>
-                    </section><!-- search_table end -->
-                    <div class="divine_auto"><!-- divine_auto start -->
-                        <div style="width:50%;">
-                            <aside class="title_line"><!-- title_line start -->
-                            <h3>Credit Card Key-in List</h3>
-                            </aside><!-- title_line end -->
-                            
-                            <div class="border_box" style="height:350px;"><!-- border_box start -->
-                                <article id="crcKeyIn_grid_wrap" class="grid_wrap"></article>
-                            </div><!-- border_box end -->
-                        </div>
-                        <div style="width:50%;">
-                            <aside class="title_line"><!-- title_line start -->
-                              <h3>Credit Card Statement</h3>
-                            </aside><!-- title_line end -->
-                            <div class="border_box" style="height:350px;"><!-- border_box start -->
-                                <article id="crcState_grid_wrap" class="grid_wrap"></article>
-                                <ul class="right_btns">
-                                    <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping">Mapping</a></p></li>
-                                    <li><p class="btn_blue2"><a href="javascript:fn_mappingListKnockOff();" id="btnKnockOff">Knock-Off</a></p></li>
-                                </ul>
-                            </div><!-- border_box end -->
-                        </div>
-                    </div><!-- divine_auto end -->
-            </section><!-- content end -->
-            <hr />
-    </div><!-- wrap end -->
-</body>
+<section id="content"><!-- content start -->
+    <ul class="path">
+        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+        <li>Card Payment</li>
+        <li>Payment Key-In & Credit Card Statement</li>
+    </ul>
+    
+    <aside class="title_line"><!-- title_line start -->
+        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <h2>Payment Key-In & Credit Card Statement</h2>
+        <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_getCrcReconStateList();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+        </ul>
+    </aside><!-- title_line end -->
+    
+    <section class="search_table"><!-- search_table start -->
+        <form action="#" method="post" id="searchForm">
+            <table class="type1"><!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:200px" />
+                    <col style="width:*" />
+                    <col style="width:200px" />
+                    <col style="width:*" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>Transaction Date</th>
+                        <td>
+                            <!-- date_set start -->
+                            <div class="date_set w100p">
+                            <p><input type="text" id="transDateFr" name="transDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="transDateTo" name="transDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
+                        <th>Bank Account</th>
+                        <td>
+                            <select id="bankAcc" name="bankAcc" class="w100p" ></select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><!-- table end -->
+        </form> 
+    </section><!-- search_table end -->
+    
+    <!-- search_result start -->
+    <section class="search_result">
+        <!-- grid_wrap start -->
+            <article id="mapping_grid_wrap" class="grid_wrap"></article>
+        <!-- grid_wrap end -->
+    </section>
+    <!-- search_result end -->
+
+
+    <div class="divine_auto"><!-- divine_auto start -->
+        <div style="width:50%;">
+            <aside class="title_line"><!-- title_line start -->
+                <h3>Credit Card Key-in List</h3>
+            </aside><!-- title_line end -->
+            <article id="crcKeyIn_grid_wrap" class="grid_wrap"></article>
+        </div><!-- border_box end -->
+        <div style="width:50%;">
+            <aside class="title_line"><!-- title_line start -->
+                <h3>Credit Card Statement</h3>
+            </aside><!-- title_line end -->
+            <article id="crcState_grid_wrap" class="grid_wrap"></article>
+        </div>
+    </div>
+
+    
+    <ul class="right_btns">
+        <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping">Mapping</a></p></li>
+        <li><p class="btn_blue2"><a href="javascript:fn_mappingListKnockOff();" id="btnKnockOff">Knock-Off</a></p></li>
+    </ul>
+</section><!-- content end -->
+    

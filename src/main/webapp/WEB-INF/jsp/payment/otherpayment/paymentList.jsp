@@ -11,6 +11,9 @@
 <script type="text/javaScript">
 	//AUIGrid 그리드 객체
 	var myGridID;
+
+	//Grid에서 선택된 RowID
+	var selectedGridValue;
 	
 	//Grid Properties 설정
 	var gridPros = {
@@ -47,10 +50,13 @@
 	
     
 	$(document).ready(function(){
-		
-		
 		//그리드 생성
 	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+		
+		// Master Grid 셀 클릭시 이벤트
+	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+		    selectedGridValue = event.rowIndex;
+	    });
 	    
 	});
 
@@ -109,8 +115,26 @@
           });
       }
   }
-    
-    
+  
+	//Request DCF 팝업
+	function fn_requestDCFPop(){
+		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+		
+		if (selectedItem[0] > -1){
+			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
+			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+
+			if (revStusId == 1) {
+				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been Requested. </b>");   
+			} else if (revStusId == 4) {
+				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been Approved. </b>");   
+			} else {
+				Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
+			}
+		}else{
+             Common.alert('No Payment List selected.');
+        }	
+	}
 
 </script>
 <!-- content start -->
@@ -127,8 +151,6 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Payment List</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="">Request DCF</a></p></li>
-            <li><p class="btn_blue"><a href="">Request F/T</a></p></li>
             <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>     
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
@@ -177,6 +199,21 @@
         </form>
     </section>
     <!-- search_table end -->
+
+	<!-- link_btns_wrap start -->
+	<aside class="link_btns_wrap">
+		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+		<dl class="link_list">
+			<dt>Link</dt>
+			<dd>
+				<ul class="btns">
+					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();">Request DCF</a></p></li>
+				</ul>
+				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+			</dd>
+		</dl>
+	</aside>
+	<!-- link_btns_wrap end -->
 
     <!-- search_result start -->
     <section class="search_result">

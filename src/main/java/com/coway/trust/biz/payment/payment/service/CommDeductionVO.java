@@ -4,14 +4,14 @@ import org.apache.commons.csv.CSVRecord;
 
 public class CommDeductionVO {
 	private int orderNo;
-	private int mCode;
+	private String mCode;
 	private double amount;
 	private int paidMonth;
 	
 	public static CommDeductionVO create(CSVRecord CSVRecord) {
 		CommDeductionVO vo = new CommDeductionVO();
 		vo.setOrderNo(Integer.parseInt(CSVRecord.get(0)));
-		vo.setmCode(Integer.parseInt(CSVRecord.get(1)));
+		vo.setmCode(CSVRecord.get(1));
 		vo.setAmount(Double.parseDouble(CSVRecord.get(2)));
 		vo.setPaidMonth(Integer.parseInt(CSVRecord.get(3)));
 		return vo;
@@ -23,10 +23,10 @@ public class CommDeductionVO {
 	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;
 	}
-	public int getmCode() {
+	public String getmCode() {
 		return mCode;
 	}
-	public void setmCode(int mCode) {
+	public void setmCode(String mCode) {
 		this.mCode = mCode;
 	}
 	public double getAmount() {
