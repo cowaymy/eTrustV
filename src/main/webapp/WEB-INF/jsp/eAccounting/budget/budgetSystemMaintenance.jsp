@@ -18,7 +18,7 @@
     }, {
         dataField : "budgetMonth",
         headerText : '<spring:message code="budget.title.month" />',
-        dataType : "date",
+        //dataType : "date",
         //formatString : "mmm",
         editRenderer : {
             type : "DropDownListRenderer",
