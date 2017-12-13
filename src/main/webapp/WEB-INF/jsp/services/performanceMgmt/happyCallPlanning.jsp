@@ -6,15 +6,18 @@
 var myGridID;
 var callTypeList = new Array();
 var evalCriteriaList = new Array();
+var feedbackTypeList = new Array();
 
 $(document).ready(function() {
     
     happyCallGrid();
     fn_selectCallType();
     fn_selectEvalCriteria();
+    fn_selectFeedbackType();
 
     doGetCombo('/services/performanceMgmt/selectCallTypeList.do','', '', 'cmbCallType', 'S', '');
     doGetCombo('/services/performanceMgmt/selectEvalCriteriaList.do','', '', 'cmbEvalCriteria', 'S', '');
+    doGetCombo('/services/performanceMgmt/selectFeedbackTypeSearchList.do','', '', 'cmbFeedbackType', 'S', '');
 
                     
     //search
@@ -85,7 +88,17 @@ function happyCallGrid() {
 		        dataField : "feedbackType",
 		        headerText : 'Feedback Type',
 		        width : 200,
-		        editable : true
+		        editable : true, 
+		        editRenderer : {
+                    type : "ComboBoxRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        var list = feedbackTypeList;
+                        return list;
+                    }, 
+                    keyField : "feedbackType",
+                    valueField : "feedbackType"
+                }
 		    }, {
 		        dataField : "evaluationCriteria",
 		        headerText : 'Evaluation Criteria',
@@ -112,14 +125,26 @@ function happyCallGrid() {
 		        width : 200,
 		        dataType : "date",
 		        formatString : "dd/mm/yyyy",
-		        editable : true
+		        editable : true, 
+		        editRenderer : {
+                    type : "CalendarRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+                    showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+                  },
+                onlyCalendar : false // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 		    }, {
 		        dataField : "periodTo",
 		        headerText : 'Period To',
 		        width : 200,
 		        dataType : "date",
 		        formatString : "dd/mm/yyyy",
-		        editable : true
+		        editable : true, 
+		        editRenderer : {
+                    type : "CalendarRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+                    showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+                  },
+                onlyCalendar : false // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 		    } ];
 	
 	//그리드 속성 설정
@@ -200,6 +225,20 @@ function fn_selectEvalCriteria(){
         });
     return evalCriteriaList;
 }
+
+function fn_selectFeedbackType(){
+    Common.ajax("GET", "/services/performanceMgmt/selectFeedbackTypeGridList.do",$("#happyCallForm").serialize(), function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        
+        for (var i = 0; i < result.length; i++) {
+            var list = new Object();
+            list.feedbackType = result[i].codeName;
+            feedbackTypeList.push(list);
+            }
+        });
+    return feedbackTypeList;
+}
 	
 </script>
 
@@ -255,7 +294,8 @@ function fn_selectEvalCriteria(){
 			<td><select id="cmbCallType" name="cmbCallType" class="w100p"></select>
 			</td>
 			<th scope="row">Feedback Type</th>
-			<td><input type="text" id="feedbackType" name="feedbackType" title="" placeholder="" class="w100p" /></td>
+			<td><select id="cmbFeedbackType" name="cmbFeedbackType" class="w100p"></select>
+			</td>
 			<th scope="row">Evaluation Criteria</th>
 			<td><select id="cmbEvalCriteria" name="cmbEvalCriteria" class="w100p"></select>
 			</td>

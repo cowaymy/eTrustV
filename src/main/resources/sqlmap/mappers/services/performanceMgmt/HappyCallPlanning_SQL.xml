@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.HappyCallPlanningMapper">
 
     <select id="selectCallTypeList"  parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME 
+        SELECT CODE_NAME, CODE_NAME CODE_ID
         FROM SYS0013M
         WHERE CODE_MASTER_ID = 80
     </select>
@@ -12,6 +12,18 @@
         SELECT CODE CODE_ID, CODE || ' : ' || CODE_NAME CODE_NAME
 		FROM SYS0013M
 		WHERE CODE_MASTER_ID = 386
+    </select>
+    
+    <select id="selectFeedbackTypeSearchList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME, CODE_NAME CODE_ID
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = 385
+    </select>
+    
+    <select id="selectFeedbackTypeGridList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE_NAME, CODE_NAME CODE_ID
+        FROM SYS0013M
+        WHERE CODE_MASTER_ID = 50
     </select>
     
 </mapper>

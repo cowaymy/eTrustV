@@ -12,4 +12,8 @@ public interface HappyCallPlanningMapper {
 
 	List<EgovMap> selectEvalCriteriaList();
 
+	List<EgovMap> selectFeedbackTypeSearchList();
+	
+	List<EgovMap> selectFeedbackTypeGridList();
+
 }

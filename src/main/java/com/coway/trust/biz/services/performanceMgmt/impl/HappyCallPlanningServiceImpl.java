@@ -30,5 +30,15 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
 	public List<EgovMap> selectEvalCriteriaList() {
 		return happyCallPlanningMapper.selectEvalCriteriaList();
 	}
+
+	@Override
+	public List<EgovMap> selectFeedbackTypeSearchList() {
+		return happyCallPlanningMapper.selectFeedbackTypeSearchList();
+	}
+	
+	@Override
+	public List<EgovMap> selectFeedbackTypeGridList() {
+		return happyCallPlanningMapper.selectFeedbackTypeGridList();
+	}
 	
 }

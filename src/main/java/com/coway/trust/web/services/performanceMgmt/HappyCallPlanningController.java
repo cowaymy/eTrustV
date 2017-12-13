@@ -58,6 +58,22 @@ public class HappyCallPlanningController {
 		return ResponseEntity.ok(selectEvalCriteriaList);
 	}
 	
+	@RequestMapping(value = "/selectFeedbackTypeSearchList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectFeedbackTypeSearchList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		//LOGGER.debug("params {}", params);
+		List<EgovMap> selectFeedbackTypeSearchList = happyCallPlanningService.selectFeedbackTypeSearchList();
+		LOGGER.debug("selectFeedbackTypeSearchList {}", selectFeedbackTypeSearchList);
+		return ResponseEntity.ok(selectFeedbackTypeSearchList);
+	}
+	
+	@RequestMapping(value = "/selectFeedbackTypeGridList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectFeedbackTypeGridList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		//LOGGER.debug("params {}", params);
+		List<EgovMap> selectFeedbackTypeGridList = happyCallPlanningService.selectFeedbackTypeGridList();
+		LOGGER.debug("selectFeedbackTypeGridList {}", selectFeedbackTypeGridList);
+		return ResponseEntity.ok(selectFeedbackTypeGridList);
+	}
+	
 //	@RequestMapping(value = "/surveyEventCreatePop.do")
 //	public String surveyEventCreatePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 //		return "services/performanceMgmt/surveyEventCreatePop";
