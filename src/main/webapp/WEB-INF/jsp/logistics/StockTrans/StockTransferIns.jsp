@@ -61,7 +61,7 @@ $(document).ready(function(){
     doGetComboData('/common/selectCodeList.do', paramdata, 'US','sttype', 'S' , 'transferTypeFunc');
     //paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록 
    //2017-11-28 From Location : CDC , RDC, CDC & RDC 가 보일 수 있도록 처리 
-    paramdata = {locgb:'010205'}; // session 정보 등록 
+    paramdata = {locgb:'010205', endlikeValue:$("#locationType").val() }; // session 정보 등록 
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); 
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
@@ -221,6 +221,10 @@ $(function(){
     });
 });
 
+function fn_changeLocation() {
+	 paramdata = {locgb:'010205', endlikeValue:$("#locationType").val() }; // session 정보 등록 
+	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
+} 
 function locationList(){
 	$('#list').click();
 }
@@ -384,7 +388,9 @@ function f_multiCombo() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:180px" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:140px" />
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
@@ -392,35 +398,43 @@ function f_multiCombo() {
 <tbody>
 <tr>
     <th scope="row">STO Number</th>
-    <td><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
+    <td colspan="3"><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Document Date</th>
-    <td><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
     <th scope="row">Transfer Type</th>
-    <td>
+    <td colspan="3">
     <select class="w100p" id="sttype" name="sttype"></select>
     </td>
     <th scope="row">Transfer Type Detail</th>
-    <td>
+    <td colspan="3">
     <select class="w100p" id="smtype" name="smtype"><option>Transfer Type Selected</option></select>
     </td>
 </tr>
 <tr>
+    <th scope="row">Location Type </th>
+    <td>
+    <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
+        <option> All </option>
+        <option selected> A </option>
+        <option> B </option>
+    </select>
     <th scope="row">From Location</th>
-    <td colspan="3">
+    <td colspan="2">
     <select class="w100p" id="tlocation" name="tlocation"></select>
     </td>
-</tr>
-<tr>
     <th scope="row">To Location</th>
-    <td colspan="3">
+    <td colspan="2">
     <select class="w100p" id="flocation" name="flocation"></select>
     </td>
 </tr>
 <tr>
+    
+</tr>
+<tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="7"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <!-- <tr id="cancelTr">
     <th scope="row">Defect Reason</th>

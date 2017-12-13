@@ -1274,7 +1274,10 @@
            <if test="groupCode != null and groupCode == 'CODY'">
               AND S28M.WH_LOC_BRNCH_ID IN (SELECT BRNCH_ID FROM SYS0005M WHERE (CASE WHEN (TYPE_ID IS NOT NULL) THEN TYPE_ID ELSE 0 END) = 42)
            </if>
-         ORDER BY WH_LOC_GB , CODE_NAME
+           <if test="endlikeValue != null and endlikeValue != '' and endlikeValue != 'All'">
+             AND S28M.WH_LOC_DESC LIKE '%'||#{endlikeValue}
+           </if>
+         ORDER BY WH_LOC_GB , CODE_NAME 
     </select>
 
     <select id="selectBrnchIdByPostCode" parameterType="Map" resultType="egovMap">
