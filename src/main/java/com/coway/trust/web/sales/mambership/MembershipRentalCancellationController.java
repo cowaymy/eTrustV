@@ -198,5 +198,11 @@ public class MembershipRentalCancellationController {
     	return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value="/membershipRentalCancellationRAWPop.do")
+	public String membershipRentalCancellationRAWPop(){
+		
+		return "sales/membership/membershipRentalCancellationRAWPop";
+	}
+	
 	
 }

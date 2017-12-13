@@ -149,7 +149,7 @@ function fn_viewPop() {
 
 
 function fn_goCancellRAW(){
-    location.replace("/sales/membership/cancellationRAW.do");
+	Common.popupDiv("/sales/membership/membershipRentalCancellationRAWPop.do", null, null, true);
 }
 
 function fn_newPop(){
