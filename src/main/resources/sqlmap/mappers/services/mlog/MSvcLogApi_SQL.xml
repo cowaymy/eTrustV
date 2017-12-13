@@ -93,7 +93,8 @@
 						<!--           SAL0071D st -->                      
 						           S.STUS_CODE_ID AS rental_Status,
 						<!--          SAL0071D end -->                   
-						  			'HS' as job_Type
+						  			'HS' as job_Type, 
+						  			'1' as need_Filter
 						FROM
 						  (
 						      SELECT A.* FROM SVC0008D A, ORG0001D B
@@ -440,7 +441,7 @@
                  WHERE 1 = 1 AND rn = 1)
          WHERE RNN = 1
     )
-    WHERE   app_Type  <![CDATA[<>]]>  '2173'     /*not inhouse 1 =  (CASE WHEN NVL(reqRefNo,' ') <![CDATA[<>]]> ' ' AND NVL(asr_No, ' ')  = ' ' THEN 0 ELSE 1 END)*/
+    WHERE   app_Type  <![CDATA[<>]]>  '2173'    /*not inhouse 1 =  (CASE WHEN NVL(reqRefNo,' ') <![CDATA[<>]]> ' ' AND NVL(asr_No, ' ')  = ' ' THEN 0 ELSE 1 END)*/
 ) A
 LEFT OUTER JOIN (
     SELECT DISTINCT * FROM
