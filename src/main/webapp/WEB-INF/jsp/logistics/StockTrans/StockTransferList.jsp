@@ -111,8 +111,8 @@ var mtrcolumnLayout = [
 var resop = {
         rowIdField : "rnum",            
         //editable : true,
-        groupingFields : ["reqstno", "staname"],
-        displayTreeOpen : true,
+        //groupingFields : ["reqstno", "staname"],
+        displayTreeOpen : false,
         //showStateColumn : false,
         showBranchOnGrouping : false
         };
