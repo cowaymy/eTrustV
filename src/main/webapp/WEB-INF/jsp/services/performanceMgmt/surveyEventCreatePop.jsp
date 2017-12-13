@@ -87,7 +87,7 @@ $(document).ready(function(){
     
     //두번째 grid 행 추가
      $("#addRow_q").click(function() { 
-        var item_q = {"codeName" : "", "q3" : ""}; //row 추가
+        var item_q = {"hcDefCtgryId" : "", "hcDefDesc" : ""}; //row 추가
         AUIGrid.addRow(myGridID_Q, item_q, "last");
     });
     

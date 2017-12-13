@@ -23,7 +23,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("surveyMgmtService")
 public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 	
-	private static final Logger logger = LoggerFactory.getLogger(SurveyMgmtService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SurveyMgmtService.class);
 
 	@Resource(name = "surveyMgmtMapper")
 	private SurveyMgmtMapper surveyMgmtMapper;
@@ -86,6 +86,7 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 		Map<String, ArrayList<Object>> aGrid = params.get("aGrid");
 		Map<String, ArrayList<Object>> bGrid = params.get("bGrid");
 		Map<String, ArrayList<Object>> cGrid = params.get("cGrid");
+		Map<String, ArrayList<Object>> dGrid = params.get("cGrid");
 		
 		ArrayList<Object> addList = aGrid.get(AppConstants.AUIGRID_ADD);
 		
@@ -110,17 +111,71 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 				surveyMgmtMapper.addSurveyEventTarget((Map<String, Object>) bRow);
 			}
 			
-			//세번째 그리드 등록...
+			//세번째 그리드 등록... CCR0003M에 등록하기
 			ArrayList<Object> c_addList = cGrid.get(AppConstants.AUIGRID_ADD);
+			ArrayList<Object> d_addList = cGrid.get(AppConstants.AUIGRID_ADD);
 			
 			for(Object row : c_addList){
 				Map<String, Object> cRow = (Map<String, Object>) row;
 				cRow.put("evtId", masterRow.get("evtId"));
+				
+				LOGGER.debug("hcDefCtgryId : {}", cRow.get("hcDefCtgryId"));
+				
 				//xxxMapper.insertCC(cRow);
 				((Map<String, Object>) cRow).put("crtUserId", loginId);
 				((Map<String, Object>) cRow).put("updUserId", loginId);
 				surveyMgmtMapper.addSurveyEventQuestion((Map<String, Object>) cRow);
+				
+				
+				//세번째 그리드에서 CCR0004M에 등록하기
+				Map<String, Object> dRow = (Map<String, Object>) row;
+				dRow.put("hcDefId", cRow.get("hcDefId"));
+				//xxxMapper.insertCC(cRow);
+				((Map<String, Object>) dRow).put("crtUserId", loginId);
+				((Map<String, Object>) dRow).put("updUserId", loginId);
+				
+				String feedType = (String) cRow.get("hcDefCtgryId");
+				
+				String[] pointSpecial = new String[2];
+				pointSpecial[0] = "1";
+				pointSpecial[1] = "5";
+				
+				String[] descSpecial = new String[2];
+				descSpecial[0] = "Yes";
+				descSpecial[1] = "No";
+				
+				String[] pointStandard = new String[5];
+				pointStandard[0] = "1";
+				pointStandard[1] = "2";
+				pointStandard[2] = "3";
+				pointStandard[3] = "4";
+				pointStandard[4] = "5";
+				
+				String[] descStandard = new String[5];
+				descStandard[0] = "Excellent";
+				descStandard[1] = "Good";
+				descStandard[2] = "Average";
+				descStandard[3] = "Poor";
+				descStandard[4] = "Bad";
+				
+				//FeedbackType이 Special일때
+				if(feedType.equals("Special")){
+					for(int i=0; i<2; i++){
+						dRow.put("hcAnsPoint", pointSpecial[i]);
+						dRow.put("hcAnsDesc", descSpecial[i]);
+						surveyMgmtMapper.addSurveyEventAnsSpecial((Map<String, Object>) dRow);
+					}
+				}//FeedbackType이 Standard일때
+				else if(feedType.equals("Standard")){
+					for(int j=0; j<5; j++){
+						dRow.put("hcAnsPoint", pointStandard[j]);
+						dRow.put("hcAnsDesc", descStandard[j]);
+						surveyMgmtMapper.addSurveyEventAnsStandard((Map<String, Object>) dRow);
+					}
+				}
 			}
+			
+			
 			
 		}else{
 			throw new ApplicationException(AppConstants.FAIL, "1건 이상이어야 합니다.");

@@ -142,6 +142,9 @@
    </insert>
    
    <insert id="addSurveyEventQuestion" parameterType="Map">
+       <selectKey keyProperty="hcDefId" resultType="Integer" order="BEFORE">
+        SELECT CCR0003M_HC_DEF_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
        INSERT INTO CCR0003M (
           HC_DEF_ID
           , HC_DEF_TYPE_ID
@@ -159,7 +162,7 @@
           , EVT_ID
        )
       VALUES(
-          CCR0003M_HC_DEF_ID_SEQ.NEXTVAL
+          #{hcDefId}
           , 2718
           , 1
           , #{hcDefDesc}
@@ -180,6 +183,79 @@
           , #{evtId}
       )
    </insert>
+   
+   <insert id="addSurveyEventAnsSpecial" parameterType="Map">
+       INSERT INTO CCR0004M (
+          HC_ANS_ID
+          , HC_DEF_ID
+          , HC_ANS_POINT
+          , HC_ANS_DESC
+          , HC_ANS_SEQ
+          , HC_ANS_STUS_ID
+          , HC_ANS_CRT_USER_ID
+          , HC_ANS_CRT_DT
+          , HC_ANS_UPD_USER_ID
+          , HC_ANS_UPD_DT
+       )
+      VALUES(
+          CCR0004M_HC_ANS_ID_SEQ.NEXTVAL
+          , #{hcDefId}
+          , #{hcAnsPoint}
+          , #{hcAnsDesc}
+          <if test="hcAnsDesc == 'Yes'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'No'">
+          , 2
+          </if>
+          , 1
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , SYSDATE
+      )
+    </insert>
+   
+   <insert id="addSurveyEventAnsStandard" parameterType="Map">
+       INSERT INTO CCR0004M (
+          HC_ANS_ID
+          , HC_DEF_ID
+          , HC_ANS_POINT
+          , HC_ANS_DESC
+          , HC_ANS_SEQ
+          , HC_ANS_STUS_ID
+          , HC_ANS_CRT_USER_ID
+          , HC_ANS_CRT_DT
+          , HC_ANS_UPD_USER_ID
+          , HC_ANS_UPD_DT
+       )
+      VALUES(
+          CCR0004M_HC_ANS_ID_SEQ.NEXTVAL
+          , #{hcDefId}
+          , #{hcAnsPoint}
+          , #{hcAnsDesc}
+          <if test="hcAnsDesc == 'Excellent'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'Good'">
+          , 2
+          </if>
+          <if test="hcAnsDesc == 'Average'">
+          , 3
+          </if>
+          <if test="hcAnsDesc == 'Poor'">
+          , 4
+          </if>
+          <if test="hcAnsDesc == 'Bad'">
+          , 5
+          </if>
+          , 1
+          , #{crtUserId}
+          , SYSDATE
+          , #{updUserId}
+          , SYSDATE
+      )
+    </insert>
    
 	<select id="selectEvtMemIdList" parameterType="Map" resultType="egovMap">
 		<![CDATA[
