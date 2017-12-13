@@ -5,19 +5,19 @@
 var myRequestDCFGridID;
 
 
-//Grid Properties ¼³Á¤
+//Grid Properties ì„¤ì •
 	var gridPros = {
-	        // ÆíÁı °¡´É ¿©ºÎ (±âº»°ª : false)
+	        // í¸ì§‘ ê°€ëŠ¥ ì—¬ë¶€ (ê¸°ë³¸ê°’ : false)
 	        editable : false,        
-	        // »óÅÂ Ä®·³ »ç¿ë
+	        // ìƒíƒœ ì¹¼ëŸ¼ ì‚¬ìš©
 	        showStateColumn : false,
-	        // ±âº» Çì´õ ³ôÀÌ ÁöÁ¤
+	        // ê¸°ë³¸ í—¤ë” ë†’ì´ ì§€ì •
 	        headerHeight : 35,
 	        
 	        softRemoveRowMode:false
 	
 	};
-// AUIGrid Ä®·³ ¼³Á¤
+// AUIGrid ì¹¼ëŸ¼ ì„¤ì •
 var requestDcfColumnLayout = [ 
 	{dataField : "groupSeq",headerText : "Payment<br>Group No.",width : 100 , editable : false, visible : false},
 	{dataField : "payItmModeId",headerText : "Pay Type ID",width : 240 , editable : false, visible : false},
@@ -45,7 +45,7 @@ $(document).ready(function(){
 	searchDCFList();
 });
 
-// ajax list Á¶È¸.
+// ajax list ì¡°íšŒ.
 function searchDCFList(){
 	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
 		AUIGrid.setGridData(myRequestDCFGridID, result);
@@ -54,7 +54,7 @@ function searchDCFList(){
 }
 
 
-//Amount °è»ê
+//Amount ê³„ì‚°
 function recalculateTotalAmt(){
     var rowCnt = AUIGrid.getRowCount(myRequestDCFGridID);
     var totalAmt = 0;
@@ -69,7 +69,7 @@ function recalculateTotalAmt(){
     $("#totalAmtTxt").val($.number(totalAmt,2));    
 }
 
-//½ÂÀÎÃ³¸®
+//ìŠ¹ì¸ì²˜ë¦¬
 function fn_approval(){
 
 	if($("#dcfStusId").val() != 1 ){
@@ -82,7 +82,7 @@ function fn_approval(){
     	return;
     }
 
-	//ÀúÀåÃ³¸®
+	//ì €ì¥ì²˜ë¦¬
 	Common.confirm('<b>Are you sure want to confirm DCF ?</b>',function (){
 
 	    
@@ -97,7 +97,7 @@ function fn_approval(){
 	});
 }
 
-//¹İ·ÁÃ³¸®
+//ë°˜ë ¤ì²˜ë¦¬
 function fn_reject(){
 	if($("#dcfStusId").val() != 1 ){
         Common.alert("<b>Only [Active] Request is allowed to Reject.</b>");   
@@ -114,7 +114,7 @@ function fn_reject(){
     	return;
     }
 
-	//ÀúÀåÃ³¸®
+	//ì €ì¥ì²˜ë¦¬
 	Common.confirm('<b>Are you sure want to reject DCF ?</b>',function (){
 	    Common.ajax("POST", "/payment/rejectDCF.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
 			var message = "<b>DCF has successfully reject<br></b>";

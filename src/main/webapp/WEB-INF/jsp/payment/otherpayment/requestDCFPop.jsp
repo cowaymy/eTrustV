@@ -5,19 +5,19 @@
 var myRequestDCFGridID;
 
 
-//Grid Properties ¼³Á¤
+//Grid Properties ì„¤ì •
 	var gridPros = {
-	        // ÆíÁı °¡´É ¿©ºÎ (±âº»°ª : false)
+	        // í¸ì§‘ ê°€ëŠ¥ ì—¬ë¶€ (ê¸°ë³¸ê°’ : false)
 	        editable : false,        
-	        // »óÅÂ Ä®·³ »ç¿ë
+	        // ìƒíƒœ ì¹¼ëŸ¼ ì‚¬ìš©
 	        showStateColumn : false,
-	        // ±âº» Çì´õ ³ôÀÌ ÁöÁ¤
+	        // ê¸°ë³¸ í—¤ë” ë†’ì´ ì§€ì •
 	        headerHeight : 35,
 	        
 	        softRemoveRowMode:false
 	
 	};
-// AUIGrid Ä®·³ ¼³Á¤
+// AUIGrid ì¹¼ëŸ¼ ì„¤ì •
 var requestDcfColumnLayout = [ 
 	{dataField : "groupSeq",headerText : "Payment<br>Group No.",width : 100 , editable : false, visible : false},
 	{dataField : "payItmModeId",headerText : "Pay Type ID",width : 240 , editable : false, visible : false},
@@ -47,7 +47,7 @@ $(document).ready(function(){
 	searchDCFList();
 });
 
-// ajax list Á¶È¸.
+// ajax list ì¡°íšŒ.
 function searchDCFList(){
 	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
 		AUIGrid.setGridData(myRequestDCFGridID, result);
@@ -55,15 +55,15 @@ function searchDCFList(){
 	});
 }
 
-//clear Ã³¸®
+//clear ì²˜ë¦¬
 function fn_clear(){
-	//form.reset ÇÔ¼ö´Â ¾²Áö ¾Ê´Â´Ù. groupSeq ¶§¹®ÀÓ.
+	//form.reset í•¨ìˆ˜ëŠ” ì“°ì§€ ì•ŠëŠ”ë‹¤. groupSeq ë•Œë¬¸ì„.
 	$("#reason").val('');
 	$("#remark").val('');
 
 }
 
-//Amount °è»ê
+//Amount ê³„ì‚°
 function recalculateTotalAmt(){
     var rowCnt = AUIGrid.getRowCount(myRequestDCFGridID);
     var totalAmt = 0;
@@ -78,10 +78,10 @@ function recalculateTotalAmt(){
     $("#totalAmtTxt").val($.number(totalAmt,2));    
 }
 
-//ÀúÀåÃ³¸®
+//ì €ì¥ì²˜ë¦¬
 function fn_request(){
 
-	//Merchant Bank Ã¼Å©
+	//Merchant Bank ì²´í¬
     if(FormUtil.checkReqValue($("#reason option:selected"))){
         Common.alert('* No Reason Selected');
         return;
@@ -97,7 +97,7 @@ function fn_request(){
     	return;
     }
 
-	//ÀúÀåÃ³¸®
+	//ì €ì¥ì²˜ë¦¬
 	Common.confirm('<b>Are you sure want to request DCF ?</b>',function (){
 
 	    
