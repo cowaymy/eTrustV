@@ -236,4 +236,12 @@
                     ACC_BATCH_ITM_UPD_DT = TO_DATE(#{today}, 'YYYY-MM-DD HH24:MI:SS')
          WHERE ( ACC_BATCH_ITM_ID = #{itemId} )
     </update>
+    
+    <resultMap id="updBillBatchMap" type="egovMap"></resultMap>
+    <resultMap id="updBillBatchMap2" type="egovMap"></resultMap>
+    <select id="updBillBatchUpload" statementType="CALLABLE" parameterType="Map">
+        {call SP_UPD_BILL_BATCH_UPLOAD(#{batchId}, 
+        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=updBillBatchMap}, 
+        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=updBillBatchMap2})}
+    </select>
 </mapper>

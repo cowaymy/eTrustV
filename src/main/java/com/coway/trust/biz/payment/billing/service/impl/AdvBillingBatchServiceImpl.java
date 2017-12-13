@@ -158,4 +158,17 @@ public class AdvBillingBatchServiceImpl extends EgovAbstractServiceImpl implemen
 	public void updateAccAdvanceBillBatchD2(Map<String, Object> params) {
 		advBillingBatchMapper.updateAccAdvanceBillBatchD2(params);
 	}
+
+	@Override
+	public boolean updBillBatchUpload(Map<String, Object> params) {
+		int updResult = -1;
+		advBillingBatchMapper.updBillBatchUpload(params);
+		updResult = Integer.parseInt(String.valueOf(params.get("p1")));
+		
+		if(updResult > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

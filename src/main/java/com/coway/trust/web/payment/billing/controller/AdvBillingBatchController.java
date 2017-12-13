@@ -298,6 +298,31 @@ public class AdvBillingBatchController {
     	mes.setMessage(message);
     	
         return ResponseEntity.ok(mes);
-
-        }
+	}
+	
+	/**
+	 * updBillBatchUpload
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/updBillBatchUpload.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updBillBatchUpload(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+        
+        ReturnMessage mes = new ReturnMessage();
+		String message = "";
+		
+		boolean resultMes = advBillingBatchService.updBillBatchUpload(params);
+		
+		if(resultMes){
+			message = "<b>This conversion batch has been approved.</b>";
+		}else{
+			message = "<b>Failed to approve this conversion batch.<br />Please try again later.</b>";
+		}
+        mes.setCode(AppConstants.SUCCESS);
+    	mes.setMessage(message);
+    	
+        return ResponseEntity.ok(mes);
+	}
 }

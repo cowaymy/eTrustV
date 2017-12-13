@@ -153,8 +153,10 @@ function fn_clickDeactivate(){
                 
                 if(re.master.advBillBatchStusId == 1){
                     $("#popDeactive").show();
+                    $("#popApprove").show();
                 }else{
                     $("#popDeactive").hide();
+                    $("#popApprove").hide();
                 }
 			});
 	     });
@@ -162,32 +164,18 @@ function fn_clickDeactivate(){
 }
 
 function fn_clickApprove(){
-    /* Common.confirm("Are you sure to deactivate this batch conversion.", function(){
+    Common.confirm("<b>Are you sure to approve this batch conversion. </b>", function(){
     	
         var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
         
-        Common.ajax("GET", "/payment/doDeactivateAdvanceBillBatach.do", {"batchId" : batchId}, function(result){
+        Common.ajax("GET", "/payment/updBillBatchUpload.do", {"batchId" : batchId}, function(result){
             console.log(result);
             Common.alert(result.message);
             $("#popDeactive").hide();
-            
-            Common.ajax("GET", "/payment/selectBatchMasterInfo.do", {"batchId" : batchId}, function(re){
-                $("#popBatchNo").text(re.master.advBillBatchRefNo);
-                $("#popCreated").text(re.master.advBillBatchCrtDt);
-                $("#popCreator").text(re.master.userName);
-                
-                $("#popStatus").text(re.master.advBillBatchStusId);
-                $("#popAmount").text(re.master.advBillBatchTot.toFixed(2));
-                $("#popDiscount").text(re.master.advBillBatchTotDscnt.toFixed(2));
-                
-                if(re.master.advBillBatchStusId == 1){
-                    $("#popApprove").show();
-                }else{
-                    $("#popApprove").hide();
-                }
-            });
+            $("#popApprove").hide();
+            fn_viewBillingBatch();
          });
-    }); */
+    });
 }
 
 function fn_Clear(){
@@ -377,8 +365,8 @@ function fn_Clear(){
          <article id="pop_batch_grid" class="grid_wrap"><!-- grid_wrap start -->
          </article><!-- grid_wrap end -->
          <ul class="center_btns">
-            <li><p class="btn_grid" id="popApprove" style="display: none"><a href="javascript:fn_clickApprove();">Approve</a></p></li>
             <li><p class="btn_grid" id="popDeactive" style="display: none"><a href="javascript:fn_clickDeactivate();">Deactivate</a></p></li>
+            <li><p class="btn_grid" id="popApprove" style="display: none"><a href="javascript:fn_clickApprove();">Approve</a></p></li>
          </ul>
     </section>
     <!-- pop_body end -->

@@ -89,5 +89,12 @@ public interface AdvBillingBatchMapper {
 	 * @return
 	 */
 	void updateAccAdvanceBillBatchD2(Map<String, Object> params);
+	
+	/**
+	 * updBillBatchUpload
+	 * @param params
+	 * @return
+	 */
+	void updBillBatchUpload(Map<String, Object> params);
 
 }

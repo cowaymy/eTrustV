@@ -90,4 +90,11 @@ public interface AdvBillingBatchService
 	 * @return
 	 */
 	void updateAccAdvanceBillBatchD2(Map<String, Object> params);
+	
+	/**
+	 * RunBillBatchUpload
+	 * @param params
+	 * @return
+	 */
+	boolean updBillBatchUpload(Map<String, Object> params);
 }
