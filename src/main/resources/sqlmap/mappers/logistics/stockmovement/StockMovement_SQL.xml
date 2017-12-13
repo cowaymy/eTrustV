@@ -437,8 +437,9 @@
               group by serial_no , matnr , stk_desc
              union 
             select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
-              from log0061d l61 
+              from log0061d l61 , (SELECT * FROM LOG0054M WHERE NVL(DELVRY_CMPLT , 'N') <![CDATA[<>]]> 'Y') L54
               WHERE l61.SERIAL_NO =  #{serial}
+                AND L61.DELVRY_NO = L54.DELVRY_NO
               group by l61.serial_no
              union 
             select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
