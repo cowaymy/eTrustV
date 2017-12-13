@@ -93,7 +93,7 @@ $(document).ready(function(){
     // cell click
          AUIGrid.bind(gridID, "cellClick", function(event) {
         	 counselingId = AUIGrid.getCellValue(gridID, event.rowIndex, "counselingNo");
-        	 console.log(counselingId);
+        	
          });
 });
 
@@ -103,7 +103,7 @@ function fn_tagLog() {
 
     var selectedItems = AUIGrid.getSelectedItems(gridID);
     if(selectedItems.length  <= 0) {
-        Common.alert("<b>No HS selected.</b>");
+        Common.alert("<b>No Tag selected.</b>");
         return ;
     }
 

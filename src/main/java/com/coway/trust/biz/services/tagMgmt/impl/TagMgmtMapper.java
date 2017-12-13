@@ -13,4 +13,10 @@ public interface TagMgmtMapper {
 
 	public EgovMap selectDetailTagStatus(Map<String, Object> params);
 
+	public int insertCcr0006d(Map<String, Object> params);
+
+	public EgovMap selectCallEntryId(Map<String, Object> params);
+
+	public int insertCcr0007d(Map<String, Object> params);
+
 }

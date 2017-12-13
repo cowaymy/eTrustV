@@ -10,7 +10,7 @@
                      , Z.Feedback_code, Z.MAIN_DEPT, Z.SUB_DEPT
                      , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
-                     ,z.ord_no
+                     ,z.ord_no,z.hc_mem_id
         
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No 
@@ -27,6 +27,7 @@
                 , A.Ord_no
                 , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
                 , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                , a.hc_mem_id
                 FROM CALLCENTERUSER.T_CUR_HIST A   
 				LEFT OUTER JOIN GBSLCVD.CCR0006D B    
 				ON A.CUR_SEQNO = B.CUR_SEQ_NO
@@ -75,7 +76,7 @@
                      , Z.Feedback_code, Z.MAIN_DEPT, Z.SUB_DEPT
                      , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
-                     ,z.ord_no
+                     ,z.ord_no,  z.hc_mem_id, z.ORD_ID, z.hc_id 
         
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No 
@@ -92,6 +93,7 @@
                 , A.Ord_no
                 , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
                 , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                ,  a.hc_mem_id ,  a.ORD_ID, a.hc_id
                 FROM CALLCENTERUSER.T_CUR_HIST A   
                 LEFT OUTER JOIN GBSLCVD.CCR0006D B    
                 ON A.CUR_SEQNO = B.CUR_SEQ_NO
@@ -106,6 +108,53 @@
         WHERE 1=1
         and z.Counseling_No = #{counselingId}
         </select>
+        
+         <insert id="insertCcr0006d" parameterType="Map" >
+          INSERT INTO Ccr0006d(
+          CALL_ENTRY_ID , SALES_ORD_ID ,TYPE_ID , STUS_CODE_ID
+          , RESULT_ID , DOC_ID , CRT_USER_ID , CRT_DT
+          , CALL_DT, IS_WAIT_FOR_CANCL, HAPY_CALLER_ID, UPD_DT
+          , UPD_USER_ID, ORI_CALL_DT, CUR_SEQ_NO, MAIN_DEPT
+          , SUB_DEPT
+          )
+          VALUES(
+          CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL, #{orderId}, 260, 1
+          ,0 ,0 , #{userId}, SYSDATE
+          ,TO_date(#{regDate},'YY/MM/DD') ,0 ,#{hcId} , SYSDATE
+          ,#{userId} , SYSDATE, #{counselingNo}, #{mainDept}
+          ,#{subDept}
+          )
+          
+          
+         
+         
+         
+         </insert>
+         
+         
+             <select id="selectCallEntryId" parameterType="Map" resultType="egovMap">
+	             SELECT CALL_ENTRY_ID
+	             FROM CCR0006D
+	             WHERE  CUR_SEQ_NO = #{counselingNo}
+	             <![CDATA[ and ROWNUM < = 1    ]]>
+             </select>
+             
+              <insert id="insertCcr0007d" parameterType="Map" >
+			          INSERT INTO Ccr0007d(
+			        CALL_RESULT_ID, CALL_ENTRY_ID, CALL_STUS_ID, CALL_DT
+					, CALL_ACTN_DT, CALL_FDBCK_ID, CALL_CT_ID, CALL_REM
+				    , CALL_CRT_USER_ID, CALL_CRT_DT, CALL_CRT_USER_ID_DEPT, CALL_HC_ID
+					, CALL_ROS_AMT, CALL_SMS, CALL_SMS_REM, MAIN_DEPT
+					, SUB_DEPT
+			          )
+			          VALUES(
+			          CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, #{callEntryId}, 1, TO_date(#{regDate},'YY/MM/DD')
+			          ,SYSDATE , 0 , #{userId}, #{remark}
+			          ,#{userId} ,SYSDATE ,0 , #{hcId}
+			          ,0 , 0, 0 , #{mainDept}
+			          ,#{subDept}
+			          )
+			  </insert>
   
     
 </mapper>

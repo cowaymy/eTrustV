@@ -1,19 +1,25 @@
 package com.coway.trust.web.services.tagMgmt;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.services.servicePlanning.MileageCalculationController;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -57,8 +63,27 @@ public class TagMgmtController {
 		return ResponseEntity.ok(notice);
 	}
 	
-	
-	
+	@RequestMapping(value = "/addRemarkResult.do" , method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> addRemarkResult (@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO)  throws ParseException {
+		ReturnMessage message = new ReturnMessage();	
+		logger.debug("paramsJINMU3 {}", params);
+		
+		int remarkResult =	tagMgmtService.addRemarkResult(params, sessionVO );
+		
+		if(remarkResult == 2){
+			message.setMessage("success");
+		}
+		else{
+			message.setMessage("fail");
+		}
+
+		
+		
+		return ResponseEntity.ok(message);
+		
+		
+		
+}
 	
 	
 }
