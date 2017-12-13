@@ -163,7 +163,7 @@ var estmColumnLayout = [
         style : "my-custom-up",
         editable : false,
     },{
-        dataField : "",
+        dataField : "emailAdd",
         headerText : "Additional Email",
         editable : false,
     },{
