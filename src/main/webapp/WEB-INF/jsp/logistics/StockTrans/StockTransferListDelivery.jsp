@@ -87,8 +87,8 @@ var reqcolumnLayout;
 var resop = {
 		rowIdField : "rnum",			
 		editable : true,
-		groupingFields : ["reqstno", "staname"],
-        displayTreeOpen : true,
+		//groupingFields : ["reqstno", "staname"],
+        displayTreeOpen : false,
         //fixedColumnCount : 9,
         showRowCheckColumn : true ,
         showStateColumn : false,
