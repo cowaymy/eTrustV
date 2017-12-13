@@ -50,7 +50,11 @@ public class RoleManagementController {
 	}
 
 	@RequestMapping(value = "/getRoleManagementList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getPostCodeList(@RequestParam Map<String, Object> params) {
+	public ResponseEntity<List<EgovMap>> getPostCodeList(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "status", required = false) String[] status,
+			@RequestParam(value = "level", required = false) String[] level) {
+		params.put("status", status);
+		params.put("level", level);
 		List<EgovMap> roleManagementList = roleManagementService.getRoleManagementList(params);
 		return ResponseEntity.ok(roleManagementList);
 	}

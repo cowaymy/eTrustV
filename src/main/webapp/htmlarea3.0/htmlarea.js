@@ -41,7 +41,7 @@ if (typeof _editor_lang == "string") {
  */
 
 //웹에디터 초기화
-//_editor_url = "/resources/htmlarea3.0/";
+//_editor_url = "/htmlarea3.0/";
 _editor_lang = "en";
 
 var editor = null;

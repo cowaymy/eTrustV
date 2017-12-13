@@ -10,7 +10,7 @@
 [전자정부 참고]
 
 - http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:%EC%9B%B9%EC%97%90%EB%94%94%ED%84%B0
-- http://localhost:8180/resources/htmlarea3.0/reference.html
+- http://localhost:8180/htmlarea3.0/reference.html
 
 [기타 참고]
 
@@ -21,9 +21,9 @@
 <!-- EDITOR -->
 <script type="text/javaScript" language="javascript">
     _editor_area = "editorArea";        //  -> 페이지에 웹에디터가 들어갈 위치에 넣은 textarea ID
-    _editor_url = "<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/'/>";
+    _editor_url = "<c:url value='${pageContext.request.contextPath}/htmlarea3.0/'/>";
 </script>
-<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/htmlarea.js'/>"></script>
+<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/htmlarea3.0/htmlarea.js'/>"></script>
 <!-- EDITOR -->
 
 <script type="text/javaScript" language="javascript">
