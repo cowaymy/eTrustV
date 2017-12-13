@@ -64,9 +64,25 @@ function doGetComboCodeId(url, pdata , selCode, obj , type, callbackFn){
     });
 } ;
 
-
-
-
+function doGetComboDataStatus(url, pdata , selCode, obj , type, callbackFn){
+    $.ajax({
+        type : "GET",
+        url : getContextPath() + url,
+        data : pdata,
+        dataType : "json",
+        //async : false,
+        contentType : "application/json;charset=UTF-8",
+        success : function(data) {
+            var rData = data;
+            doDefComboStatus(rData, selCode, obj , type,  callbackFn);
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            //alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        },
+        complete: function(){
+        }
+    });
+} ;
 
 function doGetComboDataAndMandatory(url, pdata , selCode, obj , type, callbackFn){
     Common.ajax("GET", url, pdata, function(data) {
@@ -224,6 +240,37 @@ function doDefCombo(data, selCode, obj , type, callbackFn){
             $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj).attr("selected", "true");
         }else{
             $('<option />', {value : data[index].codeId, text:data[index].codeName}).appendTo(obj);
+        }
+    });
+
+
+    if(callbackFn){
+        var strCallback = callbackFn+"()";
+        eval(strCallback);
+    }
+};
+
+function doDefComboStatus(data, selCode, obj , type, callbackFn){
+    var targetObj = document.getElementById(obj);
+    var custom = "";
+
+    for(var i=targetObj.length-1; i>=0; i--) {
+        targetObj.remove( i );
+    }
+    obj= '#'+obj;
+    if (type&&type!="M") {
+        custom = (type == "S") ? eTrusttext.option.choose : ((type == "A") ? eTrusttext.option.all : "");
+        $("<option />", {value: "", text: custom}).appendTo(obj);
+    }else{
+        $(obj).attr("multiple","multiple");
+    }
+
+    $.each(data, function(index,value) {
+        //CODEID , CODE , CODENAME ,,description
+        if(selCode==data[index].codeId){
+            $('<option />', {value : data[index].stusCodeId, text:data[index].codeName}).appendTo(obj).attr("selected", "true");
+        }else{
+            $('<option />', {value : data[index].stusCodeId, text:data[index].codeName}).appendTo(obj);
         }
     });
 

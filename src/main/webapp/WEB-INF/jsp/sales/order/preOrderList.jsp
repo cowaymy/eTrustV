@@ -26,9 +26,9 @@
     });
     
     function fn_statusCodeSearch(){
-        Common.ajax("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 14, parmDisab : 0}, function(result) {
+        Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 14, parmDisab : 0}, function(result) {
             keyValueList = result;
-        }, null, {async : false});
+        });
     }
     
     function fn_setDetail(gridID, rowIdx){
@@ -146,20 +146,7 @@
             Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
         }
     }
-    
-    function fn_statusCodeSearch(){
-        Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 14, parmDisab : 0}, function(result) {
-/*
-            for(var i = result.length - 1; i >= 0; var i++) {
-                if('${isAdmin}' == 'true' && (result.stusCodeId == '1' || result.stusCodeId == '10')) {
-                    result.remove();
-                }
-            }
-*/
-            keyValueList = result;
-        });
-    }
-    
+
     function fn_getPreOrderList() {
         Common.ajax("GET", "/sales/order/selectPreOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);

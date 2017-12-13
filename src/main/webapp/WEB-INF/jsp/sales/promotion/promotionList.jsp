@@ -7,11 +7,14 @@
     var listGridID;
     var listStckGridID, listGiftGridID;
     
-    var keyValueList = [{"code":"1", "value":"Active"}, {"code":"8", "value":"Inactive"}];
+    var keyValueList = [];
 
     var timerId = null;
 
     $(document).ready(function(){
+        
+        fn_statusCodeSearch();
+        
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         createAUIGridStk();
@@ -26,7 +29,7 @@
         
         doGetComboOrder('/common/selectCodeList.do', '320', 'CODE_ID', '', 'list_promoAppTypeId', 'M', 'fn_multiCombo'); //Common Code
         doGetCombo('/common/selectCodeList.do',  '76', '', 'list_promoTypeId',    'M', 'fn_multiCombo'); //Promo Type
-        
+        doGetComboDataStatus('/status/selectStatusCategoryCdList.do',  {selCategoryId : 3, parmDisab : 0}, '', 'list_promoStusId', 'M', 'fn_multiCombo'); //Promo Type
     });
 
     function auiGridSelectionChangeHandler(event) { 
@@ -65,6 +68,12 @@
             }
         });
     }
+    
+    function fn_statusCodeSearch(){
+        Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 3, parmDisab : 0}, function(result) {
+            keyValueList = result;
+        });
+    }
 
     function createAUIGrid() {
         
@@ -80,8 +89,8 @@
             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                   var retStr = "";
                                   for(var i=0,len=keyValueList.length; i<len; i++) {
-                                      if(keyValueList[i]["code"] == value) {
-                                          retStr = keyValueList[i]["value"];
+                                      if(keyValueList[i]["stusCodeId"] == value) {
+                                          retStr = keyValueList[i]["codeName"];
                                           break;
                                       }
                                   }
@@ -90,8 +99,8 @@
             , editRenderer : {
                   type       : "ComboBoxRenderer",
                   list       : keyValueList, //key-value Object 로 구성된 리스트
-                  keyField   : "code", // key 에 해당되는 필드명
-                  valueField : "value" // value 에 해당되는 필드명
+                  keyField   : "stusCodeId", // key 에 해당되는 필드명
+                  valueField : "codeName" // value 에 해당되는 필드명
               }}
           , { headerText : "promoId",        dataField : "promoId",        visible : false}
           , { headerText : "promoAppTypeId", dataField : "promoAppTypeId", visible : false}
@@ -264,6 +273,13 @@
             width: '100%'
         });
         $('#list_promoTypeId').multipleSelect("checkAll");
+        $('#list_promoStusId').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택 
+            width: '100%'
+        });
+        $('#list_promoStusId').multipleSelect("checkAll");
         
         fn_delApptype2();
     }
@@ -338,11 +354,7 @@
 <tr>
     <th scope="row">Status</th>
     <td>
-    <select id="list_promoStusId" name="promoStusId" class="w100p">
-        <option value="">Choose One</option>
-        <option value="1">Active</option>
-        <option value="8">Inactive</option>
-    </select>
+    <select id="list_promoStusId" name="promoStusId" class="w100p"></select>
     </td>
     <th scope="row">Promotion Code</th>
     <td><input id="list_promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
