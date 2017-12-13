@@ -360,14 +360,14 @@ $(document).ready(function(){
     AUIGrid.clearGridData(grdIf);
 
     var currentFullDt = new Date();
-    currentFullDt.setMonth(currentFullDt.getMonth() + 1);
+    currentFullDt.setMonth(currentFullDt.getMonth());
     var beforeFullDt = new Date();
-    beforeFullDt.setMonth(beforeFullDt.getMonth() + 1);
+    beforeFullDt.setMonth(beforeFullDt.getMonth() - 1);
 
-    beforeFullDt.setDate(beforeFullDt.getDate() - 60);
+    beforeFullDt.setDate(beforeFullDt.getDate() - 7);
 
-    var currentDt = lpad(currentFullDt.getDate(),2,"0")+"/"+lpad(currentFullDt.getMonth(),2,"0")+"/"+currentFullDt.getFullYear();
-    var beforeDt = lpad(beforeFullDt.getDate(),2,"0")+"/"+lpad(beforeFullDt.getMonth(),2,"0")+"/"+beforeFullDt.getFullYear();
+    var currentDt = lpad(currentFullDt.getDate(),2,"0")+"/"+lpad(currentFullDt.getMonth()+1,2,"0")+"/"+currentFullDt.getFullYear();
+    var beforeDt = lpad(beforeFullDt.getDate(),2,"0")+"/"+lpad(beforeFullDt.getMonth()+1,2,"0")+"/"+beforeFullDt.getFullYear();
 
     $("#frDate").val(beforeDt);
     $("#toDate").val(currentDt);
