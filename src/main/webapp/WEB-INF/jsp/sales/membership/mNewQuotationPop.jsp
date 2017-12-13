@@ -465,10 +465,10 @@ function fn_onChange_cPromotionpac(o){
                                var t1=    oriprice -( oriprice * ( promoPrcPrcnt /100 ) );
                                var t2=    t1 -  promoAddDiscPrc;
                                var t3 = Math.floor( t2);
-                               $("#txtPackagePrice").html(t3); 
+                               $("#txtPackagePrice").html( Number(t3)); 
                               
                          }else if(result[0].promoDiscType =="1"){  //amt 
-                             $("#txtPackagePrice").html(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  )); 
+                             $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  ))); 
                          
                          }else{
                              alert('promoDiscType err ');
@@ -509,7 +509,7 @@ function fn_getMembershipPackageInfo(_id){
 
         	 $("#HiddenHasPackage").val(0);
              $("#txtBSFreq").html("");
-             $("#txtPackagePrice").html("0.00");
+             $("#txtPackagePrice").html("0");
              $("#hiddenPacOriPrice").val(0);
              
          }else{
@@ -560,8 +560,7 @@ function   fn_getMembershipPackageFilterInfo(){
     $('#cPromo option').remove();
     
     var SRV_MEM_PAC_ID = $("#cTPackage").val();
-    doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');            // Customer Type Combo Box
-
+    doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');          
     
 	
 }

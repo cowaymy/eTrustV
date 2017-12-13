@@ -724,6 +724,7 @@ function  fn_setSaveFormData(){
 	    
 	
 	var asResultM ={
+			       AS_NO:                       $("#AS_NO").val(),
 			       AS_ENTRY_ID:              $("#AS_ID").val(),
 				   AS_SO_ID:                   $("#ORD_ID").val(),
 				   AS_CT_ID:                   $('#ddlCTCode').val(),

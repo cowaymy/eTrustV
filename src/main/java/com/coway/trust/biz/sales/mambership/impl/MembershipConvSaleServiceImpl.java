@@ -97,8 +97,14 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 				logger.debug("srvMemBillNo==>" + memBillNo);
 				logger.debug("hasBill  =================================>");
 			 
+				
+			 /////////////////////////////////////////////////////
 			 //master 
+		     params.put("srvMemQuotId",  String.valueOf(sal0093dData.get("srvMemQuotId")));
+		     params.put("srvMemSalesMemId",  String.valueOf(sal0093dData.get("srvSalesMemId")));
 			 o = membershipConvSaleMapper.SAL0095D_insert(params) ;
+			/////////////////////////////////////////////////////
+			 
 			 
 			logger.debug("=================SAL0095D_insert  =========== ==>");
 			logger.debug("["+	o+"]");

@@ -77,6 +77,7 @@ import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.biz.services.as.ASManagementListService;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
@@ -111,7 +112,8 @@ public class ServiceApiController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+	@Resource(name = "servicesLogisticsPFCService")
+	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 	
 	
 	@ApiOperation(value = "Heart Service Job List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -875,7 +877,19 @@ public class ServiceApiController {
 		
 				LOGGER.debug("asResultInsert1111111111 값 : {}", asResultInsert);
 				
-				ASManagementListService.asResult_insert(asResultInsert);
+				
+				EgovMap  rtnValue = ASManagementListService.asResult_insert(asResultInsert);
+				
+				
+
+				if( null !=rtnValue){
+					HashMap   spMap =(HashMap)rtnValue.get("spMap");
+					LOGGER.debug("spMap :"+ spMap.toString());   
+					if("000".equals(rtnValue.get("P_RESULT_MSG"))){
+						rtnValue.put("logerr","Y");
+					}
+					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+				}
 				
 
 				

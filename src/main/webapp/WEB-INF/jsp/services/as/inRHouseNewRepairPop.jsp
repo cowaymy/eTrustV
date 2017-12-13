@@ -1014,7 +1014,9 @@ function fn_productGroup_SelectedIndexChanged(){
             <input type="text" title="" placeholder="DD/MM/YYYY" disabled="disabled"  class="readonly j_date" id="asInHouseComDt" name="asInHouseComDt"/>
     </td>
  </tr>
-<tr>
+ 
+ 
+<tr  style="display:none">
     <th scope="row">Remark </th>
     <td colspan="3"> 
         <textarea cols="10" name="t6" id="t6" rows="2" placeholder="Remark"></textarea>     
@@ -1022,7 +1024,7 @@ function fn_productGroup_SelectedIndexChanged(){
  </tr>
  
  
-<tr>
+<tr style="display:none">
     <th scope="row"> Call Log Status </th>
     <td >
             <select class="select w100p"   id="callLogStatus" name="callLogStatus">

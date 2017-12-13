@@ -26,7 +26,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.InHouseRepairService;
-import com.coway.trust.biz.services.servicePlanning.CTSubGroupListService;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -49,6 +49,11 @@ public class ASManagementListController {
 	private InHouseRepairService inHouseRepairService;
 	
 
+	@Resource(name = "servicesLogisticsPFCService")
+	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+	
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -170,7 +175,6 @@ public class ASManagementListController {
 			
 			
 			if(! "".equals((String) params.get("in_ordId"))){
-				
 				return "services/as/ASReceiveEntryPop";
 			}else{
 				return "services/as/ASReceiveEntryPop";
@@ -233,9 +237,12 @@ public class ASManagementListController {
 		model.put("AS_NO", (String)params.get("AS_NO"));     
 		model.put("AS_ID", (String)params.get("AS_ID")); 
 		model.put("MOD", (String)params.get("mod"));   
-		
 		model.put("IN_AsResultId", (String)params.get("asResultId"));   
 		
+		//ASR인경우  SET ERRCODE 
+		model.put("mafuncId", (String)params.get("mafuncId"));   
+		model.put("mafuncResnId", (String)params.get("mafuncResnId"));   
+        
 		
 		/*
 		if("VIEW".equals(params.get("mod"))){
@@ -266,10 +273,22 @@ public class ASManagementListController {
 		
 		logger.debug("saveASEntry in...."); 
 		logger.debug("params :"+ params.toString());
-		
 		params.put("USER_ID", sessionVO.getUserId());
 		
 		EgovMap sm = ASManagementListService.saveASEntry(params);
+		logger.debug("sm :"+ sm.toString());
+		
+		
+		if( null !=sm){
+			HashMap   spMap =(HashMap)sm.get("spMap");
+			logger.debug("spMap :"+ spMap.toString());   
+			if("000".equals(sm.get("P_RESULT_MSG"))){
+				sm.put("logerr","Y");
+			}
+			
+			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		}
+		
 		
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
@@ -782,6 +801,18 @@ public class ASManagementListController {
 		
 		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
 		
+		if( null !=rtnValue){
+			HashMap   spMap =(HashMap)rtnValue.get("spMap");
+			logger.debug("spMap :"+ spMap.toString());   
+			if("000".equals(rtnValue.get("P_RESULT_MSG"))){
+				rtnValue.put("logerr","Y");
+			}
+			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		}
+		
+		
+		
+		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(rtnValue.get("AS_NO"));
@@ -1028,6 +1059,18 @@ public class ASManagementListController {
 		params.put("updator", sessionVO.getUserId());    
 		
 		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+		
+		if( null !=rtnValue){
+			HashMap   spMap =(HashMap)rtnValue.get("spMap");
+			logger.debug("spMap :"+ spMap.toString());   
+			if("000".equals(rtnValue.get("P_RESULT_MSG"))){
+				rtnValue.put("logerr","Y");
+			}
+			  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+			  logger.debug("			SP_SVC_LOGISTIC_REQUEST===> "+spMap.toString());  
+		}
+		
+		
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

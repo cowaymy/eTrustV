@@ -21,13 +21,9 @@ $(document).ready(function(){
     createASHistoryGrid();
     createBSHistoryGrid();
     
-    
-    
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
     fn_setComboBox();
-
-    
     
     
     <c:if test="${MOD eq 'VIEW'}">
@@ -35,15 +31,19 @@ $(document).ready(function(){
     createASCallLogAUIGrid();
     </c:if>
     
-    
-    
+    if ( '${mafuncId}'   != "undefined"     &&   '${mafuncId}'  !=""  ) {
+    	   //ASR인경우  SET ERRCODE 
+        $("#errorCode").val('${mafuncId}' );
+        $("#errorDesc").val('${mafuncResnId}' ); 
+        $("#ISRAS").val("RAS");
+    }
+   
 });
 
 
 function fn_setComboBox(){
     doGetCombo('/common/selectCodeList.do', '24', '','requestor', 'S' , ''); 
     doGetCombo('/services/as/getBrnchId', '', '','branchDSC', 'S' , '');            // Customer Type Combo Box
-    
 }
 
 
@@ -353,7 +353,6 @@ function fn_doUpDate(){
                  "AS_SESION_CODE"           : $("#CTSSessionCode").val(),
                  "CALL_MEMBER"              : '0',
                  "REF_REQUEST"              : '0' ,
-
                  "PIC_NAME" :$("#perIncharge").val(),
                  "PIC_CNTC" :$("#perContact").val(),
                  "AS_ID": $("#AS_ID").val(),
@@ -407,8 +406,8 @@ function  fn_doNewSave(){
                  "REF_REQUEST"              : $("#IN_AsResultId").val() ,
                  "CALL_REM"                     :$("#callRem").val(),   
                  "PIC_NAME" :$("#perIncharge").val(),
-                 "PIC_CNTC" :$("#perContact").val()
-                 
+                 "PIC_CNTC" :$("#perContact").val(),
+                 "ISRAS" :     $("#ISRAS").val() 
 		}
 		
 	    console.log(saveForm);
@@ -416,6 +415,12 @@ function  fn_doNewSave(){
 	    Common.ajax("POST", "/services/as/saveASEntry.do",saveForm , function(result) {
 	                console.log("asSave.");
 	                console.log( result);
+	                
+	                if( result.logerr =="Y"){
+	                	Common.alert("물류 오류 ..........." );
+	                	return ;
+	                }
+	                
 	                
 	                if(result.asNo !="" ){
 	                	Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +"<b>New AS successfully saved.<br />AS number : [" + result.asNo  + "]</b>" );
@@ -1158,11 +1163,14 @@ function fn_addRemark(){
 
 
 
-<div style="display:none">
-           <input type="text" title="" placeholder="AS_ID"  id="AS_ID" name="AS_ID"/>
+<div style="display:inline">
+           <input type="text" title="" placeholder="ISRAS"  id="ISRAS" name="ISRAS"/>
+           <input type="text" title="" placeholder="AS_ID"  id="AS_ID" name="AS_ID"  value="${AS_ID}"/>
            <input type="text" title="" placeholder="AS_PIC_ID"  id="AS_PIC_ID" name="AS_PIC_ID"/>
            <input type="text" title="" placeholder="CTID"  id="CTID" name="CTID"/>
-           <input type="text" title="" placeholder="CTID"  id="IN_AsResultId" name="IN_AsResultId" value="${IN_AsResultId}"/>
+           <input type="text" title="" placeholder="IN_AsResultId"  id="IN_AsResultId" name="IN_AsResultId" value="${IN_AsResultId}"/>
+           <input type="text" title="" placeholder="mafuncResnId"  id="mafuncResnId" name="mafuncResnId" value="${mafuncResnId}"/>
+           <input type="text" title="" placeholder="mafuncId"  id="mafuncId" name="mafuncId" value="${mafuncId}"/>
 </div>
 
 <ul class="center_btns" id='save_bt_div'>

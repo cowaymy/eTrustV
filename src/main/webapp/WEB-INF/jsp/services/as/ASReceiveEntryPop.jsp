@@ -39,13 +39,19 @@ function fn_confirmOrder(){
         	$("#_NewEntryPopDiv1").remove();
         }
     });
-    
 }
 
 
 $(document).ready(function(){
-    fn_keyEvent();
-    
+	
+	fn_keyEvent();
+	
+	if ('${ORD_NO}' !="" ){ 
+		$("#entry_orderNo").val('${ORD_NO}');
+		
+		fn_confirmOrder();
+	}
+	
 });
 
 

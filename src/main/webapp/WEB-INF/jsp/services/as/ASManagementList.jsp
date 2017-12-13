@@ -17,9 +17,23 @@ function fn_searchASManagement(){
         });
 }
 
+
+
 function fn_newASPop(){
 	
-    Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,null, null , true , '_NewEntryPopDiv1');
+	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+	var ordno ;
+	
+    if(selectedItems.length  >  0) {
+    	 if("ASR" !=  selectedItems[0].item.code ){
+    		 Common.alert("<b> No ARS selected.</b>");
+    		 return ;
+    	 }
+         ordno  =selectedItems[0].item.salesOrdNo;
+    }
+    
+	
+    Common.popupDiv("/services/as/ASReceiveEntryPop.do" ,{in_ordNo: ordno}, null , true , '_NewEntryPopDiv1');
     
 }
 
@@ -59,7 +73,26 @@ function fn_viewASResultPop(){
 
 
 function fn_resultASPop(ordId,ordNo){
-	Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+ordId+"&ordNo="+ordNo ,null, null , true , '_resultNewEntryPopDiv1');
+	
+      var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+	  var mafuncId="";
+	  var mafuncResnId="";
+	  var asId="";
+      
+      if(selectedItems.length  >  0) {
+    	  
+           if("ASR" !=  selectedItems[0].item.code ){
+               Common.alert("<b> No ARS selected.</b>");
+               return ;
+           }
+           mafuncId = selectedItems[0].item.asMalfuncId;
+           mafuncResnId =selectedItems[0].item.asMalfuncResnId;
+           asId=selectedItems[0].item.asId;
+      }
+      
+      var pram = "?salesOrderId="+ordId+"&ordNo="+ordNo+"&mafuncId="+mafuncId+"&mafuncResnId="+mafuncResnId+"&AS_ID="+asId;
+      
+	Common.popupDiv("/services/as/resultASReceiveEntryPop.do"+pram  ,null, null , true , '_resultNewEntryPopDiv1');
 }
 
 
@@ -443,7 +476,11 @@ function asManagementGrid() {
         dataField : "brnchCode",
         headerText : "AS BRNCH",
         width : 100 
-    }, {
+    },{
+        dataField : "asIfFlag",
+        headerText : "AS_IF_FLAG",  
+        width : 150 
+    } , {
         dataField : "asBrnchId",
         headerText : "as asBrnc",
         width : 100,  visible : false
@@ -689,7 +726,7 @@ function fn_invoice(){
     <select class="multy_select w100p" multiple="multiple" id="asType" name="asType">
     <option value="675">Auto AS</option>
     <option value="674">Normal AS</option>
-    <option value="">Request AS</option>
+    <option value="2703">Request AS</option>
     <option value="2713">InHouseRepair</option>
     
     </select>
