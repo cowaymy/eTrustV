@@ -593,4 +593,11 @@ public class MembershipController {
 		
 		return ResponseEntity.ok(ogdCodeList);
 	}
+	
+	@RequestMapping(value="/membershipOutrightExpireListPop.do")
+	public String membershipOutrightExpireListPop(){
+		
+		return "sales/membership/membershipOutrightExpireListPop";
+	}
+	
 }

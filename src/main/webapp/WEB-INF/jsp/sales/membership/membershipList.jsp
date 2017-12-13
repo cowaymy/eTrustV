@@ -258,6 +258,11 @@
     function fn_YSListing(){
         Common.popupDiv("/sales/membership/membershipOutrightYSListingPop.do", null, null, true);
     }
+    
+    function fn_expireList(){
+        Common.popupDiv("/sales/membership/membershipOutrightExpireListPop.do", null, null, true);
+    }
+    
 
 function fn_keyEvent(){
     
@@ -394,7 +399,7 @@ function fn_clear(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick="javascript: alert('The program is under development')">Expire List</a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_expireList()">Expire List</a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript: alert('The program is under development')">Expire List (Only Rental)</a></p></li>
 	
 </ul> 
