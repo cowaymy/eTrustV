@@ -207,6 +207,20 @@ public class SurveyMgmtController {
 		return ResponseEntity.ok(selectSurveyEventDisplayTargetList);
 	}
 	
+	@RequestMapping(value = "/surveyEventEditPop.do")
+	public String surveyEventEditPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("popEvtTypeDesc", params.get("popEvtTypeDesc").toString());
+		model.addAttribute("popMemCode", params.get("popMemCode").toString());
+		model.addAttribute("popCodeDesc", params.get("popCodeDesc").toString());
+		model.addAttribute("popEvtDt", params.get("popEvtDt").toString());
+		model.addAttribute("popEvtId", params.get("popEvtId").toString());
+		
+		return "services/performanceMgmt/surveyEventEditPop";
+	}
+	
 
 
 }

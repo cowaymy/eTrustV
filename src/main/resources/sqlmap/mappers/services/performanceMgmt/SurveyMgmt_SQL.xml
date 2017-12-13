@@ -291,9 +291,7 @@
         AND A.EVT_MEM_ID = B.MEM_ID
         AND B.MEM_TYPE = C.CODE_ID
         AND B.MEM_TYPE = 1
-        AND A.EVT_TYPE_DESC = #{popEvtTypeDescView}
         AND A.EVT_ID = #{popEvtIdView}
-        AND A.EVT_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE=#{popMemCodeView})
         ]]>
     </select>
     

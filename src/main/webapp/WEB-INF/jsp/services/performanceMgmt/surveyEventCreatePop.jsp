@@ -439,15 +439,15 @@ function auiRemoveRowHandler(){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-     <li>
-        <div class="auto_file"><!-- auto_file start -->
+     <!-- <li>
+        <div class="auto_file">
             <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
                  <input title="file add" type="file" id="uploadfile" name="uploadfile">
                  <label><span class="label_text"><a href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
             </form>
-         </div><!-- auto_file end -->
+         </div>
     </li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_uploadFile();">ExcelUpLoad</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_uploadFile();">ExcelUpLoad</a></p></li> -->
     <li><p class="btn_grid"><a href="#" id="excelDown_target">ExcelDownLoad</a></p></li>
     <li><p class="btn_grid"><a href="#" id="addRow_target">add</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_target()">del</a></p></li>

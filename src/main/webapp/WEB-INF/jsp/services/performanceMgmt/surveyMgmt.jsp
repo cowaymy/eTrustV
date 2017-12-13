@@ -112,6 +112,28 @@
 	function fn_newEvent() {
 		Common.popupDiv("/services/performanceMgmt/surveyEventCreatePop.do", $("#popSForm").serializeJSON(), null, true,"surveyEventCreatePop");
 	}
+	
+	//Edit Pop 호출
+	function fn_editEvent(){
+
+        var selectedItems = AUIGrid.getSelectedItems(myGridID);
+        if(selectedItems.length <= 0) {
+            Common.alert("<spring:message code='expense.msg.NoData'/> ");
+            return;
+        }
+        // singleRow, singleCell 이 아닌 multiple 인 경우 선택된 개수 만큼 배열의 요소가 있음
+        var first = selectedItems[0];
+
+        $("#popEvtTypeDesc").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "evtTypeDesc"));
+        $("#popMemCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "memCode"));
+        $("#popCodeDesc").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "codeDesc"));
+        $("#popEvtDt").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "evtDt")); 
+        $("#popEvtId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "evtId")); 
+
+       Common.popupDiv("/services/performanceMgmt/surveyEventEditPop.do",$("#popSForm").serializeJSON(), null , true , 'surveyEventEditPop');
+        
+    } 
+	
 </script>
 
 <section id="content">
@@ -199,7 +221,7 @@
 	<ul class="right_btns">
 		<li><p class="btn_grid"><a href="#" id="excelDown">EXCEL DW</a></p></li>
 		<li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li>
-		<li><p class="btn_grid"><a href="#">Edit Event</a></p></li>
+		<li><p class="btn_grid"><a href="#" onClick="javascript:fn_editEvent();">Edit Event</a></p></li>
 	</ul>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
