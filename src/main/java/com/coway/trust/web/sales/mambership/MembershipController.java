@@ -600,4 +600,9 @@ public class MembershipController {
 		return "sales/membership/membershipOutrightExpireListPop";
 	}
 	
+	@RequestMapping(value="/membershipOutrightExpireYearListPop.do")
+	public String membershipOutrightExpireYearListPop(){
+		
+		return "sales/membership/membershipOutrightExpireYearListPop";
+	}
 }

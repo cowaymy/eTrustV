@@ -95,15 +95,15 @@ function btnGeneratePDF_Click(){
 	    }
 	    /*
 	    if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
-	    	whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'MM/dd/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'MM/dd/YY')";
+	    	whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'dd/MM/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'dd/MM/YY')";
 	    } 
 	    */
 	    if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0)){
-	    	whereSQL += " AND TRUNC(TO_DATE(sm.SRV_EXPR_DT,'yy/MM/dd'), 'month') >= TRUNC(TO_DATE('"+$("#mypExpireMonthFr").val()+"','MM/yyyy'), 'month')"; //GetFirstDayOfMonth
+	    	whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') >= TRUNC(TO_DATE('"+$("#mypExpireMonthFr").val()+"','MM/yyyy'), 'month')"; //GetFirstDayOfMonth
 	    	expireMonth = " FROM "+$("#mypExpireMonthFr").val();
 	    }
 	    if(!($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
-            whereSQL += " AND TRUNC(TO_DATE(sm.SRV_EXPR_DT,'yy/MM/dd'), 'month') <= TRUNC(TO_DATE('"+$("#mypExpireMonthTo").val()+"','MM/yyyy'), 'month')";
+            whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') <= TRUNC(TO_DATE('"+$("#mypExpireMonthTo").val()+"','MM/yyyy'), 'month')";
             expireMonth += " TO "+$("#mypExpireMonthTo").val();
         }
 	    if($("input:checkbox[id='btnOnlyExpire']").is(":checked")){
@@ -156,7 +156,6 @@ function btnGeneratePDF_Click(){
              whereSQL += ") ";
         }
 	    
-	    console.log(whereSQL);
 		
 	    $("#V_WHERESQL").val(whereSQL);
 		$("#V_APPTYPE").val(appType);
@@ -204,15 +203,15 @@ function btnGenerateExcel_Click(){
         }
         /*
         if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) && !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
-            whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'MM/dd/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'MM/dd/YY')";
+            whereSQL += " AND som.SALES_DT BETWEEN TO_DATE('"+$("#dpOrderDateFr").val()+"', 'dd/MM/YY') AND TO_DATE('"+$("#dpOrderDateTo").val()+"', 'dd/MM/YY')";
         } 
         */
         if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0)){
-            whereSQL += " AND TRUNC(TO_DATE(sm.SRV_EXPR_DT,'yy/MM/dd'), 'month') >= TRUNC(TO_DATE('"+$("#mypExpireMonthFr").val()+"','MM/yyyy'), 'month')"; //GetFirstDayOfMonth
+            whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') >= TRUNC(TO_DATE('"+$("#mypExpireMonthFr").val()+"','MM/yyyy'), 'month')"; //GetFirstDayOfMonth
             expireMonth = " FROM "+$("#mypExpireMonthFr").val();
         }
         if(!($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
-            whereSQL += " AND TRUNC(TO_DATE(sm.SRV_EXPR_DT,'yy/MM/dd'), 'month') <= TRUNC(TO_DATE('"+$("#mypExpireMonthTo").val()+"','MM/yyyy'), 'month')";
+            whereSQL += " AND TRUNC(sm.SRV_EXPR_DT, 'month') <= TRUNC(TO_DATE('"+$("#mypExpireMonthTo").val()+"','MM/yyyy'), 'month')";
             expireMonth += " TO "+$("#mypExpireMonthTo").val();
         }
         if($("input:checkbox[id='btnOnlyExpire']").is(":checked")){

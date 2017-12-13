@@ -263,6 +263,10 @@
         Common.popupDiv("/sales/membership/membershipOutrightExpireListPop.do", null, null, true);
     }
     
+    function fn_expireListRental(){
+    	Common.popupDiv("/sales/membership/membershipOutrightExpireYearListPop.do", null, null, true);
+    }
+    
 
 function fn_keyEvent(){
     
@@ -400,7 +404,7 @@ function fn_clear(){
 
 <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_expireList()">Expire List</a></p></li>
-	<li><p class="btn_grid"><a href="#" onclick="javascript: alert('The program is under development')">Expire List (Only Rental)</a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_expireListRental()">Expire List (Only Rental)</a></p></li>
 	
 </ul> 
 
