@@ -9,211 +9,191 @@
 
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-                                /* By KV -mobile- get job list */
-						
-  
-						    SELECT   
-						    	DISTINCT
-						    <!-- SVC0008D st -->
-						           TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
-						           A.NO AS service_No,
-						           A.STUS_CODE_ID AS job_Status,
-						           A.APPNT_TM AS appointment_Time,
-						           A.YEAR AS plan_Year,
-						           A.MONTH AS plan_Month,
-						           <!-- SVC0008D end -->
-						<!--          SAL0001D st -->
-						           B.SALES_ORD_NO AS sales_Order_No,
-						           B.APP_TYPE_ID AS app_Type,
-						<!--            SAL0001D end -->           
-						<!--            SAL0017D st -->           
-						           D.PROMO_ID AS sales_Promotion,
-						<!--           SAL0017D end -->           
-						<!--             SAL0022D st -->
-						           E.CUST_ACC_BANK_ID AS bank_Code,
-						           E.CUST_ACC_NO AS card_Account_No,
-						<!--           SAL0022D end -->           
-						<!--             SAL0027D st -->          
-						           F.TEL_M1 AS handphone_Tel,
-						           F.TEL_O AS home_Tel,
-						           F.TEL_R AS office_Tel,
-						           F.EMAIL AS mail_Address,
-						           F.NRIC AS resultIc_Mobile_No,
-						<!--             SAL0027D end -->       
-						<!--            SAL0029D st -->
-						           G.NAME AS cust_Name,
-						           G.TYPE_ID AS customer_Type,
-						           G.cust_id AS customer_Id,
-						           G.CUST_VA_NO AS customer_Va_No,
-						<!--               SAL0029D end -->                
-						<!--               SAL0045D  st -->    
-									H.BRNCH_ID AS dsc_Code,
-									H.INSTCT AS instruction,
-						<!--                 SAL0045D end -->
-						<!--            SAL0047D st -->
-						           J.SIRIM_NO AS sirim_No,
-						           J.SERIAL_NO AS serial_No,
-						           J.RESULT_CUST_NAME AS result_Cust_Name,
-						           J.RESULT_REP_EMAIL_NO AS result_Report_Email_No,
-						           J.RESULT_ACEPT_NAME AS result_Acceptance_Name,
-						<!--           SAL0047D  end -->         
-						<!--           SVC0006D st -->
-						           K.FAIL_RESN_ID AS fail_Reason_Code,           
-						           K.RESULT_REM AS result_Remark,
-						           K.REN_COLCT_ID AS rc_Code,
-						           k.TEMPERATE_SETNG AS temperatureSetting,
-						           k.NEXT_APPNT_TM AS nextAppointmentTime,
-						           k.OWNER_CODE AS ownerCode,
-						           k.RESULT_CUST_NAME AS resultCustName,
-						           k.RESULT_MOBILE_NO AS resultIcMobileNo,
-						           k.RESULT_RPT_EMAIL_NO AS resultReportEmailNo,
-						           k.RESULT_ACEPT_NAME AS resultAcceptanceName,
-						           '' AS signData,
-						           TO_CHAR (k.NEXT_APPNT_DT, 'YYYYMMDD') AS nextAppointmentDate,
-					<!-- 	          SVC0006D end  -->                    
-					<!-- 	          ORG0001D st --> 
-						           '' AS settled_By,
-						<!--           ORG0001D end -->                            
-						<!--           SYS0026M st -->                
-						           M.STK_DESC AS product_Name,
-						           M.STK_CODE AS product_Code,
-						<!--           SYS0026M end -->         
-						<!--          SAL0024D st --> 
-						           N.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
-						<!--          SAL0024D end -->       
-						<!--           SYS0013M st -->      
-						           P.CODE_NAME AS payment_ModeName,
-						           TO_CHAR (P.CODE_ID) AS payment_Mode,
-						<!--           SYS0013M st -->                      
-						           Q.ADDR_DTL AS install_Address,
-						<!--           SYS0013M end -->                   
-						<!--           SAL0095D at -->   
-						           TO_CHAR (R.SRV_DUR) AS contract_Duration,
-						           TO_CHAR (R.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry,
-						<!--           SAL0071D st -->                      
-						           S.STUS_CODE_ID AS rental_Status,
-						<!--          SAL0071D end -->                   
-						  			'HS' as job_Type, 
-						  			'1' as need_Filter
-						FROM
-						  (
-						      SELECT A.* FROM SVC0008D A, ORG0001D B
-						      WHERE A.CODY_ID = B.MEM_ID
-						      AND A.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
-						      AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
-						      AND B.MEM_CODE = #{userId}
-						  ) A
-						  , SAL0001D B
-						  , SAL0002D C
-						  , SAL0017D D
-						  , (SELECT * FROM
-						      (
-						        SELECT CUST_ID, CUST_ACC_BANK_ID, CUST_ACC_NO,
-						              ROW_NUMBER() OVER(PARTITION BY CUST_ID ORDER BY CUST_ACC_UPD_DT DESC) AS DUM_SEQ
-						        FROM SAL0022D
-						      ) SAL22D
-						      WHERE DUM_SEQ = 1 ) E
-						  , (SELECT * FROM
-						      (
-						        SELECT CUST_ID, TEL_M1, TEL_O, TEL_R, EMAIL, NRIC,
-						              ROW_NUMBER() OVER(PARTITION BY CUST_ID ORDER BY UPD_DT DESC) AS DUM_SEQ
-						        FROM SAL0027D
-						      ) SAL27D
-						      WHERE DUM_SEQ = 1 ) F
-						  , SAL0029D G
-						  , SAL0045D H
-						  , (
-						        SELECT MAX(INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
-						        FROM SAL0046D
-						        GROUP BY SALES_ORD_ID
-						    ) I
-						  , (
-						        SELECT
-						            A.ENTRY_ID
-						            , A.SIRIM_NO
-						            , A.SERIAL_NO
-						            , A.RESULT_CUST_NAME
-						            , A.RESULT_REP_EMAIL_NO
-						            , A.RESULT_ACEPT_NAME
-						        FROM
-						            SAL0047D A
-						            , (
-						                SELECT MAX(A.RESULT_ID) AS RESULT_ID, A.ENTRY_ID 
-						                FROM
-						                    SAL0047D A,
-						                    (
-						                        SELECT
-						                            MAX(C.INSTALL_ENTRY_ID) AS ENTRY_ID
-						                            , C.SALES_ORD_ID
-						                        FROM
-						                            SVC0008D A
-						                            INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
-						                            INNER JOIN SAL0046D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-						                        WHERE     A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
-						                        AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
-						                        GROUP BY C.INSTALL_ENTRY_ID, C.SALES_ORD_ID
-						                    ) B
-						                WHERE A.ENTRY_ID = B.ENTRY_ID
-						                GROUP BY A.ENTRY_ID
-						            ) B
-						        WHERE A.ENTRY_ID = B.ENTRY_ID
-						        AND A.RESULT_ID = B.RESULT_ID
-						  ) J
-						  , SVC0006D K
-						  , (
-						      SELECT C.SALES_ORD_ID AS SALES_ORD_ID, MAX(C.SCHDUL_ID) AS SCHDUL_ID
-						      FROM SVC0008D A, ORG0001D B, SVC0006D C
-						      WHERE A.CODY_ID = B.MEM_ID
-						      AND A.SCHDUL_ID = C.SCHDUL_ID
-						      AND A.YEAR  = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
-						      AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
-						      AND B.MEM_CODE = #{userId}
-						      GROUP BY C.SALES_ORD_ID, C.SCHDUL_ID
-						  ) K2
-						  , SYS0026M M
-						  , SAL0024D N
-						  , SAL0074D O
-						  , SYS0013M P
-						  , SAL0023D Q
-						  , (
-						    SELECT SRV_DUR, SRV_EXPR_DT, A.SRV_SALES_ORD_ID
-						      FROM SAL0095D A
-						           INNER JOIN
-						           (  SELECT C.SRV_SALES_ORD_ID, MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
-						                FROM SVC0008D A
-						                     INNER JOIN ORG0001D B
-						                        ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
-						                     LEFT OUTER JOIN SAL0095D C
-						                        ON     A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
-						                           AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
-						                           AND C.SRV_STUS_CODE_ID = 4
-						               WHERE     A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
-						                     AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
-						            GROUP BY C.SRV_SALES_ORD_ID) B
-						              ON     A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID
-						                 AND A.SRV_MEM_ID = B.SRV_MEM_ID
-						   ) R
-						  , SAL0071D S
-						WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
-						  AND B.SALES_ORD_ID = C.SALES_ORD_ID
-						  AND B.PROMO_ID = D.PROMO_ID(+)
-						  AND B.CUST_ID = E.CUST_ID(+)
-						  AND B.CUST_ID = F.CUST_ID(+)
-						  AND B.CUST_ID = G.CUST_ID(+)
-						  AND B.SALES_ORD_ID = H.SALES_ORD_ID
-						  AND B.SALES_ORD_ID = I.SALES_ORD_ID
-						  AND I.INSTALL_ENTRY_ID = J.ENTRY_ID
-						  AND A.SCHDUL_ID = K2.SCHDUL_ID(+)
-						  AND K2.SCHDUL_ID = K.SCHDUL_ID
-						  AND K2.SALES_ORD_ID = K.SALES_ORD_ID
-						  AND C.ITM_STK_ID = M.STK_ID
-						  AND B.CUST_BILL_ID = N.CUST_BILL_ID(+)
-						  AND B.SALES_ORD_ID = O.SALES_ORD_ID(+)
-						  AND O.MODE_ID = P.CODE_ID(+)
-						  AND B.CUST_ADD_ID = Q.CUST_ADD_ID
-						  AND B.SALES_ORD_ID = R.SRV_SALES_ORD_ID(+)
-						  AND B.SALES_ORD_ID = S.SALES_ORD_ID(+)
-						  ORDER BY A.NO
+                              SELECT 
+									DISTINCT
+									                /* SVC0008D st */
+									       TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
+									       A.NO AS service_No,
+									       A.STUS_CODE_ID AS job_Status,
+									       A.APPNT_TM AS appointment_Time,
+									       A.YEAR AS plan_Year,
+									       A.MONTH AS plan_Month,
+									                       /* SVC0008D end */
+									            /*          SAL0001D st */
+									       C.SALES_ORD_NO AS sales_Order_No,
+									       C.APP_TYPE_ID AS app_Type,
+									                        /*            SAL0001D end */ 
+									                        /*            SAL0017D st */           
+									       T.PROMO_ID AS sales_Promotion,
+									                        /*           SAL0017D end */
+									                        /*             SAL0022D st */
+									       D.CUST_ACC_BANK_ID AS bank_Code,
+									       D.CUST_ACC_NO AS card_Account_No,
+									                        /*           SAL0022D end */
+									                        /*             SAL0027D st */          
+									       F.TEL_M1 AS handphone_Tel,
+									       F.TEL_O AS home_Tel,
+									       F.TEL_R AS office_Tel,
+									       F.EMAIL AS mail_Address,
+									       F.NRIC AS resultIc_Mobile_No,
+									                        /*             SAL0027D end */
+									                        /*            SAL0029D st */
+									       G.NAME AS cust_Name,
+									       G.TYPE_ID AS customer_Type,
+									       G.cust_id AS customer_Id,
+									       G.CUST_VA_NO AS customer_Va_No,
+									                        /*               SAL0029D end */
+									                        /*               SAL0045D  st */    
+									       H.BRNCH_ID AS dsc_Code,
+									       H.INSTCT AS instruction,
+									                        /*                 SAL0045D end */
+									                        /*            SAL0047D st */
+									       J.SIRIM_NO AS sirim_No,
+									       J.SERIAL_NO AS serial_No,
+									       J.RESULT_CUST_NAME AS result_Cust_Name,
+									       J.RESULT_REP_EMAIL_NO AS result_Report_Email_No,
+									       J.RESULT_ACEPT_NAME AS result_Acceptance_Name,
+									                        /*           SAL0047D  end */
+									                        /*           SVC0006D st */
+									       B.FAIL_RESN_ID AS fail_Reason_Code,
+									       B.RESULT_REM AS result_Remark,
+									       B.REN_COLCT_ID AS rc_Code,
+									       B.TEMPERATE_SETNG AS temperatureSetting,
+									       B.NEXT_APPNT_TM AS nextAppointmentTime,
+									       B.OWNER_CODE AS ownerCode,
+									       B.RESULT_CUST_NAME AS resultCustName,
+									       B.RESULT_MOBILE_NO AS resultIcMobileNo,
+									       B.RESULT_RPT_EMAIL_NO AS resultReportEmailNo,
+									       B.RESULT_ACEPT_NAME AS resultAcceptanceName,
+									       '' AS signData,
+									       TO_CHAR (B.NEXT_APPNT_DT, 'YYYYMMDD') AS nextAppointmentDate,
+									                    /*               SVC0006D end  */  
+									                    /*               ORG0001D st */ 
+									       '' AS settled_By,
+									                        /*           ORG0001D end */
+									                        /*           SYS0026M st */                
+									       L.STK_DESC AS product_Name,
+									       L.STK_CODE AS product_Code,
+									                        /*           SYS0026M end */
+									                        /*          SAL0024D st */ 
+									       M.CUST_BILL_PAY_REF_NO1 AS customer_Jom_Pay_Ref_No,
+									                        /*          SAL0024D end */
+									                        /*           SYS0013M st */      
+									       P.CODE_NAME AS payment_ModeName,
+									       TO_CHAR (P.CODE_ID) AS payment_Mode,
+									                        /*           SYS0013M st */                      
+									       Q.ADDR_DTL AS install_Address,
+									                        /*           SYS0013M end */
+									                        /*           SAL0095D at */   
+									       TO_CHAR (R.SRV_DUR) AS contract_Duration,
+									       TO_CHAR (R.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry,
+									                        /*           SAL0071D st */                      
+									       S.STUS_CODE_ID AS rental_Status,
+									                        /*          SAL0071D end */ 
+									       CASE  WHEN V.FILT_CNT <![CDATA[ > ]]> 0  THEN '1' ELSE '0' END need_Filter,
+									       'HS' as job_Type       
+									  FROM (SELECT A.*
+									          FROM SVC0008D A,
+									               ORG0001D B
+									         WHERE A.CODY_ID = B.MEM_ID
+									           AND A.YEAR = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
+									           AND A.MONTH = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'MM')
+									           AND B.MEM_CODE = #{userId}
+									               ) A ,               
+									       SVC0006D B,       
+									       SAL0001D C,       
+									       (SELECT *
+									          FROM (SELECT CUST_ID,
+									                       CUST_ACC_BANK_ID,
+									                       CUST_ACC_NO,
+									                       ROW_NUMBER() OVER(PARTITION BY CUST_ID
+									                         ORDER BY CUST_ACC_UPD_DT DESC) AS DUM_SEQ
+									                  FROM SAL0022D ) SAL22D
+									         WHERE DUM_SEQ = 1 ) D,         
+									       (SELECT *
+									          FROM (SELECT CUST_ID,
+									                       TEL_M1,
+									                       TEL_O,
+									                       TEL_R,
+									                       EMAIL,
+									                       NRIC,
+									                       ROW_NUMBER() OVER(PARTITION BY CUST_ID
+									                         ORDER BY UPD_DT DESC) AS DUM_SEQ
+									                  FROM SAL0027D ) SAL27D
+									         WHERE DUM_SEQ = 1 ) F,       
+									       SAL0029D G ,
+									       SAL0045D H ,       
+									       (SELECT MAX(INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
+									          FROM SAL0046D
+									         GROUP BY SALES_ORD_ID ) I,         
+									         (SELECT A.ENTRY_ID ,
+									                 A.SIRIM_NO ,
+									                 A.SERIAL_NO ,
+									                 A.RESULT_CUST_NAME ,
+									                 A.RESULT_REP_EMAIL_NO ,
+									                 A.RESULT_ACEPT_NAME
+									            FROM SAL0047D A ,
+									               (SELECT MAX(A.RESULT_ID) AS RESULT_ID, A.ENTRY_ID
+									                 FROM  SAL0047D A,
+									                       (SELECT MAX(C.INSTALL_ENTRY_ID) AS ENTRY_ID, C.SALES_ORD_ID
+									                          FROM SVC0008D A INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID 
+									                               INNER JOIN SAL0046D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+									                         WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+									                           AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+									                         GROUP BY C.INSTALL_ENTRY_ID, C.SALES_ORD_ID ) B
+									                 WHERE A.ENTRY_ID = B.ENTRY_ID
+									                 GROUP BY A.ENTRY_ID ) B
+									         WHERE A.ENTRY_ID = B.ENTRY_ID
+									           AND A.RESULT_ID = B.RESULT_ID ) J,         
+									        SAL0002D K, 
+									        SYS0026M L,
+									        SAL0024D M,
+									        SAL0074D O,
+									        SYS0013M P,
+									        SAL0023D Q,        
+									       (SELECT SRV_DUR,
+									               SRV_EXPR_DT,
+									               A.SRV_SALES_ORD_ID
+									          FROM SAL0095D A INNER JOIN (SELECT C.SRV_SALES_ORD_ID, MAX (C.SRV_MEM_ID) AS SRV_MEM_ID
+									                  FROM SVC0008D A INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID AND B.MEM_CODE = #{userId}
+									                       LEFT OUTER JOIN SAL0095D C ON A.SALES_ORD_ID = C.SRV_SALES_ORD_ID
+									                   AND SYSDATE BETWEEN C.SRV_START_DT AND C.SRV_EXPR_DT
+									                   AND C.SRV_STUS_CODE_ID = 4
+									                 WHERE A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
+									                   AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
+									                 GROUP BY C.SRV_SALES_ORD_ID) B ON A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID
+									           AND A.SRV_MEM_ID = B.SRV_MEM_ID ) R,       
+									        SAL0071D S,
+									        SAL0017D T,
+									        SAL0090D U,
+									        (
+									          SELECT SRV_CONFIG_ID, COUNT (*) AS FILT_CNT
+									            FROM SAL0087D
+									           WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD),
+									                          'YYYYMM') <![CDATA[ <= ]]> TO_CHAR (SYSDATE, 'YYYYMM')
+									            GROUP BY SRV_CONFIG_ID
+									        ) V        
+									 WHERE A.SCHDUL_ID = B.SCHDUL_ID(+)
+									   AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
+									   AND A.SALES_ORD_ID = C.SALES_ORD_ID
+									   AND C.CUST_ID = D.CUST_ID(+)
+									   AND C.CUST_ID = F.CUST_ID(+)
+									   AND C.CUST_ID = G.CUST_ID(+)   
+									   AND C.SALES_ORD_ID = H.SALES_ORD_ID
+									   AND H.SALES_ORD_ID = I.SALES_ORD_ID
+									   AND I.INSTALL_ENTRY_ID = J.ENTRY_ID(+)
+									   AND C.SALES_ORD_ID = K.SALES_ORD_ID
+									   AND K.ITM_STK_ID = L.STK_ID
+									   AND C.CUST_BILL_ID = M.CUST_BILL_ID(+)
+									   AND C.SALES_ORD_ID = O.SALES_ORD_ID(+)
+									   AND C.SALES_ORD_ID = O.CUST_ID(+) 
+									   AND O.MODE_ID = P.CODE_ID(+)
+									   AND C.CUST_ID = Q.CUST_ID
+									   AND H.ADD_ID = Q.CUST_ADD_ID(+)   AND C.SALES_ORD_ID = R.SRV_SALES_ORD_ID(+)
+									   AND C.SALES_ORD_ID = S.SALES_ORD_ID(+)
+									   AND C.PROMO_ID = T.PROMO_ID(+)
+									   AND C.SALES_ORD_ID = U.SRV_SO_ID
+									   AND U.SRV_CONFIG_ID = V.SRV_CONFIG_ID(+)
      </select>
 
 
@@ -287,7 +267,8 @@
                        product_Code,
                        dsc_Code,
                        case when (solution_reason_id =454 OR solution_reason_id =452 ) then 'Y' else 'N'  end inhouserepairyn,
-                       reqRefNo
+                       reqRefNo,
+                       as_type_id
                   FROM (SELECT ROW_NUMBER ()
                                OVER (
                                   PARTITION BY sal0001d.sales_ord_no, svc0001d.as_no
@@ -391,7 +372,8 @@
                                   AS result_Report_Email_No,
                                TO_CHAR (svc0004d.result_acept_name)
                                   AS result_Acceptance_Name,
-                               svc0001d.REF_REQST as reqRefNo
+                               svc0001d.REF_REQST as reqRefNo,
+                               svc0001d.as_type_id 
                           FROM sal0001d,
                                sal0002d,
                                sal0022d,
@@ -441,7 +423,7 @@
                  WHERE 1 = 1 AND rn = 1)
          WHERE RNN = 1
     )
-    WHERE   app_Type  <![CDATA[<>]]>  '2173'    /*not inhouse 1 =  (CASE WHEN NVL(reqRefNo,' ') <![CDATA[<>]]> ' ' AND NVL(asr_No, ' ')  = ' ' THEN 0 ELSE 1 END)*/
+    WHERE   as_type_id   <![CDATA[<>]]>  '2173'    /*not inhouse 1 =  (CASE WHEN NVL(reqRefNo,' ') <![CDATA[<>]]> ' ' AND NVL(asr_No, ' ')  = ' ' THEN 0 ELSE 1 END)*/
 ) A
 LEFT OUTER JOIN (
     SELECT DISTINCT * FROM

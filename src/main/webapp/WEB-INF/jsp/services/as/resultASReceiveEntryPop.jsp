@@ -393,7 +393,7 @@ function  fn_doNewSave(){
                  "AS_SMS"                  : '0',
                  "AS_ENTRY_IS_SYNCH"        : '0',   
                  "AS_ENTRY_IS_EDIT"         : '0',
-                 "AS_TYPE_ID"               : '674',
+                 "AS_TYPE_ID"                     : $("#IN_AsResultId").val() ==  "" ? '674' : '2173'  ,
                  "AS_REQSTER_TYPE_ID"       : $("#txtRequestor").val(),
                  "AS_IS_BS_WITHIN_30DAYS"   : $("#checkBS").prop("checked")   ? '1': '0',
                  "AS_ALLOW_COMM"            : $("#checkComm").prop("checked") ? '1': '0',

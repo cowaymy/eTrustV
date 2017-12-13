@@ -45,6 +45,7 @@ $(document).ready(function(){
     if('${REF_REQST}' >0){
     	fn_getASRulstSVC0004DInfo();
         fn_getASRulstEditFilterInfo();
+        $("#IN_HOUSE_CLOSE").val("Y"); 
         $("#btnSaveDiv").attr("style","display:inline");
     }
 });
@@ -767,7 +768,8 @@ function  fn_setSaveFormData(){
 	               IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
 	               IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
 	               IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val(),
-	               CHANGBN:'WEB'
+	               CHANGBN:'WEB',
+	               IN_HOUSE_CLOSE:  $("#IN_HOUSE_CLOSE").val()
 	}
 	
 	var  saveForm ={
@@ -1085,12 +1087,13 @@ function fn_productGroup_SelectedIndexChanged(){
 
 
 <form id="resultASForm" method="post">
-    <div  style="display:none">
+    <div  style="display:inline">
 	        <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
 	        <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
 	        <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
 	        <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
 	        <input type="text" name="REF_REQST"   id="REF_REQST"  value="${REF_REQST}"/>
+	        <input type="text" name="IN_HOUSE_CLOSE"   id="IN_HOUSE_CLOSE" />
     </div>
 </form>
 

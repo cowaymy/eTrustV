@@ -1586,6 +1586,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		
 	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID") );
 	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")) );
+	    
+	    
+	    
+	    
+	    //IN_HOUSE_CLOSE 인경우 as_app_Type 변경  모바일 잡 리스트 에서 인하우스 오더는 내려가지 않도록 했음. 
+	    if("Y".equals((String )svc0004dmap.get("IN_HOUSE_CLOSE"))){
+	    	 ASManagementListMapper.updateAS_TYPE_ID_SVC0001D(svc0004dmap);
+	    }
+	    
+	    
+	    
 	      
 	    ///////물류 결과 ///////////////////////
 	    Map<String, Object>  logPram = new HashMap<String, Object>();

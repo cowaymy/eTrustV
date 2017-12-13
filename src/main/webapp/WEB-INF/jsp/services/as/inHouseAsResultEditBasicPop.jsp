@@ -202,7 +202,7 @@ function  fn_setSVC0004dInfo(result){
     
     
     if(result[0].c25 =="B8"  ||  result[0].c25 =="B6" ){
-        $("#inHouseRepair_div").attr("style" ,"display:inline");
+        $("#inHouseRepair_div").attr("style" ,"display:none");
     }
     
     if( result[0].inHuseRepairReplaceYn =="1"){
@@ -333,7 +333,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
                         $("#serialNo").attr("disabled", false); 
                         $("#inHouseRemark").attr("disabled", false); 
                         
-                        $("#inHouseRepair_div").attr("style","display:inline");
+                        $("#inHouseRepair_div").attr("style","display:none");
                         
                         
                     }else{
@@ -1132,7 +1132,7 @@ function fn_productGroup_SelectedIndexChanged(){
             <input type="text" title="" placeholder="DD/MM/YYYY" disabled="disabled"  class="readonly j_date" id="asInHouseComDt" name="asInHouseComDt"/>
     </td>
  </tr>
-<tr>
+<tr style="display:none">
     <th scope="row">Remark </th>
     <td colspan="3"> 
         <textarea cols="10" name="t6" id="t6" rows="2" placeholder="Remark"></textarea>     
@@ -1140,7 +1140,7 @@ function fn_productGroup_SelectedIndexChanged(){
  </tr>
  
  
-<tr>
+<tr style="display:none">
     <th scope="row"> Call Log Status </th>
     <td >
             <select class="select w100p"   id="callLogStatus" name="callLogStatus">
@@ -1664,7 +1664,7 @@ function fn_productGroup_SelectedIndexChanged(){
     
     
     <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-    <dt class="click_add_on"><a href="#">In-House Repair Entry</a></dt>
+    <dt class="click_add_on"  style="display:none"><a href="#">In-House Repair Entry</a></dt>
     <dd  id='inHouseRepair_div' style="display:none">
     <table class="type1"><!-- table start -->
     <caption>table</caption>

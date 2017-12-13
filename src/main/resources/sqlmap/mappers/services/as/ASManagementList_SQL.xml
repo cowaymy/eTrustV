@@ -1937,6 +1937,16 @@
                       WHERE AS_ID                              =#{AS_ENTRY_ID}
    </insert>
       
+    <insert id="updateAS_TYPE_ID_SVC0001D" parameterType="Map" >  
+                    UPDATE SVC0001D 
+                         SET       AS_TYPE_ID                ='674', 
+                                     AS_UPD_USER_ID          =#{USER_ID}, 
+                                     AS_UPD_DT                  =SYSDATE
+                      WHERE AS_ID                              =#{AS_ENTRY_ID}
+   </insert>
+      
+      
+      
       
       
      <select id="getCCR0006D_CALL_ENTRY_ID_SEQ" parameterType="Map" resultType="egovMap">
