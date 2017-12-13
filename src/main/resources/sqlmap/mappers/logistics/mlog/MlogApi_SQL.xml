@@ -231,13 +231,13 @@
 	              <!--    '05', 'CDC/RDC', -->
 	                 S28.WH_LOC_GB) LOCATION_TYPE,
 			       WH_LOC_DESC,
-			       WH_LOC_ID,
+			       WH_LOC_ID rdc_code,
 			       NVL(QTY , 0),
 			       NVL (BOOKQTY, 0) BOOKQTY,
 			       QTY -NVL(BOOKQTY , 0) AVAIL_QTY,
 			       <!-- L75.MOV_QTY INTRANSIT_QTY, -->
 			       NVL(L56.MOV_QTY,0) INTRANSIT_QTY,
-			       (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code
+			       (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) loc_id
 			  FROM LOG0056M L56,
 			       SYS0028M S28,
 			       (  SELECT LOC_ID,
