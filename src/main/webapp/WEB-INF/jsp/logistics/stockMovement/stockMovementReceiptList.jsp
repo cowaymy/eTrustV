@@ -110,8 +110,8 @@ var serialcolumnLayout2 =[
 var resop = {
 		rowIdField : "rnum",			
 		editable : true,
-		groupingFields : ["delyno"],
-        displayTreeOpen : true,
+		//groupingFields : ["delyno"],
+        displayTreeOpen : false,
         showRowCheckColumn : true ,
         showStateColumn : false,
         showBranchOnGrouping : false

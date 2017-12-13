@@ -76,8 +76,8 @@ var resop = {
 		rowIdField : "rnum",			
 		editable : true,
 		//fixedColumnCount : 6,
-		groupingFields : ["delyno"],
-        displayTreeOpen : true,
+		//groupingFields : ["delyno"],
+        displayTreeOpen : false,
         showRowCheckColumn : true ,
         showStateColumn : false,
         showBranchOnGrouping : false

@@ -214,7 +214,6 @@ public class PointOfSalesController {
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> list = PointOfSalesService.selectTypeList(params);
 	
-		System.out.println(":::"+list);
 		return ResponseEntity.ok(list);
 		
 	}

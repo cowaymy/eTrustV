@@ -138,8 +138,8 @@ var resop = {
 		rowIdField : "rnum",
 		fixedColumnCount : 11,
 		editable : true,
-		groupingFields : ["reqstno", "staname"],
-        displayTreeOpen : true,
+		//groupingFields : ["reqstno", "staname"],
+        displayTreeOpen : false,
         showRowCheckColumn : true ,
         showStateColumn : false,
         showBranchOnGrouping : false
