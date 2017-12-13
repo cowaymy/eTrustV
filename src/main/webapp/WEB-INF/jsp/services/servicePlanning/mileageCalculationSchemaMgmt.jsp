@@ -13,7 +13,7 @@ function getTypeComboList(){
 	    return list;
 }
 
-function mileageCalSchemaList() { 
+function mileageCalSchemaList() {
     var columnLayout = [
                           { dataField : "memType", headerText  : "Member Type",    width : 100  ,
                               editRenderer : {
@@ -31,6 +31,8 @@ function mileageCalSchemaList() {
                           { dataField : "mileageAmt", headerText  : "Mileage Amount",    width : 100 },
                           { dataField : "deductFlag",       headerText  : "Deduct Distance",  width  : 200},
                           { dataField : "multiRate",       headerText  : "Multiple Rate",  width  :100},
+                          /*By KV 20171213 - Add Extra Charge */
+                          { dataField : "extCharg",       headerText  : "Extra Charge",  width  : 100},
                           { dataField : "applyFrom",       headerText  : "Apply From",  width  : 100,
                               editRenderer : {
                                   type : "CalendarRenderer",
@@ -47,11 +49,11 @@ function mileageCalSchemaList() {
                                       }}
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, selectionMode : "singleRow",  showRowNumColumn : true, showStateColumn : false};
+
         gridID1 = GridCommon.createAUIGrid("calculation_schema_grid_wap", columnLayout  ,"" ,gridPros);
     }
-    
+
     function addRow(){
     	var item = new Object();
         item.memType = "";
@@ -63,13 +65,13 @@ function mileageCalSchemaList() {
         item.multipleRate = "";
         item.applyFrom = "";
         item.applyTo = "";
-       
+
         // parameter
         // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
         // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
         AUIGrid.addRow(gridID1, item, "first");
     }
-    
+
     function save(){
     	if(vaildationCheck()){
 	    	Common.ajax("POST", "/services/mileageCileage/saveSchemaMgmt.do", GridCommon.getEditData(gridID1), function(result) {
@@ -78,7 +80,7 @@ function mileageCalSchemaList() {
 	        });
     	}
     }
-    
+
     function fn_schemaSearch(){
     	Common.ajax("GET", "/services/mileageCileage/selectSchemaMgmt.do",$("#schemaForm").serialize() , function(result) {
             console.log("성공.");
@@ -90,21 +92,21 @@ function mileageCalSchemaList() {
         AUIGrid.removeRow(gridID1, "selectedIndex");
         AUIGrid.removeSoftRows(gridID1);
     }
-    
+
     function vaildationCheck(){
     	 var result = true;
          var addList = AUIGrid.getAddedRowItems(gridID1);
          var delList = AUIGrid.getRemovedItems(gridID1);
-         
-         
-         if (addList.length == 0 && delList.length == 0) 
+
+
+         if (addList.length == 0 && delList.length == 0)
          {
            Common.alert("No Change");
            return false;
          }
-         
 
-         for (var i = 0; i < addList.length; i++) 
+
+         for (var i = 0; i < addList.length; i++)
          {
              var memType  = addList[i].memType;
              var applyFrom  = addList[i].applyFrom;
@@ -115,26 +117,26 @@ function mileageCalSchemaList() {
                  Common.alert("<spring:message code='sys.msg.necessary' arguments='Memver Type' htmlEscape='false'/>");
                  break;
                }
-               
+
                if (applyFrom == "" || applyFrom.length == 0) {
                      result = false;
                      // {0} is required.
                      Common.alert("<spring:message code='sys.msg.necessary' arguments='Apply From' htmlEscape='false'/>");
                      break;
                    }
-               
-               
+
+
                if (applyTo == "" || applyTo.length == 0) {
                  result = false;
                  // {0} is required.
                  Common.alert("<spring:message code='sys.msg.necessary' arguments='Apply To' htmlEscape='false'/>");
                  break;
                }
-               
+
          }
-         
+
          return result;
-    	
+
     }
 </script>
 <section id="content"><!-- content start -->
