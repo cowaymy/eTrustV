@@ -32,5 +32,11 @@ public interface SurveyMgmtMapper {
 	List<EgovMap> selectEvtMemIdList(Map<String, Object> params);
 	
 	List<EgovMap> selectSalesOrdNotList(Map<String, Object> params);
+	
+	List<EgovMap> selectSurveyEventDisplayInfoList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectSurveyEventDisplayQList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectSurveyEventDisplayTargetList(Map<String, Object> params) throws Exception;
 
 }

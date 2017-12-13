@@ -16,6 +16,39 @@
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
     };
+	
+    // AUIGrid 칼럼 설정
+    var columnLayout = [ {
+        dataField : "evtTypeDesc",
+        headerText : 'Event Name',
+        width : 200,
+        editable : false
+    }, {
+        dataField : "memCode",
+        headerText : 'In Charge of the Event',
+        width : 200,
+        editable : false
+    }, {
+        dataField : "codeDesc",
+        headerText : 'Member Type',
+        width : 200,
+        editable : false
+    }, {
+        dataField : "evtDt",
+        headerText : 'Date for the Event',
+        width : 200,
+        dataType : "date",
+        formatString : "dd/mm/yyyy",
+        editable : false
+    }, {
+        dataField : "surveyStatus",
+        headerText : 'Survey Status',
+        editable : false
+    }, {
+        dataField : "evtId",
+        headerText : 'Key',
+        editable : false
+    }];
 
 	//Start AUIGrid
 	$(document).ready(function() {
@@ -23,10 +56,27 @@
 		// Create AUIGrid
 		myGridID = GridCommon.createAUIGrid("grid_wrap",columnLayout, "", gridPros);
 
+		AUIGrid.hideColumnByDataField(myGridID, "evtId");
+		
 		doGetCombo('/services/performanceMgmt/selectMemberTypeList','', '', 'cmbMemberTypeId', 'S', '');
 		doGetCombo('/services/performanceMgmt/selectSurveyStusList','', '', 'cmbSurveyStusId', 'S', '');
-
 						
+		
+		/*셀 더블클릭 이벤트 바인딩*/
+	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+	    	var selectedItems = AUIGrid.getSelectedItems(myGridID);
+	    	var first = selectedItems[0];
+	    	
+ 	    	$("#popEvtTypeDesc").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "evtTypeDesc"));
+	        $("#popMemCode").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "memCode"));
+	        $("#popCodeDesc").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "codeDesc"));
+	        $("#popEvtDt").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "evtDt")); 
+	        $("#popEvtId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "evtId")); 
+
+	       Common.popupDiv("/services/performanceMgmt/surveyEventDisplayPop.do",$("#popSForm").serializeJSON(), null , true , 'surveyEventDisplayPop');
+	        
+	    });   
+		
 		//search
 		$("#search").click(function() {
 			//var cmbMemberTypeId22 = $("#cmbMemberTypeId").val();
@@ -57,35 +107,6 @@
 
 					
 	});//Ready
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [ {
-		dataField : "evtTypeDesc",
-		headerText : 'Event Name',
-		width : 200,
-		editable : false
-	}, {
-		dataField : "memCode",
-		headerText : 'In Charge of the Event',
-		width : 200,
-		editable : false
-	}, {
-		dataField : "codeDesc",
-		headerText : 'Member Type',
-		width : 200,
-		editable : false
-	}, {
-		dataField : "evtDt",
-		headerText : 'Date for The Event',
-		width : 200,
-		dataType : "date",
-		formatString : "dd/mm/yyyy",
-		editable : false
-	}, {
-		dataField : "surveyStatus",
-		headerText : 'Survey Status',
-		editable : false
-	} ];
 
 	//New Pop 호출
 	function fn_newEvent() {
@@ -118,6 +139,7 @@
 </aside>
 <!-- title_line end -->
 
+
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="popSForm" name="popSForm" method="post">
 	<input type="hidden" id="popEvtTypeDesc" name="popEvtTypeDesc" /> 
@@ -125,6 +147,7 @@
 	<input type="hidden" id="popCodeDesc" name="popCodeDesc" /> 
 	<input type="hidden" id="popEvtDt" name="popEvtDt" /> 
 	<input type="hidden" id="popServeyStatus" name="popServeyStatus" />
+	<input type="hidden" id="popEvtId" name="popEvtId" />
 </form>
 
 <form action="#" method="post" id="listSForm" name="listSForm">

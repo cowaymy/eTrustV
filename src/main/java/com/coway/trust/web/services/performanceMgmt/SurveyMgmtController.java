@@ -171,6 +171,42 @@ public class SurveyMgmtController {
 		
 	}
 	
+	@RequestMapping(value = "/surveyEventDisplayPop.do")
+	public String surveyEventDisplayPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("popEvtTypeDesc", params.get("popEvtTypeDesc").toString());
+		model.addAttribute("popMemCode", params.get("popMemCode").toString());
+		model.addAttribute("popCodeDesc", params.get("popCodeDesc").toString());
+		model.addAttribute("popEvtDt", params.get("popEvtDt").toString());
+		model.addAttribute("popEvtId", params.get("popEvtId").toString());
+		
+		return "services/performanceMgmt/surveyEventDisplayPop";
+	}
+	
+	@RequestMapping(value = "/selectSurveyEventDisplayInfoList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectSurveyEventDisplayInfoList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		List<EgovMap> selectSurveyEventDisplayInfoList = null; 
+		LOGGER.debug("params =====================================>>  " + params);
+		selectSurveyEventDisplayInfoList = surveyMgmtService.selectSurveyEventDisplayInfoList(params);
+		return ResponseEntity.ok(selectSurveyEventDisplayInfoList);
+	}
+	
+	@RequestMapping(value = "/selectSurveyEventDisplayQList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectSurveyEventDisplayQList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		List<EgovMap> selectSurveyEventDisplayQList = null; 
+		selectSurveyEventDisplayQList = surveyMgmtService.selectSurveyEventDisplayQList(params);
+		return ResponseEntity.ok(selectSurveyEventDisplayQList);
+	}
+	
+	@RequestMapping(value = "/selectSurveyEventDisplayTargetList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectSurveyEventDisplayTargetList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
+		List<EgovMap> selectSurveyEventDisplayTargetList = null; 
+		selectSurveyEventDisplayTargetList = surveyMgmtService.selectSurveyEventDisplayTargetList(params);
+		return ResponseEntity.ok(selectSurveyEventDisplayTargetList);
+	}
+	
 
 
 }

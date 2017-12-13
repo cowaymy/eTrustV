@@ -175,8 +175,6 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 				}
 			}
 			
-			
-			
 		}else{
 			throw new ApplicationException(AppConstants.FAIL, "1건 이상이어야 합니다.");
 		}
@@ -192,6 +190,21 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 	@Override
 	public List<EgovMap> selectSalesOrdNotList(Map<String, Object> params) {
 		return surveyMgmtMapper.selectSalesOrdNotList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectSurveyEventDisplayInfoList(Map<String, Object> params) throws Exception {
+		return surveyMgmtMapper.selectSurveyEventDisplayInfoList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectSurveyEventDisplayQList(Map<String, Object> params) throws Exception {
+		return surveyMgmtMapper.selectSurveyEventDisplayQList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectSurveyEventDisplayTargetList(Map<String, Object> params) throws Exception {
+		return surveyMgmtMapper.selectSurveyEventDisplayTargetList(params);
 	}
 	
 }
