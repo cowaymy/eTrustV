@@ -223,7 +223,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
                         $("#serialNo").attr("disabled", false); 
                         $("#inHouseRemark").attr("disabled", false); 
                         
-                        $("#inHouseRepair_div").attr("style","display:inline");
+                        $("#inHouseRepair_div").attr("style","display:none");
                         
                         
                     }else{
