@@ -462,6 +462,9 @@
 	<input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="Related No" class="w100p" />
 	</td>
 </tr>
+<tr>
+    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Order number / Customer id / Customer name / NRIC-Company number / Order date</span>  </th>
+</tr>
 </tbody>
 </table><!-- table end -->
 
