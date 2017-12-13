@@ -34,9 +34,9 @@
 <!-- EDITOR -->
 <script type="text/javaScript" language="javascript">
     _editor_area = "editorArea";        //  -> 페이지에 웹에디터가 들어갈 위치에 넣은 textarea ID
-    _editor_url = "<c:url value='${pageContext.request.contextPath}/htmlarea3.0/'/>";
+    _editor_url = "<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/'/>";
 </script>
-<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/htmlarea3.0/htmlarea.js'/>">
+<script type="text/javascript" src="<c:url value='${pageContext.request.contextPath}/resources/htmlarea3.0/htmlarea.js'/>">
 </script>
 <!-- EDITOR -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>

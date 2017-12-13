@@ -63,7 +63,6 @@
             <mvc:exclude-mapping path="/login/*.do"/>
             <mvc:exclude-mapping path="/resources/**"/>
             <mvc:exclude-mapping path="/help/**"/>
-            <mvc:exclude-mapping path="/htmlarea3.0/**"/>
             <mvc:exclude-mapping path="/**/*Pop.do"/>
 
             <!-- eamil confirm -->
@@ -120,7 +119,6 @@
     
     <!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory-->
 	<mvc:resources mapping="/help/**" location="/help/" />
-	<mvc:resources mapping="/htmlarea3.0/**" location="/htmlarea3.0/" />
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	<mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/" />
 	<mvc:resources mapping="/swagger-resources/**" location="classpath:/META-INF/resources/" />
