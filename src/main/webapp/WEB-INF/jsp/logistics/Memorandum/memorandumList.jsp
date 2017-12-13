@@ -236,7 +236,7 @@
             //TODO : 추후 퍼블리싱 해결 해야함
             $(".htmlarea").attr("style","width:100%; height:100%;");
     		$(".htmlarea .toolbar > table").attr("style","width:100%;");
-    		$(".htmlarea .toolbar > table > ㅅㄱ").attr("style","width:100%;");
+    		$(".htmlarea .toolbar > table > tr").attr("style","width:100%;");
     		$(".htmlarea > iframe").attr("style","border-width: 1px; width:100%;");
     		
     		$("#vmode").val("ins");
