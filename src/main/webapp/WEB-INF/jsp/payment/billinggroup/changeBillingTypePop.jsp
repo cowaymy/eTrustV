@@ -14,7 +14,6 @@ var custBillId = '${custBillId}';
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
-
 var gridPros = {
         editable: false,
         showStateColumn: false,
@@ -55,11 +54,9 @@ $(document).ready(function(){
 
 $(function(){
     $('#changeBillPopCloseBtn').click(function() {
-        
         if(callPrgm == 'BILLING_GROUP'){
             searchList();
         }
-        
     });
 });
 
@@ -67,7 +64,7 @@ function changeBillingInfo(custBillId){
 	
 	Common.ajax("GET","/payment/selectChangeBillType.do", {"custBillId":custBillId}, function(result){
 		
-        $('#changeTypeForm #custTypeId').val(result.data.basicInfo.typeId);//히든값
+        $('#changeTypeForm #custTypeId').val(result.data.basicInfo.typeId);//hidden
         $('#changeBill_grpNo').text(result.data.basicInfo.custBillGrpNo);
         $('#changeBill_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeBill_ordGrp').css("color","red");
         $('#changeBill_remark').text(result.data.basicInfo.custBillRem);
@@ -97,7 +94,6 @@ function changeBillingInfo(custBillId){
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
         AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
         AUIGrid.resize(estmHisPopGridID,935,300); 
-        
     });
 }
 
@@ -168,6 +164,7 @@ function fn_reqNewMail(){
 
 function fn_newReqSave(){
     var reqEmail = $("#newReqEmail").val();
+    var reqAdditionalEmail = $("#newReqAdditionalEmail").val();
     var reasonUpd = $("#newReqReason").val();
     var custBillId = $("#changeTypeForm #custBillId").val();
     var valid = true;
@@ -183,6 +180,13 @@ function fn_newReqSave(){
          }
     }
     
+    if($.trim(reqAdditionalEmail) != ""){
+    	if(FormUtil.checkEmail($.trim(reqAdditionalEmail)) == true){
+            valid = false;
+            message += "* The additional email is invalid.<br />"; 
+        }
+    }
+    
     if($.trim(reasonUpd) ==""){
         valid = false;
         message += "* Please key in the reason to update.<br />";
@@ -194,9 +198,10 @@ function fn_newReqSave(){
     }
     
     if(valid){
-        Common.ajax("GET","/payment/saveNewReq.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqEmail" : reqEmail}, function(result){
+        Common.ajax("GET","/payment/saveNewReq.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "reqEmail" : reqEmail, "reqAdditionalEmail" : reqAdditionalEmail}, function(result){
             console.log(result);
             $("#newReqEmail").val("");
+            $("#newReqAdditionalEmail").val("");
             $("#newReqReason").val("");
             Common.alert(result.message);
         });
@@ -297,7 +302,13 @@ function fn_estmReqPopClose(){
                     <tr>
                         <th scope="row">Email</th>
                         <td>
-                        <input type="text" id="newReqEmail" name="newReqEmail" title="" placeholder="" class="w100p" />
+                            <input type="text" id="newReqEmail" name="newReqEmail" title="" placeholder="" class="w100p" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Additional Email</th>
+                        <td>
+                            <input type="text" id="newReqAdditionalEmail" name="newReqAdditionalEmail" title="" placeholder="" class="w100p" />
                         </td>
                     </tr>
                     <tr>

@@ -1,7 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
-
 <script type="text/javaScript" language="javascript">
     
     $(document).ready(function(){
@@ -30,19 +28,20 @@
                 $('#rentalPayMode').val(result.orderOutstandingView[0].rentalpaymode);
                 $('#custVANo').val(result.orderOutstandingView[0].custvano);
                 $('#jomPayRefNo1').val(result.orderOutstandingView[0].jompayrefno1);
-                $('#outrightFees').val(result.orderOutstandingView[0].outrightfees);
-                $('#rpfFees').val(result.orderOutstandingView[0].rpffees);
-                $('#rpfPaid').val(result.orderOutstandingView[0].rpfpaid);
-                $('#rentalFees').val(result.orderOutstandingView[0].rentalfees);
-                $('#ASOutstanding').val(result.orderOutstandingView[0].astotalamount);
-                $('#penaltyCharges').val(result.orderOutstandingView[0].totalpenaltycharge);
-                $('#penaltyPaid').val(result.orderOutstandingView[0].totalpenaltypaid);
-                $('#penaltyAdjustment').val(result.orderOutstandingView[0].totalpenaltyadj);
-                $('#penaltyBalance').val(result.orderOutstandingView[0].totalpenaltybal);
+                $('#outrightFees').val($.number(result.orderOutstandingView[0].outrightfees, 2));
                 
-                $('#unbillAmount').val(result.orderOutstandingView[0].orderUnbillamt);
-                $('#totalOutstanding').val(result.orderOutstandingView[0].orderTotaloutstanding);
-                $('#outstandingMonth').val(result.orderOutstandingView[0].orderOutstandingmth);
+                $('#rpfFees').val($.number(result.orderOutstandingView[0].rpffees, 2));
+                $('#rpfPaid').val($.number(result.orderOutstandingView[0].rpfpaid, 2));
+                $('#rentalFees').val($.number(result.orderOutstandingView[0].rentalfees, 2));
+                $('#ASOutstanding').val($.number(result.orderOutstandingView[0].astotalamount, 2));
+                $('#penaltyCharges').val($.number(result.orderOutstandingView[0].totalpenaltycharge, 2));
+                $('#penaltyPaid').val($.number(result.orderOutstandingView[0].totalpenaltypaid, 2));
+                $('#penaltyAdjustment').val($.number(result.orderOutstandingView[0].totalpenaltyadj, 2));
+                $('#penaltyBalance').val($.number(result.orderOutstandingView[0].totalpenaltybal, 2));
+                
+                $('#unbillAmount').val($.number(result.orderOutstandingView[0].orderUnbillamt, 2));
+                $('#totalOutstanding').val($.number(result.orderOutstandingView[0].orderTotaloutstanding, 2));
+                $('#outstandingMonth').val($.number(result.orderOutstandingView[0].orderOutstandingmth, 2));
                 
                 var rentalGrandTotal = Number(0.00);
                 rentalGrandTotal = result.orderOutstandingView[0].orderUnbillamt + result.orderOutstandingView[0].orderTotaloutstanding;
@@ -52,19 +51,19 @@
                 if(Number(result.orderOutstandingView[0].srvmemquotpackageamount) == 0 && Number(result.orderOutstandingView[0].srvmemquotid) == 0){
                 	$('#svmQuotPacAmount').val("");
                 }else{
-                	$('#svmQuotPacAmount').val(result.orderOutstandingView[0].srvmemquotpackageamount);
+                	$('#svmQuotPacAmount').val($.number(result.orderOutstandingView[0].srvmemquotpackageamount, 2));
                 }
                 
                 if(Number(result.orderOutstandingView[0].srvmemquotfilteramount) == 0 && Number(result.orderOutstandingView[0].srvmemquotid) == 0){
                     $('#svmQuotFilterAmount').val("");
                 }else{
-                    $('#svmQuotFilterAmount').val(result.orderOutstandingView[0].srvmemquotfilteramount);
+                    $('#svmQuotFilterAmount').val($.number(result.orderOutstandingView[0].srvmemquotfilteramount, 2));
                 }
                 
                 if(Number(result.orderOutstandingView[0].srvmemquottotalamount) == 0 && Number(result.orderOutstandingView[0].srvmemquottotalamount) == 0){
                     $('#svmQuotFilterAmount').val("");
                 }else{
-                    $('#svmQuotTotalAmount').val(result.orderOutstandingView[0].srvmemquottotalamount);
+                    $('#svmQuotTotalAmount').val($.number(result.orderOutstandingView[0].srvmemquottotalamount, 2));
                 }
                 
                 $('#svmQuotNo').val(result.orderOutstandingView[0].srvmemquotno);
@@ -75,13 +74,13 @@
                 if(Number(result.orderOutstandingView[0].srvmempackageamount) == 0 && Number(result.orderOutstandingView[0].srvmemid) == 0){
                     $('#svmPacAmount').val("");
                 }else{
-                    $('#svmPacAmount').val(result.orderOutstandingView[0].srvmempackageamount);
+                    $('#svmPacAmount').val($.number(result.orderOutstandingView[0].srvmempackageamount,2));
                 }
                 
                 if(Number(result.orderOutstandingView[0].srvmemfilteramount) == 0 && Number(result.orderOutstandingView[0].srvmemid) == 0){
                     $('#svmFilterAmount').val("");
                 }else{
-                    $('#svmFilterAmount').val(result.orderOutstandingView[0].srvmemfilteramount);
+                    $('#svmFilterAmount').val($.number(result.orderOutstandingView[0].srvmemfilteramount,2));
                 }
                 
                 $('#svmStatus').val(result.orderOutstandingView[0].srvmemstatus);
@@ -94,19 +93,19 @@
                 	$('#svmDuration').val("");
                 }
                 $('#svmCreateDate').val(result.orderOutstandingView[0].srvmemcreated);
-                $('#svmTotalOutstanding').val(result.orderOutstandingView[0].srvcontracttotalamount);
+                $('#svmTotalOutstanding').val($.number(result.orderOutstandingView[0].srvcontracttotalamount, 2));
                 
                 //(REN) SVM
                 if(Number(result.orderOutstandingView[0].srvcontractpackageamount) == 0 && Number(result.orderOutstandingView[0].srvcontractid) == 0){
                     $('#srvContractPacAmount').val("");
                 }else{
-                    $('#srvContractPacAmount').val(result.orderOutstandingView[0].srvcontractpackageamount);
+                    $('#srvContractPacAmount').val($.number(result.orderOutstandingView[0].srvcontractpackageamount, 2));
                 }
                 
                 if(Number(result.orderOutstandingView[0].srvcontractfilteramount) == 0 && Number(result.orderOutstandingView[0].srvcontractid) == 0){
                     $('#srvContractFilterAmount').val("");
                 }else{
-                    $('#srvContractFilterAmount').val(result.orderOutstandingView[0].srvcontractfilteramount);
+                    $('#srvContractFilterAmount').val($.number(result.orderOutstandingView[0].srvcontractfilteramount,2));
                 }
                 
                 $('#srvContractStatus').val(result.orderOutstandingView[0].srvcontractstatus);
@@ -118,7 +117,7 @@
                     $('#srvContractDuration').val("");
                 }
                 $('#srvContractCreateDate').val(result.orderOutstandingView[0].srvcontractcreated);
-                $('#srvContractTotalOutstanding').val(result.orderOutstandingView[0].srvcontracttotalamount);
+                $('#srvContractTotalOutstanding').val($.number(result.orderOutstandingView[0].srvcontracttotalamount, 2));
                 
             }else{
             	Common.alert("* Please enter an valid order no.");
@@ -145,6 +144,24 @@
         }
     }
     
+    function viewOrderPaymentListing(){
+        if($("#ordId").val() != ''){
+            Common.popupWin("ledgerForm", "/payment/initOrderPaymentListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
+        }else{
+            Common.alert('* Please enter an order no.');
+            return;
+        }
+    }
+    
+    function viewASListing(){
+        if($("#ordId").val() != ''){
+            Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
+        }else{
+            Common.alert('* Please enter an order no.');
+            return;
+        }
+    }
+    
     function fn_clear(){
     	$("#orderForm")[0].reset();
     	$("#ledgerForm")[0].reset();
@@ -162,80 +179,80 @@
 	    <form action="#" method="post" id="orderForm">
 	        <input type="hidden" id="orderId" name="orderId">
 			<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:150px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:150px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">ORDER NUMBER</th>
-			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="" id="orderNo" name="orderNo"/>
-			    <p class="btn_sky"><a href="javascript:fn_searchOutStandView();">Search</a></p>
-			    <p class="btn_sky"><a href="javascript:fn_clear();">Clear</a></p>
-			    </td>
-			    <th scope="row">Customer Name</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custName" name="custName"/>
-			    </td>
-			    <th scope="row">Order Status</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="orderStatus" name="orderStatus" />
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Summary</th>
-			    <td colspan="7">
-			    <p class="btn_sky"><a href="javascript:viewRentalLedger();">View Ledger (1)</a></p>
-			    <p class="btn_sky"><a href="javascript:viewRentalLedger2();">View Ledger (2)</a></p>
-			    <p class="btn_sky"><a href="#">Payment Listing</a></p>
-			    <p class="btn_sky"><a href="#">Quotation Listing</a></p>
-			    <p class="btn_sky"><a href="#">Outright Membership</a></p>
-			    <p class="btn_sky"><a href="#">Rental Membership</a></p>
-			    <p class="btn_sky"><a href="#">AS Listing</a></p>
-			    <p class="btn_sky"><a href="#">Transfer History</a></p>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Application Type</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="appType" name="appType"/>
-			    </td>
-			    <th scope="row">Product</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="productName" name="productName"/>
-			    </td>
-			    <th scope="row">*Pay by 3rd Party Name</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="thirdPartyName" name="thirdPartyName"/>
-			    </td>
-			    <th scope="row">Rental Paymode</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalPayMode" name="rentalPayMode"/>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">VA Number</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custVANo" name="custVANo"/>
-			    </td>
-			    <th scope="row">JOMPay Ref 1</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="jomPayRefNo1" name="jomPayRefNo1"/>
-			    </td>
-			    <th scope="row">Outright Fees</th>
-			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="outrightFees" name="outrightFees"/>
-			    </td>
-			</tr>
-			</tbody>
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:150px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:150px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">ORDER NUMBER</th>
+					    <td colspan="3">
+						    <input type="text" title="" placeholder="" class="" id="orderNo" name="orderNo"/>
+						    <p class="btn_sky"><a href="javascript:fn_searchOutStandView();">Search</a></p>
+						    <p class="btn_sky"><a href="javascript:fn_clear();">Clear</a></p>
+					    </td>
+					    <th scope="row">Customer Name</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custName" name="custName"/>
+					    </td>
+					    <th scope="row">Order Status</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="orderStatus" name="orderStatus" />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Summary</th>
+					    <td colspan="7">
+						    <p class="btn_sky"><a href="javascript:viewRentalLedger();">View Ledger (1)</a></p>
+						    <p class="btn_sky"><a href="javascript:viewRentalLedger2();">View Ledger (2)</a></p>
+						    <p class="btn_sky"><a href="javascript:viewOrderPaymentListing();">Payment Listing</a></p>
+						    <p class="btn_sky"><a href="#">Quotation Listing</a></p>
+						    <p class="btn_sky"><a href="#">Outright Membership</a></p>
+						    <p class="btn_sky"><a href="#">Rental Membership</a></p>
+						    <p class="btn_sky"><a href="javascript:viewASListing();">AS Listing</a></p>
+						    <p class="btn_sky"><a href="#">Transfer History</a></p>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Application Type</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="appType" name="appType"/>
+					    </td>
+					    <th scope="row">Product</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="productName" name="productName"/>
+					    </td>
+					    <th scope="row">*Pay by 3rd Party Name</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="thirdPartyName" name="thirdPartyName"/>
+					    </td>
+					    <th scope="row">Rental Paymode</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalPayMode" name="rentalPayMode"/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">VA Number</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custVANo" name="custVANo"/>
+					    </td>
+					    <th scope="row">JOMPay Ref 1</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="jomPayRefNo1" name="jomPayRefNo1"/>
+					    </td>
+					    <th scope="row">Outright Fees</th>
+					    <td colspan="3">
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="outrightFees" name="outrightFees"/>
+					    </td>
+					</tr>
+				</tbody>
 			</table><!-- table end -->
 			
 			<aside class="title_line"><!-- title_line start -->
@@ -243,73 +260,73 @@
 			</aside><!-- title_line end -->
 			
 			<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:150px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:150px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">RPF Fees</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rpfFees" name="rpfFees"/>
-			    </td>
-			    <th scope="row">RPF Paid</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rpfPaid" name="rpfPaid"/>
-			    </td>
-			    <th scope="row">Rental Fees</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalFees" name="rentalFees"/>
-			    </td>
-			    <th scope="row">AS O/S</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ASOutstanding" name="ASOutstanding"/>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Penalty Charge</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyCharges" name="penaltyCharges"/>
-			    </td>
-			    <th scope="row">Penalty Paid</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyPaid" name="penaltyPaid"/>
-			    </td>
-			    <th scope="row">Penalty Adjustment</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyAdjustment" name="penaltyAdjustment"/>
-			    </td>
-			    <th scope="row">Balance Penalty</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyBalance" name="penaltyBalance"/>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Unbill Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="unbillAmount" name="unbillAmount" />
-			    </td>
-			    <th scope="row">Total O/S Balance</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totalOutstanding" name="totalOutstanding"/>
-			    </td>
-			    <th scope="row">Total O/S Month</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="outstandingMonth" name="outstandingMonth"/>
-			    </td>
-			    <th scope="row">Total :</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalGrandTotal" name="rentalGrandTotal"/>
-			    </td>
-			</tr>
-			</tbody>
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:150px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:150px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">RPF Fees</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rpfFees" name="rpfFees"/>
+					    </td>
+					    <th scope="row">RPF Paid</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rpfPaid" name="rpfPaid"/>
+					    </td>
+					    <th scope="row">Rental Fees</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalFees" name="rentalFees"/>
+					    </td>
+					    <th scope="row">AS O/S</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ASOutstanding" name="ASOutstanding"/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Penalty Charge</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyCharges" name="penaltyCharges"/>
+					    </td>
+					    <th scope="row">Penalty Paid</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyPaid" name="penaltyPaid"/>
+					    </td>
+					    <th scope="row">Penalty Adjustment</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyAdjustment" name="penaltyAdjustment"/>
+					    </td>
+					    <th scope="row">Balance Penalty</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="penaltyBalance" name="penaltyBalance"/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Unbill Amount</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="unbillAmount" name="unbillAmount" />
+					    </td>
+					    <th scope="row">Total O/S Balance</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="totalOutstanding" name="totalOutstanding"/>
+					    </td>
+					    <th scope="row">Total O/S Month</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="outstandingMonth" name="outstandingMonth"/>
+					    </td>
+					    <th scope="row">Total :</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="rentalGrandTotal" name="rentalGrandTotal"/>
+					    </td>
+					</tr>
+				</tbody>
 			</table><!-- table end -->
 			
 			<aside class="title_line"><!-- title_line start -->
@@ -317,45 +334,45 @@
 			</aside><!-- title_line end -->
 			
 			<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:170px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:120px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">Package Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotPacAmount" name="svmQuotPacAmount"/>
-			    </td>
-			    <th scope="row">Filter Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotFilterAmount" name="svmQuotFilterAmount"/>
-			    </td>
-			    <th scope="row">Total</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotTotalAmount" name="svmQuotTotalAmount"/>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Quotation Number</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotNo" name="svmQuotNo"/>
-			    </td>
-			    <th scope="row">Status</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly"" id="svmQuotStatus" name="svmQuotStatus"/>
-			    </td>
-			    <th scope="row">Create Date</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
-			    </td>
-			</tr>
-			</tbody>
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:170px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:120px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Package Amount</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotPacAmount" name="svmQuotPacAmount"/>
+					    </td>
+					    <th scope="row">Filter Amount</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotFilterAmount" name="svmQuotFilterAmount"/>
+					    </td>
+					    <th scope="row">Total</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotTotalAmount" name="svmQuotTotalAmount"/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Quotation Number</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotNo" name="svmQuotNo"/>
+					    </td>
+					    <th scope="row">Status</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmQuotStatus" name="svmQuotStatus"/>
+					    </td>
+					    <th scope="row">Create Date</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
+					    </td>
+					</tr>
+				</tbody>
 			</table><!-- table end -->
 			
 			<aside class="title_line"><!-- title_line start -->
@@ -363,51 +380,51 @@
 			</aside><!-- title_line end -->
 			
 			<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:170px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:120px" />
-			    <col style="width:*" />
-			    <col style="width:120px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">Package Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmPacAmount" name="svmPacAmount"/>
-			    </td>
-			    <th scope="row">Filter Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmFilterAmount" name="svmFilterAmount" />
-			    </td>
-			    <th scope="row">Status</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmStatus" name="svmStatus"/>
-			    </td>
-			    <th scope="row">Create Date</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Duration</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmDuration" name="svmDuration"/>
-			    </td>
-			    <th scope="row">Valid Date</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmValidDate" name="svmValidDate"/>
-			    </td>
-			    <th scope="row">Total :</th>
-			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmTotalOutstanding" name="svmTotalOutstanding"/>
-			    </td>
-			</tr>
-			</tbody>
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:170px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:120px" />
+				    <col style="width:*" />
+				    <col style="width:120px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Package Amount</th>
+					    <td>
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmPacAmount" name="svmPacAmount"/>
+					    </td>
+					    <th scope="row">Filter Amount</th>
+					    <td>
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmFilterAmount" name="svmFilterAmount" />
+					    </td>
+					    <th scope="row">Status</th>
+					    <td>
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmStatus" name="svmStatus"/>
+					    </td>
+					    <th scope="row">Create Date</th>
+					    <td>
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmCreateDate" name="svmCreateDate"/>
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Duration</th>
+					    <td>
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmDuration" name="svmDuration"/>
+					    </td>
+					    <th scope="row">Valid Date</th>
+					    <td>
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmValidDate" name="svmValidDate"/>
+					    </td>
+					    <th scope="row">Total :</th>
+					    <td colspan="3">
+					       <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="svmTotalOutstanding" name="svmTotalOutstanding"/>
+					    </td>
+					</tr>
+				</tbody>
 			</table><!-- table end -->
 			
 			<aside class="title_line"><!-- title_line start -->
@@ -415,55 +432,54 @@
 			</aside><!-- title_line end -->
 			
 			<table class="type1"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-			    <col style="width:170px" />
-			    <col style="width:*" />
-			    <col style="width:130px" />
-			    <col style="width:*" />
-			    <col style="width:120px" />
-			    <col style="width:*" />
-			    <col style="width:120px" />
-			    <col style="width:*" />
-			</colgroup>
-			<tbody>
-			<tr>
-			    <th scope="row">Package Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractPacAmount" name="srvContractPacAmount"/>
-			    </td>
-			    <th scope="row">Filter Amount</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractFilterAmount" name="srvContractFilterAmount"/>
-			    </td>
-			    <th scope="row">Status</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractStatus" name="srvContractStatus"/>
-			    </td>
-			    <th scope="row">Create Date</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractCreateDate" name="srvContractCreateDate" />
-			    </td>
-			</tr>
-			<tr>
-			    <th scope="row">Duration (Mth)</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractDuration" name="srvContractDuration" />
-			    </td>
-			    <th scope="row">Valid Date</th>
-			    <td>
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractValidDate" name="srvContractValidDate"/>
-			    </td>
-			    <th scope="row">Total :</th>
-			    <td colspan="3">
-			    <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractTotalOutstanding" name="srvContractTotalOutstanding"/>
-			    </td>
-			</tr>
-			</tbody>
+				<caption>table</caption>
+				<colgroup>
+				    <col style="width:170px" />
+				    <col style="width:*" />
+				    <col style="width:130px" />
+				    <col style="width:*" />
+				    <col style="width:120px" />
+				    <col style="width:*" />
+				    <col style="width:120px" />
+				    <col style="width:*" />
+				</colgroup>
+				<tbody>
+					<tr>
+					    <th scope="row">Package Amount</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractPacAmount" name="srvContractPacAmount"/>
+					    </td>
+					    <th scope="row">Filter Amount</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractFilterAmount" name="srvContractFilterAmount"/>
+					    </td>
+					    <th scope="row">Status</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractStatus" name="srvContractStatus"/>
+					    </td>
+					    <th scope="row">Create Date</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractCreateDate" name="srvContractCreateDate" />
+					    </td>
+					</tr>
+					<tr>
+					    <th scope="row">Duration (Mth)</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractDuration" name="srvContractDuration" />
+					    </td>
+					    <th scope="row">Valid Date</th>
+					    <td>
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractValidDate" name="srvContractValidDate"/>
+					    </td>
+					    <th scope="row">Total :</th>
+					    <td colspan="3">
+					        <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="srvContractTotalOutstanding" name="srvContractTotalOutstanding"/>
+					    </td>
+					</tr>
+				</tbody>
 			</table><!-- table end -->
 		</form>
 	</section><!-- pop_body end -->
-
 </div><!-- popup_wrap end -->
 <form id="ledgerForm" action="#" method="post">
     <input type="hidden" id="ordId" name="ordId" />
