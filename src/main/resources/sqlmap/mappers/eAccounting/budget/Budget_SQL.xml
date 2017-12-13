@@ -88,20 +88,69 @@ VALUES (
  <if test="budgetMonth == 'DEC'">
  12,
  </if>
- #{budgetStus},
+ <if test="budgetStus == 'Open'">
+ 'N',
+ </if>
+ <if test="budgetStus == 'Locked'">
+ 'Y',
+ </if>
 SYSDATE,
 #{crtUserId},
 SYSDATE,
 #{crtUserId}
 )
 </insert>
+
  <update id="udtBudgetSysMaintGrid">  
 MERGE INTO FCM0106M F0
 USING DUAL
- ON (F0.BUDGET_YEAR = #{budgetYear} AND F0.BUDGET_MONTH = #{budgetMonth})
+ ON (F0.BUDGET_YEAR = #{budgetYear}
+  AND F0.BUDGET_MONTH = 
+ <if test="budgetMonth == 'JAN'">
+ 1
+ </if>
+ <if test="budgetMonth == 'FEB'">
+ 2
+ </if>
+ <if test="budgetMonth == 'MAR'">
+ 3
+ </if>
+ <if test="budgetMonth == 'APR'">
+ 4
+ </if>
+ <if test="budgetMonth == 'MAY'">
+ 5
+ </if>
+ <if test="budgetMonth == 'JUN'">
+ 6
+ </if>
+ <if test="budgetMonth == 'JUL'">
+ 7
+ </if>
+ <if test="budgetMonth == 'AUG'">
+ 8
+ </if>
+ <if test="budgetMonth == 'SEP'">
+ 9
+ </if>
+ <if test="budgetMonth == 'OCT'">
+ 10
+ </if>
+ <if test="budgetMonth == 'NOV'">
+ 11
+ </if>
+ <if test="budgetMonth == 'DEC'">
+ 12
+ </if>)
 WHEN MATCHED THEN
   UPDATE
-  SET BUDGET_STUS = #{budgetStus}
+  SET BUDGET_STUS =  
+  <if test="budgetStus == 'Open'">
+ 'N'
+ </if>
+ <if test="budgetStus == 'Locked'">
+ 'Y'
+ </if>
       , UPD_DT = SYSDATE
       , UPD_USER_ID = #{crtUserId}
 WHEN NOT MATCHED THEN
@@ -116,8 +165,48 @@ WHEN NOT MATCHED THEN
   )
   VALUES (
       #{budgetYear},
-      #{budgetMonth},
-      #{budgetStus},
+      <if test="budgetMonth == 'JAN'">
+ 1,
+ </if>
+ <if test="budgetMonth == 'FEB'">
+ 2,
+ </if>
+ <if test="budgetMonth == 'MAR'">
+ 3,
+ </if>
+ <if test="budgetMonth == 'APR'">
+ 4,
+ </if>
+ <if test="budgetMonth == 'MAY'">
+ 5,
+ </if>
+ <if test="budgetMonth == 'JUN'">
+ 6,
+ </if>
+ <if test="budgetMonth == 'JUL'">
+ 7,
+ </if>
+ <if test="budgetMonth == 'AUG'">
+ 8,
+ </if>
+ <if test="budgetMonth == 'SEP'">
+ 9,
+ </if>
+ <if test="budgetMonth == 'OCT'">
+ 10,
+ </if>
+ <if test="budgetMonth == 'NOV'">
+ 11,
+ </if>
+ <if test="budgetMonth == 'DEC'">
+ 12,
+ </if>
+ <if test="budgetStus == 'Open'">
+ 'N',
+ </if>
+ <if test="budgetStus == 'Locked'">
+ 'Y',
+ </if>
       SYSDATE,
       #{crtUserId},
       SYSDATE,
