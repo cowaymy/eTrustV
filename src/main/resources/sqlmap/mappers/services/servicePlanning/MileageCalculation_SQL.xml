@@ -6,7 +6,7 @@
     SELECT *
     FROM (SELECT ROWNUM AS RNUM
                             ,Z.*
-                FROM (  
+                FROM (
 </sql>
 <sql id="pagingEnd">
      ) Z
@@ -66,22 +66,22 @@
 
 <!-- <delete id="deleteDCPMaster" parameterType="Map">
          DELETE FROM SVC0034M
-         WHERE  MEM_TYPE = #{memType1} AND BRNCH_CODE = #{brnchCode1}  
+         WHERE  MEM_TYPE = #{memType1} AND BRNCH_CODE = #{brnchCode1}
          AND DCP_FROM = #{dcpFrom1} AND DCP_TO = #{dcpTo1}
          AND DCP_FROM_ID = #{dcpFromId1} AND AND DCP_TO = #{dcpTo1}
 </delete> -->
 
 <!-- 171206 :: 선한이 -->
 <select id="selectAllDCPMaster"  parameterType="Map" resultType="egovMap">
-SELECT ROWNUM AS RNUM, Z.* FROM ( 
+SELECT ROWNUM AS RNUM, Z.* FROM (
     <if test="memType != null and memType == 2 ">
         SELECT
-          'CODY' MEM_TYPE, 
-          C.CODY_BRNCH_CODE BRNCH_CODE, 
+          'CODY' MEM_TYPE,
+          C.CODY_BRNCH_CODE BRNCH_CODE,
           C.CITY_FROM CITY_FROM,
           C.DCP_FROM DCP_FROM,
           C.DCP_FROM_ID DCP_FROM_ID,
-          C.CITY_TO CITY_TO, 
+          C.CITY_TO CITY_TO,
           C.DCP_TO DCP_TO,
           C.DCP_TO_ID DCP_TO_ID,
           TO_CHAR(A.DISTANCE)  DISTANCE
@@ -96,15 +96,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
                            AND BB.CITY = #{cityTo}
                         </if>
                         <if test="mcpFromID != null and mcpFromID != '' ">
-                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
                         </if>
                         <if test="mcpToID != null and mcpToID != '' ">
-                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
                         </if>
-<![CDATA[ 
+<![CDATA[
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
-                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
                           AND A.MEM_TYPE IN (2)
                         <if test="brnch != null and brnch != '' ">
                           AND A.BRNCH_CODE IN (#{brnch})
@@ -122,15 +122,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
             </if>
         ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
     </if>
-    
+
     <if test="memType != null and memType == 3 ">
         SELECT
-          'CT' MEM_TYPE, 
-          C.CT_BRNCH_CODE BRNCH_CODE, 
+          'CT' MEM_TYPE,
+          C.CT_BRNCH_CODE BRNCH_CODE,
           C.CITY_FROM CITY_FROM,
           C.DCP_FROM DCP_FROM,
           C.DCP_FROM_ID DCP_FROM_ID,
-          C.CITY_TO CITY_TO, 
+          C.CITY_TO CITY_TO,
           C.DCP_TO DCP_TO,
           C.DCP_TO_ID DCP_TO_ID,
           TO_CHAR(A.DISTANCE)  DISTANCE
@@ -145,15 +145,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
                            AND BB.CITY = #{cityTo}
                         </if>
                         <if test="mcpFromID != null and mcpFromID != '' ">
-                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
                         </if>
                         <if test="mcpToID != null and mcpToID != '' ">
-                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
                         </if>
-<![CDATA[ 
+<![CDATA[
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
-                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
                         AND A.MEM_TYPE IN (3)
                         <if test="brnch != null and brnch != '' ">
                           AND A.BRNCH_CODE IN (#{brnch})
@@ -179,12 +179,12 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
 <include refid="pagingStart" />
     <if test="memType != null and memType == 2 ">
         SELECT
-          'CODY' MEM_TYPE, 
-          C.CODY_BRNCH_CODE BRNCH_CODE, 
+          'CODY' MEM_TYPE,
+          C.CODY_BRNCH_CODE BRNCH_CODE,
           C.CITY_FROM CITY_FROM,
           C.DCP_FROM DCP_FROM,
           C.DCP_FROM_ID DCP_FROM_ID,
-          C.CITY_TO CITY_TO, 
+          C.CITY_TO CITY_TO,
           C.DCP_TO DCP_TO,
           C.DCP_TO_ID DCP_TO_ID,
           A.DISTANCE DISTANCE
@@ -199,15 +199,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
                            AND BB.CITY = #{cityTo}
                         </if>
                         <if test="mcpFromID != null and mcpFromID != '' ">
-                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
                         </if>
                         <if test="mcpToID != null and mcpToID != '' ">
-                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
                         </if>
-<![CDATA[ 
+<![CDATA[
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
-                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
                           AND A.MEM_TYPE IN (2)
                         <if test="brnch != null and brnch != '' ">
                           AND A.BRNCH_CODE IN (#{brnch})
@@ -225,15 +225,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
             </if>
         ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
     </if>
-    
+
     <if test="memType != null and memType == 3 ">
         SELECT
-          'CT' MEM_TYPE, 
-          C.CT_BRNCH_CODE BRNCH_CODE, 
+          'CT' MEM_TYPE,
+          C.CT_BRNCH_CODE BRNCH_CODE,
           C.CITY_FROM CITY_FROM,
           C.DCP_FROM DCP_FROM,
           C.DCP_FROM_ID DCP_FROM_ID,
-          C.CITY_TO CITY_TO, 
+          C.CITY_TO CITY_TO,
           C.DCP_TO DCP_TO,
           C.DCP_TO_ID DCP_TO_ID,
           A.DISTANCE DISTANCE
@@ -248,15 +248,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
                            AND BB.CITY = #{cityTo}
                         </if>
                         <if test="mcpFromID != null and mcpFromID != '' ">
-                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
                         </if>
                         <if test="mcpToID != null and mcpToID != '' ">
-                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
                         </if>
-<![CDATA[ 
+<![CDATA[
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
-                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
                         AND A.MEM_TYPE IN (3)
                         <if test="brnch != null and brnch != '' ">
                           AND A.BRNCH_CODE IN (#{brnch})
@@ -294,15 +294,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
                            AND BB.CITY = #{cityTo}
                         </if>
                         <if test="mcpFromID != null and mcpFromID != '' ">
-                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
                         </if>
                         <if test="mcpToID != null and mcpToID != '' ">
-                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
                         </if>
-<![CDATA[ 
+<![CDATA[
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
-                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
                           AND A.MEM_TYPE IN (2)
                         <if test="brnch != null and brnch != '' ">
                           AND A.BRNCH_CODE IN (#{brnch})
@@ -320,7 +320,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
             </if>
         ORDER BY A.DISTANCE ASC, C.DCP_FROM ASC, C.DCP_TO ASC
     </if>
-    
+
     <if test="memType != null and memType == 3 ">
         SELECT
           COUNT(1) AS CNT
@@ -335,15 +335,15 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
                            AND BB.CITY = #{cityTo}
                         </if>
                         <if test="mcpFromID != null and mcpFromID != '' ">
-                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%' 
+                           AND REPLACE(AA.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpFromID}, '-', '') || '%'
                         </if>
                         <if test="mcpToID != null and mcpToID != '' ">
-                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%' 
+                           AND REPLACE(BB.AREA_ID, '-', '') LIKE '%' || REPLACE(#{mcpToID}, '-', '') || '%'
                         </if>
-<![CDATA[ 
+<![CDATA[
                         AND AA.AREA_ID <> BB.AREA_ID) C
 ]]>
-                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO 
+                    ON (A.DCP_FROM = C.DCP_FROM AND A.DCP_TO = C.DCP_TO
                         AND A.MEM_TYPE IN (3)
                         <if test="brnch != null and brnch != '' ">
                           AND A.BRNCH_CODE IN (#{brnch})
@@ -364,7 +364,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
 </select>
 
 <select id="selectDCPFrom"  parameterType="Map" resultType="egovMap">
-        SELECT DISTINCT 
+        SELECT DISTINCT
               DCP_FROM CODE_ID,
               DCP_FROM CODE_NAME
          FROM SVC0034M
@@ -376,7 +376,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
 </select>
 
 <select id="selectDCPTo"  parameterType="Map" resultType="egovMap">
-        SELECT DISTINCT 
+        SELECT DISTINCT
               DCP_TO CODE_ID,
               DCP_TO CODE_NAME
          FROM SVC0034M
@@ -408,6 +408,8 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
     , CRT_DT
     , UPD_USER_ID
     , UPD_DT
+    <!-- BY KV -add extra charge-->
+    , EXT_CHARG
     )
     VALUES(
        SVC0033M_SCHEM_ID_SEQ.NEXTVAL
@@ -423,6 +425,8 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
      , SYSDATE
      , #{userId}
      , SYSDATE
+     <!-- BY KV -add extra charge-->
+     , #{extcharg}
      )
 </insert>
 <update id="updateSchemaMgmt" parameterType="Map">
@@ -436,7 +440,9 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
         PERIOD_FROM = TO_DATE(#{applyFrom},'YYYY-MM-DD'),
         PERIOD_TO = TO_DATE(#{applyTo},'YYYY-MM-DD'),
         UPD_USER_ID = #{userId},
-        UPD_DT = SYSDATE
+        UPD_DT = SYSDATE,
+        <!-- BY KV -add extra charge-->
+        EXT_CHARG = #{extcharg}
     WHERE SCHEM_ID = #{schemId}
 </update>
 <delete id="deleteSchemaMgmt" parameterType="Map">
@@ -453,6 +459,8 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
             MILEAGE_AMT MILEAGE_AMT,
             DEDUCT_FLAG DEDUCT_FLAG,
             MULTI_RATE MULTI_RATE,
+            <!-- BY KV -add extra charge-->
+            EXT_CHARG EXT_CHARG,
             TO_CHAR(PERIOD_FROM,'YYYY-MM-DD')  APPLY_FROM,
             TO_CHAR(PERIOD_TO, 'YYYY-MM-DD')  APPLY_TO
         FROM SVC0033M
@@ -564,9 +572,9 @@ FROM
     </select>
     <!--  171130 :: 선한이 -->
     <select id="selectCity"  parameterType="Map" resultType="egovMap">
-         SELECT DISTINCT CITY CODE_ID, CITY CODE_NAME 
-         FROM SYS0064M 
-         WHERE 1=1 
+         SELECT DISTINCT CITY CODE_ID, CITY CODE_NAME
+         FROM SYS0064M
+         WHERE 1=1
          <if test="groupCode != null and groupCode != '' ">
             AND (CT_BRNCH_CODE = #{groupCode} OR CODY_BRNCH_CODE = #{groupCode})
          </if>
