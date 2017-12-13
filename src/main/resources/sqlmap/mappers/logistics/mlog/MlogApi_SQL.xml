@@ -242,10 +242,10 @@
 			       SYS0028M S28,
 			       (  SELECT LOC_ID,
 			                 ITM_CODE,
-			                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY,MOV_QTY
+			                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
 			            FROM LOG0075M
 			           WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
-			        GROUP BY LOC_ID, ITM_CODE,MOV_QTY) L75 ,
+			        GROUP BY LOC_ID, ITM_CODE) L75 ,
 			        CRDC
 			 WHERE     1 = 1
 			       AND L56.LOC_ID = L75.LOC_ID(+)
