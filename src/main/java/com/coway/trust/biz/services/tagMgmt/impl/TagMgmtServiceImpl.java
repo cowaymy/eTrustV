@@ -42,7 +42,19 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 		
 		params.put("userId", sessionVO.getUserId());
 		
-		cnt = tagMgmtMapper.insertCcr0006d(params);
+		
+		
+		EgovMap mapCheckCallEntryId = tagMgmtMapper.selectCallEntryId(params);
+		if(mapCheckCallEntryId == null){
+		
+    		cnt = tagMgmtMapper.insertCcr0006d(params);
+
+		}
+		else {
+			
+			cnt = tagMgmtMapper.updateCcr0006d(params);
+			
+		}
 		
 		EgovMap mapCallEntryId= tagMgmtMapper.selectCallEntryId(params);
 		params.put("callEntryId", mapCallEntryId.get("callEntryId") );

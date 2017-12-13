@@ -32,12 +32,6 @@
 				LEFT OUTER JOIN GBSLCVD.CCR0006D B    
 				ON A.CUR_SEQNO = B.CUR_SEQ_NO
 				WHERE A.TR_DVCD         = 'T'
-				AND CUR_SEQNO NOT IN (
-				SELECT CUR_SEQ_NO
-				FROM GBSLCVD.CCR0006D
-				WHERE CUR_SEQ_NO IS NOT NULL 
-				AND STUS_CODE_ID NOT IN (1, 35, 44)
-                )
         ) Z
         WHERE 1=1
 	   <if test="customer != null and customer != '' ">
@@ -98,12 +92,6 @@
                 LEFT OUTER JOIN GBSLCVD.CCR0006D B    
                 ON A.CUR_SEQNO = B.CUR_SEQ_NO
                 WHERE A.TR_DVCD         = 'T'
-                AND CUR_SEQNO NOT IN (
-                SELECT CUR_SEQ_NO
-                FROM GBSLCVD.CCR0006D
-                WHERE CUR_SEQ_NO IS NOT NULL 
-                AND STUS_CODE_ID NOT IN (1, 35, 44)
-                )
         ) Z
         WHERE 1=1
         and z.Counseling_No = #{counselingId}
@@ -118,7 +106,7 @@
           , SUB_DEPT
           )
           VALUES(
-          CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL, #{orderId}, 260, 1
+          CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL, #{orderId}, 260, #{status}
           ,0 ,0 , #{userId}, SYSDATE
           ,TO_date(#{regDate},'YY/MM/DD') ,0 ,#{hcId} , SYSDATE
           ,#{userId} , SYSDATE, #{counselingNo}, #{mainDept}
@@ -148,13 +136,21 @@
 					, SUB_DEPT
 			          )
 			          VALUES(
-			          CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, #{callEntryId}, 1, TO_date(#{regDate},'YY/MM/DD')
+			          CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL, #{callEntryId}, #{status}, TO_date(#{regDate},'YY/MM/DD')
 			          ,SYSDATE , 0 , #{userId}, #{remark}
 			          ,#{userId} ,SYSDATE ,0 , #{hcId}
 			          ,0 , 0, 0 , #{mainDept}
 			          ,#{subDept}
 			          )
 			  </insert>
+			  
+			    <update id="updateCcr0006d" parameterType="Map" >
+				     update Ccr0006d
+				     set UPD_USER_ID = #{userId},
+				     UPD_DT = SYSDATE,
+				     STUS_CODE_ID = #{status}
+				     WHERE  CUR_SEQ_NO = #{counselingNo}
+			    </update>
   
     
 </mapper>

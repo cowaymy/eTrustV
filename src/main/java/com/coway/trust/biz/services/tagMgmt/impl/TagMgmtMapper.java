@@ -19,4 +19,6 @@ public interface TagMgmtMapper {
 
 	public int insertCcr0007d(Map<String, Object> params);
 
+	public int updateCcr0006d(Map<String, Object> params);
+
 }

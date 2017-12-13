@@ -51,6 +51,11 @@ function tagMgmtGrid() {
                            dataField: "regDate",
                            headerText: "Register Date",
                            dataType : "date"
+                       },
+                       {
+                           dataField: "status",
+                           headerText: "Status",
+                           width: "5%"
                        }
                    ];
     

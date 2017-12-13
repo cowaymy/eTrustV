@@ -17,6 +17,7 @@ function fn_saveRemarkResult(){
 
 	  var jsonObj = { 
 			 "remark" : $("#remark").val(),
+			 "status" : $("#status").val(),
 			  "counselingNo" :  $("#counselingNo").text(),
 			  "mainDept" : $("#mainDept").text(),
 			  "subDept" : $("#subDept").text(),
@@ -350,11 +351,11 @@ function fn_saveRemarkResult(){
         <td>
             <select  id="status" name="status">
                 <option value="1">Open</option>
-                <option value="2">Pending</option>
-                <option value="3">Solve</option>
-                <option value="4">Not yet to solve</option>
-                <option value="5">Close</option>
-                <option value="6">Cancel</option>
+                <option value="44">Pending</option>
+                <option value="34">Solve</option>
+                <option value="35">Not yet to solve</option>
+                <option value="36">Close</option>
+                <option value="10">Cancel</option>
             </select>
         </td>
     </tr>
