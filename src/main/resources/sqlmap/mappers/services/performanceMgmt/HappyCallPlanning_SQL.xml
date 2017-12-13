@@ -2,28 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.performanceMgmt.impl.HappyCallPlanningMapper">
 
-    <select id="selectCallTypeList"  parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME, CODE_NAME CODE_ID
-        FROM SYS0013M
-        WHERE CODE_MASTER_ID = 80
+    <select id="selectCodeNameList" parameterType="Map" resultType="egovMap">
+       SELECT 
+            <choose>
+                <when test=" groupCode != null and groupCode == '386' ">
+                CODE_ID, CODE || ' : ' || CODE_NAME CODE_NAME
+                </when>
+                <otherwise>
+                CODE_ID, CODE_NAME
+                </otherwise>
+            </choose>
+        FROM SYS0013M 
+        WHERE CODE_MASTER_ID = #{groupCode}
     </select>
     
-    <select id="selectEvalCriteriaList"  parameterType="Map" resultType="egovMap">
-        SELECT CODE CODE_ID, CODE || ' : ' || CODE_NAME CODE_NAME
-		FROM SYS0013M
-		WHERE CODE_MASTER_ID = 386
+    <select id="selectHappyCallList" parameterType="Map" resultType="egovMap">
+        SELECT B.CODE_NAME CALL_TYPE, A.HC_DEF_ITM_NO QUESTION_NUMBER, C.CODE_NAME FEEDBACK_TYPE, D.CODE_NAME EVALUATION_CRITERIA, A.HC_DEF_DESC QUESTION, A.PRIOD_FROM PERIOD_FROM, A.PRIOD_TO PERIOD_TO
+		FROM CCR0003M A
+		JOIN SYS0013M B ON A.HC_DEF_TYPE_ID = B.CODE_ID
+		JOIN SYS0013M C ON A.HC_DEF_CTGRY_ID = C.CODE_ID
+		JOIN SYS0013M D ON A.HC_DEF_QUES_TYPE_ID = D.CODE_ID
+		WHERE 1=1
+		<if test="cmbCallType != null and cmbCallType != '' ">
+			AND A.HC_DEF_TYPE_ID = #{cmbCallType}
+		</if>
+		<if test="cmbFeedbackType != null and cmbFeedbackType != '' ">
+			<if test=" cmbFeedbackType != null and cmbFeedbackType == '2753' ">
+			AND A.HC_DEF_CTGRY_ID = '515'
+			</if>
+			<if test=" cmbFeedbackType != null and cmbFeedbackType == '2754' ">
+	        AND A.HC_DEF_CTGRY_ID = '516'
+	        </if>
+		</if>
+		<if test="cmbEvalCriteria != null and cmbEvalCriteria != '' ">
+		    <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2755' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1184'
+            </if>
+            <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2756' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1183'
+            </if>
+            <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2757' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1185'
+            </if>
+            <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2758' ">
+            AND A.HC_DEF_QUES_TYPE_ID = '1186'
+            </if>
+		</if>
+		<if test="periodMonth != null and periodMonth != '' ">
+            AND TO_DATE(#{periodMonth}, 'MM/YYYY') BETWEEN A.PRIOD_FROM AND A.PRIOD_TO
+        </if>
     </select>
-    
-    <select id="selectFeedbackTypeSearchList"  parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME, CODE_NAME CODE_ID
-        FROM SYS0013M
-        WHERE CODE_MASTER_ID = 385
-    </select>
-    
-    <select id="selectFeedbackTypeGridList"  parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME, CODE_NAME CODE_ID
-        FROM SYS0013M
-        WHERE CODE_MASTER_ID = 50
-    </select>
-    
+
 </mapper>

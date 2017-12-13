@@ -42,36 +42,21 @@ public class HappyCallPlanningController {
 		return "services/performanceMgmt/happyCallPlanning";
 	}
 	
-	@RequestMapping(value = "/selectCallTypeList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCallTypeList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		//LOGGER.debug("params {}", params);
-		List<EgovMap> selectCallTypeList = happyCallPlanningService.selectCallTypeList();
-		LOGGER.debug("selectCallTypeList {}", selectCallTypeList);
-		return ResponseEntity.ok(selectCallTypeList);
+	@RequestMapping(value = "/selectCodeNameList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeNameList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		LOGGER.debug("params {}", params);
+		List<EgovMap> selectCodeNameList = happyCallPlanningService.selectCodeNameList(params);
+		LOGGER.debug("selectCodeNameList {}", selectCodeNameList);
+		return ResponseEntity.ok(selectCodeNameList);
 	}
 	
-	@RequestMapping(value = "/selectEvalCriteriaList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectEvalCriteriaList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		//LOGGER.debug("params {}", params);
-		List<EgovMap> selectEvalCriteriaList = happyCallPlanningService.selectEvalCriteriaList();
-		LOGGER.debug("selectEvalCriteriaList {}", selectEvalCriteriaList);
-		return ResponseEntity.ok(selectEvalCriteriaList);
-	}
-	
-	@RequestMapping(value = "/selectFeedbackTypeSearchList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectFeedbackTypeSearchList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		//LOGGER.debug("params {}", params);
-		List<EgovMap> selectFeedbackTypeSearchList = happyCallPlanningService.selectFeedbackTypeSearchList();
-		LOGGER.debug("selectFeedbackTypeSearchList {}", selectFeedbackTypeSearchList);
-		return ResponseEntity.ok(selectFeedbackTypeSearchList);
-	}
-	
-	@RequestMapping(value = "/selectFeedbackTypeGridList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectFeedbackTypeGridList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		//LOGGER.debug("params {}", params);
-		List<EgovMap> selectFeedbackTypeGridList = happyCallPlanningService.selectFeedbackTypeGridList();
-		LOGGER.debug("selectFeedbackTypeGridList {}", selectFeedbackTypeGridList);
-		return ResponseEntity.ok(selectFeedbackTypeGridList);
+	@RequestMapping(value = "/selectHappyCallList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHappyCallList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		LOGGER.debug("params {}", params);
+		List<EgovMap> selectHappyCallList = null;
+		selectHappyCallList = happyCallPlanningService.selectHappyCallList(params);        
+		LOGGER.debug("happyCallList {}", selectHappyCallList);
+		return ResponseEntity.ok(selectHappyCallList);
 	}
 	
 //	@RequestMapping(value = "/surveyEventCreatePop.do")

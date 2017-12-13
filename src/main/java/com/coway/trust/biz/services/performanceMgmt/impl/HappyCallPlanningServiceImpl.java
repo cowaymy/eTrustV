@@ -1,6 +1,7 @@
 package com.coway.trust.biz.services.performanceMgmt.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -22,23 +23,13 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
 	private HappyCallPlanningMapper happyCallPlanningMapper;
 	
 	@Override
-	public List<EgovMap> selectCallTypeList() {
-		return happyCallPlanningMapper.selectCallTypeList();
+	public List<EgovMap> selectCodeNameList(Map<String, Object> params) {
+		return happyCallPlanningMapper.selectCodeNameList(params);
 	}
 
 	@Override
-	public List<EgovMap> selectEvalCriteriaList() {
-		return happyCallPlanningMapper.selectEvalCriteriaList();
-	}
-
-	@Override
-	public List<EgovMap> selectFeedbackTypeSearchList() {
-		return happyCallPlanningMapper.selectFeedbackTypeSearchList();
-	}
-	
-	@Override
-	public List<EgovMap> selectFeedbackTypeGridList() {
-		return happyCallPlanningMapper.selectFeedbackTypeGridList();
+	public List<EgovMap> selectHappyCallList(Map<String, Object> params) {
+		return happyCallPlanningMapper.selectHappyCallList(params);
 	}
 	
 }

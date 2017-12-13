@@ -11,12 +11,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface HappyCallPlanningService {
 	
-	List<EgovMap> selectCallTypeList();
+	List<EgovMap> selectCodeNameList(Map<String, Object> params);
 
-	List<EgovMap> selectEvalCriteriaList();
-
-	List<EgovMap> selectFeedbackTypeSearchList();
-	
-	List<EgovMap> selectFeedbackTypeGridList();
+	List<EgovMap> selectHappyCallList(Map<String, Object> params);
 	
 }

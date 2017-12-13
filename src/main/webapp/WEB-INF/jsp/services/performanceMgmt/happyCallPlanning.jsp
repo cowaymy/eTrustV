@@ -15,9 +15,9 @@ $(document).ready(function() {
     fn_selectEvalCriteria();
     fn_selectFeedbackType();
 
-    doGetCombo('/services/performanceMgmt/selectCallTypeList.do','', '', 'cmbCallType', 'S', '');
-    doGetCombo('/services/performanceMgmt/selectEvalCriteriaList.do','', '', 'cmbEvalCriteria', 'S', '');
-    doGetCombo('/services/performanceMgmt/selectFeedbackTypeSearchList.do','', '', 'cmbFeedbackType', 'S', '');
+    doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 80, '', 'cmbCallType', 'S', '');
+    doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 386, '', 'cmbEvalCriteria', 'S', '');
+    doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 385, '', 'cmbFeedbackType', 'S', '');
 
                     
     //search
@@ -32,22 +32,6 @@ $(document).ready(function() {
         });
                                     
     });
-
-                    
-    $("#clear").click(function() {
-        $("#cmbMemberTypeId").val('');
-        $("#eventName").val('');
-        $("#eventDate").val('');
-        $("#eventMemCode").val('');
-        $("#cmbSurveyStusId").val('');
-    });
-
-    
-    //excel Download
-    $('#excelDown').click(function() {
-        GridCommon.exportTo("grid_wrap", 'xlsx',"Survey Management");
-    });
-
                 
 });
 
@@ -71,18 +55,18 @@ function happyCallGrid() {
                 }
 		    }, {
 		        dataField : "questionNumber",
-		        headerText : 'Question Number',
-		        width : 150,
+		        headerText : 'Question <br/>Number',
+		        width : 100,
 		        editable : true, 
                 editRenderer : {
                     type : "ComboBoxRenderer",
                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
-                        var list = rData;
+                    	var list = fn_selectQuestionNum();
                         return list;
                     }, 
                     keyField : "questionNumber",
-                    valueField : "questionNumber"
+                    //valueField : "questionNumber"
                 }
 		    }, {
 		        dataField : "feedbackType",
@@ -157,6 +141,7 @@ function happyCallGrid() {
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        headerHeight : 30
     };
 	
 	// Create AUIGrid
@@ -177,7 +162,14 @@ function auiCellEditingHandler(event) {
     }
 }; */
 
-function addRow(){
+function fn_clear(){
+	$("#cmbCallType").val('');
+    $("#cmbFeedbackType").val('');
+    $("#cmbEvalCriteria").val('');
+    $("#periodMonth").val('');
+}
+
+function fn_addRow(){
     var item = new Object();
     item.callType = "";
     item.questionNumber = "";
@@ -193,13 +185,13 @@ function addRow(){
     AUIGrid.addRow(myGridID, item, "first");
 }
 
-function removeRow(){
+function fn_removeRow(){
     AUIGrid.removeRow(myGridID, "selectedIndex");
     AUIGrid.removeSoftRows(myGridID);
 }
 
 function fn_selectCallType(){
-    Common.ajax("GET", "/services/performanceMgmt/selectCallTypeList.do",$("#happyCallForm").serialize(), function(result) {
+    Common.ajax("GET", "/services/performanceMgmt/selectCodeNameList.do",{groupCode : 80}, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         
@@ -212,22 +204,13 @@ function fn_selectCallType(){
     return callTypeList;
 }
 
-function fn_selectEvalCriteria(){
-    Common.ajax("GET", "/services/performanceMgmt/selectEvalCriteriaList.do",$("#happyCallForm").serialize(), function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
-        
-        for (var i = 0; i < result.length; i++) {
-            var list = new Object();
-            list.evaluationCriteria = result[i].codeId;
-            evalCriteriaList.push(list);
-            }
-        });
-    return evalCriteriaList;
+function fn_selectQuestionNum(){
+	var list = [ "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    return list;
 }
 
 function fn_selectFeedbackType(){
-    Common.ajax("GET", "/services/performanceMgmt/selectFeedbackTypeGridList.do",$("#happyCallForm").serialize(), function(result) {
+    Common.ajax("GET", "/services/performanceMgmt/selectCodeNameList.do",{groupCode : 102}, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         
@@ -238,6 +221,32 @@ function fn_selectFeedbackType(){
             }
         });
     return feedbackTypeList;
+}
+
+function fn_selectEvalCriteria(){
+    Common.ajax("GET", "/services/performanceMgmt/selectCodeNameList.do",{groupCode : 103}, function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        
+        for (var i = 0; i < result.length; i++) {
+            var list = new Object();
+            list.evaluationCriteria = result[i].codeName;
+            evalCriteriaList.push(list);
+            }
+        });
+    return evalCriteriaList;
+}
+
+function fn_search(){
+    Common.ajax("GET", "/services/performanceMgmt/selectHappyCallList.do", $('#searchForm').serialize(), function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        AUIGrid.setGridData(myGridID, result);
+    });
+}
+
+function fn_exportTo(){
+	GridCommon.exportTo("grid_wrap", 'xlsx',"Happy Call Planning");
 }
 	
 </script>
@@ -258,12 +267,8 @@ function fn_selectFeedbackType(){
 	</p>
 	<h2>Happy Call Planning</h2>
 	<ul class="right_btns">
-		<li><p class="btn_blue">
-				<a href="#" id="search"><span class="search"></span>Search</a>
-			</p></li>
-		<li><p class="btn_blue">
-				<a href="#" id="clear"><span class="clear"></span>Clear</a>
-			</p></li>
+		<li><p class="btn_blue"><a href="#" onclick="fn_search()"><span class="search"></span>Search</a></p></li>
+		<li><p class="btn_blue"><a href="#" onclick="fn_clear()"><span class="clear"></span>Clear</a></p></li>
 	</ul>
 </aside>
 <!-- title_line end -->
@@ -277,7 +282,7 @@ function fn_selectFeedbackType(){
 	<input type="hidden" id="popServeyStatus" name="popServeyStatus" />
 </form>
 
-<form action="#" method="post" id="happyCallForm" name="happyCallForm">
+<form action="#" method="post" id="searchForm" name="searchForm">
 <table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -302,7 +307,7 @@ function fn_selectFeedbackType(){
 		</tr>
 		<tr>
 			<th scope="row">Period Month</th>
-			<td><input id="myBSMonth" name="myBSMonth" type="text" title="Period Month" placeholder="MM/YYYY" class="j_date2 w100p" readonly /></td>
+			<td><input id="periodMonth" name="periodMonth" type="text" title="Period Month" placeholder="MM/YYYY" class="j_date2 w100p" readonly /></td>
 			<th scope="row"></th>
 			<td></td>
 			<th scope="row"></th>
@@ -321,10 +326,10 @@ function fn_selectFeedbackType(){
 <section class="search_result"><!-- search_result start -->
 
 	<ul class="right_btns">
-		<li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">Add</a></p></li>
-		<li><p class="btn_grid"><a href="#" id="excelDown">Edit</a></p></li>
-		<li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">Delete</a></p></li>
-		<li><p class="btn_grid"><a href="#" id="excelDown">EXCEL DW</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="fn_addRow()">Add</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="">Edit</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="fn_removeRow()">Delete</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="fn_exportTo()">EXCEL DW</a></p></li>
 		<!-- <li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li> -->
 		<!-- <li><p class="btn_grid"><a href="#">Edit Event</a></p></li> -->
 	</ul>
