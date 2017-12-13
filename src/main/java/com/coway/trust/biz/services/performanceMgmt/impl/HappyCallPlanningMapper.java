@@ -10,4 +10,6 @@ public interface HappyCallPlanningMapper {
 	
 	List<EgovMap> selectCallTypeList();
 
+	List<EgovMap> selectEvalCriteriaList();
+
 }

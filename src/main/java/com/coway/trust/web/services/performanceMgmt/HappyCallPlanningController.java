@@ -44,27 +44,20 @@ public class HappyCallPlanningController {
 	
 	@RequestMapping(value = "/selectCallTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCallTypeList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		LOGGER.debug("params {}", params);
+		//LOGGER.debug("params {}", params);
 		List<EgovMap> selectCallTypeList = happyCallPlanningService.selectCallTypeList();
 		LOGGER.debug("selectCallTypeList {}", selectCallTypeList);
 		return ResponseEntity.ok(selectCallTypeList);
 	}
 	
-//	@RequestMapping(value = "/selectSurveyStusList", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> selectSurveyStusList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-//		LOGGER.debug("params {}", params);
-//		List<EgovMap> selectSurveyStusList = surveyMgmtService.selectSurveyStusList();
-//		LOGGER.debug("selectSurveyStusList {}", selectSurveyStusList);
-//		return ResponseEntity.ok(selectSurveyStusList);
-//	}
-//	
-//	@RequestMapping(value = "/selectSurveyEventList", method = RequestMethod.GET) 
-//	public ResponseEntity<List<EgovMap>> selectSurveyEventList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception {
-//		List<EgovMap> selectSurveyEventList = null; 
-//		selectSurveyEventList = surveyMgmtService.selectSurveyEventList(params);
-//		return ResponseEntity.ok(selectSurveyEventList);
-//	}
-//	
+	@RequestMapping(value = "/selectEvalCriteriaList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectEvalCriteriaList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		//LOGGER.debug("params {}", params);
+		List<EgovMap> selectEvalCriteriaList = happyCallPlanningService.selectEvalCriteriaList();
+		LOGGER.debug("selectEvalCriteriaList {}", selectEvalCriteriaList);
+		return ResponseEntity.ok(selectEvalCriteriaList);
+	}
+	
 //	@RequestMapping(value = "/surveyEventCreatePop.do")
 //	public String surveyEventCreatePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 //		return "services/performanceMgmt/surveyEventCreatePop";

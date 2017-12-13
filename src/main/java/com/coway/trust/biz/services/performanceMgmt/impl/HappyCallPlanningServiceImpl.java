@@ -23,8 +23,12 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
 	
 	@Override
 	public List<EgovMap> selectCallTypeList() {
-		
 		return happyCallPlanningMapper.selectCallTypeList();
+	}
+
+	@Override
+	public List<EgovMap> selectEvalCriteriaList() {
+		return happyCallPlanningMapper.selectEvalCriteriaList();
 	}
 	
 }

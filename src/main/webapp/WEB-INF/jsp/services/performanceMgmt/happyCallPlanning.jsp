@@ -2,8 +2,125 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-	// Make AUIGrid 
-	var myGridID;
+// Make AUIGrid 
+var myGridID;
+var callTypeList = new Array();
+var evalCriteriaList = new Array();
+
+$(document).ready(function() {
+    
+    happyCallGrid();
+    fn_selectCallType();
+    fn_selectEvalCriteria();
+
+    doGetCombo('/services/performanceMgmt/selectCallTypeList.do','', '', 'cmbCallType', 'S', '');
+    doGetCombo('/services/performanceMgmt/selectEvalCriteriaList.do','', '', 'cmbEvalCriteria', 'S', '');
+
+                    
+    //search
+    $("#search").click(function() {
+        //var cmbMemberTypeId22 = $("#cmbMemberTypeId").val();
+        //alert(cmbMemberTypeId22);
+                                        
+        Common.ajax("GET","/services/performanceMgmt/selectSurveyEventList",$("#listSForm").serialize(),function(result) {
+            console.log("성공.");
+            console.log("data : "+ result);
+            AUIGrid.setGridData(myGridID,result);
+        });
+                                    
+    });
+
+                    
+    $("#clear").click(function() {
+        $("#cmbMemberTypeId").val('');
+        $("#eventName").val('');
+        $("#eventDate").val('');
+        $("#eventMemCode").val('');
+        $("#cmbSurveyStusId").val('');
+    });
+
+    
+    //excel Download
+    $('#excelDown').click(function() {
+        GridCommon.exportTo("grid_wrap", 'xlsx',"Survey Management");
+    });
+
+                
+});
+
+function happyCallGrid() {
+    
+	// AUIGrid 칼럼 설정
+    var columnLayout = [ {
+		        dataField : "callType",
+		        headerText : 'Call Type',
+		        width : 150,
+		        editable : true, 
+		        editRenderer : {
+		        	type : "ComboBoxRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        var list = callTypeList;
+                        return list;
+                    }, 
+                    keyField : "callType",
+                    valueField : "callType"
+                }
+		    }, {
+		        dataField : "questionNumber",
+		        headerText : 'Question Number',
+		        width : 150,
+		        editable : true, 
+                editRenderer : {
+                    type : "ComboBoxRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        var list = rData;
+                        return list;
+                    }, 
+                    keyField : "questionNumber",
+                    valueField : "questionNumber"
+                }
+		    }, {
+		        dataField : "feedbackType",
+		        headerText : 'Feedback Type',
+		        width : 200,
+		        editable : true
+		    }, {
+		        dataField : "evaluationCriteria",
+		        headerText : 'Evaluation Criteria',
+		        width : 150,
+		        editable : true, 
+		        editRenderer : {
+                    type : "ComboBoxRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        var list = evalCriteriaList;
+                        return list;
+                    }, 
+                    keyField : "evaluationCriteria",
+                    valueField : "evaluationCriteria"
+                }
+		    }, {
+		        dataField : "question",
+		        headerText : 'Question',
+		        width : 400,
+		        editable : true
+		    }, {
+		        dataField : "periodFrom",
+		        headerText : 'Period From',
+		        width : 200,
+		        dataType : "date",
+		        formatString : "dd/mm/yyyy",
+		        editable : true
+		    }, {
+		        dataField : "periodTo",
+		        headerText : 'Period To',
+		        width : 200,
+		        dataType : "date",
+		        formatString : "dd/mm/yyyy",
+		        editable : true
+		    } ];
 	
 	//그리드 속성 설정
     var gridPros = {
@@ -16,110 +133,73 @@
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
     };
-
-	//Start AUIGrid
-	$(document).ready(function() {
-						
-		// Create AUIGrid
-		myGridID = GridCommon.createAUIGrid("grid_wrap",columnLayout, "", gridPros);
-
-		doGetCombo('/services/performanceMgmt/selectCallTypeList.do','', '', 'cmbCallType', 'S', '');
-		//doGetCombo('/services/performanceMgmt/selectSurveyStusList','', '', 'cmbSurveyStusId', 'S', '');
-
-						
-		//search
-		$("#search").click(function() {
-			//var cmbMemberTypeId22 = $("#cmbMemberTypeId").val();
-			//alert(cmbMemberTypeId22);
-											
-			Common.ajax("GET","/services/performanceMgmt/selectSurveyEventList",$("#listSForm").serialize(),function(result) {
-				console.log("성공.");
-				console.log("data : "+ result);
-				AUIGrid.setGridData(myGridID,result);
-			});
-										
-		});
-
-						
-		$("#clear").click(function() {
-			$("#cmbMemberTypeId").val('');
-			$("#eventName").val('');
-			$("#eventDate").val('');
-			$("#eventMemCode").val('');
-			$("#cmbSurveyStusId").val('');
-		});
-
-		
-		//excel Download
-		$('#excelDown').click(function() {
-			GridCommon.exportTo("grid_wrap", 'xlsx',"Survey Management");
-		});
-
-					
-	});
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [ {
-		dataField : "callType",
-		headerText : 'Call Type',
-		width : 100,
-		editable : false
-	}, {
-		dataField : "questionNumber",
-		headerText : 'Question Number',
-		width : 150,
-		editable : false
-	}, {
-		dataField : "feedbackType",
-		headerText : 'Feedback Type',
-		width : 200,
-		editable : false
-	}, {
-		dataField : "evaluationCriteria",
-		headerText : 'Evaluation Criteria',
-		width : 150,
-		editable : false
-	}, {
-		dataField : "question",
-		headerText : 'Question',
-		width : 400,
-		editable : false
-	}, {
-        dataField : "periodFrom",
-        headerText : 'Period From',
-        width : 200,
-        dataType : "date",
-        formatString : "dd/mm/yyyy",
-        editable : false
-    }, {
-        dataField : "periodTo",
-        headerText : 'Period To',
-        width : 200,
-        dataType : "date",
-        formatString : "dd/mm/yyyy",
-        editable : false
-    } ];
-
-	function addRow(){
-        var item = new Object();
-        item.callType = "";
-        item.questionNumber = "";
-        item.feedbackType = "";
-        item.evaluationCriteria = "";
-        item.question = "";
-        item.periodFrom = "";
-        item.periodTo = "";
-       
-        // parameter
-        // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-        // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
-        AUIGrid.addRow(myGridID, item, "first");
-    }
 	
-	function removeRow(){
-        AUIGrid.removeRow(myGridID, "selectedIndex");
-        AUIGrid.removeSoftRows(myGridID);
+	// Create AUIGrid
+    myGridID = GridCommon.createAUIGrid("grid_wrap",columnLayout, "", gridPros);
+    
+    /* // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); */
+
+}
+
+/* //편집 핸들러
+function auiCellEditingHandler(event) {
+    if(event.columnIndex == 0 && event.value == "Public Holiday"){
+        AUIGrid.setCellValue(gridID, event.rowIndex,  1, "");
+        AUIGrid.setColumnProp( gridID, 1, { editable : false } );
+    } else if(event.columnIndex == 0 && event.value != "Public Holiday") {
+        AUIGrid.setColumnProp( gridID, 1, { editable : true } );
     }
+}; */
+
+function addRow(){
+    var item = new Object();
+    item.callType = "";
+    item.questionNumber = "";
+    item.feedbackType = "";
+    item.evaluationCriteria = "";
+    item.question = "";
+    item.periodFrom = "";
+    item.periodTo = "";
+   
+    // parameter
+    // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+    AUIGrid.addRow(myGridID, item, "first");
+}
+
+function removeRow(){
+    AUIGrid.removeRow(myGridID, "selectedIndex");
+    AUIGrid.removeSoftRows(myGridID);
+}
+
+function fn_selectCallType(){
+    Common.ajax("GET", "/services/performanceMgmt/selectCallTypeList.do",$("#happyCallForm").serialize(), function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        
+        for (var i = 0; i < result.length; i++) {
+            var list = new Object();
+            list.callType = result[i].codeName;
+            callTypeList.push(list);
+            }
+        });
+    return callTypeList;
+}
+
+function fn_selectEvalCriteria(){
+    Common.ajax("GET", "/services/performanceMgmt/selectEvalCriteriaList.do",$("#happyCallForm").serialize(), function(result) {
+        console.log("성공.");
+        console.log("data : " + result);
+        
+        for (var i = 0; i < result.length; i++) {
+            var list = new Object();
+            list.evaluationCriteria = result[i].codeId;
+            evalCriteriaList.push(list);
+            }
+        });
+    return evalCriteriaList;
+}
 	
 </script>
 
@@ -128,6 +208,7 @@
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
 	<li>Service</li>   
+	<li>Performance Mgmt.</li>   
 	<li>Happy Call Planning</li>
 </ul>
 
@@ -157,7 +238,7 @@
 	<input type="hidden" id="popServeyStatus" name="popServeyStatus" />
 </form>
 
-<form action="#" method="post" id="listSForm" name="listSForm">
+<form action="#" method="post" id="happyCallForm" name="happyCallForm">
 <table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -176,7 +257,8 @@
 			<th scope="row">Feedback Type</th>
 			<td><input type="text" id="feedbackType" name="feedbackType" title="" placeholder="" class="w100p" /></td>
 			<th scope="row">Evaluation Criteria</th>
-			<td><input type="text" id="evaluationCriteria" name="evaluationCriteria" title="" placeholder="" class="w100p" /></td>
+			<td><select id="cmbEvalCriteria" name="cmbEvalCriteria" class="w100p"></select>
+			</td>
 		</tr>
 		<tr>
 			<th scope="row">Period Month</th>

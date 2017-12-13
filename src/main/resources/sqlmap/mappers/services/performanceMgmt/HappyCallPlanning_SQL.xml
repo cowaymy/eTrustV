@@ -5,6 +5,13 @@
     <select id="selectCallTypeList"  parameterType="Map" resultType="egovMap">
         SELECT CODE_NAME 
         FROM SYS0013M
+        WHERE CODE_MASTER_ID = 80
+    </select>
+    
+    <select id="selectEvalCriteriaList"  parameterType="Map" resultType="egovMap">
+        SELECT CODE CODE_ID, CODE || ' : ' || CODE_NAME CODE_NAME
+		FROM SYS0013M
+		WHERE CODE_MASTER_ID = 386
     </select>
     
 </mapper>
