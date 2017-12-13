@@ -1440,9 +1440,9 @@ var addOrderLayout = [
 									<tr>
 									    <th scope="row">Billing Type</th>
 									    <td colspan="3">
-									    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
-									    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
-									    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
+										    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
+										    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
+										    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
 									    </td>
 									</tr>
 									<tr>
@@ -1605,7 +1605,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Reason Update</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" id="change_reasonUpd"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" id="change_reasonUpd"></textarea>
 					    </td>
 					</tr>
 				</tbody>
@@ -1644,19 +1644,19 @@ var addOrderLayout = [
 						<tr>
 						    <th scope="row">Current Remark</th>
 						    <td colspan="3">
-						    <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="updRem_remark"></textarea>
+						      <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="updRem_remark"></textarea>
 						    </td>
 						</tr>
 						<tr>
 						    <th scope="row">New Remark</th>
 						    <td colspan="3">
-						    <textarea cols="20" rows="5" placeholder="" id="newRem"></textarea>
+						      <textarea cols="20" rows="5" placeholder="" id="newRem"></textarea>
 						    </td>
 						</tr>
 						<tr>
 						    <th scope="row">Reason Update</th>
 						    <td colspan="3">
-						    <textarea cols="20" rows="5" placeholder="" id="reasonUpd"></textarea>
+						      <textarea cols="20" rows="5" placeholder="" id="reasonUpd"></textarea>
 						    </td>
 						</tr>
 					</tbody>
@@ -1699,19 +1699,19 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Current Address</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="changeMail_currAddr"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" readonly="readonly" class="readonly" id="changeMail_currAddr"></textarea>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">New Address</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" id="changeMail_newAddr" readonly="readonly" class="readonly"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" id="changeMail_newAddr" readonly="readonly" class="readonly"></textarea>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Reason Update</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" id="changeMail_resUpd"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" id="changeMail_resUpd"></textarea>
 					    </td>
 					</tr>
 				</tbody>
@@ -1823,7 +1823,7 @@ var addOrderLayout = [
 				<tr>
 				    <th scope="row">Reason Update</th>
 				    <td colspan="3">
-				    <textarea cols="20" rows="5" placeholder="" id="newContPerReason"></textarea>
+				        <textarea cols="20" rows="5" placeholder="" id="newContPerReason"></textarea>
 				    </td>
 				</tr>
 				</tbody>
@@ -1869,7 +1869,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">User Remark </th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" readonly="readonly"  id="det_userRemark"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" readonly="readonly"  id="det_userRemark"></textarea>
 					    </td>
 					</tr>
 					<tr>
@@ -1906,7 +1906,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Address Keyword</th>
 					    <td>
-					    <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
+					       <input type="text" id="custAddr" name="custAddr" title="" placeholder="Keyword" class="w100p" />
 					    </td>
 					</tr>
 				</tbody>
@@ -1937,7 +1937,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Contact Keyword</th>
 					    <td>
-					    <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
+					       <input type="text" id="personKeyword" name="personKeyword" title="" placeholder="Keyword" class="w100p" />
 					    </td>
 					</tr>
 				</tbody>
@@ -1966,74 +1966,74 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Initial<span class="must">*</span></th>
 					    <td>
-					    <select class="w100p" id="cmbInitials" name="cmbInitials">
-					    </select>
+						    <select class="w100p" id="cmbInitials" name="cmbInitials">
+						    </select>
 					    </td>
 					    <th scope="row">Gender<span class="must">*</span></th>
 					    <td>
-					    <label><input type="radio" name="gender" /><span>Male</span></label>
-					    <label><input type="radio" name="gender" /><span>Female</span></label>
+						    <label><input type="radio" name="gender" /><span>Male</span></label>
+						    <label><input type="radio" name="gender" /><span>Female</span></label>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Name<span class="must">*</span></th>
 					    <td>
-					    <input type="text" title="" placeholder="Name" class="w100p" />
+					       <input type="text" title="" placeholder="Name" class="w100p" />
 					    </td>
 					    <th scope="row">Race<span class="must">*</span></th>
 					    <td>
-					    <select id="raceId" name="raceId" class="w100p">
-					    </select>
+						    <select id="raceId" name="raceId" class="w100p">
+						    </select>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">NRIC</th>
 					    <td>
-					    <input type="text" title="" placeholder="NRIC Number" class="w100p" />
+					       <input type="text" title="" placeholder="NRIC Number" class="w100p" />
 					    </td>
 					    <th scope="row">DOB</th>
 					    <td>
-					    <input type="text" title="Create start Date" placeholder="Date of Brith" class="j_date" />
+					       <input type="text" title="Create start Date" placeholder="Date of Brith" class="j_date" />
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Tel (Mobile)<span class="must">*</span></th>
 					    <td>
-					    <input type="text" title="Telephone Number (Mobile)" placeholder="" class="w100p" />
+					       <input type="text" title="Telephone Number (Mobile)" placeholder="" class="w100p" />
 					    </td>
 					    <th scope="row">Tel (Office)<span class="must">*</span></th>
 					    <td>
-					    <input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />    
+					       <input type="text" title="" placeholder="Telephone Number (Office)" class="w100p" />    
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Tel (Residence)<span class="must">*</span></th>
 					    <td>
-					    <input type="text" title="" placeholder="Telephone Number (Residence)" class="w100p" />
+					       <input type="text" title="" placeholder="Telephone Number (Residence)" class="w100p" />
 					    </td>
 					    <th scope="row">Tel (Fax)<span class="must">*</span></th>
 					    <td>
-					    <input type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+					       <input type="text" title="" placeholder="Telephone Number (Fax)" class="w100p" />
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Department</th>
 					    <td>
-					    <input type="text" title="" placeholder="Department" class="w100p" />
+					       <input type="text" title="" placeholder="Department" class="w100p" />
 					    </td>
 					    <th scope="row">Job Position</th>
 					    <td>
-					    <input type="text" title="" placeholder="Job Position" class="w100p" />
+					       <input type="text" title="" placeholder="Job Position" class="w100p" />
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Ext No.</th>
 					    <td>
-					    <input type="text" title="" placeholder="Extension Number" class="w100p" />
+					       <input type="text" title="" placeholder="Extension Number" class="w100p" />
 					    </td>
 					    <th scope="row">Email</th>
 					    <td>
-					    <input type="text" title="" placeholder="Email" class="w100p" />
+					       <input type="text" title="" placeholder="Email" class="w100p" />
 					    </td>
 					</tr>
 				</tbody>
@@ -2079,7 +2079,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Reason Update</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" id="apprReq_reasonUpd"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" id="apprReq_reasonUpd"></textarea>
 					    </td>
 					</tr>
 				</tbody>
@@ -2142,7 +2142,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Reason Update</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" id="remove_reasonUpd"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" id="remove_reasonUpd"></textarea>
 					    </td>
 					</tr>
 				</tbody>
@@ -2171,11 +2171,11 @@ var addOrderLayout = [
 				<tbody>
 					<tr>
 					    <th scope="row">Billing Group</th>
-					        <td id="addOrd_grpNo">
-					        </td>
+					    <td id="addOrd_grpNo">
+					    </td>
 					    <th scope="row">Total Order In Group</th>
-					        <td id="addOrd_ordGrp">
-					        </td>
+					    <td id="addOrd_ordGrp">
+					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Available Order</th>
@@ -2186,7 +2186,7 @@ var addOrderLayout = [
 					<tr>
 					    <th scope="row">Reason Update</th>
 					    <td colspan="3">
-					    <textarea cols="20" rows="5" placeholder="" id="addOrd_reasonUpd"></textarea>
+					       <textarea cols="20" rows="5" placeholder="" id="addOrd_reasonUpd"></textarea>
 					    </td>
 					</tr>
 				</tbody>
