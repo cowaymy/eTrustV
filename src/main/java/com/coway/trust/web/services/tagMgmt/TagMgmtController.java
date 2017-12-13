@@ -50,6 +50,8 @@ public class TagMgmtController {
 		model.addAttribute("tagMgmtDetail" , tagMgmtDetail );
 		logger.debug("paramsJINMU1 {}", tagMgmtDetail );
 		
+		List<EgovMap> remarks = tagMgmtService.getTagRemark(params);
+		model.addAttribute("remarks" , remarks );
 		return "services/tagMgmt/tagLogListPop";
 	}
 	
@@ -61,6 +63,15 @@ public class TagMgmtController {
 		List<EgovMap> notice = tagMgmtService.getTagStatus(params);
 		logger.debug("paramsJINMU {}", notice );
 		return ResponseEntity.ok(notice);
+	}
+	
+
+	@RequestMapping(value = "/getRemarkResults.do")
+	 ResponseEntity<List<EgovMap>> getRemarks(@RequestParam Map<String, Object> params) {
+		logger.debug("paramsJINMU4 {}", params);
+		List<EgovMap>  remarks= tagMgmtService.getTagRemark(params);
+		logger.debug("paramsJINMU5 {}", remarks);
+		return ResponseEntity.ok(remarks);
 	}
 	
 	@RequestMapping(value = "/addRemarkResult.do" , method = RequestMethod.POST)

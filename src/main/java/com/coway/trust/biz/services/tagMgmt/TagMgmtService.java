@@ -15,6 +15,8 @@ public interface TagMgmtService {
 	EgovMap getDetailTagStatus(Map<String, Object> params);
 
 	int addRemarkResult(Map<String, Object> params, SessionVO sessionVO)  throws ParseException;
+
+	List<EgovMap> getTagRemark(Map<String, Object> params);
 	
 
 }

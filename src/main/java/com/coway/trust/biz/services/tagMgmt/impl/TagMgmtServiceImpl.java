@@ -63,6 +63,16 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 		
 		return cnt;
 	}
+
+	@Override
+	public List<EgovMap> getTagRemark(Map<String, Object> params) {
+		
+		EgovMap mapCallEntryId= tagMgmtMapper.selectCallEntryId(params);
+		if(mapCallEntryId != null){
+			params.put("callEntryId", mapCallEntryId.get("callEntryId") );
+		}
+		return tagMgmtMapper.selectTagRemarks(params);
+	}
 	
 	
 }

@@ -3,15 +3,78 @@
 
 
 <script type="text/javaScript">
+var gridID1;
+function tagRespondGrid() {
+		
+		var columnLayout1 =[
+					                   {
+					                       dataField: "mainDepartment",
+					                       headerText: "Main Dept",
+					                       width: 170
+					                   },
+					                   {
+					                       dataField: "subDepartment",
+					                       headerText: "Sub Dept",
+					                       width: 170
+					                   },
+					                   {
+					                       dataField: "remarkCont",
+					                       headerText: "Remark",
+					                       width: 170
+					                   },
+					                   {
+					                       dataField: "statusNm",
+					                       headerText: "Status",					                      
+					                       width: 130
+					                   },
+					                   {
+					                       dataField: "crtDate",
+					                       headerText: "Date",
+					                       dataType : "date"
+					                
+					                   }
+		                   
+			                   ];
+	                   
+	var gridPros1 = {  
+	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+	        showStateColumn     : false,             
+	        displayTreeOpen     : false,            
+	        selectionMode       : "singleRow",  //"multipleCells",            
+	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+	};  
+	
+	gridID1 = GridCommon.createAUIGrid("respond_grid_wrap", columnLayout1  ,"" ,gridPros1);
+
+
+
+}
 
 
 
 $(document).ready(function(){
 	
+	//grid 생성
+	tagRespondGrid();
 	
+	$("#respondInfo").click(function() {
+		
+		  var counselingNum = $("#counselingNo").text();
+		    Common.ajax("Get", "/services/tagMgmt/getRemarkResults.do?counselingNo="+ counselingNum +"", '' , function(result) {
+		    	 console.log("성공.");
+		         console.log("data : "+ result);
+		        AUIGrid.setGridData(gridID1 , result );
+		        AUIGrid.resize(gridID1,900,300);
+		    });
+	});
 	
+
 	
 });
+
+
 
 function fn_saveRemarkResult(){
 
@@ -23,8 +86,9 @@ function fn_saveRemarkResult(){
 			  "subDept" : $("#subDept").text(),
 			  "regDate" : $("#regDate").text(),
 			  "orderId" : $("#ordId").val(),
-			  "hcId" : $("#hcId").val()
-			 
+			  "hcId" : $("#hcId").val(),
+			  "inputMainDept" : $("#inputMainDept").val(),
+			  "inputSubDept" : $("#inputMainDept").val()
 	       };
 	 var regDate =  $("#orderId").val();
 	  console.log(regDate);
@@ -67,7 +131,7 @@ function fn_saveRemarkResult(){
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on">Tag Info</a></li>
-    <li><a href="#">Respond Info</a></li>
+    <li><a href="#" id="respondInfo">Respond Info</a></li>
 </ul>
 
 <!-- Tag Info Start -->
@@ -75,7 +139,7 @@ function fn_saveRemarkResult(){
     <section class="tap_wrap mt0"><!-- tap_wrap start -->
     <ul class="tap_type1">
         <li><a href="#" class="on">Tag Basic Info</a></li>
-        <li><a href="#">Caller Info</a></li>
+        <li><a href="#" >Caller Info</a></li>
     </ul>
     <!-- Tag Basic Info Start -->
     <article class="tap_area"><!-- tap_area start -->
@@ -313,7 +377,7 @@ function fn_saveRemarkResult(){
     </aside><!-- title_line end -->
 
     <article class="grid_wrap"><!-- grid_wrap start -->
-    그리드 영역
+         <div id="respond_grid_wrap" style="width:100%; height:300px; margin:0 "></div>
     </article><!-- grid_wrap end -->
 
   
@@ -345,12 +409,19 @@ function fn_saveRemarkResult(){
     </colgroup>
    
     <tbody>
-     
+     <tr>
+        <th scope="row">Main Dept</th>
+        <td><input type = "text"  id="inputMainDept" placeholder="Main Department"></td>
+     </tr>
+      <tr>
+        <th scope="row">Sub Dept</th>
+        <td><input type = "text"   id="inputSubDept"  placeholder="Sub Department"></td>
+     </tr>
     <tr>
         <th scope="row">Status</th>
         <td>
             <select  id="status" name="status">
-                <option value="1">Open</option>
+                <option value="1">Active</option>
                 <option value="44">Pending</option>
                 <option value="34">Solve</option>
                 <option value="35">Not yet to solve</option>

@@ -21,4 +21,6 @@ public interface TagMgmtMapper {
 
 	public int updateCcr0006d(Map<String, Object> params);
 
+	public List<EgovMap> selectTagRemarks(Map<String, Object> params);
+
 }
