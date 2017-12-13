@@ -156,7 +156,7 @@
             else {
                 var diffDay = fn_diffDate($('#listOrdStartDt').val(), $('#listOrdEndDt').val());
                  
-                if(diffDay > 31) {
+                if(diffDay > 31 || diffDay < 0) {
                     isValid = false;
                     msg += "* Please enter search period within one month.";
                 }
