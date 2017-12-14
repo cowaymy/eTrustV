@@ -10,6 +10,7 @@
                 (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = sy26m.STK_CTGRY_ID) STK_CTGRY_NM ,
                 lg62m.LATRANSIT,
                 lg62m.GLTRI,
+                lg62m.BOX_NO,
                 lg62m.LVORM,
                 TO_CHAR(lg62m.CRT_DT , 'DD/MM/YYYY') CRT_DT,
                 lg62m.CRT_USER_ID,
