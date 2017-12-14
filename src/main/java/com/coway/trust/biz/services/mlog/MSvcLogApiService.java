@@ -124,6 +124,6 @@ public interface MSvcLogApiService {
 
 	void saveProductServiceLogs(Map<String, Object> params);
 
-	void updateSuccessProductStatus(String transactionId);
+
 
 }
