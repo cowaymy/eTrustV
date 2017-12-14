@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1743,6 +1744,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
 		
 		orderRegisterMapper.insertCallResult(callResultVO);
+		
+		Map<String, Object> tempMap = new HashMap<String, Object>();
+		
+		tempMap.put("soReqSeq", salesReqCancelVO.getSoReqId());
+		tempMap.put("updCallEntryId", callResultVO.getCallEntryId());
+		
+		ccpCalculateMapper.updateOrderRequest(tempMap);
 		
 		callEntryMasterVO.setResultId(callResultVO.getCallResultId());
 		
