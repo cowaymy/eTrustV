@@ -249,7 +249,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		Map   SRMap=new HashMap(); 
 		
 		LOGGER.debug("ASManagementListServiceImpl.saveASEntry 물류 호출 PRAM ===>"+ logPram.toString());
-		servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);  
+		//servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);  
 		LOGGER.debug("ASManagementListServiceImpl.saveASEntry 물류 호출 결과 ===>" +logPram.toString());
 		logPram.put("P_RESULT_TYPE", "AS");
 		logPram.put("P_RESULT_MSG", logPram.get("p1"));
@@ -1614,8 +1614,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			      
 					/////////////////////////물류 호출////////////////////// 
 		            logPram.put("ORD_ID",     svc0004dmap.get("AS_NO") );
-		            logPram.put("RETYPE", "COMPLET");  
-		            logPram.put("P_TYPE", "OD03");  
+		            logPram.put("RETYPE", "SVO");  
+		            logPram.put("P_TYPE", "OD01");  
 		            logPram.put("P_PRGNM", "ASCOM_2");  
 		            logPram.put("USERID", String.valueOf(params.get("updator")));   
 		            

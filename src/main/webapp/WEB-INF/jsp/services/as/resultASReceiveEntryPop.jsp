@@ -1163,7 +1163,7 @@ function fn_addRemark(){
 
 
 
-<div style="display:inline">
+<div style="display:none">
            <input type="text" title="" placeholder="ISRAS"  id="ISRAS" name="ISRAS"/>
            <input type="text" title="" placeholder="AS_ID"  id="AS_ID" name="AS_ID"  value="${AS_ID}"/>
            <input type="text" title="" placeholder="AS_PIC_ID"  id="AS_PIC_ID" name="AS_PIC_ID"/>

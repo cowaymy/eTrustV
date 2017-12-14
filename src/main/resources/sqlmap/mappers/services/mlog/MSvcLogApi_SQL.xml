@@ -357,8 +357,7 @@
                                svc0004d.as_tot_amt AS total_Amount,
                                TO_CHAR (svc0004d.in_huse_repair_rem)
                                   AS in_House_Repair_Remark,
-                               TO_CHAR (svc0004d.in_huse_repair_replace_yn)
-                                  AS inhouserepairreplacementyn,
+                               DECODE(TO_CHAR (svc0004d.in_huse_repair_replace_yn),'1','Y','N')  AS inhouserepairreplacementyn,
                                TO_CHAR (svc0004d.in_huse_repair_promis_dt,
                                         'YYYYMMDD')
                                   AS in_House_Repair_Promised_Date,
@@ -428,10 +427,10 @@
 LEFT OUTER JOIN (
     SELECT DISTINCT * FROM
     (
-        SELECT
+       SELECT
             A.AS_NO AS AS_NO
             , B.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark
-            , B.IN_HUSE_REPAIR_REPLACE_YN AS inhouserepairreplacementyn
+            , DECODE(B.IN_HUSE_REPAIR_REPLACE_YN,'1','Y','N') AS inhouserepairreplacementyn
             , TO_CHAR(B.IN_HUSE_REPAIR_PROMIS_DT, 'YYYYMMDD') AS in_House_Repair_Promised_Date
             , B.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
             , B.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code
@@ -444,7 +443,7 @@ LEFT OUTER JOIN (
         SELECT
             A.AS_NO AS AS_NO
             , E.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark
-            , E.IN_HUSE_REPAIR_REPLACE_YN AS inhouserepairreplacementyn
+            , DECODE(E.IN_HUSE_REPAIR_REPLACE_YN,'1','Y','N' )AS inhouserepairreplacementyn
             , TO_CHAR(E.IN_HUSE_REPAIR_PROMIS_DT, 'YYYYMMDD') AS in_House_Repair_Promised_Date
             , E.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
             , E.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code

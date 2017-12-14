@@ -97,7 +97,7 @@
 							                 A.REF_REQST
 		                        FROM   SVC0001D A, SVC0004D B
 				            WHERE   1 = 1 
-				              AND A.AS_ID = B.AS_ENTRY_ID
+				              AND A.AS_ID = B.AS_ENTRY_ID(+)
 				              AND  REF_REQST IN ( 
 										                     SELECT  AS_RESULT_ID 
 										                        FROM  SVC0001D  A, SVC0004D  B  

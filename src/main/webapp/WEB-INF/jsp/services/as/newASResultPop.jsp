@@ -1087,7 +1087,7 @@ function fn_productGroup_SelectedIndexChanged(){
 
 
 <form id="resultASForm" method="post">
-    <div  style="display:inline">
+    <div  style="display:none">
 	        <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
 	        <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
 	        <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
