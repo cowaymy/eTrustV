@@ -44,6 +44,7 @@ function tagRespondGrid() {
 	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+	        editable :false 
 	};  
 	
 	gridID1 = GridCommon.createAUIGrid("respond_grid_wrap", columnLayout1  ,"" ,gridPros1);
@@ -70,6 +71,14 @@ $(document).ready(function(){
 		    });
 	});
 	
+	  doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'inputMainDept' , 'S', '');
+	
+	   $("#inputMainDept").change(function(){
+         
+         doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#inputMainDept").val(), '','inputSubDept', 'S' ,  ''); 
+         
+     });
+	
 
 	
 });
@@ -82,13 +91,13 @@ function fn_saveRemarkResult(){
 			 "remark" : $("#remark").val(),
 			 "status" : $("#status").val(),
 			  "counselingNo" :  $("#counselingNo").text(),
-			  "mainDept" : $("#mainDept").text(),
-			  "subDept" : $("#subDept").text(),
+			  "mainDept" : $("#mainDept").val(),
+			  "subDept" : $("#subDept").val(),
 			  "regDate" : $("#regDate").text(),
 			  "orderId" : $("#ordId").val(),
 			  "hcId" : $("#hcId").val(),
 			  "inputMainDept" : $("#inputMainDept").val(),
-			  "inputSubDept" : $("#inputMainDept").val()
+			  "inputSubDept" : $("#inputSubDept").val()
 	       };
 	 var regDate =  $("#orderId").val();
 	  console.log(regDate);
@@ -188,9 +197,14 @@ function fn_saveRemarkResult(){
         </tr>
         <tr>
             <th scope="row">Latest Main Dept</th>
-            <td><span id ="mainDept"><c:out value="${tagMgmtDetail.latestMainDept }"/></span></td>
+            <td><span ><c:out value="${tagMgmtDetail.latestMainDept }"/></span>
+                <input type="hidden" id ="mainDept" value="${tagMgmtDetail.deptCode}">
+            </td>
+            
             <th scope="row">Latest Sub Dept</th>
-            <td><span id="subDept"><c:out value="${tagMgmtDetail.latestSubDept }"/></span></td>
+            <td><span><c:out value="${tagMgmtDetail.latestSubDept }"/></span>
+                <input type="hidden" id ="subDept" value="${tagMgmtDetail.subDeptCde}">
+            </td>
          <th scope="row"></th>
             <td><span></span></td>
         </tr>
@@ -419,11 +433,13 @@ function fn_saveRemarkResult(){
     <tbody>
      <tr>
         <th scope="row">Main Dept</th>
-        <td><input type = "text"  id="inputMainDept" placeholder="Main Department"></td>
+        <td>
+         <select class="w100p" id="inputMainDept" name="inputMainDept"></select>
+         </td>
      </tr>
       <tr>
         <th scope="row">Sub Dept</th>
-        <td><input type = "text"   id="inputSubDept"  placeholder="Sub Department"></td>
+        <td><select class="w100p" id="inputSubDept" name="inputSubDept"></select></td>
      </tr>
     <tr>
         <th scope="row">Status</th>

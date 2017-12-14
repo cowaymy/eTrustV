@@ -23,4 +23,8 @@ public interface TagMgmtMapper {
 
 	public List<EgovMap> selectTagRemarks(Map<String, Object> params);
 
+	public List<EgovMap> selectMainDept();
+
+	public List<EgovMap> selectSubDept(Map<String, Object> params);
+
 }

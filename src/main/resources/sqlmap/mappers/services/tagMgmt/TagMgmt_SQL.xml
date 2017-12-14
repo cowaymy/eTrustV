@@ -24,8 +24,8 @@
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_LRGCLAS_CD, 'ms-MY') AS Main_inquiry 
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry 
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
-                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , B.MAIN_DEPT ) AS MAIN_DEPT    
-                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , B.SUB_DEPT) AS SUB_DEPT   
+                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS MAIN_DEPT    
+                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT   
                 , A.DEPT_CODE
                 , A.SUB_DEPT_CDE  
                 , A.Ord_no
@@ -70,7 +70,7 @@
               </foreach>
            </if>
            
-	
+	      ORDER BY  Reg_date
   </select>
   
   
@@ -94,8 +94,8 @@
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS MAIN_DEPT    
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT 
-                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , B.MAIN_DEPT ) AS LATEST_MAIN_DEPT    
-                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , B.SUB_DEPT) AS LATEST_SUB_DEPT       
+                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS LATEST_MAIN_DEPT  
+                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS LATEST_SUB_DEPT          
                 , A.DEPT_CODE
                 , A.SUB_DEPT_CDE  
                 , A.Ord_no
@@ -210,14 +210,40 @@
 			    
 			      <select id="selectTagRemarks" parameterType="Map" resultMap="clobMap">
 			 
-			        SELECT MAIN_DEPT main_department, SUB_DEPT sub_department
-                        , CALLCENTERUSER.FN_ERP_GET_STUS_NM(CALL_STUS_ID) status_Nm ,TO_CHAR(CALL_CRT_DT,'YYYY-MM-DD') crt_Date
-                        , CALL_REM 
-                    FROM  GBSLCVD.CCR0007D
-                    where Call_stus_id in (1,10,34,35,36,44)
-                    and  CALL_ENTRY_ID = #{callEntryId}
-                     
+				        SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', MAIN_DEPT ) main_department,  CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', SUB_DEPT) sub_department
+	                        , CALLCENTERUSER.FN_ERP_GET_STUS_NM(CALL_STUS_ID) status_Nm ,TO_CHAR(CALL_CRT_DT,'YYYY-MM-DD') crt_Date
+	                        , CALL_REM 
+	                    FROM  GBSLCVD.CCR0007D
+	                    where Call_stus_id in (1,10,34,35,36,44)
+	                    and  CALL_ENTRY_ID = #{callEntryId}
+                       order by crt_Date
 			      </select>
-  
+			      
+			        <select id="selectMainDept"  resultType="egovMap">
+					        
+						 SELECT CODE CODE_ID
+						     , CODE_DESC CODE_NAME
+						  FROM GBSLCVD.SYS0013M 
+						 WHERE CODE_MASTER_ID = 359
+						 ORDER BY CODE
+			        </select>
+			        
+			        
+			             <select id="selectSubDept"  parameterType="Map" resultType="egovMap">
+                            
+                         SELECT CODE CODE_ID
+					     , CODE_DESC CODE_NAME
+					  FROM GBSLCVD.SYS0013M
+					 WHERE CODE_MASTER_ID = 360
+					
+                          <if test = "groupCode != null and groupCode != '' ">
+						           AND  CODE LIKE #{groupCode} || '%'
+				         </if>
+				         
+				          ORDER BY CODE
+						  
+                    </select>
+			        
+		
     
 </mapper>

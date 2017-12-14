@@ -68,6 +68,7 @@ function tagMgmtGrid() {
                         	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                         	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                         	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                        	        editable :false 
                           };  
                           
                           gridID = GridCommon.createAUIGrid("tagMgmt_grid_wap", columnLayout  ,"" ,gridPros);
