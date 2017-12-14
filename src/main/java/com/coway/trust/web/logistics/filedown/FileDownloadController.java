@@ -53,6 +53,8 @@ public class FileDownloadController {
 
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
+	@Value("${web.resource.upload.file}")
+	private String uploadDirWeb;
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
@@ -204,7 +206,10 @@ public class FileDownloadController {
 		} else {
 			last += "Privacy";
 		}
-		String path = uploadDir + "/RawData/" + last;
+
+		// String path = uploadDir + "/RawData/" + last;
+		String path = uploadDirWeb + "/RawData/" + last;
+
 		File directory = new File(path);
 
 		FileFilter directoryFileFilter = new FileFilter() {
@@ -237,7 +242,8 @@ public class FileDownloadController {
 	public ResponseEntity<List<Map>> rawdataList(@RequestParam Map<String, Object> params) throws Exception {
 
 		logger.debug("groupCode : {}", params);
-		String path = uploadDir + "/RawData/" + params.get("type");
+		// String path = uploadDir + "/RawData/" + params.get("type");
+		String path = uploadDirWeb + "/RawData/" + params.get("type");
 		File dirFile = new File(path);
 		File[] fileList = dirFile.listFiles();
 		List<Map> list = new ArrayList<>();
