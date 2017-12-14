@@ -473,7 +473,10 @@ public class AssetMasterController {
 			loginId = sessionVO.getUserId();
 		}
 
-		logger.debug("masterassetid  : {}", params.get("masterassetid"));
+		logger.debug("transAssetId  : {}", params.get("transAssetId"));
+		logger.debug("transTypeId  : {}", params.get("transTypeId"));
+		params.put("masterassetid", params.get("transAssetId"));
+		params.put("cardTypeId", params.get("transTypeId"));
 		params.put("loginId", loginId);
 		ams.saveAssetCard(params);
 
@@ -515,8 +518,11 @@ public class AssetMasterController {
 			loginId = sessionVO.getUserId();
 		}
 
-		logger.debug("masterassetid  : {}", params.get("masterassetid"));
-		logger.debug("transdepartment  : {}", params.get("transdepartment"));
+		logger.debug("statusAssetId  : {}", params.get("statusAssetId"));
+		logger.debug("statusTypeId  : {}", params.get("statusTypeId"));
+		params.put("masterassetid", params.get("statusAssetId"));
+		params.put("cardTypeId", params.get("statusTypeId"));
+		
 		params.put("loginId", loginId);
 		ams.updateAssetStatus(params);
 
