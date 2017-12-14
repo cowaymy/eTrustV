@@ -52,7 +52,50 @@ public class ProductReturnResultForm {
 	private String checkInTime;
 	private String checkInGps;
 	
+
+	@ApiModelProperty(value = "signRegDate Data")
+	private String signRegDate;
+
+	@ApiModelProperty(value = "signRegTime Data")
+	private String signRegTime;
 	
+	private String ccCode;
+	private String resultCode;
+	
+	public String getCcCode() {
+		return ccCode;
+	}
+
+	public void setCcCode(String ccCode) {
+		this.ccCode = ccCode;
+	}
+
+	public String getResultCode() {
+		return resultCode;
+	}
+
+	public void setResultCode(String resultCode) {
+		this.resultCode = resultCode;
+	}
+
+	public String getSignRegDate() {
+		return signRegDate;
+	}
+
+	public void setSignRegDate(String signRegDate) {
+		this.signRegDate = signRegDate;
+	}
+
+	public String getSignRegTime() {
+		return signRegTime;
+	}
+
+	public void setSignRegTime(String signRegTime) {
+		this.signRegTime = signRegTime;
+	}
+
+
+
 	public String getCheckInDate() {
 		return checkInDate;
 	}
@@ -169,17 +212,24 @@ public class ProductReturnResultForm {
 
 	
 	
-	public static Map<String, Object> createMaps(ProductReturnResultForm productReturnResultForm) {
+	public static  List<Map<String, Object>>   createMaps(ProductReturnResultForm productReturnResultForm) {
 		
 		List<Map<String, Object>> list = new ArrayList<>();
-
-			Map<String, Object> map;
+			   Map<String, Object> map;
 			
-				map = BeanConverter.toMap(productReturnResultForm, "signData", "partList");
-//				map.put("signData", Base64.decodeBase64(installationResultForm.getSignData()));
-
-				// install Result
-				map.put("userId", productReturnResultForm.getUserId());
+				map = BeanConverter.toMap(productReturnResultForm, "signData");
+				
+				
+				map.put("resultCode",  	productReturnResultForm.getResultCode()); 
+				map.put("ccCode",  		productReturnResultForm.getCcCode()); 
+				map.put("signData", Base64.decodeBase64(productReturnResultForm.getSignData()));
+				//map.put("signData",    productReturnResultForm.getSignData());
+				map.put("checkinDt",  	productReturnResultForm.getCheckInDate()); 
+				map.put("checkinTm",  	productReturnResultForm.getCheckInTime()); 
+		    	map.put("checkinGps",  	productReturnResultForm.getCheckInGps()); 
+		    	map.put("signRegDt",  	productReturnResultForm.getSignRegDate());  
+		    	map.put("signRegTm",   productReturnResultForm.getSignRegTime()); 
+				map.put("userId",		    productReturnResultForm.getUserId());
 				map.put("salesOrderNo", productReturnResultForm.getSalesOrderNo());
 				map.put("serviceNo", productReturnResultForm.getServiceNo());
 				map.put("resultRemark", productReturnResultForm.getResultRemark());
@@ -188,12 +238,12 @@ public class ProductReturnResultForm {
 				map.put("resultIcMobileNo", productReturnResultForm.getResultIcMobileNo());
 				map.put("resultReportEmailNo", productReturnResultForm.getResultReportEmailNo());
 				map.put("resultAcceptanceName", productReturnResultForm.getResultAcceptanceName());
-				map.put("signData", Base64.decodeBase64(productReturnResultForm.getSignData()));
 				map.put("transactionId", productReturnResultForm.getTransactionId());				
-
-//				list.add(map);
 				
-				return map;
+
+				list.add(map);
+				
+				return list;
 	}
 	
 	

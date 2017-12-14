@@ -37,9 +37,7 @@ public interface MSvcLogApiService {
 	void updateSuccessInstallStatus(String transactionId);
 
 	void insertInstallationResult(Map<String, Object> params);
-
-	void insertProductReturnResult(Map<String, Object> params);
-
+	
 	void aSresultRegistration(List<Map<String, Object>> asTransLogs);
 
 	List<EgovMap> serviceHistory(Map<String, Object> params);
@@ -121,9 +119,11 @@ public interface MSvcLogApiService {
 	void upDatetAsFailJobResultM(Map<String, Object> params);
 
 	void upDateInstallFailJobResultM(Map<String, Object> params);
+	
+	
+	EgovMap productReturnResult(Map<String, Object> params);
 
-
-
+	void setPRFailJobRequest(Map<String, Object> params);
 
 
 }

@@ -62,8 +62,6 @@ public interface MSvcLogApiMapper {
 
 	List<EgovMap> getRentalCustomerList(Map<String, Object> params);
 
-	void insertProductReturnResult(Map<String, Object> params);
-
 	List<EgovMap> serviceHistory(Map<String, Object> params);
 
 	List<EgovMap> getFilterHistoryDList(Map<String, Object> params);
@@ -143,7 +141,16 @@ public interface MSvcLogApiMapper {
 	void upDateInstallFailJobResultM(Map<String, Object> params);
 
 	void insertInsFailServiceLog(Map<String, Object> params);
-
+	
+	
+	/*ProductReturnResult  API*/
+	int  updateState_LOG0038D(Map<String, Object> params);
+	int  insert_LOG0039D(Map<String, Object> params);
+	int  updateAppTm_LOG0038D(Map<String, Object> params);
+	int  insertFailed_LOG0039D(Map<String, Object> params);  
+	int  updateFailed_LOG0038D(Map<String, Object> params);
+	
+	String   getRetnCrtUserId(Map<String, Object> params);
 
 	
 }

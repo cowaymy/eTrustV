@@ -323,11 +323,70 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 
 	@Override
-	public void insertProductReturnResult(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		MSvcLogApiMapper.insertProductReturnResult(params);
+	public EgovMap productReturnResult (Map<String, Object> params) {
+		
+		EgovMap  rMp = new EgovMap();
+		
+		
+		//lev 1   =>  39m insert   결과 생성 
+		//lev 2   =>  38m update 상태 
+		//lev 3   =>  물류 return 
+		//lev 4   =>   xxxx....
+		
+		logger.debug("insert_LOG0039D==>" +params.toString());
+		int  log39cnt  = MSvcLogApiMapper.insert_LOG0039D(params);
+		logger.debug("log39cnt==>" +log39cnt);
+		
+		
+		if(log39cnt > 0){
+			logger.debug("updateState_LOG0038D==>" +params.toString());
+			int  log38cnt  = MSvcLogApiMapper.updateState_LOG0038D(params);
+			logger.debug("log38cnt==>" +log39cnt);
+		}
+		
+		
+		   //물류 호출   add by hgham
+        Map<String, Object>  logPram = null ;
+		/////////////////////////물류 호출/////////////////////////
+		logPram =new HashMap<String, Object>();
+        logPram.put("ORD_ID",     params.get("salesOrderNo") );
+        logPram.put("RETYPE",  "COMPLET");  
+        logPram.put("P_TYPE",  "OD03");  
+        logPram.put("P_PRGNM", "LOG39");  
+        logPram.put("USERID", MSvcLogApiMapper.getRetnCrtUserId(params));   
+        
+        
+        logger.debug("productReturnResult 물류  PRAM ===>"+ logPram.toString());
+		servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);  
+		logger.debug("productReturnResult 물류  결과 ===>" +logPram.toString());
+		logPram.put("P_RESULT_TYPE", "PR");
+		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+        /////////////////////////물류 호출 END //////////////////////   	
+		
+		rMp.put("SP_MAP", logPram);
+		
+		return rMp;
+		
 	}
 
+	
+	@Override
+	public void  setPRFailJobRequest (Map<String, Object> params) {
+		
+		
+		//lev 1   =>  38m ffaild   
+		//lev 2   =>  39m ffaild  
+		
+		logger.debug("setPRFailJobRequest==>" +params.toString());
+		int  log38cnt  = MSvcLogApiMapper.updateFailed_LOG0038D(params);
+		int  log39cnt  = MSvcLogApiMapper.insertFailed_LOG0039D(params);  
+		logger.debug("log39cnt==>" +log39cnt);
+	}
+	
+	
+	
+	
+	
 	@Override
 	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
 		// TODO Auto-generated method stub
@@ -454,7 +513,6 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 
 
-
 	@Override
 	public void saveHsReServiceLogs(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -503,7 +561,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 
 	@Override
 	public void updatePrReAppointmentReturnResult(Map<String, Object> params) {
-		 MSvcLogApiMapper.updatePrReAppointmentReturnResult(params);
+		 MSvcLogApiMapper.updateAppTm_LOG0038D(params);
 		
 	}
 
@@ -575,8 +633,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		MSvcLogApiMapper.upDateInstallFailJobResultM(params);
 		
 	}
-
-
+	
 	
 	   
 /*	@Override

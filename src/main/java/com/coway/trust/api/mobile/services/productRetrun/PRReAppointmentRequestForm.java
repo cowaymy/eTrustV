@@ -27,6 +27,11 @@ public class PRReAppointmentRequestForm {
 
 	@ApiModelProperty(value = "작업 변경 시간(HHMM)")
 	private String appointmentTime;
+	
+	
+
+	private String transactionId;
+	
 
 	public String getUserId() {
 		return userId;
@@ -68,6 +73,16 @@ public class PRReAppointmentRequestForm {
 		this.appointmentTime = appointmentTime;
 	}
 	
+	
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
 	
 	
 	

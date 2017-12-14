@@ -68,6 +68,7 @@ import com.coway.trust.api.mobile.services.installation.InstallationResultForm;
 import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestDto;
 import com.coway.trust.api.mobile.services.productRetrun.PRFailJobRequestForm;
 import com.coway.trust.api.mobile.services.productRetrun.PRReAppointmentRequestDto;
+import com.coway.trust.api.mobile.services.productRetrun.PRReAppointmentRequestForm;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobDto;
 import com.coway.trust.api.mobile.services.productRetrun.ProductRetrunJobForm;
 import com.coway.trust.api.mobile.services.productRetrun.ProductReturnResultDto;
@@ -1123,34 +1124,75 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Product Return Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/productReturnResult", method = RequestMethod.POST)
-	public ResponseEntity<ProductReturnResultDto> productReturnResult(@RequestBody ProductReturnResultForm productReturnResultForm)
+	public ResponseEntity<ProductReturnResultDto> productReturnResult(@RequestBody List< ProductReturnResultForm> productReturnResultForm)
 			throws Exception {		
 		String transactionId = "";
 
-		Map<String, Object> params = ProductReturnResultForm.createMaps(productReturnResultForm);
 		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.saveInstallServiceLogs(params);
-//		}
+		List<Map<String, Object>> prTransLogs = null;
+		SessionVO sessionVO1 = new SessionVO();
 		
+		prTransLogs = new ArrayList<>();
+		for (ProductReturnResultForm prService : productReturnResultForm) {
+			prTransLogs.addAll(prService.createMaps(prService));
+		}
 		
-//		// business service....
-//		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
-
+		for(int i=0 ; i < prTransLogs.size() ; i++ ){
+			
+			LOGGER.debug("prTransLogs 값 : {}", prTransLogs.get(i));
+			Map<String, Object> paramsTran = prTransLogs.get(i);  
+			Map<String, Object>    cvMp = new HashMap<String, Object>(); 
+			
+	    	cvMp.put("stkRetnStusId",  			"4");  
+	    	cvMp.put("stkRetnStkIsRet",  			"1");  
+	    	cvMp.put("stkRetnRem",  			    String.valueOf(paramsTran.get("resultRemark"))); 
+	    	cvMp.put("stkRetnResnId", 		    paramsTran.get("resultCode"));  
+	    	cvMp.put("stkRetnCcId",  		     	paramsTran.get("ccCode")); 
+	    	cvMp.put("stkRetnCrtUserId",         paramsTran.get("userId"));
+	    	cvMp.put("stkRetnUpdUserId",        paramsTran.get("userId")); 
+	    	cvMp.put("stkRetnResultIsSynch",   "0"); 
+	    	cvMp.put("stkRetnAllowComm",  		"0"); 
+	    	cvMp.put("stkRetnCtMemId",  		paramsTran.get("userId")); 
+	    	cvMp.put("checkinDt",  					String.valueOf(paramsTran.get("checkInDate"))); 
+	    	cvMp.put("checkinTm",  				String.valueOf(paramsTran.get("checkInTime"))); 
+	    	cvMp.put("checkinGps",  				String.valueOf(paramsTran.get("checkInGps"))); 
+	    	cvMp.put("signData",  					paramsTran.get("signData")); 
+	    	cvMp.put("signRegDt",  					String.valueOf(paramsTran.get("signRegDate")));  
+	    	cvMp.put("signRegTm",  				String.valueOf(paramsTran.get("signRegTime"))); 
+	    	cvMp.put("ownerCode",                 String.valueOf(paramsTran.get("ownerCode"))); 
+	    	cvMp.put("resultCustName",  		    String.valueOf(paramsTran.get("resultCustName"))); 
+	    	cvMp.put("resultIcmobileNo",  		String.valueOf(paramsTran.get("resultIcMobileNo"))); 
+	    	cvMp.put("resultRptEmailNo",  		String.valueOf(paramsTran.get("resultReportEmailNo"))); 
+	    	cvMp.put("resultAceptName",  		String.valueOf(paramsTran.get("resultAcceptanceName"))); 
+	    	cvMp.put("salesOrderNo",  String.valueOf(paramsTran.get("salesOrderNo"))); 
+	    	cvMp.put("userId",  String.valueOf(paramsTran.get("userId"))); 
+	    	cvMp.put("serviceNo",  String.valueOf(paramsTran.get("serviceNo"))); 
+	    	
+			
+	    	EgovMap  rtnValue = MSvcLogApiService.productReturnResult(cvMp);
+			
+			if( null !=rtnValue){
+				HashMap   spMap =(HashMap)rtnValue.get("spMap");
+				LOGGER.debug("spMap :"+ spMap.toString());   
+				if("000".equals(rtnValue.get("P_RESULT_MSG"))){
+					rtnValue.put("logerr","Y");
+				}
+				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+			}
+			
+		    /*
+			transactionId = String.valueOf(params.get("transactionId"));
+			
+			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+				MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+			}
+			*/
+			
+		}
 		
-		// TODO : 리턴할 dto 구현.
-		transactionId = productReturnResultForm.getTransactionId();
-		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-//		}
 		
 		return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
-
 	}
-	
-	
 	
 	
 	
@@ -1234,31 +1276,25 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "Product Return Re-Appointment Request", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/pRReAppointmentRequest", method = RequestMethod.POST)
-	public ResponseEntity<PRReAppointmentRequestDto> pRReAppointmentRequest(@RequestBody ProductReturnResultForm productReturnResultForm)
+	public ResponseEntity<PRReAppointmentRequestDto> pRReAppointmentRequest(@RequestBody  PRReAppointmentRequestForm pRReAppointmentRequestForm)
 			throws Exception {		
 		String transactionId = "";
 
-		Map<String, Object> params = ProductReturnResultForm.createMaps(productReturnResultForm);
+		Map<String, Object> params = PRReAppointmentRequestForm.createMaps(pRReAppointmentRequestForm);
 		
 		if (RegistrationConstants.IS_INSERT_PRRE_LOG) {
-			MSvcLogApiService.savePrReServiceLogs(params);
+			//MSvcLogApiService.savePrReServiceLogs(params);
 		}
 		
+		MSvcLogApiService.updatePrReAppointmentReturnResult(params);		
 		
-//		// business service....
-//		// TODO : installResult 구현 필요.....
-//		MSvcLogApiService.insertProductReturnResult(params);		
-
-		
-		// TODO : 리턴할 dto 구현.
-		transactionId = productReturnResultForm.getTransactionId();
+		transactionId = pRReAppointmentRequestForm.getTransactionId();  
 		
 //		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
 //			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
 //		}
 		
 		return ResponseEntity.ok(PRReAppointmentRequestDto.create(transactionId));
-
 	}
 	
 	
@@ -1360,15 +1396,6 @@ public class ServiceApiController {
 		return ResponseEntity.ok(ASReAppointmentRequestDto.create(transactionId));
 
 	}
-	
-	
-	
-	
-
-	
-	
-	
-	
 	
 	
 	
@@ -1476,21 +1503,16 @@ public class ServiceApiController {
 		Map<String, Object> params = PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
 		
 		if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-			MSvcLogApiService.savePrFailServiceLogs(params);
+			//MSvcLogApiService.savePrFailServiceLogs(params);
 		}
+	       
+		MSvcLogApiService.setPRFailJobRequest(params);		
+  	
+        transactionId = pRFailJobRequestForm.getTransactionId();
 		
-		
-//		// business service....
-//		// TODO : installResult 구현 필요.....
-		MSvcLogApiService.insertProductReturnResult(params);		
-
-		
-		// TODO : 리턴할 dto 구현.
-//		transactionId = productReturnResultForm.getTransactionId();
-		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-//		}
+    	if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
+    			//MSvcLogApiService.updatePrFailServiceLogs(transactionId);
+    	}
 		
 		return ResponseEntity.ok(PRFailJobRequestDto.create(transactionId));
 
@@ -1752,6 +1774,6 @@ public class ServiceApiController {
 
 	}
 	
-	
+
 	
 }
