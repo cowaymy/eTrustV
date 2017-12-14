@@ -575,6 +575,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		MSvcLogApiMapper.upDateInstallFailJobResultM(params);
 		
 	}
+
+	@Override
+	public void saveProductServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	   
