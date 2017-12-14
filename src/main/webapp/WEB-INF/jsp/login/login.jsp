@@ -342,14 +342,14 @@
             <input type="hidden" id="loginBrowser" name="browser" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
-            <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value="IVYLIM"/></p>
+            <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>
             <p><input type="password" title="PASSWORD" placeholder="PASSWORD" id="password" name="password"
-                      value="ivy123"/></p>
+                      value=""/></p>
             <p class="id_save">
                 <label>
                     <input id="saveId" type="checkbox" checked/>
                     <span>
-                    <spring:message code='sys.info.id'/> 
+                    <spring:message code='sys.info.id'/>
                     <spring:message code='sys.btn.save'/>
                   </span>
                 </label>
