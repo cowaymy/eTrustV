@@ -55,7 +55,7 @@ function fn_departmentCode(value){
 	            memberLvl : 3,
 	            flag :  "%CRS%"
 	    };
-		   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+		   doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
 		   break;
 	   case "2" :
            var jsonObj = {
@@ -85,9 +85,6 @@ function fn_departmentCode(value){
            break;
 
 	   case "5" :
-        
-         
-          
            $("#traineeType1").change(function(){
         	   var traineeType =  $("#traineeType1").val();
         	   if( traineeType == '2'){
@@ -97,19 +94,27 @@ function fn_departmentCode(value){
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
         	   }
            });
-           
+
            $("#branch").change(function(){
         	   var jsonObj = {
                        memberLvl : 3,
                        flag :  "%CCS%",
                        branchVal : $("#branch").val()
                };
-        	   
+
         	   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            });
-          
-         
+
+
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
+           break;
+
+	   case "6" :
+           var jsonObj = {
+                memberLvl : 3,
+                flag :  "%CRS%"
+        };
+           doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
            break;
 	}
 }
@@ -130,7 +135,7 @@ $(document).ready(function() {
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
 
     $("#deptCd").change(function (){
-    	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
+    	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
 	createAUIGridDoc();
 	fn_docSubmission();
@@ -505,9 +510,9 @@ function fn_selectState(selVal){
 <form action="#" id="memberAddForm" method="post">
 <input type="hidden" id="areaId" name="areaId">
 <input type="hidden" id="streetDtl1" name="streetDtl">
-<input type="hidden" id="addrDtl1" name="addrDtl">
+<input type="hidden" value ="addrDtl" id="addrDtl1" name="addrDtl">
 <input type="hidden" id="traineeType" name="traineeType">
-
+<!--<input type="hidden" id = "memberType" name="memberType"> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -524,6 +529,7 @@ function fn_selectState(selVal){
         <option value="3">Coway Technician (CT)</option>--%>
         <option value="4">Coway Staff (Staff)</option>
         <option value="5">Trainee</option>
+        <option value="6">HP Applicant</option>
     </select>
     </td>
 </tr>
