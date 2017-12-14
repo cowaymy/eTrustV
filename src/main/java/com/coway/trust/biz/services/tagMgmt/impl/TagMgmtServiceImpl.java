@@ -85,6 +85,18 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 		
 		return tagMgmtMapper.selectSubDept(params);
 	}
+
+	@Override
+	public List<EgovMap> getMainInquiryList() {
+		// TODO Auto-generated method stub
+		return tagMgmtMapper.selectMainInquiryList();
+	}
+
+	@Override
+	public List<EgovMap> getSubInquiryList(Map<String, Object> params) {
+	
+		return tagMgmtMapper.selectSubInquiryList(params);
+	}
 	
 	
 }

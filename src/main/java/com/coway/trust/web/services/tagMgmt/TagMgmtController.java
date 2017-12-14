@@ -114,5 +114,20 @@ public class TagMgmtController {
 		return ResponseEntity.ok( subDeptList);
 	}
 	
+	@RequestMapping(value = "/selectMainInquiry.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getMainInquiryList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> mainInquiryList = tagMgmtService.getMainInquiryList() ;
+		
+		return ResponseEntity.ok( mainInquiryList);
+	}
+	
+	@RequestMapping(value = "/selectSubInquiry.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getSubInquiryList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> subInquiryList = tagMgmtService.getSubInquiryList(params) ;
+		
+		return ResponseEntity.ok( subInquiryList);
+	}
 	
 }

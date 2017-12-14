@@ -77,7 +77,7 @@ $(document).ready(function(){
 	});
 	
 	  doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'inputMainDept' , 'S', '');
-	 
+	
 	
 	   $("#inputMainDept").change(function(){
          
@@ -180,9 +180,9 @@ function fn_saveRemarkResult(){
             <td><span><c:out value="${tagMgmtDetail.classifyMem }"/></span></td>
         </tr>
         <tr>
-            <th scope="row">In-charge Main Dept.</th>
+            <th scope="row">Initial Main Dept.</th>
             <td><span ><c:out value="${tagMgmtDetail.mainDept }"/></span></td>
-            <th scope="row">In-charge Sub Dept.</th>
+            <th scope="row">Initial Sub Dept.</th>
             <td><span ><c:out value="${tagMgmtDetail.subDept }"/></span></td>
             <th scope="row">Main Inquiry</th>
             <td><span ><c:out value="${tagMgmtDetail.mainInquiry }"/></span></td>

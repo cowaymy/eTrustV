@@ -101,6 +101,27 @@ $(document).ready(function(){
         	 counselingId = AUIGrid.getCellValue(gridID, event.rowIndex, "counselingNo");
         	
          });
+    
+    
+         doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'main_department' , 'S', '');
+         
+         
+         $("#main_department").change(function(){
+           
+           doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  ''); 
+           
+       });
+         
+         
+         doGetCombo('/services/tagMgmt/selectMainInquiry.do', '' , '', 'main_inquiry' , 'S', '');
+         
+         
+         $("#main_inquiry").change(function(){
+           
+           doGetCombo('/services/tagMgmt/selectSubInquiry.do',  $("#main_inquiry").val(), '','sub_inquiry', 'S' ,  ''); 
+           
+       });
+         
 });
 
 
@@ -170,17 +191,17 @@ function fn_tagLog() {
     <th scope="row">Counselling No</th>
     <td><input type="text" id="customer" name="counseling_no" placeholder="counseling_no" class="w100p" /></td>
     <th scope="row">Main Inquiry</th>
-    <td><input type="text" id="main_inquiry" name="main_inquiry" title="" placeholder="main_inquiry" class="w100p" /></td>
+    <td><select class="w100p" id="main_inquiry" name="main_inquiry"></select></td>
     <th scope="row">Sub Inquiry</th>
-    <td><input type="text" id="sub_inquiry" name="sub_inquiry" title="" placeholder="sub_inquiry" class="w100p" /></td>
+    <td><select class="w100p" id="sub_inquiry" name="sub_inquiry"></select></td>
 </tr>
 <tr>
     <th scope="row">Customer</th>
     <td><input type="text" id="customer" name="customer" placeholder="customer" class="w100p" /></td>
     <th scope="row">Main Dept</th>
-    <td><input type="text" id="main_department" name="main_department" title="" placeholder="main_department" class="w100p" /></td>
+    <td><select class="w100p" id="main_department" name="main_department"></select></td>
     <th scope="row">Sub Dept</th>
-    <td><input type="text" id="" name="sub_department" title="sub_department" placeholder="sub_department" class="w100p" /></td>
+    <td><select class="w100p" id="sub_department" name="sub_department"></select></td>
 </tr>
 <tr>
     <th scope="row">Feedback Code</th>

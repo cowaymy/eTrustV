@@ -21,6 +21,10 @@ public interface TagMgmtService {
 	List<EgovMap> getMainDeptList();
 
 	List<EgovMap> getSubDeptList(Map<String, Object> params);
+
+	List<EgovMap> getMainInquiryList();
+
+	List<EgovMap> getSubInquiryList(Map<String, Object> params);
 	
 
 }
