@@ -33,6 +33,8 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectSalesCnt(Map<String, Object> params);
 	List<EgovMap> selectSeperation(Map<String, Object> params);
 	List<EgovMap> selectChildField(Map<String, Object> params);
+	List<EgovMap> selectAccuracyMonthlyHeaderList(Map<String, Object> params);
+	List<EgovMap> selectWeekThSn(Map<String, Object> params);
 	List<EgovMap> selectRemainWeekTh(Map<String, Object> params);
 	List<EgovMap> selectMonthCombo(Map<String, Object> params);
 	List<EgovMap> selectPlanDetailIdSeq(Map<String, Object> params);
@@ -43,5 +45,7 @@ public interface SalesPlanMngementService
 	
 	int updateSCMPlanMaster(List<Object> addList, Integer updUserId);
 	int insertSalesPlanDetail(List<Object> addList, Integer updUserId);
+	
+	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
 	
 }
