@@ -41,7 +41,7 @@ var otherType;
                       {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:250    ,height:30                },
                       {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30 , visible:false              },
-                      {dataField:"mtext"        ,headerText:"Request Type"               ,width:120    ,height:30                },
+                      {dataField:"mtext"        ,headerText:"Movement Type"               ,width:120    ,height:30                },
                       {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
                       {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
                       {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
@@ -753,7 +753,7 @@ function f_addrow(){
                         <p><input type="text" class="w100p" id="searchOthersReq2" name="searchOthersReq2" /></p>
                          </div> <!-- date_set end -->
                     </td> 
-                    <th scope="row">Request Type</th>
+                    <th scope="row">Movement Type</th>
                     <td>
                         <select class="w100p" id="searchReqType" name="searchReqType" onchange="test()"></select>
                     </td> 
