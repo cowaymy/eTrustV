@@ -816,7 +816,7 @@ function  fn_DoSaveProcess(_saveOption){
          if(result.code =="00"){
              if(_saveOption == "1"){
                   Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.data.qotatRefNo + "<br/> System will auto redirect to payment process after 3 seconds. ");
-                  // setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000); 
+                   setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000); 
                   $("#_NewQuotDiv1").remove();
 
              }else{
@@ -835,6 +835,8 @@ function  fn_DoSaveProcess(_saveOption){
 function fn_saveResultTrans(quot_id){
     $("#_alertOk").click();
     $("#_NewQuotDiv1").remove();
+    
+    Common.popupDiv("/sales/membershipRentalQut/mRentalQuotConvSalePop.do" ,{QUOT_ID : quot_id}, null , true , '_mConvSaleDiv1');
     
 }
 
