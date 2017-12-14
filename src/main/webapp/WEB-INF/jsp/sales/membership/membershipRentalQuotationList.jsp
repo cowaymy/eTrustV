@@ -54,13 +54,29 @@ function fn_selectListAjax() {
 
 	
 
-	   if( $("#QUOT_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#CRT_SDT").val() ==""  ){
-	        
-	          Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
-	              
-	           return ;
-	       }
+    if( $("#QUOT_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#CRT_SDT").val() ==""  ){
+        
+          Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
+              
+           return ;
+       }
 	   
+	   if($("#CRT_EDT").val() !=""){
+           if($("#CRT_SDT").val()==""){
+                var msg = '<spring:message code="sales.CreateDate" />';
+                   Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+msg+"' htmlEscape='false'/>", function(){
+                       $("#CRT_SDT").focus();
+                   });
+                   return;
+           }else{
+               if($("#CRT_SDT").val() >   $("#CRT_EDT").val() ){
+                    Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
+                        $("#CRT_EDT").focus();
+                    });
+                    return;
+               }           
+           }
+       }
 	
     Common.ajax("GET", "/sales/membershipRentalQut/quotationList", $("#listSForm").serialize(), function(result) {
          console.log( result);
@@ -303,8 +319,8 @@ function fn_updateStus(){
 		
 	</ul>
 	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doPrint()">Quotation Download</a></p></li>
-		<li><p class="link_btn type2"><a href="#"  onclick="javascript:fn_doViewQuotation()">View Quotation</a></p></li>
+		<li><p class="link_btn"><a href="#" onclick="javascript:fn_doPrint()">Quotation Download</a></p></li>
+		<li><p class="link_btn"><a href="#"  onclick="javascript:fn_doViewQuotation()">View Quotation</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

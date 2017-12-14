@@ -10,6 +10,15 @@
 	
 	$(document).ready(function(){
 		
+	     var optionUnit = {  
+	             id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
+	             name: "codeName",  // 콤보박스 text 에 지정할 필드명.              
+	             isShowChoose: false,
+	             type : 'M'
+	     };
+	     	     
+	     CommonCombo.make('MBRSH_STUS_ID', "/status/selectStatusCategoryCdList.do", {selCategoryId : 23} , "" , optionUnit);
+		
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
@@ -31,7 +40,14 @@
 	
 	
 	 // 리스트 조회.
-    function fn_selectListAjax() {        
+    function fn_selectListAjax() {       
+		 
+        if( $("#MBRSH_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#MBRSH_CRT_DT").val() ==""  ){
+            
+            Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
+             return ;
+         }
+		 
         Common.ajax("GET", "/sales/membership/selectMembershipList", $("#listSForm").serialize(), function(result) {
         	
         	 console.log("성공.");
@@ -165,14 +181,7 @@
 	        
 	        gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
 	    }
-	
-	
-	
-	  function fn_clear(){
-	     
-	  }
-	  
-	  
+		  
 	  
 	  function fn_doViewLegder(){
 		   
@@ -229,26 +238,30 @@
 	  
 	function fn_report(type) {
 		
-		  var selectedItems = AUIGrid.getSelectedItems(gridID);
+		  /* var selectedItems = AUIGrid.getSelectedItems(gridID);
 		  
-		  if(type=="Invoice"){
-			  if (parseInt(selectedItems[0].item.mbrshId ,10) < 490447){
-				  // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
-		            var option = {
-		                isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-		            };
-				  
-				  
-				  $("#V_REFNO").val(selectedItems[0].item.mbrshId);
-		            Common.report("reportInvoiceForm", option);
-		            
-			  }else{
-				  Common.alert("<b>[" + selectedItems[0].item.mbrshId+ "]  does not  has event [490447]</b>");
-				  return ;
-			  }
-		  }
-
-	      
+		  if(selectedItems ==""){
+              Common.alert("No membership selected..");
+              return ;
+          }else{
+        	  
+        	  if(type=="Invoice"){
+                  if (parseInt(selectedItems[0].item.mbrshId ,10) < 490447){
+                      // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
+                        var option = {
+                            isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+                        };
+                      
+                       $("#V_REFNO").val(selectedItems[0].item.mbrshId);
+                        //Common.report("reportInvoiceForm", option); */
+                        Common.popupDiv("/payment/initTaxInvoiceMembershipPop.do");
+                        
+                 /*  }else{
+                      Common.alert("<b>[" + selectedItems[0].item.mbrshId+ "]  does not  has event [490447]</b>");
+                      return ;
+                  }
+              }
+          }    */
 	}
 	
 	function fn_keyInList(){
@@ -342,15 +355,15 @@ function fn_clear(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Membership No</th>
+	<th scope="row">Membership No<span class="must">*</span></th>
 	<td>
 	   <input type="text" title="" id="MBRSH_NO" name="MBRSH_NO"placeholder="Membership Number" class="w100p" />
 	</td>
-	<th scope="row">Order No</th>
+	<th scope="row">Order No<span class="must">*</span></th>
 	<td>
 	<input type="text" title=""  id="ORD_NO"  name="ORD_NO" placeholder="Order Number" class="w100p" />
 	</td>
-	<th scope="row">Create Date</th>
+	<th scope="row">Create Date<span class="must">*</span></th>
 	<td>
 	<input type="text" title="Create start Date"   id="MBRSH_CRT_DT" name="MBRSH_CRT_DT" placeholder="DD/MM/YYYY" class="j_date w100p" />
 	</td>
@@ -363,8 +376,6 @@ function fn_clear(){
 	<th scope="row">Status</th>
 	<td>
     <select id="MBRSH_STUS_ID" name="MBRSH_STUS_ID" class="multy_select w100p" multiple="multiple" >
-        <option value="1">Active</option>
-        <option value="4">Completed</option>
     </select>
 	</td>
 	<th scope="row">Outstanding</th>
@@ -377,6 +388,9 @@ function fn_clear(){
     </select>
 	</td>
 </tr>
+<tr>
+    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Creation date</span>  </th>
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -387,10 +401,12 @@ function fn_clear(){
 	<dd>
 
 	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li>
+		<li><p class="link_btn"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li>
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')">Invoice</a></p></li>
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" >Key-in List</a></p></li>
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_YSListing()">YS List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireList()">Expire List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireListRental()">Expire List (Year)</a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
@@ -402,11 +418,11 @@ function fn_clear(){
 
 <section class="search_result"><!-- search_result start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
 	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_expireList()">Expire List</a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript: fn_expireListRental()">Expire List (Only Rental)</a></p></li>
 	
-</ul> 
+</ul>  -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

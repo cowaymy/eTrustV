@@ -10,6 +10,27 @@ var  gridID;
 
 $(document).ready(function(){
     
+	 var optionUnit = {  
+             id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
+             name: "codeName",  // 콤보박스 text 에 지정할 필드명.              
+             isShowChoose: false,
+             type : 'M'
+     };
+             
+     CommonCombo.make('cmbStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 23} , "" , optionUnit);
+     
+     var optionUnit = {  
+             id: "code",              // 콤보박스 value 에 지정할 필드명.
+             name: "codeName",  // 콤보박스 text 에 지정할 필드명.              
+             isShowChoose: false,
+             isCheckAll : false,
+             type : 'M'
+     };
+             
+     
+     CommonCombo.make('cmbSRVCStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 24} , "ACT|!|REG|!|INV|!|SUS" , optionUnit);
+    
+	
     //AUIGrid 그리드를 생성합니다.
     createAUIGrid();
 
@@ -80,8 +101,14 @@ function fn_clear(){
 
 
 // 리스트 조회.
-function fn_selectListAjax() {        
+function fn_selectListAjax() {       
 	
+    if( $("#sRVContrtNo").val() ==""  &&  $("#salesDate").val() ==""  &&  $("#orderNo").val() ==""  ){
+        
+        Common.alert("You must key-in at least one of Membership number / Order number / Sales date");
+         return ;
+     }
+     
 
    Common.ajax("GET", "/sales/membershipRental/selectList", $("#listSForm").serialize(), function(result) {
        
@@ -243,33 +270,25 @@ function fn_goSVMDetails(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Membership No.</th>
+	<th scope="row">Membership No.<span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Rental Membership Number" class="w100p"   id="sRVContrtNo"  name="sRVContrtNo"/></td>
 	<th scope="row">Membership Status</th>
 	<td>
 	       <select class="multy_select w100p" multiple="multiple"  id ="cmbStatus" name="cmbStatus"  >
-                <option value="1" selected>Active</option>
-                <option value="4" selected>Completed</option>
             </select>
 			
 	</td>
-	<th scope="row">Sales Date</th>
+	<th scope="row">Sales Date<span class="must">*</span></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"   id="salesDate" name="salesDate" /></td>
 </tr>
 <tr>
 	<th scope="row">Rental Status</th>
 	<td>
 			<select class="multy_select w100p" multiple="multiple"  id="cmbSRVCStatus"  name="cmbSRVCStatus">
-                    <option value="ACT" selected>Active</option>
-                    <option value="REG" selected>Regular</option>
-                    <option value="INV" selected>Investigate</option>
-                    <option value="SUS" selected>Suspend</option>
-                    <option value="RET">Return</option>
-                    <option value="TER">Terminate</option>
             </select>
 		    
 	</td>
-	<th scope="row">Order No.</th>
+	<th scope="row">Order No.<span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Order No" class="w100p"  id="orderNo" name="orderNo"/></td>
 	<th scope="row">Creator</th>
 	<td><input type="text" title="" placeholder="Creator" class="w100p"  id="creator" name="creator" /></td>
@@ -282,7 +301,9 @@ function fn_goSVMDetails(){
 	<th scope="row">NRIC/Company No.</th>
 	<td><input type="text" title="" placeholder="NRIC/Company No." class="w100p" id="custNRIC"  name="custNRIC"  /></td>
 </tr>
-
+<tr>
+    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Sales date</span>  </th>
+</tr>
 
 
 
@@ -298,8 +319,8 @@ function fn_goSVMDetails(){
 	
 	</ul>
 	<ul class="btns">
-		<li><p class="link_btn type2"><a onclick="javascript:fn_goSVMDetails()" href="#">View Rental SVM Details</a></p></li>
-		<li><p class="link_btn type2"><a onclick="javascript:fn_goLEDGER()" href="#">LEDGER</a></p></li>
+		<li><p class="link_btn"><a onclick="javascript:fn_goSVMDetails()" href="#">View Rental SVM Details</a></p></li>
+		<li><p class="link_btn"><a onclick="javascript:fn_goLEDGER()" href="#">LEDGER</a></p></li>
 		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()" href="#">Key-in List</a></p></li>
 		<li><p class="link_btn type2"><a onclick="javascript:fn_goYSList()" href="#">YS List</a></p></li>
 	</ul>
