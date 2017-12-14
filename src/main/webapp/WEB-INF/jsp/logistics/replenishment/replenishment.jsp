@@ -61,9 +61,9 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    doGetComboData('/common/selectCodeList.do', {groupCode : 339, orderValue : 'code'}, '','slocgb', 'M' , 'f_multiCombo');
-    doGetCombo('/common/selectCodeList.do', '11', '', 'scate', 'M','f_multiCombo'); //CATEGORY LIST
-    doGetCombo('/common/selectCodeList.do', '15', '', 'sttype', 'M','f_multiCombo'); //TYPE LIST
+    doGetComboData('/common/selectCodeList.do', {groupCode : 339, orderValue : 'code'}, '','slocgb', 'S' , '');
+    doGetCombo('/common/selectCodeList.do', '11', '', 'scate', 'S',''); //CATEGORY LIST
+    doGetCombo('/common/selectCodeList.do', '15', '', 'sttype', 'S',''); //TYPE LIST
 
     
     rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
@@ -86,7 +86,7 @@ $(document).ready(function(){
     });
     
     AUIGrid.bind(subGrid, "ready", function(event) {
-    	
+        
     });
     
 });
@@ -97,16 +97,16 @@ $(function(){
         SearchListAjax();
     });
     $("#clear").click(function(){
-    	$("#searchForm")[0].reset();
+        $("#searchForm")[0].reset();
     });
     $("#sttype").change(function(){
        
     });
     $('#add').click(function(){
-    	$("#giopenwindow").show();
+        $("#giopenwindow").show();
     });
     $('#save').click(function(){
-    	var dat = GridCommon.getEditData(listGrid);
+        var dat = GridCommon.getEditData(listGrid);
         console.log(dat);
         Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
             Common.alert(result.message , SearchListAjax);
@@ -119,32 +119,32 @@ $(function(){
         });
     });
     $('#popsave').click(function(){
-    	
+        
         var param = $('#popForm').serializeJSON();
         
         if (validationchk()){
-	        Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
-	        	Common.alert(result.message , SearchListAjax);
-	        	$("#giopenwindow").hide();
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
-	
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
+            Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
+                Common.alert(result.message , SearchListAjax);
+                $("#giopenwindow").hide();
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
+    
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
         }else{
-        	return false;
+            return false;
         }
     });
     $('#slocgb').change(function(){
-    	var paramdata ={locgb:$('#slocgb').val()};
-    	doGetCombo('/common/selectStockLocationList.do', paramdata, '','sloccode', 'M' , 'f_multiCombo');
-    	if ($('#slocgb').val() == '03' || $('#slocgb').val() == '04'){
-    		AUIGrid.hideColumnByDataField(listGrid, "sftyqty");
-    	}else{
-    		AUIGrid.showColumnByDataField(listGrid, "sftyqty");
-    	}
+        var paramdata ={"locgb":$('#slocgb').val()};
+        doGetComboData('/common/selectStockLocationList.do', paramdata, '','sloccode', 'S' , '');
+        if ($('#slocgb').val() == '03' || $('#slocgb').val() == '04'){
+            AUIGrid.hideColumnByDataField(listGrid, "sftyqty");
+        }else{
+            AUIGrid.showColumnByDataField(listGrid, "sftyqty");
+        }
     });
     $('#sloccode').change(function(){
     });
@@ -187,21 +187,21 @@ $(function(){
     });
     
     $("#download").click(function() {
-    	 GridCommon.exportTo("grid_wrap", 'xlsx', "Replenishment Data");
+         GridCommon.exportTo("grid_wrap", 'xlsx', "Replenishment Data");
     });
     $("#itmnm").keyup(function(e) {
-    	if (event.which == '13') {
-        	$("#sUrl").val("/logistics/material/materialcdsearch.do");
-        	$("#svalue").val($("#itmnm").val());
+        if (event.which == '13') {
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            $("#svalue").val($("#itmnm").val());
             Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
         }
     });
     $("#locnm").keyup(function(e) {
-	    if (event.which == '13') {
-	        $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-	        $("#svalue").val($("#locnm").val());
-	        Common.searchpopupWin("popupForm", "/common/searchPopList.do","location");
-	    }
+        if (event.which == '13') {
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+            $("#svalue").val($("#locnm").val());
+            Common.searchpopupWin("popupForm", "/common/searchPopList.do","location");
+        }
     });
     $(".numberAmt").keyup(function(e) {
         //regex = /^[0-9]+(\.[0-9]+)?$/g;
@@ -218,57 +218,57 @@ $(function(){
 });
 
 function validationchk(){
-	if ($("#period").val() == ''){
-		Common.alert('Please enter a period.');
-		return false;
-	}
-	if ($("#loccd").val() == ''){
-		Common.alert('Please enter a Location.');
+    if ($("#period").val() == ''){
+        Common.alert('Please enter a period.');
         return false;
     }
-	if ($("#locnm").val() == ''){
-		Common.alert('Please enter a Location.');
+    if ($("#loccd").val() == ''){
+        Common.alert('Please enter a Location.');
         return false;
     }
-	if ($("#itmcd").val() == ''){
-		Common.alert('Please enter a Material.');
+    if ($("#locnm").val() == ''){
+        Common.alert('Please enter a Location.');
         return false;
     }
-	if ($("#itmnm").val() == ''){
-		Common.alert('Please enter a Material.');
+    if ($("#itmcd").val() == ''){
+        Common.alert('Please enter a Material.');
         return false;
     }
-	if ($("#maxqty").val() == ''){
-		Common.alert('Please enter a Maxmum Qty.');
+    if ($("#itmnm").val() == ''){
+        Common.alert('Please enter a Material.');
+        return false;
+    }
+    if ($("#maxqty").val() == ''){
+        Common.alert('Please enter a Maxmum Qty.');
         return false;
     }
     if ($("#reordqty").val() == ''){
-    	Common.alert('Please enter a Reorder Qty.');
+        Common.alert('Please enter a Reorder Qty.');
         return false;
     }if ($("#sftyqty").val() == ''){
-    	Common.alert('Please enter a Safety Stock Qty.');
+        Common.alert('Please enter a Safety Stock Qty.');
         return false;
     }
     return true;
 }
 
 function fn_itempopList(d){
-	
-	if (d[0].item.itemcode != undefined && d[0].item.itemcode != "undefined" && d[0].item.itemcode != null){
-		$("#itmcd").val(d[0].item.itemcode);
-		$("#itmnm").val(d[0].item.itemname);
-	}
-	
-	if (d[0].item.loccd != undefined && d[0].item.loccd != "undefined" && d[0].item.loccd != null){
+    
+    if (d[0].item.itemcode != undefined && d[0].item.itemcode != "undefined" && d[0].item.itemcode != null){
+        $("#itmcd").val(d[0].item.itemcode);
+        $("#itmnm").val(d[0].item.itemname);
+    }
+    
+    if (d[0].item.loccd != undefined && d[0].item.loccd != "undefined" && d[0].item.loccd != null){
         $("#loccd").val(d[0].item.loccd);
         $("#locnm").val(d[0].item.locdesc);
         
         if (d[0].item.locgb == '01' || d[0].item.locgb == '02' || d[0].item.locgb == '05'){
-        	
-        	$("#sftyqty").prop("disabled", false);
+            
+            $("#sftyqty").prop("disabled", false);
         }else{
-        	$("#sftyqty").val(0);
-        	$("#sftyqty").prop("disabled", true);
+            $("#sftyqty").val(0);
+            $("#sftyqty").prop("disabled", true);
         }
     }
 }
@@ -360,19 +360,19 @@ function createInitGrid() {
 }
 
 function fn_detail(data){
-	var period;
-	var location;
-	var itmcd;
-	var rowList = [];
-	var iCnt = 0;
-	for (var i = 1 ; i <= data.length ; i++){
-		Common.ajaxSync("GET" , "/logistics/replenishment/exceldata.do" , data[i-1] , function(data){
-			
-			if (data != null){
-			rowList[iCnt] = {
-		            period   : data.PERIOD,
-		            locid    : data.LOCID,
-		            loccd    : data.LOCCD,
+    var period;
+    var location;
+    var itmcd;
+    var rowList = [];
+    var iCnt = 0;
+    for (var i = 1 ; i <= data.length ; i++){
+        Common.ajaxSync("GET" , "/logistics/replenishment/exceldata.do" , data[i-1] , function(data){
+            
+            if (data != null){
+            rowList[iCnt] = {
+                    period   : data.PERIOD,
+                    locid    : data.LOCID,
+                    loccd    : data.LOCCD,
                     locnm    : data.LOCNM,
                     itmcd    : data.ITMCD,
                     itmnm    : data.ITMNM,
@@ -380,48 +380,23 @@ function fn_detail(data){
                     reordqty : data.REORDQTY,
                     sftyqty  : data.SFTYQTY,
                     avrqty   : 0
-		        }
-				iCnt++;
-			}
-		});
-	}
+                }
+                iCnt++;
+            }
+        });
+    }
 
-	AUIGrid.addRow(listGrid, rowList, "last");
+    AUIGrid.addRow(listGrid, rowList, "last");
 }
 
 function SearchListAjax() {
-	   
+       
     var url = "/logistics/replenishment/searchList.do";
     var param = $('#searchForm').serializeJSON();
     
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
         
-    });
-}
-
-function f_multiCombo() {
-    $(function() {
-        $('#slocgb').change(function() {
-        }).multipleSelect({
-            selectAll : true, // 전체선택 
-            width : '80%'
-        });
-        $('#sloccode').change(function() {
-        }).multipleSelect({
-            selectAll : true, // 전체선택 
-            width : '80%'
-        });
-        $('#sttype').change(function() {
-        }).multipleSelect({
-            selectAll : true, // 전체선택 
-            width : '80%'
-        });
-        $('#scate').change(function() {
-        }).multipleSelect({
-            selectAll : true, // 전체선택 
-            width : '80%'
-        }); 
     });
 }
 
@@ -462,13 +437,13 @@ function f_multiCombo() {
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row" rowspan='2'>Location Type</th>
+                    <th scope="row" rowspan='2'>Category of storage</th>
                     <td rowspan='2'>
-                        <select class="multy_select w100p" multiple="multiple" id="slocgb" name="slocgb"></select>
+                        <select class="w100p" id="slocgb" name="slocgb"></select>
                     </td>
                     <th scope="row" id=slocnm'>Location</th>
                     <td>
-                        <select class="multy_select w100p" multiple="multiple" id="sloccode" name="sloccode"><option value="">Choose Category of Storage</option></select>
+                        <select class="w100p" id="sloccode" name="sloccode"><option value="">Choose Category of Storage</option></select>
                     </td>
                     <th scope="row">Period</th>
                     <td>
@@ -478,11 +453,11 @@ function f_multiCombo() {
                 <tr>
                     <th scope="row">Material type</th>
                     <td>
-                        <select class="multy_select w100p" multiple="multiple" id="sttype" name="sttype"></select>
+                        <select class="w100p" id="sttype" name="sttype"></select>
                     </td>
                     <th scope="row">Material Category</th>
                     <td>
-                        <select class="multy_select w100p" multiple="multiple" id="scate" name="scate"></select>
+                        <select class="w100p" id="scate" name="scate"></select>
                     </td>
                 </tr>
             </tbody>
