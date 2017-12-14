@@ -589,6 +589,17 @@ public class MemberListController {
 	}
 
 
+	@RequestMapping(value = "/selectDeptCodeHp", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDeptCodeHp(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		logger.debug("params : {}", params);
+		params.put("memberLvl", params.get("groupCode[memberLvl]"));
+		params.put("flag", params.get("groupCode[flag]"));
+		params.put("branchVal", params.get("groupCode[branchVal]"));
+		logger.debug("params : {}", params);
+		List<EgovMap> deptCode = memberListService.selectDeptCodeHp(params);
+		return ResponseEntity.ok(deptCode);
+	}
+
 	/**
 	 * Search rule book management list
 	 *
@@ -607,24 +618,24 @@ public class MemberListController {
 
 	@RequestMapping(value = "/traineeUpdate.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage>  traineeUpdate(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		
+
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		
+
 		logger.debug("in...... traineeUpdate");
 		logger.debug("params : {}", params);
-		
-		
+
+
 		resultValue = memberListService.traineeUpdate(params,sessionVO);
-		
+
 		if(null != resultValue){
 			message.setMessage((String)resultValue.get("memCode"));
-		}	
-		
-		
+		}
+
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * MemberList Edit Pop open
 	 *
@@ -633,7 +644,7 @@ public class MemberListController {
 	 * @return
 	 * @throws Exception
 	 */
-	
+
 	@RequestMapping(value = "/memberListEditPop.do")
 	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -653,58 +664,58 @@ public class MemberListController {
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}
-	
+
 	@RequestMapping(value = "/getMemberListMemberView", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMemberListMemberView(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		
-		logger.debug("in  getMemberListMemberView.....");		
+
+		logger.debug("in  getMemberListMemberView.....");
 		logger.debug("params : {}", params.toString());
-		
-		
+
+
 		List<EgovMap> list = memberListService.getMemberListView(params);
 		logger.debug("return_Values: " + list.toString());
-		
+
 		return ResponseEntity.ok(list);
 	}
-	
+
 	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateMemberl(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
-		
+
 		//memberListService.saveDocSubmission(memberListVO,params, sessionVO);
 
 		Boolean success = false;
-		String msg = "";		
-		
-		
+		String msg = "";
+
+
 
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
-		
+
 		int userId = sessionVO.getUserId();
 		formMap.put("user_id", userId);
 
 		logger.debug("udtList : {}", updList);
 		logger.debug("formMap : {}", formMap);
-		
+
 		logger.debug("memberNm : {}", formMap.get("memberNm"));
 		logger.debug("memberType : {}", formMap.get("memberType"));
 		logger.debug("joinDate : {}", formMap.get("joinDate"));
 		logger.debug("gender : {}", formMap.get("gender"));
 		logger.debug("update : {}", formMap.get("docType"));
 		logger.debug("myGridID : {}", formMap.get("params"));
-		
+
 		String memCode = "";
 		boolean update = false;
-		
+
 		logger.debug("memCode : {}", formMap.get("memCode"));
-		
+
 		//update = memberListService.updateMember(formMap, updList,sessionVO);
-		
+
 		//update
-		
+
 		int resultUpc1 = 0;
 		int resultUpc2 = 0;
 		int resultUpc3 = 0;
@@ -712,7 +723,7 @@ public class MemberListController {
 		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
 		resultUpc3 = memberListService.memberListUpdate_member(formMap);
 		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
-		
+
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
 //    	message.setCode(AppConstants.SUCCESS);
