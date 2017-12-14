@@ -28,4 +28,10 @@ public class AnalysisController {
 		
 		return "sales/analysis/accumulated";
 	}
+	
+	@RequestMapping(value = "/salesDropOut.do")
+	public String salesDropOut() throws Exception{
+		
+		return "sales/analysis/salesDropOut";
+	}
 }
