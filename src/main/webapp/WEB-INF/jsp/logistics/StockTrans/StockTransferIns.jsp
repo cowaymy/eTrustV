@@ -138,7 +138,7 @@ $(document).ready(function(){
     
 });
 function tlocationFunc(){
-	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val()}, '','flocation', 'S' , '');
+	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val(), endlikeValue:$("#locationType").val()}, '','flocation', 'S' , '');
 }
 
 function transferTypeFunc(){
@@ -419,7 +419,7 @@ function f_multiCombo() {
         <option> All </option>
         <option selected> A </option>
         <option> B </option>
-    </select>
+    </select></td>
     <th scope="row">From Location</th>
     <td colspan="2">
     <select class="w100p" id="tlocation" name="tlocation"></select>
