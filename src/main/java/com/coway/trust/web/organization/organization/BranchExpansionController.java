@@ -57,7 +57,6 @@ public class BranchExpansionController {
  
 	@RequestMapping(value = "/branchExpansionPop.do")
 	public String branchExpansionPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		//화면에 공통코드값....가져와........
 
 		// 호출될 화면 
 		return "organization/organization/branchExpansionPop";
