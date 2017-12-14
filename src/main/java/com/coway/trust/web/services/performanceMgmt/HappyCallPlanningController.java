@@ -1,5 +1,6 @@
 package com.coway.trust.web.services.performanceMgmt;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +14,15 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.services.performanceMgmt.HappyCallPlanningService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -59,75 +64,57 @@ public class HappyCallPlanningController {
 		return ResponseEntity.ok(selectHappyCallList);
 	}
 	
-//	@RequestMapping(value = "/surveyEventCreatePop.do")
-//	public String surveyEventCreatePop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
-//		return "services/performanceMgmt/surveyEventCreatePop";
-//	}
-//	
-//
-//	@RequestMapping(value = "/saveSurveyEventCreate.do", method = RequestMethod.POST)
-//	public  ResponseEntity<ReturnMessage> saveSurveyEventCreate(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
-//
-//		String dt = CommonUtils.getNowDate();	
-//
-//		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-//		String loginId = "";
-//		if(sessionVO==null){
-//			loginId="1000000000";			
-//		}else{
-//			loginId=String.valueOf(sessionVO.getUserId());
-//		}
-//		
-//		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
-//		
-//		int cnt = 0;
-//		
-//		if (addList.size() > 0) {			
-//			cnt = surveyMgmtService.addSurveyEventCreate(addList, loginId);
-//		}
-//		
-//		model.addAttribute("searchDt", dt);
-//
-//		// 결과 만들기 예.
-//		ReturnMessage message = new ReturnMessage();
-//		message.setCode(AppConstants.SUCCESS);
-//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-//		return ResponseEntity.ok(message);
-//	}
-//	
-//	
-//	@RequestMapping(value = "/getCodeNameList.do", method = RequestMethod.GET)
-//	public ResponseEntity<List<EgovMap>> getCodeNameList(@RequestParam Map<String, Object> params) {
-//		Precondition.checkNotNull(params.get("codeId"),
-//				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "codeId" }));
-//
-//		LOGGER.debug("codeId : {}", params.get("codeId"));
-//
-//		List<EgovMap> codeNameList = surveyMgmtService.getCodeNameList(params);
-//		return ResponseEntity.ok(codeNameList);
-//	}
-//	
-//	
-//	@RequestMapping(value = "/saveSurveyEventTarget.do", method = RequestMethod.POST)
-//	public  ResponseEntity<ReturnMessage> saveSurveyEventTarget(@RequestBody Map<String, Map<String, ArrayList<Object>>> params, Model model) {
-//
-//		String dt = CommonUtils.getNowDate();	
-//
-//		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-//		String loginId = "";
-//		if(sessionVO==null){
-//			loginId="1000000000";			
-//		}else{
-//			loginId=String.valueOf(sessionVO.getUserId());
-//		}
-//		
-//		surveyMgmtService.addSurveyEventTarget(params, loginId);
-//		
-//		// 결과 만들기 예.
-//		ReturnMessage message = new ReturnMessage();
-//		message.setCode(AppConstants.SUCCESS);
-//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-//		return ResponseEntity.ok(message);
-//	}
+	@RequestMapping(value = "/saveHappyCallList.do", method = RequestMethod.POST)
+	public  ResponseEntity<ReturnMessage> saveHappyCallList(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 
+		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); 		// Get grid addList
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 	// Get gride UpdateList
+		List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE);  // Get grid DeleteList
+		
+		LOGGER.debug("addList {}", addList);
+		LOGGER.debug("udtList {}", udtList);
+		LOGGER.debug("delList {}", delList);
+		
+		ReturnMessage message = new ReturnMessage();
+		boolean addSuccess = false;
+		boolean updateSuccess = false;
+		boolean delSuccess = false;
+		
+		if(addList != null){
+			addSuccess = happyCallPlanningService.insertHappyCall(addList,sessionVO);
+		}
+		if(addList != null){
+//			updateSuccess = happyCallPlanningService.updateHappyCall(udtList,sessionVO);
+		}
+		if(delList != null){
+//			delSuccess = happyCallPlanningService.deleteHappyCall(delList,sessionVO);
+		}
+		
+		if(addSuccess){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		if(updateSuccess){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		if(delSuccess){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+	
 }

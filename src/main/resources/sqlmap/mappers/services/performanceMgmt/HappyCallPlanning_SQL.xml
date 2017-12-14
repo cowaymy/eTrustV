@@ -17,22 +17,18 @@
     </select>
     
     <select id="selectHappyCallList" parameterType="Map" resultType="egovMap">
-        SELECT B.CODE_NAME CALL_TYPE, A.HC_DEF_ITM_NO QUESTION_NUMBER, C.CODE_NAME FEEDBACK_TYPE, D.CODE_NAME EVALUATION_CRITERIA, A.HC_DEF_DESC QUESTION, A.PRIOD_FROM PERIOD_FROM, A.PRIOD_TO PERIOD_TO
+        SELECT A.HC_DEF_ID HC_ID, B.CODE_NAME CALL_TYPE, A.HC_DEF_ITM_NO QUESTION_NUMBER, C.CODE_NAME FEEDBACK_TYPE, D.CODE_NAME EVALUATION_CRITERIA, A.HC_DEF_DESC QUESTION, A.PRIOD_FROM PERIOD_FROM, A.PRIOD_TO PERIOD_TO, E.NAME STATUS
 		FROM CCR0003M A
 		JOIN SYS0013M B ON A.HC_DEF_TYPE_ID = B.CODE_ID
 		JOIN SYS0013M C ON A.HC_DEF_CTGRY_ID = C.CODE_ID
 		JOIN SYS0013M D ON A.HC_DEF_QUES_TYPE_ID = D.CODE_ID
+		JOIN SYS0038M E ON A.HC_DEF_STUS_ID = E.STUS_CODE_ID
 		WHERE 1=1
 		<if test="cmbCallType != null and cmbCallType != '' ">
 			AND A.HC_DEF_TYPE_ID = #{cmbCallType}
 		</if>
 		<if test="cmbFeedbackType != null and cmbFeedbackType != '' ">
-			<if test=" cmbFeedbackType != null and cmbFeedbackType == '2753' ">
-			AND A.HC_DEF_CTGRY_ID = '515'
-			</if>
-			<if test=" cmbFeedbackType != null and cmbFeedbackType == '2754' ">
-	        AND A.HC_DEF_CTGRY_ID = '516'
-	        </if>
+			AND A.HC_DEF_CTGRY_ID = #{cmbFeedbackType}
 		</if>
 		<if test="cmbEvalCriteria != null and cmbEvalCriteria != '' ">
 		    <if test=" cmbEvalCriteria != null and cmbEvalCriteria == '2755' ">
@@ -48,9 +44,56 @@
             AND A.HC_DEF_QUES_TYPE_ID = '1186'
             </if>
 		</if>
+		<if test="cmbStatus != null and cmbStatus != '' ">
+            AND A.HC_DEF_STUS_ID = #{cmbStatus}
+        </if>
 		<if test="periodMonth != null and periodMonth != '' ">
             AND TO_DATE(#{periodMonth}, 'MM/YYYY') BETWEEN A.PRIOD_FROM AND A.PRIOD_TO
         </if>
     </select>
+    
+    <insert id="insertHappyCall" parameterType="Map">
+	    INSERT INTO CCR0003M (
+	       HC_DEF_ID, 
+	       HC_DEF_TYPE_ID, 
+	       HC_DEF_ITM_NO, 
+	       HC_DEF_DESC, 
+	       HC_DEF_STUS_ID, 
+	       HC_DEF_CTGRY_ID, 
+	       CRT_DT, 
+	       CRT_USER_ID, 
+	       UPD_DT, 
+	       UPD_USER_ID, 
+	       HC_DEF_QUES_TYPE_ID, 
+	       PRIOD_FROM, 
+	       PRIOD_TO
+	    )
+		VALUES (
+		   CCR0003M_HC_DEF_ID_SEQ.NEXTVAL,
+		   (SELECT CODE_ID
+	        FROM SYS0013M 
+	        WHERE CODE_MASTER_ID = 80
+	        AND CODE_NAME = #{callType}), 
+           TO_NUMBER(#{questionNumber}), 
+           #{question}, 
+           (SELECT STUS_CODE_ID 
+		    FROM SYS0038M 
+		    WHERE NAME = #{status}), 
+           (SELECT CODE_ID
+            FROM SYS0013M 
+            WHERE CODE_MASTER_ID = 102
+            AND CODE_NAME = #{feedbackType}), 
+           SYSDATE, 
+           #{userId}, 
+           SYSDATE, 
+           #{userId}, 
+           (SELECT CODE_ID
+            FROM SYS0013M 
+            WHERE CODE_MASTER_ID = 103
+            AND CODE_NAME = #{evaluationCriteria}), 
+           TO_DATE(#{periodFrom}, 'YYYY/MM/DD'), 
+           TO_DATE(#{periodTo}, 'YYYY/MM/DD')
+		)
+    </insert>
 
 </mapper>

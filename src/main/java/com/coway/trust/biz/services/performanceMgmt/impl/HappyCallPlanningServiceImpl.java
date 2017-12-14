@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.services.performanceMgmt.HappyCallPlanningService;
 import com.coway.trust.biz.services.performanceMgmt.SurveyMgmtService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -30,6 +31,24 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
 	@Override
 	public List<EgovMap> selectHappyCallList(Map<String, Object> params) {
 		return happyCallPlanningMapper.selectHappyCallList(params);
+	}
+
+	@Override
+	public boolean insertHappyCall(List<Object> addList, SessionVO sessionVO) {
+		boolean addSuccess = false;
+		if(addList.size() > 0){
+    		for(int i=0; i< addList.size(); i++){
+    			Map<String, Object>  insertValue = (Map<String, Object>) addList.get(i);
+//    			insertValue.put("holidayType", (insertValue.get("holidayType").toString()).substring(0, 1) );
+    			insertValue.put("userId", sessionVO.getUserId());
+    			logger.debug("insertValue {}", insertValue);
+    			happyCallPlanningMapper.insertHappyCall(insertValue);
+    		}
+    		addSuccess = true;
+		}else{
+			addSuccess = false;
+		}
+		return addSuccess;
 	}
 	
 }

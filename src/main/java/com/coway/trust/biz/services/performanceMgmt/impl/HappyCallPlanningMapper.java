@@ -13,4 +13,6 @@ public interface HappyCallPlanningMapper {
 
 	List<EgovMap> selectHappyCallList(Map<String, Object> params);
 
+	void insertHappyCall(Map<String, Object> insertValue);
+
 }

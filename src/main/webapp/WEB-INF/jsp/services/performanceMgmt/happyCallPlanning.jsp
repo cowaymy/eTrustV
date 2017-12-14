@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 80, '', 'cmbCallType', 'S', '');
     doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 386, '', 'cmbEvalCriteria', 'S', '');
-    doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 385, '', 'cmbFeedbackType', 'S', '');
+    doGetCombo('/services/performanceMgmt/selectCodeNameList.do', 102, '', 'cmbFeedbackType', 'S', '');
 
                     
     //search
@@ -42,9 +42,8 @@ function happyCallGrid() {
 		        dataField : "callType",
 		        headerText : 'Call Type',
 		        width : 150,
-		        editable : true, 
 		        editRenderer : {
-		        	type : "ComboBoxRenderer",
+		        	type : "DropDownListRenderer",
                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
                         var list = callTypeList;
@@ -57,9 +56,8 @@ function happyCallGrid() {
 		        dataField : "questionNumber",
 		        headerText : 'Question <br/>Number',
 		        width : 100,
-		        editable : true, 
                 editRenderer : {
-                    type : "ComboBoxRenderer",
+                    type : "DropDownListRenderer",
                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
                     	var list = fn_selectQuestionNum();
@@ -72,9 +70,8 @@ function happyCallGrid() {
 		        dataField : "feedbackType",
 		        headerText : 'Feedback Type',
 		        width : 200,
-		        editable : true, 
 		        editRenderer : {
-                    type : "ComboBoxRenderer",
+                    type : "DropDownListRenderer",
                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
                         var list = feedbackTypeList;
@@ -89,7 +86,7 @@ function happyCallGrid() {
 		        width : 150,
 		        editable : true, 
 		        editRenderer : {
-                    type : "ComboBoxRenderer",
+                    type : "DropDownListRenderer",
                     showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                     listFunction : function(rowIndex, columnIndex, item, dataField) {
                         var list = evalCriteriaList;
@@ -129,7 +126,27 @@ function happyCallGrid() {
                     showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
                   },
                 onlyCalendar : false // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-		    } ];
+		    }, {
+                dataField : "status",
+                headerText : 'Status',
+                width : 100,
+                editable : true, 
+                editRenderer : {
+                    type : "DropDownListRenderer",
+                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                    listFunction : function(rowIndex, columnIndex, item, dataField) {
+                        var list = fn_selectStatus();
+                        return list;
+                    }, 
+                    keyField : "status",
+                    //valueField : "status"
+                }
+            }, {
+                dataField : "hcId",
+                headerText : 'HC ID',
+                editable : false, 
+                visible : true
+            } ];
 	
 	//그리드 속성 설정
     var gridPros = {
@@ -145,8 +162,18 @@ function happyCallGrid() {
     };
 	
 	// Create AUIGrid
-    myGridID = GridCommon.createAUIGrid("grid_wrap",columnLayout, "", gridPros);
-    
+    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "hcId", gridPros);
+	
+	AUIGrid.bind(myGridID, "cellEditBegin", function (event){
+        if (event.columnIndex == 0 || event.columnIndex == 1 || event.columnIndex == 2){
+            if(AUIGrid.isAddedById(myGridID, event.item.hcId)) {
+                return true;
+            }else{
+                return false;
+            }
+        }       
+    });
+	
     /* // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); */
 
@@ -169,6 +196,10 @@ function fn_clear(){
     $("#periodMonth").val('');
 }
 
+function fn_exportTo(){
+    GridCommon.exportTo("grid_wrap", 'xlsx',"Happy Call Planning");
+}
+
 function fn_addRow(){
     var item = new Object();
     item.callType = "";
@@ -178,6 +209,7 @@ function fn_addRow(){
     item.question = "";
     item.periodFrom = "";
     item.periodTo = "";
+    item.hcId = "";
    
     // parameter
     // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
@@ -190,6 +222,22 @@ function fn_removeRow(){
     AUIGrid.removeSoftRows(myGridID);
 }
 
+function fn_save(){
+    if(GridCommon.getEditData(myGridID) != null){
+        Common.ajax("POST", "/services/performanceMgmt/saveHappyCallList.do", GridCommon.getEditData(myGridID), function(result) {
+            console.log("Save 성공.");
+            console.log("data : " + result);
+        });
+    } else {
+    	alert("null");
+    }
+}
+
+/* function fn_validationCheck(){
+	var result = true;
+	return result;
+} */
+
 function fn_selectCallType(){
     Common.ajax("GET", "/services/performanceMgmt/selectCodeNameList.do",{groupCode : 80}, function(result) {
         console.log("성공.");
@@ -198,6 +246,7 @@ function fn_selectCallType(){
         for (var i = 0; i < result.length; i++) {
             var list = new Object();
             list.callType = result[i].codeName;
+            //list.callTypeId = result[i].codeId;
             callTypeList.push(list);
             }
         });
@@ -217,6 +266,7 @@ function fn_selectFeedbackType(){
         for (var i = 0; i < result.length; i++) {
             var list = new Object();
             list.feedbackType = result[i].codeName;
+            //list.feedbackTypeId = result[i].codeId;
             feedbackTypeList.push(list);
             }
         });
@@ -231,10 +281,16 @@ function fn_selectEvalCriteria(){
         for (var i = 0; i < result.length; i++) {
             var list = new Object();
             list.evaluationCriteria = result[i].codeName;
+            //list.evaluationCriteriaId = result[i].codeId;
             evalCriteriaList.push(list);
             }
         });
     return evalCriteriaList;
+}
+
+function fn_selectStatus(){
+    var list = [ "Active", "Inactive"];
+    return list;
 }
 
 function fn_search(){
@@ -243,10 +299,6 @@ function fn_search(){
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID, result);
     });
-}
-
-function fn_exportTo(){
-	GridCommon.exportTo("grid_wrap", 'xlsx',"Happy Call Planning");
 }
 	
 </script>
@@ -308,8 +360,13 @@ function fn_exportTo(){
 		<tr>
 			<th scope="row">Period Month</th>
 			<td><input id="periodMonth" name="periodMonth" type="text" title="Period Month" placeholder="MM/YYYY" class="j_date2 w100p" readonly /></td>
-			<th scope="row"></th>
-			<td></td>
+			<th scope="row">Status</th>
+            <td>
+            <select id="cmbStatus" name="cmbStatus" class="w100p">
+                <option value="">All</option>
+                <option value="1">Active</option>
+                <option value="8">Inactive</option>
+            </select>
 			<th scope="row"></th>
 			<td></td>
 		</tr>
@@ -327,8 +384,8 @@ function fn_exportTo(){
 
 	<ul class="right_btns">
 		<li><p class="btn_grid"><a href="#" onclick="fn_addRow()">Add</a></p></li>
-		<li><p class="btn_grid"><a href="#" onclick="">Edit</a></p></li>
 		<li><p class="btn_grid"><a href="#" onclick="fn_removeRow()">Delete</a></p></li>
+		<li><p class="btn_grid"><a href="#" onclick="fn_save()">Save</a></p></li>
 		<li><p class="btn_grid"><a href="#" onclick="fn_exportTo()">EXCEL DW</a></p></li>
 		<!-- <li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li> -->
 		<!-- <li><p class="btn_grid"><a href="#">Edit Event</a></p></li> -->
