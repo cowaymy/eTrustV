@@ -22,6 +22,11 @@ public class PRFailJobRequestForm {
 	@ApiModelProperty(value = "EX_BS00000 / AS00000")
 	private String serviceNo;
 
+	private String failReasonCode;
+
+
+
+
 
 
 
@@ -63,7 +68,16 @@ public class PRFailJobRequestForm {
 
 
 	
-	
+
+
+	public String getFailReasonCode() {
+		return failReasonCode;
+	}
+
+	public void setFailReasonCode(String failReasonCode) {
+		this.failReasonCode = failReasonCode;
+	}
+
 	
 	
 	
