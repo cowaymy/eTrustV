@@ -548,7 +548,7 @@
          
     <select id="getSAL0093D_SEQ" parameterType="Map" resultType="egovMap">
                  <![CDATA[     
-                          SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL  SEQ  FROM DUAL 
+                          SELECT SAL0093D_SRV_MEM_QUOT_ID_SEQ.NEXTVAL  SEQ  FROM DUAL 
                  ]]>
     </select>
     
