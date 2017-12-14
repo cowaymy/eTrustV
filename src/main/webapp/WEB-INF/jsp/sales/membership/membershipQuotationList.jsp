@@ -11,12 +11,40 @@
 
     
     $(document).ready(function(){
-        createAUIGrid();
+        createAUIGrid();       
+
+        $("#btnDeactive").hide();
         
         AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
             console.log(event.rowIndex);
             fn_doViewQuotation();
         });
+        
+        AUIGrid.bind(gridID, "cellClick", function(event) {
+            console.log(event.rowIndex);
+            
+            if(AUIGrid.getCellValue(gridID, event.rowIndex, "validStus") == "ACT"){
+                $("#deActQuotNo").val(AUIGrid.getCellValue(gridID, event.rowIndex, "quotNo") );
+                $("#deActOrdNo").val(AUIGrid.getCellValue(gridID, event.rowIndex, "ordNo") );
+                $("#btnDeactive").show();
+            }else{
+                $("#deActQuotNo").val("");
+                $("#deActOrdNo").val("");
+                $("#btnDeactive").hide();
+            }
+        });
+        
+        var optionUnit = {  
+        		id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
+                name: "codeName",  // 콤보박스 text 에 지정할 필드명.      		
+        		isShowChoose: false,
+        		isCheckAll : false,
+        		type : 'M'
+        };
+        
+        var selectValue = "1" + DEFAULT_DELIMITER + "81";
+        
+        CommonCombo.make('VALID_STUS_ID', "/status/selectStatusCategoryCdList.do", {selCategoryId : 22} , selectValue , optionUnit);
         
     });
     
@@ -34,9 +62,9 @@
        Common.ajax("GET", "/sales/membership/quotationList", $("#listSForm").serialize(), function(result) {
             console.log( result);
 	        AUIGrid.setGridData(gridID, result);
-       });
-       
-       
+       });       
+
+       $("#deActQuotNo").val("");
    }
     
    
@@ -174,6 +202,21 @@ function fn_doPrint(){
     Common.report("reportInvoiceForm", option);
     
     }
+    
+    function fn_updateStus(){
+        
+    	Common.confirm("Are you sure you want to deactivate "+ $("#deActQuotNo").val() +"(orderNo." + $("#deActOrdNo").val() +")?",function(){
+    		
+    			Common.ajax("GET", "/sales/membership/updateStus", $("#listSForm").serialize(), function(result) {
+		            console.log( result);
+		            fn_selectListAjax();
+
+		            $("#btnDeactive").hide();
+		       });
+		 });
+         
+    }
+    
  </script>
  
  
@@ -228,15 +271,17 @@ function fn_doPrint(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id='listSForm' name='listSForm'>
+<input type="hidden" id="deActQuotNo" name="srvMemQuotNo" />
+<input type="hidden" id="deActOrdNo" name="ordNo" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:150px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:160px" />
+	<col style="width:120px" />
 	<col style="width:*" />
-	<col style="width:170px" />
+	<col style="width:120px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -269,10 +314,6 @@ function fn_doPrint(){
 	<th scope="row">Status</th>
 	<td>
 	<select class="multy_select w100p" multiple="multiple" id="VALID_STUS_ID" name="VALID_STUS_ID">
-			<option value="1" selected>Active</option>
-			<option value="81" selected>Converted</option>
-			<option value="82">Expired</option>
-			<option value="8">Deactivated</option>
 	</select>
 	</td>
 	<th scope="row"></th>
@@ -308,8 +349,9 @@ function fn_doPrint(){
 
 <section class="search_result"><!-- search_result start -->
 
-
-
+<ul class="right_btns">
+<li><p class="btn_grid"><a href="#" id="btnDeactive" onclick="javascript:fn_updateStus()">Deactive</a></p></li>
+</ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->

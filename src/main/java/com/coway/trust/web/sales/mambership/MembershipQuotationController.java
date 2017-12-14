@@ -373,10 +373,6 @@ public class  MembershipQuotationController {
 		return ResponseEntity.ok(message);   
 	}
 	
-	
-   
-	
-	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -456,10 +452,31 @@ public class  MembershipQuotationController {
 		
 		return ResponseEntity.ok(list);
 	}
+		
 	
-	
-	
-	
+	@RequestMapping(value = "/updateStus" ,method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updateStus(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		logger.debug("in  updateStus ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		membershipQuotationService.updateStus(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage((String)params.get("SAL0093D_NO"));
+		message.setData(params.get("SAL0093D_SEQ"));
+		
+		
+		logger.debug("mNewQuotationSave SAL0093D_SEQ {}", params.get("SAL0093D_SEQ"));
+		
+		return ResponseEntity.ok(message);   
+	}
 	
 	
 	

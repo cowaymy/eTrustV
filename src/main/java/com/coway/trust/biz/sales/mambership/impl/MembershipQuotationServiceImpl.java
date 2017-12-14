@@ -300,6 +300,13 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	public List<EgovMap> selectSrchMembershipQuotationPop(Map<String, Object> params) {
 		return membershipQuotationMapper.selectSrchMembershipQuotationPop(params);
 	}
+
+
+	@Override
+	public void updateStus(Map<String, Object> params) {
+		  membershipQuotationMapper.update_SAL0093D_Stus(params);
+		
+	}
 	
 	
 }

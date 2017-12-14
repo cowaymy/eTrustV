@@ -14,7 +14,37 @@ $(document).ready(function(){
      AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
          console.log(event.rowIndex);
          fn_doViewQuotation();
+     });     
+
+     $("#btnDeactive").hide();
+     
+     AUIGrid.bind(gridID, "cellClick", function(event) {
+         console.log(event.rowIndex);
+         
+         if(AUIGrid.getCellValue(gridID, event.rowIndex, "c2") == "ACT"){
+             $("#deActQotatId").val(AUIGrid.getCellValue(gridID, event.rowIndex, "qotatId") );
+             $("#deActQotatRefNo").val(AUIGrid.getCellValue(gridID, event.rowIndex, "qotatRefNo") );
+             $("#deActOrdNo").val(AUIGrid.getCellValue(gridID, event.rowIndex, "salesOrdNo") );
+             $("#btnDeactive").show();
+         }else{
+             $("#deActQotatId").val("");
+             $("#deActQotatRefNo").val("");
+             $("#deActOrdNo").val("");
+             $("#btnDeactive").hide();
+         }
      });
+     
+     var optionUnit = {  
+             id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
+             name: "codeName",  // 콤보박스 text 에 지정할 필드명.              
+             isShowChoose: false,
+             isCheckAll : false,
+             type : 'M'
+     };
+     
+     var selectValue = "1";
+     
+     CommonCombo.make('STUS_ID', "/status/selectStatusCategoryCdList.do", {selCategoryId : 22} , selectValue , optionUnit);
      
 });
  
@@ -30,13 +60,15 @@ function fn_selectListAjax() {
 	              
 	           return ;
 	       }
-	       
-	   
 	   
 	
     Common.ajax("GET", "/sales/membershipRentalQut/quotationList", $("#listSForm").serialize(), function(result) {
          console.log( result);
-         AUIGrid.setGridData(gridID, result);
+         AUIGrid.setGridData(gridID, result);         
+
+         $("#deActQotatId").val("");
+         $("#deActQotatRefNo").val("");
+         $("#deActOrdNo").val("");
     });
 }
     
@@ -44,6 +76,7 @@ function fn_selectListAjax() {
    
    function createAUIGrid() {
            var columnLayout = [ 
+                     {dataField :"qotatId",  headerText : "",      width: 150 ,visible : false },
                      {dataField :"qotatRefNo",  headerText : "Quotation No",      width: 150 ,editable : false },
                      {dataField :"salesOrdNo",  headerText : "Order No",    width: 100, editable : false },
                      {dataField :"name", headerText : "Customer Name",   width: 150, editable : false },
@@ -170,7 +203,22 @@ function fn_doPrint(){
     $("#QUOTID").val(selectedItems[0].item.quotId);
     Common.report("reportInvoiceForm", option);
     
-    } 
+    }
+
+
+function fn_updateStus(){
+    
+	Common.confirm("Are you sure you want to deactivate "+ $("#deActQotatRefNo").val() +"(orderNo." + $("#deActOrdNo").val() +")?",function(){
+            
+            Common.ajax("GET", "/sales/membershipRentalQut/updateStus", $("#listSForm").serialize(), function(result) {
+                console.log( result);
+                fn_selectListAjax();               
+
+                $("#btnDeactive").hide();
+           });
+     });
+     
+}
  </script>
  
 
@@ -194,15 +242,18 @@ function fn_doPrint(){
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id='listSForm' name='listSForm'>
+<input type="hidden" id="deActQotatId" name="srvCntrctQuotId" />
+<input type="hidden" id="deActQotatRefNo" name="srvMemQuotNo" />
+<input type="hidden" id="deActOrdNo" name="ordNo" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
+	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:180px" />
+	<col style="width:120px" />
 	<col style="width:*" />
-	<col style="width:180px" />
+	<col style="width:120px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -215,10 +266,6 @@ function fn_doPrint(){
 	<td>
 		
 		<select class="multy_select w100p" multiple="multiple" id="STUS_ID" name="STUS_ID">
-	            <option value="1" selected>Active</option>
-	            <option value="81" >Converted</option>
-	            <option value="82">Expired</option>
-	            <option value="8">Deactivated</option>
 	    </select>
 	    
 	    
@@ -270,7 +317,9 @@ function fn_doPrint(){
 <section class="search_result"><!-- search_result start -->
 
 
-
+<ul class="right_btns">
+<li><p class="btn_grid"><a href="#" id="btnDeactive" onclick="javascript:fn_updateStus()">Deactive</a></p></li>
+</ul>
 
 
 

@@ -683,6 +683,26 @@ public class  MembershipRentalQuotationController {
 		return ResponseEntity.ok(message);  
 	}
 	
+	@RequestMapping(value = "/updateStus" ,method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updateStus(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		logger.debug("in  updateStus ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		membershipRentalQuotationService.updateStus(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData("");
+		
+		return ResponseEntity.ok(message);   
+	}
 	
 	
 }

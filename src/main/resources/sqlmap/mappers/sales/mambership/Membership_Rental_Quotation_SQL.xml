@@ -1130,7 +1130,7 @@
     
     <update id="updateSAL0083D" parameterType="Map">
         UPDATE SAL0083D
-			 SET QOTAT_STUS_ID = 4
+			 SET QOTAT_STUS_ID = #{qotatStusId}
 		 WHERE QOTAT_ID = #{srvCntrctQuotId}
     </update>
     

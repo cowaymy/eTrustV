@@ -171,11 +171,11 @@
                                             </if>
 			                                 
 			                                 <if test="CRT_SDT != null and CRT_SDT != ''">
-                                                 AND sL.CRT_DT<![CDATA[<=]]> tO_date( #{CRT_SDT} , 'dd/mm/yyyy')
+                                                 AND sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_SDT} , 'dd/mm/yyyy')
                                             </if>
 						                  
 						                    <if test="CRT_EDT != null and CRT_EDT != ''">
-                                                 AND sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_EDT} , 'dd/mm/yyyy')
+                                                 AND sL.CRT_DT<![CDATA[<=]]> tO_date( #{CRT_EDT} , 'dd/mm/yyyy')
                                             </if>
                                             
 						                    <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
@@ -936,16 +936,13 @@
      </select>
      
      
-     <select id="update_SAL0093D_Stus" parameterType="Map" resultType="egovMap">
+     <select id="update_SAL0093D_Stus" parameterType="Map" >
             UPDATE SAL0093D 
-                   SET  SRV_QUOT_STUS_ID  = 4,
+                   SET  SRV_QUOT_STUS_ID  = 8,
                           SRV_UPD_DT  = SYSDATE,
                           SRV_UPD_USER_ID = #{userId}
-             WHERE  SRV_MEM_ID =#{srvMemId}
+             WHERE  SRV_MEM_QUOT_NO   =#{srvMemQuotNo}
      </select>
-     
-     
-     
      
      <insert id="SAL0088D_insert" parameterType="Map"  >    
 		INSERT INTO SAL0088D (

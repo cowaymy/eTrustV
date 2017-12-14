@@ -159,20 +159,20 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		logger.debug("docMap =============>" +docMap.toString());
 		
 		
-		String  SAL0093D_SEQ = String.valueOf(seqMap.get("seq"));
+		String  SAL0083D_SEQ = String.valueOf(seqMap.get("seq"));
 		String docNo = String.valueOf(docMap.get("docno"));
 		   
-		if("".equals(SAL0093D_SEQ)){
-			throw new ApplicationException(AppConstants.FAIL, "can't  get SAL0093D_SEQ !!");
+		if("".equals(SAL0083D_SEQ)){
+			throw new ApplicationException(AppConstants.FAIL, "can't  get SAL0083D_SEQ !!");
 		}
 		
 		logger.debug("params : {}", params.toString());
-		logger.debug("SAL0093D_SEQ =============>");
-		logger.debug("SAL0093D_SEQ : {}", SAL0093D_SEQ);
+		logger.debug("SAL0083D_SEQ =============>");
+		logger.debug("SAL0083D_SEQ : {}", SAL0083D_SEQ);
 		logger.debug("docNo : {}", docNo);
 
 		
-		params.put("qotatId" , SAL0093D_SEQ);
+		params.put("qotatId" , SAL0083D_SEQ);
 		params.put("qotatRefNo" , docNo);
 		
 		   
@@ -205,7 +205,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 Map rMap  = (Map) list.get(a);
 					 
 					 
-					 eFilterMap.put("qotatId", SAL0093D_SEQ);
+					 eFilterMap.put("qotatId", SAL0083D_SEQ);
 					 eFilterMap.put("qotatItmStkId", rMap.get("filterId"));
 					 eFilterMap.put("qotatItmExpDt", rMap.get("lastChngDt")); 
 					 eFilterMap.put("qotatItmChrg", rMap.get("prc"));
@@ -239,7 +239,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		 }
 		 
 
-		trnMap.put("qotatId", SAL0093D_SEQ);
+		trnMap.put("qotatId", SAL0083D_SEQ);
 		trnMap.put("qotatRefNo", docNo);
 			
 		 return trnMap ;
@@ -347,6 +347,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		
 		int serviceCntractQotatCnt = membershipRentalQuotationMapper.serviceCntractQotatCnt(saveParam);
 		if(serviceCntractQotatCnt > 0){
+			saveParam.put("qotatStusId", 4);
 			membershipRentalQuotationMapper.updateSAL0083D(saveParam);
 		}
 		
@@ -394,6 +395,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		}
 		
 		EgovMap cnvrToSalesSrvConfigur = membershipRentalQuotationMapper.cnvrToSalesSrvConfigur(saveParam);
+		saveParam.put("qotatStusId", 4);
 		saveParam.put("srvConfigId", cnvrToSalesSrvConfigur.get("srvConfigId"));
 		membershipRentalQuotationMapper.updateSAL0083D(saveParam);
 
@@ -506,6 +508,14 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		saveParam.put("qotatCrtUserId", params.get("qotatCrtUserId"));
 		membershipRentalQuotationMapper.spInstRscRentalBill(saveParam);
 		return trnMap;
+	}
+
+
+	@Override
+	public void updateStus(Map<String, Object> params) {
+
+		params.put("qotatStusId", 8);
+		membershipRentalQuotationMapper.updateSAL0083D(params);
 	}
 	
 }

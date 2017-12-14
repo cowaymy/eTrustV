@@ -62,6 +62,8 @@ public interface MembershipQuotationService {
 	List<EgovMap>   mActiveQuoOrder(Map<String, Object> params);
 	
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
+
+	void updateStus(Map<String, Object> params);
 	
 	
 	

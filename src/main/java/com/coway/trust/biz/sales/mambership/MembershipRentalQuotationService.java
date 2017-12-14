@@ -76,6 +76,7 @@ public interface MembershipRentalQuotationService {
 	EgovMap cnvrToSalesThrdParty(Map<String, Object> params);
 
 	EgovMap insertCnvrToSale(Map<String, Object> params) ;
+	void updateStus(Map<String, Object> params);
 
 	
 }
