@@ -247,6 +247,10 @@
     	
     }
     
+//    function fn_CTBulk(){
+//    	Common.popupDiv("/sales/order/ctAssignBulkPop.do", $("#detailForm").serializeJSON(), null , true, '_bulkDiv');
+//    }
+    
     function fn_rawData(){
     	Common.popupDiv("/sales/order/orderCancelRequestRawDataPop.do", null, null, true);
     }
@@ -266,6 +270,7 @@
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()">New Log Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_ctAssignment()">CT Assignment</a></p></li>
+<!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTBulk()">Change Assign CT(bulk)</a></p></li> -->
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"  onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -304,7 +309,7 @@
 <tr>
     <th scope="row">Order No</th>
     <td>
-        <input type="text" title="" id="ordId" name="ordId" placeholder="Order Number" class="w100p" />
+        <input type="text" title="" id="ordNo" name="ordNo" placeholder="Order Number" class="w100p" />
     </td>
     <th scope="row">Application Type</th>
     <td>
