@@ -92,7 +92,7 @@
 		},
 		{
 		    dataField: "claimNote",
-		    headerText: "Caim Note",
+		    headerText: "Claim Note",
 		    style: "aui-grid-user-custom-left ",
 		    width: "18%"
 		},
