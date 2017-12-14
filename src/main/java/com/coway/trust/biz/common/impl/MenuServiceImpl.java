@@ -21,13 +21,13 @@ public class MenuServiceImpl implements MenuService {
 	private MenuMapper menuMapper;
 
 	@Override
-//	@Cacheable(value = AppConstants.LEFT_MENU_CACHE, key = "#sessionVO.userId")
+	@Cacheable(value = AppConstants.LEFT_MENU_CACHE, key = "#sessionVO.getUserId()")
 	public List<EgovMap> getMenuList(SessionVO sessionVO) {
 		return menuMapper.selectMenuList(sessionVO);
 	}
 
 	@Override
-//	@Cacheable(value = AppConstants.LEFT_MY_MENU_CACHE, key = "#sessionVO.userId")
+	@Cacheable(value = AppConstants.LEFT_MY_MENU_CACHE, key = "#sessionVO.getUserId()")
 	public List<EgovMap> getFavoritesList(SessionVO sessionVO) {
 		return menuMapper.getFavoritesList(sessionVO);
 	}

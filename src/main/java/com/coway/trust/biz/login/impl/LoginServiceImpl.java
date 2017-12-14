@@ -21,8 +21,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.login.LoginHistory;
 import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.model.LoginSubAuthVO;
@@ -143,6 +145,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
+	@CacheEvict(value = { AppConstants.LEFT_MENU_CACHE, AppConstants.LEFT_MY_MENU_CACHE }, key = "#loginHistory.getUserId()")
 	public void saveLoginHistory(LoginHistory loginHistory) {
 		loginMapper.insertLoginHistory(loginHistory);
 	}
