@@ -122,4 +122,8 @@ public interface MSvcLogApiService {
 
 	void upDateInstallFailJobResultM(Map<String, Object> params);
 
+	void saveProductServiceLogs(Map<String, Object> params);
+
+	void updateSuccessProductStatus(String transactionId);
+
 }
