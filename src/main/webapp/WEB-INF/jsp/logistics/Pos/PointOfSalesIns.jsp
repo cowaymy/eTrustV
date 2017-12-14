@@ -64,7 +64,7 @@ var serialcolumn=[{dataField:"itmcd"        ,headerText:"Material Code"         
 var reqcolumnLayout;
 
  var resop = {
-		 rowIdField : "rnum", 
+         rowIdField : "rnum", 
          // 페이지 설정
          usePaging : true,                
          pageRowCount : 20,                
@@ -81,31 +81,32 @@ var reqcolumnLayout;
          softRemoveRowMode:false
          };
  var reqop = {
-		    rowIdField : "itmrnum",
-	        editable : true,
-	        softRemoveRowMode : false,
-	         // 체크박스 표시 설정
-	         showRowCheckColumn : true,
-	         // 전체 체크박스 표시 설정
-	         //showRowAllCheckBox : true,
-	        //displayTreeOpen : true,
-	        //showRowCheckColumn : true ,
-	        //enableCellMerge : true,
-	        //showStateColumn : false,
-	        //showBranchOnGrouping : false
-	        };
+            rowIdField : "itmrnum",
+            editable : true,
+            softRemoveRowMode : false,
+             // 체크박스 표시 설정
+             showRowCheckColumn : true,
+             // 전체 체크박스 표시 설정
+             //showRowAllCheckBox : true,
+            //displayTreeOpen : true,
+            //showRowCheckColumn : true ,
+            //enableCellMerge : true,
+            //showStateColumn : false,
+            //showBranchOnGrouping : false
+            };
  var serialop = {
-	        //rowIdField : "rnum",          
-	        editable : true
-	        //displayTreeOpen : true,
-	        //showRowCheckColumn : true ,
-	        //enableCellMerge : true,
-	        //showStateColumn : false,
-	        //showBranchOnGrouping : false
-	        };
+            //rowIdField : "rnum",          
+            editable : true
+            //displayTreeOpen : true,
+            //showRowCheckColumn : true ,
+            //enableCellMerge : true,
+            //showStateColumn : false,
+            //showBranchOnGrouping : false
+            };
  
  //var uomlist = f_getTtype('42' , '');
  var uomlist = [{code: "EA", codeId: 71, codeName: "Each"},{code: "PCS", codeId: 72, codeName: "Piece"},{code: "OTH", codeId: 75, codeName: "Others"},{code: "SET", codeId: 74, codeName: "Set"},{code: "PKT", codeId: 73, codeName: "Packet"}];
+var comboDatas = [{"codeId": "OI","codeName": "OH_GI"},{"codeId": "OG","codeName": "OH_GR"}];
 // var paramdata;
 
 
@@ -119,17 +120,18 @@ $('#reqadd').hide();
 // var paramdatas = { groupCode : '306' ,Codeval: 'OH' , orderValue : 'CODE' , likeValue:''};
 // doGetComboData('/common/selectCodeList.do', paramdatas, '','smtype', 'S' , '');
 
-var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
+//var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
 var LocData = {sLoc : UserCode};
 var LocData2 = {brnch : UserBranchId};
 var paramdata2 = {endlikeValue:$("#locationType").val()};
-     doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
+//     doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
      doGetComboCodeId('/common/selectStockLocationList.do',paramdata2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
       doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
       doSysdate(0 , 'insReqDate');
+      doDefCombo(comboDatas, '' ,'insTransType', 'S', '');
 //      $("#giopenwindow").hide();
 //     /**********************************
 //      * Header Setting End
@@ -176,28 +178,28 @@ var paramdata2 = {endlikeValue:$("#locationType").val()};
     
     AUIGrid.bind(resGrid, "cellEditEnd", function (event){});
     AUIGrid.bind(reqGrid, "cellEditEnd", function (event){
-    	
+        
  
-    	if(event.dataField == "rqty"){
+        if(event.dataField == "rqty"){
             if(AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "itemqty")){
-            	Common.alert('The requested quantity is up to '+AUIGrid.getCellValue(reqGrid, event.rowIndex, "itemqty")+'.');
-            	return false;
+                Common.alert('The requested quantity is up to '+AUIGrid.getCellValue(reqGrid, event.rowIndex, "itemqty")+'.');
+                return false;
             }
         }
-    	
-    	  if(event.dataField == "itmcode"){
+        
+          if(event.dataField == "itmcode"){
               $("#svalue").val(AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd"));
               $("#sUrl").val("/logistics/material/materialcdsearch.do");
               Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
           }
-  	
+    
     });
     
     
     
     AUIGrid.bind(reqGrid, "cellEditEnd", function (event){
         
-    	var serialChkFlag = AUIGrid.getCellValue(reqGrid, event.rowIndex, "itemserialChk");	
+        var serialChkFlag = AUIGrid.getCellValue(reqGrid, event.rowIndex, "itemserialChk"); 
         if (event.dataField != "rqty"){
             return false;
         }else{
@@ -211,8 +213,8 @@ var paramdata2 = {endlikeValue:$("#locationType").val()};
                     AUIGrid.restoreEditedRows(reqGrid, "selectedIndex");
                 }else{
 
-                       AUIGrid.addCheckedRowsByIds(reqGrid, event.item.itmrnum);         		   
-           	 
+                       AUIGrid.addCheckedRowsByIds(reqGrid, event.item.itmrnum);                   
+             
                 }
             }else{
                 AUIGrid.restoreEditedRows(reqGrid, "selectedIndex");
@@ -254,9 +256,9 @@ var paramdata2 = {endlikeValue:$("#locationType").val()};
 //                AUIGrid.update(serialGrid);
 //            }
 //           if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-//         	  var serialstus=$("#serialstus").val(); 	  
+//            var serialstus=$("#serialstus").val();      
 //           if($("#serialstus").val() =="Y"){
-//              f_addrow();          		 
+//              f_addrow();                  
 //              }
 //           }
           
@@ -281,12 +283,12 @@ var paramdata2 = {endlikeValue:$("#locationType").val()};
 $(function(){
     $('#search').click(function() {
         if (searchReqType != 'OH03'){
-    	
-	    	if (f_validatation('search')){
-	//     	    $("#slocation").val($("#tlocation").val());
-	    	    SearchListAjax();
-	    	}
-    	}else{
+        
+            if (f_validatation('search')){
+    //          $("#slocation").val($("#tlocation").val());
+                SearchListAjax();
+            }
+        }else{
             Common.alert("Click The ADD Button");
         }
     });
@@ -321,18 +323,18 @@ $(function(){
    var chkfalg;
    var checkDelqty= false; 
    var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
-// 	 for (var i = 0 ; i < checkedItems.length ; i++){
-	       
-// 	       if (checkedItems[i].itemserialChk == 'Y'){
-// 	           chkfalg="Y";
-// 	           break;
-// 	      }else{
-// 	          chkfalg ="N";
-// 	      } 
-	      
-// 	   } 
+//   for (var i = 0 ; i < checkedItems.length ; i++){
+           
+//         if (checkedItems[i].itemserialChk == 'Y'){
+//             chkfalg="Y";
+//             break;
+//        }else{
+//            chkfalg ="N";
+//        } 
+          
+//     } 
    
-//	 if(chkfalg =="Y") {   
+//   if(chkfalg =="Y") {   
 
 //          var checkedItems = AUIGrid.getCheckedRowItems(reqGrid);
 //          var str = "";
@@ -359,20 +361,20 @@ $(function(){
 //          } 
          
 //      }else{
-	   if (f_validatation('save')){
-	    	  insPosInfo();           
-	     }      
-//	   }	 
+       if (f_validatation('save')){
+              insPosInfo();           
+         }      
+//     }     
    });
 
  
     $('#reqdel').click(function(){
-    	AUIGrid.removeCheckedRows(reqGrid);
-//     	AUIGrid.removeRow(reqGrid, "selectedIndex");
+        AUIGrid.removeCheckedRows(reqGrid);
+//      AUIGrid.removeRow(reqGrid, "selectedIndex");
 //        AUIGrid.removeSoftRows(reqGrid);
     });
     $('#list').click(function(){
-    	document.location.href = '/logistics/pos/PointOfSalesList.do';
+        document.location.href = '/logistics/pos/PointOfSalesList.do';
     });
 
     
@@ -382,14 +384,14 @@ $(function(){
         var bool = true;
         
         if (checkedItems.length > 0){
-        	
-	        var rowPos = "first";
-	        var item = new Object();
-	        var rowList = [];
-	        
-	        for (var i = 0 ; i < checkedItems.length ; i++){
+            
+            var rowPos = "first";
+            var item = new Object();
+            var rowList = [];
+            
+            for (var i = 0 ; i < checkedItems.length ; i++){
 
-	        	rowList[i] = {itmrnum : checkedItems[i].rnum,
+                rowList[i] = {itmrnum : checkedItems[i].rnum,
                             itmtype : checkedItems[i].codeName,
                             itmcode : checkedItems[i].stkCode,
                             itmdesc : checkedItems[i].stkDesc,
@@ -398,15 +400,19 @@ $(function(){
                             itemuom : checkedItems[i].uom,
                             rqty:0
                         }
-	        	
-	            AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
-	     
-	        } 
-	        
-	        AUIGrid.addRow(reqGrid, rowList, rowPos);
+                
+                AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
+         
+            } 
+            
+            AUIGrid.addRow(reqGrid, rowList, rowPos);
     }           
     });
     
+     $("#insTransType").change(function(){
+        var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#insTransType").val()};
+        doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
+    });
 });
 
 
@@ -465,7 +471,7 @@ function fn_serialChck(rowindex , rowitem , str){
           
           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
 
-        	 $("#serialstus").val(item.statustype);
+             $("#serialstus").val(item.statustype);
               if (item.statustype  == 'N'){
                   return "my-row-style";
               }
@@ -484,18 +490,18 @@ function fn_serialChck(rowindex , rowitem , str){
 
 
 function f_validatation(v){
-	
-	if (v == 'search'){
-	        if ($("#PosItemType").val() == null || $("#PosItemType").val() == undefined || $("#PosItemType").val() == ""){
-	            Common.alert("Please Select PosItemType.");
-	            return false;
-	        }
-	        
-	        if ($("#insReqLoc").val() == null || $("#insReqLoc").val() == undefined || $("#insReqLoc").val() == ""){
+    
+    if (v == 'search'){
+            if ($("#PosItemType").val() == null || $("#PosItemType").val() == undefined || $("#PosItemType").val() == ""){
+                Common.alert("Please Select PosItemType.");
+                return false;
+            }
+            
+            if ($("#insReqLoc").val() == null || $("#insReqLoc").val() == undefined || $("#insReqLoc").val() == ""){
                 Common.alert("Please Select Request Location.");
                 return false;
             }   
-	    }
+        }
     if(v == 'save'){
         
         if ($("#insReqType").val() == "") {
@@ -529,51 +535,51 @@ function f_validatation(v){
             return false;
         }
     }
-	
+    
     if (v == 'save'){
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid); 
-    	var reqRowCnt = AUIGrid.getRowCount(reqGrid);
-    	var checkedRowCnt =checkedItems.length;
-    	var uncheckedRowCnt = reqRowCnt - checkedRowCnt;
-    	if (uncheckedRowCnt > 0  || reqRowCnt==0){
-    		Common.alert("Please enter Request Qty");
-    		return false;
-    	}
-    	 for (var i = 0 ; i < checkedItems.length ; i++){
-    	   if (checkedItems[i].itemuom =="" || checkedItems[i].itemuom == undefined){
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid); 
+        var reqRowCnt = AUIGrid.getRowCount(reqGrid);
+        var checkedRowCnt =checkedItems.length;
+        var uncheckedRowCnt = reqRowCnt - checkedRowCnt;
+        if (uncheckedRowCnt > 0  || reqRowCnt==0){
+            Common.alert("Please enter Request Qty");
+            return false;
+        }
+         for (var i = 0 ; i < checkedItems.length ; i++){
+           if (checkedItems[i].itemuom =="" || checkedItems[i].itemuom == undefined){
                Common.alert("Please enter UOM");
                return false;
            }
-    	 }
+         }
     }
     
-//     if (v == 'saveSerial'){	
+//     if (v == 'saveSerial'){  
 //     var serialRowCnt = AUIGrid.getRowCount(serialGrid);
 //     var reqcheckedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
 //     var serialcheckedItems = AUIGrid.getCheckedRowItemsAll(serialGrid);
     
     
 // //     if(serialRowCnt != itm_qty){
-// //     	Common.alert("The quantity is not equal Request Qty");
-// //     	return false;
+// //       Common.alert("The quantity is not equal Request Qty");
+// //       return false;
 // //       }
 //      for (var j = 0 ; j < reqcheckedItems.length ; j++){
-//     	 var bool = false;
-//     	 if (reqcheckedItems[j].itemserialChk == 'Y'){
-// 			 for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-				    
-// // 				    	alert(reqcheckedItems[i].itmcode);
+//       var bool = false;
+//       if (reqcheckedItems[j].itemserialChk == 'Y'){
+//           for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+                    
+// //                       alert(reqcheckedItems[i].itmcode);
 
-// 				 if(reqcheckedItems[j].itmcode == AUIGrid.getCellValue(serialGrid , i , "itmcd")){
-// 					 bool = true;
-// 					 break;
-// 				 }
-// 			 }	
-// 			 if(!bool){
+//               if(reqcheckedItems[j].itmcode == AUIGrid.getCellValue(serialGrid , i , "itmcd")){
+//                   bool = true;
+//                   break;
+//               }
+//           }  
+//           if(!bool){
 //                  Common.alert("The Material Code No Same");   
 //                  return false;
-//                 }	  
-//     	   }
+//                 }      
+//         }
 //      } 
 //   } 
 
@@ -595,9 +601,9 @@ function SearchSessionAjax() {
     var url = "/logistics/pos/SearchSessionInfo.do";
     Common.ajaxSync("GET" , url , '' , function(result){
 
-    	UserCode=result.UserCode;
-    	UserBranchId=result.UserBranchId;
-    	$("#insRequestor").val(result.UserName);
+        UserCode=result.UserCode;
+        UserBranchId=result.UserBranchId;
+        $("#insRequestor").val(result.UserName);
     });
 }
 
@@ -623,7 +629,7 @@ function f_multiCombos() {
 function f_LocMultiCombo() {
     $(function() {
         $('#insReqLoc').change(function() {
-        	$("#reqLoc").val($("#insReqLoc").val());
+            $("#reqLoc").val($("#insReqLoc").val());
         });
     });
 }
@@ -631,22 +637,22 @@ function f_LocMultiCombo() {
 
 function fn_itemSerialPopList(data){
     
- 	checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
- 	
+    checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
+    
     var rowPos = "first";
     var rowList = [];
     var reqQty;
     var item = new Object();
     var itm_qty  = 0;
 
-	for (var i = 0 ; i < data.length ; i++){
-		
-		if (data[i].item.itemserialChk == 'Y'){
-			reqQty =data[i].item.rqty;
-	        itm_qty +=parseInt(reqQty)
-		}	    
-	}
-	$("#serialqty").val(itm_qty);
+    for (var i = 0 ; i < data.length ; i++){
+        
+        if (data[i].item.itemserialChk == 'Y'){
+            reqQty =data[i].item.rqty;
+            itm_qty +=parseInt(reqQty)
+        }       
+    }
+    $("#serialqty").val(itm_qty);
     
     f_addrow();
     
@@ -693,7 +699,7 @@ function f_getTtype(g , v){
                 });
            },
            error: function(jqXHR, textStatus, errorThrown){
-        	   Common.alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+               Common.alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
            },
            complete: function(){
            }
@@ -728,41 +734,41 @@ function f_addrow(){
 
 
 function insPosInfo(){
-	
+    
         var data = {};
-		var checkdata = AUIGrid.getCheckedRowItemsAll(reqGrid);
-//		var serials = AUIGrid.getAddedRowItems(serialGrid);
-//		console.log(serials);
-//	    data.add = serials;
-		data.checked = checkdata;
-		data.form = $("#headForm").serializeJSON();
+        var checkdata = AUIGrid.getCheckedRowItemsAll(reqGrid);
+//      var serials = AUIGrid.getAddedRowItems(serialGrid);
+//      console.log(serials);
+//      data.add = serials;
+        data.checked = checkdata;
+        data.form = $("#headForm").serializeJSON();
 
-		Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
-			Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
-			//Common.alert(result.message);
-			$("#giopenwindow").hide();
+        Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
+            Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
+            //Common.alert(result.message);
+            $("#giopenwindow").hide();
 
-		}, function(jqXHR, textStatus, errorThrown) {
-			try {
-			} catch (e) {
-			}
-			Common.alert("Fail : " + jqXHR.responseJSON.message);
-		});
-		for (var i = 0; i < checkdata.length; i++) {
-			AUIGrid.addUncheckedRowsByIds(reqGrid, checkdata[i].itmrnum);
-		}
-			
-			
-	}
-	
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+        for (var i = 0; i < checkdata.length; i++) {
+            AUIGrid.addUncheckedRowsByIds(reqGrid, checkdata[i].itmrnum);
+        }
+            
+            
+    }
+    
 function saveSerialInfo(){
 
-	   //if(f_validatation("save") && f_validatation("saveSerial")){
-	   if(f_validatation("save")){	   
-		   insPosInfo();
-		}   
+       //if(f_validatation("save") && f_validatation("saveSerial")){
+       if(f_validatation("save")){     
+           insPosInfo();
+        }   
     $("#giopenwindow").hide();
-	
+    
 }
 
 function locationList(){
@@ -792,7 +798,7 @@ function locationList(){
 <form id="headForm" name="headForm" method="post">
 <input type='hidden' id='pridic' name='pridic' value='M'/>
 <input type='hidden' id='headtitle' name='headtitle' value='SOH'/>
-<input type='hidden' id='trnscType' name='trnscType' value='OH'/>
+<!--<input type='hidden' id='trnscType' name='trnscType' value='OH'/> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -805,18 +811,17 @@ function locationList(){
 <tr>
     <th scope="row">Others Request</th>
     <td colspan="3"><input id="insOthersReq" name="insOthersReq" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
-    <th scope="row">Request Type</th>
-    <td colspan="3"><select class="w100p" id="insReqType" name="insReqType"></select></td>
-</tr>
-<tr>
     <th scope="row">Request Date</th>
     <td colspan="3">
     <input id="insReqDate" name="insReqDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
     </td>
-    <th scope="row"></th>
-    <td colspan="3">
-    
-    </td>
+</tr>
+<tr>    
+  <th scope="row">Transaction Type</th>
+    <td colspan="3"><select class="w100p" id="insTransType" name="insTransType"></select></td>
+    <th scope="row">Request Type</th>
+    <td colspan="3"><select class="w100p" id="insReqType" name="insReqType"><option value=''>Choose One</option></select></td>  
+
 </tr>
 <tr>
     <th scope="row">Requestor</th>
@@ -974,7 +979,7 @@ function locationList(){
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="serialno" id="serialno"/>
             <input type="hidden" name="serialstus" id="serialstus"/>
-            <input type="hidden" name="ttype" id="ttype" value="OH"/>
+<!--            <input type="hidden" name="ttype" id="ttype" value="OH"/>   -->
             <!-- <input type="hidden" id="posReqSeq" name="posReqSeq"> -->
             <table class="type1">
             <caption>search table</caption>
