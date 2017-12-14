@@ -33,4 +33,5 @@ public interface SurveyMgmtService {
 
 	List<EgovMap> selectSurveyEventDisplayTargetList(Map<String, Object> params) throws Exception;
 	
+	
 }

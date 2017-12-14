@@ -38,5 +38,7 @@ public interface SurveyMgmtMapper {
 	List<EgovMap> selectSurveyEventDisplayQList(Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> selectSurveyEventDisplayTargetList(Map<String, Object> params) throws Exception;
+	
+
 
 }

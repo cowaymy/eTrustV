@@ -6,15 +6,17 @@ var myGridID_Info;
 var myGridID_Q;
 var myGridID_Target;
 
-var notNullcount = 0;
+var nullCount = 0;
+var notNullCount = 0;
 var duplicatedCount = 0;
-var duplicationChkList = new Array();
+var salesOrderListLength = 0;
+//var duplicationChkList = new Array();
 
 
 var  CodeList = [];
 
 var columnLayout_info=[             
- {dataField:"hcTypeId", headerText:'Event Type', width: 130, editable : true},
+ {dataField:"hcTypeId", headerText:'Event Type', width: 130, editable : false},
  {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : true},
  {dataField:"evtMemId", headerText:'In Charge of</br>the Event', width: 130, editable : true},
  {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} },
@@ -78,7 +80,7 @@ $(document).ready(function(){
     
     //var rowCount = AUIGrid.getRowPosition(myGridID_Q);
 
-    var item_info = { "hcTypeId" :  "2718", "evtTypeDesc" : "", "evtMemId" : "", "evtDt" :  "", "evtCompRqstDate" :  "", "evtCompRate" :  "", "com" :  ""}; //row 추가
+    var item_info = { "hcTypeId" :  "Event Survey", "evtTypeDesc" : "", "evtMemId" : "", "evtDt" :  "", "evtCompRqstDate" :  "", "evtCompRate" :  "", "com" :  ""}; //row 추가
     AUIGrid.addRow(myGridID_Info, item_info, "last");
     
     AUIGrid.bind(myGridID_Q, "removeRow_q", auiRemoveRowHandler);
@@ -126,30 +128,60 @@ $(document).ready(function(){
                     	 
                     	 var salesOrdNo= AUIGrid.getColumnValues(myGridID_Target, "salesOrdNo");
                          var addList_t = AUIGrid.getAddedRowItems(myGridID_Target);
-                         notNullcount = 0;
+                         salesOrderListLength = addList_t.length;
+                         nullCount = 0;
+                         notNullCount = 0;
+                         duplicatedCount = 0;
+                         var duplicationChkList = new Array();
+                         var i = 0;
+                         var j = 0;
                          
-                          
-                         for (var i = 0; i < addList_t.length; i++) {
+                         for ( i; i < addList_t.length; i++) {
                              var v_salesOrdNo = addList_t[i].salesOrdNo;
                              if(v_salesOrdNo != ""){
-                                 notNullcount ++;
-                                 
-                                 duplicationChkList[i] = v_salesOrdNo;
+                            	 notNullCount ++;
+                            	 if (i == 0){
+                            		 duplicationChkList[0] = v_salesOrdNo;
+                            	 }
                                  //duplication Check
-                                 for(var j=0; j < i; j++){
-                                     if(duplicationChkList[j]==v_salesOrdNo){
-                                         duplicatedCount ++;
-                                     }
+                                 for(j; j < i; j++){
+                                	 //alert("두번째i::"+i +"::duplicationChkList ["+duplicationChkList +"]");
+                                	 if(duplicationChkList[j] != v_salesOrdNo){
+                                		 //alert("안에서v_salesOrdNo"+v_salesOrdNo);
+                                		 //alert("안에서duplicationChkList[j]"+duplicationChkList[j]);
+                                		 duplicationChkList[i] = v_salesOrdNo;
+                                	 }else{
+                                		 duplicatedCount ++;
+                                		 break;
+                                	 }
                                  }
+                             }else if(v_salesOrdNo == ""){
+                            	 nullCount ++;
                              }
                          } 
-                         
+                         //alert("중복안된값들"+duplicationChkList);
                          Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
-                             if(result.length == 0 || notNullcount != (result.length+duplicatedCount)){
-
+                             //if(result.length == 0 || salesOrderListLength != (result.length+duplicatedCount)){
+                             if((nullCount == 0 && notNullCount != (result.length+duplicatedCount)) || (nullCount == 0 && result.length == 0)){
+                            	 //alert("보내는길이::"+salesOrderListLength);
+                            	 //alert("받는길이"+result.length);
+                            	 //alert("중복길이"+duplicatedCount);
+                            	 //alert("총길이"+(result.length+duplicatedCount));
+                            	  
                                  result = false;
                                  Common.alert("'Sales Order' is a wrong Order Number.");
+                             } else if(notNullCount != salesOrderListLength && nullCount != salesOrderListLength){
+  
+                            	 //alert("salesOrderListLength::"+salesOrderListLength);
+                            	 
+                            	 result = false;
+                            	 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Sales Order' htmlEscape='false'/>");
                              } else {
+                            	 //alert("보내는길이::"+salesOrderListLength);
+                                 //alert("받는길이"+result.length);
+                                 //alert("중복길이"+duplicatedCount);
+                                 //alert("총길이"+(result.length+duplicatedCount));
+                            	 
                                  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_create);
                              }
                          });
@@ -352,10 +384,6 @@ function validationCom_info(list){
            } else if(v_evtCompRate == ""){
                result = false;
                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Complete Condition Rate' htmlEscape='false'/>");
-               break;
-           } else if(v_hcTypeId  % 1 != 0){
-               result = false;
-               Common.alert("Please Enter 'Event Type' with numbers");
                break;
            } else if(v_evtMemId  % 1 != 0){
                result = false;

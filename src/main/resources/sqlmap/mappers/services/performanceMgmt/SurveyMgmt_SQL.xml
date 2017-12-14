@@ -31,7 +31,7 @@
 		AND A.EVT_TYPE_DESC LIKE '%' || #{eventName} || '%'
 		</if>
 		<if test="eventDate != null and eventDate != '' ">
-		<![CDATA[ AND TO_DATE(TO_CHAR(A.EVT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') > TO_DATE(#{eventDate}, 'DD/MM/YYYY') ]]>
+		<![CDATA[ AND TO_DATE(TO_CHAR(A.EVT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') = TO_DATE(#{eventDate}, 'DD/MM/YYYY') ]]>
 		</if>
 		<if test="eventMemCode != null and eventMemCode != '' ">
 		AND B.MEM_CODE = #{eventMemCode}
@@ -164,7 +164,8 @@
       VALUES(
           #{hcDefId}
           , 2718
-          , 1
+          , (CASE WHEN (SELECT MAX(HC_DEF_ITM_NO) FROM CCR0003M WHERE EVT_ID=#{evtId}) IS NULL THEN 1 
+                     WHEN (SELECT MAX(HC_DEF_ITM_NO) FROM CCR0003M WHERE EVT_ID=#{evtId}) IS NOT NULL THEN (SELECT MAX(HC_DEF_ITM_NO)+1 FROM CCR0003M WHERE EVT_ID=#{evtId}) END)
           , #{hcDefDesc}
           , 1
           <if test="hcDefCtgryId == 'Standard'">
@@ -285,7 +286,7 @@
     
    <select id="selectSurveyEventDisplayInfoList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        SELECT A.EVT_TYPE_ID, A.EVT_TYPE_DESC, B.MEM_CODE, A.EVT_DT, A.EVT_COMP_RQST_DATE, A.EVT_COMP_RATE
+        SELECT (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=2718)AS EVT_TYPE_ID, A.EVT_TYPE_DESC, B.MEM_CODE, A.EVT_DT, A.EVT_COMP_RQST_DATE, A.EVT_COMP_RATE, A.EVT_ID
         FROM CCR0012M A, ORG0001D B, SYS0013M C
         WHERE A.EVT_TYPE_ID = 2718
         AND A.EVT_MEM_ID = B.MEM_ID
@@ -297,8 +298,9 @@
     
     <select id="selectSurveyEventDisplayQList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        SELECT (CASE WHEN B.HC_DEF_CTGRY_ID=515 THEN 'Standard' WHEN B.HC_DEF_CTGRY_ID=516 THEN 'Special' END)HC_DEF_CTGRY_ID
+        SELECT (CASE WHEN B.HC_DEF_CTGRY_ID=515 THEN 'Standard' WHEN B.HC_DEF_CTGRY_ID=516 THEN 'Special' END)HC_DEF_CTGRY_ID, B.EVT_ID
         , B.HC_DEF_DESC
+        , B.HC_DEF_ID
         FROM CCR0012M A, CCR0003M B
         WHERE A.EVT_ID = B.EVT_ID
         AND B.EVT_ID = #{popEvtIdView}
@@ -308,11 +310,13 @@
     
     <select id="selectSurveyEventDisplayTargetList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        SELECT SALES_ORD_NO, NAME, CONT_NO, CALL_MEM
+        SELECT SALES_ORD_NO, NAME, CONT_NO, CALL_MEM, EVT_CONT_ID, EVT_ID
         FROM CCR0013M 
         WHERE EVT_ID = #{popEvtIdView}
         ]]>
     </select>
     
     
+
+   
 </mapper>

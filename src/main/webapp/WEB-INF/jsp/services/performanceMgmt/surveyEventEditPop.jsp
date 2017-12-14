@@ -8,24 +8,31 @@ var myGridID_TargetEdit;
 
 var columnLayout_infoEdit=[             
  {dataField:"evtTypeId", headerText:'Event Type', width: 130, editable : false},
- {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : true},
- {dataField:"memCode", headerText:'In Charge of</br>the Event', width: 130, editable : true},
- {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : true, dataType : "date", formatString : "dd/mm/yyyy"},
- {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : true, dataType : "date", formatString : "dd/mm/yyyy"},
+ {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : false},
+ {dataField:"memCode", headerText:'In Charge of</br>the Event', width: 130, editable : false},
+ {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
+ {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} , dataType : "date", formatString : "dd/mm/yyyy" },
  {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : true},
  {dataField:"com", headerText:'Complete</br>Status', editable : false},
+ {dataField:"evtId", headerText:'EVT_ID(CCR0012M)', editable : false, visible: false}
 ];
 
 var columnLayout_qEdit=[             
- {dataField:"hcDefCtgryId", headerText:'Feedback</br>Type', width: 200, editable : false},
- {dataField:"hcDefDesc", headerText:'Question', editable : true},
+ {dataField:"hcDefCtgryId", headerText:'Feedback</br>Type', width: 200, editRenderer : {type : "DropDownListRenderer",showEditorBtnOver : true, listFunction : function(rowIndex, columnIndex, item, dataField) {return CodeList;},keyField : "codeName",valueField : "codeName"}},
+ {dataField:"hcDefDesc", headerText:'Question'},
+ {dataField:"hcDefId", headerText:'HC_DEF_ID(CCR0003M)', visible: false},
+ {dataField:"evtId", headerText:'EVT_ID(CCR0012M)', editable : false, visible: false}
 ];
 
+
+
 var columnLayout_targetEdit=[             
- {dataField:"salesOrdNo", headerText:'Sales Order', width: 250, editable : true},
- {dataField:"name", headerText:'Name', width: 250, editable : true},
- {dataField:"contNo", headerText:'Contact Number', width: 250, editable : true},
- {dataField:"callMem", headerText:'Calling Agent', editable : true},
+ {dataField:"salesOrdNo", headerText:'Sales Order', width: 250},
+ {dataField:"name", headerText:'Name', width: 250},
+ {dataField:"contNo", headerText:'Contact Number', width: 250},
+ {dataField:"callMem", headerText:'Calling Agent'},
+ {dataField:"evtContId", headerText:'EVT_CONT_ID(CCR0013M)', visible: false},
+ {dataField:"evtId", headerText:'EVT_ID(CCR0012M)', editable : false, visible: false}
 ];
 
 
@@ -42,7 +49,7 @@ var gridOptions_infoEdit = {
 var gridOptions_qEdit = {   
         headerHeight : 30,
         selectionMode: "singleRow",
-        showStateColumn: false,
+        showStateColumn: true,
         usePaging : true,
         pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
         showFooter : false
@@ -50,8 +57,9 @@ var gridOptions_qEdit = {
   
 var gridOptions_targetEdit = {
         selectionMode: "singleRow",
-        showStateColumn: false,
+        showStateColumn: true,
         usePaging : true,
+        useGroupingPanel : false,
         pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
         showFooter : false
 };
@@ -66,15 +74,33 @@ $(document).ready(function(){
 
 
     myGridID_InfoEdit = GridCommon.createAUIGrid("grid_wrap_infoEdit", columnLayout_infoEdit, "", gridOptions_infoEdit);
-    myGridID_QEdit = GridCommon.createAUIGrid("grid_wrap_qEdit", columnLayout_qEdit, "", gridOptions_qEdit);
-    myGridID_TargetEdit = GridCommon.createAUIGrid("grid_wrap_targetEdit", columnLayout_targetEdit, "", gridOptions_targetEdit);
+    myGridID_QEdit = GridCommon.createAUIGrid("grid_wrap_qEdit", columnLayout_qEdit, "hcDefId", gridOptions_qEdit);
+    myGridID_TargetEdit = GridCommon.createAUIGrid("grid_wrap_targetEdit", columnLayout_targetEdit, "evtContId", gridOptions_targetEdit);
     
-
-    //var cmbMemberTypeId22 = $("#popEvtDtView").val();
-    //alert(cmbMemberTypeId22);
-
-    //var item_infoView = { "hcTypeId" :  "2718", "evtTypeDesc" : "${popEvtTypeDesc}", "evtMemId" : "${popMemCode}", "evtDt" :  "${popEvtDt}", "evtCompRqstDate" :  "", "evtCompRate" :  "", "com" :  ""}; //row 추가
-    //AUIGrid.addRow(myGridID_InfoView, item_infoView, "last");
+    
+    /*ADD한 ROW만 수정_Q*/
+    //AUIGrid.bind(myGridID_QEdit, "addRow", function(event){});
+    AUIGrid.bind(myGridID_QEdit, "cellEditBegin", function (event){
+        if (event.columnIndex == 0){
+            if(AUIGrid.isAddedById(myGridID_QEdit, event.item.hcDefId)) {
+                return true;
+            }else{
+                return false;
+            }
+        }       
+    });
+    
+    /*ADD한 ROW만 수정_Target*/
+    //AUIGrid.bind(myGridID_TargetEdit, "addRow", function(event){});
+    AUIGrid.bind(myGridID_TargetEdit, "cellEditBegin", function (event){
+        if (event.columnIndex == 0 || event.columnIndex == 1 || event.columnIndex == 2 || event.columnIndex == 3){
+        	if(AUIGrid.isAddedById(myGridID_TargetEdit, event.item.evtContId)) {
+                return true;
+            }else{
+                return false;
+            }
+        }       
+    });
     
       
      Common.ajax("GET","/services/performanceMgmt/selectSurveyEventDisplayInfoList",$("#listEditForm").serialize(),function(result) {
@@ -96,6 +122,9 @@ $(document).ready(function(){
     });   
     
     
+    fn_getCodeSearch('');
+    
+    
   //두번째 grid 행 추가
     $("#addRow_qEdit").click(function() { 
        var item_qEdit = {"hcDefCtgryId" : "", "hcDefDesc" : ""}; //row 추가
@@ -110,6 +139,68 @@ $(document).ready(function(){
        //var rowCount22 = AUIGrid.getRowCount(myGridID_Target);
        //alert("rowCount"+rowCount22);
    });
+    
+    
+    //save
+    $("#save_edit").click(function() {
+        if (validation_infoEdit()) {
+            var rowCount_t = AUIGrid.getRowCount(myGridID_TargetEdit);
+            
+            if(rowCount_t > 0) {
+                
+                var salesOrdNo= AUIGrid.getColumnValues(myGridID_TargetEdit, "salesOrdNo");
+                //alert("salesOrdNo"+salesOrdNo);
+                var addList_t = AUIGrid.getColumnValues(myGridID_TargetEdit, "salesOrdNo");
+                //alert("addList_t"+addList_t);
+                salesOrderListLength = addList_t.length;
+                nullCount = 0;
+                notNullCount = 0;
+                duplicatedCount = 0;
+                var duplicationChkList = new Array();
+                var i = 0;
+                var j = 0;
+                
+                for ( i; i < addList_t.length; i++) {
+                    var v_salesOrdNo = addList_t[i].salesOrdNo;
+                    if(v_salesOrdNo != ""){
+                        notNullCount ++;
+                        if (i == 0){
+                            duplicationChkList[0] = v_salesOrdNo;
+                        }
+                        //duplication Check
+                        for(j; j < i; j++){
+
+                            if(duplicationChkList[j] != v_salesOrdNo){
+                                duplicationChkList[i] = v_salesOrdNo;
+                            }else{
+                                duplicatedCount ++;
+                                break;
+                            }
+                        }
+                    }else if(v_salesOrdNo == ""){
+                        nullCount ++;
+                    }
+                } 
+                Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
+                    if((nullCount == 0 && notNullCount != (result.length+duplicatedCount)) || (nullCount == 0 && result.length == 0)){
+                        result = false;
+                        Common.alert("'Sales Order' is a wrong Order Number.");
+                    } else if(notNullCount != salesOrderListLength && nullCount != salesOrderListLength){
+
+                        result = false;
+                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Sales Order' htmlEscape='false'/>");
+                    } else {
+                        Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_edit);
+                    }
+                });
+                
+            }else{
+                Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_edit);
+            }
+
+            
+         }
+    }); 
     
   
 }); //Ready
@@ -134,6 +225,205 @@ function removeRow_targetEdit(){
     AUIGrid.removeSoftRows(myGridID_TargetEdit);
 }
 
+/* function auiRemoveRowHandler(){
+}
+ */
+ 
+//renderer list search(Special or Standard)
+function fn_getCodeSearch(){
+    Common.ajax("GET", "/services/performanceMgmt/getCodeNameList.do",{codeId: 102}, function(result) {
+        CodeList = result;
+    }, null, {async : false});
+}  
+
+ 
+ /*SAVE*/
+function fn_saveGridData_edit(){
+    
+    /*Target grid에서 addrow가 있다면 saveSurveyEventTarget.do를 실행*/
+    var rowCount_target = AUIGrid.getRowCount(myGridID_TargetEdit);
+    var rowCount_q = AUIGrid.getRowCount(myGridID_QEdit);
+    
+    
+    var params = {
+            aGrid : GridCommon.getEditData(myGridID_InfoEdit),
+            bGrid : GridCommon.getEditData(myGridID_TargetEdit),
+            cGrid : GridCommon.getEditData(myGridID_QEdit)
+    };
+    
+    
+    //if(rowCount_target > 0 || rowCount_q > 0) {
+/*         Common.ajax("POST", "/services/performanceMgmt/saveEditedSurveyEventTarget.do", params, 
+        function(result) {
+            // 공통 메세지 영역에 메세지 표시.
+            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            $("#search").trigger("click");
+            Common.alert("<spring:message code='sys.msg.success'/>");
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+            } catch (e) {
+                console.log(e);
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);             
+        }); */
+        
+    //}/*Info grid 값만 저장하고 싶다면 saveSurveyEventCreate.do를 실행*/
+/*     else{
+        Common.ajax("POST", "/services/performanceMgmt/saveEditedSurveyEventCreate.do", GridCommon.getEditData(myGridID_InfoEdit), function(result) {
+            // 공통 메세지 영역에 메세지 표시.
+            Common.setMsg("<spring:message code='sys.msg.success'/>");
+            $("#search").trigger("click");
+            Common.alert("<spring:message code='sys.msg.success'/>");
+        }, function(jqXHR, textStatus, errorThrown) {
+            try {
+                console.log("status : " + jqXHR.status);
+                console.log("code : " + jqXHR.responseJSON.code);
+                console.log("message : " + jqXHR.responseJSON.message);
+                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+            } catch (e) {
+                console.log(e);
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);             
+        });
+    } */
+    
+} 
+
+
+/*  validation */
+function validation_infoEdit() {
+    var result = true;
+    
+    
+    var addList_q = AUIGrid.getAddedRowItems(myGridID_QEdit);
+    var validation_q = AUIGrid.getRowCount(myGridID_QEdit);
+    
+    var addList_target = AUIGrid.getAddedRowItems(myGridID_TargetEdit);
+    var validation_target = AUIGrid.getRowCount(myGridID_TargetEdit);
+    
+    
+/*     if (addList_q.length == 0 && addList_target.length == 0 ) {
+    	Common.alert("<spring:message code='sys.common.alert.noChange'/>");
+    	return false;
+    }
+     */
+    //Questionnaires validation 
+    if(validation_q > 0) {
+         if(!validationCom_qEdit(addList_q)){
+                return false;
+           }      
+    }
+    
+    
+    //target validation 
+    if(validation_target > 0) {
+         if(!validationCom_targetEdit(addList_target)){
+                return false;
+           }      
+    }
+     
+    var addList = AUIGrid.getAddedRowItems(myGridID_InfoEdit);
+    
+    //info validation
+    if(!validationCom_infoEdit(addList)){
+        return false;
+    }       
+    
+    return result;
+}  
+
+
+function validationCom_infoEdit(list){
+    var result = true;
+
+    for (var i = 0; i < list.length; i++) {
+           var v_evtCompRqstDate = list[i].evtCompRqstDate;
+           var v_evtCompRate = list[i].evtCompRate;
+           
+           
+          if(v_evtCompRqstDate == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Requested Complete Date' htmlEscape='false'/>");
+               break;
+           } else if(v_evtCompRate == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Complete Condition Rate' htmlEscape='false'/>");
+               break;
+           } else if(v_evtCompRate  % 1 != 0){
+               result = false;
+               Common.alert("Please Enter 'Complete Condition Rate' with numbers");
+               break;
+           } else if(v_evtCompRate > 100){
+               result = false;
+               Common.alert("Please Enter 'Complete Condition Rate' under 100");
+               break;
+           } 
+           
+    }
+    
+    return result;
+}
+
+
+function validationCom_qEdit(list){
+    var result = true;
+
+    for (var i = 0; i < list.length; i++) {
+           var v_hcDefCtgryId = list[i].hcDefCtgryId;
+           var v_hcDefDesc = list[i].hcDefDesc;
+
+           
+           if(v_hcDefCtgryId == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Feedback Type' htmlEscape='false'/>");
+               break;
+           } else if(v_hcDefDesc == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Question' htmlEscape='false'/>");
+               break;
+           }
+    }
+    
+    return result;
+}
+
+
+function validationCom_targetEdit(list){
+    var result = true;
+
+    for (var i = 0; i < list.length; i++) {
+           var v_salesOrdNo = list[i].salesOrdNo;
+           var v_name = list[i].name;
+           var v_contNo = list[i].contNo;
+           var v_callMem = list[i].callMem;
+           
+           
+           if(v_name == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Name' htmlEscape='false'/>");
+               break;
+           } else if(v_contNo == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Contact Number' htmlEscape='false'/>");
+               break;
+           } else if(v_callMem == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Calling Agent' htmlEscape='false'/>");
+               break;
+           } else if(v_contNo  % 1 != 0){
+               result = false;
+               Common.alert("Please Enter 'Contact Number' with numbers");
+               break;
+           } 
+    }
+    
+    return result;
+}
+
 </script>   
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -152,6 +442,9 @@ function removeRow_targetEdit(){
     <input type="hidden" id="popMemCodeVeiw" name="popMemCodeVeiw" /> 
     <input type="hidden" id="popEvtDtView" name="popEvtDtView" /> 
     <input type="hidden" id="popEvtIdView" name="popEvtIdView" /> 
+    
+    <input type="hidden" id="popHcDefIdView" name="popHcDefIdView" /> 
+    <input type="hidden" id="popEvtContIdView" name="popEvtContIdView" /> 
 </form>
 
 <form action="#" method="post" id="listDForm" name="listDForm">

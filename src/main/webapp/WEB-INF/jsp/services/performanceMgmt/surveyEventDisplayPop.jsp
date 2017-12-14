@@ -13,19 +13,19 @@ var columnLayout_infoView=[
  {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
  {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
  {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : false},
- {dataField:"com", headerText:'Complete</br>Status', editable : false},
+ {dataField:"com", headerText:'Complete</br>Status', editable : false}
 ];
 
 var columnLayout_qView=[             
  {dataField:"hcDefCtgryId", headerText:'Feedback</br>Type', width: 200, editable : false},
- {dataField:"hcDefDesc", headerText:'Question', editable : false},
+ {dataField:"hcDefDesc", headerText:'Question', editable : false}
 ];
 
 var columnLayout_targetView=[             
  {dataField:"salesOrdNo", headerText:'Sales Order', width: 250, editable : false},
  {dataField:"name", headerText:'Name', width: 250, editable : false},
  {dataField:"contNo", headerText:'Contact Number', width: 250, editable : false},
- {dataField:"callMem", headerText:'Calling Agent', editable : false},
+ {dataField:"callMem", headerText:'Calling Agent', editable : false}
 ];
 
 
@@ -45,7 +45,8 @@ var gridOptions_qView = {
         showStateColumn: false,
         usePaging : true,
         pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
-        showFooter : false
+        showFooter : false,
+        //showAutoNoDataMessage : false
 };
   
 var gridOptions_targetView = {
