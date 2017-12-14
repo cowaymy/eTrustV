@@ -1105,9 +1105,15 @@ public class ServiceApiController {
 		map.put("searchKeyword" , String.valueOf(rentalForm.getSearchKeyword()));
 		
 		List<EgovMap> rcList = MSvcLogApiService.getRentalCustomerList(map);
+		List<RentalServiceCustomerDto> list = null;
 		
-		List<RentalServiceCustomerDto> list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r))
-				.collect(Collectors.toList());
+//		hsManualService.selecthSFilterUseHistorycall(params);
+//		List<EgovMap> list = (List<EgovMap>)params.get("cv_1");
+		
+		if(rcList != null){
+			list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r))
+					.collect(Collectors.toList());
+		}
 
 		return ResponseEntity.ok(list);
 
@@ -1631,8 +1637,15 @@ public class ServiceApiController {
 				.collect(Collectors.toList());
 		
 		orv.setOsrd(list);
-		/*
+
+		//headSet
+		orv.setSumRpf(Integer.parseInt(String.valueOf(rmap.get("sumRpf"))));
+		orv.setSumRpt(Integer.parseInt(String.valueOf(rmap.get("sumRpt"))));
+		orv.setSumRhf(Integer.parseInt(String.valueOf(rmap.get("sumRhf"))));
+		orv.setSumRental(Integer.parseInt(String.valueOf(rmap.get("sumRental"))));
+		orv.setSumAdjust(Integer.parseInt(String.valueOf(rmap.get("sumAdjust"))));
 		
+		/*
 		List<OutStandignResultDetail> list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r))
 				.collect(Collectors.toList());
 		*/
