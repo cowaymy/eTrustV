@@ -909,7 +909,7 @@ function fnSettiingHeader()
 	              $("#planCreatedAt").text(result.planInfo[0].crtDt);
 			       }
 
-	           console.log("seperaionInfo: " + result.seperaionInfo.length + " /getChildField: " + result.getChildField.length );
+	          // console.log("seperaionInfo: " + result.seperaionInfo.length + " /getChildField: " + result.getChildField.length );
 
              if( (result.seperaionInfo == null || result.seperaionInfo.length < 1) 
                 || (result.getChildField == null || result.getChildField.length < 1))
