@@ -576,12 +576,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 	}
 
-	@Override
-	public void saveProductServiceLogs(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+
 	
 	   
 /*	@Override
