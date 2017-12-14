@@ -58,8 +58,10 @@ public class TagMgmtController {
 	
 	
 	@RequestMapping(value = "/selectTagStatus")
-	 ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params) {
+	 ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params, HttpServletRequest request) {
 		logger.debug("paramsJINMU {}", params);
+		String[] statusList = request.getParameterValues("statusList");
+		params.put("listStatus", statusList);
 		List<EgovMap> notice = tagMgmtService.getTagStatus(params);
 		logger.debug("paramsJINMU {}", notice );
 		return ResponseEntity.ok(notice);

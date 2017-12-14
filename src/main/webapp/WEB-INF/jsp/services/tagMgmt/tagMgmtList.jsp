@@ -184,17 +184,24 @@ function fn_tagLog() {
 <tr>
     <th scope="row">Feedback Code</th>
     <td><input type="text" id="feedback_code" name="feedback_code" title="" placeholder="feedback_code" class="w100p" /></td>
-   <!--  <th scope="row">Status</th>
-    <td>
-         <select class="w100p"  id="status" name="status">
-            <option value="">Choose One</option>
-            <option value="Active">Active</option>
-            <option value="Complete">Complete</option>
-        </select> -->
+   
+        
     
     
        <th scope="row">Regist Date</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regDt" name="regDt"/></td>
+    
+     <th scope="row">Status</th>
+    <td>
+         <select  class="multy_select w100p" multiple="multiple"  id="statusList" name="statusList">
+                 <option value="1">Active</option>
+                <option value="44">Pending</option>
+                <option value="34">Solved</option>
+                <option value="35">Unsolved</option>
+                <option value="36">Closed</option>
+                <option value="10">Cancelled</option>
+        </select> 
+    </td> 
     
 </tr>
 

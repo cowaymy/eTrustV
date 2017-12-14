@@ -62,6 +62,13 @@
         <if test="regDt != null and regDt != '' ">
             and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') = TO_CHAR(TO_DATE (#{regDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
         </if>
+        
+        <if test="listStatus != null and listStatus != '' ">
+              AND Z.Status IN
+              <foreach item="item" collection="listStatus" index="index" open="(" separator="," close=")">
+              CALLCENTERUSER.FN_ERP_GET_STUS_NM( #{item} )
+              </foreach>
+           </if>
            
 	
   </select>

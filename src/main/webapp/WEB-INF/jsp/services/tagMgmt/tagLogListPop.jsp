@@ -118,7 +118,7 @@ function fn_saveRemarkResult(){
 
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>tag Log List </h1>
+<h1>Tag Log Detail INFO </h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
