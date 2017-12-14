@@ -145,7 +145,7 @@ function happyCallGrid() {
                 dataField : "hcId",
                 headerText : 'HC ID',
                 editable : false, 
-                visible : true
+                visible : false
             } ];
 	
 	//그리드 속성 설정
