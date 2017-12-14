@@ -1,5 +1,9 @@
 package com.coway.trust.web.logistics.filedown;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,17 +107,6 @@ public class FileDownloadController {
 		return ResponseEntity.ok(map);
 	}
 
-	@RequestMapping(value = "/rawdataList.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> rawdataList(@RequestParam Map<String, Object> params) throws Exception {
-
-		List<EgovMap> list = FileDownloadService.rawDataList(params);
-
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(list);
-		return ResponseEntity.ok(message);
-	}
-
 	@RequestMapping(value = "/selectLabelList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectTypeList(@RequestParam Map<String, Object> params) {
 
@@ -199,6 +192,79 @@ public class FileDownloadController {
 		params.put("fileGroupKey", fileGroupKey);
 		logger.debug("params : {}", params);
 		FileDownloadService.updateFileGroupKey(params);
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/checkDirectory.do", method = RequestMethod.GET)
+	public ResponseEntity<List<Map>> checkDirectory(@RequestParam Map<String, Object> params) {
+
+		String last = "";
+		if ("PB".equals(params.get("groupCode"))) {
+			last += "Public";
+		} else {
+			last += "Privacy";
+		}
+		String path = uploadDir + "/RawData/" + last;
+		File directory = new File(path);
+
+		FileFilter directoryFileFilter = new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				return file.isDirectory();
+			}
+		};
+
+		File[] directoryListAsFile = directory.listFiles(directoryFileFilter);
+		List<String> foldersInDirectory = new ArrayList<String>(directoryListAsFile.length);
+		for (File directoryAsFile : directoryListAsFile) {
+			foldersInDirectory.add(directoryAsFile.getName());
+		}
+
+		List<Map> list = new ArrayList<>();
+		for (int i = 0; i < foldersInDirectory.size(); i++) {
+			Map<String, Object> rtn = new HashMap();
+			rtn.put("codeId", foldersInDirectory.get(i));
+			rtn.put("codeName", foldersInDirectory.get(i));
+
+			list.add(rtn);
+
+		}
+
+		return ResponseEntity.ok(list);
+	}
+
+	@RequestMapping(value = "/rawdataList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<Map>> rawdataList(@RequestParam Map<String, Object> params) throws Exception {
+
+		logger.debug("groupCode : {}", params);
+		String path = uploadDir + "/RawData/" + params.get("type");
+		File dirFile = new File(path);
+		File[] fileList = dirFile.listFiles();
+		List<Map> list = new ArrayList<>();
+		for (File tempFile : fileList) {
+			if (tempFile.isFile()) {
+				Map<String, Object> rtn = new HashMap();
+				String tempPath = tempFile.getParent();
+				String tempFileName = tempFile.getName();
+				logger.debug("tempPath : {}", tempPath);
+				logger.debug("tempFileName : {}", tempFileName);
+				File f = new File(tempPath, tempFileName);
+				Date made = new Date(f.lastModified());
+				Long length = f.length();
+				logger.debug("made : {}", made);
+				logger.debug("length : {}", length);
+
+				rtn.put("orignlfilenm", tempFileName);
+				rtn.put("updDt", made);
+				rtn.put("filesize", length);
+				rtn.put("subpath", tempPath);
+				list.add(rtn);
+			}
+
+		}
+
+		logger.debug("rtn : {}", list);
+
 		return ResponseEntity.ok(list);
 	}
 }
