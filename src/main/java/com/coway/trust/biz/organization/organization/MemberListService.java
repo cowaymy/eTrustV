@@ -69,20 +69,22 @@ public interface MemberListService {
 	List<EgovMap> selectDeptCode(Map<String, Object> params);
 
 	List<EgovMap> selectCourse();
-	
+
 	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO);
 
-	
+
 	List<EgovMap> getMemberListView(Map<String, Object> params);
-	
+
 	int memberListUpdate_user(Map<String, Object> params);
-	
+
 	int memberListUpdate_memorg(Map<String, Object> params);
-	
+
 	int memberListUpdate_member(Map<String, Object> params);
-	
+
 	boolean updateMember(Map<String, Object> params, List<Object> docType,SessionVO sessionVO);
-	
+
 	void saveDocSubmission(MemberListVO memberListVO,Map<String, Object> params, SessionVO sessionVO) throws Exception;
-	
+
+	List<EgovMap> selectDeptCodeHp(Map<String, Object> params);
+
 }
