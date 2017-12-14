@@ -7,6 +7,8 @@ var myGridID_Q;
 var myGridID_Target;
 
 var notNullcount = 0;
+var duplicatedCount = 0;
+var duplicationChkList = new Array();
 
 
 var  CodeList = [];
@@ -125,19 +127,26 @@ $(document).ready(function(){
                     	 var salesOrdNo= AUIGrid.getColumnValues(myGridID_Target, "salesOrdNo");
                          var addList_t = AUIGrid.getAddedRowItems(myGridID_Target);
                          notNullcount = 0;
+                         
                           
                          for (var i = 0; i < addList_t.length; i++) {
                              var v_salesOrdNo = addList_t[i].salesOrdNo;
                              if(v_salesOrdNo != ""){
                                  notNullcount ++;
+                                 
+                                 duplicationChkList[i] = v_salesOrdNo;
+                                 //duplication Check
+                                 for(var j=0; j < i; j++){
+                                     if(duplicationChkList[j]==v_salesOrdNo){
+                                         duplicatedCount ++;
+                                     }
+                                 }
                              }
                          } 
                          
                          Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
-                             if(result.length == 0 || notNullcount != result.length){
-                            	 alert("보내는길이"+notNullcount);
-                            	 alert("받는길이"+result.length);
-                            	 
+                             if(result.length == 0 || notNullcount != (result.length+duplicatedCount)){
+
                                  result = false;
                                  Common.alert("'Sales Order' is a wrong Order Number.");
                              } else {
@@ -225,6 +234,17 @@ function fn_saveGridData_create(){
 function validation_info() {
     var result = true;
     
+    
+    var addList_q = AUIGrid.getAddedRowItems(myGridID_Q);
+    var validation_q = AUIGrid.getRowCount(myGridID_Q);
+    
+    //Questionnaires validation 
+    if(validation_q > 0) {
+         if(!validationCom_q(addList_q)){
+                return false;
+           }      
+    }
+    
     var addList_target = AUIGrid.getAddedRowItems(myGridID_Target);
     var validation_target = AUIGrid.getRowCount(myGridID_Target);
     
@@ -244,6 +264,30 @@ function validation_info() {
     
     return result;
 }  
+
+
+function validationCom_q(list){
+    var result = true;
+
+    for (var i = 0; i < list.length; i++) {
+           var v_hcDefCtgryId = list[i].hcDefCtgryId;
+           var v_hcDefDesc = list[i].hcDefDesc;
+
+           
+           if(v_hcDefCtgryId == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Feedback Type' htmlEscape='false'/>");
+               break;
+           } else if(v_hcDefDesc == ""){
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='Question' htmlEscape='false'/>");
+               break;
+           }
+    }
+    
+    return result;
+}
+
 
 function validationCom_target(list){
     var result = true;
