@@ -649,6 +649,7 @@
                       $("#saveStatusBtn").hide();
                       $("#trnasInfo").show();
                       $("#statusInfo").hide();
+                      $("#trigger").trigger("click");
                      
                  }else{
                      Common.alert('This asset is not active. Transfer asset is disallowed.');
@@ -686,6 +687,7 @@
                       $("#saveStatusBtn").hide();
                       $("#trnasInfo").hide();
                       $("#statusInfo").hide();
+                      $("#trigger").trigger("click");
                  }
              }else{
              Common.alert('Choice Data please..');
@@ -721,6 +723,7 @@
                       $("#returnTrnsBtn").hide();
                       $("#trnasInfo").hide();
                       $("#statusInfo").show();
+                      $("#trigger").trigger("click");
                      
                  }
              }else{
