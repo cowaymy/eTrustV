@@ -116,12 +116,21 @@
           ,#{userId} , SYSDATE, #{counselingNo}   
           <choose>
                       <when test="inputMainDept != null and inputMainDept != ''">  
-                       , #{inputMainDept},#{inputSubDept}
+                       , #{inputMainDept}
                       </when>
                       <otherwise>
-                         , #{mainDept},#{subDept}
+                         , #{mainDept}
                       </otherwise>
             </choose>
+              <choose>
+                      <when test="inputSubDept != null and inputSubDept != ''">  
+                       ,#{inputSubDept}
+                      </when>
+                      <otherwise>
+                       ,#{subDept}
+                      </otherwise>
+            </choose>
+            
           )
           
           
@@ -153,12 +162,20 @@
 			          ,0 , 0, 0 
 			          <choose>
 				          <when test="inputMainDept != null and inputMainDept != ''">  
-				          , #{inputMainDept},#{inputSubDept}
+				          , #{inputMainDept}
 				          </when>
 				          <otherwise>
-				          , #{mainDept},#{subDept}
+				          , #{mainDept}
 				          </otherwise>
 			          </choose>
+			           <choose>
+                      <when test="inputSubDept != null and inputSubDept != ''">  
+                       ,#{inputSubDept}
+                      </when>
+                      <otherwise>
+                       ,#{subDept}
+                      </otherwise>
+            </choose>
 			          )
 			  </insert>
 			  
@@ -169,10 +186,14 @@
 				     STUS_CODE_ID = #{status}
 				    <choose>
                       <when test="inputMainDept != null and inputMainDept != ''">  
-                      , MAIN_DEPT = #{inputMainDept}, SUB_DEPT = #{inputSubDept}
+                         , MAIN_DEPT = #{inputMainDept}
                       </when>
                      </choose>
-				     
+                      <choose>
+                      <when test="inputSubDept != null and inputSubDept != ''">  
+                         , SUB_DEPT = #{inputSubDept}
+				      </when>
+                     </choose>
 				     WHERE  CUR_SEQ_NO = #{counselingNo}
 			    </update>
 			    
