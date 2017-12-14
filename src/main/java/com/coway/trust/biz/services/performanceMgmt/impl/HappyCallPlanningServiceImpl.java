@@ -50,5 +50,21 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
 		}
 		return addSuccess;
 	}
+
+	@Override
+	public boolean deleteHappyCall(List<Object> delList, SessionVO sessionVO) {
+		boolean delSuccess = false;
+		if(delList.size() > 0){
+    		for(int i=0; i< delList.size(); i++){
+    			Map<String, Object>  deleteValue = (Map<String, Object>) delList.get(i);
+    			logger.debug("deleteValue {}", deleteValue);
+    			happyCallPlanningMapper.deleteHappyCall(deleteValue);
+    		}
+    		delSuccess = true;
+		}else{
+			delSuccess = false;
+		}
+		return delSuccess;
+	}
 	
 }

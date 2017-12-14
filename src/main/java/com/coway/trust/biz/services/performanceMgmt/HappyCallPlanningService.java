@@ -16,5 +16,7 @@ public interface HappyCallPlanningService {
 	List<EgovMap> selectHappyCallList(Map<String, Object> params);
 
 	boolean insertHappyCall(List<Object> addList, SessionVO sessionVO);
+
+	boolean deleteHappyCall(List<Object> delList, SessionVO sessionVO);
 	
 }

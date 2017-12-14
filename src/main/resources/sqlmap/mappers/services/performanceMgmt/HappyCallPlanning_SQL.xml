@@ -95,5 +95,10 @@
            TO_DATE(#{periodTo}, 'YYYY/MM/DD')
 		)
     </insert>
+    
+    <delete id="deleteHappyCall" parameterType="Map">
+        DELETE FROM CCR0003M 
+        WHERE HC_DEF_ID = #{hcId}
+    </delete>
 
 </mapper>
