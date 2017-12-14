@@ -60,45 +60,53 @@
 		{
 		    dataField: "customer",
 		    headerText: "Customer",
+		    editable: false,
 		    width: "8%"
 		},
 		{
 		    dataField: "mainInquiry",
 		    headerText: "Main Inquiry",
+		    editable: false,
 		    width: "13%"
 		},
 		{
 		    dataField: "subInquiry",
 		    headerText: "Sub Inquiry",
 		    style: "aui-grid-user-custom-left ",
+		    editable: false,
 		    width: "13%"
 		},
 		{
 		    dataField: "salesOrder",
 		    headerText: "Sales Order",
+		    editable: false,
 		    width: "10%"
 		},
 		{
 		    dataField: "mainDepartment",
 		    headerText: "Main Department",
+		    editable: false,
 		    style: "aui-grid-user-custom-left ",
 		    width: "13%"
 		},
 		{
 		    dataField: "subDepartment",
 		    headerText: "Sub Department",
+		    editable: false,
 		    style: "aui-grid-user-custom-left ",
 		    width: "15%"
 		},
 		{
 		    dataField: "claimNote",
 		    headerText: "Claim Note",
+		    editable: false,
 		    style: "aui-grid-user-custom-left ",
 		    width: "18%"
 		},
 		{
 		    dataField: "status",
-		    headerText: "Status"
+		    headerText: "Status",
+		    editable: false
 		}
 	];
 
@@ -144,7 +152,7 @@
 				    dataType : "numeric",
                     formatString : "#,##0",
 				    width: "6.7%",
-				    editable: true
+				    editable: false
 				},
 				{
                     dataField: "keyInQtyMonthEnd",
@@ -153,7 +161,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 }
             ],
             width: "20%",
@@ -180,7 +188,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 },
                 {
                     dataField: "byPrdCtgryBidet",
@@ -189,7 +197,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 },
                 {
                     dataField: "byPrdCtgrySoftner",
@@ -198,7 +206,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 }
             ],
             width: "20%",
@@ -225,7 +233,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 },
                 {
                     dataField: "bySalesCtgryMbrShip",
@@ -234,7 +242,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 },
                 {
                     dataField: "bySalesCtgryExtrade",
@@ -243,7 +251,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.7%",
-                    editable: true
+                    editable: false
                 }
             ],
             width: "19%",
@@ -270,7 +278,7 @@
                     dataType : "numeric",
                     formatString : "#,##0",
                     width: "6.5%",
-                    editable: true
+                    editable: false
                 }
             ],
             editable: false
