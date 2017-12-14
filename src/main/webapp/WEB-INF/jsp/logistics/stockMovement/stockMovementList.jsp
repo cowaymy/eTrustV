@@ -314,7 +314,7 @@ function f_getTtype(g , v){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Movement Request List</h2>
+<h2>SMO List</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -345,7 +345,7 @@ function f_getTtype(g , v){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Stock Movement Request</th>
+                    <th scope="row">SMO No</th>
                     <td>
                         <input type="text" class="w100p" id="streq" name="streq">
                     </td>
@@ -421,7 +421,7 @@ function f_getTtype(g , v){
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
 		    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-		    <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.ins' /></a></p></li>
+		    <li><p class="btn_grid"><a id="insert">New</a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>

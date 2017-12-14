@@ -54,6 +54,7 @@ var columnLayout = [
 							{dataField:"matnr" ,headerText:"Material Code",width:120 ,height:30},
 							{dataField:"stkDesc" ,headerText:"Material Name",width:200 ,height:30},
 							{dataField:"stkCtgryNm" ,headerText:"Catagory Type",width:150 ,height:30},
+							{dataField:"boxNo", headerText:"Material Type", width:150, height:30},
 							{dataField:"lvorm" ,headerText:"Deletion",width:150 ,height:30},
 							{dataField:"gltri" ,headerText:"Prod Date",width:150 ,height:30},		
 							{dataField:"latransit" ,headerText:"latransit",width:120 ,height:30, visible:false},
@@ -795,7 +796,7 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="create">Create</a></p></li>
+    <li><p class="btn_blue"><a id="create">New</a></p></li>
     <li><p class="btn_blue"><a id="edit">Edit</a></p></li>
     <!-- <li><p class="btn_blue"><a id="view">View</a></p></li> -->
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
@@ -839,13 +840,14 @@ function f_multiCombo() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Category Type</th>
-    <td>
-        <select class="multy_select w100p" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
-    </td>
+   
     <th scope="row">Material Type</th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="materialtype" name="materialtype[]"  /></select>
+    </td>
+     <th scope="row">Material Category</th>
+    <td>
+        <select class="multy_select w100p" multiple="multiple" id="srchcatagorytype" name="srchcatagorytype[]" /></select>
     </td>
     <th scope="row">Deletion Flag</th>
     <td>

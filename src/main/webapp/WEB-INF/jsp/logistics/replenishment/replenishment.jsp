@@ -61,9 +61,9 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    doGetComboData('/common/selectCodeList.do', {groupCode : 339, orderValue : 'code'}, '','slocgb', 'S' , '');
-    doGetCombo('/common/selectCodeList.do', '11', '', 'scate', 'S',''); //CATEGORY LIST
-    doGetCombo('/common/selectCodeList.do', '15', '', 'sttype', 'S',''); //TYPE LIST
+    doGetComboData('/common/selectCodeList.do', {groupCode : 339, orderValue : 'code'}, '','slocgb', 'M' , 'f_multiCombo');
+    doGetCombo('/common/selectCodeList.do', '11', '', 'scate', 'M','f_multiCombo'); //CATEGORY LIST
+    doGetCombo('/common/selectCodeList.do', '15', '', 'sttype', 'M','f_multiCombo'); //TYPE LIST
 
     
     rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
@@ -138,8 +138,8 @@ $(function(){
         }
     });
     $('#slocgb').change(function(){
-    	var paramdata ={"locgb":$('#slocgb').val()};
-    	doGetComboData('/common/selectStockLocationList.do', paramdata, '','sloccode', 'S' , '');
+    	var paramdata ={locgb:$('#slocgb').val()};
+    	doGetCombo('/common/selectStockLocationList.do', paramdata, '','sloccode', 'M' , 'f_multiCombo');
     	if ($('#slocgb').val() == '03' || $('#slocgb').val() == '04'){
     		AUIGrid.hideColumnByDataField(listGrid, "sftyqty");
     	}else{
@@ -400,6 +400,31 @@ function SearchListAjax() {
     });
 }
 
+function f_multiCombo() {
+    $(function() {
+        $('#slocgb').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });
+        $('#sloccode').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });
+        $('#sttype').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        });
+        $('#scate').change(function() {
+        }).multipleSelect({
+            selectAll : true, // 전체선택 
+            width : '80%'
+        }); 
+    });
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -437,13 +462,13 @@ function SearchListAjax() {
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row" rowspan='2'>Category of storage</th>
+                    <th scope="row" rowspan='2'>Location Type</th>
                     <td rowspan='2'>
-                        <select class="w100p" id="slocgb" name="slocgb"></select>
+                        <select class="multy_select w100p" multiple="multiple" id="slocgb" name="slocgb"></select>
                     </td>
                     <th scope="row" id=slocnm'>Location</th>
                     <td>
-                        <select class="w100p" id="sloccode" name="sloccode"><option value="">Choose Category of Storage</option></select>
+                        <select class="multy_select w100p" multiple="multiple" id="sloccode" name="sloccode"><option value="">Choose Category of Storage</option></select>
                     </td>
                     <th scope="row">Period</th>
                     <td>
@@ -453,11 +478,11 @@ function SearchListAjax() {
                 <tr>
                     <th scope="row">Material type</th>
                     <td>
-                        <select class="w100p" id="sttype" name="sttype"></select>
+                        <select class="multy_select w100p" multiple="multiple" id="sttype" name="sttype"></select>
                     </td>
                     <th scope="row">Material Category</th>
                     <td>
-                        <select class="w100p" id="scate" name="scate"></select>
+                        <select class="multy_select w100p" multiple="multiple" id="scate" name="scate"></select>
                     </td>
                 </tr>
             </tbody>

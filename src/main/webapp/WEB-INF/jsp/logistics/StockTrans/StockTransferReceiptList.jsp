@@ -371,12 +371,12 @@ function grFunc(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Transfer Good Issue List</li>
+    <li>Transfer-In</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Transfer Good Issue List</h2>
+<h2>Transfer-In</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->

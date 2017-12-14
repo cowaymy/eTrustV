@@ -35,7 +35,7 @@
     // AUIGrid 생성 후 반환 ID
     var myGridID;
     var historyGrid;
-    var comboDatas = [{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}];
+    var comboDatas = [{"codeId": "Y","codeName": "Y-Exclude Del Info"},{"codeId": "N","codeName": "N-Include Del Info"}];
     var comboData = [{"codeId": "2040","codeName": "MY-Local Pur.Org"},{"codeId": "2041","codeName": "MY-Import(EAST)"},{"codeId": "2042","codeName": "MY-Import(WEST)"}];
 
     
@@ -325,12 +325,12 @@
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>PurchasePrice</li>
-    <li>View</li>
+
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>View - Purchase Price by Item</h2>
+<h2>Purchase Price</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
@@ -364,9 +364,9 @@
     <td>
     <select id="purchasorg" name="purchasorg" placeholder="" class="w100p" >
     <option value=""></option>
-    <option value="2040">MY-Local Pur.Org</option>
-    <option value="2041">MY-Import(EAST)</option>
-    <option value="2042">MY-Import(WEST)</option>
+    <option value="2040">2040-Domestics</option>
+    <option value="2041">2041-Import(EAST)</option>
+    <option value="2042">2042-Import(WEST)</option>
     </select>
     </td> 
 </tr>

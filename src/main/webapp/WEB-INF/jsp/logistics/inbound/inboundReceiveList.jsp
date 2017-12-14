@@ -422,13 +422,13 @@ function fn_itempopList_T(data){
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-     <li>InBound</li>
-    <li>View - Receipt</li>
+     <li>InBound GR</li>
+
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>InBound SMO Receipt</h2>
+<h2>InBound SMO GR</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->

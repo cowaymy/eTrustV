@@ -306,7 +306,7 @@ $(function(){
          
          if(serialChkfalg =="Y"){
         	   document.giForm.gitype.value="GI";
-               $("#dataTitle").text("Good Issue Posting Data");
+               $("#dataTitle").text("GI/GR");
                $("#giptdate").val("");
                $("#gipfdate").val("");
                $("#doctext").val("");
@@ -319,7 +319,7 @@ $(function(){
              fn_itemSerialPopList(checkedItems);   
          }else{
         	 document.giForm.gitype.value="GI"
-            $("#dataTitle").text("Good Issue Posting Data");
+            $("#dataTitle").text("GI/GR");
              $("#giptdate").val("");
              $("#gipfdate").val("");
              $("#doctext").val("");
@@ -357,7 +357,7 @@ $(function(){
                 }
             }
             document.giForm.gitype.value="GC";
-            $("#dataTitle").text("Issue Cancel Posting Data");
+            $("#dataTitle").text("GI/GR Cancel");
             $("#giptdate").val("");
             $("#gipfdate").val("");
             $("#doctext").val("");
@@ -711,12 +711,12 @@ function f_addrow(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Point Of Sales List</li>
+    <li>Other GI/GR Mgmt</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Other GI/GR List</h2>
+<h2>Other GI/GR Mgmt</h2>
 </aside><!-- title_line end -->
 
 
@@ -801,7 +801,7 @@ function f_addrow(){
     
         <ul class="right_btns">
          <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-         <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.ins' /></a></p></li>            
+         <li><p class="btn_grid"><a id="insert">New</a></p></li>            
          <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
          <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
         </ul>
@@ -813,7 +813,7 @@ function f_addrow(){
     
     <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-            <h1 id="dataTitle">Good Issue Posting Data</h1>
+            <h1 id="dataTitle">GI/GR Posting Date</h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>

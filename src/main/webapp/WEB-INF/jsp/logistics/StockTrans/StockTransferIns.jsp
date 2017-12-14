@@ -517,7 +517,7 @@ function f_multiCombo() {
 <div style="width:50%"><!-- 50% start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Stock in Location</h3>
+<h3>Material Code</h3>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->

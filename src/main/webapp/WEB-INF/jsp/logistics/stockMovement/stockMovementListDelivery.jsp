@@ -671,12 +671,12 @@ function fn_serialChck(rowindex , rowitem , str){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Movement Delivery</li>
+    <li>Movement-Out</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Stock Movement Request List For Delivery</h2>
+<h2>Movement-Out</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -705,7 +705,7 @@ function fn_serialChck(rowindex , rowitem , str){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Stock Movement Request</th>
+                    <th scope="row">SMO No</th>
                     <td>
                         <input type="text" class="w100p" id="streq" name="streq">
                     </td>

@@ -775,13 +775,13 @@ function locationList(){
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
+    <li>logistics</li>
+    <li>Other Request</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Issue Request</h2>
+<h2>Other Request</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -906,7 +906,7 @@ function locationList(){
 <div style="width:50%"><!-- 50% start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Stock in Location</h3>
+<h3>Material Code</h3>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->

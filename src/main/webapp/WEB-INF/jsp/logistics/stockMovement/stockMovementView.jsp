@@ -403,7 +403,7 @@ function f_AddRow() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>View-Stock Movement Request</h2>
+<h2>SMO</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -528,7 +528,7 @@ function f_AddRow() {
 <div style="width:50%"><!-- 50% start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Stock in Location</h3>
+<h3>Material Code</h3>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->

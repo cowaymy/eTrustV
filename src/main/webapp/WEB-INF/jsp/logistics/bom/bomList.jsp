@@ -53,13 +53,13 @@
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
 								//{dataField:"bom",headerText:"Material Cdoe",width:"10%", cellMerge : true,visible:true},
-								{dataField:"bom",headerText:"Material Cdoe",width:100,style: "my-min-style",visible:false},
+								{dataField:"bom",headerText:"Material Code",width:100,style: "my-min-style",visible:false},
 								{dataField:"altrtivBom",headerText:"",width:100,style: "my-min-style",visible:false},
 								//{dataField:"plant",headerText:"Material Code Name",width:"10%",visible:true,style :"aui-grid-user-custom-left"
 								//	,cellMerge : true,
 							    //    mergeRef : "bom", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
 							    //    mergePolicy : "restrict"},
-								{dataField:"matrlNo",headerText:"Material Cdoe",width:"10%",style: "my-min-style",visible:true, cellMerge : true},
+								{dataField:"matrlNo",headerText:"Material Code",width:"10%",style: "my-min-style",visible:true, cellMerge : true},
 								{dataField:"stkdesc",headerText:"Material Name",width:"10%",style: "my-min-style",visible:true, cellMerge : true},
 								{dataField:"matrlNm",headerText:"Material Category",width:"10%",visible:true,
 								    style :"aui-grid-user-custom-left",
@@ -375,15 +375,14 @@
 		<ul class="path">
 			<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
 				alt="Home" /></li>
-			<li>View</li>
-			<li>BOM List</li>
+			<li>BOM</li>
 		</ul>
          <!-- title_line start -->
 		<aside class="title_line">
 			<p class="fav">
 				<a href="#" class="click_add_on">My menu</a>
 			</p>
-			<h2>View - BOM List</h2>
+			<h2>BOM</h2>
 			<ul class="right_btns">
 				<li><p class="btn_blue">
 						<a id="search"><span class="search"></span>

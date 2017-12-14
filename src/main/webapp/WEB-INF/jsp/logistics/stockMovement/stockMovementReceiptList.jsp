@@ -548,12 +548,12 @@ function fn_gradComb(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Movement Goods Receipt</li>
+    <li>Movement-In</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Movement Goods Receipt</h2>
+<h2>Movement-In</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -583,7 +583,7 @@ function fn_gradComb(){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Delivery Number</th>
+                    <th scope="row">Delivery No</th>
                     <td>
                        <!--  <select class="w100p" id="seldelno" name="seldelno"></select> -->
                         <input type="text" class="w100p" id="seldelno" name="seldelno">

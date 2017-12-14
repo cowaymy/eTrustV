@@ -1330,7 +1330,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
     
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Stocks</h2>
+        <h2>Material Code</h2>
         <ul class="right_opt">
           <%//@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
@@ -1390,7 +1390,7 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
-            <li><p class="btn_grid"><a id="stockIns"><spring:message code='sys.btn.ins' /></a></p></li>
+            <li><p class="btn_grid"><a id="stockIns">New</a></p></li>
             
 <!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()">Add</p></li> -->
         </ul>

@@ -613,12 +613,12 @@ function f_addrow(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>Stock Transfer Delivery List</li>
+    <li>Transfer-Out</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Stock Transfer Delivery List</h2>
+<h2>Transfer-Out</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->

@@ -637,12 +637,12 @@ function f_addrow(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
-    <li>STO List</li>
+    <li>Delivery No Mgmt</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>STO List</h2>
+<h2>Delivery No Mgmt</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -678,7 +678,7 @@ function f_addrow(){
                         <!-- <select class="w100p" id="streq" name="streq"></select> -->
                         <input type="text" class="w100p" id="streq" name="streq">
                     </td>
-                    <th scope="row">Stock Transfer Type</th>
+                    <th scope="row">Transfer Type</th>
                     <td>
                         <select class="w100p" id="sttype" name="sttype"></select>
                     </td>

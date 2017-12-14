@@ -359,12 +359,12 @@ function f_getTtype(g , v){
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">STO</th>
+                    <th scope="row">STO No</th>
                     <td>
                         <!-- <select class="w100p" id="streq" name="streq"></select> -->
                         <input type="text" class="w100p" id="streq" name="streq">
                     </td>
-                    <th scope="row">Stock Transfer Type</th>
+                    <th scope="row">Transfer Type</th>
                     <td>
                         <select class="w100p" id="sttype" name="sttype"></select>
                     </td>
@@ -431,7 +431,7 @@ function f_getTtype(g , v){
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-            <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.ins' /></a></p></li>
+            <li><p class="btn_grid"><a id="insert">New</a></p></li>
         </ul>
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
         
