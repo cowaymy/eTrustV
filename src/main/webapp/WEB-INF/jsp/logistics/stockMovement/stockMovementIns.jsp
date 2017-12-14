@@ -201,7 +201,7 @@ $(function(){
     		doDefCombo([], '' ,'flocation', 'S', '');
     	}else{
 	    	//var paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:$("#movpath").val()}; // session 정보 등록
-	    	var paramdata = { locgb:$("#movpath").val()}; // session 정보 등록
+	    	var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val()}; // session 정보 등록
 	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	        doDefCombo([], '' ,'flocation', 'S', '');
     	}
@@ -415,7 +415,9 @@ function f_multiCombo() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:180px" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:140px" />
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
@@ -423,43 +425,48 @@ function f_multiCombo() {
 <tbody>
 <tr>
     <th scope="row">SMO Number</th>
-    <td><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
+    <td colspan="3"><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Movement Path</th>
-    <td> 
+    <td colspan="3"> 
         <select class="w100p" id="movpath" name="movpath"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Movement Type</th>
-    <td>
+    <td colspan="3">
     <select class="w100p" id="sttype" name="sttype"></select>
     </td>
     <th scope="row">Movement Type</th>
-    <td>
+    <td colspan="3">
     <select class="w100p" id="smtype" name="smtype"><option>Movement Type Selected</option></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Document Date</th>
-    <td><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input id="docdate" name="docdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
     <th scope="row">Delivery Required Date</th>
-    <td><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+    <td colspan="3"><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
+    <th scope="row">Location Type </th>
+    <td>
+    <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
+        <option> All </option>
+        <option selected> A </option>
+        <option> B </option>
+    </select></td>
     <th scope="row">From Location</th>
-    <td colspan="3">
-    <select class="w100p" id="tlocation" name="tlocation"><option>Movement Path Choose</option></select>
+    <td colspan="2">
+    <select class="w100p" id="tlocation" name="tlocation"></select>
     </td>
-</tr>
-<tr>
     <th scope="row">To Location</th>
-    <td colspan="3">
-    <select class="w100p" id="flocation" name="flocation"><option>Choose One</option></select>
+    <td colspan="2">
+    <select class="w100p" id="flocation" name="flocation"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="7"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <!-- <tr id="cancelTr"> -->
 <!--     <th scope="row">Defect Reason</th> -->

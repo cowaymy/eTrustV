@@ -122,10 +122,11 @@ $('#reqadd').hide();
 var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
 var LocData = {sLoc : UserCode};
 var LocData2 = {brnch : UserBranchId};
+var paramdata2 = {endlikeValue:$("#locationType").val()};
      doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
-     doGetComboCodeId('/common/selectStockLocationList.do','', '','insReqLoc', 'S' , 'f_LocMultiCombo');
+     doGetComboCodeId('/common/selectStockLocationList.do',paramdata2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
       doGetCombo('/common/selectCodeList.do', '15', '', 'PosItemType', 'M','f_multiCombo');
       doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombos'); 
       doSysdate(0 , 'insReqDate');
@@ -795,7 +796,7 @@ function locationList(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:180px" />
     <col style="width:*" />
     <col style="width:180px" />
     <col style="width:*" />
@@ -803,39 +804,46 @@ function locationList(){
 <tbody>
 <tr>
     <th scope="row">Others Request</th>
-    <td><input id="insOthersReq" name="insOthersReq" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
+    <td colspan="3"><input id="insOthersReq" name="insOthersReq" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Request Type</th>
-    <td><select class="w100p" id="insReqType" name="insReqType"></select></td>
+    <td colspan="3"><select class="w100p" id="insReqType" name="insReqType"></select></td>
 </tr>
 <tr>
     <th scope="row">Request Date</th>
-    <td>
+    <td colspan="3">
     <input id="insReqDate" name="insReqDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
     </td>
     <th scope="row"></th>
-    <td>
+    <td colspan="3">
     
     </td>
 </tr>
 <tr>
     <th scope="row">Requestor</th>
-    <td>
+    <td colspan="3">
     <input id="insRequestor" name="insRequestor" type="text" title="" placeholder=""  class="readonly w100p" readonly="readonly" />
     </td>
     <th scope="row">Stock Movement No</th>
-     <td>
+     <td colspan="3">
     <input id="insSmo" name="insSmo" type="text" title="" placeholder="" class="w100p" />
     </td> 
 </tr>
 <tr>
+    <th scope="row">Location Type </th>
+    <td>
+      <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
+        <option> All </option>
+        <option selected> A </option>
+        <option> B </option>
+    </select></td>
     <th scope="row">Request Location</th>
-    <td colspan="3">
+    <td colspan="5">
     <select class="w100p" id="insReqLoc" name="insReqLoc"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3"><input id="insRemark" name="insRemark" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="7"><input id="insRemark" name="insRemark" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 
 </tbody>

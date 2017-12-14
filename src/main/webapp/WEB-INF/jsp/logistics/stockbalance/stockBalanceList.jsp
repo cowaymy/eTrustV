@@ -40,6 +40,9 @@ var columnLayout = [{dataField:"matrlNo"             ,headerText:"Material Code"
                     {dataField:"trantype"            ,headerText:"Transaction Type Text"      ,width:120    ,height:30 , visible:true},
                     {dataField:"invntryMovType"      ,headerText:"Movemen type"               ,width:120    ,height:30 , visible:true},
                     {dataField:"movtype"             ,headerText:"Movement Text"              ,width:120    ,height:30 , visible:true},
+                    {dataField:"blank", headerText:"Initial Qty", width:120, height :30, visible:true},
+                    {dataField:"inqty", headerText:"In", width :"8%", height : 30, visible:true},
+                    {dataField:"outqty", headerText:"Out", width:"8%", height:30, visible:true},
                     {dataField:"qty"                 ,headerText:"Qty"                        ,width:"8%"   ,height:30 , visible:true},
                     {dataField:"matrlDocNo"          ,headerText:"Material Documents"         ,width:120    ,height:30 , visible:true},
                     {dataField:"matrlDocItm"         ,headerText:"Item"                       ,width:120    ,height:30 , visible:true},
@@ -108,7 +111,9 @@ $(document).ready(function(){
 
 $(function(){
     $("#search").click(function() {
-        SearchListAjax();
+    	if(validation()) {
+    		  SearchListAjax();
+    	}
     });
     $("#clear").click(function() {
         
@@ -166,7 +171,17 @@ $(function(){
         
         doGetComboData('/common/selectStockLocationList2.do', param , '', 'stoLoc', 'M','f_multiComboType');
     });
+ 
 });
+
+function validation() {
+    var result = true;
+	if($("#PostingDt1").val() == null || $("#PostingDt1").val() == '') {
+		Common.alert("Please Insert Posting Date");
+		result = false;
+	}
+	return result;
+}
 
 function f_frloctype() {
     $(function() {
@@ -315,26 +330,15 @@ function f_multiCombos() {
                     <td>
                         <select id="searchMoveType" name="searchMoveType" class="multy_select w100p" multiple="multiple"></select>
                     </td>
-                    <td colspan="2">&nbsp;</td>
-                </tr>
-                <tr>
                     <th scope="row">Posting Date</th>
-                    <td>
+                        <td>
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
                         <span> To </span>
                         <p><input id="PostingDt2" name="PostingDt2" type="text" title="Posting End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->                        
                     </td>
-                    <th scope="row">Create Date</th>
-                    <td >
-                        <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> To </span>
-                        <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->
-                    </td>
-                    <td colspan='2'></td>              
+                    
                 </tr>
                 <tr>
                     <th scope="row">From Location Type</th>
