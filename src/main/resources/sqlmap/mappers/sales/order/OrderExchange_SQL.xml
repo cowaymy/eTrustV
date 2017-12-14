@@ -198,12 +198,12 @@
 			       WHERE 1=1
 			       <if test="startCrtDt != null and startCrtDt != ''">
                          <![CDATA[
-                         AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE( #{startCrtDt} , 'DD/MM/YYYY')
+                         AND Filter1.SO_EXCHG_CRT_DT >= TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
                          ]]>
                     </if>
                     <if test="endCrtDt != null and endCrtDt != ''">
                          <![CDATA[
-                         AND Filter1.SO_EXCHG_CRT_DT <= TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
+                         AND Filter1.SO_EXCHG_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                          ]]>
                     </if>
                     <if test="salesOrdNo != null and salesOrdNo != ''">

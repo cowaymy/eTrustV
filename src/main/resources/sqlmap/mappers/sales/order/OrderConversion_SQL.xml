@@ -105,19 +105,19 @@
                      AND Filter1.RS_CNVR_NO = #{convNo}
                  </if>
 			     <if test="createStDate != null and createStDate != ''">
-		             AND Filter1.RS_CNVR_CRT_DT <![CDATA[>=]]> TO_DATE( #{createStDate} , 'DD/MM/YYYY')
+		             AND Filter1.RS_CNVR_CRT_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
 		         </if>
 		         <if test="createEnDate != null and createEnDate != ''">
-                     AND Filter1.RS_CNVR_CRT_DT <![CDATA[<=]]> TO_DATE( #{createEnDate} , 'DD/MM/YYYY')
+                     AND Filter1.RS_CNVR_CRT_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                  </if>
                  <if test="crtUserName != null and crtUserName != ''">
                      AND UPPER(Filter1.USERNAME3) LIKE '%' || UPPER(#{crtUserName}) || '%'
                  </if>
 		         <if test="stConvConfDt != null and stConvConfDt != ''">
-                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[>=]]> TO_DATE(#{stConvConfDt}, 'DD/MM/YYYY')
+                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[>=]]> TO_DATE(#{stConvConfDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
                  </if>
                  <if test="endConvConfDt != null and endConvConfDt != ''">
-                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[<=]]> TO_DATE(#{endConvConfDt}, 'DD/MM/YYYY')
+                     AND Filter1.RS_CNVR_CNFM_DT <![CDATA[<=]]> TO_DATE(#{endConvConfDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                  </if>
                  <if test="convRem != null and convRem != ''">
                      AND UPPER(Filter1.RS_CNVR_REM) LIKE '%' || UPPER(#{convRem}) || '%'
