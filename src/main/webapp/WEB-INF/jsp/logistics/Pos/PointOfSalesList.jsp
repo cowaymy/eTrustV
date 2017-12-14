@@ -36,6 +36,7 @@ var listGrid;
 var subGrid;
 var serialChkfalg;
 var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
+var comboDatas = [{"codeId": "OI","codeName": "OH_GI"},{"codeId": "OG","codeName": "OH_GR"}];
 var otherType;
  var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
                       {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
@@ -154,9 +155,12 @@ $(document).ready(function(){
     **********************************/
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
        /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
-       var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-      doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
+//        var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
+//       doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
       //doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');
+      doDefCombo(comboDatas, '' ,'searchTransType', 'S', '');
+      
+      
     
     /**********************************
      * Header Setting End
@@ -395,6 +399,7 @@ $(function(){
         $("#crtedt").val('');
         $("#reqsdt").val('');
         $("#reqedt").val('');
+        $("#searchReqType").val('');
     });
     
 //     $("#flocationnm").keypress(function(event) {
@@ -407,6 +412,12 @@ $(function(){
 //             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
 //         }
 //     });
+    
+    $("#searchTransType").change(function(){
+        var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#searchTransType").val()};
+        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , ''); 
+    });
+    
     
 });
 
@@ -510,6 +521,9 @@ function giSave() {
     var Location;
     var Status;
 if(v=='search'){
+	 if ($("#searchTransType").val() == "") {
+		 return false
+	 }
     if ($("#searchReqType").val() == "") {
         ReqType = false;
     }else{
@@ -703,8 +717,6 @@ function f_addrow(){
     return false;
 }
 
-
-
 </script>
 
 <section id="content"><!-- content start -->
@@ -753,11 +765,22 @@ function f_addrow(){
                         <p><input type="text" class="w100p" id="searchOthersReq2" name="searchOthersReq2" /></p>
                          </div> <!-- date_set end -->
                     </td> 
-                    <th scope="row">Movement Type</th>
+                    <th scope="row"></th>
                     <td>
-                        <select class="w100p" id="searchReqType" name="searchReqType" onchange="test()"></select>
+                        <!-- <select class="w100p" id="searchReqType" name="searchReqType" onchange="test()"></select> -->
                     </td> 
                 </tr>
+                <tr>
+                    <th scope="row">Transaction Type</th>
+                    <td>
+                        <select class="w100p" id="searchTransType" name="searchTransType"></select>
+                    </td>
+                    <th scope="row">Movement Type</th>
+                    <td>
+                        <select class="w100p" id="searchReqType" name="searchReqType"><option value=''>Choose One</option></select>
+                    </td>         
+                </tr>
+                
                 <tr>
                     <th scope="row">Location</th>
                     <td>
@@ -884,4 +907,3 @@ function f_addrow(){
     <input type="hidden" id="svalue" name="svalue">
 </form>
 </section>
-
