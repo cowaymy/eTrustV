@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "sales api", description = "sales api")
 @RestController(value = "regPreOrderApiController")
-@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/logistics")
+@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/sales")
 public class RegPreOrderApiController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(RegPreOrderApiController.class);
 

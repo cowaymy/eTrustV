@@ -15,4 +15,7 @@ public interface CourseApiMapper {
 
 	EgovMap memInfo(Map<String, Object> params);
 	
+	void registerCourse(Map<String, Object> params);
+	
+	void cancelCourse(Map<String, Object> params);
 }

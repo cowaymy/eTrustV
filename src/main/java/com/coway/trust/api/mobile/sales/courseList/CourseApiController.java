@@ -26,9 +26,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "sales api", description = "sales api")
+@Api(value = "course api", description = "course api")
 @RestController(value = "CourseApiController")
-@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/sales")
+@RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/course")
 public class CourseApiController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseApiController.class);
@@ -40,7 +40,7 @@ public class CourseApiController {
 	private MessageSourceAccessor messageAccessor;
 	
 	@ApiOperation(value = "Course List", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/course", method = RequestMethod.GET)
+	@RequestMapping(value = "/courselist", method = RequestMethod.GET)
 	public ResponseEntity<List<CourseDto>> courseList(@ModelAttribute CourseForm courseForm) throws Exception {
 
 		Map<String, Object> params = courseForm.createMap(courseForm);

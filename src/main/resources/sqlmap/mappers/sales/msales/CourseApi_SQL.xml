@@ -4,7 +4,9 @@
 
     <select id="memInfo" parameterType="Map" resultType="egovMap">
         SELECT MEM_ID 
-                  ,MEM_TYPE
+             , MEM_TYPE
+             , NAME
+             , NRIC
           FROM ORG0001D 
         WHERE MEM_CODE = #{userId}
     </select>
@@ -50,4 +52,44 @@
 		      AND COURS_ID = #{courseId}
     </select>
 
+    <update id="registerCourse" parameterType="Map">
+        MERGE
+         INTO MSC0009D
+        USING DUAL
+           ON (COURS_ID = #{courseId} AND COURS_MEM_ID = #{memId})
+         WHEN MATCHED THEN
+              UPDATE
+                 SET COURS_MEM_STUS_ID = 1
+         WHEN NOT MATCHED THEN
+              INSERT
+                   ( COURS_ITM_ID
+                   , COURS_ID
+                   , COURS_MEM_ID
+                   , COURS_MEM_STUS_ID
+                   , COURS_D_UPD_USER_ID
+                   , COURS_D_UPD_DT
+                   , COURS_D_MEM_NAME
+                   , COURS_D_MEM_NRIC
+                   )
+              VALUES
+                   ( MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL
+                   , #{courseId}
+                   , #{memId}
+                   , 1
+                   , #{userId}
+                   , SYSDATE
+                   , #{memName}
+                   , #{memNric}
+                   )
+    </update>
+    
+    <update id="cancelCourse" parameterType="Map">
+        UPDATE MSC0009D
+           SET COURS_MEM_STUS_ID = 8
+             , COURS_D_UPD_USER_ID = #{userId}
+             , COURS_D_UPD_DT = SYSDATE
+         WHERE COURS_ID = #{courseId}
+           AND COURS_MEM_ID = #{memId}
+    </update>
+    
 </mapper>
