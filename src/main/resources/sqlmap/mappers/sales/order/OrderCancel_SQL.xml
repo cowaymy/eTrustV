@@ -159,8 +159,8 @@
                      #{item}
                  </foreach>
              </if>
-             <if test="ordId != null and ordId != ''">
-                 AND A.ORD_ID = #{ordId}
+             <if test="ordNo != null and ordNo != ''">
+                 AND A.ORD_NO = #{ordNo}
              </if>
              <if test="reqNo != null and reqNo != ''">
                  AND A.REQ_NO = #{reqNo}
@@ -181,13 +181,13 @@
                 AND CRT_DT <![CDATA[   >= ]]>  TO_DATE( #{startCrtDt} , 'DD/MM/YYYY')
              </if>
              <if test="endCrtDt != null and endCrtDt != ''">                              
-                AND CRT_DT <![CDATA[   <   ]]>  TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
+                AND CRT_DT <![CDATA[   <=   ]]>  TO_DATE( #{endCrtDt} , 'DD/MM/YYYY')
             </if>
             <if test="startRecallDt != null and startRecallDt != '' ">
                 AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE( #{startRecallDt} , 'DD/MM/YYYY')
             </if>
             <if test="endRecallDt != null and endRecallDt != '' ">           
-                AND CALL_RECALL_DT <![CDATA[   <   ]]>  TO_DATE( #{endRecallDt} , 'DD/MM/YYYY')
+                AND CALL_RECALL_DT <![CDATA[   <=   ]]>  TO_DATE( #{endRecallDt} , 'DD/MM/YYYY')
             </if>
     </select>
     
