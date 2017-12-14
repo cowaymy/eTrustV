@@ -297,7 +297,6 @@
 			   AND ((OH_QTY_CURR <![CDATA[>]]> 0) OR (IS_QTY_CURR <![CDATA[>]]> 0) OR (SB_QTY_CURR <![CDATA[>]]> 0))
 			ORDER BY M1_AMT_CURR			
   
-  </select> 
-    
+  </select>
   
 </mapper>
