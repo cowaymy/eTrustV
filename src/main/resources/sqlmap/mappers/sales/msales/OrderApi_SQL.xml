@@ -215,7 +215,7 @@
              , EMP_CHK
              , GST_CHK
              , ATCH_FILE_GRP_ID
-             , CUST_CNT_ID
+             , CUST_CNTC_ID
              , KEYIN_BRNCH_ID
              , INST_ADD_ID
              , DSC_BRNCH_ID
