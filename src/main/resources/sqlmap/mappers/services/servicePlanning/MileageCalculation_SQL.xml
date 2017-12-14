@@ -426,7 +426,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
      , #{userId}
      , SYSDATE
      <!-- BY KV -add extra charge-->
-     , #{extcharg}
+     , #{extCharg}
      )
 </insert>
 <update id="updateSchemaMgmt" parameterType="Map">
@@ -442,7 +442,7 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
         UPD_USER_ID = #{userId},
         UPD_DT = SYSDATE,
         <!-- BY KV -add extra charge-->
-        EXT_CHARG = #{extcharg}
+        EXT_CHARG = #{extCharg}
     WHERE SCHEM_ID = #{schemId}
 </update>
 <delete id="deleteSchemaMgmt" parameterType="Map">
@@ -488,7 +488,7 @@ MEM_CODE,
 SERVICE_DATE,
 DISTANCE as TOTAL_DISTANCE,
 <![CDATA[
-(SELECT MILEAGE_AMT
+(SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
   FROM SVC0033M
   WHERE mem_type = z.mem_Type
   AND PERIOD_FROM <= UPD_DT
