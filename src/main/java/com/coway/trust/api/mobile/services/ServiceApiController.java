@@ -1627,7 +1627,11 @@ public class ServiceApiController {
 		
 		Map<String, Object> rmap = MSvcLogApiService.selectOutstandingResult(map);
 		
-		if (!rmap.isEmpty()){
+//		if (!rmap.isEmpty()){
+//			LOGGER.debug(" :::: {}" ,rmap);
+//		}
+		
+		if (rmap != null){
 			LOGGER.debug(" :::: {}" ,rmap);
 		}
 		
@@ -1639,11 +1643,21 @@ public class ServiceApiController {
 		orv.setOsrd(list);
 
 		//headSet
-		orv.setSumRpf(Integer.parseInt(String.valueOf(rmap.get("sumRpf"))));
-		orv.setSumRpt(Integer.parseInt(String.valueOf(rmap.get("sumRpt"))));
-		orv.setSumRhf(Integer.parseInt(String.valueOf(rmap.get("sumRhf"))));
-		orv.setSumRental(Integer.parseInt(String.valueOf(rmap.get("sumRental"))));
-		orv.setSumAdjust(Integer.parseInt(String.valueOf(rmap.get("sumAdjust"))));
+		if(rmap != null){
+			orv.setSumRpf(Integer.parseInt(String.valueOf(rmap.get("sumRpf"))));
+			orv.setSumRpt(Integer.parseInt(String.valueOf(rmap.get("sumRpt"))));
+			orv.setSumRhf(Integer.parseInt(String.valueOf(rmap.get("sumRhf"))));
+			orv.setSumRental(Integer.parseInt(String.valueOf(rmap.get("sumRental"))));
+			orv.setSumAdjust(Integer.parseInt(String.valueOf(rmap.get("sumAdjust"))));
+		}else {
+			orv.setSumRpf(0);
+			orv.setSumRpt(0);
+			orv.setSumRhf(0);
+			orv.setSumRental(0);
+			orv.setSumAdjust(0);
+		}
+		
+
 		
 		/*
 		List<OutStandignResultDetail> list = rcList.stream().map(r -> RentalServiceCustomerDto.create(r))
