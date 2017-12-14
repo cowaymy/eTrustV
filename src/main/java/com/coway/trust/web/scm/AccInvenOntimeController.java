@@ -240,4 +240,15 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterMngmentCon
 	}		
 	
 	
+	/******************************
+     **** Sales Plan Accuracy *****
+     ******************************/
+	@RequestMapping(value = "/salesPlanAccuracy.do")
+	public String doSalesPlanAccuracy(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
+	{
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/salesPlanAccuracy";  	
+	}  
+	
+	
 }
