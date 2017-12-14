@@ -33,6 +33,8 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectSalesCnt(Map<String, Object> params);
 	List<EgovMap> selectSeperation(Map<String, Object> params);
 	List<EgovMap> selectChildField(Map<String, Object> params);
+	List<EgovMap> selectWeekThSn(Map<String, Object> params);
+	List<EgovMap> selectAccuracyMonthlyHeaderList(Map<String, Object> params);
 	List<EgovMap> selectRemainWeekTh(Map<String, Object> params);
 	List<EgovMap> selectMonthCombo(Map<String, Object> params);
 	
@@ -43,4 +45,8 @@ public interface SalesPlanMngementMapper {
 	
 	void updateScmPlanMaster(Map<String, Object> params);
 	void insertSalesPlanDetail(Map<String, Object> params);
+	
+	/* SALES PLAN ACCURACY */
+	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
+	
 }

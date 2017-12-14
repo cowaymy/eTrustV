@@ -83,6 +83,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	}
 	
 	@Override
+	public List<EgovMap> selectAccuracyMonthlyHeaderList(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectAccuracyMonthlyHeaderList(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectExcuteYear(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectExcuteYear(params);
 	}
@@ -189,6 +194,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	}
 	
 	@Override
+	public List<EgovMap> selectWeekThSn(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectWeekThSn(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectRemainWeekTh(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectRemainWeekTh(params);
 	}
@@ -203,6 +213,10 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	@Override
 	public List<EgovMap> selectPlanMasterId(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectPlanMasterId(params);
+	}
+	@Override
+	public List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectAccuracyWeeklyDetail(params);
 	}
 
 }
