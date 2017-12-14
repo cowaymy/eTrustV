@@ -126,21 +126,23 @@ public interface MemberListMapper {
 	EgovMap getDocNo(Map<String, Object> params);
 
 
-	
+
 	int traineeUpdate(Map<String, Object> params);
 	EgovMap afterSelTrainee(Map<String, Object> params);
-	
+
 	List<EgovMap> getMemberListView(Map<String, Object> params);
 
 	int memberListUpdate_user(Map<String, Object> params);
-	
+
 	int memberListUpdate_memorg(Map<String, Object> params);
-	
+
 	int memberListUpdate_member(Map<String, Object> params);
-	
+
 	void saveDocSubmission(DocSubmissionVO docSubmissionVO);
-	
+
 	void updateDocSubmissionDel(DocSubmissionVO docSubmissionVO);
-	
+
+	List<EgovMap> selectDeptCodeHp(Map<String, Object> params);
+
 
 }
