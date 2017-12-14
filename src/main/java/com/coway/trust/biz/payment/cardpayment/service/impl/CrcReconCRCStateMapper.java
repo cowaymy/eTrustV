@@ -59,4 +59,13 @@ public interface CrcReconCRCStateMapper {
 	 */
 	void insertCrcStatementITF(Map<String, Object> params);
 	
+	/**
+	 * selectCrcKeyInOrNoList
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	List<EgovMap> selectCrcKeyInOrNoList(Map<String, Object> params);
+	
 }

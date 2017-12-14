@@ -4,22 +4,23 @@
     
     <select id="selectCrcStatementMappingList" parameterType="Map" resultType="egovMap">
         SELECT 
-            GROUP_SEQ, 
-            PAY_ITM_CC_NO, 
-            PAY_ITM_REF_DT, 
-            PAY_ITM_APPV_NO, 
-            PAY_ITM_CARD_MODE_ID, 
-            PAY_ITM_BANK_ACC_ID,
-            CARD_MODE_NAME,
-            AMOUNT, 
-            CRC_TRNSC_ID, 
-            CRC_TRNSC_DT, 
-            CRC_TRNSC_NO, 
-            CRC_TRNSC_APPV, 
-            CRDIT_CARD, 
-            CRC_STATE_ACC_ID, 
-            GROS_AMT,
-            CRC_MC_NAME
+            TB1.GROUP_SEQ GROUP_SEQ, 
+            TB1.PAY_ITM_CC_NO PAY_ITM_CC_NO, 
+            TB1.PAY_ITM_REF_DT PAY_ITM_REF_DT, 
+            TB1.PAY_ITM_APPV_NO PAY_ITM_APPV_NO, 
+            TB1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID, 
+            TB1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
+            TB1.CARD_MODE_NAME CARD_MODE_NAME,
+            TB1.AMOUNT AMOUNT, 
+            TB1.CRC_MC_NAME CRC_MC_NAME,
+            TB2.CRC_TRNSC_ID CRC_TRNSC_ID, 
+            TO_CHAR(TB2.CRC_TRNSC_DT , 'DD/MM/YYYY') CRC_TRNSC_DT,
+            TB2.CRC_TRNSC_NO CRC_TRNSC_NO, 
+            TB2.CRC_TRNSC_APPV CRC_TRNSC_APPV, 
+            TB2.CRDIT_CARD CRDIT_CARD, 
+            TB2.CRC_STATE_ACC_ID CRC_STATE_ACC_ID, 
+            TB2.GROS_AMT GROS_AMT,
+            TB2.CRC_TRNSC_MID CRC_TRNSC_MID
             FROM 
                 (
                 SELECT
@@ -38,6 +39,8 @@
                     JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
                     JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
                     JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                    JOIN PAY0241T G ON A.GROUP_SEQ = G.ITM_SEQ
                 WHERE 
                     A.PAY_ITM_MODE_ID = 107
                     AND A.CRC_STATE_MAPPING_STUS_ID = 1
@@ -65,7 +68,8 @@
                     B.CRC_TRNSC_APPV,
                     B.CRDIT_CARD,
                     A.CRC_STATE_ACC_ID,
-                    NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT
+                    NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
+                    B.CRC_TRNSC_MID CRC_TRNSC_MID
                 FROM 
                     PAY0075D A 
                     JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID 
@@ -83,7 +87,8 @@
                     B.CRC_TRNSC_NO,
                     B.CRC_TRNSC_APPV,
                     B.CRDIT_CARD,
-                    A.CRC_STATE_ACC_ID ) TB2 ON   TB1.PAY_ITM_CC_NO = TB2.CRC_TRNSC_NO
+                    A.CRC_STATE_ACC_ID,
+                    B.CRC_TRNSC_MID  ) TB2 ON   TB1.PAY_ITM_CC_NO = TB2.CRC_TRNSC_NO
                                                 AND TB1.PAY_ITM_REF_DT = TB2.CRC_TRNSC_DT
                                                 AND TB1.PAY_ITM_APPV_NO = TB2.CRC_TRNSC_APPV
                                                 AND TB1.AMOUNT = TB2.GROS_AMT
@@ -325,5 +330,21 @@
             #{amount}
         )
     </insert>
+    
+    <select id="selectCrcKeyInOrNoList" parameterType="Map" resultType="egovMap">
+        SELECT
+            F.OR_NO OR_NO,
+            G.ORD_NO ORD_NO,
+            NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS PAY_AMT
+                FROM 
+                    PAY0252T A
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                    JOIN PAY0241T G ON A.GROUP_SEQ = G.ITM_SEQ
+                WHERE 
+                    A.PAY_ITM_MODE_ID = '107'
+                    AND A.CRC_STATE_MAPPING_STUS_ID = '1'
+                    AND A.GROUP_SEQ = #{groupSeq}
+                GROUP BY  F.OR_NO, G.ORD_NO            
+    </select>
     
 </mapper>

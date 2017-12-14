@@ -5,8 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.cardpayment.service.CrcReconCRCStateService;
+import com.coway.trust.biz.payment.reconciliation.service.impl.AccountReconciliationServiceImpl;
 import com.coway.trust.biz.payment.reconciliation.service.impl.CRCStatementMapper;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -16,7 +20,7 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Resource(name = "crcReconCRCStateMapper")
 	private CrcReconCRCStateMapper crcReconCRCStateMapper ;
-	
+	private static final Logger logger = LoggerFactory.getLogger(AccountReconciliationServiceImpl.class);
 	
 	/**
 	 * selectCrcStatementMappingList
@@ -57,17 +61,26 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public boolean updCrcReconState(int userId , List<Object> paramList) {
 		boolean isSucess = false;
+		
     	if (paramList.size() > 0) {    		
     		Map<String, Object> hm = null;
-    		int index = 0;
+    		Map<String, Object> orNoMap = null;
     		for (Object map : paramList) {
     			hm = (HashMap<String, Object>) map;  
     			hm.put("userId", userId);
-    			hm.put("bankSeq", index+1);
+    			
+    			List<EgovMap> orNoList = crcReconCRCStateMapper.selectCrcKeyInOrNoList(hm);
+    			for(int i = 0 ; i < orNoList.size() ; i++){
+					orNoMap = (Map<String, Object>)orNoList.get(i);
+					hm.put("bankSeq", i+1);
+        			hm.put("ordNo", orNoMap.get("ordNo"));
+        			hm.put("orNo", orNoMap.get("orNo"));
+        			hm.put("amount", orNoMap.get("payAmt"));
+        			crcReconCRCStateMapper.insertCrcStatementITF(hm);
+    			}
     			crcReconCRCStateMapper.updCrcKeyIn(hm);
     			crcReconCRCStateMapper.updCrcStatement(hm);
-    			crcReconCRCStateMapper.insertCrcStatementITF(hm);
-    			index++;
+    			
     		}
     		isSucess = true;
     	}

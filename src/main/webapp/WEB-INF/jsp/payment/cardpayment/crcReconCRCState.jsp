@@ -58,9 +58,7 @@ var mappingLayout = [
                        }, {
                            dataField : "crcTrnscDt",
                            headerText : "Transaction Date",
-                           editable : false,
-                           dataType : "date", 
-                           formatString : "dd/mm/yyyy"
+                           editable : false
                        },{
                            dataField : "crcTrnscNo",
                            headerText : "Card No",
@@ -160,9 +158,7 @@ var crcStateLayout = [
                       }, {
                           dataField : "crcTrnscDt",
                           headerText : "TR Date",
-                          editable : false,
-                          dataType : "date", 
-                          formatString : "dd/mm/yyyy"
+                          editable : false
                       }, {
                           dataField : "crcTrnscNo",
                           headerText : "Card No",
