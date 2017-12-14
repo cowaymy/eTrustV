@@ -2049,7 +2049,9 @@ LEFT OUTER JOIN (
 
            </select>
 
-           <select id="getRentalCustomerList" parameterType="Map" resultType="egovMap">
+
+           <resultMap id="rcListMap" type="egovMap"></resultMap>
+           <select id="getRentalCustomerList" parameterType="Map"  statementType="CALLABLE">
                 {
                     call  SP_MOBILE_SELT_RC_TRGET(
                       #{userId},
