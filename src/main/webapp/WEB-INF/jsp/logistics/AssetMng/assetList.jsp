@@ -746,27 +746,30 @@
                  return false;
                  }
              }
-             $("#cardTypeId").val("TR");
+             //$("#cardTypeId").val("TR");
+             $("#transTypeId").val("TR");
              saveTrns();
              
          });
          $("#saveStatusBtn").click(function(){
              var status = $("#status").val();
              var statusremark = $("#statusremark").val();
+            
              if(null == status || ''==status){
                  Common.alert("Please Select Status.");
                  return false;
              }
              if("7"==status){
-                 $("#cardTypeId").val("OB");
+                 $("#statusTypeId").val("OB");
              }else if("67"==status){
-                 $("#cardTypeId").val("LS");
+                 $("#statusTypeId").val("LS");
              }else{
-                 $("#cardTypeId").val("DE");
+                 $("#statusTypeId").val("DE");
              }
              saveStatus();
              
          });
+         
          $("#returnTrnsBtn").click(function(){
              $("#cardTypeId").val("RT");
              saveTrnsRe();
@@ -935,28 +938,7 @@
      
     });
     
-    
-//     function getAssetListAjax() {
-//         var param = $('#searchForm').serialize();
-//         $.ajax({
-//             type : "POST",
-//             url : "/logistics/assetmng/assetList.do?" + param,
-//             //url : "/stock/StockList.do",
-//             //data : param,
-//             dataType : "json",
-//             contentType : "application/json;charset=UTF-8",
-//             success : function(data) {
-//                 var gridData = data             
-            
-//                 AUIGrid.setGridData(myGridID, gridData.data);
-//             },
-//             error : function(jqXHR, textStatus, errorThrown) {
-//                 alert("실패하였습니다.");
-//             },
-           
-//         });
-//     }
-    
+
      function getAssetListAjax() {
         
          var param = $('#searchForm').serialize();
@@ -1072,6 +1054,8 @@
       
     function fn_assetDetail(rowid){
         $("#masterassetid").val(AUIGrid.getCellValue(myGridID ,rowid,'assetid'));
+        $("#transAssetId").val(AUIGrid.getCellValue(myGridID ,rowid,'assetid'));
+        $("#statusAssetId").val(AUIGrid.getCellValue(myGridID ,rowid,'assetid'));
         $("#masterstatus").val(AUIGrid.getCellValue(myGridID ,rowid,'name2'));
         $("#masterbreanch").val(AUIGrid.getCellValue(myGridID ,rowid,'branch'));
         $("#masterdepartment").val(AUIGrid.getCellValue(myGridID ,rowid,'department'));
@@ -1623,7 +1607,7 @@
     }
     function saveTrns(){
           //$("#cardTypeId").val("TR");
-           var param = $('#masterForm').serializeJSON();
+           var param = $('#transForm').serializeJSON();
             var url = "/logistics/assetmng/saveAssetCard.do";
             console.log(param);
                 Common.ajax("POST" , url , param , function(data){
@@ -1650,7 +1634,7 @@
         
     }
     function saveStatus(){
-          var param = $('#masterForm').serializeJSON();
+          var param = $('#statusForm').serializeJSON();
           $.extend(param, {
               'trnsbranchid' : 0,
               'transdepartment' : 0
@@ -1906,7 +1890,7 @@
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <h3 id="transH3_01" style="display: none;">Asset Informaton</h3>
-<section class="tap_wrap"><!-- tap_wrap start -->
+<section class="tap_wrap mt0"><!-- tap_wrap start -->
             <ul class="tap_type1">
                 <li id="Master_info" class="on"><a href="#" id="trigger"> Master info </a></li>
                 <li id="Details_info"><a href="#"> Details Info</a></li>
@@ -1920,7 +1904,7 @@
     <li><p class="btn_blue"><a id="ViewMoveTrns">View Movement Transaction</a></p></li>
 </ul>
 <form id="masterForm" name="masterForm" method="POST">
-<table class="type1"><!-- table start -->
+<table class="type1 mt10"><!-- table start -->
 <caption>search table</caption>
 <colgroup>
     <col style="width:120px" />
@@ -2037,62 +2021,62 @@
         </tr>
         </tbody>
     </table>
-    <table class="type1" id="trnasInfo">
-        <colgroup>
-        <col style="width:120px" />
-        <col style="width:*" />
-        <col style="width:120px" />
-        <col style="width:*" /> 
-        </colgroup>
-        <tbody>
-        <tr>
-            <td scope="row" colspan="4"><h3>Transfer Informaton</h3></th>
-        </tr>
-        <tr>
-            <th scope="row">Branch</th>
-            <td colspan="3">
-                 <select id="trnsbranchid" name="trnsbranchid" onchange="getComboRelayTrns('transdepartment' , this.value , '', '')" class="w100p" >
-                 </select>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Current Department</th>
-            <td colspan="3"> 
-                <select class="w100p" id="transdepartment" name="transdepartment" >
-                </select>
-            </td>
-        </tr>
-    </table>
-    <table class="type1" id="statusInfo">
-        <colgroup>
-        <col style="width:120px" />
-        <col style="width:*" />
-        <col style="width:120px" />
-        <col style="width:*" /> 
-        </colgroup>
-        <tbody>
-        <tr>
-            <th scope="row">Status</th>
-            <td colspan="3">
-                 <select id="status" name="status"  class="w100p" >
-                  <option value=""></option>
-                  <option value="7">Obsolete</option>
-                  <option value="67">Lost</option>
-                  <option value="8">Deactivate</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Remark</th>
-            <td colspan="3"> 
-               <input type="text" title="" placeholder=""  class="w100p" id="statusremark" name="statusremark"/></td>    
-        </tr>
-    </table>
+<!--     <table class="type1" id="trnasInfo"> -->
+<!--         <colgroup> -->
+<!--         <col style="width:120px" /> -->
+<!--         <col style="width:*" /> -->
+<!--         <col style="width:120px" /> -->
+<!--         <col style="width:*" />  -->
+<!--         </colgroup> -->
+<!--         <tbody> -->
+<!--         <tr> -->
+<!--             <td scope="row" colspan="4"><h3>Transfer Informaton</h3></th> -->
+<!--         </tr> -->
+<!--         <tr> -->
+<!--             <th scope="row">Branch</th> -->
+<!--             <td colspan="3"> -->
+<!--                  <select id="trnsbranchid" name="trnsbranchid" onchange="getComboRelayTrns('transdepartment' , this.value , '', '')" class="w100p" > -->
+<!--                  </select> -->
+<!--             </td> -->
+<!--         </tr> -->
+<!--         <tr> -->
+<!--             <th scope="row">Current Department</th> -->
+<!--             <td colspan="3">  -->
+<!--                 <select class="w100p" id="transdepartment" name="transdepartment" > -->
+<!--                 </select> -->
+<!--             </td> -->
+<!--         </tr> -->
+<!--     </table> -->
+<!--     <table class="type1" id="statusInfo"> -->
+<!--         <colgroup> -->
+<!--         <col style="width:120px" /> -->
+<!--         <col style="width:*" /> -->
+<!--         <col style="width:120px" /> -->
+<!--         <col style="width:*" />  -->
+<!--         </colgroup> -->
+<!--         <tbody> -->
+<!--         <tr> -->
+<!--             <th scope="row">Status</th> -->
+<!--             <td colspan="3"> -->
+<!--                  <select id="status" name="status"  class="w100p" > -->
+<!--                   <option value=""></option> -->
+<!--                   <option value="7">Obsolete</option> -->
+<!--                   <option value="67">Lost</option> -->
+<!--                   <option value="8">Deactivate</option> -->
+<!--                 </select> -->
+<!--             </td> -->
+<!--         </tr> -->
+<!--         <tr> -->
+<!--             <th scope="row">Remark</th> -->
+<!--             <td colspan="3">  -->
+<!--                <input type="text" title="" placeholder=""  class="w100p" id="statusremark" name="statusremark"/></td>     -->
+<!--         </tr> -->
+<!--     </table> -->
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a id="returnTrnsBtn">Confirm Return</a></p></li>
     <li><p class="btn_blue2 big"><a id="savePopbtn">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li>
+<!--     <li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li> -->
+<!--     <li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li> -->
     <li><p class="btn_blue2 big"><a id="updatePopbtn">UPDATE</a></p></li>
     <li><p class="btn_blue2 big"><a id="cancelPopbtn" onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
 </ul>
@@ -2103,7 +2087,7 @@
 <article class="tap_area" id="DtatilGrid_div_tap"  style="display:none;">
 <div id="DtatilGrid_div" style="width:100%;"></div>             
 
-<aside class="title_line" id="a2"><!-- title_line start -->
+<aside class="title_line mt20" id="a2"><!-- title_line start -->
 <h2>Copy/Duplicate Informaton</h2>
 </aside><!-- title_line end -->
     <table class="type1" id="CopyAssetInfo2">
@@ -2161,6 +2145,76 @@
 </article>
 
 </section><!--  tab -->
+
+
+<form id="transForm" name="transForm" method="POST">
+<input type="hidden" id="transAssetId" name="transAssetId"/>
+<input type="hidden" id="transTypeId" name="transTypeId"/>
+    <table class="type1" id="trnasInfo">
+        <colgroup>
+        <col style="width:120px" />
+        <col style="width:*" />
+        <col style="width:120px" />
+        <col style="width:*" /> 
+        </colgroup>
+        <tbody>
+        <tr>
+            <td scope="row" colspan="4"><h3>Transfer Informaton</h3></th>
+        </tr>
+        <tr>
+            <th scope="row">Branch</th>
+            <td colspan="3">
+                 <select id="trnsbranchid" name="trnsbranchid" onchange="getComboRelayTrns('transdepartment' , this.value , '', '')" class="w100p" >
+                 </select>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Current Department</th>
+            <td colspan="3"> 
+                <select class="w100p" id="transdepartment" name="transdepartment" >
+                </select>
+            </td>
+        </tr>
+    </table>
+</form>
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li>
+</ul>
+
+
+
+<form id="statusForm" name="statusForm" method="POST">
+<input type="hidden" id="statusAssetId" name="statusAssetId"/>
+<input type="hidden" id="statusTypeId" name="statusTypeId"/>
+<table class="type1" id="statusInfo">
+        <colgroup>
+        <col style="width:120px" />
+        <col style="width:*" />
+        <col style="width:120px" />
+        <col style="width:*" /> 
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Status</th>
+            <td colspan="3">
+                 <select id="status" name="status"  class="w100p" >
+                  <option value=""></option>
+                  <option value="7">Obsolete</option>
+                  <option value="67">Lost</option>
+                  <option value="8">Deactivate</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Remark</th>
+            <td colspan="3"> 
+               <input type="text" title="" placeholder=""  class="w100p" id="statusremark" name="statusremark"/></td>    
+        </tr>
+    </table>
+</form>
+<ul class="center_btns">
+    <li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li>
+</ul>
 
 
 <div class="popup_wrap" id="regDetailWindow" style="display:none"><!-- popup_wrap start -->
@@ -2279,7 +2333,6 @@
                 </form> 
     </section>  
 </div>
-
 
 
 <div class="popup_wrap" id="asstMoveTrnsDiv" style="display:none"><!-- popup_wrap start -->
