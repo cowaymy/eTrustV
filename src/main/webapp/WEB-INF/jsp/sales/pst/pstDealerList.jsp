@@ -3,6 +3,11 @@
 
 <script type="text/javaScript">
 
+var optionUnit = { 
+isShowChoose: false,
+type : 'M'
+};
+
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
 
@@ -18,8 +23,10 @@
             $("#paramDealerId").val(event.item.dealerId);
             Common.popupDiv("/sales/pst/pstDealerDetailPop.do", $("#searchForm").serializeJSON());
         });
-     
+ 
+        CommonCombo.make('cmbDealerStus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 21} , '', optionUnit);
         $('#cmbDealerStus').multipleSelect("checkAll");
+ 
 	});
 	
 	doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'M' , 'f_multiCombo');     // Dealer Type Combo Box
@@ -164,8 +171,6 @@
     <th scope="row">Status</th>
     <td>
 	    <select class="multy_select w100p" id="cmbDealerStus" name="cmbDealerStus" multiple="multiple">
-	        <option value="1">Active</option>
-	        <option value="8">Inactive</option>
 	    </select>
     </td>
     <th scope="row"></th>

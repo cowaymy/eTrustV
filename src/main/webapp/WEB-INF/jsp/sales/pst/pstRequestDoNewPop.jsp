@@ -414,7 +414,7 @@ isShowChoose: true,
 <tr>
     <th scope="row">Email</th>
     <td><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
-    <th scope="row">Customer PO</th>
+    <th scope="row">Customer PO<span class="must">*</span></th>
     <td><input type="text" id="pstNewCustPo" name="pstNewCustPo" title="" placeholder="Customer PO" class="w100p" /></td>
 </tr>
 <tr>

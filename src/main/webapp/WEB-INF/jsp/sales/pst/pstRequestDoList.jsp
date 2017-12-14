@@ -4,8 +4,15 @@
 <script type="text/javaScript" language="javascript">
 
 var optionUnit = { 
-isShowChoose: false,
-type : 'M'
+		id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
+        name: "codeName",
+		isShowChoose: false,
+		type : 'M'
+};
+
+var optionUnitS = { 
+isSelectChoose: true,
+type : 'S'
 };
 
 
@@ -32,6 +39,8 @@ type : 'M'
             Common.popupDiv("/sales/pst/getPstRequestDODetailPop.do", $("#searchForm").serializeJSON());
         });
         
+        CommonCombo.make('pstStusIds', "/status/selectStatusCategoryCdList.do", {selCategoryId : '20'} , '', optionUnit);
+        
         $('#pstStusId').multipleSelect("checkAll");
         
      // 셀 더블클릭 이벤트 바인딩
@@ -43,6 +52,7 @@ type : 'M'
     
     doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
     
+//    doGetCombo('/status/selectStatusCategoryCdList.do', '20', '','pstStusIds', 'S' , ''); 
 
     // 조회조건 combo box
     function f_multiCombo(){
@@ -235,9 +245,6 @@ type : 'M'
     <th scope="row">PSO Status</th>
     <td>
     <select class="multy_select w100p" id="pstStusIds" name="pstStusId" multiple="multiple">
-        <option value="1" selected>Active</option>
-        <option value="4" selected>Completed</option>
-        <option value="10" selected>Cancel</option>
     </select>
     </td>
     <th scope="row">Create Date</th>
