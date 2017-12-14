@@ -171,11 +171,11 @@
                                             </if>
 			                                 
 			                                 <if test="CRT_SDT != null and CRT_SDT != ''">
-                                                 AND sL.CRT_DT<![CDATA[>=]]> tO_date( #{CRT_SDT} , 'dd/mm/yyyy')
+                                                 AND TO_CHAR(sL.CRT_DT, 'dd/mm/yyyy') <![CDATA[>=]]>  #{CRT_SDT}
                                             </if>
 						                  
 						                    <if test="CRT_EDT != null and CRT_EDT != ''">
-                                                 AND sL.CRT_DT<![CDATA[<=]]> tO_date( #{CRT_EDT} , 'dd/mm/yyyy')
+                                                 AND TO_CHAR(sL.CRT_DT, 'dd/mm/yyyy') <![CDATA[<=]]> #{CRT_EDT}
                                             </if>
                                             
 						                    <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
