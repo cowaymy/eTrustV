@@ -386,7 +386,9 @@
 	</select>
 
 	<select id="getMyStockList" parameterType="Map" resultType="egovMap">
-		SELECT L56.LOC_ID,
+		SELECT
+		/*+ leading(S28) use_nl(L56 L75) */  
+		L56.LOC_ID,
 		L56.STK_CODE PARTS_CODE,
 		L56.STK_DESC,
 		L56.STK_TYPE_ID PARTS_TYPE,
