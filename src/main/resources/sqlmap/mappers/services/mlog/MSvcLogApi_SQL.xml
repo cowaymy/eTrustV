@@ -906,8 +906,8 @@ LEFT OUTER JOIN (
 						    , NVL(TO_CHAR(F.EMAIL), '') AS mail_Address
 						    , NVL(TO_CHAR(F.CUST_VA_NO), '') AS customer_Va_No
 						    , NVL(TO_CHAR(G.CUST_BILL_PAY_REF_NO1), '') AS customer_Jom_Pay_Ref_No
-						    , TO_CHAR(D.STK_CODE) AS product_Name
-						    , TO_CHAR(D.STK_DESC) AS product_Code
+						    , TO_CHAR(D.STK_CODE) AS product_Code
+						    , TO_CHAR(D.STK_DESC) AS product_Name
 						    , NVL(FN_GET_COMMCD (10, C.APP_TYPE_ID), '') AS app_Type
 						    , NVL(K.INSTCT, '') AS instruction
 						    , NVL(TO_CHAR(I.INSTALL_DT, 'YYYYMMDD'), '') AS installation_Date
