@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.sales.msales.impl.CourseApiMapper">
+
+    <select id="memInfo" parameterType="Map" resultType="egovMap">
+        SELECT MEM_ID 
+                  ,MEM_TYPE
+          FROM ORG0001D 
+        WHERE MEM_CODE = #{userId}
+    </select>
+    
+    <select id="courseList" parameterType="Map" resultType="egovMap">
+        SELECT A.COURS_CODE AS COURSE_CODE, 
+	               A.COURS_NAME AS COURSE_NAME, 
+	               D.CODE_NAME AS COURSE_TYPE_NAME,
+	               A.COURS_LOC AS COURSE_LOCATION, 
+	               A.COURS_LIMIT AS COURSE_LIMIT, 
+	               (SELECT COUNT(COURS_ID)  CNT 
+	                   FROM MSC0009D 
+	                  WHERE COURS_ID = A.COURS_ID
+	                      AND COURS_MEM_STUS_ID = 1)  AS COURSE_JOIN_CNT ,
+	               TO_CHAR(A.COURS_START,'yyyymmdd') AS COURSE_FROM_DATE,
+	               TO_CHAR(A.COURS_END, 'yyyymmdd') AS COURSE_TO_DATE,
+	               A.COURS_ID AS COURSE_ID,
+	               A.COURS_ATTEND_OWNER               
+		  FROM MSC0008D A 
+		  INNER JOIN SYS0013M D ON  A.COURS_TYPE_CODE_ID = D.CODE_ID
+		WHERE A.COURS_STUS_ID = 1
+			AND A.COURS_MEM_YN_ID = 2318 
+			AND A.COURS_START<![CDATA[ > ]]> SYSDATE                  
+			AND A.COURS_MEM_TYPE_ID = #{memType}
+    </select>
+    
+    <select id="courseMemInfo" parameterType="Map" resultType="egovMap">
+		SELECT COURS_ITM_ID
+		            ,COURS_ID
+		            ,COURS_MEM_ID
+		            ,COURS_TEST_RESULT
+		            ,COURS_MEM_STUS_ID
+		            ,COURS_D_UPD_USER_ID
+		            ,COURS_D_UPD_DT
+		            ,COURS_MEM_SHIRT_SIZE
+		            ,COURS_ITM_MEM_IS_VEGE
+		            ,COURS_ITM_MEM_PUP
+		            ,COURS_D_MEM_NAME
+		            ,COURS_D_MEM_NRIC
+		            ,COURS_ATTEND_DAY
+		    FROM MSC0009D 
+		  WHERE COURS_MEM_ID = #{memId} 
+		      AND COURS_ID = #{courseId}
+    </select>
+
+</mapper>
