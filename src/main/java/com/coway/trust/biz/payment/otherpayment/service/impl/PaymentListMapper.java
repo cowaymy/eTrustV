@@ -60,6 +60,14 @@ public interface PaymentListMapper {
 	 * @param model
 	 * @return
 	 */		
-	void updateStatusDCF(Map<String, Object> params);	
+	void updateStatusDCF(Map<String, Object> params);
+	
+	/**
+	 * Payment List - Approval DCF 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	void approvalDCF(Map<String, Object> params);
 	
 }

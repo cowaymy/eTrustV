@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.otherpayment.service.PaymentListService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -183,17 +184,45 @@ public class PaymentListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/rejectDCF.do", method = RequestMethod.POST)
-	public ResponseEntity<EgovMap> rejectDCF(
+	public ResponseEntity<ReturnMessage> rejectDCF(
+			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params : {} ", params);		
+		// 저장
+		params.put("userId", sessionVO.getUserId());
+		paymentListService.rejectDCF(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
+    	
+	}
+	
+	/**
+	 * Payment List - Approval DCF 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/approvalDCF.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approvalDCF(
 			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		LOGGER.debug("params : {} ", params);
 		
 		// 저장
 		params.put("userId", sessionVO.getUserId());
-    	EgovMap resultMap = paymentListService.rejectDCF(params);
+		paymentListService.approvalDCF(params);
 		
-		// 조회 결과 리턴.
-    	return ResponseEntity.ok(resultMap);
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
     	
 	}
 	

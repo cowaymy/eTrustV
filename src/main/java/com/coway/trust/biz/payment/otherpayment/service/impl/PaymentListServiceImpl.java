@@ -86,9 +86,7 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	 * @return
 	 */	
 	@Override
-	public EgovMap rejectDCF(Map<String, Object> params) {
-		
-		EgovMap returnMap = new EgovMap();
+	public void rejectDCF(Map<String, Object> params) {
 		
 		//DCF Reject 처리
 		params.put("dcfStusId", "6");
@@ -98,11 +96,18 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		params.put("revStusId", "6");
 		paymentListMapper.updateGroupPaymentRevStatus(params);
 		
-		returnMap.put("returnKey", params.get("dcfReqId"));
-		
-		return returnMap;
-		
-		
+	}
+	
+	/**
+	 * Payment List - Approval DCF 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	@Override
+	public void approvalDCF(Map<String, Object> params) {
+		//Approval DCF 처리 프로시저 호출
+		paymentListMapper.approvalDCF(params);
 	}
 	
 	

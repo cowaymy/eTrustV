@@ -454,7 +454,10 @@
                 PAY0064D Extent1
                 JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
                 JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
-                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND 99 <![CDATA[ <> ]]> Extent4.TYPE_ID AND 1059 <![CDATA[ <> ]]> Extent4.TYPE_ID AND 98 <![CDATA[ <> ]]> Extent4.TYPE_ID
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID 
+                                                            AND 99 <![CDATA[ <> ]]> Extent4.TYPE_ID 
+                                                            AND 1059 <![CDATA[ <> ]]> Extent4.TYPE_ID 
+                                                            AND 98 <![CDATA[ <> ]]> Extent4.TYPE_ID
             WHERE  
                 Extent1.TYPE_ID = 101
                 AND Extent1.SALES_ORD_ID = #{orderId}  
@@ -1104,8 +1107,8 @@
 	            LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID        
 	            LEFT JOIN SAL0029D Extent8   ON Extent8.CUST_ID = Extent7.CUST_ID
             WHERE  
-                Extent1.STUS_ID = 1
-                AND Extent1.BILL_TYPE_ID = 222         
+                /*Extent1.STUS_ID = 1*/
+                Extent1.BILL_TYPE_ID = 222         
                 AND (
                     Extent1.BILL_NO = #{billSearchTxt}
                     OR Extent7.SALES_ORD_NO = #{billSearchTxt}
@@ -1136,10 +1139,12 @@
     <select id="selectOutSrvcBillInfo" parameterType="Map" resultType="egovMap">
         SELECT 
             SRV_MEM_ID , 
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT <![CDATA[ >= ]]> 0 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_CHARGE,
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT <![CDATA[ >= ]]> 0 THEN SRV_MEM_AMT ELSE 0 END) AS FILTER_CHARGE,    
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END) AS PACKAGE_PAID,
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END) AS FILTER_PAID
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_CHARGE,
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END) AS FILTER_CHARGE,
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END) 
+                - SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID = 164 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_PAID,                
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END) 
+                - SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END) AS FILTER_PAID
         FROM 
             PAY0024D 
         WHERE 
