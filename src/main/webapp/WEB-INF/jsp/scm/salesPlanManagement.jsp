@@ -911,7 +911,8 @@ function fnSettiingHeader()
 
 	          // console.log("seperaionInfo: " + result.seperaionInfo.length + " /getChildField: " + result.getChildField.length );
 
-             if( (result.seperaionInfo == null || result.seperaionInfo.length < 1) 
+             if( (result.planInfo == null || result.planInfo.length < 1)
+                || (result.seperaionInfo == null || result.seperaionInfo.length < 1) 
                 || (result.getChildField == null || result.getChildField.length < 1))
              {
             	 Common.alert("<spring:message code='expense.msg.NoData' />");
