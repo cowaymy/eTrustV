@@ -10,22 +10,27 @@ function tagRespondGrid() {
 					                   {
 					                       dataField: "mainDepartment",
 					                       headerText: "Main Dept",
-					                       width: 170
+					                       width: 160
 					                   },
 					                   {
 					                       dataField: "subDepartment",
 					                       headerText: "Sub Dept",
-					                       width: 170
+					                       width: 160
 					                   },
 					                   {
 					                       dataField: "remarkCont",
 					                       headerText: "Remark",
-					                       width: 170
+					                       width: 160
 					                   },
+					                   {
+                                           dataField: "regNm",
+                                           headerText: "Register",
+                                           width: 160
+                                       },
 					                   {
 					                       dataField: "statusNm",
 					                       headerText: "Status",					                      
-					                       width: 130
+					                       width: 120
 					                   },
 					                   {
 					                       dataField: "crtDate",
@@ -72,12 +77,15 @@ $(document).ready(function(){
 	});
 	
 	  doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'inputMainDept' , 'S', '');
+	 
 	
 	   $("#inputMainDept").change(function(){
          
          doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#inputMainDept").val(), '','inputSubDept', 'S' ,  ''); 
          
      });
+	   
+	   
 	
 
 	

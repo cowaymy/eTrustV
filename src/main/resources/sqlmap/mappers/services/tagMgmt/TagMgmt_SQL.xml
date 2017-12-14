@@ -2,9 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.tagMgmt.impl.TagMgmtMapper">
     
-     <resultMap id="clobMap" type="EgovMap">
-        <result property="remark_cont" column="CALL_REM" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>   
+
   
   
   <select id="selectTagStatus" parameterType="Map" resultType="egovMap">
@@ -208,15 +206,31 @@
 			    </update>
 			    
 			    
-			      <select id="selectTagRemarks" parameterType="Map" resultMap="clobMap">
-			 
-				        SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', MAIN_DEPT ) main_department,  CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', SUB_DEPT) sub_department
-	                        , CALLCENTERUSER.FN_ERP_GET_STUS_NM(CALL_STUS_ID) status_Nm ,TO_CHAR(CALL_CRT_DT,'YYYY-MM-DD') crt_Date
-	                        , CALL_REM 
-	                    FROM  GBSLCVD.CCR0007D
-	                    where Call_stus_id in (1,10,34,35,36,44)
-	                    and  CALL_ENTRY_ID = #{callEntryId}
-                       order by crt_Date
+			      <select id="selectTagRemarks" parameterType="Map" resultType="egovMap">                
+       SELECT 
+        CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.DEPT_CODE) AS main_department    
+           , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT_CDE) AS sub_department
+          , TO_CHAR(T2.MEMO) AS remark_cont
+           , to_char('Active') as status_Nm   
+          , TO_CHAR( to_date(Substr(T2.REG_DTM, 1, 8 ),'YYYY/MM/DD'), 'YYYY-MM-DD' )AS crt_Date
+           , TO_CHAR(T2.REG_NM) AS REG_NM
+           
+         FROM CALLCENTERUSER.T_CUR_HIST T1
+         LEFT JOIN CALLCENTERUSER.T_RMK_HIST T2 
+           ON T1.CUR_SEQNO = T2.CUR_SEQNO
+        WHERE T1.CUR_SEQNO = #{counselingNo}
+        
+        union all
+        
+        SELECT CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', T1.MAIN_DEPT ) main_department,  CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', T1.SUB_DEPT) sub_department, TO_CHAR( T1.CALL_REM )  remark_cont
+         ,  to_char(CALLCENTERUSER.FN_ERP_GET_STUS_NM(T1.CALL_STUS_ID)) status_Nm    ,TO_CHAR(T1.CALL_CRT_DT,'YYYY-MM-DD') crt_Date
+         , T2.USER_FULL_NAME AS REG_NM
+        FROM  GBSLCVD.CCR0007D T1
+        LEFT OUTER JOIN GBSLCVD.SYS0047M T2   
+         ON T1.CALL_CRT_USER_ID = T2.USER_ID
+         where Call_stus_id in (1,10,34,35,36,44)
+          and  CALL_ENTRY_ID = #{callEntryId}
+                       
 			      </select>
 			      
 			        <select id="selectMainDept"  resultType="egovMap">
