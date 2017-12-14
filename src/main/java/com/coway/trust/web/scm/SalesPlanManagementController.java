@@ -100,6 +100,22 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(map);
 	}
 	
+	@RequestMapping(value = "/selectAccuracyMonthlyHeaderList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectAccuracyMonthlyHeaderList(@RequestParam Map<String, Object> params) 
+	{
+		LOGGER.debug("selectAccuracyMonthlyHeaderList : {}", params.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		List<EgovMap> selectWeekThAccuracy = salesPlanMngementService.selectAccuracyMonthlyHeaderList(params);
+		List<EgovMap> seperaionCnt = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
+		
+		map.put("selectWeekThAccuracy",selectWeekThAccuracy);
+		map.put("accuracyHeadCount",seperaionCnt);
+		
+		return ResponseEntity.ok(map);
+	}
+	
 	@RequestMapping(value = "/selectStockIdByStCode.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectStockIdByStCode(@RequestParam Map<String, Object> params) 
 	{
@@ -223,6 +239,24 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(selectMonthCombo);
 	}
 	
+	@RequestMapping(value = "/selectWeekThList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectWeekThList(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectWeekThComboList : {}", params.toString());
+		
+		List<EgovMap> selectWeekThComboList = salesPlanMngementService.selectChildField(params);
+		return ResponseEntity.ok(selectWeekThComboList);
+	}
+	
+	@RequestMapping(value = "/selectWeekThSnComboList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectWeekThSn(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectWeekThSnComboList : {}", params.toString());
+		
+		List<EgovMap> selectWeekThSnComboList = salesPlanMngementService.selectWeekThSn(params);
+		return ResponseEntity.ok(selectWeekThSnComboList);
+	}
+	
 	@RequestMapping(value = "/selectScmTeamCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmTeamCodeList(@RequestParam Map<String, Object> params) {
 		Precondition.checkNotNull(params.get("codeMasterId"),
@@ -327,6 +361,21 @@ public class SalesPlanManagementController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	// SALES PLAN ACCURACY	
+	@RequestMapping(value = "/selectAccuracyWeeklyDetail.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectAccuracyWeeklyDetail(@RequestParam Map<String, Object> params) 
+	{
+		LOGGER.debug("selectAccuracyWeeklyDetail_Params : {}", params.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		List<EgovMap> selectAccuracyWeeklyDetail = salesPlanMngementService.selectAccuracyWeeklyDetail(params);
+		
+		map.put("accuracyWeeklyDetailList",selectAccuracyWeeklyDetail);
+		
+		return ResponseEntity.ok(map);
 	}
 
 }
