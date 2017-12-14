@@ -3,79 +3,70 @@
 <mapper namespace="com.coway.trust.biz.sales.msales.impl.OrderCustomerApiMapper">
 
     <select id="orderCustInfo" parameterType="Map" resultType="egovMap">
-            SELECT 
-                        DECODE(project1.CUSTOMER_ID, 0, 'N', 'Y') AS CUST_EXIST_Y_N, 
-                        project1.CUST_ADDR_ID,
-                        project1.CUSTOMER_ID,
-                        project1.CUST_NAME,
-                        project1.NRIC_COMPANY_NO,
-                        project1.CUST_BIRTH_DAY,
-                        project1.CUST_GENDER,
-                        project1.CUSTOMER_TYPE,
-                        project1.CODE_NAME,
-                        project1.AREA_ID,
-                        project1.ADDR_DTL,
-                        project1.ADDR,
-                        project1.STREET, 
-                        project1.AREA, 
-                        project1.POST_CODE, 
-                        project1.CITY, 
-                        project1.STATE,
-                        project1.COUNTRY,
-                        project1.MAIN_YN,
-                        project1.STUS_CODE_ID
-                    FROM 
-                        (
-                        SELECT 
-                               Extent1.CUST_ADD_ID CUST_ADDR_ID  ,
-                               Extent1.CUST_ID CUSTOMER_ID  ,
-                               Extent2.NAME CUST_NAME,
-                               Extent2.NRIC NRIC_COMPANY_NO,
-                               TO_CHAR(Extent2.DOB, 'YYYYMMDD') AS CUST_BIRTH_DAY,
-                               Extent2.GENDER CUST_GENDER,
-                               Extent2.TYPE_ID CUSTOMER_TYPE,
-                               Extent6.CODE_NAME ,
-                               Extent1.AREA_ID,
-                               Extent1.ADDR_DTL,
-                               CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
-                               NVL(Extent1.STREET, '') ||' '|| Extent5.AREA ||' '|| Extent5.POSTCODE ||' '|| Extent5.CITY ||' '|| Extent5.STATE ||' '|| Extent5.COUNTRY AS ADDR,
-                               Extent1.STREET, Extent5.AREA, Extent5.POSTCODE as POST_CODE, Extent5.CITY, Extent5.STATE,
-                               Extent5.COUNTRY,
-                               DECODE(Extent1.STUS_CODE_ID, '9', 'Y','N') as MAIN_YN,
-                               CASE WHEN ( Extent1.STUS_CODE_ID IS NOT NULL ) THEN Extent1.STUS_CODE_ID ELSE 0 END STUS_CODE_ID  
-                        FROM SAL0023D Extent1
-                               JOIN SAL0029D Extent2   ON Extent2.CUST_ID = Extent1.CUST_ID                               
-                               LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
-                               LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
-                               LEFT JOIN SYS0064M Extent5   ON Extent5.AREA_ID = Extent1.AREA_ID
-                               LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent2.TYPE_ID
-                        WHERE   
-                              8 <![CDATA[<>]]> Extent1.STUS_CODE_ID 
-                        AND  
-                              Extent2.TYPE_ID = #{customerType}
-                        AND  
-                              Extent2.NRIC = #{nricCompanyNo}
-                        Union All 
-                        SELECT 
-                                 0 AS CUST_ADDR_ID  ,
-                                 0 AS CUSTOMER_ID  ,
-                                 '' AS CUST_NAME,
-                                 '' AS NRIC_COMPANY_NO,
-                                 '' AS CUST_BIRTH_DAY,
-                                 '' AS CUST_GENDER,
-                                 0 AS CUSTOMER_TYPE,
-                                 '' AS CODE_NAME,
-                                 '' AS AREA_ID,
-                                 '' AS ADDR_DTL,
-                                 '' AS ADDR,
-                                 '' AS STREET, '' AS AREA, '' AS POST_CODE, '' AS CITY, '' AS STATE,
-                                 '' AS COUNTRY,
-                                 '' AS  MAIN_YN,
-                                 0 AS STUS_CODE_ID
-                          FROM DUAL
-                        ) project1
-               WHERE ROWNUM =1
-               ORDER BY project1.STUS_CODE_ID DESC
+            SELECT * FROM
+		   (SELECT   DECODE (project1.CUSTOMER_ID, 0, 'N', 'Y') AS CUST_EXIST_Y_N,
+		           project1.CUST_ADDR_ID,        
+		           project1.CUSTOMER_ID,        
+		           project1.CUST_NAME,            
+		           project1.NRIC_COMPANY_NO,        
+		           project1.CUST_BIRTH_DAY,        
+		           project1.CUST_GENDER,        
+		           project1.CUSTOMER_TYPE, 
+		           project1.AREA_ID,
+		           project1.ADDR_DTL,
+		           project1.STREET,
+		           project1.AREA,
+		           project1.POST_CODE,
+		           project1.CITY,
+		           project1.STATE,
+		           project1.COUNTRY,
+		           project1.CRT_DT
+		   FROM (
+		   SELECT 
+		            Extent6.CUST_ADD_ID AS CUST_ADDR_ID,
+		            Extent1.CUST_ID AS CUSTOMER_ID,
+		            Extent1.NAME AS CUST_NAME,
+		            Extent1.NRIC AS NRIC_COMPANY_NO,
+		            TO_CHAR (Extent1.DOB, 'YYYYMMDD') AS CUST_BIRTH_DAY,
+		            Extent1.GENDER AS CUST_GENDER,
+		            Extent1.TYPE_ID AS CUSTOMER_TYPE,
+		            Extent6.AREA_ID,
+		            Extent6.ADDR_DTL,
+		            Extent6.STREET,
+		            Extent10.AREA,
+		            Extent10.POSTCODE AS POST_CODE,
+		            Extent10.CITY,
+		            Extent10.STATE,
+		            Extent10.COUNTRY,
+		            Extent1.CRT_DT
+		        FROM SAL0029D Extent1
+		            LEFT OUTER JOIN SAL0023D Extent6 ON Extent6.CUST_ID = Extent1.CUST_ID AND 9 = Extent6.STUS_CODE_ID
+		            LEFT JOIN SYS0064M Extent10 ON Extent10.AREA_ID = Extent6.AREA_ID
+		        WHERE 
+		            8 <![CDATA[<>]]> Extent1.STUS_CODE_ID 
+		           AND Extent1.NRIC = #{nricCompanyNo}
+		           AND Extent1.TYPE_ID = #{customerType}
+		      UNION ALL
+		        SELECT 0 AS CUST_ADDR_ID,
+		                 0 AS CUSTOMER_ID,
+		                 '' AS CUST_NAME,
+		                 '' AS NRIC_COMPANY_NO,
+		                 '' AS CUST_BIRTH_DAY,
+		                 '' AS CUST_GENDER,
+		                 0 AS CUSTOMER_TYPE,
+		                 '' AS AREA_ID,
+		                 '' AS ADDR_DTL,
+		                 '' AS STREET,
+		                 '' AS AREA,
+		                 '' AS POST_CODE,
+		                 '' AS CITY,
+		                 '' AS STATE,
+		                 '' AS COUNTRY,
+		                 TO_DATE('1900-01-01', 'YYYY-MM-DD') AS CRT_DT
+		          FROM   DUAL
+		          ) project1
+		      Order by project1.CRT_DT DESC )
+		          WHERE   ROWNUM = 1
     </select>
     
     <select id="custIdSeq" resultType="Integer">
@@ -115,7 +106,7 @@
                                     #{custRace},
                                     #{email},
                                     #{rem},
-                                    #{stusCodeId},
+                                    9,
                                     #{crtUserId},
                                     SYSDATE,
                                     #{renGrp},
@@ -170,7 +161,7 @@
                                     #{custGender},
                                     #{custRace},
                                     #{email},
-                                    #{stusCodeId},
+                                    9,
                                     SYSDATE,
                                     #{crtUserId},
                                     #{idOld},
@@ -207,7 +198,7 @@
                         #{asTelR},
                         #{asExt},
                         #{asEmail},
-                        #{stusCodeId},
+                        9,
                         #{crtUserId},
                         SYSDATE,
                         #{crtUserId},
