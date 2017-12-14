@@ -2975,7 +2975,6 @@ LEFT OUTER JOIN (
 					   STK_RETN_RESULT_ID, 
 					   STK_RETN_ID, 
 					   STK_RETN_STUS_ID, 
-					   STK_RETN_RESN_ID,
 					   STK_RETN_CT_MEM_ID,
 					   STK_RETN_CRT_DT, 
 					   STK_RETN_CRT_USER_ID) 
@@ -2983,13 +2982,12 @@ LEFT OUTER JOIN (
 					   LOG0039D_STK_RETN_RESULT_ID.nextval, 
 					   (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}) , 
 					   '21', 
-					   #{failReasonCode},
 					   (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId}),
 					   sysdate, 
 					   (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
 					 )
        </insert>
-       
+         
           
        <update id="updateFailed_LOG0038D" parameterType="Map">
                 UPDATE  LOG0038D
