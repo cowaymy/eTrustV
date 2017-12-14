@@ -874,107 +874,111 @@ LEFT OUTER JOIN (
      </select>
 
     <select id="getProductRetrunJobList" parameterType="Map" resultType="egovMap">
-				    SELECT
-				                    TO_CHAR(C.SALES_ORD_NO) AS sales_Order_No
-				                    , A.RETN_NO AS service_No
-				                    , NVL(F.NAME, '') AS cust_Name
-				                    , 'PR' AS job_Type
-				                    , TO_CHAR(A.STUS_CODE_ID) AS job_Status
-				                    , NVL(TO_CHAR(A.APP_DT, 'YYYYMMDD'), '') AS appointment_Date
-				                    , DECODE (A.RT_SESION_CODE,
-				                                     'M', '1000',
-				                                     'A', '1400',
-				                                     'E', '1900',
-				                                     'O', '2000', '2000') AS appointment_Time
-				                    , A.RT_SESION_CODE AS job_Session
-				                    , '' AS check_In_Date
-				                    , '' AS check_In_Time
-				                    , '' AS check_In_Gps
-				                    , NVL(TO_CHAR(F.TYPE_ID), '') AS customer_Type
-				                    , NVL(TO_CHAR(C.CUST_ID), '') AS customer_Id
-				                    , '' AS service_State
-				                    , NVL(TO_CHAR(A.APP_DT, 'YYYY'), '') AS plan_Year
-				                    , NVL(TO_CHAR(A.APP_DT, 'MM'), '') AS plan_Month
-				                    , '' AS install_Address
-				                    , '' AS postcode
-				                    , NVL(TO_CHAR(N.TEL_M1), '') AS handphone_Tel
-				                    , NVL(TO_CHAR(N.TEL_R), '') AS home_Tel
-				                    , NVL(TO_CHAR(N.TEL_O), '') AS office_Tel
-				                    , NVL(TO_CHAR(F.EMAIL), '') AS mail_Address
-				                    , NVL(TO_CHAR(F.CUST_VA_NO), '') AS customer_Va_No
-				                    , NVL(TO_CHAR(G.CUST_BILL_PAY_REF_NO1), '') AS customer_Jom_Pay_Ref_No
-				                    , TO_CHAR(D.STK_CODE) AS product_Name
-				                    , TO_CHAR(D.STK_DESC) AS product_Code
-				                    , NVL(FN_GET_COMMCD (10, C.APP_TYPE_ID), '') AS app_Type
-				                    , NVL(K.INSTCT, '') AS instruction
-				                    , NVL(TO_CHAR(I.INSTALL_DT, 'YYYYMMDD'), '') AS installation_Date
-				                    , NVL(TO_CHAR(J.MEM_CODE), '') AS installed_By
-				                    , '' AS prev_Outstanding
-				                    , '' AS penalty_Charges
-				                    , '' AS unbilled_Amount
-				                    , '' AS outstanding
-				                    , NVL(TO_CHAR(L.CODE), '') AS dsc_Code
-				                    , NVL(I.SIRIM_NO, '') AS sirim_No
-				                    , NVL(I.SERIAL_NO, '') AS serial_No
-				                    , '' AS hp_Name
-				                    , '' AS hp_Tel
-				                    , NVL(TO_CHAR(M.NAME), '') AS hm_Name
-				                    , NVL(TO_CHAR(M.TEL_MOBILE), '') AS hm_Tel
-				                    , TO_CHAR(E.STK_RETN_CC_ID) AS cc_Code
-				                    , TO_CHAR(E.STK_RETN_RESN_ID) AS result_Code
-				                    , TO_CHAR(E.STK_RETN_REM) AS result_Remark
-				                    , '' AS owner_Code
-				                    , '' AS owner_Code_Nm
-				                    , '' AS result_Cust_Name
-				                    , '' AS result_Ic_Mobile_No
-				                    , '' AS result_Report_Email_No
-				                    , '' AS result_Acceptance_Name
-				                    , '' AS fail_Reason_Code
-				                    , '' AS fail_Reason_Name
-				                    , TO_CHAR(E.STK_RETN_DT, 'YYYYMMDD') AS complete_Ret_Date
-				                    , TO_CHAR(E.STK_RETN_DT, 'HHMM') AS complete_Ret_Time
-				                    , '' AS last_Payment_Date
-				                    , NVL(TO_CHAR(I.NEXT_CALL_DT, 'YYYYMMDD'), '') AS next_Call_Date
-				                    , NVL(TO_CHAR(I.NEXT_CALL_DT, 'HHMM'), '') AS next_Call_Time
-				                  FROM LOG0038D A
-				                  INNER JOIN ORG0001D B ON A.CT_ID = B.MEM_ID
-				                  INNER JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
-				                  INNER JOIN SYS0026M D ON A.STOCK_ID = D.STK_ID
-				                  LEFT OUTER JOIN (
-				                        SELECT
-				                            A.*
-				                            , B.RETN_RESULT_ID AS RETN_RESULT_ID
-				                        FROM LOG0039D A
-				                        INNER JOIN (
-				                            SELECT
-				                                STK_RETN_ID
-				                                , MAX(STK_RETN_RESULT_ID) AS RETN_RESULT_ID
-				                            FROM LOG0039D
-				                            GROUP BY STK_RETN_ID
-				                        ) B ON A.STK_RETN_ID = B.STK_RETN_ID AND A.STK_RETN_RESULT_ID = B.RETN_RESULT_ID
-				                    ) E ON A.STK_RETN_ID = E.STK_RETN_ID
-				                  LEFT OUTER JOIN SAL0029D F ON C.CUST_ID = F.CUST_ID
-				                  LEFT OUTER JOIN SAL0024D G ON C.CUST_BILL_ID = G.CUST_BILL_ID
-				                  LEFT OUTER JOIN (
-				                    SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
-				                    FROM SAL0046D
-				                    GROUP BY SALES_ORD_ID
-				                  ) H ON C.SALES_ORD_ID = H.SALES_ORD_ID
-				                  INNER JOIN (
-				                    SELECT A.*
-				                      FROM SAL0047D A
-				                           INNER JOIN (  SELECT ENTRY_ID, MAX (RESULT_ID) AS RESULT_ID
-				                                           FROM SAL0047D
-				                                       GROUP BY ENTRY_ID) B
-				                              ON A.ENTRY_ID = B.ENTRY_ID AND A.RESULT_ID = B.RESULT_ID
-				                  ) I ON H.INSTALL_ENTRY_ID = I.ENTRY_ID
-				                  INNER JOIN ORG0001D J ON I.CT_ID = J.MEM_ID
-				                  INNER JOIN SAL0045D K ON A.SALES_ORD_ID = K.SALES_ORD_ID
-				                  INNER JOIN SYS0005M L ON B.BRNCH = L.BRNCH_ID
-				                  LEFT OUTER JOIN ORG0001D M ON C.SALES_HM_ID = M.MEM_ID
-				                  LEFT OUTER JOIN SAL0027D N ON C.CUST_ID = N.CUST_ID AND C.CUST_CNT_ID = N.CUST_CNTC_ID
-				                 WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate} , 'YYYYMM')) + 1, -1) AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
-				                 AND B.MEM_CODE = #{userId} 
+				 SELECT
+						    TO_CHAR(C.SALES_ORD_NO) AS sales_Order_No
+						    , A.RETN_NO AS service_No
+						    , NVL(F.NAME, '') AS cust_Name
+						    , 'PR' AS job_Type
+						    , TO_CHAR(A.STUS_CODE_ID) AS job_Status
+						    , NVL(TO_CHAR(A.APP_DT, 'YYYYMMDD'), '') AS appointment_Date
+						    , CASE WHEN NVL(TO_CHAR(A.APP_TM, 'YYYYMMDD'), ' ') = '' THEN
+						        DECODE (NVL(TO_CHAR(A.APP_TM, 'YYYYMMDD'), ''),
+						                         'M', '1000',
+						                         'A', '1400',
+						                         'E', '1900',
+						                         'O', '2000', '2000')
+						      ELSE NVL(TO_CHAR(A.APP_TM, 'YYYYMMDD'), '')
+						      END AS appointment_Time
+						    , A.RT_SESION_CODE AS job_Session
+						    , NVL(TO_CHAR(E.CHECKIN_DT), '') AS check_In_Date
+						    , SUBSTR(NVL(TO_CHAR(E.CHECKIN_TM), ''), 1, 4) AS check_In_Time
+						    , NVL(TO_CHAR(E.CHECKIN_GPS), '') AS check_In_Gps
+						    , NVL(TO_CHAR(F.TYPE_ID), '') AS customer_Type
+						    , NVL(TO_CHAR(C.CUST_ID), '') AS customer_Id
+						    , '' AS service_State
+						    , NVL(TO_CHAR(A.APP_DT, 'YYYY'), '') AS plan_Year
+						    , NVL(TO_CHAR(A.APP_DT, 'MM'), '') AS plan_Month
+						    , '' AS install_Address
+						    , '' AS postcode
+						    , NVL(TO_CHAR(N.TEL_M1), '') AS handphone_Tel
+						    , NVL(TO_CHAR(N.TEL_R), '') AS home_Tel
+						    , NVL(TO_CHAR(N.TEL_O), '') AS office_Tel
+						    , NVL(TO_CHAR(F.EMAIL), '') AS mail_Address
+						    , NVL(TO_CHAR(F.CUST_VA_NO), '') AS customer_Va_No
+						    , NVL(TO_CHAR(G.CUST_BILL_PAY_REF_NO1), '') AS customer_Jom_Pay_Ref_No
+						    , TO_CHAR(D.STK_CODE) AS product_Name
+						    , TO_CHAR(D.STK_DESC) AS product_Code
+						    , NVL(FN_GET_COMMCD (10, C.APP_TYPE_ID), '') AS app_Type
+						    , NVL(K.INSTCT, '') AS instruction
+						    , NVL(TO_CHAR(I.INSTALL_DT, 'YYYYMMDD'), '') AS installation_Date
+						    , NVL(TO_CHAR(J.MEM_CODE), '') AS installed_By
+						    , '' AS prev_Outstanding
+						    , '' AS penalty_Charges
+						    , '' AS unbilled_Amount
+						    , '' AS outstanding
+						    , NVL(TO_CHAR(L.CODE), '') AS dsc_Code
+						    , NVL(I.SIRIM_NO, '') AS sirim_No
+						    , NVL(I.SERIAL_NO, '') AS serial_No
+						    , '' AS hp_Name
+						    , '' AS hp_Tel
+						    , NVL(TO_CHAR(M.NAME), '') AS hm_Name
+						    , NVL(TO_CHAR(M.TEL_MOBILE), '') AS hm_Tel
+						    , TO_CHAR(E.STK_RETN_CC_ID) AS cc_Code
+						    , TO_CHAR(E.STK_RETN_RESN_ID) AS result_Code
+						    , TO_CHAR(E.STK_RETN_REM) AS result_Remark
+						    , NVL(TO_CHAR(E.OWNER_CODE), '') AS owner_Code
+						    , NVL(FN_GET_COMMCD (376, TO_CHAR(E.OWNER_CODE)), '') AS owner_Code_Nm
+						    , NVL(TO_CHAR(E.RESULT_CUST_NAME), '') AS result_Cust_Name
+						    , NVL(TO_CHAR(E.RESULT_ICMOBILE_NO), '') AS result_Ic_Mobile_No
+						    , NVL(TO_CHAR(E.RESULT_RPT_EMAIL_NO), '') AS result_Report_Email_No
+						    , NVL(TO_CHAR(E.RESULT_ACEPT_NAME), '') AS result_Acceptance_Name
+						    , NVL(TO_CHAR(A.FAIL_RESN_ID), '') AS fail_Reason_Id
+						    , NVL(TO_CHAR(A.FAIL_RESN_CODE), '') AS fail_Reason_Code
+						    , '' AS fail_Reason_Name
+						    , TO_CHAR(E.STK_RETN_DT, 'YYYYMMDD') AS complete_Ret_Date
+						    , TO_CHAR(E.STK_RETN_DT, 'HHMM') AS complete_Ret_Time
+						    , '' AS last_Payment_Date
+						    , NVL(TO_CHAR(I.NEXT_CALL_DT, 'YYYYMMDD'), '') AS next_Call_Date
+						    , NVL(TO_CHAR(I.NEXT_CALL_DT, 'HHMM'), '') AS next_Call_Time
+						  FROM LOG0038D A
+						  INNER JOIN ORG0001D B ON A.CT_ID = B.MEM_ID
+						  INNER JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+						  INNER JOIN SYS0026M D ON A.STOCK_ID = D.STK_ID
+						  LEFT OUTER JOIN (
+						        SELECT
+						            A.*
+						            , B.RETN_RESULT_ID AS RETN_RESULT_ID
+						        FROM LOG0039D A
+						        INNER JOIN (
+						            SELECT
+						                STK_RETN_ID
+						                , MAX(STK_RETN_RESULT_ID) AS RETN_RESULT_ID
+						            FROM LOG0039D
+						            GROUP BY STK_RETN_ID
+						        ) B ON A.STK_RETN_ID = B.STK_RETN_ID AND A.STK_RETN_RESULT_ID = B.RETN_RESULT_ID
+						    ) E ON A.STK_RETN_ID = E.STK_RETN_ID
+						  LEFT OUTER JOIN SAL0029D F ON C.CUST_ID = F.CUST_ID
+						  LEFT OUTER JOIN SAL0024D G ON C.CUST_BILL_ID = G.CUST_BILL_ID
+						  LEFT OUTER JOIN (
+						    SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
+						    FROM SAL0046D
+						    GROUP BY SALES_ORD_ID
+						  ) H ON C.SALES_ORD_ID = H.SALES_ORD_ID
+						  INNER JOIN (
+						    SELECT A.*
+						      FROM SAL0047D A
+						           INNER JOIN (  SELECT ENTRY_ID, MAX (RESULT_ID) AS RESULT_ID
+						                           FROM SAL0047D
+						                       GROUP BY ENTRY_ID) B
+						              ON A.ENTRY_ID = B.ENTRY_ID AND A.RESULT_ID = B.RESULT_ID
+						  ) I ON H.INSTALL_ENTRY_ID = I.ENTRY_ID
+						  INNER JOIN ORG0001D J ON I.CT_ID = J.MEM_ID
+						  INNER JOIN SAL0045D K ON A.SALES_ORD_ID = K.SALES_ORD_ID
+						  INNER JOIN SYS0005M L ON B.BRNCH = L.BRNCH_ID
+						  LEFT OUTER JOIN ORG0001D M ON C.SALES_HM_ID = M.MEM_ID
+						  LEFT OUTER JOIN SAL0027D N ON C.CUST_ID = N.CUST_ID AND C.CUST_CNT_ID = N.CUST_CNTC_ID
+               WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate} , 'YYYYMM')) + 1, -1) AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
+               AND B.MEM_CODE = #{userId} 
 				                
      </select>
 
