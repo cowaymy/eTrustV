@@ -63,7 +63,7 @@
     // ajax list 조회.
     function searchList(){
     	
-    	if(FormUtil.checkReqValue($("#ordId"))){
+    	if(FormUtil.checkReqValue($("#ordNo"))){
             Common.alert('* Please search order number first. <br />');
             return;
         }
@@ -100,21 +100,7 @@
    }
     
 
-  //Search Order confirm
-  function fn_orderConfirm(){
-      
-	  var ordNo = $("#ordNo").val();
-      
-      if(ordNo != ''){
-          //Order Basic 정보 조회
-          Common.ajax("GET", "/payment/common/selectOrdIdByNo.do", {"ordNo" : ordNo}, function(result) {        
-              if(result != null && result.salesOrdId != ''){
-                  $("#ordId").val(result.salesOrdId);
-                  $("#ordNo").val(result.salesOrdNo);
-              }            
-          });
-      }
-  }
+  
   
 	//Request DCF 팝업
 	function fn_requestDCFPop(){
@@ -126,7 +112,7 @@
 
 			if (revStusId == 1) {
 				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been Requested. </b>");   
-			} else if (revStusId == 4) {
+			} else if (revStusId == 5) {
 				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been Approved. </b>");   
 			} else {
 				Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
@@ -175,9 +161,6 @@
                         <th scope="row">Sales Order No</th>
                         <td>
                             <input type="text" id="ordNo" name="ordNo" class="" />
-                            <p class="btn_sky">
-                                 <a href="javascript:fn_orderConfirm();" id="confirm">Confirm</a>
-                             </p>
                              <p class="btn_sky">
                                  <a href="javascript:fn_orderSearchPop();" id="search">Search</a>
                              </p>
