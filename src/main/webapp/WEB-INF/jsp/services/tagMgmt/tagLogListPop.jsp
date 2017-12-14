@@ -164,9 +164,9 @@ function fn_saveRemarkResult(){
         </tr>
         <tr>
             <th scope="row">In-charge Main Dept.</th>
-            <td><span id ="mainDept"><c:out value="${tagMgmtDetail.mainDept }"/></span></td>
+            <td><span ><c:out value="${tagMgmtDetail.mainDept }"/></span></td>
             <th scope="row">In-charge Sub Dept.</th>
-            <td><span id="subDept"><c:out value="${tagMgmtDetail.subDept }"/></span></td>
+            <td><span ><c:out value="${tagMgmtDetail.subDept }"/></span></td>
             <th scope="row">Main Inquiry</th>
             <td><span ><c:out value="${tagMgmtDetail.mainInquiry }"/></span></td>
         </tr>
@@ -185,6 +185,14 @@ function fn_saveRemarkResult(){
             <td><span id="regDate"><c:out value="${tagMgmtDetail.regDate }"/></span></td>
             <th scope="row">Feedback Code</th>
             <td><span><c:out value="${tagMgmtDetail.feedbackCode }"/></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Latest Main Dept</th>
+            <td><span id ="mainDept"><c:out value="${tagMgmtDetail.latestMainDept }"/></span></td>
+            <th scope="row">Latest Sub Dept</th>
+            <td><span id="subDept"><c:out value="${tagMgmtDetail.latestSubDept }"/></span></td>
+         <th scope="row"></th>
+            <td><span></span></td>
         </tr>
         </tbody>
         </table><!-- table end -->

@@ -14,7 +14,7 @@
                      , Z.Feedback_code, Z.MAIN_DEPT, Z.SUB_DEPT
                      , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
-                     ,z.ord_no,z.hc_mem_id
+                     ,z.ord_no,z.hc_mem_id 
         
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No 
@@ -82,6 +82,7 @@
                      , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
                      ,z.ord_no,  z.hc_mem_id, z.ORD_ID, z.hc_id 
+                     ,z.LATEST_MAIN_DEPT,LATEST_SUB_DEPT 
         
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No 
@@ -92,7 +93,9 @@
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry 
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS MAIN_DEPT    
-                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT     
+                , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT 
+                , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , B.MAIN_DEPT ) AS LATEST_MAIN_DEPT    
+                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , B.SUB_DEPT) AS LATEST_SUB_DEPT       
                 , A.DEPT_CODE
                 , A.SUB_DEPT_CDE  
                 , A.Ord_no
