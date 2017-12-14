@@ -471,7 +471,6 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			insMap.put("itmname", insMap.get("partsName"));
 			insMap.put("reqstno", insMap.get("reqno"));
 
-			logger.debug("insMap    값 : {}", insMap);
 			// logger.debug("partsCode 값 : {}", insMap.get("partsCode"));
 			// logger.debug("partsId 값 : {}", insMap.get("partsId"));
 			// logger.debug("requestQty 값 : {}", insMap.get("requestQty"));
@@ -480,8 +479,8 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 
 			// 55 insert
 			MlogApiMapper.insertDeliveryStockMovementDetail(insMap);
-
-			if (form.getSerialNo() != null || form.getSerialNo() != "") {
+			
+			if (form.getSerialNo() != null && form.getSerialNo() != "") {
 				// 61insert
 				insMap.put("serial", insMap.get("serialNo"));
 				MlogApiMapper.insertMovementSerial(insMap);
