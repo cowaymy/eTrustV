@@ -68,7 +68,14 @@ select ROWNUM rnum , l47.REQST_STUS     status
            AND l48.itm_code       = l55.itm_code(+)
            and l47.reqst_stus     = reqs.code(+)
            AND l48.itm_code=S26.STK_CODE(+)
-           and l47.trnsc_type  = 'OH'
+        <choose>
+         <when test="searchTransType != null and searchTransType !=''">
+             and l47.trnsc_type  = #{searchTransType}
+         </when>
+         <otherwise>
+            and l47.trnsc_type  in('OI','OG','OH')
+         </otherwise>
+       </choose>     
            <if test="searchOthersReq1 != null and searchOthersReq2 != null and searchOthersReq1 != '' and searchOthersReq2 != ''" >
              AND l47.reqst_no BETWEEN #{searchOthersReq1} AND #{searchOthersReq2}
            </if>
@@ -76,7 +83,7 @@ select ROWNUM rnum , l47.REQST_STUS     status
             AND l47.trnsc_type_dtl = #{searchReqType}
            </if> -->
           <if test="searchReqType != null and searchReqType !=''">
-            AND l47.REQST_TYPE_DTL = #{searchReqType}
+            AND l47.trnsc_type_dtl = SUBSTR(#{searchReqType}, 0, 4)
           </if>
 <!--            <if test="searchLoc != null and searchLoc !=''"> -->
 <!--             AND l47.reqst_cdc_rdc = #{searchLoc} -->
@@ -304,7 +311,7 @@ WHERE 1 = 1
                 )
         VALUES (  
                 #{reqno}
-                , #{trnscType}
+                , #{insTransType}
                 , #{insReqType}
                 , #{pridic}
                 , SYSDATE
@@ -315,7 +322,7 @@ WHERE 1 = 1
                 , 'O'
                 , #{userId}
                 , SYSDATE
-                , #{trnscType}
+                , #{insTransType}
                 , #{insReqType}
                 )
     </insert>
