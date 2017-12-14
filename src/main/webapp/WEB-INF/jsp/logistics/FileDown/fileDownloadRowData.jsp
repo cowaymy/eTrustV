@@ -31,7 +31,7 @@ var rawFileGrid2;
                       
 var columnLayout1 = [
                     {dataField:"orignlfilenm",headerText:"Filename",width:"30%",visible:true },
-                    {dataField:"updDt",headerText:"Write Time",width:"30%",visible:true },
+                    {dataField:"updDt",headerText:"Write Time",width:"30%", dataType : "date",formatString : "yyyy. mm. dd t hh:MM",visible:true },
                     {dataField:"filesize",headerText:"File Size",width:"30%",postfix : "bytes",dataType : "numeric",visible:true},
                     {
                         dataField : "",
@@ -41,7 +41,7 @@ var columnLayout1 = [
                             labelText : "Download",
                             onclick : function(rowIndex, columnIndex, value, item) {
                               // removeRow(rowIndex, gridNm,chkNum);
-                              fileDown(rowIndex,"PR");
+                              fileDown(rowIndex,"PB");
                             }
                         }
                     , editable : false
@@ -90,20 +90,13 @@ var paramdata;
 
 $(document).ready(function(){
 
-	/* 최악의 변환 작업...
-	2017-12-04 대상 테이블 확인 받음 PAY0061D(로컬에서 로그 조회가 안됨... 하 그래서 상상코딩함)
-	TODO LIST
-	1. 셀렉트 박스 조회 조건 확인 및 쿼리 확인 필요 * 현재 확인 불가 상황이라 FILEDOWNLOAD로 세팅해서 그리드 데이터 세팅됨.
-	2. 그리드 세팅될 값 확인 필요함. 
-	3. 파일 다운로드 경로 달라서 파일 다운 로드 불가 * 서버에 파일도 없음  > 파일 다운 로드 테스트 필요
-	*/
     rawFileGrid1 = AUIGrid.create("#grid_wrap1", columnLayout1, gridoptions);
     rawFileGrid2 = AUIGrid.create("#grid_wrap2", columnLayout2, gridoptions);
     
     
-    doGetCombo('/common/selectCodeList.do', '70', '','spublic', 'S' , ''); //File Type 리스트 조회
+    doGetCombo('/logistics/file/checkDirectory.do', 'PB', '','spublic', 'S' , ''); //File Type 리스트 조회
+    doGetCombo('/logistics/file/checkDirectory.do', 'PR', '','scpublic', 'S' , ''); //File Type 리스트 조회
     
-    doGetCombo('/common/selectCodeList.do', '70', '','scpublic', 'S' , ''); //File Type 리스트 조회
  
 });
 
@@ -135,21 +128,21 @@ $(function(){
 
 function SearchListAjax1(str) {
     var url = "/logistics/file/rawdataList.do";
-    var param = {type :str};
+    var param = {type :"Public/"+str};
     Common.ajax("GET" , url , param , function(data){
     	console.log(data);
     	AUIGrid.clearGridData(rawFileGrid1);
-        AUIGrid.setGridData(rawFileGrid1, data.data);
+        AUIGrid.setGridData(rawFileGrid1, data);
         
     });
 }
 function SearchListAjax2(str) {
     var url = "/logistics/file/rawdataList.do";
-    var param = {type :str};
+    var param = {type :"Privacy/"+str};
     Common.ajax("GET" , url , param , function(data){
     	console.log(data);
     	AUIGrid.clearGridData(rawFileGrid2);
-        AUIGrid.setGridData(rawFileGrid2, data.data);
+        AUIGrid.setGridData(rawFileGrid2, data);
         
     });
 }
@@ -158,26 +151,16 @@ function fileDown(rowIndex,str){
 	    var subPath;
 	    var fileName;
 	    var orignlFileNm;
-	if("PR"==str){
-	   // subPath = AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "subpath");
-	    subPath = "/RawData/Public/";
-	    fileName = AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "filename");
-	    //orignlFileNm = AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "fileName")+AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "fileEt");
+	if("PB"==str){
+	    subPath = "/RawData/Public/"+$('#spublic').val();
 	    orignlFileNm = AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "orignlfilenm");
 	}else{
-	    //subPath = AUIGrid.getCellValue(rawFileGrid2 ,  rowIndex, "subpath");
-	    subPath = "/RawData/Privacy/";
-	    fileName = AUIGrid.getCellValue(rawFileGrid2 ,  rowIndex, "filename");
-	    //orignlFileNm = AUIGrid.getCellValue(rawFileGrid2 ,  rowIndex, "fileName")+AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "fileEt");
+	    subPath = "/RawData/Privacy/"+$('#scpublic').val();
 	    orignlFileNm = AUIGrid.getCellValue(rawFileGrid2 ,  rowIndex, "orignlfilenm");
 	}
 	
- if(""==fileName || null==fileName ){
-     Common.alert("File is not exist.");
-     return false;
- }
   window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
-          + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
+          + "&fileName=" + orignlFileNm + "&orignlFileNm=" + orignlFileNm
           + "'/>");
 }
 
