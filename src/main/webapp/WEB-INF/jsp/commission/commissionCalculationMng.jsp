@@ -85,7 +85,7 @@
 							data.all = gridList;
 							data.form = formList;
 
-							Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
+							Common.ajaxSync("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
 								$("#search").trigger("click");
 							}, function(jqXHR, textStatus, errorThrown) {
 								console.log("실패하였습니다.");
