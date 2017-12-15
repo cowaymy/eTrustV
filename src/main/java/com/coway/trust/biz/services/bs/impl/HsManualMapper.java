@@ -153,5 +153,8 @@ public interface HsManualMapper {
 	int saveFilterUpdate(Map<String, Object> params);	
 	
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
+	
+	
+	String getSVC008D_NO(Map<String, Object> params);
 
 }

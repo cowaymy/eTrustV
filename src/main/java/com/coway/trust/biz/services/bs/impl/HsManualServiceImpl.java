@@ -384,8 +384,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		EgovMap insertHsResultfinal = new EgovMap();
 
-
-
+		String LOG_SVC0008D_NO ="";
+		LOG_SVC0008D_NO  =(String)hsManualMapper.getSVC008D_NO(params);
+			
 		if(masterCnt > 0 ) { //master y
 
 			params.put("resultId", nextSeq);
@@ -486,6 +487,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 
   				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
+  					
   					hsManualMapper.insertHsResultD(docSub);
 
   					String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
@@ -600,39 +602,43 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			/////////////////////////물류 호출//////////////////////
 			logPram =new HashMap<String, Object>();
-            logPram.put("ORD_ID",      params.get("hidSalesOrdCd")   );
+            logPram.put("ORD_ID",  LOG_SVC0008D_NO );
             logPram.put("RETYPE", "COMPLET");
             logPram.put("P_TYPE", "OD05");
             logPram.put("P_PRGNM", "HSCOM");
             logPram.put("USERID", sessionVO.getUserId());
 
             logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            logger.debug("ORDERCALL 물류 호출 결과 ===> {}" , logPram);
+            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+            logger.debug("HSCOMCALL 물류 호출 결과 ===> {}" , logPram);
+        	logPram.put("P_RESULT_TYPE", "HS");
+    		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+    		
             /////////////////////////물류 호출 END //////////////////////
 
       }else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){
 
     	  /////////////////////////물류 호출//////////////////////
     		logPram =new HashMap<String, Object>();
-            logPram.put("ORD_ID",     params.get("hidSalesOrdCd"));
+            logPram.put("ORD_ID",  LOG_SVC0008D_NO );
             logPram.put("RETYPE", "SVO");
             logPram.put("P_TYPE", "OD06");
             logPram.put("P_PRGNM", "HSCAN");
             logPram.put("USERID", sessionVO.getUserId());
 
-            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-          servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            logger.debug("HSCOMCALL 물류 호출 PRAM ===>"+ logPram.toString());
+             servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+            logPram.put("P_RESULT_TYPE", "HS");
+     		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+            logger.debug("HSCOMCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
-      }
+      } 
 
-
-
-
+		
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue.put("resultId",  params.get("hidSalesOrdCd"));
+		resultValue.put("spMap", logPram);
 		return resultValue;
 	}
 

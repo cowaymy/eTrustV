@@ -1380,7 +1380,13 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
                         WHERE  Extent1.SCHDUL_ID = #{hidschdulId}
 
               </select>
+              
+             <select id="getSVC008D_NO"  parameterType="Map" resultType="java.lang.String">
+                        SELECT NO 
+                          FROM SVC0008D Extent1
+                        WHERE  Extent1.SCHDUL_ID = #{hidschdulId}
 
+              </select>
 
 
              <select id="selectHSScheduleMCnt"  parameterType="Map" resultType="int">
@@ -1585,7 +1591,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 						,SERIAL_NO
                         )
                  values (
-                      GBSLCVD.SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
+                     SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
                     , #{bsResultId}
                     , #{bsResultPartId}
                     , #{bsResultPartDesc}

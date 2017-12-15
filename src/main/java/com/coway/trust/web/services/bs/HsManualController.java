@@ -23,7 +23,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -41,6 +43,11 @@ public class HsManualController {
 
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+
+	@Resource(name = "servicesLogisticsPFCService")
+	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+	
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -446,8 +453,27 @@ public class HsManualController {
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
 		resultValue = hsManualService.addIHsResult(formMap, updList, sessionVO);
-
-		message.setMessage("Complete to Add a HS Order : " + resultValue.get("resultId") );
+		
+		  
+		if( null !=resultValue){
+			
+			HashMap   spMap =(HashMap)resultValue.get("spMap");
+			
+			logger.debug("spMap :========>"+ spMap.toString());   
+			
+			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+				
+				resultValue.put("logerr","Y");
+				message.setMessage("Logistics call Error." );
+			}else{
+				
+				message.setMessage("Complete to Add a HS Order : " + resultValue.get("resultId") );
+			}
+			
+			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		}
+		
+		
 
 		return ResponseEntity.ok(message);
 	}

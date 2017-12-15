@@ -874,24 +874,36 @@ LEFT OUTER JOIN (
      </select>
 
     <select id="getProductRetrunJobList" parameterType="Map" resultType="egovMap">
-				 SELECT
+				SELECT
 						    TO_CHAR(C.SALES_ORD_NO) AS sales_Order_No
 						    , A.RETN_NO AS service_No
 						    , NVL(F.NAME, '') AS cust_Name
 						    , 'PR' AS job_Type
 						    , TO_CHAR(A.STUS_CODE_ID) AS job_Status
 						    , NVL(TO_CHAR(A.APP_DT, 'YYYYMMDD'), '') AS appointment_Date
-						    , CASE WHEN NVL(TO_CHAR(A.APP_TM, 'YYYYMMDD'), ' ') = '' THEN
-						        DECODE (NVL(TO_CHAR(A.APP_TM, 'YYYYMMDD'), ''),
+						    , CASE WHEN NVL(TO_CHAR(A.APP_TM, 'HHMM'), ' ') = ' ' THEN
+						        DECODE (NVL(TO_CHAR(A.APP_TM, 'HHMM'), ''),
 						                         'M', '1000',
 						                         'A', '1400',
 						                         'E', '1900',
 						                         'O', '2000', '2000')
-						      ELSE NVL(TO_CHAR(A.APP_TM, 'YYYYMMDD'), '')
+						      ELSE NVL(TO_CHAR(A.APP_TM, 'HHMM'), '')
 						      END AS appointment_Time
 						    , A.RT_SESION_CODE AS job_Session
-						    , NVL(TO_CHAR(E.CHECKIN_DT), '') AS check_In_Date
-						    , SUBSTR(NVL(TO_CHAR(E.CHECKIN_TM), ''), 1, 4) AS check_In_Time
+						    , CASE WHEN (TO_CHAR(A.STUS_CODE_ID) <![CDATA[ <> ]]> '1' AND NVL(TO_CHAR(E.CHECKIN_DT), ' ') = ' ') THEN NVL(TO_CHAR(A.APP_DT, 'YYYYMMDD'), ' ')
+						            ELSE NVL(TO_CHAR(E.CHECKIN_DT), '')
+						            END AS check_In_Date
+						    , CASE WHEN (TO_CHAR(A.STUS_CODE_ID) <![CDATA[ <> ]]> '1' AND NVL(TO_CHAR(E.CHECKIN_TM), ' ') = ' ') THEN
+						            CASE WHEN NVL(TO_CHAR(A.APP_TM, 'HHMM'), ' ') = ' ' THEN
+						                DECODE (NVL(TO_CHAR(A.APP_TM, 'HHMM'), ''),
+						                                 'M', '1000',
+						                                 'A', '1400',
+						                                 'E', '1900',
+						                                 'O', '2000', '2000')
+						            ELSE NVL(TO_CHAR(A.APP_TM, 'HHMM'), '')
+						            END
+						          ELSE SUBSTR(NVL(TO_CHAR(E.CHECKIN_TM), ''), 1, 4)
+						          END  AS check_In_Time
 						    , NVL(TO_CHAR(E.CHECKIN_GPS), '') AS check_In_Gps
 						    , NVL(TO_CHAR(F.TYPE_ID), '') AS customer_Type
 						    , NVL(TO_CHAR(C.CUST_ID), '') AS customer_Id
@@ -977,16 +989,13 @@ LEFT OUTER JOIN (
 						  INNER JOIN SYS0005M L ON B.BRNCH = L.BRNCH_ID
 						  LEFT OUTER JOIN ORG0001D M ON C.SALES_HM_ID = M.MEM_ID
 						  LEFT OUTER JOIN SAL0027D N ON C.CUST_ID = N.CUST_ID AND C.CUST_CNT_ID = N.CUST_CNTC_ID
-               WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate} , 'YYYYMM')) + 1, -1) AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
-               AND B.MEM_CODE = #{userId} 
+						 WHERE A.APP_DT BETWEEN ADD_MONTHS (LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM')) + 1, -1) AND LAST_DAY (TO_DATE (#{requestDate}, 'YYYYMM'))
+						 AND B.MEM_CODE = #{userId}
 				                
      </select>
 
 
-
-
-
- 	    <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
+ 	 <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
 
 							SELECT *
 							    from (
@@ -1035,7 +1044,6 @@ LEFT OUTER JOIN (
 										LEFT  JOIN SVC0006D S06A ON S06A.SCHDUL_ID = S08A.SCHDUL_ID
 										LEFT  JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
 										INNER JOIN ORG0001D O1DA ON O1DA.MEM_ID = S08A.CODY_ID
-
 										WHERE S08A.YEAR = TO_CHAR(to_date(#{requestDate}  ,'YYYY/MM'),'YYYY')
 										AND   S08A.MONTH =  TO_CHAR(to_date(#{requestDate} ,'YYYY/MM'),'MM')
 										AND   O1DA.MEM_CODE = #{userId}

@@ -2354,7 +2354,7 @@
 								   CRT_DT, UPD_USER_ID, UPD_DT, 
 								   HC_NO_SVC, HC_LOK, HC_CLOS_ID) 
 						VALUES (
-									(select max(HC_ID)+1  from Ccr0001d), 
+									 CCR0001D_HC_ID_SEQ.nextval, 
 									#{hcsoid}, 
 									#{hcCallEntryId}, 
 									 #{hcTypeNo}, 
