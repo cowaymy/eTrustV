@@ -28,7 +28,6 @@
         function createAUIGrid(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
-        
                     dataField : "c1",
                     headerText : " ",
                     width : 390
@@ -37,7 +36,18 @@
                     headerText : "Member  Name",
                     width : 120,
                     visible : false
-                                        
+             }, {
+                    dataField : "memId",
+                    headerText : "Member  Name",
+                    width : 120            
+             }, {
+                    dataField : "memLvl",
+                    headerText : "Member  Name",
+                    width : 120               
+             }, {
+                    dataField : "memType",
+                    headerText : "Member  Name",
+                    width : 120                                                              
              }];
             
             // 그리드 속성 설정
@@ -80,10 +90,13 @@
                  // 트리그리드 lazyLoading 요청 이벤트 핸들러 CD
                  AUIGrid.bind(myCdGridID, "treeLazyRequest", function(event) {
                  var item = event.item;
-                 var vMemLvl = item.memLvl +1;                                    
+                 var vMemLvl = item.memLvl +1 ;             
+                 var memType = item.memType;
                  
+                 console.log("data : " + event.item);                       
+
                     $.ajax({
-                        url: "/organization/selectCdChildList.do?memId=" + item.memId + "&memLvl=" + vMemLvl,
+                        url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType ,
                         success: function(data) {
                             // 성공 시 완전한 배열 객체로 삽입하십시오.
                             event.response(data);
@@ -289,6 +302,9 @@
            console.log("deptId fin: " + deptIdCd);        
            console.log("deptId fin: " + cmbMemberTp);                   
            
+           if($("#cmbGroupId").val() == "" && $("#cmbOrganizationId").val() != ""){
+                 parentIdCd ="0";
+           }
            
             //cd
            var paramCddata;
