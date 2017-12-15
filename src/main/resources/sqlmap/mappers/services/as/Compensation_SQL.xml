@@ -96,7 +96,8 @@
              </if>   
              <if test="status != null and status  != '' " >    
                      AND A.STUS_CODE_ID in ( #{status} )
-             </if>   
+             </if> 
+            ORDER BY   A.COMP_NO DESC               
  </select>
               
               
@@ -176,7 +177,7 @@
 		values
 				(
 				SVC0053M_COMP_NO_SEQ.NEXTVAL , #{custId}, #{salesOrdNo}, #{asNo}, #{asReqsterTypeId}, 
-				#{stusCodeId}, to_date(#{compDt}, 'yyyymmdd'), #{mainDept}, #{code}, #{compTotAmt}, 
+				#{stusCodeId}, to_date(#{compDt}, 'yyyymmdd'), #{searchdepartment}, #{code}, #{compTotAmt}, 
 				to_date(#{issueDt}, 'yyyymmdd'), #{asDefectTypeId}, #{asMalfuncResnId}, #{asrItmPart_id}, #{asrItmPartDesc}, 
 				#{asSlutnResn_id}, #{compItem1}, #{compItem2}, #{compItem3}, #{hasAttach},
 				#{updator}, SYSDATE, #{updator}, SYSDATE
@@ -190,7 +191,7 @@
               ,AS_NO                        = #{asNo}
               ,AS_REQSTER_TYPE_ID   = #{asReqsterTypeId}
               ,COMP_DT                    = to_date(#{compDt}, 'yyyymmdd')
-              ,MAIN_DEPT                  = #{mainDept}
+              ,MAIN_DEPT                  = #{searchdepartment}
               ,CODE                          = #{code}
               ,COMP_TOT_AMT           = #{compTotAmt}
               ,ISSUE_DT                    = to_date(#{issueDt}, 'yyyymmdd')

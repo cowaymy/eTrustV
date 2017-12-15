@@ -21,4 +21,5 @@ public interface CompensationMapper {
 	int   updateCompensation(Map<String, Object> params);
 	 
 	List<EgovMap> selectSalesOrdNoInfo(Map<String, Object> params);
+	
 }

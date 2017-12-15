@@ -9,7 +9,7 @@
         
         $(document).ready(function() {
         
-            doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
+          /*   doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
             
             doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'searchdepartment' , 'S', '');
     
@@ -17,7 +17,7 @@
 	         
             doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
 	         
-	     });
+	     }); */
  	     
 	     $("#salesOrdNo").focusout(function(){
              
@@ -47,53 +47,42 @@
     }       
 
     function fn_doSave () {
-    /* 
-             var  SaveForm ={
-                                        "issueDt"               : $("#issueDt").val().replace(/\//g,""),
-                                        "asReqsterTypeId"  : $("#asReqsterTypeId").val(),
-                                        "asNo"                  : $("#asNo").val(),
-                                        "salesOrdNo"          : $("#salesOrdNo").val(),
-                                        "custId"                : $("#custId").val(),
-                                        "custId"                : $("#custId").val(),
-                                        "stusCodeId"          : $("#stusCodeId option:selected").val(),
-                                        "compDt"               : $("#compDt").val().replace(/\//g,""),
-                                        "compTotAmt"        : $("#compTotAmt").val(),
-                                        "searchdepartment" : $("#searchdepartment option:selected").val(),
-                                        "code"                  : $("#code option:selected").val(),
-                                        "asrItmPartId"          : $("#asrItmPart_id").val(),
-                                        "asDefectTypeId"    : $("#asDefectTypeId").val(),
-                                        "asMalfuncResnId"    : $("#asSlutnResn_id").val(),
-                                        "asMalfuncResnId"    : $("#asMalfuncResnId").val(),
-                                        "compItem1"         : $("#compItem1").val(),
-                                        "compItem2"         : $("#compItem2").val(),
-                                        "compItem3"         : $("#compItem3").val(),
-                                        "attachFile"            : $("#attachFile").val()
-                                   };
-     */
-     
-           var formData = Common.getFormData("comPensationInfoForm");
-             
-             var obj = $("#comPensationInfoForm").serializeJSON();
-             
-             $.each(obj, function(key, value) {
-                formData.append(key, value);
-            });
-             
-            console.log(JSON.stringify(formData));
-             
-            Common.ajaxFile("/services/compensation/insertCompensation.do",  formData , function(result) {
-				console.log("fn_doSave >>> .");
-				console.log(  JSON.stringify(result));
-                
-                if(result.code = "00"){
-                    $("#popClose").click();
-                    fn_searchASManagement();
-                     Common.alert("<b>Compensation successfully added.</b>",fn_close);
-               }else{
-                    Common.alert("<b>Failed to add this Compensation. Please try again later.</b>");
-               }			
+            
+            if ($("#custId").val().trim() == '') {
+                alert('Customer name checked');
+                return false;
+            } else if ($("#salesOrdNo").val().trim() == '') {
+                alert('Order No checked');
+                return false;
+            } else if ($("#issueDt").val().trim() == '') {
+                alert('AS Request Date checked');
+                return false;
+            } else {
 
-            }); 
+	           var formData = Common.getFormData("comPensationInfoForm");
+	             
+	           var obj = $("#comPensationInfoForm").serializeJSON();
+	             
+	             $.each(obj, function(key, value) {
+	                formData.append(key, value);
+	            });
+	             
+	            console.log(JSON.stringify(formData));
+	             
+	            Common.ajaxFile("/services/compensation/insertCompensation.do",  formData , function(result) {
+					console.log("fn_doSave >>> .");
+					console.log(  JSON.stringify(result));
+	                
+	                if(result.code = "00"){
+	                    $("#popClose").click();
+	                    fn_searchASManagement();
+	                     Common.alert("<b>Compensation successfully added.</b>",fn_close);
+	               }else{
+	                    Common.alert("<b>Failed to add this Compensation. Please try again later.</b>");
+	               }			
+	
+	            }); 
+            }
     }
 
 
@@ -189,7 +178,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Serial No</th>
     <td colspan="3">
-    <input type="text" title="" id="Serial" name="Serial"  placeholder="" class=" "  style="width: 157px; "/>
+    <input type="text" title="" id="Serial" name="Serial"  placeholder="" class="readonly" readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 
@@ -218,14 +207,26 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Managing Department</th>
     <td colspan="3">
-    <select class="w100p" id="searchdepartment" name="searchdepartment"  ></select>
-    <select class="w100p" id="inputSubDept" name="inputSubDept"></select>
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+         <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>  
+    </select>
+    <!-- <select class="w100p" id="inputSubDept" name="inputSubDept"></select> -->
     </td>   
 </tr>
 <tr>
 <th scope="row">DSC</th>
-    <td colspan="7">
-     <select id="code" name="code" class="w100p" ></select>
+    <td colspan="3">
+     <select id="code" name="code" class="w100p" >
+          <c:forEach var="list" items="${branchWithNMList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>
+     </select>
+</td>
+<th scope="row"></th>
+<td colspan="3"> </td> 
+</tr>     
 </tr>
 </tbody>
 </table><!-- table end -->

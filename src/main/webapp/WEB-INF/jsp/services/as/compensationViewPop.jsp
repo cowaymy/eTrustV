@@ -6,200 +6,23 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
-
-    var myGenerallGridIDInActive;
-    var myDetailGridIDInActive;
-
-    function createAUIGridInactiveGeneral(){
-        // AUIGrid 칼럼 설정
-        var columnLayout = [ 
-                                        
-                                        {                        
-                                            dataField : "",
-                                            headerText : "AS Request Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Application Route",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "As Order Number",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Order No",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Customer name",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Product name",
-                                            width : 130
-                                            //,dataType : "date",
-                                            //formatString : "dd/mm/yyyy"   
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Installation Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Serial No.",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Status",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Person to bear",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Complete Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "RM",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Managing Department",
-                                            width : 130 
-                                        }    
-                                   ];
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용       
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-                
-                editable : false,
-                
-                //showStateColumn : true, 
-                
-                //displayTreeOpen : true,
-                
-                headerHeight : 30,
-                
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-                
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-                
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
-        
-            };
-            myGenerallGridIDInActive = AUIGrid.create("#grid_wrap_general", columnLayout, gridPros);
-    }
-    
-    
-    function createAUIGridInactiveDetailLog(){
-        // AUIGrid 칼럼 설정
-        var columnLayout = [ 
-                                        
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Issue Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Leaking/burning",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Defect Parts",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Reason",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Settlement Mothod",
-                                            width : 140 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Attachment",
-                                            width : 130
-                                            //,dataType : "date",
-                                            //formatString : "dd/mm/yyyy"   
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Comensation Item",
-                                            width : 140 
-                                        }
-                                   ];
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용       
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-                
-                editable : false,
-                
-                //showStateColumn : true, 
-                
-                //displayTreeOpen : true,
-                
-                headerHeight : 30,
-                
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-                
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-                
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
-        
-            };
-            myDetailGridIDInActive = AUIGrid.create("#grid_wrap_detailLog", columnLayout, gridPros);
-    }
-    
-      
         
         $(document).ready(function() {
         
-            //doDefCombo('', '' ,'searchdepartment', 'M', 'f_deptmultiCombo');
-            
-           // CommonCombo.make('searchdepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#searchdepartment").val(), memLvl : 3, parentID : total_item}, '', {type:'M', isCheckAll:false});
-            
-            doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
-            
-            
-            doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'searchdepartment' , 'S', '');
-     
-    
 	       $("#searchdepartment").change(function(){
 	         
 	         doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
 	         
 	     });
+	     
+	        var statusCd = "${compensationView.stusCodeId}";
+            $("#stusCodeId option[value='"+ statusCd +"']").attr("selected", true);
+            
+            var searchdepartmentStatusCd = "${compensationView.mainDept}";
+            $("#searchdepartment option[value='"+ searchdepartmentStatusCd +"']").attr("selected", true);
+            
+            var codeStatusCd = "${compensationView.code}";
+            $("#code option[value='"+ codeStatusCd +"']").attr("selected", true);
 	     
             
         });
@@ -312,20 +135,26 @@
     <th scope="row">Managing Department</th>
     <td colspan="3">
     <%-- <input type="text" title="" id="mainDept" name="mainDept"  value="${compensationView.mainDept}" placeholder="" class="readonly " style="width: 157px; "/> --%>
-    <select class="w100p" id="searchdepartment" name="searchdepartment"  disabled="disabled"></select>
-    <select class="w100p" id="inputSubDept" name="inputSubDept" disabled="disabled"></select>
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  disabled="disabled">
+        <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>  
+    </select>
+    <!-- <select class="w100p" id="inputSubDept" name="inputSubDept" disabled="disabled"></select> -->
     </td>   
 </tr>
 <tr>
 <th scope="row">DSC</th>
-    <td colspan="7">
+    <td colspan="3">
      <select id="code" name="code" class="w100p" disabled="disabled">
-     <%-- <option value="">Choose One</option>
-      <c:forEach var="list" items="${ssCapacityCtList }">
-         <option value="${list.codeId }">${list.codeName }</option>
-         <option value="${list.codeId }">${list.codeName }</option>
-      </c:forEach> --%>
+        <c:forEach var="list" items="${branchWithNMList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>
  </select>
+ </td>
+<th scope="row"></th>
+    <td colspan="3"> </td> 
+</tr> 
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -9,14 +9,14 @@
         
         $(document).ready(function() {
             
-            doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
+            //doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
             
-            doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'searchdepartment' , 'S', '');
+            //doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'searchdepartment' , 'S', '');
     
-            $("#searchdepartment").change(function(){
+/*             $("#searchdepartment").change(function(){
                 doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
-            });
-	     
+            }); */
+	       
 	     
             $("#salesOrdNo").focusout(function(){
                 if (  $("#salesOrdNo").val().length > 6) {
@@ -24,17 +24,27 @@
                     Common.ajax("GET", "/services/compensation/selectSalesOrdNoInfo.do",   { salesOrdNo :  $("#salesOrdNo").val() }  , function(result) {
 						console.log("selectSalesOrdNoInfo >>> .");
 						console.log(  JSON.stringify(result));
-						
-						$("#product").val(result[0].stkDesc)
-						$("#Installation").val(result[0].installDt)
-						$("#Serial").val(result[0].serialNo)
-	              
+						if ( result != null ) {
+							$("#product").val(result[0].stkDesc)
+							$("#Installation").val(result[0].installDt)
+							$("#Serial").val(result[0].serialNo)
+                        }	              
                     }); 
 	            
                 }
             });
             
             setInputFile2();
+            
+            var statusCd = "${compensationView.stusCodeId}";
+            $("#stusCodeId option[value='"+ statusCd +"']").attr("selected", true);
+            
+            var searchdepartmentStatusCd = "${compensationView.mainDept}";
+            $("#searchdepartment option[value='"+ searchdepartmentStatusCd +"']").attr("selected", true);
+            
+            var codeStatusCd = "${compensationView.code}";
+            $("#code option[value='"+ codeStatusCd +"']").attr("selected", true);
+            
         });
  
     function setInputFile2(){//인풋파일 세팅하기
@@ -47,30 +57,16 @@
 
     function fn_doSave () {
     
-             /*  var  SaveForm ={
-                                        "issueDt"               : $("#issueDt").val().replace(/\//g,""),
-                                        "asReqsterTypeId"  : $("#asReqsterTypeId").val(),
-                                        "asNo"                  : $("#asNo").val(),
-                                        "salesOrdNo"          : $("#salesOrdNo").val(),
-                                        "custId"                : $("#custId").val(),
-                                        "custId"                : $("#custId").val(),
-                                        "stusCodeId"          : $("#stusCodeId option:selected").val(),
-                                        "compDt"               : $("#compDt").val().replace(/\//g,""),
-                                        "compTotAmt"        : $("#compTotAmt").val(),
-                                        "mainDept"              : $("#searchdepartment option:selected").val(),
-                                        "code"                  : $("#code option:selected").val(),
-                                        "asrItmPartId"          : $("#asrItmPart_id").val(),
-                                        "asDefectTypeId"    : $("#asDefectTypeId").val(),
-                                        "asMalfuncResnId"    : $("#asSlutnResn_id").val(),
-                                        "asSlutnResnId"    : $("#asSlutnResn_Id").val(),
-                                        "compItem1"         : $("#compItem1").val(),
-                                        "compItem2"         : $("#compItem2").val(),
-                                        "compItem3"         : $("#compItem3").val(),
-                                        "attachFile"            : $("#attachFile").val(),
-                                        "compNo"                : $("#compNo").val()
-                                        
-                                   }; */
-             
+		if ($("#custId").val().trim() == '') {
+		    alert('Customer name checked');
+		    return false;
+		} else if ($("#salesOrdNo").val().trim() == '') {
+		    alert('Order No checked');
+		    return false;
+		} else if ($("#issueDt").val().trim() == '') {
+		    alert('AS Request Date checked');
+		    return false;
+		} else {            
              var formData = Common.getFormData("comPensationInfoForm");
              
              var obj = $("#comPensationInfoForm").serializeJSON();
@@ -92,8 +88,9 @@
                }else{
                     Common.alert("<b>Failed to edit this Compensation. Please try again later.</b>");
                }     
-            }); 
-    }
+        });
+    }             
+}
 
 function fn_getASReasonCode2(_obj , _tobj, _v){
     
@@ -188,7 +185,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Serial No</th>
     <td colspan="3">
-    <input type="text" title="" id="Serial" name="Serial"  value="" placeholder="" class="" readonly="" style="width: 157px; "/>
+    <input type="text" title="" id="Serial" name="Serial"  value="" placeholder="" class="readonly" readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 
@@ -218,20 +215,25 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     <th scope="row">Managing Department</th>
     <td colspan="3">
     <%-- <input type="text" title="" id="mainDept" name="mainDept"  value="${compensationView.mainDept}" placeholder="" class="readonly " style="width: 157px; "/> --%>
-    <select class="w100p" id="searchdepartment" name="searchdepartment"  ></select>
-    <select class="w100p" id="inputSubDept" name="inputSubDept"></select>
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+     <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>    
+    </select>
+    <!-- <select class="w100p" id="inputSubDept" name="inputSubDept"></select> -->
     </td>   
 </tr>
 <tr>
 <th scope="row">DSC</th>
-    <td colspan="7">
+    <td colspan="3">
      <select id="code" name="code" class="w100p" >
-     <%-- <option value="">Choose One</option>
-      <c:forEach var="list" items="${ssCapacityCtList }">
-         <option value="${list.codeId }">${list.codeName }</option>
-         <option value="${list.codeId }">${list.codeName }</option>
-      </c:forEach> --%>
- </select>
+     <c:forEach var="list" items="${branchWithNMList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>
+    </select>
+    </td>
+<th scope="row"></th>
+    <td colspan="3"> </td> 
 </tr>
 </tbody>
 </table><!-- table end -->

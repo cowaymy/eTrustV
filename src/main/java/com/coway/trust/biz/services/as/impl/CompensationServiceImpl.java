@@ -17,6 +17,7 @@ import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.services.as.CompensationService;
+import com.coway.trust.biz.services.servicePlanning.impl.HolidayMapper;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -29,6 +30,9 @@ public class  CompensationServiceImpl  extends EgovAbstractServiceImpl implement
 	
 	@Resource(name = "CompensationMapper")
 	private CompensationMapper compensationMapper;
+
+	@Resource(name = "holidayMapper")
+	private HolidayMapper holidayMapper;	
 	
 	@Autowired
 	private FileService fileService;
@@ -84,5 +88,11 @@ public class  CompensationServiceImpl  extends EgovAbstractServiceImpl implement
 		saveView.put("massage", messageSourceAccessor.getMessage(SalesConstants.MSG_DCF_SUCC)); 
 		
 		return saveView;
-	} 	
+	}
+	
+	@Override
+	public List<EgovMap> selectBranchWithNM() {
+		
+		return holidayMapper.selectBranchWithNM();
+	}
 } 

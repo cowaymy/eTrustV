@@ -28,6 +28,7 @@ import com.coway.trust.biz.application.FileApplication;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.services.as.CompensationService;
+import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -50,6 +51,9 @@ public class CompensationController {
 	@Resource(name = "CompensationService")
 	private CompensationService compensationService;
 	
+	@Resource(name = "tagMgmtService")
+	TagMgmtService tagMgmtService;
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;	
 	
@@ -65,31 +69,29 @@ public class CompensationController {
 	
 	@RequestMapping(value = "/compensationAddPop.do")
 	public String addPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		// 호출될 화면
-		logger.debug("======================================================================================");
-		logger.debug("===============================compensationPop params {} ==========================================", params.toString());
-		logger.debug("======================================================================================");
 		
+		List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
+		List<EgovMap> mainDeptList = tagMgmtService.getMainDeptList() ;
+		
+		model.put("branchWithNMList", branchWithNMList);
+		model.put("mainDeptList", mainDeptList);
+		// 호출될 화면
 		return "services/as/compensationAddPop";
 	}
 
 	@RequestMapping(value = "/compensationEditPop.do")
 	public String editPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
-		logger.debug("======================================================================================");
-		logger.debug("===============================compensationPop params {} ==========================================", params.toString());
-		logger.debug("======================================================================================");
-		 
 		params.put("compNo", params.get("compNo"));
 
 		EgovMap compensationView = compensationService.selectCompenSationView(params);
+		List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
+		List<EgovMap> mainDeptList = tagMgmtService.getMainDeptList() ;
+		
 		model.put("compensationView", compensationView);
-		
+		model.put("branchWithNMList", branchWithNMList);
+		model.put("mainDeptList", mainDeptList);
 		model.put("compNo", params.get("compNo"));
-		
-		logger.debug("======================================================================================");
-		logger.debug("===============================compensationPop model {} ==========================================", model.toString());
-		logger.debug("======================================================================================");
 		
 		
 		return "services/as/compensationEditPop";
@@ -98,15 +100,16 @@ public class CompensationController {
 	@RequestMapping(value = "/compensationViewPop.do")
 	public String viewPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
-		logger.debug("======================================================================================");
-		logger.debug("===============================compensationPop params {} ==========================================", params.toString());
-		logger.debug("======================================================================================");
 		 
 		params.put("compNo", params.get("compNo"));
 
 		EgovMap compensationView = compensationService.selectCompenSationView(params);
-		model.put("compensationView", compensationView);
+		List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
+		List<EgovMap> mainDeptList = tagMgmtService.getMainDeptList() ;
 		
+		model.put("compensationView", compensationView);
+		model.put("branchWithNMList", branchWithNMList);
+		model.put("mainDeptList", mainDeptList);
 		model.put("compNo", params.get("compNo"));
 		
 
