@@ -38,6 +38,12 @@ import com.coway.trust.api.mobile.logistics.audit.StockAuditResultDto;
 import com.coway.trust.api.mobile.logistics.audit.StockAuditResultForm;
 import com.coway.trust.api.mobile.logistics.ctcodylist.DisplayCt_CodyListDto;
 import com.coway.trust.api.mobile.logistics.ctcodylist.DisplayCt_CodyListForm;
+import com.coway.trust.api.mobile.logistics.filterinventorydisplay.FilterChangeDListDto;
+import com.coway.trust.api.mobile.logistics.filterinventorydisplay.FilterChangeListForm;
+import com.coway.trust.api.mobile.logistics.filterinventorydisplay.FilterNotChangeDListDto;
+import com.coway.trust.api.mobile.logistics.filterinventorydisplay.FilterNotChangeListForm;
+import com.coway.trust.api.mobile.logistics.filterinventorydisplay.UserFilterDListDto;
+import com.coway.trust.api.mobile.logistics.filterinventorydisplay.UserFilterListForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOverallStockDto;
@@ -88,6 +94,9 @@ import com.coway.trust.api.mobile.logistics.usedparts.UsedPartsListForm;
 import com.coway.trust.biz.logistics.mlog.MlogApiService;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockBarcodeListVo;
 import com.coway.trust.biz.logistics.mlog.vo.AdjustmentStockNoneBarcodeListVo;
+import com.coway.trust.biz.logistics.mlog.vo.FilterChangeListVo;
+import com.coway.trust.biz.logistics.mlog.vo.FilterNotChangeListVo;
+import com.coway.trust.biz.logistics.mlog.vo.UserFilterListVo;
 import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.util.CommonUtils;
 
@@ -666,11 +675,145 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(list);
 	}
-	
-	
-	
-	
 
+	@ApiOperation(value = "Filter Inventory Display - Not Change List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/filterNotChangeList", method = RequestMethod.GET)
+	public ResponseEntity<FilterNotChangeListVo> getfilterNotChangeList(
+			@ModelAttribute FilterNotChangeListForm filterNotChangeListForm) throws Exception {
+
+		Map<String, Object> params = FilterNotChangeListForm.createMap(filterNotChangeListForm);
+		
+		params.put("querytype", "sum");
+		FilterNotChangeListVo dto = null;
+
+		List<EgovMap> header = MlogApiService.getFilterNotChangeList(params);
+		
+		for (int i = 0; i < header.size(); i++) {
+			
+			LOGGER.debug("header 사이즈 : {}", header.get(i));
+			
+		}
+		
+		if (header.size() > 0) {
+			dto = new FilterNotChangeListVo();
+
+			for (int i = 0; i < header.size(); i++) {
+				Map<String, Object> headerMap = header.get(i);
+				
+				dto.setTotalTobeChangeQty(Integer.parseInt(String.valueOf(headerMap.get("totalTobeChangeQty"))));
+
+			}
+			
+			params.put("querytype", "list");
+			List<EgovMap> notchangeDlist = MlogApiService.getFilterNotChangeList(params);
+
+			List<FilterNotChangeDListDto> notchangelist = notchangeDlist.stream().map(r -> FilterNotChangeDListDto.create(r))
+					.collect(Collectors.toList());
+			dto.setPartsList(notchangelist);
+
+			for (int i = 0; i < notchangelist.size(); i++) {
+				LOGGER.debug("notchangelist 값 : {}", notchangelist.get(i));
+			}
+
+		}
+		return ResponseEntity.ok(dto);
+
+	}
+	
+	
+//	@ApiOperation(value = "Filter Inventory Display - User Filter List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/userFilterList", method = RequestMethod.GET)
+//	public ResponseEntity<UserFilterListVo> getuserFilterList(
+//			@ModelAttribute UserFilterListForm userFilterListForm) throws Exception {
+//
+//		Map<String, Object> params = UserFilterListForm.createMap(userFilterListForm);
+//		
+//		params.put("querytype", "sum");
+//		UserFilterListVo dto = null;
+//
+//		List<EgovMap> header = MlogApiService.getFilterUserChangeList(params);
+//		
+//		for (int i = 0; i < header.size(); i++) {
+//			
+//			LOGGER.debug("header 사이즈 : {}", header.get(i));
+//			
+//		}
+//		
+//		if (header.size() > 0) {
+//			dto = new UserFilterListVo();
+//
+//			for (int i = 0; i < header.size(); i++) {
+//				Map<String, Object> headerMap = header.get(i);
+//				
+//				dto.setTotalTobeChangeQty(Integer.parseInt(String.valueOf(headerMap.get("totalTobeChangeQty"))));
+//
+//			}
+//			
+//			params.put("querytype", "list");
+//			List<EgovMap> userFilterDList = MlogApiService.getFilterNotChangeList(params);
+//
+//			List<UserFilterDListDto> userFilterList = userFilterDList.stream().map(r -> UserFilterDListDto.create(r))
+//					.collect(Collectors.toList());
+//			dto.setPartsList(userFilterList);
+//
+//			for (int i = 0; i < userFilterDList.size(); i++) {
+//				LOGGER.debug("notchangelist 값 : {}", userFilterDList.get(i));
+//			}
+//
+//		}
+//		return ResponseEntity.ok(dto);
+//
+//	}
+	
+	
+	
+	@ApiOperation(value = "Filter Inventory Display - Change List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/filterChangeList", method = RequestMethod.GET)
+	public ResponseEntity<FilterChangeListVo> getfilterChangeList(
+			@ModelAttribute FilterChangeListForm filterChangeListForm) throws Exception {
+
+		Map<String, Object> params = FilterChangeListForm.createMap(filterChangeListForm);
+		
+		params.put("querytype", "sum");
+		FilterChangeListVo dto = null;
+
+		List<EgovMap> header = MlogApiService.getFilterUserChangeList(params);
+		
+		for (int i = 0; i < header.size(); i++) {
+			
+			LOGGER.debug("header 사이즈 : {}", header.get(i));
+			
+		}
+		
+		if (header.size() > 0) {
+			dto = new FilterChangeListVo();
+
+			for (int i = 0; i < header.size(); i++) {
+				Map<String, Object> headerMap = header.get(i);
+				
+				dto.setTotalTobeChangeQty(Integer.parseInt(String.valueOf(headerMap.get("totalTobeChangeQty"))));
+				dto.setTotalShortageQty(Integer.parseInt(String.valueOf(headerMap.get("totalShortageQty"))));
+
+			}
+			
+			params.put("querytype", "list");
+			List<EgovMap> filterChangeDList = MlogApiService.getFilterUserChangeList(params);
+
+			List<FilterChangeDListDto>  filterChangeList = filterChangeDList.stream().map(r -> FilterChangeDListDto.create(r))
+					.collect(Collectors.toList());
+			dto.setPartsList(filterChangeList);
+
+			for (int i = 0; i < filterChangeDList.size(); i++) {
+				LOGGER.debug("notchangelist 값 : {}", filterChangeDList.get(i));
+			}
+
+		}
+		return ResponseEntity.ok(dto);
+
+	}
+	
+	
+	
 	/**
 	 * 아래부분 현창배 추가
 	 */
