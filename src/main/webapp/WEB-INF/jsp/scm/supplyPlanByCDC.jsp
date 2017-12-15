@@ -199,16 +199,16 @@ function fnSearchBtnList()
               console.log("성공 selectSupplyPlanMasterList_Length: " + result.selectSupplyPlanMasterList.length);
               
               AUIGrid.setGridData(myGridID, result.selectSupplyPlanCDCList);
-              if ( result != null)
+              if ( result != null && result.selectSupplyPlanCDCList.length > 0)
               {
                  //save
-	              if(result.selectSupplyCdcSaveFlag.length > 0 )
+	              if(result.selectSupplyCdcSaveFlag.length > 0 && result.selectSupplyPlanMasterList.length > 0 )
 	              {
 	                  if (result.selectSupplyCdcSaveFlag[0].saveFlag == "B")
 	                  {
 	            	      $("#cir_save").attr('class','circle circle_blue');
 
-	            	      if (result.selectSupplyPlanMasterList[0].planStus == 4) 
+	            	      if ( result.selectSupplyPlanMasterList[0].planStus == 4) 
 	            	    	  $("#ConfirmBtn").attr("disabled",true)     //disabled
 	                    else $("#ConfirmBtn").attr("disabled",false) //enabled
 
@@ -244,9 +244,25 @@ function fnSearchBtnList()
                   $("#cir_cinfirm").attr('class','circle circle_red');
                 }
               }
+           }
+				 , function(jqXHR, textStatus, errorThrown)
+				   {
+				     try
+				     {
+				       console.log("Fail Status : " + jqXHR.status);
+				       console.log("code : "        + jqXHR.responseJSON.code);
+				       console.log("message : "     + jqXHR.responseJSON.message);
+				       console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				     }
+				     catch (e)
+				     {
+				       console.log(e);
+				     }
+				     
+				     Common.alert("Fail : " + jqXHR.responseJSON.message);
+				   });
 
-             
-           });
+
    
 }
 
