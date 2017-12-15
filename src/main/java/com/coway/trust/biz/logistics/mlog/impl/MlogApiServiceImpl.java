@@ -195,7 +195,17 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		return MlogApiMapper.getMiscPartList();
 	}
 	
+	@Override
+	public List<EgovMap> getFilterNotChangeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getFilterNotChangeList(params);
+	}
 	
+	@Override
+	public List<EgovMap> getFilterUserChangeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getFilterUserChangeList(params);
+	}
 
 	/**
 	 * 현창배 추가
