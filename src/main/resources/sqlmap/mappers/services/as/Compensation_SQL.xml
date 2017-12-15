@@ -176,9 +176,9 @@
 		values
 				(
 				SVC0053M_COMP_NO_SEQ.NEXTVAL , #{custId}, #{salesOrdNo}, #{asNo}, #{asReqsterTypeId}, 
-				#{stusCodeId}, to_date(#{compDt}, 'ddmmyyyy'), #{mainDept}, #{code}, #{compTotAmt}, 
-				to_date(#{issueDt}, 'ddmmyyyy'), #{asDefectTypeId}, #{asMalfuncResnId}, #{asrItmPartId}, #{asrItmPartDesc}, 
-				#{asSlutnResnId}, #{compItem1}, #{compItem2}, #{compItem3}, #{hasAttach},
+				#{stusCodeId}, to_date(#{compDt}, 'yyyymmdd'), #{mainDept}, #{code}, #{compTotAmt}, 
+				to_date(#{issueDt}, 'yyyymmdd'), #{asDefectTypeId}, #{asMalfuncResnId}, #{asrItmPart_id}, #{asrItmPartDesc}, 
+				#{asSlutnResn_id}, #{compItem1}, #{compItem2}, #{compItem3}, #{hasAttach},
 				#{updator}, SYSDATE, #{updator}, SYSDATE
 				)
     </insert>
@@ -196,9 +196,9 @@
               ,ISSUE_DT                    = to_date(#{issueDt}, 'yyyymmdd')
               ,AS_DEFECT_TYPE_ID     = #{asDefectTypeId}
               ,AS_MALFUNC_RESN_ID   = #{asMalfuncResnId}
-              ,ASR_ITM_PART_ID         = #{asrItmPartId}
+              ,ASR_ITM_PART_ID         = #{asrItmPart_id}
               ,ASR_ITM_PART_DESC     = #{asrItmPartDesc}
-              ,AS_SLUTN_RESN_ID       = #{asSlutnResnId}
+              ,AS_SLUTN_RESN_ID       = #{asSlutnResn_id}
               ,COMP_ITEM_1               = #{compItem1}
               ,COMP_ITEM_2               = #{compItem2}
               ,COMP_ITEM_3               = #{compItem3}

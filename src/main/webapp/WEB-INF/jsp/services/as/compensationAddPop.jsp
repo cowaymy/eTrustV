@@ -251,17 +251,17 @@
                                    };
      */
      
-            var formData = Common.getFormData("comPensationInfoForm");
+           var formData = Common.getFormData("comPensationInfoForm");
              
-            var obj = $("#comPensationInfoForm").serializeJSON();
+             var obj = $("#comPensationInfoForm").serializeJSON();
              
-            $.each(obj, function(key, value) {
+             $.each(obj, function(key, value) {
                 formData.append(key, value);
             });
              
             console.log(JSON.stringify(formData));
              
-            Common.ajaxFile("/services/compensation/insertCompensation.do",  SaveForm , function(result) {
+            Common.ajaxFile("/services/compensation/insertCompensation.do",  formData , function(result) {
 				console.log("fn_doSave >>> .");
 				console.log(  JSON.stringify(result));
                 
