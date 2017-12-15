@@ -181,39 +181,29 @@
             myDetailGridIDInActive = AUIGrid.create("#grid_wrap_detailLog", columnLayout, gridPros);
     }
     
-        function fn_getGeneralInfo(){
-            
-            Common.ajax("GET", "/services/bs/hSFilterUseHistory.do", {OrderID : $("#orderId").val() ,StockID :  $("#stkId").val() }, function(result) {
-                console.log("fn_getUseHistoryInfo.");
-                console.log(  JSON.stringify(result));
-                AUIGrid.setGridData(myDetailGridIDInActive, result);        
-            });
-            
-        }
-        
-        function fn_getDetailLogInfo(){
-            
-            Common.ajax("GET", "/services/bs/hSFilterUseHistory.do", {OrderID : $("#orderId").val() ,StockID :  $("#stkId").val() }, function(result) {
-                console.log("fn_getUseHistoryInfo.");
-                console.log(  JSON.stringify(result));
-                AUIGrid.setGridData(myDetailGridIDInActive, result);        
-            });
-            
-        }        
+      
         
         $(document).ready(function() {
-        	createAUIGridInactiveGeneral();
-        	
-        	createAUIGridInactiveDetailLog();
+        
+            //doDefCombo('', '' ,'searchdepartment', 'M', 'f_deptmultiCombo');
             
-            //fn_getGeneralInfo();
+           // CommonCombo.make('searchdepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#searchdepartment").val(), memLvl : 3, parentID : total_item}, '', {type:'M', isCheckAll:false});
             
-            //fn_getDetailLogInfo();
+            doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
+            
+            
+            doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'searchdepartment' , 'S', '');
+     
+    
+	       $("#searchdepartment").change(function(){
+	         
+	         doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
+	         
+	     });
+	     
             
         });
-
-        
-        
+ 
     function fn_close() {
         $("#popClose").click();
     }       
@@ -226,39 +216,187 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ORDER FILTER USE HISTORY</h1>
+<h1>View Compliance Log Detail</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" method="post"  id='orderInfoForm'  name='orderInfoForm' >
-    <input type="hidden" name="SRV_FILTER_ID"  id="SRV_FILTER_ID" value=""/>  
-    <input type="hidden" name="orderId"  id="orderId" value="${orderId}"/>
-    <input type="hidden" name="stkId"  id="stkId" value="${stkId}"/>
-    
+<form action="#" method="get"  id='comPensationInfoForm'>
+    <input type="hidden" name="compNo"  id="compNo" value="${compNo}"/>
 
 <aside class="title_line"><!-- title_line start -->
 <h2>General</h2>
 </aside><!-- title_line end -->
 
-<article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap_general" style="width: 100%; height: 134px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:165px" />
+    <col style="width:*" />
+    <col style="width:165px" />
+    <col style="width:*" />    
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">AS Request Date</th>
+    <td colspan="3">
+    <%-- <input type="text" title="" id="issueDt" name="issueDt"  value="${compensationView.issueDt}" placeholder="" class="readonly " style="width: 157px; " /> --%>
+    <input type="text" title="" id="issueDt" name="issueDt"  value="${compensationView.issueDt}" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Application Route</th>
+    <td colspan="3">
+    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  readonly="readonly" value="${compensationView.asReqsterTypeId}" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+</tr>
+<tr>
+    <th scope="row"> AS Order Number</th>
+    <td colspan="3">
+    <input type="text" title="" id="asNo" name="asNo"  value="${compensationView.asNo}" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Order No</th>
+    <td colspan="3">
+    <input type="text" title="" id="salesOrdNo" name="salesOrdNo"  readonly="readonly" value="${compensationView.salesOrdNo}" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+</tr>
+<tr>
+ <th scope="row">Customer name</th>
+    <td colspan="3">
+        <input type="text" title="" id="custId" name="custId"  readonly="readonly" value="${compensationView.custId}" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Product name</th>
+    <td colspan="3">
+        <input type="text" title="" id="product" name="product"  value="${compensationView.stkDesc}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    </td> 
+</tr>
 
+<tr>
+    <th scope="row">Installation Date</th>
+    <td colspan="3">
+    <input type="text" title="" id="Installation" name="Installation"  value="${compensationView.installDt}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    </td>
+    <th scope="row">Serial No</th>
+    <td colspan="3">
+    <input type="text" title="" id="Serial" name="Serial"  value="${compensationView.serialNo}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    </td>
+</tr>
+
+<tr>
+    <th scope="row">Status</th>
+    <td colspan="3">
+         <select  class="multy_select w100p" id="stusCodeId" name="stusCodeId" disabled="disabled">
+                 <option value="1">Active</option>
+                <option value="44">Pending</option>
+                <option value="34">Solved</option>
+                <option value="35">Unsolved</option>
+                <option value="36">Closed</option>
+                <option value="10">Cancelled</option>
+        </select> 
+    </td>  
+    <th scope="row">Complete Date</th>
+    <td colspan="3">
+    <%-- <input type="date" title="" id="compDt" name="compDt" class="j_date2" value="${compensationView.compDt}" placeholder="" class="readonly "  style="width: 157px; "/> --%>
+    <input type="text" title="" id="compDt" name="compDt"  value="${compensationView.compDt}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">RM</th>
+    <td colspan="3">
+    <input type="text" title="" id="compTotAmt" name="compTotAmt"  readonly="readonly" value="${compensationView.compTotAmt}" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Managing Department</th>
+    <td colspan="3">
+    <%-- <input type="text" title="" id="mainDept" name="mainDept"  value="${compensationView.mainDept}" placeholder="" class="readonly " style="width: 157px; "/> --%>
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  disabled="disabled"></select>
+    <select class="w100p" id="inputSubDept" name="inputSubDept" disabled="disabled"></select>
+    </td>   
+</tr>
+<tr>
+<th scope="row">DSC</th>
+    <td colspan="7">
+     <select id="code" name="code" class="w100p" disabled="disabled">
+     <%-- <option value="">Choose One</option>
+      <c:forEach var="list" items="${ssCapacityCtList }">
+         <option value="${list.codeId }">${list.codeName }</option>
+         <option value="${list.codeId }">${list.codeName }</option>
+      </c:forEach> --%>
+ </select>
+</tr>
+</tbody>
+</table><!-- table end -->
+ 
 <aside class="title_line"><!-- title_line start -->
 <h2>Detail Log</h2>
 </aside><!-- title_line end -->
 
   
-<article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap_detailLog" style="width: 100%; height: 134px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
-
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:165px" />
+    <col style="width:*" />
+    <col style="width:165px" />
+    <col style="width:*" />    
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Defect Parts</th>
+    <td colspan="3">
+    <input type="text" title="" id="asrItmPartId" name="asrItmPartId"  value="${compensationView.asrItmPartId}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; " />
+    </td>
+    <th scope="row">Leaking/burning</th>
+    <td colspan="3">
+    <input type="text" title="" id="asDefectTypeId" name="asDefectTypeId"  value="${compensationView.asDefectTypeId}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Settlement Method</th>
+    <td colspan="3">
+    <input type="text" title="" id="asMalfuncResnId" name="asMalfuncResnId"  value="${compensationView.asMalfuncResnId}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Reason</th>
+    <td colspan="3">
+    <input type="text" title="" id="asMalfuncResnId" name="asMalfuncResnId"  value="${compensationView.asMalfuncResnId}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Compensation Item</th>
+    <td colspan="3">
+        <input type="text" title="" id="compItem1" name="compItem1"  value="${compensationView.compItem1}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Attachment</th>
+    <td colspan="3">
+        <input type="text" title="" id="attachFile" name="attachFile"  value="${compensationView.attachFile}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>  
+</tr>
+<tr>
+<th scope="row">Compensation Item</th>
+    <td colspan="3">
+    <input type="text" title="" id="compItem2" name="compItem2"  value="${compensationView.compItem2}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
+    </td>
+    <th scope="row">Compensation Item</th>
+    <td colspan="3">
+    <input type="text" title="" id="compItem3" name="compItem3"  value="${compensationView.compItem3}" readonly="readonly" class="readonly " style="width: 157px; "/>
+    </td> 
+</tr>
+ 
+</tbody>
+</table><!-- table end -->
     
+
   
 </form>
+
+
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->

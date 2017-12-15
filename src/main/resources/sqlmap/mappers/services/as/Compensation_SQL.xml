@@ -4,194 +4,201 @@
 
 
  <select id="selCompensationList" parameterType="Map" resultType="egovMap">
-		WITH  as_Entry as (
-		          SELECT   1 tKy,
-		                   A.AS_ID,
-		                   A.AS_NO,
-		                   A.AS_MEM_ID,
-		                   A.AS_STUS_ID,
-		                   B.AS_SO_ID,
-		                   B.AS_RESULT_NO,
-		                   B.AS_ENTRY_ID,
-		                   B.AS_CT_ID,
-		                   B.AS_BRNCH_ID,
-		                   F.CODE,
-		                   E.CODE AS AS_DF_DESC,
-		                   G.STK_CODE,
-		                   G.STK_DESC,
-		                   H.MEM_CODE,
-		                   C.SALES_ORD_NO,
-		                   C.SALES_ORD_ID,
-		                   C.CUST_ID,
-		                   DECODE (A.AS_STUS_ID,  '1',    'ACT', '4', 'COM','21','FAI','10','CAN')  AS AS_STUS,
-		                   A.REF_REQST
-		            FROM   SVC0001D A,
-		                   SVC0004D B,
-		                   SAL0001D C,
-		                   SAL0002D D,
-		                   SYS0026M G,
-		                   SYS0032M E,
-		                   SYS0005M F,
-		                   ORG0001D H
-		           WHERE       1 = 1
-		                   AND A.AS_ID = B.AS_ENTRY_ID
-		                   AND A.AS_SO_ID = C.SALES_ORD_ID
-		                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-		                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-		                   AND D.ITM_STK_ID = G.STK_ID
-		                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-		                   AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
-		                   AND B.AS_CT_ID = H.MEM_ID
-		                   AND B.AS_SLUTN_RESN_ID = '454'
-		) ,  
-		in_Entry as(
-		         SELECT    1 tKy, 
-			                   A.AS_ID,
-			                   A.AS_NO,
-			                   A.AS_MEM_ID,
-			                   A.AS_STUS_ID,
-			                   B.AS_SO_ID,
-			                   B.AS_RESULT_NO,
-			                   B.AS_RESULT_ID,
-			                   B.AS_ENTRY_ID,
-			                   B.AS_CT_ID,
-			                   B.AS_BRNCH_ID,
-			                   B.IN_HUSE_REPAIR_PROMIS_DT,
-			                   B.APPNT_DT,
-			                   F.CODE,
-			                   E.CODE AS AS_DF_DESC,
-			                   G.STK_CODE,
-			                   G.STK_DESC,
-			                   H.MEM_CODE,
-			                   A.AS_CRT_DT,
-			                   CASE 
-			                        WHEN ( B.AS_RESULT_STUS_ID  ='4' ) THEN  TO_CHAR( B.AS_RESULT_UPD_DT,'dd/mm/yyyy')
-			                   ELSE '-'
-			                   END AS AS_COM_DT  ,
-			                   DECODE (A.AS_STUS_ID, '1', 'ACT', '4', 'COM',  '21', 'FAI', '10',   'CAN')   AS IN_AS_STUS,
-			                   A.REF_REQST
-			            FROM   SVC0001D A,
-			                   SVC0004D B,
-			                   SAL0001D C,
-			                   SAL0002D D,
-			                   SYS0026M G,
-			                   SYS0032M E,
-			                   SYS0005M F,
-			                   ORG0001D H
-			           WHERE  A.AS_ID = B.AS_ENTRY_ID
-			                   AND A.AS_SO_ID = C.SALES_ORD_ID
-			                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-			                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-			                   AND D.ITM_STK_ID = G.STK_ID
-			                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-			                   AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
-			                   AND B.AS_CT_ID = H.MEM_ID
-			                   AND A.AS_TYPE_ID = '2713'
-			),
-			on_Entry as(
-					           SELECT    1 tKy,
-		                                     A.AS_NO,
-		                                     (SELECT   STK_DESC       FROM   SYS0026M X      WHERE   X.STK_CODE = B.IN_HUSE_REPAIR_PRODUCT_CODE)  STK_DESC,
-							                 B.IN_HUSE_REPAIR_SERIAL_NO,
-							                 DECODE (A.AS_STUS_ID,  '1',  'ACT','4','COM', '21','FAI', '10',  'CAN')  AS AS_STUS,
-							                 A.REF_REQST
-		                        FROM   SVC0001D A, SVC0004D B
-				            WHERE   1 = 1 
-				              AND A.AS_ID = B.AS_ENTRY_ID
-				              AND  REF_REQST IN ( 
-										                     SELECT  AS_RESULT_ID 
-										                        FROM  SVC0001D  A, SVC0004D  B  
-										                     WHERE   A.AS_ID =B.AS_ENTRY_ID   
-										                        AND  REF_REQST IN ( 
-										                                             SELECT 
-										                                                    A.AS_ID
-										                                             FROM   SVC0001D A,
-										                                                    SVC0004D B,
-										                                                    SAL0001D C,
-										                                                    SAL0002D D,
-										                                                    SYS0026M G,
-										                                                    SYS0032M E,
-										                                                    SYS0005M F,
-										                                                    ORG0001D H
-										                                            WHERE       1 = 1
-										                                                    AND A.AS_ID = B.AS_ENTRY_ID
-										                                                    AND A.AS_SO_ID = C.SALES_ORD_ID
-										                                                    AND C.SALES_ORD_ID = D.SALES_ORD_ID
-										                                                    AND C.SALES_ORD_ID = D.SALES_ORD_ID
-										                                                    AND D.ITM_STK_ID = G.STK_ID
-										                                                    AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-										                                                    AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
-										                                                    AND B.AS_CT_ID = H.MEM_ID
-										                                                    AND B.AS_SLUTN_RESN_ID  IN('454' ,'452')
-										                                                 
-										                                                  <if test="ordNo != null and ordNo  != '' " >    
-																			                     AND  C.SALES_ORD_NO = #{ordNo}
-																			               </if>
-																			                 
-																			              <if test="asNo != null and asNo  != '' " >    
-																			                       AND  A.AS_NO = #{asNo}
-																			               </if>   
-										                                          )
-										                    )  
-			) 
-			SELECT 
-			         as_Entry.AS_ID,
-			         as_Entry.AS_NO,
-			         as_Entry.CUST_ID,
-			         as_Entry.AS_MEM_ID,
-			         as_Entry.AS_STUS_ID,
-			         as_Entry.AS_STUS,
-			         as_Entry.AS_SO_ID,
-			         as_Entry.AS_RESULT_NO,
-			         as_Entry.AS_ENTRY_ID,
-			         as_Entry.AS_CT_ID,
-			         as_Entry.MEM_CODE,
-			         as_Entry.AS_BRNCH_ID,
-			         as_Entry.CODE AS_BRNCH_DESC,
-			         as_Entry.AS_DF_DESC,
-			         as_Entry.STK_CODE,
-			         as_Entry.STK_DESC,
-			         as_Entry.SALES_ORD_NO,
-			         as_Entry.SALES_ORD_ID,
-			         in_Entry.AS_ID AS IN_AS_ID,
-			         in_Entry.AS_NO AS IN_AS_NO,
-			         in_Entry.AS_MEM_ID AS IN_AS_MEM_ID,
-			         in_Entry.AS_STUS_ID AS IN_AS_STUS_ID,
-			         in_Entry.AS_SO_ID AS IN_AS_SO_ID,
-			         in_Entry.AS_RESULT_NO AS IN_AS_RESULT_NO,
-			         in_Entry.AS_RESULT_ID AS IN_AS_RESULT_ID,
-			         in_Entry.AS_ENTRY_ID AS IN_AS_ENTRY_ID,
-			         in_Entry.AS_CT_ID AS IN_AS_CT_ID,
-			         in_Entry.MEM_CODE AS IN_MEM_CODE,
-			         in_Entry.AS_BRNCH_ID AS IN_AS_BRNCH_ID,
-			         in_Entry.CODE AS IN_AS_BRNCH_DESC,
-			         in_Entry.AS_DF_DESC AS IN_AS_DF_DESC,
-			         in_Entry.STK_CODE AS IN_STK_CODE,
-			         in_Entry.STK_DESC AS IN_STK_DESC,
-			         in_Entry.IN_HUSE_REPAIR_PROMIS_DT,
-			         in_Entry.APPNT_DT AS IN_APPNT_DT,
-			         in_Entry.AS_CRT_DT AS IN_AS_CRT_DT,
-			         in_Entry.AS_COM_DT AS IN_AS_COM_DT,
-			         in_Entry.IN_AS_STUS, 
-			         on_Entry.AS_NO      AS ON_AS_NO,
-			         on_Entry.STK_DESC   AS ON_STK_DESC,
-			         on_Entry.IN_HUSE_REPAIR_SERIAL_NO   AS ON_IN_HUSE_REPAIR_SERIAL_NO,
-			         on_Entry.AS_STUS   AS  ON_AS_STUS
-			FROM  as_Entry  ,in_Entry  ,on_Entry
-			WHERE 1=1  
-		        AND as_Entry.tKy = in_Entry.tKy(+)
-                AND in_Entry.tKy = on_Entry.tKy(+)
-                AND as_Entry.AS_ID  = in_Entry.REF_REQST(+)
-                AND in_Entry.AS_RESULT_ID = on_Entry.REF_REQST(+)
-			 
-			 <if test="ordNo != null and ordNo  != '' " >    
-			         AND  as_Entry.SALES_ORD_NO = #{ordNo}
-             </if>
-                 
-             <if test="asNo != null and asNo  != '' " >    
-                     AND  as_Entry.AS_NO = #{asNo}
+			<!-- SELECT COMP_NO /* COMPENSATION CASE NO */, 
+				       CUST_ID /* CUSTOMER ID */,
+				       SVC.SALES_ORD_NO /* SALES ORDER */, 
+				       AS_NO /* AS NUMBER */,
+				       AS_REQSTER_TYPE_ID /* COMPENSATION REQUEST ROUTE */,
+				       STUS_CODE_ID /* STATUS */, TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT /* COMPLETE DATE */,
+				       MAIN_DEPT /* IN CHARGE DEPARTMENT */, CODE /* DSC CODE */,
+				       COMP_TOT_AMT /* COMPENSATION AMOUNT */, TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT/* ISSUED DATE */,
+				       AS_DEFECT_TYPE_ID /* DEFECT TYPE */,
+				       AS_MALFUNC_RESN_ID /* DEFECT REASON */,
+				       ASR_ITM_PART_ID /* DEFECT PARTS */,
+				       ASR_ITM_PART_DESC /* DEFECT DESCRIPTION */,
+				       AS_SLUTN_RESN_ID /* SOLUTION CODE */,
+				       COMP_ITEM_1 /* COMPENSATION ITEM 1 */,
+				       COMP_ITEM_2 /* COMPENSATION ITEM 2 */,
+				       COMP_ITEM_3 /* COMPENSATION ITEM 3 */
+				       ,ORD_INFO.STK_DESC
+				       ,ORD_INFO.INSTALL_DT
+				       ,ORD_INFO.SERIAL_NO
+				  FROM SVC0053M SVC,
+				  (SELECT E.STK_DESC, C.INSTALL_DT, C.SERIAL_NO, A.SALES_ORD_NO
+				  FROM SAL0001D A,
+				       SAL0046D B,
+				       SAL0047D C,
+				       SAL0002D D,
+				       SYS0026M E,
+				       SVC0053M F
+				 WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+				   AND A.SALES_ORD_ID = D.SALES_ORD_ID
+				   AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+				   AND D.ITM_STK_ID = E.STK_ID
+				   AND F.SALES_ORD_NO = A.SALES_ORD_NO(+)
+				   AND C.SERIAL_NO IS NOT NULL
+				   AND ROWNUM = '1'
+				) ORD_INFO
+				 WHERE 1 = 1 
+				 AND SVC.SALES_ORD_NO = ORD_INFO.SALES_ORD_NO(+) -->
+			SELECT A.CUST_ID,                                                    /* CUSTOMER CODE    */
+			       A.SALES_ORD_NO,                                               /* ORDER NUMBER     */
+			       A.AS_NO,                                                           /* AS ORDER NUMBER */
+			       TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT,        /* COMPLETE DATA  */
+			       TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT,        /* APPLICATION DATE */
+			       A.CODE,                                                             /* DSC BRANCH */
+			       COMP_TOT_AMT, 
+			       B.NAME, 
+			       A.COMP_NO,
+			       C.STK_DESC
+			  FROM SVC0053M A, SYS0038M B,
+			   (SELECT E.STK_DESC, C.INSTALL_DT, C.SERIAL_NO, A.SALES_ORD_NO
+                  FROM SAL0001D A,
+                       SAL0046D B,
+                       SAL0047D C,
+                       SAL0002D D,
+                       SYS0026M E,
+                       SVC0053M F
+                 WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+                   AND A.SALES_ORD_ID = D.SALES_ORD_ID
+                   AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+                   AND D.ITM_STK_ID = E.STK_ID
+                   AND F.SALES_ORD_NO = A.SALES_ORD_NO(+)
+                   AND C.SERIAL_NO IS NOT NULL
+                   AND ROWNUM = '1'
+                ) C
+			 WHERE A.STUS_CODE_ID = B.STUS_CODE_ID
+			 AND A.SALES_ORD_NO = C.SALES_ORD_NO(+)
+             <if test="customerCode != null and customerCode  != '' " >    
+                     AND A.CUST_ID =  #{customerCode}
+             </if>			 
+             <if test="orderNum != null and orderNum  != '' " >    
+                     AND A.SALES_ORD_NO =  #{orderNum}
+             </if>        
+             <if test="ordNo != null and ordNo  != '' " >    
+                     AND A.AS_NO =  #{ordNo}
+             </if>      
+             <if test="dscBranch != null and dscBranch  != '' " >    
+                     AND A.CODE =  #{dscBranch}
+             </if>                            
+             <if test="applicationStrDate != null and applicationStrDate  != '' " >    
+                     AND A.ISSUE_DT >=  #{applicationStrDate}
              </if>   
-             
+             <if test="applicationEndDate != null and applicationEndDate  != '' " >    
+                     AND A.ISSUE_DT <![CDATA[<]]>  #{applicationEndDate}
+             </if>   
+             <if test="status != null and status  != '' " >    
+                     AND A.STUS_CODE_ID = #{status}
+             </if>   
  </select>
               
+              
+ <select id="selectSalesOrdNoInfo" parameterType="Map" resultType="egovMap">
+			SELECT E.STK_DESC, TO_CHAR(C.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT, C.SERIAL_NO
+			  FROM SAL0001D A,
+			       SAL0046D B,
+			       SAL0047D C,
+			       SAL0002D D,
+			       SYS0026M E
+			 WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+			   AND A.SALES_ORD_ID = D.SALES_ORD_ID
+			   AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+			   AND D.ITM_STK_ID = E.STK_ID
+			   AND A.SALES_ORD_NO = #{salesOrdNo}
+			   AND C.SERIAL_NO IS NOT NULL
+			   AND ROWNUM = '1'
+
+             
+ </select>              
+              
+    <select id ="selectCompenSationView" parameterType="Map" resultType="egovMap">
+			SELECT
+			         COMP_NO                         /*  Compensation Case No        */    
+			        ,CUST_ID                         /*  Customer ID                 */    
+			        ,svc.SALES_ORD_NO                /*  Sales Order                 */    
+			        ,AS_NO                           /*  AS Number                   */                
+			        ,AS_REQSTER_TYPE_ID      /*  Compensation Request Route  */    
+			        ,STUS_CODE_ID                /*  Status                      */    
+			        ,TO_CHAR(COMP_DT, 'DD/MM/YYYY') COMP_DT                         /*  Complete Date               */    
+			        ,MAIN_DEPT              /*  In Charge Department        */    
+			        ,CODE                   /*  DSC Code                    */    
+			        ,COMP_TOT_AMT           /*  Compensation Amount         */    
+			        ,TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT               /*  Issued Date                 */    
+			        ,AS_DEFECT_TYPE_ID      /*  Defect Type                 */    
+			        ,AS_MALFUNC_RESN_ID     /*  Defect Reason               */    
+			        ,ASR_ITM_PART_ID        /*  Defect  Parts               */    
+			        ,ASR_ITM_PART_DESC      /*  Defect  Description         */  
+			        ,AS_SLUTN_RESN_ID       /*  Solution Code               */  
+			        ,COMP_ITEM_1            /*  Compensation Item 1         */  
+			        ,COMP_ITEM_2            /*  Compensation Item 2         */  
+			        ,COMP_ITEM_3            /*  Compensation Item 3         */
+			        ,ORD_INFO.STK_DESC
+                    ,ORD_INFO.INSTALL_DT
+                    ,ORD_INFO.SERIAL_NO  
+			 FROM SVC0053M svc,
+					    (SELECT E.STK_DESC, C.INSTALL_DT, C.SERIAL_NO, A.SALES_ORD_NO
+						  FROM SAL0001D A,
+						       SAL0046D B,
+						       SAL0047D C,
+						       SAL0002D D,
+						       SYS0026M E,
+						       SVC0053M F
+						 WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+						   AND A.SALES_ORD_ID = D.SALES_ORD_ID
+						   AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+						   AND D.ITM_STK_ID = E.STK_ID
+						   AND F.SALES_ORD_NO = A.SALES_ORD_NO(+)
+						   AND C.SERIAL_NO IS NOT NULL
+						   AND ROWNUM = '1'
+						) ORD_INFO
+			 WHERE 1 = 1 AND comp_no = #{compNo}    
+			 and svc.sales_ord_no = ord_info.SALES_ORD_NO(+)
+    
+    </select>              
+    
+    
+    <insert id="insertCompensation" parameterType="Map" >
+    INSERT INTO SVC0053M
+				(
+				COMP_NO, CUST_ID, SALES_ORD_NO, AS_NO, AS_REQSTER_TYPE_ID, 
+				STUS_CODE_ID, COMP_DT, MAIN_DEPT, CODE, COMP_TOT_AMT, 
+				ISSUE_DT, AS_DEFECT_TYPE_ID, AS_MALFUNC_RESN_ID, ASR_ITM_PART_ID, ASR_ITM_PART_DESC, 
+				AS_SLUTN_RESN_ID, COMP_ITEM_1, COMP_ITEM_2, COMP_ITEM_3, ATTACH_FILE, 
+				CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT
+				)
+		values
+				(
+				SVC0053M_COMP_NO_SEQ.NEXTVAL , #{custId}, #{salesOrdNo}, #{asNo}, #{asReqsterTypeId}, 
+				#{stusCodeId}, to_date(#{compDt}, 'ddmmyyyy'), #{mainDept}, #{code}, #{compTotAmt}, 
+				to_date(#{issueDt}, 'ddmmyyyy'), #{asDefectTypeId}, #{asMalfuncResnId}, #{asrItmPartId}, #{asrItmPartDesc}, 
+				#{asSlutnResnId}, #{compItem1}, #{compItem2}, #{compItem3}, #{hasAttach},
+				#{updator}, SYSDATE, #{updator}, SYSDATE
+				)
+    </insert>
+    
+    <insert id="updateCompensation" parameterType="Map" >
+    update SVC0053M
+         set  CUST_ID                     = #{custId}
+              ,SALES_ORD_NO            = #{salesOrdNo}
+              ,AS_NO                        = #{asNo}
+              ,AS_REQSTER_TYPE_ID   = #{asReqsterTypeId}
+              ,COMP_DT                    = to_date(#{compDt}, 'yyyymmdd')
+              ,MAIN_DEPT                  = #{mainDept}
+              ,CODE                          = #{code}
+              ,COMP_TOT_AMT           = #{compTotAmt}
+              ,ISSUE_DT                    = to_date(#{issueDt}, 'yyyymmdd')
+              ,AS_DEFECT_TYPE_ID     = #{asDefectTypeId}
+              ,AS_MALFUNC_RESN_ID   = #{asMalfuncResnId}
+              ,ASR_ITM_PART_ID         = #{asrItmPartId}
+              ,ASR_ITM_PART_DESC     = #{asrItmPartDesc}
+              ,AS_SLUTN_RESN_ID       = #{asSlutnResnId}
+              ,COMP_ITEM_1               = #{compItem1}
+              ,COMP_ITEM_2               = #{compItem2}
+              ,COMP_ITEM_3               = #{compItem3}
+              ,ATTACH_FILE                = #{hasAttach}
+              ,UPD_USER_ID                = #{updator}
+              ,UPD_DT                        = SYSDATE
+     where COMP_NO =  #{compNo}    
+    </insert>    
+    
 </mapper>
