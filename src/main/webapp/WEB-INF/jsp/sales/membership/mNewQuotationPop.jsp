@@ -366,7 +366,7 @@ function setPackgCombo(){
 function  fn_cTPackage_onchangeEvt(){
 	
     $("#cYear").removeAttr("disabled");
-    $("#cYear").val("");
+    $("#cYear").val("12");
     $("#txtPackagePrice").html("");  
     $("#txtFilterCharge").html("");    
     $('#cPromotionpac option').remove();
@@ -376,7 +376,7 @@ function  fn_cTPackage_onchangeEvt(){
     $("#cPromoCombox").attr("checked",false);
 
 
-    
+    fn_cYear_onChageEvent();
     
 }
  
@@ -1711,17 +1711,18 @@ function createAUIGridOList() {
 		    <th scope="row">Subscription Year</th>
 		    <td width='80px'>
 		    <select  id="cYear"   name= "cYear" style="width:80px"  disabled="disabled"  onChange="fn_cYear_onChageEvent()" >
-		        <option value="" >Choose One</option>
 		        <option value="12" >1</option>
+		        <option value="24" >2</option>
+		        <option value="36" >3</option>
+		        <option value="48" >4</option>
 		    </select>
 		    </td>
 		    
 		      <th scope="row">Employee </th>
 	            <td>
 	            <select  style="width:80px"  id="cEmplo"   onChange="fn_cYear_onChageEvent()">
-	                 <option value="">Choose One</option>
 	                <option value="1">Y</option>
-	                <option value="0">N</option>
+	                <option selected="selected" value="0">N</option>
 	            </select>
 	            </td>
 	            

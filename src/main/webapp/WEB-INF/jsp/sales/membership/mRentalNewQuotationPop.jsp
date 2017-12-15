@@ -1521,9 +1521,8 @@ function fn_cTPackageChanged(){
              <th scope="row">Employee </th>
                 <td>
                 <select  style="width:80px"  id="cEmplo"    onchange="fn_cTPackageChanged()">
-                    <option value="">Choose One</option>
                     <option value="1">Y</option>
-                    <option value="0">N</option>
+                    <option selected="selected" value="0">N</option>
                 </select>
                 </td>
                 
