@@ -137,21 +137,21 @@ function f_multiCombo(){
 function createAUIGrid() {
         
         var columnLayout = [
-                            { dataField : "srvCntrctRefNo", headerText  : "Membership No.",    width : 100,  editable : false},
-                            { dataField : "salesOrdNo", headerText  : "Order No.",width : 100,  editable: false },
-                            { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : false},
-                            { dataField : "cntrctRentalStus", headerText  : "Rent Status",  width          : 100, editable       : false },
-                            { dataField : "srvCntrctNetMonth",headerText  : "Net Mth",  width          : 100,   editable       : false},
-                            { dataField : "srvCntrctNetYear",         headerText  : "Net Year",   width          : 100,     editable       : false },
-                            { dataField : "srvPrdStartDt",       headerText  : "Start Date",  width          : 100, editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
-                            { dataField : "srvCntrctPacDesc",     headerText  : "Package",  width          : 200,    editable       : false},
-                            { dataField : "name",      headerText  : "Customer Name",   width          : 200,    editable       : false },
-                            { dataField : "srvCntrctCrtDt",     headerText  : "Created",    width          : 100,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
+                            { dataField : "srvCntrctRefNo", headerText  : "Membership<br/>No.",    width : 100,  editable : false},
+                            { dataField : "salesOrdNo", headerText  : "Order No.",width : 80,  editable: false },
+                            { dataField : "code",   headerText  : "Status",  width          : 60,   editable       : false},
+                            { dataField : "cntrctRentalStus", headerText  : "Rent<br/>Status",  width          : 60, editable       : false },
+                            { dataField : "srvCntrctNetMonth",headerText  : "Net Mth",  width          : 65,   editable       : false},
+                            { dataField : "srvCntrctNetYear",         headerText  : "Net Year",   width          : 70,     editable       : false },
+                            { dataField : "srvPrdStartDt",       headerText  : "Start Date",  width          : 90, editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
+                            { dataField : "srvCntrctPacDesc",     headerText  : "Package",  width          : 130,    editable       : false },
+                            { dataField : "name",      headerText  : "Customer Name",   width          : 150,    editable       : false },
+                            { dataField : "srvCntrctCrtDt",     headerText  : "Created",    width          : 90,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
                             { dataField : "userName",     headerText  : "Creator",    width : 100,       editable  : false}
                                
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  headerHeight        : 30, showRowNumColumn : true};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
     }
@@ -335,12 +335,9 @@ function fn_goSVMDetails(){
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-        <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+        <div id="list_grid_wrap" style="width:100%; height:360px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-
-
-</div><!-- wrap end -->
