@@ -89,218 +89,212 @@
 								msg = "Do you want to run the batch?"
 							}
 									
-							Common.confirmById(msg,function(){
-								
-								var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
-	                            var formList = $("#searchForm").serializeArray();       //폼 데이터
-	                            
-	                            $("#commCalConfirm").hide();
-	                            //param data array
-	                            var data = {};
-	                            data.all = gridList;
-	                            data.form = formList;
-	                           
-	                           Common.ajaxSync("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	                            	 
-	                                $("#search").trigger("click");
-	                                $("#commCalConfirm").remove();
-	                            }, function(jqXHR, textStatus, errorThrown) {
-	                            
-	                                    console.log("실패하였습니다.");
-	                                    console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);    
-	                                
-	                                    if(jqXHR.status==503){
-	                                        Common.alert("Running... Please wait about 20 minutes ");
-	                                        $("#search").trigger("click");
-	                                     }
-	                                    $("#commCalConfirm").remove();
-	                            });
-						   },"","commCalConfirm");//batch function call
+					//		Common.confirmById(msg,function(){						
+	            var gridList = AUIGrid.getGridData(myGridID_CAL); //그리드 데이터
+							var formList = $("#searchForm").serializeArray(); //폼 데이터
+
+							//param data array
+							var data = {};
+							data.all = gridList;
+							data.form = formList;
+
+							Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
+								$("#search").trigger("click");
+							}, function(jqXHR, textStatus, errorThrown) {
+								console.log("실패하였습니다.");
+								console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+								if (jqXHR.status == 503) {
+									Common.alert("Running... Please wait about 20 minutes ");
+									$("#search").trigger("click");
+								}
+							});
+							//		   },"","commCalConfirm");//batch function call
 						});
-						
-					}else{
-						Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
+
+					} else {
+						Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
 					}
 				});//runningPrdCheck
-				
+
 			}
 		});
-		
-		$("#actionTypeS").click(function(){
+
+		$("#actionTypeS").click(function() {
 			$("#search").trigger("click");
 		});
-	    $("#actionTypeA").click(function(){
-	    	$("#search").trigger("click");
-        });
-	    
-	    
-		
+		$("#actionTypeA").click(function() {
+			$("#search").trigger("click");
+		});
+
 	});//Ready
-	
 
 	//event management
 	function auiCellEditingHandler(event) {
 	}
 	// 행 추가 이벤트 핸들러
-    function auiAddRowHandler(event) {
+	function auiAddRowHandler(event) {
 	}
-    // 행 삭제 이벤트 핸들러
-    function auiRemoveRowHandler(event) {
-    }
+	// 행 삭제 이벤트 핸들러
+	function auiRemoveRowHandler(event) {
+	}
 
 	// 아이템 AUIGrid 칼럼 설정
 	function createAUIGrid() {
-		var columnLayout = [ { 
+		var columnLayout = [ {
 			dataField : "codeName",
-	        headerText : "Procedure Name",
-	        style : "my-column",
-	        editable : false,
-	        width : 200
+			headerText : "Procedure Name",
+			style : "my-column",
+			editable : false,
+			width : 200
 		}, {
 			dataField : "cdds",
-	        headerText : "Description",
-	        style : "my-column",
-	        editable : false
+			headerText : "Description",
+			style : "my-column",
+			editable : false
 		}, {
-            dataField : "calState",
-            headerText : "result",
-            style : "my-column",
-            editable : false,
-            visible : false
-        },{
-            dataField : "statenm",
-            headerText : "result",
-            style : "my-column",
-            editable : false,
-            width : 100
-        },{
-	        dataField : "calStartTime",
-	        headerText : "date",
-	        style : "my-column",
-	        editable : false,
-	        width : 160
-	    },{
-	        dataField : "DATA",
-	        headerText : "Data Search",
-	        style : "my-column",
-	        renderer : {
-	            type : "ButtonRenderer",
-	            labelText : "SEARCH",
-	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
-	            	$("#code").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "code"));
-	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
-	                $("#prdDec").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cdds"));
-	                Common.popupDiv("/commission/calculation/calCommDataPop.do", $("#searchForm").serializeJSON());
-	            }
-	        },
-	        editable : false,
-	        width : 105
-	    },{
-	        dataField : "LOGE",
-	        headerText : "Log Search",
-	        style : "my-column",
-	        renderer : {
-	            type : "ButtonRenderer",
-	            labelText : "SEARCH",
-	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
-	            	Common.popupDiv("/commission/calculation/calCommLogPop.do", $("#searchForm").serializeJSON());
-	            }
-	        },
-	        editable : false,
-	        width : 105
-	    },{
+			dataField : "calState",
+			headerText : "result",
+			style : "my-column",
+			editable : false,
+			visible : false
+		}, {
+			dataField : "statenm",
+			headerText : "result",
+			style : "my-column",
+			editable : false,
+			width : 100
+		}, {
+			dataField : "calStartTime",
+			headerText : "date",
+			style : "my-column",
+			editable : false,
+			width : 160
+		}, {
+			dataField : "DATA",
+			headerText : "Data Search",
+			style : "my-column",
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "SEARCH",
+				onclick : function(rowIndex, columnIndex, value, item) {
+					$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
+					$("#code").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "code"));
+					$("#prdNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
+					$("#prdDec").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cdds"));
+					Common.popupDiv("/commission/calculation/calCommDataPop.do", $("#searchForm").serializeJSON());
+				}
+			},
+			editable : false,
+			width : 105
+		}, {
+			dataField : "LOGE",
+			headerText : "Log Search",
+			style : "my-column",
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "SEARCH",
+				onclick : function(rowIndex, columnIndex, value, item) {
+					$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
+					Common.popupDiv("/commission/calculation/calCommLogPop.do", $("#searchForm").serializeJSON());
+				}
+			},
+			editable : false,
+			width : 105
+		}, {
 			dataField : "exBtn",
-	        headerText : "Execute",
-	        style : "my-column",
-	        renderer : {
-	            type : "ButtonRenderer",
-	            labelText : "EXECUTE",
-	            onclick : function(rowIndex, columnIndex, value, item) {
-	            	$("#procedureNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
-	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
-	            	$("#batchYn").val("N");
-	            	var  myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
-	            	var failCnt = "0";
-	            	var state;
-	            	for(var i=0;i<myGridID_CALLength;i++){
-	            		state= AUIGrid.getCellValue(myGridID_CAL, i, "calState");
-	            		if(state == "9"){
-	            			failCnt = i;
-	            		}
-	            	}
-	            	for(var i=0;i<rowIndex;i++){
-	            		state= AUIGrid.getCellValue(myGridID_CAL, i, "calState");
-	            		if(state != "0"){
-	            			Common.alert("<spring:message code='commission.alert.calFirstExecute'/>");
-	            			return false;
-	            		}
-	            	}
-	            	
-	            	if(Number(year) < Number($("#searchDt").val().substr(3,7))){
-	            		Common.alert("<spring:message code='commission.alert.currentDate'/>");
-                        return false;
-                    }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0,2))){
-                    	Common.alert("<spring:message code='commission.alert.currentDate'/>");
-                        return false;
-                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState"))=="8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState"))=="9" ){
-	            		Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
-	            		return false;
-	            	}else {
-	            		
-	            		var data={"actionType":$("input[type=radio][name=actionType]:checked").val(),"ItemGrCd":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cd") , "prdNm":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName")};
-	            		Common.ajax("GET", "/commission/calculation/runningPrdCheck",data, function(result) {
-	            			
-	            			if(result.data[0] == null){
+			headerText : "Execute",
+			style : "my-column",
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "EXECUTE",
+				onclick : function(rowIndex, columnIndex, value, item) {
+					$("#procedureNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
+					$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
+					$("#batchYn").val("N");
+					var myGridID_CALLength = AUIGrid.getGridData(myGridID_CAL).length;
+					var failCnt = "0";
+					var state;
+					for (var i = 0; i < myGridID_CALLength; i++) {
+						state = AUIGrid.getCellValue(myGridID_CAL, i, "calState");
+						if (state == "9") {
+							failCnt = i;
+						}
+					}
+					for (var i = 0; i < rowIndex; i++) {
+						state = AUIGrid.getCellValue(myGridID_CAL, i, "calState");
+						if (state != "0") {
+							Common.alert("<spring:message code='commission.alert.calFirstExecute'/>");
+							return false;
+						}
+					}
 
-				            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
-				            		 if(rowIndex == myGridID_CALLength-1){
-				            			 Common.ajax("GET", "/commission/calculation/prdBatchSuccessHistory", $("#searchForm").serialize());
-				            		 }
-				            		$("#search").trigger("click");
-				            	}, function(jqXHR, textStatus, errorThrown) {
-			                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
-			                 
-			                          if(jqXHR.status==503){
-			                        	   Common.alert("Running... Please wait about 20 minutes ");
-			                        	   $("#search").trigger("click");
-			                          }
-				                }); //callPrd
-				                
-	            			}else{
-	            				Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
-	            			}
-	            		});//runningPrdCheck
-	            		
-	            	}
-	            }
-	        },
-	        editable : false,
-	        width : 105
+					if (Number(year) < Number($("#searchDt").val().substr(3, 7))) {
+						Common.alert("<spring:message code='commission.alert.currentDate'/>");
+						return false;
+					} else if (Number(year) == Number($("#searchDt").val().substr(3, 7)) && Number(month) < Number($("#searchDt").val().substr(0, 2))) {
+						Common.alert("<spring:message code='commission.alert.currentDate'/>");
+						return false;
+					} else if ((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState")) == "8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState")) == "9") {
+						Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
+						return false;
+					} else {
+
+						var data = {
+							"actionType" : $("input[type=radio][name=actionType]:checked").val(),
+							"ItemGrCd" : AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cd"),
+							"prdNm" : AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName")
+						};
+						Common.ajax("GET", "/commission/calculation/runningPrdCheck", data, function(result) {
+
+							if (result.data[0] == null) {
+
+								Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
+									if (rowIndex == myGridID_CALLength - 1) {
+										Common.ajax("GET", "/commission/calculation/prdBatchSuccessHistory", $("#searchForm").serialize());
+									}
+									$("#search").trigger("click");
+								}, function(jqXHR, textStatus, errorThrown) {
+									console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+									if (jqXHR.status == 503) {
+										Common.alert("Running... Please wait about 20 minutes ");
+										$("#search").trigger("click");
+									}
+								}); //callPrd
+
+							} else {
+								Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
+							}
+						});//runningPrdCheck
+
+					}
+				}
+			},
+			editable : false,
+			width : 105
 		}, {
 			dataField : "codeId",
-	        headerText : "CODE ID",
-	        visible : false
+			headerText : "CODE ID",
+			visible : false
 		}, {
-            dataField : "code",
-            headerText : "CODE",
-            visible : false
-        }, {
-            dataField : "cd",
-            visible : false
-        }];
-		 // 그리드 속성 설정
-        var gridPros = {
-            usePaging : true,                   // 페이징 사용       
-            pageRowCount : 20,               // 한 화면에 출력되는 행 개수 20(기본값:20)
-            skipReadonlyColumns : true,    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            wrapSelectionMove : true,      // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn : true,    // 줄번호 칼럼 렌더러 출력
-            selectionMode : "singleRow"
-        };
-        myGridID_CAL = AUIGrid.create("#grid_wrap", columnLayout,gridPros);
+			dataField : "code",
+			headerText : "CODE",
+			visible : false
+		}, {
+			dataField : "cd",
+			visible : false
+		} ];
+		// 그리드 속성 설정
+		var gridPros = {
+			usePaging : true, // 페이징 사용       
+			pageRowCount : 20, // 한 화면에 출력되는 행 개수 20(기본값:20)
+			skipReadonlyColumns : true, // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+			wrapSelectionMove : true, // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+			showRowNumColumn : true, // 줄번호 칼럼 렌더러 출력
+			selectionMode : "singleRow"
+		};
+		myGridID_CAL = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 	}
-    
 </script>
 
 
