@@ -305,6 +305,12 @@
            console.log("deptId fin: " + deptIdCd);        
            console.log("deptId fin: " + cmbMemberTp);                   
            
+           if(deptIdCd== 0){
+                deptIdCd="";
+           }
+           
+           alert("deptIdCd:"+deptIdCd);
+           
            if($("#cmbGroupId").val() == "" && $("#cmbOrganizationId").val() != ""){
                  parentIdCd ="0";
            }
