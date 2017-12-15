@@ -282,7 +282,7 @@ var paramdata2 = {endlikeValue:$("#locationType").val()};
 // //btn clickevent
 $(function(){
     $('#search').click(function() {
-        if (searchReqType != 'OH03'){
+        if (searchReqType != 'OG53'){
         
             if (f_validatation('search')){
     //          $("#slocation").val($("#tlocation").val());
@@ -296,8 +296,9 @@ $(function(){
     
     $('#insReqType').change(function() {
         searchReqType = $('#insReqType').val();
+        alert("searchReqType :  "+searchReqType);
         //alert("searchReqType :  "+searchReqType);
-        if (searchReqType == 'OH03'){
+        if (searchReqType == 'OG53'){
             $('#lirightBtn').hide();
             $('#reqadd').show();
             AUIGrid.setGridData(resGrid, []);
