@@ -88,30 +88,33 @@
 							}else{
 								msg = "Do you want to run the batch?"
 							}
-							
-							Common.confirm(msg,function(){
+									
+							Common.confirmById(msg,function(){
+								
 								var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
-						        var formList = $("#searchForm").serializeArray();       //폼 데이터
-						        
-						        //param data array
-						        var data = {};
-						        
-						        data.all = gridList;
-						        data.form = formList;
-						        
-						        Common.ajaxSync("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
-						            $("#search").trigger("click");
-						        }, function(jqXHR, textStatus, errorThrown) {
-						        
-						                console.log("실패하였습니다.");
-						                console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);    
-						            
-						                if(jqXHR.status==503){
-						                    Common.alert("Running... Please wait about 20 minutes ");
-						                    $("#search").trigger("click");
-						                 }
-						        });
-						   });//batch function call
+	                            var formList = $("#searchForm").serializeArray();       //폼 데이터
+	                            
+	                            $("#commCalConfirm").hide();
+	                            //param data array
+	                            var data = {};
+	                            data.all = gridList;
+	                            data.form = formList;
+	                            
+	                             Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	                            	 
+	                                $("#search").trigger("click");
+	                                $("##commCalConfirm").remove();
+	                            }, function(jqXHR, textStatus, errorThrown) {
+	                            
+	                                    console.log("실패하였습니다.");
+	                                    console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);    
+	                                
+	                                    if(jqXHR.status==503){
+	                                        Common.alert("Running... Please wait about 20 minutes ");
+	                                        $("#search").trigger("click");
+	                                     }
+	                                    $("##commCalConfirm").remove();
+	                            });								
+						   },"","#commCalConfirm");//batch function call
 						});
 						
 					}else{
@@ -128,6 +131,8 @@
 	    $("#actionTypeA").click(function(){
 	    	$("#search").trigger("click");
         });
+	    
+	    
 		
 	});//Ready
 	
