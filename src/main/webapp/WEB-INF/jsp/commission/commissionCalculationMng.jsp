@@ -99,8 +99,8 @@
 	                            var data = {};
 	                            data.all = gridList;
 	                            data.form = formList;
-	                            
-	                             Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	                            	 
+	                           
+	                           Common.ajaxSync("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	                            	 
 	                                $("#search").trigger("click");
 	                                $("#commCalConfirm").remove();
 	                            }, function(jqXHR, textStatus, errorThrown) {
@@ -113,7 +113,7 @@
 	                                        $("#search").trigger("click");
 	                                     }
 	                                    $("#commCalConfirm").remove();
-	                            });								
+	                            });
 						   },"","commCalConfirm");//batch function call
 						});
 						
