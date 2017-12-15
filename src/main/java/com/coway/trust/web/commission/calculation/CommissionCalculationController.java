@@ -623,15 +623,7 @@ public class CommissionCalculationController {
 		
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P01)){
 			popName = "calculationData0016T_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTB_P01)){
-			popName = "calculationData0018T_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTB_P02)){
-			popName = "calculationData0019T_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTB_P03)){
-			popName = "calculationData0020T_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTB_P04)){
-			popName = "calculationData0021T_Pop";
-		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTB_P05)){
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P03)){
 			popName = "calculationData0024T_Pop";
 		}
 		
@@ -1020,6 +1012,14 @@ public class CommissionCalculationController {
 			popName = "calculationData0068T_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P019)){
 			popName = "calculationData0069T_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P020)){
+			popName = "calculationData0018T_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P021)){
+			popName = "calculationData0019T_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P022)){
+			popName = "calculationData0020T_Pop";
+		}else if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P023)){
+			popName = "calculationData0021T_Pop";
 		}else{
 			return null;
 		}

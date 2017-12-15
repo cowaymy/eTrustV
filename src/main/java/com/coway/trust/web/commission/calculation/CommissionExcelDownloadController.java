@@ -679,7 +679,7 @@ public class CommissionExcelDownloadController {
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad69T(map, downloadHandler);
 			}
-			else if (codeNm.equals(CommissionConstants.COMIS_CTB_P01)) {
+			else if (codeNm.equals(CommissionConstants.COMIS_BSD_P020)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("instPersonCd", request.getParameter("instPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
@@ -691,7 +691,7 @@ public class CommissionExcelDownloadController {
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad18T(map, downloadHandler);
 
-			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P02)) {
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P021)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("bsPersonCd", request.getParameter("bsPersonCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
@@ -703,7 +703,7 @@ public class CommissionExcelDownloadController {
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad19T(map, downloadHandler);
 
-			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P03)) {
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P022)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("asEntryCd", request.getParameter("asEntryCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
@@ -715,7 +715,7 @@ public class CommissionExcelDownloadController {
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad20T(map, downloadHandler);
 
-			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P04)) {
+			} else if (codeNm.equals(CommissionConstants.COMIS_BSD_P023)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("retPCd", request.getParameter("retPCd"));
 				map.put("useYnCombo", request.getParameter("useYnCombo"));
@@ -727,7 +727,7 @@ public class CommissionExcelDownloadController {
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad21T(map, downloadHandler);
 
-			} else if (codeNm.equals(CommissionConstants.COMIS_CTB_P05)) {
+			} else if (codeNm.equals(CommissionConstants.COMIS_CTM_P03)) {
 				map.put("ordId", request.getParameter("ordId"));
 				map.put("emplyCd", request.getParameter("emplyCd"));
 

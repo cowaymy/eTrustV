@@ -87,12 +87,8 @@ public class CommissionConstants {
 	public static final String COMIS_CTR_P01 = "CTE-P01";					//
 	public static final String COMIS_CTL_P02 = "CTL-P02";					//
 	public static final String COMIS_CTM_P02 = "CTM-P02";					//
+	public static final String COMIS_CTM_P03 = "CTM-P03";					//
 	public static final String COMIS_CTR_P02 = "CTE-P02";					//
-	public static final String COMIS_CTB_P01 = "CTB-P01";					//
-	public static final String COMIS_CTB_P02 = "CTB-P02";					//
-	public static final String COMIS_CTB_P03 = "CTB-P03";					//
-	public static final String COMIS_CTB_P04 = "CTB-P04";					//
-	public static final String COMIS_CTB_P05 = "CTB-P05";					//
 	
 	public static final String COMIS_CDC_P01 = "CDC-P01";					//
 	public static final String COMIS_CDG_P01 = "CDG-P01";					//
@@ -137,6 +133,10 @@ public class CommissionConstants {
 	public static final String COMIS_BSD_P017 = "BSD-P17";					//CMM0067T
 	public static final String COMIS_BSD_P018 = "BSD-P18";					//CMM0068T
 	public static final String COMIS_BSD_P019 = "BSD-P19";					//CMM0069T
+	public static final String COMIS_BSD_P020 = "BSD-P20";					//18
+	public static final String COMIS_BSD_P021 = "BSD-P21";					//19
+	public static final String COMIS_BSD_P022 = "BSD-P22";					//20
+	public static final String COMIS_BSD_P023 = "BSD-P23";					//21
 	public static final String COMIS_BSG_P01 = "BSG-P01";					//
 	
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//
