@@ -106,7 +106,7 @@
             dataType : "numeric",
             width : 100
         }, {
-            dataField : "nric",
+            dataField : "stusCodeId",
             headerText : "Status",
             width : 100
         }, {

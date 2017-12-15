@@ -42,15 +42,22 @@
 				 WHERE 1 = 1 
 				 AND SVC.SALES_ORD_NO = ORD_INFO.SALES_ORD_NO(+) -->
 			SELECT A.CUST_ID,                                                    /* CUSTOMER CODE    */
-			       A.SALES_ORD_NO,                                               /* ORDER NUMBER     */
-			       A.AS_NO,                                                           /* AS ORDER NUMBER */
-			       TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT,        /* COMPLETE DATA  */
-			       TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT,        /* APPLICATION DATE */
-			       A.CODE,                                                             /* DSC BRANCH */
-			       COMP_TOT_AMT, 
-			       B.NAME, 
-			       A.COMP_NO,
-			       C.STK_DESC
+				       A.SALES_ORD_NO,                                               /* ORDER NUMBER     */
+				       A.AS_NO,                                                           /* AS ORDER NUMBER */
+				       TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT,        /* COMPLETE DATA  */
+				       TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT,        /* APPLICATION DATE */
+				       A.CODE,                                                             /* DSC BRANCH */
+				       COMP_TOT_AMT, 
+				       B.NAME, 
+				       A.COMP_NO,
+				       C.STK_DESC,
+				       CASE 
+					        WHEN A.STUS_CODE_ID ='1' THEN 'Active'
+					        WHEN A.STUS_CODE_ID ='34' THEN 'Solved'
+					        WHEN A.STUS_CODE_ID ='35' THEN 'Unsolved'
+					        WHEN A.STUS_CODE_ID ='36' THEN 'Closed'
+					        WHEN A.STUS_CODE_ID ='44' THEN 'Pending'
+					   END STUS_CODE_ID
 			  FROM SVC0053M A, SYS0038M B,
 			   (SELECT E.STK_DESC, C.INSTALL_DT, C.SERIAL_NO, A.SALES_ORD_NO
                   FROM SAL0001D A,
