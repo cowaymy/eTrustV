@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -40,6 +42,9 @@ public class InstallationResultListController {
 	private CommonService commonService;
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Resource(name = "servicesLogisticsPFCService")
+	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 	
 	/**
 	 * organization transfer page  
@@ -311,7 +316,23 @@ public class InstallationResultListController {
 		
 		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
 		
-		message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
+		
+		if( null !=resultValue){
+			HashMap   spMap =(HashMap)resultValue.get("spMap");
+			logger.debug("spMap :"+ spMap.toString());   
+			if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+				
+				resultValue.put("logerr","Y");
+				message.setMessage("Error in Logistics Transaction !");
+				
+			}else{
+				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
+
+			}
+			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		}
+		
+		
 		
 		return ResponseEntity.ok(message);
 	}

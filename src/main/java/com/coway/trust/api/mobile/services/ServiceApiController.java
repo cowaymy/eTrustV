@@ -1085,15 +1085,25 @@ public class ServiceApiController {
 			params.put("remark",insTransLogs.get(i).get("resultRemark"));
 			
 			LOGGER.debug("params11111 값 : {}", params);
-			installationResultListService.insertInstallationResult(params,sessionVO1 );	
-
+			Map rtnValue  =installationResultListService.insertInstallationResult(params,sessionVO1 );	
 			
-			// TODO : 리턴할 dto 구현.
-//			transactionId = installationResultForms.getTransactionId();
-			transactionId = String.valueOf(params.get("transactionId"));
 			
-			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-				MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+			if( null !=rtnValue){
+				HashMap   spMap =(HashMap)rtnValue.get("spMap");
+				LOGGER.debug("spMap :"+ spMap.toString());   
+				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+					rtnValue.put("logerr","Y");
+					
+					
+				}else{
+						transactionId = String.valueOf(params.get("transactionId"));
+						
+						if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+							MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+						}
+					
+				}
+				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 			}
 			
 		}	

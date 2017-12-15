@@ -1647,18 +1647,21 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		//물류 호출   add by hgham
         Map<String, Object>  logPram = null ;
 		if(Integer.parseInt(params.get("installStatus").toString()) == 4 ){
+    		
 
 			/////////////////////////물류 호출//////////////////////
 			logPram =new HashMap<String, Object>();
-            logPram.put("ORD_ID",    params.get("hiddeninstallEntryNo") );
+            logPram.put("ORD_ID",  params.get("hiddeninstallEntryNo") );
             logPram.put("RETYPE", "COMPLET");
             logPram.put("P_TYPE", "OD01");
             logPram.put("P_PRGNM", "INSCOM");
             logPram.put("USERID", sessionVO.getUserId());
 
-            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            logger.debug("install 물류 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+        	logPram.put("P_RESULT_TYPE", "IN");
+    		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+            logger.debug("install 물류 호출 결과 ===>" +logPram);
             /////////////////////////물류 호출 END //////////////////////
 
       }else if(Integer.parseInt(params.get("installStatus").toString()) == 21){
@@ -1671,12 +1674,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             logPram.put("P_PRGNM", "INSCAN");
             logPram.put("USERID", sessionVO.getUserId());
 
-            logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-            servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(logPram);
-            logger.debug("ORDERCALL 물류 호출 결과 ===>");
+            logger.debug("install 물류  CANCEL 호출 PRAM ===>"+ logPram.toString());
+            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+            logPram.put("P_RESULT_TYPE", "IN");
+    		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+            logger.debug("install 물류 CANCEL  호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
       }
-
+       resultValue.put("spMap", logPram);
 
 		return resultValue;
 	}
