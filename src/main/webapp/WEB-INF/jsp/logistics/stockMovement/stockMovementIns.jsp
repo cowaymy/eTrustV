@@ -248,6 +248,7 @@ $(function(){
 function fn_changeLocation() {
 	var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val()}; // session 정보 등록
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+    doDefCombo([], '' ,'flocation', 'S', '');
 } 
 
 function transferTypeFunc(){
