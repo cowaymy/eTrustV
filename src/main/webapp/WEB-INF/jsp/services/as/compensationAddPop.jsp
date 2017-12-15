@@ -203,6 +203,8 @@
  	     
 	     $("#salesOrdNo").focusout(function(){
              
+             if (  $("#salesOrdNo").val().length > 6) {
+             
              Common.ajax("GET", "/services/compensation/selectSalesOrdNoInfo.do",   { salesOrdNo :  $("#salesOrdNo").val() }  , function(result) {
                 console.log("selectSalesOrdNoInfo >>> .");
                 console.log(  JSON.stringify(result));
@@ -212,7 +214,7 @@
                  $("#Serial").val(result[0].serialNo)
               
             }); 
-             
+             }
          }); 
         setInputFile2();
    
@@ -339,27 +341,27 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     <th scope="row">AS Request Date</th>
     <td colspan="3">
     <%-- <input type="text" title="" id="issueDt" name="issueDt"  value="${compensationView.issueDt}" placeholder="" class="readonly " style="width: 157px; " /> --%>
-    <input type="date" title="Create start Date" placeholder="DD/MM/YYYY" name="issueDt" id="issueDt" class="j_date" " />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="issueDt" id="issueDt" class="j_date" " />
     </td>
     <th scope="row">Application Route</th>
     <td colspan="3">
-    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  placeholder="" class=" " style="width: 157px; "/>
     </td>
 </tr>
 <tr>
     <th scope="row"> AS Order Number</th>
     <td colspan="3">
-    <input type="text" title="" id="asNo" name="asNo" placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="asNo" name="asNo" placeholder="" class=" " style="width: 157px; "/>
     </td>
     <th scope="row">Order No</th>
     <td colspan="3">
-    <input type="text" title="" id="salesOrdNo" name="salesOrdNo"  placeholder="" class="readonly " style="width: 157px;" />
+    <input type="text" title="" id="salesOrdNo" name="salesOrdNo"  placeholder="" class=" " style="width: 157px;" />
     </td>
 </tr>
 <tr>
  <th scope="row">Customer name</th>
     <td colspan="3">
-        <input type="text" title="" id="custId" name="custId" placeholder="" class="readonly " style="width: 157px; "/>
+        <input type="text" title="" id="custId" name="custId" placeholder="" class=" " style="width: 157px; "/>
     </td>
     <th scope="row">Product name</th>
     <td colspan="3">
@@ -374,7 +376,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Serial No</th>
     <td colspan="3">
-    <input type="text" title="" id="Serial" name="Serial"  placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="Serial" name="Serial"  placeholder="" class=" "  style="width: 157px; "/>
     </td>
 </tr>
 
@@ -393,13 +395,13 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     <th scope="row">Complete Date</th>
     <td colspan="3">
     <%-- <input type="date" title="" id="compDt" name="compDt" class="j_date2" value="${compensationView.compDt}" placeholder="" class="readonly "  style="width: 157px; "/> --%>
-    <input type="date" title="Create start Date" placeholder="DD/MM/YYYY" name="compDt" id="compDt" class="j_date"/>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="compDt" id="compDt" class="j_date"/>
     </td>
 </tr>
 <tr>
     <th scope="row">RM</th>
     <td colspan="3">
-    <input type="text" title="" id="compTotAmt" name="compTotAmt"  placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="compTotAmt" name="compTotAmt"  placeholder="" class=" " style="width: 157px; "/>
     </td>
     <th scope="row">Managing Department</th>
     <td colspan="3">
@@ -444,7 +446,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Leaking/burning</th>
     <td colspan="3">
-    <input type="text" title="" id="asDefectTypeId" name="asDefectTypeId"  placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="asDefectTypeId" name="asDefectTypeId"  placeholder="" class=" " style="width: 157px; "/>
     </td>
 </tr>
 <tr>
@@ -456,17 +458,17 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Reason</th>
     <td colspan="3">
-    <input type="text" title="" id="asMalfuncResnId" name="asMalfuncResnId"  placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="asMalfuncResnId" name="asMalfuncResnId"  placeholder="" class=" " style="width: 157px; "/>
     </td>
 </tr>
 <tr>
     <th scope="row">Compensation Item</th>
     <td colspan="3">
-        <input type="text" title="" id="compItem1" name="compItem1"   placeholder="" class="readonly " style="width: 157px; "/>
+        <input type="text" title="" id="compItem1" name="compItem1"   placeholder="" class=" " style="width: 157px; "/>
     </td>
     <th scope="row">Compensation Item</th>
     <td colspan="3">
-    <input type="text" title="" id="compItem2" name="compItem2"   placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="compItem2" name="compItem2"   placeholder="" class=" " style="width: 157px; "/>
     </td>
 </tr>
 <tr>
@@ -474,7 +476,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
 
     <th scope="row">Compensation Item</th>
     <td colspan="7">
-    <input type="text" title="" id="compItem3" name="compItem3"   placeholder="" class="readonly " style="width: 157px; "/>
+    <input type="text" title="" id="compItem3" name="compItem3"   placeholder="" class=" " style="width: 157px; "/>
     </td> 
 </tr>
  <tr>
