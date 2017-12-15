@@ -163,7 +163,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		GiMap.put("refdocno", docno);
 		GiMap.put("salesorder", "");
 		GiMap.put("userId", params.get("userId"));
-
+		logger.debug("GiMap ???    값 : {}", GiMap);
 		if ("GC".equals(GiMap.get("gitype"))) {
 			PointOfSalesMapper.GICancelIssue(GiMap);
 			reVal = (String) GiMap.get("rdata");
