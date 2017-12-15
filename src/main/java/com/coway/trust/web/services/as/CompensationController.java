@@ -171,9 +171,12 @@ public class CompensationController {
 		
 		String issue = (String)params.get("issueDt");
 		String compdate = (String)params.get("compDt"); 
-		
-		params.put("issueDt", transFormat.format(sdFormat.parse(issue.replaceAll("/", ""))));
-		params.put("compDt", transFormat.format(sdFormat.parse(compdate.replaceAll("/", ""))));
+		if ( !issue.equals("")) {
+			params.put("issueDt", transFormat.format(sdFormat.parse(issue.replaceAll("/", ""))));
+		}
+		if ( !compdate.equals("")) {
+			params.put("compDt", transFormat.format(sdFormat.parse(compdate.replaceAll("/", ""))));
+		}
 		
 		EgovMap resultValue = compensationService.insertCompensation(params);
 	 
@@ -216,8 +219,15 @@ public class CompensationController {
 		String issue = (String)params.get("issueDt");
 		String compdate = (String)params.get("compDt"); 
 		
-		params.put("issueDt", transFormat.format(sdFormat.parse(issue.replaceAll("/", ""))));
-		params.put("compDt", transFormat.format(sdFormat.parse(compdate.replaceAll("/", ""))));
+		
+		if ( !issue.equals("")) {
+			params.put("issueDt", transFormat.format(sdFormat.parse(issue.replaceAll("/", ""))));
+		}
+		if ( !compdate.equals("")) {
+			params.put("compDt", transFormat.format(sdFormat.parse(compdate.replaceAll("/", ""))));
+		}
+		//params.put("issueDt", transFormat.format(sdFormat.parse(issue.replaceAll("/", ""))));
+		//params.put("compDt", transFormat.format(sdFormat.parse(compdate.replaceAll("/", ""))));
 		
 		EgovMap resultValue = compensationService.updateCompensation(params);
 		
