@@ -139,10 +139,10 @@ function DCPMasterGrid() {
             return false;
         }
         
-        if(($('#mcpFrom').val() == '') && ($('#mcpTo').val() == '')) {
+        /* if(($('#mcpFrom').val() == '') && ($('#mcpTo').val() == '')) {
             Common.alert("Please write 'DCP From' or 'DCP To'");
             return false;
-        }
+        } */
         
         //페이징 변수 세팅
         $("#pageNo").val(goPage);   

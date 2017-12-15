@@ -42,5 +42,7 @@ public interface MileageCalculationMapper {
 	int selectDCPMasterCount(Map<String, Object> params);
 
 	List<EgovMap> selectCity(Map<String, Object> params);
+
+	void updatetDCPMasterLinked(Map<String, Object> updateValue);
 	
 }

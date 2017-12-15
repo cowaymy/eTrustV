@@ -98,7 +98,7 @@ public class MileageCalculationController {
 			 mileageCalculationService.updateDCPMaster(udtList,sessionVO);
 		}
 		if(delList != null){
-			 mileageCalculationService.deleteDCPMaster(delList,sessionVO);
+//			 mileageCalculationService.deleteDCPMaster(delList,sessionVO);
 		}
 		
 		return ResponseEntity.ok(message);

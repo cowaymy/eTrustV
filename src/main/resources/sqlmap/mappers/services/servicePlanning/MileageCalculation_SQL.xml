@@ -56,12 +56,33 @@
           A.DCP_FROM_ID = #{dcpFromId},
           A.DCP_TO = #{dcpTo},
           A.DCP_TO_ID = #{dcpToId}, -->
-          A.DISTANCE = #{distance},
+          A.DISTANCE = NVL(#{distance},''),
           A.UPD_USER_ID = #{userId},
           A.UPD_DT = SYSDATE
     WHEN NOT MATCHED THEN
         INSERT (A.MEM_TYPE, A.BRNCH_CODE, A.DCP_FROM, A.DCP_FROM_ID, A.DCP_TO, A.DCP_TO_ID, A.DISTANCE, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
-        VALUES (#{memType}, #{brnchCode}, #{dcpFrom}, #{dcpFromId}, #{dcpTo}, #{dcpToId}, #{distance}, #{userId}, SYSDATE, #{userId}, SYSDATE)
+        VALUES (#{memType}, #{brnchCode}, #{dcpFrom}, #{dcpFromId}, #{dcpTo}, #{dcpToId}, NVL(#{distance},''), #{userId}, SYSDATE, #{userId}, SYSDATE)
+</update>
+
+<update id="updatetDCPMasterLinked" parameterType="Map">
+    MERGE INTO SVC0034M A
+    USING DUAL
+    ON (A.DCP_FROM_ID = #{dcpToId}
+        AND A.DCP_TO_ID = #{dcpFromId})
+    WHEN MATCHED THEN
+        UPDATE SET
+          <!-- A.MEM_TYPE = #{memType},
+          A.BRNCH_CODE = #{brnchCode},
+          A.DCP_FROM = #{dcpTo},
+          A.DCP_FROM_ID = #{dcpToId},
+          A.DCP_TO = #{dcpFrom},
+          A.DCP_TO_ID = #{dcpFromId}, -->
+          A.DISTANCE = NVL(#{distance},''),
+          A.UPD_USER_ID = #{userId},
+          A.UPD_DT = SYSDATE
+    WHEN NOT MATCHED THEN
+        INSERT (A.MEM_TYPE, A.BRNCH_CODE, A.DCP_FROM, A.DCP_FROM_ID, A.DCP_TO, A.DCP_TO_ID, A.DISTANCE, A.CRT_USER_ID, A.CRT_DT, A.UPD_USER_ID, A.UPD_DT)
+        VALUES (#{memType}, #{brnchCode}, #{dcpTo}, #{dcpToId}, #{dcpFrom}, #{dcpFromId}, #{distance}, #{userId}, SYSDATE, #{userId}, SYSDATE)
 </update>
 
 <!-- <delete id="deleteDCPMaster" parameterType="Map">

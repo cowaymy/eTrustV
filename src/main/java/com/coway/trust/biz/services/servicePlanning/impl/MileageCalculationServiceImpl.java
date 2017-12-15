@@ -33,10 +33,16 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
     			}else{
     				insertValue.put("memType", 3);//CT
     			}
-    			insertValue.put("distance", Integer.parseInt(insertValue.get("distance").toString()));
+    			if( insertValue.get("distance") != null && insertValue.get("distance").toString().length() > 0 ) {
+    				insertValue.put("distance", Integer.parseInt(insertValue.get("distance").toString()));
+    			} else {
+    				insertValue.put("distance", "");
+    			}
+//    			insertValue.put("distance", Integer.parseInt(insertValue.get("distance").toString()));
     			insertValue.put("userId", sessionVO.getUserId());
     			logger.debug("insertValue {}", insertValue);
     			mileageCalculationMapper.insertDCPMaster(insertValue);
+    			mileageCalculationMapper.updatetDCPMasterLinked(insertValue);
     		}
 		}
 	}
@@ -51,10 +57,16 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
     			}else{
     				updateValue.put("memType", 3);//CT
     			}
-    			updateValue.put("distance", Integer.parseInt(updateValue.get("distance").toString()));
+    			if( updateValue.get("distance") != null && updateValue.get("distance").toString().length() > 0 ) {
+    				updateValue.put("distance", Integer.parseInt(updateValue.get("distance").toString()));
+    			} else {
+    				updateValue.put("distance", "");
+    			}
+//    			updateValue.put("distance", Integer.parseInt(updateValue.get("distance").toString()));
     			updateValue.put("userId", sessionVO.getUserId());
     			logger.debug("updateValue {}", updateValue);
     			mileageCalculationMapper.updatetDCPMaster(updateValue);
+    			mileageCalculationMapper.updatetDCPMasterLinked(updateValue);
     		}
 		}
 	}
@@ -95,6 +107,7 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
 					
 					logger.debug("updateValue {}", updateValue);
 					mileageCalculationMapper.updatetDCPMaster(updateValue);
+					mileageCalculationMapper.updatetDCPMasterLinked(updateValue);
 				}
     		}
 		}
