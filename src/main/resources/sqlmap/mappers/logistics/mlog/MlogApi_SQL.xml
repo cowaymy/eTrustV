@@ -2,16 +2,106 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
     
+    <select id="getFilterUserChangeList"  resultType="egovMap">
+    <if test="querytype eq 'sum'.toString() ">
+	 select SUM(tobe_Change_Qty) total_Tobe_Change_Qty,SUM(totalShortageQty) total_Shortage_Qty  from (
+	 </if>
+	SELECT 
+	     <!-- SALES_ORD_ID , SALES_ORD_NO , FILTERID PARTSID ,BS_RESULT_PART_ID , BOM_COMPNT PARTSCD , FILTERNM PARTSNM , COMPNT_QTY TOBECHNAGEQTY , ALTERNATIVEYN, YEAR , MONTH,  BS_RESULT_PART_QTY , QTY -->     
+	      FILTERID parts_Id ,BS_RESULT_PART_ID , BOM_COMPNT parts_Code , FILTERNM parts_Name , COMPNT_QTY  
+	       , BOM ,SUM(BS_RESULT_PART_QTY) tobe_Change_Qty ,SUM(QTY) on_Hand_Stock_Qty , CASE WHEN (SUM(QTY) - SUM(BS_RESULT_PART_QTY))*-1 > 0 THEN 'Y' ELSE 'N' END shortage_Y_N ,ALTERNATIVEYN  alternative_Y_N,WH_LOC_ID  rdc_Code,CASE WHEN (SUM(QTY) - SUM(BS_RESULT_PART_QTY))*-1 > 0 THEN  (SUM(QTY) - SUM(BS_RESULT_PART_QTY))*-1 ELSE 0 END totalShortageQty 
+	  FROM   (
+	SELECT BOM.BOM , S01.SALES_ORD_ID , S01.SALES_ORD_NO ,  BOM.FILTERID ,BOM.BOM_COMPNT , BOM.FILTERNM , COMPNT_QTY , RAN , CASE WHEN RAN > 1 THEN 'Y' ELSE 'N' END ALTERNATIVEYN
+	     , SVC.BS_RESULT_PART_ID , SVC.BS_RESULT_PART_QTY ,WH_LOC_ID
+	     , SVC.YEAR ,SVC.MONTH 
+	     , NVL(BAL.QTY , 0) QTY
+	  FROM (SELECT S01.*
+	          FROM SAL0001D S01, SAL0071D S71
+	         WHERE     S01.SALES_ORD_ID = S71.SALES_ORD_ID(+)
+	               AND (   (S01.APP_TYPE_ID = '66' AND S71.STUS_CODE_ID = 'REG')
+	                    OR (S01.APP_TYPE_ID <![CDATA[<>]]> '66'))) S01,
+	       SAL0002D S02,
+	       SAL0090D S90,
+	       SAL0087D S87,
+	       (SELECT L44.BOM , S26.STK_ID,
+	               S26.STK_CODE,
+	               S26F.STK_ID FILTERID,
+	               L44.BOM_COMPNT,
+	               S26F.STK_DESC FILTERNM,
+	               L44.COMPNT_QTY,
+	               RANK ()
+	               OVER (PARTITION BY L44.BOM, L44.ALTER_ITM_GRP
+	                     ORDER BY L44.USE_PROBABILTIY)
+	                  AS RAN
+	          FROM SYS0026M S26,
+	               LOG0043M L43,
+	               LOG0044D L44,
+	               SYS0026M S26F
+	         WHERE     1 = 1
+	               AND S26F.STK_CODE = L44.BOM_COMPNT
+	               AND S26.STK_CODE = L43.MATRL_NO
+	               AND L43.BOM = L44.BOM) BOM
+	      ,(SELECT S06.RESULT_ID ,S06.NO , S06.SCHDUL_ID , S06.SALES_ORD_ID , S08.CODY_ID
+	             , S07.BS_RESULT_PART_ID , BS_RESULT_PART_DESC , BS_RESULT_PART_QTY , S08.YEAR , S08.MONTH
+	             , S26.STK_CODE
+	             , S28.WH_LOC_CODE , S28.WH_LOC_ID 
+	          FROM SVC0006D S06
+	             , SVC0007D S07
+	             , SVC0008D S08
+	             , SYS0026M S26
+	             , ORG0001D O01
+	             , SYS0047M S47
+	             , SYS0028M S28
+	         WHERE 1 = 1
+	         AND S08.SCHDUL_ID    = S06.SCHDUL_ID
+	         AND S07.BS_RESULT_ID = S06.RESULT_ID
+	         AND S07.BS_RESULT_PART_ID = S26.STK_ID
+	         AND S26.STK_TYPE_ID = 62
+	         <!-- AND S08.STUS_CODE_ID = '1' -->
+	         AND O01.MEM_ID = S08.CODY_ID
+	         AND S28.WH_LOC_CODE = O01.MEM_CODE
+	         AND S47.USER_NAME = S28.WH_LOC_CODE
+	         AND S47.USER_NAME = #{userId}
+	       ) SVC
+	      ,LOG0056M BAL
+	 WHERE     1 = 1
+	       AND SVC.STK_CODE          = BAL.STK_CODE (+)
+	       AND SVC.WH_LOC_ID         = BAL.LOC_ID (+)
+	       AND S87.SRV_FILTER_STK_ID = BOM.FILTERID
+	       AND S87.SRV_FILTER_STK_ID = SVC.BS_RESULT_PART_ID
+	       AND S02.ITM_STK_ID   = BOM.STK_ID
+	       AND S01.SALES_ORD_ID = SVC.SALES_ORD_ID
+	       AND S01.SALES_ORD_ID = S02.SALES_ORD_ID
+	       AND S01.SALES_ORD_ID = S90.SRV_SO_ID
+	       AND S90.SRV_CONFIG_ID = S87.SRV_CONFIG_ID
+	       AND S87.SRV_FILTER_STUS_ID = '1'
+	       <if test="searchFromDate !=null and searchFromDate !=''">
+	       AND TO_CHAR (ADD_MONTHS (S87.SRV_FILTER_PRV_CHG_DT, S87.SRV_FILTER_PRIOD),
+	              'yyyymmdd') BETWEEN #{searchFromDate} 
+	       </if>       
+	       <if test="searchToDate !=null and searchToDate !=''">
+	       AND #{searchToDate} 
+	       </if>	                              
+	) T
+	GROUP BY BOM , FILTERID  ,BS_RESULT_PART_ID , BOM_COMPNT  , FILTERNM , COMPNT_QTY  , ALTERNATIVEYN,WH_LOC_ID
+    <if test="querytype eq 'sum'.toString() ">
+	)
+	</if>
+	<!-- WHERE ALTERNATIVEYN <> 'N' -->
+    </select>
+    
+    
+    
     <select id="getFilterNotChangeList"  resultType="egovMap">
        SELECT
            <if test="querytype eq 'sum'.toString() ">
                  SUM(BS_RESULT_PART_QTY) total_Tobe_Change_Qty 
            </if>
            <if test="querytype eq 'list'.toString() ">
-                  BS_RESULT_PART_ID parts_Id, STK_CODE parts_Code, STK_DESC parts_Name,  to_char(BS_RESULT_CRT_DT,'YYYY-MM-DD') fail_Date , SALES_ORD_NO order_No, NAME cust_Name,MEM_CODE, RDC_CODE rdc_Code
+                  BS_RESULT_PART_ID parts_Id, STK_CODE parts_Code, STK_DESC parts_Name,  to_char(BS_RESULT_CRT_DT,'YYYY-MM-DD') fail_Date , SALES_ORD_NO order_No, NAME cust_Name,MEM_CODE, RDC_CODE rdcCode,WH_LOC_ID rdc_Code
            </if>
          FROM (
-        SELECT S7.BS_RESULT_PART_ID , S26.STK_CODE , S26.STK_DESC , S7.BS_RESULT_CRT_DT , S1.SALES_ORD_NO , S29.NAME ,O1.MEM_CODE, S28.RDC_CODE , S7.BS_RESULT_PART_QTY 
+        SELECT S7.BS_RESULT_PART_ID , S26.STK_CODE , S26.STK_DESC , S7.BS_RESULT_CRT_DT , S1.SALES_ORD_NO , S29.NAME ,O1.MEM_CODE, S28.RDC_CODE , S7.BS_RESULT_PART_QTY,S28.WH_LOC_ID 
           FROM SVC0006D S6 ,SVC0007D S7 , SVC0008D S8 , SAL0001D S1 , SAL0029D S29 , SYS0026M S26 , SYS0028M S28 , ORG0001D O1
          WHERE  1 = 1
            AND O1.MEM_CODE     = S28.WH_LOC_CODE
