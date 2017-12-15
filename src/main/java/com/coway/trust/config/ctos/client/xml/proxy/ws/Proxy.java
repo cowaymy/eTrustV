@@ -2,30 +2,43 @@ package com.coway.trust.config.ctos.client.xml.proxy.ws;
 
 import java.rmi.RemoteException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.coway.trust.AppConstants;
+import com.coway.trust.cmmn.exception.ApplicationException;
 
 @Component
 public class Proxy implements Proxy_PortType {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(Proxy.class);
-
 	private String _endpoint = null;
 	private Proxy_PortType proxy_PortType = null;
+	private String proxyAddress;
 
-	public Proxy() {
+	@Autowired
+	public Proxy(@Value("${ctos.soap.proxy.address}") String proxyAddress) {
+		this.proxyAddress = proxyAddress;
 		_initProxy();
 	}
 
-	public Proxy(String endpoint) {
-		_endpoint = endpoint;
-		_initProxy();
-	}
-
+	// public Proxy(String endpoint, @Value("${ctos.soap.proxy.address}") String proxyAddress) {
+	// this.proxyAddress = proxyAddress;
+	// _endpoint = endpoint;
+	// _initProxy();
+	// }
 	private void _initProxy() {
+
+		if (StringUtils.isEmpty(proxyAddress)) {
+			throw new ApplicationException(AppConstants.FAIL, "proxyAddress is empty !!!!");
+		}
+
 		try {
-			proxy_PortType = (new Proxy_ServiceLocator()).getProxyPort();
+			proxy_PortType = (new Proxy_ServiceLocator(proxyAddress)).getProxyPort();
 			if (proxy_PortType != null) {
 				if (_endpoint != null)
 					((javax.xml.rpc.Stub) proxy_PortType)._setProperty("javax.xml.rpc.service.endpoint.address",

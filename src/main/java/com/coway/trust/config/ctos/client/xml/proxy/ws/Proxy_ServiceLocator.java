@@ -9,33 +9,34 @@ package com.coway.trust.config.ctos.client.xml.proxy.ws;
 
 public class Proxy_ServiceLocator extends org.apache.axis.client.Service implements Proxy_Service {
 
-	public Proxy_ServiceLocator() {
+	public Proxy_ServiceLocator(String ProxyPort_address) {
+		this.ProxyPort_address = ProxyPort_address;
 	}
 
 	public Proxy_ServiceLocator(org.apache.axis.EngineConfiguration config) {
 		super(config);
 	}
 
-	public Proxy_ServiceLocator(String wsdlLoc, javax.xml.namespace.QName sName)
+	public Proxy_ServiceLocator(java.lang.String wsdlLoc, javax.xml.namespace.QName sName)
 			throws javax.xml.rpc.ServiceException {
 		super(wsdlLoc, sName);
 	}
 
 	// Use to get a proxy class for ProxyPort
-	private String ProxyPort_address = "http://enq.cmctos.com.my:8080/ctos/Proxy";
+	private java.lang.String ProxyPort_address;// = "http://enq.cmctos.com.my:8080/ctos/Proxy";
 
-	public String getProxyPortAddress() {
+	public java.lang.String getProxyPortAddress() {
 		return ProxyPort_address;
 	}
 
 	// The WSDD service name defaults to the port name.
-	private String ProxyPortWSDDServiceName = "ProxyPort";
+	private java.lang.String ProxyPortWSDDServiceName = "ProxyPort";
 
-	public String getProxyPortWSDDServiceName() {
+	public java.lang.String getProxyPortWSDDServiceName() {
 		return ProxyPortWSDDServiceName;
 	}
 
-	public void setProxyPortWSDDServiceName(String name) {
+	public void setProxyPortWSDDServiceName(java.lang.String name) {
 		ProxyPortWSDDServiceName = name;
 	}
 
@@ -59,7 +60,7 @@ public class Proxy_ServiceLocator extends org.apache.axis.client.Service impleme
 		}
 	}
 
-	public void setProxyPortEndpointAddress(String address) {
+	public void setProxyPortEndpointAddress(java.lang.String address) {
 		ProxyPort_address = address;
 	}
 
@@ -74,7 +75,7 @@ public class Proxy_ServiceLocator extends org.apache.axis.client.Service impleme
 				_stub.setPortName(getProxyPortWSDDServiceName());
 				return _stub;
 			}
-		} catch (Throwable t) {
+		} catch (java.lang.Throwable t) {
 			throw new javax.xml.rpc.ServiceException(t);
 		}
 		throw new javax.xml.rpc.ServiceException("There is no stub implementation for the interface:  "
@@ -90,7 +91,7 @@ public class Proxy_ServiceLocator extends org.apache.axis.client.Service impleme
 		if (portName == null) {
 			return getPort(serviceEndpointInterface);
 		}
-		String inputPortName = portName.getLocalPart();
+		java.lang.String inputPortName = portName.getLocalPart();
 		if ("ProxyPort".equals(inputPortName)) {
 			return getProxyPort();
 		} else {
@@ -117,7 +118,7 @@ public class Proxy_ServiceLocator extends org.apache.axis.client.Service impleme
 	/**
 	 * Set the endpoint address for the specified port name.
 	 */
-	public void setEndpointAddress(String portName, String address)
+	public void setEndpointAddress(java.lang.String portName, java.lang.String address)
 			throws javax.xml.rpc.ServiceException {
 
 		if ("ProxyPort".equals(portName)) {
@@ -130,7 +131,7 @@ public class Proxy_ServiceLocator extends org.apache.axis.client.Service impleme
 	/**
 	 * Set the endpoint address for the specified port name.
 	 */
-	public void setEndpointAddress(javax.xml.namespace.QName portName, String address)
+	public void setEndpointAddress(javax.xml.namespace.QName portName, java.lang.String address)
 			throws javax.xml.rpc.ServiceException {
 		setEndpointAddress(portName.getLocalPart(), address);
 	}
