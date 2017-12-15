@@ -825,9 +825,6 @@
                                        AND ( Extent1.MEM_LVL = #{memLvl} )
                                        AND ( Extent1.MEM_UP_ID = #{groupCode} )
                                        AND ( Extent2.STUS IN ( 1,8 )]]>   
-                                      <!--  <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
-                                            AND Extent1.mem_id = #{deptIdCd}
-                                       </if> -->
                                       ) ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
                                
