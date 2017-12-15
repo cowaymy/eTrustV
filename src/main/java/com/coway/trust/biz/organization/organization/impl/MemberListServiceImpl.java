@@ -76,6 +76,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectMemberList(params);
 	}
 
+	public List<EgovMap> selectHPApplicantList(Map<String, Object> params) {
+		return memberListMapper.selectHPApplicantList(params);
+	}
+
 	public String selectLastGroupCode(Map<String,Object> params){
 		return memberListMapper.selectLastGroupCode(params);
 	}
@@ -139,6 +143,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public String saveMember(Map<String, Object> params, List<Object> docType) {
 
 		String appId="";
+		String memCode = "";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
 		if(Integer.parseInt((String) params.get("memberType")) == 6){   //if HP Applicant
@@ -194,21 +199,32 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("streetDtl",params.get("streetDtl1")!= null ?params.get("streetDtl1").toString() : "");
 			MemApp.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
 
-
 			logger.debug("MemApp : {}",MemApp);
-
-
 			EgovMap appNo = getDocNo("145");
 			MemApp.put("applicantCode", appNo.get("docNo"));
 			logger.debug("appNo : {}",appNo);
 			updateDocNoNumber("145");
 
+			//insert HP applicant
 			memberListMapper.insertMemApp(MemApp);
 			codeMap1.put("code", "memApp");
 			appId = memberListMapper.selectMemberId(codeMap1);
 
+			memCode = MemApp.get("applicantCode").toString();
+
+			/*if(success){
+			if(Integer.parseInt((String) params.get("memberType")) == 2){
+				if(MemApp != null){
+					//sendSMS(params);
+				}
+			}
+		}*/
+
+			return memCode;
 		}
 
+		else
+		{
 
 		int rank = 0;
 		if(params.get("memberType").equals("1") ){
@@ -285,23 +301,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("spouseDob", params.get("spouseDOB").toString().equals("") ? "01/01/1900":params.get("spouseDOB").toString().trim() );
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 
+
 		Boolean success = false;
-		String memCode = "";
+
 		if(params != null){
 			memCode = doSaveMember(params, docType);
 
-			/*if(success){
-				if(Integer.parseInt((String) params.get("memberType")) == 2){
-					if(MemApp != null){
-						//sendSMS(params);
-					}
-				}
-			}*/
+
+		}
+		return memCode;
 		}
 
-
-
-		return memCode;
 	}
 
 
@@ -1420,5 +1430,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 
 	}
+
 
 }
