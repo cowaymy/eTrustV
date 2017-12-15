@@ -28,7 +28,7 @@
 <script type="text/javaScript" language="javascript">
 var rawFileGrid1;
 var rawFileGrid2;
-                      
+
 var columnLayout1 = [
                     {dataField:"orignlfilenm",headerText:"Filename",width:"30%",visible:true },
                     {dataField:"updDt",headerText:"Write Time",width:"30%", dataType : "date",formatString : "yyyy. mm. dd t hh:MM",visible:true },
@@ -40,7 +40,6 @@ var columnLayout1 = [
                             type : "ButtonRenderer",
                             labelText : "Download",
                             onclick : function(rowIndex, columnIndex, value, item) {
-                              // removeRow(rowIndex, gridNm,chkNum);
                               fileDown(rowIndex,"PB");
                             }
                         }
@@ -53,7 +52,7 @@ var columnLayout1 = [
                     
 var columnLayout2 = [
                     {dataField:"orignlfilenm",headerText:"Filename",width:"30%",visible:true },
-                    {dataField:"updDt",headerText:"Write Time",width:"30%",visible:true },
+                    {dataField:"updDt",headerText:"Write Time",width:"30%", dataType : "date",formatString : "yyyy. mm. dd t hh:MM",visible:true },
                     {dataField:"filesize",headerText:"File Size",width:"30%",postfix : "bytes",dataType : "numeric",visible:true},
                     {
                         dataField : "",
@@ -62,7 +61,6 @@ var columnLayout2 = [
                             type : "ButtonRenderer",
                             labelText : "Download",
                             onclick : function(rowIndex, columnIndex, value, item) {
-                              // removeRow(rowIndex, gridNm,chkNum);
                               fileDown(rowIndex,"P&C");
                             }
                         }
@@ -152,25 +150,23 @@ function fileDown(rowIndex,str){
 	    var fileName;
 	    var orignlFileNm;
 	if("PB"==str){
-	    subPath = "/RawData/Public/"+$('#spublic').val();
+	    subPath = "/resources/WebShare/RawData/Public/"+$('#spublic').val();
 	    orignlFileNm = AUIGrid.getCellValue(rawFileGrid1,  rowIndex, "orignlfilenm");
 	}else{
-	    subPath = "/RawData/Privacy/"+$('#scpublic').val();
+	    subPath = "/resources/WebShare/RawData/Privacy/"+$('#scpublic').val();
 	    orignlFileNm = AUIGrid.getCellValue(rawFileGrid2 ,  rowIndex, "orignlfilenm");
 	}
 	
-  window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
-          + "&fileName=" + orignlFileNm + "&orignlFileNm=" + orignlFileNm
-          + "'/>");
+  window.open("${pageContext.request.contextPath}"+subPath + "/" + orignlFileNm);
 }
-
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif"
+                alt="Home" /></li>
+    <li>File</li>
+    <li>RawData list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
