@@ -23,10 +23,12 @@ var option = {
         fn_filterChargeListJsonAjax();
         $("#chkDiv").hide();
         if($("#appTypeId").val() != 66  && $("#custBillId").val() == 0){
+        	$("#billGrpFont").show();
         	$("#groupDiv").show();
         	$("#radioNo").show();
         	$("#groupVal").val('1');   // Group Option 필수 Validation check값
         }else{
+        	$("#billGrpFont").hide();
             $("#groupDiv").hide();
             $("#radioNo").hide();
             $("#groupVal").val('0');    // Group Option 필수 Validation check값
@@ -277,6 +279,7 @@ var option = {
         $('#rentPayCRCBank').val(custCRCBank);
         $('#hiddenRentPayCRCBankId').val(custCrcBankId);
         $('#rentPayCRCCardType').val(crcCardType);
+        
     }
     
     function fn_loadBankAccountPop(bankAccId) {
@@ -789,7 +792,7 @@ var option = {
     <th scope="row">Credit Card Number<span class="must">*</span></th>
     <td>
         <input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" readonly/>
-        <input id="hiddenRentPayCRCId" name="rentPayCRCId" type="hidden" />
+        <input id="hiddenRentPayCRCId" name="hiddenRentPayCRCId" type="hidden" />
         <input id="hiddenRentPayEncryptCRCNoId" name="hiddenRentPayEncryptCRCNoId" type="hidden" />
     </td>
     <th scope="row">Credit Card Type</th>
@@ -811,7 +814,7 @@ var option = {
     <th scope="row">Issue Bank</th>
     <td>
         <input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
-        <input id="hiddenRentPayCRCBankId" name="rentPayCRCBankId" type="hidden" title="" class="w100p" />
+        <input id="hiddenRentPayCRCBankId" name="hiddenRentPayCRCBankId" type="hidden" title="" class="w100p" />
     </td>
     <th scope="row">Card Type</th>
     <td>
@@ -825,9 +828,11 @@ var option = {
 
 </section><!-- search_table end -->
 
+<div id="billGrpFont">
 <aside class="title_line"><!-- title_line start -->
 <h3>Rental Billing Group</h3>
 </aside><!-- title_line end -->
+</div>
 
 <section class="search_table mt20"><!-- search_table start -->
 
