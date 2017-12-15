@@ -92,6 +92,12 @@
     }             
 }
 
+   function onlyNumber(obj) {
+       $(obj).keyup(function(){
+            $(this).val($(this).val().replace(/[^0-9]/g,""));
+       }); 
+   }
+
 function fn_getASReasonCode2(_obj , _tobj, _v){
     
     var   reasonCode =$(_obj).val();
@@ -154,7 +160,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Application Route</th>
     <td colspan="3">
-    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  value="${compensationView.asReqsterTypeId}" placeholder="" class=" " style="width: 157px; "/>
+    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  value="${compensationView.asReqsterTypeId}" onkeydown="onlyNumber(this)" placeholder="" class=" " style="width: 157px; "/>
     </td>
 </tr>
 <tr>

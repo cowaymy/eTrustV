@@ -46,6 +46,12 @@
         $("#popClose").click();
     }       
 
+   function onlyNumber(obj) {
+       $(obj).keyup(function(){
+            $(this).val($(this).val().replace(/[^0-9]/g,""));
+       }); 
+   }
+
     function fn_doSave () {
             
             if ($("#custId").val().trim() == '') {
@@ -147,7 +153,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Application Route</th>
     <td colspan="3">
-    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  placeholder="" class=" " style="width: 157px; "/>
+    <input type="text" title="" id="asReqsterTypeId" name="asReqsterTypeId"  placeholder="" class=" " onkeydown="onlyNumber(this)" style="width: 157px; "/>
     </td>
 </tr>
 <tr>
