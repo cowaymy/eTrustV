@@ -296,8 +296,6 @@ $(function(){
     
     $('#insReqType').change(function() {
         searchReqType = $('#insReqType').val();
-        alert("searchReqType :  "+searchReqType);
-        //alert("searchReqType :  "+searchReqType);
         if (searchReqType == 'OG53'){
             $('#lirightBtn').hide();
             $('#reqadd').show();
