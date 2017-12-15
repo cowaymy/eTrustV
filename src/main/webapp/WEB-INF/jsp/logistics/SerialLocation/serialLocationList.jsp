@@ -75,7 +75,7 @@
             if (event.which == '13')
             {
                 $("#svalue").val($("#srchmaterial").val());
-                $("#sUrl").val("/logistics/material/materialcdsearch.do");
+                $("#surl").val("/logistics/material/materialcdsearch.do");
                 $("#searchtype").val("search");
 
                 Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
@@ -88,7 +88,7 @@
 
             if (event.which == '13')
             {
-                $("#ltype").val('hiddenLoc');
+                $("#stype").val('hiddenLoc');
                 $("#svalue").val($('#location').val());
                 $("#sUrl").val("/logistics/organization/locationCdSearch.do");
 
@@ -124,7 +124,7 @@
         {
             $("#srchmaterial").val(rtnVal.itemcode);
         }
-        else if($("#ltype").val() == "hiddenLoc")
+        else if($("#stype").val() == "hiddenLoc")
         {
             $("#hiddenLoc").val(rtnVal.locid);
             $("#location").val(rtnVal.locdesc);
@@ -183,9 +183,9 @@
 
         <form id="searchForm" name="searchForm">
 
-            <input type="hidden" id="lvalue" name="lvalue"/>
-            <input type="hidden" id="lUrl"   name="lUrl"  />
-            <input type="hidden" id="ltype"  name="ltype" />
+            <input type="hidden" id="svalue" name="svalue"/>
+            <input type="hidden" id="sUrl"   name="sUrl"  />
+            <input type="hidden" id="stype"  name="stype" />
             <input type="hidden" id="searchtype" name="searchtype"/>
 
             <table class="type1"><!-- table start -->
