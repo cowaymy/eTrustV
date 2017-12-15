@@ -46,4 +46,6 @@ public interface BudgetService {
 	EgovMap deleteAdjustmentInfo (Map<String, Object> params) throws Exception;
 
 	void saveApproval(Map<String, Object> params) throws Exception;
+
+	String selectCloseMonth(Map<String, Object> params);
 }

@@ -822,6 +822,13 @@ SELECT BUDGET_PLAN_YEAR ,
   <update id="deleteAdjustmentDByDocNo" parameterType="Map">
    DELETE FROM FCM0103D      
     WHERE BUDGET_DOC_NO     = #{budgetDocNo}
-</update>
+  </update>
+
+  <select id="selectCloseMonth" parameterType="Map" resultType="String">
+      SELECT BUDGET_STUS 
+        FROM FCM0106M 
+      WHERE BUDGET_YEAR = SUBSTR(REPLACE (#{yearMonth}, '/',''),3,4) 
+          AND BUDGET_MONTH = SUBSTR(REPLACE (#{yearMonth}, '/',''),1,2)
+  </select>
 
 </mapper>

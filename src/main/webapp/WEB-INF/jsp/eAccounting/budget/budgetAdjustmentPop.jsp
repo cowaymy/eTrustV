@@ -1001,6 +1001,22 @@ function fn_savePopApprove(value){
     }));
 }
 
+function fn_closeMonChk(obj){
+	var str = obj.value;
+	
+	Common.ajax("GET", "/eAccounting/budget/selectCloseMonth?yearMonth="+ str, null, function(result) {
+        
+        console.log("성공.");
+        console.log( result);
+        
+        if(result.data == "Y") {
+        	Common.alert("Closed" + DEFAULT_DELIMITER + "Month : "+str+ " - The month is closed.");
+            $("#" + obj.id).val("");
+        }
+       
+   });
+}
+		
 
 </script>
 
@@ -1064,7 +1080,7 @@ function fn_savePopApprove(value){
 <tr>
 	<th scope="row"><spring:message code="budget.Month" />/<spring:message code="budget.Year" /></th>
 <%-- 	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-	<td><input type="text" id="sendYearMonth" name="sendYearMonth" title="" placeholder="MM/YYYY" class="j_date2" /></td>
+	<td><input type="text" id="sendYearMonth" name="sendYearMonth" title="" placeholder="MM/YYYY" class="j_date2" onchange="fn_closeMonChk(this);"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>
@@ -1121,7 +1137,7 @@ function fn_savePopApprove(value){
 <tr>
 	<th scope="row"><spring:message code="budget.Month" />/<spring:message code="budget.Year" /></th>
 <%-- 	<td><input type="text" title="" placeholder="" class="" /><a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td> --%>
-	<td><input type="text" id="recvYearMonth" name="recvYearMonth" title="" placeholder="MM/YYYY" class="j_date2" /></td>
+	<td><input type="text" id="recvYearMonth" name="recvYearMonth" title="" placeholder="MM/YYYY" class="j_date2" onchange="fn_closeMonChk(this);" /></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="budget.CostCenter" /></th>

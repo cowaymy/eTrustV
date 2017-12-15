@@ -674,5 +674,20 @@ public class BudgetController {
 		
 	}		
 	
+	@RequestMapping(value = "/selectCloseMonth", method = RequestMethod.GET) 
+	public ResponseEntity<ReturnMessage> selectCloseMonth (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String closeMonth = budgetService.selectCloseMonth(params);
+		
+		ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(closeMonth);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}	
 }
 
