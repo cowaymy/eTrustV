@@ -24,15 +24,12 @@ $(document).ready(function() {
     
     AUIGrid.setSelectionMode(myGridID, "singleRow");
     
-    // 171113 :: 선한이
     doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'S' ,  '');
     
-    // 171114 :: 선한이
     $("#cmbbranchId").change(function (){
         doGetCombo('/services/as/selectCTByDSC.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
     });
     
-    // 171110 :: 선한이
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         var asid =    AUIGrid.getCellValue(myGridID, event.rowIndex, "asId");
@@ -196,7 +193,6 @@ $.fn.clearForm = function() {
 <br> -->
 
 <ul class="right_btns">
-    <!-- 171110 :: 선한이  -->
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_searchASManagement()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#CompensationForm').clearForm();" ><span class="clear"></span>Clear</a></p></li>
 </ul>

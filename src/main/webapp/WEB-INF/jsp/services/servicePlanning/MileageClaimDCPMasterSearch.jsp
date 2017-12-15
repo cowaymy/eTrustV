@@ -126,7 +126,6 @@ function DCPMasterGrid() {
         });
     }
     
-    // 171129 :: 선한이
     // Search 결과 조회
     // 마스터 그리드 리스트 조회.
     function fn_DCPMasterSearch(goPage){
@@ -192,7 +191,6 @@ function DCPMasterGrid() {
         AUIGrid.removeSoftRows(gridID1);
     }
     
-     // 171123 :: 선한이
      // 엑셀 내보내기(Export);
      function fn_exportTo() {
          GridCommon.exportTo("calculation_DCPMaster_grid_wap", 'xlsx', "DCP Mgmt");
@@ -217,7 +215,6 @@ function DCPMasterGrid() {
                 });
      };
      
-     // 171204 :: 선한이
      function fn_AlldownFile() {
     	 if($('#memType').val() == '') {
              Common.alert("Please Select 'Member Type'");
@@ -284,7 +281,6 @@ function DCPMasterGrid() {
 <h2>DCP Mgmt.</h2>
 <ul class="right_btns">
 
-    <!-- 171123 :: 선한이 -->
     <li>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>

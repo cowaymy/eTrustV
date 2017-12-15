@@ -52,7 +52,6 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		}
 	}
 	
-	// 171120 :: 선한이
 	@Override
 	public void updateCTSubGroupByExcel(List<Map<String, Object>> updateList) {
 		for(int i=0; i< updateList.size(); i++){
@@ -80,7 +79,6 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		}
 	}
 	
-	// 171120 :: 선한이
 	@Override
 	public void updateCTAreaByExcel(List<Map<String, Object>> updateList) {
 		for(int i=0; i< updateList.size(); i++){

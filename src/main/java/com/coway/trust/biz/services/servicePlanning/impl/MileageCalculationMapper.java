@@ -25,7 +25,6 @@ public interface MileageCalculationMapper {
 	
 	void deleteSchemaMgmt(Map<String, Object> params);
 	
-	// 171123 :: 선한이
 	void updateDCPMasterByExcel(Map<String, Object> updateValue);
 	
 	List<EgovMap> selectSchemaMgmt(Map<String, Object> params);
@@ -36,12 +35,10 @@ public interface MileageCalculationMapper {
 	
 	List<EgovMap> selectMemberCode(Map<String, Object> params);
 
-	// 171127 :: 선한이
 	List<EgovMap> selectDCPFrom(Map<String, Object> params);
 	
 	List<EgovMap> selectDCPTo(Map<String, Object> params);
 
-	// 171130 :: 선한이
 	int selectDCPMasterCount(Map<String, Object> params);
 
 	List<EgovMap> selectCity(Map<String, Object> params);

@@ -341,7 +341,6 @@ function fn_radioButton(val){
 	}
 }
 
-// 171115 :: 선한이
 // 엑셀 내보내기(Export);
 function fn_exportTo() {
     var radioVal = $("input:radio[name='name']:checked").val();
@@ -353,7 +352,6 @@ function fn_exportTo() {
     }
 };
 
-// 171117 :: 선한이
 function fn_uploadFile() 
 {
    var formData = new FormData();

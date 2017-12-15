@@ -331,7 +331,6 @@ public class MileageCalculationController {
 		return ResponseEntity.ok(memberCode);
 	}
 	
-	// 171130 :: 선한이
 	/**
 	 * Search rule book management list
 	 *
@@ -349,7 +348,6 @@ public class MileageCalculationController {
 		return ResponseEntity.ok(cityList);
 	}
 	
-	// 171127 :: 선한이
 	/**
 	 * Search rule book management list
 	 *

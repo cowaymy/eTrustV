@@ -277,7 +277,6 @@
             AND B.MEM_LVL IN(2,3,4) AND STUS = 1
             ORDER BY A.MEM_ID , MEM_CODE,NAME 
        </select>
-       <!-- 171114 :: 선한이 -->
        <select id="seleCtCodeSearch2" parameterType="Map" resultType="egovMap">
            select 
             A.MEM_ID CODE_ID, A.MEM_CODE || ' - '|| NAME CODE_NAME , NAME

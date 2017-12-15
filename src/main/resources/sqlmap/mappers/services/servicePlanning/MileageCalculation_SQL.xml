@@ -71,7 +71,6 @@
          AND DCP_FROM_ID = #{dcpFromId1} AND AND DCP_TO = #{dcpTo1}
 </delete> -->
 
-<!-- 171206 :: 선한이 -->
 <select id="selectAllDCPMaster"  parameterType="Map" resultType="egovMap">
 SELECT ROWNUM AS RNUM, Z.* FROM (
     <if test="memType != null and memType == 2 ">
@@ -174,7 +173,6 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
     ) Z
 </select>
 
-<!-- 171129 :: 선한이 -->
 <select id="selectDCPMaster"  parameterType="Map" resultType="egovMap">
 <include refid="pagingStart" />
     <if test="memType != null and memType == 2 ">
@@ -277,7 +275,6 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
 <include refid="pagingEnd" />
 </select>
 
-<!-- 171130 :: 선한이 -->
 <!-- selectDCPMaster 전체 건수 -->
 <select id="selectDCPMasterCount"  parameterType="Map" resultType="int">
     <if test="memType != null and memType == 2 ">
@@ -570,7 +567,6 @@ FROM
          </if>
           AND A.STUS = '1'
     </select>
-    <!--  171130 :: 선한이 -->
     <select id="selectCity"  parameterType="Map" resultType="egovMap">
          SELECT DISTINCT CITY CODE_ID, CITY CODE_NAME
          FROM SYS0064M

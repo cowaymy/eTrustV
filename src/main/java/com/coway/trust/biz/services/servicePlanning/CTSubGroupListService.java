@@ -11,14 +11,12 @@ public interface CTSubGroupListService {
 	
 	void insertCTSubGroup(List<Object> params);
 	
-	// 171120 :: 선한이
 	void updateCTSubGroupByExcel(List<Map<String, Object>> updateList);
 	
 	List<EgovMap>  selectCTAreaSubGroupList(Map<String, Object> params);
 	
 	void insertCTSubAreaGroup(List<Object> params);
 	
-	// 171120 :: 선한이
 	void updateCTAreaByExcel(List<Map<String, Object>> updateList);
 	
 	List<EgovMap>  selectCTSubGroupDscList(Map<String, Object> params);

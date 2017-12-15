@@ -100,5 +100,21 @@
         DELETE FROM CCR0003M 
         WHERE HC_DEF_ID = #{hcId}
     </delete>
+    
+    <!-- <update id="updateStatus" parameterType="Map">
+		UPDATE CCR0003M
+		SET HC_DEF_STUS_ID = 8
+		WHERE 1=1
+		AND HC_DEF_TYPE_ID = (SELECT CODE_ID
+							               FROM SYS0013M 
+							               WHERE CODE_MASTER_ID = 80
+							               AND CODE_NAME = #{callType})
+		AND HC_DEF_STUS_ID = 1
+		AND HC_DEF_ITM_NO = TO_NUMBER(#{questionNumber})
+		AND (TO_DATE(#{periodFrom}, 'MM/YYYY') 
+		      BETWEEN TO_DATE(해당시작일, 'YYYY/MM/DD') AND TO_DATE(해당종료일, 'YYYY/MM/DD')
+		OR TO_DATE(#{periodFrom}, 'MM/YYYY') 
+              BETWEEN TO_DATE(해당시작일, 'YYYY/MM/DD') AND TO_DATE(해당종료일, 'YYYY/MM/DD'))
+    </update> -->
 
 </mapper>

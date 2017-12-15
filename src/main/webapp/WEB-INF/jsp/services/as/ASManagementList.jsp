@@ -398,15 +398,12 @@ $(document).ready(function() {
     
     AUIGrid.setSelectionMode(myGridID, "singleRow");
     
-    // 171113 :: 선한이
     doGetCombo('/services/holiday/selectBranchWithNM', 43, '','cmbbranchId', 'S' ,  '');
     
-	// 171114 :: 선한이
 	$("#cmbbranchId").change(function (){
 		doGetCombo('/services/as/selectCTByDSC.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
 	});
     
-    // 171110 :: 선한이
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
         var asid =    AUIGrid.getCellValue(myGridID, event.rowIndex, "asId");
@@ -501,7 +498,6 @@ function asManagementGrid() {
               labelText : "Edit",
               onclick : function(rowIndex, columnIndex, value, item) {
                    
-                  // 171110 :: 선한이
                   var AS_ID =    AUIGrid.getCellValue(myGridID, rowIndex, "asId");
                   var AS_NO =    AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
                   var asStusId     = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
@@ -689,7 +685,6 @@ function fn_invoice(){
 <br> -->
 
 <ul class="right_btns">
-    <!-- 171110 :: 선한이  -->
     
     
     
@@ -757,7 +752,6 @@ function fn_invoice(){
     <th scope="row">Order Number</th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
 </tr>
-<!-- 171115 :: 선한이  -->
 <tr>
     <th scope="row">DSC</th>
     <td>
@@ -796,7 +790,6 @@ function fn_invoice(){
     <ul class="btns">
       <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit </a></p></li>
       
-        <!-- 171110 :: 선한이  -->
         <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_newASResultPop()">New AS Result</a></p></li>

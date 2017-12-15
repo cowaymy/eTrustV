@@ -203,7 +203,6 @@
         fn_getCtCodeSearch1();
         //fn_getCtCodeSearch('');
         
-        // 171114 :: 선한이
 	    $("#cmbbranchId").change(function (){
 	        
 	        doGetCombo('/organization/seleCtCodeSearch2.do',  $("#cmbbranchId").val(), '','cmbctId', 'S' ,  '');
@@ -350,7 +349,6 @@
         }, null, {async : false});
     }
     
-    // 171204 :: 선한이
     // 엑셀 업로드
     function fn_uploadFile() {
         var formData = new FormData();
@@ -399,7 +397,6 @@
 <h3>Search Option</h3>
 <ul class="right_btns">
 
-    <!-- 171204 :: 선한이 -->
     <li>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
