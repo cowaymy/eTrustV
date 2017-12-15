@@ -335,13 +335,13 @@
     
 <form id='cForm' name='cForm'>
 
-    <input type='text' id ='groupCode' name='groupCode'>
-    <input type='text' id ='memType' name='memType'>
-    <input type='text' id ='memLvl' name='memLvl'>
+    <input type='hidden' id ='groupCode' name='groupCode'>
+    <input type='hidden' id ='memType' name='memType'>
+    <input type='hidden' id ='memLvl' name='memLvl'>
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">
-    <li><img src="../images/common/path_home.gif" alt="Home" /></li>
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Organization</li>
     <li>Organization Chart</li>
 </ul>
