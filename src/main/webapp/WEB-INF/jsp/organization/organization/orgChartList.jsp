@@ -309,7 +309,6 @@
                 deptIdCd="";
            }
            
-           alert("deptIdCd:"+deptIdCd);
            
            if($("#cmbGroupId").val() == "" && $("#cmbOrganizationId").val() != ""){
                  parentIdCd ="0";
