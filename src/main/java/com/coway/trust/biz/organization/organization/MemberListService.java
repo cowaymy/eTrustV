@@ -87,4 +87,6 @@ public interface MemberListService {
 
 	List<EgovMap> selectDeptCodeHp(Map<String, Object> params);
 
+	List<EgovMap> selectHPApplicantList(Map<String, Object> params);
+
 }
