@@ -126,7 +126,18 @@ public class MemberListController {
 		logger.debug("createDate : {}", params.get("createDate"));
 		logger.debug("endDate : {}", params.get("endDate"));
 
-		List<EgovMap> memberList = memberListService.selectMemberList(params);
+		List<EgovMap> memberList = null;
+
+		String MemType = params.get("memTypeCom").toString();
+		if(MemType.equals("2803"))
+		{
+			memberList = memberListService.selectHPApplicantList(params);
+		}
+		else
+		{
+			memberList = memberListService.selectMemberList(params);
+		}
+
 		return ResponseEntity.ok(memberList);
 	}
 
