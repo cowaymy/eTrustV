@@ -33,6 +33,13 @@
 	    Extent1.NAME Name
 	    FROM  SYS0038M Extent1
 	    INNER JOIN ORG0001D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS
+	     union
+        SELECT DISTINCT
+        Extent1.STUS_CODE_ID StatusCodeID,
+        Extent1.CODE Code,
+        Extent1.NAME Name
+        FROM  SYS0038M Extent1
+        INNER JOIN ORG0003D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS_ID
     )  Distinct1
     </select>
 
@@ -299,6 +306,99 @@
     </select>
     <!-- By KV end - add Position query -->
 
+<!-- CYC select HP Applicant -->
+<select id="selectHPApplicantList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+           SELECT row_number,
+            Project1.MEM_ID MemberID,
+            Project1.MEM_TYPE  MemberType,
+            Project1.MEM_CODE MemberCode,
+            Project1.CODE_NAME CodeName,
+            Project1.NAME Name,
+            Project1.NRIC NRIC,
+            Project1.status_name,
+            Project1.UPD_DT Updated,
+            Project1.STUS Status,
+            Project1.position_name,
+            Project1.brnch_id,
+            Project1.ct_sub_grp,
+            Project1.C1 C1
+            FROM ( SELECT Project1.C1 C1,
+                     Project1.MEM_ID MEM_ID,
+                     Project1.MEM_CODE MEM_CODE,
+                     Project1.MEM_TYPE MEM_TYPE,
+                     Project1.NAME NAME,
+                     Project1.NRIC NRIC,
+                     Project1.STUS STUS,
+                    TO_CHAR(Project1.UPD_DT,'DD-MM-YYYY') UPD_DT,
+                     Project1.CODE_NAME CODE_NAME,
+                     Project1.status_name,
+                     Project1.position_name,
+                     Project1.brnch_id,
+                    Project1.ct_sub_grp,
+                     row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
+                     FROM ( SELECT
+                   '' C1,
+                    Extent1.APLCTN_ID MEM_ID,
+                    Extent1.APLICNT_CODE MEM_CODE,
+                    Extent1.APLICNT_TYPE MEM_TYPE,
+                    Extent1.APLICNT_NAME NAME,
+                    Extent1.APLICNT_NRIC NRIC,
+                    Extent1.STUS_ID STUS,
+                    Extent1.UPD_DT UPD_DT,
+                    Extent2.CODE_NAME CODE_NAME,
+                    Extent3.NAME as status_name,
+                    '' as brnch_id,
+                    '' ct_sub_grp,
+                    '' position_name
+                    FROM   ORG0003D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
+                    INNER JOIN SYS0013M Extent2 ON Extent1.APLICNT_type = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
+                    INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
+                    ]]>
+                        WHERE 1=1
+                         <if test="code != null and code != ''">
+                           AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{code} || '%')
+                         </if>
+                         <if test="name != null and name != ''">
+                           AND  UPPER(Extent1.APLICNT_NAME) LIKE UPPER('%' || #{name} || '%')
+                         </if>
+                         <if test="icNum != null and icNum != ''">
+                           AND  Extent1.APLICNT_NRIC LIKE   '%' || #{icNum} || '%'
+                         </if>
+                         <if test="birth != null and birth != ''">
+                           AND Extent1.APLICNT_DOB =  TO_DATE(#{birth}, 'DD/MM/YYYY')
+                         </if>
+                          <if test="nation != null and nation != ''">
+                           AND  Extent1.APLICNT_NATION =  #{nation}
+                         </if>
+                         <if test="race != null and race != ''">
+                           AND Extent1.APLICNT_RACE =  #{race}
+                         </if>
+                         <if test="status != null and status != ''">
+                           AND  Extent1.STUS_ID =  #{status}
+                         </if>
+                         <if test="keyUser != null and keyUser != ''">
+                           AND  Extent1.CRT_USER_ID =  #{keyUser}
+                         </if>
+                         <if test="createDate != '' and endDate == '' ">
+                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
+                         </if>
+                          <if test="endDate != '' and createDate == '' ">
+                            <![CDATA[  AND TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD')   <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                         </if>
+                          <if test="createDate != '' and endDate != '' ">
+                            <![CDATA[  AND Extent1.CRT_DT  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                         </if>
+                          <if test="contact != null and contact != ''">
+                            AND  ((Extent1.APLICNT_TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.APLICNT_TEL_MOBILE = #{contact} OR Extent1.APLICNT_TEL_HUSE = #{contact} OR Extent1.APLICNT_TEL_OFFICE = #{contact})
+                         </if>
+                  <![CDATA[
+                )   Project1
+            )  Project1
+            WHERE Project1.row_number >  0
+            ORDER BY Project1.MEM_CODE ASC
+             ]]>
+    </select>
 
     <resultMap id="clobMap" type="EgovMap">
         <result property="C59" column="C59" jdbcType="CLOB"  javaType="java.lang.String" />
