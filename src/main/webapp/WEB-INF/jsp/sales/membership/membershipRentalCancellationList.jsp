@@ -86,11 +86,11 @@ function creatGrid(){
     },{
         dataField : "trmnatRefNo",
         headerText : '<spring:message code="sales.cancellNo" />',
-        width : 150
+        width : 120
     },{
         dataField : "srvCntrctRefNo",
         headerText : '<spring:message code="sales.MembershipNo" />',
-        width : 150   
+        width : 120   
     },{
         dataField : "salesOrdNo",
         headerText : '<spring:message code="sales.OrderNo" />',
@@ -99,26 +99,26 @@ function creatGrid(){
         dataField : "resnDesc",
         headerText : '<spring:message code="sales.reasonDesc" />',
         style : "my-left-style",
-        width : 150
+        width : 180
     },{
         dataField : "trmnatPnalty",
         headerText : '<spring:message code="sales.penaltyCharges" />',
         dataType : "numeric",
         formatString : "#,##0.00",
         style : "my-right-style",
-        width : 150
+        width : 110
     }, {
         dataField : "taxInvcRefNo",
         headerText : '<spring:message code="sales.invoiceNo" />',
-        width : 150
+        width : 120
     }, {
         dataField : "userName",
         headerText : '<spring:message code="sales.Creator" />',
-        width : 100
+        width : 120
     }, {
         dataField : "trmnatCrtDt",
         headerText : '<spring:message code="sales.reqDate" />',
-        width : 150
+        width : 110
     }];
     
 
@@ -127,6 +127,7 @@ function creatGrid(){
                showRowNumColumn    : false,
                usePaging : true,
                editable : false,
+               headerHeight        : 30, 
                softRemoveRowMode:false
          }; 
     

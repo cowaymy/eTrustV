@@ -85,22 +85,23 @@ function creatGrid(){
     var stusColLayout = [ {
         dataField : "rsCnvrNo",
         headerText : '<spring:message code="sales.BatchNo" />',
-        width : 150
+        width : 110
     },{
         dataField : "batchStatus",
-        headerText : '<spring:message code="sales.BatchStatus" />'
+        headerText : '<spring:message code="sales.BatchStatus" />',
+        width : 75
     },{
         dataField : "rsCnvrStusFrom",
         headerText : '<spring:message code="sales.StatusFrom" />',
-        width : 150
+        width : 75
     },{
         dataField : "rsCnvrStusTo",
         headerText : '<spring:message code="sales.StatusTo" />',
-        width : 100
+        width : 75
     }, {
         dataField : "convertStatus",
         headerText : '<spring:message code="sales.ConvertStatus" />',
-        width : 100
+        width : 75
     },{
         dataField : "rsCnvrDt",
         headerText : '<spring:message code="sales.ConvertDate" />',
@@ -108,19 +109,19 @@ function creatGrid(){
     },{
         dataField : "crtUserName",
         headerText : '<spring:message code="sales.Creator" />',
-        width : 150
+        width : 120
     },{
         dataField : "rsCnvrCrtDt",
         headerText : '<spring:message code="sales.CreateDate" />',
-        width : 150
+        width : 90
     },{
         dataField : "cnfmUserName",
         headerText : '<spring:message code="sales.ConfirmBy" />',
-        width : 150
+        width : 120
     },{
         dataField : "rsCnvrCnfmDt",
         headerText : '<spring:message code="sales.ConfirmDate" />',
-        width : 150
+        width : 120
     },{
         dataField : "rsCnvrId",
         headerText : '',
@@ -129,7 +130,7 @@ function creatGrid(){
     },{
         dataField : "rsStusId",
         headerText : '',
-        width : 150,
+        width : 90,
         visible : false
     }];
     
@@ -137,7 +138,8 @@ function creatGrid(){
     var stusOptions = {
                showStateColumn:false,
                showRowNumColumn    : true,
-               usePaging : true,
+               usePaging : true, 
+               headerHeight        : 30, 
                editable : false
          }; 
     
@@ -270,7 +272,7 @@ function creatGrid(){
 </ul> -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="stusGridID" style="width:100%; height:420px; margin:0 auto;"></div>
+    <div id="stusGridID" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
