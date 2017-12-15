@@ -111,7 +111,7 @@ $(document).ready(function(){
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
-    doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
+    //doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
    //doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
      doGetCombo('/logistics/inbound/InboundLocation', 'port', '','flocation', 'A' , ''); 
      doGetCombo('/logistics/inbound/InboundLocation', '', '','tlocation', 'A' , ''); 
@@ -193,6 +193,7 @@ $(document).ready(function(){
                });
                AUIGrid.update(serialGrid);
            }
+          
           
           if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
              f_addrow();      
@@ -310,7 +311,7 @@ function grFunc(){
     data.checked = check;
     data.add = serials;
     data.form    = $("#grForm").serializeJSON();
-    console.log(data);
+    
     Common.ajax("POST", "/logistics/inbound/receipt.do", data, function(result) {
        
         Common.alert(result.message);
@@ -405,10 +406,13 @@ function fn_itempopList_T(data){
     var itm_temp = "";
     var itm_qty  = 0;
     var itmdata = [];
+    
     for (var i = 0 ; i < data.length ; i++){
+    	
     	if("Y"==data[i].item.serialchk){
-           itm_qty = itm_qty + data[i].item.rciptqty;
+           itm_qty = itm_qty + Number(data[i].item.rciptqty);
     	}
+    	
         $("#reqstno").val(data[i].item.reqstno)
     }
     $("#serialqty").val(itm_qty);
