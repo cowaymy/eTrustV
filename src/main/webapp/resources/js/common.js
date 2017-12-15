@@ -691,6 +691,33 @@ var Common = {
 
     },
 
+    confirmById: function (message, okCallback, cancelCallback, confirmDivId) {
+
+        if(FormUtil.isEmpty(message)){
+            alert("message parameter  is empty !!!!!!");
+            return;
+        }
+
+        var msgArray = message.split(DEFAULT_DELIMITER);
+        var title = "Message";
+        var content = "";
+
+        if(msgArray.length > 1){
+            title = msgArray[0];
+            content = msgArray[1];
+        }else{
+            content = message;
+        }
+
+        Common.confirmBase({
+            title : title,
+            content : content,
+            confirmDivId : confirmDivId,
+            isManual : true
+        }, okCallback, cancelCallback);
+
+    },
+
     /**
      * 공통 confirm BASE....
      * @param option
@@ -708,7 +735,9 @@ var Common = {
 
         var option = {
             title : "Message",
-            isBig : false
+            isBig : false,
+            isManual : false,
+            confirmDivId : "_popup_wrap_confirm"
         };
 
         option = $.extend(option, _options);
@@ -719,7 +748,7 @@ var Common = {
             bigClass = "msg_big";
         }
 
-        var msgHtml = '<div id="_popup_wrap_confirm"  confirm="Y" class="popup_wrap msg_box ' + bigClass + '">'
+        var msgHtml = '<div id="' + option.confirmDivId + '"  confirm="Y" class="popup_wrap msg_box ' + bigClass + '">'
             + '	<header class="pop_header">'
             + '<h1>' + option.title + '</h1>'
             + '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
@@ -747,7 +776,11 @@ var Common = {
                 okCallback();
             }
 
-            $obj.remove();
+            if(option.isManual){
+                console.log("this confirm is manual mode....");
+            }else{
+                $obj.remove();
+            }
         });
 
         $obj.find('#_confirmCancel').on('click', function () {
