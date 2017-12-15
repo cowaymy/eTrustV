@@ -76,20 +76,7 @@
 				//Check : Run procedure in 20 minutes
 				Common.ajax("GET", "/commission/calculation/runningPrdCheck",$("#searchForm").serializeJSON(), function(result) {
 					if(result.data[0] == null){
-						
-						$("#batchYn").val("Y");
-					    
-						//Check : Running is more than 30 minutes
-						Common.ajax("GET", "/commission/calculation/runPrdTimeValid", $("#searchForm").serializeJSON(), function(result2) {
-							//message settting
-							var msg = "";
-							if(result2.data[0] != null){
-								msg = "The procedure is already running("+result2.data[0].calYearMonth+"). Do you want to run it again?"
-							}else{
-								msg = "Do you want to run the batch?"
-							}
-									
-					//		Common.confirmById(msg,function(){						
+					
 	            var gridList = AUIGrid.getGridData(myGridID_CAL); //그리드 데이터
 							var formList = $("#searchForm").serializeArray(); //폼 데이터
 
@@ -108,9 +95,6 @@
 									$("#search").trigger("click");
 								}
 							});
-							//		   },"","commCalConfirm");//batch function call
-						});
-
 					} else {
 						Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
 					}
