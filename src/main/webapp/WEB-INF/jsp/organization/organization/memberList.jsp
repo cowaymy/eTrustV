@@ -102,6 +102,7 @@ $(document).ready(function() {
     /*By KV Start  - Position button disable function in selection*/
     $("#position").attr("disabled",true);
     /*By KV End - Position button disable function in selection*/
+
  });
 
 function createAUIGrid() {
@@ -250,7 +251,7 @@ function fn_searchPosition(selectedData){
 				    "memberType="+selectedData,
 				    function(result) {
 				    	/* By KV - user able use "select account" */
-				    	$("#position").append("<option value=''>Select Account</option> " );
+				    	$("#position").append("<option value=''>Select Position</option> " );
 				        for(var idx=0; idx < result.length ; idx++){
 				            $("#position").append("<option value='" +result[idx].positionLevel+ "'> "+result[idx].positionName+ "</option>");
 				        }
