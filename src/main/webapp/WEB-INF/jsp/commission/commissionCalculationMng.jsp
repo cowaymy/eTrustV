@@ -102,7 +102,7 @@
 	                            
 	                             Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {	                            	 
 	                                $("#search").trigger("click");
-	                                $("##commCalConfirm").remove();
+	                                $("#commCalConfirm").remove();
 	                            }, function(jqXHR, textStatus, errorThrown) {
 	                            
 	                                    console.log("실패하였습니다.");
@@ -112,9 +112,9 @@
 	                                        Common.alert("Running... Please wait about 20 minutes ");
 	                                        $("#search").trigger("click");
 	                                     }
-	                                    $("##commCalConfirm").remove();
+	                                    $("#commCalConfirm").remove();
 	                            });								
-						   },"","#commCalConfirm");//batch function call
+						   },"","commCalConfirm");//batch function call
 						});
 						
 					}else{
