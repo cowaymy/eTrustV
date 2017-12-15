@@ -67,6 +67,10 @@ public interface MlogApiService {
 	List<EgovMap> getUsedPartsList(Map<String, Object> params);
 	
 	List<EgovMap> getMiscPartList();
+	
+	List<EgovMap> getFilterNotChangeList(Map<String, Object> params);
+	
+	List<EgovMap> getFilterUserChangeList(Map<String, Object> params);
 
 	/**
 	 * 현창배 추가
