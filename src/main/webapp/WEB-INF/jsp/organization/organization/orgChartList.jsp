@@ -39,15 +39,18 @@
              }, {
                     dataField : "memId",
                     headerText : "Member  Name",
-                    width : 120            
+                    width : 120,
+                    visible : false            
              }, {
                     dataField : "memLvl",
                     headerText : "Member  Name",
-                    width : 120               
+                    width : 120,
+                    visible : false               
              }, {
                     dataField : "memType",
                     headerText : "Member  Name",
-                    width : 120                                                              
+                    width : 120,
+                    visible : false                                                              
              }];
             
             // 그리드 속성 설정
@@ -308,7 +311,7 @@
            
             //cd
            var paramCddata;
-           paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd};
+           paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
            
                 //cd
            Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
