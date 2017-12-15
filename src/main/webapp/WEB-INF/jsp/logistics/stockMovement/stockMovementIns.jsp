@@ -245,6 +245,11 @@ $(function(){
     });
 });
 
+function fn_changeLocation() {
+	var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val()}; // session 정보 등록
+    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
+} 
+
 function transferTypeFunc(){
 //     paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
 //     doGetComboData('/common/selectCodeList.do', paramdata, 'UM03','smtype', 'S' , '');

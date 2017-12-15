@@ -415,6 +415,11 @@ $(function(){
     });
 });
 
+function fn_changeLocation() {
+    var paramdata2 = {endlikeValue:$("#locationType").val()};
+    doGetComboCodeId('/common/selectStockLocationList.do',paramdata2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
+} 
+
 
 function fn_serialChck(rowindex , rowitem , str){
     var schk = true;
