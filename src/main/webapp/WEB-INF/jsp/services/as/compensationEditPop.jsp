@@ -6,224 +6,39 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript" language="javascript">
-
-    var myGenerallGridIDInActive;
-    var myDetailGridIDInActive;
-
-    function createAUIGridInactiveGeneral(){
-        // AUIGrid 칼럼 설정
-        var columnLayout = [ 
-                                        
-                                        {                        
-                                            dataField : "",
-                                            headerText : "AS Request Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Application Route",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "As Order Number",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Order No",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Customer name",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Product name",
-                                            width : 130
-                                            //,dataType : "date",
-                                            //formatString : "dd/mm/yyyy"   
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Installation Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Serial No.",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Status",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Person to bear",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Complete Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "RM",
-                                            width : 130 
-                                        },
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Managing Department",
-                                            width : 130 
-                                        }    
-                                   ];
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용       
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-                
-                editable : false,
-                
-                //showStateColumn : true, 
-                
-                //displayTreeOpen : true,
-                
-                headerHeight : 30,
-                
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-                
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-                
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
-        
-            };
-            myGenerallGridIDInActive = AUIGrid.create("#grid_wrap_general", columnLayout, gridPros);
-    }
-    
-    
-    function createAUIGridInactiveDetailLog(){
-        // AUIGrid 칼럼 설정
-        var columnLayout = [ 
-                                        
-                                        {                        
-                                            dataField : "",
-                                            headerText : "Issue Date",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Leaking/burning",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Defect Parts",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Reason",
-                                            width : 130 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Settlement Mothod",
-                                            width : 140 
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Attachment",
-                                            width : 130
-                                            //,dataType : "date",
-                                            //formatString : "dd/mm/yyyy"   
-                                        },
-                                        {                        
-                                        	dataField : "",
-                                            headerText : "Comensation Item",
-                                            width : 140 
-                                        }
-                                   ];
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용       
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-                
-                editable : false,
-                
-                //showStateColumn : true, 
-                
-                //displayTreeOpen : true,
-                
-                headerHeight : 30,
-                
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-                
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-                
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
-        
-            };
-            myDetailGridIDInActive = AUIGrid.create("#grid_wrap_detailLog", columnLayout, gridPros);
-    }
-    
-      
         
         $(document).ready(function() {
-        
-            //doDefCombo('', '' ,'searchdepartment', 'M', 'f_deptmultiCombo');
-            
-           // CommonCombo.make('searchdepartment', '/sales/trBook/getOrganizationCodeList', {memType : $("#searchdepartment").val(), memLvl : 3, parentID : total_item}, '', {type:'M', isCheckAll:false});
             
             doGetCombo('/services/holiday/selectBranchWithNM', 43, '','code', 'S' ,  '');
             
-            
             doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'searchdepartment' , 'S', '');
-     
     
-	       $("#searchdepartment").change(function(){
-	         
-	         doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
-	         
-	     });
+            $("#searchdepartment").change(function(){
+                doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
+            });
 	     
 	     
-	     $("#salesOrdNo").focusout(function(){
-             if (  $("#salesOrdNo").val().length > 6) {
+            $("#salesOrdNo").focusout(function(){
+                if (  $("#salesOrdNo").val().length > 6) {
              
-	             Common.ajax("GET", "/services/compensation/selectSalesOrdNoInfo.do",   { salesOrdNo :  $("#salesOrdNo").val() }  , function(result) {
-	                console.log("selectSalesOrdNoInfo >>> .");
-	                console.log(  JSON.stringify(result));
-	                
-	                 $("#product").val(result[0].stkDesc)
-	                 $("#Installation").val(result[0].installDt)
-	                 $("#Serial").val(result[0].serialNo)
+                    Common.ajax("GET", "/services/compensation/selectSalesOrdNoInfo.do",   { salesOrdNo :  $("#salesOrdNo").val() }  , function(result) {
+						console.log("selectSalesOrdNoInfo >>> .");
+						console.log(  JSON.stringify(result));
+						
+						$("#product").val(result[0].stkDesc)
+						$("#Installation").val(result[0].installDt)
+						$("#Serial").val(result[0].serialNo)
 	              
-	            }); 
+                    }); 
 	            
-            }
-             
-         });
+                }
+            });
             
             setInputFile2();
         });
  
-      function setInputFile2(){//인풋파일 세팅하기
-                $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
+    function setInputFile2(){//인풋파일 세팅하기
+        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
     }
  
     function fn_close() {
@@ -232,7 +47,7 @@
 
     function fn_doSave () {
     
-              var  SaveForm ={
+             /*  var  SaveForm ={
                                         "issueDt"               : $("#issueDt").val().replace(/\//g,""),
                                         "asReqsterTypeId"  : $("#asReqsterTypeId").val(),
                                         "asNo"                  : $("#asNo").val(),
@@ -254,7 +69,7 @@
                                         "attachFile"            : $("#attachFile").val(),
                                         "compNo"                : $("#compNo").val()
                                         
-                                   };
+                                   }; */
              
              var formData = Common.getFormData("comPensationInfoForm");
              
@@ -280,6 +95,25 @@
             }); 
     }
 
+function fn_getASReasonCode2(_obj , _tobj, _v){
+    
+    var   reasonCode =$(_obj).val();
+    var   reasonTypeId =_v;
+    
+    Common.ajax("GET", "/services/as/getASReasonCode2.do", {RESN_TYPE_ID: reasonTypeId  ,CODE:reasonCode} , function(result) {
+        console.log("fn_getASHistoryInfo.");
+        console.log(  JSON.stringify(result));
+        
+        if(result.length >0 ){
+            $("#"+_tobj+"_text").val((result[0].resnDesc.trim()).trim());
+            $("#"+_tobj+"_id").val(result[0].resnId);
+            
+        }else{
+            $("#"+_tobj+"_text").val("* No such detail of defect found.");
+        }
+    });
+    
+}
 </script>
 
 
