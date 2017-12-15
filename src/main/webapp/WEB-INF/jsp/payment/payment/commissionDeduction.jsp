@@ -24,6 +24,7 @@ $(document).ready(function(){
     });  
     
     AUIGrid.bind(subGrid2, "cellClick", function(event){
+    	AUIGrid.destroy(subGrid3);
         $("#grid_wrap_sub3").show();
         subGrid3 = GridCommon.createAUIGrid("#grid_wrap_sub3", columnLayoutForSub3, null, gridPros);
         var payId = AUIGrid.getCellValue(subGrid2, event.rowIndex, "payId");
