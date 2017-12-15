@@ -1442,12 +1442,12 @@ SELECT STK_ID
   SELECT * 
     FROM(
          SELECT
-              #{scmMonthCbBox} MONTH
-             ,'W' || #{scmPeriodCbBox} WEEK
-             ,STOCK_CODE
-             ,STOCK_NAME
-             ,STOCK_CTGRY
-             ,STK_TYPE_ID
+               #{scmMonthCbBox} MONTH
+             , 'W' || #{scmPeriodCbBox} WEEK
+             , STOCK_CODE
+             , STOCK_NAME
+             , STOCK_CTGRY
+             , STK_TYPE_ID
              
              ,TEAM
              ,SUM(W12_WEEK_00) W12
@@ -1697,14 +1697,14 @@ SELECT STK_ID
 
         /******************************/
 
-        SELECT  #{scmMonthCbBox} MONTH
-               ,'W' || #{scmPeriodCbBox} WEEK
-               ,STOCK_CODE
-               ,STOCK_NAME
-               ,STOCK_CTGRY
-               ,STK_TYPE_ID
+        SELECT  #{scmMonthCbBox}  MONTH
+               ,'W' || #{scmPeriodCbBox}  WEEK
+               , STOCK_CODE
+               , STOCK_NAME
+               , STOCK_CTGRY
+               , STK_TYPE_ID
+            
                ,'ALL' TEAM
-
                ,ALL_W12_WEEK_00 W12
                ,ALL_W11_WEEK_00 W11
                ,ALL_W10_WEEK_00 W10 
