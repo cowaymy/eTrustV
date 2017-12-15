@@ -323,7 +323,7 @@
                             id="causeOfCompensation" name="causeOfCompensation" /></td>
                         <th scope="row">Status</th>
                         <td>
-                                 <select  class="multy_select w100p" id="status" name="status">
+                                 <select  class="w100p" id="status" name="status">
                                          <option value="1">Active</option>
                                         <option value="44">Pending</option>
                                         <option value="34">Solved</option>

@@ -95,7 +95,7 @@
                      AND A.ISSUE_DT <![CDATA[<]]>  #{applicationEndDate}
              </if>   
              <if test="status != null and status  != '' " >    
-                     AND A.STUS_CODE_ID = #{status}
+                     AND A.STUS_CODE_ID in ( #{status} )
              </if>   
  </select>
               
@@ -194,6 +194,7 @@
               ,CODE                          = #{code}
               ,COMP_TOT_AMT           = #{compTotAmt}
               ,ISSUE_DT                    = to_date(#{issueDt}, 'yyyymmdd')
+              ,STUS_CODE_ID             = #{stusCodeId}
               ,AS_DEFECT_TYPE_ID     = #{asDefectTypeId}
               ,AS_MALFUNC_RESN_ID   = #{asMalfuncResnId}
               ,ASR_ITM_PART_ID         = #{asrItmPart_id}
