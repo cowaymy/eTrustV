@@ -83,8 +83,7 @@ function fn_viewBillingBatch(){
 	if(selectedItem != undefined){
 		   
 		   var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
-		    console.log("batchId : " + batchId);
-		    
+		    $("#itemText").text("Batch Item");
 		    Common.ajax("GET", "/payment/selectBatchMasterInfo.do", {"batchId" : batchId}, function(result){
 		    	$("#view_batch_pop").show();
 		        $("#popBatchNo").text(result.master.advBillBatchRefNo);
