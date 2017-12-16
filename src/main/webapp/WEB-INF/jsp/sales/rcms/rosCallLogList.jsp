@@ -43,7 +43,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 		Common.ajax("GET","/sales/rcms/selectRosCallLogList" , $("#_searchForm").serialize(),function(result){
 			//set Grid Data
 			AUIGrid.setGridData(rosGridID, result);
-		})
+		});
 	});
 });////////////////////////////////////////////////////////////////////////////////////////////////// Document Ready Func End
 
@@ -153,7 +153,7 @@ function fn_newROSCall(){
         return;
     }
     //Popup
-    Common.popupDiv("/sales/rcms/newRosCallPop.do", {salesOrderId : selectedItem[0].item.ordId , ordNo : selectedItem[0].item.ordNo, custId : selectedItem[0].item.custId}, null , true , '_newDiv');
+    Common.popupDiv("/sales/rcms/newRosCallPop.do", {salesOrderId : selectedItem[0].item.ordId , ordNo : selectedItem[0].item.ordNo, custId : selectedItem[0].item.custId, custBillId : selectedItem[0].item.custBillId}, null , true , '_newDiv');
 }
 
 function fn_chargeOrderBillingType(){
@@ -257,6 +257,7 @@ function searchList(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a onclick="javascript:fn_underDevelop()">Feedback List</a></p></li>
+        <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%> 
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

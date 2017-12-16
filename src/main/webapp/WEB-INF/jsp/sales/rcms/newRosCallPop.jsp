@@ -1,11 +1,48 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<!-- ############  Tooltip ######################-->
+<style type="text/css">
+    [data-tooltip-text]:hover {
+    position: relative;
+}
+[data-tooltip-text]:hover:after {
+    background-color: #000000;
+    background-color: rgba(0, 0, 0, 0.8);
+
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+    -moz-box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+    box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.4);
+
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    color: #FFFFFF;
+    font-size: 10px;
+    content: attr(data-tooltip-text);
+
+  margin-bottom: 10px;
+    top: 130%;
+    left: -50%;    
+    padding: 7px 12px;
+    position: absolute;
+    width: auto;
+    min-width: 150px;
+    max-width: 3000px;
+    word-wrap: break-word;
+    word-break:break-word;
+    white-space:pre;
+    text-overflow:clip;
+    z-index: 9999;
+}
+</style>
+<!-- ############  Tooltip ######################-->
+
 <script type="text/javascript">
 
 //Create and Return ID
 var smsGridID;
-
 
 var optionComboReason = {
         type: "S",
@@ -26,7 +63,10 @@ var optionComboStatus = {
 };
 
 
-$(document).ready(function() {
+$(document).ready(function() {/////////////////////////////////////////////////////////////////////////////// Doc Ready Func Start
+	
+    console.log("ordID : " + '${ordId}');
+    console.log("billID : " + '${custBillId}');
 	
 	createSMSGrid();
 	//Init
@@ -48,9 +88,163 @@ $(document).ready(function() {
 	
 	//Save
 	$("#_rosCallSaveBtn").click(function() {
-		Common.alert("Do Save!");
+		
+		if(fn_validation() == true){
+		
+			if($("#_groupRemSync").is(":checked") == true ){
+				
+				var rtnList;
+				
+				rtnList = fn_chkROSCallLogBillGroupOrderCount();
+				 
+				if(rtnList.length > 1){
+					Common.confirm("Total " + rtnList.length + " order. Are you sure you want to update?", fn_save);
+				}else{
+					fn_save();
+				}
+			}else{
+				fn_save();
+			}
+		}else{
+			console.log("validation false....");
+		}
+		
 	});
-});
+});////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Doc Ready Func End
+
+function fn_save(){
+
+	if($("#_groupRemSync").is(":checked") == true ){
+		$("#_chkGrp").val("1");
+	}else{
+		$("#_chkGrp").val("0");
+	}
+	
+	if($("#_smsChk").is(":checked") == true ){
+		$("#_chkSmS").val("1");
+	}else{
+		$("#_chkSmS").val("0");
+	}
+	
+	var resultStr = fn_makeTime($("#_reCallYMD").val() , $("#_reCallTime").val());
+	$("#_reCallDate").val(resultStr);
+	
+	 Common.ajax("POST", "/sales/rcms/insertNewRosCall", $("#_insForm").serializeJSON() , function(result) {
+		
+		 console.log("result.isResult : " + result.isResult);
+		 console.log("result.chkSms : " + result.chkSms);
+		 console.log("result.total : " + result.total);
+		 console.log("result.success : " + result.success);
+		 
+		if(result != null){
+			if(result.isResult == true){
+				if(result.chkSms > 0){
+					console.log("send SMS Result : " + result.smsResultMSg);
+					if(result.total == result.success){
+	                    Common.alert("<b>ROS remark successfully saved.<br />SMS has already insert into sending queue.</b>");
+	                    $("#_newRosCallClose").click(); //close Pop
+	                }else{
+	                    Common.alert("<b>ROS remark successfully saved.<br />SMS sending failed.</b>");
+	                    $("#_newRosCallClose").click(); //close Pop
+	                }
+				}else{
+					Common.alert("<b>ROS remark successfully saved.</b>");
+					$("#_newRosCallClose").click(); //close Pop
+				}
+			}else{
+				Common.alert("<b>Failed to save ROS remark. Please try again later.</b>");
+			}
+		}else{
+			Common.alert("<b>Failed to prepare save data.<br />Please contact IT Department.</b>");	
+		}
+	});
+}
+
+function fn_reloadPage(){
+	$("#_newRosCallClose").click();
+	$("#_searchBtn").click();
+}
+
+function fn_validation(){
+	
+	//1. Action
+	if($("#_action").val() == null || $("#_action").val() == ''){
+		Common.alert("* Please select the action.<br />");
+		return false;
+	}
+	
+	//2. Main Reason
+	if($("#_mainReason").val() == null || $("#_mainReason").val() == ''){
+		Common.alert("* Please select the main reason.<br />");
+		return false;
+	}
+	
+	//3.Feedback
+	if($("#_feedback").val() == null || $("#_feedback").val() == ''){
+		Common.alert("* Please select the feedback code.<br />");
+		return false;
+	}
+	
+	//4. Collect Amt
+	if($("#_collectAmt").val() == null || $("#_collectAmt").val() == ''){
+		Common.alert("* Please Key in amount.");
+		return false;
+	}
+	
+	//5. Amt Check
+/* 	if(Number($("#_collectAmt").val()) < 0){
+		Common.alert("* Collection amount must be larger than 0.<br />");
+        return false;
+	} */
+	
+	//6. Remark
+    if($("#_rosRem").val() == null || $("#_rosRem").val() == ''){
+        Common.alert("* Please key in the ROS remark.<br />");
+        return false;
+    }
+	 
+	//7.SMS
+    if($("#_smsChk").is(":checked") == true ){
+    	
+    	if($("#_smsRem").val() == null || $("#_smsRem").val() == '' ){
+    		 Common.alert("* Please key in the SMS remark.<br />");
+    	        return false;
+    	}
+    	
+    	var orderNo = '${ordNo}';
+    	var feedbackStr = '';
+    	feedbackStr =  $("#_feedback option:selected").text().trim();
+    	
+    	var fullSMS = '';
+    	fullSMS = orderNo + ' ' + feedbackStr + $("#_smsRem").val().trim();
+    	console.log("fullSMS : " + fullSMS);
+    	console.log("fullSMS.length : " + fullSMS.length);
+    	if(fullSMS.length > 160){
+    		Common.alert("* SMS message exceed 160 characters.<br />");
+    		$("#_fullSms").val('');
+    		return false;
+    	}
+    	$("#_fullSms").val(fullSMS);
+    }
+	
+	return true;
+}
+
+
+function fn_chkROSCallLogBillGroupOrderCount(){
+	
+	var ajaxOpt = {async: false};
+	var resultList;
+	Common.ajax("GET", "/sales/rcms/selectROSCallLogBillGroupOrderCnt", {custBillId : '${custBillId}'}, function(result) {
+		if(result != null ){
+			resultList = result;
+		}else{
+			Common.alert("Server Error. Please try again.");
+		}
+	},'', ajaxOpt);
+	
+	return resultList;
+}
 
 function createSMSGrid(){
 	
@@ -120,8 +314,133 @@ function fn_inputAmt(obj){
 }
 /*** ************* ***/
  
+ function fn_chkMaxAmtCheck(value){
+	
+	if(value > 10000){
+		$("#_collectAmt").val("10000");
+	}else if(value < 0){
+		$("#_collectAmt").val("0");
+	}else{
+		$("#_collectAmt").val(value);
+	}
+}
+ 
+ function fn_editRentPaySetting() {
+	
+	//DIV --Grid ID Dup...
+	Common.popupDiv("/sales/order/orderModifyPop.do", {salesOrderId : '${ordId}' , ordEditType : 'PAY'}, null, true);
+	
+	
+	//Window
+	//var winPopOpt = {width: "1000px",  height: "500px" };
+	//Common.popupWin("_winPopForm", "/sales/order/orderModifyPop.do", winPopOpt);
+	
+}
+ 
+ function  isValidMobileNo(inputContact){
+	    
+	 
+	    if(isNaN(inputContact) == true){
+	    	return false;
+	    }
+	    if(inputContact.length != 10 && inputContact != 11){
+	    	return false;
+	    }
+	    if( inputContact.substr(0 , 3) != '010' &&
+	        inputContact.substr(0 , 3) != '011' &&
+	        inputContact.substr(0 , 3) != '012' &&
+	        inputContact.substr(0 , 3) != '013' &&
+	        inputContact.substr(0 , 3) != '014' &&
+	        inputContact.substr(0 , 3) != '015' &&
+	        inputContact.substr(0 , 3) != '016' &&
+	        inputContact.substr(0 , 3) != '017' &&
+	        inputContact.substr(0 , 3) != '018' &&
+	        inputContact.substr(0 , 3) != '019' 
+	      ){
+	    	return false;
+	    }
+	    return true;
+}
+ 
+function fn_chkValidNumber(){
+	
+	if($("#_smsChk").is(":checked") == true){
+		
+		if($("#_salesManMemCode").val() != null && $("#_salesManMemCode").val() != ''){
+			
+			if(isValidMobileNo($("#_salesManMemTelMobile").val().trim()) == true){
+				//Valid Success
+		        $("#_smsRem").attr({"class" : "" , "disabled" : false});
+			}else{
+				$('#_smsChk').attr('checked', false);
+				$("#_smsRem").val('');
+		        $("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
+	            Common.alert("<b>Invalid cody mobile number.<br />SMS to cody is disallowed.</b>");
+			}
+		}else{
+			$('#_smsChk').attr('checked', false); 
+			$("#_smsRem").val('');
+	        $("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
+			Common.alert("<b>No incharge cody found in this order.<br />SMS to cody is disallowed.</b>");
+		}
+	}else{
+		$("#_smsRem").val('');
+		$("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
+	}
+} 
+
+function fn_invoice(){
+	
+	Common.popupDiv("/payment/initTaxInvoiceRentalPop.do", '', null, true);
+	
+}
+
+function fn_makeTime(ymd , time){
+	
+	console.log("input ymd : " + ymd);
+	console.log("input time : " + time);
+	
+	var rtnDate = "";
+	var ap = '';
+	var tempTime;
+	
+	if(ymd != null && ymd != ''){
+		
+		if(time != null && time != ''){
+			
+			tempTime = Number(time.substr(0, 2));
+			ap = time.substr(6,8);
+			
+			console.log("tempTime : " + tempTime);
+			console.log("ap : " + ap);
+			
+			if(ap == 'PM'){
+				tempTime += 12;
+			}
+			
+			rtnDate =   ymd + ' ' + tempTime +':00:00';
+	    }else{
+	    	rtnDate =   ymd + ' ' +'00:00:00';
+	    }
+	}
+	
+	console.log("rtnDate  :  " + rtnDate);
+	return rtnDate;
+}
+
 </script>
 
+<form id="_winPopForm">
+    <input type="hidden"  name="salesOrderId" value="${ordId}">
+    <input type="hidden"  name="ordEditType" value="PAY">
+</form>
+
+<c:set var="tooltipResult" value="MemberCode:${salesManMap.memCode }
+Member Name : ${salesManMap.name }              
+Member NRIC : ${salesManMap.nric }
+Mobile No : ${salesManMap.telMobile}
+ " />
+    
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -248,13 +567,25 @@ function fn_inputAmt(obj){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#">email to Customer</a></p></li>
-    <li><p class="btn_grid"><a href="#">Invoice</a></p></li>
-    <li><p class="btn_grid"><a href="#">Edit Rent Pay Setting</a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : fn_underDevelop()">email to Customer</a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : fn_invoice()">Invoice</a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : fn_editRentPaySetting()">Edit Rent Pay Setting</a></p></li>
 </ul>
 
-<form action="#" method="post">
+<form id="_insForm">
+<input type="hidden" name="orderId" value="${ordId}">
+<input type="hidden" name="custBillId" value="${custBillId}"> 
+<input type="hidden" id="_chkGrp" name="chkGrp"> <!-- check Group  -->
+<input type="hidden" id="_chkSmS" name="chkSmS"> <!-- check SMS  -->
+<input type="hidden" id="_reCallDate" name="reCallDate">
 
+<!-- hidden Value  -->
+<input type="hidden" id="_salesManMemCode" name="" value="${salesManMap.memCode }">
+<input type="hidden" id="_salesManMemName" name="" value="${salesManMap.name }">
+<input type="hidden" id="_salesManMemNric" name="" value="${salesManMap.nric }">
+<input type="hidden" id="_salesManMemTelMobile" name="salesManMemTelMobile" value="${salesManMap.telMobile}">
+
+<input type="hidden" id="_fullSms" name="fullSms">
 <div class="divine_auto"><!-- divine_auto start -->
 
 <div style="width:50%;">
@@ -268,7 +599,7 @@ function fn_inputAmt(obj){
     <tr>
         <th scope="row">Action<span class="must">*</span></th>
         <td>
-        <select class="w100p">
+        <select class="w100p" id="_action" name="action">
             <option value="56">Call-In</option>
             <option value="57">Call-Out</option>
             <option value="58">Internal Feedback</option>
@@ -278,25 +609,25 @@ function fn_inputAmt(obj){
     <tr>
         <th scope="row">Main Reason</th>
         <td>
-        <select class="w100p" id="_mainReason"></select>
+        <select class="w100p" id="_mainReason" name="mainReason"></select>
         </td>
     </tr>
     <tr>
         <th scope="row">FeedBack</th>
         <td>
-        <select class="w100p disabled" id="_feedback" disabled="disabled"></select>
+        <select class="w100p disabled" id="_feedback" name="feedback" disabled="disabled"></select>
         </td>
     </tr>
     <tr>
         <th scope="row">ROS Status<span class="must">*</span></th>
         <td>
-        <select class="w100p" id="_rosStatus"></select>
+        <select class="w100p" id="_rosStatus" name="rosStatus"></select>
         </td>
     </tr>
     <tr>
         <th scope="row">ROS Remark<span class="must">*</span></th>
         <td>
-            <textarea></textarea>
+            <textarea id="_rosRem" name="rosRem"></textarea>
         </td>
     </tr>
     </tbody>
@@ -315,13 +646,13 @@ function fn_inputAmt(obj){
     <tbody>
     <tr>
         <th scope="row">Recall Date</th>
-        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_reCallYMD" name="reCallDtYmd"/></td>
     </tr>
     <tr>
         <th scope="row">Recall Time</th>
         <td colspan="3">
         <div class="time_picker w100p"><!-- time_picker start -->
-        <input type="text" title="" placeholder="" class="time_date w100p" />
+        <input type="text" title="" placeholder="" class="time_date w100p"  id="_reCallTime"/>
         <ul>
             <li>Time Picker</li>
             <li><a href="#">12:00 AM</a></li>
@@ -354,24 +685,38 @@ function fn_inputAmt(obj){
     </tr>
     <tr>
         <th scope="row">Collection Amount</th>
-        <td><input type="text" title="" placeholder="" class="w100p"  onkeyup="fn_inputAmt(this)"  id="_collectAmt"/></td>
+        <td><input type="text" title="" placeholder="" class="w100p"  onkeyup="fn_inputAmt(this)"  onblur="javascript : fn_chkMaxAmtCheck(this.value)" id="_collectAmt" name="collectAmt"/></td>
         <th scope="row">SMS Cody<span class="must">**</span></th>
-        <td><label><input type="checkbox" /><span>SMS to Cody?</span></label></td>
+        <td data-tooltip-text="${tooltipResult}"><label><input type="checkbox"  id="_smsChk" name="smsChk" onchange="javascript : fn_chkValidNumber()" /><span>SMS to Cody?</span></label></td>
     </tr>
     <tr>
         <th scope="row">PTP Date</th>
-        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  onchange="javascript : fn_chkDate(this.value)" id="_ptpDate" readonly="readonly"/></td>
+        <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  onchange="javascript : fn_chkDate(this.value)" id="_ptpDate" readonly="readonly" name="ptpDate"/></td>
     </tr>
     <tr>
         <th scope="row">SMS Remark<span class="must">**</span></th>
         <td colspan="3">
-            <textarea></textarea>
+            <textarea id="_smsRem" name="smsRem" class="disabled" disabled="disabled"></textarea>
         </td>
     </tr>
+    
     </tbody>
     </table><!-- table end -->
 </div>
 </div><!-- divine_auto end -->
+   <table class="type1"><!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+        <col style="width:20%" />
+        <col style="width:*" />
+    </colgroup>
+    <tbody>
+    <tr>
+        <th scope="row">Group Remark Sync?</th>
+        <td colspan="3"><input type="checkbox" id="_groupRemSync" name="groupRemSync"></td>
+    </tr>
+    </tbody>
+    </table>
 </form>
 <hr/>
 <ul class="center_btns">

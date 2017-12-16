@@ -285,4 +285,313 @@
 			 WHERE  ( Extent1.PARENT_RESN_ID = #{resnId} )
 			          AND ( 0 = Extent1.DISAB )
 </select>
+
+<select id="selectROSCallLogBillGroupOrderCnt" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    Extent1.SALES_ORD_ID   
+			FROM 
+			    SAL0001D Extent1
+			WHERE 
+			    Extent1.CUST_BILL_ID = #{custBillId} 
+			<![CDATA[
+			AND  1 <> Extent1.STUS_CODE_ID
+			]]> 
+</select>
+
+<select id="getOrderServiceMemberViewByOrderID" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.SALES_ORD_ID SALES_ORD_ID  ,
+       Limit1.DEPT_CODE DEPT_CODE  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.MEMBERCODE1 ELSE ' ' END MEMBER_CODE  ,
+       CASE WHEN ( Limit1.MEM_ID IS NOT NULL ) THEN Limit1.NAME1 ELSE ' ' END MEMBER_NAME  ,
+       CASE WHEN ( Limit1.TELMOBILE1 IS NOT NULL ) THEN Limit1.TELMOBILE1 ELSE ' ' END MEM_TEL_MOBILE  ,
+       Limit1.GRP_CODE   ,
+       CASE WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.MEMBERCODE2 ELSE ' ' END MEMBER_CODE1  ,
+       CASE WHEN ( Limit1.MEMBERID1 IS NOT NULL ) THEN Limit1.NAME2 ELSE ' ' END MEMBER_NAME1  ,
+       CASE WHEN ( Limit1.TELMOBILE2 IS NOT NULL ) THEN Limit1.TELMOBILE2 ELSE ' ' END MEM_TEL_MOBILE1  ,
+       Limit1.ORG_CODE   ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.MEMBERCODE3 ELSE ' ' END MEMBER_CODE2  ,
+       CASE WHEN ( Limit1.MEMBERID2 IS NOT NULL ) THEN Limit1.NAME3 ELSE ' ' END MEMBER_NAME2  ,
+       CASE WHEN ( Limit1.TELMOBILE3 IS NOT NULL ) THEN Limit1.TELMOBILE3 ELSE ' ' END MEM_TEL_MOBILE2  ,
+       Limit1.MEM_CODE   ,
+       Limit1.NAME   ,
+       Limit1.NRIC   ,
+       CASE WHEN ( Limit1.TEL_MOBILE IS NOT NULL ) THEN Limit1.TEL_MOBILE ELSE ' ' END TEL_MOBILE  ,
+       CASE WHEN ( Limit1.TEL_HUSE IS NOT NULL ) THEN Limit1.TEL_HUSE ELSE ' ' END TEL_HUSE  ,
+       CASE WHEN ( Limit1.TEL_OFFICE IS NOT NULL ) THEN Limit1.TEL_OFFICE ELSE ' ' END TEL_OFFICE  
+  FROM ( SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+                Extent3.MEM_CODE MEM_CODE  ,
+                Extent3.NAME NAME  ,
+                Extent3.NRIC NRIC  ,
+                Extent3.TEL_OFFICE TEL_OFFICE  ,
+                Extent3.TEL_HUSE TEL_HUSE  ,
+                Extent3.TEL_MOBILE TEL_MOBILE  ,
+                Extent4.DEPT_CODE DEPT_CODE  ,
+                Extent4.GRP_CODE GRP_CODE  ,
+                Extent4.ORG_CODE ORG_CODE  ,
+                Extent5.MEM_ID MEM_ID  ,
+                Extent5.MEM_CODE MEMBERCODE1  ,
+                Extent5.NAME NAME1  ,
+                Extent5.TEL_MOBILE TELMOBILE1  ,
+                Extent7.MEM_ID MEMBERID1  ,
+                Extent7.MEM_CODE MEMBERCODE2  ,
+                Extent7.NAME NAME2  ,
+                Extent7.TEL_MOBILE TELMOBILE2  ,
+                Extent9.MEM_ID MEMBERID2  ,
+                Extent9.MEM_CODE MEMBERCODE3  ,
+                Extent9.NAME NAME3  ,
+                Extent9.TEL_MOBILE TELMOBILE3  
+         FROM SAL0001D Extent1
+                JOIN SAL0090D Extent2   ON ( Extent2.SRV_SO_ID = Extent1.SALES_ORD_ID )
+                AND ( 1 = Extent2.SRV_STUS_ID )
+                JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent2.SRV_CODY_ID
+                JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                              vMemberOrg.MEM_CODE MEM_CODE  ,
+                              vMemberOrg.MEM_LVL MEM_LVL  ,
+                              vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                              vMemberOrg.GRP_CODE GRP_CODE  ,
+                              vMemberOrg.ORG_CODE ORG_CODE  ,
+                              vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                              vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                              vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                              vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                              vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                              vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+                       FROM ORG1001V vMemberOrg ) Extent4   ON Extent4.MEM_ID = Extent3.MEM_ID
+                LEFT JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent4.MEM_UP_ID
+                LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+                            FROM ORG1001V vMemberOrg ) Extent6   ON Extent6.MEM_ID = Extent4.MEM_UP_ID
+                LEFT JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Extent6.MEM_UP_ID
+                LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+                            FROM ORG1001V vMemberOrg ) Extent8   ON Extent8.MEM_ID = Extent6.MEM_UP_ID
+                LEFT JOIN ORG0001D Extent9   ON Extent9.MEM_ID = Extent8.MEM_UP_ID
+          <![CDATA[      
+          WHERE  Extent1.SALES_ORD_ID = #{ordId} AND ROWNUM <= 1 ) Limit1
+          ]]>
+</select>
+<!-- INSERT NEW ROS CALL START -->
+<select id="chkCurrRosCall" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    Extent1.SALES_ORD_ID   ,
+			    Extent1.ROS_YEAR   ,
+			    Extent1.ROS_MONTH   ,
+			    Extent1.ROS_CALLER_USER_ID   ,
+			    Extent1.ROS_CALL_RESN_ID   ,
+			    Extent1.ROS_CALL_RECALL_DT   ,
+			    Extent1.ROS_CALL_STUS_ID   ,
+			    Extent1.ROS_CALL_CRT_DT   ,
+			    Extent1.ROS_CALL_CRT_USER_ID   ,
+			    Extent1.ROS_CALL_UPD_DT   ,
+			    Extent1.ROS_CALL_UPD_USER_ID   
+			FROM 
+			    MSC0013D Extent1
+			WHERE 
+			    Extent1.SALES_ORD_ID = #{orderId} 
+			AND 
+			    Extent1.ROS_YEAR = TO_CHAR(SYSDATE,'YYYY') 
+			AND 
+			    Extent1.ROS_MONTH = TO_CHAR(SYSDATE,'MM') 
+			AND 
+			    <![CDATA[
+			    ROWNUM <= 1
+			    ]]>
+</select>
+
+<update id="updateROSCallInfo" parameterType="Map" >
+                UPDATE 
+                    MSC0013D
+                SET 
+                    ROS_CALL_RESN_ID = #{rosCallResnId},
+                    ROS_CALL_RECALL_DT = TO_DATE(#{rosCallRecallDt} , 'DD/MM/YYYY HH24:MI:SS'),
+                    ROS_CALL_STUS_ID = #{rosCallStusId},
+                    ROS_STUS = #{rosStatus},
+                    PTP_DT = TO_DATE(#{ptpDt}, 'DD/MM/YYYY'),
+                    ROS_CALL_UPD_DT = SYSDATE,
+                    ROS_CALL_UPD_USER_ID = #{userId}
+                WHERE   
+                     SALES_ORD_ID = #{orderId} 
+                AND  
+                    ROS_YEAR = TO_CHAR(SYSDATE,'YYYY')  
+                AND 
+                    ROS_MONTH = TO_CHAR(SYSDATE,'MM')  
+</update>
+
+<select id="chkCurrCallEntryInfo" parameterType="Map" resultType="egovMap">
+            SELECT Extent1.CALL_ENTRY_ID   ,
+                   Extent1.SALES_ORD_ID   ,
+                   Extent1.TYPE_ID   ,
+                   Extent1.STUS_CODE_ID   ,
+                   Extent1.RESULT_ID   ,
+                   Extent1.DOC_ID   ,
+                   Extent1.CRT_USER_ID   ,
+                   Extent1.CRT_DT   ,
+                   Extent1.CALL_DT   ,
+                   Extent1.IS_WAIT_FOR_CANCL   ,
+                   Extent1.HAPY_CALLER_ID   ,
+                   Extent1.UPD_DT   ,
+                   Extent1.UPD_USER_ID   ,
+                   Extent1.ORI_CALL_DT   
+             FROM 
+                CCR0006D Extent1
+             WHERE 
+                Extent1.SALES_ORD_ID = #{orderId} 
+             AND
+                507 = Extent1.TYPE_ID
+            <![CDATA[      
+            AND ROWNUM <= 1
+            ]]>
+</select>
+
+<select id="getSeqCCR0007D" resultType="java.lang.Integer">
+    SELECT CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertCallResultInfo" parameterType="Map">
+    INSERT INTO CCR0007D (
+                CALL_RESULT_ID,
+                CALL_ENTRY_ID,
+                CALL_STUS_ID,
+                CALL_DT,
+                CALL_ACTN_DT,
+                CALL_FDBCK_ID,
+                CALL_CT_ID,
+                CALL_REM,
+                CALL_CRT_USER_ID,
+                CALL_CRT_DT,
+                CALL_CRT_USER_ID_DEPT,
+                CALL_HC_ID,
+                CALL_ROS_AMT,
+                CALL_SMS,
+                CALL_SMS_REM
+        ) VALUES (
+                #{callResultSeq},
+                #{callEntId},
+                #{callStusId},
+                TO_DATE(#{callDt}, 'DD/MM/YYYY'),
+                TO_DATE(#{callActnDt}, 'DD/MM/YYYY'),
+                #{callFdbchId},
+                #{callCtId},
+                #{callRem},
+                #{callCrtUserId},
+                SYSDATE,
+                #{callCrtUserIdDept},
+                #{callHcId},
+                #{callRosAmt},
+                #{callSMS},
+                #{callSMSRem}
+               )
+</insert>
+
+<update id="updateCallEntryInfo" parameterType="Map">
+            UPDATE 
+                CCR0006D
+            SET 
+                RESULT_ID = #{resultId},
+                UPD_DT = SYSDATE,
+                UPD_USER_ID = #{userId}
+             WHERE   
+                CALL_ENTRY_ID = #{callEntId} 
+</update>
+
+
+<select id="getSeqCCR0006D" resultType="java.lang.Integer">
+    SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertCallEntryInfo" parameterType="Map">
+INSERT INTO CCR0006D(
+                CALL_ENTRY_ID,
+                SALES_ORD_ID,
+                TYPE_ID,
+                STUS_CODE_ID,
+                RESULT_ID,
+                DOC_ID ,
+                CRT_USER_ID,
+                CRT_DT,
+                CALL_DT,
+                IS_WAIT_FOR_CANCL,
+                HAPY_CALLER_ID,
+                UPD_DT,
+                UPD_USER_ID,
+                ORI_CALL_DT,
+                CUR_SEQ_NO,
+                MAIN_DEPT,
+                SUB_DEPT
+        ) VALUES (
+              #{callEntSeq},
+              #{salesOrdId},
+              #{typeId},
+              #{stusCodeId},
+              #{resultId},
+              #{docId},
+              #{userId},
+              SYSDATE,
+              TO_DATE(#{callDt}, 'DD/MM/YYYY'),
+              #{isWaitForCancl},
+              #{happCallerId},
+              SYSDATE,
+              #{userId},
+              TO_DATE(#{oriCallDt}, 'DD/MM/YYYY'),
+              NULL,
+              NULL,
+              NULL
+               )
+
+</insert>
+
+<!--ROS CALL NOT FOUND -->
+<insert id="insertROSCallInfo" parameterType="Map">
+    INSERT INTO MSC0013D (
+                        SALES_ORD_ID,
+                        ROS_YEAR,
+                        ROS_MONTH,
+                        ROS_CALLER_USER_ID,
+                        ROS_CALL_RESN_ID,
+                        ROS_CALL_RECALL_DT,
+                        ROS_CALL_STUS_ID,
+                        ROS_CALL_CRT_DT,
+                        ROS_CALL_CRT_USER_ID,
+                        ROS_CALL_UPD_DT,
+                        ROS_CALL_UPD_USER_ID,
+                        ROS_STUS,
+                        PTP_DT
+        ) VALUES (
+                        #{orderId},
+                        TO_CHAR(SYSDATE,'YYYY'),
+                        TO_CHAR(SYSDATE,'MM'),
+                        #{rosCallerUserId},
+                        #{rosCallResnId},
+                        TO_DATE(#{rosCallRecallDt}, 'DD/MM/YYYY HH24:MI:SS'),
+                        #{rosCallStusId},
+                        SYSDATE,
+                        #{userId},
+                        SYSDATE,
+                        #{userId},
+                        #{rosStatus},
+                        TO_DATE(#{ptpDt}, 'DD/MM/YYYY')
+        )
+</insert>
+
+
 </mapper>

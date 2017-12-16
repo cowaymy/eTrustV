@@ -1,19 +1,26 @@
 package com.coway.trust.biz.sales.rcms.impl;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.coway.trust.biz.sales.rcms.ROSCallLogService;
+import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("rosCallLogService")
 public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements ROSCallLogService{
 
-	//private static final Logger LOGGER = LoggerFactory.getLogger(ROSCallLogServiceImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ROSCallLogServiceImpl.class);
 	
 	@Resource(name = "rosCallLogMapper")
 	private ROSCallLogMapper rosCallLogMapper;
@@ -59,5 +66,836 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 		
 		return rosCallLogMapper.getFeedbackCodeList(params);
 	}
-	
+
+	@Override
+	public List<EgovMap> selectROSCallLogBillGroupOrderCnt(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.selectROSCallLogBillGroupOrderCnt(params);
+	}
+
+	@Override
+	public EgovMap getOrderServiceMemberViewByOrderID(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.getOrderServiceMemberViewByOrderID(params);
+	}
+
+	@Override
+	@Transactional
+	public boolean insertNewRosCall(Map<String, Object> params) throws Exception {
+		
+		//Init
+		int feedbackId = 0;
+		String defaultDateTime = "";
+		defaultDateTime =  SalesConstants.DEFAULT_DATE +" "+ SalesConstants.DEFAULT_TM;
+		LOGGER.info("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: defaultDateTime : "+defaultDateTime);
+		List<EgovMap> grpList = new ArrayList<EgovMap>();
+		grpList = rosCallLogMapper.selectROSCallLogBillGroupOrderCnt(params);
+/**##############################################################  CHECK NON AND LIST SIZE EQ 1 ______________________________________________________ **/		
+		if(Integer.parseInt(String.valueOf(params.get("chkGrp"))) == 0 || grpList.size() == 1 ){ //UNCHECK GROUP 
+			
+			//FIRST CHECK ROS CALL ROG
+			EgovMap currMap = null;
+			currMap = rosCallLogMapper.chkCurrRosCall(params);  //Check Ros Call Current Status.....
+			
+			if(currMap != null){
+				/******	CURRENT MONTH ROS CALL LOG FOUND ******/
+				//________________________________________________________________________________________________________ 1. ROS CALL LOG(UPDATE) 
+				Map<String, Object> oneMap = new HashMap<String, Object>();
+				oneMap.put("orderId", currMap.get("salesOrdId"));  //rosCallLogMaster.SalesOrderID = int.Parse(Request["OrderID"].ToString());
+				//oneMap.put("rosCallerUserId", SalesConstants.ROS_CALLER_USER_ID);
+				
+				if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+					feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+				}
+				oneMap.put("rosCallResnId", feedbackId);
+				
+				if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+					oneMap.put("rosCallRecallDt", defaultDateTime);
+				}else{
+					oneMap.put("rosCallRecallDt", params.get("reCallDate"));
+				}
+				
+				oneMap.put("rosCallStusId", SalesConstants.ROS_CALL_STATUS_ID);
+				oneMap.put("userId", params.get("userId"));
+				oneMap.put("rosStatus", params.get("rosStatus"));
+				oneMap.put("ptpDt", params.get("ptpDate"));
+				
+				LOGGER.info("<currMap IS NOT NULL> ::::: 1) ________________________ROS MASTER(UPDATE) START ");
+				LOGGER.info("<currMap IS NOT NULL> ::::: 1) ________________________ROS MASTER(UPDATE) PARAM :  " + oneMap.toString());
+				rosCallLogMapper.updateROSCallInfo(oneMap);
+				LOGGER.info("<currMap IS NOT NULL> ::::: 1) ________________________ROS MASTER(UPDATE) END ");
+				
+				//________________________________________________________________________________________________________ 2. CALL RESULT
+				
+				int callResultSeq = 0;
+				int callEntId = 0;
+				int actionId = 0;
+				double rosAmt = 0;
+				int chkSms = 0;
+				String smsRem = "";
+				int callEntSeq = 0;
+				
+				EgovMap currCallEntMap = null;
+				currCallEntMap = rosCallLogMapper.chkCurrCallEntryInfo(params); //Check Call Entry Current Status.....
+				
+				if(currCallEntMap != null){
+					//________________________________________________________________________________________________________CASE : ROS CALL ENTRY FOUND
+					//ROS CALLENTRY FOUND
+					//________________________________________________________________________________________________________ 2 - 1 . CALL RESULT INSERT
+					Map<String, Object> callEntMap = new HashMap<String, Object>();
+					
+					callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+					callEntMap.put("callResultSeq", callResultSeq);
+					
+					callEntId = Integer.parseInt(String.valueOf(currCallEntMap.get("callEntryId")));
+					callEntMap.put("callEntId", callEntId);
+					
+					if(params.get("action") != null){
+						actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+					}
+					callEntMap.put("callStusId", actionId);
+
+					if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+						callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+					}else{
+						callEntMap.put("callDt", params.get("reCallDtYmd"));
+					}
+					
+					callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+					
+					if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+						feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+					}
+					callEntMap.put("callFdbchId", feedbackId);
+					callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+					callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+					callEntMap.put("callCrtUserId", params.get("userId"));
+					callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+					callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+					
+					if(params.get("collectAmt") != null){
+						rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+					}
+					callEntMap.put("callRosAmt", rosAmt);
+					
+					if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+					}else{ //CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+						smsRem = String.valueOf(params.get("smsRem"));
+					}
+					callEntMap.put("callSMS", chkSms);
+					callEntMap.put("callSMSRem", smsRem);
+					
+					LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________INS CALL RESULT START ");
+					LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+					rosCallLogMapper.insertCallResultInfo(callEntMap);
+					LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________INS CALL RESULT END ");
+					
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//________________________________________________________________________________________________________ 2 - 2 . CALL ENTRY UPDATE
+					Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+					updCallEntMap.put("resultId", callResultSeq);
+					updCallEntMap.put("userId", params.get("userId"));
+					updCallEntMap.put("callEntId", callEntId);
+					
+					LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________UPD CALL ENTRY START ");
+					LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+					rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+					LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________UPD CALL ENTRY END ");
+				}else{  
+					//________________________________________________________________________________________________________CASE : ROS CALL ENTRY  NOT FOUND
+					//ROS CALLENTRY NOT FOUND
+					//________________________________________________________________________________________________________ 2 - 1 . CALL ENTRY INSERT (MAKE CALL ENTRY)
+					Map<String, Object> callInsMap = new HashMap<String, Object>();
+					callEntSeq = rosCallLogMapper.getSeqCCR0006D();
+					
+					callInsMap.put("callEntSeq", callEntSeq);
+					callInsMap.put("salesOrdId", params.get("orderId"));
+					callInsMap.put("typeId", SalesConstants.ROS_NEW_CALL_ENTRY_TYPE_ID);
+					callInsMap.put("stusCodeId", SalesConstants.ROS_NEW_CALL_ENTRY_STATUS_ID);
+					callInsMap.put("resultId", SalesConstants.ROS_NEW_CALL_ENTRY_RESULT_ID);
+					callInsMap.put("docId", SalesConstants.ROS_NEW_CALL_ENTRY_DOC_ID);
+					callInsMap.put("userId", params.get("userId"));
+					callInsMap.put("callDt", SalesConstants.DEFAULT_DATE);
+					callInsMap.put("isWaitForCancl", SalesConstants.ROS_NEW_CALL_ENTRY_WAIT_CANCEL);
+					callInsMap.put("happCallerId", SalesConstants.ROS_NEW_CALL_ENTRY_HAPPY_CALLER_ID);
+					callInsMap.put("oriCallDt", SalesConstants.DEFAULT_DATE);
+					
+					LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________CALL ENTRY INSERT START ");
+					LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________CALL ENTRY INSERT PARAM :  " + callInsMap.toString());
+					rosCallLogMapper.insertCallEntryInfo(callInsMap);
+					LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________CALL ENTRY INSERT END ");
+					
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					//________________________________________________________________________________________________________ 2 - 2 . CALL RESULT INSERT 
+					Map<String, Object> callEntMap = new HashMap<String, Object>();
+					
+					callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+					callEntMap.put("callResultSeq", callResultSeq);
+					callEntMap.put("callEntId", callEntSeq);
+					
+					if(params.get("action") != null){
+						actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+					}
+					callEntMap.put("callStusId", actionId);
+					
+					if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+						callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+					}else{
+						callEntMap.put("callDt", params.get("reCallDtYmd"));
+					}
+					
+					callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+					
+					if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+						feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+					}
+					callEntMap.put("callFdbchId", feedbackId);
+					callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+					callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+					callEntMap.put("callCrtUserId", params.get("userId"));
+					callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+					callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+					
+					if(params.get("collectAmt") != null){
+						rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+					}
+					callEntMap.put("callRosAmt", rosAmt);
+					
+					if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+					}else{ //CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+						smsRem = String.valueOf(params.get("smsRem"));
+					}
+					callEntMap.put("callSMS", chkSms);
+					callEntMap.put("callSMSRem", smsRem);
+					
+					LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________INS CALL RESULT START ");
+					LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+					rosCallLogMapper.insertCallResultInfo(callEntMap);
+					LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________INS CALL RESULT END ");
+					
+					
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//________________________________________________________________________________________________________ 2 - 3 . CALL ENTRY UPDATE 						
+                    Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+                    updCallEntMap.put("resultId", callResultSeq);
+                    updCallEntMap.put("userId", params.get("userId"));
+                    updCallEntMap.put("callEntId", callEntId);
+                    
+                    LOGGER.info("<currMap IS NOT NULL> ::::: 4) ________________________UPD CALL ENTRY START ");
+                    LOGGER.info("<currMap IS NOT NULL> ::::: 4) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+                    rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+                    LOGGER.info("<currMap IS NOT NULL> ::::: 4) ________________________UPD CALL ENTRY END ");
+				}
+			}else{
+				/******	CURRENT MONTH ROS CALL LOG NOT FOUND ******/
+				//____________________________________________________________________________________________________________________________ 1. ROS CALL LOG(INSERT)
+				Map<String, Object> oneMap = new HashMap<String, Object>();
+				oneMap.put("orderId", params.get("orderId"));  //Sales Ord Id  
+				oneMap.put("rosCallerUserId", SalesConstants.ROS_CALLER_USER_ID);
+				
+				if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+					feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+				}
+				oneMap.put("rosCallResnId", feedbackId);
+				
+				if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+					oneMap.put("rosCallRecallDt", defaultDateTime);
+				}else{
+					oneMap.put("rosCallRecallDt", params.get("reCallDate"));
+				}
+				
+				oneMap.put("rosCallStusId", SalesConstants.ROS_CALL_STATUS_ID);
+				oneMap.put("userId", params.get("userId"));
+				oneMap.put("rosStatus", params.get("rosStatus"));
+				oneMap.put("ptpDt", params.get("ptpDate"));
+				
+				LOGGER.info("<currMap IS  NULL> ::::: 1) ________________________ROS MASTER(INSERT) START ");
+				LOGGER.info("<currMap IS  NULL> ::::: 1) ________________________ROS MASTER(INSERT) PARAM :  " + oneMap.toString());
+				rosCallLogMapper.insertROSCallInfo(oneMap);
+				LOGGER.info("<currMap IS  NULL> ::::: 1) ________________________ROS MASTER(INSERT) END ");
+				
+				
+				//________________________________________________________________________________________________________ 2. CALL RESULT
+				
+				int callResultSeq = 0;
+				int callEntId = 0;
+				int actionId = 0;
+				double rosAmt = 0;
+				int chkSms = 0;
+				String smsRem = "";
+				int callEntSeq = 0;
+				
+				EgovMap currCallEntMap = null;
+				currCallEntMap = rosCallLogMapper.chkCurrCallEntryInfo(params); //Check Call Entry Current Status.....
+				
+				if(currCallEntMap != null){
+					//________________________________________________________________________________________________________CASE : ROS CALL ENTRY FOUND
+					//ROS CALLENTRY FOUND
+					//________________________________________________________________________________________________________ 2 - 1 . CALL RESULT INSERT
+					Map<String, Object> callEntMap = new HashMap<String, Object>();
+					
+					callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+					callEntMap.put("callResultSeq", callResultSeq);
+					
+					callEntId = Integer.parseInt(String.valueOf(currCallEntMap.get("callEntryId")));
+					callEntMap.put("callEntId", callEntId);
+					
+					if(params.get("action") != null){
+						actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+					}
+					callEntMap.put("callStusId", actionId);
+					
+					if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+						callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+					}else{
+						callEntMap.put("callDt", params.get("reCallDtYmd"));
+					}
+					
+					callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+					
+					if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+						feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+					}
+					callEntMap.put("callFdbchId", feedbackId);
+					callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+					callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+					callEntMap.put("callCrtUserId", params.get("userId"));
+					callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+					callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+					
+					if(params.get("collectAmt") != null){
+						rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+					}
+					callEntMap.put("callRosAmt", rosAmt);
+					
+					if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+					}else{ //CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+						smsRem = String.valueOf(params.get("smsRem"));
+					}
+					callEntMap.put("callSMS", chkSms);
+					callEntMap.put("callSMSRem", smsRem);
+					
+					LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________INS CALL RESULT START ");
+					LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+					rosCallLogMapper.insertCallResultInfo(callEntMap);
+					LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________INS CALL RESULT END ");
+					
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    //________________________________________________________________________________________________________ 2 - 2 . CALL ENTRY UPDATE
+                    Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+                    updCallEntMap.put("resultId", callResultSeq);
+                    updCallEntMap.put("userId", params.get("userId"));
+                    updCallEntMap.put("callEntId", callEntId);
+                    
+                    LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________UPD CALL ENTRY START ");
+                    LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+                    rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+                    LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________UPD CALL ENTRY END ");
+				}else{
+					//________________________________________________________________________________________________________CASE : ROS CALL ENTRY  NOT FOUND
+					//ROS CALLENTRY NOT FOUND
+					//________________________________________________________________________________________________________ 2 - 1 . CALL ENTRY INSERT (MAKE CALL ENTRY)
+					Map<String, Object> callInsMap = new HashMap<String, Object>();
+					callEntSeq = rosCallLogMapper.getSeqCCR0006D();
+					
+					callInsMap.put("callEntSeq", callEntSeq);
+					callInsMap.put("salesOrdId", params.get("orderId"));
+					callInsMap.put("typeId", SalesConstants.ROS_NEW_CALL_ENTRY_TYPE_ID);
+					callInsMap.put("stusCodeId", SalesConstants.ROS_NEW_CALL_ENTRY_STATUS_ID);
+					callInsMap.put("resultId", SalesConstants.ROS_NEW_CALL_ENTRY_RESULT_ID);
+					callInsMap.put("docId", SalesConstants.ROS_NEW_CALL_ENTRY_DOC_ID);
+					callInsMap.put("userId", params.get("userId"));
+					callInsMap.put("callDt", SalesConstants.DEFAULT_DATE);
+					callInsMap.put("isWaitForCancl", SalesConstants.ROS_NEW_CALL_ENTRY_WAIT_CANCEL);
+					callInsMap.put("happCallerId", SalesConstants.ROS_NEW_CALL_ENTRY_HAPPY_CALLER_ID);
+					callInsMap.put("oriCallDt", SalesConstants.DEFAULT_DATE);
+					
+					LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________CALL ENTRY INSERT START ");
+					LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________CALL ENTRY INSERT PARAM :  " + callInsMap.toString());
+					rosCallLogMapper.insertCallEntryInfo(callInsMap);
+					LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________CALL ENTRY INSERT END ");
+					
+					/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					
+					//________________________________________________________________________________________________________ 2 - 2 . CALL RESULT INSERT 
+					Map<String, Object> callEntMap = new HashMap<String, Object>();
+					
+					callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+					callEntMap.put("callResultSeq", callResultSeq);
+					callEntMap.put("callEntId", callEntSeq);
+					
+					if(params.get("action") != null){
+						actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+					}
+					callEntMap.put("callStusId", actionId);
+					
+					if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+						callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+					}else{
+						callEntMap.put("callDt", params.get("reCallDtYmd"));
+					}
+					
+					callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+					
+					if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+						feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+					}
+					callEntMap.put("callFdbchId", feedbackId);
+					callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+					callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+					callEntMap.put("callCrtUserId", params.get("userId"));
+					callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+					callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+					
+					if(params.get("collectAmt") != null){
+						rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+					}
+					callEntMap.put("callRosAmt", rosAmt);
+					
+					if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+					}else{ //CHECK
+						chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+						smsRem = String.valueOf(params.get("smsRem"));
+					}
+					callEntMap.put("callSMS", chkSms);
+					callEntMap.put("callSMSRem", smsRem);
+					
+					LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________INS CALL RESULT START ");
+					LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+					rosCallLogMapper.insertCallResultInfo(callEntMap);
+					LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________INS CALL RESULT END ");
+					
+					
+                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					//________________________________________________________________________________________________________ 2 - 3 . CALL ENTRY UPDATE 						
+                    Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+                    updCallEntMap.put("resultId", callResultSeq);
+                    updCallEntMap.put("userId", params.get("userId"));
+                    updCallEntMap.put("callEntId", callEntId);
+                    
+                    LOGGER.info("<currMap IS  NULL> ::::: 4) ________________________UPD CALL ENTRY START ");
+                    LOGGER.info("<currMap IS  NULL> ::::: 4) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+                    rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+                    LOGGER.info("<currMap IS  NULL> ::::: 4) ________________________UPD CALL ENTRY END ");
+				}
+			}
+		}else{ //CHECK GROUP AND LIST SIZE MORE THAN 1 OR CHECK GROUP
+			//All List Save --grpList
+			/**##############################################################  CHECK AND LIST SIZE MORE TAHN 1 ______________________________________________________ **/				
+			
+			for (int idx = 0; idx < grpList.size(); idx++) {
+				
+				//SALES_ORD_ID  
+				EgovMap ordMap = grpList.get(idx);
+				
+				//FIRST CHECK ROS CALL ROG
+				EgovMap currMap = null;
+				params.put("orderId", ordMap.get("salesOrdId"));
+				currMap = rosCallLogMapper.chkCurrRosCall(params);  //Check Ros Call Current Status.....
+				
+				if(currMap != null){
+					/******	CURRENT MONTH ROS CALL LOG FOUND ******/
+					//________________________________________________________________________________________________________ 1. ROS CALL LOG(UPDATE) 
+					Map<String, Object> oneMap = new HashMap<String, Object>();
+					oneMap.put("orderId", ordMap.get("salesOrdId"));  
+					
+					if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+						feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+					}
+					oneMap.put("rosCallResnId", feedbackId);
+					
+					if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+						oneMap.put("rosCallRecallDt", defaultDateTime);
+					}else{
+						oneMap.put("rosCallRecallDt", params.get("reCallDate"));
+					}
+					
+					oneMap.put("rosCallStusId", SalesConstants.ROS_CALL_STATUS_ID);
+					oneMap.put("userId", params.get("userId"));
+					oneMap.put("rosStatus", params.get("rosStatus"));
+					oneMap.put("ptpDt", params.get("ptpDate"));
+					
+					LOGGER.info("<currMap IS NOT NULL> ::::: 1) ________________________ROS MASTER(UPDATE) START ");
+					LOGGER.info("<currMap IS NOT NULL> ::::: 1) ________________________ROS MASTER(UPDATE) PARAM :  " + oneMap.toString());
+					rosCallLogMapper.updateROSCallInfo(oneMap);
+					LOGGER.info("<currMap IS NOT NULL> ::::: 1) ________________________ROS MASTER(UPDATE) END ");
+					
+					//________________________________________________________________________________________________________ 2. CALL RESULT
+					
+					int callResultSeq = 0;
+					int callEntId = 0;
+					int actionId = 0;
+					double rosAmt = 0;
+					int chkSms = 0;
+					String smsRem = "";
+					int callEntSeq = 0;
+					
+					EgovMap currCallEntMap = null;
+					params.put("orderId", ordMap.get("salesOrdId"));
+					currCallEntMap = rosCallLogMapper.chkCurrCallEntryInfo(params); //Check Call Entry Current Status.....
+					
+					if(currCallEntMap != null){
+						//________________________________________________________________________________________________________CASE : ROS CALL ENTRY FOUND
+						//ROS CALLENTRY FOUND
+						//________________________________________________________________________________________________________ 2 - 1 . CALL RESULT INSERT
+						Map<String, Object> callEntMap = new HashMap<String, Object>();
+						
+						callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+						callEntMap.put("callResultSeq", callResultSeq);
+						
+						callEntId = Integer.parseInt(String.valueOf(currCallEntMap.get("callEntryId")));
+						callEntMap.put("callEntId", callEntId);
+						
+						if(params.get("action") != null){
+							actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+						}
+						callEntMap.put("callStusId", actionId);
+						
+						if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+							callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+						}else{
+							callEntMap.put("callDt", params.get("reCallDtYmd"));
+						}
+						
+						callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+						
+						if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+							feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+						}
+						callEntMap.put("callFdbchId", feedbackId);
+						callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+						callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+						callEntMap.put("callCrtUserId", params.get("userId"));
+						callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+						callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+						
+						if(params.get("collectAmt") != null){
+							rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+						}
+						callEntMap.put("callRosAmt", rosAmt);
+						
+						if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+						}else{ //CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+							smsRem = String.valueOf(params.get("smsRem"));
+						}
+						callEntMap.put("callSMS", chkSms);
+						callEntMap.put("callSMSRem", smsRem);
+						
+						LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________INS CALL RESULT START ");
+						LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+						rosCallLogMapper.insertCallResultInfo(callEntMap);
+						LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________INS CALL RESULT END ");
+						
+						///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//________________________________________________________________________________________________________ 2 - 2 . CALL ENTRY UPDATE
+						Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+						updCallEntMap.put("resultId", callResultSeq);
+						updCallEntMap.put("userId", params.get("userId"));
+						updCallEntMap.put("callEntId", callEntId);
+						
+						LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________UPD CALL ENTRY START ");
+						LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+						rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+						LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________UPD CALL ENTRY END ");
+					}else{  
+						//________________________________________________________________________________________________________CASE : ROS CALL ENTRY  NOT FOUND
+						//ROS CALLENTRY NOT FOUND
+						//________________________________________________________________________________________________________ 2 - 1 . CALL ENTRY INSERT (MAKE CALL ENTRY)
+						Map<String, Object> callInsMap = new HashMap<String, Object>();
+						callEntSeq = rosCallLogMapper.getSeqCCR0006D();
+						
+						callInsMap.put("callEntSeq", callEntSeq);
+						callInsMap.put("salesOrdId", ordMap.get("salesOrdId"));
+						callInsMap.put("typeId", SalesConstants.ROS_NEW_CALL_ENTRY_TYPE_ID);
+						callInsMap.put("stusCodeId", SalesConstants.ROS_NEW_CALL_ENTRY_STATUS_ID);
+						callInsMap.put("resultId", SalesConstants.ROS_NEW_CALL_ENTRY_RESULT_ID);
+						callInsMap.put("docId", SalesConstants.ROS_NEW_CALL_ENTRY_DOC_ID);
+						callInsMap.put("userId", params.get("userId"));
+						callInsMap.put("callDt", SalesConstants.DEFAULT_DATE);
+						callInsMap.put("isWaitForCancl", SalesConstants.ROS_NEW_CALL_ENTRY_WAIT_CANCEL);
+						callInsMap.put("happCallerId", SalesConstants.ROS_NEW_CALL_ENTRY_HAPPY_CALLER_ID);
+						callInsMap.put("oriCallDt", SalesConstants.DEFAULT_DATE);
+						
+						LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________CALL ENTRY INSERT START ");
+						LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________CALL ENTRY INSERT PARAM :  " + callInsMap.toString());
+						rosCallLogMapper.insertCallEntryInfo(callInsMap);
+						LOGGER.info("<currMap IS NOT NULL> ::::: 2) ________________________CALL ENTRY INSERT END ");
+						
+						/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						
+						//________________________________________________________________________________________________________ 2 - 2 . CALL RESULT INSERT 
+						Map<String, Object> callEntMap = new HashMap<String, Object>();
+						
+						callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+						callEntMap.put("callResultSeq", callResultSeq);
+						callEntMap.put("callEntId", callEntSeq);
+						
+						if(params.get("action") != null){
+							actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+						}
+						callEntMap.put("callStusId", actionId);
+						
+						if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+							callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+						}else{
+							callEntMap.put("callDt", params.get("reCallDtYmd"));
+						}
+						
+						callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+						
+						if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+							feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+						}
+						callEntMap.put("callFdbchId", feedbackId);
+						callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+						callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+						callEntMap.put("callCrtUserId", params.get("userId"));
+						callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+						callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+						
+						if(params.get("collectAmt") != null){
+							rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+						}
+						callEntMap.put("callRosAmt", rosAmt);
+						
+						if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+						}else{ //CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+							smsRem = String.valueOf(params.get("smsRem"));
+						}
+						callEntMap.put("callSMS", chkSms);
+						callEntMap.put("callSMSRem", smsRem);
+						
+						LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________INS CALL RESULT START ");
+						LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+						rosCallLogMapper.insertCallResultInfo(callEntMap);
+						LOGGER.info("<currMap IS NOT NULL> ::::: 3) ________________________INS CALL RESULT END ");
+						
+						
+	                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//________________________________________________________________________________________________________ 2 - 3 . CALL ENTRY UPDATE 						
+	                    Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+	                    updCallEntMap.put("resultId", callResultSeq);
+	                    updCallEntMap.put("userId", params.get("userId"));
+	                    updCallEntMap.put("callEntId", callEntId);
+	                    
+	                    LOGGER.info("<currMap IS NOT NULL> ::::: 4) ________________________UPD CALL ENTRY START ");
+	                    LOGGER.info("<currMap IS NOT NULL> ::::: 4) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+	                    rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+	                    LOGGER.info("<currMap IS NOT NULL> ::::: 4) ________________________UPD CALL ENTRY END ");
+					}
+				}else{
+					/******	CURRENT MONTH ROS CALL LOG NOT FOUND ******/
+					//____________________________________________________________________________________________________________________________ 1. ROS CALL LOG(INSERT)
+					Map<String, Object> oneMap = new HashMap<String, Object>();
+					oneMap.put("orderId", ordMap.get("salesOrdId"));  //Sales Ord Id  
+					oneMap.put("rosCallerUserId", SalesConstants.ROS_CALLER_USER_ID);
+					
+					if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+						feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+					}
+					oneMap.put("rosCallResnId", feedbackId);
+					
+					if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+						oneMap.put("rosCallRecallDt", defaultDateTime);
+					}else{
+						oneMap.put("rosCallRecallDt", params.get("reCallDate"));
+					}
+					
+					oneMap.put("rosCallStusId", SalesConstants.ROS_CALL_STATUS_ID);
+					oneMap.put("userId", params.get("userId"));
+					oneMap.put("rosStatus", params.get("rosStatus"));
+					oneMap.put("ptpDt", params.get("ptpDate"));
+					
+					LOGGER.info("<currMap IS  NULL> ::::: 1) ________________________ROS MASTER(INSERT) START ");
+					LOGGER.info("<currMap IS  NULL> ::::: 1) ________________________ROS MASTER(INSERT) PARAM :  " + oneMap.toString());
+					rosCallLogMapper.insertROSCallInfo(oneMap);
+					LOGGER.info("<currMap IS  NULL> ::::: 1) ________________________ROS MASTER(INSERT) END ");
+					
+					
+					//________________________________________________________________________________________________________ 2. CALL RESULT
+					
+					int callResultSeq = 0;
+					int callEntId = 0;
+					int actionId = 0;
+					double rosAmt = 0;
+					int chkSms = 0;
+					String smsRem = "";
+					int callEntSeq = 0;
+					
+					EgovMap currCallEntMap = null;
+					params.put("orderId", ordMap.get("salesOrdId"));
+					currCallEntMap = rosCallLogMapper.chkCurrCallEntryInfo(params); //Check Call Entry Current Status.....
+					
+					if(currCallEntMap != null){
+						//________________________________________________________________________________________________________CASE : ROS CALL ENTRY FOUND
+						//ROS CALLENTRY FOUND
+						//________________________________________________________________________________________________________ 2 - 1 . CALL RESULT INSERT
+						Map<String, Object> callEntMap = new HashMap<String, Object>();
+						
+						callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+						callEntMap.put("callResultSeq", callResultSeq);
+						
+						callEntId = Integer.parseInt(String.valueOf(currCallEntMap.get("callEntryId")));
+						callEntMap.put("callEntId", callEntId);
+						
+						if(params.get("action") != null){
+							actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+						}
+						callEntMap.put("callStusId", actionId);
+						
+						if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+							callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+						}else{
+							callEntMap.put("callDt", params.get("reCallDtYmd"));
+						}
+						
+						callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+						
+						if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+							feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+						}
+						callEntMap.put("callFdbchId", feedbackId);
+						callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+						callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+						callEntMap.put("callCrtUserId", params.get("userId"));
+						callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+						callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+						
+						if(params.get("collectAmt") != null){
+							rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+						}
+						callEntMap.put("callRosAmt", rosAmt);
+						
+						if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+						}else{ //CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+							smsRem = String.valueOf(params.get("smsRem"));
+						}
+						callEntMap.put("callSMS", chkSms);
+						callEntMap.put("callSMSRem", smsRem);
+						
+						LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________INS CALL RESULT START ");
+						LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+						rosCallLogMapper.insertCallResultInfo(callEntMap);
+						LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________INS CALL RESULT END ");
+						
+	                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	                    //________________________________________________________________________________________________________ 2 - 2 . CALL ENTRY UPDATE
+	                    Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+	                    updCallEntMap.put("resultId", callResultSeq);
+	                    updCallEntMap.put("userId", params.get("userId"));
+	                    updCallEntMap.put("callEntId", callEntId);
+	                    
+	                    LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________UPD CALL ENTRY START ");
+	                    LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+	                    rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+	                    LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________UPD CALL ENTRY END ");
+					}else{
+						//________________________________________________________________________________________________________CASE : ROS CALL ENTRY  NOT FOUND
+						//ROS CALLENTRY NOT FOUND
+						//________________________________________________________________________________________________________ 2 - 1 . CALL ENTRY INSERT (MAKE CALL ENTRY)
+						Map<String, Object> callInsMap = new HashMap<String, Object>();
+						callEntSeq = rosCallLogMapper.getSeqCCR0006D();
+						
+						callInsMap.put("callEntSeq", callEntSeq);
+						callInsMap.put("salesOrdId", ordMap.get("salesOrdId"));
+						callInsMap.put("typeId", SalesConstants.ROS_NEW_CALL_ENTRY_TYPE_ID);
+						callInsMap.put("stusCodeId", SalesConstants.ROS_NEW_CALL_ENTRY_STATUS_ID);
+						callInsMap.put("resultId", SalesConstants.ROS_NEW_CALL_ENTRY_RESULT_ID);
+						callInsMap.put("docId", SalesConstants.ROS_NEW_CALL_ENTRY_DOC_ID);
+						callInsMap.put("userId", params.get("userId"));
+						callInsMap.put("callDt", SalesConstants.DEFAULT_DATE);
+						callInsMap.put("isWaitForCancl", SalesConstants.ROS_NEW_CALL_ENTRY_WAIT_CANCEL);
+						callInsMap.put("happCallerId", SalesConstants.ROS_NEW_CALL_ENTRY_HAPPY_CALLER_ID);
+						callInsMap.put("oriCallDt", SalesConstants.DEFAULT_DATE);
+						
+						LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________CALL ENTRY INSERT START ");
+						LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________CALL ENTRY INSERT PARAM :  " + callInsMap.toString());
+						rosCallLogMapper.insertCallEntryInfo(callInsMap);
+						LOGGER.info("<currMap IS  NULL> ::::: 2) ________________________CALL ENTRY INSERT END ");
+						
+						/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						
+						//________________________________________________________________________________________________________ 2 - 2 . CALL RESULT INSERT 
+						Map<String, Object> callEntMap = new HashMap<String, Object>();
+						
+						callResultSeq = rosCallLogMapper.getSeqCCR0007D();
+						callEntMap.put("callResultSeq", callResultSeq);
+						callEntMap.put("callEntId", callEntSeq);
+						
+						if(params.get("action") != null){
+							actionId = Integer.parseInt(String.valueOf(params.get("action"))); 
+						}
+						callEntMap.put("callStusId", actionId);
+						
+						if(params.get("reCallDate") == null || ("").equals(String.valueOf(params.get("reCallDate")))){
+							callEntMap.put("callDt", SalesConstants.DEFAULT_DATE);
+						}else{
+							callEntMap.put("callDt", params.get("reCallDtYmd"));
+						}
+						
+						callEntMap.put("callActnDt", SalesConstants.DEFAULT_DATE);
+						
+						if(params.get("feedback") != null && !("").equals(String.valueOf(params.get("feedback")))){
+							feedbackId = Integer.parseInt(String.valueOf(params.get("feedback")));
+						}
+						callEntMap.put("callFdbchId", feedbackId);
+						callEntMap.put("callCtId", SalesConstants.ROS_CALL_CT_ID); //0
+						callEntMap.put("callRem", params.get("rosRem"));  //callResultDetails.CallRemark = txtROSRemark_ROS.Text.Trim();
+						callEntMap.put("callCrtUserId", params.get("userId"));
+						callEntMap.put("callCrtUserIdDept", SalesConstants.ROS_CALL_CREATE_BY_DEPT); //callResultDetails.CallCreateByDept = 0;
+						callEntMap.put("callHcId", SalesConstants.ROS_CALL_HCID);
+						
+						if(params.get("collectAmt") != null){
+							rosAmt = Double.parseDouble(String.valueOf(params.get("collectAmt")));
+						}
+						callEntMap.put("callRosAmt", rosAmt);
+						
+						if(Integer.parseInt(String.valueOf(params.get("chkSmS"))) == 0){  //NOT CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_FALSE;
+						}else{ //CHECK
+							chkSms = SalesConstants.ROS_CHECK_SMS_TRUE;
+							smsRem = String.valueOf(params.get("smsRem"));
+						}
+						callEntMap.put("callSMS", chkSms);
+						callEntMap.put("callSMSRem", smsRem);
+						
+						LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________INS CALL RESULT START ");
+						LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________INS CALL RESULT PARAM :  " + callEntMap.toString());
+						rosCallLogMapper.insertCallResultInfo(callEntMap);
+						LOGGER.info("<currMap IS  NULL> ::::: 3) ________________________INS CALL RESULT END ");
+						
+						
+	                    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						//________________________________________________________________________________________________________ 2 - 3 . CALL ENTRY UPDATE 						
+	                    Map<String, Object> updCallEntMap = new HashMap<String, Object>();
+	                    updCallEntMap.put("resultId", callResultSeq);
+	                    updCallEntMap.put("userId", params.get("userId"));
+	                    updCallEntMap.put("callEntId", callEntId);
+	                    
+	                    LOGGER.info("<currMap IS  NULL> ::::: 4) ________________________UPD CALL ENTRY START ");
+	                    LOGGER.info("<currMap IS  NULL> ::::: 4) ________________________UPD CALL ENTRY PARAM :  " + updCallEntMap.toString());
+	                    rosCallLogMapper.updateCallEntryInfo(updCallEntMap);
+	                    LOGGER.info("<currMap IS  NULL> ::::: 4) ________________________UPD CALL ENTRY END ");
+					}
+				}
+			}//LOOP END
+			
+		}///Insert End
+		
+		return true;
+	}
 }

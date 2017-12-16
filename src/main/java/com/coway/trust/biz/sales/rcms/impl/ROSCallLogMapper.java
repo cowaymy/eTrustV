@@ -22,4 +22,29 @@ public interface ROSCallLogMapper {
 	List<EgovMap> getReasonCodeList (Map<String, Object> params);
 	
 	List<EgovMap> getFeedbackCodeList(Map<String, Object> params);
+	
+	List<EgovMap> selectROSCallLogBillGroupOrderCnt(Map<String, Object> params);
+	
+	EgovMap getOrderServiceMemberViewByOrderID(Map<String, Object> params);
+	
+	EgovMap chkCurrRosCall(Map<String, Object> params);
+	
+	//Start
+	
+	void updateROSCallInfo(Map<String, Object> params);
+	
+	void updateCallEntryInfo(Map<String, Object> params);
+	
+	void insertROSCallInfo(Map<String, Object> params);
+	
+	EgovMap chkCurrCallEntryInfo(Map<String, Object> params);
+	
+	void insertCallResultInfo(Map<String, Object> params);
+	
+	int getSeqCCR0007D();
+	
+	int getSeqCCR0006D();
+	
+	void insertCallEntryInfo(Map<String, Object> params);
+	
 }

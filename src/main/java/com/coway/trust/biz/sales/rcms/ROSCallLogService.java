@@ -20,4 +20,10 @@ public interface ROSCallLogService {
 	List<EgovMap> getReasonCodeList (Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> getFeedbackCodeList(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectROSCallLogBillGroupOrderCnt(Map<String, Object> params)throws Exception;
+	
+	EgovMap getOrderServiceMemberViewByOrderID(Map<String, Object> params)throws Exception;
+	
+	boolean insertNewRosCall(Map<String, Object> params) throws Exception;
 }

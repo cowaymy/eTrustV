@@ -378,7 +378,23 @@ public class SalesConstants {
 	public static final int POS_TRX_REVERSE_TYPE = 101;
 	public static final int POS_GL_RECEIPT_REVERSE_TYPE = 101;
 	 
-     
+    //ROS CALL
+	public static final int ROS_CALLER_USER_ID = 0;  //ROSCallerUserID
+	public static final int ROS_CALL_STATUS_ID = 4; //ROSCallStatusID = 4;
+	public static final int ROS_CALL_CT_ID = 0;  //callResultDetails.CallCTID = 0;
+	public static final int ROS_CALL_CREATE_BY_DEPT = 0;  //callResultDetails.CallCreateByDept = 0;
+	public static final int ROS_CALL_HCID = 0; //callResultDetails.CallHCID = 0;
+	
+	public static final int ROS_CHECK_SMS_TRUE = 1;
+	public static final int ROS_CHECK_SMS_FALSE = 0;
+	
+	public static final int ROS_NEW_CALL_ENTRY_TYPE_ID = 507;  //newCallEntry.TypeID = 507;
+	public static final int ROS_NEW_CALL_ENTRY_STATUS_ID = 1;  //newCallEntry.StatusCodeID = 1;
+	public static final int ROS_NEW_CALL_ENTRY_RESULT_ID = 0;  //newCallEntry.ResultID = 0;
+	public static final int ROS_NEW_CALL_ENTRY_DOC_ID = 0;//newCallEntry.DocID = 0;
+	public static final int ROS_NEW_CALL_ENTRY_WAIT_CANCEL = 0;     //newCallEntry.IsWaitForCancel = false;
+	public static final int ROS_NEW_CALL_ENTRY_HAPPY_CALLER_ID = 0;  //newCallEntry.HappyCallerID = 0;
+	
 	/**
 	 * 메세지 KEY
 	 */

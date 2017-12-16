@@ -748,7 +748,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
             //OrdRequest Update
 			LOGGER.info("_________________________________________________________________________________________");
 			LOGGER.info("_______________ // 4 -  6Cancel Reject Status    Data.SalesOrderM  Start _________________________");
-			LOGGER.info("_________________________________________________________________________________________");
+			LOGGER.info("_______________ Params : " + params.toString());
             ccpCalculateMapper.updateOrderRequest(params); //Upd 2
             LOGGER.info("_________________________________________________________________________________________");
 			LOGGER.info("_______________ // 4 -  6Cancel Reject Status    Data.SalesOrderM  End _________________________");
