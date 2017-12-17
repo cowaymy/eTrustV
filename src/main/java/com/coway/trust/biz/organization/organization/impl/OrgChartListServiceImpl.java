@@ -88,6 +88,12 @@ public class OrgChartListServiceImpl extends EgovAbstractServiceImpl implements 
 
 	}
 
+	@Override
+	public List<EgovMap> selectOrgChartDetList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return orgChartListMapper.selectOrgChartDetList(params);
+	}
+
 
 
 	
