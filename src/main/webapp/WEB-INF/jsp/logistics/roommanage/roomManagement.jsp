@@ -45,10 +45,10 @@
     var newRoomId;
     // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [
-                        {dataField:"rumId"      ,headerText:"Room Id"      ,width:"15%"  ,height:30 , visible:true},
-                        {dataField:"rumCode"    ,headerText:"Room Code"    ,width:"20%" ,height:30 , visible:true},
-                        {dataField:"rumName"    ,headerText:"Room Name"    ,width:"35%" ,height:30 , visible:true},
-                        {dataField:"stusId"     ,headerText:"Status"       ,width:"15%" ,height:30 , visible:true
+		{dataField:   "rumId",headerText :"<spring:message code='log.head.roomid'/>"        ,width:   "15%"     ,height:30 , visible:true},               
+		{dataField: "rumCode",headerText :"<spring:message code='log.head.roomcode'/>"      ,width: "20%"    ,height:30 , visible:true},                
+		{dataField: "rumName",headerText :"<spring:message code='log.head.roomname'/>"      ,width: "35%"    ,height:30 , visible:true},                
+		{dataField: "stusId",headerText :"<spring:message code='log.head.status'/>"        ,width:  "15%"    ,height:30 , visible:true  
                         	,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                                 var retStr = value;
                                 for(var i=0,len=comboData.length; i<len; i++) {
@@ -59,11 +59,11 @@
                                 }
                                 return retStr;
                             }},
-                        {dataField:"cpcty"      ,headerText:"Capacity"     ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"advTmInMin" ,headerText:"advTmInMin"   ,width:90 ,height:30 , visible:false},
-                        {dataField:"brnchId"    ,headerText:"brnchId"      ,width:120 ,height:30 , visible:false},
-                        {dataField:"advOptnId"  ,headerText:"advOptnId"    ,width:140 ,height:30 , visible:false},
-                        {dataField:"hasImg"     ,headerText:"hasImg"       ,width:120 ,height:30 , visible:false}
+                            {dataField: "cpcty",headerText :"<spring:message code='log.head.capacity'/>"         ,width:    "15%"    ,height:30 , visible:true},                
+                            {dataField: "advTmInMin",headerText :"<spring:message code='log.head.advtminmin'/>"    ,width:90 ,height:30 , visible:false},                       
+                            {dataField: "brnchId",headerText :"<spring:message code='log.head.brnchid'/>"         ,width:120 ,height:30 , visible:false},                       
+                            {dataField: "advOptnId",headerText :"<spring:message code='log.head.advoptnid'/>"       ,width:140 ,height:30 , visible:false},                         
+                            {dataField: "hasImg",headerText :"<spring:message code='log.head.hasimg'/>"        ,width:120 ,height:30 , visible:false}  
                        ];
     
     
