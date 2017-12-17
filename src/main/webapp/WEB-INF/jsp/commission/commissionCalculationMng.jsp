@@ -85,16 +85,19 @@
 							data.all = gridList;
 							data.form = formList;
 
-							Common.ajaxSync("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
+							var option = {
+						            timeout: 60000*3
+						        };
+							Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
 								$("#search").trigger("click");
 							}, function(jqXHR, textStatus, errorThrown) {
 								console.log("실패하였습니다.");
 								console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-								if (jqXHR.status == 503) {
-									Common.alert("Running... Please wait about 20 minutes ");
-									$("#search").trigger("click");
+								if(textStatus=="timeout" || jqXHR.status == 503){
+									 Common.alert("Running... Please wait about 20 minutes ");
+					         $("#search").trigger("click");
 								}
-							});
+							},option);
 					} else {
 						Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
 					}
