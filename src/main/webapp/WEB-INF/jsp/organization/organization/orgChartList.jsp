@@ -518,7 +518,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"> Year</th>
+    <th scope="row"> Plan Year</th>
     <td>
     <select id ="cmbYear" nsme = "cmbYear" class="w100p">
         <option value="">MemberType</option>
