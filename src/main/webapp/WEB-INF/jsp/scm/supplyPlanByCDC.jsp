@@ -104,7 +104,6 @@ function fnSelectExcuteYear()
             console.log("period_values: " + $this.val());
                 
             CommonCombo.initById("scmPeriodCbBox");  // Period reset... 
-            //CommonCombo.initById("cdcCbBox");  // CDC reset... 
 
             if (FormUtil.isNotEmpty($this.val())) 
             {
@@ -142,6 +141,45 @@ function fnSelectExcuteYear()
 function fnChangeEventPeriod(object)
 {
   gWeekThValue = object.value;
+}
+
+function fnUpdateSave(Obj)
+{
+  if ($(Obj).parents().hasClass("btn_disabled") == true)
+     return false;
+
+
+  Common.ajax("POST"
+	        , "/scm/saveUpdatePlanByCDC.do"  
+	        , GridCommon.getEditData(myGridID)
+	       
+	        , function(result) 
+	          {
+	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	            fnSearchBtnList() ;
+	            
+	            console.log("성공." + JSON.stringify(result));
+	            console.log("data : " + result.data);
+	          }
+	             
+	        , function(jqXHR, textStatus, errorThrown) 
+	          {
+	            try 
+	            {
+	              console.log("Fail Status : " + jqXHR.status);
+	              console.log("code : "        + jqXHR.responseJSON.code);
+	              console.log("message : "     + jqXHR.responseJSON.message);
+	              console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	            } 
+	            catch (e) 
+	            {
+	              console.log(e);
+	            }
+	            
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
+	            
+	          }); 
+  
 }
 
 function fnSetStockComboBox()
@@ -243,6 +281,8 @@ function fnSearchBtnList()
                 {
                   $("#cir_cinfirm").attr('class','circle circle_red');
                 }
+
+                $('#updSaveBtn').removeClass("btn_disabled");
               }
            }
 				 , function(jqXHR, textStatus, errorThrown)
@@ -268,39 +308,20 @@ function fnSearchBtnList()
 
 function auiCellEditignHandler(event) 
 {
+	  var selPSI = AUIGrid.getCellValue(myGridID, event.rowIndex, "psi");
+
     if(event.type == "cellEditBegin") 
     {
+        if (selPSI != "PO & FCST" )
+        {
+          return false;
+        }
         console.log("에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
     } 
     else if(event.type == "cellEditEnd") 
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-
-        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
-        {
-          if (parseInt(event.value) < 1)
-          {
-            //Common.alert("Menu Level is not more than 4. ");
-                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
-                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
-                return false;
-          }  
-        }
-
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
-        {
-          if (parseInt(event.value) < 1)
-          {
-             Common.alert("<spring:message code='sys.msg.necessary' arguments='CATEGORY NAME' htmlEscape='false'/>");
-             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "stusCtgryName"] );
-             return false;
-          }
-          else
-          {
-            AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
-          }  
-        }
-        
+       // AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
     } 
     else if(event.type == "cellEditCancel") 
     {
@@ -419,7 +440,7 @@ function fnSettiingHeader()
                     usePaging : false,
                     useGroupingPanel : false,
                     showRowNumColumn : false, //순번 칼럼 숨김
-                    editable : false,
+                    editable : true,
                     showStateColumn : true, // 행 상태 칼럼 보이기
                     showEditedCellMarker : true, // 셀 병합 실행
                     enableCellMerge : true,
@@ -439,13 +460,9 @@ function fnSettiingHeader()
                     	console.log ("isChecked: " + isChecked + " /Checked value: " + AUIGrid.getCellValue(myGridID, rowIndex, "code"));
                     	
                     	if (isChecked == false) // for Checked 
-                      {
                     	 addCheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
-                      }
                     	else
-                      {
                     	 addUncheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
-                      }
                           
                       return true;
                     },
@@ -590,6 +607,7 @@ function fnSettiingHeader()
                                                     {                            
                                                        dataField : result.header[0].todayH2  // m0 == M0_PLAN_ORDER
                                                       ,headerText : "<spring:message code='sys.scm.salesplan.M0' />"
+                                                    	,editable : false
                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                        {
                                                          if(item.divOdd == "0") 
@@ -602,6 +620,7 @@ function fnSettiingHeader()
                                                   , {                            
                                                        dataField : result.header[0].m1H2
                                                       ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
+                                                    	,editable : false
                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                        {
                                                          if(item.divOdd == "0") 
@@ -613,7 +632,8 @@ function fnSettiingHeader()
                                                     }
                                                   , {                            
                                                        dataField : result.header[0].m2H2
-                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
+                                                      ,headerText : "<spring:message code='sys.scm.salesplan.M2' />"
+                                                    	,editable : false 
                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                        {
                                                          if(item.divOdd == "0") 
@@ -626,6 +646,7 @@ function fnSettiingHeader()
                                                   , {                            
                                                        dataField : result.header[0].m3H3
                                                       ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
+                                                    	,editable : false
                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                        {
                                                          if(item.divOdd == "0") 
@@ -638,6 +659,7 @@ function fnSettiingHeader()
                                                   , {                            
                                                        dataField : result.header[0].m4H4
                                                       ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
+                                                    	,editable : false
                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                        {
                                                          if(item.divOdd == "0") 
@@ -650,6 +672,7 @@ function fnSettiingHeader()
                                                   , {                            
                                                        dataField : result.header[0].supplyCorpHOverdue
                                                       ,headerText : "<spring:message code='sys.scm.supplyCorp.Overdue' />"
+                                                    	,editable : false
                                                       ,styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField)
                                                        {
                                                          if(item.divOdd == "0") 
@@ -658,6 +681,13 @@ function fnSettiingHeader()
                                                            return "my-backColumn1";
                                                        } 
                                                         //,width : "5%"
+                                                    }
+                                                  , {                            
+                                                       dataField : "psiId"
+                                                      ,headerText : "psiId"
+                                                    	,editable : false
+                                                      ,width : 0
+                                                      
                                                     }
                                                  ] // child                     
                                     } 
@@ -761,6 +791,7 @@ function fnSettiingHeader()
                            groupM_0.children.push({
                                                     dataField : "w" + intToStrFieldCnt,   // "w00"
                                                     headerText :result.header[1][fieldStr], 
+                                                    editable : false,
                                                     style : "my-backColumn3"
                                                   });
 
@@ -772,7 +803,8 @@ function fnSettiingHeader()
                         	
                           groupM_0.children.push({
 										                                 dataField : "w" + intToStrFieldCnt,   // "w00"
-										                                 headerText :result.header[0][fieldStr], 
+										                                 headerText :result.header[0][fieldStr],
+										                                 editable : false, 
 										                                 style : "my-backColumn3"
 										                            });
                           iLootCnt++;  
@@ -813,7 +845,8 @@ function fnSettiingHeader()
                       
                       groupM_1.children.push({
 								                               dataField : "w" + intToStrFieldCnt,
-								                               headerText :  result.header[1][fieldStr], 
+								                               headerText :  result.header[1][fieldStr],
+								                               editable : false, 
 								                               style : "my-backColumn3"
 								                            }); 
                         
@@ -825,7 +858,8 @@ function fnSettiingHeader()
                     	
 	                    groupM_1.children.push({
 	                                             dataField : "w" + intToStrFieldCnt,
-	                                             headerText :  result.header[0][fieldStr], 
+	                                             headerText :  result.header[0][fieldStr],
+	                                             editable : false,  
 	                                             style : "my-backColumn3"
 	                                          }); 
 	  
@@ -869,7 +903,8 @@ function fnSettiingHeader()
                      groupM_2.children.push({
 											                         dataField : "w" + intToStrFieldCnt,
 											                         headerText :  result.header[1][fieldStr],
-											                         style : "my-backColumn1"
+											                         style : "my-backColumn1",
+											                         editable: true,
 											                      });
                        
                      iLootCnt2 ++;                  
@@ -881,7 +916,8 @@ function fnSettiingHeader()
                      groupM_2.children.push({
 				                                      dataField : "w" + intToStrFieldCnt,
 				                                      headerText :  result.header[0][fieldStr],
-				                                      style : "my-backColumn1"
+				                                      style : "my-backColumn1",
+				                                      editable: true,
                                            });
 
                      iLootCnt ++;
@@ -922,7 +958,8 @@ function fnSettiingHeader()
 	                    groupM_3.children.push({
 									                              dataField : "w" + intToStrFieldCnt,
 									                              headerText :  result.header[1][fieldStr],
-									                              style : "my-backColumn1"
+									                              style : "my-backColumn1",
+									                              editable: true,
 									                          });
 	                      
 	                    iLootCnt2++;                  
@@ -934,7 +971,8 @@ function fnSettiingHeader()
 		                  groupM_3.children.push({
 		                                            dataField : "w" + intToStrFieldCnt,
 		                                            headerText :  result.header[0][fieldStr],
-		                                            style : "my-backColumn1"
+		                                            style : "my-backColumn1",
+		                                            editable: true,
 		                                         });
 		  
 		                  iLootCnt++;
@@ -1176,10 +1214,8 @@ $(document).ready(function()
 	 </p>
 	</li>
 	<li>
-	 <p class="btn_grid">
-   <!-- <a href="javascript:void(0);">Test</a> -->
-   <input type='button' id='Test' name='Test' value='Test' disabled />
-	 </p></li>
+	 <p id='updSaveBtn' class="btn_grid btn_disabled">
+   <a onclick="fnUpdateSave(this);">Save</a></p></li>
 </ul>
 </div><!-- side_btns end -->
 

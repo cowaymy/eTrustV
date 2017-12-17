@@ -214,11 +214,12 @@ function fnCreatePO()
 	for(var i=0; i<rowCount; i++) 
 	  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
 
-  var addList = AUIGrid.getAddedRowItems(myGridID2);
+  //var addList = AUIGrid.getAddedRowItems(myGridID2);
+  var udtList = AUIGrid.getEditedRowItems(myGridID2);
+  
+	//console.log("addList: " + addList.length + " /edtList: " + udtList.length);
 
-	console.log("addList: " + addList.length );
-
-	if (addList.length > 0)
+	if (udtList.length > 0)
 		fnUpdSaveCall();
 }
 
@@ -274,6 +275,15 @@ function auiCellEditignHandler(event)
     else if(event.type == "cellEditEnd") 
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+
+        AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty");
+        AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice");
+
+        console.log("roundupPoQty: " + AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty") + " /price: " + AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice"));
+        console.log("fobAmount: " + AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty") * (AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice")))
+        var lastAmount = ((AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty")) * (AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice")));
+        AUIGrid.setCellValue(myGridID2, event.rowIndex, 7, lastAmount);
+        
     } 
     else if(event.type == "cellEditCancel") 
     {
@@ -296,6 +306,66 @@ function fnMoveRight()
     return false;  
 	}
 
+	/*
+	conso;e.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
+	     +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
+	     +" inStkTypeId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId")
+	     +" inPlanQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")
+	     +" inPoQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty")
+	     +" inMoq: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "moq"));
+    */
+
+	     $("#inStockCode").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode"));
+	     $("#inStkCtgryId").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId"));
+	     $("#inPlanQty").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty"));
+	     $("#inPoQty").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty"));
+	     $("#inStkTypeId").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId"));
+	     $("#inMoq").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "moq"));
+	     $("#inPreCdc").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preCdc"));
+	     $("#inPreYear").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preYear"));
+	     $("#inPreWeekTh").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preWeekTh"));
+	     
+	     $("#inRoundupPoQty").val(Math.ceil((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / $("#inMoq").val() ));  
+
+	     if ( $("#inMoq").val() <= 0)
+	     {
+	       Common.alert("<spring:message code='sys.scm.poissue.zeroDivisible'/> ");
+	       return false;
+	     }
+	
+	   Common.ajax("GET"
+	             , "/scm/selectPoRightMove.do"
+	             , $("#MainForm").serialize()
+	             , function(result) 
+	               {
+	                  console.log("성공 fnSearchBtnList: " + result.selectPoRightMoveList.length);
+	                  AUIGrid.setGridData(myGridID2, result.selectPoRightMoveList);
+
+	                  if (result.selectPoRightMoveList.length > 0 )
+	                  {
+	                      $('#clearBtn').removeClass("btn_disabled");
+	                      $('#createPoBtn').removeClass("btn_disabled");
+	                  }
+	               }
+
+	             , function(jqXHR, textStatus, errorThrown)
+	               {
+	                 try
+	                 {
+	                   console.log("Fail Status : " + jqXHR.status);
+	                   console.log("code : "        + jqXHR.responseJSON.code);
+	                   console.log("message : "     + jqXHR.responseJSON.message);
+	                   console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                 }
+	                 catch (e)
+	                 {
+	                   console.log(e);
+	                 }
+	                 
+	                 Common.alert("Fail : " + jqXHR.responseJSON.message);
+	               });
+       
+/*
   var selFieldObj = new Object();
   
   selFieldObj.stockCode = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode");
@@ -316,6 +386,13 @@ function fnMoveRight()
   else
 	  qty = maxQty;
 
+  console.log("maxQty: " + maxQty +" /availableQty: " + availableQty + " /moq: " + moq);
+
+  if (moq <= 0)
+	{
+	  Common.alert("<spring:message code='sys.scm.poissue.zeroDivisible'/> ");
+	  return false;
+	}
   //qty를 다시 moq 단위로 자름
   if(qty > moq)
   {
@@ -336,6 +413,7 @@ function fnMoveRight()
   }
 
 	addRow(selFieldObj);
+		*/
 }
 
 //MstGrid 행 추가, 삽입
@@ -365,8 +443,8 @@ function addRow(selFieldObj)
     AUIGrid.addRow(myGridID2, newFieldObj, "last");
     //AUIGrid.setSorting(myGridID, [{ dataField : "TYPE", sortType : 1 }]);
     
-    $('#clearBtn').removeClass("btn_disabled");
-    $('#createPoBtn').removeClass("btn_disabled");
+  //  $('#clearBtn').removeClass("btn_disabled");
+  //  $('#createPoBtn').removeClass("btn_disabled");
 }
 
 //행 추가 이벤트 핸들러
@@ -448,11 +526,31 @@ var SCMPrePOViewLayout =
             //width : "15%",
             editable : false
         }, {
-            dataField : "fobPrice",
-            headerText : "Unit Price",
+            dataField : "moq",
+            headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
             style : "aui-grid-right-column",
+            editable : false,
             visible  : false,
-            editable : false
+        }, {
+            dataField : "stkCtgryId",
+            headerText :  "<spring:message code='sys.scm.poApproval.stockCategory'/>",   
+            editable : false,
+            visible  : false,
+        }, {
+            dataField : "preYear",
+            headerText :  "preYear",   
+            editable : false,
+            visible  : true,
+        }, {
+            dataField : "preCdc",
+            headerText : "preCdc",   
+            editable : false,
+            visible  : true,
+        }, {
+            dataField : "preWeekTh",
+            headerText : "preWeekTh",   
+            editable : false,
+            visible  : true,
         }
     ];
 
@@ -486,64 +584,92 @@ var SCMPrePOViewLayout2 =
       },{
             dataField : "stockCode",
             headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
-            width : "22%",
+            width : "15%",
             editable : false
         }, {
             dataField : "stockName",
             headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
-            width : "22%",
+            width : "15%",
             editable : false
         }, {
-            dataField : "stkTypeId",
+            dataField : "stockType",
             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
             visible  : false,
             width : "10%"
         },{
-            dataField : "poQty",
+            dataField : "moq",
+            headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
+            style : "aui-grid-right-column",
+            width : "10%",
+            editable : false
+        }, {
+            dataField : "roundupPoQty",
             headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
             style : "aui-grid-right-column",
-            width : "15%",
-            editable : false
+            width : "10%",
+            editable : true
         }, {
             dataField : "fobPrice",
             headerText : "<spring:message code='sys.scm.pomngment.FOBPrice'/>",
             style : "aui-grid-right-column",
             width : "15%",
             editable : false
-        }, {
-            dataField : "fobAmount",
-            headerText : "<spring:message code='sys.scm.pomngment.FobAmount'/>",
-            style : "aui-grid-right-column",
-            //width : "20%",
-            editable : false
         }
         // for Save temporaryDataField
         , {
-            dataField : "planQty",
-            headerText : "<spring:message code='sys.scm.pomngment.planQty'/>",
+            dataField : "fobAmount",
+            headerText : "<spring:message code='sys.scm.pomngment.FobAmount'/>",
             style : "aui-grid-right-column",
-            visible  : false,
-            width : 10
+            visible  : true,
+            width : "20%",
+            editable : false
         }, {
+            dataField : "currency",  
+            headerText : "<spring:message code='log.head.currency'/>",
+            visible  : true,
+            width : "10%",
+        }, {
+            dataField : "vendor",
+            headerText : "<spring:message code='log.head.vendor'/>",  
+            visible  : true,
+            width : "10%",
+            editable : false
+        }, {
+            dataField : "vendorTxt",
+            headerText : "<spring:message code='log.head.vendortext'/>", 
+            visible  : true,
+            width : "10%",
+            editable : false
+        },{
+            dataField : "reqDate",
+            headerText : "<spring:message code='log.head.requestdate'/>",   
+            visible  : true,
+            width : "13%",
+            editable : false
+        },{
+            dataField : "stockCategory",
+            headerText : "<spring:message code='sys.scm.poApproval.stockCategory'/>",   
+            visible  : true,
+            width : "13%",
+            editable : false
+        },{
             dataField : "preYear",
-            headerText : "YEAR",
+            headerText : "preYear",
             visible  : false,
-            width : 10
-        }, {
-            dataField : "preMonth",
-            headerText : "MONTH",
-            visible  : false,
-            width : 10
-        }, {
-            dataField : "preWeekTh",
-            headerText : "WEEK_TH",
-            visible  : false,
-            width : 10
+            width :"5%",
+            editable : false
         },{
             dataField : "preCdc",
-            headerText : "CDC",
+            headerText : "preCdc", 
             visible  : false,
-            width : 10
+            width : "5%",
+            editable : false
+        },{
+            dataField : "preWeekTh",
+            headerText : "preWeekTh", 
+            visible  : false,
+            width : "5%",
+            editable : false
         },
 
     ];
@@ -558,7 +684,9 @@ var SCMPrePOViewFooterLayout =
                                    dataField : "fobAmount",
                                    positionField : "fobAmount",
                                    operation : "SUM",
-                                   formatString : "#,##0.0000"
+                                   formatString : "#,##0.0000",
+                                   width : 200
+                                   
                                  }
                                ];
     
@@ -773,9 +901,9 @@ $(document).ready(function()
             usePaging : false,
             useGroupingPanel : false,
             showRowNumColumn : false,  // 그리드 넘버링
-            showStateColumn : false, // 행 상태 칼럼 보이기
+            showStateColumn : true, // 행 상태 칼럼 보이기
             enableRestore : true,
-            editable : false,
+            editable : true,
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
@@ -893,11 +1021,23 @@ $(document).ready(function()
   <input type ="hidden" id="viewType" name="viewType" value=""/>
   <input type ="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
   <input type ="hidden" id="V_PO_NO" name="V_PO_NO" value="" />
+  
+
 </form>      
  
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="post" action="">
-
+  <input type ="hidden" id="inStockCode"  name="inStockCode" value=""/>
+  <input type ="hidden" id="inStkCtgryId" name="inStkCtgryId" value=""/>
+  <input type ="hidden" id="inPlanQty"    name="inPlanQty" value="" />
+  <input type ="hidden" id="inPoQty"      name="inPoQty" value="" />
+  <input type ="hidden" id="inMoq"        name="inMoq" value=""/>
+  <input type ="hidden" id="inStkTypeId"  name="inStkTypeId" value=""/>
+  <input type ="hidden" id="inRoundupPoQty"  name="inRoundupPoQty" value=""/>
+  <input type ="hidden" id="inPreCdc"        name="inPreCdc" value=""/>
+  <input type ="hidden" id="inPreYear"    name="inPreYear" value=""/>  
+  <input type ="hidden" id="inPreWeekTh"    name="inPreWeekTh" value=""/>  
+  
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
