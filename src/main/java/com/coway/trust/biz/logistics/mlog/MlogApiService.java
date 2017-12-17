@@ -70,7 +70,9 @@ public interface MlogApiService {
 	
 	List<EgovMap> getFilterNotChangeList(Map<String, Object> params);
 	
-	List<EgovMap> getFilterUserChangeList(Map<String, Object> params);
+	List<EgovMap> getFilterChangeList(Map<String, Object> params);
+	
+	List<EgovMap> getUserFilterList(Map<String, Object> params);
 
 	/**
 	 * 현창배 추가
