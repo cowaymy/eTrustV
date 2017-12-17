@@ -95,10 +95,10 @@
     <select id="getFilterNotChangeList"  resultType="egovMap">
        SELECT
            <if test="querytype eq 'sum'.toString() ">
-                 SUM(BS_RESULT_PART_QTY) total_Tobe_Change_Qty 
+                 NVL(SUM (BS_RESULT_PART_QTY),0) total_Tobe_Change_Qty 
            </if>
            <if test="querytype eq 'list'.toString() ">
-                  BS_RESULT_PART_ID parts_Id, STK_CODE parts_Code, STK_DESC parts_Name,  to_char(BS_RESULT_CRT_DT,'YYYY-MM-DD') fail_Date , SALES_ORD_NO order_No, NAME cust_Name,MEM_CODE, RDC_CODE rdcCode,WH_LOC_ID rdc_Code
+                  BS_RESULT_PART_ID parts_Id, STK_CODE parts_Code, STK_DESC parts_Name,  to_char(BS_RESULT_CRT_DT,'YYYYMMDD') fail_Date , SALES_ORD_NO order_No, NAME cust_Name,MEM_CODE, RDC_CODE rdcCode,WH_LOC_ID rdc_Code
            </if>
          FROM (
         SELECT S7.BS_RESULT_PART_ID , S26.STK_CODE , S26.STK_DESC , S7.BS_RESULT_CRT_DT , S1.SALES_ORD_NO , S29.NAME ,O1.MEM_CODE, S28.RDC_CODE , S7.BS_RESULT_PART_QTY,S28.WH_LOC_ID 
