@@ -262,9 +262,9 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-        //if(valiedcheck('search')){
+        if(valiedcheck('search')){
         SearchListAjax();
-        //}
+        }
     });
  
     $("#download").click(function() {
@@ -522,31 +522,32 @@ function giSave() {
     var Status;
 if(v=='search'){
 	 if ($("#searchTransType").val() == "") {
+		 Common.alert("Please select the Transaction Type.");
 		 return false
 	 }
-    if ($("#searchReqType").val() == "") {
-        ReqType = false;
-    }else{
-        ReqType = true;
-    }
-    if ($("#searchLoc").val() == "") {
-        Location = false;
-    }else{
-        Location = true;
-    } 
-    if ($("#searchStatus").val() == "") {
-        Status = false;
-    }else{
-        Status = true;
-    }   
+//     if ($("#searchReqType").val() == "") {
+//         ReqType = false;
+//     }else{
+//         ReqType = true;
+//     }
+//     if ($("#searchLoc").val() == "") {
+//         Location = false;
+//     }else{
+//         Location = true;
+//     } 
+//     if ($("#searchStatus").val() == "") {
+//         Status = false;
+//     }else{
+//         Status = true;
+//     }   
 
-    if(ReqType == false && Location == false && Status == false){  
-        alert("Please select the Request Type. \nPlease select the Location.\nPlease key in the Status.");
-        return false;
-    }
-    if(ReqType == true || Location == true || Status == true){  
-          return true;
-    }
+//     if(ReqType == false && Location == false && Status == false){  
+//         alert("Please select the Request Type. \nPlease select the Location.\nPlease key in the Status.");
+//         return false;
+//     }
+//     if(ReqType == true || Location == true || Status == true){  
+//           return true;
+//     }
     
 }else if(v=='save'){
     
@@ -565,10 +566,9 @@ if(v=='search'){
           $("#doctext").focus();
           return false;
       }
-      return true;
 }   
-    
-    
+      return true;
+        
 } 
 
 
