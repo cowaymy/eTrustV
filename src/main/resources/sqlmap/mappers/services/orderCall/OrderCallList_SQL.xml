@@ -554,6 +554,8 @@
 		WITH CRDC AS (select s28.WH_LOC_CODE, s28.CDC_CODE, s28.RDC_CODE from sys0028m s28,sys0005m s05
 		              where 1 =1
 		              and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)  
+		               and s28.WH_LOC_STK_GRAD = 'A' 
+                       and s28.WH_LOC_GB = '02'   
 		  and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D 
 		                     WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
                             AND B.CUST_ADD_ID = C.ADD_ID
