@@ -169,6 +169,7 @@
 
             fn_getOrgChartHPListAjax();
             fn_getOrgChartCdListAjax();
+            fn_getOrgChartCtListAjax();
 
         });
         
@@ -262,9 +263,9 @@
     }            
             
                 // cd리스트 조회.
-        function fn_getOrgChartCdListAjax() {
+        function fn_getOrgChartCtListAjax() {
         
-            var deptIdCd = 0;
+/*             var deptIdCd = 0;
             var deptLevelCd = 1;
             var parentIdCd;
             var cmbDeptCode = $('#cmbDepartmentCode').val();
@@ -313,6 +314,80 @@
            
            if($("#cmbGroupId").val() == "" && $("#cmbOrganizationId").val() != ""){
                  parentIdCd ="0";
+           } */
+           
+            var cmbMemberTp = 3;
+            var deptLevelCd = 1;
+            var parentIdCd = "";
+            var deptIdCd = "";
+            
+            //ct
+           var paramCddata;
+           paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
+           
+                //cd
+           Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
+                
+                console.log("성공.");
+                console.log("data : " + result);
+                AUIGrid.setGridData(myCtGridID, result);
+            });        
+        
+        }
+        
+        
+        
+        
+        
+                function fn_getOrgChartCdListAjax() {
+        
+            var deptIdCd = 0;
+            var deptLevelCd = 1;
+            var parentIdCd;
+            var cmbDeptCode = $('#cmbDepartmentCode').val();
+            var cmbGroupIdcd = $('#cmbGroupId').val();
+            var cmbOrganiIdCd = $('#cmbOrganizationId').val();
+            var cmbMemberTp = $('#cmbMemberType').val();
+            
+            if($('#cmbMemberType').val()==1){
+                parentIdCd = 124;
+            }else {
+                cmbMemberTp = 2;
+                parentIdCd = 31983;
+            }
+            
+            console.log("data11111111 : " + parentIdCd + ":::aaaaaa:::"+$('#cmbMemberType').val());
+        
+        
+            if(cmbDeptCode != null && cmbDeptCode.length != 0){//DeptCode 있을때
+                deptIdCd = cmbDeptCode;
+                deptLevelCd = 3;
+                parentIdCd = cmbGroupIdcd;
+            }else {//DeptCode 없을때
+                if(cmbGroupIdcd != null && cmbGroupIdcd.length !=0){
+                    deptIdCd = cmbGroupIdcd;
+                    deptLevelCd = 2;
+                    parentIdCd =cmbOrganiIdCd;
+                }else {
+                    if(cmbOrganiIdCd != null && cmbOrganiIdCd.length !=0){
+                        deptIdCd = cmbOrganiIdCd;
+                        deptLevelCd = 1;
+                    }
+                }
+             }   
+
+        
+           console.log("parentId fin : " + parentIdCd); 
+           console.log("deptLeve finl : " + deptLevelCd);       
+           console.log("deptId fin: " + deptIdCd);        
+           console.log("deptId fin: " + cmbMemberTp);                   
+           
+           if(deptIdCd== 0){
+                deptIdCd="";
+           }
+           
+           if($("#cmbGroupId").val() == "" && $("#cmbOrganizationId").val() != ""){
+                 parentIdCd ="0";
            }
            
             //cd
@@ -328,7 +403,6 @@
             });        
         
         }
-        
         
         
         
@@ -375,12 +449,12 @@
 
 <h2>Organization Chart</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_SelectOrgChartListAjax();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue" ><a href="#" onclick="javascript:fn_SelectOrgChartListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue" style ="display: none "><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
-<section class="search_table"><!-- search_table start -->
+<section style ="display: none "class="search_table"><!-- search_table start -->
 <form action="#" method="post">
 
 <table class="type1"><!-- table start -->
@@ -427,6 +501,45 @@
 
 </form>
 </section><!-- search_table end -->
+
+
+<!-- 20171217 add -->
+
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:160px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row"> Year</th>
+    <td>
+    <select id ="cmbYear" nsme = "cmbYear" class="w100p">
+        <option value="">MemberType</option>
+    </select>
+    </td>
+    <th scope="row">Month</th>
+    <td>
+    <select id ="cmbMonth" nsme = "cmbMonth" class="w100p">
+        <option value="">Organization</option>
+    </select>
+    </td>
+</tr>
+
+</tbody>
+</table><!-- table end -->
+
+
+
+</form>
+</section>
+<!-- 20171217 add -->
 
 <section class="search_result"><!-- search_result start -->
 
