@@ -11,10 +11,10 @@ public class FilterChangeListForm {
 	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CD104211", example = "CD104211")
 	private String userId;
 
-	@ApiModelProperty(value = "실사 기준일자(YYYYMMDD) 예) 20171201", example = "20171201")
+	@ApiModelProperty(value = "조회시작날짜(YYYYMMDD) 예) 20171201", example = "20171201")
 	private String searchFromDate;
 
-	@ApiModelProperty(value = "실사 기준일자(YYYYMMDD) 예) 20171231", example = "20171231")
+	@ApiModelProperty(value = "조회종료날짜(YYYYMMDD) 예) 20171231", example = "20171231")
 	private String searchToDate;
 
 	public static Map<String, Object> createMap(FilterChangeListForm filterNotChangeListForm) {
