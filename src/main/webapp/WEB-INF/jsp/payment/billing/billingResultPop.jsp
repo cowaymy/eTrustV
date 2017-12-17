@@ -113,7 +113,7 @@ function fn_billList(){
     <header class="pop_header">
         <h1>Billing Result</h1>
         <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" id="_close1"><spring:message code='sys.btn.close'/></a></p></li>
             </ul>
     </header>
     <!-- pop_header end -->
@@ -127,8 +127,8 @@ function fn_billList(){
             <input type="hidden" name="pageNo" id="pageNo" />
             
             <ul class="right_btns mb10">
-                <li><p class="btn_blue"><a href="javascript:fn_billList();">Excel Download</a></p></li>
-                <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_billList();"><spring:message code='budget.ExcelDownload'/></a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
         
         

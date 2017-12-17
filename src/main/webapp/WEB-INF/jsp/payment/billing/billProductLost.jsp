@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 var myGridID;
 //var tmp = 665425;
@@ -161,8 +161,8 @@ function fn_clickViewDetail(){
 					    <td>
 					    <input type="hidden" id="orderId" name="orderId" />
 					    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
-					    <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
-					    <p class="btn_sky"><a href="javascript:fn_clickViewDetail();">View Details</a></p>
+					    <p class="btn_sky"><a href="javascript:fn_orderSearch();"><spring:message code='sys.btn.search'/></a></p>
+					    <p class="btn_sky"><a href="javascript:fn_clickViewDetail();"><spring:message code='pay.btn.link.viewDetails'/></a></p>
 					    </td>
 					</tr>
 					</tbody>
@@ -230,7 +230,7 @@ function fn_clickViewDetail(){
 			</table><!-- table end -->
 		
 		<ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();">Create Bills</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();"><spring:message code='pay.btn.createBills'/></a></p></li>
 		</ul>
 		</form>
 	</section><!-- search_table end -->

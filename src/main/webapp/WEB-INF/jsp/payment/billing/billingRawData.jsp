@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 
 //Default Combo Data
@@ -70,7 +70,7 @@ function fn_generate(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Billing Raw Data</h2>        
         <ul class="right_btns">            
-            <li><p class="btn_blue2"><a href="javascript:fn_generate();">Generate</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_generate();"><spring:message code='pay.btn.generate'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

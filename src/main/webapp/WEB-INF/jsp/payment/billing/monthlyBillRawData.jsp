@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 $(document).ready(function(){
 	var curDate = new Date();
@@ -55,7 +55,7 @@ function fn_generateClick(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Monthly Bill Raw Data</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateClick();">Generate</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateClick();"><spring:message code='pay.btn.generate'/></a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

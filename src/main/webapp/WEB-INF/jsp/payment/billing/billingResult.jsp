@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 var myGridID;
 
@@ -127,7 +127,7 @@ function fn_billList(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Billing Result</h2>
         <ul class="right_opt">
-            <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -171,10 +171,10 @@ function fn_billList(){
             <dt>Link</dt>
             <dd>
                 <ul class="btns">
-                    <li><p class="link_btn"><a href="javascript:fn_billList()">Bill List</a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_billList()"><spring:message code='pay.btn.billList'/></a></p></li>
                 </ul>
                 <ul class="btns">
-                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()">Back to List Page</a></p></li>
+                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()"><spring:message code='pay.btn.backtoListPage'/></a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>

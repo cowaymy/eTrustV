@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 var myGridID;
 //var tmp = 165801;
@@ -178,10 +178,10 @@ function fn_clickViewDetail(){
                     <tr>
 					    <th scope="row">Selected Order No.</th>
 					    <td>
-					    <input type="hidden" id="orderId" name="orderId" />
-					    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
-					    <p class="btn_sky"><a href="javascript:fn_orderSearch();">Search</a></p>
-					    <p class="btn_sky"><a href="javascript:fn_clickViewDetail()">View Details</a></p>
+						    <input type="hidden" id="orderId" name="orderId" />
+						    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
+						    <p class="btn_sky"><a href="javascript:fn_orderSearch();"><spring:message code='sys.btn.search'/></a></p>
+						    <p class="btn_sky"><a href="javascript:fn_clickViewDetail()"><spring:message code='pay.btn.link.viewDetails'/></a></p>
 					    </td>
 						</tr>
 				</tbody>
@@ -201,43 +201,43 @@ function fn_clickViewDetail(){
 					<tr>
 					    <th scope="row">Penalty Type</th>
 					    <td>
-					    <select class="readonly">
-					        <option value="">Early Termination Fees</option>
-					    </select>
+						    <select class="readonly">
+						        <option value="">Early Termination Fees</option>
+						    </select>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Mothly Rental</th>
 					    <td>
-					    <input type="hidden" id="rental" name="rental" title="" placeholder="" class="readonly" readonly/>
-					    <input type="text" id="rental1" title="" placeholder="" class="readonly" readonly/>
+						    <input type="hidden" id="rental" name="rental" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="rental1" title="" placeholder="" class="readonly" readonly/>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Unbill Month</th>
 					    <td>
-					    <input type="hidden" id="unbillMonth" name="unbillMonth" title="" placeholder="" class="readonly" readonly/>
-					    <input type="text" id="unbillMonth1" title="" placeholder="" class="readonly" readonly/>
+						    <input type="hidden" id="unbillMonth" name="unbillMonth" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="unbillMonth1" title="" placeholder="" class="readonly" readonly/>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Termination Fee</th>
 					    <td>
-					    <input type="hidden" id="amount" name="amount" title="" placeholder="" class="readonly" readonly/>
-					    <input type="text" id="amount1" title="" placeholder="" class="readonly" readonly/>
+						    <input type="hidden" id="amount" name="amount" title="" placeholder="" class="readonly" readonly/>
+						    <input type="text" id="amount1" title="" placeholder="" class="readonly" readonly/>
 					    </td>
 					</tr>
 					<tr>
 					    <th scope="row">Remark</th>
 					    <td>
-					    <textarea id="remark" name="remark" cols="20" rows="5" placeholder=""></textarea>
+					       <textarea id="remark" name="remark" cols="20" rows="5" placeholder=""></textarea>
 					    </td>
 					</tr>
 				</tbody>
 			</table><!-- table end -->
 
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();">Create Bills</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();"><spring:message code='pay.btn.createBills'/></a></p></li>
 			</ul>
 
         </form>

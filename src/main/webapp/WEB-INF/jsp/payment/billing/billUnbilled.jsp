@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style type="text/css">
 .my-custom-up{
     text-align: left;
@@ -396,7 +396,7 @@ var billingTargetLayout = [
 							    <td>
 								    <input type="text"  id="orderNo" name="orderNo" title="" placeholder="" class="readonly" />
 								    <p class="btn_sky">
-								         <a href="javascript:fn_orderSearch();" id="search">Search</a>
+								         <a href="javascript:fn_orderSearch();" id="search"><spring:message code='sys.btn.search'/></a>
 								    </p>
 							    </td>
 							</tr>
@@ -413,7 +413,7 @@ var billingTargetLayout = [
 					<div class="border_box" style="height:350px;"><!-- border_box start -->
 					<article id="grid_wrap2" class="grid_wrap"></article>
 					<ul class="left_btns">
-					    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnAddToBillTarget">Add to Billing Target</a></p></li>
+					    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnAddToBillTarget"><spring:message code='pay.btn.addToBillTarget'/></a></p></li>
 					</ul>
 					
 					</div><!-- border_box end -->
@@ -425,8 +425,8 @@ var billingTargetLayout = [
 						<div class="border_box" style="height:350px;"><!-- border_box start -->
 							<article id="grid_wrap3" class="grid_wrap"></article>
 							<ul class="left_btns">
-							    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget">Remove From Billing Target</a></p></li>
-							    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills">Create Bills</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget"><spring:message code='pay.btn.removeFromBillTarget'/></a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills"><spring:message code='pay.btn.createBills'/></a></p></li>
 							</ul>
 						</div><!-- border_box end -->
 					</div>
@@ -438,7 +438,7 @@ var billingTargetLayout = [
 			<header class="pop_header"><!-- pop_header start -->
 				<h1>Advance Bill Remark</h1>
 				<ul class="right_opt">
-				    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();">CLOSE</a></p></li>
+				    <li><p class="btn_blue2"><a href="" onclick="fn_createBillsPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
 				</ul>
 			</header><!-- pop_header end -->
 			<section class="pop_body"><!-- pop_body start -->
@@ -467,7 +467,7 @@ var billingTargetLayout = [
 					</tbody>
 				</table><!-- table end -->
 				<ul class="center_btns">
-				    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick="">SAVE</a></p></li>
+				    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick=""><spring:message code='sys.btn.save'/></a></p></li>
 				</ul>
 			</section><!-- pop_body end -->
 		</div><!-- popup_wrap end -->

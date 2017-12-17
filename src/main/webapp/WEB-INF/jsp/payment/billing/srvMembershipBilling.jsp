@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 var myGridID;
 var myViewDetailGridID;
@@ -196,7 +196,7 @@ function fn_save(){
 	    <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 	    <h2>Membership</h2>	    
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_createBills();">Create Bills</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_createBills();"><spring:message code='pay.btn.createBills'/></a></p></li>
         </ul>
         
 	</aside>
@@ -223,7 +223,7 @@ function fn_save(){
 	                    <th scope="row">Membership Quotation</th>
 	                    <td>
 	                        <input type="text"  id="quoNo" name="quoNo"  title="" placeholder="" class="readonly" readonly="readonly" />
-	                        <p class="btn_sky"><a href="javascript:fn_search();">Search</a></p>
+	                        <p class="btn_sky"><a href="javascript:fn_search();"><spring:message code='sys.btn.search'/></a></p>
 	                    </td>
 	                </tr>
 	            </tbody>
@@ -247,7 +247,7 @@ function fn_save(){
     <header class="pop_header" id="viewDetail_pop_header">
         <h1>VIEW DETAILS</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#viewDetail_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#viewDetail_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     
@@ -297,7 +297,7 @@ function fn_save(){
     <header class="pop_header" id="remark_pop_header">
         <h1>ADVANCE BILL REMARK</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#remark_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#remark_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     
@@ -329,7 +329,7 @@ function fn_save(){
         </section>   
         
         <ul class="center_btns mt10" >
-            <li><p class="btn_blue2"><a href="javascript:fn_save();">Save</a></p></li>           
+            <li><p class="btn_blue2"><a href="javascript:fn_save();"><spring:message code='sys.btn.save'/></a></p></li>           
         </ul>        
     </section>
     </form>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <style type="text/css">
 .my-custom-up{
     text-align: left;
@@ -271,7 +271,7 @@ var discountLayout = [
 					    <td>
 					        <input type="text" name="orderNo" id="orderNo" title="" placeholder=""  class="readonly"/>
 					         <p class="btn_sky">
-                                <a href="javascript:fn_orderSearch();" id="search">Search</a>
+                                <a href="javascript:fn_orderSearch();" id="search"><spring:message code='sys.btn.search'/></a>
                             </p>
 					     </td>
 					     <th scope="row">Customer Name</th>
@@ -289,7 +289,7 @@ var discountLayout = [
 			                    <dt>Link</dt>
 			                    <dd>                    
 			                    <ul class="btns">
-			                        <li><p class="link_btn type2"><a href="javascript:fn_addNewEntry();">Add New Entry</a></p></li>
+			                        <li><p class="link_btn type2"><a href="javascript:fn_addNewEntry();"><spring:message code='pay.btn.link.addNewEntry'/></a></p></li>
 			                    </ul>
 			                    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			                    </dd>
@@ -308,7 +308,7 @@ var discountLayout = [
 			<header class="pop_header"><!-- pop_header start -->
 				<h1>Add New Module Unit</h1>
 				<ul class="right_opt">
-				    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_close();"><spring:message code='sys.btn.close'/></a></p></li>
 				</ul>
 			</header><!-- pop_header end -->
 			<section class="pop_body"><!-- pop_body start -->
@@ -350,7 +350,7 @@ var discountLayout = [
 			                </tbody>
 			    </table>
 			    <ul class="center_btns">
-			        <li><p class="btn_grid"><a href="javascript:fn_saveDiscount();">Save</a></p></li>
+			        <li><p class="btn_grid"><a href="javascript:fn_saveDiscount();"><spring:message code='sys.btn.save'/></a></p></li>
 			    </ul>
 			</section><!-- pop_body end -->
 		</div><!-- popup_wrap end -->
