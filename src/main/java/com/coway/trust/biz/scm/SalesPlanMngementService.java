@@ -13,8 +13,8 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectSalesPlanMaster(Map<String, Object> params);
 	List<EgovMap> selectComboSupplyCDC(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
-	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);
-	
+	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);  
+	int updatePlanByCDC(List<Object> addList, Integer updUserId);
 	
 	//Supply-Corp
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);

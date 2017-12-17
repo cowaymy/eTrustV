@@ -22,6 +22,7 @@ public interface PoMngementService
 	List<EgovMap> selectPoApprovalSummary(Map<String, Object> params);
 	List<EgovMap> selectPoApprovalSummaryHidden(Map<String, Object> params);
 	List<EgovMap> selectPoApprovalMainList(Map<String, Object> params);
+	List<EgovMap> selectPoRightMove(Map<String, Object> params);
 	int updatePoApprovalDetail(List<Object> addList, Integer updUserId);
 	
 	// PO Management - PO Issue
@@ -30,7 +31,7 @@ public interface PoMngementService
 	List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params);
 	EgovMap selectPOIssueNewPoNo(Map<String, Object> params);
 	
-	int updatePOIssuItem(List<Map<String, Object>> addList, Integer updUserId);
+	int updatePOIssuItem(List<Map<String, Object>> updList, Integer updUserId);
 	int insertPOIssueDetail(List<Object> addList, Integer crtUserId);
 	
 }
