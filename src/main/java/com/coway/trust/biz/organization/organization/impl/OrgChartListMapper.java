@@ -23,6 +23,8 @@ public interface OrgChartListMapper {
 	List<EgovMap> selectOrgChartCtList(Map<String, Object> params);
 	
 	List<EgovMap> selectCtChildList(Map<String, Object> params);
+
+	List<EgovMap> selectOrgChartDetList(Map<String, Object> params);
 	
 
 	
