@@ -81,7 +81,9 @@ function fn_hpMemRegisPop(){
     };
     //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
 
-    if (memberType == "6" && $("#memTypeCom").val() != "") {
+    //alert(  memberType  + "  <>  " + statusName );
+    
+    if (memberType == "2803" ) {
     	if ( statusName != "Approved" ) {
     
 	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType }, function(result) {
