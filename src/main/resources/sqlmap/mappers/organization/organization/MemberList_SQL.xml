@@ -2825,7 +2825,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,NATION 		,TEL_OFFICE 		,TEL_HUSE 		,TEL_MOBILE 		,EMAIL
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO 		
-		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus
+		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
 		)
 		select  
 		        (SELECT MAX(MEM_ID)+1 FROM ORG0001D ) AS MEM_ID, 
@@ -2868,7 +2868,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE CRT_DT, 
 		        CRT_USER_ID, 
 		        SYSDATE UPD_DT, 
-		        UPD_USER_ID,  '1' AS stus
+		        UPD_USER_ID,  '1' AS stus, APLICNT_ID
 		from ORG0003D   d             
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
