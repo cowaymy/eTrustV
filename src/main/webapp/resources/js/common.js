@@ -32,8 +32,8 @@ var Common = {
         } else {
             _params = _jsonObj ? JSON.stringify(_jsonObj) : '';
         }
-
-		//timeout test
+		
+        //add timeout defalut : 0
         var option = {
             async: true,
             isShowLoader : true ,
