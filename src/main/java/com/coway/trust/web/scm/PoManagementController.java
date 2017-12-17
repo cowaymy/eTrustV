@@ -96,22 +96,40 @@ public class PoManagementController {
 		
 		return ResponseEntity.ok(map);
 		
+	}
+	
+	@RequestMapping(value = "/selectPoRightMove.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectPoRightMove(@RequestParam Map<String, Object> params,
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	{
+		LOGGER.debug("selectPoRightMove_Input : {}", params.toString());
+		
+		List<EgovMap> selectPoRightMoveList = poMngementService.selectPoRightMove(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectPoRightMoveList", selectPoRightMoveList);
+		
+		return ResponseEntity.ok(map);
+		
 	}	
 	
 	@RequestMapping(value = "/savePOIssuItem.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePOIssuItem(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO)
 	{
-		List<Map<String, Object>> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		//List<Map<String, Object>> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		List<Map<String, Object>> updList = params.get(AppConstants.AUIGRID_UPDATE); // Get grid addList
 
 		int tmpCnt = 0;
 		int totCnt = 0;
 		
-		LOGGER.info("InsUpdPoIssueItem_수정 >> Add_Size: {}, params: {}", addList.size(), params.toString());
+		LOGGER.info("InsUpdPoIssueItem_수정 >> Add_Size: {}, Upd_Size: {}, params: {}", updList.size(), params.toString());
 		
-		if (addList.size() > 0) 
+		if (updList.size() > 0) 
 		{
 			// Step1. Update SCMPrePOItem   Step2. Insert SCMPODetail
-			tmpCnt = poMngementService.updatePOIssuItem(addList, sessionVO.getUserId());
+			tmpCnt = poMngementService.updatePOIssuItem(updList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
 

@@ -149,5 +149,32 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(map);
 		
 	}
+	
+	// saveUpdatePlanByCDC
+	@RequestMapping(value = "/saveUpdatePlanByCDC.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveUpdatePlanByCDC(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
+	{
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
+		// 콘솔로 찍어보기
+		LOGGER.info("updatePlanByCDC_수정 : {}", udtList.toString());
+		
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		if (udtList.size() > 0) {
+			tmpCnt = salesPlanMngementService.updatePlanByCDC(udtList, sessionVO.getUserId());
+			totCnt = totCnt + tmpCnt;
+		}
+		
+		LOGGER.info("PlanByCDC Saves카운트 : {}", totCnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}	
 
 }

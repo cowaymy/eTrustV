@@ -31,6 +31,7 @@ public interface PoMngementMapper
 	List<EgovMap> selectScmPrePoItemView(Map<String, Object> params);
 	List<EgovMap> selectScmPoView(Map<String, Object> params);
 	List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params); 
+	List<EgovMap> selectPoRightMove(Map<String, Object> params); 
 	EgovMap selectPOIssueNewPoNo(Map<String, Object> params); 
 	
 	int updatePOIssuItem(Map<String, Object> params);

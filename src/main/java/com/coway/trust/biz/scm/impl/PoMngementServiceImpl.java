@@ -55,6 +55,10 @@ public class PoMngementServiceImpl implements PoMngementService {
 	public List<EgovMap> selectOtdSOPPDetailPop(Map<String, Object> params) {
 		return poMngementMapper.selectOtdSOPPDetailPop(params);
 	}
+	@Override
+	public List<EgovMap> selectPoRightMove(Map<String, Object> params) {
+		return poMngementMapper.selectPoRightMove(params);
+	}
 	
 	/* Interface */
 	@Override
@@ -135,20 +139,20 @@ public class PoMngementServiceImpl implements PoMngementService {
 	
 	// update SCMPrePOItem && Insert SCMPODetail
 	@Override
-	public int updatePOIssuItem(List<Map<String, Object>> addList, Integer crtUserId) 
+	public int updatePOIssuItem(List<Map<String, Object>> updList, Integer crtUserId) 
 	{
 		int saveCnt = 0;
 		int poItemNo = 0;
 		
-		LOGGER.debug(" updatePOIssuItem_IMPLE {} ", addList.toString() );
+		LOGGER.debug(" updatePOIssuItem_IMPLE {} ", updList.toString() );
 		
 		String preCdc = "";
 		String preYear = "";
 		
-		if(addList != null && addList.size() > 0)
+		if(updList != null && updList.size() > 0)
 		{
-		  preCdc =  (String) addList.get(0).get("preCdc");
-		  preYear = (String) addList.get(0).get("preYear");
+		  preCdc =  (String) updList.get(0).get("preCdc");
+		  preYear = (String) updList.get(0).get("preYear");
 		}
 		
 		if(StringUtils.isEmpty(preCdc) || StringUtils.isEmpty(preYear)){
@@ -161,7 +165,7 @@ public class PoMngementServiceImpl implements PoMngementService {
 		EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
 		String selectNewPoNo = (String)newPonoMap.get("newPono");
 		
-		for (Map<String, Object> obj : addList) 
+		for (Map<String, Object> obj : updList) 
 		{
 			poItemNo++;
 			

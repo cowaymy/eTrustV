@@ -152,6 +152,31 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		return saveCnt;
 	}
 	
+	//updatePlanByCDC
+	@Override
+	public int updatePlanByCDC(List<Object> addList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : addList) 
+		{
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug(" >>>>> updatePlanByCDC ");
+			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
+			
+			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
+			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
+			
+			saveCnt++;
+			
+			salesPlanMngementMapper.updatePlanByCDC((Map<String, Object>) obj);
+		}
+		
+		return saveCnt;
+	}
+	
 	// INSERT
 	@Override
 	public int insertSalesPlanDetail(List<Object> addList, Integer crtUserId) 

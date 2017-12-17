@@ -14,7 +14,8 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectSupplyCDC(Map<String, Object> params);
 	List<EgovMap> selectComboSupplyCDC(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);
-	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
+	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);  
+	void updatePlanByCDC(Map<String, Object> params);
 	
     /*Supply_CORP */
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);
