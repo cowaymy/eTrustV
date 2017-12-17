@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
 .my-custom-up{
     text-align: left;
@@ -221,7 +222,7 @@ function fn_estmReqPopClose(){
         <header class="pop_header"><!-- pop_header start -->
             <h1>Billing Group Maintenance - Billing Type</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" id="changeBillPopCloseBtn">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" id="changeBillPopCloseBtn"><spring:message code='sys.btn.close'/></a></p></li>
             </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
@@ -262,7 +263,7 @@ function fn_estmReqPopClose(){
                         <tr>
                             <td colspan="3">
 	                            <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
-	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();">Request New Email</a></p>
+	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();"><spring:message code='pay.btn.requestNewEmail'/></a></p>
                             </td>
                         </tr>
                         <tr>
@@ -274,7 +275,7 @@ function fn_estmReqPopClose(){
                         </tbody>
                     </table><!-- table end -->
                     <ul class="center_btns">
-                        <li><p class="btn_blue2 big"><a href="javascript:fn_changeBillSave();">SAVE</a></p></li>
+                        <li><p class="btn_blue2 big"><a href="javascript:fn_changeBillSave();"><spring:message code='sys.btn.save'/></a></p></li>
                     </ul>
                 </article><!-- tap_area end -->
                 <article class="tap_area"><!-- tap_area start -->
@@ -288,7 +289,7 @@ function fn_estmReqPopClose(){
         <header class="pop_header"><!-- pop_header start -->
             <h1>E-Statement - New Request</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" onclick="fn_estmReqPopClose();">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" onclick="fn_estmReqPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
             </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
@@ -320,7 +321,7 @@ function fn_estmReqPopClose(){
                 </tbody>
             </table><!-- table end -->
             <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a href="javascript:fn_newReqSave();">SAVE</a></p></li>
+                <li><p class="btn_blue2 big"><a href="javascript:fn_newReqSave();"><spring:message code='sys.btn.save'/></a></p></li>
             </ul>
         </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->

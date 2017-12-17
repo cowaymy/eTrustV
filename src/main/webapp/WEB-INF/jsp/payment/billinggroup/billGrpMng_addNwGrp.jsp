@@ -481,8 +481,8 @@ var contPersonLayout = [
 						</article><!-- tap_area end -->
 						<article class="tap_area"><!-- tap_area start -->
 							<ul class="right_btns">
-							    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();" id="addNewAddr">Add New Address</a></p></li>
-							    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();" id="selectMailAddr">Select Mailing Address</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();" id="addNewAddr"><spring:message code='pay.btn.addNewAddress'/></a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();" id="selectMailAddr"><spring:message code='pay.btn.selectMailingAddress'/></a></p></li>
 							</ul>
 							<table class="type1 mt10"><!-- table start -->
 								<caption>table</caption>
@@ -501,8 +501,8 @@ var contPersonLayout = [
 						</article><!-- tap_area end -->
 						<article class="tap_area"><!-- tap_area start -->
 							<ul class="right_btns">
-							    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();" id="addNewContact">Add New Contact</a></p></li>
-							    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();" id="selectContPerson">Select Contact Person</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();" id="addNewContact"><spring:message code='pay.btn.addNewContact'/></a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();" id="selectContPerson"><spring:message code='pay.btn.selectContactPerson'/></a></p></li>
 							</ul>
 							<table class="type1 mt10"><!-- table start -->
 								<caption>table</caption>
@@ -539,7 +539,7 @@ var contPersonLayout = [
 						</article><!-- tap_area end -->
 					</section><!-- tap_wrap end -->
 					<ul class="center_btns mt10">
-					    <li><p class="btn_blue2 big"><a href="javascript:fn_createNewGroup();" id="_btnSave">SAVE</a></p></li>
+					    <li><p class="btn_blue2 big"><a href="javascript:fn_createNewGroup();" id="_btnSave"><spring:message code='sys.btn.save'/></a></p></li>
 					</ul>
 				</section><!-- content end -->
 			</section><!-- container end -->
@@ -549,13 +549,13 @@ var contPersonLayout = [
 			<header class="pop_header"><!-- pop_header start -->
 				<h1>Customer Address - Customer Address</h1>
 				<ul class="right_opt">
-				    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();">CLOSE</a></p></li>
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();"><spring:message code='sys.btn.close'/></a></p></li>
 				</ul>
 			</header><!-- pop_header end -->
 			<section class="pop_body"><!-- pop_body start -->
 				<ul class="right_btns">
-				    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
-				    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
+				    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+				    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 				</ul>
 				<table class="type1 mt10"><!-- table start -->
 					<caption>table</caption>
@@ -580,13 +580,13 @@ var contPersonLayout = [
 			<header class="pop_header"><!-- pop_header start -->
 				<h1>We Bring Wellness - Customer Contact</h1>
 				<ul class="right_opt">
-				    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();">CLOSE</a></p></li>
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
 				</ul>
 			</header><!-- pop_header end -->
 			<section class="pop_body"><!-- pop_body start -->
 				<ul class="right_btns">
-				    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
-				    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
+				    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+				    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 				</ul>
 				<table class="type1 mt10"><!-- table start -->
 					<caption>table</caption>

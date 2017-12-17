@@ -56,7 +56,7 @@ function fn_generateStatement(){
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Generate</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.generate'/></a></p></li>
         </ul>    
     <!-- search_table start -->
     <section class="search_table">

@@ -164,8 +164,8 @@ hideViewPopup=function(val){
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();">Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
 </ul>
 
 <section class="search_table">

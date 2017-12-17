@@ -226,8 +226,8 @@ hideViewPopup=function(val){
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_openDivPop();">Generate Invoice</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_getProformaInvoiceListAjax();">Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getProformaInvoiceListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
         </ul>    
 
     <!-- search_table start -->
@@ -392,7 +392,7 @@ hideViewPopup=function(val){
                 </table>
             </section>        
             <ul class="center_btns" >
-                <li><p class="btn_blue2"><a href="javascript:fn_generateStatement();">Generate</a></p></li>
+                <li><p class="btn_blue2"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.generate'/></a></p></li>
             </ul>
         </section>
     </form>       

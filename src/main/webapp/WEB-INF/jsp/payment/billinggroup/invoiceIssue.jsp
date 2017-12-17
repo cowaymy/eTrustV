@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javaScript">
 
@@ -61,7 +62,7 @@ function fn_goSelectedPage() {
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Invoice Generate</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()">Go</a></p></li>            
+            <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()"><spring:message code='pay.btn.go'/></a></p></li>            
         </ul>    
     </aside>
     <!-- title_line end -->

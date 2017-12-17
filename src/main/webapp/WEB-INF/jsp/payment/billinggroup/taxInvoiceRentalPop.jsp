@@ -109,8 +109,8 @@ function fn_generateInvoice(){
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();">Generate Invoice</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();">Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
 
     <!-- search_table start -->

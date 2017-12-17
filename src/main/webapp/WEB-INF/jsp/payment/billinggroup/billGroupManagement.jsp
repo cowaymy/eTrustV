@@ -1373,10 +1373,10 @@ var addOrderLayout = [
 							    <td>
 							        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" />
 							        <p class="btn_sky">
-							            <a href="javascript:searchList();" id="confirm">Confirm</a>
+							            <a href="javascript:searchList();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
 							        </p>
 							        <p class="btn_sky">
-							            <a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a>
+							            <a href="javascript:fn_reSelect();" id="reSelect" style="display: none"><spring:message code='pay.btn.reselect'/></a>
 							        </p>
 							     </td>
 							</tr>
@@ -1394,10 +1394,10 @@ var addOrderLayout = [
 						</ul>
 						<article class="tap_area"><!-- tap_area start -->
 							<ul class="right_btns">
-							    <li><p class="btn_blue2"><a href="javascript:fn_billGrpHistory();">View History</a></p></li>
-							    <li><p class="btn_blue2"><a href="javascript:fn_changeMainOrder();">Change Main Order</a></p></li>
-							    <li><p class="btn_blue2"><a href="javascript:fn_updRemark();">Update Remark</a></p></li>
-							    <li><p class="btn_blue2"><a href="javascript:fn_changeBillType();">Change Billing Type</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_billGrpHistory();"><spring:message code='pay.btn.viewHistory'/></a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_changeMainOrder();"><spring:message code='pay.btn.changemMinOrder'/></a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_updRemark();"><spring:message code='pay.btn.updateRemark'/></a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_changeBillType();"><spring:message code='pay.btn.ChangeBillingType'/></a></p></li>
 							</ul>
 							<table class="type1 mt10"><!-- table start -->
 								<caption>table</caption>
@@ -1463,7 +1463,7 @@ var addOrderLayout = [
 						</article><!-- tap_area end -->
 						<article class="tap_area"><!-- tap_area start -->
 							<ul class="right_btns">
-							    <li><p class="btn_blue2"><a href="javascript:fn_changeMaillAddr();">Change Mailing Address</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_changeMaillAddr();"><spring:message code='pay.btn.changeMailingAddress'/></a></p></li>
 							</ul>
 							<table class="type1 mt10"><!-- table start -->
 								<caption>table</caption>
@@ -1482,7 +1482,7 @@ var addOrderLayout = [
 						</article><!-- tap_area end -->
 						<article class="tap_area"><!-- tap_area start -->
 							<ul class="right_btns">
-							    <li><p class="btn_blue2"><a href="javascript:fn_chgContPerson();">Change Contact Person</a></p></li>
+							    <li><p class="btn_blue2"><a href="javascript:fn_chgContPerson();"><spring:message code='pay.btn.changeContactPerson'/></a></p></li>
 							</ul>
 							<table class="type1 mt10"><!-- table start -->
 								<caption>table</caption>
@@ -1524,7 +1524,7 @@ var addOrderLayout = [
 								<aside class="title_line"><!-- title_line start -->
 								<h3 class="pt0">Order In Group</h3>
 								<ul class="right_btns top0">
-								    <li><p class="btn_grid"><a href="javascript:fn_addOrder();">Add Order</a></p></li>
+								    <li><p class="btn_grid"><a href="javascript:fn_addOrder();"><spring:message code='pay.btn.addOrder'/></a></p></li>
 								</ul>
 								</aside><!-- title_line end -->
 								<!-- grid_wrap start -->
@@ -1563,7 +1563,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>Billing Group - History</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_hisClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_hisClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -1575,7 +1575,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>Billing Group Maintenance - Change Main Order</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_changeOrderClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_changeOrderClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -1611,7 +1611,7 @@ var addOrderLayout = [
 				</tbody>
 			</table><!-- table end -->
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_chgMainOrd();">SAVE</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_chgMainOrd();"><spring:message code='sys.btn.save'/></a></p></li>
 			</ul>
 		</section><!-- pop_body end -->
 	</div><!-- popup_wrap end -->
@@ -1620,7 +1620,7 @@ var addOrderLayout = [
 			<header class="pop_header"><!-- pop_header start -->
 				<h1>Billing Group Maintenance - Remark</h1>
 				<ul class="right_opt">
-				    <li><p class="btn_blue2"><a href="#" onclick="fn_updRemPopClose();">CLOSE</a></p></li>
+				    <li><p class="btn_blue2"><a href="#" onclick="fn_updRemPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
 				</ul>
 			</header><!-- pop_header end -->
 			<section class="pop_body"><!-- pop_body start -->
@@ -1662,7 +1662,7 @@ var addOrderLayout = [
 					</tbody>
 				</table><!-- table end -->
 				<ul class="center_btns">
-				    <li><p class="btn_blue2 big"><a href="javascript:fn_saveRemark();">SAVE</a></p></li>
+				    <li><p class="btn_blue2 big"><a href="javascript:fn_saveRemark();"><spring:message code='sys.btn.save'/></a></p></li>
 				</ul>
 			</section><!-- pop_body end -->
 		</div><!-- popup_wrap end -->
@@ -1671,13 +1671,13 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>Billing Group Maintenance - Mailing Address</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgMailClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgMailClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
 			<ul class="right_btns">
-			    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();">Add New Address</a></p></li>
-			    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();">Select Mailing Address</a></p></li>
+			    <li><p class="btn_blue2"><a href="javascript:fn_addNewAddr();"><spring:message code='pay.btn.addNewAddress'/></a></p></li>
+			    <li><p class="btn_blue2"><a href="javascript:fn_selectMailAddr();"><spring:message code='pay.btn.selectMailingAddress'/></a></p></li>
 			</ul>
 			<table class="type1 mt10"><!-- table start -->
 				<caption>table</caption>
@@ -1717,7 +1717,7 @@ var addOrderLayout = [
 				</tbody>
 			</table><!-- table end -->
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_newAddrSave();">SAVE</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_newAddrSave();"><spring:message code='sys.btn.save'/></a></p></li>
 			</ul>
 		</section><!-- pop_body end -->
 	</div><!-- popup_wrap end -->
@@ -1725,13 +1725,13 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 		<h1>Billing Group Maintenance - Contact Person</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgContPerPopClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_chgContPerPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
 			<ul class="right_btns">
-			    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();">Add New Contact</a></p></li>
-			    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();">Select Contact Person</a></p></li>
+			    <li><p class="btn_blue2"><a href="javascript:fn_addNewConPerson();"><spring:message code='pay.btn.addNewContact'/></a></p></li>
+			    <li><p class="btn_blue2"><a href="javascript:fn_selectContPerson();"><spring:message code='pay.btn.selectContactPerson'/></a></p></li>
 			</ul>
 			<table class="type1 mt10"><!-- table start -->
 				<caption>table</caption>
@@ -1829,7 +1829,7 @@ var addOrderLayout = [
 				</tbody>
 			</table><!-- table end -->
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_newContPersonSave();">SAVE</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_newContPersonSave();"><spring:message code='sys.btn.save'/></a></p></li>
 			</ul>
 		</section><!-- pop_body end -->
 	</div><!-- popup_wrap end -->
@@ -1837,7 +1837,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>Billing Group - History Details</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -1888,13 +1888,13 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>Customer Address - Customer Address</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_custAddrClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
 			<ul class="right_btns">
-			    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span>Search</a></p></li>
-			    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span>Clear</a></p></li>
+			    <li><p class="btn_blue"><a href="javascript:fn_selectMailAddr();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			    <li><p class="btn_blue"><a href="javascript:fn_keywordClear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 			</ul>
 			<table class="type1 mt10"><!-- table start -->
 				<caption>table</caption>
@@ -1919,13 +1919,13 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>We Bring Wellness - Customer Contact</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_contPerPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
 			<ul class="right_btns">
-			    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span>Search</a></p></li>
-			    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span>Clear</a></p></li>
+			    <li><p class="btn_blue"><a href="javascript:fn_selectContPerson();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			    <li><p class="btn_blue"><a href="javascript:fn_keywordClear2();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 			</ul>
 			<table class="type1 mt10"><!-- table start -->
 				<caption>table</caption>
@@ -1950,7 +1950,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 		<h1>Billing Group Maintenance - Contact Person</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -2047,7 +2047,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>E-Statement - Approve Request</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="" onclick="fn_apprRequestClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="" onclick="fn_apprRequestClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -2085,8 +2085,8 @@ var addOrderLayout = [
 				</tbody>
 			</table><!-- table end -->
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('A');" id="btnApprReq">Approve Request</a></p></li>
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('C');" id="btnCancelReq">Cancel Request</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('A');" id="btnApprReq"><spring:message code='pay.btn.approveRequest'/></a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_approveRequest('C');" id="btnCancelReq"><spring:message code='pay.btn.cancelRequest'/></a></p></li>
 			</ul>
 		</section><!-- pop_body end -->
 	</div><!-- popup_wrap end -->
@@ -2094,7 +2094,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 			<h1>Billing Group Maintenance - Remove Order From Group</h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a href="#" onclick="fn_removeClose();">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a href="#" onclick="fn_removeClose();"><spring:message code='sys.btn.close'/></a></p></li>
 			</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -2148,7 +2148,7 @@ var addOrderLayout = [
 				</tbody>
 			</table><!-- table end -->
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_removeOrdGrp();" id="btnSave">Save</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_removeOrdGrp();" id="btnSave"><spring:message code='sys.btn.save'/></a></p></li>
 			</ul>
 		</section><!-- pop_body end -->
 	</div><!-- popup_wrap end -->
@@ -2156,7 +2156,7 @@ var addOrderLayout = [
 		<header class="pop_header"><!-- pop_header start -->
 		<h1>Billing Group Maintenance - Add Order Into Group</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="" onclick="fn_addOrdPopClose();">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="" onclick="fn_addOrdPopClose();"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
@@ -2192,7 +2192,7 @@ var addOrderLayout = [
 				</tbody>
 			</table><!-- table end -->
 			<ul class="center_btns">
-			    <li><p class="btn_blue2 big"><a href="javascript:fn_addOrdSave();">SAVE</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_addOrdSave();"><spring:message code='sys.btn.save'/></a></p></li>
 			</ul>
 		</section><!-- pop_body end -->
 	</div><!-- popup_wrap end -->
