@@ -1093,11 +1093,9 @@ public class ServiceApiController {
 				LOGGER.debug("spMap :"+ spMap.toString());   
 				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
 					rtnValue.put("logerr","Y");
-					
-					
 				}else{
-						transactionId = String.valueOf(params.get("transactionId"));
 						
+						transactionId = String.valueOf(params.get("transactionId"));
 						if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
 							MSvcLogApiService.updateSuccessInstallStatus(transactionId);
 						}

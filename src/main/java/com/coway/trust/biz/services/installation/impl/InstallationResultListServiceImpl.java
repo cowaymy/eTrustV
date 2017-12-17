@@ -1705,7 +1705,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		//update SalesM Status
     		installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
 
-    		if("67".equals(ApptypeID)  || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
+    		if("67".equals(ApptypeID)   || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
 
 
     		//insert taxinvoiceRental

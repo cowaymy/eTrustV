@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -34,6 +35,10 @@ public class OrderCallListController {
 	private OrderCallListService orderCallListService;
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Resource(name = "servicesLogisticsPFCService")
+	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+	
 	
 	/**
 	 * Call Center - Order Call 
@@ -150,8 +155,30 @@ public class OrderCallListController {
 		String installationNo = "";
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue = orderCallListService.insertCallResult(params,sessionVO);
-		message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
-		message.setCode("1");
+		
+		if( null !=resultValue){
+			HashMap   spMap =(HashMap)resultValue.get("spMap");
+			logger.debug("spMap :"+ spMap.toString());   
+			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+				resultValue.put("logerr","Y");
+				
+				message.setMessage("Error in Logistics Transaction");
+				message.setCode("99");
+				
+			}else{
+				message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
+				message.setCode("1");
+			}
+			
+			
+			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		}
+		
+		
+		
+		
+		
+		
 		return ResponseEntity.ok(message);
 	}
 	

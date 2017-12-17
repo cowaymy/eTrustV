@@ -249,7 +249,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		Map   SRMap=new HashMap(); 
 		
 		LOGGER.debug("ASManagementListServiceImpl.saveASEntry 물류 호출 PRAM ===>"+ logPram.toString());
-		//servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);  
+		servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);  
 		LOGGER.debug("ASManagementListServiceImpl.saveASEntry 물류 호출 결과 ===>" +logPram.toString());
 		logPram.put("P_RESULT_TYPE", "AS");
 		logPram.put("P_RESULT_MSG", logPram.get("p1"));
