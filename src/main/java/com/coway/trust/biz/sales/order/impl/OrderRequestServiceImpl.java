@@ -1083,8 +1083,14 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         		callEntryId = CommonUtils.intNvl(cenMap.get("callEntryId"));
         	}
         	
+        	int installEntryId = 0;
+        	
+        	if(insMapMax != null) {
+        		installEntryId = CommonUtils.intNvl(insMapMax.get("installEntryId"));
+        	}
+        	
         	//EXCHANGE MASTER
-        	orderExchangeMasterVO.setInstallEntryId(CommonUtils.intNvl(insMapMax.get("installEntryId")));
+        	orderExchangeMasterVO.setInstallEntryId(installEntryId);
         	orderExchangeMasterVO.setSoExchgOldPrcId(CommonUtils.intNvl(sodMap.get("itmPrcId")));
         	orderExchangeMasterVO.setSoExchgOldPrc((BigDecimal) somMap.get("totAmt"));
         	orderExchangeMasterVO.setSoExchgOldPv((BigDecimal) somMap.get("totPv"));

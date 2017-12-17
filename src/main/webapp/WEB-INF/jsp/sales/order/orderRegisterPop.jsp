@@ -2000,9 +2000,12 @@
 //              $("#ordPv").removeClass("readonly");
 //              $("#ordRentalFees").removeClass("readonly");
 
+                var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal*(1/1.06))
+
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
-                $("#ordPv").val(stkPriceInfo.orderPV);
-                $("#ordPvGST").val(stkPriceInfo.orderPV);
+                $("#ordPv").val(pvVal);
+                $("#ordPvGST").val(pvValGst);
                 $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#ordPriceId").val(stkPriceInfo.priceId);
 
@@ -2088,6 +2091,7 @@
         $('#ordPriceId').val('');
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
+        $('#orgOrdRentalFees').val('');
     }
 
     //ClearControl_RentPaySet_ThirdParty

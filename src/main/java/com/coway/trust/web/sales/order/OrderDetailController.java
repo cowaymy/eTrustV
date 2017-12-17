@@ -138,16 +138,17 @@ public class OrderDetailController {
 	}
 	
 	@RequestMapping(value = "/selectAutoDebitJsonList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectAutoDebitJsonList(@RequestParam Map<String, Object>params, ModelMap model) {
-
-		logger.debug("!@##############################################################################");
-		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
-		logger.debug("!@##############################################################################");
-		
+	public ResponseEntity<List<EgovMap>> selectAutoDebitJsonList(@RequestParam Map<String, Object>params, ModelMap model) {	
 		List<EgovMap> memInfoList = orderDetailService.selectAutoDebitList(params);
-
 		// 데이터 리턴.
 		return ResponseEntity.ok(memInfoList);
+	}
+	
+	@RequestMapping(value = "/selectEcashList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectEcashList(@RequestParam Map<String, Object>params, ModelMap model) {
+		List<EgovMap> result = orderDetailService.selectEcashList(params);
+		// 데이터 리턴.
+		return ResponseEntity.ok(result);
 	}
 	
 	@RequestMapping(value = "/selectDiscountJsonList.do", method = RequestMethod.GET)

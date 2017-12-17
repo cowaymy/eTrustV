@@ -39,4 +39,6 @@ public interface OrderDetailService {
 	EgovMap selectBasicInfo(Map<String, Object> params) throws Exception;
 
 	EgovMap selectGSTCertInfo(Map<String, Object> params);
+
+	List<EgovMap> selectEcashList(Map<String, Object> params);
 }

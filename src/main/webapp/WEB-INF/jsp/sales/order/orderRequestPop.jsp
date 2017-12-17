@@ -25,6 +25,7 @@
     var EX_TRADE      = '${orderDetail.basicInfo.exTrade}';
     var TODAY_DD      = '${toDay}';
     var SRV_PAC_ID    = '${orderDetail.basicInfo.srvPacId}';
+    var GST_CHK       = '${orderDetail.basicInfo.gstChk}';
 
     var filterGridID;
     
@@ -33,8 +34,7 @@
         
         if(FormUtil.isNotEmpty(TAB_NM)) {
             fn_changeTab(TAB_NM);
-        }
-        
+        }        
     });
 
     $(function(){
@@ -96,6 +96,10 @@
                 fn_loadProductPrice(APP_TYPE_ID, stkIdVal);
                 fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);                
                 $('#btnCurrentPromo').removeAttr("disabled");
+                
+                if(GST_CHK == '1') {
+                    fn_excludeGstAmt();
+                }
             }
         });
         $('#cmbPromotion').change(function() {
@@ -109,6 +113,10 @@
             }
             else {
                 fn_loadProductPrice(APP_TYPE_ID, stkIdVal);
+            }
+            
+            if(GST_CHK == '1') {
+                fn_excludeGstAmt();
             }
         });
         $('#btnCurrentPromo').click(function(event) {
@@ -133,6 +141,10 @@
             else {
                 fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
                 fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
+            }
+            
+            if(GST_CHK == '1') {
+                fn_excludeGstAmt();
             }
         });
         $('#cmbAppTypeAexc').change(function() {
@@ -186,9 +198,17 @@
                fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
             }
             else {
-                fn_loadProductPriceAexc(APP_TYPE_ID, STOCK_ID)
-            }
+                if($('#cmbAppTypeAexc option:selected').index() == 0) {
+                    fn_loadProductPriceAexc(APP_TYPE_ID, STOCK_ID);
+                }
+                else {
+                    fn_loadProductPriceAexc($("#cmbAppTypeAexc").val(), STOCK_ID);
+                }
             
+                if(GST_CHK == '1') {
+                    fn_excludeGstAmtAexc();
+                }
+            }
         });
         $('#srvPacIdAexc').change(function() {
 
@@ -216,7 +236,17 @@
                         $('#srvPacIdAexc').val('');
                     }
                     else {
+                        if($('#cmbAppTypeAexc option:selected').index() == 0) {
+                            fn_loadProductPriceAexc(APP_TYPE_ID, STOCK_ID);
+                        }
+                        else {
+                            fn_loadProductPriceAexc($("#cmbAppTypeAexc").val(), STOCK_ID);
+                        }
                         fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val(), $('#srvPacIdAexc').val());   
+
+                        if(GST_CHK == '1') {
+                            fn_excludeGstAmtAexc();
+                        }
                     }
                 });
             }
@@ -371,6 +401,54 @@
         });
     });
     
+	function fn_excludeGstAmt() {
+	    console.log('fn_excludeGstAmt() start');
+        //Amount before GST
+        var oldPrice     = $('#orgOrdPrice').val();
+        var newPrice     = $('#ordPrice').val();
+        var oldRental    = $('#orgOrdRentalFees').val();
+        var newRental    = $('#ordRentalFees').val();
+        var oldPv        = $('#ordPv').val();
+        //Amount of GST applied
+        var oldPriceGST  = fn_calcGst(oldPrice);
+        var newPriceGST  = fn_calcGst(newPrice);
+        var oldRentalGST = fn_calcGst(oldRental);
+        var newRentalGST = fn_calcGst(newRental);
+        var newPv        = $('#ordPvGST').val();
+        
+        $('#orgOrdPrice').val(oldPriceGST);
+        $('#ordPrice').val(newPriceGST);
+        $('#orgOrdRentalFees').val(oldRentalGST);
+        $('#ordRentalFees').val(newRentalGST);
+        $('#ordPv').val(newPv);
+        
+      //$('#pBtnCal').addClass("blind");
+	}
+	
+	function fn_excludeGstAmtAexc() {
+	    console.log('fn_excludeGstAmtAexc() start');
+        //Amount before GST
+        var oldPrice     = $('#orgOrdPriceAexc').val();
+        var newPrice     = $('#txtPriceAexc').val();
+        var oldRental    = $('#orgOrdRentalFeesAexc').val();
+        var newRental    = $('#ordRentalFeesAexc').val();
+        var oldPv        = $('#txtPVAexc').val();
+        //Amount of GST applied
+        var oldPriceGST  = fn_calcGst(oldPrice);
+        var newPriceGST  = fn_calcGst(newPrice);
+        var oldRentalGST = fn_calcGst(oldRental);
+        var newRentalGST = fn_calcGst(newRental);
+        var newPv        = $('#ordPvGSTAexc').val();
+        
+        $('#orgOrdPriceAexc').val(oldPriceGST);
+        $('#txtPriceAexc').val(newPriceGST);
+        $('#orgOrdRentalFeesAexc').val(oldRentalGST);
+        $('#ordRentalFeesAexc').val(newRentalGST);
+        $('#txtPVAexc').val(newPv);
+        
+      //$('#pBtnCal').addClass("blind");
+	}
+	
     function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
         $('#txtHiddenBillGroupIDOwnt').removeClass("readonly").val(billGrpId);
         $('#txtBillGroupOwnt').removeClass("readonly").val(custBillGrpNo);
@@ -951,13 +1029,15 @@
     
     function fn_loadPromotionPriceAexc(promoId, stkId) {
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
                 $("#txtPriceAexc").val(promoPriceInfo.orderPricePromo);
                 $("#txtPVAexc").val(promoPriceInfo.orderPVPromo);
+                $("#ordPvGSTAexc").val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFeesAexc").val(promoPriceInfo.orderRentalFeesPromo);
+                $("#orgOrdRentalFeesAexc").val(promoPriceInfo.normalRentalFees);
 
                 $("#promoDiscPeriodTpAexc").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriodAexc").val(promoPriceInfo.promoDiscPeriod);
@@ -974,13 +1054,15 @@
 
     function fn_loadPromotionPrice(promoId, stkId) {
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
                 $("#ordPrice").val(promoPriceInfo.orderPricePromo);
                 $("#ordPv").val(promoPriceInfo.orderPVPromo);
+                $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
+                $("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
 
                 $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
@@ -1032,14 +1114,18 @@
 
         appTypeId = appTypeVal=='68' ? '67' : appTypeVal;
 
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
 
                 console.log("성공.");
+                
+                var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal*(1/1.06))
 
                 $("#txtPriceAexc").val(stkPriceInfo.orderPrice);
-                $("#txtPVAexc").val(stkPriceInfo.orderPV);
+                $("#txtPVAexc").val(pvVal);
+                $("#ordPvGSTAexc").val(pvValGst);
                 $("#ordRentalFeesAexc").val(stkPriceInfo.orderRentalFees);
                 $("#ordPriceIdAexc").val(stkPriceInfo.priceId);
 
@@ -1066,14 +1152,18 @@
         $("#searchAppTypeId").val(appTypeId);
         $("#searchStkId").val(stkId);
 */
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
 
                 console.log("성공.");
 
+                var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal*(1/1.06))
+
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
                 $("#ordPv").val(stkPriceInfo.orderPV);
+                $("#ordPvGST").val(pvValGst);
                 $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
 //              $("#hiddenPriceID").val(stkPriceInfo.priceId);
 
@@ -1880,12 +1970,14 @@
             isValid = false;
             msg += "* Please select the product to exchange.<br>";
         }
+        /*
         if(!$('#btnCurrentPromo').is(":checked")) {
             if($("#cmbPromotion option:selected").index() <= 0) {
                 isValid = false;
                 msg += "* Please select the promotion option.<br>";
             }
         }
+        */
         if(FormUtil.checkReqValue($('#dpCallLogDateExch'))) {
             isValid = false;
             msg += "* Please key in the call log date.<br>";
@@ -2276,7 +2368,8 @@
     <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="orgOrdPrice" name="orgOrdPrice" type="hidden" />
-        <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" /></td>
+        <input id="orgOrdPv"    name="orgOrdPv"    type="hidden" />
+        <input id="ordPvGST"    name="ordPvGST"    type="hidden" /></td>
 </tr>
 <tr>
     <th scope="row">Promotion<span class="must">*</span></th>
@@ -2431,17 +2524,18 @@
 </tr>
 <tr>
     <th scope="row">Price/RPF<span id="spPrice" class="must blind">*</span></th>
-    <td><input id="txtPriceAexc" name="txtPrice" type="text" title="" placeholder="Price/RPF" class="w100p readonly" readonly/>
-        <input id="orgOrdPriceAexc" name="orgOrdPrice" type="hidden" />
-        <input id="ordPriceIdAexc"  name="ordPriceId"  type="hidden" />
-        <input id="orgOrdPriceIdAexc" name="orgOrdPriceId"    type="hidden" />
-        <input id="orgOrdPvAexc"    name="orgOrdPv"    type="hidden" /></td>
+    <td><input id="txtPriceAexc"      name="txtPrice"      type="text" title="" placeholder="Price/RPF" class="w100p readonly" readonly/>
+        <input id="orgOrdPriceAexc"   name="orgOrdPrice"   type="hidden" />
+        <input id="ordPriceIdAexc"    name="ordPriceId"    type="hidden" />
+        <input id="orgOrdPriceIdAexc" name="orgOrdPriceId" type="hidden" />
+        <input id="orgOrdPvAexc"      name="orgOrdPv"      type="hidden" /></td>
     <th scope="row">Normal Rental Fees (RM)</th>
     <td><input id="orgOrdRentalFeesAexc" name="orgOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
     <th scope="row">PV<span id="spPV" class="must blind">*</span></th>
-    <td><input id="txtPVAexc" name="txtPV" type="text" title="" placeholder="PV" class="w100p readonly" readonly/></td>
+    <td><input id="txtPVAexc" name="txtPV" type="text" title="" placeholder="PV" class="w100p readonly" readonly/>
+        <input id="ordPvGSTAexc" name="ordPvGST" type="hidden" /></td>
     <th scope="row">Discount Period/<br>Final Rental Fee</th>
     <td><p><select id="promoDiscPeriodTpAexc" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriodAexc" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>

@@ -877,6 +877,22 @@
          ORDER BY T.BANK_DTL_ID DESC
     </select>
     
+    <select id="selectEcashList" parameterType="Map" resultType="egovMap">
+		SELECT T1.FILE_ITM_ID
+		     , TO_CHAR(T1.FILE_ITM_CRT, 'DD/MM/YYYY') AS FILE_ITM_CRT
+		     , T2.CODE_NAME
+		     , T1.FILE_ITM_AMT
+		     , T1.FILE_ITM_STUS_ID
+		     , T1.FILE_ITM_REM
+		  FROM SAL0152M T1
+		     , SYS0013M T2
+		 WHERE T1.FILE_ITM_ORD_ID = #{salesOrderId}
+		   AND T1.FILE_ITM_STUS_ID != 8
+		   AND T1.FILE_ITM_TYPE_ID = T2.CODE_ID
+		 ORDER
+		    BY T1.FILE_ITM_ID DESC
+    </select>
+
     <select id="selectDiscountList" parameterType="Map" resultType="egovMap">
         SELECT T1.ORD_ID
              , T2.SALES_ORD_NO

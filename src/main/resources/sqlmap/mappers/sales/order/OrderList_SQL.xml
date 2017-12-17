@@ -45,126 +45,128 @@
              , NVL(T.PRODUCT_ID, 0) AS PRODUCT_ID
              , T.PV_MONTH
              , T.PV_YEAR
-          FROM ( SELECT V1.APP_TYPE_CODE
-                      , V1.APP_TYPE_ID
-                      , V1.APP_TYPE_NAME
-                      , V1.CRT_USER_ID
-                      , V1.CUST_IC
-                      , V1.CUST_NAME
-                      , V1.CUST_ID
-                      , V1.CUST_VA_NO
-                      , V1.DSC_BRNCH_ID
-                      , V1.KEYIN_BRNCH_ID
-                      , V1.ORD_DT
-                      , V1.ORD_ID
-                      , V1.ORD_NO
-                      , V1.ORD_STUS_CODE
-                      , V1.ORD_STUS_ID
-                      , V1.PO_NO
-                      , V1.PRODUCT_ID
-                      , V1.PRODUCT_CODE
-                      , V1.PRODUCT_NAME
-                      , V1.REF_NO
-                      , V1.RENT_STUS
-                      , V1.SALESMAN_MEM_ID
-                      , V1.SALESMAN_CODE
-                      , V1.SALESMAN_MEM_TYPE_ID
-                      , V1.BILLING_GRP_ID
-                      , V1.MAIL_TEL_MOB
-                      , V1.MAIL_TEL_FAX
-                      , V1.MAIL_TEL_OFF
-                      , V1.MAIL_TEL_RES
-                      , V1.INST_TEL_FAX
-                      , V1.INST_TEL_MOB
-                      , V1.INST_TEL_OFF
-                      , V1.INST_TEL_RES
-                      , V1.SIRIM_NO
-                      , V1.SERIAL_NO
-                      , V1.ITM_PRC_ID
-                      , V1.PV_MONTH
-                      , V1.PV_YEAR
-                      , V1.PROMO_CODE
-                      , V1.PROMO_DESC
-                      , V1.RELATED_NO
-                      , V1.RELATED_ID
-                   FROM SAL1013V V1
-                  WHERE 1 = 1  
+          FROM
+             ( SELECT /*+ use_nl( V1.som V1.ir V1.ie V1.ei V1.i V1.sod V1.cp3 V1.cp2 V1.rs V1.c V1.u V1.mem V1.cd V1.stk V1.pm V1.S ) */
+                      V1.APP_TYPE_CODE
+                    , V1.APP_TYPE_ID
+                    , V1.APP_TYPE_NAME
+                    , V1.CRT_USER_ID
+                    , V1.CUST_IC
+                    , V1.CUST_NAME
+                    , V1.CUST_ID
+                    , V1.CUST_VA_NO
+                    , V1.DSC_BRNCH_ID
+                    , V1.KEYIN_BRNCH_ID
+                    , V1.ORD_DT
+                    , V1.ORD_ID
+                    , V1.ORD_NO
+                    , V1.ORD_STUS_CODE
+                    , V1.ORD_STUS_ID
+                    , V1.PO_NO
+                    , V1.PRODUCT_ID
+                    , V1.PRODUCT_CODE
+                    , V1.PRODUCT_NAME
+                    , V1.REF_NO
+                    , V1.RENT_STUS
+                    , V1.SALESMAN_MEM_ID
+                    , V1.SALESMAN_CODE
+                    , V1.SALESMAN_MEM_TYPE_ID
+                    , V1.BILLING_GRP_ID
+                    , V1.MAIL_TEL_MOB
+                    , V1.MAIL_TEL_FAX
+                    , V1.MAIL_TEL_OFF
+                    , V1.MAIL_TEL_RES
+                    , V1.INST_TEL_FAX
+                    , V1.INST_TEL_MOB
+                    , V1.INST_TEL_OFF
+                    , V1.INST_TEL_RES
+                    , V1.SIRIM_NO
+                    , V1.SERIAL_NO
+                    , V1.ITM_PRC_ID
+                    , V1.PV_MONTH
+                    , V1.PV_YEAR
+                    , V1.PROMO_CODE
+                    , V1.PROMO_DESC
+                    , V1.RELATED_NO
+                    , V1.RELATED_ID
+                 FROM SAL1013V  V1
+                WHERE 1 = 1  
                 <if test='ordDt == null || ordDt == ""'>
-                    AND V1.ORD_DT BETWEEN TO_DATE(#{ordStartDt}||' 00:00:00', 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
                 </if>
                 <if test='ordDt != null and ordDt != ""'>
-                    AND TO_CHAR(V1.ORD_DT, 'DD/MM/YYYY') = #{ordDt}
+                  AND V1.SALES_DT BETWEEN TO_DATE(#{ordDt}, 'DD/MM/YYYY') AND TO_DATE(#{ordDt}||' 23:59:59', 'DD/MM/YYYY HH24:MI:SS')
                 </if>
                 <if test='ordNo != null and ordNo != ""'>
-                    AND V1.ORD_NO = #{ordNo}
+                  AND V1.ORD_NO = #{ordNo}
                 </if>
                 <if test='arrAppType != null and arrAppType != ""'>
-                    AND V1.APP_TYPE_ID IN
+                  AND V1.APP_TYPE_ID IN
                   <foreach item="item" collection="arrAppType" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
                 <if test='arrOrdStusId != null and arrOrdStusId != ""'>
-                    AND V1.ORD_STUS_ID IN
+                  AND V1.ORD_STUS_ID IN
                   <foreach item="item" collection="arrOrdStusId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
                 <if test='arrKeyinBrnchId != null and arrKeyinBrnchId != ""'>
-                    AND V1.KEYIN_BRNCH_ID IN
+                  AND V1.KEYIN_BRNCH_ID IN
                   <foreach item="item" collection="arrKeyinBrnchId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
                 <if test='arrDscBrnchId != null and arrDscBrnchId != ""'>
-                    AND V1.DSC_BRNCH_ID IN
+                  AND V1.DSC_BRNCH_ID IN
                   <foreach item="item" collection="arrDscBrnchId" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
                 <if test='custId != null and custId != ""'>
-                    AND V1.CUST_ID = #{custId}
+                  AND V1.CUST_ID = #{custId}
                 </if>
                 <if test='custName != null and custName != ""'>
-                    AND V1.CUST_NAME LIKE '%'||#{custName}||'%'
+                  AND V1.CUST_NAME LIKE '%'||#{custName}||'%'
                 </if>
                 <if test='custIc != null and custIc != ""'>
-                    AND V1.CUST_IC LIKE '%'||#{custIc}||'%'
+                  AND V1.CUST_IC LIKE '%'||#{custIc}||'%'
                 </if>
                 <if test='productId != null and productId != ""'>
-                    AND V1.PRODUCT_ID = #{productId}
+                  AND V1.PRODUCT_ID = #{productId}
                 </if>
                 <if test='salesmanCode != null and salesmanCode != ""'>
-                    AND V1.SALESMAN_CODE = #{salesmanCode}
+                  AND V1.SALESMAN_CODE = #{salesmanCode}
                 </if>
                 <if test='arrRentStus != null and arrRentStus != ""'>
-                    AND V1.RENT_STUS IN
+                  AND V1.RENT_STUS IN
                   <foreach item="item" collection="arrRentStus" index="index" open="(" separator="," close=")">
                     #{item}
                   </foreach>
                 </if>
                 <if test='refNo != null and refNo != ""'>
-                    AND V1.REF_NO = #{refNo}
+                  AND V1.REF_NO = #{refNo}
                 </if>
                 <if test='poNo != null and poNo != ""'>
-                    AND V1.PO_NO = #{poNo}
+                  AND V1.PO_NO = #{poNo}
                 </if>
                 <if test='contactNo != null and contactNo != ""'>
-                    AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
+                  AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
                 </if>
                 <if test='crtUserId != null and crtUserId != ""'>
-                    AND V1.CRT_USER_ID = #{crtUserId}
+                  AND V1.CRT_USER_ID = #{crtUserId}
                 </if>
                 <if test='promoCode != null and promoCode != ""'>
-                    AND V1.PROMO_CODE = #{promoCode}
+                  AND V1.PROMO_CODE = #{promoCode}
                 </if>
                 <if test='relatedNo != null and relatedNo != ""'>
-                    AND V1.RELATED_NO = #{relatedNo}
+                  AND V1.RELATED_NO = #{relatedNo}
                 </if>
                 <if test='invoicePoNo != null and invoicePoNo != ""'>
-                    AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID  
-                                        FROM PAY0015D
-                                       WHERE PO_REF_NO = #{invoicePoNo})
+                  AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID  
+                                      FROM PAY0015D
+                                     WHERE PO_REF_NO = #{invoicePoNo})
                 </if>
                ) T
            ORDER BY T.ORD_NO ASC

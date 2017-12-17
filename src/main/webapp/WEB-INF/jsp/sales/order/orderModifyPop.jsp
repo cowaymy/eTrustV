@@ -1896,10 +1896,13 @@
             if(stkPriceInfo != null) {
 
                 console.log("성공.");
+                
+                var pvVal = stkPriceInfo.orderPV;
+                var pvValGst = Math.floor(pvVal*(1/1.06))
 
                 $("#ordPrice").val(stkPriceInfo.orderPrice);
-                $("#ordPv").val(stkPriceInfo.orderPV);
-                $("#ordPvGST").val(stkPriceInfo.orderPV);
+                $("#ordPv").val(pvVal);
+                $("#ordPvGST").val(pvValGst);
                 $("#ordRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#orgOrdRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#ordPriceId").val(stkPriceInfo.priceId);

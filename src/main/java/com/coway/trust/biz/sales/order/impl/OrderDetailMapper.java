@@ -81,6 +81,8 @@ public interface OrderDetailMapper {
 
 	List<EgovMap> selectAutoDebitList(Map<String, Object> params); //Auto Debit Result
 
+	List<EgovMap> selectEcashList(Map<String, Object> params); //eCash Result
+
 	List<EgovMap> selectDiscountList(Map<String, Object> params); //Discount
 
 	EgovMap selectOrderConfigInfo(Map<String, Object> params); //Guarantee Info

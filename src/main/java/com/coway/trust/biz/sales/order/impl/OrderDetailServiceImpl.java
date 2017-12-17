@@ -472,6 +472,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	}
 	
 	@Override
+	public List<EgovMap> selectEcashList(Map<String, Object> params) {
+		return orderDetailMapper.selectEcashList(params);
+	}
+	
+	@Override
 	public List<EgovMap> selectDiscountList(Map<String, Object> params) {
 		return orderDetailMapper.selectDiscountList(params);
 	}
