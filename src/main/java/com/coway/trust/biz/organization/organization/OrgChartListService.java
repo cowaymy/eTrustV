@@ -15,23 +15,11 @@ public interface OrgChartListService {
 	
 	List<EgovMap> getGroupTreeList(Map<String, Object> params);        
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	List<EgovMap> selectOrgChartCdList(Map<String, Object> params);
 	
 	List<EgovMap> selectOrgChartCtList(Map<String, Object> params);
+
+	List<EgovMap> selectOrgChartDetList(Map<String, Object> params);
 	
 	
 	
