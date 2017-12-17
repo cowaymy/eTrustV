@@ -287,8 +287,8 @@ var columnLayout2 = [
             <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
             <h2>Enrollment</h2>   
             <ul class="right_btns">
-                <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
-                <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+                <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
             </ul>    
         </aside>
         <!-- title_line end -->
@@ -350,11 +350,11 @@ var columnLayout2 = [
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>
-                        <ul class="btns">                            
-                            <li><p class="link_btn"><a href="javascript:view_Enrollment()">View Enrollment</a></p></li>
+                        <ul class="btns">
+                            <li><p class="link_btn"><a href="javascript:view_Enrollment()"><spring:message code='pay.btn.link.viewEnrollment'/></a></p></li>
                         </ul>
                         <ul class="btns">                            
-                            <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()">New Enrollment</a></p></li>                            
+                            <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()"><spring:message code='pay.btn.link.enrollment'/></a></p></li>                            
                         </ul>
                         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
@@ -375,7 +375,7 @@ var columnLayout2 = [
             <!-- pop_header start -->
             <h1>VIEW ENROLLMENT</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" onclick="fn_close();"><spring:message code='sys.btn.close'/></a></p></li>
             </ul>
         </header>
         <!-- pop_header end -->
@@ -429,7 +429,7 @@ var columnLayout2 = [
         <header class="pop_header">
         <h1>NEW ENROLLMENT</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" onclick="fn_close2();"><spring:message code='sys.btn.close'/></a></p></li>
             </ul>
         </header>
         <!-- pop_header end -->
@@ -477,7 +477,7 @@ var columnLayout2 = [
             </table>
 
             <ul class="center_btns">
-                <li><p class="btn_grid"><a href="javascript:fn_saveEnroll();">Enroll</a></p></li>
+                <li><p class="btn_grid"><a href="javascript:fn_saveEnroll();"><spring:message code='pay.btn.enroll'/></a></p></li>
             </ul>
         </section>
         <!-- pop_body end -->

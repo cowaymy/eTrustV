@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -662,8 +662,8 @@ function fn_openDivScheduleSettingPop() {
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Claim List</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getClaimListAjax();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getClaimListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -748,16 +748,16 @@ function fn_openDivScheduleSettingPop() {
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Claim</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">Claim Result(Live)</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULTNEXT');">Claim Result(Next Day)</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');">Fail Deduction SMS</a></p></li>                                                                       
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');"><spring:message code='pay.btn.viewClaim'/></a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');"><spring:message code='pay.btn.claimResultLive'/></a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULTNEXT');"><spring:message code='pay.btn.claimResultNextDay'/></a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');"><spring:message code='pay.btn.reGenerateClaimFile'/></a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');"><spring:message code='pay.btn.failDeductionSMS'/></a></p></li>                                                                       
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('NEW');">New Claim</a></p></li>        
-						<li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleSettingPop();">Schedule Setting</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleBatchPop();">Schedule Claim Batch</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('NEW');"><spring:message code='pay.btn.newClaim'/></a></p></li>        
+						<li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleSettingPop();"><spring:message code='pay.btn.scheduleSetting'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleBatchPop();"><spring:message code='pay.btn.scheduleClaimBatch'/></a></p></li>
                     </ul>                    
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
@@ -791,7 +791,7 @@ function fn_openDivScheduleSettingPop() {
     <header class="pop_header" id="pop_header">
         <h1></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#view_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#view_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -863,20 +863,20 @@ function fn_openDivScheduleSettingPop() {
         </section><!-- search_result end -->
 
         <ul class="center_btns" id="center_btns1">
-            <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('LIVE');">Update Result</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_deactivate();"><spring:message code='pay.btn.deactivate'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('LIVE');"><spring:message code='pay.btn.updateResult'/></a></p></li>
         </ul>
         
         <ul class="center_btns" id="center_btns2">
-            <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('NEXT');">Update Result</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_deactivate();"><spring:message code='pay.btn.deactivate'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_updateResult('NEXT');"><spring:message code='pay.btn.updateResult'/></a></p></li>
         </ul>
         
          <ul class="center_btns" id="center_btns3">
-            <li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_createFile();"><spring:message code='pay.btn.generateFile'/></a></p></li>
         </ul>
          <ul class="center_btns" id="center_btns4">
-            <li><p class="btn_blue2"><a href="javascript:fn_sendFailDeduction();">Send Fail Deduction SMS</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_sendFailDeduction();"><spring:message code='pay.btn.sendFailDecductionSMS'/></a></p></li>
         </ul>
     </section>
     <!-- pop_body end -->
@@ -893,7 +893,7 @@ function fn_openDivScheduleSettingPop() {
     <header class="pop_header" id="new_pop_header">
         <h1>NEW CLAIM</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#new_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#new_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -940,7 +940,7 @@ function fn_openDivScheduleSettingPop() {
         <!-- search_table end -->
         
         <ul class="center_btns">
-            <li><p class="btn_blue2"><a href="javascript:fn_genClaim();">Generate Claim</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_genClaim();"><spring:message code='pay.btn.generateClaim'/></a></p></li>
         </ul>
     </section>
     </form>       
@@ -960,7 +960,7 @@ function fn_openDivScheduleSettingPop() {
     <header class="pop_header" id="updResult_pop_header">
         <h1>CLAIM RESULT UPDATE</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updResult_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updResult_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -1000,8 +1000,8 @@ function fn_openDivScheduleSettingPop() {
         <!-- search_table end -->
         
         <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();">Upload</a></p></li>
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv">Download CSV Format</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();"><spring:message code='pay.btn.upload'/></a></p></li>
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
     </section>
     </form>       

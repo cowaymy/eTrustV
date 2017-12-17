@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var myGridID;
 var viewGridID;
@@ -254,8 +254,8 @@ function fn_clear(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Enrollment Result</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->
@@ -319,10 +319,10 @@ function fn_clear(){
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="#" onclick="javascript:showViewPopup()">View Enrollment Result</a></p></li>
+                        <li><p class="link_btn"><a href="#" onclick="javascript:showViewPopup()"><spring:message code='pay.btn.link.viewEnrollmentResult'/></a></p></li>
                     </ul>
                     <ul class="btns">                        
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showNewPopup()">New Enrollment Result</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:showNewPopup()"><spring:message code='pay.btn.link.newEnrollmentResult'/></a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
@@ -342,7 +342,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>Enrollment Update Info</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -391,7 +391,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>Enrollment Result Update</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideNewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     
@@ -399,8 +399,8 @@ function fn_clear(){
     <section class="pop_body">
         <!-- search_table start -->
         <ul class="right_btns mb10">
-            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
-            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/payment/EnrollmentResult_Format.csv">Download CSV Format</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a></p></li>
+            <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/payment/EnrollmentResult_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
         <section class="search_table">
             <form name="myForm" id="myForm">

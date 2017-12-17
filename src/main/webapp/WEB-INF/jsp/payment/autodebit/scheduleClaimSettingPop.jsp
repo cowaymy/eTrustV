@@ -243,9 +243,9 @@ function fn_deleteSchedule(){
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Claim Schedule</h1>
 		<ul class="right_opt">
-			<li><p class="btn_blue2"><a href="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
-			<li><p class="btn_blue2"><a href="javascript:fn_clear();">Clear</a></p></li>
-			<li><p class="btn_blue2"><a href="#" onclick="window.close()">CLOSE</a></p></li>
+			<li><p class="btn_blue2"><a href="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			<li><p class="btn_blue2"><a href="javascript:fn_clear();"><spring:message code='sys.btn.clear'/></a></p></li>
+			<li><p class="btn_blue2"><a href="#" onclick="window.close()"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 
@@ -291,10 +291,10 @@ function fn_deleteSchedule(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_deleteSchedule();">Delete Schedule</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_deleteSchedule();"><spring:message code='pay.btn.link.deleteSchedule'/></a></p></li>
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_openNewDivPop();">New Schedule</a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openNewDivPop();"><spring:message code='pay.btn.link.newSchedule'/></a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
@@ -319,7 +319,7 @@ function fn_deleteSchedule(){
     <header class="pop_header" id="pop_header2">
         <h1>NEW CLAIM SCHEDULE</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#new_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#new_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -374,7 +374,7 @@ function fn_deleteSchedule(){
         <!-- search_table end -->
 		
 		<ul class="center_btns" id="center_btns1">
-            <li><p class="btn_blue2"><a href="javascript:fn_saveSchedule();">Save Schedule</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_saveSchedule();"><spring:message code='pay.btn.saveSchedule'/></a></p></li>
         </ul>
 
     </section>
