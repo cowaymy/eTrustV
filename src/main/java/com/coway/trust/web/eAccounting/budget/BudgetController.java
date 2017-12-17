@@ -31,6 +31,7 @@ import com.coway.trust.biz.common.FileService;
 import com.coway.trust.biz.common.FileVO;
 import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.eAccounting.budget.BudgetService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -427,7 +428,7 @@ public class BudgetController {
 	}
 	
 	@RequestMapping(value = "/saveAdjustmentList", method = RequestMethod.POST) 
-	public ResponseEntity<ReturnMessage> saveAdjustmentList (HttpServletRequest request, @RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+	public ResponseEntity<ReturnMessage> saveAdjustmentList (HttpServletRequest request, @RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception {		
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		LOGGER.debug("request :: atchFileGrpId ==============>> " + params.get("pAtchFileGrpId"));
@@ -447,12 +448,29 @@ public class BudgetController {
 		params.put("userId", sessionVO.getUserId());
 
 		Map result = new HashMap<String, Object>();
+
+    	ReturnMessage message = new ReturnMessage();
 		
-		result = budgetService.saveAdjustmentInfo(params);
-		
+    	
+    	try{
+    		result = budgetService.saveAdjustmentInfo(params);
+    	}catch (ApplicationException e){
+    		e.printStackTrace();
+    		
+    		result.put("totCnt", params.get("totCnt"));
+    		result.put("budgetDocNo", params.get("budgetDocNo"));
+    		result.put("resultAmtList", params.get("resultAmtList"));
+    		result.put("overbudget", params.get("overbudget"));
+    		
+    		// 결과 만들기 예.
+        	message.setCode(AppConstants.SUCCESS);
+        	message.setData(result);
+        	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        
+        	return ResponseEntity.ok(message);
+    	}
 		
 		// 결과 만들기 예.
-    	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(result);
     	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));

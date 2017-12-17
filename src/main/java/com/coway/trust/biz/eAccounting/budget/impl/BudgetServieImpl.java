@@ -15,6 +15,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.eAccounting.budget.BudgetService;
 import com.coway.trust.biz.eAccounting.webInvoice.impl.WebInvoiceMapper;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementServieImpl;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -141,6 +142,7 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 				
 				//detail table insert
 				budgetMapper.insertAdjustmentD((Map<String, Object>) obj);
+
 			}
 		}
 		
@@ -227,17 +229,20 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 					amtMap.put("overbudget", overbudget);
 					
 					resultAmtList.add(amtMap);
-					
 					continue;
-				}			
+				}					
 			}			
 
 			if(overbudget.equals("N")){
 				budgetMapper.insertApprove(approvalMap); 
 				budgetMapper.updateAdjustmentM(approvalMap); 
-			}else{
-				budgetMapper.deleteAdjustmentM(approvalMap);
-				budgetMapper.deleteAdjustmentD(approvalMap);
+			}else{			
+				
+				params.put("totCnt", addCnt+updCnt+delCnt);
+				params.put("budgetDocNo", budgetDocNo.toString());
+				params.put("resultAmtList", resultAmtList);
+				params.put("overbudget", overbudget);
+				throw new ApplicationException("-1","예산초과");				
 			}
 		}else{			
 			/*approvalMap.put("appvStus", "O");							

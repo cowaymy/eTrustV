@@ -279,7 +279,7 @@ $(document).ready(function(){
 });
 
 function  fn_clearData(){    
-    $("#pAdjForm")[0].reset();
+    fn_resetForm();
 
     //기본 콤보 셋팅
     fn_chnCombo('01');
@@ -572,9 +572,29 @@ function fn_getCodeName(str, value){
 }
 
 
+function fn_resetForm(){
+    $("#recvCostCenter").val("");
+    $("#recvYearMonth").val("");
+    $("#recvBudgetCode").val("");
+    $("#recvBudgetCodeName").val("");
+    $("#recvGlAccCode").val("");
+    $("#recvGlAccCodeName").val("");
+    $("#pAdjustmentType").val("01");
+    $("#recvAmount").val("")
+    $("#remark").val("");
+    
+    $("#sendCostCenter").val("");
+    $("#sendYearMonth").val("");
+    $("#sendBudgetCode").val("");
+    $("#sendBudgetCodeName").val("");
+    $("#sendGlAccCode").val("");
+    $("#sendGlAccCodeName").val("");
+    $("#sendAmount").val("");
+}
+
 function fn_chnCombo(str){
 	
-    $("#pAdjForm")[0].reset();
+    fn_resetForm();
     $("#pAdjustmentType").val(str);
     
 	if( str =="01" || str =="02"){
@@ -879,7 +899,7 @@ function fn_saveAdjustement(){
                     // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
                     AUIGrid.update(adjPGridID);
                  
-                     alert("<spring:message code="budget.exceeded" />"); 
+                     Common.alert("<spring:message code="budget.exceeded" />"); 
 
                      $("#pBudgetDocNo").val("");
                  
