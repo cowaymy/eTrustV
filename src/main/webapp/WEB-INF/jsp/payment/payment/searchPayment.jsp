@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <script type="text/javaScript">
 
@@ -866,9 +867,9 @@ function fn_clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Search Payment</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();">Official Receipt</a></p></li>            
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();"><spring:message code='pay.btn.officialReceipt'/></a></p></li>            
+            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -993,8 +994,8 @@ function fn_clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View Details</a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');">Edit Details</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');"><spring:message code='pay.btn.link.viewDetails'/></a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');"><spring:message code='pay.btn.link.editDetails'/></a></p></li>
                         <!-- <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>  -->                                                                      
                     </ul>
                     <!-- 
@@ -1032,7 +1033,7 @@ function fn_clear(){
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>VIEW PAYMENT DETAILS</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#" onclick="fn_close();">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" onclick="fn_close();"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	
@@ -1144,7 +1145,7 @@ function fn_clear(){
 	                </tbody>
 	    </table>
 	    <ul class="center_btns">
-	        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
+	        <li><p class="btn_blue2"><a href="javascript:showViewHistory()"><spring:message code='pay.btn.viewHistory'/></a></p></li>
 	    </ul>
 	    <section class="search_result"><!-- search_result start -->
 		    <article class="grid_wrap"  id="popList_wrap" style="width  : 100%;">
@@ -1164,7 +1165,7 @@ function fn_clear(){
 	<header class="pop_header"><!-- pop_header start -->
 	<h1>PAYMENT EDITOR</h1>
 	<ul class="right_opt">
-	    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();">CLOSE</a></p></li>
+	    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();"><spring:message code='sys.btn.close'/></a></p></li>
 	</ul>
 	</header><!-- pop_header end -->
 	<form name="myForm" id="myForm">
@@ -1266,9 +1267,9 @@ function fn_clear(){
 	                        <th scope="row">Collector Code</th>
 	                        <td id="">
 	                            <input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode" style="width:100px">
-	                            <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
-	                            <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
-	                            <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
+	                            <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()"><spring:message code='pay.btn.confirm'/></a></p>    
+	                            <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" ><spring:message code='sys.btn.search'/></a></p>  
+	                            <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" ><spring:message code='pay.btn.reset'/></a></p>
 	                         </td>
 	                        <th scope="row">HP Code/Dealer</th>
 	                        <td id="edit_txtSalesPerson"></td>
@@ -1285,8 +1286,8 @@ function fn_clear(){
 	        <li><label><input name="btnAllowComm" id="btnAllowComm" type="checkbox"  /><span>Allow commission for this payment </span></label></li>
 	    </ul>
 	    <ul class="center_btns">
-	        <li><p class="btn_blue2"><a href="javascript:saveChanges()">Update</a></p></li>
-	        <li><p class="btn_blue2"><a href="javascript:showViewHistory()">View History</a></p></li>
+	        <li><p class="btn_blue2"><a href="javascript:saveChanges()"><spring:message code='pay.btn.update'/></a></p></li>
+	        <li><p class="btn_blue2"><a href="javascript:showViewHistory()"><spring:message code='pay.btn.viewHistory'/></a></p></li>
 	    </ul>
 	    <section class="search_result"><!-- search_result start -->
 	        <article class="grid_wrap"  id="editPopList_wrap" style="width  : 100%;">
@@ -1302,7 +1303,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>PAYMENT MASTER HISTORY</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -1319,7 +1320,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>PAYMENT DETAIL HISTORY</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -1341,7 +1342,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>PAYMENT ITEM - EDIT</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -1392,7 +1393,7 @@ function fn_clear(){
         <tr>
             <td colspan="2"> 
 	            <ul class="center_btns">
-	               <li><p class="btn_blue2"><a href="#" onclick="saveCash()">save</a></p></li>
+	               <li><p class="btn_blue2"><a href="#" onclick="saveCash()"><spring:message code='sys.btn.save'/></a></p></li>
 	             </ul>
              </td>
         </tr>
@@ -1409,7 +1410,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>PAYMENT ITEM - EDIT</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -1507,7 +1508,7 @@ function fn_clear(){
         <tr>
             <td colspan="2"> 
                 <ul class="center_btns">
-                   <li><p class="btn_blue2"><a href="#" onclick="saveCreditCard()">save</a></p></li>
+                   <li><p class="btn_blue2"><a href="#" onclick="saveCreditCard()"><spring:message code='sys.btn.save'/></a></p></li>
                  </ul>
              </td>
         </tr>
@@ -1524,7 +1525,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>PAYMENT ITEM - EDIT</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -1585,7 +1586,7 @@ function fn_clear(){
         <tr>
             <td colspan="2"> 
                 <ul class="center_btns">
-                   <li><p class="btn_blue2"><a href="#" onclick="saveCheque()">save</a></p></li>
+                   <li><p class="btn_blue2"><a href="#" onclick="saveCheque()"><spring:message code='sys.btn.save'/></a></p></li>
                  </ul>
              </td>
         </tr>
@@ -1602,7 +1603,7 @@ function fn_clear(){
     <header class="pop_header">
         <h1>PAYMENT ITEM - EDIT</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -1665,7 +1666,7 @@ function fn_clear(){
         <tr>
             <td colspan="2"> 
                 <ul class="center_btns">
-                   <li><p class="btn_blue2"><a href="#" onclick="saveOnline()">save</a></p></li>
+                   <li><p class="btn_blue2"><a href="#" onclick="saveOnline()"><spring:message code='sys.btn.save'/></a></p></li>
                  </ul>
              </td>
         </tr>
