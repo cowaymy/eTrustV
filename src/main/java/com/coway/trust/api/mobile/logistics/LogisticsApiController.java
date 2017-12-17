@@ -721,49 +721,52 @@ public class LogisticsApiController {
 	}
 	
 	
-//	@ApiOperation(value = "Filter Inventory Display - User Filter List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@RequestMapping(value = "/userFilterList", method = RequestMethod.GET)
-//	public ResponseEntity<UserFilterListVo> getuserFilterList(
-//			@ModelAttribute UserFilterListForm userFilterListForm) throws Exception {
-//
-//		Map<String, Object> params = UserFilterListForm.createMap(userFilterListForm);
-//		
-//		params.put("querytype", "sum");
-//		UserFilterListVo dto = null;
-//
-//		List<EgovMap> header = MlogApiService.getFilterUserChangeList(params);
-//		
-//		for (int i = 0; i < header.size(); i++) {
-//			
-//			LOGGER.debug("header 사이즈 : {}", header.get(i));
-//			
-//		}
-//		
-//		if (header.size() > 0) {
-//			dto = new UserFilterListVo();
-//
-//			for (int i = 0; i < header.size(); i++) {
-//				Map<String, Object> headerMap = header.get(i);
-//				
-//				dto.setTotalTobeChangeQty(Integer.parseInt(String.valueOf(headerMap.get("totalTobeChangeQty"))));
-//
-//			}
-//			
-//			params.put("querytype", "list");
-//			List<EgovMap> userFilterDList = MlogApiService.getFilterNotChangeList(params);
-//
-//			List<UserFilterDListDto> userFilterList = userFilterDList.stream().map(r -> UserFilterDListDto.create(r))
-//					.collect(Collectors.toList());
-//			dto.setPartsList(userFilterList);
-//
-//			for (int i = 0; i < userFilterDList.size(); i++) {
-//				LOGGER.debug("notchangelist 값 : {}", userFilterDList.get(i));
-//			}
-//
-//		}
-//		return ResponseEntity.ok(dto);
-//
-//	}
+	@ApiOperation(value = "Filter Inventory Display - User Filter List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/userFilterList", method = RequestMethod.GET)
+	public ResponseEntity<UserFilterListVo> getuserFilterList(
+			@ModelAttribute UserFilterListForm userFilterListForm) throws Exception {
+
+		Map<String, Object> params = UserFilterListForm.createMap(userFilterListForm);
+		
+		params.put("querytype", "sum");
+		UserFilterListVo dto = null;
+
+		List<EgovMap> header = MlogApiService.getUserFilterList(params);
+		
+		for (int i = 0; i < header.size(); i++) {
+			
+			LOGGER.debug("header 사이즈 : {}", header.get(i));
+			
+		}
+		
+		if (header.size() > 0) {
+			dto = new UserFilterListVo();
+
+			for (int i = 0; i < header.size(); i++) {
+				Map<String, Object> headerMap = header.get(i);
+				
+				dto.setTotalTobeChangeQty(Integer.parseInt(String.valueOf(headerMap.get("totalTobeChangeQty"))));
+				dto.setTotalShortageQty(Integer.parseInt(String.valueOf(headerMap.get("totalShortageQty"))));
+				dto.setTotalQty(Integer.parseInt(String.valueOf(headerMap.get("totalQty"))));
+				
+
+			}
+			
+			params.put("querytype", "list");
+			List<EgovMap> userFilterDList = MlogApiService.getUserFilterList(params);
+
+			List<UserFilterDListDto> userFilterList = userFilterDList.stream().map(r -> UserFilterDListDto.create(r))
+					.collect(Collectors.toList());
+			dto.setPartsList(userFilterList);
+
+			for (int i = 0; i < userFilterDList.size(); i++) {
+				LOGGER.debug("notchangelist 값 : {}", userFilterDList.get(i));
+			}
+
+		}
+		return ResponseEntity.ok(dto);
+
+	}
 	
 	
 	
@@ -777,7 +780,7 @@ public class LogisticsApiController {
 		params.put("querytype", "sum");
 		FilterChangeListVo dto = null;
 
-		List<EgovMap> header = MlogApiService.getFilterUserChangeList(params);
+		List<EgovMap> header = MlogApiService.getFilterChangeList(params);
 		
 		for (int i = 0; i < header.size(); i++) {
 			
@@ -797,7 +800,7 @@ public class LogisticsApiController {
 			}
 			
 			params.put("querytype", "list");
-			List<EgovMap> filterChangeDList = MlogApiService.getFilterUserChangeList(params);
+			List<EgovMap> filterChangeDList = MlogApiService.getFilterChangeList(params);
 
 			List<FilterChangeDListDto>  filterChangeList = filterChangeDList.stream().map(r -> FilterChangeDListDto.create(r))
 					.collect(Collectors.toList());
