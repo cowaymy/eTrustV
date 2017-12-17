@@ -202,11 +202,17 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 	}
 	
 	@Override
-	public List<EgovMap> getFilterUserChangeList(Map<String, Object> params) {
+	public List<EgovMap> getFilterChangeList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return MlogApiMapper.getFilterUserChangeList(params);
+		return MlogApiMapper.getFilterChangeList(params);
 	}
 
+	
+	@Override
+	public List<EgovMap> getUserFilterList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getUserFilterList(params);
+	}
 	/**
 	 * 현창배 추가
 	 */
