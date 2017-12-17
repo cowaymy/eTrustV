@@ -27,7 +27,7 @@ public class UserFilterDListDto {
 	@ApiModelProperty(value = "차용 cody/ct 명")
 	private String targetUserName;
 	@ApiModelProperty(value = "Location ID")
-	private String rdcCode;
+	private int rdcCode;
 
 	public static UserFilterDListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, UserFilterDListDto.class);
@@ -97,11 +97,11 @@ public class UserFilterDListDto {
 		this.targetUserName = targetUserName;
 	}
 
-	public String getRdcCode() {
+	public int getRdcCode() {
 		return rdcCode;
 	}
 
-	public void setRdcCode(String rdcCode) {
+	public void setRdcCode(int rdcCode) {
 		this.rdcCode = rdcCode;
 	}
 
