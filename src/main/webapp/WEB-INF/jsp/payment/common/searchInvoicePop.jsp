@@ -86,7 +86,7 @@ function fn_getInvoiceListAjax() {
     <header class="pop_header">
         <h1>INVOICE SEARCH</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" id="_close1"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -140,7 +140,7 @@ function fn_getInvoiceListAjax() {
         <!-- search_result end -->
 
         <ul class="center_btns">
-            <li><p class="btn_blue2"><a href="javascript:fn_getInvoiceListAjax();" id="_saveBtn">Search</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_getInvoiceListAjax();" id="_saveBtn"><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
 
     </section><!-- pop_body end -->

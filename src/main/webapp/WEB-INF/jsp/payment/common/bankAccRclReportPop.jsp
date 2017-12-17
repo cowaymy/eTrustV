@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
 //Default Combo Data
 var reportTypeData = [{"codeId": "1","codeName": "Deposit (Key-In vs Deposit Entry)"},
@@ -65,7 +66,7 @@ var reportTypeData = [{"codeId": "1","codeName": "Deposit (Key-In vs Deposit Ent
     <header class="pop_header"><!-- pop_header start -->
         <h1>Bank Account Reconciliation Report</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" id="accRclReportPopCloseBtn">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" id="accRclReportPopCloseBtn"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     <section class="pop_body"><!-- pop_body start -->
@@ -106,7 +107,7 @@ var reportTypeData = [{"codeId": "1","codeName": "Deposit (Key-In vs Deposit Ent
                 </table><!-- table end -->
             </form>
             <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a href="javascript:fn_generateStatement();">Statement Generate</a></p></li>
+                <li><p class="btn_blue2 big"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.statementGenerate'/></a></p></li>
             </ul>
         </section><!-- search_table end -->
     </section><!-- content end -->

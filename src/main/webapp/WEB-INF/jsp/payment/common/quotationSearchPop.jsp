@@ -109,7 +109,7 @@ function moveToQuotationPage(goPage){
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>OUTRIGHT MEMBERSHIP QUOTATION SEARCH</h1>
 		<ul class="right_opt">
-			<li><p class="btn_blue2"><a href="#" id="memberPopCloseBtn">CLOSE</a></p></li>
+			<li><p class="btn_blue2"><a href="#" id="memberPopCloseBtn"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	
@@ -155,8 +155,8 @@ function moveToQuotationPage(goPage){
 		</form>
 		
 		<ul class="right_btns">
-			<li><p class="btn_blue2 big"><a href="javascript:fn_selectListAjax(1);"><span class="search"></span>Search</a></p></li>
-			<li><p class="btn_blue2 big"><a href="#" id="btnOrderClear">Clear</a></p></li>
+			<li><p class="btn_blue2 big"><a href="javascript:fn_selectListAjax(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+			<li><p class="btn_blue2 big"><a href="#" id="btnOrderClear"><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 
 		<article id="grid_quotationPop_wrap" class="grid_wrap"><!-- grid_wrap start -->

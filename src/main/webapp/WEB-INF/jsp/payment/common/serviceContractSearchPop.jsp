@@ -90,7 +90,7 @@ $(document).ready(function(){
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>RENTAL MEMBERSHIP SEARCH</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#" id="memberPopCloseBtn">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" id="memberPopCloseBtn"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -140,8 +140,8 @@ $(document).ready(function(){
 			</section><!-- search_table end -->
 		</form>
 		<ul class="right_btns">
-		    <li><p class="btn_blue2 big"><a href="#" id="btnOrderSearch">Search</a></p></li>
-		    <li><p class="btn_blue2 big"><a href="#" id="btnOrderClear">Clear</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="#" id="btnOrderSearch"><spring:message code='sys.btn.search'/></a></p></li>
+		    <li><p class="btn_blue2 big"><a href="#" id="btnOrderClear"><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 		<article id="grid_serviceContractPop_wrap" class="grid_wrap"><!-- grid_wrap start -->
 		</article><!-- grid_wrap end -->
