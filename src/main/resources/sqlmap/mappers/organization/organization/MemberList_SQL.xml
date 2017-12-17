@@ -2829,8 +2829,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		)
 		select  
 		        (SELECT MAX(MEM_ID)+1 FROM ORG0001D ) AS MEM_ID, 
-		        APLICNT_CODE AS MEM_CODE, 
-		        APLICNT_TYPE AS MEM_TYPE, 
+		        (SELECT CASE
+			                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
+			               ELSE ''
+			                  END C1
+			          FROM SYS0022C Extent1
+			         WHERE  Extent1.DOC_NO_ID ='1'  AND ROWNUM <![CDATA[<=]]> 1
+			    )  AS MEM_CODE, 
+		        '1'  AS MEM_TYPE, 
 		        APLICNT_NAME AS NAME, 
 		        APLICNT_FULL_NAME AS FULL_NAME,
 		        
