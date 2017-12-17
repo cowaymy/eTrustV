@@ -113,4 +113,20 @@ public class OrgChartListController {
 	
 	
 	
+	@RequestMapping(value = "/initOrgChartListDet.do")
+	public String initMembersList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "organization/organization/orgChartListDet";
+	}
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value = "/selectOrgChartDetList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectOrgChartDetList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> OrgChartDetList = orgChartListService.selectOrgChartDetList(params);
+		return ResponseEntity.ok(OrgChartDetList);
+	}
+	
 }
