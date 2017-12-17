@@ -1431,5 +1431,72 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	}
 
+	@Override
+	public Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO) {
+		boolean success = false;
+		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
+		Map<String, Object> CodeMap = new HashMap<String, Object>();
 
+		int a =memberListMapper.hpMemRegister(params);
+
+		if(a> 0){
+			
+			Map<String, Object> memOrg = new HashMap<String, Object>();
+			CodeMap.put("code", "mem");
+			String MemberId = memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
+
+			EgovMap selectOrganization = null;
+			selectOrganization = memberListMapper.selectHpOranization(params);//deptCode 가져가서 select
+			logger.debug("selectOrganization : {}",selectOrganization);
+			String deptParentID="", lastGroupCode="", lastOrgCode = "";
+
+			if(selectOrganization.get("memLvl").toString().equals("3")){
+				deptParentID = selectOrganization.get("memId").toString();
+			}
+			
+			logger.debug("in...... hpMemRegister");
+			logger.debug("selectOrganization : {}", selectOrganization);
+			
+			if(selectOrganization.get("memId").toString() != null){
+
+				memOrg.put("memberId",MemberId);
+				memOrg.put("memberUpID",Integer.parseInt((deptParentID)));
+				memOrg.put("memberLvl", 4);
+				memOrg.put("deptCode",params.get("deptCode"));
+				memOrg.put("orgUpdateBy",params.get("creator"));
+				memOrg.put("orgUpdateAt",new Date());
+				memOrg.put("prevDeptCode","");
+				memOrg.put("prevGroupCode","");
+				memOrg.put("prevMemberUpId",0);
+				memOrg.put("prevMemberLvl",0);
+				memOrg.put("orgStatusCodeId",1);
+				memOrg.put("prCode","");
+				memOrg.put("prMemberId",0);
+				memOrg.put("grandPrCode","");
+				memOrg.put("grandPrMemberId",0);
+				memOrg.put("lastDeptCode",params.get("deptCode"));
+				memOrg.put("lastGrpCode",lastGroupCode);
+				memOrg.put("lastOrgCode",lastOrgCode);
+				memOrg.put("lastTopOrgCode","");
+				memOrg.put("branchId",0);
+
+
+				logger.debug("memOrg : {}",memOrg);
+
+				memberListMapper.insertOrganization(memOrg);
+
+			} 
+			
+			params.put("updUserId", sessionVO.getUserId());
+			
+			memberListMapper.updateHpApproval(params);
+			
+			params.put("memberId", MemberId);
+			
+			resultValue =	memberListMapper.afterSelTrainee(params);
+			
+		}
+
+		return resultValue;
+	}
 }

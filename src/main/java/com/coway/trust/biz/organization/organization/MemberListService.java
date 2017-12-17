@@ -71,6 +71,8 @@ public interface MemberListService {
 	List<EgovMap> selectCourse();
 
 	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO);
+	
+	Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO);
 
 
 	List<EgovMap> getMemberListView(Map<String, Object> params);

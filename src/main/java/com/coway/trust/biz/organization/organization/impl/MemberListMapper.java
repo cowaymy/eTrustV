@@ -130,6 +130,8 @@ public interface MemberListMapper {
 
 
 	int traineeUpdate(Map<String, Object> params);
+	int hpMemRegister(Map<String, Object> params);
+	
 	EgovMap afterSelTrainee(Map<String, Object> params);
 
 	List<EgovMap> getMemberListView(Map<String, Object> params);
@@ -146,5 +148,8 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectDeptCodeHp(Map<String, Object> params);
 
-
+	EgovMap selectHpOranization(Map<String, Object> params);
+	
+	void updateHpApproval(Map<String, Object> params);
+	
 }

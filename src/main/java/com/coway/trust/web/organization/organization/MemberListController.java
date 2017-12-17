@@ -152,6 +152,11 @@ public class MemberListController {
 	@RequestMapping(value = "/selectMemberListDetailPop.do")
 	public String selectMemberListDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		
+		logger.debug("selCompensation in.............");
+		logger.debug("params : {}", params);
+		
+		
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
 		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
@@ -774,5 +779,28 @@ public class MemberListController {
 	*/
 
 
+	@RequestMapping(value = "/hpMemRegister.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage>  hpMemRegister(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
+		ReturnMessage message = new ReturnMessage();
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		logger.debug("in...... hpMemRegister");
+		logger.debug("params : {}", params);
+
+		params.put("MemberID", Integer.parseInt((String) params.get("memberId")));
+		
+		resultValue = memberListService.hpMemRegister(params,sessionVO);
+		
+		logger.debug("in...... hpMemRegiste Result");
+		logger.debug("params : {}", params);
+		logger.debug("resultValue : {}", resultValue);
+
+		if(null != resultValue){
+			message.setMessage((String)resultValue.get("memCode"));
+		}
+
+
+		return ResponseEntity.ok(message);
+	}
 }

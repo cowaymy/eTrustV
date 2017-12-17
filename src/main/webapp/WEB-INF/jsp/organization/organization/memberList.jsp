@@ -73,6 +73,36 @@ function fn_requestVacationPop(){
      });
 
 }
+
+function fn_hpMemRegisPop(){
+     var jsonObj = {
+             MemberID :memberid,
+            MemberType : memberType
+    };
+    //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
+
+    if (memberType == "6") {
+    	if ( statusName != "Approved" ) {
+    
+	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType }, function(result) {
+	         console.log("성공.");
+	         console.log( result);
+	
+	         if(result !="" ){
+	             Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
+	              fn_memberListSearch();
+	         }
+	     });
+	     
+	    } else {
+	    	alert('이미 수정했습니다. ');
+	    }
+    } else {
+    	alert('HP Applicant만 해당 됩니다. ');
+    }
+
+}
+
 /*By KV end - traineeToMemberRegistPop*/
 
 
@@ -96,6 +126,8 @@ $(document).ready(function() {
     	memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
         membercode = AUIGrid.getCellValue(myGridID, event.rowIndex, "membercode");
+        statusName = AUIGrid.getCellValue(myGridID, event.rowIndex, "statusName");
+        
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 
@@ -289,6 +321,7 @@ function fn_searchPosition(selectedData){
     <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
     <li><p class="btn_blue"><a href="javascript:fn_confirmMemRegisPop()">Confirm Member Registration </a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_hpMemRegisPop()">HP Approval</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

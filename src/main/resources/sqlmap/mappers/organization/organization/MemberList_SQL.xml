@@ -2817,4 +2817,113 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </update>
 
 
+    <insert id="hpMemRegister" parameterType="Map">
+		INSERT INTO ORG0001D
+		(
+		MEM_ID
+		,MEM_CODE
+		,MEM_TYPE
+		,NAME
+		,FULL_NAME
+		,NRIC
+		,DOB
+		,GENDER
+		,RACE
+		,MARTL
+		,NATION
+		,TEL_OFFICE
+		,TEL_HUSE
+		,TEL_MOBILE
+		,EMAIL
+		,SPUSE_CODE
+		,SPOUSE_NAME
+		,SPOUSE_NRIC
+		,SPOUSE_OCPAT
+		,SPOUSE_TEL_CNTC
+		,SPOUSE_DOB
+		,EDC_LEV
+		,LANG
+		,BANK
+		,BANK_ACC_NO
+		,SPONS_CODE
+		,CRT_DT
+		,CRT_USER_ID
+		,UPD_DT
+		,UPD_USER_ID
+		)
+		select  
+		        (SELECT MAX(MEM_ID)+1 FROM ORG0001D ) AS MEM_ID, 
+		        APLICNT_CODE AS MEM_CODE, 
+		        APLICNT_TYPE AS MEM_TYPE, 
+		        APLICNT_NAME AS NAME, 
+		        APLICNT_FULL_NAME AS FULL_NAME,
+		        APLICNT_NRIC AS  NRIC, 
+		        APLICNT_DOB AS DOB, 
+		        APLICNT_GENDER AS GENDER, 
+		        APLICNT_RACE AS RACE, 
+		        APLICNT_MARTL AS MARTL,
+		        APLICNT_NATION AS NATION, 
+		        APLICNT_TEL_OFFICE AS TEL_OFFICE, 
+		        APLICNT_TEL_HUSE AS TEL_HUSE, 
+		        APLICNT_TEL_MOBILE AS TEL_MOBILE, 
+		        APLICNT_EMAIL AS EMAIL,
+		        APLICNT_SPOUSE_CODE AS SPOUSE_CODE, 
+		        APLICNT_SPOUSE_NAME AS SPOUSE_NAME, 
+		        APLICNT_SPOUSE_NRIC AS SPOUSE_NRIC, 
+		        APLICNT_SPOUSE_OCPAT AS SPOUSE_OCPAT, 
+		        APLICNT_SPOUSE_TEL_CNTC AS SPOUSE_TEL_CNTC,
+		        APLICNT_SPOUSE_DOB AS SPOUSE_DOB, 
+		        APLICNT_EDU_LEV AS EDC_LEV, 
+		        APLICNT_LANG AS LANG, 
+		        APLICNT_BANK_ID AS BANK_ID, 
+		        APLICNT_BANK_ACC_NO AS BANK_ACC_NO,
+		        APLICNT_SPONS_CODE AS SPONS_CODE, 
+		        CRT_DT, 
+		        CRT_USER_ID, 
+		        UPD_DT, 
+		        UPD_USER_ID
+		from ORG0003D   d             
+		where 1=1 and APLCTN_ID = #{MemberID}
+    </insert>
+    
+    
+    <select id="selectHpOranization" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+         SELECT Extent1.MEM_ID MEM_ID  ,
+           Extent1.MEM_UP_ID MEM_UP_ID  ,
+           Extent1.MEM_LVL MEM_LVL  ,
+           Extent1.DEPT_CODE DEPT_CODE  ,
+           Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+           Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+           Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+           Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+           Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+           Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+           Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+           Extent1.PR_CODE PR_CODE  ,
+           Extent1.PR_MEM_ID PR_MEM_ID  ,
+           Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+           Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+           Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+           Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+           Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+           Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+           Extent1.BRNCH_ID BRNCH_ID
+      FROM ORG0005D Extent1
+     WHERE  ( 3 = Extent1.MEM_LVL )
+          AND ( Extent1.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0003D WHERE 1=1 AND APLCTN_ID =#{MemberID}))
+        ]]>
+    </select>
+
+
+     <update id="updateHpApproval" parameterType="Map">
+     <![CDATA[
+        UPDATE ORG0003D
+         SET STUS_ID = '5',
+               UPD_DT =  SYSDATE,
+               UPD_USER_ID =  #{updUserId}
+           WHERE  APLCTN_ID = #{MemberID}
+        ]]>
+    </update>
+
 </mapper>
