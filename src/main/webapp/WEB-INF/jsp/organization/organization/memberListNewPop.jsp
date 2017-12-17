@@ -529,7 +529,7 @@ function fn_selectState(selVal){
         <option value="3">Coway Technician (CT)</option>--%>
         <option value="4">Coway Staff (Staff)</option>
         <option value="5">Trainee</option>
-        <option value="6">HP Applicant</option>
+        <option value="2803">HP Applicant</option>
     </select>
     </td>
 </tr>
