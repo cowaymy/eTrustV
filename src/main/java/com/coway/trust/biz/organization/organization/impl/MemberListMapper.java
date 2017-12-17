@@ -151,5 +151,5 @@ public interface MemberListMapper {
 	EgovMap selectHpOranization(Map<String, Object> params);
 	
 	void updateHpApproval(Map<String, Object> params);
-	
+
 }
