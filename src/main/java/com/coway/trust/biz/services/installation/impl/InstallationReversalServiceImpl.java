@@ -234,5 +234,44 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	
 	@Override
 	public  void    addSalesorderLog(Map<String, Object> params) {}
+	
+	@Override
+	public EgovMap GetOrderExchangeTypeByInstallEntryID(Map<String, Object> params) {
+		return installationReversalMapper.GetOrderExchangeTypeByInstallEntryID(params);
+	}
+	
+	@Override
+	public  void    updateSalesOrderExchange(Map<String, Object> params) {}
+	
+	@Override
+	public  void    updateSrvConfigurations(Map<String, Object> params) {}
+	
+	@Override
+	public  void    updateSrvConfigSetting2(Map<String, Object> params) {}
+	
+	@Override
+	public  void    updateSrvConfigPeriod2(Map<String, Object> params) {}
+	
+	@Override
+	public  void    updateSrvConfigFilter2(Map<String, Object> params) {}
+	
+	@Override
+	public EgovMap getRequiredView2(Map<String, Object> params) {
+		return installationReversalMapper.getRequiredView2(params);
+	}
+	
+	public  void    updateSalesOrderM2(Map<String, Object> params) {}
+	
+	public  void    updateSalesOrderD2(Map<String, Object> params) {}
+	
+	@Override
+	public  void    addAccTRXes(Map<String, Object> params) {}
+	
+	@Override
+	public  void    updateSrvMembershipSale2(Map<String, Object> params) {}
+	
+	@Override
+	public  void    addAccRentLedger(Map<String, Object> params) {}
+	
 
 }

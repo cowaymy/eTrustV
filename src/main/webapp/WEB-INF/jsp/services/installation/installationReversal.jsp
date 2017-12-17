@@ -32,6 +32,7 @@ function selectrow(installEntryNo,salesOrdNo){
 	$("#salesOrdNo").val(salesOrdNo);
 	$("#installEntryId").val(installEntryId);
 	$("#salesOrdId").val(salesOrdId);
+	$("#einstallEntryNo").val(installEntryNo);
     
 	   Common.ajax("POST", "/services/installationReversalSearchDetail", $("#searchForm").serializeJSON() , function(result) {
 	        
@@ -72,6 +73,9 @@ function fn_setdetail(result){
 	$("#spanRemark").text(result.list1.rem);
 	$("#spanResultKeyBy").text(result.list1.memCode);
 	$("#spanResultKeyAt").text(result.list1.c3);
+	
+	$("#lblCT").text("("+result.list1.memCode+")"+result.list1.name2 );
+	
     
 	if(result.list1.allowComm==1){
 		$("#allowCom").prop("checked",true);	
@@ -85,18 +89,45 @@ function fn_setdetail(result){
         $("#reqSms").prop("checked",true);    
     }
 	
+	$("#ectid").val(result.list1.c6);
+	$("#applicationTypeID").val(result.list1.codeId);
+	
+	if(result.list5.whLocId!=null){
+		   $("#inChargeCTWHID").val(result.list5.whLocId);
+	}
+	//$("#retWarehouseID").text(result.list1.brnchId);
+	
+	/*
 	if(result.list1.stusCodeId==4){
 		if(result.list1.c3==null){
-			$("#lblErrorMessage").text(result.list1.salesOrdNo);		
+			//$("#lblErrorMessage").text(result.list1.salesOrdNo);
+			$("#btnReverse").hide();
+			$("#lblErrorMessage").show();
+			$("#lblErrorMessage").text("* No installation record found for this order.");
+			$("#divResultReversal").hide();
 		}
 		if(result.list1.c9==result.list1.c8){
 			$("#lblErrorMessage").text("");
+			$("#lblErrorMessage").hide();
+			$("#btnReverse").show();
+			$("#divResultReversal").show();			
 		}else{
+			$("#lblErrorMessage").show();
 			$("#lblErrorMessage").text("* This installation is past day. Reversal is disallowed.");
+			$("#btnReverse").hide();
+            $("#divResultReversal").hide();
 		}
 	}else{
+        $("#lblErrorMessage").show();
 		$("#lblErrorMessage").text("* Only installation complete result can be reverse.");
+		$("#btnReverse").hide();
+        $("#divResultReversal").hide();
 	}
+	*/
+	$("#callTypeId").val(result.list1.codeid1);
+	$("#esalesDt").val(result.list1.salesDt);	
+	$("#eCustomerName").text(result.list1.name);
+    
 }
 
 function createAUIGrid() {
@@ -226,6 +257,90 @@ function fn_orderSearch(){
         AUIGrid.setGridData(myGridID, orderList);
     });
 
+}
+
+function fn_save(){
+	
+	/*if(fn_saveValidation()){
+		var result = false;
+		var callTypeId = $("#callTypeId").val();
+		
+		var data = GridCommon.getGridData(myGridID);
+	    data.form = $("#editForm").serializeJSON();
+	    
+		Common.ajax("POST", "/services/saveResaval",  data, function(result) {
+		console.log("message : " + result.message );
+        Common.alert(result.message,fn_close);
+        });
+		}
+	
+	*/
+	
+	$("#einstallEntryNo").val($("#installEntryNo").val());
+    $("#esalesOrdNo").val($("#salesOrdNo").val());
+    $("#einstallEntryId").val($("#installEntryId").val());
+    $("#esalesOrdId").val($("#salesOrdId").val());
+	
+	Common.ajax("POST", "/services/saveResaval",  $("#editForm").serializeJSON(), function(result) {
+        console.log("message : " + result.message );
+        Common.alert(result.message,fn_close);
+        });
+}
+
+function fn_saveValidation(){
+	var valid = true;
+	var message = "";
+	var d = new Date();
+	var installDate = new Date();
+	var callDate = new Date();
+	
+	//instalStrlDate
+    if ($("#instalStrlDate").val() == ""){
+        valid = false;
+        message += "* Please select the install date. \n";
+    }else{
+    	installDate = new Date($("#instalStrlDate").val());
+        //DateTime installDate = dpInstallDate.SelectedDate.Value;
+        if (installDate >= d){
+            valid = false;
+            message += "* Install date cannot be future date.<br />";
+        }else{
+            //DateTime nowDate = DateTime.Now.Date;
+            if (installDate.getMonth() != d.getMonth() || installDate.getFullYear() != d.getFullYear()){
+                valid = false;
+                message += "* Install date must within current month.<br />";
+            }
+        }
+    }
+	
+    if($("#failReason").val()==""){
+        valid=false;
+        message += "* Please select the fail reason.<br />";
+    }
+    if ($("#nextCallStrlDate").val() == "")
+    {
+        valid = false;
+        message += "* Please select the next call date.<br />";
+    }
+    else
+    {
+    	installDate = new Date($("#nextCallStrlDate").val());
+    	if(installDate<=d)
+        //if(!CommonFunction.IsFutureOrToday(dpNextCallDate.SelectedDate.Value))
+        {
+            valid=false;
+            message += "* Next call date must be today or future date.<br />";
+        }
+    }
+
+    if (!valid)
+    	Common.alert(message);
+
+	return valid;
+}
+
+function fn_close(){
+    $("#popup_wrap").remove();
 }
 
 
@@ -397,7 +512,7 @@ function fn_orderSearch(){
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="5"><span id="spanRemark"></span></td>
+    <td colspan="5" ><span id="spanRemark"></span></td>
 </tr>
 <tr>
     <td colspan="6">
@@ -415,4 +530,90 @@ function fn_orderSearch(){
 </tbody>
 </table><!-- table end -->
 
+<div id="divResultReversal">
+<aside class="title_line"><!-- title_line start -->
+<h3>installation Result Reversal</h3>
+</aside><!-- title_line end -->
+<form action="" id="editForm" method="post">
+<input type="text" id="callTypeId" name = "callTypeId">
+<input type="hidden"  id="einstallEntryNo" name="einstallEntryNo"/>
+<input type="hidden"  id="esalesOrdNo" name="esalesOrdNo"/>
+<input type="hidden"  id="einstallEntryId" name="einstallEntryId"/>
+<input type="hidden"  id="esalesOrdId" name="esalesOrdId"/>
+<input type="hidden"  id="ectid" name="ectid" />
+<input type="hidden"  id="applicationTypeID" name="applicationTypeID" />
+<input type="hidden"  id="inChargeCTWHID" name="inChargeCTWHID" />
+<input type="hidden"  id="retWarehouseID" name="retWarehouseID" />
+<input type="hidden"  id="esalesDt" name="esalesDt"/>
+<input type="hidden"  id="eCustomerName" name="eCustomerName"/>
+
+
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:160px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+    <col style="width:190px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Reversal Status</th>
+    <td><span id="lblShowRevInstallStatus1" style="font-weight:bold;">From</span>
+    <span id="lblShowRevInstallStatus2" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic">Completed</span>
+    <span id="lblShowRevInstallStatus3" style="font-weight:bold;">To</span>
+    <span id="lblShowRevInstallStatus4" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic">Fail</span>
+    </td>
+    <th scope="row">Incharge CT</th>
+    <td><span id="lblCT"></span></td>
+    <th scope="row">Install Date</th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+        <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
+        </div>
+    </td>
+    
+</tr>
+<tr>
+    <th scope="row">Reverse Reason</th>
+    <td>
+        <select class="w100p" id="reverseReason" name="reverseReason">
+        <option value="" selected>Reverse Reason</option>
+         <c:forEach var="list" items="${selectReverseReason }" varStatus="status">
+           <option value="${list.code}">${list.code} - ${list.resnDesc}</option>
+        </c:forEach>
+        </select>
+    </td>
+    <th scope="row">Fail Reason</th>
+    <td>
+        <select class="w100p" id="failReason" name="failReason">
+        <option value="" selected>Fail Reason</option>
+         <c:forEach var="list" items="${selectFailReason }" varStatus="status">
+           <option value="${list.code}">${list.code} - ${list.resnDesc}</option>
+        </c:forEach>
+        </select>
+    </td>
+    <th scope="row">Next Call Date</th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+        <p><input type="text" title="Next Call Date" placeholder="DD/MM/YYYY" class="j_date" id="nextCallStrlDate" name="nextCallStrlDate"/></p>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Reverse Reason</th>
+    <td colspan="5">
+        <textarea cols="20" rows="5" id="reverseReasonText" name="reverseReasonText"></textarea>
+    </span></td>
+</tr>
+</tbody>
+</table>
+<ul class="center_btns">
+    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:fn_save()">Confirm to Reverse</a></p></li>
+</ul>
+</form>
+</div>
 </section><!-- content end -->

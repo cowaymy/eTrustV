@@ -526,31 +526,31 @@ AND ROWNUM                    <= 1
     <select id="getRequiredView" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT Limit1.SALES_ORD_ID SALES_ORD_ID ,
-  Limit1.TOT_AMT TOT_AMT ,
-  Limit1.APP_TYPE_ID APP_TYPE_ID
-FROM
-  (SELECT Extent1.SALES_ORD_ID SALES_ORD_ID ,
-    Extent1.APP_TYPE_ID APP_TYPE_ID ,
-    Extent1.TOT_AMT TOT_AMT
-  FROM SAL0001D Extent1
-  LEFT JOIN PAY0022D Extent2
-  ON ( Extent1.SALES_ORD_ID   = Extent2.RENT_SO_ID )
-  AND ( 161                   = Extent2.RENT_DOC_TYPE_ID )
-  AND ( 66                    = Extent1.APP_TYPE_ID )
-  AND ( Extent2.RENT_AMT   >= UTILS.CONVERT_TO_FLOAT(0,53) )
-  AND ( ( ( Extent2.RENT_DOC_NO = #{einstallEntryNo} )
-  AND ( Extent2.RENT_DT_TM >= #{rentDateTime} ) )
-  OR ( ( Extent2.RENT_DOC_NO    = Extent1.SALES_ORD_NO )
-  AND ( Extent2.RENT_DT_TM  < #{rentDateTime} ) ) )
-  LEFT JOIN PAY0035D Extent3
-  ON ( Extent1.SALES_ORD_ID  = Extent3.TRADE_SO_ID )
-  AND ( 164                  = Extent3.TRADE_DOC_TYPE_ID )
-  AND ( Extent3.TRADE_AMT >= UTILS.CONVERT_TO_FLOAT(0,53) )
-  AND ( Extent3.TRADE_DOC_NO   = #{einstallEntryNo} )
-  AND ( Extent1.APP_TYPE_ID   IN ( 67,68 ) )
-  WHERE Extent1.SALES_ORD_ID = #{esalesOrdId}
-  AND ROWNUM                <= 1
-  ) Limit1
+				  Limit1.TOT_AMT TOT_AMT ,
+				  Limit1.APP_TYPE_ID APP_TYPE_ID
+			FROM
+				  (SELECT Extent1.SALES_ORD_ID SALES_ORD_ID ,
+				                Extent1.APP_TYPE_ID APP_TYPE_ID ,
+				                Extent1.TOT_AMT TOT_AMT
+				        FROM SAL0001D Extent1
+				        LEFT JOIN PAY0022D Extent2
+				                ON ( Extent1.SALES_ORD_ID   = Extent2.RENT_SO_ID )
+				                AND ( 161                   = Extent2.RENT_DOC_TYPE_ID )
+				                AND ( 66                    = Extent1.APP_TYPE_ID )
+				                AND ( Extent2.RENT_AMT   >= UTILS.CONVERT_TO_FLOAT(0,53) )
+				                AND ( ( ( Extent2.RENT_DOC_NO = #{einstallEntryNo} )
+				                AND ( Extent2.RENT_DT_TM >= #{rentDateTime} ) )
+				                OR ( ( Extent2.RENT_DOC_NO    = Extent1.SALES_ORD_NO )
+				                AND ( Extent2.RENT_DT_TM  < #{rentDateTime} ) ) )
+				        LEFT JOIN PAY0035D Extent3
+				                ON ( Extent1.SALES_ORD_ID  = Extent3.TRADE_SO_ID )
+				                AND ( 164                  = Extent3.TRADE_DOC_TYPE_ID )
+				                AND ( Extent3.TRADE_AMT >= UTILS.CONVERT_TO_FLOAT(0,53) )
+				                AND ( Extent3.TRADE_DOC_NO   = #{einstallEntryNo} )
+				                AND ( Extent1.APP_TYPE_ID   IN ( 67,68 ) )
+				    WHERE Extent1.SALES_ORD_ID = #{esalesOrdId}
+				        AND ROWNUM                <= 1
+				    ) Limit1
   
   
     ]]>    
@@ -742,7 +742,7 @@ FROM
         ]]>
     </update>
     
-    <insert id="addAccTradeLedger" parameterType="Map">
+    <insert id="addAccRentLedger" parameterType="Map">
         insert into pay0022d
 		(RENT_SO_ID
 		,RENT_DOC_TYPE_ID
@@ -755,6 +755,7 @@ FROM
 		,RENT_IS_SYNC
 		,RENT_DOC_NO
 		,RENT_RUN_ID
+		,rent_id
 		)values
 		(#{esalesOrdId}
 		,'155'
@@ -767,6 +768,7 @@ FROM
 		,'1'
 		,#{adjEntryNoteNo}
 		,pay0022d_seq.nextval
+		,0
 		)
     </insert>
     
@@ -1070,7 +1072,9 @@ FROM
     </update>
     
     <select id="getInstallResults" parameterType="Map" resultType="egovMap">
-        select result_id,entry_id,stus_code_id,ct_id,install_dt,rem,gl_post,crt_user_id,crt_dt,sirim_no
+        select result_id,entry_id,stus_code_id,ct_id,install_dt,rem
+                ,case when gl_post is null then 0 else gl_post end gl_post
+                ,crt_user_id,crt_dt,sirim_no
      ,serial_no,fail_id,next_call_dt,allow_comm,is_trade_in,require_sms
      ,doc_ref_no1,doc_ref_no2,upd_user_id,adj_amt ,upd_dt from sal0047d     
      where entry_id =#{einstallEntryId}
@@ -1291,8 +1295,8 @@ FROM
 		(CCR0007D_CALL_RESULT_ID_SEQ.nextval
 		,#{CallEntryID}
 		,#{CallStatusID}
-		,#{CallCallDate}
-		,#{CallActionDate}
+		,to_date(#{CallCallDate},'YYYY-MM-DD')
+		,to_date(#{CallActionDate},'YYYY-MM-DD')
 		,#{CallFeedBackID}
 		,#{CallCTID}
 		,#{CallRemark}
@@ -1330,5 +1334,252 @@ FROM
         )
     </insert>
         
-		
+    <select id="GetOrderExchangeTypeByInstallEntryID" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+		select sal0001d.SALES_ORD_NO
+      ,case when sal0001d.REF_NO is null then '' else sal0001d.REF_NO end REF_NO            
+      ,sal0001d.SALES_DT
+      ,case when sal0001d.UPD_DT is null then sal0001d.SALES_DT else sal0001d.UPD_DT end UPD_DT
+      ,case when sal0001d.UPD_USER_ID is null then 0 else sal0001d.UPD_USER_ID end UPD_USER_ID
+      ,case when sys0013m.CODE_ID is null then 0 else sys0013m.CODE_ID end CODE_ID
+      ,case when sys0013m.CODE_NAME is null then '0' else sys0013m.CODE_NAME end CODE_NAME
+      ,SYS0026M.STK_CTGRY_ID
+      ,SYS0026M.STK_ID
+      ,case when sys0026m.STK_CODE is null then '' else sys0026m.STK_CODE end STK_CODE
+      ,case when sys0026m.STK_DESC is null then '' else sys0026m.STK_DESC end STK_DESC  
+      ,SAL0029D.CUST_ID
+      ,case when SAL0029D.name is null then '' else SAL0029D.name end NAME
+      ,case when SAL0029D.nric is null then '' else SAL0029D.nric end NRIC
+      ,sal0001d.REM
+      ,sal0001d.PROMO_ID
+      ,SAL0017D.PROMO_CODE
+      ,SAL0017D.PROMO_DESC
+      ,case when SAL0004D.SO_EXCHG_OLD_PROMO_ID is null then 0 else SAL0004D.SO_EXCHG_OLD_PROMO_ID end SO_EXCHG_OLD_PROMO_ID
+      ,case when SAL0017D.PROMO_CODE is null then '' else SAL0017D.PROMO_CODE end old_promo_code
+      ,case when SAL0017D.PROMO_desc is null then '' else SAL0017D.PROMO_desc end old_promo_desc
+      ,case when SAL0004D.SO_EXCHG_NW_PRC_ID is null then 0 else SAL0004D.SO_EXCHG_NW_PRC_ID end SO_EXCHG_NW_PRC_ID
+      ,case when SAL0004D.SO_EXCHG_NW_PRC is null then 0 else SAL0004D.SO_EXCHG_NW_PRC end SO_EXCHG_NW_PRC
+      ,case when SAL0004D.SO_EXCHG_OLD_PV is null then 0 else SAL0004D.SO_EXCHG_OLD_PV end SO_EXCHG_OLD_PV
+      ,case when SAL0004D.SO_EXCHG_OLD_PRC_ID is null then 0 else SAL0004D.SO_EXCHG_OLD_PRC_ID end SO_EXCHG_OLD_PRC_ID
+      ,case when SAL0004D.SO_EXCHG_OLD_PRC is null then 0 else SAL0004D.SO_EXCHG_OLD_PRC end SO_EXCHG_OLD_PRC         
+      ,case when SAL0004D.SO_EXCHG_OLD_PV is null then 0 else SAL0004D.SO_EXCHG_OLD_PV end SO_EXCHG_OLD_PV
+      ,case when sal0001d.MTH_RENT_AMT is null then 0 else sal0001d.MTH_RENT_AMT end MTH_RENT_AMT
+      ,case when sal0001d.DEF_RENT_AMT is null then 0 else sal0001d.DEF_RENT_AMT end DEF_RENT_AMT
+      ,case when SYS0038M.STUS_CODE_ID is null then 0 else SYS0038M.STUS_CODE_ID end STUS_CODE_ID 
+      ,sys0038m.NAME status_name
+      ,case when SAL0004D.SO_CUR_STUS_ID is null then 0 else SAL0004D.SO_CUR_STUS_ID end SO_CUR_STUS_ID
+      ,CCR0006D.doc_id
+      ,case when SAL0004D.SO_EXCHG_NW_APP_TYPE_ID is null then 0 else SAL0004D.SO_EXCHG_NW_APP_TYPE_ID end SO_EXCHG_NW_APP_TYPE_ID
+  from SAL0046D 
+       ,CCR0006D 
+       ,SAL0004D 
+       ,sal0001d
+       ,SAL0029D
+       ,ORG0001D 
+       ,sys0013m
+       ,SYS0026M 
+       ,ORG0005D 
+       ,SAL0017D 
+       ,SYS0038M
+ where sal0046d.CALL_ENTRY_ID = ccr0006d.CALL_ENTRY_ID
+   and sal0004d.SO_EXCHG_ID = ccr0006d.doc_id
+   and SAL0001D.SALES_ORD_ID = sal0046d.SALES_ORD_ID
+   and sal0029d.CUST_ID = sal0001d.CUST_ID
+   and org0001d.MEM_ID = sal0001d.MEM_ID
+   and sal0001d.app_type_id = sys0013m.CODE_ID
+   and SAL0046D.INSTALL_STK_ID = SYS0026M.STK_ID
+   and ORG0005D.mem_id =ORG0001D.mem_id
+   and sal0017d.PROMO_ID =SAL0004D.SO_EXCHG_OLD_PROMO_ID
+   and sys0038m.STUS_CODE_ID = SAL0046D.STUS_CODE_ID    
+   and sal0046d.INSTALL_ENTRY_ID = #{einstallEntryId}
+    ]]>    
+    </select>
+    
+    <update id="updateSalesOrderExchange" parameterType="Map">
+     <![CDATA[
+        update sal0004d
+		   set SO_EXCHG_STUS_ID = 1
+		      ,SO_EXCHG_UPD_DT = sysdate
+		      ,SO_EXCHG_UPD_USER_ID = #{userId}
+		 where SO_EXCHG_ID = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <update id="updateSrvConfigurations" parameterType="Map">
+     <![CDATA[
+        update SAL0090D
+		   set SRV_STUS_ID = 1
+		 where SRV_CONFIG_ID = (select SRV_CONFIG_ID from SAL0005D where SO_EXCHG_ID = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <update id="updateSrvConfigSetting2" parameterType="Map">
+     <![CDATA[
+        update SAL0089D
+           set SRV_SETT_STUS_ID = 1
+         where SRV_SETT_ID = (select SRV_SETT_ID from SAL0008D where SO_EXCHG_ID = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <update id="updateSrvConfigPeriod2" parameterType="Map">
+     <![CDATA[
+        update SAL0088D
+           set SRV_PRD_STUS_ID = 1
+         where SRV_PRD_ID = (select SRV_PRD_ID from SAL0007D where SO_EXCHG_ID = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <update id="updateSrvConfigFilter2" parameterType="Map">
+     <![CDATA[
+        update SAL0087D
+             set SRV_FILTER_STUS_ID = 1
+         where SRV_FILTER_ID = (select SRV_FILTER_ID from SAL0006D where SO_EXCHG_ID = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <select id="getRequiredView2" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        select APP_TYPE_ID
+		      ,SO_EXCHG_NW_PRC_ID
+		      ,SO_EXCHG_NW_PRC
+		      ,SO_EXCHG_NW_PV
+		      ,SO_EXCHG_NW_STK_ID
+		      ,SO_EXCHG_NW_PROMO_ID
+		      ,SO_EXCHG_NW_RENT_AMT
+		      ,SO_EXCHG_NW_RENT_AMT
+		      ,SO_EXCHG_OLD_PRC_ID
+		      ,SO_EXCHG_OLD_PRC
+		      ,SO_EXCHG_OLD_PV
+		      ,SO_EXCHG_OLD_STK_ID
+		      ,SO_EXCHG_OLD_PROMO_ID
+		      ,SO_EXCHG_OLD_RENT_AMT
+		  from SAL0004D
+		      ,SAL0001D
+		 where sal0004d.SO_ID = sal0001d.SALES_ORD_ID 
+		   and SO_EXCHG_ID = #{esalesOrdId}
+    ]]>
+    </select>
+    
+    <update id="updateSalesOrderM2" parameterType="Map">
+     <![CDATA[
+        update sal0001d
+		   set SYNC_CHK = #{SyncCheck}
+		      ,UPD_DT = sysdate
+		      ,UPD_USER_ID = #{userId}
+		      ,PV_MONTH = #{PVMonth}
+		      ,PV_YEAR = #{PVYear}
+		      ,TAX_AMT = #{TotalAmt}
+		      ,PROMO_ID = #{PromoID}
+		      ,TOT_PV = #{TotalPV}
+		      ,MTH_RENT_AMT = #{MthRentAmt}
+		      ,DEF_RENT_AMT = #{DefRentAmt}      
+		 where sales_ord_id = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <update id="updateSalesOrderD2" parameterType="Map">
+     <![CDATA[
+        update SAL0002D
+		   set ITM_STK_ID = case when #{ItemStkID} is null then ITM_STK_ID else #{ItemStkID} end
+		      ,ITM_PRC_ID = case when #{ItemPriceID} is null then ITM_PRC_ID else #{ItemPriceID} end
+		      ,ITM_PRC = case when #{ItemPrice} is null then ITM_PRC else #{ItemPrice} end
+		      ,ITM_PV = case when #{ItemPV} is null then UPD_DT else #{ItemPV} end
+		      ,UPD_DT = sysdate 
+		      ,UPD_USER_ID = #{userId}
+		 where sales_ord_id = #{esalesOrdId}
+        ]]>
+    </update>
+    
+    <insert id="addAccTRXes" parameterType="Map">
+    insert into PAY0036D
+		(TRX_ID
+		,TRX_NO
+		,TRX_ITM_NO
+		,TRX_GL_ACC_ID
+		,TRX_GL_DEPT
+		,TRX_PRJCT
+		,TRX_FIN_YEAR
+		,TRX_PRIOD
+		,TRX_SRC_TYPE_ID
+		,TRX_DOC_TYPE_ID
+		,TRX_CUST_BILL_ID
+		,TRX_CHEQUE_NO
+		,TRX_CR_CARD_SLIP
+		,TRX_BIS_NO
+		,TRX_RECON_DT
+		,TRX_REM
+		,TRX_CURR_ID
+		,TRX_CURR_RATE
+		,TRX_AMT
+		,TRX_AMT_RM
+		,TRX_IS_SYNCH
+		)
+		values
+		(
+		(select max(TRX_ID) from pay0036d)
+		,#{TRXNo}
+		,#{TRXItemNo}
+		,#{TRXGLAccID}
+		,#{TRXGLDept}
+		,#{TRXProject}
+		,#{TRXFinYear}
+		,#{TRXPeriod}
+		,#{TRXSourceTypeID}
+		,#{TRXDocTypeID}
+		,#{TRXCustBillID}
+		,#{TRXChequeNo}
+		,#{TRXCRCardSlip}
+		,#{TRXBisNo}
+		,#{TRXReconDate}
+		,#{TRXRemark}
+		,#{TRXCurrID}
+		,#{TRXCurrRate}
+		,#{TRXAmount}
+		,#{TRXAmountRM}
+		,#{TRXIsSynch}
+		)
+    </insert>
+    
+    <update id="updateSrvMembershipSale2" parameterType="Map">
+     <![CDATA[
+        update SAL0095D
+           set SRV_STUS_CODE_ID = #{SrvStatusCodeID}
+              ,SRV_UPD_DT = sysdate
+              ,SRV_UPD_USER_ID = #{userId}
+         where SRV_MEM_ID = #{SrvMemID}
+            and SRV_STUS_CODE_ID = 4
+        ]]>
+    </update>
+    
+    
+    <insert id="addAccTradeLedger" parameterType="Map">
+        insert into PAY0035D
+		(TRADE_RUN_ID
+		,TRADE_ID
+		,TRADE_SO_ID
+		,TRADE_DOC_NO
+		,TRADE_DOC_TYPE_ID
+		,TRADE_DT_TM
+		,TRADE_AMT
+		,TRADE_INST_NO
+		,TRADE_BATCH_NO
+		,TRADE_UPD_USER_ID
+		,TRADE_UPD_DT
+		,TRADE_IS_SYNC
+		)
+		values
+		(PAY0035D_SEQ.nextval
+		,0
+		,#{TradeSOID}
+		,#{adjEntryNoteNo}
+		,#{TradeDocTypeID}
+		,sysdate
+		,#{TradeAmount}
+		,#{TradeInstNo}
+		,#{TradeBatchNo}
+		,#{userId}
+		,sysdate
+		,#{TradeIsSync}
+		)
+    </insert>
     </mapper>

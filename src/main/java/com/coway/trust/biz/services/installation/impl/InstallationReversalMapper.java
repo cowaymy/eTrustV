@@ -112,4 +112,27 @@ public interface InstallationReversalMapper {
 	
 	void addSalesorderLog(Map<String, Object> params);
 	
+	EgovMap GetOrderExchangeTypeByInstallEntryID(Map<String, Object> params);
+	
+	void updateSalesOrderExchange(Map<String, Object> params);
+	
+	void updateSrvConfigurations(Map<String, Object> params);
+	
+	void updateSrvConfigSetting2(Map<String, Object> params);
+	
+	void updateSrvConfigPeriod2(Map<String, Object> params);
+	
+	void updateSrvConfigFilter2(Map<String, Object> params);
+	
+	EgovMap getRequiredView2(Map<String, Object> params);
+	
+	void updateSalesOrderM2(Map<String, Object> params);
+	
+	void updateSalesOrderD2(Map<String, Object> params);
+	
+	void addAccTRXes(Map<String, Object> params);
+	
+	void updateSrvMembershipSale2(Map<String, Object> params);
+	
+	void addAccRentLedger(Map<String, Object> params);
 }
