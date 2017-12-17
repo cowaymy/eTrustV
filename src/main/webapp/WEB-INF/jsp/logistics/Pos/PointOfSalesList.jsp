@@ -38,45 +38,45 @@ var serialChkfalg;
 var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
 var comboDatas = [{"codeId": "OI","codeName": "OH_GI"},{"codeId": "OG","codeName": "OH_GR"}];
 var otherType;
- var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"status"       ,headerText:"Status"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"reqstno"      ,headerText:"Others Request No"      ,width:250    ,height:30                },
-                      {dataField:"ttext"        ,headerText:"Transaction Type Text"       ,width:120    ,height:30 , visible:false              },
-                      {dataField:"mtext"        ,headerText:"Movement Type"               ,width:120    ,height:30                },
-                      {dataField:"staname"      ,headerText:"Status"                      ,width:120    ,height:30                },
-                      {dataField:"reqitmno"     ,headerText:"Stock Movement Request Item" ,width:120    ,height:30 , visible:false},
-                      {dataField:"ttype"        ,headerText:"Transaction Type"            ,width:120    ,height:30 , visible:false},
-                      {dataField:"mtype"        ,headerText:"Movement Type"               ,width:120    ,height:30 , visible:false},
-                      {dataField:"froncy"       ,headerText:"Auto / Manual"               ,width:120    ,height:30,        visible:false},
-                      {dataField:"reqdate"      ,headerText:"Request Required Date"       ,width:120    ,height:30                },
-                      {dataField:"crtdt"        ,headerText:"Request Create Date"         ,width:120    ,height:30                },
-                      {dataField:"rcvloc"       ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                      {dataField:"rcvlocnm"     ,headerText:"From Location"               ,width:120    ,height:30 , visible:false},
-                      {dataField:"rcvlocdesc"   ,headerText:"From Location"               ,width:120    ,height:30 ,visible:false               },
-                      {dataField:"reqloc"       ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                      {dataField:"reqlocnm"     ,headerText:"To Location"                 ,width:120    ,height:30 , visible:false},
-                      {dataField:"reqlocdesc"   ,headerText:"To Location"                 ,width:120    ,height:30 ,visible:false               },
-                      {dataField:"itmcd"        ,headerText:"Material Code"               ,width:130    ,height:30 , visible:true},
-                      {dataField:"itmname"      ,headerText:"Material Name"               ,width:450    ,height:30                },
-                      {dataField:"reqstqty"     ,headerText:"GI/GR REQ  QTY"                 ,width:120    ,height:30                },
-                      {dataField:"rciptqty"     ,headerText:"Remain Qty"                 ,width:120    ,height:30                },
-                      {dataField:"delvno"       ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"delyqty"      ,headerText:"delvno"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"greceipt"     ,headerText:"Good Receipt"                ,width:120    ,height:30,  visible:false  },
-                      {dataField:"uom"          ,headerText:"Unit of Measure"             ,width:120    ,height:30 , visible:false},
-                      {dataField:"serialChk"        ,headerText:"Serial Chk"             ,width:120    ,height:30                },
-                      {dataField:"uomnm"        ,headerText:"Unit of Measure"             ,width:120    ,height:30                }];     
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},                         
+								{dataField: "status",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30 , visible:false},                       
+								{dataField: "reqstno",headerText :"<spring:message code='log.head.othersrequestno'/>"         ,width:250    ,height:30                },                        
+								{dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:false              },                         
+								{dataField: "mtext",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30                },                       
+								{dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },                          
+								{dataField: "reqitmno",headerText :"<spring:message code='log.head.stockmovementrequestitem'/>"  ,width:120    ,height:30 , visible:false},                         
+								{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
+								{dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},                       
+								{dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30,        visible:false},                         
+								{dataField: "reqdate",headerText :"<spring:message code='log.head.requestrequireddate'/>"          ,width:120    ,height:30                },                       
+								{dataField: "crtdt",headerText :"<spring:message code='log.head.requestcreatedate'/>"            ,width:120    ,height:30                },                         
+								{dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},                       
+								{dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},                       
+								{dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 ,visible:false               },                         
+								{dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},                         
+								{dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},                         
+								{dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 ,visible:false               },                       
+								{dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:130    ,height:30 , visible:true},                        
+								{dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:450    ,height:30                },                       
+								{dataField: "reqstqty",headerText :"<spring:message code='log.head.gi/grreqqty'/>"                   ,width:120    ,height:30                },                         
+								{dataField: "rciptqty",headerText :"<spring:message code='log.head.remainqty'/>"                     ,width:120    ,height:30                },                         
+								{dataField: "delvno",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},                       
+								{dataField: "delyqty",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},                          
+								{dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipt'/>"                  ,width:120    ,height:30,  visible:false  },                        
+								{dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
+								{dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"                ,width:120    ,height:30                },                         
+								{dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                }];    
                       
                       
      var mtrcolumnLayout = [
-                            {dataField:"matrlDocNo", headerText:"Matrl_Doc_No" ,width:200    ,height:30},
-                            {dataField:"matrlDocItm", headerText:"MatrlDocItm" ,width:100    ,height:30},
-                            {dataField:"invntryMovType", headerText:"Move_type" ,width:100    ,height:30},                     
-                            {dataField:"movtype", headerText:"Move_text" ,width:120    ,height:30},                            
-                            {dataField:"reqStorgNm", headerText:"ReqLoc" ,width:150    ,height:30},
-                            {dataField:"matrlNo", headerText:"Matrl_Code" ,width:120    ,height:30},
-                            {dataField:"stkDesc", headerText:"MatrlName" ,width:300    ,height:30},
-                            {dataField:"debtCrditIndict", headerText:"Debit/Credit" ,width:120    ,height:30
+								{dataField:  "matrlDocNo",headerText :"<spring:message code='log.head.matrl_doc_no'/>"    ,width:200    ,height:30},                         
+								{dataField: "matrlDocItm",headerText :"<spring:message code='log.head.matrldocitm'/>"    ,width:100    ,height:30},                         
+								{dataField: "invntryMovType",headerText :"<spring:message code='log.head.move_type'/>"   ,width:100    ,height:30},                                             
+								{dataField: "movtype",headerText :"<spring:message code='log.head.move_text'/>"  ,width:120    ,height:30},                                                     
+								{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.reqloc'/>"  ,width:150    ,height:30},                         
+								{dataField: "matrlNo",headerText :"<spring:message code='log.head.matrl_code'/>"     ,width:120    ,height:30},                         
+								{dataField: "stkDesc",headerText :"<spring:message code='log.head.matrlname'/>"  ,width:300    ,height:30},                         
+								{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"   ,width:120    ,height:30
                               ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                                     
                                     var retStr = "";
@@ -99,20 +99,20 @@ var otherType;
                                 }   
                           
                             },
-                            {dataField:"autoCrtItm", headerText:"" ,width:100    ,height:30},
-                            {dataField:"qty", headerText:"Qty" ,width:120    ,height:30},
-                            {dataField:"trantype", headerText:"tran_Type" ,width:120    ,height:30},
-                            {dataField:"postingdate", headerText:"PostingDate" ,width:120    ,height:30},                            
-                            {dataField:"codeName", headerText:"Uom" ,width:120    ,height:30},             
+                            {dataField:    "autoCrtItm" ,headerText:    ""   ,width:100    ,height:30},                         
+                            {dataField:    "qty",headerText :"<spring:message code='log.head.qty'/>"    ,width:120    ,height:30},                         
+                            {dataField:    "trantype",headerText :"<spring:message code='log.head.tran_type'/>"     ,width:120    ,height:30},                         
+                            {dataField:    "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"    ,width:120    ,height:30},                                                     
+                            {dataField:    "codeName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120    ,height:30}          
                ];                   
 
-     var serialcolumn=[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
-                       {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 },
-                       {dataField:"serial"       ,headerText:"Serial"                      ,width:"30%"    ,height:30,editable:true },
-                       {dataField:"cnt61"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                       {dataField:"cnt62"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                       {dataField:"cnt63"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                       {dataField:"statustype"   ,headerText:"status"                      ,width:"30%"    ,height:30,visible:false }
+     var serialcolumn=[{dataField:  "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
+		                       {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
+		                       {dataField:    "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
+		                       {dataField:    "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+		                       {dataField:    "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+		                       {dataField:    "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+		                       {dataField:    "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }  
                       ];            
      
      
