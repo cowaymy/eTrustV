@@ -1357,8 +1357,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("entryId", Integer.parseInt(CommonUtils.nvl( params.get("hidEntryId")).toString()));
     		installResult.put("statusCodeId", Integer.parseInt(CommonUtils.nvl( params.get("installStatus")).toString()));
     		installResult.put("CTID", Integer.parseInt(CommonUtils.nvl( params.get("CTID")).toString()));
-    		installResult.put("installDate", params.get("installDate"));
-    		installResult.put("remark", params.get("remark").toString().trim());
+    		installResult.put("installDate", CommonUtils.nvl( params.get("installDate")));
+    		installResult.put("remark",CommonUtils.nvl(  params.get("remark")).toString().trim());
     		installResult.put("GLPost", 0);
     		installResult.put("creator", sessionVO.getUserId());
     		installResult.put("created", new Date());
@@ -1385,8 +1385,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		}
     		else
     		{
-    			salesOrderM.put("salesOrdId", params.get("hidSalesOrderId").toString());
-    			salesOrderM.put("statusCodeId", params.get("installStatus").toString().equals("4") ? 4 : 1 );
+    			salesOrderM.put("salesOrdId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
+    			salesOrderM.put("statusCodeId", CommonUtils.nvl( params.get("installStatus")).toString().equals("4") ? 4 : 1 );
     		}
 
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412"))
@@ -1469,7 +1469,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     				taxInvoiceOutright.put("TAX_INVC_REF_DT",LocalDate.now());
     				//taxInvoiceOutright.put("TAX_INVC_GRP_ID","1");
     				//taxInvoiceOutright.put("TAX_INVC_GRP_NO","1");
-    				taxInvoiceOutright.put("TAX_INVC_CUST_NAME",params.get("hidCustomerName"));
+    				taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( params.get("hidCustomerName")));
             		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(params.get("hidInatallation_ContactPerson")));
             		taxInvoiceOutright.put("TAX_INVC_ADDR1",0);
             		taxInvoiceOutright.put("TAX_INVC_ADDR2",0);
@@ -1501,7 +1501,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
             		taxInvoiceOutrightSub.put("INVC_ITM_ID",0);
             		taxInvoiceOutrightSub.put("TAX_INVC_ID","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl( params.get("hidTaxInvDSalesOrderNo")));
+            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
             		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
             		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE","6");
 
