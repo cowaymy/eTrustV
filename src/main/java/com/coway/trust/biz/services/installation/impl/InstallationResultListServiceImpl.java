@@ -1582,7 +1582,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			AccOrderBill.put("ACC_BILL_CNTRCT_ID", 0);
     			logger.debug("prepared AccOrderBill: ",AccOrderBill);
 
-    		}
+    		}   
 
 		if( params.get("installStatus").toString().equals("21")){
 			//FAIL
