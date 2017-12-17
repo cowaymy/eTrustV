@@ -33,9 +33,11 @@ var Common = {
             _params = _jsonObj ? JSON.stringify(_jsonObj) : '';
         }
 
+		//timeout test
         var option = {
             async: true,
-            isShowLoader : true
+            isShowLoader : true ,
+            timeout: 0
         };
 
         option = $.extend(option, _options);
@@ -58,6 +60,7 @@ var Common = {
             dataType: "text json",
             data: _params,
             async: option.async,
+            timeout:option.timeout,
             success: function (data, textStatus, jqXHR) {
                 if (_callback) {
                     _callback(data, textStatus, jqXHR);
@@ -775,7 +778,7 @@ var Common = {
             if (okCallback) {
                 okCallback();
             }
-
+            
             if(option.isManual){
                 console.log("this confirm is manual mode....");
             }else{
