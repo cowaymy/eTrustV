@@ -1,5 +1,11 @@
 <script type="text/javaScript">
 
+    var callStusCode;
+    var callStusId;
+    var salesOrdId;
+    var callEntryId;
+    var salesOrdNo;
+
 //Start AUIGrid
 $(document).ready(function() {
 	
@@ -85,7 +91,15 @@ $(document).ready(function() {
 	}
 	function fn_openAddCall(){
 		if(callStusId == "1" || callStusId == "19" || callStusId == "30"  ){ //1 10 19 20 30)
-		  Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
+		  //Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
+            Common.popupDiv("/organization/allocation/allocation.do", {
+                callStusCode: callStusCode,
+                callStusId: callStusId,
+                salesOrdId: salesOrdId,
+                callEntryId: callEntryId,
+                salesOrdNo: salesOrdNo,
+                salesOrderId: salesOrdId
+            });
 		}else if(callStusId == "10" ){
 			Common.alert("This call log is under [CAN] status. Add call log result is disallowed.  ");
 		}else if(callStusId == "20" ){
