@@ -214,7 +214,7 @@
 	  WHERE BAS_YEAR = #{scmYearCbBox}  
 	    AND EST_WEEK = #{scmPeriodCbBox}
 	   <if test='cdcCbBox != null and cdcCbBox !="" '>  
-	    AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','')
+	    AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 	   </if>
 	   <if test="stockCodeCbBox != null and stockCodeCbBox !=''">
 	    AND STOCK_CODE = #{stockCodeCbBox}      
@@ -242,11 +242,13 @@
 		     , PRE_PO_ITM_STUS_DT   
 		     , NVL(UNIT_PRC,0)  FOB_PRICE 
 		     , FOB_AMT   FOB_AMOUNT
+		     , MOQ
+         , STK_CTGRY_ID
 		  FROM SCM0042V   
 		 WHERE PRE_YEAR    = #{scmYearCbBox}  
 		   AND PRE_WEEK_TH = #{scmPeriodCbBox} 
 		   <if test='cdcCbBox != null and cdcCbBox !="" '>  
-		   AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','')
+		   AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 		   </if>
 		   <if test='stockCodeCbBox != null and stockCodeCbBox !="" '> 
 		   AND PRE_STOCK_CODE = #{stockCodeCbBox}      
@@ -254,7 +256,27 @@
        <if test="scmStockType != null and scmStockType !=''">
        AND STK_TYPE_ID = #{scmStockType}    
        </if>		   
-
+</select>
+ 
+<select id="selectPoRightMove" parameterType="Map" resultType="egovMap">
+    SELECT MATRL_MST STOCK_CODE
+	      , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{inStockCode} AND STK_CTGRY_ID = #{inStkCtgryId} AND STK_TYPE_ID = #{inStkTypeId}) STOCK_NAME
+	      , (#{inPlanQty} - #{inPoQty}) PLAN_QTY   
+	      , #{inMoq} MOQ
+	      , CEIL( (#{inPlanQty} - #{inPoQty} ) / #{inMoq}   ) ROUNDUP_PO_QTY
+	      , ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3) FOB_PRICE
+	      , ( CEIL( (#{inPlanQty} - #{inPoQty}) / #{inMoq}   ) * (ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3)) ) FOB_AMOUNT
+	      , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '94' AND CODE_ID = LOG78M.CUR ) CURRENCY
+	      , VENDOR
+	      , VENDOR_TXT
+	      , (SELECT ( #{scmPeriodCbBox} + LEAD_TM ) FROM SCM0008M WHERE STOCK_CODE = #{inStockCode} AND ROWNUM = 1) REQ_DATE
+	      , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID=15 AND CODE_ID = #{inStkTypeId} ) STOCK_TYPE
+	      , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID=11 AND CODE_ID = #{inStkCtgryId} ) STOCK_CATEGORY
+	      , #{inPreCdc} PRE_CDC
+	      , #{inPreYear} PRE_Year
+        , #{inPreWeekTh} PRE_WEEK_TH
+   FROM LOG0078M LOG78M 
+  WHERE MATRL_MST = #{inStockCode} 
 </select>
  
 <select id="selectScmPoStatusCnt" parameterType="Map" resultType="egovMap">
@@ -264,7 +286,7 @@
 				            FROM SCM0011D
 				           WHERE PRE_YEAR    = #{scmYearCbBox}  
 				             AND PRE_WEEK_TH = #{scmPeriodCbBox}  
-				             AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','')
+				             AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 				             AND (PRE_QTY - PO_QTY) <![CDATA[ > ]]> 0
 				        ) PRE_POITEM_CNT
 				       ,(
@@ -272,7 +294,7 @@
 				             FROM SCM0009M 
 				            WHERE BAS_YEAR = #{scmYearCbBox}  
 				              AND EST_WEEK = #{scmPeriodCbBox}   
-				              AND CDC      = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','')
+				              AND CDC      = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 				              AND PO_STUS <![CDATA[ <> ]]> 5 
 				        )  SCMPOMASTER_CNT
 				   FROM DUAL   
@@ -283,10 +305,10 @@
 			UPDATE SCM0011D
 			   SET PO_QTY      = #{planQty}
 			 WHERE PRE_YEAR    = #{preYear}
-			   AND PRE_MONTH   = #{preMonth}
+			   AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
 			   AND PRE_WEEK_TH = #{preWeekTh}
 			   AND PRE_STOCK_CODE = #{stockCode}
-			   AND PRE_CDC        = DECODE(#{preCdc},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','') 
+			   AND PRE_CDC        = #{preCdc} 
 			                        
 </update>
 
@@ -305,7 +327,7 @@
         <selectKey keyProperty="poDetailSeq" resultType="int" order="BEFORE">
             SELECT SCM0010D_SN_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        
+         
             INSERT INTO SCM0010D  
                   ( 
                      SN
@@ -327,8 +349,8 @@
                    , #{newPono}
                    , #{poItemNo}
                    , #{stockCode}
-                   , #{poQty}
-                   , 0  /* FOB_AMT */
+                   , #{roundupPoQty}
+                   , #{fobAmount}  
                    , 1  /* PO_ITM_APPV_STUS */
                    , SYSDATE
                    , NVL(#{crtUserId},'')
