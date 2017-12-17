@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
     
 <script type="text/javaScript">
 
@@ -102,7 +103,7 @@ function fn_genDocument(docVal){
 	   } 
 
    }, function(jqXHR, textStatus, errorThrown) {
-       Common.alert("실패하였습니다.");
+       Common.alert("<spring:message code='pay.alert.fail'/>");
    });
 	
 }
@@ -127,9 +128,9 @@ function fn_clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Payment Listing</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_genDocument('PDF');">Generate To PDF</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_genDocument('EXCEL');">Generate To Excel</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_genDocument('PDF');"><spring:message code='pay.btn.GenerateToPDF'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_genDocument('EXCEL');"><spring:message code='pay.btn.generateToExcel'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
