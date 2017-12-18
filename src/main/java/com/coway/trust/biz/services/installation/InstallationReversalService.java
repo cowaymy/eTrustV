@@ -25,11 +25,11 @@ public interface InstallationReversalService {
 	
 	int saveReverseNewInstallationResult(Map<String, Object> params);
 	
-	int getMemIDBySalesOrderIDAndPacID(Map<String, Object> params);
+	String getMemIDBySalesOrderIDAndPacID(Map<String, Object> params);
 	
-	int getLatestConfigIDBySalesOrderID(Map<String, Object> params);
+	String getLatestConfigIDBySalesOrderID(Map<String, Object> params);
 	
-	int getHCIDBySalesOrderID(Map<String, Object> params);
+	String getHCIDBySalesOrderID(Map<String, Object> params);
 	
 	EgovMap getRequiredView(Map<String, Object> params);
 	

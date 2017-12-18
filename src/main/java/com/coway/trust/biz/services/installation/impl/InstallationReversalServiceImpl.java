@@ -64,17 +64,17 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	}
 	
 	@Override
-	public  int    getMemIDBySalesOrderIDAndPacID(Map<String, Object> params) {
+	public  String    getMemIDBySalesOrderIDAndPacID(Map<String, Object> params) {
 		return installationReversalMapper.getMemIDBySalesOrderIDAndPacID(params);
 	}
 	
 	@Override
-	public  int    getLatestConfigIDBySalesOrderID(Map<String, Object> params) {
+	public  String    getLatestConfigIDBySalesOrderID(Map<String, Object> params) {
 		return installationReversalMapper.getLatestConfigIDBySalesOrderID(params);
 	}
 	
 	@Override
-	public  int    getHCIDBySalesOrderID(Map<String, Object> params) {
+	public  String    getHCIDBySalesOrderID(Map<String, Object> params) {
 		return installationReversalMapper.getHCIDBySalesOrderID(params);
 	}
 	

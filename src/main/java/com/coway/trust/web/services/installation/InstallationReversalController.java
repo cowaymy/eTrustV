@@ -128,13 +128,22 @@ public class InstallationReversalController {
 		int installEntryID = Integer.parseInt(params.get("einstallEntryId").toString());
 		String installDate = params.get("instalStrlDate").toString();
 		String nextCallDate = params.get("nextCallStrlDate").toString();
-		String remark = params.get("reverseReasonText").toString();
-		String failReason =params.get("failReason").toString();
-		String ctID = params.get("ectid").toString(); 
-		int applicationTypeID = Integer.parseInt(params.get("applicationTypeID").toString());
-		int salesOrderID = Integer.parseInt(params.get("esalesOrdId").toString());
-		String salesDt = params.get("esalesDt").toString();
 		
+		logger.debug("-----------------------installDate-------------------------");;
+		logger.debug(installDate);;
+		
+		String remark = params.get("reverseReasonText").toString();
+		logger.debug(remark);;
+		String failReason =params.get("failReason").toString();
+		logger.debug(failReason);;
+		String ctID = params.get("ectid").toString();
+		logger.debug(ctID);;
+		int applicationTypeID = Integer.parseInt(params.get("applicationTypeID").toString());
+		System.out.println(applicationTypeID);;
+		int salesOrderID = Integer.parseInt(params.get("esalesOrdId").toString());
+		System.out.println(salesOrderID);;
+		String salesDt = params.get("esalesDt").toString();
+		logger.debug(salesDt);;
 		int defaultPacID=0;
 		
 		if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
@@ -149,15 +158,24 @@ public class InstallationReversalController {
 		params.put("defaultPacID",defaultPacID);
 		
 		int memID = 0;
-		memID = installationReversalService.getMemIDBySalesOrderIDAndPacID(params);
+		String memid = null;
+		memid= installationReversalService.getMemIDBySalesOrderIDAndPacID(params);
+		if(memid !=null)
+		memID = Integer.parseInt(memid);
 		params.put("memID",memID);
 		
 		int configID = 0;
-		configID = installationReversalService.getLatestConfigIDBySalesOrderID(params);
+		String configid = null;
+		configid = installationReversalService.getLatestConfigIDBySalesOrderID(params);
+		if(configid!=null)
+		configID = Integer.parseInt(configid);
 		params.put("configID",configID);
 		
 		int hcID = 0;
-		hcID = installationReversalService.getHCIDBySalesOrderID(params);
+		String hcid = null;
+		hcid = installationReversalService.getHCIDBySalesOrderID(params);
+		if(hcid!=null)
+		hcID = Integer.parseInt(hcid);
 		params.put("hcID",hcID);
 		
 		int inChargeCTWHID;
@@ -169,7 +187,7 @@ public class InstallationReversalController {
 		String installNo = params.get("einstallEntryNo").toString();
 		
 		EgovMap  installresults = installationReversalService.getInstallResults(params);
-		
+		//logger.debug("installresults {} :" ,installresults);
 		Map<String, Object> InstallresultReverse = new HashMap();
 		InstallresultReverse.put("InstallResultID", installresults.get("resultId"));
 		InstallresultReverse.put("InstallEntryID", installresults.get("entryId"));

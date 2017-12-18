@@ -456,7 +456,7 @@ AND ROWNUM                    <= 1
     
     <select id="selectReverseReason" parameterType="Map" resultType="egovMap">
     <![CDATA[
-    select code,resn_desc 
+    select resn_id,code,resn_desc 
 	  from sys0032m
 	  where resn_type_id = 726
 	    and stus_code_id = 1
@@ -465,7 +465,7 @@ AND ROWNUM                    <= 1
     
     <select id="selectFailReason" parameterType="Map" resultType="egovMap">
     <![CDATA[
-    select code,resn_desc 
+    select resn_id,code,resn_desc 
       from sys0032m
       where resn_type_id = 172
         and stus_code_id = 1
@@ -480,12 +480,12 @@ AND ROWNUM                    <= 1
         ]]>
     </update>
     
-    <select id="getMemIDBySalesOrderIDAndPacID" parameterType="Map" resultType="int">
+    <select id="getMemIDBySalesOrderIDAndPacID" parameterType="Map" resultType="String">
     <![CDATA[
         select srv_mem_id
 		  from (
-		select srv_mem_id
-		  from sal0095d
+		select case when srv_mem_id is null then 0 else srv_mem_id end srv_mem_id
+		from sal0095d 
 		   where SRV_SALES_ORD_ID = #{esalesOrdId}
 		     and SRV_STUS_CODE_ID = 4
 		     and SRV_MEM_PAC_ID = #{defaultPacID}
@@ -495,11 +495,11 @@ AND ROWNUM                    <= 1
     ]]>
     </select>
     
-    <select id="getLatestConfigIDBySalesOrderID" parameterType="Map" resultType="int">
+    <select id="getLatestConfigIDBySalesOrderID" parameterType="Map" resultType="String">
     <![CDATA[
         select srv_config_id
 		  from (
-		select SRV_CONFIG_ID
+		select case when SRV_CONFIG_ID is null then 0 else SRV_CONFIG_ID end SRV_CONFIG_ID 
 		  from SAL0090D
 		 where SRV_SO_ID = #{esalesOrdId}
 		   and SRV_STUS_ID = 1
@@ -509,11 +509,11 @@ AND ROWNUM                    <= 1
     ]]>    
     </select>
     
-    <select id="getHCIDBySalesOrderID" parameterType="Map" resultType="int">
+    <select id="getHCIDBySalesOrderID" parameterType="Map" resultType="String">
     <![CDATA[
         select hc_id
 		  from (
-		select HC_ID
+		select case when HC_ID is null then 0 else HC_ID end HC_ID
 		  from CCR0001D
 		 where HCSOID = #{esalesOrdId}
 		   and HC_TYPE_ID = 508
@@ -560,9 +560,9 @@ AND ROWNUM                    <= 1
     <![CDATA[
         SELECT DOC_RESULT
 	  FROM (
-	select DOC_NO_PREFIX +DOC_NO_ID DOC_RESULT
+	select DOC_NO_PREFIX ||DOC_NO_ID DOC_RESULT
 	  from SYS0022C
-	 where DOC_NO = #{docno}
+	 where DOC_NO_id = #{docno}
 	 )
 	 WHERE ROWNUM = 1
     ]]>    
@@ -571,7 +571,7 @@ AND ROWNUM                    <= 1
     <update id="updateDOCNumber" parameterType="Map">
      <![CDATA[
         update sys0022c
-		   set docno = lpad(doc_no+1,7,0)
+		   set DOC_NO = lpad(doc_no+1,7,0)
 		 where doc_no_id = #{docNoId}
         ]]>
     </update>
@@ -628,7 +628,8 @@ AND ROWNUM                    <= 1
     
     <insert id="addAccAdjTransResult" parameterType="Map">
 		insert into PAY0003D
-		(ADJ_RESULT_DR_ACC_ID
+		(ADJ_RESULT_ID		
+		,ADJ_RESULT_DR_ACC_ID
 		,ADJ_RESULT_CR_ACC_ID
 		,ADJ_RESULT_APP_STUS_ID
 		,ADJ_RESULT_AMT
@@ -641,7 +642,8 @@ AND ROWNUM                    <= 1
 		,ADJ_RESULT_ENTRY_ID
 		)
 		values
-		(#{adjDrAccID}
+		(PAY0003D_SEQ.nextval		
+		,#{adjDrAccID}
 		,#{adjCrAccID}
 		,'4'
 		,#{TotalAmt}
@@ -659,7 +661,7 @@ AND ROWNUM                    <= 1
     <![CDATA[
         SELECT DOC_RESULT
       FROM (
-    select DOC_NO_PREFIX +DOC_NO_ID DOC_RESULT
+    select DOC_NO_PREFIX || DOC_NO_ID DOC_RESULT
       from SYS0022C
      where DOC_NO = '23'
      )
@@ -767,8 +769,8 @@ AND ROWNUM                    <= 1
 		,#{userId}
 		,'1'
 		,#{adjEntryNoteNo}
-		,pay0022d_seq.nextval
 		,0
+		,PAY0022D_SEQ.nextval
 		)
     </insert>
     
@@ -1027,7 +1029,7 @@ AND ROWNUM                    <= 1
 		,#{InvoiceItemOrderNo}
 		,#{InvoiceItemProductModel}
 		,#{InvoiceItemProductSerialNo}
-		,#{instalStrlDate}
+		,to_date(#{instalStrlDate},'DD-MM-YYYY')
 		,#{TaxInvoiceAddress1}
 		,#{TaxInvoiceAddress2}
 		,#{TaxInvoiceAddress3}
@@ -1051,15 +1053,15 @@ AND ROWNUM                    <= 1
 		   set ENTRY_ID=#{einstallEntryId}
 		      ,STUS_CODE_ID = '21'
 		      ,CT_ID = #{ectid}
-		      ,INSTALL_DT = #{nextCallStrlDate}
+		      ,INSTALL_DT = to_date(#{instalStrlDate},'DD-MM-YYYY')
 		      ,REM = #{reverseReasonText}
-		      ,GL_POST ='0'
+		      ,GL_POST =0
 		      ,CRT_USER_ID=#{userId}
 		      ,CRT_DT = sysdate
 		      ,SIRIM_NO=''
 		      ,SERIAL_NO=''
 		      ,FAIL_ID=#{failReason}
-		      ,NEXT_CALL_DT = #{nextCallStrlDate}
+		      ,NEXT_CALL_DT = to_date(#{nextCallStrlDate},'DD-MM-YYYY')
 		      ,ALLOW_COMM= '1'
 		      ,IS_TRADE_IN='1'
 		      ,REQUIRE_SMS='1'
@@ -1137,7 +1139,7 @@ AND ROWNUM                    <= 1
     <update id="updateInstallEntry" parameterType="Map">
      <![CDATA[
         update sal0046d
-		   set StatusCodeID = '21'
+		   set STUS_CODE_ID = '21'
 		      ,ALLOW_COMM = '1'
 		      ,IS_TRADE_IN = '1'
 		      ,REV_ID = '0'
@@ -1172,7 +1174,7 @@ AND ROWNUM                    <= 1
     <update id="updateSrvConfigSetting" parameterType="Map">
      <![CDATA[
         update SAL0089D
-		   set SRV_STUS_ID = #{SrvSettStatusID}
+		   set SRV_SETT_STUS_ID = #{SrvSettStatusID}
 		      ,SRV_SETT_REM = #{SrvSettRemark}
 		 where SRV_CONFIG_ID = #{SrvConfigID}
         ]]>
@@ -1193,8 +1195,8 @@ AND ROWNUM                    <= 1
      <![CDATA[
         update SAL0087D
 		   set SRV_FILTER_STUS_ID = #{SrvFilterStatusID}
-		      ,SRV_PRD_UPD_DT = sysdate
-		      ,SRV_PRD_UPD_USER_ID = #{userId}
+		      ,SRV_FILTER_UPD_DT = sysdate
+		      ,SRV_FILTER_UPD_USER_ID = #{userId}
 		 where SRV_CONFIG_ID = #{SrvConfigID}
         ]]>
     </update>
@@ -1255,14 +1257,14 @@ AND ROWNUM                    <= 1
 		,#{TypeID}
 		,#{StatusCodeID}
 		,#{ResultID}
-		.#{DocID}
+		,#{DocID}
 		,sysdate
 		,#{userId}
-		,#{CallDate}
+		,to_date(#{CallDate},'DD-MM-YYYY')
 		,#{IsWaitForCancel}
 		,sysdate
-		,#{userId}
-		,#{OriCallDate}
+		,#{userId}		
+		,to_date(#{OriCallDate},'DD-MM-YYYY')
 		)
     </insert>
     
@@ -1326,7 +1328,7 @@ AND ROWNUM                    <= 1
         SAL0009D_LOG_ID_SEQ.nextval
         ,#{SalesOrderID}
         ,#{ProgressID}
-        sysdate
+        ,sysdate
         ,#{RefID}
         ,#{IsLock}
         ,#{userId}
@@ -1516,7 +1518,7 @@ AND ROWNUM                    <= 1
 		)
 		values
 		(
-		(select max(TRX_ID) from pay0036d)
+		(select max(TRX_ID)+1 from pay0036d)
 		,#{TRXNo}
 		,#{TRXItemNo}
 		,#{TRXGLAccID}
