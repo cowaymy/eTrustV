@@ -240,7 +240,8 @@
 
     <select id="selectMenuAuthByPgmPath" parameterType="Map" resultType="egovMap">
         WITH CURRENT_MENU AS
-             (SELECT B.MENU_CODE
+             (SELECT /*+ Full(a) Full(b) */
+                            B.MENU_CODE
                 FROM SYS0050M A, SYS0051M B
                WHERE A.PGM_CODE = B.PGM_CODE
                  AND A.PGM_PATH = #{pgmPath})
