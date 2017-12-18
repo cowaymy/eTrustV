@@ -98,11 +98,14 @@ function fn_openGenerate(){
         }
         
         var asTypeId = "";
-        if($("#asType").val() != ''){
+        if($("#asType").val() != '' &&  $("#asType").val() != null){
         	asTypeId = $("#asType  option:selected").text();
-        	if($("#asType").val() == '0'){
+        	alert($("#asType").val());
+        	if($("#asType").val() == "0"){
+        		alert(111);
         		whereSql +=   "AND (ae.AS_TYPE_ID = 674 OR ae.AS_TYPE_ID = 675) ";
         	}else{
+        		alert(22);
         		whereSql +=   "AND ae.AS_TYPE_ID = " + $("#asType").val() + " ";
         	}
         }
