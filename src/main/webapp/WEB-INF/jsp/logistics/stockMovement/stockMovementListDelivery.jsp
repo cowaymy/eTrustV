@@ -323,6 +323,7 @@ $(document).ready(function(){
     	for (var i = 0 ; i < rowCnt ; i++){
     		var qty = AUIGrid.getCellValue(listGrid , i , 'reqstqty') - AUIGrid.getCellValue(listGrid , i , 'delyqty');
     		AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
+    		AUIGrid.setCellValue(listGrid, i, 'indelyqty', qty);
     	}
     	AUIGrid.resetUpdatedItems(listGrid, "all");
     });
@@ -370,9 +371,9 @@ $(function(){
                 }
                 if (rowItem.item.serialchk =='Y'){
                 	serialchk = true;
-                }else{
+                }/*else{
                 	serialchk = false;
-                }
+                }*/
                 
             }
             if(checkDelqty){
@@ -581,8 +582,8 @@ function giFunc(){
     
     console.log(data);
     Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
-            //var msg = result.message + "<br>MDN NO : "+result.data[1];
-    	   // Common.alert(msg , SearchListAjax);
+            var msg = result.message + "<br>MDN NO : "+result.data[1];
+    	    Common.alert(msg , SearchListAjax);
             AUIGrid.resetUpdatedItems(listGrid, "all");    
         $("#giopenwindow").hide();
         $('#search').click();
@@ -596,6 +597,8 @@ function giFunc(){
         for (var i = 0 ; i < checkdata.length ; i++){
             AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
         }
+        
+        serialchk = false;
 }
 
 function fn_serialChck(rowindex , rowitem , str){

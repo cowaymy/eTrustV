@@ -123,7 +123,7 @@ $('#reqadd').hide();
 //var paramdata = { groupCode : '308' , orderValue : 'CODE' , likeValue:'OH'};
 var LocData = {sLoc : UserCode};
 var LocData2 = {brnch : UserBranchId};
-var paramdata2 = {endlikeValue:$("#locationType").val()};
+var paramdata2 = {stkGrade:$("#locationType").val()};
 //     doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','insReqLoc', 'S' , 'f_LocMultiCombo');
      //doGetComboCodeId('/common/selectStockLocationList.do',LocData2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
@@ -415,7 +415,7 @@ $(function(){
 });
 
 function fn_changeLocation() {
-    var paramdata2 = {endlikeValue:$("#locationType").val()};
+    var paramdata2 = {stkGrade:$("#locationType").val()};
     doGetComboCodeId('/common/selectStockLocationList.do',paramdata2, '','insReqLoc', 'S' , 'f_LocMultiCombo');
 } 
 
@@ -841,9 +841,9 @@ function locationList(){
     <th scope="row">Location Type </th>
     <td>
       <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
-        <option> All </option>
-        <option selected> A </option>
-        <option> B </option>
+        <option value=""> All </option>
+        <option value="A" selected> A </option>
+        <option value="B"> B </option>
     </select></td>
     <th scope="row">Request Location</th>
     <td colspan="5">
