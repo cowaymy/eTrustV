@@ -40,23 +40,23 @@ var checkedItems;
 var itm_qty  = 0;
 var searchReqType;
 
-var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
-                     {dataField:"codeName"     ,headerText:"Material Type"          ,width:120    ,height:30 ,visible:true},
-                    {dataField:"stkCode"     ,headerText:"Material Code"           ,width:120    ,height:30,visible:true},
-                     {dataField:"stkDesc"     ,headerText:"Text"         ,width:120    ,height:30,visible:true},
-                     {dataField:"qty"    ,headerText:"Available Qty"           ,width:120    ,height:30,visible:true},
-                     {dataField:"serialChk"    ,headerText:"Serial"         ,width:120    ,height:30,visible:true},
-                     {dataField:"uom"    ,headerText:"UOM"         ,width:120    ,height:30,visible:false},
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:120    ,height:30 ,visible:false},                         
+                     {dataField: "codeName",headerText :"<spring:message code='log.head.materialtype'/>"           ,width:120    ,height:30 ,visible:true},                          
+                     {dataField: "stkCode",headerText :"<spring:message code='log.head.materialcode'/>"             ,width:120    ,height:30,visible:true},                          
+                     {dataField: "stkDesc",headerText :"<spring:message code='log.head.text'/>"           ,width:120    ,height:30,visible:true},                        
+                     {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"             ,width:120    ,height:30,visible:true},                          
+                     {dataField: "serialChk",headerText :"<spring:message code='log.head.serial'/>"           ,width:120    ,height:30,visible:true},                        
+                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"            ,width:120    ,height:30,visible:false}  
                     ];
  
 
-var serialcolumn=[{dataField:"itmcd"        ,headerText:"Material Code"               ,width:"20%"    ,height:30 },
-                         {dataField:"itmname"      ,headerText:"Material Name"               ,width:"25%"    ,height:30 },
-                         {dataField:"serial"       ,headerText:"Serial"                      ,width:"30%"    ,height:30,editable:true },
-                         {dataField:"cnt61"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                         {dataField:"cnt62"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                         {dataField:"cnt63"        ,headerText:"Serial"                      ,width:"30%"    ,height:30,visible:false },
-                         {dataField:"statustype"   ,headerText:"status"                      ,width:"30%"    ,height:30,visible:false }
+var serialcolumn=[{dataField:   "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
+                  {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
+                  {dataField: "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
+                  {dataField: "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+                  {dataField: "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+                  {dataField: "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+                  {dataField: "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }      
                         ];                         
                     
                   
@@ -137,20 +137,20 @@ var paramdata2 = {endlikeValue:$("#locationType").val()};
 //      * Header Setting End
 //      ***********************************/
     
-    reqcolumnLayout=[{dataField:"itmrnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
-                      {dataField:"itmcode"     ,headerText:"Code"        ,width:120    ,height:30 , editable:false},
-                      {dataField:"itmdesc"     ,headerText:"Text"        ,width:120    ,height:30 , editable:false},
-                      {dataField:"itemqty"   ,headerText:"Available Qty"      ,width:120    ,height:30 , editable:false},
-                      /* {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30 }, */
-                      {dataField:"rqty"      ,headerText:"Request Qty"                ,width:120    ,height:30 , editable:true 
+ reqcolumnLayout=[{dataField:   "itmrnum",headerText :"<spring:message code='log.head.rnum'/>"                ,width:120    ,height:30 ,visible:false},                         
+						 {dataField:    "itmcode",headerText :"<spring:message code='log.head.code'/>"          ,width:120    ,height:30 , editable:false},                         
+						 {dataField:    "itmdesc",headerText :"<spring:message code='log.head.text'/>"          ,width:120    ,height:30 , editable:false},                         
+						 {dataField:    "itemqty",headerText :"<spring:message code='log.head.availableqty'/>"        ,width:120    ,height:30 , editable:false},                       
+						 /* {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30 }, */                          
+						 {dataField:    "rqty",headerText :"<spring:message code='log.head.requestqty'/>"                   ,width:120    ,height:30 , editable:true 
                           ,dataType : "numeric" ,editRenderer : {
                               type : "InputEditRenderer",
                               onlyNumeric : true, // 0~9 까지만 허용
                               allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                         }
                       },
-                      {dataField:"itemserialChk"       ,headerText:"Serial"            ,width:120    ,height:30,editable:false},
-                      {dataField:"itemuom"       ,headerText:"UOM"            ,width:120    ,height:30,editable:false
+                      {dataField:    "itemserialChk",headerText :"<spring:message code='log.head.serial'/>"              ,width:120    ,height:30,editable:false},                       
+                      {dataField:    "itemuom",headerText :"<spring:message code='log.head.uom'/>"               ,width:120    ,height:30,editable:false     
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               for(var i=0,len=uomlist.length; i<len; i++) {

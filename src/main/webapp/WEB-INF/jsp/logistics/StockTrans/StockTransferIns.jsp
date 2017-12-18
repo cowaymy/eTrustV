@@ -29,18 +29,18 @@
 var resGrid;
 var reqGrid;
 
-var rescolumnLayout=[{dataField:"rnum"      ,headerText:"rnum"              ,width:120    ,height:30 ,visible:false},
-                     {dataField:"locid"     ,headerText:"Location"          ,width:120    ,height:30 ,visible:false},
-                     {dataField:"stkid"     ,headerText:"ITEM CD"           ,width:120    ,height:30 ,visible:false},
-                     {dataField:"stkcd"     ,headerText:"Mat.Code"           ,width:120    ,height:30,editable:false},
-                     {dataField:"stknm"     ,headerText:"Material Name"         ,width:120    ,height:30,editable:false},
-                     {dataField:"qty"       ,headerText:"Available Qty"     ,width:120    ,height:30, editable:false},
-                     {dataField:"serialchck"       ,headerText:"Serial No Check "     ,width:120    ,height:30, editable:false},
-                     {dataField:"typeid"    ,headerText:"Type Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"typenm"    ,headerText:"Type"         ,width:120    ,height:30,editable:false},
-                     {dataField:"cateid"    ,headerText:"Cate Id"           ,width:120    ,height:30,visible:false},
-                     {dataField:"catenm"    ,headerText:"Category"          ,width:120    ,height:30,editable:false},
-                     {dataField:"uom"       ,headerText:"UOM"               ,width:120    ,height:30, visible:false}
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:120    ,height:30 ,visible:false},                         
+                     {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"              ,width:120    ,height:30 ,visible:false},                         
+                     {dataField: "stkid",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30 ,visible:false},                        
+                     {dataField: "stkcd",headerText :"<spring:message code='log.head.matcode'/>"            ,width:120    ,height:30,editable:false},                        
+                     {dataField: "stknm",headerText :"<spring:message code='log.head.materialname'/>"             ,width:120    ,height:30,editable:false},                          
+                     {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"       ,width:120    ,height:30, editable:false},                         
+                     {dataField: "serialchck" ,headerText:    ""       ,width:120    ,height:30, editable:false},                         
+                     {dataField: "typeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120    ,height:30,visible:false},                         
+                     {dataField: "typenm",headerText :"<spring:message code='log.head.type'/>"            ,width:120    ,height:30,editable:false},                          
+                     {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},                         
+                     {dataField: "catenm",headerText :"<spring:message code='log.head.category'/>"             ,width:120    ,height:30,editable:false},                         
+                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false} 
                     ];
                     
 var reqcolumnLayout;
@@ -71,12 +71,12 @@ $(document).ready(function(){
      * Header Setting End
      ***********************************/
     
-     reqcolumnLayout=[{dataField:"itmid"     ,headerText:"ITEM ID"        ,width:120    ,height:30 , visible:false},
-                      {dataField:"itmcd"     ,headerText:"Mat.Code"        ,width:120    ,height:30 , editable:false},
-                      {dataField:"itmname"   ,headerText:"Material Name"      ,width:120    ,height:30 , editable:false},
-                      {dataField:"aqty"      ,headerText:"Available Qty"    ,width:120    ,height:30 , editable:false},
-                      {dataField:"rqty"      ,headerText:"Request Qty"    ,width:120    ,height:30},
-                      {dataField:"uom"       ,headerText:"UOM"            ,width:120    ,height:30, editable:false
+     reqcolumnLayout=[{dataField:    "itmid",headerText :"<spring:message code='log.head.itemid'/>"          ,width:120    ,height:30 , visible:false},                          
+                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"         ,width:120    ,height:30 , editable:false},                         
+                      {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"        ,width:120    ,height:30 , editable:false},                       
+                      {dataField: "aqty",headerText :"<spring:message code='log.head.availableqty'/>"     ,width:120    ,height:30 , editable:false},                         
+                      {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30},                          
+                      {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"               ,width:120    ,height:30, editable:false 
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               

@@ -31,20 +31,20 @@ var subGrid;
 var userCode;
 
                       
- var rescolumnLayout=[{dataField:"rnum"           ,headerText:"RowNum"            ,width:120    ,height:30 , visible:false},
-                      {dataField:"stkCode"        ,headerText:"Material Code"     ,width:120    ,height:30 },
-                      {dataField:"stkDesc"        ,headerText:"Material Name"     ,width:120    ,height:30                },
-                      {dataField:"ctgryId"        ,headerText:"CategoryID"        ,width:120    ,height:30,visible:false  },
-                      {dataField:"ctgryName"      ,headerText:"Category"          ,width:120    ,height:30                },
-                      {dataField:"typeId"         ,headerText:"TypeID"            ,width:120    ,height:30,visible:false },
-                      {dataField:"typeName"       ,headerText:"Type"              ,width:120    ,height:30 },
-                      {dataField:"whLocCode"    ,headerText:"Location Code" ,width :120 ,height : 30},
-                      {dataField:"locDesc"        ,headerText:"Location"          ,width:120    ,height:30 },
-                      {dataField:"whlocgb"        ,headerText:"Location Grade"    ,width:120    ,height:30 },
-                      {dataField:"qty"            ,headerText:"QTY"               ,width:120    ,height:30},
-                      {dataField:"movQty"         ,headerText:"In-Transit QTY"    ,width:120    ,height:30                },
-                      {dataField:"bookingQty"     ,headerText:"Booking QTY"       ,width:120    ,height:30                },
-                      {dataField:"availableQty"   ,headerText:"Available Qty"     ,width:120    ,height:30                }
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},                          
+                     {dataField: "stkCode",headerText :"<spring:message code='log.head.materialcode'/>"       ,width:120    ,height:30 },                        
+                     {dataField: "stkDesc",headerText :"<spring:message code='log.head.materialname'/>"       ,width:120    ,height:30                },                         
+                     {dataField: "ctgryId",headerText :"<spring:message code='log.head.categoryid'/>"            ,width:120    ,height:30,visible:false  },                          
+                     {dataField: "ctgryName",headerText :"<spring:message code='log.head.category'/>"              ,width:120    ,height:30                },                        
+                     {dataField: "typeId",headerText :"<spring:message code='log.head.typeid'/>"             ,width:120    ,height:30,visible:false },                       
+                     {dataField: "typeName",headerText :"<spring:message code='log.head.type'/>"               ,width:120    ,height:30 },                       
+                     {dataField: "whLocCode",headerText :"<spring:message code='log.head.locationcode'/>"     ,width :120 ,height : 30},                         
+                     {dataField: "locDesc",headerText :"<spring:message code='log.head.location'/>"            ,width:120    ,height:30 },                       
+                     {dataField: "whlocgb",headerText :"<spring:message code='log.head.locationgrade'/>"     ,width:120    ,height:30 },                         
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                  ,width:120    ,height:30},                       
+                     {dataField: "movQty",headerText :"<spring:message code='log.head.in-transitqty'/>"      ,width:120    ,height:30                },                          
+                     {dataField: "bookingQty",headerText :"<spring:message code='log.head.bookingqty'/>"        ,width:120    ,height:30                },                       
+                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30                }  
                       ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};

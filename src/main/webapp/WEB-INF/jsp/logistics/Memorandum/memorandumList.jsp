@@ -52,21 +52,21 @@
     var itemdata;
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
-    var columnLayout = [{dataField:"memoid"          ,headerText:"memoid"          ,width:120    ,height:30 , visible:false},
-                        {dataField:"memotitle"       ,headerText:"Title"           ,width:250    ,height:30 , visible:true},
-                        {dataField:"memocntnt"       ,headerText:"memocntnt"       ,width:350    ,height:30 , visible:false},
-                        {dataField:"stusid"          ,headerText:"Status Code"     ,width:140    ,height:30 , visible:false},
-                        {dataField:"stuscode"        ,headerText:"Status Code"     ,width:140    ,height:30 , visible:false},
-                        {dataField:"stusname"        ,headerText:"Status Code"     ,width:140    ,height:30 , visible:true},
-                        {dataField:"crtdt"           ,headerText:"Create Date"         ,width:140    ,height:30 , visible:true},
-                        {dataField:"fcrtdt"          ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
-                        {dataField:"crtuserid"       ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
-                        {dataField:"crtusernm"       ,headerText:"Creator"         ,width:140    ,height:30 , visible:true},
-                        {dataField:"upddt"           ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
-                        {dataField:"fupddt"          ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
-                        {dataField:"upduserid"       ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
-                        {dataField:"updusernm"       ,headerText:"Creator"         ,width:140    ,height:30 , visible:false},
-                        {dataField:"staffmemo"       ,headerText:"Staff"           ,width:140    ,height:30 , visible:true
+var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.head.memoid'/>"           ,width:120    ,height:30 , visible:false},                        
+							{dataField: "memotitle",headerText :"<spring:message code='log.head.title'/>"              ,width:250    ,height:30 , visible:true},                        
+							{dataField: "memocntnt",headerText :"<spring:message code='log.head.memocntnt'/>"          ,width:350    ,height:30 , visible:false},                       
+							{dataField: "stusid",headerText :"<spring:message code='log.head.statuscode'/>"      ,width:140    ,height:30 , visible:false},                         
+							{dataField: "stuscode",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:false},                         
+							{dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:true},                          
+							{dataField: "crtdt",headerText :"<spring:message code='log.head.createdate'/>"           ,width:140    ,height:30 , visible:true},                          
+							{dataField: "fcrtdt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},                         
+							{dataField: "crtuserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
+							{dataField: "crtusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:true},                          
+							{dataField: "upddt",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
+							{dataField: "fupddt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},                         
+							{dataField: "upduserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
+							{dataField: "updusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
+							{dataField: "staffmemo",headerText :"<spring:message code='log.head.staff'/>"              ,width:140    ,height:30 , visible:true 
                             , renderer : 
                             {
                                 type : "CheckBoxEditRenderer",
@@ -76,7 +76,7 @@
                                 unCheckValue : ""
                             }
                         },
-                        {dataField:"codymemo"        ,headerText:"Cody"        ,width:140    ,height:30 , visible:true
+                        {dataField:  "codymemo",headerText :"<spring:message code='log.head.cody'/>"         ,width:140    ,height:30 , visible:true 
                             , renderer : 
                             {
                                 type : "CheckBoxEditRenderer",
@@ -87,7 +87,7 @@
                                 
                             }     
                         },
-                        {dataField:"hpmemo"          ,headerText:"HP"           ,width:140    ,height:30 , visible:true
+                        {dataField: "hpmemo",headerText :"<spring:message code='log.head.hp'/>"            ,width:140    ,height:30 , visible:true 
                             , renderer : 
                             {
                                 type : "CheckBoxEditRenderer",

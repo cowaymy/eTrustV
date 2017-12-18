@@ -35,18 +35,18 @@ var uomlist = f_getTtype('364' , '');
 var oldQty;
 var oldSerial;
                       
- var rescolumnLayout=[{dataField:"rnum"           ,headerText:"RowNum"            ,width:120    ,height:30 , visible:false},
-                      {dataField:"serviceOrder"        ,headerText:"Service Order"     ,width:120    ,height:30, editable:false },
-                      {dataField:"customer"        ,headerText:"Customer"     ,width:120    ,height:30, editable:false },
-                      {dataField:"customerName"      ,headerText:"Customer Name"          ,width:120    ,height:30, editable:false },
-                      {dataField:"serviceDate"       ,headerText:"Service Date"              ,width:120    ,height:30, editable:false},
-                      {dataField:"materialCode"        ,headerText:"Material Code"          ,width:120    ,height:30, editable:false},
-                      {dataField:"materialName"        ,headerText:"Material Name"    ,width:120    ,height:30, editable:false},
-                      {dataField:"serialNumber"            ,headerText:"Serial Number(System)"               ,width:120    ,height:30, editable:false},
-                      {dataField:"serial"         ,headerText:"Serial(Actual)"    ,width:120    ,height:30                },
-                      {dataField:"qty"     ,headerText:"Qty"       ,width:120    ,height:30                },
-                       /* {dataField:"noPartsReturn"   ,headerText:"No Parts Return"     ,width:120    ,height:30 },  */
-                      {dataField:"noPartsReturn"       ,headerText:"No Parts Return"            ,width:120    ,height:30 
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},                          
+                     {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },                        
+                     {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },                        
+                     {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false },                       
+                     {dataField: "serviceDate",headerText :"<spring:message code='log.head.servicedate'/>"                 ,width:120    ,height:30, editable:false},                        
+                     {dataField: "materialCode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120    ,height:30, editable:false},                        
+                     {dataField: "materialName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:120    ,height:30, editable:false},                          
+                     {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:false},                       
+                     {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },                          
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"          ,width:120    ,height:30                },                       
+                     /* {dataField:  "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"        ,width:120    ,height:30 },  */                        
+                     {dataField: "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"               ,width:120    ,height:30 
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
                               
@@ -66,10 +66,10 @@ var oldSerial;
                              valueField : "codeName"
                           }
                       },
-                      {dataField:"text"   ,headerText:"Text"     ,width:120    ,height:30                },
-                      {dataField:"returnComplete"   ,headerText:"Return Complete"     ,width:120    ,height:30, editable:false},
-                      {dataField:"returnCompleteDate"   ,headerText:"Return Complete Date"     ,width:120    ,height:30, editable:false},
-                      {dataField:"serialChk"   ,headerText:"Serial Chk"     ,width:120    ,height:30, editable:false}
+                      {dataField: "text",headerText :"<spring:message code='log.head.text'/>"      ,width:120    ,height:30                },                         
+                      {dataField: "returnComplete",headerText :"<spring:message code='log.head.returncomplete'/>"      ,width:120    ,height:30, editable:false},                         
+                      {dataField: "returnCompleteDate",headerText :"<spring:message code='log.head.returncompletedate'/>"      ,width:120    ,height:30, editable:false},                         
+                      {dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"        ,width:120    ,height:30, editable:false}  
                       ];                     
  
 var subgridpros = {

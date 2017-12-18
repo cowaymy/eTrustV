@@ -33,12 +33,12 @@ var userCode;
 var userSession = ${SESSION_INFO.userId};
                     
  var rescolumnLayout=[
-                      {dataField:"fileUploadId"         ,headerText:"fileUploadId"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"fileTypeId"         ,headerText:"fileTypeId"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"codeName"       ,headerText:"Type"                      ,width:200    ,height:30 },
-                      {dataField:"fileTypeLbl"      ,headerText:"Label"      ,width:400    ,height:30                },
-                      {dataField:"fileName"        ,headerText:"Filename"               ,width:600    ,height:30  },
-                      {dataField:"isCody"      ,headerText:"Cody"                      ,width:60    ,height:30                
+						{dataField: "fileUploadId",headerText :"<spring:message code='log.head.fileuploadid'/>",width:120    ,height:30 , visible:false},                       
+						{dataField: "fileTypeId",headerText :"<spring:message code='log.head.filetypeid'/>",width:120    ,height:30 , visible:false},                       
+						{dataField: "codeName",headerText :"<spring:message code='log.head.type'/>",width:200    ,height:30 },                          
+						{dataField: "fileTypeLbl",headerText :"<spring:message code='log.head.label'/>"       ,width:400    ,height:30                },                        
+						{dataField: "fileName",headerText :"<spring:message code='log.head.filename'/>"                ,width:600    ,height:30  },                         
+						{dataField: "isCody",headerText :"<spring:message code='log.head.cody'/>",width:60    ,height:30              
                    	   , renderer : 
                          {
                              type : "CheckBoxEditRenderer",
@@ -48,7 +48,7 @@ var userSession = ${SESSION_INFO.userId};
                              unCheckValue :0
                          }  
                       },
-                      {dataField:"isHp"     ,headerText:"HP" ,width:60    ,height:30 
+                      {dataField:    "isHp",headerText :"<spring:message code='log.head.hp'/>"    ,width:60    ,height:30    
                     	  , renderer : 
                           {
                               type : "CheckBoxEditRenderer",
@@ -58,7 +58,7 @@ var userSession = ${SESSION_INFO.userId};
                               unCheckValue :0
                           }  
                       },
-                      {dataField:"isStaff"        ,headerText:"Staff"            ,width:60    ,height:30 
+                      {dataField:   "isStaff",headerText :"<spring:message code='log.head.staff'/>"             ,width:60    ,height:30  
                     	  , renderer : 
                           {
                               type : "CheckBoxEditRenderer",
@@ -68,10 +68,10 @@ var userSession = ${SESSION_INFO.userId};
                               unCheckValue : 0
                           }                
                       },
-                      {dataField:"crtUserId"        ,headerText:"crtUserId"               ,width:110    ,height:30 , visible:false },
-                      {dataField:"c1"        ,headerText:"Creator"               ,width:110    ,height:30 },
-                      {dataField:"crtDt"       ,headerText:"Create Date"               ,width:110    ,height:30},
-                      {dataField:"fileUrl"        ,headerText:"FILE_URL"         ,width:120    ,height:30 , visible:false},
+                      {dataField: "crtUserId",headerText :"<spring:message code='log.head.crtuserid'/>"                  ,width:110    ,height:30 , visible:false },                          
+                      {dataField: "c1",headerText :"<spring:message code='log.head.creator'/>"                   ,width:110    ,height:30 },                          
+                      {dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"                 ,width:110    ,height:30},                       
+                      {dataField: "fileUrl",headerText :"<spring:message code='log.head.file_url'/>"           ,width:120    ,height:30 , visible:false},
                       {
                           dataField : "",
                           headerText : "",
@@ -85,8 +85,8 @@ var userSession = ${SESSION_INFO.userId};
                           }
                       , editable : false
                       },
-                      {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
-                      {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false}
+                      {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},                         
+                      {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false}  
                       ];                     
                                     
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};

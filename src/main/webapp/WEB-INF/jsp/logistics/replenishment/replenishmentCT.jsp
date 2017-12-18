@@ -30,16 +30,16 @@ var listGrid;
 var subGrid;
 var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
 
-var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:150    ,height:30 , visible:false},
-                     {dataField:"period"       ,headerText:"Period"   ,dataType : "date",formatString : "mm/yyyy",width:140    ,height:30  , editable:false},
-                     {dataField:"ctNo"        ,headerText:"CT No"                    ,width:140    ,height:30 , editable:false},
-                     {dataField:"ctName"        ,headerText:"CT Name"               ,width:150    ,height:30 , editable:false},
-                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:140    ,height:30 , editable:false},
-                     {dataField:"itmnm"        ,headerText:"Material Code Text"          ,width:154    ,height:30 , editable:false},
-                     {dataField:"maxqty"       ,headerText:"Maximum Qty"                 ,width:140    ,height:30 , editable:true},
-                     {dataField:"reordqty"     ,headerText:"Reorder Qty"                 ,width:140    ,height:30 , editable:true},
-                     {dataField:"avgqty"       ,headerText:"Average Qty"                 ,width:140    ,height:30 , editable:false},
-                     {dataField:"stkTypeName"       ,headerText:"Type"                 ,width:140    ,height:30 , editable:false},
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:150    ,height:30 , visible:false},                         
+                     {dataField: "period",headerText :"<spring:message code='log.head.period'/>"    ,dataType : "date"    ,formatString :     "mm/yyyy" ,width:140    ,height:30  , editable:false},        
+                     {dataField: "ctNo",headerText :"<spring:message code='log.head.ctno'/>"                     ,width:140    ,height:30 , editable:false},                         
+                     {dataField: "ctName",headerText :"<spring:message code='log.head.ctname'/>"                ,width:150    ,height:30 , editable:false},                          
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:140    ,height:30 , editable:false},                          
+                     {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"              ,width:154    ,height:30 , editable:false},                       
+                     {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>"                  ,width:140    ,height:30 , editable:true},                         
+                     {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderqty'/>"                    ,width:140    ,height:30 , editable:true},                         
+                     {dataField: "avgqty",headerText :"<spring:message code='log.head.averageqty'/>"                  ,width:140    ,height:30 , editable:false},                        
+                     {dataField: "stkTypeName",headerText :"<spring:message code='log.head.type'/>"                   ,width:140    ,height:30 , editable:false}
                      ];
                      
 // AUIGrid.showColumnByDataField(myGridID, "sftyqty"); 
@@ -65,8 +65,10 @@ $(document).ready(function(){
     **********************************/
     $("#sftyqty").val(0);
     
-//       doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'S','');
        doDefCombo(comboData1, '' ,'searchType', 'S', '');
+       doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
+       doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo'); 
+       doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
        
     rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
     
@@ -102,7 +104,35 @@ $(function(){
     	}
     });
     $("#clear").click(function(){
-    	$("#searchForm")[0].reset();
+        $('#searchMatCode').val('');
+        $('#searchMatName').val('');
+        doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
+        doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
+        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
+    });
+    $('#searchMatName').keypress(function(event) {
+        $('#searchMatCode').val('');
+        if (event.which == '13') {
+            $("#stype").val('stock');
+            $("#svalue").val($('#searchMatName').val());
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
+        }
+    });
+    $('#searchlocgrade').change(function(){
+        var searchlocgb = $('#searchlocgb').val();
+        
+        var locgbparam = "";
+        for (var i = 0 ; i < searchlocgb.length ; i++){
+            if (locgbparam == ""){
+                locgbparam = searchlocgb[i];
+            }else{
+                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+            }
+        }
+        
+        var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
     $("#sttype").change(function(){
        
@@ -283,6 +313,40 @@ function SearchListAjax() {
     });
 }
 
+
+function f_multiCombo() {
+    $(function() {
+        $('#searchlocgb').change(function() {
+            console.log('1');
+            if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
+                 var searchlocgb = $('#searchlocgb').val();
+                    
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                        }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                        }
+                    }
+                    
+                    var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+              }
+        }).multipleSelect({
+            selectAll : true
+        });        
+    });
+}
+
+function f_multiCombos() {
+    $(function() {
+        $('#searchCtgry').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */ 
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -315,10 +379,11 @@ function SearchListAjax() {
                 <col style="width:*" />
                 <col style="width:160px" />
                 <col style="width:*" />
-<!--                 <col style="width:160px" /> -->
-<!--                 <col style="width:*" /> -->
+                <col style="width:160px" />
+                <col style="width:*" />
             </colgroup>
             <tbody>
+<!--  
                 <tr>
                     <th scope="row">CT no</th>
                     <td >
@@ -339,6 +404,39 @@ function SearchListAjax() {
                         <select class="w100p" id="searchType" name="searchType"><option value=''>Choose One</option></select>
                     </td>
                 </tr>
+-->  
+                <tr>
+                   <th scope="row">Location Type</th>
+                   <td>
+                        <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select>                        
+<!--                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc"> -->
+<!--                         <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm"> -->
+                   </td> 
+                   <th scope="row">Location Grade</th>
+                   <td>
+                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
+                   </td>
+                   <th scope="row">Location</th>
+                   <td>
+                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
+                   </td> 
+                </tr>
+                <tr>
+                   <th scope="row">Material Code</th>
+                   <td >
+                      <input type="hidden" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
+                      <input type="text"   title="" placeholder=""  class="w100p" id="searchMatName" name="searchMatName"/>
+                   </td> 
+                    <th scope="row">Category</th>
+                   <td>
+                       <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
+                   </td>
+                   <th scope="row">Type</th>
+                   <td>
+                       <select class="w100p" id="searchType" name="searchType"></select>
+                   </td>    
+                </tr>
+                                  
             </tbody>
         </table><!-- table end -->
     </form>
@@ -348,6 +446,7 @@ function SearchListAjax() {
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
             <li><p class="btn_grid"><a id="add">Add</a></p></li>
             <li><p class="btn_grid"><a id="edit">Edit</a></p></li>
         </ul>

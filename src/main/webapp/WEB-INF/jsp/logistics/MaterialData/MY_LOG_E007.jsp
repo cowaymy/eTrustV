@@ -50,35 +50,35 @@
     var stockgradecomboData = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
-    var columnLayout = [{dataField:"itmCode"         ,headerText:"Material Code"   ,width:120    ,height:30 , visible:true},
-                        {dataField:"itmName"         ,headerText:"Material Name"   ,width:250    ,height:30 , visible:true},
-                        {dataField:"itmDesc"         ,headerText:"Material Detail Desc" ,width:350    ,height:30 , visible:true},
-                        {dataField:"itmId"           ,headerText:"Itm Id"          ,width:140    ,height:30 , visible:false},
-                        {dataField:"codeName"        ,headerText:"Key Prod Group"  ,width:"12%"  ,height:30 , visible:true},
-                        {dataField:"attachImgLoc"    ,headerText:"Attach Img Loc"  ,width:120    ,height:30 , visible:false},
-                        {dataField:"ctgryId"         ,headerText:"Ctgry Id"        ,width:120    ,height:30 , visible:true},
-                        {dataField:"isAttachImg"     ,headerText:"IsAttach Img"    ,width:120    ,height:30 , visible:false},
-                        {dataField:"isHotItm"        ,headerText:"Hot Itm"         ,width:90     ,height:30 , visible:false},
-                        {dataField:"isNwItm"         ,headerText:"New Itm"         ,width:90     ,height:30 , visible:false},
-                        {dataField:"isPromoItm"      ,headerText:"Promo Itm"       ,width:120    ,height:30 , visible:false},
-                        {dataField:"itemType"        ,headerText:"Item Type"       ,width:100    ,height:30 , visible:false},
-                        {dataField:"uom"             ,headerText:"Unit of Measure" ,width:100    ,height:30 , visible:false},
-                        {dataField:"uomname"         ,headerText:"Unit of Measure" ,width:100    ,height:30 , visible:true},
-                        {dataField:"currency"        ,headerText:"Currency"        ,width:100    ,height:30 , visible:false},
-                        {dataField:"currencynm"      ,headerText:"Currency"        ,width:100    ,height:30 , visible:true},
-                        {dataField:"prc"             ,headerText:"Prc"             ,width:100    ,height:30 , visible:true , dataType:"numeric", formatString : "#.00"},
-                        {dataField:"prcRem"          ,headerText:"PrcRem"          ,width:100    ,height:30 , visible:false},
-                        {dataField:"promoNormalPrc"  ,headerText:"PromoNormalPrc"  ,width:100    ,height:30 , visible:false},
-                        {dataField:"seq"             ,headerText:"Seq"             ,width:100    ,height:30 , visible:false},
-                        {dataField:"stusCodeId"      ,headerText:"StusCodeId"      ,width:100    ,height:30 , visible:false},
-                        {dataField:"crtDt"           ,headerText:"CrtDt"           ,width:100    ,height:30 , visible:false , formatString : "mm/dd/yyyy"},
-                        {dataField:"crtUserId"       ,headerText:"CrtUserId"       ,width:100    ,height:30 , visible:false},
-                        {dataField:"updDt"           ,headerText:"UpdDt"           ,width:100    ,height:30 , visible:false},
-                        {dataField:"updUserId"       ,headerText:"UpdUserId"       ,width:100    ,height:30 , visible:false},
-                        {dataField:"codeId"          ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:false},
-                        {dataField:"codeName"        ,headerText:"Code Name"       ,width:"8%"   ,height:30 , visible:true},
-                        {dataField:"oldStkId"        ,headerText:"CodeId"          ,width:"8%"   ,height:30 , visible:false},
-                        {dataField:"PRD"             ,headerText:"ProductDisplayDummySet"   ,width:"8%"   ,height:30 , visible:true
+var columnLayout = [{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"     ,width:120    ,height:30 , visible:true},                        
+							{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:250    ,height:30 , visible:true},                        
+							{dataField: "itmDesc",headerText :"<spring:message code='log.head.materialdetaildesc'/>"     ,width:350    ,height:30 , visible:true},                          
+							{dataField: "itmId",headerText :"<spring:message code='log.head.itmid'/>"             ,width:140    ,height:30 , visible:false},                        
+							{dataField: "codeName",headerText :"<spring:message code='log.head.keyprodgroup'/>"   ,width:   "12%"     ,height:30 , visible:true},               
+							{dataField: "attachImgLoc",headerText :"<spring:message code='log.head.attachimgloc'/>"   ,width:120    ,height:30 , visible:false},                        
+							{dataField: "ctgryId",headerText :"<spring:message code='log.head.ctgryid'/>"           ,width:120    ,height:30 , visible:true},                       
+							{dataField: "isAttachImg",headerText :"<spring:message code='log.head.isattachimg'/>"       ,width:120    ,height:30 , visible:false},                          
+							{dataField: "isHotItm",headerText :"<spring:message code='log.head.hotitm'/>"            ,width:90     ,height:30 , visible:false},                         
+							{dataField: "isNwItm",headerText :"<spring:message code='log.head.newitm'/>"             ,width:90     ,height:30 , visible:false},                         
+							{dataField: "isPromoItm",headerText :"<spring:message code='log.head.promoitm'/>"          ,width:120    ,height:30 , visible:false},                       
+							{dataField: "itemType",headerText :"<spring:message code='log.head.itemtype'/>"        ,width:100    ,height:30 , visible:false},                       
+							{dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"  ,width:100    ,height:30 , visible:false},                         
+							{dataField: "uomname",headerText :"<spring:message code='log.head.unitofmeasure'/>"  ,width:100    ,height:30 , visible:true},                          
+							{dataField: "currency",headerText :"<spring:message code='log.head.currency'/>"         ,width:100    ,height:30 , visible:false},                          
+							{dataField: "currencynm",headerText :"<spring:message code='log.head.currency'/>"           ,width:100    ,height:30 , visible:true},                       
+							{dataField: "prc",headerText :"<spring:message code='log.head.prc'/>"                ,width:100    ,height:30 , visible:true , dataType:"numeric", formatString : "#.00"    },          
+							{dataField: "prcRem",headerText :"<spring:message code='log.head.prcrem'/>"           ,width:100    ,height:30 , visible:false},                        
+							{dataField: "promoNormalPrc",headerText :"<spring:message code='log.head.promonormalprc'/>"   ,width:100    ,height:30 , visible:false},                        
+							{dataField: "seq",headerText :"<spring:message code='log.head.seq'/>"                ,width:100    ,height:30 , visible:false},                         
+							{dataField: "stusCodeId",headerText :"<spring:message code='log.head.stuscodeid'/>"       ,width:100    ,height:30 , visible:false},                        
+							{dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"              ,width:100    ,height:30 , visible:false , formatString : "mm/dd/yyyy"   },                  
+							{dataField: "crtUserId",headerText :"<spring:message code='log.head.crtuserid'/>"          ,width:100    ,height:30 , visible:false},                       
+							{dataField: "updDt",headerText :"<spring:message code='log.head.upddt'/>"              ,width:100    ,height:30 , visible:false},                       
+							{dataField: "updUserId",headerText :"<spring:message code='log.head.upduserid'/>"          ,width:100    ,height:30 , visible:false},                       
+							{dataField: "codeId",headerText :"<spring:message code='log.head.codeid'/>"           ,width:   "8%"       ,height:30 , visible:false},                 
+							{dataField: "codeName",headerText :"<spring:message code='log.head.codename'/>"        ,width:  "8%"       ,height:30 , visible:true},                  
+							{dataField: "oldStkId",headerText :"<spring:message code='log.head.codeid'/>"             ,width:   "8%"       ,height:30 , visible:false},                 
+							{dataField: "PRD",headerText :"<spring:message code='log.head.productdisplaydummyset'/>"       ,width:  "8%"       ,height:30 , visible:true
                         	, renderer : 
                             {
                                 type : "CheckBoxEditRenderer",
@@ -88,7 +88,7 @@
                                 unCheckValue : ""
                             }
                         },
-                        {dataField:"CDTL"               ,headerText:"CodyTools"               ,width:"8%"   ,height:30 , visible:true
+                        	{dataField:    "CDTL",headerText :"<spring:message code='log.head.codytools'/>"                   ,width:  "8%"       ,height:30 , visible:true                
                         	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",
@@ -99,7 +99,7 @@
 	                            
 	                        }     
                         },
-                        {dataField:"HRI"                  ,headerText:"HRItem"                  ,width:"8%"   ,height:30 , visible:true
+                        	{dataField: "HRI",headerText :"<spring:message code='log.head.hritem'/>"                      ,width:   "8%"       ,height:30 , visible:true                
                         	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",
@@ -112,7 +112,7 @@
 	                        }
 	                                  
 	                    },
-                        {dataField:"FINI"             ,headerText:"FinanceItem"             ,width:"8%"   ,height:30 , visible:true
+                        	{dataField: "FINI",headerText :"<spring:message code='log.head.financeitem'/>"               ,width:    "8%"       ,height:30 , visible:true                
 	                    	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",
@@ -125,7 +125,7 @@
 	                        }
                                   
 	                    },
-                        {dataField:"MISC"                ,headerText:"MiscItem"                ,width:"8%"   ,height:30 , visible:true
+                        	{dataField: "MISC",headerText :"<spring:message code='log.head.miscitem'/>"                 ,width: "8%"       ,height:30 , visible:true                
 	                    	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",
@@ -138,7 +138,7 @@
 	                        }
 	                                  
 	                    },
-                        {dataField:"UNM"                 ,headerText:"Uniform"                 ,width:"8%"   ,height:30 , visible:true
+                        	{dataField: "UNM",headerText :"<spring:message code='log.head.uniform'/>"                    ,width:    "8%"       ,height:30 , visible:true                
 	                    	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",
@@ -150,7 +150,7 @@
 	                        }
 	                                  
 	                    },
-                        {dataField:"MKT"         ,headerText:"MerchandiseItem"         ,width:"8%"   ,height:30 , visible:true
+                        	{dataField: "MKT",headerText :"<spring:message code='log.head.merchandiseitem'/>"            ,width:    "8%"       ,height:30 , visible:true                
 	                    	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",
@@ -162,7 +162,7 @@
 	                        }
 	                                  
 	                    },
-                        {dataField:"KSK"               ,headerText:"KioskItem"               ,width:"8%"   ,height:30 , visible:true
+                        	{dataField: "KSK",headerText :"<spring:message code='log.head.kioskitem'/>"                ,width:  "8%"       ,height:30 , visible:true 
 	                    	, renderer : 
 	                        {
 	                            type : "CheckBoxEditRenderer",

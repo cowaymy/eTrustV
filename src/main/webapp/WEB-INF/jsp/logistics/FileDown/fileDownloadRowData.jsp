@@ -30,9 +30,9 @@ var rawFileGrid1;
 var rawFileGrid2;
 
 var columnLayout1 = [
-                    {dataField:"orignlfilenm",headerText:"Filename",width:"30%",visible:true },
-                    {dataField:"updDt",headerText:"Write Time",width:"30%", dataType : "date",formatString : "yyyy. mm. dd t hh:MM",visible:true },
-                    {dataField:"filesize",headerText:"File Size",width:"30%",postfix : "bytes",dataType : "numeric",visible:true},
+					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },                
+					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :    "date"    ,formatString :     "yyyy. mm. dd t hh:MM"    ,visible:true },  
+					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :    "numeric" ,visible:true},  
                     {
                         dataField : "",
                         headerText : "",
@@ -45,15 +45,15 @@ var columnLayout1 = [
                         }
                     , editable : false
                     },
-                    {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
-                    {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false},     
-                    {dataField:"fileEt"         ,headerText:"fileEt"                      ,width:120    ,height:30 , visible:false}     
+                    {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},                         
+                    {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false},                               
+                    {dataField: "fileEt",headerText :"<spring:message code='log.head.fileet'/>",width:120    ,height:30 , visible:false}  
                     ];
                     
 var columnLayout2 = [
-                    {dataField:"orignlfilenm",headerText:"Filename",width:"30%",visible:true },
-                    {dataField:"updDt",headerText:"Write Time",width:"30%", dataType : "date",formatString : "yyyy. mm. dd t hh:MM",visible:true },
-                    {dataField:"filesize",headerText:"File Size",width:"30%",postfix : "bytes",dataType : "numeric",visible:true},
+					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },                
+					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :     "date"     ,formatString :     "yyyy. mm. dd t hh:MM"    ,visible:true },  
+					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :     "numeric" ,visible:true},  
                     {
                         dataField : "",
                         headerText : "",
@@ -66,9 +66,9 @@ var columnLayout2 = [
                         }
                     , editable : false
                     },
-                    {dataField:"subpath"         ,headerText:"subpath"                      ,width:120    ,height:30 , visible:false},
-                    {dataField:"filename"         ,headerText:"filename"                      ,width:120    ,height:30 , visible:false},     
-                    {dataField:"fileEt"         ,headerText:"fileEt"                      ,width:120    ,height:30 , visible:false}     
+                    {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},                         
+                    {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false},                               
+                    {dataField: "fileEt",headerText :"<spring:message code='log.head.fileet'/>",width:120    ,height:30 , visible:false}  
                     ];                    
 
 

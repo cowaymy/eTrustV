@@ -52,7 +52,7 @@ $(document).ready(function(){
 	doDefComboCode(ttypedata, '' ,"sttype", 'A', '');
 	doDefComboCode(mtypedata, '' ,"smtype", 'A', '');
 	
-	columnLayout = [{dataField:"ttype"         ,headerText:"Transaction<br>Type Code"      ,width:120    ,height:30
+	columnLayout = [{dataField:"ttype"         ,headerText:"<spring:message code='log.head.transactiontypecode'/>"     ,width:120    ,height:30
                         ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                             var retStr = "";
                             for(var i=0,len=ttypedata.length; i<len; i++) {
@@ -71,8 +71,8 @@ $(document).ready(function(){
                            valueField : "codeName"
                         }
                     }
-                    ,{dataField:"ttypedesc"       ,headerText:"Transaction<br>Type Text" , editable:false    ,width:250    ,height:30 , visible:true}
-                    ,{dataField:"mtype"           ,headerText:"Movement<br>Type"               ,width:120    ,height:30
+                    ,{dataField:"ttypedesc"       ,headerText:"<spring:message code='log.head.transactiontypetext'/>"    , editable:false    ,width:250    ,height:30 , visible:true}
+                    ,{dataField:"mtype"           ,headerText:"<spring:message code='log.head.movementtype'/>"               ,width:120    ,height:30
                     	,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                             var retStr = "";
                             for(var i=0,len=mtypedata.length; i<len; i++) {
@@ -91,8 +91,8 @@ $(document).ready(function(){
                            valueField : "code"
                         }
                      }
-                    ,{dataField:"mtypedesc"       ,headerText:"Movement<br>Type Text"      , editable:false     ,width:250    ,height:30 , visible:true}
-                    ,{dataField:"cmtype"        ,headerText:"Cancel<br>Movement Type"       ,width:"12%"  ,height:30 
+                    ,{dataField:"mtypedesc"       ,headerText:"<spring:message code='log.head.movementtypetext'/>"      , editable:false     ,width:250    ,height:30 , visible:true}
+                    ,{dataField:"cmtype"        ,headerText:"<spring:message code='log.head.cancelmovementtype'/>"       ,width:"12%"  ,height:30 
                     	,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
 	                    
 	                        var retStr = "";
@@ -112,7 +112,7 @@ $(document).ready(function(){
 	                       valueField : "code"
 	                    }
                     }
-                    ,{dataField:"cmvt"    ,headerText:"Cancel<br>MVT"              ,width:120    ,height:30 , visible:true
+                    ,{dataField:"cmvt"    ,headerText:"<spring:message code='log.head.cancelmvt'/>"              ,width:120    ,height:30 , visible:true
                     	, renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -122,7 +122,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"decr"         ,headerText:"Debit/Credit"            ,width:120    ,height:30
+                    ,{dataField:"decr"         ,headerText:"<spring:message code='log.head.debit/credit'/>"            ,width:120    ,height:30
                     	,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                             
                             var retStr = "";
@@ -142,8 +142,8 @@ $(document).ready(function(){
                            valueField : "code"
                         }
                      }
-                    ,{dataField:"decrdesc"     ,headerText:"Debit/Credit<br>Text"    ,width:120    ,height:30}
-                    ,{dataField:"mvindict"        ,headerText:"Movement<br>Indicator"         ,width:90     ,height:30
+                    ,{dataField:"decrdesc"     ,headerText:"<spring:message code='log.head.debit/credittext'/>"    ,width:120    ,height:30}
+                    ,{dataField:"mvindict"        ,headerText:"<spring:message code='log.head.movementindicator'/>"         ,width:90     ,height:30
                         ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                             
                             var retStr = "";
@@ -163,8 +163,8 @@ $(document).ready(function(){
                            valueField : "code"
                         }
                      }
-                    ,{dataField:"mvindictdesc"         ,headerText:"Movement<br>Indicator Text"         ,width:90     ,height:30 , visible:true}
-                    ,{dataField:"mretn"      ,headerText:"Return"       ,width:120    ,height:30 , visible:true
+                    ,{dataField:"mvindictdesc"         ,headerText:"<spring:message code='log.head.movementindicatortext'/>"         ,width:90     ,height:30 , visible:true}
+                    ,{dataField:"mretn"      ,headerText:"<spring:message code='log.head.return'/>"      ,width:120    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -174,7 +174,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"tstep"        ,headerText:"Transfer Step"       ,width:100    ,height:30
+                    ,{dataField:"tstep"        ,headerText:"<spring:message code='log.head.transferstep'/>"      ,width:100    ,height:30
                         ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                             var retStr = "";
                             
@@ -194,7 +194,7 @@ $(document).ready(function(){
                            valueField : "codeName"
                         }
                      }
-                    ,{dataField:"tranorgn"             ,headerText:"Transfer<br>Origin MVT" ,width:100    ,height:30
+                    ,{dataField:"tranorgn"             ,headerText:"<spring:message code='log.head.transferoriginmvt'/>" ,width:100    ,height:30
                         ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
                             var retStr = "";
                             for(var i=0,len=mtypedata.length; i<len; i++) {
@@ -213,7 +213,7 @@ $(document).ready(function(){
                            valueField : "code"
                         }
                      }
-                    ,{dataField:"vender"        ,headerText:"Vender"          ,width:100    ,height:30 , visible:true
+                    ,{dataField:"vender"        ,headerText:"<spring:message code='log.head.vender'/>"          ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -223,7 +223,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"cust"             ,headerText:"Customer"        ,width:100    ,height:30 , visible:true
+                    ,{dataField:"cust"             ,headerText:"<spring:message code='log.head.customer'/>"        ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -233,7 +233,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"poflag"          ,headerText:"Purchase<br>Order"  ,width:100    ,height:30 , visible:true
+                    ,{dataField:"poflag"          ,headerText:"<spring:message code='log.head.purchaseorder'/>"  ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -243,7 +243,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"stflag"  ,headerText:"Stock<br>Transfer"  ,width:100    ,height:30 , visible:true
+                    ,{dataField:"stflag"  ,headerText:"<spring:message code='log.head.stocktransfer'/>"  ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -253,7 +253,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"ssoflag"             ,headerText:"Sales<br>Order"     ,width:100    ,height:30 , visible:true
+                    ,{dataField:"ssoflag"             ,headerText:"<spring:message code='log.head.salesorder'/>"     ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -263,7 +263,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"dnflag"      ,headerText:"Delivery<br>Number" ,width:100    ,height:30 , visible:true
+                    ,{dataField:"dnflag"      ,headerText:"<spring:message code='log.head.deliverynumber'/>" ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -273,7 +273,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"adjflag"           ,headerText:"Adjustment"           ,width:100    ,height:30 , visible:true
+                    ,{dataField:"adjflag"           ,headerText:"<spring:message code='log.head.adjustment'/>"           ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -283,7 +283,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"resflag"       ,headerText:"Resevation"       ,width:100    ,height:30 , visible:true
+                    ,{dataField:"resflag"       ,headerText:"<spring:message code='log.head.resevation'/>"       ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -293,7 +293,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"ganflag"           ,headerText:"G/L Account<br>Number"           ,width:100    ,height:30 , visible:true
+                    ,{dataField:"ganflag"           ,headerText:"<spring:message code='log.head.g/laccountnumber'/>"           ,width:100    ,height:30 , visible:true
                         , renderer : 
                         {
                             type : "CheckBoxEditRenderer",
@@ -303,7 +303,7 @@ $(document).ready(function(){
                             unCheckValue : 0
                         }
                      }
-                    ,{dataField:"ptype"     ,headerText:"ptype"  ,  editable : false , visible:false}
+                    ,{dataField:"ptype"     ,headerText:"<spring:message code='log.head.ptype'/>"  ,  editable : false , visible:false}
                    ];
     var options = {usePaging : false ,useGroupingPanel : false , showStateColumn : true};
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,"ptype", options);

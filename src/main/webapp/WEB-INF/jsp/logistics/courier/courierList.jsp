@@ -41,23 +41,20 @@
     
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
-                         {dataField:"courierid",headerText:"courierId",width:100,visible:false },
-                         {dataField:"couriercd",headerText:"Code",width:"15%",visible:true },
-                         {dataField:"couriernm",headerText:"Name",width:"30%",visible:true,style :"aui-grid-user-custom-left"},
-                         {dataField:"regno",headerText:"Reg. No.",width:"15%",visible:true },
-                         {dataField:"country",headerText:"Country",width:"10%",visible:true },
-                         
-                         {dataField:"countryid",headerText:"countryId",width:100,visible:false },
-                         {dataField:"state",headerText:"State",width:"15%",visible:true },
-                         {dataField:"stateid",headerText:"stateId",width:100,visible:false },
-                         {dataField:"area",headerText:"Area",width:"15%",visible:true },
-                         {dataField:"areaid",headerText:"areaId",width:100,visible:false },
-
-                         {dataField:"postcd",headerText:"postCd",width:100,visible:false },
-                         {dataField:"contactno1",headerText:"contactNo1",width:100,visible:false },
-                         {dataField:"contactno2",headerText:"contactNo2",width:100,visible:false },
-                         {dataField:"faxno",headerText:"faxNo",width:100,visible:false }
-                         
+                         {dataField: "courierid",headerText :"<spring:message code='log.head.courierid'/>"   ,width:100,visible:false },                         
+                         {dataField: "couriercd",headerText :"<spring:message code='log.head.code'/>"    ,width: "15%"   ,visible:true },                
+                         {dataField: "couriernm",headerText :"<spring:message code='log.head.name'/>"    ,width: "30%"   ,visible:true,style :   "aui-grid-user-custom-left"   },          
+                         {dataField: "regno",headerText :"<spring:message code='log.head.regno'/>"   ,width: "15%"   ,visible:true },                
+                         {dataField: "country",headerText :"<spring:message code='log.head.country'/>"   ,width: "10%"   ,visible:true },                
+                         {dataField: "countryid",headerText :"<spring:message code='log.head.countryid'/>"   ,width:100,visible:false },                         
+                         {dataField: "state",headerText :"<spring:message code='log.head.state'/>"   ,width: "15%"   ,visible:true },                
+                         {dataField: "stateid",headerText :"<spring:message code='log.head.stateid'/>"   ,width:100,visible:false },                         
+                         {dataField: "area",headerText :"<spring:message code='log.head.area'/>" ,width: "15%"   ,visible:true },                
+                         {dataField: "areaid",headerText :"<spring:message code='log.head.areaid'/>" ,width:100,visible:false },                         
+                         {dataField: "postcd",headerText :"<spring:message code='log.head.postcd'/>" ,width:100,visible:false },                         
+                         {dataField: "contactno1",headerText :"<spring:message code='log.head.contactno1'/>" ,width:100,visible:false },                         
+                         {dataField: "contactno2",headerText :"<spring:message code='log.head.contactno2'/>" ,width:100,visible:false },                         
+                         {dataField: "faxno",headerText :"<spring:message code='log.head.faxno'/>"   ,width:100,visible:false } 
                          ];
     
     

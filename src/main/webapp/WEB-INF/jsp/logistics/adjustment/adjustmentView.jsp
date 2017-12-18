@@ -43,15 +43,15 @@ var adjNo="${rAdjcode }";
 //var adjLocation = "${rAdjlocId }";
 
 var columnLayout=[
-                  {dataField:"invntryLocId" ,headerText:"invntryLocId",width:120 ,height:30, visible:false},
-                  {dataField:"invntryNo" ,headerText:"Stock Audit No",width:"20%" ,height:30},
-                  {dataField:"docDt" ,headerText:"Doc. Date",width:"20%" ,height:30},
-                  {dataField:"locId" ,headerText:"Location Id",width:"20%" ,height:30},
-                  {dataField:"locName" ,headerText:"Location Name",width:"20%" ,height:30},
-/*                   {dataField:"serialPdChk" ,headerText:"serialPdChk",width:120 ,height:30},
-                  {dataField:"serialFtChk" ,headerText:"serialFtChk",width:120 ,height:30},
-                  {dataField:"serialPtChk" ,headerText:"serialPtChk",width:120 ,height:30}, */
-                  {dataField:"saveYn" ,headerText:"Count Status",width:"20%" ,height:30}
+			{dataField: "invntryLocId",headerText :"<spring:message code='log.head.invntrylocid'/>" ,width:120 ,height:30, visible:false},                          
+			{dataField: "invntryNo",headerText :"<spring:message code='log.head.stockauditno'/>"    ,width: "20%"    ,height:30},               
+			{dataField: "docDt",headerText :"<spring:message code='log.head.docdate'/>" ,width: "20%"    ,height:30},               
+			{dataField: "locId",headerText :"<spring:message code='log.head.locationid'/>"  ,width: "20%"    ,height:30},               
+			{dataField: "locName",headerText :"<spring:message code='log.head.locationname'/>"  ,width: "20%"    ,height:30},               
+			/*                   {dataField:    "serialPdChk",headerText :"<spring:message code='log.head.serialpdchk'/>"   ,width:120 ,height:30},                         
+			{dataField: "serialFtChk",headerText :"<spring:message code='log.head.serialftchk'/>"   ,width:120 ,height:30},                         
+			{dataField: "serialPtChk",headerText :"<spring:message code='log.head.serialptchk'/>"   ,width:120 ,height:30}, */                          
+			{dataField: "saveYn",headerText :"<spring:message code='log.head.countstatus'/>"    ,width: "20%"    ,height:30} 
                ];          
 var resop = {
 		usePaging : false

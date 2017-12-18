@@ -34,21 +34,21 @@ var myGridID;
 
 var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "36","codeName": "Close"},{"codeId": "67","codeName": "Lost"}];
 var columnLayout = [
-                    {dataField:"boxId",headerText:"boxId",width:100,visible:false,style :"aui-grid-user-custom-left" },
-                    {dataField:"boxNo",headerText:"boxNo",width:100,visible:false ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookNo",headerText:"Book No",width:195 ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookPrefix",headerText:"Prefix",width:195 ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookCrtDt",headerText:"trBookCrtDt",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookCrtUserId",headerText:"trBookCrtUserId",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookCrtUserName",headerText:"trBookCrtUserName",width:100,visible:false ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookId",headerText:"trBookId",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookNoStart",headerText:"From",width:195,style :"aui-grid-user-custom-left" },
-                    {dataField:"trBookNoEnd",headerText:"To",width:195,style :"aui-grid-user-custom-left" },
-                    {dataField:"trBookPge",headerText:"Total Sheet(s)",width:195 ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookStusId",headerText:"trBookStusId",width:100,visible:false  ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trBookStusCode",headerText:"Status",width:195 ,style :"aui-grid-user-custom-left" },
-                    {dataField:"trHolder",headerText:"Holder",width:195 ,style :"aui-grid-user-custom-left"},
-                    {dataField:"trHolderType",headerText:"Holder Type",width:195 ,style :"aui-grid-user-custom-left"}
+					{dataField: "boxId",headerText :"<spring:message code='log.head.boxid'/>"   ,width:100,visible:false,style :    "aui-grid-user-custom-left"  },                 
+					{dataField: "boxNo",headerText :"<spring:message code='log.head.boxno'/>"   ,width:100,visible:false ,style :   "aui-grid-user-custom-left" },                  
+					{dataField: "trBookNo",headerText :"<spring:message code='log.head.bookno'/>"   ,width:195 ,style : "aui-grid-user-custom-left" },                  
+					{dataField: "trBookPrefix",headerText :"<spring:message code='log.head.prefix'/>"   ,width:195 ,style : "aui-grid-user-custom-left" },                  
+					{dataField: "trBookCrtDt",headerText :"<spring:message code='log.head.trbookcrtdt'/>"   ,width:100,visible:false  ,style :  "aui-grid-user-custom-left" },                  
+					{dataField: "trBookCrtUserId",headerText :"<spring:message code='log.head.trbookcrtuserid'/>"   ,width:100,visible:false  ,style :  "aui-grid-user-custom-left" },                  
+					{dataField: "trBookCrtUserName",headerText :"<spring:message code='log.head.trbookcrtusername'/>"   ,width:100,visible:false ,style :   "aui-grid-user-custom-left" },                  
+					{dataField: "trBookId",headerText :"<spring:message code='log.head.trbookid'/>" ,width:100,visible:false  ,style :  "aui-grid-user-custom-left" },                  
+					{dataField: "trBookNoStart",headerText :"<spring:message code='log.head.from'/>"    ,width:195,style :  "aui-grid-user-custom-left"  },                 
+					{dataField: "trBookNoEnd",headerText :"<spring:message code='log.head.to'/>"    ,width:195,style :  "aui-grid-user-custom-left"  },                 
+					{dataField: "trBookPge",headerText :"<spring:message code='log.head.totalsheet(s)'/>"   ,width:195 ,style : "aui-grid-user-custom-left" },                  
+					{dataField: "trBookStusId",headerText :"<spring:message code='log.head.trbookstusid'/>" ,width:100,visible:false  ,style :  "aui-grid-user-custom-left" },                  
+					{dataField: "trBookStusCode",headerText :"<spring:message code='log.head.status'/>" ,width:195 ,style : "aui-grid-user-custom-left"  },                 
+					{dataField: "trHolder",headerText :"<spring:message code='log.head.holder'/>"   ,width:195 ,style : "aui-grid-user-custom-left" },                  
+					{dataField: "trHolderType",headerText :"<spring:message code='log.head.holdertype'/>"   ,width:195 ,style : "aui-grid-user-custom-left" } 
                     ];
 // 그리드 속성 설정
 var gridPros = {

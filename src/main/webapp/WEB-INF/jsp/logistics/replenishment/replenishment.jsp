@@ -30,17 +30,17 @@ var listGrid;
 var subGrid;
 
 
-var rescolumnLayout=[{dataField:"rnum"         ,headerText:"RowNum"                      ,width:120    ,height:30 , visible:false},
-                     {dataField:"period"       ,headerText:"Period"   ,dataType : "date",formatString : "mm/yyyy",width:120    ,height:30  , editable:false},
-                     {dataField:"locid"        ,headerText:"Location"                    ,width:120    ,height:30 , visible:false},
-                     {dataField:"loccd"        ,headerText:"Location"                    ,width:120    ,height:30 , editable:false},
-                     {dataField:"locnm"        ,headerText:"Location Name"               ,width:120    ,height:30 , editable:false},
-                     {dataField:"itmcd"        ,headerText:"Material Code"               ,width:120    ,height:30 , editable:false},
-                     {dataField:"itmnm"        ,headerText:"Material Code Text"          ,width:120    ,height:30 , editable:false},
-                     {dataField:"maxqty"       ,headerText:"Maximum Qty"                 ,width:120    ,height:30 , editable:true},
-                     {dataField:"sftyqty"      ,headerText:"Safety Stock"                ,width:120    ,height:30 , editable:true},
-                     {dataField:"reordqty"     ,headerText:"Reorder Qty"                 ,width:120    ,height:30 , editable:true},
-                     {dataField:"avrqty"       ,headerText:"Average Qty"                 ,width:120    ,height:30 , editable:false}];
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},                         
+                     {dataField: "period",headerText :"<spring:message code='log.head.period'/>"    ,dataType :  date    ,formatString :     mm/yyyy ,width:120    ,height:30  , editable:false},        
+                     {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"                        ,width:120    ,height:30 , visible:false},                          
+                     {dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"                        ,width:120    ,height:30 , editable:false},                         
+                     {dataField: "locnm",headerText :"<spring:message code='log.head.locationname'/>"                   ,width:120    ,height:30 , editable:false},                          
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30 , editable:false},                          
+                     {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"              ,width:120    ,height:30 , editable:false},                       
+                     {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>"                  ,width:120    ,height:30 , editable:true},                         
+                     {dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"                   ,width:120    ,height:30 , editable:true},                          
+                     {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderqty'/>"                    ,width:120    ,height:30 , editable:true},                         
+                     {dataField: "avrqty",headerText :"<spring:message code='log.head.averageqty'/>"                  ,width:120    ,height:30 , editable:false}];   
                      
 // AUIGrid.showColumnByDataField(myGridID, "sftyqty"); 
 // hideColumnByDataField

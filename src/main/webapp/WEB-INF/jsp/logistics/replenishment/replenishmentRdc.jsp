@@ -29,32 +29,32 @@
 var listGrid;
 var subGrid;
 
-
+var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
 var rescolumnLayout=[
                      
                      
-                     {dataField:"rnum" ,headerText:"rownum",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"period" ,headerText:"Period",width:100 ,height:30, editable:false},
-                     {dataField:"rdc" ,headerText:"RDC",width:120 ,height:30, editable:false  , visible:false},
-                     {dataField:"rdcname" ,headerText:"RDC",width:240 ,height:30, editable:false},
-                     {dataField:"loccd" ,headerText:"Location",width:120 ,height:30, editable:false},
-                     {dataField:"ctName" ,headerText:"Location Name",width:140 ,height:30, editable:false},
-                     {dataField:"itmcd" ,headerText:"Material Code",width:120 ,height:30, editable:false},
-                     {dataField:"itmnm" ,headerText:"Material Code Text",width:240 ,height:30, editable:false},
-                     {dataField:"stkTypeId" ,headerText:"Material Type",width:120 ,height:30, editable:false},
-                     {dataField:"stkTypeName" ,headerText:"Material Type Text",width:120 ,height:30, editable:false},
-                     {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30, editable:false, visible:false},
-                     {dataField:"stkCtgryName" ,headerText:"Catagory Name",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"uom" ,headerText:"uom",width:120 ,height:30, editable:false, visible:false},  
-                     {dataField:"uomName" ,headerText:"UOM",width:120 ,height:30, editable:false, visible:false},
-                     {dataField:"userName" ,headerText:"userName",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"maxqty" ,headerText:"Maximum Qty",width:120 ,height:30, editable:false},
-                     {dataField:"planqty" ,headerText:"Planned Qty",width:120 ,height:30, editable:true},
-                     {dataField:"sftyqty" ,headerText:"Safety Stock",width:120 ,height:30, editable:true},
-                     {dataField:"reordqty" ,headerText:"Reorder Qty",width:120 ,height:30, editable:true},
-                     {dataField:"avgQty" ,headerText:"Average Qty",width:120 ,height:30, editable:false},
-                     {dataField:"crtDt" ,headerText:"crtDt",width:120 ,height:30, editable:false , visible:false},
-                     {dataField:"crtUser" ,headerText:"crtUser",width:120 ,height:30, editable:false , visible:false}
+					{dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
+					{dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false},                         
+					{dataField: "rdc",headerText :"<spring:message code='log.head.rdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
+					{dataField: "rdcname",headerText :"<spring:message code='log.head.rdc'/>"   ,width:240 ,height:30, editable:false},                         
+					{dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"    ,width:120 ,height:30, editable:false},                         
+					{dataField: "ctName",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
+					{dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
+					{dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
+					{dataField: "stkTypeId",headerText :"<spring:message code='log.head.materialtype'/>"    ,width:120 ,height:30, editable:false},                         
+					{dataField: "stkTypeName",headerText :"<spring:message code='log.head.materialtypetext'/>"  ,width:120 ,height:30, editable:false},                         
+					{dataField: "stkCtgryId",headerText :"<spring:message code='log.head.stkctgryid'/>" ,width:120 ,height:30, editable:false, visible:false},                          
+					{dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false , visible:false},                         
+					{dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
+					{dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
+					{dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false , visible:false},                         
+					{dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false},                         
+					{dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:true},                          
+					{dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:true},                          
+					{dataField: "reordqty",headerText :"<spring:message code='log.head.reorderqty'/>"   ,width:120 ,height:30, editable:true},                          
+					{dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false},                         
+					{dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
+					{dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false}  
 
                      
                      ];
@@ -79,11 +79,11 @@ $(document).ready(function(){
     /**********************************
     * Header Setting
     **********************************/
-    doGetComboData('/common/selectCodeList.do', {groupCode : 339, orderValue : 'code'}, '','slocgb', 'S' , '');
-    doGetCombo('/logistics/bom/selectCodeList', '15', '','sttype', 'A' , ''); // filter, spare parts 만 나오도록
-    //doGetCombo('/common/selectCodeList.do', '11', '', 'scate', 'S',''); //CATEGORY LIST
-    //doGetCombo('/common/selectCodeList.do', '15', '', 'sttype', 'S',''); //TYPE LIST
-
+    doDefCombo(comboData1, '' ,'searchType', 'S', '');
+    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo'); 
+    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
+    
     
     rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
     
@@ -120,8 +120,35 @@ $(function(){
         SearchListAjax();
     });
     $("#clear").click(function(){
-    	//$("#searchForm")[0].reset();
-    	searchFormReset();
+        $('#searchMatCode').val('');
+        $('#searchMatName').val('');
+        doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
+        doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
+        doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
+    });
+    $('#searchMatName').keypress(function(event) {
+        $('#searchMatCode').val('');
+        if (event.which == '13') {
+            $("#stype").val('stock');
+            $("#svalue").val($('#searchMatName').val());
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
+        }
+    });
+    $('#searchlocgrade').change(function(){
+        var searchlocgb = $('#searchlocgb').val();
+        
+        var locgbparam = "";
+        for (var i = 0 ; i < searchlocgb.length ; i++){
+            if (locgbparam == ""){
+                locgbparam = searchlocgb[i];
+            }else{
+                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+            }
+        }
+        
+        var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
     $("#sttype").change(function(){
        
@@ -477,10 +504,39 @@ function SearchListAjax2(str) {
     });
 }
 
-function searchFormReset(){
-	$("#searchForm")[0].reset();
+function f_multiCombo() {
+    $(function() {
+        $('#searchlocgb').change(function() {
+            console.log('1');
+            if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
+                 var searchlocgb = $('#searchlocgb').val();
+                    
+                    var locgbparam = "";
+                    for (var i = 0 ; i < searchlocgb.length ; i++){
+                        if (locgbparam == ""){
+                            locgbparam = searchlocgb[i];
+                        }else{
+                            locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                        }
+                    }
+                    
+                    var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
+                    doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+              }
+        }).multipleSelect({
+            selectAll : true
+        });        
+    });
 }
 
+function f_multiCombos() {
+    $(function() {
+        $('#searchCtgry').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */ 
+    });
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -517,6 +573,7 @@ function searchFormReset(){
                 <col style="width:*" />
             </colgroup>
             <tbody>
+<!-- 
                 <tr>
                     <th scope="row" rowspan='2'>Category of storage</th>
                     <td rowspan='2'>
@@ -538,11 +595,40 @@ function searchFormReset(){
                     </td>
                     <th></th>
                     <td ></td>
-                   <!--  <th scope="row">Material Category</th>
-                    <td>
-                        <select class="w100p" id="scate" name="scate"></select>
-                    </td> -->
                 </tr>
+ --> 
+                 <tr>
+                   <th scope="row">Location Type</th>
+                   <td>
+                        <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select>                        
+<!--                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc"> -->
+<!--                         <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm"> -->
+                   </td> 
+                   <th scope="row">Location Grade</th>
+                   <td>
+                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
+                   </td>
+                   <th scope="row">Location</th>
+                   <td>
+                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
+                   </td> 
+                </tr>
+                <tr>
+                   <th scope="row">Material Code</th>
+                   <td >
+                      <input type="hidden" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
+                      <input type="text"   title="" placeholder=""  class="w100p" id="searchMatName" name="searchMatName"/>
+                   </td> 
+                    <th scope="row">Category</th>
+                   <td>
+                       <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
+                   </td>
+                   <th scope="row">Type</th>
+                   <td>
+                       <select class="w100p" id="searchType" name="searchType"></select>
+                   </td>    
+                </tr>
+                                       
             </tbody>
         </table><!-- table end -->
     </form>
@@ -552,6 +638,7 @@ function searchFormReset(){
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
+            <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
             <li><p class="btn_grid"><a id="add">Add</a></p></li>
             <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
             <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li>
@@ -582,6 +669,7 @@ function searchFormReset(){
                 <col style="width:*" />
             </colgroup>
             <tbody>
+            
                 <tr>
                     <th scope="row">Period</th>
                     <td ><input id="period" name="period" type="text" title="PERIOD" placeholder="MM/YYYY" class="j_date2" /></td>    

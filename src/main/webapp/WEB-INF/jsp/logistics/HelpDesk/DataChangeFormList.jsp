@@ -36,47 +36,47 @@ var cmbStatusCombo= [{"codeId": "61","codeName": "Verifying"},{"codeId": "36","c
     var div;
 
     // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"dcfreqno"      ,headerText:"Request No"           ,width:"10%"  ,height:30 , visible:true},
-                                  {dataField:"c11"      ,headerText:"Request Date"           ,width:"10%" ,height:30 , visible:true},
-                                  {dataField:"code"      ,headerText:"Request Status"    ,width:"11%" ,height:30 , visible:true},
-                                  {dataField:"dcfsuptypedesc"      ,headerText:"Type"           ,width:"15%"  ,height:30 , visible:true},
-                                  {dataField:"dcfsuptypedesc1"      ,headerText:"Category"           ,width:"14%" ,height:30 , visible:true},
-                                  {dataField:"dcfsuptypedesc2"      ,headerText:"Subject"    ,width:"15%" ,height:30 , visible:true},
-                                  {dataField:"c12"      ,headerText:"Requestor"           ,width:"12.5%" ,height:30 , visible:true},
-                                  {dataField:"c6"      ,headerText:"Approval Status"    ,width:"12.5%" ,height:30 , visible:true},
-                                  {dataField:"dcfreqentryid"      ,headerText:"Approval Status"    ,width:"12.5%" ,height:30 , visible:false},
-                                  {dataField:"name"      ,headerText:"Request Status"           ,width:"10%" ,height:30 , visible:false},
-                                  {dataField:"c20"      ,headerText:"Request By"    ,width:"15%" ,height:30 , visible:false},
-                                  {dataField:"dcfreqremark"      ,headerText:"Remark"           ,width:"12.5%" ,height:30 , visible:false},
-                                  {dataField:"dcfReqDesc"      ,headerText:"Description"    ,width:"15%" ,height:30 , visible:false},
-                                  {dataField:"c19"      ,headerText:"Request On Behalf"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"c21"      ,headerText:"Settle Date"           ,width:"15%"  ,height:30 , visible:false},
-                       
-                                  {dataField:"dcfreqapproveremark"      ,headerText:"DCFReqApproveRemark"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"dcfreqapproveby"      ,headerText:"DCFReqApproveBy"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"reasondesc1"      ,headerText:"Reason (Approver Verified)"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"c7"      ,headerText:"Approval Status"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"c2"      ,headerText:"Approve At"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"dcfreqstatusid"      ,headerText:"DCF_REQ_STUS_ID"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"dcfreqapprovereqreasonid"      ,headerText:"ApproveReqReasonID"           ,width:"15%"  ,height:30 , visible:false},
-                                  {dataField:"c8"      ,headerText:"filePath"           ,width:"15%"  ,height:30 , visible:true},                                   
+var columnLayout = [{dataField: "dcfreqno",headerText :"<spring:message code='log.head.requestno'/>"               ,width:  "10%"     ,height:30 , visible:true},               
+							{dataField: "c11",headerText :"<spring:message code='log.head.requestdate'/>"              ,width:  "10%"    ,height:30 , visible:true},                
+							{dataField: "code",headerText :"<spring:message code='log.head.requeststatus'/>"        ,width: "11%"    ,height:30 , visible:true},                
+							{dataField: "dcfsuptypedesc",headerText :"<spring:message code='log.head.type'/>"              ,width:  "15%"     ,height:30 , visible:true},               
+							{dataField: "dcfsuptypedesc1",headerText :"<spring:message code='log.head.category'/>"             ,width:  "14%"    ,height:30 , visible:true},                
+							{dataField: "dcfsuptypedesc2",headerText :"<spring:message code='log.head.subject'/>"       ,width: "15%"    ,height:30 , visible:true},                
+							{dataField: "c12",headerText :"<spring:message code='log.head.requestor'/>"            ,width:  "12.50%"     ,height:30 , visible:true},                
+							{dataField: "c6",headerText :"<spring:message code='log.head.approvalstatus'/>"     ,width: "12.50%"     ,height:30 , visible:true},                
+							{dataField: "dcfreqentryid",headerText :"<spring:message code='log.head.approvalstatus'/>"      ,width: "12.50%"     ,height:30 , visible:false},               
+							{dataField: "name",headerText :"<spring:message code='log.head.requeststatus'/>"               ,width:  "10%"    ,height:30 , visible:false},               
+							{dataField: "c20",headerText :"<spring:message code='log.head.requestby'/>"     ,width: "15%"    ,height:30 , visible:false},               
+							{dataField: "dcfreqremark",headerText :"<spring:message code='log.head.remark'/>"              ,width:  "12.50%"     ,height:30 , visible:false},               
+							{dataField: "dcfReqDesc",headerText :"<spring:message code='log.head.description'/>"        ,width: "15%"    ,height:30 , visible:false},               
+							{dataField: "c19",headerText :"<spring:message code='log.head.requestonbehalf'/>"              ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "c21",headerText :"<spring:message code='log.head.settledate'/>"               ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "dcfreqapproveremark",headerText :"<spring:message code='log.head.dcfreqapproveremark'/>"              ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "dcfreqapproveby",headerText :"<spring:message code='log.head.dcfreqapproveby'/>"              ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "reasondesc1",headerText :"<spring:message code='log.head.reason(approververified)'/>"             ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "c7",headerText :"<spring:message code='log.head.approvalstatus'/>"            ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "c2",headerText :"<spring:message code='log.head.approveat'/>"             ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"               ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "dcfreqapprovereqreasonid",headerText :"<spring:message code='log.head.approvereqreasonid'/>"              ,width:  "15%"     ,height:30 , visible:false},                  
+							{dataField: "c8",headerText :"<spring:message code='log.head.filepath'/>"              ,width:  "15%"     ,height:30 , visible:true}                               
                                ];
     
     
-        var compulsoryLayout = [{dataField:"dcfComFildTypeName"      ,headerText:"Field Type"           ,width:"50%"  ,height:30 , visible:true},
-                            {dataField:"dcfReqComFildRefNo"      ,headerText:"Reference"           ,width:"50%" ,height:30 , visible:true},         
-                  
+var compulsoryLayout = [{dataField: "dcfComFildTypeName",headerText :"<spring:message code='log.head.fieldtype'/>"             ,width:  "50%"     ,height:30 , visible:true},               
+                        {dataField: "dcfReqComFildRefNo",headerText :"<spring:message code='log.head.reference'/>"             ,width:  "50%"    ,height:30 , visible:true}   
                          ];
-        var changeitemLayout = [{dataField:"dcfReqDetFildChg"      ,headerText:"Item"           ,width:"15%"  ,height:30 , visible:true},
-                            {dataField:"dcfReqDetOldData"      ,headerText:"From"           ,width:"15%" ,height:30 , visible:true},
-                            {dataField:"dcfReqDetNwData"      ,headerText:"To"    ,width:"15%" ,height:30 , visible:true},
-                            {dataField:"c3"      ,headerText:"Status"           ,width:"15%"  ,height:30 , visible:true},
-                            {dataField:"c4"      ,headerText:"Settle Date"           ,width:"15%" ,height:30 , visible:true},
-                            {dataField:"dcfReqDetRem"      ,headerText:"Remark"    ,width:"25%" ,height:30 , visible:true},      
+                         
+var changeitemLayout = [{dataField: "dcfReqDetFildChg",headerText :"<spring:message code='log.head.item'/>"            ,width:  "15%"     ,height:30 , visible:true},               
+                        {dataField: "dcfReqDetOldData",headerText :"<spring:message code='log.head.from'/>"            ,width:  "15%"    ,height:30 , visible:true},                
+                        {dataField: "dcfReqDetNwData",headerText :"<spring:message code='log.head.to'/>"        ,width: "15%"    ,height:30 , visible:true},                
+                        {dataField: "c3",headerText :"<spring:message code='log.head.status'/>"            ,width:  "15%"     ,height:30 , visible:true},               
+                        {dataField: "c4",headerText :"<spring:message code='log.head.settledate'/>"            ,width:  "15%"    ,height:30 , visible:true},                
+                        {dataField: "dcfReqDetRem",headerText :"<spring:message code='log.head.remark'/>"       ,width: "25%"    ,height:30 , visible:true}    
                          ];
-        var respondlogLayout = [{dataField:"c2"      ,headerText:"Creator"           ,width:"30%"  ,height:30 , visible:true},
-                            {dataField:"c1"      ,headerText:"Date"           ,width:"30%" ,height:30 , visible:true},
-                            {dataField:"dcfRespnsMsg"      ,headerText:"Remark"    ,width:"40%" ,height:30 , visible:true},
+                         
+var respondlogLayout = [{dataField: "c2",headerText :"<spring:message code='log.head.creator'/>"               ,width:  "30%"     ,height:30 , visible:true},               
+                        {dataField: "c1",headerText :"<spring:message code='log.head.date'/>"              ,width:  "30%"    ,height:30 , visible:true},                
+                        {dataField: "dcfRespnsMsg",headerText :"<spring:message code='log.head.remark'/>"       ,width: "40%"    ,height:30 , visible:true}
                          ];
     
     

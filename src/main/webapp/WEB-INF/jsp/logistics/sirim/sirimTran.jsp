@@ -50,56 +50,56 @@
     var instockgradecomboData = [{"codeId": "A","codeName": "A"}];
     
     // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"trnsitid"      ,headerText:"Transit ID"         ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"trnsitno"      ,headerText:"Transit No"         ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"trnsitdt"      ,headerText:"Transit Date"       ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"trnsitfr"      ,headerText:"From"               ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"trnsitto"      ,headerText:"To"                 ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"trnsitcur"     ,headerText:"Transit Curier"     ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"curiername"     ,headerText:"Transit Curier"     ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"trnsitstusid"  ,headerText:"Status"             ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"trnsitstuscd"  ,headerText:"Status"             ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"trnsitstusnm"  ,headerText:"Status"             ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"crtuserid"     ,headerText:"Create By"          ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"crtusernm"     ,headerText:"Create By"          ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"trnsitcdt"     ,headerText:"Colse Dt"           ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"totitm"        ,headerText:"Total Transfer"     ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"totcnt"        ,headerText:"Total Count"        ,width:"14%" ,height:30 , visible:false}
+var columnLayout = [{dataField: "trnsitid",headerText :"<spring:message code='log.head.transitid'/>"             ,width:    "14%"    ,height:30 , visible:true},                
+							{dataField: "trnsitno",headerText :"<spring:message code='log.head.transitno'/>"             ,width:    "14%"    ,height:30 , visible:true},                
+							{dataField: "trnsitdt",headerText :"<spring:message code='log.head.transitdate'/>"         ,width:  "14%"    ,height:30 , visible:true},                
+							{dataField: "trnsitfr",headerText :"<spring:message code='log.head.from'/>"                ,width:  "14%"    ,height:30 , visible:true},                
+							{dataField: "trnsitto",headerText :"<spring:message code='log.head.to'/>"                    ,width:    "14%"    ,height:30 , visible:true},                
+							{dataField: "trnsitcur",headerText :"<spring:message code='log.head.transitcurier'/>"        ,width:    "14%"    ,height:30 , visible:false},               
+							{dataField: "curiername",headerText :"<spring:message code='log.head.transitcurier'/>"       ,width:    "14%"    ,height:30 , visible:false},               
+							{dataField: "trnsitstusid",headerText :"<spring:message code='log.head.status'/>"                ,width:    "14%"    ,height:30 , visible:false},               
+							{dataField: "trnsitstuscd",headerText :"<spring:message code='log.head.status'/>"                ,width:    "14%"    ,height:30 , visible:false},               
+							{dataField: "trnsitstusnm",headerText :"<spring:message code='log.head.status'/>"                ,width:    "14%"    ,height:30 , visible:true},                
+							{dataField: "crtuserid",headerText :"<spring:message code='log.head.createby'/>"              ,width:   "14%"    ,height:30 , visible:false},               
+							{dataField: "crtusernm",headerText :"<spring:message code='log.head.createby'/>"              ,width:   "16%"    ,height:30 , visible:true},                
+							{dataField: "trnsitcdt",headerText :"<spring:message code='log.head.colsedt'/>"            ,width:  "14%"    ,height:30 , visible:false},               
+							{dataField: "totitm",headerText :"<spring:message code='log.head.totaltransfer'/>"       ,width:    "16%"    ,height:30 , visible:true},                
+							{dataField: "totcnt",headerText :"<spring:message code='log.head.totalcount'/>"         ,width: "14%"    ,height:30 , visible:false} 
                        ];
     
     //detailGrid
-    var detailcolumn = [{dataField:"rnum"      ,headerText:"rnum"               ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"sno"       ,headerText:"Type"               ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"cdesc"     ,headerText:"Srim No"            ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"code"      ,headerText:"Status"             ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"ttcd"      ,headerText:"Close Date"         ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"uname"     ,headerText:"Update By"          ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"stod"      ,headerText:"Update Date"        ,width:"16%" ,height:30 , visible:true},
-                        {dataField:"stii"      ,headerText:"Transit Curier"     ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"stid"      ,headerText:"Transit No"         ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"srsi"      ,headerText:"Transit Date"       ,width:"14%" ,height:30 , visible:false}
+var detailcolumn = [{dataField: "rnum",headerText :"<spring:message code='log.head.rnum'/>"                ,width:  "14%"    ,height:30 , visible:false},               
+							{dataField: "sno",headerText :"<spring:message code='log.head.type'/>"                 ,width:  "16%"    ,height:30 , visible:true},                
+							{dataField: "cdesc",headerText :"<spring:message code='log.head.srimno'/>"              ,width: "16%"    ,height:30 , visible:true},                
+							{dataField: "code",headerText :"<spring:message code='log.head.status'/>"                ,width:    "16%"    ,height:30 , visible:true},                
+							{dataField: "ttcd",headerText :"<spring:message code='log.head.closedate'/>"             ,width:    "16%"    ,height:30 , visible:true},                
+							{dataField: "uname",headerText :"<spring:message code='log.head.updateby'/>"              ,width:   "16%"    ,height:30 , visible:true},                
+							{dataField: "stod",headerText :"<spring:message code='log.head.updatedate'/>"           ,width: "16%"    ,height:30 , visible:true},                
+							{dataField: "stii",headerText :"<spring:message code='log.head.transitcurier'/>"         ,width:    "14%"    ,height:30 , visible:false},               
+							{dataField: "stid",headerText :"<spring:message code='log.head.transitno'/>"             ,width:    "14%"    ,height:30 , visible:false},               
+							{dataField: "srsi",headerText :"<spring:message code='log.head.transitdate'/>"         ,width:  "14%"    ,height:30 , visible:false}
                         
                        ];
     
   //detailGrid
-    var itmcolumn    = [{dataField:"rnum"      ,headerText:"Rnum"              ,width:"33%" ,height:30 , visible:false},
-                        {dataField:"sno"       ,headerText:"Sirim No"          ,width:"33%" ,height:30 , visible:true},
-                        {dataField:"stid"      ,headerText:"Type"              ,width:"33%" ,height:30 , visible:false},
-                        {dataField:"stnm"      ,headerText:"Type"              ,width:"33%" ,height:30 , visible:true},
-                        {dataField:"sloc"      ,headerText:"Location"          ,width:"34%" ,height:30 , visible:true},
-                        {dataField:"sqty"      ,headerText:"Qty"               ,width:"16%" ,height:30 , visible:false}
+var itmcolumn    = [{dataField: "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:   "33%"    ,height:30 , visible:false},               
+							{dataField: "sno",headerText :"<spring:message code='log.head.sirimno'/>"             ,width:   "33%"    ,height:30 , visible:true},                
+							{dataField: "stid",headerText :"<spring:message code='log.head.type'/>"               ,width:   "33%"    ,height:30 , visible:false},               
+							{dataField: "stnm",headerText :"<spring:message code='log.head.type'/>"               ,width:   "33%"    ,height:30 , visible:true},                
+							{dataField: "sloc",headerText :"<spring:message code='log.head.location'/>"           ,width:   "34%"    ,height:30 , visible:true},                
+							{dataField: "sqty",headerText :"<spring:message code='log.head.qty'/>"                 ,width:  "16%"    ,height:30 , visible:false}
                         
                        ];
-    var updcolumn    = [{dataField:"rnum"      ,headerText:"rnum"               ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"cdesc"     ,headerText:"Type"               ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"sno"       ,headerText:"Srim No"            ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"code"      ,headerText:"Status"             ,width:"12%" ,height:30 , visible:true},
-                        {dataField:"ttcd"      ,headerText:"Close Date"         ,width:"13%" ,height:30 , visible:true},
-                        {dataField:"uname"     ,headerText:"Update By"          ,width:"13%" ,height:30 , visible:true},
-                        {dataField:"stod"      ,headerText:"Update Date"        ,width:"13%" ,height:30 , visible:true},
-                        {dataField:"stii"      ,headerText:"Transit Curier"     ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"stid"      ,headerText:"Transit No"         ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"srsi"      ,headerText:"Transit Date"       ,width:"14%" ,height:30 , visible:false},
+var updcolumn    = [{dataField: "rnum",headerText :"<spring:message code='log.head.rnum'/>"                ,width:  "14%"    ,height:30 , visible:false},               
+                    {dataField: "cdesc",headerText :"<spring:message code='log.head.type'/>"                   ,width:  "15%"    ,height:30 , visible:true},                
+                    {dataField: "sno",headerText :"<spring:message code='log.head.srimno'/>"                ,width: "15%"    ,height:30 , visible:true},                
+                    {dataField: "code",headerText :"<spring:message code='log.head.status'/>"                ,width:    "12%"    ,height:30 , visible:true},                
+                    {dataField: "ttcd",headerText :"<spring:message code='log.head.closedate'/>"             ,width:    "13%"    ,height:30 , visible:true},                
+                    {dataField: "uname",headerText :"<spring:message code='log.head.updateby'/>"              ,width:   "13%"    ,height:30 , visible:true},                
+                    {dataField: "stod",headerText :"<spring:message code='log.head.updatedate'/>"           ,width: "13%"    ,height:30 , visible:true},                
+                     {dataField:    "stii",headerText :"<spring:message code='log.head.transitcurier'/>"         ,width:    "14%"    ,height:30 , visible:false},               
+                     {dataField:    "stid",headerText :"<spring:message code='log.head.transitno'/>"             ,width:    "14%"    ,height:30 , visible:false},               
+                     {dataField:    "srsi",headerText :"<spring:message code='log.head.transitdate'/>"         ,width:  "14%"    ,height:30 , visible:false},       
                         {
                             dataField : "undefined",
                             headerText : "",

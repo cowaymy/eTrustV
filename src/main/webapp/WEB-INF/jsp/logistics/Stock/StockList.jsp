@@ -31,38 +31,39 @@
     
     // AUIGrid 칼럼 설정
     
-    var columnLayout = [{dataField:"stkid"             ,headerText:"StockID"           ,width:120 ,height:30, visible : false},
-                        {dataField:"stkcode"           ,headerText:"MaterialCode"         ,width:100 ,height:30},
-                        {dataField:"stkdesc"           ,headerText:"MaterialName"         ,width:350 ,height:30,style :"aui-grid-user-custom-left"},
-                        {dataField:"stkcategoryid"     ,headerText:"CategoryID"      ,width:120,height:30 , visible : false},
-                        {dataField:"codename"          ,headerText:"Category"      ,width:140 ,height:30},
-                        {dataField:"stktypeid"         ,headerText:"TypeID"          ,width:120 ,height:30, visible : false},
-                        {dataField:"codename1"         ,headerText:"Type"          ,width:120 ,height:30},
-                        {dataField:"name"              ,headerText:"Status"    ,width:120 ,height:30},
-                        {dataField:"statuscodeid"      ,headerText:"statuscodeid"    ,width:120 ,height:30 , visible : false},
-                        {dataField:"issirim"           ,headerText:"IsSirim"           ,width:90 ,height:30},
-                        {dataField:"isncv"             ,headerText:"IsNCV"             ,width:90 ,height:30},
-                        {dataField:"serialchk"             ,headerText:"Serial Chk"             ,width:90 ,height:30},
-                        {dataField:"qtypercarton"      ,headerText:"Qty Per Carton" ,width:120 ,height:30},
-                        {dataField:"netweight"         ,headerText:"Net Wgt"         ,width:100 ,height:30},
-                        {dataField:"grossweight"       ,headerText:"Gross Wgt"       ,width:100 ,height:30},
-                        {dataField:"measurementcbm"    ,headerText:"CBM"    ,width:100 ,height:30},
-                        {dataField:"stkgrade"          ,headerText:"Grade"        ,width:100 ,height:30},
-                        {dataField:"c6"                ,headerText:"STK_COMM_AS"        ,width:100 ,height:30},
-                        {dataField:"c7"                ,headerText:"STK_COMM_OS_AS"        ,width:100 ,height:30},
-                        {dataField:"c8"                ,headerText:"STK_COMM_BS"        ,width:100 ,height:30},
-                        {dataField:"c9"                ,headerText:"STK_COMM_OS_BS"        ,width:100 ,height:30},
-                        {dataField:"c10"               ,headerText:"STK_COMM_INS"        ,width:100 ,height:30},
-                        {dataField:"c11"               ,headerText:"STK_COMM_OS_INS"        ,width:100 ,height:30}
+  var columnLayout = [{dataField:   "stkid",headerText :"<spring:message code='log.head.stockid'/>"            ,width:120 ,height:30, visible : false},                         
+							{dataField: "stkcode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:100 ,height:30},                        
+							{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"           ,width:350 ,height:30,style :  "aui-grid-user-custom-left" },                  
+							{dataField: "stkcategoryid",headerText :"<spring:message code='log.head.categoryid'/>"        ,width:120,height:30 , visible : false},                          
+							{dataField: "codename",headerText :"<spring:message code='log.head.category'/>"       ,width:140 ,height:30},                       
+							{dataField: "stktypeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120 ,height:30, visible : false},                          
+							{dataField: "codename1",headerText :"<spring:message code='log.head.type'/>"              ,width:120 ,height:30},                       
+							{dataField: "name",headerText :"<spring:message code='log.head.status'/>"       ,width:120 ,height:30},                         
+							{dataField: "statuscodeid",headerText :"<spring:message code='log.head.statuscodeid'/>"     ,width:120 ,height:30 , visible : false},                       
+							{dataField: "issirim",headerText :"<spring:message code='log.head.issirim'/>"              ,width:90 ,height:30},                       
+							{dataField: "isncv",headerText :"<spring:message code='log.head.isncv'/>"                ,width:90 ,height:30},                         
+							{dataField: "serialchk",headerText :"<spring:message code='log.head.serialchk'/>"                ,width:90 ,height:30},                         
+							{dataField: "qtypercarton",headerText :"<spring:message code='log.head.qtypercarton'/>"  ,width:120 ,height:30},                        
+							{dataField: "netweight",headerText :"<spring:message code='log.head.netwgt'/>"           ,width:100 ,height:30},                        
+							{dataField: "grossweight",headerText :"<spring:message code='log.head.grosswgt'/>"         ,width:100 ,height:30},                          
+							{dataField: "measurementcbm",headerText :"<spring:message code='log.head.cbm'/>"        ,width:100 ,height:30},                         
+							{dataField: "stkgrade",headerText :"<spring:message code='log.head.grade'/>"            ,width:100 ,height:30},                         
+							{dataField: "c6",headerText :"<spring:message code='log.head.stk_comm_as'/>"            ,width:100 ,height:30},                         
+							{dataField: "c7",headerText :"<spring:message code='log.head.stk_comm_os_as'/>"         ,width:100 ,height:30},                         
+							{dataField: "c8",headerText :"<spring:message code='log.head.stk_comm_bs'/>"            ,width:100 ,height:30},                         
+							{dataField: "c9",headerText :"<spring:message code='log.head.stk_comm_os_bs'/>"         ,width:100 ,height:30},                         
+							{dataField: "c10",headerText :"<spring:message code='log.head.stk_comm_ins'/>"          ,width:100 ,height:30},                         
+							{dataField: "c11",headerText :"<spring:message code='log.head.stk_comm_os_ins'/>"           ,width:100 ,height:30} 
+
                        ];
 
-    var filtercolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
-                        {dataField:"stockname"           ,headerText:"Description"   ,width:"50%", editable : false,style :"aui-grid-user-custom-left"},
-                        {dataField:"stock"               ,headerText:"Desc"   ,width:"20%" , visible : false},
-                        {dataField:"typeid"              ,headerText:"Type"          ,width:120 , visible : false},
-                        {dataField:"typenm"              ,headerText:"TypeName"      ,width:"10%", editable : false,style :"aui-grid-user-custom-left"},
-                        {dataField:"period"              ,headerText:"Period"        ,width:"10%", editable : false},
-                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"7%", editable : false},
+  var filtercolumn = [{dataField: "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},                       
+                      {dataField: "stockname",headerText :"<spring:message code='log.head.description'/>"    ,width:  "50%"   , editable : false,style :  "aui-grid-user-custom-left" },          
+                      {dataField: "stock",headerText :"<spring:message code='log.head.desc'/>"       ,width:  "20%"    , visible : false},                
+                      {dataField: "typeid",headerText :"<spring:message code='log.head.type'/>"             ,width:120 , visible : false},                        
+                      {dataField: "typenm",headerText :"<spring:message code='log.head.typename'/>"         ,width:   "10%"   , editable : false,style :  "aui-grid-user-custom-left" },          
+                      {dataField: "period",headerText :"<spring:message code='log.head.period'/>"         ,width: "10%"   , editable : false},                
+                      {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"              ,width:  "7%"    , editable : false}, 
                         {
                             dataField : "",
                             headerText : "",
@@ -78,9 +79,9 @@
                         , editable : false
                         }];
 
-  var sparecolumn = [{dataField:"stockid"             ,headerText:"StockID"       ,width:120 , visible : false},
-                        {dataField:"stockname"           ,headerText:"Description"   ,width:"70%", editable : false,style :"aui-grid-user-custom-left"},
-                        {dataField:"qty"                 ,headerText:"Qty"           ,width:"20%", editable : false},
+  var sparecolumn = [{dataField:  "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},                       
+                     {dataField: "stockname",headerText :"<spring:message code='log.head.description'/>"    ,width:  "70%"   , editable : false,style :  "aui-grid-user-custom-left" },          
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"              ,width:  "20%"   , editable : false},  
                         {
                             dataField : "",
                             headerText : "",
@@ -96,8 +97,8 @@
                         , editable : false
                         }]; 
     
-var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"     ,width:120 , visible : false},
-                     {dataField:"packagename"         ,headerText:"Description"   ,width:"70%",  style :"aui-grid-user-custom-left", 
+  var servicecolumn = [{dataField:    "packageid",headerText :"<spring:message code='log.head.packageid'/>"        ,width:120 , visible : false},                         
+                       {dataField:    "packagename",headerText :"<spring:message code='log.head.description'/>"      ,width:  "70%"   ,  style :  "aui-grid-user-custom-left" ,   
                       labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
                      var retStr = "";
                      for (var i = 0, len = srvMembershipList.length; i < len; i++) {
@@ -154,12 +155,12 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                      ];
     
 
-    var stockimgcolumn =[{dataField : "imgurl",        headerText : "",   prefix : "/resources", 
+  var stockimgcolumn =[{dataField :   "imgurl"  ,headerText:    ""  ,   prefix :    "/resources"    ,   
                             renderer : { type : "ImageRenderer", imgHeight : 24//, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
                             //altField : "country" // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
                           }},
-                          {dataField:"codenm"         ,headerText:"Angle"     ,width:200 },
-                          {dataField : "undefined"    ,headerText:"Preview",
+                          {dataField:    "codenm",headerText :"<spring:message code='log.head.angle'/>"       ,width:200 },                          
+                          {dataField :   "undefined" ,headerText :"<spring:message code='log.head.preview'/>"  ,   
                             renderer : {
                                 type : "ButtonRenderer",
                                 labelText : "Show Image",
@@ -168,23 +169,23 @@ var servicecolumn = [{dataField:"packageid"           ,headerText:"PACKAGEID"   
                                 }
                                 }
                           },
-                          {dataField:"angeid"         ,headerText:"angeid"    ,width:120 , visible : false},
-                          {dataField:"scodeid"        ,headerText:"scodeid"   ,width:120 , visible : false},
-                          {dataField:"stkid"          ,headerText:"stkid"     ,width:120 , visible : false},
-                          {dataField:"imgid"          ,headerText:"imgid"     ,width:120 , visible : false},
-                          {dataField:"udate"          ,headerText:"udate"     ,width:120 , visible : false},
-                          {dataField:"uuser"          ,headerText:"uuser"     ,width:120, visible : false},
-                          {dataField:"cdate"          ,headerText:"cdate"     ,width:120, visible : false},
-                          {dataField:"cuser"          ,headerText:"cuser"     ,width:120 , visible : false}];
+                          {dataField:    "angeid",headerText :"<spring:message code='log.head.angeid'/>"     ,width:120 , visible : false},                          
+                          {dataField:    "scodeid",headerText :"<spring:message code='log.head.scodeid'/>"      ,width:120 , visible : false},                       
+                          {dataField:    "stkid",headerText :"<spring:message code='log.head.stkid'/>"        ,width:120 , visible : false},                         
+                          {dataField:    "imgid",headerText :"<spring:message code='log.head.imgid'/>"        ,width:120 , visible : false},                         
+                          {dataField:    "udate",headerText :"<spring:message code='log.head.udate'/>"        ,width:120 , visible : false},                         
+                          {dataField:    "uuser",headerText :"<spring:message code='log.head.uuser'/>"        ,width:120, visible : false},                          
+                          {dataField:    "cdate",headerText :"<spring:message code='log.head.cdate'/>"        ,width:120, visible : false},                          
+                          {dataField:    "cuser",headerText :"<spring:message code='log.head.cuser'/>"        ,width:120 , visible : false}];
     
     var pricehiscolumn=[
-                                {dataField:"pricecost"          ,headerText:"Cost"               ,width:"14%" , visible : true},
-                                {dataField:"amt"          ,headerText:"Normal Price"     ,width:"14%" , visible : true},
-                                {dataField:"pricepv"          ,headerText:"Point of <br> Value (PV)"     ,width:"15%" , visible : true},
-                                {dataField:"mrental"          ,headerText:"Monthly <br> Rental"     ,width:"14%" , visible : true},
-                                {dataField:"pricerpf"          ,headerText:"Rental <br> Deposit"     ,width:"14%" , visible : true},
-                                {dataField:"penalty"          ,headerText:"Penalty <br> Charges"     ,width:"14%" , visible : true},
-                                {dataField:"tradeinpv"          ,headerText:"Trade In <br> (PV) Value"     ,width:"15%" , visible : true},
+                        {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "14%"    , visible : true},                 
+                        {dataField:    "amt",headerText :"<spring:message code='log.head.normalprice'/>"        ,width:    "14%"    , visible : true},                 
+                        {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "15%"    , visible : true},                 
+                        {dataField:    "mrental"   ,headerText:    "<spring:message code='log.head.monthlyrental'/>"        ,width:    "14%"    , visible : true},                 
+                        {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "14%"    , visible : true},                 
+                        {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "14%"    , visible : true},                 
+                        {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "15%"    , visible : true}, 
                                ];
 
  // 그리드 속성 설정

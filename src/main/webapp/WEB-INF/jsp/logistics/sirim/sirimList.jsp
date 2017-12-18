@@ -34,9 +34,9 @@
         
 
     // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"sirimNo"      ,headerText:"Sirim No"           ,width:"30%"  ,height:30 , visible:true},
-                        {dataField:"sirimTypeName"      ,headerText:"Type"           ,width:"30%" ,height:30 , visible:true},
-                        {dataField:"sirimLoc"    ,headerText:"Location"    ,width:"40%" ,height:30 , visible:true},
+var columnLayout = [{dataField: "sirimNo",headerText :"<spring:message code='log.head.sirimno'/>"              ,width:  "30%"     ,height:30 , visible:true},               
+{dataField: "sirimTypeName",headerText :"<spring:message code='log.head.type'/>"               ,width:  "30%"    ,height:30 , visible:true},                
+{dataField: "sirimLoc",headerText :"<spring:message code='log.head.location'/>"     ,width: "40%"    ,height:30 , visible:true}
                        ];
     
  /* 그리드 속성 설정
