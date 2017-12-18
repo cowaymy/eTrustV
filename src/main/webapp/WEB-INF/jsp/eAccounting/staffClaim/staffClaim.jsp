@@ -110,21 +110,25 @@ function fn_clearData() {
     /* $("#form_newStaffClaim").each(function() {
         this.reset();
     }); */
-    
-    $("#invcDt").val("");
-    $("#supplirName").val("");
-    $("#gstRgistNo").val("");
-    $("#invcType").val("F");
-    $("#invcNo").val("");
-    $("#expDesc").val("");
-    
-    AUIGrid.destroy(myGridID);
-    myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
-    
-    fn_myGridSetEvent();
-    
-    $("#attachTd").html("");
-    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
+    if($(":input:radio[name=expGrp]:checked").val() == "1"){
+        fn_destroyMileageGrid();
+        fn_createMileageAUIGrid();
+    } else {
+    	$("#invcDt").val("");
+        $("#supplirName").val("");
+        $("#gstRgistNo").val("");
+        $("#invcType").val("F");
+        $("#invcNo").val("");
+        $("#expDesc").val("");
+        
+        fn_destroyMyGrid();
+        fn_createMyGrid();
+        
+        fn_myGridSetEvent();
+        
+        $("#attachTd").html("");
+        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
+    }
     
     clmSeq = 0;
 }
@@ -253,12 +257,12 @@ function fn_setPopExpType() {
 }
 
 //AUIGrid 를 생성합니다.
-function fn_createAUIGrid() {
+function fn_createMileageAUIGrid() {
     // 이미 생성되어 있는 경우
-    /* console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
+    console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
     if(AUIGrid.isCreated("#mileage_grid_wrap")) {
-    	fn_destroyGrid();
-    } */
+    	fn_destroyMileageGrid();
+    }
 
     // 실제로 #grid_wrap 에 그리드 생성
     mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
@@ -267,18 +271,18 @@ function fn_createAUIGrid() {
 }
 
 // 그리드를 제거합니다.
-function fn_destroyGrid() {
+function fn_destroyMileageGrid() {
     AUIGrid.destroy("#mileage_grid_wrap");
     mileageGridID = null;
 }
 
 function fn_mileageAdd() {
 	if(AUIGrid.getRowCount(mileageGridID) > 0) {
-		AUIGrid.addRow(mileageGridID, {clamUn:AUIGrid.getCellValue(mileageGridID, 0, "clamUn"),cur:"MYR",carMilag:0,carMilagAmt:0,tollAmt:0,parkingAmt:0}, "last");
+		AUIGrid.addRow(mileageGridID, {clamUn:AUIGrid.getCellValue(mileageGridID, 0, "clamUn"),expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",carMilag:0,carMilagAmt:0,tollAmt:0,parkingAmt:0}, "last");
     } else {
         Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J4"}, function(result) {
             console.log(result);
-            AUIGrid.addRow(mileageGridID, {clamUn:result.clamUn,cur:"MYR",carMilag:0,carMilagAmt:0,tollAmt:0,parkingAmt:0}, "last");
+            AUIGrid.addRow(mileageGridID, {clamUn:result.clamUn,expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",carMilag:0,carMilagAmt:0,tollAmt:0,parkingAmt:0}, "last");
         });
     }
 }
@@ -399,10 +403,10 @@ function fn_checkEmpty() {
 //AUIGrid 를 생성합니다.
 function fn_createMyGrid() {
     // 이미 생성되어 있는 경우
-    /* console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
-    if(AUIGrid.isCreated("#mileage_grid_wrap")) {
-        fn_destroyGrid();
-    } */
+    console.log("isCreated : " + AUIGrid.isCreated("#my_grid_wrap"));
+    if(AUIGrid.isCreated("#my_grid_wrap")) {
+        fn_destroyMyGrid();
+    }
 
     // 실제로 #grid_wrap 에 그리드 생성
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
@@ -420,11 +424,11 @@ function fn_destroyMyGrid() {
 
 function fn_addMyGridRow() {
     if(AUIGrid.getRowCount(myGridID) > 0) {
-        AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+        AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
     } else {
         Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J4"}, function(result) {
             console.log(result);
-            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,expGrp:$(":input:radio[name=expGrp]:checked").val(),cur:"MYR",gstBeforAmt:0,gstAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
         });
     }
 }
@@ -466,6 +470,8 @@ function fn_addRow() {
                                 glAccCodeName : "Car Mileage Expense",
                                 budgetCode : "99999",
                                 budgetCodeName : "Car Mileage Expense",
+                                clamUn : gridDataList[i].clamUn,
+                                expGrp : gridDataList[i].expGrp,
                         		carMilagDt : gridDataList[i].carMilagDt,
                         		locFrom : gridDataList[i].locFrom,
                         		locTo : gridDataList[i].locTo,
@@ -488,8 +494,8 @@ function fn_addRow() {
                     fn_getAllTotAmt();
                     
                     // Grid 초기화
-                    fn_destroyGrid();
-                    fn_createAUIGrid();
+                    fn_destroyMileageGrid();
+                    fn_createMileageAUIGrid();
                 });
         	} else {
         		formData.append("atchFileGrpId", atchFileGrpId);
@@ -516,6 +522,8 @@ function fn_addRow() {
                                 glAccCodeName : "Car Mileage Expense",
                                 budgetCode : "99999",
                                 budgetCodeName : "Car Mileage Expense",
+                                clamUn : gridDataList[i].clamUn,
+                                expGrp : gridDataList[i].expGrp,
                                 carMilagDt : gridDataList[i].carMilagDt,
                                 locFrom : gridDataList[i].locFrom,
                                 locTo : gridDataList[i].locTo,
@@ -545,8 +553,8 @@ function fn_addRow() {
                     clmSeq = 0;
                     
                     // Grid 초기화
-                    fn_destroyGrid();
-                    fn_createAUIGrid();
+                    fn_destroyMileageGrid();
+                    fn_createMileageAUIGrid();
                 });
         	}
         } else {
@@ -713,7 +721,6 @@ function fn_insertStaffClaimExp(st) {
         var data = {
                 gridDataList : gridDataList
                 ,allTotAmt : Number($("#allTotAmt_text").text().replace(/,/gi, ""))
-                ,expGrp : $(":input:radio[name=expGrp]:checked").val()
         }
         console.log(data);
         Common.ajax("POST", "/eAccounting/staffClaim/insertStaffClaimExp.do", data, function(result) {
@@ -756,152 +763,166 @@ function fn_selectStaffClaimInfo() {
             ,clmSeq : clmSeq
             ,clamUn : clamUn
     };
-    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimInfo.do?_cacheId=" + Math.random(), obj, function(result) {
+    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimInfo.do?_cacheId=" + Math.random(), obj, fn_setStaffClaimInfo);
+}
+
+function fn_setStaffClaimInfo(result) {
+	console.log(result);
+    // Expense Type Name == Car Mileage Expense
+    //$("#expTypeName").val() == "Car Mileage Expense"
+    // WebInvoice Test는 Test
+    if(result.expGrp == "1") {
+    	console.log("carMileage_radio checked");
+    	$("#normalExp_radio").prop("checked", false);
+    	$("#carMileage_radio").prop("checked", true);
+    	fn_checkExpGrp();
+        
+        $("#newCostCenter").val(result.costCentr);
+        $("#newCostCenterText").val(result.costCentrName);
+        $("#newMemAccId").val(result.memAccId);
+        $("#newMemAccName").val(result.memAccName);
+        $("#bankCode").val(result.bankCode);
+        $("#bankName").val(result.bankName);
+        $("#bankAccNo").val(result.bankAccNo);
+        $("#newClmMonth").val(result.clmMonth);
+        $("#expType").val(result.expType);
+        $("#expTypeName").val(result.expTypeName);
+        $("#glAccCode").val(result.glAccCode);
+        $("#glAccCodeName").val(result.glAccCodeName);
+        $("#budgetCode").val(result.budgetCode);
+        $("#budgetCodeName").val(result.budgetCodeName);
+        
+        // TODO attachFile
+        attachList = result.attachList;
+        console.log(attachList);
+        console.log(attachList.length);
+        if(attachList.length > 0) {
+        	for(var i = 0; i < attachList.length; i++) {
+        		result.itemGrp[i].atchFileId = attachList[i].atchFileId;
+                result.itemGrp[i].atchFileName = attachList[i].atchFileName;
+                var str = attachList[i].atchFileName.split(".");
+                result.itemGrp[i].fileExtsn = str[1];
+                result.itemGrp[i].fileCnt = 1;
+        	}
+        }
         console.log(result);
-        // Expense Type Name == Car Mileage Expense
-        //$("#expTypeName").val() == "Car Mileage Expense"
-        // WebInvoice Test는 Test
-        if(result.expGrp == 1) {
-        	$("#newCostCenter").val(result.costCentr);
-            $("#newCostCenterText").val(result.costCentrName);
-            $("#newMemAccId").val(result.memAccId);
-            $("#newMemAccName").val(result.memAccName);
-            $("#bankCode").val(result.bankCode);
-            $("#bankName").val(result.bankName);
-            $("#bankAccNo").val(result.bankAccNo);
-            $("#newClmMonth").val(result.clmMonth);
-            $("#expType").val(result.expType);
-            $("#expTypeName").val(result.expTypeName);
-            $("#glAccCode").val(result.glAccCode);
-            $("#glAccCodeName").val(result.glAccCodeName);
-            $("#budgetCode").val(result.budgetCode);
-            $("#budgetCodeName").val(result.budgetCodeName);
-        	
-        	// TODO attachFile
-            attachList = result.attachList;
-            console.log(attachList);
-            console.log(attachList.length);
-            if(attachList.length > 0) {
-            	result.atchFileId = attachList[0].atchFileId;
-            	result.atchFileName = attachList[0].atchFileName;
-            	var str = attachList[0].atchFileName.split(".");
-            	result.fileExtsn = str[1];
-            	result.fileCnt = attachList.length;
-            }
-            console.log(result);
-            
-            AUIGrid.setGridData(mileageGridID, result);
-            
-            AUIGrid.bind(mileageGridID, "cellDoubleClick", function( event ) {
-                console.log("mileageGridID cellDoubleClick");
-                if(event.dataField == "atchFileName") {
-                    console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                    console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId + " CellDoubleClick atchFileId : " + event.item.atchFileId);
-                    if(event.item.fileCnt > 1) {
-                        atchFileGrpId = event.item.atchFileGrpId;
-                        fn_fileListPop();
+        
+        AUIGrid.setGridData(mileageGridID, result.itemGrp);
+        
+        AUIGrid.bind(mileageGridID, "cellDoubleClick", function( event ) {
+            console.log("mileageGridID cellDoubleClick");
+            if(event.dataField == "atchFileName") {
+                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId + " CellDoubleClick atchFileId : " + event.item.atchFileId);
+                if(event.item.fileCnt > 1) {
+                    atchFileGrpId = event.item.atchFileGrpId;
+                    fn_fileListPop();
+                } else {
+                    var data = {
+                            atchFileGrpId : event.item.atchFileGrpId,
+                            atchFileId : event.item.atchFileId
+                    };
+                    if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
+                        // TODO View
+                        console.log(data);
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                            console.log(result);
+                            var fileSubPath = result.fileSubPath;
+                            fileSubPath = fileSubPath.replace('\', '/'');
+                            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                        });
                     } else {
-                        var data = {
-                                atchFileGrpId : event.item.atchFileGrpId,
-                                atchFileId : event.item.atchFileId
-                        };
-                        if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
-                            // TODO View
-                            console.log(data);
-                            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                                console.log(result);
-                                var fileSubPath = result.fileSubPath;
-                                fileSubPath = fileSubPath.replace('\', '/'');
-                                console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                                window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
-                            });
-                        } else {
-                            Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
-                                console.log(result);
-                                var fileSubPath = result.fileSubPath;
-                                fileSubPath = fileSubPath.replace('\', '/'');
-                                console.log("/file/fileDown.do?subPath=" + fileSubPath
-                                        + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                                window.open("/file/fileDown.do?subPath=" + fileSubPath
+                        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                            console.log(result);
+                            var fileSubPath = result.fileSubPath;
+                            fileSubPath = fileSubPath.replace('\', '/'');
+                            console.log("/file/fileDown.do?subPath=" + fileSubPath
                                     + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                            });
-                        }
+                            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                        });
+                    }
+                }
+            }
+        });
+    } else {
+    	console.log("normalExp_radio checked");
+    	$("#carMileage_radio").prop("checked", false);
+    	$("#normalExp_radio").prop("checked", true);
+    	fn_checkExpGrp();
+        
+        $("#newCostCenter").val(result.costCentr);
+        $("#newCostCenterText").val(result.costCentrName);
+        $("#newMemAccId").val(result.memAccId);
+        $("#newMemAccName").val(result.memAccName);
+        $("#bankCode").val(result.bankCode);
+        $("#bankName").val(result.bankName);
+        $("#bankAccNo").val(result.bankAccNo);
+        $("#newClmMonth").val(result.clmMonth);
+        $("#supplir").val(result.supplir);
+        $("#supplirName").val(result.supplirName);
+        $("#invcType").val(result.invcType);
+        $("#invcNo").val(result.invcNo);
+        $("#invcDt").val(result.invcDt);
+        $("#gstRgistNo").val(result.gstRgistNo);
+        $("#expDesc").val(result.expDesc);
+        
+        AUIGrid.setGridData(myGridID, result.itemGrp);
+        
+        // TODO attachFile
+        attachList = result.attachList;
+        console.log(attachList);
+        console.log(attachList.length);
+        if(attachList.length > 0) {
+            $("#attachTd").html("");
+            for(var i = 0; i < attachList.length; i++) {
+                if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
+                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
+                } else {
+                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                }
+            }
+            
+            // 파일 다운
+            $(".input_text").dblclick(function() {
+                var oriFileName = $(this).val();
+                var fileGrpId;
+                var fileId;
+                for(var i = 0; i < attachList.length; i++) {
+                    if(attachList[i].atchFileName == oriFileName) {
+                        fileGrpId = attachList[i].atchFileGrpId;
+                        fileId = attachList[i].atchFileId;
+                    }
+                }
+                fn_atchViewDown(fileGrpId, fileId);
+            });
+            // 파일 수정
+            $("#form_newStaffClaim :file").change(function() {
+                var div = $(this).parents(".auto_file2");
+                var oriFileName = div.find(":text").val();
+                console.log(oriFileName);
+                for(var i = 0; i < attachList.length; i++) {
+                    if(attachList[i].atchFileName == oriFileName) {
+                        update.push(attachList[i].atchFileId);
+                        console.log(JSON.stringify(update));
                     }
                 }
             });
-        } else {
-        	$("#newCostCenter").val(result.costCentr);
-            $("#newCostCenterText").val(result.costCentrName);
-            $("#newMemAccId").val(result.memAccId);
-            $("#newMemAccName").val(result.memAccName);
-            $("#bankCode").val(result.bankCode);
-            $("#bankName").val(result.bankName);
-            $("#bankAccNo").val(result.bankAccNo);
-            $("#newClmMonth").val(result.clmMonth);
-            $("#supplir").val(result.supplir);
-            $("#supplirName").val(result.supplirName);
-            $("#invcType").val(result.invcType);
-            $("#invcNo").val(result.invcNo);
-            $("#invcDt").val(result.invcDt);
-            $("#gstRgistNo").val(result.gstRgistNo);
-            $("#expDesc").val(result.expDesc);
-            
-            AUIGrid.setGridData(myGridID, result.itemGrp);
-            
-            // TODO attachFile
-            attachList = result.attachList;
-            console.log(attachList);
-            console.log(attachList.length);
-            if(attachList.length > 0) {
-                $("#attachTd").html("");
+            // 파일 삭제
+            $(".auto_file2 a:contains('Delete')").click(function() {
+                var div = $(this).parents(".auto_file2");
+                var oriFileName = div.find(":text").val();
+                console.log(oriFileName);   
                 for(var i = 0; i < attachList.length; i++) {
-                    if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
-                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
-                    } else {
-                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                    if(attachList[i].atchFileName == oriFileName) {
+                        remove.push(attachList[i].atchFileId);
+                        console.log(JSON.stringify(remove));
                     }
                 }
-                
-                // 파일 다운
-                $(".input_text").dblclick(function() {
-                    var oriFileName = $(this).val();
-                    var fileGrpId;
-                    var fileId;
-                    for(var i = 0; i < attachList.length; i++) {
-                        if(attachList[i].atchFileName == oriFileName) {
-                            fileGrpId = attachList[i].atchFileGrpId;
-                            fileId = attachList[i].atchFileId;
-                        }
-                    }
-                    fn_atchViewDown(fileGrpId, fileId);
-                });
-                // 파일 수정
-                $("#form_newStaffClaim :file").change(function() {
-                    var div = $(this).parents(".auto_file2");
-                    var oriFileName = div.find(":text").val();
-                    console.log(oriFileName);
-                    for(var i = 0; i < attachList.length; i++) {
-                        if(attachList[i].atchFileName == oriFileName) {
-                            update.push(attachList[i].atchFileId);
-                            console.log(JSON.stringify(update));
-                        }
-                    }
-                });
-                // 파일 삭제
-                $(".auto_file2 a:contains('Delete')").click(function() {
-                    var div = $(this).parents(".auto_file2");
-                    var oriFileName = div.find(":text").val();
-                    console.log(oriFileName);   
-                    for(var i = 0; i < attachList.length; i++) {
-                        if(attachList[i].atchFileName == oriFileName) {
-                            remove.push(attachList[i].atchFileId);
-                            console.log(JSON.stringify(remove));
-                        }
-                    }
-                });
-            }
+            });
         }
-    });
+    }
 }
 
 function fn_atchViewDown(fileGrpId, fileId) {
@@ -1008,17 +1029,22 @@ function fn_checkExpGrp() {
 	// Expense Type Name == Car Mileage Expense
     //$("#expTypeName").val() == "Car Mileage Expense"
     // WebInvoice Test는 Test
+    console.log("checkExpGrp Action");
     if($(":input:radio[name=expGrp]:checked").val() == "1") {
+    	console.log("createMileageGrid");
         $("#noMileage").hide();
         $("#myGird_btn").hide();
         fn_destroyMyGrid();
-        fn_createAUIGrid();
+        fn_clearData();
+        //fn_createMileageAUIGrid();
         $("#mileage_btn").show();
     } else {
-        fn_destroyGrid();
+    	console.log("createMyGrid");
         $("#mileage_btn").hide();
         $("#noMileage").show();
-        fn_createMyGrid();
+        fn_destroyMileageGrid();
+        fn_clearData();
+        //fn_createMyGrid();
         $("#myGird_btn").show();
     }
 }

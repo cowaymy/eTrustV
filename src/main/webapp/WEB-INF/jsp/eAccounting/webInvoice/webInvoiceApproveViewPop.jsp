@@ -52,7 +52,7 @@ var myColumnLayout = [ {
     formatString : "#,##0.00"
 }, {
     dataField : "taxNonClmAmt",
-    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"

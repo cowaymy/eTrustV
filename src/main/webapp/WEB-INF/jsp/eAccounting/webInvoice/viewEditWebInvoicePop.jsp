@@ -47,6 +47,7 @@ var obj = {
         ,totAmt : Number("${data.totAmt}")
         ,expDesc : "${data.expDesc}"
         ,clamUn : "${data.clamUn}"
+        ,utilNo : "${data.utilNo}"
 };
 gridDataList.push(obj);
 </c:forEach>
@@ -64,7 +65,7 @@ attachmentList.push(obj);
 </c:forEach>
 var myColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -211,6 +212,9 @@ var myColumnLayout = [ {
 }
 ];
 var approvalColumnLayout = [ {
+    dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
     dataField : "budgetCode",
     headerText : '<spring:message code="expense.Activity" />',
     editable : false
@@ -435,22 +439,33 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_approveLinePop() {
-	var checkResult = fn_checkEmpty();
-    
-    if(!checkResult){
-        return false;
+	var data = {
+			memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
     }
-    
-	// 수정 후 temp save가 아닌 바로 submit
-    // 고려하여 update 후 approve
-    // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
-    if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
-    	fn_attachmentUpload("");
-    } else {
-    	fn_attachmentUpdate("");
-    }
-	
-    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+        console.log(result);
+        if(result.data) {
+        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+        } else {
+        	var checkResult = fn_checkEmpty();
+            
+            if(!checkResult){
+                return false;
+            }
+            
+            // 수정 후 temp save가 아닌 바로 submit
+            // 고려하여 update 후 approve
+            // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+            if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+                fn_attachmentUpload("");
+            } else {
+                fn_attachmentUpdate("");
+            }
+            
+            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+        }
+    });
 }
 
 function fn_atchViewDown(fileGrpId, fileId) {
@@ -478,15 +493,26 @@ function fn_atchViewDown(fileGrpId, fileId) {
 }
 
 function fn_tempSave() {
-var checkResult = fn_checkEmpty();
-    
-    if(checkResult){
-    	if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
-            fn_attachmentUpload(callType);
-        } else {
-            fn_attachmentUpdate(callType);
-        }
+	var data = {
+			memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
     }
+    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+        console.log(result);
+        if(result.data) {
+        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+        } else {
+        	var checkResult = fn_checkEmpty();
+            
+            if(checkResult){
+                if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+                    fn_attachmentUpload(callType);
+                } else {
+                    fn_attachmentUpdate(callType);
+                }
+            }
+        }
+    });
 }
 
 function fn_attachmentUpload(st) {
@@ -565,6 +591,7 @@ function fn_setGridData(data) {
 <input type="hidden" id="newCostCenter" name="costCentr" value="${webInvoiceInfo.costCentr}">
 <input type="hidden" id="bankCode" name="bankCode" value="${webInvoiceInfo.bankCode}">
 <input type="hidden" id="totAmt" name="totAmt" value="${webInvoiceInfo.totAmt}">
+<input type="hidden" id="crtUserId" name="crtUserId" value="${webInvoiceInfo.crtUserId}">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -579,13 +606,13 @@ function fn_setGridData(data) {
 	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" value="${webInvoiceInfo.invcDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate" value="${webInvoiceInfo.crtDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
+	<td><input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate" value="${webInvoiceInfo.crtDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${webInvoiceInfo.costCentrName}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="crtUserId" name="crtUserId" value="${webInvoiceInfo.crtUserId}" /></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${webInvoiceInfo.crtUserName}" /></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
@@ -613,8 +640,8 @@ function fn_setGridData(data) {
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bankAccount" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo" value="${webInvoiceInfo.bankAccNo}" /></td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
+	<td><input type="text" title="" placeholder="" class="w100p" id="utilNo" name="utilNo" value="${webInvoiceInfo.utilNo}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
@@ -647,7 +674,7 @@ function fn_setGridData(data) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>>${webInvoiceInfo.invcRem}</textarea></td>
+	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem" placeholder="Enter up to 200 characters" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>>${webInvoiceInfo.invcRem}</textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->

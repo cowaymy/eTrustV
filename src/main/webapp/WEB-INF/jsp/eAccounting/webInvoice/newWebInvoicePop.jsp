@@ -28,7 +28,7 @@ var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var myColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -282,29 +282,51 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_approveLinePop() {
-	var checkResult = fn_checkEmpty();
-    
-    if(!checkResult){
-        return false;
+	var data = {
+			memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
     }
-    
-    // tempSave를 하지 않고 바로 submit인 경우
-    if(FormUtil.isEmpty($("#clmNo").val())) {
-        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
-        fn_attachmentUpload("");
-    } else {
-    	fn_updateWebInvoiceInfo("");
-    }
-    
-    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+        console.log(result);
+        if(result.data) {
+        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+        } else {
+            var checkResult = fn_checkEmpty();
+            
+            if(!checkResult){
+                return false;
+            }
+            
+            // tempSave를 하지 않고 바로 submit인 경우
+            if(FormUtil.isEmpty($("#clmNo").val())) {
+                // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
+                fn_attachmentUpload("");
+            } else {
+                fn_updateWebInvoiceInfo("");
+            }
+            
+            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+        }
+    });
 }
 
 function fn_tempSave() {
-	var checkResult = fn_checkEmpty();
-	
-	if(checkResult){
-		fn_attachmentUpload(callType);
-	}
+	var data = {
+            memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
+    }
+    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+        console.log(result);
+        if(result.data) {
+        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+        } else {
+        	var checkResult = fn_checkEmpty();
+            
+            if(checkResult){
+                fn_attachmentUpload(callType);
+            }
+        }
+    });
 }
 
 function fn_attachmentUpload(st) {
@@ -382,6 +404,7 @@ function fn_updateWebInvoiceInfo(st) {
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="totAmt" name="totAmt">
+<input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -396,13 +419,13 @@ function fn_updateWebInvoiceInfo(st) {
 	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt"/></td>
 	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="keyDate" name="keyDate"/></td>
+	<td><input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="crtUserId" name="crtUserId" value="${userId}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
@@ -430,8 +453,8 @@ function fn_updateWebInvoiceInfo(st) {
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bankAccount" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankAccNo" name="bankAccNo"/></td>
-	<th scope="row"></th>
-	<td></td>
+	<th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
+	<td><input type="text" title="" placeholder="" class="w100p" id="utilNo" name="utilNo"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
@@ -443,7 +466,7 @@ function fn_updateWebInvoiceInfo(st) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.remark" /></th>
-	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem"></textarea></td>
+	<td colspan="3"><textarea cols="20" rows="5" id="invcRem" name="invcRem" placeholder="Enter up to 200 characters"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->

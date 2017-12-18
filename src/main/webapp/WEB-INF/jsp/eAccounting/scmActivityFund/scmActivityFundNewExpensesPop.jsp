@@ -29,7 +29,7 @@ var update = new Array();
 var remove = new Array();
 var newGridColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -191,7 +191,7 @@ var newGridID;
 
 var myGridColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴

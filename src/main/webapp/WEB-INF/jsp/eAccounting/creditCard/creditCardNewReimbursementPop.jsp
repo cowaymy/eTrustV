@@ -35,7 +35,7 @@ var update = new Array();
 var remove = new Array();
 var newGridColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -62,6 +62,12 @@ var newGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "costCentr",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "sCostCentr",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "sCostCentrName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmMonth",
@@ -185,7 +191,7 @@ var newGridID;
 
 var myGridColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -332,8 +338,7 @@ $(document).ready(function () {
     
     setInputFile2();
     
-    $("#supplier_search_btn").click();
-    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
+    $("#search_sCostCentr_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
     $("#supply_search_btn").click(fn_supplierSearchPop);
     $("#clear_btn").click(fn_clearData);
@@ -408,6 +413,7 @@ function fn_tempSave() {
 <input type="hidden" id="newChrgUserId" name="chrgUserId">
 <input type="hidden" id="newSupply" name="supply">
 <input type="hidden" id="newCostCenter" name="costCentr">
+<input type="hidden" id="sCostCentrName" name="sCostCentrName">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="expType" name="expType">
 <input type="hidden" id="glAccCode" name="glAccCode">
@@ -465,7 +471,7 @@ function fn_tempSave() {
 	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt"/></td>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" id="sCostCenterText" readonly="readonly"/></td>
+	<td><input type="text" title="" placeholder="" class="" id="sCostCentr" name="sCostCentr"/><a href="#" class="search_btn" id="search_sCostCentr_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>

@@ -558,6 +558,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,ATCH_FILE_GRP_ID
         ,EXP_DESC
         ,CLAM_UN
+        ,UTIL_NO
         ,CRT_DT
         ,CRT_USER_ID
         ,UPD_DT
@@ -586,6 +587,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{atchFileGrpId}
        ,#{expDesc}
        ,#{clamUn}
+       ,#{utilNo}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -626,6 +628,7 @@ SELECT T1.CLM_SEQ,
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC,
        T1.CLAM_UN, 
+       T1.UTIL_NO,
        T3.TOT_AMT  AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO 
 FROM   FCM0014D T1 
@@ -673,7 +676,8 @@ SELECT T1.CLM_SEQ,
        T1.NON_CLM_GST_AMT, 
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
-       T1.EXP_DESC 
+       T1.EXP_DESC,
+       T1.UTIL_NO 
 FROM   FCM0014D T1
        LEFT JOIN FCM0013M T2 
               ON T1.CLM_NO = T2.CLM_NO 
@@ -759,6 +763,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,NON_CLM_GST_AMT = #{nonClmGstAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
+       ,UTIL_NO = #{utilNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}     
@@ -793,6 +798,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
        ,CLAM_UN
+       ,UTIL_NO
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -823,6 +829,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{expDesc}
        ,#{atchFileGrpId}
        ,#{clamUn}
+       ,#{utilNo}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE

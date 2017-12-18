@@ -62,7 +62,6 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 		
 		masterData.put("clmNo", clmNo);
 		masterData.put("allTotAmt", params.get("allTotAmt"));
-		masterData.put("expGrp", params.get("expGrp"));
 		masterData.put("userId", params.get("userId"));
 		masterData.put("userName", params.get("userName"));
 		
@@ -81,8 +80,8 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 			// Expense Type Name == Car Mileage Expense
 	        //$("#expTypeName").val() == "Car Mileage Expense"
 	        // WebInvoice Test는 Test
-			LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
-			if("1".equals(params.get("expGrp"))) {
+			LOGGER.debug("expGrp =====================================>>  " + item.get("expGrp"));
+			if("1".equals(item.get("expGrp"))) {
 				LOGGER.debug("insertStaffClaimExpMileage =====================================>>  " + item);
 				staffClaimMapper.insertStaffClaimExpMileage(item);
 			}
@@ -132,8 +131,8 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 				// Expense Type Name == Car Mileage Expense
 		        //$("#expTypeName").val() == "Car Mileage Expense"
 		        // WebInvoice Test는 Test
-				LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
-				if("1".equals(params.get("expGrp"))) {
+				LOGGER.debug("expGrp =====================================>>  " + hm.get("expGrp"));
+				if("1".equals(hm.get("expGrp"))) {
 					LOGGER.debug("insertStaffClaimExpMileage =====================================>>  " + hm);
 					staffClaimMapper.insertStaffClaimExpMileage(hm);
 				}
@@ -160,8 +159,8 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 				// Expense Type Name == Car Mileage Expense
 		        //$("#expTypeName").val() == "Car Mileage Expense"
 		        // WebInvoice Test는 Test
-				LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
-				if("1".equals(params.get("expGrp"))) {
+				LOGGER.debug("expGrp =====================================>>  " + hm.get("expGrp"));
+				if("1".equals(hm.get("expGrp"))) {
 					LOGGER.debug("updateStaffClaimExpMileage =====================================>>  " + hm);
 					staffClaimMapper.updateStaffClaimExpMileage(hm);
 				}

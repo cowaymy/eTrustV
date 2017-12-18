@@ -31,6 +31,9 @@ var update = new Array();
 var remove = new Array();
 var newGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -191,6 +194,9 @@ var newGridPros = {
 
 var myGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -323,6 +329,9 @@ var myGridColumnLayout = [ {
 
 var approvalColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -421,6 +430,9 @@ var myGridID;
 
 var mileageGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",

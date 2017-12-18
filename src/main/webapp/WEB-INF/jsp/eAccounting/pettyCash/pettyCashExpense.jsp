@@ -121,6 +121,7 @@ function fn_clearData() {
     $("#invcType").val("F");
     $("#invcNo").val("");
     $("#expDesc").val("");
+    $("#utilNo").val("");
     
     AUIGrid.destroy(myGridID);
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
@@ -392,6 +393,7 @@ function fn_addRow() {
                     ,invcDt : $("#invcDt").val()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
+                    ,utilNo : $("#utilNo").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
             
@@ -419,6 +421,7 @@ function fn_addRow() {
                 		data.gridData.add[i].invcTypeName = data.invcTypeName;
                 		data.gridData.add[i].cur = data.cur;
                 		data.gridData.add[i].expDesc = data.expDesc;
+                		data.gridData.add[i].utilNo = data.utilNo;
                 		data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
                 		AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                 	}
@@ -444,6 +447,7 @@ function fn_addRow() {
                     ,invcDt : $("#invcDt").val()
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
+                    ,utilNo : $("#utilNo").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
             
@@ -478,6 +482,7 @@ function fn_addRow() {
                         data.gridData.add[i].invcTypeName = data.invcTypeName;
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
+                        data.gridData.add[i].utilNo = data.utilNo;
                         data.gridData.add[i].atchFileGrpId = atchFileGrpId;
                         AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                     }
@@ -500,6 +505,7 @@ function fn_addRow() {
                         data.gridData.update[i].invcTypeName = data.invcTypeName;
                         data.gridData.update[i].cur = data.cur;
                         data.gridData.update[i].expDesc = data.expDesc;
+                        data.gridData.update[i].utilNo = data.utilNo;
                         AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                     }
                 }
@@ -590,6 +596,7 @@ function fn_selectExpenseInfo() {
         $("#invcDt").val(result.invcDt);
         $("#gstRgistNo").val(result.gstRgistNo);
         $("#expDesc").val(result.expDesc);
+        $("#utilNo").val(result.utilNo);
         
         AUIGrid.setGridData(myGridID, result.itemGrp);
         

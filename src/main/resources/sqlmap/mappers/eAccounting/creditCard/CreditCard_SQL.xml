@@ -445,6 +445,9 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
         ATCH_FILE_GRP_ID,
         EXP_DESC,
         CLAM_UN,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        GST_RGIST_NO,
         CRT_DT,
         CRT_USER_ID,
         UPD_DT,
@@ -472,6 +475,9 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{atchFileGrpId}
        ,#{expDesc}
        ,#{clamUn}
+       ,#{sCostCentr}
+       ,#{sCostCentrName}
+       ,#{gstRgistNo}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -510,6 +516,9 @@ SELECT T1.CLM_SEQ,
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC, 
        T1.CLAM_UN, 
+       T1.COST_CENTR AS S_COST_CENTR,
+       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
+       T1.GST_RGIST_NO,
        T3.TOT_AMT  AS ALL_TOT_AMT,
        T3.APPV_PRCSS_NO 
 FROM   FCM0018D T1 
@@ -532,6 +541,9 @@ SELECT T1.CLM_SEQ,
        T3.NAME  AS CHRG_USER_NAME,
        T2.COST_CENTR, 
        T2.COST_CENTR_NAME, 
+       T1.COST_CENTR AS S_COST_CENTR,
+       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
+       T1.GST_RGIST_NO,
        T2.BANK_CODE, 
        T2.BANK_NAME, 
        TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
@@ -638,6 +650,9 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
+       ,COST_CENTR = #{sCostCentr}
+       ,COST_CENTR_NAME = #{sCostCentrName}
+       ,GST_RGIST_NO = #{gstRgistNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}     
@@ -688,8 +703,8 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,#{expType}
        ,#{expTypeName}
-       ,#{costCentr}
-       ,#{costCentrName}
+       ,#{sCostCentr}
+       ,#{sCostCentrName}
        ,#{glAccCode}
        ,#{glAccCodeName}
        ,#{budgetCode}
@@ -739,6 +754,7 @@ SELECT CRDIT_CARD_NO AS CARD_NO,
          || CRDIT_CARD_USER_NAME 
          || ')' )    AS CARD_NAME 
 FROM   FCM0016M
+WHERE CRDIT_CARD_STUS = 'A'
 </select>
 
 </mapper>

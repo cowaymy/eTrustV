@@ -31,6 +31,9 @@ var update = new Array();
 var remove = new Array();
 var newGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -191,6 +194,9 @@ var newGridPros = {
 
 var myGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -323,6 +329,9 @@ var myGridColumnLayout = [ {
 
 var approvalColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -421,6 +430,9 @@ var myGridID;
 
 var mileageGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -617,7 +629,7 @@ $(document).ready(function () {
     
     AUIGrid.bind(newGridID, "cellDoubleClick", function( event ) {
     	console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-        console.log("CellDoubleClick clmNo : " + event.item.clmNo + " CellDoubleClick clmSeq : " + event.item.clmSeq);
+        console.log("CellDoubleClick clmSeq : " + event.item.clmSeq + " CellDoubleClick clamUn : " + event.item.clamUn);
         // TODO pettyCash Expense Info GET
         if(clmNo != null && clmNo != "") {
             selectRowIdx = event.rowIndex;
@@ -656,11 +668,13 @@ $(document).ready(function () {
         if(!FormUtil.isEmpty("${appvPrcssNo}")){
         	mileageGridPros.editable = false;
         }
-        fn_createAUIGrid();
-        $("#carMileage_radio").attr("checked", "checked");
+        fn_createMileageAUIGrid();
+        $("#normalExp_radio").prop("checked", false);
+        $("#carMileage_radio").prop("checked", true);
         $("#mileage_btn").show();
     } else {
-    	$("#normalExp_radio").attr("checked", "checked");
+    	$("#carMileage_radio").prop("checked", false);
+        $("#normalExp_radio").prop("checked", true);
     }
 });
 

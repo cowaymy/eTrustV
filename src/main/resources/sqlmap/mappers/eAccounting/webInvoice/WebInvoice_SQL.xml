@@ -158,6 +158,7 @@ SELECT   T.CLM_NO
        ,INVC_REM
        ,TOT_AMT
        ,APPV_PRCSS_NO
+       ,UTIL_NO
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -181,6 +182,7 @@ SELECT   T.CLM_NO
        ,#{invcRem}
        ,#{totAmt}
        ,#{appvPrcssNo}
+       ,#{utilNo}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -263,12 +265,16 @@ SELECT   T.CLM_NO
                    ,T1.INVC_REM
                    ,NVL(T1.TOT_AMT, 0) TOT_AMT
                    ,T1.APPV_PRCSS_NO
+                   ,T1.UTIL_NO
                    ,T1.CRT_DT
                    ,T1.CRT_USER_ID
+                   ,T3.USER_NAME AS CRT_USER_NAME
                    ,T1.TOT_AMT
           FROM FCM0002M T1
           LEFT JOIN FCM0006M T2
           ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+          LEFT JOIN SYS0047M T3
+          ON T1.CRT_USER_ID = T3.USER_ID
           WHERE T1.CLM_NO = #{clmNo}
 </select>
 
@@ -346,6 +352,7 @@ SELECT   T.CLM_NO
        ,ATCH_FILE_GRP_ID = #{atchFileGrpId}
        ,INVC_REM = #{invcRem}
        ,TOT_AMT = #{totAmt}
+       ,UTIL_NO = #{utilNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}       
@@ -495,6 +502,7 @@ SELECT   T.CLM_NO
        ,EXP_DESC
        ,ATCH_FILE_GRP_ID
        ,CLAM_UN
+       ,UTIL_NO
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -525,6 +533,7 @@ SELECT   T.CLM_NO
        ,#{expDesc}
        ,#{atchFileGrpId}
        ,#{clamUn}
+       ,#{utilNo}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -655,12 +664,12 @@ SELECT T.APPV_PRCSS_NO
   WHERE 1 = 1   
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+             AND T.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             AND T.INVC_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+             AND T.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
@@ -980,5 +989,12 @@ WHERE  CLM_TYPE = #{clmType}
 /* webInvoiceMapper.updateClamUn */
    UPDATE FCM0022M SET CLAM_UN = #{clamUn} WHERE CLM_TYPE = #{clmType}
 </update>
+
+<select id="selectSameVender" parameterType="Map" resultType="String">
+/* webInvoiceMapper.selectSameVender */
+SELECT CLM_NO 
+FROM   FCM0002M 
+WHERE  MEM_ACC_ID = #{memAccId} AND INVC_NO = #{invcNo}
+</select>
 
 </mapper>

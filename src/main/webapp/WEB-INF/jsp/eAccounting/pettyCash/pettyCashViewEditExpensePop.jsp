@@ -36,6 +36,9 @@ var update = new Array();
 var remove = new Array();
 var newGridColumnLayout = [ {
     dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "utilNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmSeq",
@@ -179,7 +182,7 @@ var newGridID;
 
 var myGridColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -320,7 +323,7 @@ var myGridPros = {
 
 var approvalColumnLayout = [ {
     dataField : "clamUn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -554,7 +557,9 @@ function fn_tempSave() {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-    <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
+    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="utilNo" name="utilNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>

@@ -93,4 +93,6 @@ public interface WebInvoiceMapper {
 	
 	void updateClamUn(Map<String, Object> params);
 	
+	String selectSameVender(Map<String, Object> params);
+	
 }

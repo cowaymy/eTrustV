@@ -74,12 +74,9 @@ public class ExpenseController {
 	
 	@RequestMapping(value = "/addExpenseTypePop.do")
 	public String addExpenseTypePop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
-		List<EgovMap> taxCodeList = null; 
 		
 		LOGGER.debug("Params =====================================>>  " + params);
 		
-		taxCodeList = expenseService.selectTaxCodeByClmType(params);
-		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
 		return "eAccounting/expense/addExpenseTypePop";
 	}
 	
@@ -197,19 +194,6 @@ public class ExpenseController {
 
 		List<EgovMap> codeList = expenseService.selectCodeList(params);
 		return ResponseEntity.ok(codeList);
-	}
-	
-	@RequestMapping(value = "/selectTaxCodeByClmType", method = RequestMethod.GET) 
-	public ResponseEntity<List<EgovMap>> selectTaxCodeByClmType (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
-		
-		List<EgovMap> taxCodeList = null; 
-		
-		LOGGER.debug("Params =====================================>>  " + params);
-		
-		taxCodeList = expenseService.selectTaxCodeByClmType(params);
-		
-		return ResponseEntity.ok(taxCodeList);
-		
 	}
 }
 

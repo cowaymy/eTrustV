@@ -84,7 +84,6 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,BANK_ACC_NO
         ,CLM_MONTH
         ,TOT_AMT
-        ,EXP_GRP
         ,APPV_PRCSS_NO
         ,CRT_DT
         ,CRT_USER_ID
@@ -102,7 +101,6 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{bankAccNo}
        ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
        ,#{allTotAmt}
-       ,#{expGrp}
        ,#{appvPrcssNo}
        ,SYSDATE
        ,#{userId}
@@ -143,6 +141,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,ATCH_FILE_GRP_ID
         ,EXP_DESC
         ,CLAM_UN
+        ,EXP_GRP
         ,CRT_DT
         ,CRT_USER_ID
         ,UPD_DT
@@ -172,6 +171,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{atchFileGrpId}
        ,#{expDesc}
        ,#{clamUn}
+       ,#{expGrp}
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -251,8 +251,8 @@ SELECT T1.CLM_SEQ,
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC,
        T1.CLAM_UN, 
+       T1.EXP_GRP,  
        T3.TOT_AMT  AS ALL_TOT_AMT,
-       T3.EXP_GRP,  
        T3.APPV_PRCSS_NO 
 FROM   FCM0020D T1 
        LEFT JOIN FCM0007C T2 
@@ -278,7 +278,7 @@ SELECT T1.CLM_SEQ,
        T3.BANK_ACC_NO, 
        TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
        T3.TOT_AMT                                          AS ALL_TOT_AMT,
-       T3.EXP_GRP, 
+       T1.EXP_GRP, 
        T3.APPV_PRCSS_NO,
        T1.EXP_TYPE, 
        T1.EXP_TYPE_NAME, 
@@ -299,18 +299,8 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT, 
        T1.TOT_AMT, 
        T1.ATCH_FILE_GRP_ID, 
-       T1.EXP_DESC, 
-       T2.CAR_MILAG_DT, 
-       T2.LOC_FROM, 
-       T2.LOC_TO, 
-       T2.CAR_MILAG, 
-       T2.CAR_MILAG_AMT, 
-       T2.TOLL_AMT, 
-       T2.PARKING_AMT, 
-       T2.PURPOSE
+       T1.EXP_DESC
 FROM   FCM0020D T1 
-       LEFT JOIN FCM0021D T2 
-              ON T1.CLM_NO = T2.CLM_NO AND T1.CLM_SEQ = T2.CLM_SEQ  
        LEFT JOIN FCM0019M T3 
               ON T1.CLM_NO = T3.CLM_NO 
        LEFT JOIN FCM0006M T4 
@@ -339,10 +329,21 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT, 
        T1.TOT_AMT, 
        T1.CLAM_UN,
-       T1.ATCH_FILE_GRP_ID
+       T1.ATCH_FILE_GRP_ID,
+       T3.CAR_MILAG_DT, 
+       T3.LOC_FROM, 
+       T3.LOC_TO, 
+       T3.CAR_MILAG, 
+       T3.CAR_MILAG_AMT, 
+       T3.TOLL_AMT, 
+       T3.PARKING_AMT, 
+       T3.PURPOSE,
+       T1.EXP_DESC
 FROM   FCM0020D T1 
        LEFT JOIN FCM0007C T2 
               ON T1.TAX_CODE = T2.TAX_CODE 
+       LEFT JOIN FCM0021D T3 
+              ON T1.CLM_NO = T3.CLM_NO AND T1.CLM_SEQ = T3.CLM_SEQ
 WHERE  T1.CLM_NO = #{clmNo} 
        AND CLAM_UN = #{clamUn}
 </select>

@@ -93,6 +93,7 @@ public class WebInvoiceController {
 		List<EgovMap> taxCodeList = webInvoiceService.selectTaxCodeWebInvoiceFlag();
 		
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
+		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
 		model.addAttribute("callType", params.get("callType"));
 		
@@ -100,7 +101,7 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/viewEditWebInvoicePop.do")
-	public String viewEditWebInvoice(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String viewEditWebInvoice(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -504,6 +505,24 @@ public class WebInvoiceController {
 		webInvoiceService.updateClamUn(clamUn);
 		
 		return ResponseEntity.ok(clamUn);
+		
+	}
+	
+	@RequestMapping(value = "/selectSameVender", method = RequestMethod.GET) 
+	public ResponseEntity<ReturnMessage> selectSameVender (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+		
+		LOGGER.debug("Params =====================================>>  " + params);
+		
+		String clmNo = webInvoiceService.selectSameVender(params);
+		
+		LOGGER.debug("clmNo =====================================>>  " + clmNo);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(clmNo);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 		
 	}
 }

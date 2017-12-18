@@ -219,6 +219,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("costCentr", params.get("costCentr"));
 				hm.put("costCentrName", params.get("costCentrName"));
 				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
+				hm.put("utilNo", params.get("utilNo"));
 				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
@@ -440,6 +441,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	public void updateClamUn(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		webInvoiceMapper.updateClamUn(params);
+	}
+
+	@Override
+	public String selectSameVender(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectSameVender(params);
 	}
 	
 	

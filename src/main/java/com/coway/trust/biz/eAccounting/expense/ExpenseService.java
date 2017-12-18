@@ -19,5 +19,4 @@ public interface ExpenseService {
 	
 	List<EgovMap> selectCodeList( Map<String, Object> params) throws Exception;
 	
-	List<EgovMap> selectTaxCodeByClmType( Map<String, Object> params) throws Exception;
 }

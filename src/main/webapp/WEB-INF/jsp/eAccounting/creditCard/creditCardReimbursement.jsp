@@ -192,6 +192,8 @@ function fn_clearData() {
     $("#invcType").val("F");
     $("#invcNo").val("");
     $("#expDesc").val("");
+    $("#sCostCentr").val("");
+    $("#sCostCentrName").val("");
     
     AUIGrid.destroy(myGridID);
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
@@ -209,8 +211,8 @@ function fn_popCostCenterSearchPop() {
 }
 
 function fn_setPopCostCenter() {
-    $("#newCostCenter").val($("#search_costCentr").val());
-    $("#newCostCenterText").val($("#search_costCentrName").val());
+    $("#sCostCentr").val($("#search_costCentr").val());
+    $("#sCostCentrName").val($("#search_costCentrName").val());
 }
 
 function fn_PopExpenseTypeSearchPop() {
@@ -282,7 +284,6 @@ function fn_creditCardNoChange() {
 	            $("#newChrgUserName").val(result.data.chrgUserName);
 	            $("#newCostCenter").val(result.data.costCentr);
 	            $("#newCostCenterText").val(result.data.costCentrName);
-	            $("#sCostCenterText").val(result.data.costCentrName);
 	            $("#bankCode").val(result.data.bankCode);
 	            $("#bankName").val(result.data.bankName);
 	        } else {
@@ -293,7 +294,6 @@ function fn_creditCardNoChange() {
 	            $("#newChrgUserName").val("");
 	            $("#newCostCenter").val("");
 	            $("#newCostCenterText").val("");
-	            $("#sCostCenterText").val("");
 	            $("#bankCode").val("");
 	            $("#bankName").val("");
 	        }
@@ -305,7 +305,6 @@ function fn_creditCardNoChange() {
         $("#newChrgUserName").val("");
         $("#newCostCenter").val("");
         $("#newCostCenterText").val("");
-        $("#sCostCenterText").val("");
         $("#bankCode").val("");
         $("#bankName").val("");
 	}
@@ -329,7 +328,7 @@ function fn_checkEmpty() {
         return checkResult;
     }
     if($("#invcType").val() == "F") {
-        if(FormUtil.isEmpty($("#newSupply").val())) {
+        if(FormUtil.isEmpty($("#newSupplyName").val())) {
             Common.alert('<spring:message code="crditCardReim.supplierName.msg" />');
             checkResult = false;
             return checkResult;
@@ -395,6 +394,8 @@ function fn_addRow() {
                 ,clmMonth : $("#clmMonth").val()
                 ,invcDt : $("#invcDt").val()
                 ,costCentrName : $("#newCostCenterText").val()
+                ,sCostCentr : $("#sCostCentr").val()
+                ,sCostCentrName : $("#sCostCentrName").val()
                 ,supply : $("#newSupply").val()
                 ,supplyName : $("#newSupplyName").val()
                 ,gstRgistNo : $("#gstRgistNo").val()
@@ -423,6 +424,8 @@ function fn_addRow() {
                         data.gridData.add[i].chrgUserName = data.chrgUserName;
                         data.gridData.add[i].costCentr = data.costCentr;
                         data.gridData.add[i].costCentrName = data.costCentrName;
+                        data.gridData.add[i].sCostCentr = data.sCostCentr;
+                        data.gridData.add[i].sCostCentrName = data.sCostCentrName;
                         data.gridData.add[i].clmMonth = data.clmMonth;
                         data.gridData.add[i].supply = data.supply;
                         data.gridData.add[i].supplyName = data.supplyName;
@@ -465,6 +468,8 @@ function fn_addRow() {
                         data.gridData.add[i].chrgUserName = data.chrgUserName;
                         data.gridData.add[i].costCentr = data.costCentr;
                         data.gridData.add[i].costCentrName = data.costCentrName;
+                        data.gridData.add[i].sCostCentr = data.sCostCentr;
+                        data.gridData.add[i].sCostCentrName = data.sCostCentrName;
                         data.gridData.add[i].clmMonth = data.clmMonth;
                         data.gridData.add[i].supply = data.supply;
                         data.gridData.add[i].supplyName = data.supplyName;
@@ -490,6 +495,8 @@ function fn_addRow() {
                         data.gridData.update[i].chrgUserName = data.chrgUserName;
                         data.gridData.update[i].costCentr = data.costCentr;
                         data.gridData.update[i].costCentrName = data.costCentrName;
+                        data.gridData.update[i].sCostCentr = data.sCostCentr;
+                        data.gridData.update[i].sCostCentrName = data.sCostCentrName;
                         data.gridData.update[i].clmMonth = data.clmMonth;
                         data.gridData.update[i].supply = data.supply;
                         data.gridData.update[i].supplyName = data.supplyName;
@@ -595,7 +602,8 @@ function fn_selectReimbursementInfo() {
         $("#newChrgUserName").val(result.chrgUserName);
         $("#newCostCenter").val(result.costCentr);
         $("#newCostCenterText").val(result.costCentrName);
-        $("#sCostCenterText").val(result.costCentrName);
+        $("#sCostCentr").val(result.sCostCentr);
+        $("#sCostCentrName").val(result.sCostCentrName);
         $("#bankCode").val(result.bankCode);
         $("#bankName").val(result.bankName);
         $("#clmMonth").val(result.clmMonth);
