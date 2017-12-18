@@ -96,24 +96,24 @@ function fn_openReport(){
         }
         
         
-        $("#reportForm #V_SHOWAPPDATEFROM").val(showAppDateFrom);
-        $("#reportForm #V_SHOWAPPDATETO").val(showAppDateTo);
-        $("#reportForm #V_SHOWCTCODEFROM").val(showCTCodeFrom);
-        $("#reportForm #V_SHOWCTCODETO").val(showCTCodeTo);
-        $("#reportForm #V_SHOWBRANCHCODE").val(showBranchCode);
-        $("#reportForm #V_SHOWCTGROUP").val(showCTGroup);
-        $("#reportForm #V_SHOWSORTBY").val(showSortBy);
-        $("#reportForm #V_WHERESQL").val(whereSql);
-        $("#reportForm #V_ORDERSQL").val(orderBySql);
-        $("#reportForm #reportFileName").val('/services/InstallationLogBookList.rpt');
-        $("#reportForm #viewType").val("PDF");
-        $("#reportForm #reportDownFileName").val("InstallationLogBook_" +day+month+date.getFullYear());
+        $("#reportFormIns #V_SHOWAPPDATEFROM").val(showAppDateFrom);
+        $("#reportFormIns #V_SHOWAPPDATETO").val(showAppDateTo);
+        $("#reportFormIns #V_SHOWCTCODEFROM").val(showCTCodeFrom);
+        $("#reportFormIns #V_SHOWCTCODETO").val(showCTCodeTo);
+        $("#reportFormIns #V_SHOWBRANCHCODE").val(showBranchCode);
+        $("#reportFormIns #V_SHOWCTGROUP").val(showCTGroup);
+        $("#reportFormIns #V_SHOWSORTBY").val(showSortBy);
+        $("#reportFormIns #V_WHERESQL").val(whereSql);
+        $("#reportFormIns #V_ORDERSQL").val(orderBySql);
+        $("#reportFormIns #reportFileName").val('/services/InstallationLogBookList.rpt');
+        $("#reportFormIns #viewType").val("PDF");
+        $("#reportFormIns #reportDownFileName").val("InstallationLogBook_" +day+month+date.getFullYear());
         
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
         
-        Common.report("reportForm", option);
+        Common.report("reportFormIns", option);
         
 	}
 }
@@ -147,7 +147,7 @@ $.fn.clearForm = function() {
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="reportForm">
+<form action="#" method="post" id="reportFormIns">
 <input type="hidden" id="V_SHOWAPPDATEFROM" name="V_SHOWAPPDATEFROM" />
 <input type="hidden" id="V_SHOWAPPDATETO" name="V_SHOWAPPDATETO" />
 <input type="hidden" id="V_SHOWCTCODEFROM" name="V_SHOWCTCODEFROM" />
@@ -230,7 +230,7 @@ $.fn.clearForm = function() {
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormIns').clearForm();">Clear</a></p></li>
 </ul>
 
 </form>
