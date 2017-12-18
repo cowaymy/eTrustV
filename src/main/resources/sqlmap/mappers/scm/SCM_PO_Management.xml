@@ -359,6 +359,51 @@
                    , NULL
                   )
 </insert>
+
+<insert id="insertPOIssueMaster" parameterType="Map">
+        <selectKey keyProperty="poMasterIdSeq" resultType="int" order="BEFORE">
+            SELECT SCM0009M_PO_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+         
+         INSERT INTO SCM0009M
+         (
+           BAS_YEAR
+          ,CDC
+          ,CRT_DT
+          ,CRT_USER_ID
+          ,EST_WEEK
+          ,GR_MONTH
+          ,GR_WEEK
+          ,GR_YEAR
+          ,IF_DT
+          ,PO_ID
+          ,PO_ISSU_DT
+          ,PO_NO
+          ,PO_STUS
+          ,RTPGR_WEEK
+          ,UPD_DT
+          ,UPD_USER_ID
+         )
+         VALUES
+         (
+           #{preYear}
+         , #{preCdc} 
+         , SYSDATE
+         , #{crtUserId}
+         , #{preWeekTh}
+         , NULL  
+         , ( CASE WHEN (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) > 52 THEN  ((#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) - 52) ELSE (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1) ) END )
+         , ( CASE WHEN (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) > 52 THEN  (TO_NUMBER(#{preYear}) + 1) ELSE TO_NUMBER(#{preYear})  END    )   
+         , NULL 
+         , #{poMasterIdSeq}
+         , SYSDATE
+         , #{newPono}
+         , 5
+         , NULL
+         , SYSDATE
+         , #{updUserId}
+         )
+</insert>
   
 <insert id="insertPOIssueDetail_TEMP" parameterType="Map">
         <selectKey keyProperty="detailSeq,newPono" resultType="egovMap" order="BEFORE">
@@ -429,6 +474,43 @@
   <!-- PO Approval -->
  
 <select id="selectPoApprovalSummary" parameterType="Map" resultType="egovMap">
+WITH PO_APPROVAL_SUMMARY
+   AS
+   (
+      SELECT 
+             NVL(STOCK_CTGRY,'ZZ_SUM') STOCK_CTGRY
+           , NVL(PRE_CDC,'ALL_SUM') CDC
+           , SUM(PRE_QTY) QTY
+           , SUM(PRE_FOB_PRC) FOB_AMT
+       FROM SCM0043V
+      WHERE PRE_SCM_YEAR = #{scmYearCbBox} 
+        AND PRE_EST_WEEK = #{scmPeriodCbBox}
+        <if test="scmStockType != null and scmStockType !=''">
+        AND STK_TYPE_ID = #{scmStockType}
+        </if>  
+      GROUP BY ROLLUP (STOCK_CTGRY,PRE_CDC)
+    )
+   SELECT STOCK_CTGRY
+          ,JB_QTY
+          ,JB_FOB_AMT
+          ,KC_QTY
+          ,KC_FOB_AMT
+          ,KK_QTY
+          ,KK_FOB_AMT
+          ,KL_QTY
+          ,KL_FOB_AMT
+          ,PN_QTY
+          ,PN_FOB_AMT
+          ,ALL_SUM_QTY
+          ,ALL_SUM_FOB_AMT
+      FROM PO_APPROVAL_SUMMARY
+      PIVOT
+           ( SUM (QTY) QTY ,SUM(FOB_AMT) FOB_AMT FOR CDC IN ('KC' AS KC ,'KK' AS KK ,'KL' AS KL ,'JB' AS JB ,'PN' AS PN ,'ALL_SUM' AS ALL_SUM ) )
+     WHERE STOCK_CTGRY <![CDATA[ <> ]]> 'ZZ_SUM'
+     ORDER BY STOCK_CTGRY
+</select>
+
+<select id="selectPoApprovalSummary_TEMP" parameterType="Map" resultType="egovMap">
 WITH PO_APPROVAL_SUMMARY
   AS
    (
