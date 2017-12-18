@@ -15,7 +15,7 @@
             { headerText : "Deduction Date", dataField : "fileItmCrt",    width : 120 }
           , { headerText : "Payment Type",   dataField : "codeName" }
           , { headerText : "Amount",         dataField : "fileItmAmt",    width : 120 }
-          , { headerText : "Success ?",      dataField : "fileItmStusId", width : 120 }
+          , { headerText : "Success ?",      dataField : "isSuccess",     width : 120 }
           , { headerText : "Reason",         dataField : "fileItmRem",    width : 260 }
           ];
 

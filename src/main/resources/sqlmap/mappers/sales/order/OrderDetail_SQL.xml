@@ -882,6 +882,10 @@
 		     , TO_CHAR(T1.FILE_ITM_CRT, 'DD/MM/YYYY') AS FILE_ITM_CRT
 		     , T2.CODE_NAME
 		     , T1.FILE_ITM_AMT
+             , CASE WHEN T1.FILE_ITM_STUS_ID = 4      THEN 'Success'
+                    WHEN T1.FILE_ITM_STUS_ID IN (6,8) THEN 'Fail'
+                                                      ELSE '-'
+               END IS_SUCCESS
 		     , T1.FILE_ITM_STUS_ID
 		     , T1.FILE_ITM_REM
 		  FROM SAL0152M T1
