@@ -26,15 +26,19 @@ $(document).ready(function(){
     
     createAUIGridHList();
     createAUIGridOList();
+
+    $("#cPromo").prop("disabled", true); 
+    $("#cPromo").attr("class", "disabled"); 
+    
     
     $("#rbt").attr("style","display:none");
     $("#ORD_NO_RESULT").attr("style","display:none");
     
     
     $("#ORD_NO").keydown(function(key)  {
-  	        if (key.keyCode == 13) {
-  	        	fn_doConfirm();
-  	        }
+            if (key.keyCode == 13) {
+                fn_doConfirm();
+            }
      });
     
 });
@@ -61,11 +65,11 @@ function fn_doConfirm (){
              
          }else{
              
-        	 
-        	 if(fn_isActiveMembershipQuotationInfoByOrderNo()){
-        		 return ;
-        	 }
-        	 
+             
+             if(fn_isActiveMembershipQuotationInfoByOrderNo()){
+                 return ;
+             }
+             
              $("#ORD_ID").val( result[0].ordId);
              $("#ORD_NO_RESULT").val( result[0].ordNo);
              
@@ -88,18 +92,18 @@ function fn_doConfirm (){
 
 
 function  fn_isActiveMembershipQuotationInfoByOrderNo(){
-	var rtnVAL= false;
-	 Common.ajaxSync("GET", "/sales/membership/mActiveQuoOrder", {ORD_NO: $("#ORD_NO").val()}, function(result) {
+    var rtnVAL= false;
+     Common.ajaxSync("GET", "/sales/membership/mActiveQuoOrder", {ORD_NO: $("#ORD_NO").val()}, function(result) {
          console.log( result);
         
          if(result.length > 0 ){
-        	 rtnVAL =true;
-        	 Common.alert(" <b>This order already has an active quotation.<br />Quotation number : [" + result[0].srvMemQuotNo +"]</b>");
-        	 return true; 
+             rtnVAL =true;
+             Common.alert(" <b>This order already has an active quotation.<br />Quotation number : [" + result[0].srvMemQuotNo +"]</b>");
+             return true; 
          }
     });
-	 
-	 return rtnVAL;
+     
+     return rtnVAL;
 }
 
 function fn_getDataInfo (){
@@ -117,20 +121,20 @@ function fn_outspro (){
         console.log(result);
         
         if(result.outSuts.length >0 ){
-        	$("#ordoutstanding").html(result.outSuts[0].ordOtstnd);
-        	$("#asoutstanding").html(result.outSuts[0].asOtstnd);
+            $("#ordoutstanding").html(result.outSuts[0].ordOtstnd);
+            $("#asoutstanding").html(result.outSuts[0].asOtstnd);
         }
     });
  }
  
 
 function setText(result){
-	
-	resultBasicObject = result.basic;
-	resultSrvconfigObject = result.srvconfig;
-	
-	
-	$("#ordNo").html(result.basic.ordNo);
+    
+    resultBasicObject = result.basic;
+    resultSrvconfigObject = result.srvconfig;
+    
+    
+    $("#ordNo").html(result.basic.ordNo);
     $("#ordDt").html(result.basic.ordDt);
     $("#ORD_DATE").html(result.basic.orgOrdDt);
     $("#InstallmentPeriod").html(result.basic.InstallmentPeriod);
@@ -205,10 +209,10 @@ function  fn_goCustSearch(){
 
 
 function fn_callbackOrdSearchFunciton(item){
-	console.log(item);
-	$("#ORD_NO").val(item.ordNo);
-	fn_doConfirm();
-	
+    console.log(item);
+    $("#ORD_NO").val(item.ordNo);
+    fn_doConfirm();
+    
 }
 
 
@@ -220,8 +224,8 @@ function fn_doReset() {
 
 
 function fn_setTerm(){
-	$("#term").html();
-	$("#isCharge").html();
+    $("#term").html();
+    $("#isCharge").html();
 }
 
 
@@ -321,23 +325,29 @@ function fn_newGetExpDate(old_result){
          console.log( result);
          
          if(result.expDate.expint <= 0){
-        	 $("#HiddenIsCharge").val(0);
-        	 $("#isCharge").html("No");
-        	 $("#term").html("<font color='green'> Under membership </font>");
-        	 
+             $("#HiddenIsCharge").val(0);
+             $("#isCharge").html("No");
+             $("#term").html("<font color='green'> Under membership </font>");
+             
          }else if(result.expDate.expint > 0 && old_result.basic.coolOffPriod >= result.expDate.expint){
-        	 
-        	   $("#HiddenIsCharge").val(0);
+             
+               $("#HiddenIsCharge").val(0);
                $("#isCharge").html("No");
                $("#term").html("<font color='brown'> Under cooling off period </font>");
                
          }else{
-        	  $("#HiddenIsCharge").val(1);
+              $("#HiddenIsCharge").val(1);
               $("#isCharge").html("YES");
               $("#term").html("<font color='red'> Passed cooling off period </font>");
          }
+
+         if($("#HiddenIsCharge").val() != "0"){
+             $("#cPromo").prop("disabled", false);
+             $("#cPromo").attr("class", ""); 
+         }
          
     });
+    
  }
  
 /*oList*/ 
@@ -364,13 +374,13 @@ function setPackgCombo(){
 
 
 function  fn_cTPackage_onchangeEvt(){
-	
+    
     $("#cYear").removeAttr("disabled");
     $("#cYear").val("12");
     $("#txtPackagePrice").html("");  
     $("#txtFilterCharge").html("");    
-    $('#cPromotionpac option').remove();
-    $('#cPromo option').remove();
+   // $('#cPromotionpac option').remove();
+  //  $('#cPromo option').remove();
 
     $("#packpro").attr("checked",false);
     $("#cPromoCombox").attr("checked",false);
@@ -382,7 +392,7 @@ function  fn_cTPackage_onchangeEvt(){
  
  
 function fn_cYear_onChageEvent(){
-	
+    
     //set clear 
     fn_SubscriptionYear_initEvt();
    
@@ -402,22 +412,23 @@ function fn_cYear_onChageEvent(){
  
 function fn_getFilterPromotionAmt(){
 
-    Common.ajax("GET", "/sales/membership/getFilterPromotionAmt.do", {SALES_ORD_NO: resultBasicObject.ordNo ,SRV_PAC_ID :$('#cTPackage').val() }, function(result) {
-         console.log( result);
-         
-         if(null != result){
-        	 $("#txtFilterCharge").html(result.normaAmt );  
-        	 
-         }
-         
-    });
+    if($("#HiddenIsCharge").val() != "0"){
+        Common.ajax("GET", "/sales/membership/getFilterPromotionAmt.do", {SALES_ORD_NO: resultBasicObject.ordNo ,SRV_PAC_ID :$('#cTPackage').val() }, function(result) {
+             console.log( result);
+             
+             if(null != result){
+                 $("#txtFilterCharge").html(result.normaAmt );
+             }
+             
+        });
+    }
 }
 
 function fn_onChange_cPromotionpac(o){
-	
-	   $('#txtPackagePrice').html($('#hiddenPacOriPrice').val());
-	   
-	    if($("#cPromotionpac").val().trim() >0)  {
+    
+       $('#txtPackagePrice').html($('#hiddenPacOriPrice').val());
+       
+        if($("#cPromotionpac").val().trim() >0)  {
             
             var isProc  =true;
             
@@ -457,8 +468,8 @@ function fn_onChange_cPromotionpac(o){
                          
                          
                          if(result[0].promoDiscType =="0"){       //% 
-                        	 
-                        	 $("#txtPackagePrice").html("");
+                             
+                             $("#txtPackagePrice").html("");
                              // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );    
                              
                              
@@ -482,8 +493,8 @@ function fn_onChange_cPromotionpac(o){
             }
     }
     
-	    
-	   
+        
+       
 }
 
 
@@ -501,40 +512,40 @@ function  f_multiCombo3(){
 
 /*fn_getMembershipPackageInfo*/ 
 function fn_getMembershipPackageInfo(_id){
-	
+    
     Common.ajax("GET", "/sales/membership/mPackageInfo", $("#getDataForm").serialize(), function(result) {
          console.log( result);
          
          if( result.packageInfo ==null  ||  result.packageInfo ==""){
 
-        	 $("#HiddenHasPackage").val(0);
+             $("#HiddenHasPackage").val(0);
              $("#txtBSFreq").html("");
              $("#txtPackagePrice").html("0");
              $("#hiddenPacOriPrice").val(0);
              
          }else{
-        	 
+             
               var   pacYear   =  parseInt($("#DUR").val() ,10) / 12;
               var   pacPrice =  Math.round((result.packageInfo.srvMemItmPrc * pacYear));
               
              
-        	   $("#HiddenHasPackage").val(1);
-        	   $("#txtBSFreq").html(result.packageInfo.srvMemItmPriod +" month(s)");
-        	   $("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod );
-        	   
-        	   $("#txtPackagePrice").html(pacPrice);
-        	   $("#hiddenPacOriPrice").val(pacPrice);
+               $("#HiddenHasPackage").val(1);
+               $("#txtBSFreq").html(result.packageInfo.srvMemItmPriod +" month(s)");
+               $("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod );
+               
+               $("#txtPackagePrice").html(pacPrice);
+               $("#hiddenPacOriPrice").val(pacPrice);
        }
          
          
          if ( $("#HiddenHasFilterCharge") .val() == "1") {
-        	 
-        	// fn_getFilterCharge(_id);
-        	 fn_LoadMembershipPromotion();
+             
+            // fn_getFilterCharge(_id);
+             fn_LoadMembershipPromotion();
              $("#btnViewFilterCharge").attr("style" ,"display:inline");
-        	 
+             
          } else{
-        	  // $("#txtFilterCharge").html("0.00");
+              // $("#txtFilterCharge").html("0.00");
          }
          
          $("#packpro").removeAttr("disabled");
@@ -549,20 +560,23 @@ function fn_getMembershipPackageInfo(_id){
  
  
 function   fn_getMembershipPackageFilterInfo(){
-	
-	$('#txtFilterCharge').html("");
+    
+    $('#txtFilterCharge').html("");
+    
     $("#cPromoCombox").attr("checked",false);
+        
+    $("#cPromoCombox").removeAttr("disabled");  
     
-    $("#cPromo").removeAttr("disabled");
-    $("#cPromoCombox").removeAttr("disabled");
-   
-    
-    $('#cPromo option').remove();
+    $("#cPromo").val("");
     
     var SRV_MEM_PAC_ID = $("#cTPackage").val();
     doGetCombo('/sales/membership/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');          
+
     
-	
+    if($("#HiddenIsCharge").val() != "0"){
+        $("#cPromo").prop("disabled", false);
+        $("#cPromo").attr("class", ""); 
+    }
 }
  
  
@@ -570,53 +584,54 @@ function   fn_getMembershipPackageFilterInfo(){
  
 function fn_doPackagePro(v){
    if(v.checked){
-	   fn_PacPromotionCode();
-	   
-	   $("#cPromotionpac").removeAttr("disabled");
-	   $("#cPromotionpac").attr("class" ,"");
-	}else{
-		 $("#cPromotionpac").attr("disabled" ,"disabled");
-	}
+       fn_PacPromotionCode();
+       
+       $("#cPromotionpac").removeAttr("disabled");
+       $("#cPromotionpac").attr("class" ,"");
+    }else{
+         $("#cPromotionpac").attr("disabled" ,"disabled");
+    }
 }
 
 function fn_doPromoCombox(v){
-	   if(v.checked){
-	       
-		   $("#cPromo").removeAttr("disabled");
-           $("#cPromo").attr("class" ,"");
-		   
-	    }else{
-	        $("#cPromo").attr("disabled" ,"disabled");
-	    }
+       if(v.checked){
+            if($("#HiddenIsCharge").val() != "0"){
+               $("#cPromo").prop("disabled", false);
+               $("#cPromo").attr("class" ,"");
+            }
+        }else{
+            $("#cPromo").prop("disabled", true); 
+            $("#cPromo").attr("class", "disabled"); 
+        }
 }
 
 
 
 
 function  fn_PacPromotionCode(){
-	
-	$('#cPromotionpac option').remove();
-	
-	var SALES_ORD_ID = $("#ORD_ID").val() ;
-	var SRV_MEM_PAC_ID = $("#cTPackage").val();
-	var E_YN = $("#cEmplo").val();
-	
-	var pram = "?SALES_ORD_ID="+SALES_ORD_ID+"&SRV_MEM_PAC_ID="+SRV_MEM_PAC_ID+"&E_YN="+E_YN;
-	
-	doGetCombo('/sales/membership/getPromotionCode'+pram,'', '','cPromotionpac', 'S' , '');       
-	
-	
-	$("#cPromotionpac").removeAttr("disabled");
-	
-	var  _valid  = true ;
-	var  _sVale = $('#cYear').val();
-	var  _orderDate  =$('#ORD_DATE').val();
-	var _cutOffDate ="20160927";
-	
-	if(! _valid  || _sVale != 12  || _orderDate <_cutOffDate ) {
-		  $("#cPromotionpac option[value='31408']").remove();
-	}
-	
+    
+    $("#cPromotionpac").val("");
+    
+    var SALES_ORD_ID = $("#ORD_ID").val() ;
+    var SRV_MEM_PAC_ID = $("#cTPackage").val();
+    var E_YN = $("#cEmplo").val();
+    
+    var pram = "?SALES_ORD_ID="+SALES_ORD_ID+"&SRV_MEM_PAC_ID="+SRV_MEM_PAC_ID+"&E_YN="+E_YN;
+    
+    doGetCombo('/sales/membership/getPromotionCode'+pram,'', '','cPromotionpac', 'S' , '');       
+    
+    
+    $("#cPromotionpac").removeAttr("disabled");
+    
+    var  _valid  = true ;
+    var  _sVale = $('#cYear').val();
+    var  _orderDate  =$('#ORD_DATE').val();
+    var _cutOffDate ="20160927";
+    
+    if(! _valid  || _sVale != 12  || _orderDate <_cutOffDate ) {
+          $("#cPromotionpac option[value='31408']").remove();
+    }
+    
 }
 
 
@@ -625,15 +640,17 @@ function  fn_PacPromotionCode(){
 
 function fn_LoadMembershipPromotion(){
 
-    $('#cPromo option').remove();
-	$("#cPromo").removeAttr("disabled");
-	
-	
-	//cbPromo.Enabled = true;
-	
-	
-	/*
-	   
+    $("#cPromo").val("");
+    if($("#HiddenIsCharge").val() != "0"){
+           $("#cPromo").prop("disabled", false);
+           $("#cPromo").attr("class", ""); 
+    }   
+    
+    //cbPromo.Enabled = true;
+    
+    
+    /*
+       
 private void LoadMembershipPromotion(int PackageID,int StkID)
 {
     ddlPromotion.Items.Clear();
@@ -654,59 +671,69 @@ private void LoadMembershipPromotion(int PackageID,int StkID)
     MembershipManager oo = new MembershipManager();
     
 }
-	
-	*/
+    
+    */
 }
 
 
  
 function fn_getFilterChargeList(){
-	
+    
     $("#txtFilterCharge").text("");
     
-	 Common.ajax("GET", "/sales/membership/getFilterChargeListSum.do",{
-         SALES_ORD_NO : $("#ORD_NO").val(),
-         PROMO_ID: $('#cPromo').val() ,
-         SRV_PAC_ID :$('#cTPackage').val() 
-     }, function(result) {
-          console.log( result);
-          
-         if(null != result){
-        	 if(result[0] !=null){
-        		 $("#txtFilterCharge").text( result[0].disamt);
-        	 }
-         }
-     });
+    if($("#HiddenIsCharge").val() != "0"){
+    	
+        if($('#cPromo').val() == ""){
+        	
+            fn_getFilterPromotionAmt();   
+            
+        }else{
+        	
+        	Common.ajax("GET", "/sales/membership/getFilterChargeListSum.do",{
+                SALES_ORD_NO : $("#ORD_NO").val(),
+                PROMO_ID: $('#cPromo').val() ,
+                SRV_PAC_ID :$('#cTPackage').val() 
+            }, function(result) {
+                 console.log( result);
+                 
+                if(null != result){
+                    if(result[0] !=null){
+                        $("#txtFilterCharge").text( result[0].disamt);
+                    }
+                }
+            });
+        }
+    }
 }
 
  
  function   fn_LoadMembershipFilter(_cPromotion){
-	 
-	 var  cPromotion = _cPromotion;
-	 
-	 if(null ==cPromotion  || ""== cPromotion ) {
-		 cPromotion =0;
-	 } 
-	 
-	 $("#PROMO_ID").val(cPromotion);
+     
+     var  cPromotion = _cPromotion;
+     
+     if(null ==cPromotion  || ""== cPromotion ) {
+         cPromotion =0;
+     } 
+     
+     $("#PROMO_ID").val(cPromotion);
 
-	 
-	 $("#_editDiv1").remove();
-	 $("#_popupDiv").remove();
-	 Common.popupDiv("/sales/membership/mFilterChargePop.do" , $("#getDataForm").serializeJSON(), null , true , '_editDiv1');
+     
+     $("#_editDiv1").remove();
+     $("#_popupDiv").remove();
+     Common.popupDiv("/sales/membership/mFilterChargePop.do" , $("#getDataForm").serializeJSON(), null , true , '_editDiv1');
  }
  
  
  
  function fn_back(){
-	 $("#_NewQuotDiv1").remove();
+     $("#_NewQuotDiv1").remove();
 } 
 
 
 
 function fn_getFilterCharge(_cPromotion){
-	
-	   var  cPromotion = _cPromotion;
+    
+     var  cPromotion = _cPromotion;
      
      if(null ==cPromotion  || ""== cPromotion ) {
          cPromotion =0;
@@ -714,79 +741,81 @@ function fn_getFilterCharge(_cPromotion){
      
     
     $("#PROMO_ID").val(cPromotion);
+   
+    if($("#HiddenIsCharge").val() != "0"){
+       Common.ajax("GET", "/sales/membership/getFilterChargeList.do", $("#getDataForm").serialize(), function(result) {
+           console.log( "======fn_getFilterCharge========>"); 
+           console.log( result);
     
-   Common.ajax("GET", "/sales/membership/getFilterChargeList.do", $("#getDataForm").serialize(), function(result) {
-	   console.log( "======fn_getFilterCharge========>"); 
-	   console.log( result);
-
-        
-          if( result.outSuts.length >0 ){
-        	     var prc =0 ;
-                 for ( i  in  result.outSuts){
-                     prc += parseInt( result.outSuts[i].prc,10);
-                 }
+            
+              if( result.outSuts.length >0 ){
+                     var prc =0 ;
+                     for ( i  in  result.outSuts){
+                         prc += parseInt( result.outSuts[i].prc,10);
+                     }
+                     
+                    console.log(prc);
+                   $("#txtFilterCharge").html(prc);
+                   
+                   
+               }else{
+                   //$("#txtFilterCharge").html("0.00");
+               }
+            
+               if( $("#cPromotionpac").val() > 0){
+                   $("#FCPOPTITLE").val("Filter Charge Details - Promotion Applied");
+               }else{
+                  $("#FCPOPTITLE").val("Filter Charge Details - No Promotion"); 
+               }
+            
+            /*
+            if (ls.Count > 0)
+            {
+                RadGrid_FilterCharge.DataSource = ls;
+                RadGrid_FilterCharge.DataBind();
+                GridFooterItem footer = (GridFooterItem)RadGrid_FilterCharge.MasterTableView.GetItems(GridItemType.Footer)[0];
+                string TotalPrice = footer["ChargePrice"].Text.Split(':')[1];
+                txtFilterCharge.Text = string.Format("{0:C}", TotalPrice.ToString()).Replace("$", "").Replace(",", "").Replace("RM", "");
+            }
+            else
+            {
+                txtFilterCharge.Text = "0.00";
+            }
+          
+            if (PromoID > 0)
+            {
+                
                  
-                console.log(prc);
-        	   $("#txtFilterCharge").html(prc);
-        	   
-        	   
-           }else{
-        	   //$("#txtFilterCharge").html("0.00");
-           }
-        
-           if( $("#cPromotionpac").val() > 0){
-        	   $("#FCPOPTITLE").val("Filter Charge Details - Promotion Applied");
-           }else{
-        	  $("#FCPOPTITLE").val("Filter Charge Details - No Promotion"); 
-           }
-        
-        /*
-        if (ls.Count > 0)
-        {
-            RadGrid_FilterCharge.DataSource = ls;
-            RadGrid_FilterCharge.DataBind();
-            GridFooterItem footer = (GridFooterItem)RadGrid_FilterCharge.MasterTableView.GetItems(GridItemType.Footer)[0];
-            string TotalPrice = footer["ChargePrice"].Text.Split(':')[1];
-            txtFilterCharge.Text = string.Format("{0:C}", TotalPrice.ToString()).Replace("$", "").Replace(",", "").Replace("RM", "");
-        }
-        else
-        {
-            txtFilterCharge.Text = "0.00";
-        }
-      
-        if (PromoID > 0)
-        {
-        	
-        	 
-            RadWindow_FilterCharge.Title = "Filter Charge Details - Promotion Applied";
-        }
-        else
-        {
-            RadWindow_FilterCharge.Title = "Filter Charge Details - No Promotion";
-        }
-        
-        */
-   });
+                RadWindow_FilterCharge.Title = "Filter Charge Details - Promotion Applied";
+            }
+            else
+            {
+                RadWindow_FilterCharge.Title = "Filter Charge Details - No Promotion";
+            }
+            
+            */
+       });
+    }
  }
 
 function changeRowStyleFunction() {
-	
+    
     // row Styling 함수를 다른 함수로 변경
     AUIGrid.setProp(oListGridID, "rowStyleFunction", function(rowIndex, item) {
-    	
+        
 
         var  lifePeriod = parseInt(item.srvFilterPriod ,10);
         var expInt     = parseInt(item.expint ,10);
          
         if (lifePeriod > 0){
-        	
+            
             if(expInt > lifePeriod  ){
-            	
+                
                   $("#HiddenHasFilterCharge").val(1);
                   return "my-row-style";
                   
             }else{
-            	return "";
+                return "";
             }
             
             /*
@@ -889,23 +918,24 @@ function fn_doSalesResult(item){
 
 
 function    fn_SubscriptionYear_initEvt(){
-		
-	  console.log( "-----fn_SubscriptionYear_initEvt ---- ");
+        
+      console.log( "-----fn_SubscriptionYear_initEvt ---- ");
 
-	 $("#cPromotionpac").val();
-	 $("#cPromoe").val();
-	 $("#cPromotionpac").attr("disabled" ,"disabled");
-	 $("#cPromoe").attr("disabled" ,"disabled");
-	 $("#packpro").attr("checked",false);
-	 $("#cPromoCombox").attr("checked",false);
-	 $("#packpro").attr("disabled" ,"disabled");
-	 $("#cPromoCombox").attr("disabled" ,"disabled");
-	 $("#txtBSFreq").html("");
-	 $("#txtPackagePrice").html("-");
-	 $("#hiddenPacOriPrice").val("");
-	 $("#txtFilterCharge").val("");
-	 //$("#btnViewFilterCharge").attr("style" ,"display:none");
-	
+     $("#cPromotionpac").val();
+     $("#cPromoe").val();
+     $("#cPromotionpac").attr("disabled" ,"disabled");
+     $("#cPromoe").prop("disabled", true);
+     $("#packpro").attr("checked",false);
+     $("#cPromoCombox").attr("checked",false);
+     $("#packpro").attr("disabled" ,"disabled");
+     $("#cPromoCombox").attr("disabled" ,"disabled");
+     $("#txtBSFreq").html("");
+     $("#txtPackagePrice").html("-");
+     $("#hiddenPacOriPrice").val("");
+     $("#txtFilterCharge").val("");
+     $("#hiddenFilterCharge").val("");
+     //$("#btnViewFilterCharge").attr("style" ,"display:none");
+    
 }
 
 
@@ -917,27 +947,27 @@ function getOrderCurrentBillMonth (){
         console.log( result);
         
         if(result.length > 0 ){
-	          if(	parseInt( result[0].nowDate ,10) > parseInt( result[0].rentInstDt ,10)   ){
-	        	  
-	        	  billMonth =61;
-	        	  console.log( "==========billMonth============"+billMonth);
-	        	  
-	        	  return billMonth ;
-	        	  
-	          }else{
-	        	  Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth",{ ORD_ID: $("#ORD_ID").val() , RENT_INST_DT : 'SYSDATE'  }  , function(_result) {
-	        		  
-	        		  console.log( "==========2============");
-	        		  console.log( _result);
-	        		  
-	        		  if(_result.length > 0 ){
-	        			  billMonth = _result[0].rentInstNo;
-	        		  }
-	        		 
-	        		  console.log( "==========2 end ============["+billMonth+"]");
-	        		  
-	        	  });
-	          }
+              if(   parseInt( result[0].nowDate ,10) > parseInt( result[0].rentInstDt ,10)   ){
+                  
+                  billMonth =61;
+                  console.log( "==========billMonth============"+billMonth);
+                  
+                  return billMonth ;
+                  
+              }else{
+                  Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth",{ ORD_ID: $("#ORD_ID").val() , RENT_INST_DT : 'SYSDATE'  }  , function(_result) {
+                      
+                      console.log( "==========2============");
+                      console.log( _result);
+                      
+                      if(_result.length > 0 ){
+                          billMonth = _result[0].rentInstNo;
+                      }
+                     
+                      console.log( "==========2 end ============["+billMonth+"]");
+                      
+                  });
+              }
         }
    });
    
@@ -947,102 +977,102 @@ function getOrderCurrentBillMonth (){
  
  
 function fn_save(){
-	
-	 var billMonth = getOrderCurrentBillMonth();
-	 
-	 
-	 if(fn_CheckRentalOrder(billMonth)){
-		  if (fn_CheckSalesPersonCode()){
-			  fn_unconfirmSalesPerson();
-		  }
-	 }
+    
+     var billMonth = getOrderCurrentBillMonth();
+     
+     
+     if(fn_CheckRentalOrder(billMonth)){
+          if (fn_CheckSalesPersonCode()){
+              fn_unconfirmSalesPerson();
+          }
+     }
 }
 
 
 
 function  fn_validRequiredField_Save(){
-	
-	var rtnMsg ="";
-	var rtnValue=true ;
-	
-	
-	if(FormUtil.checkReqValue($("#cPromotionpac"))){
-		   rtnMsg  +="Please select the type of package <br>" ;
-	       rtnValue =false; 
-	}
-	
-	
-	if(FormUtil.checkReqValue($("#cYear"))){
-		rtnMsg += "Please select the subscription year.";
-	    rtnValue =false; 
-     }else{
-    	    if($("#cYear").val() =="12" 
-    	    	   && $("#cPromotionpac").val() =="544" ){
-    	    	
-    	     	  rtnMsg += "Not allow to choose 2 Years Advance Promotion (10% Discount) Promotion. <br>" ;
-    	    	 rtnValue =false; 
-    	    }
+    
+    var rtnMsg ="";
+    var rtnValue=true ;
+    
+    
+    if(FormUtil.checkReqValue($("#cPromotionpac"))){
+           rtnMsg  +="Please select the type of package <br>" ;
+           rtnValue =false; 
     }
-	
-	
-	if($("#packpro").prop("checked")){
-		 
-		    var expDate   =  resultSrvconfigObject.cvtLastSrvMemExprDate.substring(0,6) ;
+    
+    
+    if(FormUtil.checkReqValue($("#cYear"))){
+        rtnMsg += "Please select the subscription year.";
+        rtnValue =false; 
+     }else{
+            if($("#cYear").val() =="12" 
+                   && $("#cPromotionpac").val() =="544" ){
+                
+                  rtnMsg += "Not allow to choose 2 Years Advance Promotion (10% Discount) Promotion. <br>" ;
+                 rtnValue =false; 
+            }
+    }
+    
+    
+    if($("#packpro").prop("checked")){
+         
+            var expDate   =  resultSrvconfigObject.cvtLastSrvMemExprDate.substring(0,6) ;
             var nowDate   =  resultSrvconfigObject.cvtNowDate.substring(0,6) ;
   
            
-			 if ($("#cPromotionpac").val() == "649"){
-							 
-						 /* 
-						     DateTime ExpDate = DateTime.Parse(hiddenExpireDate.Value);
-				             int expiryYear = ExpDate.Year;
-				             int curYear = DateTime.Now.Year;
-				             int expiryMonth = ExpDate.Month;
-				             int curMonth = DateTime.Now.Month;
-			
-				             int month = ((curYear - expiryYear) * 12) + curMonth - expiryMonth;
-						 */
-						 var month =  parseInt(nowDate ,10)   -   parseInt(expDate ,10);
-						 
-						 if(month > 0){
-							  rtnMsg += "Membership is expired. Not allow to choose Early Bird Promotion.<br>";
-							  rtnValue =false; 
-						 }
-						 
-						 
-	         }else if($("#cPromotionpac").val() == "650"){
-	        	 
-	        	     var month =  parseInt(nowDate ,10)   -   parseInt(expDate ,10);
-	        	     
-	        	     var  ful_exdate   =resultSrvconfigObject.cvtLastSrvMemExprDate;
-	        	     var  ful_nowdate =resultSrvconfigObject.cvtNowDate;
-	        	     
-	        	    
-	        	     if(parseInt(ful_exdate ,10) <  parseInt(ful_nowdate ,10)  ){
-	
-	        	    	 if( resultBasicObject.stkCategoryId == 54){
-	        	    		 if(month > 7 ){
-	        	    			  rtnMsg +="Membership is expired over 7 month. Not allow to choose Fresh Expired Promotion.<br>";
-	        	    			  rtnValue =false; 
-	        	    		 }
-	        	    	 } else {
-	                        if(month > 5){
-	                        	 rtnMsg +="Membership is expired over 5 month. Not allow to choose Fresh Expired Promotion.<br>";
-	                             rtnValue =false; 
-	                        }
-	        	    	 }
-	        	    	 
-	        	    	 
-	        	     }else{
-	        	    	 rtnMsg +="Membership is haven't expired. Not allow to choose Fresh Expired Promotion.<br>";
-	        	         rtnValue =false; 
-	        	     }        	
-	       }
-	 }
-	
-	
-	
-	 //if ($("#cPromoCombox").prop("checked")){
+             if ($("#cPromotionpac").val() == "649"){
+                             
+                         /* 
+                             DateTime ExpDate = DateTime.Parse(hiddenExpireDate.Value);
+                             int expiryYear = ExpDate.Year;
+                             int curYear = DateTime.Now.Year;
+                             int expiryMonth = ExpDate.Month;
+                             int curMonth = DateTime.Now.Month;
+            
+                             int month = ((curYear - expiryYear) * 12) + curMonth - expiryMonth;
+                         */
+                         var month =  parseInt(nowDate ,10)   -   parseInt(expDate ,10);
+                         
+                         if(month > 0){
+                              rtnMsg += "Membership is expired. Not allow to choose Early Bird Promotion.<br>";
+                              rtnValue =false; 
+                         }
+                         
+                         
+             }else if($("#cPromotionpac").val() == "650"){
+                 
+                     var month =  parseInt(nowDate ,10)   -   parseInt(expDate ,10);
+                     
+                     var  ful_exdate   =resultSrvconfigObject.cvtLastSrvMemExprDate;
+                     var  ful_nowdate =resultSrvconfigObject.cvtNowDate;
+                     
+                    
+                     if(parseInt(ful_exdate ,10) <  parseInt(ful_nowdate ,10)  ){
+    
+                         if( resultBasicObject.stkCategoryId == 54){
+                             if(month > 7 ){
+                                  rtnMsg +="Membership is expired over 7 month. Not allow to choose Fresh Expired Promotion.<br>";
+                                  rtnValue =false; 
+                             }
+                         } else {
+                            if(month > 5){
+                                 rtnMsg +="Membership is expired over 5 month. Not allow to choose Fresh Expired Promotion.<br>";
+                                 rtnValue =false; 
+                            }
+                         }
+                         
+                         
+                     }else{
+                         rtnMsg +="Membership is haven't expired. Not allow to choose Fresh Expired Promotion.<br>";
+                         rtnValue =false; 
+                     }          
+           }
+     }
+    
+    
+    
+     //if ($("#cPromoCombox").prop("checked")){
          //  if(FormUtil.checkReqValue($("#packpro"))){
                // rtnMsg +="Please select the promotion <br>";
                // rtnValue =false; 
@@ -1059,47 +1089,47 @@ function  fn_validRequiredField_Save(){
 
 
 function fn_CheckRentalOrder(billMonth){
-	
-	var rtnMsg ="";
-	var rtnValue=true ;
-	    
-	if(resultBasicObject.appTypeId ==66 ){
-		
-		if( $("#rentalStus").text() == "REG" ||$("#rentalStus").text() == "INV" ){
-		
-		    if(billMonth > 60){
-				    	Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
-		                    console.log( "==========3===");
-		                    console.log(result);
-		                    if(result.length >0 ){
-		                        if(result.ordTotOtstnd > 0){
-		                             rtnMsg += "Not allow to choose 2 Years Advance Promotion   Promotion. <br>" ;
-		                             rtnValue =false; 
-		                        }
-		                    }
-		                    
-		                }, function(jqXHR, textStatus, errorThrown) {
-			                    try {
-			                        console.log("status : " + jqXHR.status);
-			                        console.log("code : " + jqXHR.responseJSON.code);
-			                        console.log("message : " + jqXHR.responseJSON.message);
-			                        console.log("detailMessage : "+ jqXHR.responseJSON.detailMessage);
-			                    } catch (e) {
-			                        console.log(e);
-			                    }
-	
-			                    rtnMsg += jqXHR.responseJSON.message;
-			                    rtnValue =false; 
-		                });
-		    }
-		          
-		          
-		}else {
-			 rtnMsg += "Only [REG] or [INV] rental order is allowed to purchase membership.<br>";
-			 rtnValue =false; 
-		}
-	}
-	
+    
+    var rtnMsg ="";
+    var rtnValue=true ;
+        
+    if(resultBasicObject.appTypeId ==66 ){
+        
+        if( $("#rentalStus").text() == "REG" ||$("#rentalStus").text() == "INV" ){
+        
+            if(billMonth > 60){
+                        Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
+                            console.log( "==========3===");
+                            console.log(result);
+                            if(result.length >0 ){
+                                if(result.ordTotOtstnd > 0){
+                                     rtnMsg += "Not allow to choose 2 Years Advance Promotion   Promotion. <br>" ;
+                                     rtnValue =false; 
+                                }
+                            }
+                            
+                        }, function(jqXHR, textStatus, errorThrown) {
+                                try {
+                                    console.log("status : " + jqXHR.status);
+                                    console.log("code : " + jqXHR.responseJSON.code);
+                                    console.log("message : " + jqXHR.responseJSON.message);
+                                    console.log("detailMessage : "+ jqXHR.responseJSON.detailMessage);
+                                } catch (e) {
+                                    console.log(e);
+                                }
+    
+                                rtnMsg += jqXHR.responseJSON.message;
+                                rtnValue =false; 
+                        });
+            }
+                  
+                  
+        }else {
+             rtnMsg += "Only [REG] or [INV] rental order is allowed to purchase membership.<br>";
+             rtnValue =false; 
+        }
+    }
+    
     
     if( rtnValue ==false ){
         Common.alert("Rental Order Validation" +DEFAULT_DELIMITER +rtnMsg );
@@ -1111,9 +1141,9 @@ function fn_CheckRentalOrder(billMonth){
 
 
 function fn_CheckSalesPersonCode(){
-	
+    
     if($("#SALES_PERSON").val() =="") {
-    	
+        
              Common.alert("Please Key-In Sales Person Code. ");
              return   false;
      }
@@ -1122,98 +1152,98 @@ function fn_CheckSalesPersonCode(){
 
 
 function fn_unconfirmSalesPerson(){
-	
-	if($("#hiddenSalesPersonID").val() =="") {
-		 Common.alert("Sales Person Confirmation" +DEFAULT_DELIMITER+"You must confirm the sales person since you have key-in sales person code.");
+    
+    if($("#hiddenSalesPersonID").val() =="") {
+         Common.alert("Sales Person Confirmation" +DEFAULT_DELIMITER+"You must confirm the sales person since you have key-in sales person code.");
          return   false;
-	
-	}else{
-		 Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" , $("#getDataForm").serializeJSON(), null , true , '_saveDiv1'); 
-	}
+    
+    }else{
+         Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" , $("#getDataForm").serializeJSON(), null , true , '_saveDiv1'); 
+    }
 }
 
 
 
 
 function  fn_SaveProcess_Click(_saveOption){
-	
-	
-	
-	/*
-	if(_saveOption == "1"){
-		
-		 //SAVE & PROCEED TO PAYMEMT
+    
+    
+    
+    /*
+    if(_saveOption == "1"){
+        
+         //SAVE & PROCEED TO PAYMEMT
         this.DisablePageControl_Page();
         RadWindowManager1.RadAlert("<b>Quotation successfully saved.<br />Quotation number : " + retQuot.SrvMemQuotNo + "<br />System will auto redirect to payment process after 3 seconds.</b>", 450, 160, "Quotation Saved & Proceed To Payment", "callBackFn", null);
         hiddenQuotID.Value = retQuot.SrvMemQuotID.ToString();
         Timer1.Enabled = true;
         
-	}else if(_saveOption == "2"){
-		 //SAVE QUOTATION ONLY
+    }else if(_saveOption == "2"){
+         //SAVE QUOTATION ONLY
         this.DisablePageControl_Page();
         RadWindowManager1.RadAlert("<b>Quotation successfully saved.<br />Quotation number : " + retQuot.SrvMemQuotNo + "</b>", 450, 160, "Quotation Saved", "callBackFn", null);
         
-	}else {
-		 RadWindowManager1.RadAlert("<b>Failed to save. Please try again later.</b>", 450, 160, "Failed To Save", "callBackFn", null);
-	}*/
+    }else {
+         RadWindowManager1.RadAlert("<b>Failed to save. Please try again later.</b>", 450, 160, "Failed To Save", "callBackFn", null);
+    }*/
 }
 
 function  fn_DoSaveProcess(_saveOption){
-	
-	$("#srvMemQuotId").val(0);
-	$("#srvSalesOrderId").val($("#ORD_ID").val());
-	$("#srvMemQuotNo").val("");
-	$("#srvMemPacId").val($("#cTPackage").val());
-	$("#srvMemPacAmt").val($("#txtPackagePrice").text());
-	$("#srvMemBSAmt").val($("#txtFilterCharge").text());
-	$("#srvMemPv").val(0);
-	$("#srvDuration").val($("#cYear").val());
-	$("#srvRemark").val($("#txtRemark").val());
-	$("#srvQuotStatusId").val(1);
-	$("#srvMemBS12Amt").val(0);
+    
+    $("#srvMemQuotId").val(0);
+    $("#srvSalesOrderId").val($("#ORD_ID").val());
+    $("#srvMemQuotNo").val("");
+    $("#srvMemPacId").val($("#cTPackage").val());
+    $("#srvMemPacAmt").val($("#txtPackagePrice").text());
+    $("#srvMemBSAmt").val($("#txtFilterCharge").text());
+    $("#srvMemPv").val(0);
+    $("#srvDuration").val($("#cYear").val());
+    $("#srvRemark").val($("#txtRemark").val());
+    $("#srvQuotStatusId").val(1);
+    $("#srvMemBS12Amt").val(0);
 
-	if($("#cPromotionpac").val() > 0 ) $("#srvPacPromoId").val( $("#cPromotionpac").val());
-	else  $("#srvPacPromoId").val(0);
+    if($("#cPromotionpac").val() > 0 ) $("#srvPacPromoId").val( $("#cPromotionpac").val());
+    else  $("#srvPacPromoId").val(0);
 
 
-	if($("#cPromo").val() >0 )  $("#srvPromoId").val( $("#cPromo").val()); 
-	else $("#srvPromoId").val(0);
+    if($("#cPromo").val() >0 )  $("#srvPromoId").val( $("#cPromo").val()); 
+    else $("#srvPromoId").val(0);
 
 
     $("#srvQuotCustCntId").val( $("SAVE_CUST_CNTC_ID").val());
     $("#srvMemQty").val(1);
-	$("#srvSalesMemId").val(  $("#hiddenSalesPersonID").val() );
-	$("#srvMemId").val(0);
-	$("#srvOrderStkId").val(  $("#STOCK_ID").val());
-	$("#srvFreq").val($("#hiddentxtBSFreq").val());
-	
-	$("#empChk").val($("#cEmplo").val());
-	
+    $("#srvSalesMemId").val(  $("#hiddenSalesPersonID").val() );
+    $("#srvMemId").val(0);
+    $("#srvOrderStkId").val(  $("#STOCK_ID").val());
+    $("#srvFreq").val($("#hiddentxtBSFreq").val());
+    
+    $("#empChk").val($("#cEmplo").val());
+    
 
     
     if($("#HiddenIsCharge").val() =="1"){
-    	$("#isFilterCharge").val("TRUE");
+        $("#isFilterCharge").val("TRUE");
     }else{
-    	$("#isFilterCharge").val("FALSE");
+        $("#isFilterCharge").val("FALSE");
     }
     
     Common.ajax("GET", "/sales/membership/mNewQuotationSave", $("#save_Form").serialize(), function(result) {
          console.log( result);
          
          if(result.code =="00"){
-        	 
-        	 if(_saveOption == "1"){
-        		 
-        		  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.message + "<br/> System will auto redirect to payment process after 3 seconds. ");
+             
+             if(_saveOption == "1"){
+                 
+                  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.message + "<br/> System will auto redirect to payment process after 3 seconds. ");
 
-        		  setTimeout(function(){ fn_saveResultTrans(result.data) ;}, 3000); 
-        		  
-        	 }else{
-        		  Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data + "<br /> ");
-        	 }
-        	 
+                  setTimeout(function(){ fn_saveResultTrans(result.data) ;}, 3000); 
+                  
+             }else{
+                  Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data + "<br /> ");
+             }
+             
          }else{
-        	  Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");
+              Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");
          }
     });
 }
@@ -1222,11 +1252,11 @@ function  fn_DoSaveProcess(_saveOption){
 
 
 function fn_saveResultTrans(quot_id){
-	
-	$("#_alertOk").click();
-	$("#_NewQuotDiv1").remove();
     
-	Common.popupDiv("/sales/membership/mAutoConvSale.do" ,{QUOT_ID : quot_id}, null , true , '_mConvSaleDiv1');
+    $("#_alertOk").click();
+    $("#_NewQuotDiv1").remove();
+    
+    Common.popupDiv("/sales/membership/mAutoConvSale.do" ,{QUOT_ID : quot_id}, null , true , '_mConvSaleDiv1');
 }
 
 
@@ -1323,8 +1353,8 @@ function createAUIGridHList() {
 
     //그리드 속성 설정
     var gridPros = {           
-   	    usePaging           : true,             //페이징 사용
-   	    pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)           
+        usePaging           : true,             //페이징 사용
+        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)           
         editable                : false,            
         fixedColumnCount    : 1,      
         selectionMode       : "singleRow",  //"multipleCells",    
@@ -1442,40 +1472,40 @@ function createAUIGridOList() {
 
 
 <form  id="save_Form" method="post">
-	<div style="display:none">
-			<input type="text" name="srvMemQuotId" id="srvMemQuotId" />
-			<input type="text" name="srvSalesOrderId" id="srvSalesOrderId" />
-			<input type="text" name="srvMemQuotNo" id="srvMemQuotNo" />
-			<input type="text" name="srvMemPacId" id="srvMemPacId" />
-			<input type="text" name="srvMemPacNetAmt" id="srvMemPacNetAmt" />
-			<input type="text" name="srvMemPacTaxes" id="srvMemPacTaxes" />
-			<input type="text" name="srvMemPacAmt" id="srvMemPacAmt" />
-			<input type="text" name="srvMemBSNetAmt" id="srvMemBSNetAmt" />
-			<input type="text" name="srvMemBSTaxes" id="srvMemBSTaxes" />
-			<input type="text" name="srvMemBSAmt" id="srvMemBSAmt" />
-			<input type="text" name="srvMemPv" id="srvMemPv" />
-			<input type="text" name="srvDuration" id="srvDuration" />
-			<input type="text" name="srvRemark" id="srvRemark" />
-			<input type="text" name="srvQuotValid" id="srvQuotValid" />
-			<input type="text" name="srvCreateAt" id="srvCreateAt" />
-			<input type="text" name="srvCreateBy" id="srvCreateBy" />
-			<input type="text" name="srvQuotStatusId" id="srvQuotStatusId" />
-			<input type="text" name="srvUpdateBy" id="srvUpdateBy" />
-			<input type="text" name="srvUpdateAt" id="srvUpdateAt" />
-			<input type="text" name="srvMemBS12Amt" id="srvMemBS12Amt" />
-			<input type="text" name="srvQuotCustCntId" id="srvQuotCustCntId" />
-			<input type="text" name="srvMemQty" id="srvMemQty" />
-			<input type="text" name="srvPromoId" id="srvPromoId" />
-			<input type="text" name="srvSalesMemId" id="srvSalesMemId" />
-			<input type="text" name="srvMemId" id="srvMemId" />
-			<input type="text" name="srvOrderStkId" id="srvOrderStkId" />
-			<input type="text" name="srvFreq" id="srvFreq" />
-			<input type="text" name="srvPacPromoId" id="srvPacPromoId" />
-			<input type="text" name="isFilterCharge" id="isFilterCharge" />
-			<input type="text" name="empChk" id="empChk" />
-			
-			
-	</div>
+    <div style="display:none">
+            <input type="text" name="srvMemQuotId" id="srvMemQuotId" />
+            <input type="text" name="srvSalesOrderId" id="srvSalesOrderId" />
+            <input type="text" name="srvMemQuotNo" id="srvMemQuotNo" />
+            <input type="text" name="srvMemPacId" id="srvMemPacId" />
+            <input type="text" name="srvMemPacNetAmt" id="srvMemPacNetAmt" />
+            <input type="text" name="srvMemPacTaxes" id="srvMemPacTaxes" />
+            <input type="text" name="srvMemPacAmt" id="srvMemPacAmt" />
+            <input type="text" name="srvMemBSNetAmt" id="srvMemBSNetAmt" />
+            <input type="text" name="srvMemBSTaxes" id="srvMemBSTaxes" />
+            <input type="text" name="srvMemBSAmt" id="srvMemBSAmt" />
+            <input type="text" name="srvMemPv" id="srvMemPv" />
+            <input type="text" name="srvDuration" id="srvDuration" />
+            <input type="text" name="srvRemark" id="srvRemark" />
+            <input type="text" name="srvQuotValid" id="srvQuotValid" />
+            <input type="text" name="srvCreateAt" id="srvCreateAt" />
+            <input type="text" name="srvCreateBy" id="srvCreateBy" />
+            <input type="text" name="srvQuotStatusId" id="srvQuotStatusId" />
+            <input type="text" name="srvUpdateBy" id="srvUpdateBy" />
+            <input type="text" name="srvUpdateAt" id="srvUpdateAt" />
+            <input type="text" name="srvMemBS12Amt" id="srvMemBS12Amt" />
+            <input type="text" name="srvQuotCustCntId" id="srvQuotCustCntId" />
+            <input type="text" name="srvMemQty" id="srvMemQty" />
+            <input type="text" name="srvPromoId" id="srvPromoId" />
+            <input type="text" name="srvSalesMemId" id="srvSalesMemId" />
+            <input type="text" name="srvMemId" id="srvMemId" />
+            <input type="text" name="srvOrderStkId" id="srvOrderStkId" />
+            <input type="text" name="srvFreq" id="srvFreq" />
+            <input type="text" name="srvPacPromoId" id="srvPacPromoId" />
+            <input type="text" name="isFilterCharge" id="isFilterCharge" />
+            <input type="text" name="empChk" id="empChk" />
+            
+            
+    </div>
 </form>
 
 
@@ -1501,16 +1531,16 @@ function createAUIGridOList() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:180px" />
-	<col style="width:*" />
+    <col style="width:180px" />
+    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Order No</th>
-	<td>
-	       <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()">Search</a></p>
+    <th scope="row">Order No</th>
+    <td>
+           <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()">Search</a></p>
            <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()">Reselect</a></p>
- 	</td>
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1522,271 +1552,271 @@ function createAUIGridOList() {
 
 <form action="#"   id="sForm"  name="saveForm" method="post"   onsubmit="return false;">
 
-		
-		<section class="tap_wrap"><!-- tap_wrap start -->
-		<ul class="tap_type1">
-		    <li><a href="#" class="on"  >Order Info</a></li>
-		    <li><a href="#">Contact Person</a></li>
-		    <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1100,380);">BS History</a></li>
-		    <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 1100,380);">Order Product Filter</a></li>
-		</ul>
-		
-		<article class="tap_area"><!-- tap_area start -->
-		
-		<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		</colgroup>
-		<tbody>
-		<tr>
-		    <th scope="row">Order No</th>
-		    <td><span id='ordNo' ></span></td>
-		    <th scope="row">Order Date</th>
-		    <td><span id='ordDt'></span></td>
-		    <th scope="row">Installment Period</th>
-		    <td><span id='InstallmentPeriod'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Order Status</th>
-		    <td><span id='ordStusName'></span></td>
-		    <th scope="row">Rental Status</th>
-		    <td><span id='rentalStus'></span></td>
-		    <th scope="row">Install No</th>
-		    <td><span id='installNo'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Application Type</th>
-		    <td><span id='appTypeDesc'></span></td>
-		    <th scope="row">Reference No</th>
-		    <td><span id='ordRefNo'></span></td>
-		    <th scope="row">Install Date</th>
-		    <td><span id='installDate'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Stock Code</th>
-		    <td><span id='stockCode'></span></td>
-		    <th scope="row">Stock Name</th>
-		    <td colspan="3" id='stockDesc'><span></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Cooling Off Period</th>
-		    <td><span id='coolingOffPeriod'>text</span></td>
-		    <th scope="row">Term</th>
-		    <td><span id='term'></span></td>
-		    <th scope="row">Is Charge</th>
-		    <td><span id='isCharge'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row" rowspan="3">Instalation Address</th>
-		    <td rowspan="3" colspan="3" id='address'><span></span></td>
-		    <th scope="row">Order Outstanding</th>
-		    <td><span id='ordoutstanding'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">AS Outstanding</th>
-		    <td><span id='asoutstanding'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Membership Expire</th>
-		    <td><span id='expire'></span></td>
-		</tr>
-	
-		<tr>
-		    <th scope="row">Customer ID</th>
-		    <td><span id='custId'></span></td>
-		    <th scope="row">Customer Type</th>
-		    <td colspan="3" id='custType'><span></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Customer Name</th>
-		    <td colspan="5" id='custName'><span></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">NRIC/Company No</th>
-		    <td colspan="5" id='custNric' ><span></span></td>
-		</tr>
-		</tbody>
-		</table><!-- table end -->
-		<p class="brown_text mt10">(Is Charge = Yes : Filter service charges is depends on the filter expiration date)</p>
-		</article><!-- tap_area end -->
-		
-		<article class="tap_area"><!-- tap_area start -->
-		
-		<ul class="left_btns mb10">
-		    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
+        
+        <section class="tap_wrap"><!-- tap_wrap start -->
+        <ul class="tap_type1">
+            <li><a href="#" class="on"  >Order Info</a></li>
+            <li><a href="#">Contact Person</a></li>
+            <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1100,380);">BS History</a></li>
+            <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 1100,380);">Order Product Filter</a></li>
+        </ul>
+        
+        <article class="tap_area"><!-- tap_area start -->
+        
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Order No</th>
+            <td><span id='ordNo' ></span></td>
+            <th scope="row">Order Date</th>
+            <td><span id='ordDt'></span></td>
+            <th scope="row">Installment Period</th>
+            <td><span id='InstallmentPeriod'></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Order Status</th>
+            <td><span id='ordStusName'></span></td>
+            <th scope="row">Rental Status</th>
+            <td><span id='rentalStus'></span></td>
+            <th scope="row">Install No</th>
+            <td><span id='installNo'></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Application Type</th>
+            <td><span id='appTypeDesc'></span></td>
+            <th scope="row">Reference No</th>
+            <td><span id='ordRefNo'></span></td>
+            <th scope="row">Install Date</th>
+            <td><span id='installDate'></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Stock Code</th>
+            <td><span id='stockCode'></span></td>
+            <th scope="row">Stock Name</th>
+            <td colspan="3" id='stockDesc'><span></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Cooling Off Period</th>
+            <td><span id='coolingOffPeriod'>text</span></td>
+            <th scope="row">Term</th>
+            <td><span id='term'></span></td>
+            <th scope="row">Is Charge</th>
+            <td><span id='isCharge'></span></td>
+        </tr>
+        <tr>
+            <th scope="row" rowspan="3">Instalation Address</th>
+            <td rowspan="3" colspan="3" id='address'><span></span></td>
+            <th scope="row">Order Outstanding</th>
+            <td><span id='ordoutstanding'></span></td>
+        </tr>
+        <tr>
+            <th scope="row">AS Outstanding</th>
+            <td><span id='asoutstanding'></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Membership Expire</th>
+            <td><span id='expire'></span></td>
+        </tr>
+    
+        <tr>
+            <th scope="row">Customer ID</th>
+            <td><span id='custId'></span></td>
+            <th scope="row">Customer Type</th>
+            <td colspan="3" id='custType'><span></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Customer Name</th>
+            <td colspan="5" id='custName'><span></span></td>
+        </tr>
+        <tr>
+            <th scope="row">NRIC/Company No</th>
+            <td colspan="5" id='custNric' ><span></span></td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+        <p class="brown_text mt10">(Is Charge = Yes : Filter service charges is depends on the filter expiration date)</p>
+        </article><!-- tap_area end -->
+        
+        <article class="tap_area"><!-- tap_area start -->
+        
+        <ul class="left_btns mb10">
+            <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
            <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
-		</ul>
-		
-		<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		    <col style="width:130px" />
-		    <col style="width:*" />
-		</colgroup>
-		<tbody>
-			     <tr>
-				    <th scope="row">Name</th>
-				    <td colspan="5" id="name"><span></span></td>
-				    <th scope="row"></th>
-				    <td><span id="gender"></span></td>
-				</tr>
-				<tr>
-				    <th scope="row">NRIC</th>
-				    <td colspan="5" id="nric"><span></span></td>
-				    <th scope="row">Race</th>
-				    <td><span id="codename1"></span></td>
-				</tr>
-				<tr>
-				    <th scope="row">Mobile No</th>
-				    <td><span id="telM1"></span></td>
-				    <th scope="row">Office No</th>
-				    <td><span id="telO"></span></td>
-				    <th scope="row">Residence No</th>
-				    <td><span id="telR" ></span></td>
-				    <th scope="row">Fax No</th>
-				    <td><span id="telf"></span></td>
-				</tr>
-				<tr>
-				    <th scope="row">Email</th>
-				    <td colspan="7" id="email"><span></span></td>
-				</tr>
-		</tbody>
-		</table><!-- table end -->
-		</article><!-- tap_area end -->
-		
-		
-		
-		<article class="tap_area"><!-- tap_area start -->
-		<article class="grid_wrap"><!-- grid_wrap start -->
-		   <div id="hList_grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
-		</article><!-- grid_wrap end -->
+        </ul>
+        
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+            <col style="width:130px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+                 <tr>
+                    <th scope="row">Name</th>
+                    <td colspan="5" id="name"><span></span></td>
+                    <th scope="row"></th>
+                    <td><span id="gender"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">NRIC</th>
+                    <td colspan="5" id="nric"><span></span></td>
+                    <th scope="row">Race</th>
+                    <td><span id="codename1"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Mobile No</th>
+                    <td><span id="telM1"></span></td>
+                    <th scope="row">Office No</th>
+                    <td><span id="telO"></span></td>
+                    <th scope="row">Residence No</th>
+                    <td><span id="telR" ></span></td>
+                    <th scope="row">Fax No</th>
+                    <td><span id="telf"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Email</th>
+                    <td colspan="7" id="email"><span></span></td>
+                </tr>
+        </tbody>
+        </table><!-- table end -->
+        </article><!-- tap_area end -->
+        
+        
+        
+        <article class="tap_area"><!-- tap_area start -->
+        <article class="grid_wrap"><!-- grid_wrap start -->
+           <div id="hList_grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+        </article><!-- grid_wrap end -->
        </article><!-- tap_area end -->
-		
-		
-		
-		<article class="tap_area"><!-- tap_area start -->
-		<article class="grid_wrap"><!-- grid_wrap start -->
-		   <div id="oList_grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
-		</article><!-- grid_wrap end -->
-		
-		</article><!-- tap_area end -->
-		
-		</section><!-- tap_wrap end -->
-		
-		<aside class="title_line"><!-- title_line start -->
-		<h3>Membership Information</h3>
-		</aside><!-- title_line end -->
-		
-		<section class="search_table"><!-- search_table start -->
-		<form action="#" method="post"  id='collForm' name ='collForm'>
-		
-		<table class="type1"><!-- table start -->
-		<caption>table</caption>
-		<colgroup>
-		    <col style="width:130px" />
-		    <col style="width:*" />  
-		    <col style="width:120px" />
-		    <col style="width:100px" />
-		    <col style="width:100px" />
+        
+        
+        
+        <article class="tap_area"><!-- tap_area start -->
+        <article class="grid_wrap"><!-- grid_wrap start -->
+           <div id="oList_grid_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
+        </article><!-- grid_wrap end -->
+        
+        </article><!-- tap_area end -->
+        
+        </section><!-- tap_wrap end -->
+        
+        <aside class="title_line"><!-- title_line start -->
+        <h3>Membership Information</h3>
+        </aside><!-- title_line end -->
+        
+        <section class="search_table"><!-- search_table start -->
+        <form action="#" method="post"  id='collForm' name ='collForm'>
+        
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:130px" />
+            <col style="width:*" />  
+            <col style="width:120px" />
             <col style="width:100px" />
-		</colgroup>
-		<tbody>
-		<tr>
-		    <th scope="row">Type of Package</th>
-		    <td>
-		    <select class="w100p" id='cTPackage' name='cTPackage'   onChange="fn_cTPackage_onchangeEvt()"></select>
-		    </td>
-		    <th scope="row">Subscription Year</th>
-		    <td width='80px'>
-		    <select  id="cYear"   name= "cYear" style="width:80px"  disabled="disabled"  onChange="fn_cYear_onChageEvent()" >
-		        <option value="12" >1</option>
-		        <option value="24" >2</option>
-		        <option value="36" >3</option>
-		        <option value="48" >4</option>
-		    </select>
-		    </td>
-		    
-		      <th scope="row">Employee </th>
-	            <td>
-	            <select  style="width:80px"  id="cEmplo"   onChange="fn_cYear_onChageEvent()">
-	                <option value="1">Y</option>
-	                <option selected="selected" value="0">N</option>
-	            </select>
-	            </td>
-	            
-	            
-		</tr>
-		<tr>
-		    <th scope="row">Package Promotion</th>
-		    <td>
-		  
-		             <div  style='display:none'>
-		               <label>
-		                <input type="checkbox" disabled="disabled"  id="packpro"   name="packpro" onclick="fn_doPackagePro(this)" /><span></span></label>
-		             </div>
-		            <select   id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
-		    </td>
-		    <th scope="row">Package Price</th>
-		    <td  colspan="3"><span id='txtPackagePrice'></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Filter Promotion</th>
-		    <td>
-		  <div  style='display:none'>
-		    <label><input type="checkbox" disabled="disabled"  id="cPromoCombox"   name="cPromoCombox" onclick="fn_doPromoCombox(this)" /><span></span></label>
-		  </div>
-		    <select  id="cPromo" name='cPromo'  onchange="fn_getFilterChargeList()"></select>
-		    </td>
-		    <th scope="row">Filter Price</th>  
-		    <td colspan="2">
-		          <span id="txtFilterCharge"></span>
-		     </td>
-		    <td>
-                  <div  id="btnViewFilterCharge" class="right_btns"  style="display:inline" >  
+            <col style="width:100px" />
+            <col style="width:100px" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row">Type of Package</th>
+            <td>
+            <select class="w100p" id='cTPackage' name='cTPackage'   onChange="fn_cTPackage_onchangeEvt()"></select>
+            </td>
+            <th scope="row">Subscription Year</th>
+            <td width='80px'>
+            <select  id="cYear"   name= "cYear" style="width:80px"  disabled="disabled"  onChange="fn_cYear_onChageEvent()" >
+                <option value="12" >1</option>
+                <option value="24" >2</option>
+                <option value="36" >3</option>
+                <option value="48" >4</option>
+            </select>
+            </td>
+            
+              <th scope="row">Employee </th>
+                <td>
+                <select  style="width:80px"  id="cEmplo"   onChange="fn_cYear_onChageEvent()">
+                    <option value="1">Y</option>
+                    <option selected="selected" value="0">N</option>
+                </select>
+                </td>
+                
+                
+        </tr>
+        <tr>
+            <th scope="row">Package Promotion</th>
+            <td>
+          
+                     <div  style='display:none'>
+                       <label>
+                        <input type="checkbox" disabled="disabled"  id="packpro"   name="packpro" onclick="fn_doPackagePro(this)" /><span></span></label>
+                     </div>
+                    <select   id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
+            </td>
+            <th scope="row">Package Price</th>
+            <td  colspan="3"><span id='txtPackagePrice'></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Filter Promotion</th>
+            <td>
+          <div  style='display:none'>
+            <label><input type="checkbox" disabled="disabled"  id="cPromoCombox"   name="cPromoCombox" onclick="fn_doPromoCombox(this)" /><span></span></label>
+          </div>
+            <select  id="cPromo" name='cPromo'  onchange="fn_getFilterChargeList()"></select>
+            </td>
+            <th scope="row">Filter Price</th>  
+            <td colspan="2">
+                  <span id="txtFilterCharge"></span>
+             </td>
+            <td>
+                  <div  id="btnViewFilterCharge" class="right_btns"  style="display:none" >  
                         <p class="btn_sky"><a href="#" onclick="javascript:fn_LoadMembershipFilter()">Detail</a></p>
                    </div>
-		</tr>
-		
-		<tr>
-		    <th scope="row">Sales Person Code</th>
-		    <td><input type="text" title="" placeholder="" class=""  style="width:100px" id="SALES_PERSON" name="SALES_PERSON"  />
-		        <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
-		        <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
-		        <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
-		    </td>
-		    <th scope="row">Sales Person Code</th>
-		    <td colspan="3"><span id="SALES_PERSON_DESC"  name="SALES_PERSON_DESC"></span></td>
-		</tr>
-		<tr>
-		    <th scope="row">Remark</th>
-		    <td><textarea cols="20" rows="5" id='txtRemark' name=''></textarea></td>
-		    <th scope="row">BS Frequency</th>
-		    <td colspan="3" ><span id='txtBSFreq'></span></td>
-		</tr>
-		</tbody>
-		</table><!-- table end -->
-		</form>
-		</section><!-- search_table end -->
-		
+        </tr>
+        
+        <tr>
+            <th scope="row">Sales Person Code</th>
+            <td><input type="text" title="" placeholder="" class=""  style="width:100px" id="SALES_PERSON" name="SALES_PERSON"  />
+                <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
+                <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
+                <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
+            </td>
+            <th scope="row">Sales Person Code</th>
+            <td colspan="3"><span id="SALES_PERSON_DESC"  name="SALES_PERSON_DESC"></span></td>
+        </tr>
+        <tr>
+            <th scope="row">Remark</th>
+            <td><textarea cols="20" rows="5" id='txtRemark' name=''></textarea></td>
+            <th scope="row">BS Frequency</th>
+            <td colspan="3" ><span id='txtBSFreq'></span></td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+        </form>
+        </section><!-- search_table end -->
+        
 
-		<ul class="center_btns">
-		    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
-		    
-		 <!--  <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
-		</ul>
-</form>		
+        <ul class="center_btns">
+            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
+            
+         <!--  <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
+        </ul>
+</form>     
 
 </div>
 </section>

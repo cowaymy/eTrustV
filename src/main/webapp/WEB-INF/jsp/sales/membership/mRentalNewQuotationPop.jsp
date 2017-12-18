@@ -25,7 +25,10 @@ var resultSrvconfigObject;
 $(document).ready(function(){
     
     createAUIGridHList();
-    createAUIGridOList();
+    createAUIGridOList();    
+
+    $("#cPromo").prop("disabled", true); 
+    $("#cPromo").attr("class", "disabled"); 
     
     $("#rbt").attr("style","display:none");
     $("#ORD_NO_RESULT").attr("style","display:none");
@@ -402,6 +405,11 @@ function fn_newGetExpDate(old_result){
               $("#term").html("<font color='red'> Passed cooling off period </font>");
          }
          
+         if($("#HiddenIsCharge").val() != "0"){
+             $("#cPromo").prop("disabled", false);
+             $("#cPromo").attr("class", ""); 
+         }
+         
     });
  }
  
@@ -434,19 +442,29 @@ function fn_getFilterChargeList(){
     
     $("#txtFilterCharge").val("");
     
-     Common.ajax("GET", "/sales/membershipRentalQut/getFilterChargeListSum.do",{
-         SALES_ORD_NO : $("#ORD_NO_P").val(),
-         PROMO_ID: $('#cPromo').val() ,
-         SRV_PAC_ID :$('#cTPackage').val() 
-     }, function(result) {
-          console.log( result);
-          
-         if(null != result){
-             if(result[0] !=null){
-                 $("#txtFilterCharge").val( result[0].disamt);
-             }
+    if($("#HiddenIsCharge").val() != "0"){
+    	
+    	 if($('#cPromo').val() == ""){
+    		 
+             fn_getFilterPromotionAmt();  
+             
+         }else{
+    	
+		     Common.ajax("GET", "/sales/membershipRentalQut/getFilterChargeListSum.do",{
+		         SALES_ORD_NO : $("#ORD_NO_P").val(),
+		         PROMO_ID: $('#cPromo').val() ,
+		         SRV_PAC_ID :$('#cTPackage').val() 
+		     }, function(result) {
+		          console.log( result);
+		          
+		         if(null != result){
+		             if(result[0] !=null){
+		                 $("#txtFilterCharge").val( result[0].disamt);
+		             }
+		         }
+		     });
          }
-     });
+    }
 }
 
 
@@ -461,13 +479,14 @@ function fn_InintMembershipPackageInfo_backup(){
     $("#packpro").attr("checked",false);
     $("#packpro").attr("disabled" ,"disabled");
     $("#cPromotionpac").attr("disabled" ,"disabled");
-    $('#cPromotionpac option').remove();
+    $("#cPromotionpac").val("");
     
     
     $("#cPromoCombox").attr("checked",false);
     $("#PromoCombox").attr("disabled" ,"disabled");
-    $("#cPromo").attr("disabled" ,"disabled");
-    $('#cPromo option').remove();
+    $("#cPromo").prop("disabled", true); 
+    $("#cPromo").attr("class", "disabled");
+    $("#cPromo").val("");
     
     $("#txtBSFreq").html("");
     $("#txtMonthlyFee").val("");
@@ -1053,12 +1072,18 @@ function   fn_getMembershipPackageFilterInfo(){
     
     $('#txtFilterCharge').html("");
     $("#cPromoCombox").attr("checked",false);
+
+    //TODO
+    if($("#HiddenIsCharge").val() != "0"){
+        $("#cPromo").prop("disabled", false); 
+        $("#cPromo").attr("class", "");
+    }
+
     
-    $("#cPromo").removeAttr("disabled");
     $("#cPromoCombox").removeAttr("disabled");
    
     
-    $('#cPromo option').remove();
+    $("#cPromo").val("");
     
     var SRV_MEM_PAC_ID = $("#cTPackage").val();
     doGetCombo('/sales/membershipRentalQut/getFilterPromotionCode?PROMO_SRV_MEM_PAC_ID='+SRV_MEM_PAC_ID+"&E_YN="+ $("#cEmplo").val(), '', '','cPromo', 'S' , '');            // Customer Type Combo Box
@@ -1073,7 +1098,7 @@ function fn_InintMembershipPackageInfo(){
 	
 	
 
-    $('#cPromotionpac option').remove();
+    $("#cPromotionpac").val("");
     
     var SALES_ORD_ID = $("#ORD_ID").val() ;
     var SRV_MEM_PAC_ID = $("#cTPackage").val();
@@ -1113,12 +1138,7 @@ function   fn_LoadRentalSVMPackage(_packId){
          $("#cPromotionpac").attr("class" ,"");
          
          if ($("#HiddenHasFilterCharge") .val() == "1") {
-             
-        	 
              $("#btnViewFilterCharge").attr("style","display:inline");
-             
-         } else{
-             $("#txtFilterCharge").val("0.00");
          }
      });
 }
@@ -1131,15 +1151,17 @@ function   fn_LoadRentalSVMPackage(_packId){
 
 function fn_getFilterPromotionAmt(){
 
-    Common.ajax("GET", "/sales/membershipRentalQut/getFilterPromotionAmt.do", {SALES_ORD_NO: resultBasicObject.ordNo ,SRV_PAC_ID :$('#cTPackage').val() }, function(result) {
-         console.log( result);
-         
-         if(null != result){
-             $("#txtFilterCharge").val(result.normaAmt );  
-             
-         }
-         
-    });
+	 if($("#HiddenIsCharge").val() != "0"){
+	    Common.ajax("GET", "/sales/membershipRentalQut/getFilterPromotionAmt.do", {SALES_ORD_NO: resultBasicObject.ordNo ,SRV_PAC_ID :$('#cTPackage').val() }, function(result) {
+	         console.log( result);
+	         
+	         if(null != result){
+	             $("#txtFilterCharge").val(result.normaAmt );  
+	             
+	         }
+	         
+	    });
+	 }
 }
 
 
