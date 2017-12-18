@@ -29,11 +29,16 @@ function fn_openReport(reportType){
 		var pvYear = 0;
 		var array = $("#pvMonth").val().split('/');
 		var startDateArray =  $("#crtDt").val().split('/');
-		var endDateArray =  $("#endDt").val().split('/');
-		startDate = startDateArray[2] + "-" + startDateArray[1] + "-" + startDateArray[0];
-		endDate =  endDateArray[2] + "-" + endDateArray[1] + "-" + endDateArray[0];
+		var endDateArray =  $("#endDt").val().split('/');     
+		
+		
+		startDate =  $("#crtDt").val().substring(6,10) + "-" + $("#crtDt").val().substring(3,5) + "-" + $("#crtDt").val().substring(0,2);
+		endDate =  $("#endDt").val().substring(6,10) + "-" + $("#endDt").val().substring(3,5) + "-" + $("#endDt").val().substring(0,2);
+		
 		pvMonth = parseInt($("#pvMonth").val().substring(0,2));
 		pvYear = parseInt($("#pvMonth").val().substring(3,7));
+		
+		
 		var reportPath = "";
 		var reportTitle = "DailyDSCReport_" +day+month+date.getFullYear();
 		
@@ -104,8 +109,7 @@ function fn_openReport(reportType){
 <input type="hidden" id="V_ENDDATE" name="V_ENDDATE" />
 <input type="hidden" id="V_PVMONTH" name="V_PVMONTH" />
 <input type="hidden" id="V_PVYEAR" name="V_PVYEAR" />
-<input type="hidden" id="v_startdate" name="v_startdate" />
-<input type="hidden" id="v_enddate" name="v_enddate" />
+
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
