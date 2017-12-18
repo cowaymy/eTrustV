@@ -28,6 +28,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -176,21 +177,33 @@ public class InstallationResultListController {
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 		EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
 		EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+		
 		EgovMap orderInfo = null;
 		if(params.get("codeId").toString().equals("258")){
 			orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
 		}else{
 			orderInfo = installationResultListService.getOrderInfo(params);
 		}
-		String promotionId = "";
-		if(params.get("codeId").toString().equals("258")){
-			promotionId = orderInfo.get("c8").toString();
-		}else{
-			promotionId = orderInfo.get("c2").toString();
+		
+		if(null == orderInfo){
+			orderInfo = new EgovMap();
 		}
+		String promotionId = "";
+		if(CommonUtils.nvl(params.get("codeId")).toString().equals("258")){
+			promotionId = CommonUtils.nvl(orderInfo.get("c8"));  
+		}else{
+			promotionId = CommonUtils.nvl(orderInfo.get("c2"));   
+		}
+		
+		if( promotionId.equals("")){
+			promotionId="0";
+		}
+		
 		logger.debug("promotionId : {}", promotionId);
-		EgovMap promotionView = null;
-		List<EgovMap> CheckCurrentPromo  = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(Integer.parseInt(promotionId));
+		
+		EgovMap promotionView = new EgovMap();
+		
+		List<EgovMap> CheckCurrentPromo  = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(Integer.parseInt( promotionId));
 		if(CheckCurrentPromo.size() > 0){
 			promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),true);
 		}else{
@@ -198,9 +211,15 @@ public class InstallationResultListController {
 				 promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),false);
 				
 			}else{
+				
+
+				if(null == promotionView){
+					promotionView = new EgovMap();
+				}
+				
 				promotionView.put("promoId", "0");
-				promotionView.put("promoPrice", params.get("codeId").toString() == "258" ? orderInfo.get("c15") : orderInfo.get("c5"));
-				promotionView.put("promoPV", params.get("codeId").toString() == "258" ? orderInfo.get("c16") : orderInfo.get("c6"));
+				promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")).toString() == "258" ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
+				promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")).toString() == "258" ?  CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
 				promotionView.put("swapPromoId","0");
 				promotionView.put("swapPromoPV","0");
 				promotionView.put("swapPormoPrice","0");

@@ -403,6 +403,7 @@
 	         OR ( ( Extent15.MEM_CODE IS NULL )
 	         AND ( Extent16.WH_LOC_CODE IS NULL ) )
     WHERE  Extent1.INSTALL_ENTRY_ID = #{installEntryId}
+     and rownum =1
 
     </select>
     <select id="getOrderInfo" parameterType="Map" resultType="egovMap">
@@ -3891,7 +3892,7 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 						  SET CT_ID =   #{ctId} ,
 						      UPD_DT =SYSDATE   ,
 						      UPD_USER_ID = #{updator}
-						  WHERE RESULT_ID = #{resultId}
+						  WHERE INSTALL_ENTRY_ID = #{resultId}
      </insert>
 
 <resultMap id="installationNoteListing" type="egovMap" />
@@ -4027,6 +4028,4 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
          WHERE  ( RESULT_ID = #{resultId} )
          </update>
         
-        
-
     </mapper>

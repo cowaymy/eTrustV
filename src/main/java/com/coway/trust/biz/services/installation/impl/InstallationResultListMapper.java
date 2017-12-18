@@ -171,4 +171,6 @@ public interface InstallationResultListMapper {
 	EgovMap  selectInstallInfo(Map<String,Object>params);
 	
 	int updateInstallResultEdit (Map<String, Object> params);
+	
+	
 }
