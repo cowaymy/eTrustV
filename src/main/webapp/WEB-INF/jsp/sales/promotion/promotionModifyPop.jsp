@@ -66,7 +66,7 @@
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells", 
+          //selectionMode       : "singleRow",  //"multipleCells", 
             showRowCheckColumn  : true,
             showEditedCellMarker: false,
             softRemoveRowMode   : false,

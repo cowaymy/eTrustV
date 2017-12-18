@@ -13,9 +13,9 @@
         pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
         editable            : false,            
         fixedColumnCount    : 0,            
-        showStateColumn     : true,             
+        showStateColumn     : false,             
         displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
+      //selectionMode       : "singleRow",  //"multipleCells",            
         headerHeight        : 30,       
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -63,6 +63,12 @@
                     fn_selectAutoDebitList();
                 }
                 break;
+            case 'ecashResult' :
+                AUIGrid.resize(ecashGridID, 942, 380);
+	            if(AUIGrid.getRowCount(ecashGridID) <= 0) {
+                    fn_selectEcashList();
+                }
+                break;
             case 'discountInfo' :
                 AUIGrid.resize(discountGridID, 942, 380);
 	            if(AUIGrid.getRowCount(discountGridID) <= 0) {
@@ -94,6 +100,7 @@
 	<li><a href="#" onClick="javascript:chgTab('transInfo');">Last 6 Months Transaction</a></li>
 	<li><a href="#">Order Configuration</a></li>
 	<li><a href="#" onClick="javascript:chgTab('autoDebitInfo');">Auto Debit Result</a></li>
+	<li><a href="#" onClick="javascript:chgTab('ecashResult');">ecash Result</a></li>
 	<li><a id="aTabGC"href="#">Relief Certificate</a></li>
 	<li><a href="#" onClick="javascript:chgTab('discountInfo');">Discount</a></li>
 </ul>
@@ -157,6 +164,10 @@
     Auto Debit Result
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/autoDebit.jsp" %>
+<!------------------------------------------------------------------------------
+    eCash Result
+------------------------------------------------------------------------------->
+<%@ include file="/WEB-INF/jsp/sales/order/include/ecachResult.jsp" %>
 <!------------------------------------------------------------------------------
     Relief Certificate
 ------------------------------------------------------------------------------->

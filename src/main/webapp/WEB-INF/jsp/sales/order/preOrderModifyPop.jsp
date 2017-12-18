@@ -46,7 +46,7 @@
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells", 
+          //selectionMode       : "singleRow",  //"multipleCells", 
             softRemoveRowMode   : false,
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
