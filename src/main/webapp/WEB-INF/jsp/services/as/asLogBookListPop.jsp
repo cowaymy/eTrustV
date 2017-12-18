@@ -37,16 +37,16 @@ function fn_openGenerate(){
          if($("#asType").val() != '' && $("#asType").val() != null){
         	 whereSql+= " AND ae.AS_TYPE_ID IN(" + $("#asType").val() + ") ";
          }
-         if($("#asAppDate").val() != ''){
+         if($("#asAppDate").val() != ''  && $("#asAppDate").val() != null){
              whereSql+= " AND ae.AS_APPNT_DT = to_date('" + $("#asAppDate").val() + "','DD/MM/YYYY') AND  ae.AS_Stus_ID = 1";
          }
-         if($("#CTCode").val() != ''){
+         if($("#CTCode").val() != '' &&  $("#CTCode").val() != null){
              whereSql+= " AND mr.mem_id = " + $("#CTCode").val() + " ";
          }
-         if($("#branch").val() != ''){
+         if($("#branch").val() != '' &&  $("#branch").val() != null){
              whereSql += " AND ae.AS_BRNCH_ID = " + $("#branch").val() + " ";
          }
-         if($("#CTGroup").val() != ''){
+         if($("#CTGroup").val() != '' &&  $("#CTGroup").val() != null){
              whereSql += " AND ae.AS_MEM_GRP =  '" + $("#CTGroup").val() + "' ";
          }
         $("#reportFormList #reportFileName").val('/services/ASLogBookList.rpt');
