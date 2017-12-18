@@ -233,7 +233,8 @@ function fnSearchBtnList()
                     Common.alert("<spring:message code='expense.msg.NoData'  htmlEscape='false'/>");
                     return true;
                   }  
-                  
+
+            
                   if(result != null && result.selectPoApprovalMainListList.length > 0)
                   {
                      // SummaryGrid-Setting.

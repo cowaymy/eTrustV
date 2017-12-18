@@ -343,6 +343,8 @@ function fnMoveRight()
 
 	                  if (result.selectPoRightMoveList.length > 0 )
 	                  {
+                      //if(result.selectPoRightMoveList[0].reqDate.length )
+		                  
 	                      $('#clearBtn').removeClass("btn_disabled");
 	                      $('#createPoBtn').removeClass("btn_disabled");
 	                  }
