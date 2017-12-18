@@ -4,9 +4,9 @@
     
     <select id="getUserFilterList"  resultType="egovMap">
     <if test="querytype eq 'sum'.toString() ">
-     SELECT SUM (tobe_Change_Qty) total_Tobe_Change_Qty,
-           SUM (shortageQty) total_Shortage_Qty ,
-          SUM (on_Hand_Stock_Qty) total_Qty
+     SELECT NVL(SUM (tobe_Change_Qty),0) total_Tobe_Change_Qty,
+           NVL(SUM (shortageQty),0) total_Shortage_Qty ,
+          NVL(SUM (on_Hand_Stock_Qty),0) total_Qty
       FROM ( 
       </if>
        SELECT FILTERID parts_Id,
@@ -156,7 +156,7 @@
     
     <select id="getFilterChangeList"  resultType="egovMap">
     <if test="querytype eq 'sum'.toString() ">
-	 select SUM(tobe_Change_Qty) total_Tobe_Change_Qty,SUM(totalShortageQty) total_Shortage_Qty  from (
+	 select NVL(SUM(tobe_Change_Qty),0) total_Tobe_Change_Qty,NVL(SUM(totalShortageQty),0) total_Shortage_Qty  from (
 	 </if>
 	SELECT 
 	     <!-- SALES_ORD_ID , SALES_ORD_NO , FILTERID PARTSID ,BS_RESULT_PART_ID , BOM_COMPNT PARTSCD , FILTERNM PARTSNM , COMPNT_QTY TOBECHNAGEQTY , ALTERNATIVEYN, YEAR , MONTH,  BS_RESULT_PART_QTY , QTY -->     
