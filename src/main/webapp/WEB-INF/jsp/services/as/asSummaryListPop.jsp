@@ -114,33 +114,33 @@ function fn_openGenerate(){
         }
         var asSort = "";
         
-        $("#reportForm #reportFileName").val('/services/ASSummaryList.rpt');
-        $("#reportForm #reportDownFileName").val("ASSummaryList_"+day+month+date.getFullYear());
-        $("#reportForm #viewType").val("PDF");
-        $("#reportForm #V_SELECTSQL").val();
-        $("#reportForm #V_WHERESQL").val(whereSql);
-        $("#reportForm #V_GROUPBYSQL").val();
-        $("#reportForm #V_FULLSQL").val();
-        $("#reportForm #V_ASNOFORM").val(asNoFrom);
-        $("#reportForm #V_ASNOTO").val(asNoTo);
-        $("#reportForm #V_ASRNOFROM").val(asRnoFrom);
-        $("#reportForm #V_ASRNOTO").val(asRnoTo);
-        $("#reportForm #V_CTCODE").val(ctCode);
-        $("#reportForm #V_DSCCODE").val(dscCode);
-        $("#reportForm #V_REQUESTDATEFROM").val(requestDateFrom);
-        $("#reportForm #V_REQUESTDATETO").val(requestDateTo);
-        $("#reportForm #V_APPOINDATEFROM").val(appointDateFrom);
-        $("#reportForm #V_APPOINDATETO").val(appointDateTo);
-        $("#reportForm #V_ASTYPEID").val(asTypeId);
-        $("#reportForm #V_ASSTATUS").val(asStus);
-        $("#reportForm #V_ASGROUP").val(asGroup);
-        $("#reportForm #V_ASTEMPSORT").val(asSort);
+        $("#reportFormAS #reportFileName").val('/services/ASSummaryList.rpt');
+        $("#reportFormAS #reportDownFileName").val("ASSummaryList_"+day+month+date.getFullYear());
+        $("#reportFormAS #viewType").val("PDF");
+        $("#reportFormAS #V_SELECTSQL").val();
+        $("#reportFormAS #V_WHERESQL").val(whereSql);
+        $("#reportFormAS #V_GROUPBYSQL").val();
+        $("#reportFormAS #V_FULLSQL").val();
+        $("#reportFormAS #V_ASNOFORM").val(asNoFrom);
+        $("#reportFormAS #V_ASNOTO").val(asNoTo);
+        $("#reportFormAS #V_ASRNOFROM").val(asRnoFrom);
+        $("#reportFormAS #V_ASRNOTO").val(asRnoTo);
+        $("#reportFormAS #V_CTCODE").val(ctCode);
+        $("#reportFormAS #V_DSCCODE").val(dscCode);
+        $("#reportFormAS #V_REQUESTDATEFROM").val(requestDateFrom);
+        $("#reportFormAS #V_REQUESTDATETO").val(requestDateTo);
+        $("#reportFormAS #V_APPOINDATEFROM").val(appointDateFrom);
+        $("#reportFormAS #V_APPOINDATETO").val(appointDateTo);
+        $("#reportFormAS #V_ASTYPEID").val(asTypeId);
+        $("#reportFormAS #V_ASSTATUS").val(asStus);
+        $("#reportFormAS #V_ASGROUP").val(asGroup);
+        $("#reportFormAS #V_ASTEMPSORT").val(asSort);
 
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
         
-        Common.report("reportForm", option);
+        Common.report("reportFormAS", option);
         
     }
 }
@@ -157,7 +157,7 @@ function fn_openGenerate(){
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" id="reportForm">
+<form action="#" id="reportFormAS" method="post">
 <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" />
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
 <input type="hidden" id="V_GROUPBYSQL" name="V_GROUPBYSQL" />
@@ -281,7 +281,7 @@ function fn_openGenerate(){
 </section><!-- search_table end -->
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openGenerate()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormAS').clearForm();">Clear</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
