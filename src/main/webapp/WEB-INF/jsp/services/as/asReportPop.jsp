@@ -71,22 +71,22 @@ function fn_openGenerate(){
         if(date.getDate() < 10){
             day = "0"+date.getDate();
         }
-	    $("#reportForm #V_FSONO1").val(fSONO1);
-	    $("#reportForm #V_FSONO2").val(fSONO2);
-	    $("#reportForm #V_FMEMCTID1").val(fMemCTID1);
-	    $("#reportForm #V_FMEMCTID2").val(fMemCTID2);
-	    $("#reportForm #V_ORDERBY").val(orderBy);
-	    $("#reportForm #V_DSCBRANCH").val(dscBranch);
-	    $("#reportForm #V_WHERESQL").val(whereSql);
-	    $("#reportForm #reportFileName").val('/services/ASReport.rpt');
-	    $("#reportForm #viewType").val("PDF");
-	    $("#reportForm #reportDownFileName").val("ASReport_" +day+month+date.getFullYear());
+	    $("#reportFormASR #V_FSONO1").val(fSONO1);
+	    $("#reportFormASR #V_FSONO2").val(fSONO2);
+	    $("#reportFormASR #V_FMEMCTID1").val(fMemCTID1);
+	    $("#reportFormASR #V_FMEMCTID2").val(fMemCTID2);
+	    $("#reportFormASR #V_ORDERBY").val(orderBy);
+	    $("#reportFormASR #V_DSCBRANCH").val(dscBranch);
+	    $("#reportFormASR #V_WHERESQL").val(whereSql);
+	    $("#reportFormASR #reportFileName").val('/services/ASReport.rpt');
+	    $("#reportFormASR #viewType").val("PDF");
+	    $("#reportFormASR #reportDownFileName").val("ASReport_" +day+month+date.getFullYear());
 	    
 	    var option = {
 	            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
 	    };
 	    
-	    Common.report("reportForm", option);
+	    Common.report("reportFormASR", option);
 	}
 }
 
@@ -119,7 +119,7 @@ $.fn.clearForm = function() {
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" id="reportForm">
+<form action="#" id="reportFormASR">
 <input type="hidden" id="V_FSONO1" name="V_FSONO1" />
 <input type="hidden" id="V_FSONO2" name="V_FSONO2" />
 <input type="hidden" id="V_FMEMCTID1" name="V_FMEMCTID1" />
@@ -211,7 +211,7 @@ $.fn.clearForm = function() {
 </section><!-- search_table end -->
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openGenerate()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormASR').clearForm();">Clear</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
