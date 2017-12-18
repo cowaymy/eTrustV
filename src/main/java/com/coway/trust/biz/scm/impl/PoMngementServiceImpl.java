@@ -148,11 +148,15 @@ public class PoMngementServiceImpl implements PoMngementService {
 		
 		String preCdc = "";
 		String preYear = "";
+		String preWeekTh = "";
+		String stockCode = "";
 		
 		if(updList != null && updList.size() > 0)
 		{
 		  preCdc =  (String) updList.get(0).get("preCdc");
 		  preYear = (String) updList.get(0).get("preYear");
+		  preWeekTh =  (String) updList.get(0).get("preWeekTh");
+		  stockCode = (String) updList.get(0).get("stockCode");
 		}
 		
 		if(StringUtils.isEmpty(preCdc) || StringUtils.isEmpty(preYear)){
@@ -174,6 +178,11 @@ public class PoMngementServiceImpl implements PoMngementService {
 			obj.put("poItemNo", poItemNo);
 			obj.put("newPono", selectNewPoNo);
 			
+			obj.put("preCdc", preCdc);
+			obj.put("preYear", preYear);
+			obj.put("preWeekTh", preWeekTh);
+			obj.put("stockCode", stockCode);						
+			
 			saveCnt++;
 			
 			LOGGER.debug(" >>>>> PO_Issue_Input_Params {} ", obj);
@@ -182,6 +191,9 @@ public class PoMngementServiceImpl implements PoMngementService {
 			poMngementMapper.updatePOIssuItem(obj);
 			// Insert SCMPODetail
 			poMngementMapper.insertPOIssueDetail(obj);
+			// INSERT SCMPOMASTER
+			poMngementMapper.insertPOIssueMaster(obj);
+			
 		}
 		
 		return saveCnt;

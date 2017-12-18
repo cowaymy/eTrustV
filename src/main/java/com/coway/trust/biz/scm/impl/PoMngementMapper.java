@@ -36,4 +36,5 @@ public interface PoMngementMapper
 	
 	int updatePOIssuItem(Map<String, Object> params);
 	int insertPOIssueDetail(Map<String, Object> params);
+	int insertPOIssueMaster(Map<String, Object> params);
 }
