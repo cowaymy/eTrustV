@@ -50,7 +50,19 @@
 				       COMP_TOT_AMT, 
 				       B.NAME, 
 				       A.COMP_NO,
-				       C.STK_DESC,
+				       (SELECT E.STK_DESC
+			            FROM SAL0001D A1,
+			                 SAL0046D B,
+			                 SAL0047D C,
+			                 SAL0002D D,
+			                 SYS0026M E
+			           WHERE A1.SALES_ORD_ID = B.SALES_ORD_ID
+			             AND A1.SALES_ORD_ID = D.SALES_ORD_ID
+			             AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
+			             AND D.ITM_STK_ID = E.STK_ID
+			             AND A.SALES_ORD_NO = A1.SALES_ORD_NO(+)
+			             AND C.SERIAL_NO IS NOT NULL
+			             AND ROWNUM = '1')  AS STK_DESC,
 				       CASE 
 					        WHEN A.STUS_CODE_ID ='1' THEN 'Active'
 					        WHEN A.STUS_CODE_ID ='34' THEN 'Solved'
@@ -58,51 +70,35 @@
 					        WHEN A.STUS_CODE_ID ='36' THEN 'Closed'
 					        WHEN A.STUS_CODE_ID ='44' THEN 'Pending'
 					   END STUS_CODE_ID
-			  FROM SVC0053M A, SYS0038M B,
-			   (SELECT E.STK_DESC, C.INSTALL_DT, C.SERIAL_NO, A.SALES_ORD_NO
-                  FROM SAL0001D A,
-                       SAL0046D B,
-                       SAL0047D C,
-                       SAL0002D D,
-                       SYS0026M E,
-                       SVC0053M F
-                 WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
-                   AND A.SALES_ORD_ID = D.SALES_ORD_ID
-                   AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
-                   AND D.ITM_STK_ID = E.STK_ID
-                   AND F.SALES_ORD_NO = A.SALES_ORD_NO(+)
-                   AND C.SERIAL_NO IS NOT NULL
-                   AND ROWNUM = '1'
-                ) C
+			  FROM SVC0053M A, SYS0038M B
 			 WHERE A.STUS_CODE_ID = B.STUS_CODE_ID
-			 AND A.SALES_ORD_NO = C.SALES_ORD_NO(+)
              <if test="customerCode != null and customerCode  != '' " >    
                      AND A.CUST_ID =  #{customerCode}
              </if>			 
              <if test="orderNum != null and orderNum  != '' " >    
                      AND A.SALES_ORD_NO =  #{orderNum}
              </if>        
-             <if test="ordNo != null and ordNo  != '' " >    
-                     AND A.AS_NO =  #{ordNo}
-             </if>      
              <if test="dscBranch != null and dscBranch  != '' " >    
                      AND A.CODE =  #{dscBranch}
              </if>                            
              <if test="applicationStrDate != null and applicationStrDate  != '' " >    
-                     AND A.ISSUE_DT >=  #{applicationStrDate}
+                     AND A.ISSUE_DT >=  TO_DATE(#{applicationStrDate}, 'DD/MM/YYYY')
              </if>   
              <if test="applicationEndDate != null and applicationEndDate  != '' " >    
-                     AND A.ISSUE_DT <![CDATA[<]]>  #{applicationEndDate}
+                     AND A.ISSUE_DT <![CDATA[<]]>   TO_DATE(#{applicationEndDate}, 'DD/MM/YYYY')
              </if>   
              <if test="status != null and status  != '' " >    
                      AND A.STUS_CODE_ID in ( #{status} )
-             </if> 
+             </if>
+             <if test="code != null and code  != '' " >    
+                     AND A.CODE in ( #{code} )
+             </if>
             ORDER BY   A.COMP_NO DESC               
  </select>
               
               
  <select id="selectSalesOrdNoInfo" parameterType="Map" resultType="egovMap">
-			SELECT E.STK_DESC, TO_CHAR(C.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT, C.SERIAL_NO
+			SELECT E.STK_DESC, TO_CHAR(C.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT, C.SERIAL_NO, A.CUST_ID
 			  FROM SAL0001D A,
 			       SAL0046D B,
 			       SAL0047D C,
@@ -149,13 +145,12 @@
 						       SAL0046D B,
 						       SAL0047D C,
 						       SAL0002D D,
-						       SYS0026M E,
-						       SVC0053M F
+						       SYS0026M E
 						 WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
 						   AND A.SALES_ORD_ID = D.SALES_ORD_ID
 						   AND B.INSTALL_ENTRY_ID = C.ENTRY_ID
 						   AND D.ITM_STK_ID = E.STK_ID
-						   AND F.SALES_ORD_NO = A.SALES_ORD_NO(+)
+						   AND A.SALES_ORD_NO = ( SELECT SALES_ORD_NO FROM  SVC0053M WHERE 1=1 AND COMP_NO  = #{compNo} )
 						   AND C.SERIAL_NO IS NOT NULL
 						   AND ROWNUM = '1'
 						) ORD_INFO

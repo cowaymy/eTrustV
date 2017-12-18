@@ -176,18 +176,18 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
     <th scope="row">Product name</th>
     <td colspan="3">
-        <input type="text" title="" id="product" name="product"  value="" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+        <input type="text" title="" id="product" name="product"  value="${compensationView.stkDesc}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td> 
 </tr>
 
 <tr>
     <th scope="row">Installation Date</th>
     <td colspan="3">
-    <input type="text" title="" id="Installation" name="Installation"  value="" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="Installation" name="Installation"  value="${compensationView.installDt}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
     <th scope="row">Serial No</th>
     <td colspan="3">
-    <input type="text" title="" id="Serial" name="Serial"  value="" placeholder="" class="readonly" readonly="readonly" style="width: 157px; "/>
+    <input type="text" title="" id="Serial" name="Serial"  value="${compensationView.serialNo}" placeholder="" class="readonly" readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 

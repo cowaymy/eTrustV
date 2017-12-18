@@ -30,6 +30,7 @@
                  $("#product").val(result[0].stkDesc)
                  $("#Installation").val(result[0].installDt)
                  $("#Serial").val(result[0].serialNo)
+                 $("#custId").val(result[0].custId)
               
             }); 
              }
@@ -161,9 +162,9 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td>
 </tr>
 <tr>
- <th scope="row">Customer name</th>
+ <th scope="row">Customer ID</th>
     <td colspan="3">
-        <input type="text" title="" id="custId" name="custId" placeholder="" class=" " style="width: 157px; "/>
+        <input type="text" title="" id="custId" name="custId" placeholder="" class="readonly" style="width: 157px; "/>
     </td>
     <th scope="row">Product name</th>
     <td colspan="3">

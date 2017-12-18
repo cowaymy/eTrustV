@@ -65,11 +65,17 @@
             editable : false,
             width : 120
         }, {
+            dataField : "custId",
+            headerText : "Customer ID",
+            editable : false,
+            width : 100
+        }, {
             dataField : "salesOrdNo",
             headerText : "Order<br>Number",
             editable : false,
             width : 100
-        }, {
+        }
+        /* , {
             dataField : "asReqstDt",
             headerText : "Event<br>Date",
             editable : false,
@@ -79,7 +85,8 @@
             headerText : "Event<br>Type",
             editable : false,
             width : 100
-        }, {
+        } */
+        , {
             dataField : "c3",
             headerText : "Cause",
             editable : false,
@@ -90,13 +97,14 @@
             headerText : "Product",
             editable : false,
             width : 150
-        }, {
+        }
+        /* , {
             dataField : "salesOrdNo",
             headerText : "Person to<br>bear",
             editable : false,
             width : 100
-
-        }, {
+        } */
+        , {
             dataField : "compDt",
             headerText : "Complete<br>Date",
             width : 120
@@ -278,11 +286,9 @@
                 <tbody>
                     <tr>
                         <th scope="row">Order Number</th>
-                        <td><input type="text" title="" placeholder="Order Number"
-                            class="w100p" id="orderNum" name="orderNum" /></td>
+                        <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum" /></td>
                         <th scope="row">Customer Code</th>
-                        <td><input type="text" title="" placeholder="Customer Code"
-                            class="w100p" id="customerCode" name="customerCode" /></td>
+                        <td><input type="text" title="" placeholder="Customer Code" class="w100p" id="customerCode" name="customerCode" /></td>
                         <th scope="row">Application Date</th>
                         <td>
                             <div class="date_set w100p">
@@ -304,23 +310,15 @@
                     </tr>
                     <tr>
                         <th scope="row">DSC Branch</th>
-                        <td><input type="text" title="" placeholder="DSC Branch"
-                            class="w100p" id="dscBranch" name="dscBranch" /></td>
-                        <th scope="row">Compensation Type</th>
-                        <td><input type="text" title=""
-                            placeholder="Compensation Type" class="w100p"
-                            id="compensationType" name="compensationType" /></td>
-                        <th scope="row">Responsibility Type</th>
-                        <td><input type="text" title=""
-                            placeholder="Responsibility Type" class="w100p"
-                            id="ResponsibilityType" name="ResponsibilityType" /></td>
-                    </tr>
-                    <!-- 171115 :: 선한이  -->
-                    <tr>
-                        <th scope="row">Cause of Compensation</th>
-                        <td><input type="text" title=""
-                            placeholder="Cause of Compensation" class="w100p"
-                            id="causeOfCompensation" name="causeOfCompensation" /></td>
+                        <td>
+                            <!-- <input type="text" title="" placeholder="DSC Branch" class="w100p" id="dscBranch" name="dscBranch" /> -->
+                            <select id="code" name="code" class="w100p" placeholder="DSC Branch">
+                                      <option value="">DSC Branch</option>
+                               <c:forEach var="list" items="${branchWithNMList}" varStatus="status">
+						             <option value="${list.codeId}">${list.codeName } </option>
+						        </c:forEach>
+						    </select>    
+                        </td>
                         <th scope="row">Status</th>
                         <td>
                                  <select  class="w100p" id="status" name="status">
@@ -333,10 +331,26 @@
                                 </select> 
                         <!-- <input type="text" title="" placeholder="Status" class="w100p" id="status" name="status" /> -->
                         </td>
-                        <th scope="row">Event Type</th>
-                        <td><input type="text" title="" placeholder="Event Type"
-                            class="w100p" id="eventType" name="eventType" /></td>
+                       <th scope="row"></th>
+                       <td></td>
                     </tr>
+                    <!-- 171115 :: 선한이  -->
+                   <!--  <tr>
+                        <th scope="row">Cause of Compensation</th>
+                        <td><input type="text" title=""
+                            placeholder="Cause of Compensation" class="w100p"
+                            id="causeOfCompensation" name="causeOfCompensation" /></td>
+                        
+                        <th scope="row">Event Type</th>
+                        <td><input type="text" title="" placeholder="Event Type" class="w100p" id="eventType" name="eventType" /></td>
+                         <th scope="row">Compensation Type</th>
+                        <td><input type="text" title="" placeholder="Compensation Type" class="w100p"
+                            id="compensationType" name="compensationType" /></td>
+                        <th scope="row">Responsibility Type</th>
+                        <td><input type="text" title=""
+                            placeholder="Responsibility Type" class="w100p"
+                            id="ResponsibilityType" name="ResponsibilityType" /></td>
+                    </tr> -->
 
                 </tbody>
             </table>

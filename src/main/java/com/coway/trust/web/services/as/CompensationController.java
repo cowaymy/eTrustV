@@ -63,6 +63,9 @@ public class CompensationController {
 	@RequestMapping(value = "/compensationList.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
 		
+		List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
+		
+		model.put("branchWithNMList", branchWithNMList);
 		// 호출될 화면
 		return "services/as/compensationList";
 	}
