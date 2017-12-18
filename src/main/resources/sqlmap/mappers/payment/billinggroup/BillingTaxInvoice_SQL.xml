@@ -108,10 +108,12 @@
 	        Extent2.INVC_ITM_AMT_DUE AS INVC_ITM_AMT_DUE, 
 	        TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'MM')) AS month,
 	        TO_NUMBER(TO_CHAR(Extent1.TAX_INVC_REF_DT,'YYYY')) AS year, 
-	        (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO
+	        (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE INVC_ITM_ORD_NO END) AS INVC_ITM_ORD_NO,
+	        Extent3.SALES_ORD_NO
         FROM
             PAY0031D Extent1
             INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
+            INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_ID            
         WHERE
             Extent1.TAX_INVC_TYPE = #{invoiceType}
             <if test="invoiceNo != null and invoiceNo != '' ">
@@ -121,7 +123,7 @@
             AND Extent1.TAX_INVC_SVC_NO = #{serviceNo}
             </if>
             <if test="orderNo != null and orderNo != '' ">
-            AND (CASE WHEN Extent2.INVC_ITM_ORD_NO IS NOT NULL THEN Extent2.INVC_ITM_ORD_NO ELSE '-' END) = #{orderNo}
+            AND Extent3.SALES_ORD_NO = TO_NUMBER(#{orderNo})
             </if>
             <if test="invoicePeriod != null and invoicePeriod != '' ">
             AND Extent1.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')
