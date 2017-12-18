@@ -46,7 +46,7 @@
 				       A.AS_NO,                                                           /* AS ORDER NUMBER */
 				       TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT,        /* COMPLETE DATA  */
 				       TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT,        /* APPLICATION DATE */
-				       A.CODE,                                                             /* DSC BRANCH */
+				       (SELECT DISTINCT CODE || '-' || NAME  CODE_NAME  FROM SYS0005M CODE WHERE 1=1 AND CODE.TYPE_ID= 43 AND CODE.CODE = A.CODE)   AS CODE, /* DSC BRANCH */
 				       COMP_TOT_AMT, 
 				       B.NAME, 
 				       A.COMP_NO,

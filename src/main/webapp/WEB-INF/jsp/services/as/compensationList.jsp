@@ -1,5 +1,11 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<style type="text/css">
+.my_left_style {
+    text-align:left;
+}
+</style>
+
 <script type="text/javaScript">
     var option = {
         width : "1200px", // 창 가로 크기
@@ -74,6 +80,12 @@
             headerText : "Order<br>Number",
             editable : false,
             width : 100
+        }, {
+            dataField : "code",
+            headerText : "DSC Branch",
+            editable : false,
+            width : 120,
+            style : "my_left_style"
         }
         /* , {
             dataField : "asReqstDt",
