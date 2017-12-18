@@ -17,11 +17,33 @@ function tagRespondGrid() {
                                            dataField: "asignFlag",
                                            headerText: "Assign",
                                            width: 160
+                                       }, {
+                                           dataField : "checkFlag",
+                                           headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+                                           width: 65,
+                                           renderer : {
+                                               type : "CheckBoxEditRenderer",
+                                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                               editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                               checkValue : "1", // true, false 인 경우가 기본
+                                               unCheckValue : "0"
+                                           }
                                        },
                                        {
                                            dataField: "majorGrp",
                                            headerText: "Major",
                                            width: 160
+                                       }, {
+                                           dataField : "radioFlag",
+                                           headerText : '<input type="checkbox" id="singleCheckbox" style="width:15px;height:15px;">',
+                                           width: 65,
+                                           renderer : {
+                                               type : "CheckBoxEditRenderer",
+                                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                               editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                               checkValue : "1", // true, false 인 경우가 기본
+                                               unCheckValue : "0"
+                                           }
                                        }
                                       
                            
@@ -53,9 +75,14 @@ function tagRespondGrid() {
             console.log("성공.");
             console.log("data : "+ result);
             AUIGrid.setGridData(gridCtSubgrpID,result);
+            for(var i=0; i< AUIGrid.getGridData(gridCtSubgrpID).length; i++){
+                if(AUIGrid.getCellValue(gridCtSubgrpID, i, "asignFlag") != null && AUIGrid.getCellValue(gridCtSubgrpID, i, "asignFlag") != ""){
+                    AUIGrid.updateRow(gridCtSubgrpID, { "checkFlag" : 1 }, i);
+                }
+            }
         });
         
-        
+      
     });
 
 
@@ -86,7 +113,10 @@ function tagRespondGrid() {
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="CTList_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
+<div id="CTList_grid_wap" style="width:100%; height:300px; margin:0 auto;">
+    <input type="radio" name="majorGrp" class="majorGrp"  checked="checked" />
+
+</div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
