@@ -518,17 +518,9 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"> Plan Year</th>
+    <th scope="row"> Plan Month/Year</th>
     <td>
-    <select id ="cmbYear" nsme = "cmbYear" class="w100p">
-        <option value="">MemberType</option>
-    </select>
-    </td>
-    <th scope="row">Month</th>
-    <td>
-    <select id ="cmbMonth" nsme = "cmbMonth" class="w100p">
-        <option value="">Organization</option>
-    </select>
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0006T_Dt" class="j_date2" value="${searchDt_pop }" />
     </td>
 </tr>
 
