@@ -307,7 +307,8 @@ WHERE 1 = 1
                 CRT_USER_ID,
                 CRT_DT,
                 REQST_TYPE,
-                REQST_TYPE_DTL
+                REQST_TYPE_DTL,
+                REQST_FILE
                 )
         VALUES (  
                 #{reqno}
@@ -324,6 +325,7 @@ WHERE 1 = 1
                 , SYSDATE
                 , #{insTransType}
                 , #{insReqType}
+                , #{keyvalue}
                 )
     </insert>
     <insert id="insRequestItem" parameterType="Map">

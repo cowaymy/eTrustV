@@ -23,12 +23,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.logistics.pointofsales.PointOfSalesService;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.EgovFormBasedFileVo;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -40,6 +47,12 @@ public class PointOfSalesController {
 
 	@Value("${app.name}")
 	private String appName;
+	
+	
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
+	@Value("${web.resource.upload.file}")
+	private String uploadDirWeb;
 
 	@Resource(name = "PointOfSalesService")
 	private PointOfSalesService PointOfSalesService;
@@ -49,6 +62,9 @@ public class PointOfSalesController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
+	
+	@Autowired
+	private FileApplication fileApplication;
 
 	@RequestMapping(value = "/PointOfSalesList.do")
 	public String poslist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -324,6 +340,29 @@ public class PointOfSalesController {
 
 		map.put("data2", mtrList);
 
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/insertFile.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> insertFile(MultipartHttpServletRequest request,
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "FileUpload",
+				1024 * 1024 * 5);
+
+		String upId = (String) params.get("upId");
+		logger.debug("upId : {}", upId);
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		// serivce 에서 파일정보를 가지고, DB 처리.
+		int fileGroupKey = fileApplication.commonAttachByUserId(FileType.WEB, FileVO.createList(list), params);
+		logger.debug("fileGroupKey : {}", fileGroupKey);
+		params.put("fileGroupKey", fileGroupKey);
+		logger.debug("params : {}", params);
+		Map<String , Object> map = new HashMap();
+		map.put("list", list);
+		map.put("keyvalue", fileGroupKey);
 		return ResponseEntity.ok(map);
 	}
 

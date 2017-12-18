@@ -44,7 +44,7 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
 								{dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:false              },                         
 								{dataField: "mtext",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30                },                       
 								{dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },                          
-								{dataField: "reqitmno",headerText :"<spring:message code='log.head.stockmovementrequestitem'/>"  ,width:120    ,height:30 , visible:false},                         
+								{dataField: "reqitmno",headerText :"<spring:message code='log.head.stockmovementrequestitem'/>"  ,width:120    ,height:30 , visible:false},
 								{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
 								{dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},                       
 								{dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30,        visible:false},                         

@@ -361,7 +361,11 @@ $(function(){
          
 //      }else{
        if (f_validatation('save')){
-              insPosInfo();           
+    	   if ($("#fileYn").val() == 'Y'){
+    	        fileSaveAjax();
+    	    }else{
+    	        insPosInfo(); 
+    	    }            
          }      
 //     }     
    });
@@ -408,6 +412,20 @@ $(function(){
     }           
     });
     
+    $("#attachment").click(function(){
+    	$("#UploadFilePopUp_wrap").show();
+    });
+    $("#newUp").click(function(){
+    	
+ 	    if(""==$("input[id=fileSelector]").val()){
+ 	    	Common.alert("Please attach a file.");
+ 	    	return false;
+ 	    }else{
+ 	    	$("#fileYn").val('Y');
+ 	    	$("#UploadFilePopUp_wrap").hide();
+ 	    	//fileSaveAjax();
+ 	    } 	   
+    });
      $("#insTransType").change(function(){
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#insTransType").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
@@ -746,7 +764,7 @@ function insPosInfo(){
 //      data.add = serials;
         data.checked = checkdata;
         data.form = $("#headForm").serializeJSON();
-
+        
         Common.ajaxSync("POST", "/logistics/pos/insertPosInfo.do", data, function(result) {
             Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
             //Common.alert(result.message);
@@ -765,12 +783,35 @@ function insPosInfo(){
             
     }
     
+    
+function fileSaveAjax() {
+    var url;
+    var formData = new FormData();
+    url="/logistics/pos/insertFile.do";    
+    formData.append("excelFile", $("input[name=zipUpload]")[0].files[0]);
+    formData.append("upId", $("#upId").val());
+    Common.ajaxFile(url,formData,function(result){
+    	$("#keyvalue").val(result.keyvalue);
+    	insPosInfo();
+    });
+}
+    
 function saveSerialInfo(){
+	
+	if ($("#fileYn").val() == 'Y'){
+        fileSaveAjax();
+    }else{
+        insPosInfo(); 
+    }           
 
        //if(f_validatation("save") && f_validatation("saveSerial")){
-       if(f_validatation("save")){     
-           insPosInfo();
-        }   
+//        if(f_validatation("save")){
+//     	   if ($("#fileYn").val() == 'Y'){
+//     		   fileSaveAjax();
+//            }else{
+//         	   insPosInfo(); 
+//            }           
+//         }   
     $("#giopenwindow").hide();
     
 }
@@ -802,6 +843,7 @@ function locationList(){
 <form id="headForm" name="headForm" method="post">
 <input type='hidden' id='pridic' name='pridic' value='M'/>
 <input type='hidden' id='headtitle' name='headtitle' value='SOH'/>
+<input type="hidden" id="keyvalue" name="keyvalue"/>
 <!--<input type='hidden' id='trnscType' name='trnscType' value='OH'/> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -934,7 +976,7 @@ function locationList(){
 <h3>Request Item</h3>
 
 <ul class="right_btns">
-            <li><p class="btn_blue2"><a id="attachment">Filter Attachment</a></p></li>
+    <li><p class="btn_blue2"><a id="attachment">File Attachment</a><input type="hidden" id="fileYn" name="fileYn"></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -1002,6 +1044,48 @@ function locationList(){
         
         </section>
     </div>
+    
+    
+    <div id="UploadFilePopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
+
+	<header class="pop_header"><!-- pop_header start -->
+	<h1>Upload File</h1>
+	<ul class="right_opt">
+	    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	</ul>
+	</header><!-- pop_header end -->
+	
+	<section class="pop_body"><!-- pop_body start -->
+	
+	<form id="FileSpaceForm2" name="FileSpaceForm2" enctype="multipart/form-data">
+	<input type="hidden" id="upId" name="upId"/>
+	<table class="type1"><!-- table start -->
+	<caption>table</caption>
+	<colgroup>
+	    <col style="width:160px" />
+	    <col style="width:*" />
+	    <col style="width:160px" />
+	    <col style="width:*" />
+	</colgroup>
+	<tbody>
+	<tr>
+	    <th scope="row">Select File</th>
+	    <td colspan="5" >
+	    <div class="auto_file"><!-- auto_file start -->
+	            <input type="file" id="fileSelector" name="zipUpload" title="file add" />
+	    </div><!-- auto_file end -->
+	    </td>
+	</tr>
+	
+	</tbody>
+	</table><!-- table end -->
+	</form>
+	<ul class="center_btns">
+	    <li><p class="btn_blue2 big"><a id="newUp">Upload File</a></p></li>
+	</ul>
+	</section><!-- pop_body end -->
+	
+	</div><!-- popup_wrap end -->   
 
 
 </section><!-- search_result end -->
