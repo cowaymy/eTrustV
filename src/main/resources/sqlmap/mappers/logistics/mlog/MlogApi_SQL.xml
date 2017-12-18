@@ -535,6 +535,17 @@
 	     , BAL.WH_LOC_DESC location_Name
 	     , BAL.WH_LOC_BRNCH_ID branch_Code
 	     , NVL(BAL.LOC_ID , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_loc_CODE =#{userId})) RDC_CODE
+	     , case when ( SELECT count(1)
+          FROM SYS0028M s28, log0056m l56 
+         WHERE s28.WH_loc_code <![CDATA[<>]]> #{userId}
+           and s28.rdc_code = (SELECT RDC_CODE
+                                 FROM SYS0028M
+                                WHERE WH_loc_CODE = #{userId})
+           and s28.wh_loc_gb in ('03' , '04')
+           and s28.wh_loc_id = l56.loc_id
+           and l56.qty  >  0
+           and L56.STK_CODE = S26.STK_CODE
+      ) > 0 then 'Y' else 'N' end  by_Holder_Y_N
 	  FROM SYS0026M S26
 	     , LOG0043M L43
 	     , LOG0044D L44
@@ -547,7 +558,7 @@
 	           and l56.loc_id   = l63.loc_id(+)
 	           and l56.stk_code = l63.matnr(+)
 	           and l56.loc_id = s28.wh_loc_id 
-	           AND L56.QTY > 0 
+	           AND L56.QTY  > 0 
 	           and S28.WH_loc_CODE = #{userId}
 	         ) BAL
 	  WHERE 1 = 1
