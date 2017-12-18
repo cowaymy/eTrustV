@@ -36,6 +36,9 @@ public class InventoryAllListDto {
 	@ApiModelProperty(value = "Location ID")
 	private int rdcCode;
 
+	@ApiModelProperty(value = "Holder 별 재고존재유무(Y/N)")
+	private String byHolderYN;
+
 	public static InventoryAllListDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, InventoryAllListDto.class);
 	}
@@ -110,6 +113,14 @@ public class InventoryAllListDto {
 
 	public void setRdcCode(int rdcCode) {
 		this.rdcCode = rdcCode;
+	}
+
+	public String getByHolderYN() {
+		return byHolderYN;
+	}
+
+	public void setByHolderYN(String byHolderYN) {
+		this.byHolderYN = byHolderYN;
 	}
 
 }
