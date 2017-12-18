@@ -34,7 +34,7 @@ function fn_openGenerate(){
          var ASCTGroup = $("#CTGroup").val() == '' ? "" : $("#CTGroup option:selected").text();
          var whereSql="";
          
-         if($("#asType").val() != ''){
+         if($("#asType").val() != '' && $("#asType").val() != null){
         	 whereSql+= " AND ae.AS_TYPE_ID IN(" + $("#asType").val() + ") ";
          }
          if($("#asAppDate").val() != ''){
