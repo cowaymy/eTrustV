@@ -280,7 +280,7 @@ function fn_save(){
     $("#esalesOrdNo").val($("#salesOrdNo").val());
     $("#einstallEntryId").val($("#installEntryId").val());
     $("#esalesOrdId").val($("#salesOrdId").val());
-	
+	alert($("#instalStrlDate").val());
 	Common.ajax("POST", "/services/saveResaval",  $("#editForm").serializeJSON(), function(result) {
         console.log("message : " + result.message );
         Common.alert(result.message,fn_close);
@@ -535,7 +535,7 @@ function fn_close(){
 <h3>installation Result Reversal</h3>
 </aside><!-- title_line end -->
 <form action="" id="editForm" method="post">
-<input type="text" id="callTypeId" name = "callTypeId">
+<input type="hidden" id="callTypeId" name = "callTypeId">
 <input type="hidden"  id="einstallEntryNo" name="einstallEntryNo"/>
 <input type="hidden"  id="esalesOrdNo" name="esalesOrdNo"/>
 <input type="hidden"  id="einstallEntryId" name="einstallEntryId"/>
@@ -583,7 +583,7 @@ function fn_close(){
         <select class="w100p" id="reverseReason" name="reverseReason">
         <option value="" selected>Reverse Reason</option>
          <c:forEach var="list" items="${selectReverseReason }" varStatus="status">
-           <option value="${list.code}">${list.code} - ${list.resnDesc}</option>
+           <option value="${list.resnId}">${list.code} - ${list.resnDesc}</option>
         </c:forEach>
         </select>
     </td>
@@ -592,7 +592,7 @@ function fn_close(){
         <select class="w100p" id="failReason" name="failReason">
         <option value="" selected>Fail Reason</option>
          <c:forEach var="list" items="${selectFailReason }" varStatus="status">
-           <option value="${list.code}">${list.code} - ${list.resnDesc}</option>
+           <option value="${list.resnId}">${list.code} - ${list.resnDesc}</option>
         </c:forEach>
         </select>
     </td>
