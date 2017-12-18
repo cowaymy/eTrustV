@@ -390,7 +390,6 @@ $(function(){
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
         doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
         $("#searchOthersReq1").val('');
-        $("#searchOthersReq2").val('');
         $("#tlocationnm").val('');
         $("#tlocation").val('');
         $("#flocationnm").val('');
@@ -759,11 +758,7 @@ function f_addrow(){
                 <tr>
                 <th scope="row">Others Request</th>
                    <td >
-                        <div class="date_set w100p"><!-- date_set start -->
-                        <p><input type="text" class="w100p" id="searchOthersReq1" name="searchOthersReq1" /></p>   
-                        <span> To </span>
-                        <p><input type="text" class="w100p" id="searchOthersReq2" name="searchOthersReq2" /></p>
-                         </div> <!-- date_set end -->
+                      <input type="text" class="w100p" id="searchOthersReq1" name="searchOthersReq1" />  
                     </td> 
                     <th scope="row"></th>
                     <td>
