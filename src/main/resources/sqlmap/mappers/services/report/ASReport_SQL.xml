@@ -4,7 +4,7 @@
      namespace="com.coway.trust.biz.services.report.impl.ASReportMapper">
      
      <select id="selectMemberCodeList" parameterType="Map" resultType="egovMap">
-		     SELECT Project1.MEM_ID CODE_ID  ,
+		     SELECT Project1.MEM_CODE CODE_ID  ,
 		       Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
 		       Project1.NAME NAME  ,
 		       Project1.NRIC NRIC  ,
