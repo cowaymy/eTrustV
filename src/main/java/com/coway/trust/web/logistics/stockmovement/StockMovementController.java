@@ -438,4 +438,18 @@ public class StockMovementController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/GetSerialDataCall.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> GetSerialDataCall(@RequestParam Map<String, Object> params, Model model)
+			throws Exception {
+		
+		logger.debug("445 Line ::: {} " , params);
+
+		List<EgovMap> list = stockMovementService.selectGetSerialDataCall(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
 }

@@ -124,7 +124,7 @@ var serialcolumnLayout =[{dataField:    "rnum",headerText :"<spring:message code
                         		}	 
                          } 
                         ];
-var serialcolumn       =[{dataField:   "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
+/*var serialcolumn       =[{dataField:   "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
                          {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
                          {dataField:    "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
                          {dataField:    "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
@@ -132,7 +132,16 @@ var serialcolumn       =[{dataField:   "itmcd",headerText :"<spring:message code
                          {dataField:    "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
                          {dataField:    "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }  
                         ];                        
+*/
 
+var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
+                         {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
+                         {dataField:    "serialno",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
+                         {dataField:    "scanno",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+                         {dataField:    "serialscan",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
+                         {dataField:    "boxno",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false }
+                        ];
+                        
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
 		rowIdField : "rnum",
@@ -237,7 +246,7 @@ $(document).ready(function(){
         	
         }
     });
-    AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+    /*AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
     	var tvalue = true;
        var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
        serial=serial.trim();
@@ -273,7 +282,7 @@ $(document).ready(function(){
           }
           
        }
-    });
+    });*/
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
 //      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
 
@@ -307,9 +316,9 @@ $(document).ready(function(){
     	
     });
     
-     AUIGrid.bind(serialGrid, "addRowFinish", function(event) {
+     /*AUIGrid.bind(serialGrid, "addRowFinish", function(event) {
     	 AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);
-     });
+     });*/
      
      /*AUIGrid.bind(serialGrid, "keyDown", function(event){
     	 
@@ -497,7 +506,7 @@ function f_getTtype(g , v){
 }
 
 
-function fn_itempopListSerial(data){
+/*function fn_itempopListSerial(data){
     var rowPos = "first";
     var rowList = [];
     var str = "";
@@ -526,39 +535,57 @@ function fn_itempopListSerial(data){
     AUIGrid.addRow(serialGrid, rowList, rowPos);
     
     
-}
+}*/
 
 function fn_itempopList_T(data){
 	var itm_temp = "";
 	var itm_qty  = 0;
 	var itmdata = [];
+	console.log(data);
+	var param = "";
 	for (var i = 0 ; i < data.length ; i++){
+		console.log(data[i].item);
 		if (data[i].item.serialchk == 'Y'){
-		itm_qty = itm_qty + data[i].item.indelyqty;
-		$("#reqstno").val(data[i].item.reqstno);
+			itm_qty = itm_qty + data[i].item.indelyqty;
+			$("#reqstno").val(data[i].item.reqstno);
 		}
+		param = "from="+data[i].item.rcvloc+"&to="+data[i].item.reqloc;
 	}
+	console.log(itm_qty + " ///// " + param);
+	
 	$("#serialqty").val(itm_qty);
 	
 	
-	f_addrow();
+	f_addrow(param);
 }
 
-function f_addrow(){
-	var rowPos = "last";
+function f_addrow(param){
+	/*var rowPos = "last";
     var item = new Object();
     AUIGrid.addRow(serialGrid, item, rowPos);
-    return false;
+    return false;*/
+    //console.log()
+	Common.ajax("GET", "/logistics/stockMovement/GetSerialDataCall.do", param, function(result) {
+		console.log(result);
+		AUIGrid.setGridData(serialGrid , result.data);
+	
+	},  function(jqXHR, textStatus, errorThrown) {
+	    try {
+	    } catch (e) {
+	    }
+	    Common.alert("Fail : " + jqXHR.responseJSON.message);
+	});
+    
 }
 
 function giFunc(){
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
     var check     = AUIGrid.getCheckedRowItems(listGrid);
-    var serials   = AUIGrid.getAddedRowItems(serialGrid);
+    var serials   = AUIGrid.getGridData(serialGrid);//AUIGrid.getAddedRowItems(serialGrid);
     
     if (serialchk){
-	    for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+	    /*for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
 	    	if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
 	    		Common.alert("Please check the serial.")
 	    		return false;
@@ -568,8 +595,8 @@ function giFunc(){
 	    		Common.alert("Please check the serial.")
 	            return false;
 	    	}
-	    }
-	    
+	    }*/
+	    console.log($("#serialqty").val() +' /// ' + AUIGrid.getRowCount(serialGrid));
 	    if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
 	    	Common.alert("Please check the serial.")
 	        return false;

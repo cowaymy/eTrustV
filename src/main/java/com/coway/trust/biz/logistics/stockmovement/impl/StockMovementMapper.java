@@ -64,5 +64,9 @@ public interface StockMovementMapper {
 	int selectDelvryNoItmQeury(Map<String, Object> params);
 
 	void insertReturnGrade(Map<String, Object> setmap);
+	
+	List<EgovMap> selectGetSerialDataCall(Map<String, Object> params);
+	
+	void updateMovementSerialScan(String param);
 
 }

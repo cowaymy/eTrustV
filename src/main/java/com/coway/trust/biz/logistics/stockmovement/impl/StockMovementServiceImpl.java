@@ -175,6 +175,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
+		
+		String scanno = "";
 
 		if (checkList.size() > 0) {
 
@@ -210,8 +212,12 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 								break;
 							}
 						}
+						scanno = (String)insSerial.get("scanno");
 					}
+					stockMoveMapper.updateMovementSerialScan(scanno);
 				}
+				
+				insMap.put("scanno" , scanno);
 				
 			}
 
@@ -322,5 +328,11 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		// return stocktran.selectStockTransferMtrDocInfoList(params);
 		stockMoveMapper.insertStockBooking(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectGetSerialDataCall(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return stockMoveMapper.selectGetSerialDataCall(params);
 	}
 }

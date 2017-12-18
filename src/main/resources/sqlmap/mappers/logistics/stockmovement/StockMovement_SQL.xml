@@ -282,6 +282,7 @@
                               , DELVRY_DT
                               , CRT_USER_ID
                               , CRT_DT
+                              , REQST_NO
                             ) VALUES(
                                 #{delno}
                               , #{ttype}
@@ -289,6 +290,7 @@
                               , to_char(sysdate , 'yyyymmdd')
                               , #{userId}
                               , SYSDATE
+                              , #{scanno}
                             )
     </insert>
     <insert id="insertDeliveryStockMovementDetail" parameterType="Map">
@@ -484,7 +486,7 @@
                                         CRT_USER_ID
                                         )
                           SELECT
-                                   #{serial},
+                                   #{serialno},
                                    #{delno},
                                    DELVRY_NO_ITM,
                                     (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
@@ -498,7 +500,7 @@
                                     AND REQST_NO = #{reqstno}
                                      AND (SELECT serial_no
 							                FROM LOG0061D
-							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serial})
+							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serialno})
 							                 IS NULL                                   
                                                        
      </insert>
@@ -631,6 +633,24 @@
                              #{grade}
                            )
     </insert> 
-       
+    
+    <select id="selectGetSerialDataCall" parameterType="Map" resultType="egovMap">
+        SELECT SCAN_NO SCANNO , SEQ SEQ , SERIAL_SCAN SERIALSCAN , SERIAL_NO SERIALNO 
+             , BOX_NO BOXNO, MATNR ITMCD , FROM_LOC_ID FROMLOC , TO_LOC_ID TOLOC , STK_DESC ITMNAME
+		  FROM LOG0087D L87 , SYS0026M S26 
+		 WHERE 1 = 1 
+		   AND L87.MATNR = S26.STK_CODE 
+		   AND FROM_LOC_ID = #{from}
+		   AND TO_LOC_ID   = #{to}
+		   AND SCAN_TYPE = '30'
+		   AND NVL(SCANINFO_STUS , 'N') = 'N'
+		 ORDER BY MATNR , SEQ
+     </select>
+     
+     <update id="updateMovementSerialScan" parameterType="String">
+        UPDATE LOG0087D
+           SET SCANINFO_STUS = 'Y'
+         WHERE SCAN_NO = #{scanno}
+     </update>
   
 </mapper>
