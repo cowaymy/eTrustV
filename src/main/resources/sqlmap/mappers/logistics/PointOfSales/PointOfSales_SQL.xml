@@ -76,8 +76,11 @@ select ROWNUM rnum , l47.REQST_STUS     status
             and l47.trnsc_type  in('OI','OG','OH')
          </otherwise>
        </choose>     
-           <if test="searchOthersReq1 != null and searchOthersReq2 != null and searchOthersReq1 != '' and searchOthersReq2 != ''" >
-             AND l47.reqst_no BETWEEN #{searchOthersReq1} AND #{searchOthersReq2}
+<!--            <if test="searchOthersReq1 != null and searchOthersReq2 != null and searchOthersReq1 != '' and searchOthersReq2 != ''" > -->
+<!--              AND l47.reqst_no BETWEEN #{searchOthersReq1} AND #{searchOthersReq2} -->
+<!--            </if> -->
+           <if test="searchOthersReq1 != null and searchOthersReq1 != ''" > 
+             AND l47.reqst_no = #{searchOthersReq1} 
            </if>
 <!--     <if test="searchReqType != null and searchReqType !=''">
             AND l47.trnsc_type_dtl = #{searchReqType}
