@@ -20,6 +20,9 @@ public class PreOrderDto {
 	@ApiModelProperty(value = "appType")
 	private String appType;
 
+	@ApiModelProperty(value = "requestDate")
+	private String requestDate;
+
 	@ApiModelProperty(value = "preOrderStatus")
 	private String preOrderStatus;
 
@@ -56,6 +59,14 @@ public class PreOrderDto {
 
 	public void setAppType(String appType) {
 		this.appType = appType;
+	}
+
+	public String getRequestDate() {
+		return requestDate;
+	}
+
+	public void setRequestDate(String requestDate) {
+		this.requestDate = requestDate;
 	}
 
 	public String getPreOrderStatus() {
