@@ -108,5 +108,13 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
 		
 		return CTSubGroupListMapper.selectCTSubGrb(params);
 	}
+
+	@Override
+	public List<EgovMap> selectCTSubGroupMajor(Map<String, Object> params) {
+		
+		return CTSubGroupListMapper.selectCTSubGroupMajor(params);
+	}
+
+
 	
 }

@@ -26,4 +26,8 @@ public interface CTSubGroupListService {
 	List<EgovMap>  selectCTMByDSC(Map<String, Object> params);
 	
 	List<EgovMap>  selectCTSubGrb(Map<String, Object> params);
+
+	List<EgovMap> selectCTSubGroupMajor(Map<String, Object> params);
+
+
 }

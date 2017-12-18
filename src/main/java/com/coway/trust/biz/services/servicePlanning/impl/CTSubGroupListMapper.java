@@ -25,4 +25,6 @@ public interface CTSubGroupListMapper {
 	
 	List<EgovMap> selectCTSubGrb(Map<String, Object> params);
 
+	List<EgovMap> selectCTSubGroupMajor(Map<String, Object> params);
+
 }

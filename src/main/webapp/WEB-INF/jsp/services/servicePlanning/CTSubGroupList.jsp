@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-
+var memId;
 var myGridID;
 var myGridID2;//AREA
 var subList = new Array();
@@ -63,6 +63,8 @@ function CTSubgGroupGrid() {
             keyField : "ctSubGrp",
             valueField : "codeName",
         }
+    
+    
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -265,6 +267,8 @@ $(document).ready(function() {
 	 AUIGrid.bind(myGridID, "cellClick", function(event) {
 	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 	        branchCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
+	        var memIdName = AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode");
+	        memId = memIdName.split('-');
 	        Common.ajax("GET", "/services/serviceGroup/selectCTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
 	            console.log("성공.");
 	            console.log("data : " + result);
@@ -404,6 +408,22 @@ function fn_Clear(){
 	$("#ctSubGrp").val("");
 	$("#CTMemId").val("");
 }
+
+function fn_CTSubAssign(){  
+	  var checkedItems  = AUIGrid.getSelectedItems(myGridID);
+	  
+
+      if(checkedItems.length <= 0) {
+          Common.alert('No data selected.');
+          return false;
+      }
+	
+	
+	memId = memId[0];
+	var jsonObj=  { "memId" : memId};
+    Common.popupDiv("/services/serviceGroup/ctSubGroupPop.do" ,  jsonObj , null , true , '_NewAddDiv1');
+}
+
 
 </script>
 
@@ -572,6 +592,7 @@ function fn_Clear(){
 
 <ul class="right_btns">
    <!--  <li><p class="btn_grid"><a href="#">Edit</a></p></li> -->
+     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubAssign()">CT Sub Assignment</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">SAVE</a></p></li>
 <!--     <li><p class="btn_grid"><a href="#">Outstation Schedule Maintenance</a></p></li>

@@ -197,4 +197,25 @@ public class CTSubGroupListController {
 		return "services/servicePlanning/updateRequestPop";
 	}
 	
+
+		
+		
+		@RequestMapping(value = "/ctSubGroupPop.do")
+		public String ctSubGroupPop(@RequestParam Map<String, Object> params, ModelMap model) {
+			logger.debug("params {}", params);
+			model.addAttribute("params", params);
+			
+			// 호출될 화면
+			return "services/servicePlanning/CTSubGroupPop";
+		}
+	
+		
+
+		@RequestMapping(value = "/selectCtSubGrp")
+		 ResponseEntity<List<EgovMap>> selectCtSubGrp(@RequestParam Map<String, Object> params, HttpServletRequest request) {
+			logger.debug("params {}", params);
+			List<EgovMap> CtSubGrps = CTSubGroupListService.selectCTSubGroupMajor(params);
+			return ResponseEntity.ok(CtSubGrps);
+			
+		}
 }
