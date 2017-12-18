@@ -46,7 +46,7 @@
 		, (select wh_loc_desc from sys0028m where wh_loc_id = l60.storg_loc) req_storg_nm
 		, l60.rciv_issu_storg_loc
 		, (select wh_loc_desc from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
-		, to_char(to_date(l59.USNAM , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
+		, to_char(to_date(L60.DOC_POSTNG_DT , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
 		,l59.CRT_DT
 		from log0059m l59
 		, log0060d l60
@@ -126,7 +126,7 @@
             </foreach>
         </if>
 		<if test="posdatefr != null and posdateto != null and posdatefr != '' and posdateto != ''" > 
-           AND l59.USNAM   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY')+1,'YYYYMMDD')
+           AND L60.DOC_POSTNG_DT   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY'),'YYYYMMDD')
         </if> 
          <if test="crtdatefr != null and crtdateto != null and crtdatefr != '' and crtdateto != ''" > 
            AND l59.CRT_DT between TO_DATE(TO_CHAR(TO_DATE(#{crtdatefr},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') 
