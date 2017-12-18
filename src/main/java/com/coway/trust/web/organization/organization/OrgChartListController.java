@@ -1,5 +1,6 @@
 package com.coway.trust.web.organization.organization;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +126,14 @@ public class OrgChartListController {
 	
 	@RequestMapping(value = "/selectOrgChartDetList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrgChartDetList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		
+		logger.debug(" :::: "+params.toString());
+		
+		String str1 = params.get("memLvl").toString();
+		String[] codeList = str1.split(",");
+		params.put("codeList", codeList);
+		
+		
 		List<EgovMap> OrgChartDetList = orgChartListService.selectOrgChartDetList(params);
 		return ResponseEntity.ok(OrgChartDetList);
 	}

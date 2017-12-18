@@ -880,24 +880,39 @@
 			                AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
 			          WHERE   1 = Extent1.STUS
 			                   AND  Extent1.MEM_TYPE IN ( 1,2,3 )
-			                   <if test="cmbLvl != null and cmbLvl != ''">
-			                   AND  Extent2.MEM_LVL IN  #{cmbLvl} 
-			                   </if>
-			                   <if test="cmbMemberType != null and cmbMemberType != ''">
+                              <if test="codeList != null and codeList != '' ">
+                                     AND  Extent2.MEM_LVL IN
+                                       <foreach item="item" collection="codeList" index="index" open="(" separator="," close=")">
+                                            #{item}
+                                      </foreach>
+                               </if>
+			                   <if test="memType != null and memType != ''">
 			                   AND  CASE 
                                     WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
-                                    ELSE 0 END = #{cmbMemberType}
+                                    ELSE 0 END = #{memType}
                                 </if>
-                                <if test="cmbOrganizationId != null and cmbOrganizationId != ''">                                    
-                               AND  Extent2.ORG_CODE = #{cmbOrganizationId}
+                                <if test="orgId != null and orgId != ''">                                    
+                               AND  Extent2.ORG_CODE =  (select DEPT_CODE
+                                                            from org0005d Extent1
+                                                            where        1=1
+                                                                             AND (Extent1.MEM_LVL = 1)
+                                                                             AND (Extent1.MEM_UP_ID = 31983)        
+                                                                             and   mem_id  = #{orgId})
                                </if>
-                               <if test="cmbOrganizationId != null and cmbOrganizationId != ''">                                    
-                               AND  Extent2.GRP_CODE = #{cmbGroupId}
+                               <if test="gropId != null and gropId != ''">                                    
+                               AND  Extent2.GRP_CODE = (select DEPT_CODE
+                                                            from org0005d Extent1
+                                                            where        1=1
+                                                                             AND Extent1.MEM_LVL = 2                                                                                    
+                                                                             and   mem_id  = #{gropId})
                                </if>
-                               <if test="cmbOrganizationId != null and cmbOrganizationId != ''">                                    
-                               AND  Extent2.DEPT_CODE = #{cmbDepartmentCode}
+                               <if test="deptCode != null and deptCode != ''">                                    
+                               AND  Extent2.DEPT_CODE = (select DEPT_CODE
+                                                            from org0005d Extent1
+                                                            where        1=1
+                                                                             AND Extent1.MEM_LVL = 3                                                                                    
+                                                                             and   mem_id  = #{deptCode})  
                                </if>
-                               <![CDATA[and rownum < 10]]>
 			                  ) Project1
 				  ORDER BY Project1.C1 ASC,
 				           Project1.ORG_CODE ASC,

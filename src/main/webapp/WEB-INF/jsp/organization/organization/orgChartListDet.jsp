@@ -21,9 +21,9 @@
                     headerText : "Member Code",
                     width : 120
              }, {
-                    dataField : "memLvl",
+                    dataField : "name",
                     headerText : "Name",
-                    width : 120
+                    width : 220
              }, {
                     dataField : "nric",
                     headerText : "NRIC",
@@ -65,6 +65,7 @@
 
         // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
         $(document).ready(function(){
+            $("#cmbLvl").multipleSelect("checkAll");
             createAUIGrid();
             AUIGrid.setSelectionMode(myGridID, "singleRow");
             //MemberType set 
@@ -81,7 +82,6 @@
          $('#cmbOrganizationId').change(function (){
             // var paramdata;
              
-             
              $("#groupCode").val( $(this).val());
              $("#memType").val(  $('#cmbMemberType').val() );
              $("#memLvl").val(2);
@@ -97,7 +97,7 @@
             
             //Group Combo 변경시  Department Combo 생성
             $('#cmbGroupId').change(function (){
-                var paramdata;8
+                var paramdata;
                  
                 $("#groupCode").val( $(this).val());
                 $("#memType").val(  $('#cmbMemberType').val() );
@@ -120,12 +120,35 @@ function fn_excelDown(){
         
         
         
+        
+        function get_chked_values(){
+
+			var etcs = '';
+			$('select[name=cmbLvl] option:selected').each(function(index){
+/* 			 etcs += "'" + $(this).val() + "'"  + ','; */
+			 etcs += $(this).val() + ',';
+			});
+			etcs = etcs.substring(0,etcs.length-1);
+			//console.log(etcs);
+			return etcs ;
+
+        }
+        
+                
+        
         // 조회 버튼/리스트 조회.
         function fn_SelectOrgChartDetAjax() {
-        
-            alert("11111:"+ $("#cmbMemberType").val());
-
-	        Common.ajax("GET", "/organization/selectOrgChartDetList.do", $("#orgChartDetForm").serialize(), function(result) {
+            
+            var memLvl = get_chked_values();
+            
+            var paramsDetdata  = { memType :  $("#cmbMemberType").val() , 
+                                     orgId :  $("#cmbOrganizationId").val() , 
+                                    gropId :  $("#cmbGroupId").val(),
+                                  deptCode :  $("#cmbDepartmentCode").val(),
+                                  memLvl   :  memLvl
+                                  };
+            
+	        Common.ajax("GET", "/organization/selectOrgChartDetList.do",paramsDetdata, function(result) {
 	            console.log("성공.");
 	            console.log( result);
 	            AUIGrid.setGridData(myGridID, result);
@@ -137,9 +160,13 @@ function fn_excelDown(){
     </script>
     
 
+<form id='cForm' name='cForm'>
 
+    <input type='hidden' id ='groupCode' name='groupCode'>
+    <input type='hidden' id ='memType' name='memType'>
+    <input type='hidden' id ='memLvl' name='memLvl'>
+</form>
 <section id="content"><!-- content start -->
-
 
 <aside class="title_line"><!-- title_line start -->
 
@@ -152,7 +179,7 @@ function fn_excelDown(){
 
 <section class="search_table"><!-- search_table start -->
 
-<form id='orgChartDetForm' name='orgChartDetForm'>
+<form method="get" id='orgChartDetForm' name='orgChartDetForm'>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -191,7 +218,7 @@ function fn_excelDown(){
 
 <tr>
     <th scope="row">Position</th>
-    <td>
+    <td >
     <select class="multy_select w100p" multiple="multiple" id="cmbLvl" name="cmbLvl">
             <option value="1">GM / GCM / SCTM</option>
             <option value="2">SM / SCM / CTM</option>
@@ -199,14 +226,17 @@ function fn_excelDown(){
             <option value="4">HP / CD / CT</option>
     </select>
     </td>
+    <th scope="row"></th>
+    <td >
+    </td>
 </tr>  
 </tbody>
 </table><!-- table end -->
 
 
-
-</section><!-- search_table end -->
 </form>
+</section><!-- search_table end -->
+
 <section class="search_result"><!-- search_result start -->
 
 <h3></h3>
