@@ -14,14 +14,14 @@ var gridPros = {
 };
 
 var columnLayout=[              
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"name", headerText:"Customer Name"},
-    {dataField:"srvMemQuotNo", headerText:"Quotation No"},
-    {dataField:"invcRefNo", headerText:"Invoice No"},
-    {dataField:"invcRefDt", headerText:"Invoice Date"},
-    {dataField:"invcSubMemPacAmt", headerText:"Invoice Amount"},
-    {dataField:"invcSubMemBsAmt", headerText:"Installment No"},
-    {dataField:"email", headerText:"email", visible:false}
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"name", headerText:"<spring:message code='pay.head.custName'/>"},
+    {dataField:"srvMemQuotNo", headerText:"<spring:message code='pay.head.quotationNo'/>"},
+    {dataField:"invcRefNo", headerText:"<spring:message code='pay.head.invoiceNo'/>"},
+    {dataField:"invcRefDt", headerText:"<spring:message code='pay.head.invoiceDate'/>"},
+    {dataField:"invcSubMemPacAmt", headerText:"<spring:message code='pay.head.invoiceAmt'/>"},
+    {dataField:"invcSubMemBsAmt", headerText:"<spring:message code='pay.head.installmentNo'/>"},
+    {dataField:"email", headerText:"<spring:message code='pay.head.email'/>", visible:false}
 ];
 
 $(document).ready(function(){

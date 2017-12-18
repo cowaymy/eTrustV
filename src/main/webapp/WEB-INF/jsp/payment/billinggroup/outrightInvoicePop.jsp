@@ -17,12 +17,12 @@ var gridPros = {
 };
 
 var columnLayout=[             
-    {dataField:"salesOrdId", headerText:"Order ID" ,visible : false},
-    {dataField:"email", headerText:"Email" ,visible : false},
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"codeName", headerText:"App Type"},
-    {dataField:"salesDt", headerText:"Order Date"},
-    {dataField:"name", headerText:"CustomerName"}
+    {dataField:"salesOrdId", headerText:"<spring:message code='pay.head.orderId'/>" ,visible : false},
+    {dataField:"email", headerText:"<spring:message code='pay.head.email'/>" ,visible : false},
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"codeName", headerText:"<spring:message code='pay.head.appType'/>"},
+    {dataField:"salesDt", headerText:"<spring:message code='pay.head.orderDate'/>"},
+    {dataField:"name", headerText:"<spring:message code='pay.head.custName'/>"}
 ];
 
 $(document).ready(function(){

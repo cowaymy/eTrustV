@@ -25,24 +25,24 @@ var gridPros = {
 var estmHisPopColumnLayout = [ 
     {
         dataField : "refNo",
-        headerText : "Ref No",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : false,
     }, {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false
     }, {
         dataField : "email",
-        headerText : "Email",
+        headerText : "<spring:message code='pay.head.email'/>",
         style : "my-custom-up",
         editable : false,
     },{
         dataField : "crtDt",
-        headerText : "At",
+        headerText : "<spring:message code='pay.head.at'/>",
         editable : false,
     },{
         dataField : "userName",
-        headerText : "By",
+        headerText : "<spring:message code='pay.head.by'/>",
         editable : false,
 }];
 

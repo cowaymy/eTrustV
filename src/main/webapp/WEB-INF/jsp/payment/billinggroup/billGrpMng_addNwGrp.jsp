@@ -28,12 +28,12 @@ $(document).ready(function(){
 var emailAddrLayout = [ 
                        {
                            dataField : "name",
-                           headerText : "Status",
+                           headerText : "<spring:message code='pay.head.status'/>",
                            editable : false,
                            width : 80
                        }, {
                            dataField : "addr",
-                           headerText : "Address",
+                           headerText : "<spring:message code='pay.head.address'/>",
                            editable : false
                        }, {
                            dataField : "custAddId",
@@ -46,39 +46,39 @@ var emailAddrLayout = [
 var contPersonLayout = [ 
                        {
                            dataField : "name",
-                           headerText : "Status",
+                           headerText : "<spring:message code='pay.head.status'/>",
                            editable : false,
                        }, {
                            dataField : "name1",
-                           headerText : "Name",
+                           headerText : "<spring:message code='pay.head.name'/>",
                            editable : false,
                        }, {
                            dataField : "nric",
-                           headerText : "NRIC",
+                           headerText : "<spring:message code='pay.head.nric'/>",
                            editable : false
                        }, {
                            dataField : "codeName",
-                           headerText : "Race",
+                           headerText : "<spring:message code='pay.head.race'/>",
                            editable : false,
                        },{
                            dataField : "gender",
-                           headerText : "Gender",
+                           headerText : "<spring:message code='pay.head.gender'/>",
                            editable : false,
                        },{
                            dataField : "telM1",
-                           headerText : "Tel(Mobile)",
+                           headerText : "<spring:message code='pay.head.mobile'/>",
                            editable : false,
                        },{
                            dataField : "telR",
-                           headerText : "Tel(Residence)",
+                           headerText : "<spring:message code='pay.head.residence'/>",
                            editable : false,
                        },{
                            dataField : "telf",
-                           headerText : "Tel(Fax)",
+                           headerText : "<spring:message code='pay.head.fax'/>",
                            editable : false,
                        },{
                            dataField : "custCntcId",
-                           headerText : "custCntcId",
+                           headerText : "<spring:message code='pay.head.custCntcId'/>",
                            editable : false,
                            visible : false
                        }];

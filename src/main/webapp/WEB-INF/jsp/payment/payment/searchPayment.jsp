@@ -88,51 +88,51 @@ $(document).ready(function(){
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
-    { dataField:"payDt" ,headerText:"TrxNo",editable : false  , visible:false, dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"payTypeId" ,headerText:"TrxNo",editable : false ,visible:false},
+    { dataField:"payDt" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false  , visible:false, dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"payTypeId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false ,visible:false},
 
-    {dataField:"rnum", headerText:"No.", width : 80,editable : false },
-    { dataField:"trxId" ,headerText:"TrxNo",editable : false },
-	{ dataField:"trxDt" ,headerText:"TrxDate",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-	{ dataField:"trxAmt" ,headerText:"TrxTotal" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
-	{ dataField:"payId" ,headerText:"PID" ,editable : false },
-	{ dataField:"orNo" ,headerText:"ORNo" ,editable : false },
-	{ dataField:"payTypeName" ,headerText:"PayType" ,editable : false },
-	{ dataField:"AdvMonth" ,headerText:"AdvMonth" ,editable : false },
-	{ dataField:"trNo" ,headerText:"TRNo" ,editable : false },
-	{ dataField:"orAmt" ,headerText:"ORTotal" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
-	{ dataField:"salesOrdNo" ,headerText:"OrderNo" ,editable : false },
-	{ dataField:"appTypeName" ,headerText:"AppType" ,editable : false },
-	{ dataField:"productDesc" ,headerText:"Product" ,editable : false },
-	{ dataField:"custName" ,headerText:"Customer" ,editable : false },
-	{ dataField:"custIc" ,headerText:"IC/CO No." ,editable : false },
-	{ dataField:"virtlAccNo" ,headerText:"VANo" ,editable : false },
-	{ dataField:"clctrBrnchName" ,headerText:"Branch" ,editable : false },
-	{ dataField:"keyinUserName" ,headerText:"UserName" ,editable : false },
-	{ dataField:"salesOrdId" ,headerText:"SalesOrdId" ,editable : false, visible : true}
+    {dataField:"rnum", headerText:"<spring:message code='pay.head.no'/>", width : 80,editable : false },
+    { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false },
+	{ dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+	{ dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
+	{ dataField:"payId" ,headerText:"<spring:message code='pay.head.PID'/>" ,editable : false },
+	{ dataField:"orNo" ,headerText:"<spring:message code='pay.head.ORNo'/>" ,editable : false },
+	{ dataField:"payTypeName" ,headerText:"<spring:message code='pay.head.payType'/>" ,editable : false },
+	{ dataField:"AdvMonth" ,headerText:"<spring:message code='pay.head.advMonth'/>" ,editable : false },
+	{ dataField:"trNo" ,headerText:"<spring:message code='pay.head.TRNo'/>" ,editable : false },
+	{ dataField:"orAmt" ,headerText:"<spring:message code='pay.head.ORTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
+	{ dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
+	{ dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
+	{ dataField:"productDesc" ,headerText:"<spring:message code='pay.head.product'/>" ,editable : false },
+	{ dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },
+	{ dataField:"custIc" ,headerText:"<spring:message code='pay.head.ICCONo'/>" ,editable : false },
+	{ dataField:"virtlAccNo" ,headerText:"<spring:message code='pay.head.VANo'/>" ,editable : false },
+	{ dataField:"clctrBrnchName" ,headerText:"<spring:message code='pay.head.branch'/>" ,editable : false },
+	{ dataField:"keyinUserName" ,headerText:"<spring:message code='pay.head.userName'/>" ,editable : false },
+	{ dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.salesOrdId'/>" ,editable : false, visible : true}
     ];
 
 var slaveColumnLayout = [ 
-	{ dataField:"payId" ,headerText:"PayID",editable : false ,visible : false },
-	{ dataField:"payItmId" ,headerText:"ItemId",editable : false ,visible : false },
-	{ dataField:"codeName" ,headerText:"Mode",editable : false },
-	{ dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
-	{ dataField:"c7" ,headerText:"CardType" ,editable : false },
-	{ dataField:"codeName1" ,headerText:"CCType" ,editable : false },
-	{ dataField:"payItmCcHolderName" ,headerText:"CCHolder" ,editable : false },
-	{ dataField:"payItmCcExprDt" ,headerText:"CCExpiryDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-	{ dataField:"payItmChqNo" ,headerText:"ChequeNo" ,editable : false },
-	{ dataField:"name" ,headerText:"IssueBank" ,editable : false },
-	{ dataField:"payItmAmt" ,headerText:"Amount" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},                   
-	{ dataField:"c8" ,headerText:"CRCMode" ,editable : false },
-	{ dataField:"accDesc" ,headerText:"Bank Account" ,editable : false },
-	{ dataField:"c3" ,headerText:"Account Code" ,editable : false },
-	{ dataField:"payItmRefDt" ,headerText:"RefDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-	{ dataField:"payItmAppvNo" ,headerText:"ApprNo." ,editable : false },
-	{ dataField:"c4" ,headerText:"EFT" ,editable : false },
-	{ dataField:"c5" ,headerText:"Running No" ,editable : false },
-	{ dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
-	{ dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
+	{ dataField:"payId" ,headerText:"<spring:message code='pay.head.payID'/>",editable : false ,visible : false },
+	{ dataField:"payItmId" ,headerText:"<spring:message code='pay.head.itemId'/>",editable : false ,visible : false },
+	{ dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false },
+	{ dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
+	{ dataField:"c7" ,headerText:"<spring:message code='pay.head.cardType'/>" ,editable : false },
+	{ dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+	{ dataField:"payItmCcHolderName" ,headerText:"<spring:message code='pay.head.CCHolder'/>" ,editable : false },
+	{ dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+	{ dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
+	{ dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },
+	{ dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},                   
+	{ dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
+	{ dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
+	{ dataField:"c3" ,headerText:"<spring:message code='pay.head.account'/>" ,editable : false },
+	{ dataField:"payItmRefDt" ,headerText:"<spring:message code='pay.head.refDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+	{ dataField:"payItmAppvNo" ,headerText:"<spring:message code='pay.head.apprNo'/>" ,editable : false },
+	{ dataField:"c4" ,headerText:"<spring:message code='pay.head.eft'/>" ,editable : false },
+	{ dataField:"c5" ,headerText:"<spring:message code='pay.head.runningNo'/>" ,editable : false },
+	{ dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false },
+	{ dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
               
 var popEditColumnLayout = [    
@@ -170,27 +170,27 @@ var popEditColumnLayout = [
              }
            }
     },    
-    { dataField:"payId" ,headerText:"TEST",editable : false , visible : false },
-    { dataField:"codeName" ,headerText:"Mode",editable : false},
-    { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
-    { dataField:"c7" ,headerText:"CardType",editable : false },
-    { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
-    { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
-    { dataField:"payItmCcHolderName" ,headerText:"CCHolder" ,editable : false },
-    { dataField:"payItmCcExprDt" ,headerText:"CCExpiryDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"" ,headerText:"CRCNo" ,editable : false },
-    { dataField:"payItmChqNo" ,headerText:"ChequeNo" ,editable : false },
-    { dataField:"name" ,headerText:"IssueBank" ,editable : false },                   
-    { dataField:"payItmAmt" ,headerText:"Amount" ,editable : false },
-    { dataField:"c8" ,headerText:"CRCMode" ,editable : false },
-    { dataField:"accDesc" ,headerText:"BankAccount" ,editable : false },
-    { dataField:"payItmRefDt" ,headerText:"RefDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"payItmAppvNo" ,headerText:"ApprNo." ,editable : false },
-    { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
-    { dataField:"c4" ,headerText:"EFT" ,editable : false },
-    { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
-    { dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false },
-    { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
+    { dataField:"payId" ,headerText:" ",editable : false , visible : false },
+    { dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false},
+    { dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
+    { dataField:"c7" ,headerText:"<spring:message code='pay.head.cardType'/>",editable : false },
+    { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+    { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+    { dataField:"payItmCcHolderName" ,headerText:"<spring:message code='pay.head.CCHolder'/>" ,editable : false },
+    { dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"" ,headerText:"<spring:message code='pay.head.CRCNo'/> ,editable : false }", editable : false},
+    { dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
+    { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },                   
+    { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false },
+    { dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
+    { dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
+    { dataField:"payItmRefDt" ,headerText:"<spring:message code='pay.head.refDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"payItmAppvNo" ,headerText:"<spring:message code='pay.head.apprNo'/>" ,editable : false },
+    { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false },
+    { dataField:"c4" ,headerText:"<spring:message code='pay.head.eft'/>" ,editable : false },
+    { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.runningNo'/>" ,editable : false },
+    { dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false },
+    { dataField:"payItmId" ,headerText:"<spring:message code='pay.head.payItemId'/>" ,editable : false, visible:false }
     ];
 
 var popColumnLayout = [    
@@ -213,51 +213,51 @@ var popColumnLayout = [
             }
      }, 
      { dataField:"payId" ,headerText:"TEST",editable : false , visible : false },
-     { dataField:"codeName" ,headerText:"Mode",editable : false},
-     { dataField:"payItmRefNo" ,headerText:"RefNo",editable : false },
-     { dataField:"c7" ,headerText:"CardType",editable : false },
-     { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
-     { dataField:"codeName1" ,headerText:"CCType" ,editable : false },
-     { dataField:"payItmCcHolderName" ,headerText:"CCHolder" ,editable : false },
-     { dataField:"payItmCcExprDt" ,headerText:"CCExpiryDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-     { dataField:"" ,headerText:"CRCNo" ,editable : false },
-     { dataField:"payItmChqNo" ,headerText:"ChequeNo" ,editable : false },
-     { dataField:"name" ,headerText:"IssueBank" ,editable : false },                   
-     { dataField:"payItmAmt" ,headerText:"Amount" ,editable : false },
-     { dataField:"c8" ,headerText:"CRCMode" ,editable : false },
-     { dataField:"accDesc" ,headerText:"BankAccount" ,editable : false },
-     { dataField:"payItmRefDt" ,headerText:"RefDate" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-     { dataField:"payItmAppvNo" ,headerText:"ApprNo." ,editable : false },
-     { dataField:"payItmRem" ,headerText:"Remark" ,editable : false },
-     { dataField:"c4" ,headerText:"EFT" ,editable : false },
-     { dataField:"payItmRem" ,headerText:"Running No" ,editable : false },
-     { dataField:"payItmBankChrgAmt" ,headerText:"BankCharge" ,editable : false },
-     { dataField:"payItmId" ,headerText:"payItemId" ,editable : false, visible:false }
+     { dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false},
+     { dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
+     { dataField:"c7" ,headerText:"<spring:message code='pay.head.cardType'/>",editable : false },
+     { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+     { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+     { dataField:"payItmCcHolderName" ,headerText:"<spring:message code='pay.head.CCHolder'/>" ,editable : false },
+     { dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"" ,headerText:"<spring:message code='pay.head.CRCNo'/> ,editable : false }" ,editable : false },
+     { dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
+     { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },                   
+     { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false },
+     { dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
+     { dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
+     { dataField:"payItmRefDt" ,headerText:"<spring:message code='pay.head.refDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"payItmAppvNo" ,headerText:"<spring:message code='pay.head.apprNo'/>" ,editable : false },
+     { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false },
+     { dataField:"c4" ,headerText:"<spring:message code='pay.head.eft'/>" ,editable : false },
+     { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.runningNo'/>" ,editable : false },
+     { dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false },
+     { dataField:"payItmId" ,headerText:"<spring:message code='pay.head.payItemId'/>" ,editable : false, visible:false }
      ];
      
 var popSlaveColumnLayout = [ 
-    { dataField:"trxId" ,headerText:"TrxNo",editable : false},
-    { dataField:"trxDt" ,headerText:"TrxDate",editable : false  },
-    { dataField:"trxAmt" ,headerText:"TrxTotal",editable : false },
-    { dataField:"payId" ,headerText:"PID",editable : false },
-    { dataField:"orNo" ,headerText:"ORNo" ,editable : false },
-    { dataField:"trNo" ,headerText:"TRNo" ,editable : false },
-    { dataField:"orAmt" ,headerText:"ORTotal" ,editable : false },
-    { dataField:"salesOrdNo" ,headerText:"OrderNo" ,editable : false },
-    { dataField:"appTypeName" ,headerText:"AppType" ,editable : false },
-    { dataField:"productDesc" ,headerText:"Product" ,editable : false },
-    { dataField:"custName" ,headerText:"Customer" ,editable : false },                   
-    { dataField:"custIc" ,headerText:"IC/CO No." ,editable : false },
-    { dataField:"keyinBrnchName" ,headerText:"Branch" ,editable : false },
-    { dataField:"keyinUserName" ,headerText:"UserName" ,editable : false },
+    { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false},
+    { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false  },
+    { dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>",editable : false },
+    { dataField:"payId" ,headerText:"<spring:message code='pay.head.PID'/>",editable : false },
+    { dataField:"orNo" ,headerText:"<spring:message code='pay.head.ORNo'/>" ,editable : false },
+    { dataField:"trNo" ,headerText:"<spring:message code='pay.head.TRNo'/>" ,editable : false },
+    { dataField:"orAmt" ,headerText:"<spring:message code='pay.head.ORTotal'/>" ,editable : false },
+    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
+    { dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
+    { dataField:"productDesc" ,headerText:"<spring:message code='pay.head.product'/>" ,editable : false },
+    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },                   
+    { dataField:"custIc" ,headerText:"<spring:message code='pay.head.ICCONo'/>" ,editable : false },
+    { dataField:"keyinBrnchName" ,headerText:"<spring:message code='pay.head.branch'/>" ,editable : false },
+    { dataField:"keyinUserName" ,headerText:"<spring:message code='pay.head.userName'/>" ,editable : false }
     ];
 
 var viewHistoryLayout=[
-    { dataField:"typename" ,headerText:"Type" ,editable : false },
-    { dataField:"valuefr" ,headerText:"From" ,editable : false },
-    { dataField:"valueto" ,headerText:"To" ,editable : false },
-    { dataField:"createdate" ,headerText:"Update Date" ,editable : false, formatString : "dd-mm-yyyy" },
-    { dataField:"creator" ,headerText:"Updator" ,editable : false }
+    { dataField:"typename" ,headerText:"<spring:message code='pay.head.type'/>" ,editable : false },
+    { dataField:"valuefr" ,headerText:"<spring:message code='pay.head.from'/>" ,editable : false },
+    { dataField:"valueto" ,headerText:"<spring:message code='pay.head.to'/>" ,editable : false },
+    { dataField:"createdate" ,headerText:"<spring:message code='pay.head.updateDate'/>" ,editable : false, formatString : "dd-mm-yyyy" },
+    { dataField:"creator" ,headerText:"<spring:message code='pay.head.updator'/>" ,editable : false }
     ];
 
 
@@ -365,13 +365,13 @@ function fn_openDivPop(val){
 	            AUIGrid.setGridData(popSlaveGridID, result.selectPaymentDetailSlaveList);
 	            
 	        },function(jqXHR, textStatus, errorThrown) {
-	            Common.alert("Invalid item selected.");
+	            Common.alert("<spring:message code='pay.alert.invalidItem'/>");
 
 	        });
 	        
 	   }else{
 	       $("#popup_wrap").hide();
-	       Common.alert("search records first");
+	       Common.alert("<spring:message code='pay.alert.searchFirst'/>");
 	       return;
 	   }
 		
@@ -444,13 +444,13 @@ function fn_openDivPop(val){
                 //팝업그리드 뿌리기
                 AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
             },function(jqXHR, textStatus, errorThrown) {
-            	Common.alert("Failed to update. Please try again later.");
+            	Common.alert("<spring:message code='pay.alert.failedUpdate'/>");
 
             });
             
        }else{
            $("#popup_wrap2").hide();
-           Common.alert("search records first");
+           Common.alert("<spring:message code='pay.alert.searchFirst'/>");
            return;
        }
     }
@@ -750,12 +750,12 @@ function saveChanges() {
 	var branchId = $("#edit_branchId").val();
 	
 	if($.trim(trNo).length > 10 ){
-        Common.alert("* The TR number cannot exceed length of 10.");
+        Common.alert("<spring:message code='pay.alert.trNo'/>");
         return;
     }
 	
 	if($.trim(branchId ) == ""){
-		Common.alert("* Please select the key-in branch.");
+		Common.alert("<spring:message code='pay.alert.selectBranch'/>");
 		return;
 	}
 	
@@ -764,7 +764,7 @@ function saveChanges() {
         Common.alert(result.message);
 
 	}, function(jqXHR, textStatus, errorThrown) {
-        Common.alert("Failed to update. Please try again later.");
+        Common.alert("<spring:message code='pay.alert.failedUpdate'/>");
     });
 }
 
@@ -818,7 +818,7 @@ function fn_goSalesConfirm(){
     
     if($("#edit_txtCollectorCode").val() =="") {
              
-             Common.alert("Please Key-In Sales Person Code. ");
+             Common.alert("<spring:message code='pay.alert.salesPersonCode'/>");
              return ;
      }
          
@@ -1031,7 +1031,7 @@ function fn_clear(){
 <div id="popup_wrap" class="popup_wrap" style="display:none;">
 	<!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
-		<h1>VIEW PAYMENT DETAILS</h1>
+		<h1><spring:message code='pay.title.viewPayDets'/></h1>
 		<ul class="right_opt">
 		    <li><p class="btn_blue2"><a href="#" onclick="fn_close();"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
@@ -1163,7 +1163,7 @@ function fn_clear(){
 <div id="popup_wrap2" class="popup_wrap" style="display:none;">
 	<!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
-	<h1>PAYMENT EDITOR</h1>
+	<h1><spring:message code='pay.title.payEditor'/></h1>
 	<ul class="right_opt">
 	    <li><p class="btn_blue2"><a href="#" onclick="fn_close2();"><spring:message code='sys.btn.close'/></a></p></li>
 	</ul>
@@ -1301,7 +1301,7 @@ function fn_clear(){
 </div><!-- popup_wrap end -->
 <div id="view_history_wrap" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
-        <h1>PAYMENT MASTER HISTORY</h1>
+        <h1><spring:message code='pay.title.payMasHis'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -1318,7 +1318,7 @@ function fn_clear(){
 
 <div id="view_detail_wrap" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
-        <h1>PAYMENT DETAIL HISTORY</h1>
+        <h1><spring:message code='pay.title.payDetsHis'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -1340,7 +1340,7 @@ function fn_clear(){
 
 <div id="item_edit_cash" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
-        <h1>PAYMENT ITEM - EDIT</h1>
+        <h1><spring:message code='pay.title.payItmEdit'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -1408,7 +1408,7 @@ function fn_clear(){
 
 <div id="item_edit_credit" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
-        <h1>PAYMENT ITEM - EDIT</h1>
+        <h1><spring:message code='pay.title.payItmEdit'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -1523,7 +1523,7 @@ function fn_clear(){
 
 <div id="item_edit_cheque" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
-        <h1>PAYMENT ITEM - EDIT</h1>
+        <h1><spring:message code='pay.title.payItmEdit'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -1601,7 +1601,7 @@ function fn_clear(){
 <!-- content end -->
 <div id="item_edit_online" class="popup_wrap size_small" style="display:none;">
     <header class="pop_header">
-        <h1>PAYMENT ITEM - EDIT</h1>
+        <h1><spring:message code='pay.title.payItmEdit'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideDetailPopup()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>

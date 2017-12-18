@@ -12,13 +12,13 @@ var gridPros = {
 };
 
 var columnLayout=[             
-    {dataField:"billId" ,headerText:"Bill ID",visible : false},
-    {dataField:"email" ,headerText:"Email",visible : false},
-    {dataField:"custBillGrpNo", headerText:"Group No",width: 200 , editable : false },
-    {dataField:"year", headerText:"Year",width: 100 , editable : false },
-    {dataField:"month", headerText:"Month",width: 100 , editable : false },
-    {dataField:"soNo", headerText:"Order No",width: 250 , editable : false },
-    {dataField:"custName", headerText:"Customer Name"}
+    {dataField:"billId" ,headerText:"<spring:message code='pay.head.billId'/>",visible : false},
+    {dataField:"email" ,headerText:"<spring:message code='pay.head.email'/>",visible : false},
+    {dataField:"custBillGrpNo", headerText:"<spring:message code='pay.head.grpNo'/>",width: 200 , editable : false },
+    {dataField:"year", headerText:"<spring:message code='pay.head.year'/>",width: 100 , editable : false },
+    {dataField:"month", headerText:"<spring:message code='pay.head.month'/>",width: 100 , editable : false },
+    {dataField:"soNo", headerText:"<spring:message code='pay.head.orderNo'/>",width: 250 , editable : false },
+    {dataField:"custName", headerText:"<spring:message code='pay.head.custName'/>"}
 ];
 
 //Grid에서 선택된 RowID

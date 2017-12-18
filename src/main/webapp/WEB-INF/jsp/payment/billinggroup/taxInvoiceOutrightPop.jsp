@@ -26,14 +26,14 @@ $(document).ready(function(){
 
  // AUIGrid 칼럼 설정
  var columnLayout = [
-     { dataField:"taxInvcId" ,headerText:"Tax Invoice ID",width: 100 , editable : false ,visible : false},
-     { dataField:"taxInvcRefNo" ,headerText:"Invoice No.",width: 180 , editable : false },
-     { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-     { dataField:"invcItmOrdNo" ,headerText:"Order No.",width: 200, editable : false },
-     { dataField:"codeName" ,headerText:"App Type",width: 150 ,editable : false },
-     { dataField:"invcItmProductModel" ,headerText:"Product Model",width: 200 , editable : false },
-     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },
-     { dataField:"invcItmAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.#"}
+     { dataField:"taxInvcId" ,headerText:"<spring:message code='pay.head.taxInvcId'/>",width: 100 , editable : false ,visible : false},
+     { dataField:"taxInvcRefNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>",width: 180 , editable : false },
+     { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 200, editable : false },
+     { dataField:"codeName" ,headerText:"<spring:message code='pay.head.appType'/>",width: 150 ,editable : false },
+     { dataField:"invcItmProductModel" ,headerText:"<spring:message code='pay.head.taxInvcId'/>",width: 200 , editable : false },
+     { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.invcItmProductModel'/>" , editable : false },
+     { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.#"}
      ];
        
     

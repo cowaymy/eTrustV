@@ -67,7 +67,7 @@ var columnLayout = [
            }
     }, {
         dataField : "isMain",
-        headerText : "Main Order",
+        headerText : "<spring:message code='pay.head.mainOrder'/>",
         editable : true,
         visible:true,
         renderer : 
@@ -84,29 +84,29 @@ var columnLayout = [
         }
     }, {
         dataField : "custId",
-        headerText : "Customer ID",
+        headerText : "<spring:message code='pay.head.customerId'/>",
         editable : false
     }, {
         dataField : "salesOrdNo",
-        headerText : "Order No",
+        headerText : "<spring:message code='pay.head.order No'/>",
         editable : false,
     },{
         dataField : "salesDt",
-        headerText : "Order Date",
+        headerText : "<spring:message code='pay.head.orderDate'/>",
         editable : false,
     },{
         dataField : "code",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false,
     },{
         dataField : "product",
-        headerText : "Product",
+        headerText : "<spring:message code='pay.head.product'/>",
         editable : false,
         width: 250
     },{
         dataField : "mthRentAmt",
-        headerText : "Rental Fees",
-        editable : false,
+        headerText : "<spring:message code='pay.head.rentalFees'/>",
+        editable : false
     }];
     
 //AUIGrid 칼럼 설정
@@ -151,28 +151,28 @@ var estmColumnLayout = [
            }
     }, {
         dataField : "refNo",
-        headerText : "Ref No",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : false,
     }, {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false
     }, {
         dataField : "email",
-        headerText : "Email",
+        headerText : "<spring:message code='pay.head.email'/>",
         style : "my-custom-up",
         editable : false,
     },{
         dataField : "emailAdd",
-        headerText : "Additional Email",
+        headerText : "<spring:message code='pay.head.additionalEmail'/>",
         editable : false,
     },{
         dataField : "crtDt",
-        headerText : "At",
+        headerText : "<spring:message code='pay.head.at'/>",
         editable : false,
     },{
         dataField : "userName",
-        headerText : "By",
+        headerText : "<spring:message code='pay.head.by'/>",
         editable : false,
     }];
     
@@ -197,23 +197,23 @@ var billGrpHistoryLayout = [
     }
     }, {
         dataField : "codename",
-        headerText : "Type",
+        headerText : "<spring:message code='pay.head.type'/>",
         editable : false,
     }, {
         dataField : "syshisremark",
-        headerText : "System Remark",
+        headerText : "<spring:message code='pay.head.sysRemark'/>",
         editable : false
     }, {
         dataField : "userhisremark",
-        headerText : "User Remark",
+        headerText : "<spring:message code='pay.head.userRemark'/>",
         editable : false,
     },{
         dataField : "hiscreated",
-        headerText : "At",
+        headerText : "<spring:message code='pay.head.at'/>",
         editable : false,
     },{
         dataField : "username",
-        headerText : "By",
+        headerText : "<spring:message code='pay.head.by'/>",
         editable : false,
     }];
     
@@ -221,27 +221,27 @@ var billGrpHistoryLayout = [
 var changeOrderLayout = [ 
     {
         dataField : "custBillGrpNo",
-        headerText : "Group No",
+        headerText : "<spring:message code='pay.head.grpNo'/>",
         editable : false,
     }, {
         dataField : "salesOrdNo",
-        headerText : "Order No",
+        headerText : "<spring:message code='pay.head.orderNo'/>",
         editable : false,
     }, {
         dataField : "salesDt",
-        headerText : "Order Date",
+        headerText : "<spring:message code='pay.head.orderDate'/>",
         editable : false
     }, {
         dataField : "code",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false,
     },{
         dataField : "product",
-        headerText : "Product",
+        headerText : "<spring:message code='pay.head.product'/>",
         editable : false,
     },{
         dataField : "mthRentAmt",
-        headerText : "Rental Fees",
+        headerText : "<spring:message code='pay.head.rentalFees'/>",
         editable : false,
     }];
 
@@ -249,23 +249,23 @@ var changeOrderLayout = [
 var estmHisPopColumnLayout = [ 
     {
         dataField : "refNo",
-        headerText : "Ref No",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : false,
     }, {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false
     }, {
         dataField : "email",
-        headerText : "Email",
+        headerText : "<spring:message code='pay.head.email'/>",
         style : "my-custom-up",
         editable : false,
     },{
         dataField : "crtDt",
-        headerText : "At",
+        headerText : "<spring:message code='pay.head.at'/>",
         editable : false,
     },{
-        dataField : "userName",
+        dataField : "<spring:message code='pay.head.userName'/>",
         headerText : "By",
         editable : false,
     }];
@@ -274,12 +274,12 @@ var estmHisPopColumnLayout = [
 var emailAddrLayout = [ 
     {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false,
         width : 80
     }, {
         dataField : "addr",
-        headerText : "Address",
+        headerText : "<spring:message code='pay.head.address'/>",
         editable : false
     }, {
         dataField : "custAddId",
@@ -292,39 +292,39 @@ var emailAddrLayout = [
 var contPersonLayout = [ 
     {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false,
     }, {
         dataField : "name1",
-        headerText : "Name",
+        headerText : "<spring:message code='pay.head.name'/>",
         editable : false,
     }, {
         dataField : "nric",
-        headerText : "NRIC",
+        headerText : "<spring:message code='pay.head.nric'/>",
         editable : false
     }, {
         dataField : "codeName",
-        headerText : "Race",
+        headerText : "<spring:message code='pay.head.race'/>",
         editable : false,
     },{
         dataField : "gender",
-        headerText : "Gender",
+        headerText : "<spring:message code='pay.head.gender'/>",
         editable : false,
     },{
         dataField : "telM1",
-        headerText : "Tel(Mobile)",
+        headerText : "<spring:message code='pay.head.mobile'/>",
         editable : false,
     },{
         dataField : "telR",
-        headerText : "Tel(Residence)",
+        headerText : "<spring:message code='pay.head.residence'/>",
         editable : false,
     },{
         dataField : "telf",
-        headerText : "Tel(Fax)",
+        headerText : "<spring:message code='pay.head.fax'/>",
         editable : false,
     },{
         dataField : "custCntcId",
-        headerText : "custCntcId",
+        headerText : "<spring:message code='pay.head.custCntcId'/>",
         editable : false,
         visible : false
     }];
@@ -333,7 +333,7 @@ var contPersonLayout = [
 var addOrderLayout = [ 
     {
         dataField : "isMain",
-        headerText : "Main Order",
+        headerText : "<spring:message code='pay.head.mainOrder'/>",
         editable : true,
         visible:true,
         renderer :
@@ -349,31 +349,31 @@ var addOrderLayout = [
         }
     },{
         dataField : "custBillGrpNo",
-        headerText : "Group No",
+        headerText : "<spring:message code='pay.head.grpNo'/>",
         editable : false,
     }, {
         dataField : "salesOrdNo",
-        headerText : "Order No",
+        headerText : "<spring:message code='pay.head.orderNo'/>",
         editable : false,
     }, {
         dataField : "salesDt",
-        headerText : "Order Date",
+        headerText : "<spring:message code='pay.head.orderDate'/>",
         editable : false
     }, {
         dataField : "code",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false,
     },{
         dataField : "product",
-        headerText : "Product",
+        headerText : "<spring:message code='pay.head.product'/>",
         editable : false,
     },{
         dataField : "mthRentAmt",
-        headerText : "Rental Fees",
+        headerText : "<spring:message code='pay.head.rentalFees'/>",
         editable : false,
     },{
         dataField : "salesOrdId",
-        headerText : "Order ID",
+        headerText : "<spring:message code='pay.head.orderId'/>",
         editable : false,
         visible:false
     }];

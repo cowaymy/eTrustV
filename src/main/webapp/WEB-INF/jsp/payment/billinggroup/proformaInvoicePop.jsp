@@ -14,16 +14,16 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"orderid", headerText:"Order ID",visible : false},
-    {dataField:"email", headerText:"Email",visible : false},
-    {dataField:"orderno", headerText:"Order No"},
-    {dataField:"orderstatuscode", headerText:"Status"},
-    {dataField:"apptypecode", headerText:"App Type"},
-    {dataField:"orderdate", headerText:"Order Date"},
-    {dataField:"stockdesc", headerText:"Product"},
-    {dataField:"customername", headerText:"Customer Name"},
-    {dataField:"customeric", headerText:"NRIC/Company No"},
-    {dataField:"creator", headerText:"Creator"}
+    {dataField:"orderid", headerText:"<spring:message code='pay.head.orderId'/>",visible : false},
+    {dataField:"email", headerText:"<spring:message code='pay.head.email'/>",visible : false},
+    {dataField:"orderno", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"orderstatuscode", headerText:"<spring:message code='pay.head.status'/>"},
+    {dataField:"apptypecode", headerText:"<spring:message code='pay.head.appType'/>"},
+    {dataField:"orderdate", headerText:"<spring:message code='pay.head.orderDate'/>"},
+    {dataField:"stockdesc", headerText:"<spring:message code='pay.head.product'/>"},
+    {dataField:"customername", headerText:"<spring:message code='pay.head.custName'/>"},
+    {dataField:"customeric", headerText:"<spring:message code='pay.head.nricCompanyNo'/>"},
+    {dataField:"creator", headerText:"<spring:message code='pay.head.creator'/>"}
 ];
 
 $(document).ready(function(){

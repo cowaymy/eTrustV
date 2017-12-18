@@ -22,13 +22,13 @@ $(document).ready(function(){
     
  // AUIGrid 칼럼 설정
  var columnLayout = [
-     { dataField:"taxInvcId" ,headerText:"Tax Invoice ID",width: 100 , editable : false ,visible : false},
-     { dataField:"taxInvcRefNo" ,headerText:"BR No.",width: 180 , editable : false },    
-     { dataField:"invcItmOrdNo" ,headerText:"Order No.",width: 200, editable : false },    
-     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },    
-     { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-     { dataField:"invcItmRentalFee" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
-     { dataField:"invcItmInstlmtNo" ,headerText:"Inst No.",width: 200 , editable : false }
+     { dataField:"taxInvcId" ,headerText:"<spring:message code='pay.head.taxInvcId'/>",width: 100 , editable : false ,visible : false},
+     { dataField:"taxInvcRefNo" ,headerText:"<spring:message code='pay.head.brNo'/>",width: 180 , editable : false },    
+     { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>.",width: 200, editable : false },    
+     { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.custName'/>" , editable : false },    
+     { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+     { dataField:"invcItmRentalFee" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
+     { dataField:"invcItmInstlmtNo" ,headerText:"<spring:message code='pay.head.instNo'/>",width: 200 , editable : false }
      ];    
     
     	// Order 정보 (Master Grid) 그리드 생성

@@ -21,11 +21,11 @@ $(document).ready(function(){
  // AUIGrid 칼럼 설정
  var columnLayout = [
      { dataField:"stateId" ,headerText:"StatementId",width: 100 , editable : false ,visible : false},
-     { dataField:"year" ,headerText:"Year",width: 100 , editable : false },
-     { dataField:"month" ,headerText:"Month",width: 80  , editable : false },
-     { dataField:"stateItmRefNo" ,headerText:"Bill No.",width: 200  , editable : false },
-     { dataField:"stateItmOrdNo" ,headerText:"Order No.",width: 200  , editable : false },
-     { dataField:"stateCustName" ,headerText:"Customer Name" , editable : false }
+     { dataField:"year" ,headerText:"<spring:message code='pay.head.year'/>",width: 100 , editable : false },
+     { dataField:"month" ,headerText:"<spring:message code='pay.head.month'/>",width: 80  , editable : false },
+     { dataField:"stateItmRefNo" ,headerText:"<spring:message code='pay.head.billNo'/>",width: 200  , editable : false },
+     { dataField:"stateItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 200  , editable : false },
+     { dataField:"stateCustName" ,headerText:"<spring:message code='pay.head.custName'/>" , editable : false }
      ];
  
     // Order 정보 (Master Grid) 그리드 생성

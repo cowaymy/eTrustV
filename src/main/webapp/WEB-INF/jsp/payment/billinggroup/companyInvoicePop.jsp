@@ -14,16 +14,16 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"taskId", headerText:"Task ID",visible : false},
-    {dataField:"renDateTimeYear", headerText:"Year",visible : false},
-    {dataField:"renDateTimeMonth", headerText:"Month",visible : false},
-    {dataField:"email", headerText:"Email",visible : false},
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"name", headerText:"Customer Name"},
-    {dataField:"rentDocNo", headerText:"Invoice No"}, 
-    {dataField:"renDateTime", headerText:"Invoice Date"},
-    {dataField:"rentAmt", headerText:"Invoice Amount"},
-    {dataField:"rentInstNo", headerText:"Installment No"}
+    {dataField:"taskId", headerText:"<spring:message code='pay.head.taskId'/>",visible : false},
+    {dataField:"renDateTimeYear", headerText:"<spring:message code='pay.head.year'/>",visible : false},
+    {dataField:"renDateTimeMonth", headerText:"<spring:message code='pay.head.month'/>",visible : false},
+    {dataField:"email", headerText:"<spring:message code='pay.head.email'/>",visible : false},
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"name", headerText:"<spring:message code='pay.head.custName'/>"},
+    {dataField:"rentDocNo", headerText:"<spring:message code='pay.head.invoiceNo'/>"}, 
+    {dataField:"renDateTime", headerText:"<spring:message code='pay.head.invoiceDate'/>"},
+    {dataField:"rentAmt", headerText:"<spring:message code='pay.head.invoiceAmt'/>"},
+    {dataField:"rentInstNo", headerText:"<spring:message code='pay.head.installmentNo'/>"}
 ];
 
 $(document).ready(function(){
