@@ -49,23 +49,23 @@ function fn_openGenerate(){
          if($("#CTGroup").val() != ''){
              whereSql += " AND ae.AS_MEM_GRP =  '" + $("#CTGroup").val() + "' ";
          }
-        $("#reportForm #reportFileName").val('/services/ASLogBookList.rpt');
-        $("#reportForm #reportDownFileName").val("ASLogBook_"+day+month+date.getFullYear());
-        $("#reportForm #viewType").val("PDF");
-        $("#reportForm #V_SELECTSQL").val();
-        $("#reportForm #V_WHERESQL").val(whereSql);
-        $("#reportForm #V_ORDERBYSQL").val();
-        $("#reportForm #V_FULLSQL").val();
-        $("#reportForm #V_ASAPPDATE").val(ASAppDate);
-        $("#reportForm #V_ASCTCODE").val(ASCTCode);
-        $("#reportForm #V_ASBRANCH").val(ASBranch);
-        $("#reportForm #V_ASCTGROUP").val(ASCTGroup);
+        $("#reportFormList #reportFileName").val('/services/ASLogBookList.rpt');
+        $("#reportFormList #reportDownFileName").val("ASLogBook_"+day+month+date.getFullYear());
+        $("#reportFormList #viewType").val("PDF");
+        $("#reportFormList #V_SELECTSQL").val();
+        $("#reportFormList #V_WHERESQL").val(whereSql);
+        $("#reportFormList #V_ORDERBYSQL").val();
+        $("#reportFormList #V_FULLSQL").val();
+        $("#reportFormList #V_ASAPPDATE").val(ASAppDate);
+        $("#reportFormList #V_ASCTCODE").val(ASCTCode);
+        $("#reportFormList #V_ASBRANCH").val(ASBranch);
+        $("#reportFormList #V_ASCTGROUP").val(ASCTGroup);
         
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
         
-        Common.report("reportForm", option);
+        Common.report("reportFormList", option);
         
     }
 }
@@ -99,7 +99,7 @@ $.fn.clearForm = function() {
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" id="reportForm">
+<form action="#" id="reportFormList">
 <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL" />
 <input type="hidden" id="V_WHERESQL" name="V_WHERESQL" />
 <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" />
@@ -166,7 +166,7 @@ $.fn.clearForm = function() {
 </section><!-- search_table end -->
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openGenerate()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormList').clearForm();">Clear</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
