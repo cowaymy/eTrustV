@@ -16,7 +16,7 @@ public interface PaymentListService
 	 * @param model
 	 * @return
 	 */	
-    List<EgovMap> selectPaymentList(Map<String, Object> params);
+    List<EgovMap> selectGroupPaymentList(Map<String, Object> params);
     
     /**
 	 * Payment List 조회

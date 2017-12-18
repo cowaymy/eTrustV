@@ -74,7 +74,7 @@
             return;
         }
     	
-    	Common.ajax("POST","/payment/selectPaymentList.do",$("#searchForm").serializeJSON(), function(result){    		
+    	Common.ajax("POST","/payment/selectGroupPaymentList.do",$("#searchForm").serializeJSON(), function(result){    		
     		AUIGrid.setGridData(myGridID, result);
     	});
     }

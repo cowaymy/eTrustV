@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.PaymentListMapper">
     
-    <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
+    <select id="selectGroupPaymentList" parameterType="Map" resultType="egovMap">
         SELECT
             A.GROUP_SEQ, 
             (SELECT APP_TYPE FROM PAY0241T WHERE SEQ = A.GROUP_SEQ AND PRCSS_SEQ = A.PRCSS_SEQ AND ROWNUM <![CDATA[ <= ]]> 1) AS APP_TYPE,         
@@ -127,7 +127,7 @@
             LEFT JOIN SYS0047M D ON A.DCF_CRT_USER_ID = D.USER_ID
         WHERE
             1=1
-            <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and payDate2 != '' ">
+            <if test="reqDateFr != null and reqDateTo != null and reqDateFr != '' and reqDateTo != '' ">
                 AND DCF_CRT_DT <![CDATA[   >= ]]> TO_DATE(#{reqDateFr},'DD/MM/YYYY')
                 AND DCF_CRT_DT <![CDATA[   < ]]> TO_DATE(#{reqDateTo},'DD/MM/YYYY') + 1
             </if>

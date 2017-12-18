@@ -55,13 +55,13 @@ public class PaymentListController {
 	 * @param model
 	 * @return
 	 */	
-	@RequestMapping(value = "/selectPaymentList.do", method = RequestMethod.POST)
-	public ResponseEntity<List<EgovMap>> selectPaymentList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
+	@RequestMapping(value = "/selectGroupPaymentList.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectGroupPaymentList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
 				, @RequestBody Map<String, Object> params, ModelMap model) {
 
 		LOGGER.debug("params : {} ", params);
         // 조회.
-        List<EgovMap> resultList = paymentListService.selectPaymentList(params);		
+        List<EgovMap> resultList = paymentListService.selectGroupPaymentList(params);		
         
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);

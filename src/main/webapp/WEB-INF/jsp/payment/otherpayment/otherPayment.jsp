@@ -2199,13 +2199,13 @@ function addOutSrvcToFinal(){
 <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         <li>Payment</li>
-        <li>Normal Key-In</li>
+        <li>Manual Key-In</li>
     </ul>
 <div id="page1">
     <!-- title_line start -->
     <aside class="title_line">
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Normal Key-In</h2>
+		<h2>Manual Key-In</h2>
 		<ul class="right_btns">
 		    <li><p class="btn_blue"><a href="#" onclick="fn_mapping();">Mapping</a></p></li>
 		    <li><p class="btn_blue"><a href="#" onclick="fn_searchList();"><span class="search"></span>Search</a></p></li>

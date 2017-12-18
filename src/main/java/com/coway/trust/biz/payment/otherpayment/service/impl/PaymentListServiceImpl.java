@@ -24,8 +24,8 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 	 * @return
 	 */	
 	@Override
-	public List<EgovMap> selectPaymentList(Map<String, Object> params) {
-		return paymentListMapper.selectPaymentList(params);
+	public List<EgovMap> selectGroupPaymentList(Map<String, Object> params) {
+		return paymentListMapper.selectGroupPaymentList(params);
 	}
 	
 	/**

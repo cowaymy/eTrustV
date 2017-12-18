@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.ConfirmBankChargeMapper">
+    
+    <select id="selectNorKeyInList" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.GROUP_SEQ,
+            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY') AS PAY_ITM_REF_DT,
+            A.PAY_ITM_MODE_ID,
+            E.CODE AS PAY_ITM_MODE_NM,
+            SUM (A.PAY_ITM_AMT) AS TOT_AMT,
+            MAX (C.PAY_ITM_BANK_CHRG_AMT) AS BANK_CHG_AMT,
+            MAX (C.PAY_ITM_BANK_IN_SLIP_NO) AS PAY_ITM_BANK_IN_SLIP_NO,
+            MAX (B.REF_DTL) AS REF_DTL,
+            MAX (C.PAY_ITM_BANK_ACC_ID) AS PAY_ITM_BANK_ACC_ID,
+            MAX (D.ACC_DESC) AS PAY_ITM_BANK_ACC_NM          
+        FROM 
+            PAY0252T A
+            JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+            JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+            LEFT JOIN SYS0001M D ON C.PAY_ITM_BANK_ACC_ID = D.ACC_ID
+            LEFT JOIN SYS0013M E ON A.PAY_ITM_MODE_ID = E.CODE_ID
+        WHERE 
+            A.BANK_CHG_MAPPING_STUS_ID = 1
+            AND A.REV_STUS_ID IS NULL
+            AND A.GROUP_SEQ IN (
+                SELECT 
+                    DISTINCT A.GROUP_SEQ
+                FROM 
+                    PAY0252T A
+                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID                    
+                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+                    JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID    
+                WHERE
+                    C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{transDateFr},'DD/MM/YYYY')
+                    AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{transDateTo},'DD/MM/YYYY') + 1
+                    <if test="bankAcc != null and bankAcc != '' ">
+                        AND C.PAY_ITM_BANK_ACC_ID = #{bankAcc}
+                    </if>
+                    <if test="payType != null and payType != '' ">
+                    AND C.PAY_ITM_MODE_ID = #{payType} 
+                    </if>
+                    <if test="vaAccount != null and vaAccount != '' ">  
+                    AND B.VA_ACC_NO = #{vaAccount}       
+                    </if>
+                    AND A.KEY_IN_SCRN = 'NOR'
+            )
+        GROUP BY 
+            A.GROUP_SEQ,
+            TO_CHAR(C.PAY_ITM_REF_DT,'DD/MM/YYYY'),
+            A.PAY_ITM_MODE_ID,
+            E.CODE 
+        
+    </select>
+    
+    <select id="selectBankStateMatchList" parameterType="Map" resultType="egovMap">
+        SELECT 
+		    B.F_TRNSC_ID,
+		    TO_CHAR(B.F_TRNSC_DT,'DD/MM/YYYY') AS F_TRNSC_DT,
+		    B.F_TRNSC_REF_CHQ_NO,
+		    B.F_TRNSC_REF1,
+		    B.F_TRNSC_REM,
+		    B.F_TRNSC_CRDIT_AMT,
+		    B.F_TRNSC_REF4,
+		    B.F_TRNSC_NEW_CHQ_NO,
+		    B.F_TRNSC_REF_VA_NO
+        FROM 
+            PAY0079D A 
+            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+        WHERE 
+            A.TRNSC_DT <![CDATA[   >= ]]> TO_DATE(#{transDateFr},'DD/MM/YYYY')
+            AND A.TRNSC_DT <![CDATA[   < ]]> TO_DATE(#{transDateTo},'DD/MM/YYYY') + 1
+            <if test="payType != null and payType != '' ">
+            AND B.F_TRNSC_REM = (CASE WHEN #{payType} = 105 THEN 'CSH'
+                                                        WHEN #{payType} = 106 THEN 'CHQ'
+                                                        WHEN #{payType} = 107 THEN 'CRC'
+                                                        WHEN #{payType} = 108 THEN 'ONL' ELSE ' ' END)
+            </if>
+            <if test="bankAcc != null and bankAcc != '' ">                                                         
+            AND A.F_BANK_JRNL_ACC_ID = #{bankAcc}
+            </if>
+            <if test="vaAccount != null and vaAccount != '' ">
+            AND B.F_TRNSC_REF_VA_NO = #{vaAccount}
+            </if>            
+            AND B.OTH_KEYIN_BC_STUS_ID = 1
+    </select>    
+    
+    
+    <update id="mappingBankChgGroupPayment" parameterType="Map">
+        UPDATE PAY0252T SET
+            BANK_CHG_MAPPING_ID  = #{fTrnscId},
+            BANK_CHG_MAPPING_STUS_ID = 4,
+            BANK_CHG_MAPPING_USER_ID = #{userId},
+            BANK_CHG_MAPPING_DT = SYSDATE
+        WHERE
+            GROUP_SEQ = #{groupSeq}
+    </update>    
+    
+    <update id="mappingBankStatementBankChg" parameterType="Map">
+        UPDATE PAY0081D SET
+            OTH_KEYIN_BC_STUS_ID = 4,
+            OTH_KEYIN_BC_MAPPING_DT = SYSDATE,
+            OTH_KEYIN_BC_MAPPING_USER_ID = #{userId}
+        WHERE
+            F_TRNSC_ID = #{fTrnscId}
+    </update>        
+    
+</mapper>
