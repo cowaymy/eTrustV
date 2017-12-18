@@ -37,4 +37,6 @@ public interface OrderListMapper {
 	EgovMap getMemberOrgInfo(Map<String, Object> params);
 	
 	List<EgovMap> getBankCodeList(Map<String, Object> params);
+	
+	List<EgovMap> getOderLdgr(Map<String, Object> params);
 }

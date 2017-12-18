@@ -111,6 +111,7 @@ public class InstallationReversalController {
 	
 	@RequestMapping(value = "/saveResaval", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveResaval(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
+		logger.debug("-------------1---------------");
 		EgovMap returnMap = new EgovMap();
 		int userId = sessionVO.getUserId();
 		params.put("userId", userId);
@@ -119,10 +120,8 @@ public class InstallationReversalController {
 		//Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 		//formData.put("user_id", userId);
 		
-		logger.debug("params : {}", params);
 		
 		int callTypeId = Integer.parseInt(params.get("callTypeId").toString());	//ccr0006d.type_id
-		logger.debug("callTypeId : {}", callTypeId);
 		int result = 0 ;
 		
 		int installResultID = Integer.parseInt(params.get("einstallEntryId").toString());
@@ -196,6 +195,7 @@ public class InstallationReversalController {
 		InstallresultReverse.put("einstallEntryId", params.get("einstallEntryId"));
 		
 		if(callTypeId == 257){ //ccr0006d.type_id = 257
+			logger.debug("-------------2---------------");
 			//result = installationReversalService.saveReverseNewInstallationResult(params);
 		
     		
@@ -330,7 +330,7 @@ public class InstallationReversalController {
             int adjCrAccID = 0;
             
             if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
-            	logger.debug("-----------0----------");
+            	logger.debug("-------------3---------------");
             	if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
             		adjTypeSetID = 7;
                     adjDrAccID = 171;
@@ -361,14 +361,11 @@ public class InstallationReversalController {
                 Date mthapril = null;
                 
                 mthapril =  format.parse("2015-APR-01");
-                logger.debug("---------------------");
-                logger.debug(esalesDt);
                 salesdate = format.parse(esalesDt);
                 System.out.println(salesdate);
                 
-                logger.debug("-----------1----------");
-                if (salesdate.compareTo(mthapril)>0){
-                	logger.debug("-----------2----------");	
+                if (salesdate.compareTo(mthapril)<0){
+                	logger.debug("-------------4---------------");
                 	String adJEntryReportNo = null;
                 	params.put("docno",18);
                 	adJEntryReportNo = installationReversalService.getDOCNumber(params);
@@ -394,6 +391,7 @@ public class InstallationReversalController {
                     params.put("trxNo", trxNo);
                     */
                     
+                    /*
                     Map<String,Object> accTRXPlus = new HashMap();
                     accTRXPlus.put("TRXItemNo", 1);
                     accTRXPlus.put("TRXGLAccID", adjDrAccID);
@@ -445,17 +443,22 @@ public class InstallationReversalController {
                     
                     installationReversalService.addAccTRXes(accTRXMinus);
                     
-                    
+                    */
                     if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
-                    	logger.debug("-----------3----------");
+                    	logger.debug("-------------5---------------");
                     	EgovMap  qryPreBill = installationReversalService.getQryPreBill(params);
-                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
-                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
-                    	params.put("Updator",qryPreBill.get("uptUserId"));;
-                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+//                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+//                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
                     	
                     	if(qryPreBill !=null){
-                    		logger.debug("-----------4----------");
+                    		logger.debug("-------------6---------------");
+                    		params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                        	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                        	params.put("Updator",qryPreBill.get("uptUserId"));;
+                        	params.put("AccBillID",qryPreBill.get("accBillId"));;
+                        	
                     		String VoidNo = null;
                     		params.put("docno",112);
                     		VoidNo = installationReversalService.getDOCNumber(params);
@@ -468,31 +471,46 @@ public class InstallationReversalController {
                          	installationReversalService.addAccOrderVoid_Invoice_Sub(params);
                          	
                          	installationReversalService.updateAccOrderBill(params);
-                         	
-                         	Map<String,Object> accTradeLedger = new HashMap();
-                         	accTradeLedger.put("TradeSOID", salesOrderID);
-                         	accTradeLedger.put("TradeDocTypeID", salesOrderID);
-                         	accTradeLedger.put("TradeAmount", Integer.parseInt(rv.get("totAmt").toString())*-1);
-                         	accTradeLedger.put("TradeInstNo", 0);
-                         	accTradeLedger.put("TradeBatchNo", "0");
-                         	accTradeLedger.put("TradeIsSync", 1);
-                         	accTradeLedger.put("userId", userId);
-                         	
-                         	installationReversalService.addAccTradeLedger(accTradeLedger);
-                         	
-                         	installationReversalService.updateRentalScheme(params);
-                         	
                     	}
+                    /*     	
+                 	Map<String,Object> accTradeLedger = new HashMap();
+                 	accTradeLedger.put("TradeSOID", salesOrderID);
+                 	accTradeLedger.put("TradeDocTypeID", salesOrderID);
+                 	accTradeLedger.put("TradeAmount", Integer.parseInt(rv.get("totAmt").toString())*-1);
+                 	accTradeLedger.put("TradeInstNo", 0);
+                 	accTradeLedger.put("TradeBatchNo", "0");
+                 	accTradeLedger.put("TradeIsSync", 1);
+                 	accTradeLedger.put("userId", userId);
+                 	
+                 	installationReversalService.addAccTradeLedger(accTradeLedger);
+                 	*/
+                    	
+                	Map<String,Object> accRentLedger = new HashMap();
+                 	accRentLedger.put("RentSOID", salesOrderID);
+                 	accRentLedger.put("RentDocTypeID", 155);
+                 	accRentLedger.put("RentAmount", Integer.parseInt(rv.get("totAmt").toString())*-1);
+                 	installationReversalService.addAccRentLedger(params);
+                 	
+                 	installationReversalService.updateRentalScheme(params);
+                 	
+                 	installationReversalService.updateRentalScheme(params);
+                         	
+                    	
                     }else{
-                    	logger.debug("-----------5----------");
+                    	logger.debug("-------------7---------------");
                     	EgovMap  qryPreBill = installationReversalService.getQryPreBill_out(params);
-                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
-                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
-                    	params.put("Updator",qryPreBill.get("uptUserId"));;
-                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+//                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+//                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
                     	
                     	if(qryPreBill !=null){
-                    		logger.debug("-----------6----------");
+                    		logger.debug("-------------8---------------");
+                    		params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+                        	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+                        	params.put("Updator",qryPreBill.get("uptUserId"));;
+                        	params.put("AccBillID",qryPreBill.get("accBillId"));;
+                        	
                     		String VoidNo = null;
                     		params.put("docno",112);
                     		VoidNo = installationReversalService.getDOCNumber(params);
@@ -508,20 +526,18 @@ public class InstallationReversalController {
                          	installationReversalService.addAccOrderVoid_Invoice_Sub(params);
                          	
                          	installationReversalService.updateAccOrderBill(params);
-                         	
-                         	installationReversalService.addAccTradeLedger(params);
-                         	
-                         	installationReversalService.updateRentalScheme(params);
-                         	
                     	}
+                         	
+                     	installationReversalService.addAccTradeLedger(params);               	
+                    	
                     }
                 }else{
-                	logger.debug("-----------7----------");
+                	logger.debug("-------------9---------------");
                 	if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
-                		logger.debug("-----------8----------");
+                		logger.debug("-------------10---------------");
                 		List<EgovMap> QryOutSList = installationReversalService.getQryOutS(params);
                 		if(QryOutSList.size()>0){
-                			logger.debug("-----------9----------");
+                			logger.debug("-------------11---------------");
                 			for(int i = 0 ; i<QryOutSList.size() ; i++){
                 				params.put("TaxInvoiceID",QryOutSList.get(0).get("taxInvcId"));
                 				params.put("InvoiceItemGSTTaxes",QryOutSList.get(0).get("invcItmGstTxs"));
@@ -628,16 +644,15 @@ public class InstallationReversalController {
                 			}
                 		}
                 	}
-                	logger.debug("-----------7 end----------");
                 }
-                logger.debug("-----------2 end----------");
             }
-            logger.debug("-----------0 end----------");
 		}else{
+			logger.debug("-------------12---------------");
 			EgovMap  orderExchangeTypeByInstallEntryID = installationReversalService.GetOrderExchangeTypeByInstallEntryID(params);
 			String hidPEAfterInstall = null;
 			returnMap.put("spanInstallationType",orderExchangeTypeByInstallEntryID.get("soCurStusId"));
 			if(Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==25 || Integer.parseInt(orderExchangeTypeByInstallEntryID.get("soCurStusId").toString())==26){
+				logger.debug("-------------13---------------");
 				hidPEAfterInstall = "1";
 				
 				installationReversalService.updateInstallresult(params);
@@ -773,6 +788,7 @@ public class InstallationReversalController {
 	    		
 	    		
 	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+	    			logger.debug("-------------14---------------");
 	    			int adjTypeSetID = 0;
 	                int adjDrAccID = 0;
 	                int adjCrAccID = 0;
@@ -782,6 +798,7 @@ public class InstallationReversalController {
 	                params.put("TotalAmt", rv.get("totAmt"));
 	                
 	    			if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
+	    				logger.debug("-------------15---------------");
 	            		adjTypeSetID = 7;
 	                    adjDrAccID = 171;
 	                    adjCrAccID = 43;
@@ -811,14 +828,11 @@ public class InstallationReversalController {
 	                Date mthapril = null;
 	                
 	                mthapril =  format.parse("2015-APR-01");
-	                logger.debug("---------------------");
-	                logger.debug(esalesDt);
 	                salesdate = format.parse(esalesDt);
 	                System.out.println(salesdate);
 	                
-	                logger.debug("-----------1----------");
-	                if (salesdate.compareTo(mthapril)>0){
-	                	logger.debug("-----------2----------");	
+	                if (salesdate.compareTo(mthapril)<0){
+	                	logger.debug("-------------16---------------");
 	                	String adJEntryReportNo = null;
 	                	params.put("docno",18);
 	                	adJEntryReportNo = installationReversalService.getDOCNumber(params);
@@ -897,15 +911,20 @@ public class InstallationReversalController {
 	                    
 	                    
 	                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
-	                    	logger.debug("-----------3----------");
+	                    	logger.debug("-------------17---------------");
 	                    	EgovMap  qryPreBill = installationReversalService.getQryPreBill(params);
-	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
-	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
-	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
-	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+//	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+//	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
 	                    	
 	                    	if(qryPreBill !=null){
-	                    		logger.debug("-----------4----------");
+	                    		logger.debug("-------------18---------------");	
+	                    		params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+		                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+		                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+		                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+		                    	
 	                    		String VoidNo = null;
 	                    		params.put("docno",112);
 	                    		VoidNo = installationReversalService.getDOCNumber(params);
@@ -923,20 +942,31 @@ public class InstallationReversalController {
 	                         	installationReversalService.updateAccOrderBill(params);
 	                    	}
 	                    	
-	                    	installationReversalService.addAccTradeLedger(params);
+	                    	Map<String,Object> accRentLedger = new HashMap();
+                         	accRentLedger.put("RentSOID", salesOrderID);
+                         	accRentLedger.put("RentDocTypeID", 155);
+                         	accRentLedger.put("RentAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
+                         	installationReversalService.addAccRentLedger(params);
+                         	
+	                    	//installationReversalService.addAccTradeLedger(params);
                      	
 	                    	//installationReversalService.updateRentalScheme(params);
 	                    	
 	                    }else{
-	                    	logger.debug("-----------5----------");
+	                    	logger.debug("-------------19---------------");
 	                    	EgovMap  qryPreBill = installationReversalService.getQryPreBill_out(params);
-	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
-	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
-	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
-	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+//	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+//	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
 	                    	
 	                    	if(qryPreBill !=null){
-	                    		logger.debug("-----------6----------");
+	                    		logger.debug("-------------20---------------");	
+	                    		params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+		                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+		                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+		                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+		                    	
 	                    		String VoidNo = null;
 	                    		params.put("docno",112);
 	                    		VoidNo = installationReversalService.getDOCNumber(params);
@@ -953,22 +983,25 @@ public class InstallationReversalController {
 	                         	
 	                         	installationReversalService.updateAccOrderBill(params);
 	                    	}
-                         	
+                         	/*
                          	Map<String,Object> accRentLedger = new HashMap();
                          	accRentLedger.put("RentSOID", salesOrderID);
                          	accRentLedger.put("RentDocTypeID", 155);
                          	accRentLedger.put("RentAmount", Integer.parseInt(rv.get("soExchgNwPrc").toString())*-1);
                          	installationReversalService.addAccRentLedger(params);
-                         	//installationReversalService.addAccTradeLedger(params);
+                         	*/
+                         	installationReversalService.addAccTradeLedger(params);
                          	//installationReversalService.updateRentalScheme(params);
 	                    }
 	                }else{
+	                	logger.debug("-------------21---------------");
 	                	if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
-	                		
+	                		logger.debug("-------------22---------------");
 	                	}else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==67){
-	                		logger.debug("-----------8----------");
+	                		logger.debug("-------------23---------------");
 	                		List<EgovMap> QryOutSList = installationReversalService.getQryOutS(params);
 	                		if(QryOutSList.size()>0){
+	                			logger.debug("-------------24---------------");
 	                			EgovMap  qryAccBill = installationReversalService.getQryAccBill(params);
                 				params.put("AccBillID",qryAccBill.get("accBillId"));
                 				params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
@@ -1052,17 +1085,15 @@ public class InstallationReversalController {
                             	params.put("TotalAmt",qryAccBill.get("taxInvcAmtDue"));
                             	
                             	installationReversalService.addAccOrderVoid_Invoice_Sub(params);
-                            	
                             	installationReversalService.addAccTradeLedger(params);
-                				
-	                		}
+                            	
+                            	//installationReversalService.updateAccOrderBill(params);
+	                		}    	
 	                	}
 	                }
 	    		}
-	    		
-	    		
-				
 			}else{
+				logger.debug("-------------25---------------");
 				hidPEAfterInstall = "0";
 				
 				installationReversalService.updateInstallresult(params);
@@ -1200,6 +1231,7 @@ public class InstallationReversalController {
 	    		
 	    		
 	    		if(Integer.parseInt(params.get("applicationTypeID").toString())==66 || Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68){
+	    			logger.debug("-------------26---------------");
 	    			int adjTypeSetID = 0;
 	                int adjDrAccID = 0;
 	                int adjCrAccID = 0;
@@ -1238,15 +1270,10 @@ public class InstallationReversalController {
 	                Date mthapril = null;
 	                
 	                mthapril =  format.parse("2015-APR-01");
-	                logger.debug("---------------------");
-	                logger.debug(esalesDt);
 	                salesdate = format.parse(esalesDt);
-	                System.out.println(salesdate);
 	                
-	                logger.debug("-----------1----------");
-	                if (salesdate.compareTo(mthapril)>0){
-	                	
-	                	logger.debug("-----------2----------");	
+	                if (salesdate.compareTo(mthapril)<0){
+	                	logger.debug("-------------27---------------");	                	
 	                	String adJEntryReportNo = null;
 	                	params.put("docno",18);
 	                	adJEntryReportNo = installationReversalService.getDOCNumber(params);
@@ -1319,15 +1346,20 @@ public class InstallationReversalController {
 	                    installationReversalService.addAccTRXes(accTRXMinus);
 	                    
 	                    if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
-	                    	logger.debug("-----------3----------");
+	                    	logger.debug("-------------28---------------");
 	                    	EgovMap  qryPreBill = installationReversalService.getQryPreBill(params);
-	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
-	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
-	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
-	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+//	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+//	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
 	                    	
 	                    	if(qryPreBill !=null){
-	                    		logger.debug("-----------4----------");
+	                    		logger.debug("-------------29---------------");
+	                    		params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+		                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+		                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+		                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+		                    	
 	                    		String VoidNo = null;
 	                    		params.put("docno",112);
 	                    		VoidNo = installationReversalService.getDOCNumber(params);
@@ -1353,14 +1385,20 @@ public class InstallationReversalController {
                          	
                          	installationReversalService.updateRentalScheme(params);
 	                    }else{
+	                    	logger.debug("-------------30---------------");
 	                    	EgovMap  qryPreBill = installationReversalService.getQryPreBill_out(params);
-	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
-	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
-	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
-	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+//	                    	params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+//	                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+//	                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+//	                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
 	                    	
 	                    	if(qryPreBill !=null){
-	                    		logger.debug("-----------6----------");
+	                    		logger.debug("-------------31---------------");	
+	                    		params.put("TaxInvoiceRefNo",qryPreBill.get("taxInvcRefNo"));
+		                    	params.put("TaxInvoiceAmountDue",qryPreBill.get("taxInvcAmtDue"));;
+		                    	params.put("Updator",qryPreBill.get("uptUserId"));;
+		                    	params.put("AccBillID",qryPreBill.get("accBillId"));;
+		                    	
 	                    		String VoidNo = null;
 	                    		params.put("docno",112);
 	                    		VoidNo = installationReversalService.getDOCNumber(params);
@@ -1384,11 +1422,14 @@ public class InstallationReversalController {
                          	installationReversalService.addAccRentLedger(params);
 	                    }
 	                }else{
+	                	logger.debug("-------------32---------------");
 	                	if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
-	                		
+	                		logger.debug("-------------33---------------");
 	                	}else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==67){
+	                		logger.debug("-------------34---------------");
 	                		List<EgovMap> QryOutSList = installationReversalService.getQryOutS(params);
 	                		if(QryOutSList.size()>0){
+	                			logger.debug("-------------35---------------");
 	                			EgovMap  qryAccBill = installationReversalService.getQryAccBill(params);
                 				params.put("AccBillID",qryAccBill.get("accBillId"));
                 				params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
@@ -1482,12 +1523,10 @@ public class InstallationReversalController {
 			}
 			
 			
-			logger.debug("-----------10----------");
 		}
 			
 		
 		
-		logger.debug("---------257 end ----------");
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setMessage("controllend");

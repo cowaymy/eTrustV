@@ -669,7 +669,7 @@ AND ROWNUM                    <= 1
     
     <select id="getQryPreBill" parameterType="Map" resultType="egovMap">
     <![CDATA[
-        select c.TAX_INVC_REF_NO,c.TAX_INVC_AMT_DUE,d.ACC_BILL_ID,b.UPT_USER_ID
+        select c.TAX_INVC_REF_NO,c.TAX_INVC_AMT_DUE,d.ACC_BILL_ID,b.UPD_USER_ID
 		  from SAL0046D a
 		      ,sal0047d b
 		      ,PAY0029D c
@@ -784,7 +784,7 @@ AND ROWNUM                    <= 1
     
     <select id="getQryPreBill_out" parameterType="Map" resultType="egovMap">
     <![CDATA[
-        select c.TAX_INVC_REF_NO,c.TAX_INVC_AMT_DUE,d.ACC_BILL_ID,b.UPT_USER_ID
+        select c.TAX_INVC_REF_NO,c.TAX_INVC_AMT_DUE,d.ACC_BILL_ID,b.UPD_USER_ID
           from SAL0046D a
               ,sal0047d b
               ,PAY0033D c
