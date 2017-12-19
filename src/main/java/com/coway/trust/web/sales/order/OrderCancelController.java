@@ -15,13 +15,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.order.OrderCancelService;
 import com.coway.trust.biz.sales.order.OrderCancelVO;
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
@@ -214,7 +217,19 @@ public class OrderCancelController {
 	 * 화면 호출. - Assignment CT Information
 	 */
 	@RequestMapping(value = "/ctAssignmentInfoPop.do")
-	public String ctAssignmentInfoPop(@RequestParam Map<String, Object>params, ModelMap model) {
+	public String ctAssignmentInfoPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		// order detail start
+		int prgrsId = 0;
+		EgovMap orderDetail = null;
+		params.put("prgrsId", prgrsId);
+	
+		params.put("salesOrderId", params.get("salesOrdId"));
+        orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		
+		model.put("orderDetail", orderDetail);
+		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
+		// order detail end
 		
 		String paramTypeId = (String)params.get("typeId");
 		String paramDocId = (String)params.get("docId");
@@ -313,4 +328,76 @@ public class OrderCancelController {
 		return "sales/order/orderCancelRequestRawDataPop";
 	}
 	
+	@RequestMapping(value="/ctAssignBulkPop.do")
+	public String ctAssignBulkPop(@RequestParam Map<String, Object>params, ModelMap model){
+		
+		List<EgovMap> dscBranchList = orderCancelService.dscBranch(params);
+		List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
+		
+		model.addAttribute("dscBranchList", dscBranchList);
+		model.addAttribute("selectAssignCTList", selectAssignCTList);
+		
+		return "sales/order/orderCancelCTAssignBulkPop";
+	}
+	
+	
+	@RequestMapping(value = "/orderCancelJsonBulk.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> orderCancelJsonBulk(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		String[] pRTypeList = request.getParameterValues("cmbPRType");
+		String[] appTypeBulkList = request.getParameterValues("cmbAppTypeBulk");
+		List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
+		
+		params.put("pRTypeList", pRTypeList);
+		params.put("appTypeBulkList", appTypeBulkList);
+		params.put("selectAssignCTList", selectAssignCTList);
+		
+		List<EgovMap> ctAssignBulkList = orderCancelService.ctAssignBulkList(params);
+		
+		return ResponseEntity.ok(ctAssignBulkList);
+	}
+	
+	
+	@RequestMapping(value = "/selectCTBulkJsonList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTBulkJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		List<EgovMap> selectCTBulkList = orderCancelService.selectAssignCT(params);
+		
+		return ResponseEntity.ok(selectCTBulkList);
+	}
+	
+	
+	@RequestMapping(value = "/saveCancelBulk.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> saveCancelBulk(@RequestBody Map<String, Object>params, ModelMap mode)
+			throws Exception {
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
+		logger.info("##### params ###############" +params.toString());
+
+		String successMsg = "SUCCESS";
+		String failMsg = "FAIL";
+		
+		//Return MSG
+//    	ReturnMessage message = new ReturnMessage();
+    	
+//        message.setCode(AppConstants.SUCCESS);
+//    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+//    	return ResponseEntity.ok(message);
+    	
+		Map<String, Object> map = new HashMap();
+
+		int dataCnt = orderCancelService.saveCancelBulk(params);
+
+		if(dataCnt > 0){
+			map.put("msg", successMsg);
+			map.put("dataCnt", dataCnt);
+		}else{
+			map.put("msg", failMsg);
+		}
+		
+
+		return ResponseEntity.ok(map);
+	}
 }
