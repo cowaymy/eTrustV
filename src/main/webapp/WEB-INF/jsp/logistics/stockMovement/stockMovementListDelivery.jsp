@@ -113,49 +113,41 @@ var serialcolumnLayout =[{dataField:    "rnum",headerText :"<spring:message code
                          {dataField:    "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
                          {dataField:    "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30  , visible:false              },                          
                          {dataField:    "serial",headerText :"<spring:message code='log.head.serial'/>"     ,width: "30%"       ,height:30,editable:true,
-                        	 editRenderer : {
-                        		    type : "InputEditRenderer",
-                        		    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-                        		    onlyNumeric : false, // 0~9만 입력가능
-                        		    allowPoint : false, // 소수점( . ) 도 허용할지 여부
-                        		    allowNegative : false, // 마이너스 부호(-) 허용 여부
-                        		    textAlign : "center", // 오른쪽 정렬로 입력되도록 설정
-                        		    autoThousandSeparator : false // 천단위 구분자 삽입 여부
-                        		}	 
+                             editRenderer : {
+                                    type : "InputEditRenderer",
+                                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                    onlyNumeric : false, // 0~9만 입력가능
+                                    allowPoint : false, // 소수점( . ) 도 허용할지 여부
+                                    allowNegative : false, // 마이너스 부호(-) 허용 여부
+                                    textAlign : "center", // 오른쪽 정렬로 입력되도록 설정
+                                    autoThousandSeparator : false // 천단위 구분자 삽입 여부
+                                }    
                          } 
                         ];
-/*var serialcolumn       =[{dataField:   "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
-                         {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
-                         {dataField:    "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
-                         {dataField:    "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField:    "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField:    "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField:    "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }  
+var serialcolumn       =[{dataField:"itmcd"      ,headerText :"<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },               
+                         {dataField:"itmname"    ,headerText :"<spring:message code='log.head.materialname'/>" ,width:"25%" ,height:30 },               
+                         {dataField:"serial"     ,headerText :"<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,editable:true },                 
+                         {dataField:"cnt61"      ,headerText :"<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+                         {dataField:"cnt62"      ,headerText :"<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+                         {dataField:"cnt63"      ,headerText :"<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+                         {dataField:"statustype" ,headerText :"<spring:message code='log.head.status'/>"       ,width:"30%" ,height:30,visible:false },
+                         {dataField:"scanno"     ,headerText :"<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false }
                         ];                        
-*/
 
-var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
-                         {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
-                         {dataField:    "serialno",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
-                         {dataField:    "scanno",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField:    "serialscan",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField:    "boxno",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false }
-                        ];
-                        
 //var resop = {usePaging : true,useGroupingPanel : true , groupingFields : ["reqstno"] ,displayTreeOpen : true, enableCellMerge : true, showBranchOnGrouping : false};
 var resop = {
-		rowIdField : "rnum",
-		fixedColumnCount : 11,
-		editable : true,
-		//groupingFields : ["reqstno", "staname"],
+        rowIdField : "rnum",
+        fixedColumnCount : 11,
+        editable : true,
+        //groupingFields : ["reqstno", "staname"],
         displayTreeOpen : false,
         showRowCheckColumn : true ,
         showStateColumn : false,
         showBranchOnGrouping : false
         };
 var serialop = {
-		//rowIdField : "rnum",			
-		editable : true
+        //rowIdField : "rnum",          
+        editable : true
         //displayTreeOpen : true,
         //showRowCheckColumn : true ,
         //enableCellMerge : true,
@@ -169,12 +161,12 @@ var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Man
 var uomlist = f_getTtype('42' , '');
 var paramdata;
 $(document).ready(function(){
-	/**********************************
+    /**********************************
     * Header Setting
     **********************************/
     
     //paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-	paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'UM'};
+    paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , Codeval:'UM'};
     //doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
@@ -197,14 +189,14 @@ $(document).ready(function(){
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
     
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
-    	
-    	if (event.dataField != "indelyqty"){
-    		return false;
-    	}else{
-    	    var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
+        
+        if (event.dataField != "indelyqty"){
+            return false;
+        }else{
+            var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
             for(var i = 0 ; i < checklist.length ; i++){
    /*              if (checklist[i].reqstno != event.item.reqstno){
-                	Common.alert("Request number is different.");
+                    Common.alert("Request number is different.");
                     return false;
                 } */
                 if (checklist[i].reqloc != event.item.reqloc){
@@ -214,11 +206,11 @@ $(document).ready(function(){
                 } 
             }
             
-    	    if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0){
-    	    	Common.alert('Delivery Qty can not be greater than Request Qty.');
-    	    	return false;
-    	    }
-    	}
+            if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0){
+                Common.alert('Delivery Qty can not be greater than Request Qty.');
+                return false;
+            }
+        }
     });
     
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
@@ -226,72 +218,84 @@ $(document).ready(function(){
         if (event.dataField != "indelyqty"){
             return false;
         }else{
-        	
-        	var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty");
-        	if (del > 0){
-	        	if ((Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty"))) 
-	        		||(Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty")))){
-	        		Common.alert('Delivery Qty can not be greater than Request Qty.');
-	        		//AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")
-	        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-	        	}else{
-	        		
-	        		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
-	        	}
-        	}else{
-        		AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-        		AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);        		
-        	}
-        	
-        	
+            
+            var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty");
+            if (del > 0){
+                if ((Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty"))) 
+                    ||(Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty")))){
+                    Common.alert('Delivery Qty can not be greater than Request Qty.');
+                    //AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstqty")
+                    AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+                }else{
+                    
+                    AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
+                }
+            }else{
+                AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+                AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);               
+            }
+            
+            
         }
     });
-    /*AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
-    	var tvalue = true;
+    AUIGrid.bind(serialGrid, "cellEditBegin", function(event) {
+    	console.log(event);
+    	console.log(event.item.scanno);
+    	if (event.item.scanno != ""){
+    		console.log('1');
+    		return false;
+    	}else{
+    		console.log('2');
+            return true;
+    	}
+       // AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);
+    });
+    AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+        var tvalue = true;
        var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
        serial=serial.trim();
        if(""==serial || null ==serial){
           //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
           //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
-	       Common.alert('Please input Serial Number.');
-	       return false;
+           Common.alert('Please input Serial Number.');
+           return false;
        }else{
-    	   for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-    		   if (event.rowIndex != i){
-    			   if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
-    				   tvalue = false;
-    				   break;
-    			   }
-    		   }
-    	   }
-    	   
-    	   if (tvalue){
-    		   fn_serialChck(event.rowIndex ,event.item , serial)
-    	   }else{
-    		   AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
+           for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+               if (event.rowIndex != i){
+                   if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
+                       tvalue = false;
+                       break;
+                   }
+               }
+           }
+           
+           if (tvalue){
+               fn_serialChck(event.rowIndex ,event.item , serial)
+           }else{
+               AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
                AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
                    if (item.statustype  == 'N'){
                        return "my-row-style";
                    }
                });
                AUIGrid.update(serialGrid);
-    	   }
-    	  
-       	  if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
+           }
+          
+          if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
              f_addrow();      
           }
           
        }
-    });*/
+    });
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-//      	$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+//          $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
 
-//     	document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
-//     	document.searchForm.submit();
+//      document.searchForm.action = '/logistics/stocktransfer/StocktransferView.do';
+//      document.searchForm.submit();
     });
     
     AUIGrid.bind(listGrid, "rowCheckClick", function(event){
-    	var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
+        var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
         for(var i = 0 ; i < checklist.length ; i++){
             /* 
             if (checklist[i].reqstno != event.item.reqstno){
@@ -308,33 +312,33 @@ $(document).ready(function(){
             
         }
         
-    	if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0 || AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty")){
+        if (AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") <= 0 || AUIGrid.getCellValue(listGrid, event.rowIndex, "rmqty") < AUIGrid.getCellValue(listGrid, event.rowIndex, "indelyqty")){
             Common.alert('Delivery Qty can not be greater than Request Qty.');
             AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
             return false;
         }
-    	
+        
     });
     
-     /*AUIGrid.bind(serialGrid, "addRowFinish", function(event) {
-    	 AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);
-     });*/
+     AUIGrid.bind(serialGrid, "addRowFinish", function(event) {
+         AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);
+     });
      
      /*AUIGrid.bind(serialGrid, "keyDown", function(event){
-    	 
-    	 if (event.keyCode == 13){
-    		 f_addrow();
-    	 }
+         
+         if (event.keyCode == 13){
+             f_addrow();
+         }
      });*/
     
     AUIGrid.bind(listGrid, "ready", function(event) {
-    	var rowCnt = AUIGrid.getRowCount(listGrid);
-    	for (var i = 0 ; i < rowCnt ; i++){
-    		var qty = AUIGrid.getCellValue(listGrid , i , 'reqstqty') - AUIGrid.getCellValue(listGrid , i , 'delyqty');
-    		AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
-    		AUIGrid.setCellValue(listGrid, i, 'indelyqty', qty);
-    	}
-    	AUIGrid.resetUpdatedItems(listGrid, "all");
+        var rowCnt = AUIGrid.getRowCount(listGrid);
+        for (var i = 0 ; i < rowCnt ; i++){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'reqstqty') - AUIGrid.getCellValue(listGrid , i , 'delyqty');
+            AUIGrid.setCellValue(listGrid, i, 'rmqty', qty);
+            AUIGrid.setCellValue(listGrid, i, 'indelyqty', qty);
+        }
+        AUIGrid.resetUpdatedItems(listGrid, "all");
     });
     //SearchListAjax();
 });
@@ -345,13 +349,13 @@ function f_change(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	SearchListAjax();
+        SearchListAjax();
     });
     $("#clear").click(function(){
         $("#searchForm")[0].reset();
     });   
     $("#sttype").change(function(){
-    	
+        
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
     });
@@ -362,9 +366,9 @@ $(function(){
     });
     
     $('#delivery').click(function(){
-    	var checkDelqty= false; 
-    	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	
+        var checkDelqty= false; 
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -375,43 +379,45 @@ $(function(){
             for(var i=0, len = checkedItems.length; i<len; i++) {
                 rowItem = checkedItems[i];
                 if(rowItem.item.indelyqty==0){
-	                str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
-	                checkDelqty= true;
+                    str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+                    checkDelqty= true;
                 }
                 if (rowItem.item.serialchk =='Y'){
-                	serialchk = true;
+                    serialchk = true;
                 }/*else{
-                	serialchk = false;
+                    serialchk = false;
                 }*/
                 
             }
             if(checkDelqty){
-            	var option = {
-           			content : str,
-           			isBig:true
-            	};
-	            Common.alertBase(option); 
+                var option = {
+                    content : str,
+                    isBig:true
+                };
+                Common.alertBase(option); 
             }else{
-	            $("#giopenwindow").show();
-	            $("#giptdate").val("");
-	            $("#gipfdate").val("");
-	            $("#doctext").val("");
-	            doSysdate(0 , 'giptdate');
-	            doSysdate(0 , 'gipfdate');
-	            AUIGrid.clearGridData(serialGrid);
-	            AUIGrid.resize(serialGrid);
-	            if (serialchk){
-	            	//fn_itempopListSerial(checkedItems);
-	                fn_itempopList_T(checkedItems);
-	            	$("#serial_grid_wrap_div").show();
-	            	AUIGrid.resize(serialGrid);
-	            }else{
-	            	$("#serial_grid_wrap_div").hide();
-	            }
-	            
+                $("#giopenwindow").show();
+                $("#giptdate").val("");
+                $("#gipfdate").val("");
+                $("#doctext").val("");
+                doSysdate(0 , 'giptdate');
+                doSysdate(0 , 'gipfdate');
+                AUIGrid.clearGridData(serialGrid);
+                AUIGrid.resize(serialGrid);
+                if (serialchk){
+                    //fn_itempopListSerial(checkedItems);
+                    fn_itempopList_T(checkedItems);
+                    $("#ascall").show();
+                    $("#serial_grid_wrap_div").show();
+                    AUIGrid.resize(serialGrid);
+                }else{
+                    $("#serial_grid_wrap_div").hide();
+                    $("#ascall").hide();
+                }
+                
             }
         }
-    	
+        
     });
     
     $("#tlocationnm").keypress(function(event) {
@@ -433,6 +439,36 @@ $(function(){
 
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
         }
+    });
+    $("#ascall").click(function(){
+    	//var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+    	
+    	for (var i = 0 ; i < checkedItems.length ; i++){
+            console.log(checkedItems[i].item);
+            
+            param = "from="+checkedItems[i].item.rcvloc+"&to="+checkedItems[i].item.reqloc;
+        }
+    	console.log(param);
+    	//param = "from=14&to=387";
+    	Common.ajax("GET", "/logistics/stockMovement/GetSerialDataCall.do", param, function(result) {
+            console.log(result);
+            console.log(result.data.length);
+            if (result.data.length > 0){
+            	AUIGrid.setGridData(serialGrid , result.data);
+            	$("#ascyn").val('Y');
+            }else{
+            	Common.alert("No Serial No found..");
+            	//f_addrow();
+            }
+        
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+    	
     });
     
 });
@@ -456,19 +492,19 @@ $(function(){
 
 function SearchListAjax() {
 
-	   if ($("#flocationnm").val() == ""){
-	        $("#flocation").val('');
-	    }
-	    if ($("#tlocationnm").val() == ""){
-	        $("#tlocation").val('');
-	    }
-	    
-	    if ($("#flocation").val() == ""){
-	        $("#flocation").val($("#flocationnm").val());
-	    }
-	    if ($("#tlocation").val() == ""){
-	        $("#tlocation").val($("#tlocationnm").val());
-	    }
+       if ($("#flocationnm").val() == ""){
+            $("#flocation").val('');
+        }
+        if ($("#tlocationnm").val() == ""){
+            $("#tlocation").val('');
+        }
+        
+        if ($("#flocation").val() == ""){
+            $("#flocation").val($("#flocationnm").val());
+        }
+        if ($("#tlocation").val() == ""){
+            $("#tlocation").val($("#tlocationnm").val());
+        }
    
     var url = "/logistics/stockMovement/StockMovementSearchList.do";
     var param = $('#searchForm').serializeJSON();
@@ -506,7 +542,7 @@ function f_getTtype(g , v){
 }
 
 
-/*function fn_itempopListSerial(data){
+function fn_itempopListSerial(data){
     var rowPos = "first";
     var rowList = [];
     var str = "";
@@ -518,99 +554,87 @@ function f_getTtype(g , v){
                 
         
         for (var j = 0 ; j < rowItem.item.indelyqty ; j++){
-        rowList[cnt] = {
-                rnum : rowItem.item.rnum,
-                reqstno : rowItem.item.reqstno,
-                itmcd : rowItem.item.itmcd,
-                itmname : rowItem.item.itmname,
-                num : num,
-                indelyqty : rowItem.item.indelyqty,
-                serial : num
-        }       
-                 
-                cnt++;
-                num++;
+	        rowList[cnt] = {
+	                rnum : rowItem.item.rnum,
+	                reqstno : rowItem.item.reqstno,
+	                itmcd : rowItem.item.itmcd,
+	                itmname : rowItem.item.itmname,
+	                num : num,
+	                indelyqty : rowItem.item.indelyqty,
+	                serial : num
+	        }       
+            cnt++;
+            num++;
         }
     }
     AUIGrid.addRow(serialGrid, rowList, rowPos);
     
     
-}*/
-
-function fn_itempopList_T(data){
-	var itm_temp = "";
-	var itm_qty  = 0;
-	var itmdata = [];
-	console.log(data);
-	var param = "";
-	for (var i = 0 ; i < data.length ; i++){
-		console.log(data[i].item);
-		if (data[i].item.serialchk == 'Y'){
-			itm_qty = itm_qty + data[i].item.indelyqty;
-			$("#reqstno").val(data[i].item.reqstno);
-		}
-		param = "from="+data[i].item.rcvloc+"&to="+data[i].item.reqloc;
-	}
-	console.log(itm_qty + " ///// " + param);
-	
-	$("#serialqty").val(itm_qty);
-	
-	
-	f_addrow(param);
 }
 
-function f_addrow(param){
-	/*var rowPos = "last";
-    var item = new Object();
-    AUIGrid.addRow(serialGrid, item, rowPos);
-    return false;*/
-    //console.log()
-	Common.ajax("GET", "/logistics/stockMovement/GetSerialDataCall.do", param, function(result) {
-		console.log(result);
-		AUIGrid.setGridData(serialGrid , result.data);
-	
-	},  function(jqXHR, textStatus, errorThrown) {
-	    try {
-	    } catch (e) {
-	    }
-	    Common.alert("Fail : " + jqXHR.responseJSON.message);
-	});
+function fn_itempopList_T(data){
+    var itm_temp = "";
+    var itm_qty  = 0;
+    var itmdata = [];
+    for (var i = 0 ; i < data.length ; i++){
+        if (data[i].item.serialchk == 'Y'){
+        itm_qty = itm_qty + data[i].item.indelyqty;
+        $("#reqstno").val(data[i].item.reqstno);
+        }
+    }
+    $("#serialqty").val(itm_qty);
     
+    
+    f_addrow();
+}
+
+function f_addrow(){
+    var rowPos = "last";
+    var item = new Object();
+    item = {"itmcd":"","itmname":"","serial":"","cnt61":"","cnt62":"","cnt63":"","statustype":"","scanno":""};    
+    AUIGrid.addRow(serialGrid, item, rowPos);
+    return false;
 }
 
 function giFunc(){
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
     var check     = AUIGrid.getCheckedRowItems(listGrid);
-    var serials   = AUIGrid.getGridData(serialGrid);//AUIGrid.getAddedRowItems(serialGrid);
+    //var serials   = AUIGrid.getAddedRowItems(serialGrid);
+    var serials   = AUIGrid.getGridData(serialGrid);
+    
+    console.log(serials);
     
     if (serialchk){
-	    /*for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
-	    	if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
-	    		Common.alert("Please check the serial.")
-	    		return false;
-	    	}
-	    	
-	    	if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
-	    		Common.alert("Please check the serial.")
-	            return false;
-	    	}
-	    }*/
-	    console.log($("#serialqty").val() +' /// ' + AUIGrid.getRowCount(serialGrid));
-	    if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
-	    	Common.alert("Please check the serial.")
-	        return false;
-	    }
+    	if ($("#ascyn").val() == "Y"){
+    		console.log('111');
+    	}else{
+	        for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+	            if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+	                Common.alert("Please check the serial.")
+	                return false;
+	            }
+	            
+	            if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+	                Common.alert("Please check the serial.")
+	                return false;
+	            }
+	        }
+    	}
+        if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+            Common.alert("Please check the serial.")
+            return false;
+        }
     }
     data.check   = check;
     data.checked = check;
-    data.add = serials;
+    data.add     = serials;
     data.form    = $("#giForm").serializeJSON();
     
     console.log(data);
     Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
             var msg = result.message + "<br>MDN NO : "+result.data[1];
-    	    Common.alert(msg , SearchListAjax);
+            Common.alert(msg , SearchListAjax);
             AUIGrid.resetUpdatedItems(listGrid, "all");    
         $("#giopenwindow").hide();
         $('#search').click();
@@ -629,15 +653,15 @@ function giFunc(){
 }
 
 function fn_serialChck(rowindex , rowitem , str){
-	var schk = true;
-	var ichk = true;
-	var slocid = '';//session.locid;
-	var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-	
+    var schk = true;
+    var ichk = true;
+    var slocid = '';//session.locid;
+    var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+    
     var data = { serial : str , locid : slocid};
     Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
-    	if (result.data[0] == null){
-    		AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
+        if (result.data[0] == null){
+            AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
@@ -646,47 +670,47 @@ function fn_serialChck(rowindex , rowitem , str){
             schk = false;
             ichk = false;
             
-    	}else{
-	         AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
-	         AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
-	         AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
-	         AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
-	         AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
-	         
-	         if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0){//} || result.data[0].L63CNT > 0){
-	        	 schk = false;
-	         }else{
-	        	 schk = true;
-	         }
-	         
-	         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-	         
-	         for (var i = 0 ; i < checkedItems.length ; i++){
-	             if (result.data[0].STKCODE == checkedItems[i].itmcd){
-	                 //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
-	                 ichk = true;
-	                 break;
-	             }else{
-	                 ichk = false;
-	             }
-	         }
-    	}
+        }else{
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
+             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
+             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
+             
+             if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0){//} || result.data[0].L63CNT > 0){
+                 schk = false;
+             }else{
+                 schk = true;
+             }
+             
+             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+             
+             for (var i = 0 ; i < checkedItems.length ; i++){
+                 if (result.data[0].STKCODE == checkedItems[i].itmcd){
+                     //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+                     ichk = true;
+                     break;
+                 }else{
+                     ichk = false;
+                 }
+             }
+        }
          
          if (schk && ichk){
-        	 AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
          }else{
-        	 AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+             AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
          }
           
-       	  //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
-       	  AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-       		  
-       		  if (item.statustype  == 'N'){
-       			  return "my-row-style";
-       		  }
-       	  });
-       	  AUIGrid.update(serialGrid);
-        	 
+          //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
+          AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+              
+              if (item.statustype  == 'N'){
+                  return "my-row-style";
+              }
+          });
+          AUIGrid.update(serialGrid);
+             
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
@@ -769,10 +793,10 @@ function fn_serialChck(rowindex , rowitem , str){
                     <th scope="row">Create Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-					    <span> To </span>
-					    <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-					    </div><!-- date_set end -->                        
+                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <span> To </span>
+                        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div><!-- date_set end -->                        
                     </td>
                     <th scope="row">Required Date</th>
                     <td >
@@ -823,10 +847,11 @@ function fn_serialChck(rowindex , rowitem , str){
         
         <section class="pop_body"><!-- pop_body start -->
             <form id="giForm" name="giForm" method="POST">
-            <input type="hidden" name="gtype" id="gtype" value="GI"/>
+            <input type="hidden" name="gtype"     id="gtype" value="GI"/>
             <input type="hidden" name="serialqty" id="serialqty"/>
-            <input type="hidden" name="reqstno" id="reqstno"/>
-            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
+            <input type="hidden" name="reqstno"   id="reqstno"/>
+            <input type="hidden" name="prgnm"     id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
+            <input type="hidden" name="ascyn"     id="ascyn" value=""/>
             <table class="type1">
             <caption>search table</caption>
             <colgroup>
@@ -844,7 +869,8 @@ function fn_serialChck(rowindex , rowitem , str){
                 </tr>
                 <tr>    
                     <th scope="row">Header Text</th>
-                    <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+                    <td colspan='2'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+                    <td><p class="btn_blue"><a id="ascall"><span class="search"></span>Auto Serial Call</a></p></td>
                 </tr>
             </tbody>
             </table>
@@ -856,8 +882,8 @@ function fn_serialChck(rowindex , rowitem , str){
             </tbody>
             </table>
             <article class="grid_wrap"  id="serial_grid_wrap_div"><!-- grid_wrap start -->
-			<div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
-			</article><!-- grid_wrap end -->
+            <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
+            </article><!-- grid_wrap end -->
             <ul class="center_btns">
                 <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
             </ul>

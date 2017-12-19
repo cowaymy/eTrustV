@@ -486,7 +486,7 @@
                                         CRT_USER_ID
                                         )
                           SELECT
-                                   #{serialno},
+                                   #{serial},
                                    #{delno},
                                    DELVRY_NO_ITM,
                                     (SELECT TRNSC_TYPE FROM LOG0047M WHERE REQST_NO= #{reqstno}) ,
@@ -500,7 +500,7 @@
                                     AND REQST_NO = #{reqstno}
                                      AND (SELECT serial_no
 							                FROM LOG0061D
-							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serialno})
+							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serial})
 							                 IS NULL                                   
                                                        
      </insert>
@@ -635,7 +635,7 @@
     </insert> 
     
     <select id="selectGetSerialDataCall" parameterType="Map" resultType="egovMap">
-        SELECT SCAN_NO SCANNO , SEQ SEQ , SERIAL_SCAN SERIALSCAN , SERIAL_NO SERIALNO 
+        SELECT SCAN_NO SCANNO , SEQ SEQ , SERIAL_SCAN SERIALSCAN , SERIAL_NO SERIAL 
              , BOX_NO BOXNO, MATNR ITMCD , FROM_LOC_ID FROMLOC , TO_LOC_ID TOLOC , STK_DESC ITMNAME
 		  FROM LOG0087D L87 , SYS0026M S26 
 		 WHERE 1 = 1 
