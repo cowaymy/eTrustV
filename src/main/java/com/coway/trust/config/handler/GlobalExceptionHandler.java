@@ -256,12 +256,7 @@ public class GlobalExceptionHandler {
 		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
-
-			if( ex.getCause() != null && ex.getCause().getCause() instanceof  ApplicationException){
-				message.setMessage(ex.getCause().getCause().getMessage());
-			}else{
-				message.setMessage(AppConstants.SERVER_ERROR);
-			}
+			message.setMessage(ex.getCause().getCause().getMessage());
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			return new ResponseEntity<Object>(message, headers, HttpStatus.INTERNAL_SERVER_ERROR);
