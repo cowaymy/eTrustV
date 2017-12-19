@@ -232,7 +232,7 @@
 						<th scope="row">Report Type</th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
-								<option value="1">HP Commisision Statement</option>
+								<option value="1">HP Commission Statement</option>
 								<option value="2">HP Commission Raw (All)</option>								
 								<option value="3">HP TBB File Data Raw</option>
 								<option value="4">HP Comm Calculation</option>
