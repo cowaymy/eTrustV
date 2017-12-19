@@ -432,7 +432,7 @@
       
       
       
-      
+     <!-- 사용 안함.  membershipQuotationMapper 사용하도록 변경--> 
  <select id="getFilterChargeListSum" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
               SELECT         SUM(DISAMT) DISAMT FROM (

@@ -444,14 +444,15 @@ function fn_getFilterChargeList(){
     
     if($("#HiddenIsCharge").val() != "0"){
     	
-    	 if($('#cPromo').val() == ""){
+/*     	 if($('#cPromo').val() == ""){
     		 
              fn_getFilterPromotionAmt();  
              
-         }else{
+         }else{ */
     	
 		     Common.ajax("GET", "/sales/membershipRentalQut/getFilterChargeListSum.do",{
 		         SALES_ORD_NO : $("#ORD_NO_P").val(),
+	             ORD_ID : $("#ORD_ID").val(),
 		         PROMO_ID: $('#cPromo').val() ,
 		         SRV_PAC_ID :$('#cTPackage').val() 
 		     }, function(result) {
@@ -459,11 +460,11 @@ function fn_getFilterChargeList(){
 		          
 		         if(null != result){
 		             if(result[0] !=null){
-		                 $("#txtFilterCharge").val( result[0].disamt);
+		                 $("#txtFilterCharge").val( result[0].amt);
 		             }
 		         }
 		     });
-         }
+         /* } */
     }
 }
 
@@ -1181,7 +1182,11 @@ function fn_cTPackageChanged(){
 	     
          fn_InintMembershipPackageInfo();
          fn_LoadRentalSVMPackage($('#cTPackage').val().trim());
-         fn_getFilterPromotionAmt();
+         
+         //fn_getFilterPromotionAmt();
+         fn_getFilterChargeList();
+         
+         
          fn_getMembershipPackageFilterInfo();
      }
       

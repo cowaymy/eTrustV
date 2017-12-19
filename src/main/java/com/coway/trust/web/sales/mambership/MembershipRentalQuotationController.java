@@ -331,7 +331,9 @@ public class  MembershipRentalQuotationController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
-		List<EgovMap>  list = membershipRentalQuotationService.getFilterChargeListSum(params);
+		membershipRentalQuotationService.getFilterChargeListSum(params);	
+		
+		List<EgovMap>  list = (List<EgovMap>) params.get("p1");
 		
 		return ResponseEntity.ok(list);
 	}

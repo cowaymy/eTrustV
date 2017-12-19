@@ -39,6 +39,9 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 	@Resource(name = "membershipRentalQuotationMapper")
 	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
 	
+	@Resource(name = "membershipQuotationMapper")
+	private MembershipQuotationMapper membershipQuotationMapper;
+	
 	@Resource(name = "orderInvestMapper")
 	private OrderInvestMapper orderInvestMapper;
 	
@@ -94,12 +97,19 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 
 	@Override
 	public List<EgovMap> getFilterChargeList(Map<String, Object> params) {
-		return membershipRentalQuotationMapper.getFilterChargeList(params);
+		//return membershipRentalQuotationMapper.getFilterChargeList(params);
+		
+		membershipQuotationMapper.getFilterCharge(params);
+		return (List<EgovMap>) params.get("p1");
 	}
    
 	@Override
 	public List<EgovMap> getFilterChargeListSum(Map<String, Object> params) {
-		return membershipRentalQuotationMapper.getFilterChargeListSum(params); 
+		return membershipQuotationMapper.getFilterChargeListSum(params); 
+
+		/*membershipQuotationMapper.getFilterCharge(params);
+		return (List<EgovMap>) params.get("p1");*/
+		
 	}
 	
 	

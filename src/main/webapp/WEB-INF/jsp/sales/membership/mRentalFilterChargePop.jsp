@@ -14,6 +14,7 @@
    function fn_filterSelectListAjax() {
        Common.ajax("GET", "/sales/membershipRentalQut/getFilterChargeList.do",{
     	   SALES_ORD_NO : $("#ORD_NO_P").val(),
+           ORD_ID : $("#ORD_ID").val(),
     	   PROMO_ID: $('#cPromo').val() ,
     	   SRV_PAC_ID :$('#cTPackage').val() 
        }, function(result) {
@@ -31,14 +32,23 @@
 	   
 
 	    
-	   var columnLayout = [ 
+/* 	   var columnLayout = [ 
 	                       {dataField :"bomCompnt",  headerText : "Code",      width: 150 ,editable : false },
 	                       {dataField :"bomCompntDesc",  headerText : "Descrption",    width: 250, editable : false },
 	                       {dataField :"srvFilterPriod", headerText : "LifePeriod",   width: 150, editable : false },
 	                       {dataField :"srvFilterPrvChgDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
 	                       {dataField :"amt", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
 	                       {dataField :"disamt", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
-	   ];
+	   ]; */
+	   var columnLayout = [ 
+                           {dataField :"filterCode",  headerText : "Code",      width: 150 ,editable : false },
+                           {dataField :"filterDesc",  headerText : "Descrption",    width: 250, editable : false },
+                           {dataField :"lifePriod", headerText : "LifePeriod",   width: 150, editable : false },
+                           {dataField :"lastChngDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
+                           {dataField :"oriPrc", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
+                           {dataField :"prc", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
+       ];      
+
 	   
 
 	   
@@ -52,33 +62,31 @@
 	        showRowNumColumn    : true  ,
 	        showFooter : true  
 	    };
-	    
-	   
 
-	     //푸터 설정
-	     var footerObject = [ 
-	                             {
-	                                 labelText : "COUNT :",
-	                                 positionField : "bomCompntDesc"
-	                             },
-	                           {
-	                                dataField : "srvFilterPriod",
-	                                positionField : "srvFilterPriod",
-	                                operation : "COUNT",
-	                                formatString : "#,##0"
-	                           },
-	                           {
-	                        	   labelText : "Total :",
-                                   positionField : "amt"
+	    
+	    //푸터 설정
+        var footerObject = [ 
+                                {
+                                    labelText : "COUNT :",
+                                    positionField : "filterDesc"
+                                },
+                              {
+                                   dataField : "lifePriod",
+                                   positionField : "lifePriod",
+                                   operation : "COUNT",
+                                   formatString : "#,##0"
                               },
-	                           {
-	                               dataField : "disamt",
-	                               positionField : "disamt",
-	                               operation : "SUM",
-	                               formatString : "#,##0.00"
-	                           }
-	         ];
-	     
+                              {
+                                  labelText : "Total :",
+                                  positionField : "oriPrc"
+                             },
+                              {
+                                  dataField : "prc",
+                                  positionField : "prc",
+                                  operation : "SUM",
+                                  formatString : "#,##0.00"
+                              }
+            ];
 	     
 	     gridFilterID = GridCommon.createAUIGrid("gridFilterID_list_grid_wrap", columnLayout, "", gridPros);
          AUIGrid.setFooter(gridFilterID, footerObject); 
