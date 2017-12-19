@@ -218,4 +218,20 @@ public class CTSubGroupListController {
 			return ResponseEntity.ok(CtSubGrps);
 			
 		}
+		@RequestMapping(value = "/CTSubGroupSave.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage>ctSubGroupSave(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+			ReturnMessage message = new ReturnMessage();
+			
+	
+			List<Object> subGroupList = (List<Object>) params.get("subGroupList");
+			logger.debug("subGroupList {}", subGroupList);
+			int updateCount = CTSubGroupListService.ctSubGroupSave(params, sessionVO);
+			
+			message.setMessage("success");
+			
+			
+			return	ResponseEntity.ok(message);
+			
+			
+		}
 }

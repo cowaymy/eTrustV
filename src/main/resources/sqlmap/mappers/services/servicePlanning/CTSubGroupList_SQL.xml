@@ -166,4 +166,119 @@ where a.CT_Sub_GRp(+) = b.ct_sub_Grp
 
 
 
+<select id="selectOneCTSubGrb" parameterType="Map" resultType="egovMap">
+    select *
+    from svc0054m 
+    where  MEM_ID= #{memId}
+    and  CT_Sub_GRp =#{ctSubGrp}
+</select>
+
+<insert id="insertSvc0054m" parameterType="Map">
+ INSERT INTO Svc0054m(	
+		MEM_ID
+		,CT_SUB_GRP
+		,ASIGN_FLAG
+		,CRT_USER_ID
+		,CRT_DT
+		,UPD_USER_ID
+		,UPD_DT
+	
+		)
+	Values(
+	   #{memId}
+	   ,#{ctSubGrp}
+	   , 'Y'
+	   , #{userId}
+	   ,SYSDATE
+	   , #{userId}
+       ,SYSDATE
+       
+	)
+	</insert>
+	
+	<delete id="deleteSvc0054m" parameterType="Map">
+    	Delete from Svc0054m
+    	where MEM_ID = #{memId}
+    	
+   <if test="insertSubgrps != null and insertSubgrps.size() > 0 ">
+      and CT_Sub_GRP not in
+    <foreach item="item" collection="insertSubgrps" index="index" open="(" separator="," close=")">
+    	 #{item}
+	</foreach>
+	</if>
+	
+	</delete>
+	
+	<select id="selectNotChooseCTSubGrb" parameterType="Map" resultType="egovMap">
+		  select *
+	    from svc0054m 
+	    where  MEM_ID= #{memId}
+	  <if test="insertSubgrps != null and insertSubgrps.size() > 0 ">
+	     AND CT_Sub_GRP not in
+	<foreach item="item" collection="insertSubgrps" index="index" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+    </if>
+	</select>
+	
+	<select id="selectOneMainGroup" parameterType="Map" resultType="egovMap">
+	     select *
+        from svc0054m 
+        where  MEM_ID= #{memId}
+        and CT_SUB_GRP = #{mainGroup}
+	    and MAJOR_GRP = 1
+	
+	</select>
+	
+	<insert id="insertMajorgroup" parameterType="Map">
+	 INSERT INTO Svc0054m( 
+        MEM_ID
+        ,CT_SUB_GRP
+        ,ASIGN_FLAG
+        ,CRT_USER_ID
+        ,CRT_DT
+        ,UPD_USER_ID
+        ,UPD_DT
+        ,MAJOR_GRP
+        
+        )
+    Values(
+       #{memId}
+       ,#{mainGroup}
+       , 'Y'
+       , #{userId}
+       ,SYSDATE
+       , #{userId}
+       ,SYSDATE
+       ,'1'
+       
+    )
+
+	</insert>
+	<update id="updateMajorgroup" parameterType="Map">
+	   update svc0054m
+	   set MAJOR_GRP =1
+	  where  MEM_ID= #{memId}
+	  and CT_SUB_GRP = #{mainGroup}
+	
+	</update>
+	<update id="updateNotMajorGroup" parameterType="Map">
+	   update svc0054m
+       set MAJOR_GRP = null
+      where  MEM_ID= #{memId}
+      <if test="mainGroup != null and mainGroup !='' ">
+        and CT_SUB_GRP != #{mainGroup}
+      </if>
+      and MAJOR_GRP =1
+	
+	</update>
+	
+<select id="selectAlreadyCTSubGrb"  parameterType="Map" resultType="egovMap">
+		select    * 
+		from svc0054m
+	    where  MEM_ID= #{memId}
+	    and CT_SUB_GRP = #{mainGroup}
+	</select>
+	
+	
 </mapper>

@@ -3,6 +3,8 @@ package com.coway.trust.biz.services.servicePlanning;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CTSubGroupListService {
@@ -28,6 +30,8 @@ public interface CTSubGroupListService {
 	List<EgovMap>  selectCTSubGrb(Map<String, Object> params);
 
 	List<EgovMap> selectCTSubGroupMajor(Map<String, Object> params);
+
+	int ctSubGroupSave(Map<String, Object> params, SessionVO sessionVO);
 
 
 }

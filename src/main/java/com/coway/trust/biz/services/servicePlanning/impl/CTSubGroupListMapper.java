@@ -27,4 +27,22 @@ public interface CTSubGroupListMapper {
 
 	List<EgovMap> selectCTSubGroupMajor(Map<String, Object> params);
 
+	EgovMap selectOneCTSubGrb(Map<String, Object> insertValue);
+
+	int insertSvc0054m(Map<String, Object> insertValue);
+
+	int deleteSvc0054m(Map<String, Object> insertValue);
+
+	List<EgovMap> selectNotChooseCTSubGrb(Map<String, Object> insertValue);
+
+	EgovMap selectOneMainGroup(Map<String, Object> params);
+
+	int insertMajorgroup(Map<String, Object> params);
+
+	int updateMajorgroup(Map<String, Object> params);
+
+	int updateNotMajorGroup(Map<String, Object> params);
+
+	EgovMap selectAlreadyCTSubGrb(Map<String, Object> insertValue);
+
 }

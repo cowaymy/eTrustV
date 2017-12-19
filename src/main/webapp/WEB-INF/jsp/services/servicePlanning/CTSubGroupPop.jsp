@@ -19,7 +19,7 @@ function tagRespondGrid() {
                                            width: 160
                                        }, {
                                            dataField : "checkFlag",
-                                           headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+                                           headerText : ' ',
                                            width: 65,
                                            renderer : {
                                                type : "CheckBoxEditRenderer",
@@ -35,7 +35,7 @@ function tagRespondGrid() {
                                            width: 160
                                        }, {
                                            dataField : "radioFlag",
-                                           headerText : '<input type="checkbox" id="singleCheckbox" style="width:15px;height:15px;">',
+                                           headerText : ' ',
                                            width: 65,
                                            renderer : {
                                                type : "CheckBoxEditRenderer",
@@ -65,6 +65,38 @@ function tagRespondGrid() {
 
 }
 
+function fn_CTAssignSave(){
+	
+	var activeItems = AUIGrid.getItemsByValue(gridCtSubgrpID, "checkFlag", "1");
+	var mainGroupItems = AUIGrid.getItemsByValue(gridCtSubgrpID, "radioFlag", "1");
+	
+    if(mainGroupItems.length > 1){
+        alert("too many choose main Group, Please choose one");
+        return
+    }
+    var jsonObj;
+    if(mainGroupItems.length > 0){
+	 jsonObj= { subGroupList : activeItems, 
+			              mainGroup : mainGroupItems[0].ctSubGrp,
+			              memId : $("#memID").val()
+			            };
+    }
+    else{
+    	jsonObj= { subGroupList : activeItems, 
+            memId : $("#memID").val()
+          };
+    }
+	console.log(jsonObj);
+	Common.ajax("POST", "/services/serviceGroup/CTSubGroupSave.do",  jsonObj,  function(result) {
+        console.log(result);
+        Common.alert(result.message);
+ 
+
+     });
+	
+}
+
+
     $(document).ready(function(){
         
         //grid 생성
@@ -78,6 +110,9 @@ function tagRespondGrid() {
             for(var i=0; i< AUIGrid.getGridData(gridCtSubgrpID).length; i++){
                 if(AUIGrid.getCellValue(gridCtSubgrpID, i, "asignFlag") != null && AUIGrid.getCellValue(gridCtSubgrpID, i, "asignFlag") != ""){
                     AUIGrid.updateRow(gridCtSubgrpID, { "checkFlag" : 1 }, i);
+                }
+                if(AUIGrid.getCellValue(gridCtSubgrpID, i, "majorGrp") != null && AUIGrid.getCellValue(gridCtSubgrpID, i, "majorGrp") != ""){
+                    AUIGrid.updateRow(gridCtSubgrpID, { "radioFlag" : 1 }, i);
                 }
             }
         });
@@ -114,7 +149,7 @@ function tagRespondGrid() {
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="CTList_grid_wap" style="width:100%; height:300px; margin:0 auto;">
-    <input type="radio" name="majorGrp" class="majorGrp"  checked="checked" />
+    
 
 </div>
 </article><!-- grid_wrap end -->
