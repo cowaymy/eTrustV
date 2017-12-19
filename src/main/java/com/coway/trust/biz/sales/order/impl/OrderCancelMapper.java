@@ -190,4 +190,19 @@ public interface OrderCancelMapper {
 	 * @exception Exception
 	 */
 	EgovMap cancelCtLOG0038D(Map<String, Object> params);
+	
+	
+	/**
+	 * Assign CT  Bulk  
+	 * 
+	 * @param params
+	 * @return
+	 * @exception Exception
+	 * @author
+	 */
+	List<EgovMap> ctAssignBulkList(Map<String, Object> params);
+	
+	void insertBulkLOG0037D(Map<String, Object> params);
+	
+	void updateBulkLOG0038D(Map<String, Object> params);
 }

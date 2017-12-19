@@ -95,4 +95,17 @@ public interface OrderCancelService {
 	List<EgovMap> selectFeedback(Map<String, Object> params);
 	
 	void saveCtAssignment(Map<String, Object> params);
+	
+	
+	/**
+	 * Assign CT  Bulk  
+	 * 
+	 * @param params
+	 * @return
+	 * @exception Exception
+	 * @author
+	 */
+	List<EgovMap> ctAssignBulkList(Map<String, Object> params);
+	
+	int saveCancelBulk(Map<String, Object> params);
 }

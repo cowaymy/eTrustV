@@ -12,8 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.order.OrderCancelService;
+import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -353,4 +355,35 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		orderCancelMapper.updateCancelLOG0038D(params);
 		
 	}
+	
+	
+	public List<EgovMap> ctAssignBulkList(Map<String, Object> params) {
+		return orderCancelMapper.ctAssignBulkList(params);
+	}
+	
+	@Override
+	@Transactional
+	public int saveCancelBulk(Map<String, Object> params){
+		
+//		GridDataSet<OrderCancelCtBulkMVO> bulkDataSetList = ctbulkvo.getBulkDataSetList();
+		
+//		List<OrderCancelCtBulkMVO> updateList = bulkDataSetList.getRemove();
+		List<Object> updList = (List<Object>)params.get("saveList");
+		int dataCnt = 0;
+		
+		// insert & update data
+		for(int i=0; i<updList.size(); i++){
+			Map<String, Object> addMap = (Map<String, Object>)updList.get(i);
+			// insert data
+			addMap.put("userId", params.get("userId"));
+			orderCancelMapper.insertBulkLOG0037D(addMap);
+			// update data
+			orderCancelMapper.updateBulkLOG0038D(addMap);
+			
+			dataCnt++;
+		}
+		
+		return dataCnt;
+	}
+	
 }
