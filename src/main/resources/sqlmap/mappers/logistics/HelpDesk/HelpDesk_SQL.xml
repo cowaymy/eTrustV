@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.helpdesk.impl.HelpDeskMapper">
-    
+
+<select id="selectEmailaddr" parameterType="int" resultType="EgovMap"> 
+SELECT Extent1.USER_ID USER_ID  ,
+       Extent1.USER_NAME USER_NAME  ,
+       Extent1.USER_PASSWD USER_PASSWD  ,
+       Extent1.USER_FULL_NAME USER_FULL_NAME  ,
+       Extent1.USER_EMAIL USER_EMAIL  ,
+       Extent1.USER_STUS_ID USER_STUS_ID  ,
+       Extent1.USER_BRNCH_ID USER_BRNCH_ID  ,
+       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+       Extent1.USER_UPD_USER_ID USER_UPD_USER_ID  ,
+       Extent1.USER_UPD_DT USER_UPD_DT  ,
+       Extent1.USER_SYNC_CHK USER_SYNC_CHK  ,
+       Extent1.USER_NRIC USER_NRIC  ,
+       Extent1.USER_DT_JOIN USER_DT_JOIN  ,
+       Extent1.USER_GSEC_SYN_CHK USER_GSEC_SYN_CHK  ,
+       Extent1.USER_PASSWD_LAST_UPD_DT USER_PASSWD_LAST_UPD_DT  ,
+       Extent1.USER_TYPE_ID USER_TYPE_ID  ,
+       Extent1.USER_DFLT_PASSWD USER_DFLT_PASSWD  ,
+       Extent1.USER_VAL_ID_FROM USER_VAL_ID_FROM  ,
+       Extent1.USER_VAL_ID_TO USER_VAL_ID_TO  ,
+       Extent1.USER_SEC_QUES_ID USER_SEC_QUES_ID  ,
+       Extent1.USER_SEC_QUES_ANS USER_SEC_QUES_ANS  ,
+       Extent1.USER_WORK_NO USER_WORK_NO  ,
+       Extent1.USER_MOBILE_NO USER_MOBILE_NO  ,
+       Extent1.USER_EXT_NO USER_EXT_NO  ,
+       Extent1.USER_IS_PART_TM USER_IS_PART_TM  ,
+       Extent1.USER_DEPT_ID USER_DEPT_ID  ,
+       Extent1.USER_IS_EXTRNL USER_IS_EXTRNL  
+  FROM SYS0047M Extent1
+ WHERE  Extent1.USER_ID = #{loginId}
+</select>    
 
 <select id="selectDataChangeList" parameterType="Map" resultType="EgovMap">  
 SELECT DTAB.DCFReqEntryID AS DCFReqEntryID,
