@@ -1118,7 +1118,7 @@ AND ROWNUM                    <= 1
 		,#{InstallRemark}
 		,#{GLPost}
 		,#{InstallCreateBy}
-		,#{InstallCreateAt}
+		,sysdate
 		,#{InstallSirimNo}
 		,#{InstallSerialNo}
 		,#{InstallFailID}
