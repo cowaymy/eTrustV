@@ -80,6 +80,27 @@
         
     </select>
     
+    <select id="selectReqDcfInfo" parameterType="Map" resultType="egovMap">
+        SELECT  
+            A.GRP_SEQ,
+            A.DCF_RESN,    
+            B.CODE_NAME AS DCF_RESN_CODE,
+            A.DCF_AMT,
+            A.DCF_REM,
+            A.DCF_STUS_ID,
+            C.CODE AS DCF_STUS_CODE,
+            A.DCF_CRT_USER_ID,
+            D.USER_NAME AS DCF_CRT_USER_NM, 
+            TO_CHAR(A.DCF_CRT_DT,'DD/MM/YYYY') AS DCF_CRT_DT
+        FROM 
+            PAY0258D A
+            JOIN SYS0013M B ON A.DCF_RESN = B.CODE_ID
+            JOIN SYS0038M C ON A.DCF_STUS_ID = C.STUS_CODE_ID
+            JOIN SYS0047M D ON A.DCF_CRT_USER_ID = D.USER_ID       
+        WHERE 
+            DCF_REQ_ID = #{reqNo}
+    </select>
+    
      <insert id="requestDCF" parameterType="Map">
         <selectKey keyProperty="dcfReqId" resultType="int" order="BEFORE">
             SELECT PAY0258D_SEQ.NEXTVAL FROM DUAL

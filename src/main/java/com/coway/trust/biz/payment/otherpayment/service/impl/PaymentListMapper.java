@@ -25,7 +25,15 @@ public interface PaymentListMapper {
 	 * @param model
 	 * @return
 	 */		
-	List<EgovMap> selectPaymentListByGroupSeq(Map<String, Object> params);	
+	List<EgovMap> selectPaymentListByGroupSeq(Map<String, Object> params);
+	
+	/**
+	 * Payment List - Request DCF 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+    EgovMap selectReqDcfInfo(Map<String, Object> params);
 	
 	/**
 	 * Payment List - Request DCF

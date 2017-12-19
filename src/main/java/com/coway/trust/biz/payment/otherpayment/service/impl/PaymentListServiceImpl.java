@@ -40,6 +40,17 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		return paymentListMapper.selectPaymentListByGroupSeq(params);
 	}
 	
+	/**
+	 * Payment List - Request DCF 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public EgovMap selectReqDcfInfo(Map<String, Object> params) {
+		return paymentListMapper.selectReqDcfInfo(params);
+	}
+	
 	 /**
 	 * Payment List - Request DCF
 	 * @param 

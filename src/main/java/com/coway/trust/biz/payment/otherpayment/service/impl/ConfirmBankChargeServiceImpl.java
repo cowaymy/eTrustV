@@ -18,7 +18,8 @@ public class ConfirmBankChargeServiceImpl extends EgovAbstractServiceImpl implem
 	@Resource(name = "confirmBankChargeMapper")
 	private ConfirmBankChargeMapper confirmBankChargeMapper;
 	
-	
+	@Resource(name = "advPaymentMatchMapper")
+	private AdvPaymentMatchMapper advPaymentMatchMapper;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfirmBankChargeServiceImpl.class);
 	
@@ -49,6 +50,20 @@ public class ConfirmBankChargeServiceImpl extends EgovAbstractServiceImpl implem
 		
 		
 		//Interface 테이블 처리 - Bank Statement Bank Charge 
+		List<EgovMap> returnList = advPaymentMatchMapper.selectMappedData(params);
+		
+		
+		if(returnList != null && returnList.size() > 0){
+			for(int i = 0 ; i < returnList.size(); i++){
+				
+				EgovMap ifMap  = (EgovMap) returnList.get(i);				
+				
+				//variance
+				ifMap.put("variance", params.get("variance"));
+				ifMap.put("userId", params.get("userId"));				
+				advPaymentMatchMapper.insertAdvPaymentMatchIF(ifMap);
+			}
+		}
 		
 		
 	}

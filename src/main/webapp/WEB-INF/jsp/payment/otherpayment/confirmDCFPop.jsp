@@ -50,6 +50,17 @@ function searchDCFList(){
 	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
 		AUIGrid.setGridData(myRequestDCFGridID, result);
 		recalculateTotalAmt();
+		searchReqDCFInfo();
+	});
+}
+
+// confirm 창에서는 Request 정보 (reason / remark)를 조회하여 보여준다.
+function searchReqDCFInfo(){
+	Common.ajax("POST","/payment/selectReqDcfInfo.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
+		$("#requestor").val(result.dcfCrtUserNm);
+		$("#reqReason").val(result.dcfResnCode);    
+		$("#reqDate").val(result.dcfCrtDt);  
+		$("#ReqRemark").val(result.dcfRem);    
 	});
 }
 
@@ -130,20 +141,19 @@ function fn_reject(){
 
 </script>   
 
-<div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
-		<h1>Request DCF</h1>
+		<h1>Confirm DCF</h1>
 		<ul class="right_opt">
 		    <li><p class="btn_blue2"><a href="#"><spring:message code="newWebInvoice.btn.close" /></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
-		<!-- search_result start -->
-		<section class="search_result">     
-			<!-- grid_wrap start -->
-			<article id="grid_request_dcf_wrap" class="grid_wrap"></article>
-			<!-- grid_wrap end -->
-		</section>
+		<!-- grid_wrap start -->
+	    <article class="grid_wrap">
+	        <div id="grid_request_dcf_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
+	    </article>
+	    <!-- grid_wrap end -->
 
 		<!-- search_table start -->
 		<section class="search_table">
@@ -157,9 +167,26 @@ function fn_reject(){
 					<colgroup>
 						<col style="width:160px" />
 						<col style="width:*" />
+						<col style="width:160px" />
+						<col style="width:*" />
 					</colgroup>
 					<tbody>
 						<tr>
+							<th scope="row">Requestor</th>
+							<td>
+								<input id="requestor" name="requestor" type="text" class="readonly" readonly />
+							</td>
+							<th scope="row">Request Date</th>
+							<td>
+								<input id="reqDate" name="reqDate" type="text" class="readonly" readonly />
+							</td>
+						</tr>
+
+						<tr>
+							<th scope="row">Request Reason</th>
+							<td>
+								<input id="reqReason" name="reqReason" type="text" class="readonly" readonly />
+							</td>
 							<th scope="row">Total Amount</th>
 							<td>
 								<input id="totalAmtTxt" name="totalAmtTxt" type="text" class="readonly" readonly />
@@ -167,13 +194,19 @@ function fn_reject(){
 							</td>
 						</tr>
 						<tr>
+							<th scope="row">Request Remark</th>
+							<td colspan="3">
+					            <textarea id="ReqRemark" name="ReqRemark"  cols="15" rows="3" placeholder="" class="readonly" readonly></textarea>
+							</td>
+						</tr>
+						<tr>
 							<th scope="row">Remark</th>
-							<td>
+							<td colspan="3">
 					            <textarea id="remark" name="remark"  cols="15" rows="3" placeholder=""></textarea>
 							</td>
 						</tr>
-						</tbody>
-				  </table>
+					</tbody>
+				</table>
 			</form>
 		</section>
 

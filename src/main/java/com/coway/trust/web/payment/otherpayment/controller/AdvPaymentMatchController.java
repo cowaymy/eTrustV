@@ -154,4 +154,33 @@ public class AdvPaymentMatchController {
     	
 	}
 	
+	/**
+	 * Advance Payment Matching - Debtor 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/saveAdvPaymentDebtor.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveAdvPaymentDebtor(
+			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params : {} ", params);
+		
+		// 저장
+		params.put("userId", sessionVO.getUserId());		
+		params.put("groupSeq", params.get("debtorGroupSeq"));
+		params.put("fTrnscId", 0);
+		params.put("accCode", 0);
+		
+		advPaymentMatchService.saveAdvPaymentDebtor(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
+    	
+	}
+	
 }

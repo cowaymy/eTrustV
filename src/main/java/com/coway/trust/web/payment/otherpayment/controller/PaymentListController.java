@@ -107,6 +107,23 @@ public class PaymentListController {
 	}
 	
 	/**
+	 * Payment List - Request DCF 정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectReqDcfInfo.do")
+	public ResponseEntity<EgovMap> selectReqDcfInfo(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		
+		//조회.
+		EgovMap resultMap = paymentListService.selectReqDcfInfo(params);
+		
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	/**
 	 * Payment List - Request DCF 대상 리스트 조회 
 	 * @param params
 	 * @param model

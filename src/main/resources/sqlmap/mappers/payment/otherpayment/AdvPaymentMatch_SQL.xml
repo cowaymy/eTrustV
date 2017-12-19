@@ -112,6 +112,134 @@
             OTH_KEYIN_BC_MAPPING_USER_ID = #{userId}
         WHERE
             F_TRNSC_ID = #{fTrnscId}
-    </update>        
+    </update>  
+     
+    <select id="selectMappedData" parameterType="Map" resultType="egovMap">
+        SELECT  
+            PAY_ITM_REF_DT,
+            ROW_NUMBER() OVER(ORDER BY OR_NO) AS BANK_SEQ,    
+            GROUP_SEQ,
+            SALES_ORD_NO,
+            OR_NO,
+            BANK_STATE_MAPPING_ID,
+            ADV_AMT,
+            CUST_ID,
+            ACC_CODE,
+            (SELECT CODE FROM SYS0013M CD WHERE CD.CODE_ID = #{accCode}) AS DIFF_TYPE 
+        FROM 
+            (
+            SELECT  
+                C.PAY_ITM_REF_DT,    
+                A.GROUP_SEQ,
+                D.SALES_ORD_NO,
+                B.OR_NO,
+                A.BANK_STATE_MAPPING_ID,
+                D.CUST_ID,
+                E.ACC_CODE,
+                SUM(C.PAY_ITM_AMT) AS ADV_AMT     
+            FROM 
+                PAY0252T A 
+                JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
+                JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID 
+                JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID
+                LEFT JOIN (
+                    SELECT 
+                        B.F_TRNSC_ID, C.ACC_CODE 
+                    FROM 
+                        PAY0079D A 
+                        JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
+                        LEFT JOIN SYS0001M C ON A.BANK_ID = C.ACC_ID
+                    ) E ON A.BANK_STATE_MAPPING_ID = E.F_TRNSC_ID
+            WHERE 
+                A.GROUP_SEQ = #{groupSeq}
+            GROUP BY 
+                C.PAY_ITM_REF_DT,
+                A.GROUP_SEQ,
+                D.SALES_ORD_NO,
+                B.OR_NO,
+                A.BANK_STATE_MAPPING_ID,
+                D.CUST_ID,
+                E.ACC_CODE
+            )
+    </select> 
+    
+    
+    <insert id="insertAdvPaymentMatchIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+            IF_KEY,
+			SEQ,
+			IF_TYPE,
+			TRAN_STATUS_CD,
+			RGST_DT,
+			RGST_TM,
+			RGST_ID,
+			PAY_DT,
+			BANK_SEQ,
+			GRP_SEQ,
+			ORD_NO,
+			WOR_NO,
+			BANK_ID,
+			BANKAC,
+			ADV_AMT,			
+			DIFF_TYPE,
+			DIFF_AMT
+        ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',       
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),  
+            #{userId},     
+            #{payItmRefDt},
+            #{bankSeq},
+            #{groupSeq},
+            #{salesOrdNo},
+            #{orNo},
+            #{bankStateMappingId},
+            #{accCode},
+            #{advAmt},            
+            #{diffType},
+            NVL(#{variance},0)
+        )            
+             
+            
+    </insert>
+    
+    <insert id="insertAdvPaymentDebtorIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,                        
+            PAY_DT,
+            BANK_SEQ,
+            GRP_SEQ,
+            ORD_NO,
+            WOR_NO,            
+            CUST_NO,
+            DEBT_AMT
+        ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',       
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),  
+            #{userId},
+            #{payItmRefDt},
+            #{bankSeq},
+            #{groupSeq},
+            #{salesOrdNo},
+            #{orNo},
+            #{custId},
+            #{advAmt}
+        )            
+             
+            
+    </insert>
     
 </mapper>

@@ -42,4 +42,12 @@ public interface AdvPaymentMatchService
 	 */	
     EgovMap requestDCFWithAppv(Map<String, Object> params);
     
+    /**
+	 * Advance Payment Matching - Debtor 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+    void saveAdvPaymentDebtor(Map<String, Object> params);
+    
 }

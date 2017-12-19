@@ -61,11 +61,14 @@
 
     // ajax list 조회.
     function searchList(){
-        if(FormUtil.checkReqValue($("#reqDateFr")) ||
-			FormUtil.checkReqValue($("#reqDateTo"))){
-            Common.alert('* Please input Request Date <br />');
-            return;
-        }
+
+		if(FormUtil.checkReqValue($("#reqNo"))){			
+			if(FormUtil.checkReqValue($("#reqDateFr")) ||
+				FormUtil.checkReqValue($("#reqDateTo"))){
+	            Common.alert('* Please input Request Date <br />');
+		        return;
+			}	
+		}        
     	
     	Common.ajax("POST","/payment/selectRequestDCFList.do",$("#searchForm").serializeJSON(), function(result){    		
     		AUIGrid.setGridData(confirmDCFGridID, result);

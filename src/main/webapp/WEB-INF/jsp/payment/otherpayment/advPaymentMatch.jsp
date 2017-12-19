@@ -221,10 +221,6 @@ function fn_requestDCFPop(){
 	}
 }
 
-
-				
-
-
 function fn_saveReverse(){
     if(FormUtil.checkReqValue($("#revReason option:selected"))){
         Common.alert('* No Reason Selected');
@@ -237,8 +233,7 @@ function fn_saveReverse(){
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to Reverse ?</b>',function (){
-	    
+	Common.confirm('<b>Are you sure want to Reverse ?</b>',function (){	    
 	    Common.ajax("POST", "/payment/requestDCFWithAppv.do", $("#reverseForm").serializeJSON(), function(result) {
 			var message = "<b>Reverse has successfully completed<br></b>";
 			message += "<b>DRN No : " + result.returnKey + "</b><br>";
@@ -249,7 +244,56 @@ function fn_saveReverse(){
     		});        
 	    });
 	});
+}
 
+
+function fn_debtor(){	
+	var advKeyInItems = AUIGrid.getCheckedRowItems(advKeyInGridId);
+	var keyInRowItem;
+	var keyInAmount = 0;
+	var groupSeq =0;
+
+	if( advKeyInItems.length < 1){
+		Common.alert("Please check Avance Key In List");
+		return;
+	}else{
+		keyInRowItem = advKeyInItems[0];
+		keyInAmount = Number(keyInRowItem.item.totAmt) + Number(keyInRowItem.item.bankChgAmt);
+		groupSeq = keyInRowItem.item.groupSeq;
+
+		Common.alert("<b>Transaction cannot done due to error : </b><br> -Bank Statement Missing.",
+			function (){				
+				$("#debtor_wrap").show();   					
+				$("#debtorGroupSeq").val(groupSeq);				
+				$("#debtorRemark").val('');
+			}
+		);		
+	}
+}
+
+function fn_saveDebtor(){
+
+	if(FormUtil.checkReqValue($("#debtorRemark"))){
+		Common.alert('* Please input Remark<br />');
+		return;
+	}
+
+	if( FormUtil.byteLength($("#debtorRemark").val()) > 3000 ){
+		Common.alert('* Please input the Remark below or less than 3000 bytes.');
+		return;
+	}
+	
+	
+	Common.confirm('<b>Are you sure want to Save?</b>',function (){
+	    Common.ajax("POST", "/payment/saveAdvPaymentDebtor.do", $("#debtorForm").serializeJSON(), function(result) {
+			var message = "<b>This Mapping has successfully saved</b>";
+
+    		Common.alert(message, function(){
+				fn_searchAdvMatchList();
+				$("#debtor_wrap").hide();                    
+    		});        
+	    });
+	});
 }
 
 
@@ -337,6 +381,7 @@ function fn_saveReverse(){
 			<dd>
 				<ul class="btns">
 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();">Reverse</a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_debtor();">Debtor</a></p></li>
 					<li><p class="link_btn"><a href="javascript:fn_mapping();">Match</a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -426,6 +471,54 @@ function fn_saveReverse(){
         </section>
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_saveMapping('Y');">SAVE</a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+
+
+<!--------------------------------------------------------------- 
+    POP-UP (Other Debtor With Ticket)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="debtor_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>Other Debtor with Ticket</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#debtor_wrapp')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="debtorForm" id="debtorForm"  method="post">
+	<input type="hidden" id="debtorGroupSeq" name="debtorGroupSeq" />
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:200px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Remark</th>
+                        <td>
+							<textarea id="debtorRemark" name="debtorRemark"  cols="10" rows="3" placeholder=""></textarea>
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_saveDebtor();">SAVE</a></p></li>
         </ul>
     </section>
     </form>       

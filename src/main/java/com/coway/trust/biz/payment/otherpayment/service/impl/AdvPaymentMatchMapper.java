@@ -43,5 +43,32 @@ public interface AdvPaymentMatchMapper {
 	void mappingBankStatementAdv(Map<String, Object> params);
 	
 	
+	/**
+   	 * Advance Payment Match - I/F에 등록할 데이터 조회 
+   	 * @param params
+   	 * @param model
+   	 * @return
+   	 * 
+   	 */
+	List<EgovMap> selectMappedData(Map<String, Object> paramMap);
+	
+	
+	/**
+	 * 인터페이스 테이블에 저장
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	void insertAdvPaymentMatchIF(EgovMap params);
+	
+	/**
+	 * 인터페이스 테이블에 저장 : Debtor
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	void insertAdvPaymentDebtorIF(EgovMap params);
 	
 }
