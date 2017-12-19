@@ -19,6 +19,8 @@ public interface HelpDeskService {
 	
 	List<EgovMap> RespondList(Map<String, Object> params);
 	
-	void insertDataChangeList(Map<String, Object> params, int loginId );
+	Map<String, Object> insertDataChangeList(Map<String, Object> params, int loginId,String today);
+	
+	void sendEmailList(Map<String, Object> params,String today);
 	
 }
