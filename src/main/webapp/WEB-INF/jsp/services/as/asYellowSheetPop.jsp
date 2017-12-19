@@ -57,38 +57,38 @@ function fn_openGenerate(){
 			nonYS = 1;
 		}
 		
-		if($("#settleDtFr").val() != '' && $("#settleDtTo").val() != ''){
+		if($("#settleDtFr").val() != '' && $("#settleDtTo").val() != '' && $("#settleDtFr").val() !=null && $("#settleDtTo").val() != null){
 			setDateFrom = $("#settleDtFr").val().substring(6,10) + "-" + $("#settleDtFr").val().substring(3,5) + "-" + $("#settleDtFr").val().substring(0,2);
 			setDateTo = $("#settleDtTo").val().substring(6,10) + "-" + $("#settleDtTo").val().substring(3,5) + "-" + $("#settleDtTo").val().substring(0,2);
         }
-		if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != ''){
+		if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != '' && $("#reqDtFr").val() !=null && $("#reqDtTo").val() != null){
 			reqDateFrom =  $("#reqDtFr").val().substring(6,10) + "-" + $("#reqDtFr").val().substring(3,5) + "-" + $("#reqDtFr").val().substring(0,2);
 			reqDateTo = $("#reqDtTo").val().substring(6,10) + "-" + $("#reqDtTo").val().substring(3,5) + "-" + $("#reqDtTo").val().substring(0,2);
         }
-		if($("#branch").val() != ''){
+		if($("#branch").val() != '' && $("#branch").val() != null){
 			branchID = $("#branch").val();
 		}
-		if($("#aging").val() != ''){
+		if($("#aging").val() != '' && $("#aging").val() !=null){
 			YSAging = $("#aging").val();
         }
 		
-		$("#reportForm #V_YS").val(YS);
-		$("#reportForm #V_NONYS").val(nonYS);
-		$("#reportForm #V_SETDATEFROM").val(setDateFrom);
-		$("#reportForm #V_SETDATETO").val(setDateTo);
-		$("#reportForm #V_REQDATEFROM").val(reqDateFrom);
-		$("#reportForm #V_REQDATETO").val(reqDateTo);
-		$("#reportForm #V_BRANCHID").val(branchID);
-		$("#reportForm #V_YSAGING").val(YSAging);
-		$("#reportForm #reportFileName").val('/services/ASYellowSheet.rpt');
-		$("#reportForm #viewType").val("PDF");
-		$("#reportForm #reportDownFileName").val("ASYellowSheet_"+day+month+date.getFullYear());
+		$("#reportFormYS #V_YS").val(YS);
+		$("#reportFormYS #V_NONYS").val(nonYS);
+		$("#reportFormYS #V_SETDATEFROM").val(setDateFrom);
+		$("#reportFormYS #V_SETDATETO").val(setDateTo);
+		$("#reportFormYS #V_REQDATEFROM").val(reqDateFrom);
+		$("#reportFormYS #V_REQDATETO").val(reqDateTo);
+		$("#reportFormYS #V_BRANCHID").val(branchID);
+		$("#reportFormYS #V_YSAGING").val(YSAging);
+		$("#reportFormYS #reportFileName").val('/services/ASYellowSheet.rpt');
+		$("#reportFormYS #viewType").val("PDF");
+		$("#reportFormYS #reportDownFileName").val("ASYellowSheet_"+day+month+date.getFullYear());
 		
 		var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
         
-        Common.report("reportForm", option);
+        Common.report("reportFormYS", option);
 		
 	}
 }
@@ -131,23 +131,23 @@ function fn_openExcel(){
             YSAging = $("#aging").val();
         }
         
-        $("#reportForm #V_YS").val(YS);
-        $("#reportForm #V_NONYS").val(nonYS);
-        $("#reportForm #V_SETDATEFROM").val(setDateFrom);
-        $("#reportForm #V_SETDATETO").val(setDateTo);
-        $("#reportForm #V_REQDATEFROM").val(reqDateFrom);
-        $("#reportForm #V_REQDATETO").val(reqDateTo);
-        $("#reportForm #V_BRANCHID").val(branchID);
-        $("#reportForm #V_YSAGING").val(YSAging);
-        $("#reportForm #reportFileName").val('/services/ASYellowSheet_RawData.rpt');
-        $("#reportForm #viewType").val("EXCEL");
-        $("#reportForm #reportDownFileName").val("ASYellowSheet_"+day+month+date.getFullYear());
+        $("#reportFormYS #V_YS").val(YS);
+        $("#reportFormYS #V_NONYS").val(nonYS);
+        $("#reportFormYS #V_SETDATEFROM").val(setDateFrom);
+        $("#reportFormYS #V_SETDATETO").val(setDateTo);
+        $("#reportFormYS #V_REQDATEFROM").val(reqDateFrom);
+        $("#reportFormYS #V_REQDATETO").val(reqDateTo);
+        $("#reportFormYS #V_BRANCHID").val(branchID);
+        $("#reportFormYS #V_YSAGING").val(YSAging);
+        $("#reportFormYS #reportFileName").val('/services/ASYellowSheet_RawData.rpt');
+        $("#reportFormYS #viewType").val("EXCEL");
+        $("#reportFormYS #reportDownFileName").val("ASYellowSheet_"+day+month+date.getFullYear());
         
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
         
-        Common.report("reportForm", option);
+        Common.report("reportFormYS", option);
     }
 }
 
@@ -181,7 +181,7 @@ $.fn.clearForm = function() {
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" id="reportForm">
+<form action="#" id="reportFormYS">
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="V_YS" name="V_YS" />
 <input type="hidden" id="V_NONYS" name="V_NONYS" />
@@ -265,7 +265,7 @@ $.fn.clearForm = function() {
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openGenerate()">Generate</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openExcel()">Excel</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormYS').clearForm();">Clear</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
