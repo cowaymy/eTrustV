@@ -20,7 +20,8 @@
             TB2.CRDIT_CARD CRDIT_CARD, 
             TB2.CRC_STATE_ACC_ID CRC_STATE_ACC_ID, 
             TB2.GROS_AMT GROS_AMT,
-            TB2.CRC_TRNSC_MID CRC_TRNSC_MID
+            TB2.CRC_TRNSC_MID CRC_TRNSC_MID,
+            TB2.CODE_ID CODE_ID
             FROM 
                 (
                 SELECT
@@ -69,10 +70,13 @@
                     B.CRDIT_CARD,
                     A.CRC_STATE_ACC_ID,
                     NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
-                    B.CRC_TRNSC_MID CRC_TRNSC_MID
+                    B.CRC_TRNSC_MID CRC_TRNSC_MID,
+                    D.CODE_ID CODE_ID
                 FROM 
                     PAY0075D A 
-                    JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID 
+                    JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+                    LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID
+                    JOIN SYS0013M D ON C.ACC_CODE = D.CODE
                 WHERE
                     B.KEYIN_STUS_ID = 1
                     <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" > 
@@ -88,7 +92,8 @@
                     B.CRC_TRNSC_APPV,
                     B.CRDIT_CARD,
                     A.CRC_STATE_ACC_ID,
-                    B.CRC_TRNSC_MID  ) TB2 ON   TB1.PAY_ITM_CC_NO = TB2.CRC_TRNSC_NO
+                    B.CRC_TRNSC_MID,
+                    D.CODE_ID  ) TB2 ON   TB1.PAY_ITM_CC_NO = TB2.CRC_TRNSC_NO
                                                 AND TB1.PAY_ITM_REF_DT = TB2.CRC_TRNSC_DT
                                                 AND TB1.PAY_ITM_APPV_NO = TB2.CRC_TRNSC_APPV
                                                 AND TB1.AMOUNT = TB2.GROS_AMT
@@ -195,7 +200,8 @@
             CRC_STATE_ACC_ID, 
             BANK_ACC_NAME, 
             GROS_AMT,
-            CRC_TRNSC_MID
+            CRC_TRNSC_MID,
+            CODE_ID
             FROM 
                 (
                     SELECT  
@@ -208,11 +214,13 @@
                         C.ACC_DESC BANK_ACC_NAME,
                         NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
                         C.ACC_DESC,
-                        B.CRC_TRNSC_MID CRC_TRNSC_MID
+                        B.CRC_TRNSC_MID CRC_TRNSC_MID,
+                        D.CODE_ID
                     FROM 
                         PAY0075D A 
                         JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID 
                         LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
+                        JOIN SYS0013M D ON C.ACC_CODE = D.CODE
                     WHERE
                         B.KEYIN_STUS_ID = 1
                         <if test="transDateFr != null and transDateTo != null and transDateFr != '' and transDateTo != ''" > 
@@ -229,7 +237,8 @@
                         B.CRDIT_CARD,
                         A.CRC_STATE_ACC_ID,
                         C.ACC_DESC,
-                        B.CRC_TRNSC_MID
+                        B.CRC_TRNSC_MID,
+                        D.CODE_ID
                     ) TB1
                 WHERE 1=1
                 AND (TB1.CRC_TRNSC_NO,
@@ -319,7 +328,7 @@
             #{bankSeq},
             #{ordNo},
             #{orNo},
-            #{crcStateAccId},
+            (SELECT CODE FROM SYS0013M WHERE CODE_ID = #{codeId}), 
             #{crcTrnscNo},
             #{crcTrnscAppv},
             TO_CHAR(TO_DATE(#{crcTrnscDt}, 'DD/MM/YYYY'),'YYYYMMDD'),
