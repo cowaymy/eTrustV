@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
+import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -43,6 +44,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
+	
+
+	@Resource(name = "membershipConvSaleMapper")
+	private MembershipConvSaleMapper membershipConvSaleMapper;
+	
 
 	@Override
 	public List<EgovMap> selectApplicationType() {
@@ -1345,6 +1351,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	}
 
 	private Map<String, Object> Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
+		
+		boolean isBillAvb =false;
+		
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		Map<String, Object> callEntry = new HashMap<String, Object>();
 		Map<String, Object> callResult = new HashMap<String, Object>();
@@ -1376,13 +1385,26 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		Map tradeamount= new HashMap();
 		tradeamount.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
 		Map outRightAmount = installationResultListMapper.getTradeAmount(tradeamount);
+		
+		
+		Map ordTamtPram= new HashMap();
+		ordTamtPram.put("INSTALL_ENTRY_ID", CommonUtils.nvl( params.get("installEntryId").toString()));
+		EgovMap   ordTotAmt =installationResultListMapper.getOrderByInstallEntryID(ordTamtPram); 
+			
+		String tAmt = "0";  // String.valueOf( CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT")));
+		
+		if(null !=ordTotAmt){
+			tAmt = String.valueOf( CommonUtils.intNvl( ordTotAmt.get("totAmt"))); 
+		}
+ 		
+		double tradeOutrightPreAmount =  Double.parseDouble(String.valueOf(CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT"))));
 
-		String tAmt =  String.valueOf( CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT")));
-		double tradeOutrightPreAmount =  Double.parseDouble(  String.valueOf(tAmt));
-
-		double outrightTotalPrice = Double.parseDouble(strOutrightTotalPrice ==""?"0" : strOutrightTotalPrice);
+		double outrightTotalPrice = Double.parseDouble(tAmt ==""?"0" : tAmt);
 		double outrightBalance = outrightTotalPrice - tradeOutrightPreAmount;
-
+		
+        double outrightSubProcessing = 0;
+        double outrightSubBalance = 0;
+		
 		//get outright refno
 		Map invoiceNum = new HashMap();
 		invoiceNum.put("DocNo", "119");
@@ -1393,7 +1415,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		cal.setTime(today);
 
 		int month = cal.get(Calendar.MONTH);
-
+		
 		EgovMap installResult = new EgovMap();
 
     		installResult.put("resultID", 0);
@@ -1430,201 +1452,213 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		}
 
     		
+    		
+    		///////////////////////add by hgham     get taxRate  //////////////////
+    		int  TAXRATE   =0;
+    			
+    		  	  params.put("srvSalesOrderId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
+    		      TAXRATE = membershipConvSaleMapper.getTaxRate(params);
+    		///////////////////////add by hgham     get taxRate  //////////////////
+  		
+    		
+    		if(ApptypeID.equals("66") ){
+    			
+        			
+    	   }
+    		
+    		
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
+
     			
-    			if(ApptypeID.equals("1412"))	{
+    			if(tradeOutrightPreAmount > 200){
+    				   outrightSubProcessing = 0;
+                       outrightSubBalance = tradeOutrightPreAmount - tradeOutrightPreAmount;
+    			}else{
+    				outrightSubProcessing = (200 - tradeOutrightPreAmount);
+                    outrightSubBalance = tradeOutrightPreAmount - (tradeOutrightPreAmount + (200 - tradeOutrightPreAmount));
+    			}
+    			
+    			
+    			
+    			 if (outrightTotalPrice  > tradeOutrightPreAmount) {
+    				 
+    				 		isBillAvb =true;
     				
-    			}else{
-    				/*
+        				 	String TAX_INVC_ID = installationResultListMapper.getPAY0033D_SEQ(invoiceNum);
+        	    			
+        					//Insert TaxinvoiceOutright
+        					taxInvoiceOutright.put("TAX_INVC_ID",TAX_INVC_ID);           
+        					taxInvoiceOutright.put("TAX_INVC_REF_NO",invoiceNo);
+        					taxInvoiceOutright.put("TAX_INVC_REF_DT", CommonUtils.getNowDate());
+        					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( params.get("hidCustomerName")));
+        	        		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(params.get("hidInatallation_ContactPerson")));
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR3",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR4",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_POST_CODE",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_STATE_NAME",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_CNTY",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_TASK_ID",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
+        	        		taxInvoiceOutright.put("TAX_INVC_REM",0);
+        	        		
+        	        		
+        	        		 if (TAXRATE > 0)  {
+        	        			 taxInvoiceOutright.put("TAX_INVC_CHRG",outrightBalance * 100 / 106 );
+        	                 }else {
+        	             		taxInvoiceOutright.put("TAX_INVC_CHRG",outrightBalance);
+        	                 }
+        	        		
+        	        		taxInvoiceOutright.put("TAX_INVC_OVERDU",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_AMT_DUE",outrightBalance);
+        	        		taxInvoiceOutright.put("TAX_INVC_PO_NO","");
+        	        		taxInvoiceOutright.put("AREA_ID", CommonUtils.nvl(params.get("hidInstallation_AreaID")));
+        	        		taxInvoiceOutright.put("ADDR_DTL",CommonUtils.nvl( params.get("hidInstallation_AddDtl")));
+        	        		taxInvoiceOutright.put("STREET","");   
+        	        		logger.debug("Prepared TaxinvoiceOutright:{}",taxInvoiceOutright);   
+        	        		
+        	        		
+        	    			
+        	    			if(ApptypeID.equals("1412"))	{
+        	    				
+        	            		taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",TAXRATE);
+        	            		
+        	            		
+        	            		if(TAXRATE > 0){
+        	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",Double.toString(outrightBalance  * 100 / 106 ));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS",outrightSubProcessing - ( outrightSubProcessing  * 100 / 106));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",Double.toString(outrightSubProcessing  * 100 / 106 ));
+        	                	}else{
+        	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS","0");
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",outrightSubProcessing);
+        	                	}
+    
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",outrightSubProcessing);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");            		
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
+        	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
+    
+        	            		
+        	      
+        	            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
+        	            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));
+        	            		taxInvoiceOutrightSub.put("STREET","");
+        	            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
+        	            		
+        	            		
+        	    				
+        	    			}else{
+        	    				
+        	    				taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",TAXRATE);
+        	            		
+        	            		
+        	            		if(TAXRATE > 0){
+        	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",Double.toString(outrightBalance  * 100 / 106 ));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS",outrightSubProcessing - ( outrightSubProcessing  * 100 / 106));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",Double.toString(outrightSubProcessing  * 100 / 106 ));
+        	                	}else{
+        	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS","0");
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",outrightSubProcessing);
+        	                	}
+    
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",outrightSubProcessing);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");            		
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
+        	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");            		
+        	      
+        	            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
+        	            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));
+        	            		taxInvoiceOutrightSub.put("STREET","");
+        	            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
+        	    			}
+        	    			
+    
+        	    			AccTradeLedger.put("TRADE_RUN_ID", 0);
+        	    			AccTradeLedger.put("TRADE_ID", 0);
+        	    			AccTradeLedger.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
+        	    			AccTradeLedger.put("TRADE_DOC_NO",invoiceNo); //params.get("hidTradeLedger_InstallNo"));
+        	    			AccTradeLedger.put("TRADE_DOC_TYPE_ID", 164);
+        	    			AccTradeLedger.put("TRADE_DT_TM", CommonUtils.getNowDate());
+        	    			AccTradeLedger.put("TRADE_AMT", outrightBalance);
+        	    			AccTradeLedger.put("TRADE_BATCH_NO", "");
+        	    			AccTradeLedger.put("TRADE_INST_NO", 0);
+        	    			AccTradeLedger.put("TRADE_UPD_USER_ID", sessionVO.getUserId());
+        	    			AccTradeLedger.put("TRADE_UPD_DT", CommonUtils.getNowDate());
+        	    			AccTradeLedger.put("TRADE_IS_SYNC", 0);
+        	    			AccTradeLedger.put("R01", 0);
+        	    			logger.debug("Prepared AccTradeLedger: ",AccTradeLedger);
+    
+        	    			
+        	    			AccOrderBill.put("ACC_BILL_ID", 0);
+        	    			AccOrderBill.put("ACC_BILL_TASK_ID", 0);
+        	    			AccOrderBill.put("ACC_BILL_REF_DT", CommonUtils.getNowDate());
+        	    			AccOrderBill.put("ACC_BILL_REF_NO", "1000");
+        	    			AccOrderBill.put("ACC_BILL_ORD_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
+        	    			AccOrderBill.put("ACC_BILL_ORD_NO", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")).toString());
+        	    			AccOrderBill.put("ACC_BILL_TYPE_ID", 1159);
+        	    			AccOrderBill.put("ACC_BILL_MODE_ID", 1164);
+        	    			AccOrderBill.put("ACC_BILL_SCHDUL_ID", 0);
+        	    			AccOrderBill.put("ACC_BILL_SCHDUL_PRIOD", 0);
+        	    			AccOrderBill.put("ACC_BILL_ADJ_ID", 0);
+        	    			AccOrderBill.put("ACC_BILL_SCHDUL_AMT", outrightBalance);
+        	    			AccOrderBill.put("ACC_BILL_ADJ_AMT", 0);
+        	    			AccOrderBill.put("ACC_BILL_NET_AMT", outrightBalance);
+        	    			AccOrderBill.put("ACC_BILL_STUS", 1);
+        	    			
+        	    			if(null  !=params.get("hidTradeLedger_InstallNo") ){
+        	        			AccOrderBill.put("ACC_BILL_REM",  (String) params.get("hidTradeLedger_InstallNo") );
+        	    			}else{
+        	    				AccOrderBill.put("ACC_BILL_REM",  " ");
+        	    			}
+        	    			
+        	    			AccOrderBill.put("ACC_BILL_CRT_DT", CommonUtils.getNowDate());
+        	    			AccOrderBill.put("ACC_BILL_CRT_USER_ID", sessionVO.getUserId());
+        	    			AccOrderBill.put("ACC_BILL_GRP_ID", 0);
+        	    			AccOrderBill.put("ACC_BILL_TAX_CODE_ID", TAXRATE == 0 ? 28 : 39);
+        	    			AccOrderBill.put("ACC_BILL_TAX_RATE", TAXRATE);
+        	    			
+        	    			if(TAXRATE ==6){
+        	      	    		 AccOrderBill.put("ACC_BILL_TXS_AMT", Double.toString(  outrightBalance  * 100 / 106));
+        	    			}else{
+        	    				AccOrderBill.put("ACC_BILL_TXS_AMT", 0);
+        	    			}
+        	      	    	  
+        	    			AccOrderBill.put("ACC_BILL_ACCT_CNVR", 0);
+        	    			AccOrderBill.put("ACC_BILL_CNTRCT_ID", 0);
+        	    			logger.debug("prepared AccOrderBill: ",AccOrderBill);
+        	    		}   
+        	    		
+    				 
+    			 }
     			
-    			TaxinvoiceCompany.put("ApptypeID", ApptypeID);	//api 추가
-
-    			//Insert TaxInvoice Rental
-        		TaxinvoiceCompany.put("TAX_INVC_ID",0);
-        		TaxinvoiceCompany.put("TAX_INVC_REF_NO",invoiceNo);
-        		TaxinvoiceCompany.put("TAX_INVC_REF_DT","1900-01-01");
-        		TaxinvoiceCompany.put("TAX_INVC_GRP_ID","1");
-        		TaxinvoiceCompany.put("TAX_INVC_GRP_NO","1");
-        		TaxinvoiceCompany.put("TAX_INVC_CUST_NAME",params.get("hidCustomerName"));
-        		TaxinvoiceCompany.put("TAX_INVC_CNTC_PERSON",0);
-        		TaxinvoiceCompany.put("TAX_INVC_ADDR1",0);
-        		TaxinvoiceCompany.put("TAX_INVC_ADDR2",0);
-        		TaxinvoiceCompany.put("TAX_INVC_ADDR3",0);
-        		TaxinvoiceCompany.put("TAX_INVC_ADDR4",0);
-        		TaxinvoiceCompany.put("TAX_INVC_POST_CODE",0);
-        		TaxinvoiceCompany.put("TAX_INVC_STATE_NAME",0);
-        		TaxinvoiceCompany.put("TAX_INVC_CNTY",0);
-        		TaxinvoiceCompany.put("TAX_INVC_MONTH", LocalDate.now().getMonthValue());
-        		TaxinvoiceCompany.put("TAX_INVC_YEAR",LocalDate.now().getYear());
-        		TaxinvoiceCompany.put("TAX_INVC_STUS_ID",1);
-        		TaxinvoiceCompany.put("TAX_INVC_TASK_ID",0);
-        		TaxinvoiceCompany.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
-        		TaxinvoiceCompany.put("TAX_INVC_REM",0);
-        		TaxinvoiceCompany.put("TAX_INVC_CHRG",0);
-        		TaxinvoiceCompany.put("TAX_INVC_OVERDU",0);
-        		TaxinvoiceCompany.put("TAX_INVC_AMT_DUE",outrightBalance);
-        		TaxinvoiceCompany.put("TAX_INVC_TYPE",1267);
-        		TaxinvoiceCompany.put("TAX_INVC_CRT_USER_ID",sessionVO.getUserId());
-        		TaxinvoiceCompany.put("TAX_INVC_PAY_REF_NO1","");
-        		TaxinvoiceCompany.put("TAX_INVC_PAY_REF_NO2","");
-        		TaxinvoiceCompany.put("TAX_INVC_BILL_TYPE",133);
-        		TaxinvoiceCompany.put("TAX_INVC_GST_REM","");
-        		TaxinvoiceCompany.put("AREA_ID","");
-        		TaxinvoiceCompany.put("ADDR_DTL","");
-        		TaxinvoiceCompany.put("STREET","");
-        		logger.debug("Prepared TaxinvoiceCompany:{}",TaxinvoiceCompany);
-
-        		taxInvoiceCompanySub.put("INVC_ITM_ID",0);
-        		taxInvoiceCompanySub.put("TAX_INVC_ID","");
-        		taxInvoiceCompanySub.put("INVC_ITM_ORD_NO",params.get("hidTaxInvDSalesOrderNo").toString());
-        		taxInvoiceCompanySub.put("INVC_ITM_PO_NO","");
-        		taxInvoiceCompanySub.put("INVC_ITM_GST_RATE","6");
-
-        		taxInvoiceCompanySub.put("INVC_ITM_GST_TXS","");
-        		taxInvoiceCompanySub.put("INVC_ITM_RENTAL_FEE","");
-        		taxInvoiceCompanySub.put("INVC_ITM_HNDL_FEE",0);
-        		taxInvoiceCompanySub.put("INVC_ITM_HNDL_FEE_TXS",0);
-        		taxInvoiceCompanySub.put("INVC_ITM_PRODUCT_CTGRY","");
-        		taxInvoiceCompanySub.put("INVC_ITM_PRODUCT_MODEL","");
-        		taxInvoiceCompanySub.put("INVC_ITM_PRODUCT_SERIAL_NO","");
-        		taxInvoiceCompanySub.put("INVC_ITM_ADD1","");
-        		taxInvoiceCompanySub.put("INVC_ITM_ADD2","");
-        		taxInvoiceCompanySub.put("INVC_ITM_ADD3","");
-        		taxInvoiceCompanySub.put("INVC_ITM_POST_CODE","");
-        		taxInvoiceCompanySub.put("INVC_ITM_STATE_NAME","");
-        		taxInvoiceCompanySub.put("INVC_ITM_CNTY","");
-        		taxInvoiceCompanySub.put("INVC_ITM_INSTALL_DT",params.get("installDate"));
-        		taxInvoiceCompanySub.put("INVC_ITM_INSTLMT_NO",0);
-        		taxInvoiceCompanySub.put("INVC_ITM_INSTLMT_PRIOD",CommonUtils.getNowDate());
-        		taxInvoiceCompanySub.put("INVC_ITM_PAY_MODE","");
-        		taxInvoiceCompanySub.put("INVC_ITM_DESC1","");
-        		taxInvoiceCompanySub.put("INVC_ITM_DESC2","");
-        		taxInvoiceCompanySub.put("INVC_ITM_TYPE_ID","");
-        		taxInvoiceCompanySub.put("AREA_ID","");
-        		taxInvoiceCompanySub.put("ADDR_DTL","");
-        		taxInvoiceCompanySub.put("STREET","");
-        		logger.debug("Prepared taxInvoiceCompanySub: ",taxInvoiceCompanySub);*/
-
-    				//Insert TaxinvoiceOutright
-    				taxInvoiceOutright.put("TAX_INVC_ID",0);
-    				taxInvoiceOutright.put("TAX_INVC_REF_NO",invoiceNo);
-    				taxInvoiceOutright.put("TAX_INVC_REF_DT",LocalDate.now());
-    				//taxInvoiceOutright.put("TAX_INVC_GRP_ID","1");
-    				//taxInvoiceOutright.put("TAX_INVC_GRP_NO","1");
-    				taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( params.get("hidCustomerName")));
-            		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(params.get("hidInatallation_ContactPerson")));
-            		taxInvoiceOutright.put("TAX_INVC_ADDR1",0);
-            		taxInvoiceOutright.put("TAX_INVC_ADDR2",0);
-            		taxInvoiceOutright.put("TAX_INVC_ADDR3",0);
-            		taxInvoiceOutright.put("TAX_INVC_ADDR4",0);
-            		taxInvoiceOutright.put("TAX_INVC_POST_CODE",0);
-            		taxInvoiceOutright.put("TAX_INVC_STATE_NAME",0);
-            		taxInvoiceOutright.put("TAX_INVC_CNTY",0);
-            		taxInvoiceOutright.put("TAX_INVC_TASK_ID",0);
-            		//taxInvoiceOutright.put("TAX_INVC_MONTH", LocalDate.now().getMonthValue());
-            		//taxInvoiceOutright.put("TAX_INVC_YEAR",LocalDate.now().getYear());
-            		//taxInvoiceOutright.put("TAX_INVC_STUS_ID",1);
-            		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
-            		taxInvoiceOutright.put("TAX_INVC_REM",0);
-            		taxInvoiceOutright.put("TAX_INVC_CHRG",0);
-            		taxInvoiceOutright.put("TAX_INVC_OVERDU",0);
-            		taxInvoiceOutright.put("TAX_INVC_AMT_DUE",outrightBalance);
-            		taxInvoiceOutright.put("TAX_INVC_PO_NO","");
-            		//taxInvoiceOutright.put("TAX_INVC_TYPE",1267);
-            		//taxInvoiceOutright.put("TAX_INVC_CRT_USER_ID",sessionVO.getUserId());
-            		//taxInvoiceOutright.put("TAX_INVC_PAY_REF_NO1","");
-            		//taxInvoiceOutright.put("TAX_INVC_PAY_REF_NO2","");
-            		//taxInvoiceOutright.put("TAX_INVC_BILL_TYPE",133);
-            		//taxInvoiceOutright.put("TAX_INVC_GST_REM","");
-            		taxInvoiceOutright.put("AREA_ID", CommonUtils.nvl(params.get("hidInstallation_AreaID")));
-            		taxInvoiceOutright.put("ADDR_DTL",CommonUtils.nvl( params.get("hidInstallation_AddDtl")));
-            		taxInvoiceOutright.put("STREET","");   
-            		logger.debug("Prepared TaxinvoiceOutright:{}",taxInvoiceOutright);   
-
-            		taxInvoiceOutrightSub.put("INVC_ITM_ID",0);
-            		taxInvoiceOutrightSub.put("TAX_INVC_ID","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
-            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE","6");
-
-            		taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",0);
-            		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",0);
-            		//taxInvoiceOutrightSub.put("INVC_ITM_HNDL_FEE",0);
-            		//taxInvoiceOutrightSub.put("INVC_ITM_HNDL_FEE_TXS",0);
-            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
-            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
-            		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
-            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS",0);
-            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",0);
-            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",0);
-            		//taxInvoiceOutrightSub.put("INVC_ITM_INSTALL_DT",params.get("installDate"));
-            		//taxInvoiceOutrightSub.put("INVC_ITM_INSTLMT_NO",0);
-            		//taxInvoiceOutrightSub.put("INVC_ITM_INSTLMT_PRIOD",CommonUtils.getNowDate());
-            		//taxInvoiceOutrightSub.put("INVC_ITM_PAY_MODE","");
-            		//taxInvoiceOutrightSub.put("INVC_ITM_DESC1","");
-            		//taxInvoiceOutrightSub.put("INVC_ITM_DESC2","");
-            		//taxInvoiceOutrightSub.put("INVC_ITM_TYPE_ID","");
-            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
-            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));
-            		taxInvoiceOutrightSub.put("STREET","");
-            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
-    			}
-
-    			AccTradeLedger.put("TRADE_RUN_ID", 0);
-    			AccTradeLedger.put("TRADE_ID", 0);
-    			AccTradeLedger.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
-    			AccTradeLedger.put("TRADE_DOC_NO",invoiceNo); //params.get("hidTradeLedger_InstallNo"));
-    			AccTradeLedger.put("TRADE_DOC_TYPE_ID", 164);
-    			AccTradeLedger.put("TRADE_DT_TM", CommonUtils.getNowDate());
-    			AccTradeLedger.put("TRADE_AMT", outrightBalance);
-    			AccTradeLedger.put("TRADE_BATCH_NO", "");
-    			AccTradeLedger.put("TRADE_INST_NO", 0);
-    			AccTradeLedger.put("TRADE_UPD_USER_ID", sessionVO.getUserId());
-    			AccTradeLedger.put("TRADE_UPD_DT", CommonUtils.getNowDate());
-    			AccTradeLedger.put("TRADE_IS_SYNC", 0);
-    			AccTradeLedger.put("R01", 0);
-    			logger.debug("Prepared AccTradeLedger: ",AccTradeLedger);
-
-    			AccOrderBill.put("ACC_BILL_ID", 0);
-    			AccOrderBill.put("ACC_BILL_TASK_ID", 0);
-    			AccOrderBill.put("ACC_BILL_REF_DT", CommonUtils.getNowDate());
-    			AccOrderBill.put("ACC_BILL_REF_NO", "1000");
-    			AccOrderBill.put("ACC_BILL_ORD_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
-    			AccOrderBill.put("ACC_BILL_ORD_NO", CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")).toString());
-    			AccOrderBill.put("ACC_BILL_TYPE_ID", 1159);
-    			AccOrderBill.put("ACC_BILL_MODE_ID", 1164);
-    			AccOrderBill.put("ACC_BILL_SCHDUL_ID", 0);
-    			AccOrderBill.put("ACC_BILL_SCHDUL_PRIOD", 0);
-    			AccOrderBill.put("ACC_BILL_ADJ_ID", 0);
-    			AccOrderBill.put("ACC_BILL_SCHDUL_AMT", outrightBalance);
-    			AccOrderBill.put("ACC_BILL_ADJ_AMT", 0);
-    			AccOrderBill.put("ACC_BILL_TXS_AMT", 0);
-    			AccOrderBill.put("ACC_BILL_NET_AMT", outrightBalance);
-    			AccOrderBill.put("ACC_BILL_STUS", 1);
-    			
-    			if(null  !=params.get("hidTradeLedger_InstallNo") ){
-        			AccOrderBill.put("ACC_BILL_REM",  (String) params.get("hidTradeLedger_InstallNo") );
-    			}else{
-    				AccOrderBill.put("ACC_BILL_REM",  " ");
-    			}
-    			
-    			AccOrderBill.put("ACC_BILL_CRT_DT", CommonUtils.getNowDate());
-    			AccOrderBill.put("ACC_BILL_CRT_USER_ID", sessionVO.getUserId());
-    			AccOrderBill.put("ACC_BILL_GRP_ID", 0);
-    			AccOrderBill.put("ACC_BILL_TAX_CODE_ID", 0);
-    			AccOrderBill.put("ACC_BILL_TAX_RATE", 0);
-    			AccOrderBill.put("ACC_BILL_ACCT_CNVR", 0);
-    			AccOrderBill.put("ACC_BILL_CNTRCT_ID", 0);
-    			logger.debug("prepared AccOrderBill: ",AccOrderBill);
-
-    		}   
+    		
 
 		if( params.get("installStatus").toString().equals("21")){
 			//FAIL
@@ -1703,7 +1737,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 							   ,AccOrderBill
 							   ,taxInvoiceOutright
 							   ,taxInvoiceOutrightSub
-							   ,salesOrderM);
+							   ,salesOrderM ,isBillAvb );
 
         ////////////////////////////insertInstallation ////////////////////////////////
 		
@@ -1761,7 +1795,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	@Transactional
 	private boolean insertInstallation(int statusId,String ApptypeID,Map<String, Object> installResult,Map<String, Object> callEntry
 													,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany
-													,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,Map<String,Object>taxInvoiceOutrightSub,Map<String,Object>salesOrderM) throws ParseException{
+													,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,
+													Map<String,Object>taxInvoiceOutrightSub,Map<String,Object>salesOrderM  ,boolean isBillAvb ) throws ParseException{
     		
 		
 		//installEntry status가 1,21 이면 그 밑에 있는걸 ㅌ야된다(컴플릿이 되어도 다시 상태값 변경 가능하게 해야된다
@@ -1817,27 +1852,33 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 					happyCall.put("HCCloseId", 0);
 					logger.debug("happyCall : {}", happyCall);
 					installationResultListMapper.insertHappyCall(happyCall);
+					
+					//insert Accorderbill
+	        		//installationResultListMapper.insertAccorderBill(AccOrderBill);
+	    
                 		
     			}
-        		
     		}
+    		
+    		
+    	
 
     		if("67".equals(ApptypeID)   || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
-
-
-        		//insert taxinvoiceRental
-        		//installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
-        		//insert taxinvoiceOutright
-        		installationResultListMapper.insertTaxInvoiceOutright(taxInvoiceOutright);
-        		//insert taxinvoiceOutright_Sub
-        		installationResultListMapper.insertTaxInvoiceOutrightSub(taxInvoiceOutrightSub);
-        		//insert tradeLedger
-        		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
-        		//insert Accorderbill
-        		installationResultListMapper.insertAccorderBill(AccOrderBill);
-    
-    
-    
+    			
+    			if(isBillAvb){
+            		//insert taxinvoiceRental
+            		//installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
+            		
+        			//insert taxinvoiceOutright
+            		installationResultListMapper.insertTaxInvoiceOutright(taxInvoiceOutright);
+            		//insert taxinvoiceOutright_Sub
+            		installationResultListMapper.insertTaxInvoiceOutrightSub(taxInvoiceOutrightSub);
+            		//insert tradeLedger
+            		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
+            		//insert Accorderbill
+            		installationResultListMapper.insertAccorderBill(AccOrderBill);
+        
+    			}
     
         		entry.put("installResultId", maxId);
         		entry.put("stusCodeId", installResult.get("statusCodeId"));

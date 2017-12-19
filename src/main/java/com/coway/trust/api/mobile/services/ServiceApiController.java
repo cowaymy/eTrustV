@@ -1058,6 +1058,7 @@ public class ServiceApiController {
 			params.put("hidEntryId",String.valueOf(installResult.get("installEntryId")));
 			params.put("hidCustomerId",String.valueOf(installResult.get("custId")));
 			params.put("hidSalesOrderId",String.valueOf(installResult.get("salesOrdId")));
+			params.put("hidTaxInvDSalesOrderNo",String.valueOf(installResult.get("salesOrdNo"))); 
 			params.put("hidStockIsSirim",String.valueOf(installResult.get("isSirim")));
 			params.put("hidStockGrade",installResult.get("stkGrad"));
 			params.put("hidSirimTypeId",String.valueOf(installResult.get("stkCtgryId")));

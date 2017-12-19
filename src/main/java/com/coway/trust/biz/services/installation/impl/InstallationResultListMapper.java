@@ -173,4 +173,14 @@ public interface InstallationResultListMapper {
 	int updateInstallResultEdit (Map<String, Object> params);
 	
 	
+	String  getPAY0033D_SEQ( Map<String,Object>params);
+	
+	EgovMap getOutrightPreBill(Map<String,Object> params);
+	
+	EgovMap getOrderByInstallEntryID(Map<String,Object> params);
+	
+	
+	
+	
+	
 }

@@ -2836,6 +2836,20 @@
 	     WHERE  ( ( ACC_BILL_ID = (SELECT MAX(ACC_BILL_ID) FROM PAY0016D ))
 	      AND ( ACC_BILL_TASK_ID = #{accBillTaskId} ) )
 	      </update>
+	      
+	      
+	      
+	      
+    <select id="getPAY0033D_SEQ" parameterType="Map" resultType="java.lang.String">
+    
+               SELECT PAY0033D_TAX_INVC_ID_SEQ.nextval   seq FROM DUAL 
+
+    </select>
+	      
+	      
+	      
+	      
+	      
 	<insert id="insertTaxInvocieOutrightD" parameterType="Map">
 	      INSERT INTO PAY0033D
             ( TAX_INVC_ID
@@ -2859,7 +2873,7 @@
             , TAX_INVC_PO_NO
             )
          VALUES (
-          PAY0033D_SEQ.NEXTVAL
+            #{taxInvcId}
          , #{taxInvoiceRefNo}
          ,  SYSDATE
          , #{taxInvoiceCustName}
@@ -2905,7 +2919,7 @@
             )
             VALUES (
             PAY0034D.SEQ_NEXTVAL
-            , #{taxInvoiceID}
+            , #{taxInvoiceID}  
             , #{invoiceItemOrderNo}
             , #{invoiceItem_PONo}
             , #{invoiceItemGSTRate}
@@ -3527,7 +3541,7 @@
           ,STREET
           )VALUES
           (
-         PAY0033D_TAX_INVC_ID_SEQ.nextval
+          #{TAX_INVC_ID} 
         ,#{TAX_INVC_REF_NO}
         ,SYSDATE
         ,#{TAX_INVC_CUST_NAME}
@@ -3581,7 +3595,7 @@
           )VALUES
           (
           PAY0034D_INVC_ITM_ID_SEQ.nextval
-        ,#{TAX_INVC_ID}
+        ,#{TAX_INVC_ID}           
         ,#{INVC_ITM_ORD_NO}
         ,#{INVC_ITM_PO_NO}
         ,#{INVC_ITM_GST_RATE}
@@ -3835,7 +3849,6 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 
 
 
-
     <select id="assignCtList" parameterType="Map" resultType="egovMap">
 
             SELECT DISTINCT   C.MEM_ID        CT_ID,
@@ -4027,5 +4040,32 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
                UPD_USER_ID = #{user_id}
          WHERE  ( RESULT_ID = #{resultId} )
          </update>
+         
+         
+   <select id="getOrderByInstallEntryID" parameterType="Map" resultType="egovMap">
+    <![CDATA[     
+				    
+			     SELECT *
+				 FROM SAL0046D I
+					JOIN CCR0006D CE ON CE.CALL_ENTRY_ID = I.CALL_ENTRY_ID
+					JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = I.SALES_ORD_ID
+					JOIN SAL0002D SOD ON SOD.SALES_ORD_ID = SOM.SALES_ORD_ID
+					JOIN SAL0029D CUST ON CUST.CUST_ID = SOM.CUST_ID
+					JOIN ORG0001D MEM ON MEM.MEM_ID = SOM.MEM_ID
+					JOIN SYS0013M APP ON APP.CODE_ID = SOM.APP_TYPE_ID
+					JOIN SYS0026M INV ON INV.STK_ID = I.INSTALL_STK_ID
+					JOIN SYS0013M CD ON CD.CODE_ID = INV.STK_CTGRY_ID
+					LEFT JOIN ORG0005D MO ON MO.MEM_ID = MEM.MEM_ID 
+					LEFT JOIN SAL0017D SPM ON SPM.PROMO_ID = SOM.PROMO_ID
+					LEFT JOIN SYS0038M STUS ON STUS.STUS_CODE_ID = I.STUS_CODE_ID
+				WHERE I.INSTALL_ENTRY_ID = #{INSTALL_ENTRY_ID}
+    
+        ]]>
+    </select>
+    
+         
+         
+         
+         
         
     </mapper>
