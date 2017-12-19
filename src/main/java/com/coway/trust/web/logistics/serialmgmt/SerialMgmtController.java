@@ -69,10 +69,44 @@ public class SerialMgmtController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/selectGIRDCBalance.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectGIRDCBalance(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> list = serialMgmtService.selectGIRDCBalance(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
+
 	@RequestMapping(value = "/selectDeliveryList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectDeliveryList(@RequestParam Map<String, Object> params)
 	{
 		List<EgovMap> list = serialMgmtService.selectDeliveryList(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/selectSerialDetails.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectSerialDetails(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> list = serialMgmtService.selectSerialDetails(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/selectRDCScanList.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectRDCScanList(@RequestParam Map<String, Object> params)
+	{
+		List<EgovMap> list = serialMgmtService.selectRDCScanList(params);
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -90,6 +124,7 @@ public class SerialMgmtController {
 
 		return ResponseEntity.ok(map);
 	}
+
 
 	@RequestMapping(value = "/selectBoxNoList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectBoxNoList(@RequestBody Map<String, Object> params, Model model)
@@ -117,10 +152,22 @@ public class SerialMgmtController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/selectUserDetails.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> selectUserDetails(Model mode, SessionVO sessionVo)
+	{
+		int brnchid = sessionVo.getUserBranchId();
+
+		List<EgovMap> list = serialMgmtService.selectUserDetails(brnchid);
+
+		Map<String, Object> map = new HashMap();
+		map.put("data", list);
+
+		return ResponseEntity.ok(map);
+	}
+
 	@RequestMapping(value = "/insertScanItems.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> insertScanItems(@RequestBody Map<String, Object> params, Model mode, SessionVO sessionVo)
 	{
-
 		int userID = sessionVo.getUserId();
 
 		logger.debug("params : {}", params.toString());
@@ -130,32 +177,38 @@ public class SerialMgmtController {
 
 		Map<String, Object> paramArray = new HashMap();
 		paramArray.put("userid", userID);
-		paramArray.put("frmlocid", formItems.get("frmlocid"));
-		paramArray.put("tolocid", formItems.get("tolocid"));
-		paramArray.put("scantype", formItems.get("scantype"));
 		paramArray.put("scanItems", scanItems);
 
-		if(paramArray.get("scantype") == "30")
+		Map<String, Object> map = new HashMap();
+
+		if(paramArray.get("scantype") == null)
 		{
 			paramArray.put("reqstno", formItems.get(""));
-			paramArray.put("reqstdt", formItems.get("reqstdt"));
+			paramArray.put("reqstdt", formItems.get("reqstDt"));
+			paramArray.put("frmlocid", formItems.get("RDCFrmLocID"));
+			paramArray.put("tolocid", formItems.get("RDCToLocID"));
+			paramArray.put("scantype", "30");
+
+			serialMgmtService.insertScanItems(paramArray);
 		}
 		else
 		{
 			paramArray.put("reqstno", formItems.get("txtDelNo"));
 			paramArray.put("reqstdt", formItems.get("txtCrtDt"));
+			paramArray.put("frmlocid", formItems.get("frmlocid"));
+			paramArray.put("tolocid", formItems.get("tolocid"));
+			paramArray.put("scantype", formItems.get("scantype"));
+
+			serialMgmtService.insertScanItems(paramArray);
+
+			Map<String, Object> delNo = new HashMap();
+
+			delNo.put("delno", formItems.get("txtDelNo"));
+
+			List<EgovMap> list = serialMgmtService.selectScanList(delNo);
+
+			map.put("data", list);
 		}
-
-		serialMgmtService.insertScanItems(paramArray);
-
-		Map<String, Object> delNo = new HashMap();
-
-		delNo.put("delno", formItems.get("txtDelNo"));
-
-		List<EgovMap> list = serialMgmtService.selectScanList(delNo);
-
-		Map<String, Object> map = new HashMap();
-		map.put("data", list);
 
 		return ResponseEntity.ok(map);
 	}
