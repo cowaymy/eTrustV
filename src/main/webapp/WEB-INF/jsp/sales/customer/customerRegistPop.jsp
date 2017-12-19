@@ -295,6 +295,7 @@
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         }else{
             $("#_cmbCorpTypeId_").val('');
+            $("#_cmbNation_").val('1');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
             $("select[name=cmbCorpTypeId]").addClass("w100p disabled");
             $("select[name=cmbNation]").removeClass("w100p disabled");
@@ -877,8 +878,14 @@
             <td>
                 <select class="w100p" id="_cmbInitials_" name="cmbInitials"></select>
             </td>
+            <th scope="row">Old IC/Army/Police</th>
+            <td >
+                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  disabled="disabled" />
+            </td>
+        </tr>
+        <tr>
             <th scope="row">Customer Name<span class="must">*</span></th>
-            <td>
+            <td colspan="3">
                 <input type="text" title="" id="_custName_" name="custName" placeholder="Customer Name" class="w100p" />
             </td>
         </tr>
@@ -890,12 +897,6 @@
             <th scope="row">GST Registration No</th>
             <td>
                 <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
-            </td>
-        </tr>
-        <tr>
-            <th scope="row">Old IC/Army/Police</th>
-            <td >
-                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  disabled="disabled" />
             </td>
         </tr>
         <tr>
