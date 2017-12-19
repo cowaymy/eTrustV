@@ -34,10 +34,31 @@ public class SerialMgmtServiceImpl implements SerialMgmtService
 	}
 
 	@Override
+	public List<EgovMap> selectGIRDCBalance(Map<String, Object> params)
+	{
+		// TODO Auto-generated method stub
+		return serialMgmtMapper.selectGIRDCBalance(params);
+	}
+
+	@Override
 	public List<EgovMap> selectDeliveryList(Map<String, Object> params)
 	{
 		// TODO Auto-generated method stub
 		return serialMgmtMapper.selectDeliveryList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectSerialDetails(Map<String, Object> params)
+	{
+		// TODO Auto-generated method stub
+		return serialMgmtMapper.selectSerialDetails(params);
+	}
+
+	@Override
+	public List<EgovMap> selectRDCScanList(Map<String, Object> params)
+	{
+		// TODO Auto-generated method stub
+		return serialMgmtMapper.selectRDCScanList(params);
 	}
 
 	@Override
@@ -55,37 +76,68 @@ public class SerialMgmtServiceImpl implements SerialMgmtService
 	}
 
 	@Override
+	public List<EgovMap> selectUserDetails(int brnchid)
+	{
+		// TODO Auto-generated method stub
+		return serialMgmtMapper.selectUserDetails(brnchid);
+	}
+
+	@Override
 	public void insertScanItems(Map<String, Object> params) {
 
 		List<Object> serialList = (List<Object>) params.get("scanItems");
+		String seq;
 
-		String seq = serialMgmtMapper.checkScanNoSeq(params.get("reqstno").toString());
-
-		if(seq == null)
+		if (params.get("scantype") == "30")
 		{
-			seq = serialMgmtMapper.selectScanNoSeq();
+    	    seq = serialMgmtMapper.selectScanNoSeq();
+
+    		if (serialList.size() > 0)
+    		{
+    			for (int i = 0; i < serialList.size(); i++)
+    			{
+    				Map<String, Object> insertSerial = null;
+
+    				insertSerial = (Map<String, Object>) serialList.get(i);
+    				insertSerial.put("scanno", seq);
+    				insertSerial.put("scanstus", "N");
+    				insertSerial.put("reqstno", params.get("reqstno"));
+    				insertSerial.put("reqstdt", params.get("reqstdt"));
+    				insertSerial.put("frmlocid", params.get("frmlocid"));
+    				insertSerial.put("tolocid", params.get("tolocid"));
+    				insertSerial.put("scantype", params.get("scantype"));
+    				insertSerial.put("userid", params.get("userid"));
+
+    				serialMgmtMapper.insertScanItems(insertSerial);
+    			}
+    		}
 		}
-
-
-		if (serialList.size() > 0)
+		else
 		{
-			for (int i = 0; i < serialList.size(); i++)
-			{
-				Map<String, Object> insertSerial = null;
+    		seq = serialMgmtMapper.checkScanNoSeq(params.get("reqstno").toString());
 
-				insertSerial = (Map<String, Object>) serialList.get(i);
-				insertSerial.put("scanno", seq);
-				insertSerial.put("scanstus", "N");
-				insertSerial.put("reqstno", params.get("reqstno"));
-				insertSerial.put("reqstdt", params.get("reqstdt"));
-				insertSerial.put("frmlocid", params.get("frmlocid"));
-				insertSerial.put("tolocid", params.get("tolocid"));
-				insertSerial.put("scantype", params.get("scantype"));
-				insertSerial.put("userid", params.get("userid"));
+    		if (seq == null){ seq = serialMgmtMapper.selectScanNoSeq(); }
 
-				serialMgmtMapper.insertScanItems(insertSerial);
-			}
-		}
+    		if (serialList.size() > 0)
+    		{
+    			for (int i = 0; i < serialList.size(); i++)
+    			{
+    				Map<String, Object> insertSerial = null;
 
+    				insertSerial = (Map<String, Object>) serialList.get(i);
+    				insertSerial.put("scanno", seq);
+    				insertSerial.put("scanstus", "N");
+    				insertSerial.put("reqstno", params.get("reqstno"));
+    				insertSerial.put("reqstdt", params.get("reqstdt"));
+    				insertSerial.put("frmlocid", params.get("frmlocid"));
+    				insertSerial.put("tolocid", params.get("tolocid"));
+    				insertSerial.put("scantype", params.get("scantype"));
+    				insertSerial.put("userid", params.get("userid"));
+
+    				serialMgmtMapper.insertScanItems(insertSerial);
+    			}
+    		}
+	    }
 	}
+
 }
