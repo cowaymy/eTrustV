@@ -702,9 +702,9 @@ public class CRJavaHelper {
 
 	public static ExportOptions getExcelExportptionsDataOnly(Map<String, Object> params) {
 		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
-		excelOptions.setUseConstantColWidth(true);
+//		excelOptions.setUseConstantColWidth(true);
 		if (CommonUtils.isEmpty(params.get(COL_WIDTH))) {
-			excelOptions.setConstantColWidth(300);
+			excelOptions.setConstantColWidth(90);
 		} else {
 			excelOptions.setConstantColWidth((Integer) params.get(COL_WIDTH));
 		}
