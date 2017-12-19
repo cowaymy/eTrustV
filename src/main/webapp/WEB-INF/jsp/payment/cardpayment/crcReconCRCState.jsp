@@ -101,6 +101,10 @@ var mappingLayout = [
                            dataField : "crcTrnscMid",
                            headerText : "crcTrnscMid",
                            visible : false
+                       }, {
+                           dataField : "codeId",
+                           headerText : "codeId",
+                           visible : false
                        }];
 
 var crcKeyInLayout = [ 
@@ -185,6 +189,10 @@ var crcStateLayout = [
                           dataField : "crcTrnscMid",
                           headerText : "crcTrnscMid",
                           visible : false
+                      }, {
+                          dataField : "codeId",
+                          headerText : "codeId",
+                          visible : false
                       }];
 
 	
@@ -231,6 +239,7 @@ var crcStateLayout = [
                 item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
                 item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
                 item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
+                item.codeId = stateRowItem.item.codeId;//hidden field
                 
                 console.log(item);
                 AUIGrid.addRow(mappingGridId, item, "last");
