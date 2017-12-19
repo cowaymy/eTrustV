@@ -768,12 +768,13 @@
                     , V1.PAC_NAME
                     , V1.MBRSH_CRT_DT
                     , V1.MBRSH_START_DT
+                    , TO_DATE(V1.MBRSH_START_DT,'DD-MON-YY') as MBRSH_START_DT2
                     , V1.MBRSH_EXPR_DT
                     , V1.MBRSH_DUR
                  FROM SAL1003V V1
                 WHERE V1.SALES_ORD_ID = #{salesOrderId}
              )
-         ORDER BY SORT_NO, MBRSH_START_DT
+         ORDER BY SORT_NO, MBRSH_START_DT2
     </select>
     
     <select id="selectDocumentList" parameterType="Map" resultType="egovMap">
