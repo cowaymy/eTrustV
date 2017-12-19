@@ -234,7 +234,9 @@
 						Common.ajax("GET", "/commission/calculation/runningPrdCheck", data, function(result) {
 
 							if (result.data[0] == null) {
-
+								  var option = {
+					                        timeout: 60000*2
+					                    };  
 								Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
 									if (rowIndex == myGridID_CALLength - 1) {
 										Common.ajax("GET", "/commission/calculation/prdBatchSuccessHistory", $("#searchForm").serialize());
@@ -243,11 +245,11 @@
 								}, function(jqXHR, textStatus, errorThrown) {
 									console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
 
-									if (jqXHR.status == 503) {
-										Common.alert("Running... Please wait about 20 minutes ");
+									if (textStatus=="timeout" ||jqXHR.status == 503) {
+										Common.alert("Running... Please wait about 5 minutes ");
 										$("#search").trigger("click");
 									}
-								}); //callPrd
+								},option); //callPrd
 
 							} else {
 								Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
