@@ -343,6 +343,7 @@
                     cmbCorpTypeId : insBasicForm.cmbCorpTypeId.value,
                     custInitial : insBasicForm.cmbInitials.value,
                     nric : insBasicForm.nric.value,
+                    oldNric : insBasicForm.oldNric.value,
                     gstRgistNo : insBasicForm.gstRgistNo.value,
                     cmbNation : insBasicForm.cmbNation.value,
                     pasSportExpr : insBasicForm.pasSportExpr.value,
@@ -887,6 +888,12 @@
             <th scope="row">GST Registration No</th>
             <td>
                 <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
+            </td>
+        </tr>
+        <tr>
+            <th scope="row">Old IC/Army/Police</th>
+            <td >
+                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  />
             </td>
         </tr>
         <tr>

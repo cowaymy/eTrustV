@@ -1335,7 +1335,8 @@
 					                      VISA_EXPR,
 					                      CUST_VA_NO,
 					                      CORP_TYPE_ID,
-					                      GST_RGIST_NO)
+					                      GST_RGIST_NO,
+					                      OLD_IC)
 					  VALUES   (#{custSeq},
 						            #{custName},
 						            #{nric},
@@ -1358,7 +1359,8 @@
                                     TO_DATE(#{visaExpr}, 'DD/MM/YYYY'),
 						            NULL,
 						            #{cmbCorpTypeId},
-						            #{gstRgistNo})
+						            #{gstRgistNo},
+						            #{oldNric})
     </insert>
     
     <update id="updateCustomerInfo" parameterType="Map">

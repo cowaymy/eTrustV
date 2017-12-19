@@ -64,8 +64,16 @@ public class CustomerVO implements Serializable {
 	private int accBankId;
 	private String accBankBrnch;
 	private String accRem;
+	private String oldNric;
 	
 	
+	
+	public String getOldNric() {
+		return oldNric;
+	}
+	public void setOldNric(String oldNric) {
+		this.oldNric = oldNric;
+	}
 	public int getCustId() {
 		return custId;
 	}

@@ -534,6 +534,7 @@ public class CustomerController {
 			insmap.put("dob", defaultDate);
 		}
 		insmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
+		insmap.put("oldNric", vo.getOldNric() != null ? vo.getOldNric() : "");
 		insmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
 		insmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
 		insmap.put("email", vo.getEmail() != null ? vo.getEmail() : "");
