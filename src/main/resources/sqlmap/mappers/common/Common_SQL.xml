@@ -1151,50 +1151,30 @@
 
     <!--Product 정보 조회 -->
     <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
-        SELECT CODE_ID
+        SELECT STK_ID
+             , C1
              , CODE_NAME
-             , GROUPCD
           FROM
-             ( SELECT DISTINCT T1.STK_ID CODE_ID
-		            , T1.STK_CODE ||' - '||T1.STK_DESC CODE_NAME
-		            , T3.CODE_NAME GROUPCD
-		         FROM SYS0026M T1
-		            , SAL0016M T2
-		            , SYS0013M T3
-		        WHERE T1.STK_ID = T2.STK_ID
-		          and T1.STK_CTGRY_ID = T3.CODE_ID
-		          and 1 != T1.IS_NCV
-		          AND 1 = T1.STUS_CODE_ID
-		          AND 61 = T1.STK_TYPE_ID
-		          AND T2.AMT &gt; 0
-                <if test='stkType != null and stkType == "1"'>
-                  AND T1.STK_CODE     IN ('110176','110306'
-                                          ,'112098'
-                                          ,'112522'
-                                          ,'112471'
-                                          ,'111609','110778','110341'
-                                          ,'600001','620001','620002','111358'
-                                          ,'112194','112237','112110','112278'
-                                          ,'111765','112389')
-                  AND T1.STK_ALLOW_SALES = '1'
-                </if>
-                <if test='stkType != null and stkType == "2"'>
-                  AND T1.STK_CODE NOT IN ('110176','110306'
-                                          ,'112098'
-                                          ,'112522'
-                                          ,'112471'
-                                          ,'111609','110778','110341'
-                                          ,'600001','620001','620002','111358'
-                                          ,'112194','112237','112110','112278'
-                                          ,'111765','112389')
-                  AND T1.STK_ALLOW_SALES = '1'
-                </if>
-                <if test='stkType != null and stkType == "3"'>
-                  AND T1.STK_CODE = '112237'
-                  AND T1.STK_ALLOW_SALES = '1'
-                </if>
+             (
+               SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , T3.CODE_NAME
+                 FROM SYS0026M T1
+                    , SYS0013M T3
+                WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T1.STUS_CODE_ID = 1
+                UNION
+               SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , T3.CODE_NAME 
+                 FROM SYS0026M T1
+                    , SYS0013M T3
+                WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T1.STUS_CODE_ID = 1
              )
-		 ORDER BY CODE_NAME ASC, CODE_NAME ASC
+         ORDER BY CODE_NAME ASC, STK_ID ASC
     </select>
 	<select id="selectInStckSelCodeList" parameterType="Map" resultType="egovMap">
 	        SELECT

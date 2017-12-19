@@ -22,7 +22,7 @@
         
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
         //doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
-        doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
+        doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
@@ -30,6 +30,10 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo')
     });
 
+    function fn_setOptGrpClass() {
+        $("optgroup").attr("class" , "optgroup_text")
+    }
+    
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
         //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
@@ -215,19 +219,19 @@
         
     	//AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Order No",        dataField : "ordNo",       editable : false, width : 80  }
-          , { headerText : "Status",          dataField : "ordStusCode", editable : false, width : 80  }
-          , { headerText : "App Type",        dataField : "appTypeCode", editable : false, width : 80  }
-          , { headerText : "Order Date",      dataField : "ordDt",       editable : false, width : 100 }
-          , { headerText : "Ref No",          dataField : "refNo",       editable : false, width : 60  }
-          , { headerText : "Product",         dataField : "productName", editable : false, width : 150 }
-          , { headerText : "Cust ID",         dataField : "custId",      editable : false, width : 70  }
-          , { headerText : "Customer Name",   dataField : "custName",    editable : false}
-          , { headerText : "NRIC/Company No", dataField : "custIc",      editable : false, width : 100 }
-          , { headerText : "Creator",         dataField : "crtUserId",   editable : false, width : 100 }
-          , { headerText : "PV Year",         dataField : "pvYear",      editable : false, width : 60  }
-          , { headerText : "PV Mth",          dataField : "pvMonth",     editable : false, width : 60  }
-          , { headerText : "ordId",           dataField : "ordId",       visible  : false }
+            { headerText : "<spring:message code='sales.OrderNo'/>", dataField : "ordNo",       editable : false, width : 80  }
+          , { headerText : "<spring:message code='sales.Status'/>",  dataField : "ordStusCode", editable : false, width : 80  }
+          , { headerText : "<spring:message code='sales.AppType'/>", dataField : "appTypeCode", editable : false, width : 80  }
+          , { headerText : "<spring:message code='sales.ordDt'/>",   dataField : "ordDt",       editable : false, width : 100 }
+          , { headerText : "<spring:message code='sales.refNo2'/>",  dataField : "refNo",       editable : false, width : 60  }
+          , { headerText : "<spring:message code='sales.prod'/>",    dataField : "productName", editable : false, width : 150 }
+          , { headerText : "<spring:message code='sales.custId'/>",  dataField : "custId",      editable : false, width : 70  }
+          , { headerText : "<spring:message code='sales.cusName'/>", dataField : "custName",    editable : false}
+          , { headerText : "<spring:message code='sales.NRIC2'/>",   dataField : "custIc",      editable : false, width : 100 }
+          , { headerText : "<spring:message code='sales.Creator'/>", dataField : "crtUserId",   editable : false, width : 100 }
+          , { headerText : "<spring:message code='sales.pvYear'/>",  dataField : "pvYear",      editable : false, width : 60  }
+          , { headerText : "<spring:message code='sales.pvMth'/>",   dataField : "pvMonth",     editable : false, width : 60  }
+          , { headerText : "ordId",                                  dataField : "ordId",       visible  : false }
             ];
 
         //그리드 속성 설정
@@ -309,23 +313,22 @@
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order</li>
-	<li>Order</li>
+	<li><spring:message code='sales.path.sales'/></li>
+	<li><spring:message code='sales.path.order'/></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Order List</h2>
+<h2><spring:message code='sales.title.orderList'/></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="btnCopy" href="#" >Copy(Change)</a></p></li>
-    <li><p class="btn_blue"><a id="btnCopyBulk" href="#" >Copy(Bulk)</a></p></li>
-    <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
-    <li><p class="btn_blue"><a id="btnEdit" href="#">Edit</a></p></li>
-    <li><p class="btn_blue"><a id="btnReq" href="#">Request</a></p></li>
-    <li><p class="btn_blue"><a id="btnSimul" href="#">Rent To Outright Simulator</a></p></li>
-	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a id="btnCopy" href="#" ><spring:message code='sales.btn.copyChange'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnCopyBulk" href="#" ><spring:message code='sales.btn.copyBulk'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnNew" href="#" ><spring:message code='sales.btn.new'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnEdit" href="#"><spring:message code='sales.btn.edit'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnReq" href="#"><spring:message code='sales.btn.request'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnSimul" href="#"><spring:message code='sales.btn.simul'/></a></p></li>
+	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
+	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -357,15 +360,15 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Order No</th>
+	<th scope="row"><spring:message code='sales.OrderNo'/></th>
 	<td>
-	<input id="listOrdNo" name="ordNo" type="text" title="Order No" placeholder="Order Number" class="w100p" />
+	<input id="listOrdNo" name="ordNo" type="text" title="Order No" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
 	</td>
-	<th scope="row">Application Type</th>
+	<th scope="row"><spring:message code='sales.AppType2'/></th>
 	<td>
 	<select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple"></select>
 	</td>
-	<th scope="row">Order Date</th>
+	<th scope="row"><spring:message code='sales.ordDt'/></th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
 	<p><input id="listOrdStartDt" name="ordStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
@@ -375,7 +378,7 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row">Order Status</th>
+	<th scope="row"><spring:message code='sales.ordStus'/></th>
 	<td>
 	<select id="listOrdStusId" name="ordStusId" class="multy_select w100p" multiple="multiple">
 		<option value="1">Active</option>
@@ -383,87 +386,87 @@
 		<option value="10">Cancelled</option>
 	</select>
 	</td>
-	<th scope="row">Key-In Branch</th>
+	<th scope="row"><spring:message code='sales.keyInBranch'/></th>
 	<td>
 	<select id="listKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p" multiple="multiple"></select>
 	</td>
-	<th scope="row">DSC Branch</th>
+	<th scope="row"><spring:message code='sales.dscBranch'/></th>
 	<td>
     <select id="listDscBrnchId" name="dscBrnchId" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Customer ID</th>
+	<th scope="row"><spring:message code='sales.custId2'/></th>
 	<td>
-	<input id="listCustId" name="custId" type="text" title="Customer ID" placeholder="Customer ID (Number Only)" class="w100p" />
+	<input id="listCustId" name="custId" type="text" title="<spring:message code='sales.custId2'/>" placeholder="Customer ID (Number Only)" class="w100p" />
 	</td>
-	<th scope="row">Customer Name</th>
+	<th scope="row"><spring:message code='sales.cusName'/></th>
 	<td>
-	<input id="listCustName" name="custName" type="text" title="Customer Name" placeholder="Customer Name" class="w100p" />
+	<input id="listCustName" name="custName" type="text" title="Customer Name" placeholder="<spring:message code='sales.cusName'/>" class="w100p" />
 	</td>
-	<th scope="row">NRIC/Company No</th>
+	<th scope="row"><spring:message code='sales.NRIC2'/></th>
 	<td>
-	<input id="listCustIc" name="custIc" type="text" title="NRIC/Company No" placeholder="NRIC/Company Number" class="w100p" />
+	<input id="listCustIc" name="custIc" type="text" title="NRIC/Company No" placeholder="<spring:message code='sales.NRIC2'/>" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Product</th>
+	<th scope="row"><spring:message code='sales.prod'/></th>
 	<td>
 	<select id="listProductId" name="productId" class="w100p"></select>
 	</td>
-	<th scope="row">Salesman</th>
+	<th scope="row"><spring:message code='sales.salesman'/></th>
 	<td>
-	<input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="Salesman (Member Code)" class="w100p" />
+	<input id="listSalesmanCode" name="salesmanCode" type="text" title="Salesman" placeholder="<spring:message code='sales.salesman'/>" class="w100p" />
 	</td>
-	<th scope="row">Rental Status</th>
+	<th scope="row"><spring:message code='sales.RentalStatus'/></th>
 	<td>
 	<select id="listRentStus" name="rentStus" class="multy_select w100p" multiple="multiple"></select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Reference No</th>
+	<th scope="row"><spring:message code='sales.refNo3'/></th>
 	<td>
-	<input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="Reference Number" class="w100p" />
+	<input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="<spring:message code='sales.refNo3'/>" class="w100p" />
 	</td>
-	<th scope="row">PO No</th>
+	<th scope="row"><spring:message code='sales.poNum'/></th>
 	<td>
-	<input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="PO Number" class="w100p" />
+	<input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
 	</td>
-	<th scope="row">Contact No</th>
+	<th scope="row"><spring:message code='sales.ContactNo'/></th>
 	<td>
-	<input id="listContactNo" name="contactNo" type="text" title="Contact No" placeholder="Contact No" class="w100p" />
-	</td>
-</tr>
-<tr>
-	<th scope="row">VA Number</th>
-	<td>
-	<input type="text" title="VA Number" placeholder="Virtual Account (VA) Number" class="w100p" />
-	</td>
-	<th scope="row">Serial Number</th>
-	<td>
-	<input type="text" title="Serial Number" placeholder="Serial Number" class="w100p" />
-	</td>
-	<th scope="row">Sirim Number</th>
-	<td>
-	<input type="text" title="Sirim Number" placeholder="Sirim Number" class="w100p" />
+	<input id="listContactNo" name="contactNo" type="text" title="Contact No" placeholder="<spring:message code='sales.ContactNo'/>" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code='sales.vaNum'/></th>
+	<td>
+	<input type="text" title="VA Number" placeholder="<spring:message code='sales.vaNum'/>" class="w100p" />
+	</td>
+	<th scope="row"><spring:message code='sales.SeriacNo'/></th>
+	<td>
+	<input type="text" title="Serial Number" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
+	</td>
+	<th scope="row"><spring:message code='sales.SirimNo'/></th>
+	<td>
+	<input type="text" title="Sirim Number" placeholder="<spring:message code='sales.SirimNo'/>" class="w100p" />
+	</td>
+</tr>
+<tr>
+	<th scope="row"><spring:message code='sales.Creator'/></th>
 	<td>
 	<input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
 	</td>
-	<th scope="row">Promotion Code</th>
+	<th scope="row"><spring:message code='sales.promoCd'/></th>
 	<td>
-	<input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="Promotion Code" class="w100p" />
+	<input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
 	</td>
-	<th scope="row">Related No(Exchange)</th>
+	<th scope="row"><spring:message code='sales.relatedNo2'/></th>
 	<td>
-	<input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="Related No" class="w100p" />
+	<input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="<spring:message code='sales.relatedNo2'/>" class="w100p" />
 	</td>
 </tr>
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Order number / Customer id / Customer name / NRIC-Company number / Order date</span>  </th>
+    <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyin'/></span></th>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -476,18 +479,18 @@
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#" id="btnVaLetter">Customer VA Letter</a></p></li>
-		<li><p class="link_btn"><a href="#" id="btnExport">Export Search List</a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnVaLetter"><spring:message code='sales.btn.custVALetter'/></a></p></li>
+		<li><p class="link_btn"><a href="#" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
 	</ul>
 	<ul class="btns">
 <!--
 		<li><p class="link_btn type2"><a href="#" id="btnSim">Rental to Outright Simulator</a></p></li>
 -->
-		<li><p class="link_btn type2"><a href="#" id="btnRentalPaySet">Rental Pay Setting Update List</a></p></li>
-		<li><p class="link_btn type2"><a href="#" id="btnSof">Sales Order Form (SOF) List</a></p></li>
-		<li><p class="link_btn type2"><a href="#" id="btnDdCrc">DD/CRC List</a></p></li>
-		<li><p class="link_btn type2"><a href="#" id="btnAsoSales">ASO Sales Report</a></p></li>
-		<li><p class="link_btn type2"><a href="#" id="btnYsListing">Sales YS Listing</a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnRentalPaySet"><spring:message code='sales.btn.rentPaySet'/></a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnSof"><spring:message code='sales.btn.sof'/></a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnDdCrc"><spring:message code='sales.btn.ddcrc'/></a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnAsoSales"><spring:message code='sales.btn.aso'/></a></p></li>
+		<li><p class="link_btn type2"><a href="#" id="btnYsListing"><spring:message code='sales.btn.ys'/></a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
@@ -498,16 +501,6 @@
 
 <section class="search_result"><!-- search_result start -->
 
-<!--
-<ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">Rental to Outright Simulator</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">INS</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
--->
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->

@@ -60,7 +60,7 @@
                 $('#prefInstDt').val('${orderInfo.installationInfo.preferInstDt}');
                 $('#prefInstTm').val('${orderInfo.installationInfo.preferInstTm}');
                 $("#dscBrnchId").val('${orderInfo.installationInfo.dscId}'); //DSC Branch
-                $("#speclInstct").val('${orderInfo.installationInfo.instct}');
+                $("#speclInstct").val("${orderInfo.installationInfo.instct}");
                 
                 //----------------------------------------------------------
                 // [Master Contact] : Owner & Purchaser Contact
