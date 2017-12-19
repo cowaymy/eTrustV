@@ -30,7 +30,9 @@
 
     var myGridID;
     var myDetailGridID;
+    var myRDCGridID;
     var myBarScanGridID;
+    var mySerialGridID;
 
     var ItmCodeMap;
 
@@ -53,13 +55,27 @@
                                       {dataField:"crtdt", headerText:"Created Date", width:120, height:30}
                                     ];
 
-    var detailLayout = [
-			                        {dataField:"itmcode", headerText:"Item Code", width:130, height:30},
-			                        {dataField:"itmdesc", headerText:"Item Description", width:300, height:30},
-			                        {dataField:"delqty", headerText:"Total Delivery Qty", width:150, height:30},
-			                        {dataField:"scanqty", headerText:"Total Scanned Qty", width:150, height:30},
-			                        {dataField:"remainqty", headerText:"Remaining Qty", width:150, height:30, visible:false}
-			                      ];
+    var detailLayout =   [
+			                          {dataField:"itmcode", headerText:"Item Code", width:130, height:30},
+			                          {dataField:"itmdesc", headerText:"Item Description", width:300, height:30},
+			                          {dataField:"delqty", headerText:"Total Delivery Qty", width:150, height:30},
+			                          {dataField:"scanqty", headerText:"Total Scanned Qty", width:150, height:30},
+			                          {dataField:"remainqty", headerText:"Remaining Qty", width:150, height:30, visible:false}
+			                        ];
+
+    var RDCLayout =     [
+                                      {dataField:"scanno", headerText:"Scan No.", width:135, height:30},
+                                      {dataField:"seq", headerText:"Seq No.", width:80, height:30},
+                                      {dataField:"serialno", headerText:"Serial No.", width:180, height:30},
+					                  {dataField:"itmcode", headerText:"Item Code", width:130, height:30},
+					                  {dataField:"itmdesc", headerText:"Item Description", width:300, height:30},
+					                  {dataField:"scanstus", headerText:"Scan Status", width:90, height:30},
+					                  {dataField:"reqstdt", headerText:"Request Date", width:120, height:30},
+					                  {dataField:"frmloc", headerText:"From Location", width:220, height:30},
+					                  {dataField:"toloc", headerText:"To Location", width:220, height:30},
+					                  {dataField:"crt", headerText:"Creator", width:110, height:30},
+					                  {dataField:"crtdt", headerText:"Created Date", width:120, height:30}
+					                ];
 
     var barScanLayout = [
 				                        {dataField:"seqno", headerText:"Seq No.", width:80, height:30},
@@ -70,14 +86,22 @@
 				                        {dataField:"serialno", headerText:"Serial No", width:40, height:30, visible:false}
 			                          ];
 
+    var serialDetailLayout = [
+                                             {dataField:"serialno", headerText:"Serial No.", width:180, height:30},
+				                             {dataField:"seq", headerText:"Seq No.", width:75, height:30},
+				                             {dataField:"boxno", headerText:"Box No.", width:180, height:30},
+				                             {dataField:"crt", headerText:"Creator", width:110, height:30},
+				                             {dataField:"crtdt", headerText:"Created Date", width:120, height:30}
+				                           ];
+
     var gridPros = {
-                                editable : false,
-                                fixedColumnCount : 2,
-                                showRowCheckColumn : false,
-                                showStateColumn : false,
-                                showBranchOnGrouping : false,
-                                enableCellMerge : true,
-                                groupingFields : ["delno"]
+                               editable : false,
+                               fixedColumnCount : 2,
+                               showRowCheckColumn : false,
+                               showStateColumn : false,
+                               showBranchOnGrouping : false,
+                               enableCellMerge : true,
+                               groupingFields : ["delno"]
                             };
 
     var detailGridPros = {
@@ -87,6 +111,15 @@
 							            showBranchOnGrouping : false
 						             };
 
+    var RDCGridPros = {
+    		                          groupingFields : ["scanno"],
+    		                          enableCellMerge : true,
+									  editable : false,
+									  showRowCheckColumn : false,
+									  showStateColumn : false,
+									  showBranchOnGrouping : false
+							       };
+
     var barScanGridPros = {
 								            editable : false,
 								            showRowCheckColumn : true,
@@ -95,14 +128,22 @@
 								            showBranchOnGrouping : false
 								         };
 
+    var serialGridPros = {
+								        editable : false,
+								        showRowAllCheckBox : false,
+								        showStateColumn : false,
+								        showBranchOnGrouping : false
+								     };
+
+
     $(document).ready(function() {
 
         myGridID = AUIGrid.create("#main_grid_wrap", columnLayout, gridPros);
         myDetailGridID = AUIGrid.create("#detail_grid_wrap", detailLayout, detailGridPros);
+        myRDCGridID = AUIGrid.create("#rdc_grid_wrap", RDCLayout, RDCGridPros);
         myBarScanGridID = AUIGrid.create("#barscan_grid_wrap", barScanLayout, barScanGridPros);
+        mySerialGridID = AUIGrid.create("#serialdetail_grid_wrap", serialDetailLayout, serialGridPros);
 
-        AUIGrid.bind(myGridID, "ready", function(event) { });
-        AUIGrid.bind(myGridID, "cellClick", function(event) { });
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 
         	if(event.rowIndex > -1)
@@ -131,6 +172,34 @@
             }
         });
 
+        AUIGrid.bind(myDetailGridID, "cellDoubleClick", function(event) {
+
+            var itmCode = AUIGrid.getCellValue(myDetailGridID, event.rowIndex, "itmcode");
+
+        	var data = { delno : $("#txtDelNo").val(), itmcode : itmCode };
+
+            Common.ajaxSync("GET", "/logistics/SerialMgmt/selectSerialDetails.do", data, function(result) {
+
+            	AUIGrid.clearGridData(mySerialGridID);
+
+                var gridData = result;
+
+                AUIGrid.setGridData(mySerialGridID, gridData.data);
+
+                $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
+
+                $("#serialDetailWindow").show();
+
+                AUIGrid.resize(mySerialGridID);
+
+            }, function(jqXHR, textStatus, errorThrown) {
+
+                    try { }
+                    catch (e) { }
+
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);
+                });
+        });
 
         AUIGrid.bind(myBarScanGridID, "rowCheckClick", function(event) {
 
@@ -154,11 +223,25 @@
 
         $("#deliverySection").hide();
         $("#RDCSection").hide();
+
         fn_balanceDelivery();
+        fn_balanceGIRDC();
 
    });
 
     $(function() {
+
+        $("#RDCToLoc").keypress(function(event) {
+
+            if (event.which == '13')
+            {
+                $("#stype").val('RDCToLocID');
+                $("#svalue").val($('#RDCToLoc').val());
+                $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+
+                Common.searchpopupWin("searchForm3", "/common/searchPopList.do","location");
+            }
+        });
 
         $("#search").click(function() {
 
@@ -168,16 +251,17 @@
         $("#refresh").click(function() {
 
         	fn_balanceDelivery();
+        	fn_balanceGIRDC();
 
         });
 
         $("#viewGRCDC").click(function() {
 
+        	$("#scantype").val("10");
+
             if($("#main_grid_wrap").is(":visible"))
             {
             	 fn_ViewDeliveryList('GRCDC');
-
-            	 $("#scantype").val("10");
             }
             else
             {
@@ -192,10 +276,11 @@
 
         $("#viewGICDC").click(function() {
 
+        	$("#scantype").val("20");
+
             if($("#main_grid_wrap").is(":visible"))
             {
                  fn_ViewDeliveryList('GICDC');
-                 $("#scantype").val("20");
             }
             else
             {
@@ -217,8 +302,12 @@
                 $("#main_grid_wrap").slideToggle(300);
             }
                 $("#deliverySection").hide();
-                $("#RDCSection").show();
 
+                fn_ViewRDCScanList();
+
+                fn_getUserLocDetails();
+
+                $("#RDCSection").show();
         });
 
 
@@ -229,13 +318,13 @@
 
         	for(var i = 0; i < RemainingQty.length; i++)
         	{
-        		if(RemainingQty[i] != "0")
+        		if (RemainingQty[i] != "0")
         		{
         			ScanComplete = "0";
         		}
         	}
 
-        	if(ScanComplete == "1")
+        	if (ScanComplete == "1")
         	{
         		Common.alert("Confirm");
         	}
@@ -247,29 +336,108 @@
     });
 
 
+    function fn_getUserLocDetails()
+    {
+    	 var data = {};
+
+         Common.ajaxSync("GET", "/logistics/SerialMgmt/selectUserDetails.do", data, function(result) {
+
+             var userDetails = result.data;
+
+             $("#RDCFrmLocID").val(userDetails[0].locid);
+             $("#RDCFrmLoc").val(userDetails[0].locdesc);
+             doSysdate(0 , "reqstDt");
+
+         }, function(jqXHR, textStatus, errorThrown) {
+
+             try { }
+             catch (e) { }
+
+             Common.alert("Fail : " + jqXHR.responseJSON.message);
+         });
+    }
+
+    function fn_ViewRDCScanList()
+    {
+    	 var data = {};
+
+         Common.ajaxSync("GET", "/logistics/SerialMgmt/selectRDCScanList.do", data, function(result) {
+
+             var gridData = result;
+
+             AUIGrid.setGridData(myRDCGridID, gridData.data);
+
+         }, function(jqXHR, textStatus, errorThrown) {
+
+             try { }
+             catch (e) { }
+
+             Common.alert("Fail : " + jqXHR.responseJSON.message);
+         });
+    }
+
+
+    function fn_itempopList(data) {
+
+        var rtnVal = data[0].item;
+
+        $("#RDCToLocID").val(rtnVal.locid);
+        $("#RDCToLoc").val(rtnVal.locdesc);
+        $("#svalue").val();
+    }
+
     function fn_showSerialRegistration()
     {
-        $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
-
-        $("#txtBarcode").val('');
-        AUIGrid.clearGridData(myBarScanGridID);
-
-        $("#barScanWindow").show();
-
-        SeqNo = 1;
-        SeqGroup = 1;
-
-        var ItmCodeArray = AUIGrid.getColumnValues(myDetailGridID, "itmcode");
-        var ItmCodeQty = AUIGrid.getColumnValues(myDetailGridID, "remainqty");
-
-        ItmCodeMap = new Map();
-
-        for(var i = 0; i < ItmCodeArray.length; i ++)
+        if ($("#scantype").val() == "30")
         {
-            ItmCodeMap.set(ItmCodeArray[i], ItmCodeQty[i]);
-        }
+        	if ($("#RDCToLoc").val() == ''|| $("#RDCToLocID").val() == '')
+        	{
+        		Common.alert("Please select a location to delivery before proceeding.");
+        	}
+        	else if ($("#reqstDt").val() == '')
+        	{
+        	    Common.alert("Please select a valid Request Date before proceeding.");
+        	}
+        	else
+        	{
+                $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 
-        AUIGrid.resize(myBarScanGridID);
+                $("#txtBarcode").val('');
+                AUIGrid.clearGridData(myBarScanGridID);
+
+                SeqNo = 1;
+                SeqGroup = 1;
+
+                $("#barScanWindow").show();
+
+                AUIGrid.resize(myBarScanGridID);
+        	}
+        }
+        else
+        {
+            var ItmCodeArray = AUIGrid.getColumnValues(myDetailGridID, "itmcode");
+            var ItmCodeQty = AUIGrid.getColumnValues(myDetailGridID, "remainqty");
+
+            ItmCodeMap = new Map();
+
+            for (var i = 0; i < ItmCodeArray.length; i ++)
+            {
+                ItmCodeMap.set(ItmCodeArray[i], ItmCodeQty[i]);
+            }
+
+            $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
+
+            $("#txtBarcode").val('');
+            $("#txtBarcode").focus();
+            AUIGrid.clearGridData(myBarScanGridID);
+
+            SeqNo = 1;
+            SeqGroup = 1;
+
+            $("#barScanWindow").show();
+
+            AUIGrid.resize(myBarScanGridID);
+        }
     }
 
 
@@ -282,7 +450,7 @@
 
         	AUIGrid.setGridData(myGridID, gridData.data);
 
-        }, function(jqXHR, textStatus, errorThrown) {
+        }, function (jqXHR, textStatus, errorThrown) {
 
             try { }
             catch (e) { }
@@ -296,11 +464,26 @@
     	var data = {};
         Common.ajaxSync("GET", "/logistics/SerialMgmt/selectDeliveryBalance.do", data, function(result) {
 
-        	$('#grCDC').val(result.data[0].grcdc);
-        	$('#giCDC').val(result.data[0].gicdc);
-        	$('#giRDC').val('0');
+        	$("#grCDC").val(result.data[0].grcdc);
+        	$("#giCDC").val(result.data[0].gicdc);
 
-        }, function(jqXHR, textStatus, errorThrown) {
+        }, function (jqXHR, textStatus, errorThrown) {
+
+            try { }
+            catch (e) { }
+
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+    }
+
+    function fn_balanceGIRDC()
+    {
+        var data = {};
+        Common.ajaxSync("GET", "/logistics/SerialMgmt/selectGIRDCBalance.do", data, function(result) {
+
+            $("#giRDC").val(result.data[0].girdc);
+
+        }, function (jqXHR, textStatus, errorThrown) {
 
             try { }
             catch (e) { }
@@ -322,12 +505,12 @@
 
    		    for (var i = 0 ; i < BarCodeArray.length ; i++)
    		    {
-                if(BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'B')
+                if (BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'B')
                 {
                     unitType = "Box";
                     hasBox = true;
                 }
-                else if(BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'P')
+                else if (BarCodeArray[i].charAt(BarCodeArray[i].length - 5) == 'P')
                 {
                     unitType = "Pal";
                     hasBox = true;
@@ -401,28 +584,31 @@
                     {
                         status = "0";
                     }
-                    else if(!ItmCodeMap.has(itmcode))
+
+                    if($("#scantype").val() != "30")
                     {
-                        boxno = "Material is not in Delivery List.";
-                        status = "0";
-                    }
+	                    if(!ItmCodeMap.has(itmcode))
+	                    {
+	                        boxno = "Material is not in Delivery List.";
+	                        status = "0";
+	                    }
 
-                     if(ItmCodeMap.has(itmcode) && status == "1")
-                    {
-                         var remainingQty =  parseInt(ItmCodeMap.get(itmcode));
+	                    if(ItmCodeMap.has(itmcode) && status == "1")
+	                    {
+	                         var remainingQty =  parseInt(ItmCodeMap.get(itmcode));
 
-                         if(remainingQty == 0)
-                        {
-                            boxno = "Exceeded Delivery Qty";
-                    	    status = "0";
-                        }
-                        else
-                        {
+	                         if(remainingQty == 0)
+	                        {
+	                            boxno = "Exceeded Delivery Qty";
+	                    	    status = "0";
+	                        }
+	                        else
+	                        {
+	                            var newRemainingQty = (remainingQty - 1);
 
-                            var newRemainingQty = (remainingQty - 1);
-
-                            ItmCodeMap.set(itmcode, newRemainingQty);
-                        }
+	                            ItmCodeMap.set(itmcode, newRemainingQty);
+	                        }
+	                    }
                     }
 
                     if(status == 1)
@@ -481,51 +667,82 @@
     	}
     	else
     	{
-    		var GridData = AUIGrid.getAddedRowItems(myBarScanGridID);
-    		var FormData = $('#searchForm2').serializeJSON();
-    		var data = {};
+    		if($("#scantype").val() == "30")
+    		{
+                var GridData = AUIGrid.getAddedRowItems(myBarScanGridID);
+                var FormData = $('#searchForm3').serializeJSON();
+                var data = {};
 
-    		data.add = GridData;
-    	    data.form = FormData;
+                data.add = GridData;
+                data.form = FormData;
 
-    		var url = "/logistics/SerialMgmt/insertScanItems.do";
+                var url = "/logistics/SerialMgmt/insertScanItems.do";
 
-    		Common.ajax("POST", url, data, function(result) {
+                Common.ajax("POST", url, data, function(result) {
 
-    	         var gridData = result;
+                    $("#barScanWindow").hide();
 
-    	         AUIGrid.setGridData(myDetailGridID, gridData.data);
+                    Common.alert("Scanned Item(s) Saved.");
 
-    			$("#barScanWindow").hide();
+                },  function(jqXHR, textStatus, errorThrown) {
 
-            },  function(jqXHR, textStatus, errorThrown) {
+                        try { }
+                        catch (e) { }
 
-                    try { }
-                    catch (e) { }
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                });
+    		}
+    		else
+    		{
+	    		var GridData = AUIGrid.getAddedRowItems(myBarScanGridID);
+	    		var FormData = $('#searchForm2').serializeJSON();
+	    		var data = {};
 
-                    Common.alert("Fail : " + jqXHR.responseJSON.message);
-            });
+	    		data.add = GridData;
+	    	    data.form = FormData;
+
+	    		var url = "/logistics/SerialMgmt/insertScanItems.do";
+
+	    		Common.ajax("POST", url, data, function(result) {
+
+	    	         var gridData = result;
+
+	    	         AUIGrid.setGridData(myDetailGridID, gridData.data);
+
+	    			$("#barScanWindow").hide();
+
+	            },  function(jqXHR, textStatus, errorThrown) {
+
+	                    try { }
+	                    catch (e) { }
+
+	                    Common.alert("Fail : " + jqXHR.responseJSON.message);
+	            });
+    		}
     	}
     }
 
 
     function fn_deleteScanItem()
     {
-    	var DeleteItems = AUIGrid.getCheckedRowItemsAll(myBarScanGridID);
-
-    	for(var i = 0; i < DeleteItems.length; i ++)
+    	if($("#scantype").val() != "30")
     	{
-    		var itmCode = DeleteItems[i].itmcode;
-    	    var itmStatus = DeleteItems[i].status;
+	    	var DeleteItems = AUIGrid.getCheckedRowItemsAll(myBarScanGridID);
 
-    		if(ItmCodeMap.has(itmCode) && itmStatus == "1")
-    		{
-	    	    var remainingQty = parseInt(ItmCodeMap.get(itmCode));
+	    	for(var i = 0; i < DeleteItems.length; i ++)
+	    	{
+	    		var itmCode = DeleteItems[i].itmcode;
+	    	    var itmStatus = DeleteItems[i].status;
 
-	    	    var newRemainingQty = remainingQty + 1;
+	    		if(ItmCodeMap.has(itmCode) && itmStatus == "1")
+	    		{
+		    	    var remainingQty = parseInt(ItmCodeMap.get(itmCode));
 
-	    	    ItmCodeMap.set(itmCode, newRemainingQty)
-    		}
+		    	    var newRemainingQty = remainingQty + 1;
+
+		    	    ItmCodeMap.set(itmCode, newRemainingQty)
+	    		}
+	    	}
     	}
 
         AUIGrid.removeCheckedRows(myBarScanGridID);
@@ -533,7 +750,7 @@
     }
 
 
-     function fn_GetScanProgress()
+    function fn_GetScanProgress()
     {
         var data = {"delno" : $("#txtDelNo").val()};
 
@@ -707,6 +924,11 @@
 
         <form id="searchForm3" name="searchForm3">
 
+            <input type="hidden" id="RDCFrmLocID" name="RDCFrmLocID"/>
+            <input type="hidden" id="svalue" name="svalue"/>
+            <input type="hidden" id="sUrl"   name="sUrl"  />
+            <input type="hidden" id="stype"  name="stype" />
+
             <table class="type1"><!-- table start -->
 
                 <caption>table</caption>
@@ -723,17 +945,18 @@
                     <tr>
                         <th scope="row">Request Date</th>
                         <td>
-                            <input type="text"  id="txtCrtDt" name="txtCrtDt"  class="w100p"  readonly/>
+                            <input id="reqstDt"  name="reqstDt" type="text" title="Reqest Date" placeholder="DD/MM/YYYY" class="j_date" readonly />
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">From Location</th>
                         <td>
-                            <input type="text"  id="txtFrLoc" name="txtFrLoc"  class="w100p"  readonly/>
+                            <input type="text"  id="RDCFrmLoc" name="RDCFrmLoc"  class="w100p"  readonly />
                         </td>
                         <th scope="row">To Location</th>
                         <td>
-                            <input type="text"  id="txtToLoc" name="txtToLoc"  class="w100p"  readonly/>
+                            <input type="hidden"  id="RDCToLocID" name="RDCToLocID" />
+                            <input type="text" class="w100p" id="RDCToLoc"  name="RDCToLoc" placeholder="Press 'Enter' to Search" readonly />
                         </td>
                     </tr>
                 </tbody>
@@ -743,6 +966,10 @@
             <ul class="left_btns">
                 <li><p class="btn_blue"><a onclick="javascript:fn_showSerialRegistration();">Scan Barcode</a></p></li>
             </ul>
+
+            &nbsp;
+            <div id="rdc_grid_wrap"  style="height:350px"></div>
+
         </form>
     </section><!-- search_table end -->
 
@@ -796,4 +1023,27 @@
         </section>
     </div>
 
+
+    <div class="popup_wrap" id="serialDetailWindow" style="display:none; width:56%;"><!-- popup_wrap start -->
+
+        <header class="pop_header">
+
+            <h1>Serial No. Details</h1>
+                <ul class="right_opt">
+                    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+                </ul>
+
+        </header>
+
+        <section class="pop_body"><!-- pop_body start -->
+
+            <form id="serialForm" name="serialForm" method="POST">
+
+                <!-- <h2 id="ItemCode"></h2> -->
+
+                <div id="serialdetail_grid_wrap" style="height:400px"></div>
+
+            </form>
+        </section>
+    </div>
 </section><!-- content end -->
