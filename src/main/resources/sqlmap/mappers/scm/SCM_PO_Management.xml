@@ -259,24 +259,43 @@
 </select>
  
 <select id="selectPoRightMove" parameterType="Map" resultType="egovMap">
-    SELECT MATRL_MST STOCK_CODE
-	      , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{inStockCode} AND STK_CTGRY_ID = #{inStkCtgryId} AND STK_TYPE_ID = #{inStkTypeId}) STOCK_NAME
-	      , (#{inPlanQty} - #{inPoQty}) PLAN_QTY   
-	      , #{inMoq} MOQ
-	      , CEIL( (#{inPlanQty} - #{inPoQty} ) / #{inMoq}   ) ROUNDUP_PO_QTY
-	      , ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3) FOB_PRICE
-	      , ( CEIL( (#{inPlanQty} - #{inPoQty}) / #{inMoq}   ) * (ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3)) ) FOB_AMOUNT
-	      , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '94' AND CODE_ID = LOG78M.CUR ) CURRENCY
-	      , VENDOR
-	      , VENDOR_TXT
-	      , (SELECT ( #{scmPeriodCbBox} + LEAD_TM ) FROM SCM0008M WHERE STOCK_CODE = #{inStockCode} AND ROWNUM = 1) REQ_DATE
-	      , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID=15 AND CODE_ID = #{inStkTypeId} ) STOCK_TYPE
-	      , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID=11 AND CODE_ID = #{inStkCtgryId} ) STOCK_CATEGORY
-	      , #{inPreCdc} PRE_CDC
-	      , #{inPreYear} PRE_Year
-        , #{inPreWeekTh} PRE_WEEK_TH
-   FROM LOG0078M LOG78M 
-  WHERE MATRL_MST = #{inStockCode} 
+    SELECT  STOCK_CODE
+          , STOCK_NAME
+          , MOQ
+          , ROUND_UP_MOQ
+          , (ROUND_UP_MOQ * MOQ ) PO_QTY
+          , FOB_PRICE
+          , ( (ROUND_UP_MOQ * MOQ) * FOB_PRICE ) FOB_AMOUNT
+          , CURRENCY
+          , VENDOR
+          , VENDOR_TXT
+          , REQ_DATE
+          , STOCK_TYPE
+          , STOCK_CATEGORY
+          , PRE_CDC
+          , PRE_YEAR
+          , PRE_WEEK_TH
+      FROM
+          (
+		          SELECT MATRL_MST STOCK_CODE
+						        , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{inStockCode} AND STK_CTGRY_ID = #{inStkCtgryId} AND STK_TYPE_ID = #{inStkTypeId}) STOCK_NAME
+						        , (#{inPlanQty} - #{inPoQty}) PLAN_QTY   
+						        , #{inMoq} MOQ
+						        ,  CEIL( (#{inPlanQty} - #{inPoQty} ) / #{inMoq} ) ROUND_UP_MOQ
+						        , (CEIL( (#{inPlanQty} - #{inPoQty} ) / #{inMoq} ) * #{inMoq} ) CALCUL_PO_QTY
+						        , ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3) FOB_PRICE
+						        , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '94' AND CODE_ID = LOG78M.CUR ) CURRENCY
+						        , VENDOR
+						        , VENDOR_TXT
+						        , (SELECT ( #{scmPeriodCbBox} + LEAD_TM ) FROM SCM0008M WHERE STOCK_CODE = #{inStockCode} AND ROWNUM = 1) REQ_DATE
+						        , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID=15 AND CODE_ID = #{inStkTypeId} ) STOCK_TYPE
+						        , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID=11 AND CODE_ID = #{inStkCtgryId} ) STOCK_CATEGORY
+						        , #{inPreCdc} PRE_CDC
+						        , #{inPreYear} PRE_Year
+						        , #{inPreWeekTh} PRE_WEEK_TH
+						   FROM LOG0078M LOG78M 
+						  WHERE MATRL_MST = #{inStockCode} 
+          )
 </select>
  
 <select id="selectScmPoStatusCnt" parameterType="Map" resultType="egovMap">
@@ -303,7 +322,7 @@
  
 <update id="updatePOIssuItem" parameterType="Map"> 
 			UPDATE SCM0011D
-			   SET PO_QTY      = #{planQty}
+			   SET PO_QTY      = #{poQty}
 			 WHERE PRE_YEAR    = #{preYear}
 			   AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
 			   AND PRE_WEEK_TH = #{preWeekTh}
@@ -349,9 +368,9 @@
                    , #{newPono}
                    , #{poItemNo}
                    , #{stockCode}
-                   , #{roundupPoQty}
+                   , #{poQty}
                    , #{fobAmount}  
-                   , 1  /* PO_ITM_APPV_STUS */
+                   , 1  
                    , SYSDATE
                    , NVL(#{crtUserId},'')
                    , SYSDATE
@@ -566,8 +585,8 @@ WITH PO_APPROVAL_SUMMARY
 SELECT 
        PO_ITM_APPV_STUS  
      , STK_TYPE_ID 
-     , PO_NO 
-     , PO_ITM_NO  
+     , S43V.PO_NO 
+     , S43V.PO_ITM_NO   
      , GR_WEEK    
      , TO_CHAR(PO_ISSU_DT,'DD-MM-YYYY') PO_ISSU_DT
      , STOCK_CTGRY   
@@ -585,7 +604,7 @@ SELECT
      , PRE_STOCK_DESC   
      , PRE_QTY   
      , PRE_FOB_PRC   
-     , PO_ID             
+     , S43V.PO_ID              
      , BAS_YEAR   
      , EST_WEEK   
      , RTPGR_WEEK   
@@ -597,13 +616,16 @@ SELECT
      , SN   
      , STOCK_ID   
      , PO_APPV_STUS 
-  FROM SCM0043V 
- WHERE BAS_YEAR = #{scmYearCbBox} 
-   AND EST_WEEK = #{scmPeriodCbBox} 
+     , IF56.EBELN ||'_'|| IF56.EBELP ECC_PO_NO
+  FROM SCM0043V S43V
+      ,ITF0156M IF56
+ WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
+   AND S43V.EST_WEEK = #{scmPeriodCbBox} 
  <if test="scmStockType != null and scmStockType !=''"> 
-   AND STK_TYPE_ID = #{scmStockType}
+   AND S43V.STK_TYPE_ID = #{scmStockType}
  </if>   
-   AND PO_NO IS NOT NULL
+   AND S43V.PO_NO IS NOT NULL
+   AND S43V.PO_NO = IF56.PO_NO(+)
 </select>
 
 <update id="updatePoApprovalDetail" parameterType="Map">
