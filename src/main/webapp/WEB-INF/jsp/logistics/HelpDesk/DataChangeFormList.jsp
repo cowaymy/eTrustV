@@ -317,13 +317,33 @@ var respondlogLayout = [{dataField: "c2",headerText :"<spring:message code='log.
           $("#insertDataChange").hide();
           var gridData = result;  
           $("#AddApprovalForm")[0].reset(); 
-          Common.alert(result.message);
+          //Common.alert(result.message);
+          console.log(result.data);
+          console.log(result);
           
+          if("61"==result.data.insApprovalStatus){
+        	  Common.alert("<b>Approval result successfully saved.</b>");
+          }else{
+          
+          if("00"==result.code && ""!=result.data.userEmail && null != result.data.userEmail){        	  
+        	  
+        	  param={ "userEmail" : result.data.userEmail,"dcfReqNo": result.data.dcfReqNo, "loginId": result.data.loginId, "insApprovalStatus": result.data.insApprovalStatus }
+                       
+              Common.ajax("POST", "/logistics/helpdesk/sendEmail.do", param, function(result) {
+            	  Common.alert("<b>Approval result successfully saved.</b>");
+        	  
+             }, function(jqXHR, textStatus, errorThrown) {
+                 Common.alert("fail.");
+             });
+        	  
+          }        
+        }
+               
         // 공통 메세지 영역에 메세지 표시.
         //Common.setMsg("<spring:message code='sys.msg.success'/>");
         //searchList();
         }, function(jqXHR, textStatus, errorThrown) {
-            Common.alert("실패하였습니다.");
+            Common.alert("fail.");
         });
 }
     
