@@ -95,6 +95,10 @@ function fn_setdetail(result){
 	if(result.list5.whLocId!=null){
 		   $("#inChargeCTWHID").val(result.list5.whLocId);
 	}
+	
+	if(result.list1.installStkId!=null){
+        $("#eProductID").val(result.list1.installStkId);
+ }
 	//$("#retWarehouseID").text(result.list1.brnchId);
 	
 	/*
@@ -546,6 +550,7 @@ function fn_close(){
 <input type="hidden"  id="retWarehouseID" name="retWarehouseID" />
 <input type="hidden"  id="esalesDt" name="esalesDt"/>
 <input type="hidden"  id="eCustomerName" name="eCustomerName"/>
+<input type="hidden"  id="eProductID" name="eProductID"/>
 
 
 
