@@ -1002,7 +1002,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
                "Email 1: " + String.valueOf(params.get("reqEmail")).trim() + "<br />" +
                "Email 2: " + additionalEmail + "<br /><br /> " +
                "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"+
-               "<a href='" +  billingTypeConfirmUrl  + "?reqId=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
+               //To-Be eTRUST시스템에서는 문구 삭제 요청함
+               //"<a href='" +  billingTypeConfirmUrl  + "?reqId=" + reqId + "' target='_blank' style='color:blue;font-weight:bold'>Verify Your Email Here</a><br /><br />" +
                "Should you have any enquiries, please do not hesitate to contact our toll-free number at 1800 888 111 or email to"+ 
                "<a href='mailto:billing@coway.com.my' target='_top' style='color:blue;font-weight:bold'>billing@coway.com.my</a><br /><br /><br />"+
                "Yours faithfully,<br />" +
