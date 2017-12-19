@@ -45,5 +45,7 @@ public interface HelpDeskMapper {
 	
 	int trRcordIdCreateSeq();
 	
+	List<EgovMap> selectEmailaddr(int loginId);
+	
 	
 }
