@@ -58,16 +58,16 @@ function fn_openReport(){
 				startDate = s_year + "-" + s_month + "-" + s_day;
 				endDate =  v_year + "-" + v_month + "-" + v_day;
 			
-			 $("#reportForm").append('<input type="hidden" id="v_startdate" name="v_startdate" value="" /> ');
-			 $("#reportForm").append('<input type="hidden" id="v_enddate" name="v_enddate" value="" /> ');
+			 $("#reportFormDSC").append('<input type="hidden" id="v_startdate" name="v_startdate" value="" /> ');
+			 $("#reportFormDSC").append('<input type="hidden" id="v_enddate" name="v_enddate" value="" /> ');
 			 
-			 $("#reportForm #v_startdate").val(startDate);
-			 $("#reportForm #v_enddate").val(endDate);
-			 $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_1_PDF.rpt');
-		     $("#reportForm #viewType").val("PDF");
-		     $("#reportForm #reportDownFileName").val("DSCReportD1_" +day+monthDay+date.getFullYear());
+			 $("#reportFormDSC #v_startdate").val(startDate);
+			 $("#reportFormDSC #v_enddate").val(endDate);
+			 $("#reportFormDSC #reportFileName").val('/services/DSCNetSalesReportD_1_PDF.rpt');
+		     $("#reportFormDSC #viewType").val("PDF");
+		     $("#reportFormDSC #reportDownFileName").val("DSCReportD1_" +day+monthDay+date.getFullYear());
 		        
-			 Common.report("reportForm");
+			 Common.report("reportFormDSC");
 			}
 		}
 		
@@ -75,16 +75,16 @@ function fn_openReport(){
             var month = $("#yearMonth").val().substring(0,2);
             var  year= $("#yearMonth").val().substring(3,7);
 			
-            $("#reportForm").append('<input type="hidden" id="PVMonth" name="PVMonth" value="" /> ');
-            $("#reportForm").append('<input type="hidden" id="PVYear" name="PVYear" value="" /> ');
+            $("#reportFormDSC").append('<input type="hidden" id="PVMonth" name="PVMonth" value="" /> ');
+            $("#reportFormDSC").append('<input type="hidden" id="PVYear" name="PVYear" value="" /> ');
             
-			 $("#reportForm #PVMonth").val(month);
-             $("#reportForm #PVYear").val(year);
-             $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
-             $("#reportForm #viewType").val("PDF");
-             $("#reportForm #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
+			 $("#reportFormDSC #PVMonth").val(month);
+             $("#reportFormDSC #PVYear").val(year);
+             $("#reportFormDSC #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
+             $("#reportFormDSC #viewType").val("PDF");
+             $("#reportFormDSC #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
 
-             Common.report("reportForm");
+             Common.report("reportFormDSC");
 		}
 		
 		else if($("#reportType").val() == '3' ){
@@ -104,17 +104,17 @@ function fn_openReport(){
                 endDt =  v_year + "-" + v_month + "-" + v_day;
                 
             
-            $("#reportForm").append('<input type="hidden" id="StartDate" name="StartDate" value="" /> ');
-            $("#reportForm").append('<input type="hidden" id="EndDate" name="EndDate" value="" /> ');
+            $("#reportFormDSC").append('<input type="hidden" id="StartDate" name="StartDate" value="" /> ');
+            $("#reportFormDSC").append('<input type="hidden" id="EndDate" name="EndDate" value="" /> ');
             
-             $("#reportForm #StartDate").val(strDt);
-             $("#reportForm #EndDate").val(endDt);
-             $("#reportForm #reportFileName").val('/services/DSCPerformanceReport_PDF.rpt');
-              $("#reportForm #viewType").val("PDF");
-                $("#reportForm #reportDownFileName").val("DSCPerfomamnceReport_" +day+monthDay+date.getFullYear());
+             $("#reportFormDSC #StartDate").val(strDt);
+             $("#reportFormDSC #EndDate").val(endDt);
+             $("#reportFormDSC #reportFileName").val('/services/DSCPerformanceReport_PDF.rpt');
+              $("#reportFormDSC #viewType").val("PDF");
+                $("#reportFormDSC #reportDownFileName").val("DSCPerfomamnceReport_" +day+monthDay+date.getFullYear());
             
              
-             Common.report("reportForm");
+             Common.report("reportFormDSC");
             }
         }
 	}
@@ -134,34 +134,34 @@ function fn_openExcel(){
             var month = $("#yearMonth").val().substring(0,2);
             var  year= $("#yearMonth").val().substring(3,7);
             
-            $("#reportForm").append('<input type="hidden" id="PVMonth" name="PVMonth" value="" /> ');
-            $("#reportForm").append('<input type="hidden" id="PVYear" name="PVYear" value="" /> ');
+            $("#reportFormDSC").append('<input type="hidden" id="PVMonth" name="PVMonth" value="" /> ');
+            $("#reportFormDSC").append('<input type="hidden" id="PVYear" name="PVYear" value="" /> ');
             
-             $("#reportForm #PVMonth").val(month);
-             $("#reportForm #PVYear").val(year);               
-             $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
-             $("#reportForm #viewType").val("PDF");
-             $("#reportForm #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
+             $("#reportFormDSC #PVMonth").val(month);
+             $("#reportFormDSC #PVYear").val(year);               
+             $("#reportFormDSC #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
+             $("#reportFormDSC #viewType").val("PDF");
+             $("#reportFormDSC #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
              
          
           
-          Common.report("reportForm");
+          Common.report("reportFormDSC");
         }
         
         else if($("#reportType").val() == '5' ){
         	var month = $("#yearMonth").val().substring(0,2);
             var  year= $("#yearMonth").val().substring(3,7);
             
-             $("#reportForm").append('<input type="hidden" id="PVMonth" name="PVMonth" value="" /> ');
-             $("#reportForm").append('<input type="hidden" id="PVYear" name="PVYear" value="" /> ');
+             $("#reportFormDSC").append('<input type="hidden" id="PVMonth" name="PVMonth" value="" /> ');
+             $("#reportFormDSC").append('<input type="hidden" id="PVYear" name="PVYear" value="" /> ');
              
-             $("#reportForm #PVMonth").val(month);
-             $("#reportForm #PVYear").val(year);               
-             $("#reportForm #reportFileName").val('/services/DSCNetSalesReportD_5_ByStock.rpt');
-             $("#reportForm #viewType").val("PDF");
-             $("#reportForm #reportDownFileName").val("DSCReportD5ByStock_" +day+monthDay+date.getFullYear());
+             $("#reportFormDSC #PVMonth").val(month);
+             $("#reportFormDSC #PVYear").val(year);               
+             $("#reportFormDSC #reportFileName").val('/services/DSCNetSalesReportD_5_ByStock.rpt');
+             $("#reportFormDSC #viewType").val("PDF");
+             $("#reportFormDSC #reportDownFileName").val("DSCReportD5ByStock_" +day+monthDay+date.getFullYear());
              
-             Common.report("reportForm");
+             Common.report("reportFormDSC");
         }
     }
 }
@@ -198,7 +198,7 @@ $.fn.clearForm = function() {
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="reportForm">
+<form action="#" method="post" id="reportFormDSC">
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
@@ -245,7 +245,7 @@ $.fn.clearForm = function() {
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()">Generate PDF</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openExcel()">Generate EXCEL</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormDSC').clearForm();">Clear</a></p></li>
 </ul>
 
 
