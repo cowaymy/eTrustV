@@ -7,6 +7,7 @@
  */
 package com.coway.trust.biz.logistics.helpdesk.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +16,12 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.logistics.helpdesk.HelpDeskService;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -26,6 +30,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("HelpDeskService")
 public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements HelpDeskService {
 
+	@Autowired
+	private AdaptorService adaptorService;
+	
 	private static final Logger Logger = LoggerFactory.getLogger(HelpDeskServiceImpl.class);
 
 	@Resource(name = "HelpDeskMapper")
@@ -68,7 +75,8 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 	}
 
 	@Override
-	public void insertDataChangeList(Map<String, Object> RespondMap, int loginId) {
+	public Map<String, Object> insertDataChangeList(Map<String, Object> RespondMap, int loginId,String today) {
+		
 		int respnsIdCreateSeq = HelpDeskMapper.respnsIdCreateSeq();
 		int trRcordIdCreateSeq = HelpDeskMapper.trRcordIdCreateSeq();
 		int insReason = 0;
@@ -204,11 +212,90 @@ public class HelpDeskServiceImpl extends EgovAbstractServiceImpl implements Help
 						HelpDeskMapper.updateTRBookD(TrBookItemMap);
 					}
 				}
-
+				
 			}
+						
+			Logger.debug("insApprovalStatus *****209***** : {}", insApprovalStatus);		
 
 		}
+		
+		List<EgovMap> getEmailaddr = HelpDeskMapper.selectEmailaddr(loginId);
+		
+		String userEmail="";
+		
+		for (int i = 0; i < getEmailaddr.size(); i++) {
+			Logger.debug("getEmailaddr : {}", getEmailaddr.get(i));
+			userEmail = (String) getEmailaddr.get(i).get("userEmail");
+		}
+		
+		Map<String, Object> emailMap = new HashMap<String, Object>();
+		emailMap.put("userEmail", userEmail);
+		emailMap.put("dcfReqNo", dcfReqNo);
+		emailMap.put("loginId", loginId);
+		emailMap.put("insApprovalStatus", insApprovalStatus);
+		
+		Logger.debug("emailMap : {}", emailMap);
+		
+		return emailMap;
 
+	}
+	
+	@Override
+	public void sendEmailList(Map<String, Object> params,String today) {
+		
+		String userEmail =(String) params.get("userEmail");
+		String dcfReqNo =(String) params.get("dcfReqNo");
+		int loginId = Integer.parseInt(String.valueOf(params.get("loginId")));
+		int insApprovalStatus = Integer.parseInt(String.valueOf(params.get("insApprovalStatus")));
+		
+		Logger.debug("1 : {}", userEmail);
+		Logger.debug("2 : {}", dcfReqNo);
+		Logger.debug("3 : {}", loginId);
+		Logger.debug("4 : {}", insApprovalStatus);
+		
+		//이메일
+		if(61 == insApprovalStatus){
+			Logger.debug("<b>Approval result successfully saved. {}");
+		}else{
+	
+			// E-mail 전송하기
+			EmailVO email = new EmailVO();
+			List<String> toList = new ArrayList<String>();
+			String localEmail="t1707038@partner.coway.co.kr";				
+//			toList.add(localEmail);
+			toList.add(userEmail);  
+
+			String Subject ="TR Book Lost Request Ticket  "+dcfReqNo+"-";
+			email.setTo(toList);
+			email.setHtml(true);
+				
+			if (insApprovalStatus == 36){
+				Subject += "Approved & Closed";
+				email.setText( 
+						"Please to inform you that your TR Book Lost request (" + dcfReqNo + ") " +
+				                "has been approved & cloed by your DCF approver - [" +loginId+ "] on " +today+".<br />" +
+				                "The TR book/receipt number has been marked as status : LOST.<br />" +
+				                "For more information, please review your tickte request in our web system.<br />" +
+				                "This email is reply from Coway Web System. Please do not reply this email.<br /><br />" +
+				                "Thank you.");			
+					
+			}else{
+				Subject += "Rejected";
+				email.setText(
+						"Please to inform you that your TR Book Lost request (" + dcfReqNo + ") " +
+		                "has been rejected by your DCF approver - [" + loginId + "] on " +today+ ".<br />" +
+		                "For more information, please review your tickte request in our web system.<br />" +
+		                "This email is reply from Coway Web System. Please do not reply this email.<br /><br />" +
+		                "Thank you.");			
+				
+			}
+			email.setSubject(Subject);
+			adaptorService.sendEmail(email, false);
+
+			
+		}	
+		
+		
 	}
 
 }
