@@ -22,6 +22,16 @@ function holidayCTassignGrid() {
                           { dataField : "ctBrnchCode",       headerText  : "Branch",  width  : 100},
                           { dataField : "replacementCtPax",       headerText  : "Replacement CT Pax",  width  : 100},
                           { dataField : "assignStatus",       headerText  : "Assign Status",  width  : 100},
+                          { dataField : "applCode",       headerText  : "Working Status",  width  : 150, editRenderer : {
+                              type : "ComboBoxRenderer",
+                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                              listFunction : function(rowIndex, columnIndex, item, dataField) {
+                                  var list = getTypeWorkList();
+                                  return list;
+                              },
+                              keyField : "id1"
+                          }
+                        	  },
                           { dataField : "brnchId",       headerText  : "",  width  : 0}
                           
                            
@@ -84,9 +94,17 @@ function getStateComboList() {
     var list = [ "Johor", "Perlis", "Pahang" ];
     return list;
 }
+
+
+
 function getTypeComboList() {
     //var list = [ {"codeId": "P","codeName": "PUBLIC"}, {"codeId": "S","codeName": "STATE"}];
    var list = [ "Public Holiday","State Holiday"];
+    return list;
+}
+
+function getTypeWorkList() {
+   var list = [ "Working","Holiday"];
     return list;
 }
 
@@ -161,7 +179,7 @@ $(document).ready(function(){
 	        branchId = AUIGrid.getCellValue(gridID1, event.rowIndex, "brnchId");
 	        state = AUIGrid.getCellValue(gridID1, event.rowIndex, "state");
 	        holidaySeq = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidaySeq");
-	        
+	        applCode = AUIGrid.getCellValue(gridID1, event.rowIndex, "applCode");
 	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq + state);
 	        
 	    });
@@ -377,6 +395,9 @@ $(document).ready(function(){
          }
    }
     function fn_CTEntry(){  
+    	if(applCode == "Working"){
+    		return;
+    	}
     	 Common.popupDiv("/services/holiday/holidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     }
     
@@ -384,6 +405,16 @@ $(document).ready(function(){
     	Common.popupDiv("/services/holiday/updatHolidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     } 
     
+    function fn_ChangeApplType(){
+    	
+    
+    	 Common.ajax("GET", "/services/holiday/changeApplType.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode,"",  function(result) {
+    		 
+    		 
+    		 
+    	 });
+    	
+    }
     function removeRow(){
     	AUIGrid.removeRow(gridID, "selectedIndex");
         AUIGrid.removeSoftRows(gridID);
@@ -517,6 +548,7 @@ $(document).ready(function(){
     <li><p class="btn_grid" id="hiddenBtn1"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn2"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn3"><a href="#" onclick="javascript:fn_holidaySave()">SAVE</a></p></li>
+    <li><p class="btn_grid" id="hiddenBtn4"><a href="#" onclick="javascript:fn_ChangeApplType()">Change Work Status</a></p></li>
     <li><p class="btn_grid" id="hiddenBtn"><a href="#" onclick="javascript:fn_CTEntry()">Replacement CT Entry</a></p></li>
 </ul>
 

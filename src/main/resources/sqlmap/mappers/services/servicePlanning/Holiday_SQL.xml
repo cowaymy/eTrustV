@@ -68,7 +68,7 @@
         group by b.mem_code, b.name,B.MEM_ID
     </select>
     <select id="selectCTAssignList"  parameterType="Map" resultType="egovMap">
-	     SELECT  CASE
+	       SELECT  CASE
                             WHEN B.HOLIDAY_TYPE = 'P' THEN 'Public Holiday'
                               ELSE 'State Holiday'
                              END
@@ -80,7 +80,11 @@
                          B.CT_BRNCH_CODE,
                          B.BRNCH_ID,
                          B.ASSIGN_STATUS,
-                         B.Replacement_CT_Pax
+                         B.Replacement_CT_Pax,
+                         Case
+                         when B.APPL_CODE IS NULL then 'Holiday'
+                            ELSE DECODE (B.APPL_CODE, 'W', 'Working','Holiday')
+                          END APPL_CODE
           FROM (  SELECT
                          A.HOLIDAY_TYPE,
                          A.STATE,
@@ -95,56 +99,62 @@
                          END ASSIGN_STATUS,
                          COUNT ( CASE WHEN D.CT_MEM_ID IS NOT NULL
                                               THEN 1
-                                         END ) AS Replacement_CT_Pax
-     FROM
-    (
-     Select  A.HOLIDAY_TYPE,
-                      CASE WHEN A.HOLIDAY_TYPE = 'S'  THEN  A.STATE
-                      ELSE  F.STATE END STATE,
-                     A.HOLIDAY,
-                     A.HOLIDAY_DESC,
-                     A.HOLIDAY_SEQ,
-                     A.CT_BRNCH_CODE
-               FROM(  SELECT DISTINCT
-                     A.HOLIDAY_TYPE,
-                     A.STATE,
-                     A.HOLIDAY,
-                     A.HOLIDAY_DESC,
-                     A.HOLIDAY_SEQ,
-                     CASE WHEN A.HOLIDAY_TYPE = 'S' AND A.STATE = B.STATE
-                             THEN B.CT_BRNCH_CODE
-                             ELSE E.CODE
-                      END CT_BRNCH_CODE
-                FROM SYS0081M A
-                    ,(SELECT STATE
-                                 ,CT_BRNCH_CODE
-                         FROM SYS0064M
-                        GROUP BY STATE
-                                 ,CT_BRNCH_CODE
-                      ) B
-                    ,(SELECT CODE
-                        FROM SYS0005M
-                        WHERE TYPE_ID=43
-                       GROUP BY CODE
-                     )  E
-                      WHERE A.STATE        = B.STATE(+) ) A ,
-                      (SELECT A.Area_ID, A.CODE, b.state
-                      FROM ( SELECT AREA_ID , CODE
-                                FROM SYS0005M WHERE TYPE_ID = '43' ) A , SYS0064M b
-                                where  a.area_ID = b.area_ID (+) ) F
-                      WHERE  f.CODE(+) = a.CT_BRNCH_CODE  ) A  ,ORG0020D D ,SYS0005M  F
-				      WHERE   A.HOLIDAY      = D.HOLIDAY(+)
-				     AND A.HOLIDAY_TYPE = D.HOLIDAY_TYPE(+)
-				     AND A.HOLIDAY_SEQ  = D.HOLIDAY_SEQ(+)
-				     AND A.CT_BRNCH_CODE = D.BRNCH_CODE(+)
-				     AND A.CT_BRNCH_CODE = F.CODE
-				     group by A.HOLIDAY_TYPE,
+                                         END ) AS Replacement_CT_Pax,
+                         C.APPL_CODE
+                         FROM
+                        (
+                         Select  A.HOLIDAY_TYPE,
+                                          CASE WHEN A.HOLIDAY_TYPE = 'S'  THEN  A.STATE
+                                          ELSE  F.STATE END STATE,
+                                         A.HOLIDAY,
+                                         A.HOLIDAY_DESC,
+                                         A.HOLIDAY_SEQ,
+                                         A.CT_BRNCH_CODE
+                                   FROM(  SELECT DISTINCT
+                                         A.HOLIDAY_TYPE,
+                                         A.STATE,
+                                         A.HOLIDAY,
+                                         A.HOLIDAY_DESC,
+                                         A.HOLIDAY_SEQ,
+                                         CASE WHEN A.HOLIDAY_TYPE = 'S' AND A.STATE = B.STATE
+                                                 THEN B.CT_BRNCH_CODE
+                                                 ELSE E.CODE
+                                          END CT_BRNCH_CODE
+                                    FROM SYS0081M A
+                                        ,(SELECT STATE
+                                                     ,CT_BRNCH_CODE
+                                             FROM SYS0064M
+                                            GROUP BY STATE
+                                                     ,CT_BRNCH_CODE
+                                          ) B
+                                        ,(SELECT CODE
+                                            FROM SYS0005M
+                                            WHERE TYPE_ID=43
+                                           GROUP BY CODE
+                                         )  E
+                                          WHERE A.STATE        = B.STATE(+) ) A ,
+                                          (SELECT A.Area_ID, A.CODE, b.state
+                                          FROM ( SELECT AREA_ID , CODE
+                                                    FROM SYS0005M WHERE TYPE_ID = '43' ) A , SYS0064M b
+                                                    where  a.area_ID = b.area_ID (+) ) F
+                                          WHERE  f.CODE(+) = a.CT_BRNCH_CODE  ) A , svc0055m C ,ORG0020D D , SYS0005M  F
+                     WHERE   A.HOLIDAY      = D.HOLIDAY(+)
+                     AND A.HOLIDAY_TYPE = D.HOLIDAY_TYPE(+)
+                     AND A.HOLIDAY_SEQ  = D.HOLIDAY_SEQ(+)
+                     AND A.CT_BRNCH_CODE = D.BRNCH_CODE(+)
+             AND A.HOLIDAY      = C.HOLIDAY(+)
+                     AND A.HOLIDAY_TYPE = C.HOLIDAY_TYPE(+)
+                     AND A.HOLIDAY_SEQ  = C.HOLIDAY_SEQ(+)
+                     AND A.CT_BRNCH_CODE = C.BRNCH_CODE(+)
+                     AND A.CT_BRNCH_CODE = F.CODE
+                     group by A.HOLIDAY_TYPE,
                      A.STATE,
                      A.HOLIDAY,
                      A.HOLIDAY_DESC,
                      A.HOLIDAY_SEQ,
                      A.CT_BRNCH_CODE,
-                     F.BRNCH_ID
+                     F.BRNCH_ID,
+                     C.APPL_CODE
         ORDER BY CT_BRNCH_CODE,HOLIDAY_TYPE, STATE, HOLIDAY, HOLIDAY_DESC
           ) B WHERE 1=1
 
@@ -278,6 +288,50 @@
     where holiday_type = 'P' and  holiday = TO_DATE (#{holiday}, 'YYYY-MM-DD')
  </select>
 
+<select id="selectApplType" parameterType="Map" resultType="egovMap">
+	select WRK_SEQ
+	,HOLIDAY
+	,HOLIDAY_TYPE
+	,HOLIDAY_SEQ
+	,BRNCH_CODE
+	,APPL_CODE
+	from svc0055m
+	where holiday = TO_DATE (#{holiday}, 'YYYY-MM-DD')
+	and HOLIDAY_TYPE =#{holidayType}
+	and HOLIDAY_SEQ =#{holidaySeq}
+	and BRNCH_CODE =#{branchName}
 
+
+</select>
+
+<insert id="insertApplType" parameterType="Map">
+	insert into svc0055m (
+	WRK_SEQ
+	,HOLIDAY
+	,HOLIDAY_TYPE
+	,HOLIDAY_SEQ
+	,BRNCH_CODE
+	,APPL_CODE
+	)
+	values(
+	SVC0055M_WRK_SEQ.NEXTVAL
+	, TO_DATE (#{holiday}, 'YYYY-MM-DD')
+	, #{holidayType}
+	, #{holidaySeq}
+	, #{branchName}
+	, #{applType}
+	
+	)
+
+
+</insert>
+<delete id="deleteApplType">
+	delete from svc0055m
+	where holiday = TO_DATE (#{holiday}, 'YYYY-MM-DD')
+	and HOLIDAY_TYPE =#{holidayType}
+	and HOLIDAY_SEQ =#{holidaySeq}
+	and BRNCH_CODE =#{branchName}
+	and APPL_CODE ='W'
+</delete>
 
 </mapper>

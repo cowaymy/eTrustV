@@ -317,4 +317,21 @@ public class HolidayController {
 		logger.debug("selectCityList {}", selectBranchWithNmList);
 		return ResponseEntity.ok(selectBranchWithNmList);
 	}
+	
+
+		
+		@RequestMapping(value = "/changeApplType.do")
+		public ResponseEntity<ReturnMessage>changeApplType(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+       
+		logger.debug("params11111 {}", params);
+		
+		
+		
+		
+		holidayService.updateAppltype(params);
+		
+		return ResponseEntity.ok(message);
+	}
+		
 }

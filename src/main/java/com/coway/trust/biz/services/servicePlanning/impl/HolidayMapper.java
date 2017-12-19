@@ -40,4 +40,10 @@ public interface HolidayMapper {
 	EgovMap selectBeforeToday(Map<String, Object> params);
 
 	List<EgovMap> selectAlreadyHoliday(Map<String, Object> params);
+
+	EgovMap selectApplType(Map<String, Object> params);
+
+	int insertApplType(Map<String, Object> params);
+
+	int deleteApplType(Map<String, Object> params);
 }

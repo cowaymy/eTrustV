@@ -63,7 +63,7 @@
           AND  B.AREA_ID = #{areaId}
         </if>
         <if test="area != null and area != ''">
-          AND  B.AREA = #{area}
+          AND  B.AREA like '%' || #{area} || '%'
         </if>
         <if test="city != null and city != ''">
           AND  B.CITY = #{city}

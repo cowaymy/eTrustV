@@ -40,4 +40,6 @@ public interface HolidayService {
 
 	boolean checkAlreadyHoliday(Map<String, Object> insertValue);
 
+   boolean updateAppltype(Map<String, Object> params);
+
 }

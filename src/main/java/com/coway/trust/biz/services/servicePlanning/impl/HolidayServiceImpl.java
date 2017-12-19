@@ -189,11 +189,47 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 		checkValue = holidayMapper.selectAlreadyHoliday(insertValue);
 		
 		//중복 날짜 존재
-		if(checkValue != null  && checkValue.size() == 0){
+		if(checkValue != null  && checkValue.size() != 0){
 			
 			return true;
 		}
 		else return false;
+	}
+
+	@Override
+	public boolean updateAppltype(Map<String, Object> params) {
+		EgovMap isInput;
+		if(params.get("applCode")!= null ){
+    		if(params.get("applCode").equals("Working")){
+    			String applType = (params.get("applCode").toString()).substring(0, 1);
+    			params.put("applType", applType);
+    			params.put("holidayType", (params.get("holidayType").toString()).substring(0, 1) );
+    			 isInput = holidayMapper.selectApplType(params);
+    			if(isInput != null && isInput.size() > 0 ){
+    				//이미 들어가있다
+    				
+    				
+    			}
+    			else{
+    				holidayMapper.insertApplType(params);
+    			}
+    		
+    		}
+    		else{
+    			params.put("holidayType", (params.get("holidayType").toString()).substring(0, 1) );
+    			isInput = holidayMapper.selectApplType(params);
+    			
+    			if(isInput != null && isInput.size() > 0 ){
+    				holidayMapper.deleteApplType(params);
+    				
+    			}
+    			
+    			
+    		}
+    	}
+		
+		
+		return false;
 	}
 	
 	
