@@ -639,8 +639,11 @@
     
     <select id="selectAssignCT" parameterType="Map" resultType="egovMap">
           SELECT MEM_ID ,
+                     MEM_ID AS MEM_ID_COMBO,
 			         MEM_CODE ,
-			         NAME as MEM_CODE_NAME  
+			         NAME as MEM_NAME,
+			         MEM_CODE || ' - ' || NAME AS MEM_CODE_NAME,
+			         MEM_CODE || ' - ' || NAME AS MEM_CODE_NAME_COMBO
 			 FROM ORG0001D
 		   WHERE STUS = 1
 			   AND MEM_TYPE = 3
@@ -953,4 +956,192 @@
                AND ROWNUM <= 1
                ]]>
     </select>
+    
+    <select id="ctAssignBulkList" parameterType="Map" resultType="egovMap">
+          SELECT Filter2.STK_RETN_ID STK_RETN_ID  ,
+	                Filter2.STATUSCODEID1 STUS_CODE_ID  ,
+	                Filter2.TYPEID1 TYPE_ID  ,
+	                Filter2.SALESORDERID1 SALES_ORD_ID  ,
+	                Filter2.MOV_ID MOV_ID  ,
+	                Filter2.CREATOR1 CRT_USER_ID  ,
+	                Filter2.UPDATOR1 UPD_USER_ID  ,
+	                Filter2.REF_ID REF_ID  ,
+	                Filter2.STOCK_ID STOCK_ID  ,
+	                Filter2.RETN_NO RETN_NO  ,
+	                Filter2.APP_DT APP_DT  ,
+	                Filter2.CT_ID CT_ID  ,
+	                Filter2.CT_GRP CT_GRP  ,
+	                Filter2.CALLENTRYID1 CALL_ENTRY_ID  ,
+	                Filter2.CODE1 CODE  ,
+	                Filter2.NAME1 NAME  ,
+	                Filter2.STK_CODE STK_CODE  ,
+	                Filter2.STK_DESC STK_DESC  ,
+	                Filter2.CODE3 CODE1  ,
+	                Filter2.CODE_DESC CODE_DESC  ,
+	                Filter2.SALES_ORD_NO SALES_ORD_NO  ,
+	                Filter2.APP_TYPE_ID APP_TYPE_ID  ,
+	                Filter2.BRANCHID1 BRNCH_ID  ,
+	                Extent15.NAME NAME1  ,
+	                CASE 
+	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.MEM_CODE
+	                ELSE ' '
+	                   END MEM_CODE  ,
+	                CASE 
+	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.NAME2
+	                ELSE ' '
+	                   END MEM_ID_NAME  ,
+	                CASE 
+	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.MEM_CODE || ' - ' || Filter2.NAME2
+	                ELSE ' '
+	                   END MEM_CODE_NAME  ,
+	                CASE 
+	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.NRIC
+	                ELSE ' '
+	                   END NRIC  ,
+	                CASE 
+	                     WHEN ( Filter2.MOV_ID13 IS NOT NULL ) THEN Filter2.MOV_TO_LOC_ID
+	                ELSE 0
+	                   END MOV_TO_LOC_ID  ,
+	                CASE 
+	                     WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_CODE
+	                ELSE ' '
+	                   END WH_LOC_CODE  ,
+	                CASE 
+	                     WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_DESC
+	                ELSE ' '
+	                   END WH_LOC_DESC  ,
+	                CASE 
+	                     WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_CODE || ' - ' || Filter2.WH_LOC_DESC
+	                ELSE ' '
+	                   END WH_LOC_CODE_DESC,
+	                   Filter2.CUST_ID       
+	         FROM ( SELECT Filter1.STK_RETN_ID ,
+			                       Filter1.STATUSCODEID1 ,
+			                       Filter1.TYPEID1 ,
+			                       Filter1.SALESORDERID1 ,
+			                       Filter1.MOV_ID ,
+			                       Filter1.CREATOR1 ,
+			                       Filter1.UPDATOR1 ,
+			                       Filter1.REF_ID ,
+			                       Filter1.STOCK_ID ,
+			                       Filter1.RETN_NO ,
+			                       Filter1.APP_DT ,
+			                       Filter1.CT_ID ,
+			                       Filter1.CT_GRP ,
+			                       Filter1.CALLENTRYID1 ,
+			                       Filter1.CODE1 ,
+			                       Filter1.NAME1 ,
+			                       Filter1.STK_CODE ,
+			                       Filter1.STK_DESC ,
+			                       Filter1.CODE3 ,
+			                       Filter1.CODE_DESC ,
+			                       Extent7.MEM_ID MEMBERID1  ,
+			                       Extent7.MEM_CODE MEM_CODE  ,
+			                       Extent7.NAME NAME2  ,
+			                       Extent7.NRIC NRIC  ,
+			                       Extent10.MOV_ID MOV_ID13  ,
+			                       Extent10.MOV_TO_LOC_ID MOV_TO_LOC_ID  ,
+			                       Extent11.WH_LOC_ID WH_LOC_ID  ,
+			                       Extent11.WH_LOC_CODE WH_LOC_CODE  ,
+			                       Extent11.WH_LOC_DESC WH_LOC_DESC  ,
+			                       Extent12.SALES_ORD_NO SALES_ORD_NO  ,
+			                       Extent12.CUST_ID CUST_ID  ,
+			                       Extent12.APP_TYPE_ID APP_TYPE_ID  ,
+			                       Extent13.BRNCH_ID BRANCHID1  
+			                FROM ( SELECT Extent1.STK_RETN_ID STK_RETN_ID  ,
+					                              Extent1.STUS_CODE_ID STATUSCODEID1  ,
+					                              Extent1.TYPE_ID TYPEID1  ,
+					                              Extent1.SALES_ORD_ID SALESORDERID1  ,
+					                              Extent1.MOV_ID MOV_ID  ,
+					                              Extent1.CRT_USER_ID CREATOR1  ,
+					                              Extent1.UPD_USER_ID UPDATOR1  ,
+					                              Extent1.REF_ID REF_ID  ,
+					                              Extent1.STOCK_ID STOCK_ID  ,
+					                              Extent1.RETN_NO RETN_NO  ,
+					                              Extent1.APP_DT APP_DT  ,
+					                              Extent1.CT_ID CT_ID  ,
+					                              Extent1.CT_GRP CT_GRP  ,
+					                              Extent1.CALL_ENTRY_ID CALLENTRYID1  ,
+					                              Extent2.CODE CODE1  ,
+					                              Extent2.NAME NAME1  ,
+					                              Extent3.STK_CODE STK_CODE  ,
+					                              Extent3.STK_DESC STK_DESC  ,
+					                              Extent4.CODE CODE3  ,
+					                              Extent4.CODE_DESC CODE_DESC  
+					                      FROM LOG0038D Extent1
+					                              JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+					                              JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent1.STOCK_ID
+					                              JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.TYPE_ID
+					                              JOIN SAL0020D Extent5   ON Extent5.SO_REQ_ID = Extent1.REF_ID
+				                        WHERE  1 = Extent1.STUS_CODE_ID
+			                            <if test="pRTypeList != null and pRTypeList != ''">
+		                                     AND Extent1.TYPE_ID IN
+		                                     <foreach item="item" collection="pRTypeList" index="index" open="(" separator="," close=")">
+		                                         #{item}
+		                                     </foreach>
+		                                 </if>
+			                                AND 25 = Extent5.SO_REQ_CUR_STUS_ID
+			                                AND 1 = Extent5.SO_REQ_STUS_ID 
+			                            ) Filter1
+				                       JOIN CCR0006D Extent6   ON Extent6.CALL_ENTRY_ID = Filter1.CALLENTRYID1
+				                       LEFT JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Filter1.CT_ID
+				                       LEFT JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.CREATOR1
+				                       LEFT JOIN SYS0047M Extent9   ON Extent9.USER_ID = Filter1.UPDATOR1
+				                       LEFT JOIN LOG0013D Extent10   ON Extent10.MOV_ID = Filter1.MOV_ID
+				                       LEFT JOIN SYS0028M Extent11   ON Extent11.WH_LOC_ID = Extent10.MOV_TO_LOC_ID
+				                       LEFT JOIN SAL0001D Extent12   ON Extent12.SALES_ORD_ID = Filter1.SALESORDERID1
+				                       LEFT JOIN SAL0045D Extent13   ON Extent13.SALES_ORD_ID = Extent12.SALES_ORD_ID
+				                       LEFT JOIN SYS0005M Extent14   ON Extent14.BRNCH_ID = Extent13.BRNCH_ID
+				                 WHERE 32 = Extent6.STUS_CODE_ID
+				                 <if test="appTypeBulkList != null and appTypeBulkList != ''">
+					                 AND Extent12.APP_TYPE_ID IN
+					                 <foreach item="item" collection="appTypeBulkList" index="index" open="(" separator="," close=")">
+					                     #{item}
+					                 </foreach>
+					             </if>
+    	                         ) Filter2
+			                LEFT JOIN SAL0029D Extent15   ON Extent15.CUST_ID = Filter2.CUST_ID
+			          WHERE 1=1
+			          <if test="dpAppointmentDate != null and dpAppointmentDate != ''">
+		                  AND Filter2.APP_DT = TO_DATE(#{dpAppointmentDate}, 'DD/MM/YYYY')
+		              </if>
+		              <if test="cmbDscBranchBulk != null and cmbDscBranchBulk != ''">
+		                  AND Filter2.BRANCHID1 = #{cmbDscBranchBulk}
+		              </if>
+			          <if test="cmbCTGrpBulk != null and cmbCTGrpBulk != ''">
+			              AND Filter2.CT_GRP = #{cmbCTGrpBulk}
+			          </if>
+			          <if test="cmbCtCodeBulk != null and cmbCtCodeBulk != ''">
+			              AND Filter2.CT_ID = #{cmbCtCodeBulk}
+			          </if>
+		      <if test="sortBy == 0">
+                 ORDER BY Filter2.STK_RETN_ID ASC
+             </if>
+             <if test="sortBy == 1">
+                 ORDER BY Filter2.RETN_NO ASC, Filter2.STK_RETN_ID ASC
+             </if>
+             <if test="sortBy == 2">
+                 ORDER BY Filter2.SALES_ORD_NO, Filter2.STK_RETN_ID ASC
+             </if>
+             <if test="sortBy == 3">
+                 ORDER BY Filter2.MEM_CODE, Filter2.SALES_ORD_NO ASC
+             </if>
+			  
+    </select>
+    
+    <update id="updateBulkLOG0038D" parameterType="Map">
+        UPDATE LOG0038D
+             SET UPD_DT = SYSDATE,
+                   UPD_USER_ID = #{userId},
+                   CT_ID = #{salesmanId}
+         WHERE STK_RETN_ID = #{stkRetnId}
+    </update>
+    
+    <insert id="insertBulkLOG0037D" parameterType="Map">
+        INSERT INTO LOG0037D
+              ( STK_RETN_CT_EXCHG_SEQ_ID, STK_RETN_ID, STK_RETN_CT_FROM, STK_RETN_CT_TO, STK_RETN_CT_EXCHG_CRT_DT
+              , STK_RETN_CT_EXCHG_CRT_USER_ID, STK_RETN_CT_GRP_TO, STK_RETN_CT_GRP_FROM )
+        VALUES ( LOG0037D_STK_RETN_CT_SEQ_ID.NEXTVAL, #{stkRetnId}, #{stockId}, #{salesmanId}, SYSDATE, #{userId}, #{ctGrp}, #{ctGrp} )
+    </insert>
+    
 </mapper>
