@@ -29,68 +29,68 @@ $(document).ready(function(){
 var columnLayout = [ 
     {
         dataField : "tOrgCode",
-        headerText : "OrgCode",
+        headerText : "<spring:message code='pay.head.orgCode'/>",
         editable : false
     }, {
         dataField : "tGrpCode",
-        headerText : "Grp Code",
+        headerText : "<spring:message code='pay.head.grpCode'/>",
         editable : false
     }, {
         dataField : "tDeptCode",
-        headerText : "Dept Code",
+        headerText : "<spring:message code='pay.head.deptCode'/>",
         editable : false
     }, {
         dataField : "memCode",
-        headerText : "Cody Code",
+        headerText : "<spring:message code='pay.head.codyCode'/>",
         editable : false
     }, {
         dataField : "sUnit",
-        headerText : "Unit",
+        headerText : "<spring:message code='pay.head.unit'/>",
         editable : false,
         dataType:"numeric"
     }, {
         dataField : "sLmos",
-        headerText : "Pre-Out",
+        headerText : "<spring:message code='pay.head.preOut'/>",
         editable : false,
         width : 180,
         dataType:"numeric", 
         formatString:"###0.#"
     }, {
         dataField : "sCmChg",
-        headerText : "Charges",
+        headerText : "<spring:message code='pay.head.charges'/>",
         editable : false,
         width : 180,
         dataType:"numeric", 
         formatString:"###0.#"
     }, {
         dataField : "sClCtg",
-        headerText : "Target",
+        headerText : "<spring:message code='pay.head.target'/>",
         editable : false,
         width : 180,
         dataType:"numeric", 
         formatString:"###0.#"
     }, {
         dataField : "sCol",
-        headerText : "Collection",
+        headerText : "<spring:message code='pay.head.collection'/>",
         editable : false,
         width : 180,dataType:"numeric", 
         formatString:"###0.#"
     }, {
         dataField : "sAdj",
-        headerText : "Adjustment",
+        headerText : "<spring:message code='pay.head.adjustment'/>",
         editable : false,
         width : 180,
         dataType:"numeric"
     },{
         dataField : "sOut",
-        headerText : "Outstanding",
+        headerText : "<spring:message code='pay.head.outstanding'/>",
         editable : false,
         width : 180,
         dataType : "numeric", 
         formatString : "#,##0.##"
     },{
         dataField : "sOutRate",
-        headerText : "Out Rate",
+        headerText : "<spring:message code='pay.head.outRate'/>",
         editable : false,
         width : 120,
         dataType : "numeric", 
@@ -124,8 +124,8 @@ var columnLayout = [
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>RC by BS</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

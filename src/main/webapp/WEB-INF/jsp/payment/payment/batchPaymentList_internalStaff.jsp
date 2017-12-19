@@ -69,43 +69,43 @@ $(document).ready(function(){
 var columnLayout = [ 
     {
         dataField : "batchId",
-        headerText : "Batch ID",
+        headerText : "<spring:message code='pay.head.batchId'/>",
         editable : false
     }, {
         dataField : "codeName",
-        headerText : "Paymode",
+        headerText : "<spring:message code='pay.head.paymode'/>",
         editable : false
     }, {
         dataField : "name",
-        headerText : "Batch Status",
+        headerText : "<spring:message code='pay.head.batchStatus'/>",
         editable : false
     }, {
         dataField : "name1",
-        headerText : "Confirm Status",
+        headerText : "<spring:message code='pay.head.confirmStatus'/>",
         editable : false
     }, {
         dataField : "updDt",
-        headerText : "Upload Date",
+        headerText : "<spring:message code='pay.head.uploadDate'/>",
         editable : false
     }, {
         dataField : "userName",
-        headerText : "Upload By",
+        headerText : "<spring:message code='pay.head.uploadBy'/>",
         editable : false
     }, {
         dataField : "cnfmDt",
-        headerText : "Upload Date",
+        headerText : "<spring:message code='pay.head.uploadDate'/>",
         editable : false
     }, {
         dataField : "c1",
-        headerText : "Confirm By",
+        headerText : "<spring:message code='pay.head.confirmBy'/>",
         editable : false
     }, {
         dataField : "crtDt",
-        headerText : "Upload Date",
+        headerText : "<spring:message code='pay.head.uploadDate'/>",
         editable : false
     },{
         dataField : "c2",
-        headerText : "Convert By",
+        headerText : "<spring:message code='pay.head.convertBy'/>",
         editable : false
     },{
         dataField : "batchStusId",
@@ -124,35 +124,35 @@ var columnLayout = [
 var batchInfoLayout = [ 
     {
         dataField : "code",
-        headerText : "Valid Status",
+        headerText : "<spring:message code='pay.head.validStatus'/>",
         editable : false
     }, {
         dataField : "validRem",
-        headerText : "Valid Remark",
+        headerText : "<spring:message code='pay.head.validRemark'/>",
         editable : false
     }, {
         dataField : "userOrdNo",
-        headerText : "Order No",
+        headerText : "<spring:message code='pay.head.orderNo'/>",
         editable : false
     }, {
         dataField : "userAmt",
-        headerText : "Amount",
+        headerText : "<spring:message code='pay.head.amount'/>",
         editable : false
     }, {
         dataField : "userBankAcc",
-        headerText : "Bank Acc",
+        headerText : "<spring:message code='pay.head.bankAcc'/>",
         editable : false
     }, {
         dataField : "userRefDtMonth",
-        headerText : "Ref Date(Month)",
+        headerText : "<spring:message code='pay.head.refDateMonth'/>)",
         editable : false
     },{
         dataField : "userRefDtDay",
-        headerText : "Ref Date(Day)",
+        headerText : "<spring:message code='pay.head.refDateDay'/>",
         editable : false
     },{
         dataField : "userRefDtYear",
-        headerText : "Ref Date(Year)",
+        headerText : "<spring:message code='pay.head.refDateYear'/>",
         editable : false
     }];
     
@@ -177,35 +177,35 @@ var batchInfoLayout = [
            }
         },{
             dataField : "code",
-            headerText : "Valid Status",
+            headerText : "<spring:message code='pay.head.validStatus'/>",
             editable : false
         }, {
             dataField : "validRem",
-            headerText : "Valid Remark",
+            headerText : "<spring:message code='pay.head.validRemark'/>",
             editable : false
         }, {
             dataField : "userOrdNo",
-            headerText : "Order No",
+            headerText : "<spring:message code='pay.head.orderNo'/>",
             editable : false
         }, {
             dataField : "userAmt",
-            headerText : "Amount",
+            headerText : "<spring:message code='pay.head.amount'/>",
             editable : false
         }, {
             dataField : "userBankAcc",
-            headerText : "Bank Acc",
+            headerText : "<spring:message code='pay.head.bankAcc'/>",
             editable : false
         },{
             dataField : "userRefDtMonth",
-            headerText : "Ref Date(Month)",
+            headerText : "<spring:message code='pay.head.refDateMonth'/>",
             editable : false
         },{
             dataField : "userRefDtDay",
-            headerText : "Ref Date(Day)",
+            headerText : "<spring:message code='pay.head.refDateDay'/>",
             editable : false
         },{
             dataField : "userRefDtYear",
-            headerText : "Ref Date(Year)",
+            headerText : "<spring:message code='pay.head.refDateYear'/>",
             editable : false
         }];
     
@@ -588,9 +588,9 @@ var batchInfoLayout = [
 			        <dt>Link</dt>
 			        <dd>
 			        <ul class="btns">
-			            <li><p class="link_btn"><a href="javascript:fn_uploadPopup();">Upload Batch Payment</a></p></li>
-			            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();">View Batch Payment</a></p></li>
-			            <li><p class="link_btn"><a href="javascript:fn_confirmBatchPopup();">Confirm Batch Payment</a></p></li>
+			            <li><p class="link_btn"><a href="javascript:fn_uploadPopup();"><spring:message code='pay.btn.link.uploadBatchPayment'/></a></p></li>
+			            <li><p class="link_btn"><a href="javascript:fn_viewBatchPopup();"><spring:message code='pay.btn.link.viewBatchPayment'/></a></p></li>
+			            <li><p class="link_btn"><a href="javascript:fn_confirmBatchPopup();"><spring:message code='pay.btn.link.confirmBatchPayment'/></a></p></li>
 			        </ul>
 			        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			        </dd>
@@ -611,7 +611,7 @@ var batchInfoLayout = [
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Batch Payment View</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#view_popup_wrap');">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#view_popup_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -706,9 +706,9 @@ var batchInfoLayout = [
 			    <aside class="title_line">
 				    <h2 id="itemGubun">All Items</h2>
 				    <ul class="right_btns">
-				        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('' , 'V');">All Items</a></p></li>
-				        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4' , 'V');">Valid Items</a></p></li>
-				        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , 'V');">Invalid Items</a></p></li>
+				        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('' , 'V');"><spring:message code='pay.btn.allItems'/></a></p></li>
+				        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4' , 'V');"><spring:message code='pay.btn.validItems'/></a></p></li>
+				        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , 'V');"><spring:message code='pay.btn.invalidItems'/></a></p></li>
 				    </ul>
 			    </aside><!-- title_line end -->
 			    <!-- grid_wrap start -->
@@ -722,7 +722,7 @@ var batchInfoLayout = [
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Batch Payment Confirmation</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#conf_popup_wrap');">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#conf_popup_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -817,9 +817,9 @@ var batchInfoLayout = [
 		    <aside class="title_line">
 			    <h2 id="itemGubun_conf">All Items</h2>
 			    <ul class="right_btns">
-			        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('','C');">All Items</a></p></li>
-			        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4', 'C');">Valid Items</a></p></li>
-			        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , 'C');">Invalid Items</a></p></li>
+			        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('','C');"><spring:message code='pay.btn.allItems'/></a></p></li>
+			        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('4', 'C');"><spring:message code='pay.btn.validItems'/></a></p></li>
+			        <li><p class="btn_grid"><a href="javascript:fn_batchPayItemList('21' , 'C');"><spring:message code='pay.btn.invalidItems'/></a></p></li>
 			    </ul>
 		    </aside>
 		    <!-- title_line end -->
@@ -828,8 +828,8 @@ var batchInfoLayout = [
 		    <!-- grid_wrap end -->
 	    </article><!-- tap_area end -->
 	    <ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmBatch();" id="btnConf">Confirm</a></p></li>
-		    <li><p class="btn_blue2 big"><a href="javascript:fn_deactivateBatch();" id="btnDeactivate">Deactivate</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmBatch();" id="btnConf"><spring:message code='pay.btn.confirm'/></a></p></li>
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_deactivateBatch();" id="btnDeactivate"><spring:message code='pay.btn.deactivate'/></a></p></li>
 	    </ul>
 	    </section><!-- tap_wrap end -->
 	</section><!-- pop_body end -->
@@ -838,7 +838,7 @@ var batchInfoLayout = [
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Batch Payment Upload</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#upload_popup_wrap')">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#upload_popup_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -873,8 +873,8 @@ var batchInfoLayout = [
 			</table><!-- table end -->
 		</form>
 		<ul class="center_btns mt20">
-		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-		    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/batchPaymentList_internalStaffFormat.csv">Download CSV Format</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
+		    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/batchPaymentList_internalStaffFormat.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
 		</ul>
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->

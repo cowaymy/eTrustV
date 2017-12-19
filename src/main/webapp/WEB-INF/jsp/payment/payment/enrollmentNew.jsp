@@ -1,3 +1,6 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 </script>
 
@@ -6,7 +9,7 @@
     <header class="pop_header">
         <h1>Enrollment Result Update</h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#" onclick="$('#popup_wrap').hide();">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#" onclick="$('#popup_wrap').hide();"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
     </header>
     

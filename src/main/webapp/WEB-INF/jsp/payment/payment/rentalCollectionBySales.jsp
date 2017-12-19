@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
 /* 커스텀 행 스타일 */
 .my-column-style2 div{
@@ -21,18 +22,18 @@ var gridPros = {
 
 
 var columnLayout=[
-    {dataField:"orgcode", headerText:"Org Code"},
-    {dataField:"grpcode", headerText:"Grp Code"},
-    {dataField:"deptcode", headerText:"Dept Code"},
-    {dataField:"membercode", headerText:"Cody Code"},
-    {dataField:"sunit", headerText:"Unit", dataType:"numeric"},
-    {dataField:"slmos", headerText:"Pre-Out", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"scmchg", headerText:"Charges", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sclctg", headerText:"Target", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"scol", headerText:"Collection", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"sadj", headerText:"Adjsutment", dataType:"numeric"},
-    {dataField:"sout", headerText:"Outstanding", dataType:"numeric", formatString:"###0.#"},
-    {dataField:"srate", headerText:"Out Rate", dataType:"numeric", formatString:"###0.00", style:"my-column-style2"}
+    {dataField:"orgcode", headerText:"<spring:message code='pay.head.orgCode'/>"},
+    {dataField:"grpcode", headerText:"<spring:message code='pay.head.grpCode'/>"},
+    {dataField:"deptcode", headerText:"<spring:message code='pay.head.deptCode'/>"},
+    {dataField:"membercode", headerText:"<spring:message code='pay.head.codyCode'/>"},
+    {dataField:"sunit", headerText:"<spring:message code='pay.head.unit'/>", dataType:"numeric"},
+    {dataField:"slmos", headerText:"<spring:message code='pay.head.preOut'/>", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"scmchg", headerText:"<spring:message code='pay.head.charges'/>", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"sclctg", headerText:"<spring:message code='pay.head.target'/>", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"scol", headerText:"<spring:message code='pay.head.collection'/>", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"sadj", headerText:"<spring:message code='pay.head.adjustment'/>", dataType:"numeric"},
+    {dataField:"sout", headerText:"<spring:message code='pay.head.outstanding'/>", dataType:"numeric", formatString:"###0.#"},
+    {dataField:"srate", headerText:"<spring:message code='pay.head.outRate'/>", dataType:"numeric", formatString:"###0.00", style:"my-column-style2"}
     ];
 
 //리스트 조회.
@@ -61,8 +62,8 @@ function fn_clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>RC By Sales</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>    
     </aside>
     <!-- title_line end -->

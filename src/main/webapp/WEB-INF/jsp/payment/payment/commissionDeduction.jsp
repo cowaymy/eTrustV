@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var mainGrid;
 var subGrid1;
@@ -53,60 +53,60 @@ var gridProsForSub = {
 };
 
 var columnLayout=[
-       {dataField:"fileId", headerText:"File No"},
-       {dataField:"fileName", headerText:"File Name"},
-       {dataField:"fileDt", headerText:"Upload date",dataType:"date",formatString:"dd-mm-yyyy"},
-       {dataField:"fileRefNo", headerText:"File Type"},
-       {dataField:"totRcord", headerText:"Total Records"},
-       {dataField:"totAmt", headerText:"Total Amount", dataType:"numeric", formatString:"#,##0.00"},
-       {dataField:"fileStus", headerText:"File Status"}
+       {dataField:"fileId", headerText:"<spring:message code='pay.head.fileNo'/>"},
+       {dataField:"fileName", headerText:"<spring:message code='pay.head.fileName'/>"},
+       {dataField:"fileDt", headerText:"<spring:message code='pay.head.uploaddate'/>",dataType:"date",formatString:"dd-mm-yyyy"},
+       {dataField:"fileRefNo", headerText:"<spring:message code='pay.head.fileType'/>"},
+       {dataField:"totRcord", headerText:"<spring:message code='pay.head.totalRecords'/>"},
+       {dataField:"totAmt", headerText:"<spring:message code='pay.head.totalAmount'/>", dataType:"numeric", formatString:"#,##0.00"},
+       {dataField:"fileStus", headerText:"<spring:message code='pay.head.fileStatus'/>"}
 ];
 
 var columnLayoutForSub1=[
-       {dataField:"fileId", headerText:"FileID"},
-       {dataField:"itmId", headerText:"ItemID"},
-       {dataField:"ordNo", headerText:"Order No"},
-       {dataField:"memCode", headerText:"Member Code"},
-       {dataField:"amt", headerText:"Amount"},
-       {dataField:"syncCmplt", headerText:"Status"}
+       {dataField:"fileId", headerText:"<spring:message code='pay.head.fileID'/>"},
+       {dataField:"itmId", headerText:"<spring:message code='pay.head.itemId'/>"},
+       {dataField:"ordNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+       {dataField:"memCode", headerText:"<spring:message code='pay.head.memberCode'/>"},
+       {dataField:"amt", headerText:"<spring:message code='pay.head.amount'/>"},
+       {dataField:"syncCmplt", headerText:"<spring:message code='pay.head.status'/>"}
 ];
 
 var columnLayoutForSub2=[
-       {dataField:"trxId", headerText:"TrxNo"},
-       {dataField:"trxDt", headerText:"TrxDate"},
-       {dataField:"trxAmt", headerText:"TrxTotal"},
-       {dataField:"payId", headerText:"PID"},
-       {dataField:"orNo", headerText:"ORNo"},
-       {dataField:"trNo", headerText:"TRNo"},
-       {dataField:"orAmt", headerText:"ORTotal"},
-       {dataField:"salesOrdNo", headerText:"OrderNo"},
-       {dataField:"appTypeName", headerText:"AppType"},
-       {dataField:"productDesc", headerText:"Product"},
-       {dataField:"custName", headerText:"Customer"},
-       {dataField:"custIc", headerText:"IC/CO No."},
-       {dataField:"clcrtBrnchName", headerText:"Branch"},
-       {dataField:"keyinUserName", headerText:"UserName"}
+       {dataField:"trxId", headerText:"<spring:message code='pay.head.trxNo'/>"},
+       {dataField:"trxDt", headerText:"<spring:message code='pay.head.trxDate'/>"},
+       {dataField:"trxAmt", headerText:"<spring:message code='pay.head.trxTotal'/>"},
+       {dataField:"payId", headerText:"<spring:message code='pay.head.pid'/>"},
+       {dataField:"orNo", headerText:"<spring:message code='pay.head.orNo'/>"},
+       {dataField:"trNo", headerText:"<spring:message code='pay.head.trNo'/>"},
+       {dataField:"orAmt", headerText:"<spring:message code='pay.head.orTotal'/>"},
+       {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+       {dataField:"appTypeName", headerText:"<spring:message code='pay.head.appType'/>"},
+       {dataField:"productDesc", headerText:"<spring:message code='pay.head.product'/>"},
+       {dataField:"custName", headerText:"<spring:message code='pay.head.customer'/>"},
+       {dataField:"custIc", headerText:"<spring:message code='pay.head.iccoNo'/>"},
+       {dataField:"clcrtBrnchName", headerText: "<spring:message code='pay.head.brach'/>"},
+       {dataField:"keyinUserName", headerText:"<spring:message code='pay.head.userName'/>"}
 ];
 
 var columnLayoutForSub3=[
-       {dataField:"payId", headerText:"PayID", visible:false},
-       {dataField:"payItmId", headerText:"ItemID", visible:false},
-       {dataField:"codeName", headerText:"Mode"},
-       {dataField:"payItmRefNo", headerText:"RefNo"},
-       {dataField:"payItmCCTypeId", headerText:"CCType"},
-       {dataField:"payItmCcHolderName", headerText:"CCHolder"},
-       {dataField:"payItmCcExprDt", headerText:"CCExpiryDate"},
-       {dataField:"payItmChqNo", headerText:"ChequeNo"},
-       {dataField:"bank", headerText:"IssueBank"},
-       {dataField:"payItmAmt", headerText:"Amount"},
-       {dataField:"payItmIsOnline", headerText:"On-Line"},
-       {dataField:"accDesc", headerText:"BankAccount"},
-       {dataField:"payItmRefDt", headerText:"RefDate", dataType:"date", formatString:"dd-mm-yyyy"},
-       {dataField:"payItmAppvNo", headerText:"ApprNo"},
-       {dataField:"payItmRem", headerText:"Remark"},
-       {dataField:"name1", headerText:"Status"},
-       {dataField:"payItmIsLok", headerText:"Locked"},
-       {dataField:"payItmBankChrgAmt", headerText:"BankChange"}
+       {dataField:"payId", headerText:"<spring:message code='pay.head.payId'/>", visible:false},
+       {dataField:"payItmId", headerText:"<spring:message code='pay.head.itemId'/>", visible:false},
+       {dataField:"codeName", headerText:"<spring:message code='pay.head.mode'/>"},
+       {dataField:"payItmRefNo", headerText:"<spring:message code='pay.head.refNo'/>"},
+       {dataField:"payItmCCTypeId", headerText:"<spring:message code='pay.head.ccType'/>"},
+       {dataField:"payItmCcHolderName", headerText:"<spring:message code='pay.head.ccHolder'/>"},
+       {dataField:"payItmCcExprDt", headerText:"<spring:message code='pay.head.ccExpiryDate'/>"},
+       {dataField:"payItmChqNo", headerText:"<spring:message code='pay.head.chequeNo'/>"},
+       {dataField:"bank", headerText:"<spring:message code='pay.head.issueBank'/>"},
+       {dataField:"payItmAmt", headerText:"<spring:message code='pay.head.amount'/>"},
+       {dataField:"payItmIsOnline", headerText:"<spring:message code='pay.head.online'/>"},
+       {dataField:"accDesc", headerText:"<spring:message code='pay.head.bankAccount'/>"},
+       {dataField:"payItmRefDt", headerText:"<spring:message code='pay.head.refDate'/>", dataType:"date", formatString:"dd-mm-yyyy"},
+       {dataField:"payItmAppvNo", headerText:"<spring:message code='pay.head.apprNo'/>"},
+       {dataField:"payItmRem", headerText:"<spring:message code='pay.head.remark'/>"},
+       {dataField:"name1", headerText:"<spring:message code='pay.head.status'/>"},
+       {dataField:"payItmIsLok", headerText:"<spring:message code='pay.head.locked'/>"},
+       {dataField:"payItmBankChrgAmt", headerText:"<spring:message code='pay.head.bankChange'/>"}
 ];
 
 function fn_uploadFile(){
@@ -175,8 +175,8 @@ function fn_clickArea2(){
     </aside><!-- title_line end -->
 
     <ul class="right_btns">
-        <li><p class="btn_blue"><a href="javascript:fn_createPayment();">Create Payment</a></p></li>
-        <li><p class="btn_blue"><a href="javascript:fn_viewResult();">View Result</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_createPayment();"><spring:message code='pay.btn.createPayment'/></a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_viewResult();"><spring:message code='pay.btn.viewResult'/></a></p></li>
     </ul>         
 
     <ul class="left_btns mt20">
@@ -185,7 +185,7 @@ function fn_clickArea2(){
                 <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
             </div><!-- auto_file end -->
         </li>
-        <li><p class="btn_sky"><a href="javascript:fn_uploadFile();">Upload</a></p></li>
+        <li><p class="btn_sky"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
         <!-- <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li> -->
     </ul>
 
@@ -196,8 +196,8 @@ function fn_clickArea2(){
 
     <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
-            <li><a href="javascript:fn_clickArea1();" class="on">Raw File Items Status</a></li>
-            <li><a href="#" onclick="fn_clickArea2();">Payment Results</a></li>
+            <li><a href="javascript:fn_clickArea1();" class="on"><spring:message code='pay.btn.rawFileItemsStatus'/></a></li>
+            <li><a href="#" onclick="fn_clickArea2();"><spring:message code='pay.btn.paymentResults'/></a></li>
         </ul>
 
         <article class="tap_area" id="tap_area1"><!-- tap_area start -->
