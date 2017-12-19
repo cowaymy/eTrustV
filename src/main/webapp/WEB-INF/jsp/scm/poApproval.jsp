@@ -646,6 +646,12 @@ var MainGridLayout =
             formatString : "dd-mm-yyyy",
             width : "10%",
             editable : false
+        }, {
+            dataField : "eccPoNo", 
+            headerText : "<spring:message code='sys.scm.poapproval.eccPoNo'/>",
+            formatString : "dd-mm-yyyy",
+            width : "10%",
+            editable : false
         }
 
     ];

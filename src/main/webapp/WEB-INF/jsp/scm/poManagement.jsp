@@ -275,13 +275,22 @@ function auiCellEditignHandler(event)
     else if(event.type == "cellEditEnd") 
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
+        
+        var roundUpMoq = AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundUpMoq");
+        var fobPrice   = AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice");
+        var editPoQty  = parseInt(event.value);
+        var editPlanQty = parseInt($("#inPlanQty").val());
+        var editInMoq   = parseInt($("#inMoq").val());
+        var newPoQty =   Math.ceil( ((editPlanQty - editPoQty) / editInMoq) );
 
-        AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty");
-        AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice");
-
-        console.log("roundupPoQty: " + AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty") + " /price: " + AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice"));
-        console.log("fobAmount: " + AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty") * (AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice")))
-        var lastAmount = ((AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundupPoQty")) * (AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice")));
+        $("#inRoundUpPoQty").val(newPoQty); 
+        
+        /* console.log("edit_poQty: "+ editPoQty + " /editPlanQty: "+ editPlanQty +" /editInMoq: "+ editInMoq+" /newPoQty: "+ newPoQty);
+        console.log("New_RoundUpMoq: "+ $("#inRoundUpPoQty").val() +" /fobPrice: " + fobPrice + " /fobAmount: " + (newPoQty * fobPrice) ); */
+        
+        var calculPoQty = (newPoQty * editInMoq) ;
+        var lastAmount = (calculPoQty * fobPrice);
+        AUIGrid.setCellValue(myGridID2, event.rowIndex, 5, calculPoQty);
         AUIGrid.setCellValue(myGridID2, event.rowIndex, 7, lastAmount);
         
     } 
@@ -305,15 +314,14 @@ function fnMoveRight()
 		Common.alert("<spring:message code='sys.scm.poIssue.AllPlannedQty'/> ");
     return false;  
 	}
-
-	/*
-	conso;e.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
-	     +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
-	     +" inStkTypeId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId")
-	     +" inPlanQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")
-	     +" inPoQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty")
-	     +" inMoq: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "moq"));
-    */
+   /*  console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
+            +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
+            +" inStkTypeId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId")
+            +" inPlanQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")
+            +" inPoQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty")
+            +" inMoq: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "moq")
+            +" roundUpMoq: " + Math.ceil((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / $("#inMoq").val() )
+            );  */
 
 	     $("#inStockCode").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode"));
 	     $("#inStkCtgryId").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId"));
@@ -324,8 +332,8 @@ function fnMoveRight()
 	     $("#inPreCdc").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preCdc"));
 	     $("#inPreYear").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preYear"));
 	     $("#inPreWeekTh").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preWeekTh"));
-	     
-	     $("#inRoundupPoQty").val(Math.ceil((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / $("#inMoq").val() ));  
+
+	     $("#inRoundUpPoQty").val( Math.ceil( ((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / parseInt($("#inMoq").val()))) ); 
 
 	     if ( $("#inMoq").val() <= 0)
 	     {
@@ -367,55 +375,6 @@ function fnMoveRight()
 	                 Common.alert("Fail : " + jqXHR.responseJSON.message);
 	               });
        
-/*
-  var selFieldObj = new Object();
-  
-  selFieldObj.stockCode = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode");
-  selFieldObj.stockName = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockName");
-  selFieldObj.stkTypeId = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId");
-  selFieldObj.poQty     = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty");
-  selFieldObj.planQty   = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty");
-  selFieldObj.unitPrice = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice");
-  selFieldObj.fobAmount = AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobAmount");
-
-  var maxQty = parseInt(parseFloat((499999 - gSumAmount) / ( selFieldObj.unitPrice)) );
-  var availableQty = parseInt(selFieldObj.planQty - selFieldObj.poQty);
-  var moq = parseInt(selFieldObj.poQty);
-	var qty = 0;
-	  
-  if (availableQty <= maxQty)
-	  qty = availableQty;
-  else
-	  qty = maxQty;
-
-  console.log("maxQty: " + maxQty +" /availableQty: " + availableQty + " /moq: " + moq);
-
-  if (moq <= 0)
-	{
-	  Common.alert("<spring:message code='sys.scm.poissue.zeroDivisible'/> ");
-	  return false;
-	}
-  //qty를 다시 moq 단위로 자름
-  if(qty > moq)
-  {
-    var tmpQty = (qty % moq);
-    qty = qty - tmpQty;
-  }
-
-  selFieldObj.poQty = qty;
-  selFieldObj.fobAmount = (qty * parseInt(selFieldObj.unitPrice)).toFixed(4);
-
-  gSumAmount = (gSumAmount + parseInt(selFieldObj.fobAmount ));
-
-  if (gSumAmount >= 500000 )
-  {
-     Common.alert("<spring:message code='sys.scm.poIssue.totalAmountExceed'/> ");
-     gSumAmount = gSumAmount - parseInt(selFieldObj.fobAmount );
-     return false;  
-  }
-
-	addRow(selFieldObj);
-		*/
 }
 
 //MstGrid 행 추가, 삽입
@@ -542,17 +501,17 @@ var SCMPrePOViewLayout =
             dataField : "preYear",
             headerText :  "preYear",   
             editable : false,
-            visible  : true,
+            visible  : false,
         }, {
             dataField : "preCdc",
             headerText : "preCdc",   
             editable : false,
-            visible  : true,
+            visible  : false,
         }, {
             dataField : "preWeekTh",
             headerText : "preWeekTh",   
             editable : false,
-            visible  : true,
+            visible  : false,
         }
     ];
 
@@ -605,7 +564,7 @@ var SCMPrePOViewLayout2 =
             width : "10%",
             editable : false
         }, {
-            dataField : "roundupPoQty",
+            dataField : "poQty",
             headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
             style : "aui-grid-right-column",
             width : "10%",
@@ -669,6 +628,12 @@ var SCMPrePOViewLayout2 =
         },{
             dataField : "preWeekTh",
             headerText : "preWeekTh", 
+            visible  : false,
+            width : "5%",
+            editable : false
+        },{
+            dataField : "roundUpMoq",
+            headerText : "roundUpMoq", 
             visible  : false,
             width : "5%",
             editable : false
@@ -1035,7 +1000,7 @@ $(document).ready(function()
   <input type ="hidden" id="inPoQty"      name="inPoQty" value="" />
   <input type ="hidden" id="inMoq"        name="inMoq" value=""/>
   <input type ="hidden" id="inStkTypeId"  name="inStkTypeId" value=""/>
-  <input type ="hidden" id="inRoundupPoQty"  name="inRoundupPoQty" value=""/>
+  <input type ="hidden" id="inRoundUpPoQty"  name="inRoundUpPoQty" value=""/>
   <input type ="hidden" id="inPreCdc"        name="inPreCdc" value=""/>
   <input type ="hidden" id="inPreYear"    name="inPreYear" value=""/>  
   <input type ="hidden" id="inPreWeekTh"    name="inPreWeekTh" value=""/>  
