@@ -74,7 +74,7 @@ public class PointOfSalesController {
 		String reqloc = request.getParameter("reqloc");
 		
 		Date date = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyyHHmmssSSS", Locale.getDefault(Locale.Category.FORMAT));
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
 		String today = df.format(date);	
 			
 		
