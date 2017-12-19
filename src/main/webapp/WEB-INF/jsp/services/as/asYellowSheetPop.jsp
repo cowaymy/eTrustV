@@ -116,18 +116,18 @@ function fn_openExcel(){
             nonYS = 1;
         }
         
-        if($("#settleDtFr").val() != '' && $("#settleDtTo").val() != ''){
+        if($("#settleDtFr").val() != '' && $("#settleDtTo").val() != '' && $("#settleDtFr").val() != null && $("#settleDtTo").val() != null){
         	setDateFrom = $("#settleDtFr").val().substring(6,10) + "-" + $("#settleDtFr").val().substring(3,5) + "-" + $("#settleDtFr").val().substring(0,2);
             setDateTo = $("#settleDtTo").val().substring(6,10) + "-" + $("#settleDtTo").val().substring(3,5) + "-" + $("#settleDtTo").val().substring(0,2);
         }
-        if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != ''){
+        if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != '' && $("#reqDtFr").val() != null && $("#reqDtTo").val() != null){
         	reqDateFrom =  $("#reqDtFr").val().substring(6,10) + "-" + $("#reqDtFr").val().substring(3,5) + "-" + $("#reqDtFr").val().substring(0,2);
             reqDateTo = $("#reqDtTo").val().substring(6,10) + "-" + $("#reqDtTo").val().substring(3,5) + "-" + $("#reqDtTo").val().substring(0,2);
         }
-        if($("#branch").val() != ''){
+        if($("#branch").val() != '' && $("#branch").val() != null){
             branchID = $("#branch").val();
         }
-        if($("#aging").val() != ''){
+        if($("#aging").val() != '' && $("#aging").val() != null){
             YSAging = $("#aging").val();
         }
         
