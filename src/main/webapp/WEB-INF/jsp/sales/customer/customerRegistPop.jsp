@@ -292,6 +292,7 @@
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
+            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         }else{
             $("#_cmbCorpTypeId_").val('');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
@@ -306,6 +307,7 @@
 //            $("select[name=dob]").removeAttr("readonly");
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
+            $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
         }
         
     }
@@ -893,7 +895,7 @@
         <tr>
             <th scope="row">Old IC/Army/Police</th>
             <td >
-                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  />
+                <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  disabled="disabled" />
             </td>
         </tr>
         <tr>
