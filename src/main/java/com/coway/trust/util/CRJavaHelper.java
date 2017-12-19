@@ -45,6 +45,7 @@ public class CRJavaHelper {
 	public static final String CSV = "csv";
 	public static final String RTF = "rtf";
 	public static final String PDF = "pdf";
+	public static final String COL_WIDTH = "colWidth";
 
 	private CRJavaHelper() {
 	}
@@ -693,28 +694,36 @@ public class CRJavaHelper {
 	 * @throws IOException
 	 */
 	public static void exportExcelDataOnly(ReportClientDocument clientDoc, HttpServletResponse response,
-			boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
-		ExportOptions exportOptions = getExcelExportptionsDataOnly();
+			boolean attachment, String downFileName, Map<String, Object> params)
+			throws ReportSDKExceptionBase, IOException {
+		ExportOptions exportOptions = getExcelExportptionsDataOnly(params);
 		export(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
 	}
 
-	public static ExportOptions getExcelExportptionsDataOnly() {
+	public static ExportOptions getExcelExportptionsDataOnly(Map<String, Object> params) {
 		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
+		excelOptions.setUseConstantColWidth(true);
+		if (CommonUtils.isEmpty(params.get(COL_WIDTH))) {
+			excelOptions.setConstantColWidth(300);
+		} else {
+			excelOptions.setConstantColWidth((Integer) params.get(COL_WIDTH));
+		}
+
 		ExportOptions exportOptions = new ExportOptions();
 		exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);
 		exportOptions.setFormatOptions(excelOptions);
 		return exportOptions;
 	}
 
-	public static void exportExcel(ReportClientDocument clientDoc, HttpServletResponse response,
-										   boolean attachment, String downFileName) throws ReportSDKExceptionBase, IOException {
+	public static void exportExcel(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
+			String downFileName) throws ReportSDKExceptionBase, IOException {
 		ExportOptions exportOptions = getExcelExportOptions();
 		export(clientDoc, exportOptions, response, attachment, "application/excel", XLS, downFileName);
 	}
 
 	public static ExportOptions getExcelExportOptions() {
 		ExportOptions exportOptions = new ExportOptions();
-//		exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);
+		// exportOptions.setExportFormatType(ReportExportFormat.recordToMSExcel);
 		exportOptions.setExportFormatType(ReportExportFormat.MSExcel);
 		return exportOptions;
 	}
@@ -789,7 +798,8 @@ public class CRJavaHelper {
 					name = "Report-" + extension;
 				}
 
-				response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+				response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
+																			   /// callback 호출시 필수.
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "." + extension + "\"");
 			}
 			OutputStream os = response.getOutputStream();

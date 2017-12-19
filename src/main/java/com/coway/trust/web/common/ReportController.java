@@ -241,7 +241,7 @@ public class ReportController {
 			viewPDF(response, clientDoc, downFileName);
 			break;
 		case EXCEL:
-			viewDataEXCEL(response, clientDoc, downFileName);
+			viewDataEXCEL(response, clientDoc, downFileName, params);
 			break;
 		case EXCEL_FULL:
 			viewEXCEL(response, clientDoc, downFileName);
@@ -288,9 +288,9 @@ public class ReportController {
 				response, true, downFileName), response, clientDoc, downFileName);
 	}
 
-	private void viewDataEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
+	private void viewDataEXCEL(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName, Map<String, Object> params) {
 		this.exportFile((clientDoc1, response1, attachment, downFileName1) -> CRJavaHelper
-				.exportExcelDataOnly(clientDoc, response, true, downFileName), response, clientDoc, downFileName);
+				.exportExcelDataOnly(clientDoc, response, true, downFileName, params), response, clientDoc, downFileName);
 	}
 
 	private void viewCSV(HttpServletResponse response, ReportClientDocument clientDoc, String downFileName) {
@@ -327,7 +327,7 @@ public class ReportController {
 				if (index >= 0) {
 					if (((Field) fields.get(index))
 							.getType() == com.crystaldecisions.sdk.occa.report.data.FieldValueType.dateField) {
-						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD", Locale.getDefault());
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 						Date d;
 						try {
 							d = format.parse(String.valueOf(v));
@@ -336,7 +336,7 @@ public class ReportController {
 						}
 						paramController.setCurrentValue("", k, d);
 					} else if (((Field) fields.get(index)).getType() == FieldValueType.dateTimeField) {
-						SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD hh:mm:ss", Locale.getDefault());
+						SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 						Date d;
 						try {
 							d = format.parse(String.valueOf(v));
