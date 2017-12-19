@@ -352,7 +352,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 			rentalStatus  = (String)basicInfo.get("rentalStus");
 		}
 		else if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode")) || SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS.equals(basicInfo.get("appTypeCode"))) {
-			obligationYear = (int)basicInfo.get("obligtYear");
+			obligationYear = CommonUtils.intNvl(basicInfo.get("obligtYear"));
 		}
 		else if(SalesConstants.APP_TYPE_CODE_INSTALLMENT.equals(basicInfo.get("appTypeCode"))) {
 			
