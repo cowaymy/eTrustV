@@ -15,6 +15,14 @@
 		FROM LOG0054M
     </select>
 
+    <select id="selectGIRDCBalance" parameterType="Map"  resultType="EgovMap">
+        SELECT
+            COUNT(DISTINCT SCAN_NO) AS girdc
+
+        FROM LOG0087D
+        WHERE SCAN_TYPE = 30
+    </select>
+
     <select id="selectDeliveryList" parameterType="Map" resultType="EgovMap">
         SELECT
               l55.DELVRY_NO AS delno,
@@ -56,6 +64,39 @@
         ORDER BY l55.DELVRY_NO DESC
     </select>
 
+    <select id="selectSerialDetails" parameterType="Map" resultType="EgovMap">
+        SELECT
+            l87.SERIAL_NO AS serialno,
+            l87.SEQ AS seq,
+            l87.BOX_NO AS boxno,
+            l87.CRT_USER_ID AS crt,
+            TO_CHAR(TO_DATE(l87.CRT_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS crtdt
+
+        FROM LOG0087D l87
+        WHERE l87.SCANINFO_STUS = 'N' AND l87.REQST_NO = #{delno} AND l87.MATNR = #{itmcode}
+    </select>
+
+    <select id="selectRDCScanList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            l87.SCAN_NO AS scanno,
+            l87.SEQ AS seq,
+            l87.SERIAL_NO AS serialno,
+            l87.MATNR AS itmcode,
+            S26.STK_DESC AS itmdesc,
+            l87.SCANINFO_STUS AS scanstus,
+            TO_CHAR(TO_DATE(l87.REQST_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS reqstdt,
+            DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc,
+            DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
+            l87.CRT_USER_ID AS crt,
+            TO_CHAR(TO_DATE(l87.CRT_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS crtdt
+
+        FROM LOG0087D l87
+	        JOIN SYS0026M s26 ON l87.MATNR = s26.STK_CODE
+	        LEFT JOIN SYS0028M s28c ON l87.FROM_LOC_ID = s28c.WH_LOC_ID
+	        LEFT JOIN SYS0028M s28q ON l87.TO_LOC_ID = s28q.WH_LOC_ID
+        WHERE l87.SCAN_TYPE = 30 AND l87.SCANINFO_STUS = 'N'
+    </select>
+
     <select id="selectScanList" parameterType="Map"  resultType="EgovMap">
         SELECT
             l55.ITM_CODE AS itmcode,
@@ -65,16 +106,17 @@
                     FROM LOG0087D
                     WHERE REQST_NO = #{delno}
                                  AND MATNR = l55.ITM_CODE
-                                 AND SCANINFO_STUS = 'N'), '0') AS scanqty,
+                                 AND SCANINFO_STUS = 'N'
+                                 AND SCAN_TYPE != 30), '0') AS scanqty,
             SUM(l55.DELVRY_QTY) - NVL((SELECT COUNT(SERIAL_NO)
                                                            FROM LOG0087D
                                                            WHERE REQST_NO = #{delno}
 							                                            AND MATNR = l55.ITM_CODE
-							                                            AND SCANINFO_STUS = 'N') , '0') AS remainqty
+							                                            AND SCANINFO_STUS = 'N'
+							                                            AND SCAN_TYPE != 30) , '0') AS remainqty
         FROM LOG0055D l55
         WHERE l55.DELVRY_NO = #{delno}
         GROUP BY l55.ITM_CODE, l55.ITM_NAME
-
     </select>
 
     <select id="selectBoxNoList" parameterType="Map" resultType="EgovMap">
@@ -88,12 +130,21 @@
         FROM LOG0062M l62
         LEFT JOIN LOG0087D l87 ON l62.SERIAL_NO = l87.SERIAL_NO
 
-
         WHERE
                     l62.BOX_NO IN
                     <foreach item="item" collection="barcodeList" index="index" open="(" separator="," close=")">
                         #{item}
                     </foreach>
+    </select>
+
+     <select id="selectUserDetails" resultType="EgovMap">
+        SELECT
+            WH_LOC_ID AS locid,
+            WH_LOC_DESC AS locdesc
+
+        FROM SYS0028M
+
+        WHERE WH_LOC_CODE = RDC_CODE AND WH_LOC_BRNCH_ID = #{brnchid}
     </select>
 
     <select id="selectScanNoSeq" resultType="String">
