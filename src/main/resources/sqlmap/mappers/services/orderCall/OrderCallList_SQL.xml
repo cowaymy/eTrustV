@@ -93,8 +93,8 @@
 	                   C.STATE,
 	                   C.area
 	   FROM  SAL0045D A, SAL0023D B, SYS0064M C, SYS0005M E, CCR1002V vCallLogOrderCall
-	WHERE A.ADD_ID       = B.CUST_ADD_ID 
-		AND   B.AREA_ID    = C.AREA_ID 
+	WHERE A.ADD_ID       = B.CUST_ADD_ID
+		AND   B.AREA_ID    = C.AREA_ID
 		AND   E.CODE        = C.CT_BRNCH_CODE
 		AND   B.CUST_ID    = vCallLogOrderCall.CUST_ID
 		AND   A.SALES_ORD_ID = vCallLogOrderCall.SALES_ORD_ID) Extent1
@@ -128,6 +128,12 @@
                    <if test="callLogTypeList != null and callLogTypeList != '' ">
                             and Extent1.CALL_TYPE_ID IN
                             <foreach item="item" collection="callLogTypeList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+                   </if>
+                   <if test="appTypeList != null and appTypeList != '' ">
+                            and Extent1.APP_TYPE_ID IN
+                            <foreach item="item" collection="appTypeList" index="index" open="(" separator="," close=")">
                             #{item}
                             </foreach>
                    </if>
@@ -525,7 +531,7 @@
 			  ORDER BY Project1.CALL_RESULT_ID ASC
              ]]>
           </select>
-  
+
 
 
 
@@ -549,20 +555,24 @@
 				    group by AREA
 
 	   </select>
-	   
- <select id="selectCdcAvaiableStock" parameterType="Map" resultType="egovMap"> 
+
+ <select id="selectCdcAvaiableStock" parameterType="Map" resultType="egovMap">
 		WITH CRDC AS (select s28.WH_LOC_CODE, s28.CDC_CODE, s28.RDC_CODE from sys0028m s28,sys0005m s05
 		              where 1 =1
-		              and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)  
-		               and s28.WH_LOC_STK_GRAD = 'A' 
-                       and s28.WH_LOC_GB = '01'   
-		  and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D 
+<!--
+		              and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)
+		  and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
+-->
+		              and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)
+		               and s28.WH_LOC_STK_GRAD = 'A'
+                       and s28.WH_LOC_GB = '01'
+		  and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
 		                     WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
                             AND B.CUST_ADD_ID = C.ADD_ID
                             AND A.CUST_ID = B.CUST_ID
                             AND B.AREA_ID = D.AREA_ID
                             AND A.SALES_ORD_NO = #{salesOrdNo})
-		            ) 
+		            )
 		SELECT QTY - NVL (BOOKQTY, 0) AVAIL_QTY
 		  FROM LOG0056M L56,
 		       SYS0028M S28,
@@ -583,25 +593,30 @@
 		       AND S28.WH_LOC_CODE IN
 		              (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
 		       AND S28.WH_LOC_GB = '01'
-			   
+
 	   </select>
-	   
-	   
-	    <select id="selectRdcStock" parameterType="Map" resultType="egovMap"> 
+
+
+	    <select id="selectRdcStock" parameterType="Map" resultType="egovMap">
         WITH CRDC AS (select s28.WH_LOC_CODE, s28.CDC_CODE, s28.RDC_CODE from sys0028m s28,sys0005m s05
                       where 1 =1
-                      and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)  
-                      and s28.WH_LOC_STK_GRAD = 'A'    
-                       and s28.WH_LOC_GB in ( '02' ,'05') 
-          and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D 
+<!--
+                      and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)
+          and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
+-->
+                      and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)
+                      and s28.WH_LOC_STK_GRAD = 'A'
+                       and s28.WH_LOC_GB in ( '02' ,'05')
+          and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
+
                              WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
                             AND B.CUST_ADD_ID = C.ADD_ID
                             AND A.CUST_ID = B.CUST_ID
                             AND B.AREA_ID = D.AREA_ID
                             AND A.SALES_ORD_NO = #{salesOrdNo})
-                    ) 
-        SELECT  QTY - NVL (BOOKQTY, 0) AVAIL_QTY, 
-                      NVL(L56.MOV_QTY,0) INTRANSIT_QTY  
+                    )
+        SELECT  QTY - NVL (BOOKQTY, 0) AVAIL_QTY,
+                      NVL(L56.MOV_QTY,0) INTRANSIT_QTY
           FROM LOG0056M L56,
                SYS0028M S28,
                (  SELECT LOC_ID,
@@ -621,7 +636,7 @@
                AND S28.WH_LOC_CODE IN
                       (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
                AND S28.WH_LOC_GB = '02'
-               
+
        </select>
 
 
