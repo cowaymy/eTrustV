@@ -59,11 +59,11 @@
 						              
 						            
 						            <if test="CRT_SDT != null and CRT_SDT != ''">
-                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'dd/mm/yyyy') <![CDATA[>=]]>  #{CRT_SDT} 
+                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[>=]]>  REPLACE(#{CRT_SDT}, '/','')
                                     </if>   
                                     
                                     <if test="CRT_EDT != null and CRT_EDT != ''">
-                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'dd/mm/yyyy') <![CDATA[<=]]>   #{CRT_EDT}
+                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[<=]]>   REPLACE(#{CRT_EDT}, '/','')
                                     </if>   
                                     
                                     
