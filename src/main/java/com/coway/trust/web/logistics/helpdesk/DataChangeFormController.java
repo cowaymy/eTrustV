@@ -1,7 +1,10 @@
 package com.coway.trust.web.logistics.helpdesk;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -149,6 +152,11 @@ public class DataChangeFormController {
 //		logger.debug("SirimLocFrom  : {}", InsertReceiveMap.get("SirimLocFrom"));
 		
 		
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+		
+		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId;
 		if (sessionVO == null) {
@@ -161,13 +169,50 @@ public class DataChangeFormController {
 
 		Map<String, Object> map = new HashMap();
 
-		HelpDeskService.insertDataChangeList(params,loginId);
+		map =HelpDeskService.insertDataChangeList(params,loginId,today);
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));	
+		message.setData(map);
 		
+		logger.debug("컨트롤러  ^^: {}",map );
+//		try {
+//		} catch (Exception ex) {
+//			retMsg = AppConstants.MSG_FAIL;
+//		} finally {
+//			map.put("msg", retMsg);
+//		}
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/sendEmail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> sendEmails(@RequestBody Map<String, Object> params, ModelMap mode)
+			throws Exception {
+
+		logger.debug("params 이메일 ???????       : {}", params);
+	
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy hh:mm:ss", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+			
+		HelpDeskService.sendEmailList(params,today);
+		
+		String retMsg = AppConstants.MSG_SUCCESS;
+
+		Map<String, Object> map = new HashMap();
+
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));	
+
+		
+//		logger.debug("컨트롤러  ^^: {}",map );
 //		try {
 //		} catch (Exception ex) {
 //			retMsg = AppConstants.MSG_FAIL;
