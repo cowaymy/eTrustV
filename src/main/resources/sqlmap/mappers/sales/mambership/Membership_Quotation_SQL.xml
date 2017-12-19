@@ -171,11 +171,11 @@
                                             </if>
 			                                 
 			                                 <if test="CRT_SDT != null and CRT_SDT != ''">
-                                                 AND TO_CHAR(sL.CRT_DT, 'dd/mm/yyyy') <![CDATA[>=]]>  #{CRT_SDT}
+                                                 AND TO_CHAR(sL.CRT_DT, 'ddmmyyyy') <![CDATA[>=]]>  REPLACE(#{CRT_SDT}, '/','')
                                             </if>
 						                  
 						                    <if test="CRT_EDT != null and CRT_EDT != ''">
-                                                 AND TO_CHAR(sL.CRT_DT, 'dd/mm/yyyy') <![CDATA[<=]]> #{CRT_EDT}
+                                                 AND TO_CHAR(sL.CRT_DT, 'ddmmyyyy') <![CDATA[<=]]>  REPLACE(#{CRT_EDT}, '/','')
                                             </if>
                                             
 						                    <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
@@ -364,7 +364,7 @@
          </select>
          
          
-          <select id="getFilterPromotionAmt" parameterType="Map" resultType="egovMap">
+         <select id="getFilterPromotionAmt" parameterType="Map" resultType="egovMap">
                    <![CDATA[
                                                      
 									                      
@@ -385,9 +385,7 @@
 									AND C.STUS_CODE_ID = '1'            -- FIXED VALUE
                           ]]>
          </select>
-         
-                                 
-                        
+           
          
          <select id="getPromoPricePercent" parameterType="Map" resultType="egovMap">
          		     SELECT  PROMO_PRC_PRCNT , PROMO_DISC_TYPE ,PROMO_ADD_DISC_PRC
@@ -402,12 +400,14 @@
       <select id="getFilterCharge"  parameterType="Map" statementType="CALLABLE"   >
        <![CDATA[ 
             {
-                  call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} ,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=filterCharge})
+                  call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} , '' , #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=filterCharge})
             }
          ]]>
-      </select>   
+      </select>  
+       
+       
       
-          <select id="getFilterChargeList" parameterType="Map" resultType="egovMap">
+       <select id="getFilterChargeList" parameterType="Map" resultType="egovMap">
        <![CDATA[ 
 	       	            
 				SELECT BOM_COMPNT
@@ -456,10 +456,25 @@
          ]]>
       </select>   
       
-      
- <select id="getFilterChargeListSum" parameterType="Map" resultType="egovMap">
+      <resultMap id="filterChargeSum" type="egovMap" ></resultMap>
+    
+      <select id="getFilterChargeListSum"  parameterType="Map" statementType="CALLABLE"   >
        <![CDATA[ 
-              SELECT         SUM(DISAMT) DISAMT FROM (
+            {
+                  call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} ,'SUM', #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=filterChargeSum})
+            }
+         ]]>
+      </select>   
+      
+      
+ <!-- <select id="getFilterChargeListSum" parameterType="Map" resultType="egovMap">
+       <if test="PROMO_ID != null and PROMO_ID != '' ">
+        SELECT         SUM(DISAMT) DISAMT FROM (
+        </if>
+        <if test="PROMO_ID == null or PROMO_ID == ''">
+        SELECT         SUM(AMT) DISAMT FROM (
+        </if>
+       <![CDATA[              
                 SELECT BOM_COMPNT
                        ,BOM_COMPNT_DESC
                        ,SRV_FILTER_PRV_CHG_DT
@@ -487,15 +502,15 @@
                              ,SAL0002D S2D 
                              ,SAL0090D E  
                              ,SAL0087D D
-                         WHERE A.SRV_PAC_ID         = #{SRV_PAC_ID}            --  SERVICE_PACKAGE ID (PROMOTOIN 아님)
-                            AND A.SRV_PAC_TYPE      =   1                             -- 0 = RENTAL MEMEBERSHIP / 1 = OUTRIGHT MEMBERSHIP
+                         WHERE A.SRV_PAC_ID         = #{SRV_PAC_ID}            /*  SERVICE_PACKAGE ID (PROMOTOIN 아님)*/
+                            AND A.SRV_PAC_TYPE      =   1                             /* 0 = RENTAL MEMEBERSHIP / 1 = OUTRIGHT MEMBERSHIP*/
                             AND A.SRV_ITM_STK_ID   = S2D.ITM_STK_ID 
                             AND A.BOM_COMPNT        = B.STK_CODE
                             AND B.STK_ID                 = C.STK_ID
-                            AND B.STUS_CODE_ID = '1'                                    -- FIXED VALUE
-                            AND C.MEM_PAC_ID   = '0'                                     -- FIXED VALUE
-                            AND C.APP_TYPE_ID  = '67'                                    -- FIXED VALUE
-                            AND C.STUS_CODE_ID = '1'                                    -- FIXED VALUE
+                            AND B.STUS_CODE_ID = '1'                                    /* FIXED VALUE*/
+                            AND C.MEM_PAC_ID   = '0'                                     /* FIXED VALUE*/
+                            AND C.APP_TYPE_ID  = '67'                                    /* FIXED VALUE*/
+                            AND C.STUS_CODE_ID = '1'                                    /* FIXED VALUE*/
                             AND S1D.SALES_ORD_ID    = S2D.SALES_ORD_ID
                             AND S1D.SALES_ORD_NO   =#{SALES_ORD_NO}
                             AND S1D.SALES_ORD_ID    = E.SRV_SO_ID
@@ -504,7 +519,7 @@
                 )
                 )
          ]]>
-      </select>   
+      </select>    -->
       
       
    

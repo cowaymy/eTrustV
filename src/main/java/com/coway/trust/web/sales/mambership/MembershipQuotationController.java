@@ -448,7 +448,9 @@ public class  MembershipQuotationController {
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
-		List<EgovMap>  list = membershipQuotationService.getFilterChargeListSum(params);
+		membershipQuotationService.getFilterChargeListSum(params);
+		
+		List<EgovMap>  list = (List<EgovMap>) params.get("p1");
 		
 		return ResponseEntity.ok(list);
 	}

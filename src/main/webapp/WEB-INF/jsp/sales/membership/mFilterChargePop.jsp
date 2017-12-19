@@ -14,6 +14,7 @@
    function fn_filterSelectListAjax() {
        Common.ajax("GET", "/sales/membership/getFilterChargeList.do",{
     	   SALES_ORD_NO : $("#ORD_NO").val(),
+           ORD_ID : $("#ORD_ID").val(),
     	   PROMO_ID: $('#cPromo').val() ,
     	   SRV_PAC_ID :$('#cTPackage').val() 
        }, function(result) {
@@ -31,15 +32,22 @@
 	   
 
 	    
-	   var columnLayout = [ 
+	  /*  var columnLayout = [ 
 	                       {dataField :"bomCompnt",  headerText : "Code",      width: 150 ,editable : false },
 	                       {dataField :"bomCompntDesc",  headerText : "Descrption",    width: 250, editable : false },
 	                       {dataField :"srvFilterPriod", headerText : "LifePeriod",   width: 150, editable : false },
 	                       {dataField :"srvFilterPrvChgDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
 	                       {dataField :"amt", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
 	                       {dataField :"disamt", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
-	   ];
-	   
+	   ]; */
+	  var columnLayout = [ 
+	                       {dataField :"filterCode",  headerText : "Code",      width: 150 ,editable : false },
+	                       {dataField :"filterDesc",  headerText : "Descrption",    width: 250, editable : false },
+	                       {dataField :"lifePriod", headerText : "LifePeriod",   width: 150, editable : false },
+	                       {dataField :"lastChngDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
+	                       {dataField :"oriPrc", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
+	                       {dataField :"prc", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
+	   ]; 	   
 
 	   
 	   //그리드 속성 설정
@@ -59,21 +67,21 @@
 	     var footerObject = [ 
 	                             {
 	                                 labelText : "COUNT :",
-	                                 positionField : "bomCompntDesc"
+	                                 positionField : "filterDesc"
 	                             },
 	                           {
-	                                dataField : "srvFilterPriod",
-	                                positionField : "srvFilterPriod",
+	                                dataField : "lifePriod",
+	                                positionField : "lifePriod",
 	                                operation : "COUNT",
 	                                formatString : "#,##0"
 	                           },
 	                           {
 	                        	   labelText : "Total :",
-                                   positionField : "amt"
+                                   positionField : "oriPrc"
                               },
 	                           {
-	                               dataField : "disamt",
-	                               positionField : "disamt",
+	                               dataField : "prc",
+	                               positionField : "prc",
 	                               operation : "SUM",
 	                               formatString : "#,##0.00"
 	                           }

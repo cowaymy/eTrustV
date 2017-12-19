@@ -99,7 +99,9 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	@Override
 	public List<EgovMap> getFilterChargeList(Map<String, Object> params) {
-		return membershipQuotationMapper.getFilterChargeList(params);
+//		return membershipQuotationMapper.getFilterChargeList(params);
+		membershipQuotationMapper.getFilterCharge(params);
+		return (List<EgovMap>) params.get("p1");
 	}
 	
 	@Override
@@ -156,7 +158,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
     		    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
     		    params.put("srvMemBSTaxes", "0");
 			 
-		 }else if(verifyGSTZeroRateLocation){
+//		 }else if(verifyGSTZeroRateLocation){
+		 }else if(isVerifyGSTEURCertificate){
 			 
 			 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
 			    params.put("srvMemPacTaxes", "0");
@@ -246,7 +249,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 					 eFilterMap.put("StkFilterPrice", rMap.get("oriPrc"));
 					 eFilterMap.put("StkChargePrice", rMap.get("prc"));
 					 
-					 if(verifyGSTZeroRateLocation){
+//					 if(verifyGSTZeroRateLocation){
+					 if(isVerifyGSTEURCertificate){
 						 
 						 eFilterMap.put("StkNetAmt", rMap.get("prc"));
 						 eFilterMap.put("StkTaxes", rMap.get("0"));

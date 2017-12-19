@@ -404,7 +404,9 @@ function fn_cYear_onChageEvent(){
     
     fn_getMembershipPackageFilterInfo();
     
-    fn_getFilterPromotionAmt();
+    //TODO
+    fn_getFilterChargeList();
+    //fn_getFilterPromotionAmt();
     
     
 }
@@ -683,26 +685,28 @@ function fn_getFilterChargeList(){
     
     if($("#HiddenIsCharge").val() != "0"){
     	
-        if($('#cPromo').val() == ""){
+       /*  if($('#cPromo').val() == ""){
         	
             fn_getFilterPromotionAmt();   
             
-        }else{
+        }else{ */
         	
         	Common.ajax("GET", "/sales/membership/getFilterChargeListSum.do",{
                 SALES_ORD_NO : $("#ORD_NO").val(),
+                ORD_ID : $("#ORD_ID").val(),
                 PROMO_ID: $('#cPromo').val() ,
                 SRV_PAC_ID :$('#cTPackage').val() 
             }, function(result) {
                  console.log( result);
                  
                 if(null != result){
-                    if(result[0] !=null){
-                        $("#txtFilterCharge").text( result[0].disamt);
-                    }
+                     if(result[0] !=null){
+                        $("#txtFilterCharge").text( result[0].amt);
+                    } 
+                	//$("#txtFilterCharge").text( result.amt);
                 }
             });
-        }
+        /* } */
     }
 }
 
