@@ -170,7 +170,7 @@ function fn_excelDown(){
 
 <aside class="title_line"><!-- title_line start -->
 
-<h2>Member</h2>
+<h2>Organization List</h2>
 <ul class="right_btns">
     <li><p class="btn_blue" ><a href="#" onclick="javascript:fn_SelectOrgChartDetAjax();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue" ><a href="#"><span class="clear"></span>Clear</a></p></li>
