@@ -239,13 +239,12 @@ $(document).ready(function(){
         }
     });
     AUIGrid.bind(serialGrid, "cellEditBegin", function(event) {
-    	console.log(event);
-    	console.log(event.item.scanno);
+    	
     	if (event.item.scanno != ""){
-    		console.log('1');
+    		
     		return false;
     	}else{
-    		console.log('2');
+    		
             return true;
     	}
        // AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);
@@ -445,15 +444,13 @@ $(function(){
     	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
     	
     	for (var i = 0 ; i < checkedItems.length ; i++){
-            console.log(checkedItems[i].item);
             
             param = "from="+checkedItems[i].item.rcvloc+"&to="+checkedItems[i].item.reqloc;
         }
-    	console.log(param);
+    	
     	//param = "from=14&to=387";
     	Common.ajax("GET", "/logistics/stockMovement/GetSerialDataCall.do", param, function(result) {
-            console.log(result);
-            console.log(result.data.length);
+            
             if (result.data.length > 0){
             	AUIGrid.setGridData(serialGrid , result.data);
             	$("#ascyn").val('Y');
@@ -603,8 +600,6 @@ function giFunc(){
     //var serials   = AUIGrid.getAddedRowItems(serialGrid);
     var serials   = AUIGrid.getGridData(serialGrid);
     
-    console.log(serials);
-    
     if (serialchk){
     	if ($("#ascyn").val() == "Y"){
     		console.log('111');
@@ -631,7 +626,6 @@ function giFunc(){
     data.add     = serials;
     data.form    = $("#giForm").serializeJSON();
     
-    console.log(data);
     Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
             var msg = result.message + "<br>MDN NO : "+result.data[1];
             Common.alert(msg , SearchListAjax);
