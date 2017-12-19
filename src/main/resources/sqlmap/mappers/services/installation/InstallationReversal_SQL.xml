@@ -1114,7 +1114,7 @@ AND ROWNUM                    <= 1
 		,#{InstallEntryID}
 		,#{InstallStatusID}
 		,#{InstallCTID}
-		,#{InstallDate}
+		,to_date(#{InstallDate},'DD-MM-YYYY')
 		,#{InstallRemark}
 		,#{GLPost}
 		,#{InstallCreateBy}
@@ -1122,7 +1122,7 @@ AND ROWNUM                    <= 1
 		,#{InstallSirimNo}
 		,#{InstallSerialNo}
 		,#{InstallFailID}
-		,#{InstallNextCallDate}
+		,to_date(#{InstallNextCallDate},'DD-MM-YYYY')
 		,#{InstallAllowComm}
 		,#{InstallIsTradeIn}
 		,#{InstallRequireSMS}
