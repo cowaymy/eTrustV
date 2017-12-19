@@ -60,44 +60,44 @@ $(document).ready(function(){
 var orderListLayout = [ 
                        {
                            dataField : "salesOrdNo",
-                           headerText : "Order No",
+                           headerText : "<spring:message code='pay.head.orderNo'/>",
                            editable : false
                        }, {
                            dataField : "refNo",
-                           headerText : "Ref No",
+                           headerText : "<spring:message code='pay.head.refNo'/>",
                            editable : false,
                            width: 100,
                        }, {
                            dataField : "salesDt",
-                           headerText : "Order Date",
+                           headerText : "<spring:message code='pay.head.orderDate'/>",
                            editable : false,
                            width: 200
                        }, {
                            dataField : "name",
-                           headerText : "Status",
+                           headerText : "<spring:message code='pay.head.status'/>",
                            editable : false,
                            width: 200
                        }, {
                            dataField : "codeDesc",
-                           headerText : "App Type",
+                           headerText : "<spring:message code='pay.head.appType'/>",
                            editable : false
                        }, {
                            dataField : "stkDesc",
-                           headerText : "Product",
+                           headerText : "<spring:message code='pay.head.product'/>",
                            editable : false
                        }, {
                            dataField : "name1",
-                           headerText : "Customer",
+                           headerText : "<spring:message code='pay.head.customer'/>",
                            editable : false,
                            width: 200 ,
                            style : "my-custom-up"
                        }, {
                            dataField : "custBillId",
-                           headerText : "Bill ID",
+                           headerText : "<spring:message code='pay.head.billId'/>",
                            editable : false
                        }, {
                            dataField : "salesOrdId",//hidden field
-                           headerText : "salesOrdId",
+                           headerText : "<spring:message code='pay.head.salesOrdId'/>",
                            visible : false
                        },{
                            dataField : "",
@@ -115,38 +115,38 @@ var orderListLayout = [
 var billingscheduleLayout = [ 
                        {
                            dataField : "salesOrdNo",
-                           headerText : "Order No",
+                           headerText : "<spring:message code='pay.head.orderNo'/>",
                            editable : false
                        }, {
                            dataField : "installment",
-                           headerText : "Installment",
+                           headerText : "<spring:message code='pay.head.installment'/>",
                            editable : false,
                        }, {
                            dataField : "schdulDt",
-                           headerText : "Schedule Date",
+                           headerText : "<spring:message code='pay.head.scheduleDate'/>",
                            editable : false,
                            width: 100
                        }, {
                            dataField : "billType",
-                           headerText : "Type",
+                           headerText : "<spring:message code='pay.head.type'/>",
                            editable : false,
                            width: 100
                        }, {
                            dataField : "billAmt",
-                           headerText : "Amount",
+                           headerText : "<spring:message code='pay.head.amount'/>",
                            editable : false
                        }, {
                            dataField : "billingStus",
-                           headerText : "Billing Status",
+                           headerText : "<spring:message code='pay.head.billingStatus'/>",
                            editable : false,
                        }, {
                            dataField : "rentInstId",
-                           headerText : "rentInstId",
+                           headerText : "<spring:message code='pay.head.rentInstId'/>",
                            editable : false,
                            visible : false
                        },{
                            dataField : "salesOrdId",
-                           headerText : "Order Id",
+                           headerText : "<spring:message code='pay.head.orderId'/>",
                            editable : false,
                            visible : false
                        }];
@@ -154,38 +154,38 @@ var billingscheduleLayout = [
 var billingTargetLayout = [ 
                              {
                                  dataField : "salesOrdNo",
-                                 headerText : "Order No",
+                                 headerText : "<spring:message code='pay.head.orderNo'/>",
                                  editable : false
                              }, {
                                  dataField : "installment",
-                                 headerText : "Installment",
+                                 headerText : "<spring:message code='pay.head.installment'/>",
                                  editable : false,
                              }, {
                                  dataField : "schdulDt",
-                                 headerText : "Schedule Date",
+                                 headerText : "<spring:message code='pay.head.scheduleDate'/>",
                                  editable : false,
                                  width: 100
                              }, {
                                  dataField : "billType",
-                                 headerText : "Type",
+                                 headerText : "<spring:message code='pay.head.type'/>",
                                  editable : false,
                                  width: 100
                              }, {
                                  dataField : "billAmt",
-                                 headerText : "Amount",
+                                 headerText : "<spring:message code='pay.head.amount'/>",
                                  editable : false
                              }, {
                                  dataField : "billingStus",
-                                 headerText : "Billing Status",
+                                 headerText : "<spring:message code='pay.head.billingStatus'/>",
                                  editable : false
                              }, {
                                  dataField : "rentInstId",
-                                 headerText : "rentInstId",
+                                 headerText : "<spring:message code='pay.head.rentInstId'/>",
                                  editable : false,
                                  visible : false
                              },{
                                  dataField : "salesOrdId",
-                                 headerText : "Order Id",
+                                 headerText : "<spring:message code='pay.head.orderId'/>",
                                  editable : false,
                                  visible : false
                              }]; 

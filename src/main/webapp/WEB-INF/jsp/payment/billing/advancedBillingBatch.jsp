@@ -23,26 +23,26 @@ var gridPros = {
 };
 
 var columnLayout=[
-                  {dataField:"advBillBatchId", headerText:"Batch ID"},
-                  {dataField:"advBillBatchRefNo", headerText:"RefNo"},
-                  {dataField:"advBillBatchTot", headerText:"Total Amount", dataType : "numeric", formatString : "#,##0.00"},
+                  {dataField:"advBillBatchId", headerText:"<spring:message code='pay.head.batchId'/>"},
+                  {dataField:"advBillBatchRefNo", headerText:"<spring:message code='pay.head.refNo'/>"},
+                  {dataField:"advBillBatchTot", headerText:"<spring:message code='pay.head.totalAmount'/>", dataType : "numeric", formatString : "#,##0.00"},
                   {dataField:"advBillBatchTotDscnt", headerText:"Total Discount", dataType : "numeric", formatString : "#,##0.00"},
-                  {dataField:"code", headerText:"Status"},
-                  {dataField:"advBillBatchRem", headerText:"Remark"},
-                  {dataField:"advBillBatchCrtDt", headerText:"Update Date", dataType:"date", formatString:"dd-mm-yyyy"}, 
-                  {dataField:"userName", headerText:"Updator"}
+                  {dataField:"code", headerText:"<spring:message code='pay.head.status'/>"},
+                  {dataField:"advBillBatchRem", headerText:"<spring:message code='pay.head.remark'/>"},
+                  {dataField:"advBillBatchCrtDt", headerText:"<spring:message code='pay.head.updateDate'/>", dataType:"date", formatString:"dd-mm-yyyy"}, 
+                  {dataField:"userName", headerText:"<spring:message code='pay.head.updator'/>"}
               ];
               
 var columnLayoutForPop=[
-                  {dataField:"accBatchItmOrdNo", headerText:"Order No."},
-                  {dataField:"accBatchItmBillStart", headerText:"Bill Start"},
-                  {dataField:"accBatchItmBillEnd", headerText:"Bill End"},
-                  {dataField:"accBatchItmBillAmt", headerText:"Bill Amount"},
-                  {dataField:"accBatchItmBillDscnt", headerText:"Bill Discount"},
-                  {dataField:"code", headerText:"Status"},
-                  {dataField:"accBatchItmRem", headerText:"Remark"}, 
-                  {dataField:"userName", headerText:"Updator"},
-                  {dataField:"accBatchItmUpdDt", headerText:"Update Date"}
+                  {dataField:"accBatchItmOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+                  {dataField:"accBatchItmBillStart", headerText:"<spring:message code='pay.head.billStart'/>"},
+                  {dataField:"accBatchItmBillEnd", headerText:"<spring:message code='pay.head.billEnd'/>"},
+                  {dataField:"accBatchItmBillAmt", headerText:"<spring:message code='pay.head.billAmount'/>"},
+                  {dataField:"accBatchItmBillDscnt", headerText:"<spring:message code='pay.head.billDiscount'/>"},
+                  {dataField:"code", headerText:"<spring:message code='pay.head.status'/>"},
+                  {dataField:"accBatchItmRem", headerText:"<spring:message code='pay.head.remark'/>"}, 
+                  {dataField:"userName", headerText:"<spring:message code='pay.head.updator'/>"},
+                  {dataField:"accBatchItmUpdDt", headerText:"<spring:message code='pay.head.updateDate'/>"}
               ];
               
 function fn_searchBillingBatch(){
@@ -242,10 +242,10 @@ function fn_Clear(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="javascript:fn_viewBillingBatch();">View Billing Batch</a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_viewBillingBatch();"><spring:message code='pay.btn.link.viewBillingBatch'/></a></p></li>
     </ul>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="javascript:fn_newBillingBatch();">New Billing Batch</a></p></li>
+        <li><p class="link_btn type2"><a href="javascript:fn_newBillingBatch();"><spring:message code='pay.btn.link.newBillingBatch'/></a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

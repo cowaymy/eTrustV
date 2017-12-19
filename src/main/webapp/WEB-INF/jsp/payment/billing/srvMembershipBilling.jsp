@@ -25,24 +25,24 @@ var detailGridPros = {
 //AUIGrid 칼럼 설정
 var columnLayout = [
 
-    { dataField:"srvMemQuotId" ,headerText:"Quotation ID",editable : false ,visible : false},
-    { dataField:"srvMemQuotIdTxt" ,headerText:"Quotation ID",editable : false ,visible : false},
-    { dataField:"salesOrdId" ,headerText:"Sales Order ID",editable : false ,visible : false},
-    { dataField:"custId" ,headerText:"cust ID",editable : false ,visible : false},
-    { dataField:"appTypeId" ,headerText:"appTypeId",editable : false ,visible : false},    
-    { dataField:"srvMemPacId" ,headerText:"Membership TypeId",editable : false ,visible : false},
-    { dataField:"srvQuotValId" ,headerText:"Expired Date", editable : false ,visible : false, dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"srvMemQuotId" ,headerText:"<spring:message code='pay.head.quotationId'/>",editable : false ,visible : false},
+    { dataField:"srvMemQuotIdTxt" ,headerText:"<spring:message code='pay.head.salesOrderId'/>",editable : false ,visible : false},
+    { dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.salesOrderId'/>",editable : false ,visible : false},
+    { dataField:"custId" ,headerText:"<spring:message code='pay.head.custId'/>",editable : false ,visible : false},
+    { dataField:"appTypeId" ,headerText:"<spring:message code='pay.head.appTypeId'/>",editable : false ,visible : false},    
+    { dataField:"srvMemPacId" ,headerText:"<spring:message code='pay.head.membershipTypeId'/>",editable : false ,visible : false},
+    { dataField:"srvQuotValId" ,headerText:"<spring:message code='pay.head.expiredDate'/>", editable : false ,visible : false, dataType : "date", formatString : "dd-mm-yyyy"},
     
-    { dataField:"salesOrdNo" ,headerText:"Order No",width: 100 , editable : false },
-    { dataField:"srvMemQuotNo" ,headerText:"Quotation No",width: 100 , editable : false },
-    { dataField:"srvDur" ,headerText:"Duration",width: 70 , editable : false},
-    { dataField:"srvFreq" ,headerText:"Frequent",width: 70 , editable : false },    
-    { dataField:"custName" ,headerText:"Customer Name",editable : false},    
-    { dataField:"stkDesc" ,headerText:"Product",width: 200,editable : false },    
-    { dataField:"srvMemDesc" ,headerText:"Type",width: 180 ,editable : false},
-    { dataField:"srvMemPacAmt" ,headerText:"Package Charges",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
-    { dataField:"srvMemBsAmt" ,headerText:"Filter Charges",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
-    { dataField:"totalAmt" ,headerText:"Total Charges",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
+    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 100 , editable : false },
+    { dataField:"srvMemQuotNo" ,headerText:"<spring:message code='pay.head.quotationNo'/>",width: 100 , editable : false },
+    { dataField:"srvDur" ,headerText:"<spring:message code='pay.head.duration'/>",width: 70 , editable : false},
+    { dataField:"srvFreq" ,headerText:"<spring:message code='pay.head.frequent'/>",width: 70 , editable : false },    
+    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customerName'/>",editable : false},    
+    { dataField:"stkDesc" ,headerText:"<spring:message code='pay.head.product'/>",width: 200,editable : false },    
+    { dataField:"srvMemDesc" ,headerText:"<spring:message code='pay.head.type'/>",width: 180 ,editable : false},
+    { dataField:"srvMemPacAmt" ,headerText:"<spring:message code='pay.head.packageCharges'/>",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
+    { dataField:"srvMemBsAmt" ,headerText:"<spring:message code='pay.head.filterCharges'/>",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
+    { dataField:"totalAmt" ,headerText:"<spring:message code='pay.head.totalCharges'/>",width: 100, editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"},
     {
         dataField : "",
         headerText : "",
@@ -60,9 +60,9 @@ var columnLayout = [
     ];
     
 var viewDetailcolumnLayout = [
-    { dataField:"salesOrdNo" ,headerText:"Order No", editable : false },
-    { dataField:"srvMemQuotNo" ,headerText:"SMQ No",editable : false },
-    { dataField:"totalAmt" ,headerText:"Amount",editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"}
+    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>", editable : false },
+    { dataField:"srvMemQuotNo" ,headerText:"<spring:message code='pay.head.smqNo'/>",editable : false },
+    { dataField:"totalAmt" ,headerText:"<spring:message code='pay.head.amount'/>",editable : false ,dataType : "numeric", formatString : "#,##0.00",style : "aui-grid-user-custom-right"}
                     
 ];
 

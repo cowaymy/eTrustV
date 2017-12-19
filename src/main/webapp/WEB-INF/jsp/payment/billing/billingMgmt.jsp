@@ -33,16 +33,16 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"taskId", headerText:"Task ID"},
-    {dataField:"taskType", headerText:"TaskType"},
-    {dataField:"billingYear", headerText:"Year"},
-    {dataField:"billingMonth", headerText:"Month"},
-    {dataField:"totCnt", headerText:"Bills"},
-    {dataField:"totAmt", headerText:"Amount"},
-    {dataField:"startDt", headerText:"Started", dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"}, 
-    {dataField:"endDt", headerText:"Ended", dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"},
-    {dataField:"stus", headerText:"Status"},
-    {dataField:"isCnfm", headerText:"Confirmed",
+    {dataField:"taskId", headerText:"<spring:message code='pay.head.taskId'/>"},
+    {dataField:"taskType", headerText:"<spring:message code='pay.head.taskType'/>"},
+    {dataField:"billingYear", headerText:"<spring:message code='pay.head.year'/>"},
+    {dataField:"billingMonth", headerText:"<spring:message code='pay.head.month'/>"},
+    {dataField:"totCnt", headerText:"<spring:message code='pay.head.bills'/>"},
+    {dataField:"totAmt", headerText:"<spring:message code='pay.head.amount'/>"},
+    {dataField:"startDt", headerText:"<spring:message code='pay.head.started'/>", dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"}, 
+    {dataField:"endDt", headerText:"<spring:message code='pay.head.ended'/>", dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"},
+    {dataField:"stus", headerText:"<spring:message code='pay.head.status'/>"},
+    {dataField:"isCnfm", headerText:"<spring:message code='pay.head.confirmed'/>",
         renderer:{
             type : "CheckBoxEditRenderer",
             showLabel : false,

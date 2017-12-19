@@ -16,13 +16,13 @@ var gridPros = {
 }
 
 var columnLayout=[
-                  {dataField:"rentRunId", headerText:"Bill ID"},
-                  {dataField:"rentDocNo", headerText:"Bill No"},
-                  {dataField:"rentSoId", headerText:"Order ID"},
-                  {dataField:"rentDocTypeId", headerText:"Bill Type"},
-                  {dataField:"rentDateTime", headerText:"Bill Date", dataType : "date", formatString : "dd-mm-yyyy"},
-                  {dataField:"rentAmount", headerText:"Bill Amount", dataType : "numeric", formatString : "#,##0"},
-                  {dataField:"rentInstNo", headerText:"Installment"}
+                  {dataField:"rentRunId", headerText:"<spring:message code='pay.head.billId'/>"},
+                  {dataField:"rentDocNo", headerText:"<spring:message code='pay.head.billNo'/>"},
+                  {dataField:"rentSoId", headerText:"<spring:message code='pay.head.orderId'/>"},
+                  {dataField:"rentDocTypeId", headerText:"<spring:message code='pay.head.billType'/>"},
+                  {dataField:"rentDateTime", headerText:"<spring:message code='pay.head.billDate'/>", dataType : "date", formatString : "dd-mm-yyyy"},
+                  {dataField:"rentAmount", headerText:"<spring:message code='pay.head.billAmount'/>", dataType : "numeric", formatString : "#,##0"},
+                  {dataField:"rentInstNo", headerText:"<spring:message code='pay.head.installment'/>"}
 ];
 
 function fn_orderSearch(){

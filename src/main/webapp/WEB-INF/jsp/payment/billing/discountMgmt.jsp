@@ -27,47 +27,47 @@ $(document).ready(function(){
 var discountLayout = [ 
                        {
                            dataField : "salesOrdNo",
-                           headerText : "Order No",
+                           headerText : "<spring:message code='pay.head.orderNo'/>",
                            editable : false
                        }, {
                            dataField : "name",
-                           headerText : "Customer Name",
+                           headerText : "<spring:message code='pay.head.customerName'/>",
                            editable : false,
                            width: 300,
                            style : "my-custom-up"
                        }, {
                            dataField : "codeDesc",
-                           headerText : "Discount Type",
+                           headerText : "<spring:message code='pay.head.discountType'/>",
                            editable : false,
                            width: 200
                        }, {
                            dataField : "dcAmtPerInstlmt",
-                           headerText : "Amount Per Installment",
+                           headerText : "<spring:message code='pay.head.amtPerInstallment'/>",
                            editable : false,
                            width: 200
                        }, {
                            dataField : "discountPeriod",
-                           headerText : "Discount Period",
+                           headerText : "<spring:message code='pay.head.discountPeriod'/>",
                            editable : false
                        }, {
                            dataField : "crtUserId",
-                           headerText : "Created By",
+                           headerText : "<spring:message code='pay.head.createdBy'/>",
                            editable : false
                        }, {
                            dataField : "",
-                           headerText : "Created Ay",
+                           headerText : "<spring:message code='pay.head.createdAy'/>",
                            editable : false
                        }, {
                            dataField : "updUserId",
-                           headerText : "Updated By",
+                           headerText : "<spring:message code='pay.head.updatedBy'/>",
                            editable : false
                        }, {
                            dataField : "",
-                           headerText : "Last Update",
+                           headerText : "<spring:message code='pay.head.lastUpdate'/>",
                            editable : false
                        }, {
                            dataField : "name1",
-                           headerText : "Status",
+                           headerText : "<spring:message code='pay.head.status'/>",
                            editable : false
                        }, {
                            dataField : "",

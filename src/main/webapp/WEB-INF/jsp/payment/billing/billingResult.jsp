@@ -27,13 +27,13 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"rnum", headerText:"No.", width : 80},
-    {dataField:"salesOrdNo", headerText:"Order No", width : 120},
-    {dataField:"taskBillGrpId", headerText:"Bill Group", width : 120},
-    {dataField:"name", headerText:"Customer Name", width : 250},
-    {dataField:"taskBillInstNo", headerText:"Installment", width : 100},
-    {dataField:"taskBillAmt", headerText:"Amount", width : 100},
-    {dataField:"taskRefDtTm", headerText:"Issued" , width : 160, dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"}
+    {dataField:"rnum", headerText:"<spring:message code='pay.head.no'/>", width : 80},
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>", width : 120},
+    {dataField:"taskBillGrpId", headerText:"<spring:message code='pay.head.billGroup'/>", width : 120},
+    {dataField:"name", headerText:"<spring:message code='pay.head.customerName'/>", width : 250},
+    {dataField:"taskBillInstNo", headerText:"<spring:message code='pay.head.installment'/>", width : 100},
+    {dataField:"taskBillAmt", headerText:"<spring:message code='pay.head.amount'/>", width : 100},
+    {dataField:"taskRefDtTm", headerText:"<spring:message code='pay.head.issued'/>" , width : 160, dataType : "date", formatString : "yyyy-mm-dd HH:MM:ss"}
 ];
 
 function fn_initData(){
