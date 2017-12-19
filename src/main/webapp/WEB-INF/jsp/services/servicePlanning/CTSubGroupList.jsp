@@ -420,7 +420,8 @@ function fn_CTSubAssign(){
 	
 	
 	memId = memId[0];
-	var jsonObj=  { "memId" : memId};
+	var jsonObj=  { "memId" : memId, 
+			             "branchCode" :branchCode};
     Common.popupDiv("/services/serviceGroup/ctSubGroupPop.do" ,  jsonObj , null , true , '_NewAddDiv1');
 }
 

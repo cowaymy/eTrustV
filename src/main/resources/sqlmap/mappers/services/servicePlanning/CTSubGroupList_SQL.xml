@@ -160,6 +160,7 @@ from
     ,( select distinct ct_sub_Grp
         from sys0064m 
         where ct_sub_Grp is not null
+        and ct_brnch_code=#{branch}
                ) B
 where a.CT_Sub_GRp(+) = b.ct_sub_Grp
 </select>

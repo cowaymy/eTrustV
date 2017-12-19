@@ -213,7 +213,7 @@ public class CTSubGroupListController {
 
 		@RequestMapping(value = "/selectCtSubGrp")
 		 ResponseEntity<List<EgovMap>> selectCtSubGrp(@RequestParam Map<String, Object> params, HttpServletRequest request) {
-			logger.debug("params {}", params);
+			logger.debug("params1111 {}", params);
 			List<EgovMap> CtSubGrps = CTSubGroupListService.selectCTSubGroupMajor(params);
 			return ResponseEntity.ok(CtSubGrps);
 			

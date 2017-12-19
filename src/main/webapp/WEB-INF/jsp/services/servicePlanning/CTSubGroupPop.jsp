@@ -71,7 +71,7 @@ function fn_CTAssignSave(){
 	var mainGroupItems = AUIGrid.getItemsByValue(gridCtSubgrpID, "radioFlag", "1");
 	
     if(mainGroupItems.length > 1){
-        alert("too many choose main Group, Please choose one");
+    	Common.alert("too many choose main Group, Please choose one");
         return
     }
     var jsonObj;
@@ -102,8 +102,9 @@ function fn_CTAssignSave(){
         //grid 생성
         tagRespondGrid();
         var memberId = $("#memID").val();
+        var branchCode =$("#branchCode").val();
         
-        Common.ajax("GET","/services/serviceGroup/selectCtSubGrp",{memId : memberId},function(result) {
+        Common.ajax("GET","/services/serviceGroup/selectCtSubGrp",{memId : memberId, branch : branchCode},function(result) {
             console.log("성공.");
             console.log("data : "+ result);
             AUIGrid.setGridData(gridCtSubgrpID,result);
@@ -136,7 +137,7 @@ function fn_CTAssignSave(){
 
 <section class="pop_body"><!-- pop_body start -->
 <input type="hidden" id="memID" name="memId" value="${params.memId}">
-
+<input type="hidden" id="branchCode" name="branchCode" value="${params.branchCode}">
 
 
 <aside class="title_line"><!-- title_line start -->
