@@ -1263,9 +1263,11 @@
         // accClaimAdtVO
         //----------------------------------------------------------------------
         var vAccNo = "", vAccName = "", vIssueBankID = 0, vAdtPayMode = "REG";
+        var vECash = 1;
         
         if($('#rentPayMode').val() == '130') {
             vAdtPayMode = "REG";
+            vECash = 0;
         }
         else if($('#rentPayMode').val() == '131') {
             vAccNo = $('#hiddenRentPayCRCId').val().trim();
@@ -1324,7 +1326,7 @@
                 totPv                   : $('#ordPv').val().trim(),
                 empChk                  : $('#empChk').val(),
                 exTrade                 : $('#exTrade').val(),
-//              ecash                   : $('#ordPv').val(),
+                ecash                   : vECash,
                 promoDiscPeriodTp       : $('#promoDiscPeriodTp').val(),
                 promoDiscPeriod         : $('#promoDiscPeriod').val().trim(),
                 norAmt                  : $('#orgOrdPrice').val().trim(),
