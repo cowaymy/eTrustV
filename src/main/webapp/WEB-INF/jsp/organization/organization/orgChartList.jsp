@@ -317,7 +317,7 @@
            } */
            
             var cmbMemberTp = 3;
-            var deptLevelCd = 1;
+            var deptLevelCd = 2;
             var parentIdCd = "";
             var deptIdCd = "";
             
@@ -520,7 +520,7 @@
 <tr>
     <th scope="row"> Plan Month/Year</th>
     <td>
-    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0006T_Dt" class="j_date2" value="${searchDt_pop }" />
+    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="searchDt" class="j_date2" value="" />
     </td>
 </tr>
 
