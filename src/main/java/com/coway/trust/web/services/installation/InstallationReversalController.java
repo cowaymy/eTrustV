@@ -120,7 +120,6 @@ public class InstallationReversalController {
 		//Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 		//formData.put("user_id", userId);
 		
-		
 		int callTypeId = Integer.parseInt(params.get("callTypeId").toString());	//ccr0006d.type_id
 		int result = 0 ;
 		
@@ -134,18 +133,23 @@ public class InstallationReversalController {
 		
 		String remark = params.get("reverseReasonText").toString();
 		logger.debug(remark);;
+		
 		String failReason =params.get("failReason").toString();
 		logger.debug(failReason);;
+		
 		String ctID = params.get("ectid").toString();
 		logger.debug(ctID);;
+		
 		int applicationTypeID = Integer.parseInt(params.get("applicationTypeID").toString());
 		System.out.println(applicationTypeID);;
+		
 		int salesOrderID = Integer.parseInt(params.get("esalesOrdId").toString());
 		System.out.println(salesOrderID);;
+		
 		String salesDt = params.get("esalesDt").toString();
 		logger.debug(salesDt);;
-		int defaultPacID=0;
 		
+		int defaultPacID=0;
 		if(Integer.parseInt(params.get("applicationTypeID").toString())==66){
 			defaultPacID=4;
 		}else if(Integer.parseInt(params.get("applicationTypeID").toString())==67 || Integer.parseInt(params.get("applicationTypeID").toString())==68 || Integer.parseInt(params.get("applicationTypeID").toString())==142){
@@ -178,38 +182,68 @@ public class InstallationReversalController {
 		hcID = Integer.parseInt(hcid);
 		params.put("hcID",hcID);
 		
-		int inChargeCTWHID;
+		int inChargeCTWHID = 0;
+		if(params.get("inChargeCTWHID") !=null)
+		inChargeCTWHID = Integer.parseInt(params.get("inChargeCTWHID").toString());
+		
 		int retWarehouseID;
 		String warehouseGrade;
-		int productID;
 		
-		String customerName = params.get("eCustomerName").toString();  
-		String installNo = params.get("einstallEntryNo").toString();
+		int productID = 0;
+		if(params.get("eProductID") !=null)
+		productID = Integer.parseInt(params.get("eProductID").toString());
+		
+		
+		String customerName = "";
+		if(params.get("eCustomerName")!=null)
+		customerName = params.get("eCustomerName").toString();
+		
+		String installNo = "";
+		if(params.get("einstallEntryNo")!=null)
+		installNo = params.get("einstallEntryNo").toString();
 		
 		EgovMap  installresults = installationReversalService.getInstallResults(params);
 		//logger.debug("installresults {} :" ,installresults);
 		Map<String, Object> InstallresultReverse = new HashMap();
 		InstallresultReverse.put("InstallResultID", installresults.get("resultId"));
-		InstallresultReverse.put("InstallEntryID", installresults.get("entryId"));
-		InstallresultReverse.put("InstallStatusID", installresults.get("stusCodeId"));
-		InstallresultReverse.put("InstallCTID", installresults.get("ctId"));
-		InstallresultReverse.put("InstallDate", installresults.get("installDt"));
-		InstallresultReverse.put("InstallRemark", installresults.get("rem"));
-		InstallresultReverse.put("GLPost", installresults.get("glPost"));
-		InstallresultReverse.put("InstallCreateBy", installresults.get("crtUserId"));
-		InstallresultReverse.put("InstallCreateAt", installresults.get("crtDt"));
-		InstallresultReverse.put("InstallSirimNo", installresults.get("sirimNo"));
-		InstallresultReverse.put("InstallSerialNo", installresults.get("serialNo"));
-		InstallresultReverse.put("InstallFailID", installresults.get("fail_id"));
-		InstallresultReverse.put("InstallNextCallDate", installresults.get("nextCallDt"));
-		InstallresultReverse.put("InstallAllowComm", installresults.get("allowComm"));
-		InstallresultReverse.put("InstallIsTradeIn", installresults.get("isTradeIn"));
-		InstallresultReverse.put("InstallRequireSMS", installresults.get("requireSms"));
-		InstallresultReverse.put("InstallDocRefNo1", installresults.get("docRefNo1"));
-		InstallresultReverse.put("InstallDocRefNo2", installresults.get("docRefNo2"));
+//		InstallresultReverse.put("InstallEntryID", installresults.get("entryId"));
+		InstallresultReverse.put("InstallEntryID", installEntryID);
+//		InstallresultReverse.put("InstallStatusID", installresults.get("stusCodeId"));
+		InstallresultReverse.put("InstallStatusID", "21");
+//		InstallresultReverse.put("InstallCTID", installresults.get("ctId"));
+		InstallresultReverse.put("InstallCTID",ctID );
+//		InstallresultReverse.put("InstallDate", installresults.get("installDt"));
+		InstallresultReverse.put("InstallDate", installDate);
+//		InstallresultReverse.put("InstallRemark", installresults.get("rem"));
+		InstallresultReverse.put("InstallRemark", remark);
+//		InstallresultReverse.put("GLPost", installresults.get("glPost"));
+		InstallresultReverse.put("GLPost", 0);
+//		InstallresultReverse.put("InstallCreateBy", installresults.get("crtUserId"));
+		InstallresultReverse.put("InstallCreateBy", 0);
+//		InstallresultReverse.put("InstallCreateAt", installresults.get("crtDt"));
+//		InstallresultReverse.put("InstallSirimNo", installresults.get("sirimNo"));
+		InstallresultReverse.put("InstallSirimNo", "");
+//		InstallresultReverse.put("InstallSerialNo", installresults.get("serialNo"));
+		InstallresultReverse.put("InstallSerialNo", "");
+//		InstallresultReverse.put("InstallFailID", installresults.get("fail_id"));
+		InstallresultReverse.put("InstallFailID", failReason);
+//		InstallresultReverse.put("InstallNextCallDate", installresults.get("nextCallDt"));   //nextCallDate
+		InstallresultReverse.put("InstallNextCallDate", nextCallDate);
+//		InstallresultReverse.put("InstallAllowComm", installresults.get("allowComm"));
+		InstallresultReverse.put("InstallAllowComm", 1);
+//		InstallresultReverse.put("InstallIsTradeIn", installresults.get("isTradeIn"));
+		InstallresultReverse.put("InstallIsTradeIn", 1);
+//		InstallresultReverse.put("InstallRequireSMS", installresults.get("requireSms"));
+		InstallresultReverse.put("InstallRequireSMS", 1);
+//		InstallresultReverse.put("InstallDocRefNo1", installresults.get("docRefNo1"));
+		InstallresultReverse.put("InstallDocRefNo1", "");
+//		InstallresultReverse.put("InstallDocRefNo2", installresults.get("docRefNo2"));
+		InstallresultReverse.put("InstallDocRefNo2", "");
 		InstallresultReverse.put("InstallUpdateAt", installresults.get("updDt"));
-		InstallresultReverse.put("InstallUpdateBy", installresults.get("updUserId"));
-		InstallresultReverse.put("InstallAdjAmount", installresults.get("adjAmt"));
+//		InstallresultReverse.put("InstallUpdateBy", installresults.get("updUserId"));
+		InstallresultReverse.put("InstallUpdateBy", userId);
+//		InstallresultReverse.put("InstallAdjAmount", installresults.get("adjAmt"));
+		InstallresultReverse.put("InstallAdjAmount", 0);
 		InstallresultReverse.put("einstallEntryId", params.get("einstallEntryId"));
 		
 		if(callTypeId == 257){ //ccr0006d.type_id = 257
