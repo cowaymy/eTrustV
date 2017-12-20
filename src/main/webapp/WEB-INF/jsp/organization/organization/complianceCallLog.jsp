@@ -5,8 +5,13 @@
 $(document).ready(function() { 
 	ComplianceListGrid();
 
+	AUIGrid.bind(myGridID_compliance, "cellDoubleClick", function(event) {
+		var complianceId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncId");
+		 Common.popupDiv("/organization/compliance/complianceViewPop.do?complianceId="+complianceId,"");
+     });
+	
 });
-var myGridID;
+var myGridID_compliance;
 function ComplianceListGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -30,12 +35,22 @@ function ComplianceListGrid() {
         editable : false,
         width : 200
     }, {
+        dataField : "cmplncId",
+        headerText : "cmplncId",
+        editable : false,
+        width : 0
+    }, {
         dataField : "c1",
         headerText : "Received Date",
         editable : false,
         width : 200,
         dataType : "date", 
         formatString : "dd/mm/yyyy"
+    }, {
+        dataField : "userName",
+        headerText : "Person In Charge",
+        editable : false,
+        width : 200
     }];
 
 
@@ -70,14 +85,14 @@ function ComplianceListGrid() {
 
 
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-    myGridID = AUIGrid.create("#grid_wrap_complianceList", columnLayout, gridPros);
+    myGridID_compliance = AUIGrid.create("#grid_wrap_complianceList", columnLayout, gridPros);
 }
 
 function fn_complianceSearch(){
 	Common.ajax("GET", "/organization/compliance/complianceCallLog.do", $("#complianceSearch").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        AUIGrid.setGridData(myGridID, result);
+        AUIGrid.setGridData(myGridID_compliance, result);
     });
 }
 
@@ -99,12 +114,17 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        AUIGrid.clearGridData(myGridID); 
+        AUIGrid.clearGridData(myGridID_compliance); 
     });
 };
 
 function fn_complianceNew(){
 	Common.popupDiv("/organization/compliance/complianceCallLogNewPop.do"  , null, null , true , '');
+}
+
+function fn_maintance(){
+	
+	Common.popupDiv("/organization/compliance/complianceLogMaintencePop.do?complianceId="+complianceId  , null, null , true , '');
 }
 </script>
 <section id="content"><!-- content start -->
@@ -118,6 +138,7 @@ function fn_complianceNew(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Compliance Call Log</h2>
 <ul class="right_btns">
+    <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_maintance()"><span class="Maintance"></span>Maintance</a></p></li> -->
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>
@@ -169,8 +190,20 @@ function fn_complianceNew(){
     </select>
     </td>
     <th scope="row">Member Code</th>
-    <td colspan="3">
+    <td>
     <input type="text" title="" placeholder="" class="" id="memCode" name="memCode"/>
+    </td>
+    <th scope="row">Person In Charge</th>
+    <td>
+    <select class="w100p"  id="userId" name="userId">
+        <option value="">Person In Charge</option>
+        <option value="18522">NICKY</option>
+        <option value="32807">EUGENE</option>
+        <option value="34026">OOI BENG EAN</option>
+        <option value="56056">WONG WENG KIT</option>
+        <option value="57202">KATE</option>
+        <option value="59697">PAVITRA</option>
+    </select>
     </td>
 </tr>
 </tbody>

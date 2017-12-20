@@ -48,7 +48,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     $("#reselectBtn").show();
     
     if(memCode.substring())
-    fn_searchMemberDetail(memCode);
+    fn_searchMemberDetail(memId);
 }
 
 function fn_searchMemberDetail(memCode){
@@ -472,6 +472,7 @@ function fn_confirm(){
 <form action="#" method="post" id="saveForm">
 <input type="hidden" title="" placeholder="" class="" id="memberId" name="memberId"/>
 <input type="hidden" title="" placeholder="" class="" id="hidFileName" name="hidFileName"/>
+<input type="hidden" title="" placeholder="" class="" id="groupId" name="groupId"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -550,6 +551,22 @@ function fn_confirm(){
     </td>
 </tr>
 <tr>
+    <th scope="row">Person In Charge</th>
+    <td colspan="3">
+    <select class="w100p"  id="changePerson" name="changePerson">
+        <option value="18522">NICKY</option>
+        <option value="32807">EUGENE</option>
+        <option value="34026">OOI BENG EAN</option>
+        <option value="56056">WONG WENG KIT</option>
+        <option value="57202">KATE</option>
+        <option value="59697">PAVITRA</option>
+    </select>
+    </td>
+    <th scope="row"></th>
+    <td colspan="3">
+    </td>
+</tr>
+<tr>
     <th scope="row">Compliance Remark</th>
     <td colspan="7">
     <textarea cols="20" rows="5" placeholder="" id="complianceRem" name="complianceRem"></textarea>
@@ -560,7 +577,7 @@ function fn_confirm(){
 </form>
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save()">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javscript:fn_clear()">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_clear()">Clear</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_uploadfile()">Upload Attachment</a></p></li>
 </ul>
 

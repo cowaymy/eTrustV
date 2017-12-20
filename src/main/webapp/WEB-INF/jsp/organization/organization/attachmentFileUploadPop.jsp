@@ -25,13 +25,15 @@ function fn_attachFile(){
 			if(date.getDate() < 10){
 				day = "0"+date.getDate(); 
 			}
-		     var newName = day+(date.getMonth()+1)+date.getFullYear()+date.getHours()+date.getMinutes()+date.getSeconds();
-		     
+			var month = date.getMonth()+1;
+		     var newName = ""+day+month+date.getFullYear()+date.getHours()+date.getMinutes()+date.getSeconds();
+		     alert(newName);
 		     
 		    var formData = Common.getFormData("attachTrForm");
 		    formData.append("targetFolder", $("#targetFolder").val());
 		    formData.append("fileName", newName);
 			 Common.ajaxFile("/organization/compliance/updateFile", formData, function(result)    {
+				 
 			       
 			        console.log("성공." + JSON.stringify(result));
 			        console.log("data : " + result.cnt);
@@ -39,6 +41,7 @@ function fn_attachFile(){
 			        Common.alert(result.message);
 			        
 			       $("#hidFileName").val("/WebShare/ComplianceCallLog/ComplianceCallLog/" + newName);
+			       $("#groupId").val(result.data);
 			       $("#fileUploadPop").remove();
 			        
 			     }
