@@ -678,6 +678,30 @@ public class CommissionExcelDownloadController {
 						 "RUN ID", "TASK ID", "IS EXCLUDE" };
 				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 				largeExcelService.downLoad69T(map, downloadHandler);
+			}else if (codeNm.equals(CommissionConstants.COMIS_BSD_P024)) {
+				map.put("codeId", request.getParameter("codeId"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
+				map.put("useYnCombo", request.getParameter("useYnCombo"));
+
+				columns = new String[] { "runId","taskId","grpName","emplyCode","emplyId","isExclude",
+						"posItmId","posId","posItmStockId","stkDesc","stkCode", "posItmQty","posItmUnitPrc","posItmTot","posItmChrg","posItmTxs",
+						"rcvStusId","posTypeId","posModuleTypeId" };
+				titles = new String[] { "RUN ID","TASK ID","GRP NAME","EMPLY CODE","EMPLY ID","IS EXCLUDE",
+						"POS ITM ID","POS ID","POS ITM STOCK ID","STK DESC","STK CODE", "POS ITM QTY","POS ITM UNIT PRC","POS ITM TOT","POS ITM CHRG","POS ITM TXS",
+						"RCV STUS ID","POS TYPE ID","POS MODULE TYPE ID" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad70T(map, downloadHandler);
+			}else if (codeNm.equals(CommissionConstants.COMIS_BSD_P025)) {
+				map.put("codeId", request.getParameter("codeId"));
+				map.put("emplyCd", request.getParameter("emplyCd"));
+				map.put("useYnCombo", request.getParameter("useYnCombo"));
+
+				columns = new String[] { "grpName","emplyCode","emplyId","docentry","reqdate","reqpernm","reqdeptnm","docdate","acctcode","acctname",
+						"amt","vatamt","vatNon","tamt","vatcode","dimension1","isExclude","taskId","runId" };
+				titles = new String[] { "GRP NAME","EMPLY CODE","EMPLY ID","DOCENTRY","REQDATE","REQPERNM","REQDEPTNM","DOCDATE","ACCTCODE","ACCTNAME",
+						"AMT","VATAMT","VAT NON","TAMT","VATCODE","DIMENSION1","IS EXCLUDE","TASK ID","RUN ID" };
+				downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
+				largeExcelService.downLoad71T(map, downloadHandler);
 			}
 			else if (codeNm.equals(CommissionConstants.COMIS_BSD_P020)) {
 				map.put("ordId", request.getParameter("ordId"));
@@ -978,19 +1002,19 @@ public class CommissionExcelDownloadController {
 						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 					}else if(actionType.equals("C")){
 						columns = new String[] { "memCode","memName","rank","nric",
-								"sCrdSumPoint","sHappycallRate","sHappycallMark",	"sHsRate","sHsMark",
-								"sRcRate","sRcMark","sNsRate","sNsMark","sOutplsAmt",
-								"sDropRate","sDropMark","sPerAmt","sSalesAmt","sBonusAmt",
-								"sCollectAmt","sMembershipAmt","sPeAmt","sHealthyFamilyAmt","sNewcodyAmt",
-								"sIntroductionFees","sMobilePhone","sStaffPurchase","sTelephoneDeduct","sIncentive",
-								"sAdj","sCodyRegistrationFees","sShiAmt","sRentalmembershipAmt","sShiRentalmembershipAmt"};
+								"aCrdSumPoint","sCrdSumPoint","aHappycallRate","sHappycallRate","aHappycallMark","sHappycallMark",	"aHsRate",	"sHsRate","aHsMark","sHsMark",
+								"aRcRate","sRcRate","aRcMark","sRcMark","aNsRate","sNsRate","aNsMark","sNsMark","aOutplsAmt","sOutplsAmt",
+								"aDropRate","sDropRate","aDropMark","sDropMark","aPerAmt","sPerAmt","aSalesAmt","sSalesAmt","aBonusAmt","sBonusAmt",
+								"aCollectAmt","sCollectAmt","aMembershipAmt","sMembershipAmt","aPeAmt","sPeAmt","aHealthyFamilyAmt","sHealthyFamilyAmt","aNewcodyAmt","sNewcodyAmt",
+								"aIntroductionFees","sIntroductionFees","aMobilePhone","sMobilePhone","aStaffPurchase","sStaffPurchase","aTelephoneDeduct","sTelephoneDeduct","aIncentive","sIncentive",
+								"aAdj","sAdj","aCodyRegistrationFees","sCodyRegistrationFees","aShiAmt","sShiAmt","aRentalmembershipAmt","sRentalmembershipAmt","aShiRentalmembershipAmt","sShiRentalmembershipAmt"};
 						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
-								"CRD SUM POINT","HAPPYCALL RATE","HAPPYCALL MARK",	"HS RATE","HS MARK",
-								"RC RATE","RC MARK","NS RATE","NS MARK","OUTPLS AMT",
-								"DROP RATE","DROP MARK","PER AMT","SALES AMT","BONUS AMT",
-								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","HEALTHY FAMILY AMT","NEWCODY AMT",
-								"INTRODUCTION FEES","MOBILE PHONE","STAFF PURCHASE","TELEPHONE DEDUCT","INCENTIVE",
-								"ADJ","CODY REGISTRATION FEES","SHI AMT","RENTALMEMBERSHIP AMT","SHI RENTALMEMBERSHIP AMT" };
+								"(A)CRD SUM POINT","(S)CRD SUM POINT","(A)HAPPYCALL RATE","(S)HAPPYCALL RATE","(A)HAPPYCALL MARK","(S)HAPPYCALL MARK",	"(A)HS RATE",	"(S)HS RATE","(A)HS MARK","(S)HS MARK",
+								"(A)RC RATE","(S)RC RATE","(A)RC MARK","(S)RC MARK","(A)NS RATE","(S)NS RATE","(A)NS MARK","(S)NS MARK","(A)OUTPLS AMT","(S)OUTPLS AMT",
+								"(A)DROP RATE","(S)DROP RATE","(A)DROP MARK","(S)DROP MARK","(A)PER AMT","(S)PER AMT","(A)SALES AMT","(S)SALES AMT","(A)BONUS AMT","(S)BONUS AMT",
+								"(A)COLLECT AMT","(S)COLLECT AMT","(A)MEMBERSHIP AMT","(S)MEMBERSHIP AMT","(A)PE AMT","(S)PE AMT","(A)HEALTHY FAMILY AMT","(S)HEALTHY FAMILY AMT","(A)NEWCODY AMT","(S)NEWCODY AMT",
+								"(A)INTRODUCTION FEES","(S)INTRODUCTION FEES","(A)MOBILE PHONE","(S)MOBILE PHONE","(A)STAFF PURCHASE","(S)STAFF PURCHASE","(A)TELEPHONE DEDUCT","(S)TELEPHONE DEDUCT","(A)INCENTIVE","(S)INCENTIVE",
+								"(A)ADJ","(S)ADJ","(A)CODY REGISTRATION FEES","(S)CODY REGISTRATION FEES","(A)SHI AMT","(S)SHI AMT","(A)RENTALMEMBERSHIP AMT","(S)RENTALMEMBERSHIP AMT","(A)SHI RENTALMEMBERSHIP AMT","(S)SHI RENTALMEMBERSHIP AMT" };
 						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 					}
 					largeExcelService.downLoadCDResultIndex(map, downloadHandler);
@@ -1043,7 +1067,7 @@ public class CommissionExcelDownloadController {
 									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
 									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
 									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
-									"(A) ADJ","SHI AMT","(S) ADJ","SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" };
+									"(A) ADJ","(S) ADJ","(A)SHI AMT","(S)SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" };
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}
 					}else if(CommissionConstants.COMIS_CD_SCM_CD.equals(orgCombo)){

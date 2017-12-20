@@ -149,6 +149,16 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoad69T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.CMM0069T.getQueryId(), parameter, excelDownloadHandler);
 	}
+	
+	@Override
+	public void downLoad70T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0070T.getQueryId(), parameter, excelDownloadHandler);
+	}
+	
+	@Override
+	public void downLoad71T(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.CMM0071T.getQueryId(), parameter, excelDownloadHandler);
+	}
 
 	@Override
 	public void downLoad28CD(Object parameter, ExcelDownloadHandler excelDownloadHandler) {

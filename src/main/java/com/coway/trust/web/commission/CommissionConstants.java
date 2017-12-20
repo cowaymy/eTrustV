@@ -133,10 +133,12 @@ public class CommissionConstants {
 	public static final String COMIS_BSD_P017 = "BSD-P17";					//CMM0067T
 	public static final String COMIS_BSD_P018 = "BSD-P18";					//CMM0068T
 	public static final String COMIS_BSD_P019 = "BSD-P19";					//CMM0069T
-	public static final String COMIS_BSD_P020 = "BSD-P20";					//18
-	public static final String COMIS_BSD_P021 = "BSD-P21";					//19
-	public static final String COMIS_BSD_P022 = "BSD-P22";					//20
-	public static final String COMIS_BSD_P023 = "BSD-P23";					//21
+	public static final String COMIS_BSD_P020 = "BSD-P20";					//CMM0018T
+	public static final String COMIS_BSD_P021 = "BSD-P21";					//CMM0019T
+	public static final String COMIS_BSD_P022 = "BSD-P22";					//CMM0020T
+	public static final String COMIS_BSD_P023 = "BSD-P23";					//CMM0021T
+	public static final String COMIS_BSD_P024 = "BSD-P24";					//CMM0070T
+	public static final String COMIS_BSD_P025 = "BSD-P25";					//CMM0071T
 	public static final String COMIS_BSG_P01 = "BSG-P01";					//
 	
 	public static final String COMIS_NEO_TYPE = "NEOPRO";					//

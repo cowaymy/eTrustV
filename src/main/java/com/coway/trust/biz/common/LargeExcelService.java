@@ -67,6 +67,10 @@ public interface LargeExcelService {
 	
 	void downLoad69T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 	
+	void downLoad70T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+	
+	void downLoad71T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+	
 	void downLoad28CD(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad28CT(Object parameter, ExcelDownloadHandler excelDownloadHandler);

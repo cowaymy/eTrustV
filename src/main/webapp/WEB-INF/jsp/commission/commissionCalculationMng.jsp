@@ -76,30 +76,26 @@
 				//Check : Run procedure in 20 minutes
 				Common.ajax("GET", "/commission/calculation/runningPrdCheck",$("#searchForm").serializeJSON(), function(result) {
 					if(result.data[0] == null){
-					
-	            var gridList = AUIGrid.getGridData(myGridID_CAL); //그리드 데이터
-							var formList = $("#searchForm").serializeArray(); //폼 데이터
-
-							//param data array
-							var data = {};
-							data.all = gridList;
-							data.form = formList;
-
-							var option = {
-						            timeout: 60000*3
-						        };
-							Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data, function(result) {
-								$("#search").trigger("click");
-							}, function(jqXHR, textStatus, errorThrown) {
-								console.log("실패하였습니다.");
-								console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-								if(textStatus=="timeout" || jqXHR.status == 503){
-									 Common.alert("Running... Please wait about 20 minutes ");
-					         $("#search").trigger("click");
-								}
-							},option);
-					} else {
-						Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
+					    
+						var gridList = AUIGrid.getGridData(myGridID_CAL);       //그리드 데이터
+                        var formList = $("#searchForm").serializeArray();       //폼 데이터
+                        
+                        //param data array
+                        var data = {};
+                        data.all = gridList;
+                        data.form = formList;
+                        
+                        Common.alert("The batch has been executed.");
+                        
+                        var option = {
+                                isShowLoader : false
+                            };
+                        Common.ajax("POST", "/commission/calculation/callCommissionProcedureBatch", data,null,null,option);                            	 
+                        
+                         $("#search").trigger("click");
+						
+					}else{
+						Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
 					}
 				});//runningPrdCheck
 
@@ -215,41 +211,37 @@
 						}
 					}
 
-					if (Number(year) < Number($("#searchDt").val().substr(3, 7))) {
-						Common.alert("<spring:message code='commission.alert.currentDate'/>");
-						return false;
-					} else if (Number(year) == Number($("#searchDt").val().substr(3, 7)) && Number(month) < Number($("#searchDt").val().substr(0, 2))) {
-						Common.alert("<spring:message code='commission.alert.currentDate'/>");
-						return false;
-					} else if ((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState")) == "8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState")) == "9") {
-						Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
-						return false;
-					} else {
-
-						var data = {
-							"actionType" : $("input[type=radio][name=actionType]:checked").val(),
-							"ItemGrCd" : AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cd"),
-							"prdNm" : AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName")
-						};
-						Common.ajax("GET", "/commission/calculation/runningPrdCheck", data, function(result) {
-
-							if (result.data[0] == null) {
-								  var option = {
-					                        timeout: 60000*2
-					                    };  
-								Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
-									if (rowIndex == myGridID_CALLength - 1) {
-										Common.ajax("GET", "/commission/calculation/prdBatchSuccessHistory", $("#searchForm").serialize());
-									}
-									$("#search").trigger("click");
-								}, function(jqXHR, textStatus, errorThrown) {
-									console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+	            	if(Number(year) < Number($("#searchDt").val().substr(3, 7))) {
+	            		Common.alert("<spring:message code='commission.alert.currentDate'/>");
+                        return false;
+                    }else if(Number(year) == Number($("#searchDt").val().substr(3,7)) && Number(month) < Number($("#searchDt").val().substr(0, 2))) {
+                    	Common.alert("<spring:message code='commission.alert.currentDate'/>");
+                        return false;
+                    }else if((AUIGrid.getCellValue(myGridID_CAL, rowIndex, "calState")) == "8" && (AUIGrid.getCellValue(myGridID_CAL, failCnt, "calState")) == "9") {
+	            		Common.alert("<spring:message code='commission.alert.calFirstErrorExecute'/>");
+	            		return false;
+	            	}else {
+	            		
+	            		var data = {"actionType":$("input[type=radio][name=actionType]:checked").val(),"ItemGrCd":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "cd") , "prdNm":AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName")};
+	            		Common.ajax("GET", "/commission/calculation/runningPrdCheck",data, function(result) {
+	            			
+	            			if(result.data[0] == null){
+	            				$("#lastLine").val("");
+	            				if(rowIndex == myGridID_CALLength-1){
+	            					$("#lastLine").val("Y");
+	            				}else{
+	            					$("#lastLine").val("N");
+	            				}
+				            	Common.ajax("GET", "/commission/calculation/callCommissionProcedure", $("#searchForm").serialize(), function(result) {
+				            		$("#search").trigger("click");
+				            	}, function(jqXHR, textStatus, errorThrown) {
+			                          console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);		             
 
 									if (textStatus=="timeout" ||jqXHR.status == 503) {
 										Common.alert("Running... Please wait about 5 minutes ");
 										$("#search").trigger("click");
 									}
-								},option); //callPrd
+								}); //callPrd
 
 							} else {
 								Common.alert(result.data[0].calYearMonth + " - " + result.data[0].calName + " is running. </br> Please wait about 20 minutes ");
@@ -318,6 +310,7 @@
 	      <input type="hidden" name="prdNm" id="prdNm"/>
           <input type="hidden" name="prdDec" id="prdDec"/>
 		  <input type="hidden" id="orgGrCd" name="orgGrCd" value=""/>
+		  <input type="hidden" id="lastLine" name="lastLine" value=""/>
           
 			<table class="type1">
 				<!-- table start -->
