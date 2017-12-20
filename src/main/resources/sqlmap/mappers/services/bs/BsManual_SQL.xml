@@ -1250,7 +1250,7 @@
                                 ,ACTN_MEM_ID = #{srvBsWeek}
                          WHERE   SCHDUL_ID = #{hidschdulId}
 
-HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
+
 
 
              </update>
