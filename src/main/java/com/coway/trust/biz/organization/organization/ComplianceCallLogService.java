@@ -18,4 +18,20 @@ public interface ComplianceCallLogService {
 	EgovMap selectCheckOrder(Map<String, Object> params);
 	
 	EgovMap selectComplianceOrderDetail(Map<String, Object> params);
+	
+	EgovMap selectComplianceNoValue(Map<String, Object> params);
+	
+	List<EgovMap> selectOrderDetailComplianceId(Map<String, Object> params);
+	
+	List<EgovMap> selectComplianceRemark(Map<String, Object> params);
+	
+	boolean deleteOrderDetail(Map<String, Object> params);
+	
+	boolean insertComplianceOrderDetail (List<Object> gridOrder,Map<String, Object> formList);
+	
+	boolean saveMaintenceCompliance(Map<String, Object> params,SessionVO sessionVo);
+	
+	boolean saveOrderMaintence(Map<String, Object> params,SessionVO sessionVo);
+	
+	EgovMap selectAttachDownload(Map<String, Object> params);
 }
