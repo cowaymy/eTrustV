@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +43,6 @@ public class EnrollController {
 	
 	@Value("${autodebit.email.receiver}")
 	private String emailReceiver;
-	
 	
 
 	/******************************************************
@@ -98,8 +96,8 @@ public class EnrollController {
 	/**
 	 * Save Enroll
 	 */
-	@RequestMapping(value = "/saveEnroll", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveEnroll(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception{
+	@RequestMapping(value = "/saveEnroll", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> saveEnroll(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception{
 
 		String frDate = CommonUtils.nvl(params.get("rdpCreateDateFr2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateFr2"));
 		String toDate = CommonUtils.nvl(params.get("rdpCreateDateTo2")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("rdpCreateDateTo2"));

@@ -131,8 +131,7 @@ var columnLayout2 = [
     function fn_saveEnroll() {
     	
     	if (validation()) {
-    		
-    	    Common.ajax("POST", "/payment/saveEnroll.do",  $('#searchForm').serializeJSON(), function(result) {
+    	    Common.ajax("GET", "/payment/saveEnroll.do",  $("#enrollForm").serialize() , function(result) {
 	    		var msg = result.message;
 	    		var enrlId = result.data.enrlId;
 	    		Common.alert(msg+enrlId);
@@ -425,6 +424,7 @@ var columnLayout2 = [
 
     <!-- popup_wrap start -->
     <div id="popup_wrap2" class="popup_wrap" style="display:none;">
+        <form action="POST" id="enrollForm" name="enrollForm" >
         <!-- pop_header start -->
         <header class="pop_header">
         <h1>NEW ENROLLMENT</h1>
@@ -481,5 +481,6 @@ var columnLayout2 = [
             </ul>
         </section>
         <!-- pop_body end -->
+        </form>
     </div>
     <!-- popup_wrap end -->
