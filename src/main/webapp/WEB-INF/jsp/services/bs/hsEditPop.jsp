@@ -366,7 +366,7 @@
  <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
  <input type="hidden" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
- <input type="text" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
+ <input type="hidden" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
 
    
  <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode"/>
