@@ -115,6 +115,16 @@
 		});
 
 	});//Ready
+	
+	//event management
+    function auiCellEditingHandler(event) {
+    }
+    // 행 추가 이벤트 핸들러
+    function auiAddRowHandler(event) {
+    }
+    // 행 삭제 이벤트 핸들러
+    function auiRemoveRowHandler(event) {
+    }
 
 	// 아이템 AUIGrid 칼럼 설정
 	function createAUIGrid() {
