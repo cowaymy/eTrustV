@@ -27,43 +27,43 @@ $(document).ready(function(){
 var columnLayout = [ 
     {
         dataField : "reconciliationNo",
-        headerText : "Transaction No",
+        headerText : "<spring:message code='pay.head.transactionNo'/>",
         editable : false
     }, {
         dataField : "depositPaymentDate",
-        headerText : "Ref Date",
+        headerText : "<spring:message code='pay.head.refDate'/>",
         editable : false
     }, {
         dataField : "depositBranchCode",
-        headerText : "Branch",
+        headerText : "<spring:message code='pay.head.branch'/>",
         editable : true
     }, {
         dataField : "depositAccountCode",
-        headerText : "Account",
+        headerText : "<spring:message code='pay.head.account'/>",
         editable : true
     }, {
         dataField : "reconciliationStatus",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : true
     }, {
         dataField : "reconciliationRemark",
-        headerText : "Remark",
+        headerText : "<spring:message code='pay.head.remark'/>",
         editable : true
     }, {
         dataField : "reconciliationCreated",
-        headerText : "Created",
+        headerText : "<spring:message code='pay.head.created'/>",
         editable : true
     }, {
         dataField : "reconciliationCreatorName",
-        headerText : "Creator",
+        headerText : "<spring:message code='pay.head.creator'/>",
         editable : true
     }, {
         dataField : "reconciliationApproveAt",
-        headerText : "Updated",
+        headerText : "<spring:message code='pay.head.updated'/>",
         editable : true
     }, {
         dataField : "reconciliationApproverName",
-        headerText : "Updator",
+        headerText : "<spring:message code='pay.head.updator'/>",
         editable : true
     }];
     
@@ -147,7 +147,7 @@ var columnLayout = [
             <!-- table end -->
 
             <ul class="right_btns">
-                <li><p class="btn_gray"><a href="#" onClick="searchList()"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_gray"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
         </form>
     </section>

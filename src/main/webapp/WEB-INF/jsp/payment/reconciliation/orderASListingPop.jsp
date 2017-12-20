@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 	
 	var gridPros = {            
@@ -18,16 +19,16 @@
     
     // AUIGrid 칼럼 설정
     var columnLayout = [
-        { dataField:"payDt" ,headerText:"Type",editable : false},
-        { dataField:"payTypeId" ,headerText:"ASNo",editable : false},
-        {dataField:"rnum", headerText:"Reques Date", width : 80,editable : false, dataType : "date", formatString : "dd-mm-yyyy"},
-        { dataField:"trxId" ,headerText:"Status",editable : false },
-        { dataField:"trxDt" ,headerText:"Result No",editable : false},
-        { dataField:"AdvMonth" ,headerText:"Key By" ,editable : false },
-        { dataField:"trNo" ,headerText:"Order No" ,editable : false },
-        { dataField:"salesOrdNo" ,headerText:"App Type" ,editable : false },
-        { dataField:"appTypeName" ,headerText:"Cust Name" ,editable : false },
-        { dataField:"productDesc" ,headerText:"NRIC/Comp No" ,editable : false }
+        { dataField:"payDt" ,headerText:"<spring:message code='pay.head.type'/>",editable : false},
+        { dataField:"payTypeId" ,headerText:"<spring:message code='pay.head.asNo'/>",editable : false},
+        {dataField:"rnum", headerText:"<spring:message code='pay.head.requesDate'/>", width : 80,editable : false, dataType : "date", formatString : "dd-mm-yyyy"},
+        { dataField:"trxId" ,headerText:"<spring:message code='pay.head.satatus'/>",editable : false },
+        { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.resultNo'/>",editable : false},
+        { dataField:"AdvMonth" ,headerText:"<spring:message code='pay.head.keyBy'/>" ,editable : false },
+        { dataField:"trNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
+        { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
+        { dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.custName'/>" ,editable : false },
+        { dataField:"productDesc" ,headerText:"<spring:message code='pay.head.nricCompNo'/>" ,editable : false }
         ];
 
     function fn_getOrderASListAjax(){
@@ -40,7 +41,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>Order AS Listing</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="window.close()">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="window.close()"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     <section class="pop_body"><!-- pop_body start -->

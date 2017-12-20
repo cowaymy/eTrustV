@@ -46,30 +46,30 @@ $(document).ready(function(){
 var masterColumnLayout = [ 
 	{
 		dataField : "fBankJrnlRefNo",
-		headerText : "Reference No",
+		headerText : "<spring:message code='pay.head.referenceNo'/>",
 		editable : false
 	},
     {
         dataField : "accDesc",
-        headerText : "Account",
+        headerText : "<spring:message code='pay.head.account'/>",
         editable : false
     }, 
     {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false
     }, {
         dataField : "fBankJrnlRem",
-        headerText : "Remark",
+        headerText : "<spring:message code='pay.head.remark'/>",
         editable : false,
         style : "my-custom-up"
     }, {
         dataField : "crtDt",
-        headerText : "Created",
+        headerText : "<spring:message code='pay.head.created'/>",
         editable : false
     }, {
         dataField : "userName",
-        headerText : "Creator",
+        headerText : "<spring:message code='pay.head.creator'/>",
         editable : false
     },{
         dataField : "fBankJrnlId",
@@ -80,121 +80,121 @@ var masterColumnLayout = [
 var statementdetailPopLayout = [ 
 	{
 	    dataField : "fTrnscDt",
-	    headerText : "Date",
+	    headerText : "<spring:message code='pay.head.date'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef1",
-	    headerText : "Ref 1",
+	    headerText : "<spring:message code='pay.head.ref1'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef2",
-	    headerText : "Ref 2",
+	    headerText : "<spring:message code='pay.head.ref2'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef3",
-	    headerText : "Ref 3",
+	    headerText : "<spring:message code='pay.head.ref3'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef4",
-	    headerText : "Ref 4",
+	    headerText : "<spring:message code='pay.head.ref4'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef5",
-	    headerText : "Ref 5",
+	    headerText : "<spring:message code='pay.head.ref5'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef6",
-	    headerText : "Ref 6",
+	    headerText : "<spring:message code='pay.head.ref6'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRem",
-	    headerText : "Mode",
+	    headerText : "<spring:message code='pay.head.mode'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRefRunngNo",
-	    headerText : "Running",
+	    headerText : "<spring:message code='pay.head.running'/>",
 	    editable : false
 	},{
 	    dataField : "fTrnscRefEft",
-	    headerText : "EFT",
+	    headerText : "<spring:message code='pay.head.eft'/>",
 	    editable : false
 	},{
 	    dataField : "fTrnscRefChqNo",
-	    headerText : "Chq No",
+	    headerText : "<spring:message code='pay.head.chqNo'/>",
 	    editable : false
 	},{
 	    dataField : "fTrnscRefVaNo",
-	    headerText : "VA No",
+	    headerText : "<spring:message code='pay.head.vaNo'/>",
 	    editable : false
 	},{
         dataField : "fTrnscDebtAmt",
-        headerText : "Debit",
+        headerText : "<spring:message code='pay.head.debit'/>",
         editable : false
     },{
         dataField : "fTrnscCrditAmt",
-        headerText : "Credit",
+        headerText : "<spring:message code='pay.head.credit'/>",
         editable : false
     },{
         dataField : "isMatch",
-        headerText : "Match",
+        headerText : "<spring:message code='pay.head.match'/>",
         editable : false
     }];
 
 var journalPopLayout = [ 
 	{
 	    dataField : "fTrnscDt",
-	    headerText : "Date",
+	    headerText : "<spring:message code='pay.head.date'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef1",
-	    headerText : "Ref 1",
+	    headerText : "<spring:message code='pay.head.ref1'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef2",
-	    headerText : "Ref 2",
+	    headerText : "<spring:message code='pay.head.ref2'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef3",
-	    headerText : "Ref 3",
+	    headerText : "<spring:message code='pay.head.ref3'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef4",
-	    headerText : "Ref 4",
+	    headerText : "<spring:message code='pay.head.ref4'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef5",
-	    headerText : "Ref 5",
+	    headerText : "<spring:message code='pay.head.ref5'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRef6",
-	    headerText : "Ref 6",
+	    headerText : "<spring:message code='pay.head.ref6'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscRem",
-	    headerText : "Mode",
+	    headerText : "<spring:message code='pay.head.mode'/>",
 	    editable : false
 	}, {
 	    dataField : "fTrnscDebtAmt",
-	    headerText : "Debit",
+	    headerText : "<spring:message code='pay.head.debit'/>",
 	    editable : false
 	},{
 	    dataField : "fTrnscCrditAmt",
-	    headerText : "Credit",
+	    headerText : "<spring:message code='pay.head.credit'/>",
 	    editable : false
 	},{
 	    dataField : "isMatch",
-	    headerText : "Match",
+	    headerText : "<spring:message code='pay.head.match'/>",
 	    editable : false
 	},{
 	    dataField : "fTrnscInstct",
-	    headerText : "Remark",
+	    headerText : "<spring:message code='pay.head.remark'/>",
 	    editable : true,
 	    style : "my-custom-up",
 	    width: 200,
 	    styleFunction : cellStyleFunction
 	},{
 	    dataField : "journalAccount",
-	    headerText : "Account",
+	    headerText : "<spring:message code='pay.head.account'/>",
 	    editable : false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
 	    width: 140,
         renderer : { // HTML 템플릿 렌더러 사용
@@ -238,7 +238,7 @@ var journalPopLayout = [
 	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
-            labelText : "Pass",
+            labelText : "<spring:message code='pay.head.pass'/>",
             onclick : function(rowIndex, columnIndex, value, item) {
                 if(item.isMatch == "X"){
                 	
@@ -250,7 +250,7 @@ var journalPopLayout = [
         }
 	},{
 	    dataField : "",
-	    headerText : "Exclude",
+	    headerText : "<spring:message code='pay.head.exclude'/>",
 	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
@@ -451,8 +451,8 @@ var journalPopLayout = [
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Bank Account Reconciliation</h2>
 		<ul class="right_btns">
-		    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
-		    <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+		    <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+		    <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	<section class="search_table"><!-- search_table start -->
@@ -512,14 +512,14 @@ var journalPopLayout = [
 				    <dt>Link</dt>
 				    <dd>
 				    <ul class="btns">
-				        <li><p class="link_btn"><a href="javascript:fn_bankAccRclReportPop();">Bank Account Reconciliation Report</a></p></li>
+				        <li><p class="link_btn"><a href="javascript:fn_bankAccRclReportPop();"><spring:message code='pay.btn.link.bankAccReconReport'/></a></p></li>
 				        <!-- <li><p class="link_btn"><a href="#">Branches Collection Summary Report</a></p></li> -->
-				        <li><p class="link_btn"><a href="javascript:fn_rclStatisticReportPop();">Reconciliation Statistic Report</a></p></li>
+				        <li><p class="link_btn"><a href="javascript:fn_rclStatisticReportPop();"><spring:message code='pay.btn.link.reconStasReport'/></a></p></li>
 				    </ul>
 				    <ul class="btns">
-				        <li><p class="link_btn type2"><a href="javascript:fn_statementViewPop();">Statement View</a></p></li>
-				        <li><p class="link_btn type2"><a href="javascript:fn_journalEntryPop();">Journal Entry</a></p></li>
-				        <li><p class="link_btn type2"><a href="javascript:fn_summaryViewPop();">Summary View</a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_statementViewPop();"><spring:message code='pay.btn.link.statementView'/></a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_journalEntryPop();"><spring:message code='pay.btn.link.journalEntry'/></a></p></li>
+				        <li><p class="link_btn type2"><a href="javascript:fn_summaryViewPop();"><spring:message code='pay.btn.link.summaryView'/></a></p></li>
 				    </ul>
 				    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
@@ -538,7 +538,7 @@ var journalPopLayout = [
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Reconciliation Task</h1>
 		<ul class="right_opt">
-		  <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#statement_popup_wrap');">CLOSE</a></p></li>
+		  <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#statement_popup_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -622,7 +622,7 @@ var journalPopLayout = [
     <header class="pop_header"><!-- pop_header start -->
         <h1>Journal Entry</h1>
         <ul class="right_opt">
-          <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#journal_popup_wrap');">CLOSE</a></p></li>
+          <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#journal_popup_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     <section class="pop_body"><!-- pop_body start -->

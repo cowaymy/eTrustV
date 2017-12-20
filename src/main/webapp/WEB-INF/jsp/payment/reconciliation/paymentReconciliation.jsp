@@ -48,46 +48,46 @@ $(document).ready(function(){
 var masterColumnLayout = [ 
 	{
 		dataField : "fDepReconRefNo",
-		headerText : "Transaction No.",
+		headerText : "<spring:message code='pay.head.transactionNo'/>",
 		editable : false
 	},{
         dataField : "fDepostPayDt",
-        headerText : "Ref Date",
+        headerText : "<spring:message code='pay.head.refDate'/>",
         editable : false
     },{
         dataField : "code",
-        headerText : "Branch",
+        headerText : "<spring:message code='pay.head.branch'/>",
         editable : false
     },
     {
         dataField : "accCode",
-        headerText : "Account",
+        headerText : "<spring:message code='pay.head.account'/>",
         editable : false
     }, 
     {
         dataField : "code1",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false
     }, {
         dataField : "remark",
-        headerText : "Remark",
+        headerText : "<spring:message code='pay.head.remark'/>",
         editable : false,
         style : "my-custom-up"
     }, {
         dataField : "fDepReconCrtDt",
-        headerText : "Created",
+        headerText : "<spring:message code='pay.head.created'/>",
         editable : false
     }, {
         dataField : "userName",
-        headerText : "Creator",
+        headerText : "<spring:message code='pay.head.creator'/>",
         editable : false
     },{
         dataField : "fDepReconUpdDt",
-        headerText : "Updated",
+        headerText : "<spring:message code='pay.head.updated'/>",
         editable : false
     },{
         dataField : "username1",
-        headerText : "Updator",
+        headerText : "<spring:message code='pay.head.updator'/>",
         editable : false
     },{
         dataField : "fDepReconId",
@@ -98,7 +98,7 @@ var masterColumnLayout = [
 var maintenancePopLayout = [ 
 	{
 	    dataField : "fDepItmDepostDt",
-	    headerText : "Deposit Date",
+	    headerText : "<spring:message code='pay.head.depositDate'/>",
 	    dataType : "date",
         formatString : "dd/mm/yyyy",
         styleFunction : cellStyleFunction,
@@ -128,7 +128,7 @@ var maintenancePopLayout = [
 	    
 	}, {
 	    dataField : "fDepItmModeId",
-	    headerText : "Deposit Mode",
+	    headerText : "<spring:message code='pay.head.depositMode'/>",
 	    editable : false, // 그리드의 에디팅 사용 안함( 템플릿에서 만든 Select 로 에디팅 처리 하기 위함 )
         renderer : { // HTML 템플릿 렌더러 사용
             type : "TemplateRenderer"
@@ -168,23 +168,23 @@ var maintenancePopLayout = [
 
 	}, {
 	    dataField : "fDepItmSlipNo",
-	    headerText : "Deposit Slip No",
+	    headerText : "<spring:message code='pay.head.depositSlipNo'/>",
 	    styleFunction : cellStyleFunction
 	}, {
 	    dataField : "fDepItmRem",
-	    headerText : "Deposit Remark",
+	    headerText : "<spring:message code='pay.head.depositRemark'/>",
 	    style : "my-custom-up",
 	    styleFunction : cellStyleFunction
 	}, {
 	    dataField : "fDepItmAmt",
-	    headerText : "Deposit Amount",
+	    headerText : "<spring:message code='pay.head.depositAmount'/>",
 	    editable : false
 	},{
 	    dataField : "",
-	    headerText : "Update",
+	    headerText : "<spring:message code='pay.head.updated'/>",
 	    renderer : {
             type : "ButtonRenderer",
-            labelText : "Update",
+            labelText : "<spring:message code='pay.head.updated'/>",
             onclick : function(rowIndex, columnIndex, value, item) {
                 if(item.fDepItmIsMtch == "0"){
                 	
@@ -194,10 +194,10 @@ var maintenancePopLayout = [
         }
 	},{
 	    dataField : "",
-	    headerText : "Exclude",
+	    headerText : "<spring:message code='pay.head.exclude'/>",
 	    renderer : {
             type : "ButtonRenderer",
-            labelText : "Exclude",
+            labelText : "<spring:message code='pay.head.exclude'/>",
             onclick : function(rowIndex, columnIndex, value, item) {
             	
             	if(item.fDepItmIsMtch == "0"){
@@ -208,11 +208,11 @@ var maintenancePopLayout = [
         }
 	}, {
         dataField : "fDepItmId",
-        headerText : "fDepItmId",
+        headerText : "<spring:message code='pay.head.fDepItmId'/>",
         visible : false
     }, {
         dataField : "fDepostId",
-        headerText : "fDepostId",
+        headerText : "<spring:message code='pay.head.fDepostId'/>",
         visible : false
     }];
 
@@ -361,8 +361,8 @@ var maintenancePopLayout = [
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Payment Reconciliation</h2>
 		<ul class="right_opt">
-		    <li><p class="btn_blue"><a href="javascript:searchList(1);"><span class="search"></span>Search</a></p></li>
-		    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+		    <li><p class="btn_blue"><a href="javascript:searchList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+		    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	<section class="search_table"><!-- search_table start -->
@@ -427,7 +427,7 @@ var maintenancePopLayout = [
 					        <li><p class="link_btn"><a href="#">menu1</a></p></li>
 					    </ul> -->
 					    <ul class="btns">
-					        <li><p class="link_btn type"><a href="javascript:fn_depositMaintenancePop();">Deposit Maintenance</a></p></li>
+					        <li><p class="link_btn type"><a href="javascript:fn_depositMaintenancePop();"><spring:message code='pay.btn.link.depositMaintenance'/></a></p></li>
 					    </ul>
 					    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 				    </dd>
@@ -448,7 +448,7 @@ var maintenancePopLayout = [
 	<header class="pop_header"><!-- pop_header start -->
 		<h1>Deposit Maintenance</h1>
 		<ul class="right_opt">
-		   <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#maintenance_popup_wrap');">CLOSE</a></p></li>
+		   <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#maintenance_popup_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
     <section class="pop_body"><!-- pop_body start -->

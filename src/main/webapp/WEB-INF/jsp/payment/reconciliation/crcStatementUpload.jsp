@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -256,7 +257,7 @@ function fn_testCallStoredProcedure(){
 		<h2>CRC Statement Upload</h2>
 		<ul class="right_opt">
 			<li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv">Download<br />CSV File Format</a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_testCallStoredProcedure();">sp test</a></p></li>
 			
 		</ul>

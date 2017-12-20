@@ -172,7 +172,7 @@
 	<header class="pop_header"><!-- pop_header start -->
 	<h1>Order Summary Page</h1>
 	<ul class="right_opt">
-		<li><p class="btn_blue2"><a href="#" onclick="window.close()">CLOSE</a></p></li>
+		<li><p class="btn_blue2"><a href="#" onclick="window.close()"><spring:message code='sys.btn.close'/></a></p></li>
 	</ul>
 	</header><!-- pop_header end -->
 	<section class="pop_body"><!-- pop_body start -->
@@ -195,8 +195,8 @@
 					    <th scope="row">ORDER NUMBER</th>
 					    <td colspan="3">
 						    <input type="text" title="" placeholder="" class="" id="orderNo" name="orderNo"/>
-						    <p class="btn_sky"><a href="javascript:fn_searchOutStandView();">Search</a></p>
-						    <p class="btn_sky"><a href="javascript:fn_clear();">Clear</a></p>
+						    <p class="btn_sky"><a href="javascript:fn_searchOutStandView();"><spring:message code='sys.btn.search'/></a></p>
+						    <p class="btn_sky"><a href="javascript:fn_clear();"><spring:message code='sys.btn.clear'/></a></p>
 					    </td>
 					    <th scope="row">Customer Name</th>
 					    <td>

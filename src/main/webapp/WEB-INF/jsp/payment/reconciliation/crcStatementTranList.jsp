@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -27,34 +27,34 @@ $(document).ready(function(){
 var columnLayout = [ 
     {         
         dataField : "crcTrnscId",
-        headerText : "ID",
+        headerText : "<spring:message code='pay.head.id'/>",
         editable : false,
         visible : false,
         width : 120
     },
     {
         dataField : "crcTrnscDt",
-        headerText : "Transaction Date",
+        headerText : "<spring:message code='pay.head.transactionDate'/>",
         editable : false
     }, {
         dataField : "crcTrnscNo",
-        headerText : "CRC No.",
+        headerText : "<spring:message code='pay.head.crcNo'/>",
         editable : false
     }, {
         dataField : "crcTrnscAppv",
-        headerText : "Approval No.",
+        headerText : "<spring:message code='pay.head.approvalNo'/>",
         editable : false
     }, {
         dataField : "crcTrnscMid",
-        headerText : "MID No.",
+        headerText : "<spring:message code='pay.head.midNo'/>",
         editable : true
     }, {
         dataField : "crcTrnscRefNo",
-        headerText : "Ref No.",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : true
     }, {
         dataField : "crcTrnscAmt",
-        headerText : "Gross Amount",
+        headerText : "<spring:message code='pay.head.grossAmount'/>",
         dataType : "numeric",
         editable : true
     }];
@@ -120,7 +120,7 @@ function resetUpdatedItems() {
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Credit Card Statement</h2>
         <ul class="right_opt">
-            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();">Save</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='pay.btn.save'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -188,7 +188,7 @@ function resetUpdatedItems() {
             <!-- table end -->
 
             <ul class="right_btns">
-                <li><p class="btn_gray"><a href="javascript:fn_getCRCStatementListAjax();"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_gray"><a href="javascript:fn_getCRCStatementListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
         </form>
     </section>
