@@ -3285,7 +3285,7 @@
              , PO_STUS
              )
             VALUES (
-            (SELECT MAX(SR_CARD_ID)+1 FROM LOG0014D)
+           LOG0014D_SR_CARD_ID_SEQ.nextval
              , #{locationId}
              , #{stockId}
              , SYSDATE
@@ -3821,7 +3821,7 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
              , STK_CRD_POST_TO_WEB_ON_TM
              )
             VALUES (
-            (SELECT MAX(MOV_ID)+1 FROM  LOG0013D)
+            LOG0013D_MOV_ID_SEQ.nextval
             , #{installEntryId}
             , #{movFromLocId}
             , #{movToLocId}
