@@ -2334,5 +2334,15 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         
 		return RESULT;
 	}
-	
+
+	@Override
+	public EgovMap selectObligtPriod(Map<String, Object> params) {
+		return orderRequestMapper.selectObligtPriod(params);
+	}
+
+	@Override
+	public EgovMap selectPenaltyAmt(Map<String, Object> params) {
+		return orderRequestMapper.selectPenaltyAmt(params);
+	}
+
 }

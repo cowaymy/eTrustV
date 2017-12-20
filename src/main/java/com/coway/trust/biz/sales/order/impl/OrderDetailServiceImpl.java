@@ -4,6 +4,7 @@
 package com.coway.trust.biz.sales.order.impl;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -134,6 +135,21 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		orderDetail.put("thirdPartyInfo", 	thirdPartyInfo);
 		orderDetail.put("orderCfgInfo", 	orderCfgInfo);
 		orderDetail.put("gstCertInfo",   	gstCertInfo);
+		
+		Date salesDt = (Date) basicInfo.get("ordDt");
+		
+		DateFormat formatter = new SimpleDateFormat("yyyyMMdd");		
+
+		Date dt = formatter.parse("20180101");
+
+		logger.debug("@#### salesDt:"+salesDt);
+		logger.debug("@#### dt:"+dt);
+				
+		boolean isNew = salesDt.after(dt);
+		
+		logger.debug("@#### isBefore:"+isNew);
+		
+		orderDetail.put("isNewVer", isNew ? "Y" : "N");
 		
 		return orderDetail;
 	};

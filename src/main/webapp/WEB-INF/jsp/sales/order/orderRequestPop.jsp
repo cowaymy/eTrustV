@@ -26,6 +26,7 @@
     var TODAY_DD      = '${toDay}';
     var SRV_PAC_ID    = '${orderDetail.basicInfo.srvPacId}';
     var GST_CHK       = '${orderDetail.basicInfo.gstChk}';
+    var IS_NEW_VER    = '${orderDetail.isNewVer}';
 
     var filterGridID;
     
@@ -1528,8 +1529,17 @@
                 $('#scOP').removeClass("blind");
             }
         }
-        if(CNVR_SCHEME_ID == '1') {
-            $('#txtObPeriod').val('36');
+        
+        
+        if(IS_NEW_VER == 'Y') {
+            var vObligtPriod = fn_getObligtPriod();
+            
+            $('#txtObPeriod').val(vObligtPriod);
+        }
+        else {
+            if(CNVR_SCHEME_ID == '1') {
+                $('#txtObPeriod').val('36');
+            }
         }
         
         fn_loadOutstandingPenaltyInfo();
@@ -1571,6 +1581,21 @@
             fn_calculatePenaltyAndTotalAmount();
         }
     }
+    
+    function fn_getPenaltyAmt(usedMnth, obPeriod) {
+        var vPenaltyAmt = 0;
+        
+        Common.ajaxSync("GET", "/sales/order/selectPenaltyAmt.do", {salesOrdId : ORD_ID, usedMnth : usedMnth, obPeriod : obPeriod}, function(result) {
+            
+            console.log('result:'+result);
+            
+            if(result != null) {
+                vPenaltyAmt = result.penaltyAmt;
+            }            
+        });
+
+       return vPenaltyAmt;
+    }
 
     function fn_calculatePenaltyAndTotalAmount() {
         var TotalMthUse = Number($('#txtTotalUseMth').val());
@@ -1580,8 +1605,13 @@
         var PenaltyAdj = Number($('#txtPenaltyAdj').val());
         var PenaltyAmt = 0;
         
-        if (TotalMthUse < ObPeriod) {
-            PenaltyAmt = ((RentalFees * (ObPeriod - TotalMthUse)) / 2);
+        if(IS_NEW_VER == 'N') {
+            if (TotalMthUse < ObPeriod) {
+                PenaltyAmt = ((RentalFees * (ObPeriod - TotalMthUse)) / 2);
+            }
+        }
+        else {
+            PenaltyAmt = fn_getPenaltyAmt(TotalMthUse, ObPeriod);
         }
         
         $('#txtPenaltyCharge').val(PenaltyAmt);
@@ -1653,6 +1683,24 @@
        });
 
        return vTotalUseMth;
+    }
+    
+    function fn_getObligtPriod() {
+
+        var vObligtPriod = 0;
+        
+        Common.ajaxSync("GET", "/sales/order/selectObligtPriod.do", {salesOrdId : ORD_ID}, function(result) {
+            
+            console.log('result:'+result);
+            
+            if(result != null) {
+                console.log('result.custId:'+result.rentInstNo);
+
+                vObligtPriod = result.obligtPriod;
+            }            
+        });
+
+       return vObligtPriod;
     }
     
     function fn_clickBtnReqCancelOrder() {

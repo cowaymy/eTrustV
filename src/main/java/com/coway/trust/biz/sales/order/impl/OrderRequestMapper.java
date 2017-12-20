@@ -192,4 +192,8 @@ public interface OrderRequestMapper {
 	
 	void updateCustBillMasterOtran(CustBillMasterVO custBillMasterVO);
 	
+	EgovMap selectObligtPriod(Map<String, Object> params);
+	
+	EgovMap selectPenaltyAmt(Map<String, Object> params);
+	
 }

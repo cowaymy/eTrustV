@@ -62,7 +62,7 @@ public class OrderRequestController {
 		model.put("toDay", 		 CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
-		
+
 		model.put("toDay", toDay);
 		
 		return "sales/order/orderRequestPop";
@@ -182,4 +182,17 @@ public class OrderRequestController {
     	List<EgovMap> ordOutInfoList = orderLedgerService.getOderOutsInfo(params);
     	return ResponseEntity.ok(ordOutInfoList);
     }
+    
+    @RequestMapping(value = "/selectObligtPriod.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectObligtPriod(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectObligtPriod(params);
+    	return ResponseEntity.ok(rslt);
+    }
+    
+    @RequestMapping(value = "/selectPenaltyAmt.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectPenaltyAmt(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.selectPenaltyAmt(params);
+    	return ResponseEntity.ok(rslt);
+    }
+    
 }
