@@ -209,10 +209,10 @@
 <tbody>
 
 <tr>
-    <th scope="row">HS Number.</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.hsNumber'/></th>
     <td><input type="text" title="" id="hsNo" name="hsNo" placeholder="" class="" />
         <!-- <a href="javascript:fn_orderSearch();" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
-        <p class="btn_grid"><a href="javascript:fn_orderSearch();">search</a></p>
+        <p class="btn_grid"><a href="javascript:fn_orderSearch();"><span class="search"></span><spring:message code='sys.btn.search'/></span></a></p>
     </td>
 </tr>
 </tbody>
@@ -235,7 +235,7 @@
 </aside><!-- grid_wrap end -->
     
 <aside class="title_line"><!-- title_line start -->
-<h3>Details</h3>
+<h3><spring:message code='svc.hs.reversal.viewDetail'/></h3>
 </aside><!-- title_line end -->
 
 <form id="frmBasicInfo" method="post">
@@ -256,38 +256,38 @@
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row" >Order No</th>
+            <th scope="row" ><spring:message code='svc.hs.reversal.orderNo'/></th>
            <%--  <td><span><c:out value="${basicInfo.ordNo}"/></span> --%>
             <td>
             <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  placeholder="" class="readonly " readonly="readonly" style="width: 188px; " />
             </td>
-            <th scope="row">Application Type</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.applicationType'/></th>
             <td>
             <input type="text" title="" id="entry_appType" name="entry_appType" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
             </td>
         </tr>
         <tr>
-            <th scope="row">Installation Address</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.installationAddress'/></th>
             <td colspan="3">
             <input type="text" title="" id="entry_address" name="entry_address" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
             </td>
         </tr>
         <tr>
-            <th scope="row">Product</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.product'/></th>
             <td>
             <input type="text" title="" id="entry_product" name="entry_product" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
             </td>
-            <th scope="row">Customer Name</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.customerName'/></th>
             <td>
             <input type="text" title="" id="entry_custName" name="entry_custName" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>    
             </td>
         </tr>
         <tr>
-            <th scope="row">NRIC/Company No</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.nricComNo'/></th>
             <td>
             <input type="text" title="" id="entry_nric" name="entry_nric"  placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
             </td>
-            <th scope="row">HS Availability</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.hsAvailability'/></th>
             <td>
         <%--    <input type="text" title="" id="entry_availability" name="entry_availability"  value="${BasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 464px; "/> --%>
             <select class="w100p" id="entry_availability" name="entry_availability">
@@ -298,37 +298,37 @@
             </td>
         </tr>
         <tr>
-            <th scope="row">HS Cody Code</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.hsCodyCode'/></th>
             <td>
             <select class="w100p"  id="entry_cmbServiceMem" name="entry_cmbServiceMem" >
             </select>
             </td>
-            <th scope="row">Last HS Date</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.lastHsDate'/></th>
             <td>
             <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Remark</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.remark'/></th>
             <td colspan="3">
              <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" > </textarea> 
         </tr>
         <tr>
-            <th scope="row">Happy Call Service</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.happyCallService'/></th>
             <td colspan="3">
-            <label><input type="checkbox" id="entry_settIns" name="entry_settIns"  /><span>Installation Type</span></label>
-            <label><input type="checkbox" id="entry_settHs" name="entry_settHs" /><span>BS Type</span></label>
-            <label><input type="checkbox" id="entry_settAs" name="entry_settAs" /><span>AS Type</span></label>
+            <label><input type="checkbox" id="entry_settIns" name="entry_settIns"  /><span><spring:message code='svc.hs.reversal.installationType'/></span></label>
+            <label><input type="checkbox" id="entry_settHs" name="entry_settHs" /><span><spring:message code='svc.hs.reversal.bsType'/></span></label>
+            <label><input type="checkbox" id="entry_settAs" name="entry_settAs" /><span><spring:message code='svc.hs.reversal.asType'/></span></span></label>
             </td>
         </tr>
         <tr>
-            <th scope="row">Prefer HS Week</th>
+            <th scope="row"><spring:message code='svc.hs.reversal.preferHsWeek'/></th>
             <td colspan="3">
-            <label><input type="radio" id="entry_srvBsWeek0" name="entry_srvBsWeek" value="0"/><span>None</span></label>
-            <label><input type="radio" id="entry_srvBsWeek1" name="entry_srvBsWeek" value="1" /><span>Week 1</span></label>
-            <label><input type="radio" id="entry_srvBsWeek2" name="entry_srvBsWeek" value="2" /><span>Week 2</span></label>
-            <label><input type="radio" id="entry_srvBsWeek3" name="entry_srvBsWeek" value="3" /><span>Week 3</span></label>
-            <label><input type="radio" id="entry_srvBsWeek4" name="entry_srvBsWeek" value="4" /><span>Week 4</span></label>
+            <label><input type="radio" id="entry_srvBsWeek0" name="entry_srvBsWeek" value="0"/><span><spring:message code='svc.hs.reversal.none'/></span></label>
+            <label><input type="radio" id="entry_srvBsWeek1" name="entry_srvBsWeek" value="1" /><span><spring:message code='svc.hs.reversal.week1'/></span></label>
+            <label><input type="radio" id="entry_srvBsWeek2" name="entry_srvBsWeek" value="2" /><span><spring:message code='svc.hs.reversal.week2'/></span></label>
+            <label><input type="radio" id="entry_srvBsWeek3" name="entry_srvBsWeek" value="3" /><span><spring:message code='svc.hs.reversal.week3'/></span></label>
+            <label><input type="radio" id="entry_srvBsWeek4" name="entry_srvBsWeek" value="4" /><span><spring:message code='svc.hs.reversal.week4'/></span></label>
             </td>
         </tr>
         </tbody>
@@ -358,15 +358,15 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Reversal Status</th>
-    <td><span id="lblShowRevInstallStatus1" style="font-weight:bold;">From</span>
-    <span id="lblShowRevInstallStatus2" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic">Completed</span>
-    <span id="lblShowRevInstallStatus3" style="font-weight:bold;">To</span>
-    <span id="lblShowRevInstallStatus4" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic">Fail</span>
+    <th scope="row"><spring:message code='svc.hs.reversal.resversalStatus'/></th>
+    <td><span id="lblShowRevInstallStatus1" style="font-weight:bold;"><spring:message code='svc.hs.reversal.from'/></span>
+    <span id="lblShowRevInstallStatus2" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic"><spring:message code='svc.hs.reversal.complete'/></span>
+    <span id="lblShowRevInstallStatus3" style="font-weight:bold;"><spring:message code='svc.hs.reversal.to'/></span></span>
+    <span id="lblShowRevInstallStatus4" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic"><spring:message code='svc.hs.reversal.fail'/></span>
     </td>
-    <th scope="row">Incharge Cody</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.inchargeCody'/></span></th>
     <td><span id="lblCT"></span></td>
-    <th scope="row">Complete Date</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.completeDate'/></th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
@@ -375,7 +375,7 @@
     
 </tr>
 <tr>
-    <th scope="row">Reverse Reason</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.reverseReason'/></th>
     <td>
         <select class="w100p" id="reverseReason" name="reverseReason">
         <option value="" selected>Reverse Reason</option>
@@ -384,7 +384,7 @@
         </c:forEach>
         </select>
     </td>
-    <th scope="row">Fail Reason</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.failReason'/></th>
     <td>
         <select class="w100p" id="failReason" name="failReason">
         <option value="" selected>Fail Reason</option>
@@ -393,7 +393,7 @@
         </c:forEach>
         </select>
     </td>
-    <th scope="row">Next Call Date</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.nextCallDate'/></th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" title="Next Call Date" placeholder="DD/MM/YYYY" class="j_date" id="nextCallStrlDate" name="nextCallStrlDate"/></p>
@@ -401,7 +401,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Reverse Reason</th>
+    <th scope="row"><spring:message code='svc.hs.reversal.reverseReasonRemark'/></th>
     <td colspan="5">
         <textarea cols="20" rows="5" id="reverseReasonText" name="reverseReasonText"></textarea>
     </span></td>
@@ -409,7 +409,7 @@
 </tbody>
 </table>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:fn_save()">Confirm to Reverse</a></p></li>
+    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:fn_save()"><spring:message code='svc.hs.reversal.confirmToReverse'/></a></p></li>
 </ul>
 </form>
 </div>
