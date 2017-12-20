@@ -31,19 +31,7 @@
 
                 AUIGrid.setSelectionMode(myGridID, "singleRow");
 
-                // 171113 :: 선한이
-                doGetCombo('/services/holiday/selectBranchWithNM', 43, '',
-                        'cmbbranchId', 'S', '');
-
-                // 171114 :: 선한이
-                $("#cmbbranchId").change(
-                        function() {
-                            doGetCombo('/services/as/selectCTByDSC.do', $(
-                                    "#cmbbranchId").val(), '', 'cmbctId', 'S',
-                                    '');
-                        });
-
-                // 171110 :: 선한이
+                 // 171110 :: 선한이
                 // 셀 더블클릭 이벤트 바인딩
                 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 
@@ -184,6 +172,8 @@
 
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : false,
+        
+        noDataMessage       :  gridMsg["sys.info.grid.noDataMessage"]
 
     };
 
@@ -195,7 +185,7 @@
     function fn_editCompPop() {
         var selectedItems = AUIGrid.getSelectedItems(myGridID);
         if (selectedItems.length <= 0) {
-            Common.alert("<b>No Compensation selected.</b>");
+            Common.alert("<spring:message code='expense.msg.NoData'/> ");
             return;
         }
 
@@ -240,7 +230,8 @@
         <p class="fav">
             <a href="#" class="click_add_on">My menu</a>
         </p>
-        <h2>Compensation Log Search</h2>
+        <!-- <h2>Compensation Log Search</h2> -->
+        <h2><spring:message code="expense.title" /></h2>
 
         <!-- <form action="#" id="inHOForm">
 <div   style="display:none" >
@@ -267,13 +258,10 @@
         <ul class="right_btns">
             <!-- 171110 :: 선한이  -->
             <li><p class="btn_blue">
-                    <a href="#" onClick="javascript:fn_searchASManagement()"><span
-                        class="search"></span>Search</a>
+                    <a href="#" onClick="javascript:fn_searchASManagement()"><span class="search"></span><spring:message code="expense.btn.Search" /></a>
                 </p></li>
             <li><p class="btn_blue">
-                    <a href="#"
-                        onclick="javascript:$('#CompensationForm').clearForm();"><span
-                        class="clear"></span>Clear</a>
+                    <a href="#" onclick="javascript:$('#CompensationForm').clearForm();"><spanclass="clear"></span>Clear</a>
                 </p></li>
         </ul>
     </aside>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+    namespace="com.coway.trust.biz.organization.organization.impl.GuardianOfComplianceMapper">
+
+		<select id="selectGuardianofComplianceList" parameterType="Map" resultType="egovMap">
+		<![CDATA[
+		SELECT Project1.REQUESTID REQUESTID  ,
+		                ( SELECT TT.CODE_NAME
+					          FROM
+					             ( SELECT DISTINCT T.C1
+					                    , T.CODE_ID
+					                    , T.CODE_NAME
+					                 FROM
+					                    ( SELECT 1 C1
+					                           , T1.RESN_ID CODE_ID
+					                           , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+					                        FROM SYS0032M T1
+					                       WHERE T1.RESN_TYPE_ID = '1389'
+					                         AND 1 = T1.STUS_CODE_ID
+					                       UNION ALL
+					                      SELECT 1 C1
+					                           , T2.RESN_ID CODE_ID
+					                           , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+					                        FROM SYS0032M T2
+					                       WHERE T2.RESN_ID = '1'
+					                    ) T
+					             ) TT  WHERE 1=1 AND TT.CODE_ID = project1.requestcategory) requestcategory,
+			       Project1.RESN_DESC RESN_DESC  ,
+			       Project1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+			       Project1.REQUESTORDERID REQUESTORDERID  ,
+			       Project1.SALES_ORD_NO SALES_ORD_NO  ,
+			       Project1.NAME NAME  ,
+			       Project1.REQUESTREFDATE REQUESTREFDATE  ,
+			       Project1.REQUESTMEMID REQUESTMEMID  ,
+			       Project1.MEM_CODE MEM_CODE  ,
+			       Project1.REQUESTCONTENT REQUESTCONTENT  ,
+			       Project1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+			       Project1.REQUESTORTYPEID REQUESTORTYPEID  ,
+			       Project1.REQUESTSTATUSID REQUESTSTATUSID  ,
+			       Project1.NAME1 NAME1  ,
+			       Project1.REQUESTCREATEAT REQUESTCREATEAT  ,
+			       Project1.USER_NAME USER_NAME  
+			  FROM ( SELECT Filter1.REQUESTID REQUESTID  ,
+			                Filter1.REQUESTCATEGORY REQUESTCATEGORY  ,
+			                Filter1.REQUESTCATEGORY_SUB REQUESTCATEGORY_SUB  ,
+			                Filter1.REQUESTORDERID REQUESTORDERID  ,
+			                Filter1.REQUESTREFDATE REQUESTREFDATE  ,
+			                Filter1.REQUESTMEMID REQUESTMEMID  ,
+			                Filter1.REQUESTCONTENT REQUESTCONTENT  ,
+			                Filter1.REQUESTATTACHMENT REQUESTATTACHMENT  ,
+			                Filter1.REQUESTORTYPEID REQUESTORTYPEID  ,
+			                Filter1.REQUESTSTATUSID REQUESTSTATUSID  ,
+			                Filter1.REQUESTCREATEAT REQUESTCREATEAT  ,
+			                Filter1.SALES_ORD_NO SALES_ORD_NO  ,
+			                Filter1.NAME1 NAME  ,
+			                Filter1.MEM_CODE MEM_CODE  ,
+			                Filter1.RESN_DESC RESN_DESC  ,
+			                Filter1.NAME2 NAME1  ,
+			                Extent8.USER_NAME USER_NAME  
+			         FROM ( SELECT Extent1.REQST_ID REQUESTID  ,
+					                       Extent1.REQST_CTGRY REQUESTCATEGORY  ,
+					                       Extent1.REQST_CTGRY_SUB REQUESTCATEGORY_SUB  ,
+					                       Extent1.REQST_ORD_ID REQUESTORDERID  ,
+					                       Extent1.REQST_REF_DT REQUESTREFDATE  ,
+					                       Extent1.REQST_MEM_ID REQUESTMEMID  ,
+					                       Extent1.REQST_CNTNT REQUESTCONTENT  ,
+					                       Extent1.REQST_ATTACH REQUESTATTACHMENT  ,
+					                       Extent1.REQST_OR_TYPE_ID REQUESTORTYPEID  ,
+					                       Extent1.REQST_STUS_ID REQUESTSTATUSID  ,
+					                       Extent1.REQST_CRT_DT REQUESTCREATEAT  ,
+					                       Extent1.REQST_CRT_USER_ID REQUESTCREATEBY  ,
+					                       Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+					                       Extent3.NAME NAME1  ,
+					                       Extent4.MEM_CODE MEM_CODE  ,
+					                       Extent6.RESN_DESC RESN_DESC  ,
+					                       Extent7.NAME NAME2 
+				                FROM MSC0043M Extent1
+				                       LEFT JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.REQST_ID
+				                       LEFT JOIN SAL0029D Extent3   ON Extent3.CUST_ID = Extent2.CUST_ID
+				                       LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.REQST_MEM_ID
+				                       LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent4.MEM_TYPE
+				                       LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REQST_CTGRY
+				                       LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent1.REQST_STUS_ID
+				                WHERE 1=1
+                    ]]>		            
+                      <if test="caseCategoryList != null and caseCategoryList != '' ">
+                             AND  Extent1.REQST_CTGRY IN 
+                            <foreach item="item" collection="caseCategoryList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+                      </if>    
+                    <if test="requestStatusIdList != null and requestStatusIdList != '' ">
+                             AND  Extent1.REQST_STUS_ID IN
+                            <foreach item="item" collection="requestStatusIdList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+                      </if>
+                         ) Filter1
+                JOIN SYS0047M Extent8   ON Extent8.USER_ID = Filter1.REQUESTCREATEBY
+                WHERE 1=1
+                    <if test="requestCreatStart != null and requestCreatStart != '' ">
+                        AND  Filter1.REQUESTCREATEAT >= to_date(#{requestCreatStart},'DD/MM/YYYY')  
+                    </if>
+                    <if test="requestCreatEnd != null and requestCreatEnd != '' ">
+                        AND  Filter1.REQUESTCREATEAT <![CDATA[<]]>  to_date(#{requestCreatEnd},'DD/MM/YYYY')   
+                    </if>                
+                    <if test="salesOrdNo != null and salesOrdNo != '' ">
+                        AND  Filter1.SALES_ORD_NO = #{salesOrdNo}
+                    </if> 
+                    <if test="customerName != null and customerName != '' ">
+                        AND  Filter1.NAME1 = #{customerName}
+                    </if>    
+                    <if test="complaintDate != null and complaintDate != '' ">
+                        AND  Filter1.REQUESTREFDATE =  to_date(#{complaintDate},'DD/MM/YYYY')   
+                    </if>    
+                    <if test="involvedPersonCode != null and involvedPersonCode != '' ">
+                        AND  Filter1.MEM_CODE = #{involvedPersonCode}
+                    </if>                        
+			          ) Project1
+                ORDER BY Project1.REQUESTID ASC
+		</select>
+		
+        <insert id="saveGuardian" parameterType="Map">
+            INSERT INTO  MSC0043M (
+                        REQST_ID, REQST_NO, REQST_CTGRY, REQST_CTGRY_SUB, 
+                        REQST_ORD_ID, REQST_REF_DT, REQST_MEM_ID, REQST_CNTNT, 
+                        REQST_ATTACH,  REQST_REM, REQST_STUS_ID, REQST_CRT_DT, 
+                        REQST_CRT_USER_ID, REQST_UPD_DT, REQST_UPD_USER_ID )
+            VALUES ( 
+                         (SELECT MAX(REQST_ID) +1 FROM MSC0043M ), (SELECT 'PRZ'||  LPAD((SELECT MAX(SUBSTR(REQST_NO, 4)) +1  FROM MSC0043M), 7,0) FROM DUAL),  #{caseCategory}, #{docType},
+                        #{salesOrdNo}, TO_DATE(#{reqstRefDt},'dd-mm-yyyy') , #{reqstMemId}, #{reqstCntnt}, 
+                        #{reqstAttach} , #{complianceRem}, '1', SYSDATE, 
+                        #{reqstCrtUserId}, SYSDATE, #{reqstCrtUserId}
+                        )
+        </insert>		
+		
+		
+		 <select id="selectSalesOrdNoInfo" parameterType="Map" resultType="egovMap">
+		            SELECT SYS.USER_MOBILE_NO,  SYS.USER_FULL_NAME
+						FROM SAL0001D SAL, SYS0047M SYS
+						WHERE 1=1
+						AND SAL.CUST_ID = SYS.USER_ID
+						AND SAL.SALES_ORD_NO  = #{salesOrdNo}
+						AND ROWNUM = 1
+		 </select> 
+ 
+ 
+ 		
+ 
+		 <select id="selectGuardianofComplianceInfo" parameterType="Map" resultType="egovMap">
+			SELECT REQST_ID, REQST_NO, REQST_CTGRY, REQST_CTGRY_SUB, REQST_ORD_ID,
+			       TO_CHAR(REQST_REF_DT, 'DD/MM/YYYY') REQST_REF_DT, REQST_MEM_ID, REQST_CNTNT, REQST_ATTACH,
+			       REQST_OR_TYPE_ID, (SELECT USER_MOBILE_NO FROM SYS0047M SYS  WHERE 1=1 AND SYS.USER_ID  = REQST_CRT_USER_ID ) AS REQST_REM, REQST_STUS_ID, REQST_CRT_DT,
+			       (SELECT NAME FROM SAL0029D   WHERE 1=1 AND CUST_ID  = REQST_CRT_USER_ID) REQST_CRT_USER_ID, REQST_ACTN_ID
+			  FROM MSC0043M
+			 WHERE 1 = 1 
+			   AND REQST_ID  = #{reqstId}
+		</select> 
+</mapper>

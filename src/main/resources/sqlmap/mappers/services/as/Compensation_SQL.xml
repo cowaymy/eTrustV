@@ -111,8 +111,6 @@
 			   AND A.SALES_ORD_NO = #{salesOrdNo}
 			   AND C.SERIAL_NO IS NOT NULL
 			   AND ROWNUM = '1'
-
-             
  </select>              
               
     <select id ="selectCompenSationView" parameterType="Map" resultType="egovMap">
