@@ -272,7 +272,7 @@
 						<th scope="row">Report Type</th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
-								<option value="1">Cody Commisision Statement</option>
+								<option value="1">Cody Commission Statement</option>
 								<option value="9">Cody Commission Raw (All)</option>
 								<option value="2">Cody Manager Commission</option>
 								<option value="3">Cody Comm Calculation</option>
