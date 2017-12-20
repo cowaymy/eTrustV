@@ -891,15 +891,15 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
             }
         }); 
         
-        $("#download").click(function(){
-        	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Asset List");
-        });
+//         $("#download").click(function(){
+//         	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Asset List");
+//         });
         
-        /*$('#exportTo').click(function() {
+        $('#exportTo').click(function() {
             
         	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
         	
-        	if (selectedItem[0] > -1){
+        //	if (selectedItem[0] > -1){
         		   	
             // 그리드의 숨겨진 칼럼이 있는 경우, 내보내기 하면 엑셀에 아예 포함시키지 않습니다.
             // 다음처럼 excelProps 에서 exceptColumnFields 을 지정하십시오.
@@ -920,11 +920,11 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
             AUIGrid.exportToXlsx(myGridID, excelProps);
             //GridCommon.exportTo("grid_wrap", "xlsx", "test");
             
-            }else{
-                Common.alert('No item to export.');
-            }
+ //           }else{
+ //               Common.alert('No item to export.');
+ //           }
 
-        });*/
+        });
         
        $('#currentAsset').click(function() {
             
@@ -1864,8 +1864,8 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
 
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="currentAsset">Branch/Department Current Asset</a></p></li>
-    <li><p class="btn_grid"><a href="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-    <!-- <li><p class="btn_grid"><a id="exportTo">Export Search List</a></p></li> -->
+<%--     <li><p class="btn_grid"><a href="download"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
+    <li><p class="btn_grid"><a id="exportTo">Export Search List</a></p></li>
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
     <%-- <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
