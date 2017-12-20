@@ -129,7 +129,7 @@
 
               console.log("Order Investigation Request successfully saved.");
               console.log("data : " + result);
-alert(result.invReqId);
+
               $("#invReqId").val(result.invReqId);
               Common.alert("Order Investigation Request successfully saved.",fn_orderNoExist3 );
               
@@ -202,7 +202,7 @@ alert(result.invReqId);
 </aside><!-- title_line end -->
 
 <form id="viewForm" name="viewForm">
-<input type="text" id="invReqId" name="invReqId">
+<input type="hidden" id="invReqId" name="invReqId">
 <input type="hidden" id="salesOrdId" name="salesOrdId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>

@@ -131,6 +131,10 @@
 		Common.popupDiv("/sales/order/orderInvestigationRequestRawDataPop.do", null, null, true);
 	}
 	
+	function fn_goCallResult(){
+	    location.replace("/sales/order/orderInvestCallRecallList.do");
+	}
+	
 	$.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -266,9 +270,12 @@
 				<dt>Link</dt>
 				<dd>
 					<ul class="btns">
-						<li><p class="link_btn type2">
+						<li>
+						    <p class="link_btn type2">
 								<a href="#" onClick="fn_rawData()">Request Raw Data</a>
-							</p></li>
+							</p>
+					    </li>
+					    <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goCallResult();">Call/result</a></p></li>
 					</ul>
 					<p class="hide_btn">
 						<a href="#"><img
