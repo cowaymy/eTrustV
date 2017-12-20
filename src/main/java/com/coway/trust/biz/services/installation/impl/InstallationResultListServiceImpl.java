@@ -2,7 +2,6 @@ package com.coway.trust.biz.services.installation.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
+import com.coway.trust.biz.services.installation.InstallationReversalService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
@@ -48,6 +48,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 	@Resource(name = "membershipConvSaleMapper")
 	private MembershipConvSaleMapper membershipConvSaleMapper;
+	
+	
+	@Resource(name = "installationReversalMapper")
+	private InstallationReversalMapper installationReversalMapper;
 	
 
 	@Override
@@ -1105,18 +1109,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 
 						}
-						Map<String, Object> orderLog = new HashMap<String, Object>();
-						orderLog.put("LogID", 0);
-						orderLog.put("salesOrderId", salesOrderM.get("salesOrdId"));
-						orderLog.put("progressId", orderProgressId);
-						orderLog.put("logDate", new Date());
-						orderLog.put("refId", orderProgressRefId);
-						orderLog.put("isLock", orderProgressIsLook);
-						orderLog.put("logCreator", sessionVO.getUserId());
-						orderLog.put("logCreated", new Date());
-
-						logger.debug("orderLog : {}", orderLog);
-						installationResultListMapper.insertOrderLog(orderLog);
+					
 					//}
 				}
 			}
@@ -1388,13 +1381,22 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		
 		
 		Map ordTamtPram= new HashMap();
-		ordTamtPram.put("INSTALL_ENTRY_ID", CommonUtils.nvl( params.get("installEntryId").toString()));
-		EgovMap   ordTotAmt =installationResultListMapper.getOrderByInstallEntryID(ordTamtPram); 
+		
+		String  t_hidEntryId ="";
+		if(null == CommonUtils.nvl( params.get("hidEntryId")).toString()){
+			t_hidEntryId = CommonUtils.nvl( params.get("installEntryId")).toString();
+		}else{
+			t_hidEntryId  =CommonUtils.nvl( params.get("hidEntryId")).toString();
+		}
+		
+		ordTamtPram.put("INSTALL_ENTRY_ID",    t_hidEntryId);
+		
+		EgovMap   ordInfo =installationResultListMapper.getOrderByInstallEntryID(ordTamtPram); 
 			
 		String tAmt = "0";  // String.valueOf( CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT")));
 		
-		if(null !=ordTotAmt){
-			tAmt = String.valueOf( CommonUtils.intNvl( ordTotAmt.get("totAmt"))); 
+		if(null !=ordInfo){
+			tAmt = String.valueOf( CommonUtils.intNvl( ordInfo.get("totAmt"))); 
 		}
  		
 		double tradeOutrightPreAmount =  Double.parseDouble(String.valueOf(CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT"))));
@@ -1463,13 +1465,18 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		
     		if(ApptypeID.equals("66") ){
     			
-        			
-    	   }
+    			int  salesDt =CommonUtils.intNvl(ordInfo.get("salesDt"));
+    			int  salesGSTcutOffDate =CommonUtils.intNvl(CommonUtils.getNowDate());
+    			
+				if(salesDt < salesGSTcutOffDate){
+    					
+					  ////GST  do Not  2년 전부터 안했다고 함. 
+    			}
+    		}
     		
     		
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
 
-    			
     			if(tradeOutrightPreAmount > 200){
     				   outrightSubProcessing = 0;
                        outrightSubBalance = tradeOutrightPreAmount - tradeOutrightPreAmount;
@@ -1483,7 +1490,61 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			 if (outrightTotalPrice  > tradeOutrightPreAmount) {
     				 
     				 		isBillAvb =true;
-    				
+    				 		
+    				 		/////////////////////////////PAY0039D////////////////////////////////////////////
+				 		    Map<String,Object> accTRXMinus = new HashMap();
+				 		    accTRXMinus.put("TRXItemNo", 1);
+				 		    accTRXMinus.put("TRXGLAccID", 166);
+				 		    accTRXMinus.put("TRXGLDept", "0");
+				 		    accTRXMinus.put("TRXProject", "");
+				 		    accTRXMinus.put("TRXFinYear", 0);
+				 		    accTRXMinus.put("TRXPeriod", 0);
+				 		    accTRXMinus.put("TRXSourceTypeID", 389);
+				 		    accTRXMinus.put("TRXDocTypeID", 409);
+				 		    accTRXMinus.put("TRXNo",      CommonUtils.nvl( params.get("hidEntryId")).toString() );
+				 		    accTRXMinus.put("TRXDocNo", params.get("hidTradeLedger_InstallNo"));
+				 		    accTRXMinus.put("TRXCustBillID", CommonUtils.nvl( params.get("hidSalesOrderId")));
+				 		    accTRXMinus.put("TRXChequeNo", "");
+		                    accTRXMinus.put("TRXCRCardSlip", "");
+		                    accTRXMinus.put("TRXBisNo", "");
+		                    accTRXMinus.put("TRXReconDate", new Date());
+		                    accTRXMinus.put("TRXRemark",CommonUtils.nvl( params.get("msgRemark")));  
+		                    accTRXMinus.put("TRXCurrID", "RM");
+		                    accTRXMinus.put("TRXCurrRate", 1);
+		                    accTRXMinus.put("TRXAmount",     -outrightBalance);
+		                    accTRXMinus.put("TRXAmountRM", -outrightBalance);
+		                    accTRXMinus.put("TRXIsSynch", 0);
+		                    installationReversalMapper.addAccTRXes(accTRXMinus);
+		                    
+		                    
+		                    Map<String,Object> accTRXPlus = new HashMap();
+		                    accTRXPlus.put("TRXItemNo", 2);
+				 		    accTRXPlus.put("TRXGLAccID", 38);
+				 		    accTRXPlus.put("TRXGLDept", "0");
+				 		    accTRXPlus.put("TRXProject", "");
+				 		    accTRXPlus.put("TRXFinYear", 0);
+				 		    accTRXPlus.put("TRXPeriod", 0);
+				 		    accTRXPlus.put("TRXSourceTypeID", 389);
+				 		    accTRXPlus.put("TRXDocTypeID", 409);
+				 		    accTRXPlus.put("TRXNo",      CommonUtils.nvl( params.get("hidEntryId")).toString() );
+				 		    accTRXPlus.put("TRXDocNo", params.get("hidTradeLedger_InstallNo"));
+				 		    accTRXPlus.put("TRXCustBillID", CommonUtils.nvl( params.get("hidSalesOrderId")));
+				 		    accTRXPlus.put("TRXChequeNo", "");
+		                    accTRXPlus.put("TRXCRCardSlip", "");
+		                    accTRXPlus.put("TRXBisNo", "");
+		                    accTRXPlus.put("TRXReconDate", new Date());
+		                    accTRXPlus.put("TRXRemark",CommonUtils.nvl( params.get("msgRemark")));  
+		                    accTRXPlus.put("TRXCurrID", "RM");
+		                    accTRXPlus.put("TRXCurrRate", 1);
+		                    accTRXPlus.put("TRXAmount",     outrightBalance);
+		                    accTRXPlus.put("TRXAmountRM", outrightBalance);
+		                    accTRXPlus.put("TRXIsSynch", 0);
+		                    installationReversalMapper.addAccTRXes(accTRXPlus);
+		                   /////////////////////////////PAY0039D////////////////////////////////////////////
+		                    
+    				 		
+    				 		
+		                    /////////////////////////////PAY0033D////////////////////////////////////////////
         				 	String TAX_INVC_ID = installationResultListMapper.getPAY0033D_SEQ(invoiceNum);
         	    			
         					//Insert TaxinvoiceOutright
@@ -1517,9 +1578,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	        		taxInvoiceOutright.put("ADDR_DTL",CommonUtils.nvl( params.get("hidInstallation_AddDtl")));
         	        		taxInvoiceOutright.put("STREET","");   
         	        		logger.debug("Prepared TaxinvoiceOutright:{}",taxInvoiceOutright);   
-        	        		
+        	        		/////////////////////////////PAY0033D////////////////////////////////////////////
         	        		
         	    			
+        	        		
+        	        		/////////////////////////////PAY0034D////////////////////////////////////////////
         	    			if(ApptypeID.equals("1412"))	{
         	    				
         	            		taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
@@ -1598,8 +1661,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		taxInvoiceOutrightSub.put("STREET","");
         	            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
         	    			}
-        	    			
+        	    			/////////////////////////////PAY0034D////////////////////////////////////////////
     
+        	    			
         	    			AccTradeLedger.put("TRADE_RUN_ID", 0);
         	    			AccTradeLedger.put("TRADE_ID", 0);
         	    			AccTradeLedger.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
@@ -1616,6 +1680,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			logger.debug("Prepared AccTradeLedger: ",AccTradeLedger);
     
         	    			
+        	    			
+        	    			/////////////////////////////PAY0016D////////////////////////////////////////////
         	    			AccOrderBill.put("ACC_BILL_ID", 0);
         	    			AccOrderBill.put("ACC_BILL_TASK_ID", 0);
         	    			AccOrderBill.put("ACC_BILL_REF_DT", CommonUtils.getNowDate());
@@ -1653,13 +1719,16 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			AccOrderBill.put("ACC_BILL_ACCT_CNVR", 0);
         	    			AccOrderBill.put("ACC_BILL_CNTRCT_ID", 0);
         	    			logger.debug("prepared AccOrderBill: ",AccOrderBill);
+        	    			/////////////////////////////PAY0016D////////////////////////////////////////////
+        	    			
+        	    			
         	    		}   
         	    		
     				 
     			 }
     			
     		
-
+    	//	//FAIL
 		if( params.get("installStatus").toString().equals("21")){
 			//FAIL
 			callEntry.put("callEntryId", 0);
@@ -1707,17 +1776,29 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			orderLog.put("progressId",  Integer.parseInt(params.get("hidCallType").toString()) == 257 ? 2:3);
 			orderLog.put("logDate", new Date());
 			orderLog.put("refId", 0);
-			orderLog.put("isLock", false);
+			orderLog.put("isLock", 0);
 			orderLog.put("logCreator", sessionVO.getUserId());
 			orderLog.put("logCreated", new Date());
 
 			logger.debug("orderLog : {}", orderLog);
 			//installationResultListMapper.insertOrderLog(orderLog);
-
 		}
+		
+		
 
 		if(Integer.parseInt(CommonUtils.nvl(params.get("installStatus")).toString()) == 4){
 			resultValue.put("value", "Completed");
+		
+			orderLog.put("LogID", 0);
+			orderLog.put("salesOrderId", Integer.parseInt(params.get("hidSalesOrderId").toString()));
+			orderLog.put("progressId",  5);
+			orderLog.put("logDate", new Date());
+			orderLog.put("refId", 0);
+			orderLog.put("isLock", 0);
+			orderLog.put("logCreator", sessionVO.getUserId());
+			orderLog.put("logCreated", new Date());
+		
+		
 		}else{
 			resultValue.put("value", "Fail");
 		}
@@ -1820,7 +1901,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		if("66".equals(ApptypeID)) {
     			
     			if(installResult.get("statusCodeId").toString().equals("4")){
-    				
     				EgovMap  s46dup =new EgovMap();
     				s46dup.put("installResultId", maxId );
     				s46dup.put("stusCodeId", installResult.get("statusCodeId"));
@@ -1829,38 +1909,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     				s46dup.put("installEntryId",  installResult.get("entryId"));
     				 
             		installationResultListMapper.updateInstallEntry(s46dup);
-					
-					Map<String, Object> happyCall = new HashMap<String, Object>();
-					//happyCall.put("HCID", 0);
-					happyCall.put("HCSOID", salesOrderM.get("salesOrdId"));
-					happyCall.put("HCCallEntryId", 0);
-					happyCall.put("HCTypeNo", entry.get("installEntryNo"));
-					happyCall.put("HCTypeId", 508);
-					happyCall.put("HCStatusId", 33);
-					happyCall.put("HCRemark", "");
-					happyCall.put("HCCommentTypeId", 0);
-					
-					happyCall.put("HCCommentGId", 0);
-					happyCall.put("HCCommentSId", 0);
-					happyCall.put("HCCommentDId", 0);
-					happyCall.put("creator", installResult.get("creator"));
-					happyCall.put("created", new Date());
-					happyCall.put("updator", installResult.get("creator"));
-					happyCall.put("updated", new Date());
-					happyCall.put("HCNoService", false);
-					happyCall.put("HCLock", false);
-					happyCall.put("HCCloseId", 0);
-					logger.debug("happyCall : {}", happyCall);
-					installationResultListMapper.insertHappyCall(happyCall);
-					
-					//insert Accorderbill
-	        		//installationResultListMapper.insertAccorderBill(AccOrderBill);
-	    
-                		
+            		
     			}
     		}
-    		
-    		
     	
 
     		if("67".equals(ApptypeID)   || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
@@ -1885,29 +1936,66 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         		entry.put("updated",  installResult.get("created"));
         		entry.put("updator",  installResult.get("creator"));
         		installationResultListMapper.updateInstallEntry(entry);
-            		
-            		
-        		if(installResult.get("statusCodeId").toString().equals("21")){
-        			if(callEntry != null){
-        				installationResultListMapper.insertCallEntry(callEntry);
-        				//callEntry에 max 값 구해서 CallResult에 저장
-        				maxIdValue.put("value", "callEntryId");
-        				maxId = installationResultListMapper.selectMaxId(maxIdValue);
-        				callResult.put("callEntryId", maxId);
-        				installationResultListMapper.insertCallResult(callResult);
-        				//callresult에 max값 구해서 callEntry에 업데이트
-        				maxIdValue.put("value", "callResultId");
-        				maxId = installationResultListMapper.selectMaxId(maxIdValue);
-        				callEntry.put("resultId", maxId);
-        				maxIdValue.put("value", "resultId");
-        				maxId = installationResultListMapper.selectMaxId(maxIdValue);
-        				callEntry.put("callEntryId", maxId);
-        				installationResultListMapper.updateCallEntry(callEntry);
-        			}
-    
-        			installationResultListMapper.insertOrderLog(orderLog);
-    		}
 		}
+    		
+    		
+    		
+    	//	Complete
+        if(installResult.get("statusCodeId").toString().equals("4")){	
+        	installationResultListMapper.insertOrderLog(orderLog);
+        }
+		
+        
+        //Fail
+        if(installResult.get("statusCodeId").toString().equals("21")){
+        	if(callEntry != null){
+				installationResultListMapper.insertCallEntry(callEntry);
+				//callEntry에 max 값 구해서 CallResult에 저장
+				maxIdValue.put("value", "callEntryId");
+				maxId = installationResultListMapper.selectMaxId(maxIdValue);
+				callResult.put("callEntryId", maxId);
+				installationResultListMapper.insertCallResult(callResult);
+				//callresult에 max값 구해서 callEntry에 업데이트
+				maxIdValue.put("value", "callResultId");
+				maxId = installationResultListMapper.selectMaxId(maxIdValue);
+				callEntry.put("resultId", maxId);
+				maxIdValue.put("value", "resultId");
+				maxId = installationResultListMapper.selectMaxId(maxIdValue);
+				callEntry.put("callEntryId", maxId);
+				installationResultListMapper.updateCallEntry(callEntry);
+			}
+        	
+        	installationResultListMapper.insertOrderLog(orderLog);
+        }
+        
+        
+		
+        
+        
+    	/////////////////////////////////	happyCall////////////////////////////
+		Map<String, Object> happyCall = new HashMap<String, Object>();
+		//happyCall.put("HCID", 0);
+		happyCall.put("HCSOID", salesOrderM.get("salesOrdId"));
+		happyCall.put("HCCallEntryId", 0);
+		happyCall.put("HCTypeNo", entry.get("installEntryNo"));
+		happyCall.put("HCTypeId", 508);
+		happyCall.put("HCStatusId", 33);
+		happyCall.put("HCRemark", "");
+		happyCall.put("HCCommentTypeId", 0);
+		
+		happyCall.put("HCCommentGId", 0);
+		happyCall.put("HCCommentSId", 0);
+		happyCall.put("HCCommentDId", 0);
+		happyCall.put("creator", installResult.get("creator"));
+		happyCall.put("created", new Date());
+		happyCall.put("updator", installResult.get("creator"));
+		happyCall.put("updated", new Date());
+		happyCall.put("HCNoService", false);
+		happyCall.put("HCLock", false);
+		happyCall.put("HCCloseId", 0);
+		logger.debug("happyCall : {}", happyCall);
+		installationResultListMapper.insertHappyCall(happyCall);	
+		/////////////////////////////////	happyCall////////////////////////////
 
 		return true;
 	}

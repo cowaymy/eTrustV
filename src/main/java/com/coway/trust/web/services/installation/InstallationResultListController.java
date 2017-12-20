@@ -345,6 +345,7 @@ public class InstallationResultListController {
 				message.setMessage("Error in Logistics Transaction !");
 				
 			}else{
+				message.setData("Y");
 				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
 
 			}
