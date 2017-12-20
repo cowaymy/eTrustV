@@ -1218,8 +1218,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
          SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
       </if>
        <if test="code != null and code == 'user'">
-        SELECT SYS0047M_USER_ID_SEQ.nextval FROM SYS0047M
-        
+        SELECT MAX(USER_ID) USER_ID FROM SYS0047M
        </if>
     </select>
 
@@ -1831,7 +1830,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , DOC_SUB_BATCH_ID
 	   )
 	  VALUES (
-	  ORG0010D_DOC_SUB_ID_SEQ_NEXTVAL
+	  ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL
 	  , #{docSubTypeId}
 	  , #{docTypeID}
 	  , #{docSOID}
