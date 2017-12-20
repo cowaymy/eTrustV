@@ -27,7 +27,6 @@ function fn_attachFile(){
 			}
 			var month = date.getMonth()+1;
 		     var newName = ""+day+month+date.getFullYear()+date.getHours()+date.getMinutes()+date.getSeconds();
-		     alert(newName);
 		     
 		    var formData = Common.getFormData("attachTrForm");
 		    formData.append("targetFolder", $("#targetFolder").val());
