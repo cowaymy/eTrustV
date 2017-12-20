@@ -6,30 +6,50 @@
 		<select id="selectComplianceLog" parameterType="Map" resultType="egovMap">
 		<![CDATA[
 		      SELECT Project1.CMPLNC_ID CMPLNC_ID  ,
-			       Project1.CMPLNC_NO CMPLNC_NO  ,
-			       Project1.MEM_ID MEM_ID  ,
-			       Project1.MEM_CODE MEM_CODE  ,
-			       Project1.MEM_TYPE MEM_TYPE  ,
-			       Project1.CODE_NAME CODE_NAME  ,
-			       Project1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
-			       Project1.NAME NAME  ,
-			       Project1.C1 C1  
-			  FROM ( SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
-			                Extent1.CMPLNC_NO CMPLNC_NO  ,
-			                Extent1.MEM_ID MEM_ID  ,
-			                Extent1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
-			                Extent3.MEM_CODE MEM_CODE  ,
-			                Extent3.MEM_TYPE MEM_TYPE  ,
-			                Extent4.CODE_NAME CODE_NAME  ,
-			                Extent5.NAME NAME  ,
-			                Extent2.CMPLNC_RCIV_DT C1  
-			         FROM MSC0005D Extent1
-			                JOIN MSC0007D Extent2   ON ( Extent2.CMPLNC_ID = Extent1.CMPLNC_ID )
-			                AND ( Extent2.CMPLNC_RCIV_DT IS NOT NULL )
-			                LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
-			                LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent3.MEM_TYPE
-			                LEFT JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.CMPLNC_STUS_ID
-			          WHERE  1=1
+		       Project1.CMPLNC_NO CMPLNC_NO  ,
+		       Project1.MEM_ID MEM_ID  ,
+		       Project1.MEM_CODE MEM_CODE  ,
+		       Project1.MEM_TYPE MEM_TYPE  ,
+		       Project1.CODE_NAME CODE_NAME  ,
+		       Project1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
+		       Project1.NAME NAME  ,
+		       Project1.C1 C1  ,
+		       Project1.USER_ID USER_ID  ,
+		       Project1.USER_NAME USER_NAME  
+		  FROM ( SELECT Project1.CMPLNC_ID CMPLNC_ID  ,
+		                Project1.CMPLNC_NO CMPLNC_NO  ,
+		                Project1.MEM_ID MEM_ID  ,
+		                Project1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
+		                Project1.MEM_CODE MEM_CODE  ,
+		                Project1.MEM_TYPE MEM_TYPE  ,
+		                Project1.CODE_NAME CODE_NAME  ,
+		                Project1.NAME NAME  ,
+		                Project1.USER_ID USER_ID  ,
+		                Project1.USER_NAME USER_NAME  ,
+		                Project1.C1 C1  ,
+		                ROW_NUMBER() OVER ( ORDER BY Project1.CMPLNC_ID ASC  ) ROW_NUMBER  
+		         FROM ( SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
+		                       Extent1.CMPLNC_NO CMPLNC_NO  ,
+		                       Extent1.MEM_ID MEM_ID  ,
+		                       Extent1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
+		                       Extent3.MEM_CODE MEM_CODE  ,
+		                       Extent3.MEM_TYPE MEM_TYPE  ,
+		                       Extent4.CODE_NAME CODE_NAME  ,
+		                       Extent5.NAME NAME  ,
+		                       Extent6.USER_ID USER_ID  ,
+		                       Extent6.USER_NAME USER_NAME  ,
+		                       GroupBy1.A2 C1  
+		                FROM MSC0005D Extent1
+		                       JOIN ( SELECT Extent2.CMPLNC_ID K1  ,
+		                                     MAX(Extent2.CMPLNC_PERSON_IN_CHRG)  A1  ,
+		                                     MIN(Extent2.CMPLNC_RCIV_DT)  A2  
+		                              FROM MSC0007D Extent2
+		                                GROUP BY Extent2.CMPLNC_ID ) GroupBy1   ON GroupBy1.K1 = Extent1.CMPLNC_ID
+		                       LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
+		                       LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent3.MEM_TYPE
+		                       LEFT JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.CMPLNC_STUS_ID
+		                       LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = GroupBy1.A1
+		                 WHERE   1=1
 			          ]]>
 			          <if test="caseNo != null and caseNo != ''">
                            AND  UPPER(Extent1.CMPLNC_NO) =  UPPER(#{caseNo})
@@ -49,8 +69,13 @@
                       <if test="recevDt != null and recevDt != ''">
                            AND  Extent2.CMPLNC_RCIV_DT =  to_date(#{recevDt},'DD/MM/YYYY')
                       </if>
+                      <if test="userId != null and userId != ''">
+                           AND  Extent6.User_ID =  #{userId}
+                      </if>
                       <![CDATA[
 			        ) Project1
+			     ) Project1
+			   WHERE  Project1.ROW_NUMBER > 0
 			  ORDER BY Project1.CMPLNC_ID ASC
 			   ]]>
 		</select>
@@ -144,7 +169,7 @@
 				                LEFT JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.LVL1_UP_ID
 				                LEFT JOIN ORG0001D Extent4   ON Extent4.MEM_ID = Extent1.LVL2_UP_ID
 				                LEFT JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent1.LVL3_UP_ID
-				          WHERE  Extent1.MEM_CODE = #{memberCode} AND ROWNUM <= 1 ) Limit1 
+				          WHERE  Extent1.MEM_ID = #{memberCode} AND ROWNUM <= 1 ) Limit1 
 		         ]]>
 		</select>
 		<insert id="insertCom" parameterType="Map">
@@ -191,6 +216,8 @@
 		  , CMPLNC_ATTACH_FILE_NAME
 		  , CMPLNC_CRT_DT
 		  , CMPLNC_CRT_USER_ID
+		  , CMPLNC_PERSON_IN_CHRG
+		  , CMPLNC_ATCH_FILE_GRP_ID
 		   )
 		  VALUES ( 
 		    MSC0007D_CMPLNC_ITM_ID_SEQ.NEXTVAL
@@ -221,6 +248,8 @@
 		  , #{complianceAttachmentFilename}
 		  , sysdate
 		  , #{complianceCreateBy}
+		  , #{compliancePersonInCharge}
+		  , #{complianceGroupId}
 		   )
     </insert>
     <select id="selectCheckOrder" parameterType="Map" resultType="egovMap">
@@ -238,7 +267,7 @@
     <![CDATA[
        SELECT Limit1.SALES_ORD_ID SALES_ORD_ID  ,
 			       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
-			      Limit1.SALES_DT C1  ,
+			       Limit1.SALES_DT C1  ,
 			       Limit1.CODE_NAME CODE_NAME  ,
 			       Limit1.STK_DESC STK_DESC  ,
 			       Limit1.NAME NAME  ,
@@ -284,5 +313,138 @@
 	   , #{complianceRemark}
 	    )
 	  </insert>
-    
+    <select id="selectComplianceNoValue" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+            SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
+				       Extent1.CMPLNC_NO CMPLNC_NO  ,
+				       Extent1.MEM_ID MEM_ID  ,
+				       Extent1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
+				       Extent1.CMPLNC_REM CMPLNC_REM  ,
+				       Extent1.CMPLNC_CRT_DT CMPLNC_CRT_DT  ,
+				       Extent1.CMPLNC_CRT_USER_ID CMPLNC_CRT_USER_ID  ,
+				       Extent1.CMPLNC_UPD_DT CMPLNC_UPD_DT  ,
+				       Extent1.CMPLNC_UPD_USER_ID CMPLNC_UPD_USER_ID  
+				  FROM MSC0005D Extent1
+				 WHERE  Extent1.CMPLNC_ID = #{complianceId} AND ROWNUM <= 1
+	   ]]>
+     </select>
+     <select id="selectOrderDetailComplianceId" parameterType="Map" resultType="egovMap">
+            SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
+				       Extent2.SALES_ORD_ID SALES_ORD_ID  ,
+				       Extent2.SALES_ORD_NO SALES_ORD_NO  ,
+				       TO_CHAR(Extent2.SALES_DT,'DD-MM-YYYY') C1  ,
+				       Extent5.CODE_NAME CODE_NAME  ,
+				       Extent4.STK_DESC STK_DESC  ,
+				       Extent6.NAME NAME  ,
+				       Extent7.NAME NAME1  ,
+				       Extent7.NRIC NRIC  ,
+				       Extent2.MEM_ID MEM_ID  
+				  FROM MSC0006D Extent1
+				         JOIN SAL0001D Extent2   ON Extent2.SALES_ORD_ID = Extent1.CMPLNC_SO_ID
+				         JOIN SAL0002D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
+				         JOIN SYS0026M Extent4   ON Extent4.STK_ID = Extent3.ITM_STK_ID
+				         JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent2.APP_TYPE_ID
+				         JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent2.STUS_CODE_ID
+				         JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent2.CUST_ID
+				 WHERE  ( 1 = Extent1.CMPLNC_STUS_ID )
+				          AND ( Extent1.CMPLNC_ID = #{complianceId} )
+            
+     </select>
+     <select id="selectComplianceRemark" parameterType="Map" resultType="egovMap">
+            SELECT Extent1.CMPLNC_ID CMPLNC_ID  ,
+				       Extent2.NAME NAME  ,
+				       Extent4.RESN_DESC RESN_DESC  ,
+				       Extent3.NAME NAME1  ,
+				       Extent1.CMPLNC_COLCT_AMT CMPLNC_COLCT_AMT  ,
+				       Extent1.CMPLNC_REM CMPLNC_REM  ,
+				       Extent5.USER_NAME USER_NAME  ,
+				       TO_CHAR(Extent1.CMPLNC_CRT_DT,'yyyy-MM-dd') C1  ,
+				       CASE 
+				            WHEN ( 1 = Extent1.CMPLNC_HAS_ATTACH ) THEN 'YES'
+				       ELSE 'NO'
+				          END C2  ,
+				       Extent1.CMPLNC_ATTACH_FILE_NAME CMPLNC_ATTACH_FILE_NAME,
+				       Extent1.CMPLNC_ATCH_FILE_GRP_ID CMPLNC_ATCH_FILE_GRP_ID
+				  FROM MSC0007D Extent1
+				         LEFT JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.CMPLNC_STUS_ID
+				         LEFT JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.CMPLNC_ACTN_ID
+				         LEFT JOIN SYS0032M Extent4   ON Extent4.RESN_ID = Extent1.CMPLNC_FOLW_UP_ID
+				         JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CMPLNC_CRT_USER_ID
+				 WHERE  Extent1.CMPLNC_ID = #{complianceId}
+            
+     </select>
+     <select id="selectOrder" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+            SELECT Extent1.CMPLNC_ITM_ID CMPLNC_ITM_ID  ,
+				       Extent1.CMPLNC_ID CMPLNC_ID  ,
+				       Extent1.CMPLNC_SO_ID CMPLNC_SO_ID  ,
+				       Extent1.CMPLNC_STUS_ID CMPLNC_STUS_ID  ,
+				       Extent1.CMPLNC_REM CMPLNC_REM  
+				  FROM MSC0006D Extent1
+				 WHERE  ( Extent1.CMPLNC_ID = #{complianceId} )
+				          AND ( Extent1.CMPLNC_SO_ID = #{orderNo} )
+				          AND ( 1 = Extent1.CMPLNC_STUS_ID ) AND ROWNUM <= 1
+		  ]]>
+     </select>
+     <update id="updateCo" parameterType="Map">
+            UPDATE MSC0006D
+            SET CMPLNC_STUS_ID = #{complianceStatusId}
+            WHERE  ( CMPLNC_ITM_ID = #{complianceId} )
+     </update>
+     <update id="updateCom" parameterType="Map">
+            UPDATE MSC0005D
+		   SET CMPLNC_UPD_DT = sysdate,
+		          CMPLNC_STUS_ID = #{complianceStatusId},
+		         CMPLNC_UPD_USER_ID = #{complianceUpdateBy}
+		 WHERE  ( CMPLNC_ID = #{complianceId} )
+     </update>
+     <insert id="insertComCs" parameterType="Map">
+            INSERT INTO MSC0007D (
+                  CMPLNC_ITM_ID
+                , CMPLNC_ID
+                , CMPLNC_SO_ID
+                , CMPLNC_STUS_ID
+                , CMPLNC_ACTN_ID
+                , CMPLNC_FOLW_UP_ID
+                , CMPLNC_RCIV_DT
+                , CMPLNC_CLOS_DT
+                , CMPLNC_REM
+                , CMPLNC_CASE_CTGRY
+                , CMPLNC_DOC_TYPE
+                , CMPLNC_FINDING
+                , CMPLNC_COLCT_AMT
+                , CMPLNC_FINAL_ACTN
+                , CMPLNC_HAS_ATTACH
+                , CMPLNC_ATTACH_FILE_NAME
+                , CMPLNC_CRT_DT
+                , CMPLNC_CRT_USER_ID
+                , CMPLNC_PERSON_IN_CHRG
+                 )
+            VALUES ( 
+	             MSC0007D_CMPLNC_ITM_ID_SEQ.NEXTVAL
+	            , 0
+	            , #{complianceSOID}
+	            , 0
+	            , #{complianceActionId}
+	            , #{complianceFollowUpId}
+	            , NULL
+	            , NULL
+	            , #{complianceRemark}
+	            , NULL
+	            , NULL
+	            , NULL
+	            , NULL
+	            , NULL
+	            , 0
+	            , NULL
+	            , sysdate
+	            , #{complianceCreateBy}
+	            , NULL
+	             )
+     </insert>
+     <select id="selectAttachDownload" parameterType="Map" resultType="egovMap">
+        SELECT * 
+		FROM SYS0070M A LEFT JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
+		WHERE ATCH_FILE_GRP_ID = #{cmplncAtchFileGrpId}
+     </select>
 </mapper>
