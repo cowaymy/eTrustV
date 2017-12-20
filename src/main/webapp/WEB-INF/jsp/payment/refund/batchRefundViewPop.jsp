@@ -15,46 +15,46 @@
 var viewGridID;
 var viewColumnLayout = [ {
     dataField : "validStusId",
-    headerText : 'Valid Status'
+    headerText : "<spring:message code='pay.head.validStatus'/>"
 }, {
     dataField : "validRem",
-    headerText : 'Valid Remark',
+    headerText : "<spring:message code='pay.head.validRemark'/>",
     style : "aui-grid-user-custom-left"
 }, {
 	dataField : "salesOrdNo",
-    headerText : 'Order No'
+    headerText : "<spring:message code='pay.head.orderNo'/>"
 }, {
 	dataField : "worNo",
-    headerText : 'WOR No'
+    headerText : "<spring:message code='pay.head.worNo'/>"
 }, {
 	dataField : "amt",
-    headerText : 'Amount',
+    headerText : "<spring:message code='pay.head.amount'/>",
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
 	dataField : "bankAcc",
-    headerText : 'Bank Acc',
+    headerText : "<spring:message code='pay.head.bankAcc'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "refNo",
-    headerText : 'Ref No'
+    headerText : "<spring:message code='pay.head.refNo'/>"
 }, {
     dataField : "chqNo",
-    headerText : 'Chq No'
+    headerText : "<spring:message code='pay.head.chqNo'/>"
 }, {
     dataField : "name",
-    headerText : 'Issue Bank',
+    headerText : "<spring:message code='pay.head.issueBank'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "refDtMonth",
-    headerText : 'Ref Date (Month)'
+    headerText : "<spring:message code='pay.head.refDateMonth'/>"
 }, {
     dataField : "refDtDay",
-    headerText : 'Ref Date (Day)'
+    headerText : "<spring:message code='pay.head.refDateDay'/>"
 }, {
     dataField : "refDtYear",
-    headerText : 'Ref Date (Year)'
+    headerText : "<spring:message code='pay.head.refDateYear'/>"
 }
 ];
 
@@ -134,7 +134,7 @@ function setFilterByValues(validStusId) {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Batch Refund View</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#" id="close_btn">Close</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="close_btn"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -206,9 +206,9 @@ function setFilterByValues(validStusId) {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" id="allItem_btn">All Items</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="validItem_btn">Valid Items</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="invalidItem_btn">Invalid Items</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="allItem_btn"><spring:message code='pay.btn.allItems'/></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="validItem_btn"><spring:message code='pay.btn.validItems'/></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="invalidItem_btn"><spring:message code='pay.btn.invalidItems'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -218,7 +218,7 @@ function setFilterByValues(validStusId) {
 </section><!-- search_result end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="excelDown">EXCEL DW</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="excelDown"><spring:message code='pay.btn.exceldw'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

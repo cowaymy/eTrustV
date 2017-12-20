@@ -15,37 +15,37 @@
 var batchId = 0;
 var bRefundColumnLayout = [ {
     dataField : "batchId",
-    headerText : 'Batch ID',
+    headerText : "<spring:message code='pay.head.batchId'/>",
     dataType : "numeric"
 }, {
     dataField : "codeName",
-    headerText : 'Pay Type'
+    headerText : "<spring:message code='pay.head.payType'/>"
 }, {
     dataField : "name",
-    headerText : 'batchStatus'
+    headerText : "<spring:message code='pay.head.batchStatus'/>"
 }, {
     dataField : "name1",
-    headerText : 'Confirm Status'
+    headerText : "<spring:message code='pay.head.confirmStatus'/>"
 }, {
     dataField : "updDt",
-    headerText : 'Upload Date',
+    headerText : "<spring:message code='pay.head.uploadDate'/>",
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "username1",
-    headerText : 'Upload By'
+    headerText : "<spring:message code='pay.head.uploadBy'/>"
 }, {
     dataField : "cnfmDt",
-    headerText : 'Confirm Date'
+    headerText : "<spring:message code='pay.head.confirmDate'/>"
 }, {
     dataField : "c1",
-    headerText : 'Confirm By'
+    headerText : "<spring:message code='pay.head.confirmBy'/>"
 }, {
     dataField : "cnvrDt",
-    headerText : 'Convert Date'
+    headerText : "<spring:message code='pay.head.convertDate'/>"
 }, {
     dataField : "c2",
-    headerText : 'Convert By'
+    headerText : "<spring:message code='pay.head.convertBy'/>"
 }
 ];
 
@@ -152,8 +152,8 @@ function fn_bRefundConfirmPop() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Batch Refund</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectBatchRefundList()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_formClear()"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectBatchRefundList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_formClear()"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -223,9 +223,9 @@ function fn_bRefundConfirmPop() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="confirm_btn">Confirm</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="uploadPop_btn">Upload</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="viewPop_btn">View</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="confirm_btn"><spring:message code='pay.btn.confirm'/></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="uploadPop_btn"><spring:message code='pay.btn.upload'/></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="viewPop_btn"><spring:message code='pay.btn.view'/></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="bRefund _grid_wrap"><!-- grid_wrap start -->

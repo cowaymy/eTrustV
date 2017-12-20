@@ -67,7 +67,7 @@ function fn_uploadFile(){
     <header class="pop_header"><!-- pop_header start -->
         <h1>Batch Refund Upload</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" id="close_btn">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" id="close_btn"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     <section class="pop_body"><!-- pop_body start -->
@@ -113,8 +113,8 @@ function fn_uploadFile(){
             </table><!-- table end -->
         </form>
         <ul class="center_btns mt20">
-            <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/BatchRefundFormat.csv">Download CSV Format</a></p></li>
+            <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
+            <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/payment/BatchRefundFormat.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
     </section>
     <!-- pop_body end -->
