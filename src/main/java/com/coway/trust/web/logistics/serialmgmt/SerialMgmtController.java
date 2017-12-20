@@ -202,11 +202,9 @@ public class SerialMgmtController {
 			serialMgmtService.insertScanItems(paramArray);
 
 			Map<String, Object> delNo = new HashMap();
-
 			delNo.put("delno", formItems.get("txtDelNo"));
 
 			List<EgovMap> list = serialMgmtService.selectScanList(delNo);
-
 			map.put("data", list);
 		}
 
