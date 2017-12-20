@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,6 +37,11 @@ public class MainNoticeController {
 		return ResponseEntity.ok(selectDailyCountList);
 	}
 
+	@RequestMapping(value = "/removeCache.do", method = RequestMethod.DELETE)
+	public ResponseEntity removeCache(@RequestParam Map<String, Object> params) {
+		mainNoticeService.removeCache();
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/getMainNotice.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMainNotice(@RequestParam Map<String, Object> params) {

@@ -5,7 +5,8 @@
 	<div id="wrap" <c:if test="${param.isPop}"> class="solo" </c:if>><!-- wrap start -->
 
 	<header id="header"><!-- header start -->
-	<ul class="left_opt">  
+	<ul class="left_opt">
+		<li><a href="javascript:void(0);"><span id="header_refresh"><img src="${pageContext.request.contextPath}/resources/images/common/icon_refresh.png" alt="Refresh" /></span></a></li>
 	    <li>Neo(Mega Deal): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li>
 	    <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
 	  <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
@@ -26,25 +27,20 @@
 	<hr />
 
 <script type="text/javascript">
-    function selectDailyCount() {
-        Common.ajax("GET", "/common/selectDailyCount.do"
-            , null
-            , function (result) {
-                if (result != null && result.length > 0) {
-                    $("#header_neo").text(result[0].neoSales);
-                    $("#header_sales").text(result[0].sales);
+    function selectDailyCount(isRemoveCache) {
+        if(isRemoveCache){
+            Common.ajax("DELETE", "/common/removeCache.do"
+                , null
+                , function (result) {
+                    fn_selectDailyCount();
+                }, null, {
+                    isShowLoader : false
+                });
 
-                    /*$("#header_netQty").text(result[0].netQty);
-                     netQty : outRight + installment + rental*/
-                    $("#header_outRight").text(result[0].outRight);
-                    $("#header_installment").text(result[0].installment);
-                    $("#header_rental").text(result[0].rental);
-                    
-                    $("#header_total").text(result[0].total);
-                }
-            }, null, {
-                isShowLoader : false
-            });
+		}else{
+            fn_selectDailyCount();
+		}
+
 /*
         $("#header_neo").on("click", function(){
             Common.alert("구현중...");
@@ -73,8 +69,37 @@
 */        
     }
 
+    function fn_selectDailyCount(){
+        var inintV = "-";
+        $("#header_neo").text(inintV);
+        $("#header_sales").text(inintV);
+        $("#header_outRight").text(inintV);
+        $("#header_installment").text(inintV);
+        $("#header_rental").text(inintV);
+        $("#header_total").text(inintV);
+
+        Common.ajax("GET", "/common/selectDailyCount.do"
+            , null
+            , function (result) {
+                if (result != null && result.length > 0) {
+                    $("#header_neo").text(result[0].neoSales);
+                    $("#header_sales").text(result[0].sales);
+
+                    /*$("#header_netQty").text(result[0].netQty);
+                     netQty : outRight + installment + rental*/
+                    $("#header_outRight").text(result[0].outRight);
+                    $("#header_installment").text(result[0].installment);
+                    $("#header_rental").text(result[0].rental);
+
+                    $("#header_total").text(result[0].total);
+                }
+            }, null, {
+                isShowLoader : false
+            });
+	}
+
    $(function() {
-	   selectDailyCount();
+       selectDailyCount(false);
        fn_selectMyMenuProgrmList();
 	   
        // draw menu path.
@@ -104,6 +129,10 @@
 		}else{
             console.log("[header.jsp] path class is not found...");
         }
+
+        $("#header_refresh").on("click", function(){
+            selectDailyCount(true);
+		});
         
 	   $(".fav a").bind("click",function(){		   		   
 		   if($(".fav a").attr("class")=="on"){	

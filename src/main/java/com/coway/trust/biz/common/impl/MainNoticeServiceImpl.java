@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import com.coway.trust.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,13 @@ public class MainNoticeServiceImpl extends EgovAbstractServiceImpl implements Ma
 		LOGGER.debug("ServiceImple MainNotice Info");
 		return mainNoticeMapper.selectDailyCount(params);
 	}
+
+	@Override
+	@CacheEvict(value = AppConstants.PERIODICAL_CACHE, allEntries = true)
+	public void removeCache() {
+		LOGGER.debug("removeCache");
+	}
+
 
 	@Override
 	public List<EgovMap> getMainNotice(Map<String, Object> params) {

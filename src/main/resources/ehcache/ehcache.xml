@@ -25,8 +25,7 @@
            maxEntriesLocalHeap="10"
            maxEntriesLocalDisk="10"
            diskExpiryThreadIntervalSeconds="600"
-           timeToIdleSeconds="600"
-           timeToLiveSeconds="600"
+           timeToLiveSeconds="0"
            overflowToDisk="true"
            memoryStoreEvictionPolicy="FIFO">
     </cache>
