@@ -7,7 +7,11 @@ $(document).ready(function () {
 	
 	$("#close_btn").click(fn_closePop);
 	
-	$("#payMode").multipleSelect("checkAll");
+	CommonCombo.make("pPayMode", "/payment/selectCodeList.do", null, "", {
+        id: "code",
+        name: "codeName",
+        type:"S"
+    });
 	
 	fn_setAccNo();
 	
@@ -90,11 +94,7 @@ function fn_uploadFile(){
                     <tr>
                         <th scope="row">Payment Mode</th>
                         <td>
-                        <select class="" id="pPayMode" name="payMode" onchange="javascript:fn_setAccNo()">
-                            <option value="106">Cheque (CHQ)</option>
-                            <option value="107">Credit Card (CRC)</option>
-                            <option value="108">Online Payment (ONL)</option>
-                        </select>
+                        <select class="" id="pPayMode" name="payMode" onchange="javascript:fn_setAccNo()"></select>
                         </td>
                     </tr>
                     <tr>

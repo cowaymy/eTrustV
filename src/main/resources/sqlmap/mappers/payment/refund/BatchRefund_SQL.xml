@@ -260,8 +260,14 @@
     WHERE ACC_STUS_ID = 1 AND IS_PAY_CRC = 1
     ORDER BY ACC_CODE
     </when>
+    <when test="payMode == 109 or payMode == 110">
+    SELECT 557 AS CODE_ID, 'CIMB 2710/204' AS CODE_NAME FROM DUAL
+    </when>
+    <when test="payMode == 106 or payMode == 108">
+    SELECT 523 AS CODE_ID, 'CIMB 2710/010F' AS CODE_NAME FROM DUAL
+    </when>
     <otherwise>
-    SELECT 523 AS CODE_ID, '2710/010F' AS CODE_NAME FROM DUAL
+    SELECT '' AS CODE_ID, 'Not Exist' AS CODE_NAME FROM DUAL
     </otherwise>
     </choose>
     </select>

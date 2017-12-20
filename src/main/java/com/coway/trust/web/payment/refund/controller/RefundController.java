@@ -176,5 +176,14 @@ private static final Logger LOGGER = LoggerFactory.getLogger(RefundController.cl
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/selectCodeList.do", method = RequestMethod.GET)	
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> codeList = refundService.selectCodeList(params);
+		
+		return ResponseEntity.ok(codeList);
+	}
+	
 
 }

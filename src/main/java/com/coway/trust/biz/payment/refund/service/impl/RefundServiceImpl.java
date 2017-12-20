@@ -77,6 +77,13 @@ public class RefundServiceImpl implements RefundService {
 		
 		return result;
 	}
+
+
+	@Override
+	public List<EgovMap> selectCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return refundMapper.selectCodeList(params);
+	}
 	
 	
 	

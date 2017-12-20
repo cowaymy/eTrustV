@@ -16,5 +16,7 @@ public interface RefundMapper {
 	
 	List<EgovMap> selectRefundItem(Map<String, Object> params);
 	
+	List<EgovMap> selectCodeList(Map<String, Object> params);
+	
 
 }

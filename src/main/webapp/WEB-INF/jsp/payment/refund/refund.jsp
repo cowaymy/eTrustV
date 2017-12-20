@@ -98,8 +98,13 @@ $(document).ready(function () {
     $("#confirmStatus").multipleSelect("setSelects", [44]);
     $("#batchStatus").multipleSelect("setSelects", [1]); */
 	
+    CommonCombo.make("payMode", "/payment/selectCodeList.do", null, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
+    
 	$("#cancelMode").multipleSelect("checkAll");
-	$("#payMode").multipleSelect("checkAll");
 	
 	fn_setToDay();
 	
@@ -272,12 +277,7 @@ function fn_formClear() {
 <tr>
     <th scope="row">Paymode</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="payMode" name="payMode">
-    <option value="105">Cash</option>
-    <option value="106">Cheque (CHQ)</option>
-    <option value="107">Credit Card (CRC)</option>
-    <option value="108">Online Payment (ONL)</option>
-    </select>
+    <select class="multy_select w100p" multiple="multiple" id="payMode" name="payMode"></select>
     </td>
     <th scope="row"></th>
     <td></td>
@@ -632,6 +632,12 @@ function fn_setConfirmPopEvent() {
             $("#rAmt").val(str);
             $("#rRefAmt").val(str);
             
+            CommonCombo.make("rRefMode", "/payment/selectCodeList.do", null, "", {
+                id: "code",
+                name: "codeName",
+                type:"S"
+            });
+            
             fn_setAccNo();
         } else {
         	Common.alert('You have already entered refund information.');
@@ -946,11 +952,7 @@ function fn_updateGridData() {
 <tr>
     <th scope="row">Refund Mode</th>
     <td>
-    <select class="" id="rRefMode" onchange="javascript:fn_setAccNo()">
-    <option value="106" selected="selected">Cheque (CHQ)</option>
-    <option value="107">Credit Card (CRC)</option>
-    <option value="108">Online Payment (ONL)</option>
-    </select>
+    <select class="" id="rRefMode" onchange="javascript:fn_setAccNo()"></select>
     </td>
     <th scope="row"></th>
     <td></td>

@@ -70,7 +70,12 @@ $(document).ready(function () {
     $("#confirmStatus").multipleSelect("setSelects", [44]);
     $("#batchStatus").multipleSelect("setSelects", [1]); */
 	
-	$("#payMode").multipleSelect("checkAll");
+    CommonCombo.make("payMode", "/payment/selectCodeList.do", null, "", {
+        id: "code",
+        name: "codeName",
+        type:"M"
+    });
+    
 	$("#batchStus").multipleSelect("checkAll");
 	$("#cnfmStus").multipleSelect("checkAll");
 	

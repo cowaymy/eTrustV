@@ -12,5 +12,7 @@ public interface RefundService {
 	
 	EgovMap selectRefundInfo(Map<String, Object> params);
 	
+	List<EgovMap> selectCodeList(Map<String, Object> params);
+	
 
 }

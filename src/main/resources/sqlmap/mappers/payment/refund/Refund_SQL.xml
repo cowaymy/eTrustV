@@ -503,6 +503,14 @@
          UPD_DT = SYSDATE
          WHERE  DET_ID = #{detId}
     </update>
+    
+    <select id="selectCodeList" parameterType="Map" resultType="egovMap">
+        SELECT
+              CODE ,
+              CODE_NAME
+        FROM SYS0013M
+        WHERE DISAB = 0 AND CODE_MASTER_ID = 395
+    </select>
      
     
 	
