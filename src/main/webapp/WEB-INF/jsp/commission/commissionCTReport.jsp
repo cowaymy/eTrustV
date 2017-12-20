@@ -264,9 +264,9 @@
 						<th scope="row">Report Type</th>
 						<td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
 								<option value="">Report/Raw Data Type</option>
-								<option value="1">Coway Technician Commisision</option>
-								<option value="2">Coway Technician Commisision Raw (Excel)</option>								
-								<option value="3">Coway Technician Commisision (All)</option>
+								<option value="1">Coway Technician Commission</option>
+								<option value="2">Coway Technician Commission Raw (Excel)</option>								
+								<option value="3">Coway Technician Commission (All)</option>
 								<option value="4">Coway Technician Comm (AS)</option>
 								<option value="5">Coway Technician Comm (BS)</option>								
 								<option value="6">Coway Technician Comm (Collection)</option>								
