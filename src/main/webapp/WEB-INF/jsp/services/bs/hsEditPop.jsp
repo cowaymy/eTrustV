@@ -234,6 +234,7 @@
            openGb = $("#openGb").val(); // TypeId 
            brnchId = $("#brnchId").val(); // TypeId  
            hidHsno = $("#hidHsno").val(); // TypeId  
+           hrResultId = $("#hrResultId").val(); // TypeId  
            
              
            createAUIGrid();
@@ -281,14 +282,14 @@
         
 
 
-          Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{salesOrdId : selSalesOrdId}, function(result) {
+          Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{hrResultId : hrResultId}, function(result) {
             console.log("성공 selectHistoryHSResult.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID2, result);            
         }); 
 
 
-         Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{salesOrdId : selSalesOrdId}, function(result) {
+         Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
             console.log("성공 selectFilterTransaction.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID3, result);            
@@ -334,7 +335,7 @@
          var width = $this.width();
 
 
-          AUIGrid.resize(gridName, width, $(".grid_wrap").innerHeight());
+          AUIGrid.resize(gridName, width, 200);
 //          AUIGrid.resize(gridName, width, height);
 
 //         setTimeout(function(){
@@ -365,6 +366,7 @@
  <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
  <input type="hidden" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
+ <input type="text" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
 
    
  <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode"/>
@@ -426,13 +428,13 @@
     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID2)">Current & History HS Result</a></dt>
     <dd>
         <article class="grid_wrap"><!-- grid_wrap start -->
-             <div id="hsResult_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>             
+             <div id="hsResult_grid_wrap" style="width:100%; height:210px; margin:0 auto;"></div>             
         </article><!-- grid_wrap end -->
     </dd>
     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID3)">Filter Transaction</a></dt>
     <dd>
         <article class="grid_wrap"><!-- grid_wrap start -->
-         <div id="fiter_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+         <div id="fiter_grid_wrap" style="width: 100%; height: 210px; margin: 0 auto;"></div>
         </article><!-- grid_wrap end -->
     </dd>
 </dl>
