@@ -1865,7 +1865,7 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="currentAsset">Branch/Department Current Asset</a></p></li>
 <%--     <li><p class="btn_grid"><a href="download"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
-    <li><p class="btn_grid"><a id="exportTo">Export Search List</a></p></li>
+    <li><p class="btn_grid"><a id="exportTo"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
     <%-- <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
