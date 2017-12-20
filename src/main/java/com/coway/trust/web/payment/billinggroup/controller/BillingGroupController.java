@@ -34,6 +34,7 @@ public class BillingGroupController {
 	 */
 	@RequestMapping(value = "/initBillGroupManagement.do")
 	public String initEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("ord_No", params.get("ord_No"));
 		return "payment/billinggroup/billGroupManagement";
 	}
 	

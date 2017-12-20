@@ -44,7 +44,13 @@ $(document).ready(function(){
     // 그리드 생성
     groupListGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     esmListGridID = GridCommon.createAUIGrid("grid_wrap2", estmColumnLayout,null,gridPros);
-    
+
+
+    // callcenter 진입시 조회처리.
+    if(FormUtil.isNotEmpty($("#orderNo").val())){
+        searchList();
+	}
+
 });
 
 
@@ -1371,7 +1377,7 @@ var addOrderLayout = [
 							<tr>
 							    <th scope="row">Order Number</th>
 							    <td>
-							        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" />
+							        <input type="text" name="orderNo" id="orderNo" title="" placeholder="Order Number" class="" value="${ord_No}"/>
 							        <p class="btn_sky">
 							            <a href="javascript:searchList();" id="confirm"><spring:message code='pay.btn.confirm'/></a>
 							        </p>
