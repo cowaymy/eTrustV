@@ -1117,7 +1117,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ,TRAINEE_TYPE
         )
             VALUES (
-             (SELECT MAX(MEM_ID)+1 FROM ORG0001D )
+            ORG0001D_MEM_ID_SEQ.NEXTVAL
             , #{memberCode}
             , #{memberType}
             , #{memberNm}
@@ -1218,7 +1218,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
          SELECT MAX(TAX_INVC_ID) TAXINVCID  FROM PAY0031D
       </if>
        <if test="code != null and code == 'user'">
-        SELECT MAX(USER_ID)+1 FROM SYS0047M
+        SELECT SYS0047M_USER_ID_SEQ.nextval FROM SYS0047M
+        
        </if>
     </select>
 
@@ -1599,7 +1600,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , USER_IS_EXTRNL
          )
          VALUES (
-           (SELECT MAX(USER_ID)+1 FROM SYS0047M)
+           SYS0047M_USER_ID_SEQ.nextval
           ,  #{userName}
           , #{password}
           , #{userFullName}
@@ -1692,7 +1693,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , STREET
 	   )
 	  VALUES (
-	  (SELECT MAX(APLCTN_ID)+1 FROM ORG0003D)
+	  ORG0003D_APLCTN_ID_SEQ.NEXTVAL
         , #{applicantCode}
 	  , #{applicantType}
 	  , #{applicantName}
@@ -1749,7 +1750,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , AG_UPD_USER_ID
 	   , AG_UPD_DT )
 	  VALUES (
-	  (SELECT MAX(AG_ID)+1 FROM ORG0002D)
+	  ORG0002D_AG_ID_SEQ.NEXTVAL
 	   , #{agreementRefNo}
 	   , #{memberID}
 	   , #{agreementTypeID}
@@ -1830,7 +1831,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , DOC_SUB_BATCH_ID
 	   )
 	  VALUES (
-	  (SELECT MAX(DOC_SUB_ID)+1 FROM ORG0010D )
+	  ORG0010D_DOC_SUB_ID_SEQ_NEXTVAL
 	  , #{docSubTypeId}
 	  , #{docTypeID}
 	  , #{docSOID}
@@ -1867,7 +1868,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        , SMS_VENDOR_ID
        )
         VALUES (
-        (SELECT MAX(SMS_ID)+1 FROM MSC0015D)
+        MSC0015D_SEQ.NEXTVAL
          , #{SMSMessage}
          , #{SMSMSISDN}
          , #{SMSTypeID}
@@ -1898,7 +1899,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , REPLY_FDBCK_ID
 	    )
 	  VALUES (
-	  (SELECT MAX(REPLY_ID)+1 FROM MSC0017D)
+	  MSC0017D_REPLY_ID_SEQ.NEXTVAL
 	  ,#{SMSID}
 	  , #{replyCode}
 	  , #{replyRemark}
@@ -2059,7 +2060,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		   , EVT_APPLY_DT
             )
 		  VALUES (
-		  (SELECT MAX(PROMO_ID)+1 FROM ORG0007D )
+		  ORG0007D_PROMO_ID_SEQ.NEXTVAL
 		   , #{requestNo}
 		   , #{statusId}
 		   , #{promoTypeId}
@@ -2113,7 +2114,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
            , VACT_REPL_CT
             )
           VALUES (
-          (SELECT MAX(PROMO_ID)+1 FROM ORG0007D )
+          ORG0007D_PROMO_ID_SEQ.NEXTVAL
            , #{requestNo}
            , 4
            , 2740
@@ -2828,7 +2829,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
 		)
 		select  
-		        (SELECT MAX(MEM_ID)+1 FROM ORG0001D ) AS MEM_ID, 
+		        ORG0001D_MEM_ID_SEQ.nextval, 
 		        (SELECT CASE
 			                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
 			               ELSE ''
