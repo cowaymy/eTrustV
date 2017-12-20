@@ -94,7 +94,7 @@
 
     function createAUIGrid2(){
         // AUIGrid 칼럼 설정
-        var columnLayout = [ {
+        var resultColumnLayout = [ {
                     dataField:"stkCode",
                     headerText:"Version",
                     width:200,
@@ -135,31 +135,24 @@
             
             // 그리드 속성 설정
             var gridPros = {
-                // 페이징 사용       
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-                
-                editable : true,
-                
-                //showStateColumn : true, 
-                
-                //displayTreeOpen : true,
-                
-                headerHeight : 30,
-                
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-                
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-                
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+                fixedColumnCount    : 1,            
+                showStateColumn     : true,             
+                displayTreeOpen     : false,            
+                selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping"
         
             };
                 //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                myDetailGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, gridPros);
+                myDetailGridID2 = GridCommon.createAUIGrid("hsResult_grid_wrap", resultColumnLayout,'', gridPros);
     }
     
 
@@ -168,7 +161,7 @@
 
     function createAUIGrid3(){
         // AUIGrid 칼럼 설정
-        var columnLayout = [ {
+        var fitercolumnLayout = [ {
                     dataField:"stkCode",
                     headerText:"BSR No",
                     width:200,
@@ -224,7 +217,7 @@
         
             };
                 //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                myDetailGridID3 = AUIGrid.create("#grid_wrap3", columnLayout, gridPros);
+                myDetailGridID3 = GridCommon.createAUIGrid("fiter_grid_wrap", fitercolumnLayout, '',gridPros);
     }
 
     
@@ -333,7 +326,21 @@
     function fn_parentReload() {
         fn_getBSListAjax(); //parent Method (Reload)
     }    
-        
+      
+        //resize func (tab click)
+    function fn_resizefunc(obj, gridName){ //
+
+         var $this = $(obj);
+         var width = $this.width();
+
+
+          AUIGrid.resize(gridName, width, $(".grid_wrap").innerHeight());
+//          AUIGrid.resize(gridName, width, height);
+
+//         setTimeout(function(){
+//             AUIGrid.resize(gridName);
+//         }, 100);
+    }    
     </script>
     
     
@@ -386,7 +393,7 @@
     <th scope="row">HS Month</th>
     <td><span><c:out value="${basicinfo.monthy}"/></span></td>
     <th scope="row">HS Type</th>
-    <td colspan="2"><span><c:out value="${basicinfo.codeName}"/></span></td>    
+    <td colspan="3"><span><c:out value="${basicinfo.codeName}"/></span></td>    
 </tr>
 <tr>
     <th scope="row">Current BSR No</th>
@@ -416,17 +423,17 @@
 
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
-    <dt class="click_add_on on"><a href="#">Current & History BS Result</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID2)">Current & History HS Result</a></dt>
     <dd>
-		<article class="grid_wrap2"><!-- grid_wrap start -->
-		     <div id="grid_wrap2" style="width: 100%; height: 10px; margin: 0 auto;"></div>
-		</article><!-- grid_wrap end -->
+        <article class="grid_wrap"><!-- grid_wrap start -->
+             <div id="hsResult_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>             
+        </article><!-- grid_wrap end -->
     </dd>
-    <dt class="click_add_on"><a href="#">Filter Transaction</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID3)">Filter Transaction</a></dt>
     <dd>
-	    <article class="grid_wrap3"><!-- grid_wrap start -->
-	     <div id="grid_wrap3" style="width: 100%; height: 10px; margin: 0 auto;"></div>
-	    </article><!-- grid_wrap end -->
+        <article class="grid_wrap"><!-- grid_wrap start -->
+         <div id="fiter_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>
+        </article><!-- grid_wrap end -->
     </dd>
 </dl>
 </article><!-- acodi_wrap end -->
