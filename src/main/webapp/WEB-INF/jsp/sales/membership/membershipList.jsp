@@ -81,17 +81,17 @@
 	        
 	        //AUIGrid 칼럼 설정
 	        var columnLayout = [
-               {     dataField  : "mbrshNo",     headerText  : "Membership No",   width          : 130,   editable       : false}, 
-               {     dataField  : "mbrshOtstnd",   headerText  : "Outstanding",  width          : 100,    editable       : false}, 
-               {     dataField  : "ordNo",   headerText  : "Order No",     width          : 90,  editable       : false}, 
+               {     dataField  : "mbrshNo",     headerText  : "Membership<br/>No",   width          : 100,   editable       : false}, 
+               {     dataField  : "mbrshOtstnd",   headerText  : "Outstanding",  width          : 95,    editable       : false}, 
+               {     dataField  : "ordNo",   headerText  : "Order No",     width          : 75,  editable       : false}, 
                {     dataField  : "custName",     headerText  : "Customer Name",      width          : 150,    editable       : false}, 
-               {     dataField  : "mbrshStusCode",    headerText   : "Status",    width           : 70,    editable        : false}, 
+               {     dataField  : "mbrshStusCode",    headerText   : "Status",    width           : 55,    editable        : false}, 
                {     dataField  : "mbrshStartDt", headerText  : "Start Date",  width       : 90,  editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
                {     dataField   : "mbrshExprDt",  headerText  : "Expire Date",   width       : 90,    editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
                {     dataField   : "pacName",  headerText  : "Package",  width       : 150, editable    : false}, 
-               {     dataField   : "mbrshDur", headerText  : "Duration<br/>(Mth)", width       : 80,   editable    : false}, 
+               {     dataField   : "mbrshDur", headerText  : "Duration<br/>(Mth)", width       : 75,   editable    : false}, 
                {     dataField   : "mbrshCrtDt",  headerText  : "Create Date",  width       : 90,  editable    : false,dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "mbrshCrtUserId",  headerText  : "Creator", width       : 120, editable    : false},
+               {     dataField   : "mbrshCrtUserId",  headerText  : "Creator", width       : 100, editable    : false},
                {     dataField : "mbrshId", visible : false },
                {     dataField : "ordId",visible : false}	                            
 	       ];
