@@ -231,18 +231,6 @@
 
     $(function() {
 
-        $("#RDCToLoc").keypress(function(event) {
-
-            if (event.which == '13')
-            {
-                $("#stype").val('RDCToLocID');
-                $("#svalue").val($('#RDCToLoc').val());
-                $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-
-                Common.searchpopupWin("searchForm3", "/common/searchPopList.do","location");
-            }
-        });
-
         $("#search").click(function() {
 
                 searchAjax();
@@ -346,6 +334,10 @@
 
              $("#RDCFrmLocID").val(userDetails[0].locid);
              $("#RDCFrmLoc").val(userDetails[0].locdesc);
+
+             var paramdata = { rdcloc:$("#RDCFrmLocID").val(), locgb:'CT'};
+             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '', 'RDCToLoc', 'S', '');
+
              doSysdate(0 , "reqstDt");
 
          }, function(jqXHR, textStatus, errorThrown) {
@@ -377,15 +369,6 @@
     }
 
 
-    function fn_itempopList(data) {
-
-        var rtnVal = data[0].item;
-
-        $("#RDCToLocID").val(rtnVal.locid);
-        $("#RDCToLoc").val(rtnVal.locdesc);
-        $("#svalue").val();
-    }
-
     function fn_showSerialRegistration()
     {
         if ($("#scantype").val() == "30")
@@ -411,6 +394,8 @@
                 $("#barScanWindow").show();
 
                 AUIGrid.resize(myBarScanGridID);
+
+                $("#txtBarcode").focus();
         	}
         }
         else
@@ -428,7 +413,7 @@
             $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header'});
 
             $("#txtBarcode").val('');
-            $("#txtBarcode").focus();
+
             AUIGrid.clearGridData(myBarScanGridID);
 
             SeqNo = 1;
@@ -437,6 +422,8 @@
             $("#barScanWindow").show();
 
             AUIGrid.resize(myBarScanGridID);
+
+            $("#txtBarcode").focus();
         }
     }
 
@@ -459,6 +446,7 @@
         });
     }
 
+
     function fn_balanceDelivery()
     {
     	var data = {};
@@ -476,6 +464,7 @@
         });
     }
 
+
     function fn_balanceGIRDC()
     {
         var data = {};
@@ -491,6 +480,7 @@
             Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
     }
+
 
     function fn_splitBarcode() {
 
@@ -529,7 +519,7 @@
                 {
                    var items = {
 			                               "seqno" : SeqNo,
-			                               "itmcode" : "Serial No. Does Not Exist or Duplicate Found.",
+			                               "itmcode" : "Serial No. Does Not Exist.",
 			                               "boxno" : BarCodeArray[i],
 			                               "unit" : unitType,
 			                               "status" : "0",
@@ -542,7 +532,7 @@
                 {
                     var items = {
 				                            "seqno" : "G" + SeqGroup,
-				                            "itmcode" : "Serial No. Does Not Exist or Duplicate Found.",
+				                            "itmcode" : "Serial No. Does Not Exist.",
 				                            "boxno" : BarCodeArray[i],
 				                            "unit" : unitType,
 				                            "status" : "0",
@@ -645,12 +635,14 @@
                 });
 
             $("#txtBarcode").val('');
+            $("#txtBarcode").focus();
     	}
     	else
     	{
     		Common.alert("Please Try Scanning Again.");
     	}
     }
+
 
     function fn_confirmScanItem()
     {
@@ -949,15 +941,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">From Location</th>
-                        <td>
-                            <input type="text"  id="RDCFrmLoc" name="RDCFrmLoc"  class="w100p"  readonly />
-                        </td>
-                        <th scope="row">To Location</th>
-                        <td>
-                            <input type="hidden"  id="RDCToLocID" name="RDCToLocID" />
-                            <input type="text" class="w100p" id="RDCToLoc"  name="RDCToLoc" placeholder="Press 'Enter' to Search" readonly />
-                        </td>
+					    <th scope="row">From Location</th>
+					    <td>
+					        <input type="text"  id="RDCFrmLoc" name="RDCFrmLoc"  class="w100p"  readonly />
+					    </td>
+					    <th scope="row">To Location</th>
+					    <td>
+					        <select class="w100p" id="RDCToLoc" name="RDCToLoc"></select>
+					    </td>
                     </tr>
                 </tbody>
             </table><!-- table end -->
