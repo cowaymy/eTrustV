@@ -161,6 +161,15 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		EgovMap  trnMap = new  EgovMap();
 		
 		String taxCode ="";
+		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
+		if(zeroRat > 0 ){
+			taxCode = "39";
+		}	
+		
+		int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
+		if(EURCert > 0 ){
+			taxCode = "28";
+		}	
 		
 		EgovMap   docMap = membershipRentalQuotationMapper.getSAL0083D_DocNo (params);
 		EgovMap   seqMap = membershipRentalQuotationMapper.getSAL0083D_SEQ (params);
@@ -230,7 +239,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 						
 								eFilterMap.put("qotatItmAmt", "0");
 								eFilterMap.put("qotatItmGstRate", "0");
-								eFilterMap.put("ItmGstTaxCodeId", "29");
+								eFilterMap.put("ItmGstTaxCodeId", "39");
 					}else{
 
     						 	double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));

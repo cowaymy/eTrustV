@@ -7,7 +7,7 @@
 
 <script type="text/javaScript" language="javascript">
 
-var  gridID;
+var  payGridID;
 
 $(document).ready(function(){
 	
@@ -46,7 +46,7 @@ $(document).ready(function(){
         
         
 
-    AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+    AUIGrid.bind(payGridID, "cellDoubleClick", function(event) {
             console.log(event);
                // fn_setDetail(listMyGridID, event.rowIndex);
                
@@ -96,7 +96,7 @@ function createAUIGrid(){
                }
    ];
     
-    gridID = GridCommon.createAUIGrid("#c_grid_wrap", cLayout,''); 
+    payGridID = GridCommon.createAUIGrid("#c_grid_wrap", cLayout,''); 
 }
 
 
@@ -104,7 +104,7 @@ function createAUIGrid(){
 function fn_getPaymentCollecterList (){ 
 	Common.ajax("GET", "/sales/membership/paymentCollecterList", $("#sParamForm").serialize(), function(result) {
 		     console.log( result);
-		     AUIGrid.setGridData(gridID, result);
+		     AUIGrid.setGridData(payGridID, result);
 	});
 }
 

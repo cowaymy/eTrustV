@@ -59,11 +59,11 @@
 						              
 						            
 						            <if test="CRT_SDT != null and CRT_SDT != ''">
-                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[>=]]>  REPLACE(#{CRT_SDT}, '/','')
+                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[>=]]>  TO_CHAR(TO_DATE(#{CRT_SDT}, 'dd/mm/yyyy'),'yyyymmdd')
                                     </if>   
                                     
                                     <if test="CRT_EDT != null and CRT_EDT != ''">
-                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[<=]]>   REPLACE(#{CRT_EDT}, '/','')
+                                                 AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[<=]]>   TO_CHAR(TO_DATE(#{CRT_EDT}, 'dd/mm/yyyy'),'yyyymmdd') 
                                     </if>   
                                     
                                     
@@ -1245,5 +1245,22 @@
             }
          ]]>
     </select>
+    
+    <select id="selectGSTZeroRateLocation"  parameterType="Map" resultType="Integer">
+          SELECT  COUNT(-1) CNT
+		    FROM SAL0001D A, SAL0023D B , SYS0064M C 
+		WHERE 1=1
+		  AND   A.CUST_ADD_ID =  B.CUST_ADD_ID 
+		  AND   B.AREA_ID = C.AREA_ID
+		  AND   C.GST_CHK =1
+		  AND  A.SALES_ORD_ID =  nvl(#{srvSalesOrderId}, #{srvSalesOrdId} )
+    </select>
+    <select id="selectGSTEURCertificate"  parameterType="Map" resultType="Integer">
+            SELECT COUNT(-1) CNT 
+			  FROM SAL0042D 
+			 WHERE   EURC_SALES_ORD_ID = nvl(#{srvSalesOrderId}, #{srvSalesOrdId} )
+			      AND  1 = EURC_STUS_CODE_ID 
+    </select>
+    
       
 </mapper>

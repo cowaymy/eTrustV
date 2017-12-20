@@ -33,6 +33,9 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	@Resource(name = "membershipQuotationMapper")
 	private MembershipQuotationMapper membershipQuotationMapper;
 	
+	@Resource(name = "membershipRentalQuotationMapper")
+	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
+	
 
 	@Resource(name = "membershipConvSaleMapper")
 	private MembershipConvSaleMapper membershipConvSaleMapper;
@@ -137,17 +140,25 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		boolean isVerifyGSTEURCertificate   = true;
 		boolean verifyGSTZeroRateLocation = true;
 		
+		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
+		if(zeroRat > 0 ){
+			verifyGSTZeroRateLocation = false;
+		}	
 		
+		int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
+		if(EURCert > 0 ){
+			isVerifyGSTEURCertificate = false;
+		}	
 		
 
-		  ////////	 get taxRate////////////////
+	/*	  ////////	 get taxRate////////////////
 		 int  TAXRATE = membershipConvSaleMapper.getTaxRate(params);
 		  ////////	 InvoiceNum  채번 ////////////////
 		 
 		 if( TAXRATE ==6){
 			 isVerifyGSTEURCertificate =false;
 			 verifyGSTZeroRateLocation =false;
-		 }
+		 }*/
 		  
 		  
 		if(verifyGSTZeroRateLocation){

@@ -132,4 +132,6 @@ public interface MembershipRentalQuotationMapper {
 	void updateSAL0090D(Map<String, Object> params);
 	
 	void spInstRscRentalBill(Map<String, Object> params);
+	int selectGSTZeroRateLocation(Map<String, Object> params);
+	int selectGSTEURCertificate(Map<String, Object> params);
 }

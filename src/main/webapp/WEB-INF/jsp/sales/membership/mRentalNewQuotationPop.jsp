@@ -906,47 +906,47 @@ function createAUIGridHList() {
     var columnLayout = [
                         {     dataField     : "no",                 
                                headerText  : "BS No",  
-                               width          : 150,               
+                               width          : 90,               
                                editable       : false
                         }, 
                         {     dataField     : "month",          
                                headerText  : "BS Month",           
-                               width          : 100,                
+                               width          : 80,                
                                editable       : false
                         }, 
                         {     dataField     : "code",                     
                                headerText  : "Type",           
-                               width          : 100,                 
+                               width          : 70,                 
                                editable       : false
                         }, 
                         {      dataField     : "code1",                
                                 headerText  : "Status",           
-                                width          :100,                 
+                                width          :70,                 
                                 editable       : false
                         }, 
                         {      dataField       : "no1",      
                             headerText   : "BSR No",           
-                            width           : 150,                 
+                            width           : 100,                 
                             editable        : false
                      },
                     {      dataField       : "c1",      
                                 headerText   : "Settle Date",           
-                                width           : 200,                 
+                                width           : 170,                 
                                 editable        : false
                          }, 
                          {      dataField       : "memCode",      
                              headerText   : "Cody Code",           
-                             width           : 100,                 
+                             width           : 90,                 
                              editable        : false
                       }, 
                       {      dataField       : "code3",      
                           headerText   : "Fail Reason",           
-                          width           :100,                 
+                          width           :105,                 
                           editable        : false
                    }, 
                    {      dataField       : "code2",      
-                       headerText   : "Collection Reason",           
-                       width           : 150,                 
+                       headerText   : "Collection<br/> Reason",           
+                       width           : 100,                 
                        editable        : false
                 }
                         
@@ -957,7 +957,8 @@ function createAUIGridHList() {
         usePaging           : true,             //페이징 사용
         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)           
         editable                : false,            
-        fixedColumnCount    : 1,      
+        fixedColumnCount    : 1,              
+        headerHeight        : 30,       
         selectionMode       : "singleRow",  //"multipleCells",    
         showRowNumColumn    : true         //줄번호 칼럼 렌더러 출력    
        
@@ -976,7 +977,7 @@ function createAUIGridOList() {
     var columnLayout = [
                         {     dataField     : "stkCode",                 
                                headerText  : "Code",  
-                               width          : "10%",               
+                               width          : "12%",               
                                editable       : false
                         }, 
                         {     dataField     : "stkDesc",          
@@ -987,17 +988,17 @@ function createAUIGridOList() {
                         }, 
                         {     dataField     : "code",                     
                                headerText  : "Type",           
-                               width          : "10%",                 
+                               width          : "12%",                 
                                editable       : false
                         }, 
                         {      dataField     : "srvFilterPriod",                
                                 headerText  : "Change Period",           
-                                width          : "10%",                 
+                                width          : "12%",                 
                                 editable       : false
                         }, 
                     {      dataField       : "srvFilterPrvChgDt",      
                                 headerText   : "Last Change",           
-                                width           : "10%",                 
+                                width           : "12%",                 
                                 editable        : false
                          }
                         
@@ -1284,8 +1285,8 @@ function fn_cTPackageChanged(){
         <ul class="tap_type1">
             <li><a href="#" class="on"  >Order Info</a></li>
             <li><a href="#">Contact Person</a></li>
-            <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1100,380);">BS History</a></li>
-            <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 1100,380);">Order Product Filter</a></li>
+            <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 950,380);">BS History</a></li>
+            <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 950,380);">Order Product Filter</a></li>
         </ul>
         
         <article class="tap_area"><!-- tap_area start -->
