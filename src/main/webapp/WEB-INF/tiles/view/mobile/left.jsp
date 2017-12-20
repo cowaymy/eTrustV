@@ -19,7 +19,7 @@
             <section class="lnb_con"><!-- lnb_con start -->
                 <ul class="inb_menu ">
                     <li class="active">
-                        <a href="#" class="on">menu 1depth</a>
+                        <a href="/logistics/SerialMgmt/serialMgmtMain.do" class="on">S/N Management</a>
 
                         <ul>
                             <li class="active">
@@ -27,11 +27,11 @@
 
                                 <ul>
                                     <li class="active">
-                                        <a href="#" class="on">menu 3depth</a>
+                                        <a href="#" class="on"> 3depth</a>
 
                                         <ul>
                                             <li class="active">
-                                                <a href="#" class="on status_new">menu 4depth</a>
+                                                <a href="/logistics/SerialMgmt/serialMgmtMain.do" class="on status_new">SN</a>
                                             </li>
                                             <li>
                                                 <a href="#" class="status_dev">menu 4depth</a>
