@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.organization.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +44,26 @@ public class ComplianceCallLogServiceImpl extends EgovAbstractServiceImpl implem
 	@Override
 	public EgovMap selectComplianceOrderDetail(Map<String, Object> params) {
 		return complianceCallLogMapper.selectComplianceOrderDetail(params);
+	}
+	
+	@Override
+	public EgovMap selectComplianceNoValue(Map<String, Object> params) {
+		return complianceCallLogMapper.selectComplianceNoValue(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectOrderDetailComplianceId(Map<String, Object> params) {
+		return complianceCallLogMapper.selectOrderDetailComplianceId(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectComplianceRemark(Map<String, Object> params) {
+		return complianceCallLogMapper.selectComplianceRemark(params);
+	}
+	
+	@Override
+	public EgovMap selectAttachDownload(Map<String, Object> params) {
+		return complianceCallLogMapper.selectAttachDownload(params);
 	}
 	
 	
@@ -97,7 +118,7 @@ public class ComplianceCallLogServiceImpl extends EgovAbstractServiceImpl implem
 		
 		Map<String, Object> com_sub =new HashMap<String, Object>();
 		
-		String NewFilename = "~/WebShare/ComplianceCallLog/ComplianceCallLog/" + complianceNo + ".zip";
+		//String NewFilename = "~/WebShare/ComplianceCallLog/ComplianceCallLog/" + complianceNo + ".zip";
 		logger.debug("PARAMS111 : {}",params.get("complianceRem").toString());
 		com_sub.put("complianceItemId", 0);
 		com_sub.put("complianceId", complianceId);
@@ -114,9 +135,11 @@ public class ComplianceCallLogServiceImpl extends EgovAbstractServiceImpl implem
 		com_sub.put("complianceCollectAmt", 0);
 		com_sub.put("complianceFinalAction",  params.get("finalAction") != null &&  params.get("finalAction") !="" ? Integer.parseInt(params.get("finalAction").toString()) : 0 );
 		com_sub.put("complianceHasAttachment", true);
-		com_sub.put("complianceAttachmentFilename", NewFilename);
+		com_sub.put("complianceAttachmentFilename", params.get("hidFileName").toString());
 		com_sub.put("complianceCreateAt", "");
 		com_sub.put("complianceCreateBy", sessionVo.getUserId());
+		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
+		com_sub.put("complianceGroupId", params.get("groupId"));
 		
 		//insert
 		complianceCallLogMapper.insertComSub(com_sub);
@@ -166,4 +189,121 @@ public class ComplianceCallLogServiceImpl extends EgovAbstractServiceImpl implem
 		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
+	
+	@Override
+	public boolean deleteOrderDetail(Map<String, Object> params) {
+		boolean success = false;
+    				
+		EgovMap orderDetail = complianceCallLogMapper.selectOrder(params);
+		if(orderDetail != null){
+    		Map<String, Object> co =new HashMap<String, Object>();
+    		
+    		co.put("complianceId", orderDetail.get("cmplncItmId"));
+    		co.put("complianceSOID", params.get("orderNo"));
+    		co.put("complianceStatusId", 8);
+    		
+    		complianceCallLogMapper.updateCo(co);
+    		success = true;
+		}
+    			
+		return success;
+	}
+	
+	@Override
+	public boolean  insertComplianceOrderDetail(List<Object> gridOrder,Map<String, Object> formList) {
+		
+		if(gridOrder != null){
+    		if(gridOrder.size() > 0){
+    			for(int i=0; i<gridOrder.size(); i++){
+    				Map<String, Object> gridOrderDate = (Map<String, Object>) gridOrder.get(i);
+    				Map<String, Object> co = new HashMap<String, Object>();
+    				co.put("complianceId",formList.get("complianceId"));
+    				co.put("complianceSOID", gridOrderDate.get("salesOrdId"));
+    				co.put("complianceStatusId", 1);
+    				co.put("complianceRemark", null);
+    				
+    				complianceCallLogMapper.insertComplianceOrder(co);
+    			}
+    		}
+	}
+		return true;
+		
+	}
+	
+	@Override
+	public boolean  saveMaintenceCompliance(Map<String, Object> params,SessionVO sessionVo) {
+		
+		boolean success = false;
+		EgovMap compliance = complianceCallLogMapper.selectComplianceNoValue(params);
+		
+		if(compliance != null){
+    		Map<String, Object> com =new HashMap<String, Object>();
+    		
+    		com.put("complianceId", Integer.parseInt(params.get("complianceId").toString()));
+    		com.put("complianceStatusId",Integer.parseInt(params.get("caseStatus").toString()));
+    		com.put("complianceUpdateAt",new Date());
+    		com.put("complianceUpdateBy",sessionVo.getUserId());
+    		
+    		 //insert
+    		complianceCallLogMapper.updateCom(com);
+    		
+    		
+    		
+    		Map<String, Object> com_sub =new HashMap<String, Object>();
+    		
+    		
+    		logger.debug("PARAMS111 : {}",params.get("complianceRem").toString());
+    		com_sub.put("complianceItemId", 0);
+    		com_sub.put("complianceId", Integer.parseInt(params.get("complianceId").toString()));
+    		com_sub.put("complianceSOID", null);
+    		com_sub.put("complianceStatusId", params.get("caseStatus") != null && params.get("caseStatus") !="" ? Integer.parseInt(params.get("caseStatus").toString()) : 0 );
+    		com_sub.put("complianceActionId", params.get("action") != null && params.get("action") != "" ? Integer.parseInt(params.get("action").toString()) : 0 );
+    		com_sub.put("complianceFollowUpId", params.get("comfup") != null && params.get("comfup") !=""  ? Integer.parseInt(params.get("comfup").toString()) : 0 );
+    		com_sub.put("complianceReceivedDate", params.get("recevCaseDt") != null && params.get("recevCaseDt") !="" ? params.get("recevCaseDt").toString() : null );
+    		com_sub.put("complianceClosedDate", params.get("recevCloDt") != null &&params.get("recevCloDt") !="" ? params.get("recevCloDt").toString() : null );
+    		com_sub.put("complianceRemark", params.get("complianceRem").toString());
+    		com_sub.put("complianceCaseCategory", params.get("caseCategory") != null &&  params.get("caseCategory") != "" ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+    		com_sub.put("complianceDocType", params.get("docType") != null && params.get("docType") != "" ? Integer.parseInt(params.get("docType").toString()) : 0 );
+    		com_sub.put("complianceFinding",  params.get("finding")  != null  && params.get("finding").toString() == "1" ? 1 : 0);
+    		com_sub.put("complianceCollectAmt", params.get("collAmount") != null && params.get("collAmount") != ""  ? Integer.parseInt(params.get("collAmount").toString()) :0);
+    		com_sub.put("complianceFinalAction",  params.get("finalAction") != null &&  params.get("finalAction") !="" ? Integer.parseInt(params.get("finalAction").toString()) : 0 );
+    		com_sub.put("complianceHasAttachment", params.get("hidFileName").toString().trim() != "" && params.get("hidFileName").toString().trim() != null ? true : false);
+    		com_sub.put("complianceAttachmentFilename", params.get("hidFileName").toString().trim());
+    		com_sub.put("complianceCreateAt", "");
+    		com_sub.put("complianceCreateBy", sessionVo.getUserId());
+    		com_sub.put("compliancePersonInCharge", params.get("changePerson") != "" && params.get("changePerson") != null ? Integer.parseInt(params.get("changePerson").toString()) : 0);
+    		
+    		//insert
+    		complianceCallLogMapper.insertComSub(com_sub);
+    		
+    		success = true;
+		}
+		return success;
+		
+	}
+	
+	@Override
+	public boolean  saveOrderMaintence(Map<String, Object> params,SessionVO sessionVo) {
+		
+			boolean success = false;
+    		Map<String, Object> cs =new HashMap<String, Object>();
+    		   		
+    		cs.put("complianceItemId",0);
+    		cs.put("complianceSOID",Integer.parseInt(params.get("orderId").toString()));
+    		cs.put("complianceActionId", params.get("action") != null && params.get("action") != "" ? Integer.parseInt(params.get("action").toString()) : 0);
+    		cs.put("complianceFollowUpId",params.get("comfup") != null && params.get("comfup") !=""  ? Integer.parseInt(params.get("comfup").toString()) : 0 );
+    		cs.put("complianceRemark",params.get("complianceRem").toString());
+    		cs.put("complianceCreateAt", new Date());
+    		cs.put("complianceCreateBy",sessionVo.getUserId());
+    		
+    		 //insert
+    		complianceCallLogMapper.insertComCs(cs);
+    		success = true;
+    		
+		return success;
+		
+	}
+	
+	
+	
 }

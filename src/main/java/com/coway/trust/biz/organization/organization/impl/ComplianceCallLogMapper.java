@@ -25,5 +25,22 @@ public interface ComplianceCallLogMapper {
 	int selectComplianceId();
 	
 	void insertComplianceOrder(Map<String, Object> params);
+	
+	EgovMap selectComplianceNoValue(Map<String, Object> params);
+	
+	List<EgovMap> selectOrderDetailComplianceId(Map<String, Object> params);	
+	
+	List<EgovMap> selectComplianceRemark(Map<String, Object> params);
+	
+	EgovMap selectOrder(Map<String, Object> params);
+	
+	void updateCo(Map<String, Object> params);
+	
+	void updateCom(Map<String, Object> params);
+	
+	void insertComCs(Map<String, Object> params);
+	
+	EgovMap selectAttachDownload(Map<String, Object> params);
+	
 }
 
