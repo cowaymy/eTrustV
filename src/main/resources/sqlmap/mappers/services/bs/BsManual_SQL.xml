@@ -1920,7 +1920,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                LEFT JOIN SYS0032M Extent8   ON Extent8.RESN_ID = Extent1.FAIL_RESN_ID
 							                LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Extent1.WH_ID
 							                LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.RESULT_CRT_USER_ID
-							          WHERE  Extent1.RESULT_ID = 8158093 AND ROWNUM <= 1 ) Limit1
+							          WHERE  Extent1.RESULT_ID = #{hrResultId} AND ROWNUM <= 1 ) Limit1
                         ]]>
                             </select>
 
@@ -1971,7 +1971,7 @@ HsResultUdateEdit.put("srvBsWeek", params.get("srvBsWeek"));
 							                          AND ( 0 <> Extent2.BS_RESULT_PART_ID )
 							                          AND ( Extent2.BS_RESULT_PART_QTY > 0 ) ) Filter1
 							                LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
-							          WHERE  Filter1.SCHDUL_ID = 8521151 ) Distinct1
+							          WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
                         ]]>
                             </select>
 
