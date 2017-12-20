@@ -484,7 +484,7 @@
                      , EVT_APPLY_DT
                      )
                      VALUES (
-                     (SELECT MAX(PROMO_ID)+1 FROM  ORG0007D)
+                     ORG0007D_PROMO_ID_SEQ.nextval
                      , #{requestNo}
                      , #{statusID}
                      , #{promoTypeId}
