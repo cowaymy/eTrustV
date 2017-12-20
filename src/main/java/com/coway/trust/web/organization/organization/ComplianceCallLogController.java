@@ -1,6 +1,7 @@
 package com.coway.trust.web.organization.organization;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -248,8 +249,189 @@ public class ComplianceCallLogController {
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
+		message.setData(params.get("fileGroupKey"));
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	/**
+	 * Compliance Call Log Search
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/complianceLogMaintencePop.do", method = {RequestMethod.POST,RequestMethod.GET})
+	public String complianceLogMaintencePop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception {
+		
+		EgovMap complianceValue = complianceCallLogService.selectComplianceNoValue(params);
+		logger.debug("complianceValue : {}",complianceValue);
+		model.addAttribute("complianceValue",complianceValue);
+		
+		return "organization/organization/complianceCallLogMaintenancePop";
+	}
+	
+	
 
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/orderDetailComplianceId.do", method = RequestMethod.GET)
+		public ResponseEntity <List<EgovMap>> getOrderDetailComplianceId(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+			List<EgovMap> orderDetailList = complianceCallLogService.selectOrderDetailComplianceId(params);
+			logger.debug("orderDetail : {}",orderDetailList);
+			return ResponseEntity.ok(orderDetailList);
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/complianceRemark.do", method = RequestMethod.GET)
+		public ResponseEntity <List<EgovMap>> getComplianceRemark(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+			List<EgovMap> complianceRemarkList = complianceCallLogService.selectComplianceRemark(params);
+			logger.debug("complianceRemarkList : {}",complianceRemarkList);
+			return ResponseEntity.ok(complianceRemarkList);
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/deleteOrderDetail.do", method = RequestMethod.GET)
+		public ResponseEntity<ReturnMessage> deleteOrderDetail(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+			boolean success = false;
+			logger.debug("params : {}",params);
+			success = complianceCallLogService.deleteOrderDetail(params);
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(success);
+			return ResponseEntity.ok(message);
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/saveComplianceOrderDetail.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> saveComplianceOrderDetail(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model,HttpServletRequest request, SessionVO sessionVo) {
+			
+			List<Object> gridList =  params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+			List<Object> formList =  params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+			logger.debug("gridList : {}",gridList);
+			logger.debug("formList : {}",formList);
+			Map<String, Object> formMap = new HashMap<String, Object>();
+			if (formList.size() > 0) {
+	    		
+	    		formList.forEach(obj -> {
+	                Map<String, Object> map = (Map<String, Object>) obj;
+	                formMap.put((String)map.get("name"),map.get("value"));
+	    		});    		
+	    	}
+			
+			boolean success = false;
+			success = complianceCallLogService.insertComplianceOrderDetail(gridList,formMap);
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(success);
+			return ResponseEntity.ok(message);
+		}
+		
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/saveMaintenceCompliance.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> insertMaintenceCompliance(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVo) {
+			boolean success = false;
+			logger.debug("params : {}",params);
+			success = complianceCallLogService.saveMaintenceCompliance(params,sessionVo);
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(success);
+			return ResponseEntity.ok(message);
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws ExceptionsaveCompliance
+		 */
+		@RequestMapping(value = "/saveOrderMaintence.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> saveOrderMaintence(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVo) {
+			boolean success = false;
+			logger.debug("params : {}",params);
+			success = complianceCallLogService.saveOrderMaintence(params,sessionVo);
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(success);
+			return ResponseEntity.ok(message);
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/complianceViewPop.do", method = {RequestMethod.POST,RequestMethod.GET})
+		public String selectComplianceView(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception {
+			EgovMap complianceValue = complianceCallLogService.selectComplianceNoValue(params);
+			logger.debug("complianceValue : {}",complianceValue);
+			model.addAttribute("complianceValue",complianceValue);
+			return "organization/organization/complianceViewPop";
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/complianceAttachDownload.do", method = RequestMethod.GET)
+		public ResponseEntity <EgovMap> complianceAttachDownload(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+			EgovMap fileDownload = complianceCallLogService.selectAttachDownload(params);
+			logger.debug("fileDownload : {}",fileDownload);
+			return ResponseEntity.ok(fileDownload);
+		}
+		
+	
 }
