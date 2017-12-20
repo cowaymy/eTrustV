@@ -213,17 +213,17 @@ $(document).ready(function(){
 
 // AUIGrid 칼럼 설정
 var columnLayout = [
-    { dataField:"ctrlId" ,headerText:"Batch Id",width: 120 ,editable : false },
-    { dataField:"stusCode" ,headerText:"Status",width: 100 ,editable : false },
-    { dataField:"ctrlIsCrcName" ,headerText:"Type",width: 100 ,editable : false },
-    { dataField:"bankCode" ,headerText:"Issue Bank",width: 100 ,editable : false },
-    { dataField:"ctrlBatchDt" ,headerText:"Debit Date",width: 120 ,editable : false},
-    { dataField:"ctrlTotItm" ,headerText:"Total Item",width: 120 ,editable : false },
-    { dataField:"ctrlBillAmt" ,headerText:"Target Amt",width: 120 ,editable : false , dataType : "numeric", formatString : "#,##0.00"},
-    { dataField:"ctrlBillPayAmt" ,headerText:"Receive Amt",width: 120 ,editable : false , dataType : "numeric", formatString : "#,##0.00"},
-    { dataField:"crtDt" ,headerText:"Create Date",width: 200 ,editable : false },
-    { dataField:"crtUserName" ,headerText:"Creator",width: 150 ,editable : false },
-    { dataField:"ctrlFailSmsIsPump" ,headerText:"SMS ?",width: 100 ,editable : false ,
+    { dataField:"ctrlId" ,headerText:"<spring:message code='pay.head.batchId'/>",width: 120 ,editable : false },
+    { dataField:"stusCode" ,headerText:"<spring:message code='pay.head.status'/>",width: 100 ,editable : false },
+    { dataField:"ctrlIsCrcName" ,headerText:"<spring:message code='pay.head.type'/>",width: 100 ,editable : false },
+    { dataField:"bankCode" ,headerText:"<spring:message code='pay.head.issueBank'/>",width: 100 ,editable : false },
+    { dataField:"ctrlBatchDt" ,headerText:"<spring:message code='pay.head.debitDate'/>",width: 120 ,editable : false},
+    { dataField:"ctrlTotItm" ,headerText:"<spring:message code='pay.head.totalItem'/>",width: 120 ,editable : false },
+    { dataField:"ctrlBillAmt" ,headerText:"<spring:message code='pay.head.targetAmt'/>",width: 120 ,editable : false , dataType : "numeric", formatString : "#,##0.00"},
+    { dataField:"ctrlBillPayAmt" ,headerText:"<spring:message code='pay.head.receiveAmt'/>",width: 120 ,editable : false , dataType : "numeric", formatString : "#,##0.00"},
+    { dataField:"crtDt" ,headerText:"<spring:message code='pay.head.createDate'/>",width: 200 ,editable : false },
+    { dataField:"crtUserName" ,headerText:"<spring:message code='pay.head.creator'/>",width: 150 ,editable : false },
+    { dataField:"ctrlFailSmsIsPump" ,headerText:"<spring:message code='pay.head.sms'/>",width: 100 ,editable : false ,
     	  labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
     		    var myString = "";
     		    
@@ -235,48 +235,48 @@ var columnLayout = [
     		    return myString;
     	} 
     },
-    { dataField:"ctrlWaitSync" ,headerText:"Wait Sync",width: 100 ,editable : false,
+    { dataField:"ctrlWaitSync" ,headerText:"<spring:message code='pay.head.waitSync'/>",width: 100 ,editable : false,
     	renderer : {
             type : "CheckBoxEditRenderer",            
             checkValue : "1",
             unCheckValue : "0"
         }    
     },
-    { dataField:"ctrlStusId" ,headerText:"Status ID",width: 120 ,visible : false, editable : false },
-    { dataField:"stusName" ,headerText:"Status Name",width: 120 ,visible : false, editable : false },
-    { dataField:"crtUserName" ,headerText:"Creator Name",width: 120 ,visible : false, editable : false },
-    { dataField:"bankName" ,headerText:"Bank Name",width: 120 ,visible : false, editable : false },
-    { dataField:"updDt" ,headerText:"Update Date",width: 120 ,visible : false, editable : false },
-    { dataField:"ctrlTotSucces" ,headerText:"Success",width: 120 ,visible : false, editable : false },
-    { dataField:"ctrlTotFail" ,headerText:"Fail",width: 120 ,visible : false, editable : false },
-    { dataField:"ctrlIsCrc" ,headerText:"ctrlIsCrc",width: 120 ,visible : false, editable : false },
-    { dataField:"bankId" ,headerText:"bankId",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlStusId" ,headerText:"<spring:message code='pay.head.statusId'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"stusName" ,headerText:"<spring:message code='pay.head.statusName'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"crtUserName" ,headerText:"<spring:message code='pay.head.creatorName'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"bankName" ,headerText:"<spring:message code='pay.head.bankName'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"updDt" ,headerText:"<spring:message code='pay.head.updateDate'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlTotSucces" ,headerText:"<spring:message code='pay.head.success'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlTotFail" ,headerText:"<spring:message code='pay.head.fail'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"ctrlIsCrc" ,headerText:"<spring:message code='pay.head.ctrlIsCrc'/>",width: 120 ,visible : false, editable : false },
+    { dataField:"bankId" ,headerText:"<spring:message code='pay.head.bankId'/>",width: 120 ,visible : false, editable : false },
     ];
     
 var updResultColLayout = [ 
                     {         
                         dataField : "0",
-                        headerText : "RefNo",
+                        headerText : "<spring:message code='pay.head.refNo'/>",
                         editable : true
                     },{
                         dataField : "1",
-                        headerText : "RefCode",
+                        headerText : "<spring:message code='pay.head.refCode'/>",
                         editable : true
                     },{
                         dataField : "2",
-                        headerText : "ItemID.",
+                        headerText : "<spring:message code='pay.head.itemId'/>",
                         editable : true
                     }];  
 
 var smsColLayout = [ 
-                    { dataField:"bankDtlApprCode" ,headerText:"Approval Code",width: 150 ,editable : false },
-                    { dataField:"salesOrdNo" ,headerText:"Order No",width: 150 ,editable : false },
-                    { dataField:"bankDtlDrAccNo" ,headerText:"Account No",width: 150 ,editable : false },
-                    { dataField:"bankDtlDrName" ,headerText:"Name",width: 150 ,editable : false },
-                    { dataField:"bankDtlDrNric" ,headerText:"NRIC",width: 150 ,editable : false },
-                    { dataField:"bankDtlAmt" ,headerText:"Claim Amt",width: 150 ,editable : false },
-                    { dataField:"bankDtlRenAmt" ,headerText:"Rent Amt",width: 150 ,editable : false },
-                    { dataField:"bankDtlRptAmt" ,headerText:"Penalty Amt",width: 150 ,editable : false }      
+                    { dataField:"bankDtlApprCode" ,headerText:"<spring:message code='pay.head.approvalCode'/>",width: 150 ,editable : false },
+                    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 150 ,editable : false },
+                    { dataField:"bankDtlDrAccNo" ,headerText:"<spring:message code='pay.head.accountNo'/>",width: 150 ,editable : false },
+                    { dataField:"bankDtlDrName" ,headerText:"<spring:message code='pay.head.name'/>",width: 150 ,editable : false },
+                    { dataField:"bankDtlDrNric" ,headerText:"<spring:message code='pay.head.nric'/>",width: 150 ,editable : false },
+                    { dataField:"bankDtlAmt" ,headerText:"<spring:message code='pay.head.claimAmt'/>",width: 150 ,editable : false },
+                    { dataField:"bankDtlRenAmt" ,headerText:"<spring:message code='pay.head.rentAmt'/>",width: 150 ,editable : false },
+                    { dataField:"bankDtlRptAmt" ,headerText:"<spring:message code='pay.head.penaltyAmt'/>",width: 150 ,editable : false }      
                           ];   
                           
 // 리스트 조회.

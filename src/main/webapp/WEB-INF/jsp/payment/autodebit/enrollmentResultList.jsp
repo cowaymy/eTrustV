@@ -112,31 +112,31 @@ var gridPros = {
 
 var columnLayout=[
                       
-    {dataField:"enrollupdateid", headerText:"Update Batch ID"},
-    {dataField:"type", headerText:"Update Type"},
-    {dataField:"totalupdate", headerText:"Total Update"},
-    {dataField:"totalsuccess", headerText:"Total Success"},
-    {dataField:"totalfail", headerText:"Total Fail"},
-    {dataField:"createdate", headerText:"Create Date"},
-    {dataField:"creator", headerText:"Creator"}
+    {dataField:"enrollupdateid", headerText:"<spring:message code='pay.head.updateBatchId'/>"},
+    {dataField:"type", headerText:"<spring:message code='pay.head.updateType'/>"},
+    {dataField:"totalupdate", headerText:"<spring:message code='pay.head.totalUpdate'/>"},
+    {dataField:"totalsuccess", headerText:"<spring:message code='pay.head.totalSuccess'/>"},
+    {dataField:"totalfail", headerText:"<spring:message code='pay.head.totalFail'/>"},
+    {dataField:"createdate", headerText:"<spring:message code='pay.head.createDate'/>"},
+    {dataField:"creator", headerText:"<spring:message code='pay.head.creator'/>"}
 ];
 
 var viewColumn=[
-     {dataField:"status", headerText:"Status"},    
-     {dataField:"orderno", headerText:"Order No"},   
-     {dataField:"inputday", headerText:"Day"},   
-     {dataField:"inputmonth", headerText:"Month"},   
-     {dataField:"inputyear", headerText:"Year"},   
-     {dataField:"inputrejectcode", headerText:"Reject Code"},   
-     {dataField:"Message", headerText:"Message"}
+     {dataField:"status", headerText:"<spring:message code='pay.head.status'/>"},    
+     {dataField:"orderno", headerText:"<spring:message code='pay.head.orderNo'/>"},   
+     {dataField:"inputday", headerText:"<spring:message code='pay.head.day'/>"},   
+     {dataField:"inputmonth", headerText:"<spring:message code='pay.head.month'/>"},   
+     {dataField:"inputyear", headerText:"<spring:message code='pay.head.year'/>"},   
+     {dataField:"inputrejectcode", headerText:"<spring:message code='pay.head.rejectCode'/>"},   
+     {dataField:"Message", headerText:"<spring:message code='pay.head.message'/>"}
 ];
 
 var newColumn=[
-      {dataField:"0", headerText:"OrderNo"},
-      {dataField:"1", headerText:"Month"},
-      {dataField:"2", headerText:"Day"},
-      {dataField:"3", headerText:"Year"},
-      {dataField:"4", headerText:"RejectCode"}
+      {dataField:"0", headerText:"<spring:message code='pay.head.orderNo'/>"},
+      {dataField:"1", headerText:"<spring:message code='pay.head.month'/>"},
+      {dataField:"2", headerText:"<spring:message code='pay.head.day'/>"},
+      {dataField:"3", headerText:"<spring:message code='pay.head.year'/>"},
+      {dataField:"4", headerText:"<spring:message code='pay.head.rejectCode'/>"}
 ];
 //리스트 조회.
 function fn_getOrderListAjax() {        

@@ -23,14 +23,14 @@ var issueBankData = [{"codeId": "2","codeName": "Alliance Bank"},
 
 //AUIGrid 칼럼 설정
 var scheduleClaimBatchLayout = [  
-	{ dataField:"schdulId" ,headerText:"Schedule ID",width: 120, editable : false},
-    { dataField:"schdulDt" ,headerText:"Schedule Date",width: 120,editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
-    { dataField:"codeName" ,headerText:"Claim Type",width: 120,editable : false},
-	{ dataField:"bankName", headerText:"Issue Bank", width : 200,editable : false },
-	{ dataField:"debtDt" ,headerText:"Debit Date",width: 120 , editable : false , dataType : "date", formatString : "dd/mm/yyyy"},
-	{ dataField:"clmDay" ,headerText:"Claim Day", width: 100,editable : false},
-    { dataField:"crtUserName" ,headerText:"Creator",width: 100 , editable : false},
-    { dataField:"crtDt" ,headerText:"Create Date",width: 120 , editable : false , dataType : "date", formatString : "dd/mm/yyyy"}
+	{ dataField:"schdulId" ,headerText:"<spring:message code='pay.head.scheduleId'/>",width: 120, editable : false},
+    { dataField:"schdulDt" ,headerText:"<spring:message code='pay.head.scheduleDate'/>",width: 120,editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
+    { dataField:"codeName" ,headerText:"<spring:message code='pay.head.claimType'/>",width: 120,editable : false},
+	{ dataField:"bankName", headerText:"<spring:message code='pay.head.issueBank'/>", width : 200,editable : false },
+	{ dataField:"debtDt" ,headerText:"<spring:message code='pay.head.debitDate'/>",width: 120 , editable : false , dataType : "date", formatString : "dd/mm/yyyy"},
+	{ dataField:"clmDay" ,headerText:"<spring:message code='pay.head.claimDay'/>", width: 100,editable : false},
+    { dataField:"crtUserName" ,headerText:"<spring:message code='pay.head.creator'/>",width: 100 , editable : false},
+    { dataField:"crtDt" ,headerText:"<spring:message code='pay.head.createDate'/>",width: 120 , editable : false , dataType : "date", formatString : "dd/mm/yyyy"}
     ];
 
 

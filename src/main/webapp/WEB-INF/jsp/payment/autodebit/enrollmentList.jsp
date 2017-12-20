@@ -39,21 +39,21 @@ $(document).ready(function(){
 var columnLayout = [ 
     {
         dataField : "enrlid",
-        headerText : "Enroll ID",
+        headerText : "<spring:message code='pay.head.enrollId'/>",
         editable : false,
         width : 200
     }, {
         dataField : "name",
-        headerText : "Issue Bank",
+        headerText : "<spring:message code='pay.head.issueBank'/>",
         style : "my-custom-up",
         editable : false
     }, {
         dataField : "createdate",
-        headerText : "Create Date",
+        headerText : "<spring:message code='pay.head.createDate'/>",
         editable : false
     }, {
         dataField : "c1",
-        headerText : "Creator",
+        headerText : "<spring:message code='pay.head.creator'/>",
         editable : false,
         width : 250
     }];
@@ -62,23 +62,23 @@ var columnLayout = [
 var columnLayout2 = [ 
     {
         dataField : "salesOrdNo",
-        headerText : "Order No",
+        headerText : "<spring:message code='pay.head.orderNo'/>",
         editable : false,
         width : 150
     }, {
         dataField : "accNo",
-        headerText : "Account No",
+        headerText : "<spring:message code='pay.head.accountNo'/>",
         editable : false,
         width : 200
     }, {
         dataField : "accName",
-        headerText : "Name",
+        headerText : "<spring:message code='pay.head.name'/>",
         editable : false,
         style : "my-custom-up",
         width : 350
     }, {
         dataField : "accNric",
-        headerText : "NRIC",
+        headerText : "<spring:message code='pay.head.nric'/>",
         editable : false,
         width : 200
     }];

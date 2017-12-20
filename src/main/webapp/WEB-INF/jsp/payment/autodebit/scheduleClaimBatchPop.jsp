@@ -30,15 +30,15 @@ var claimDayData = [{"codeId": "5","codeName": "5"},
 
 //AUIGrid 칼럼 설정
 var scheduleClaimBatchLayout = [  
-	{ dataField:"schdulClmId" ,headerText:"Process ID",width: 120, editable : false},
-    { dataField:"stusCode" ,headerText:"Status",width: 100,editable : false},
-    { dataField:"ctrlId" ,headerText:"Batch ID",width: 120,editable : false},
-	{ dataField:"payModeCode", headerText:"Claim Type", width : 100,editable : false },
-    { dataField:"bankCode" ,headerText:"Issue Bank",width: 100 , editable : false},
-    { dataField:"debtDt" ,headerText:"Debit Date",width: 120 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"clmDay" ,headerText:"Claim Day", width: 100,editable : false},
-    { dataField:"schdulClmDt" ,headerText:"Create Date", width: 120, editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"rem" ,headerText:"Remark", editable : false , dataType : "date", formatString : "dd-mm-yyyy"}
+	{ dataField:"schdulClmId" ,headerText:"<spring:message code='pay.head.processId'/>",width: 120, editable : false},
+    { dataField:"stusCode" ,headerText:"<spring:message code='pay.head.status'/>",width: 100,editable : false},
+    { dataField:"ctrlId" ,headerText:"<spring:message code='pay.head.batchId'/>",width: 120,editable : false},
+	{ dataField:"payModeCode", headerText:"<spring:message code='pay.head.claimType'/>", width : 100,editable : false },
+    { dataField:"bankCode" ,headerText:"<spring:message code='pay.head.issueBank'/>",width: 100 , editable : false},
+    { dataField:"debtDt" ,headerText:"<spring:message code='pay.head.debitDate'/>",width: 120 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"clmDay" ,headerText:"<spring:message code='pay.head.claimDay'/>", width: 100,editable : false},
+    { dataField:"schdulClmDt" ,headerText:"<spring:message code='pay.head.createDate'/>", width: 120, editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"rem" ,headerText:"<spring:message code='pay.head.createDate'/>", editable : false , dataType : "date", formatString : "dd-mm-yyyy"}
     ];
 
 
