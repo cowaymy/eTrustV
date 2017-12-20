@@ -132,7 +132,7 @@
 							                              E4.PO_REF_NO PO_REF_NO  ,
 							                              E5.USER_NAME USERNAME1  ,
 							                              E6.USER_NAME USERNAME2  ,
-							                              E7.SRV_PRD_START_DT SRV_PRD_START_DT  ,
+							                              CASE WHEN TO_CHAR(E7.SRV_PRD_START_DT, 'yyyymmdd') = '19000101' THEN '' ELSE TO_CHAR(E7.SRV_PRD_START_DT, 'dd/mm/yyyy') END SRV_PRD_START_DT  ,
 							                              E7.SRV_PRD_EXPR_DT SRV_PRD_EXPR_DT  ,
 							                              E8.CODE CODE1  ,
 							                              E9.MEM_CODE MEM_CODE  ,
