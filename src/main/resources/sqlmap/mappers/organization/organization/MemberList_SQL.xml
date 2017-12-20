@@ -21,7 +21,7 @@
 		FROM SYS0015M Extent1
 		ORDER BY Extent1.NAME ASC
 	</select>
-
+ 
 	<select id="selectStatus" parameterType="Map" resultType="egovMap">
         SELECT
 		Distinct1.StatusCodeID StatusCodeID,
