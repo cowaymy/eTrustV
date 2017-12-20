@@ -4,12 +4,12 @@
 
 function fn_saveValidation(){
 	if($("#callStatus").val() == ''){
-        Common.alert("Please select call log status");
+        Common.alert("<spring:message code='service.msg.callLog'/> ");
         return false;
     }
 	
 	if($("#feedBackCode").val() == ''){
-        Common.alert("Please select feedback code");
+        Common.alert("<spring:message code='service.msg.feedback'/> ");
         return false;
     }
     return true;
@@ -54,44 +54,45 @@ function callLogTranGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "code",
-        headerText : "Status",
+        headerText : '<spring:message code="service.grid.Status" />',
         editable : false,
         width : 100
     }, {
         dataField : "c1",
-        headerText : "Recall Date",
+        headerText : '<spring:message code="service.grid.RecallDate" />',
         editable : false,
         width : 100
     }, {
         dataField : "c2",
-        headerText : "Action Date",
+        headerText : '<spring:message code="service.grid.ActionDate" />',        
         editable : false,
         width : 130
     }, {
         dataField : "c9",
-        headerText : "Feedback",
+        headerText : '<spring:message code="service.grid.Feedback" />',        
         editable : false,
         width : 150
     }, {
         dataField : "c5",
-        headerText : "Assign CT",
+        headerText : '<spring:message code="service.grid.AssignCT" />',        
         editable : false,
         style : "my-column",
         width : 100
     }, {
         dataField : "callRem",
         headerText : "Remark",
+        headerText : '<spring:message code="service.grid.Remark" />',               
         editable : false,
         width : 180
     }, {
         dataField : "c3",
-        headerText : "Key By",
+        headerText : '<spring:message code="service.grid.KeyBy" />',            
         editable : false,
         width : 180
         
     }, {
         dataField : "callCrtDt",
-        headerText : "Key At",
+        headerText : '<spring:message code="service.grid.KeyAt" />',
         width : 180
     }];
      // 그리드 속성 설정
@@ -137,7 +138,7 @@ function fn_doAllaction(){
         Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
     }
     else{
-    	Common.alert('There is no available stock to make an appointment date, should entry for recall date');
+    	Common.alert("<spring:message code='service.msg.stock'/> ");
     }
 
 }
@@ -145,9 +146,9 @@ function fn_doAllaction(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New Call Log Result</h1>
+<h1><spring:message code='service.title.NewCallLogResult'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -155,7 +156,7 @@ function fn_doAllaction(){
 
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
-    <dt class="click_add_on on"><a href="#">Call Log Information & Transaction</a></dt>
+    <dt class="click_add_on on"><a href="#"><spring:message code='service.title.CallLogInformationTransaction'/></a></dt>
     <dd>
     
     <table class="type1"><!-- table start -->
@@ -168,11 +169,11 @@ function fn_doAllaction(){
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Call Log Type</th>
+        <th scope="row"><spring:message code='service.title.CallLogType'/></th>
         <td>
         <span><c:out value="${orderCall.callTypeName}"/> </span>
         </td>
-        <th scope="row">Create Date</th>
+        <th scope="row"><spring:message code='service.title.CreateDate'/></th>
         <td>
         <span><c:out value="${orderCall.crtDt}"/> </span>
         </td>
@@ -180,7 +181,7 @@ function fn_doAllaction(){
         <td></td>
     </tr>
     <tr>
-        <th scope="row">Wait For Cancel</th>
+        <th scope="row"><spring:message code='service.title.WaitForCancel'/></th>
         <c:if test="${orderCall.isWaitCancl == '0' }">
         <td>
         <span>No</span>
@@ -193,7 +194,7 @@ function fn_doAllaction(){
          </c:if>
     
     
-        <th scope="row">Creator</th>
+        <th scope="row"><spring:message code='service.title.Creator'/></th>        
         <td>
         <span><c:out value="${orderCall.crtUserId}"/></span>
         </td>
@@ -201,11 +202,11 @@ function fn_doAllaction(){
         <td></td>
     </tr>
     <tr>
-        <th scope="row">Product To Install </th>
+        <th scope="row"><spring:message code='service.title.ProductToInstall'/></th>              
         <td>
         <span><c:out value="${orderCall.productCode}"/> - <c:out value="${orderCall.productName}"/></span>
         </td>
-        <th scope="row">Call Log Status</th>
+        <th scope="row"><spring:message code='service.title.CallLogStatus'/></th>        
         <td>
            <span><c:out value="${orderCall.callStusCode}"/></span>
         </td>
@@ -214,7 +215,7 @@ function fn_doAllaction(){
     </tr>
       <tr>
      
-        <th scope="row">RDC Available Qty </th>
+        <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>        
        <c:if test= "${rdcStock.availQty != null }" >
        <td>
          <span id='rdcStock'><c:out value="${rdcStock.availQty}"/></span>
@@ -226,7 +227,7 @@ function fn_doAllaction(){
        </td>
        </c:if>
         
-        <th scope="row">In Transit Qty</th>
+        <th scope="row"><spring:message code='service.title.InTransitQty'/></th>        
          <c:if test= "${rdcStock.intransitQty != null }" >
         <td>
         <span><c:out value="${rdcStock.intransitQty}"/></span>
@@ -238,7 +239,7 @@ function fn_doAllaction(){
         </td>
         </c:if>
         
-        <th scope="row">CDC Available Qty </th>
+        <th scope="row"><spring:message code='service.title.CDCAvailableQty'/></th>        
          <c:if test= "${cdcAvaiableStock.availQty  == null }" >
         <td>
         <span>0</span>
@@ -258,7 +259,7 @@ function fn_doAllaction(){
     </article><!-- grid_wrap end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#">Order Full Details</a></dt>
+    <dt class="click_add_on"><a href="#"><spring:message code='service.title.OrderFullDetails'/></a></dt>
     <dd>
     <!------------------------------------------------------------------------------
     Order Detail Page Include START
@@ -272,7 +273,7 @@ function fn_doAllaction(){
 </article><!-- acodi_wrap end -->
 
 <aside class="title_line mt20" id="hideContent3"><!-- title_line start -->
-<h2>DSC Verification Remark</h2>
+<h2><spring:message code='service.title.DSCVerificationRemark'/></h2> 
 </aside><!-- title_line end -->
 
 <table class="type1" id="hideContent"><!-- table start -->
@@ -283,7 +284,7 @@ function fn_doAllaction(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Verification Remark </th>
+    <th scope="row"><spring:message code='service.title.VerificationRemark'/></th>
     <td>
     <textarea cols="20" rows="5" placeholder=""></textarea>
     </td>
@@ -292,7 +293,7 @@ function fn_doAllaction(){
 </table><!-- table end -->
 
 <aside class="title_line mt20"  id="hideContent4"><!-- title_line start -->
-<h2>New Call Log Result</h2>
+<h2><spring:message code='service.title.NewCallLogResult'/></h2>
 </aside><!-- title_line end -->
 <form action="#" id="addCallForm">
 <input type="hidden" value="${orderCall.c4}" id="hiddenProductId" name="hiddenProductId"/>
@@ -317,7 +318,7 @@ function fn_doAllaction(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Call Log Status<span class="must">*</span></th>
+    <th scope="row"><spring:message code='service.title.CallLogStatus'/><span class="must">*</span></th>
     <td>
     <select class="w100p" id="callStatus" name="callStatus">
         <option value="20">Ready To Install</option>
@@ -325,24 +326,24 @@ function fn_doAllaction(){
         <option value="30">Waiting For Cancel</option>
     </select>
     </td>
-    <th scope="row">Recall Date</th>
+    <th scope="row"><spring:message code='service.title.RecallDate'/></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="recallDate" name="recallDate"/>
     </td>
     
-    <th scope="row">Request Date</th>
+    <th scope="row"><spring:message code='service.title.RequestDate'/></th>
     <td>
     <input type="text" title="Request Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="requestDate" name="requestDate" onchange="javascript:fn_doAllaction()"/>
     </td>
     
     
-    <th scope="row">Appointment Date</th>
+    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>    
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY"  readonly="readonly"  class="readonly j_date w100p"  id="appDate" name="appDate" />
     </td>
 </tr>
 <tr>
-    <th scope="row">CT Group</th>
+    <th scope="row"><spring:message code='service.title.CTGroup'/></th>
     <td>
     
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTgroup" name="CTgroup"/>
@@ -353,14 +354,14 @@ function fn_doAllaction(){
         <option value="C">C</option>CT Code
     </select> -->
     </td>
-       <th scope="row">Appointment <br> Sessione </th>
+    <th scope="row"><spring:message code='service.title.AppointmentSessione'/></th>       
     <td>
         <input type="text" title="" placeholder=""  readonly="readonly"    id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p"/>
     </td>
     
     
     
-    <th scope="row">Feedback Code<span class="must">*</span></th>
+    <th scope="row"><spring:message code='service.title.FeedbackCode'/><span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p"  id="feedBackCode" name="feedBackCode">
         <option value="">Feedback Code</option>
@@ -371,7 +372,7 @@ function fn_doAllaction(){
     </td>
 </tr>
 <tr>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td>
 
     <div class="search_100p"><!-- search_100p start -->
@@ -381,13 +382,13 @@ function fn_doAllaction(){
     </div><!-- search_100p end -->
 
     </td>
-    <th scope="row">CT Name (NRIC)</th>
+    <th scope="row"><spring:message code='service.title.CTName'/></th>    
     <td colspan="5">
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTName" name="CTName"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code='service.title.Remark'/></th>
     <td colspan="7">
     <textarea cols="20" rows="5" placeholder="" id="remark" name="remark"></textarea>
     </td>

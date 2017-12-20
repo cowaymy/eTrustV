@@ -1,3 +1,7 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+
 <script type="text/javaScript">
 
     var callStusCode;
@@ -101,10 +105,10 @@ $(document).ready(function() {
                 salesOrderId: salesOrdId
             });
 		}else if(callStusId == "10" ){
-			Common.alert("This call log is under [CAN] status. Add call log result is disallowed.  ");
+			Common.alert("<spring:message code='service.msg.callLogCan'/> ");
 		}else if(callStusId == "20" ){
-            Common.alert("This call log is under [RDY] status. Add call log result is disallowed.   ");
-        }
+			Common.alert("<spring:message code='service.msg.callLogRDY'/> ");
+        } 
 	}
 	var myGridID;
 	function orderCallListGrid() {
@@ -112,45 +116,49 @@ $(document).ready(function() {
         var columnLayout = [ {
             dataField : "callTypeCode",
             headerText : "Type",
+            headerText : '<spring:message code="service.grid.Type" />',
             editable : false,
             width : 100
         }, {
             dataField : "callStusCode",
             headerText : "Status",
+            headerText : '<spring:message code="service.grid.Status" />',
             editable : false,
             width : 100
         }, {
             dataField : "callLogDt",
             headerText : "Date",
+            headerText : '<spring:message code="service.grid.Date" />',
             editable : false,
             width : 130
         }, {
             dataField : "salesOrdNo",
-            headerText : "Order No.",
+            headerText : '<spring:message code="service.grid.OrderNo" />', 
             editable : false,
             width : 150
         }, {
             dataField : "appTypeName",
-            headerText : "App Type",
+            headerText : '<spring:message code="service.grid.AppType" />',  
             editable : false,
             style : "my-column",
             width : 100
         }, {
             dataField : "productCode",
-            headerText : "Product",
+            headerText : '<spring:message code="service.grid.Product" />',
             editable : false,
             width : 180
         }, {
             dataField : "custName",
-            headerText : "Customer",
+            headerText : '<spring:message code="service.grid.Customer" />',
             editable : false,
             width : 180
         }, {
             dataField : "isWaitCancl",
-            headerText : "Wait Cancel ?",
+            headerText : '<spring:message code="service.grid.WaitCancel" />',		
             width : 180
         }, {
             dataField : "callStusId",
+            
             headerText : "",
             width : 0
         }, {
@@ -245,11 +253,11 @@ function fn_excelDown(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Order Call Log Search</h2>
+<h2><spring:message code='service.title.OrderCallLogSearch'/></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="fn_openAddCall()">Add Call Log Result</a></p></li>
-    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_orderCallList()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_openAddCall()"><spring:message code='service.btn.addCallLogResult'/></a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_orderCallList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -269,16 +277,16 @@ function fn_excelDown(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td>
     <input type="text" title="" placeholder="Order Number" class="w100p" id="orderNo" name="orderNo" />
-    </td>
-    <th scope="row">Application Type</th>
+    </td> 
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="listAppType" name="appType">
     </select>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -290,24 +298,25 @@ function fn_excelDown(){
     </td>
 </tr>
 <tr>
-    <th scope="row">State</th>
+    <th scope="row"><spring:message code='service.title.State'/></th>
     <td>
     <select class="w100p" id="ordStatus" name="ordStatus">
     </select>
     </td>
-    <th scope="row">Area</th>
+    <th scope="row"><spring:message code='service.title.Area'/></th>
     <td>
     <select class="w100p" id="ordArea" name="ordArea">
     </select>
     </td>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code='service.title.Product'/></th>
     <td>
     <select class="w100p" id="product" name="product">
     </select>
     </td>
 </tr>
-<tr>
-    <th scope="row">Call Log Type</th>
+<tr> 
+    <th scope="row"><spring:message code='service.title.CallLogType'/></th>
+    
     <td>
     <select class="multy_select w100p" multiple="multiple" id="callLogType" name="callLogType">
         <option value="257" selected>New Installation Order</option>
@@ -315,7 +324,7 @@ function fn_excelDown(){
 
     </select>
     </td>
-    <th scope="row">Call Log Status</th>
+    <th scope="row"><spring:message code='service.title.CallLogStatus'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="callLogStatus" name="callLogStatus">
      <option value="1" selected>Active</option>
@@ -325,7 +334,7 @@ function fn_excelDown(){
      <option value="30">Waiting For Cancel</option>
     </select>
     </td>
-    <th scope="row">Call Log Date</th>
+    <th scope="row"><spring:message code='service.title.CallLogDate'/></th>    
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -337,36 +346,36 @@ function fn_excelDown(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code='service.title.CustomerID'/></th>    
     <td>
     <input type="text" title="" placeholder="Customer ID" class="w100p" id="custId" name="custId"/>
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>  
     <td>
     <input type="text" title="" placeholder="Customer Name" class="w100p" id="custName" name="custName"/>
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>  
     <td>
     <input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="nricNo" name="nricNo"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Contact No</th>
+    <th scope="row"><spring:message code='service.title.ContactNo'/></th>  
     <td>
     <input type="text" title="" placeholder="Contact Number" class="w100p" id="contactNo" name="contactNo"/>
     </td>
-    <th scope="row">DSC Code</th>
+    <th scope="row"><spring:message code='service.title.DSCCode'/></th>  
     <td>
     <select class="multy_select w100p" multiple="multiple" id="listDSCCode" name="DSCCode">
     </select>
     </td>
-    <th scope="row">PO Number</th>
+    <th scope="row"><spring:message code='service.title.PONumber'/></th>      
     <td>
     <input type="text" title="" placeholder="PO Number" class="w100p" id="PONum" name="PONum"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Sort By</th>
+    <th scope="row"><spring:message code='service.title.SortBy'/></th>
     <td colspan="5">
     <select class="w100p" id="sortBy" name="sortBy">
         <option value="0" selected>No Sorting</option>
@@ -414,7 +423,7 @@ function fn_excelDown(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sys.btn.excel.dw' /></a></p></li>
    <!-- <l  i><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
