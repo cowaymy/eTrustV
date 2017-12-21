@@ -124,15 +124,15 @@
         }
     </select>
 
-    <delete id="deleteECashResultItem" parameterType="Map" >
+    <delete id="deleteECashDeductionResultItem" parameterType="Map" >
         DELETE FROM SAL0211T WHERE ITM_ID = #{fileBatchId}
     </delete>
 
-    <insert id="insertECashResultItem" parameterType="Map" >
+    <insert id="insertECashDeductionResultItem" parameterType="Map" >
         INSERT INTO SAL0211T (ITM_CNT,ITM_ID,APPV_CODE,RESPNS_CODE) VALUES (#{itmCnt},#{itmId},#{appvCode},#{respnsCode})
     </insert>
 
-    <update id="updateECashResult" statementType="CALLABLE" parameterType="Map">
+    <update id="updateECashDeductionResult" statementType="CALLABLE" parameterType="Map">
         {
             call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
         }
