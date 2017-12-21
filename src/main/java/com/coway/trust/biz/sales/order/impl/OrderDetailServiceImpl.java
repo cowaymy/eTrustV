@@ -56,6 +56,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
 
+	@Resource(name = "orderRequestMapper")
+	private OrderRequestMapper orderRequestMapper;
+
 //	@Autowired
 //	private MessageSourceAccessor messageSourceAccessor;
 
@@ -356,7 +359,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 	}
 	
-	private void loadBasicInfo(EgovMap basicInfo) {
+	private void loadBasicInfo(EgovMap basicInfo) throws Exception {
 		
 		BigDecimal mthRentalFees   = null;
 		String installmentDuration = "-";
@@ -367,8 +370,34 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 			mthRentalFees = (BigDecimal)basicInfo.get("ordMthRental");
 			rentalStatus  = (String)basicInfo.get("rentalStus");
 		}
-		else if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode")) || SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS.equals(basicInfo.get("appTypeCode"))) {
-			obligationYear = CommonUtils.intNvl(basicInfo.get("obligtYear"));
+		
+		if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode")) || SalesConstants.APP_TYPE_CODE_OUTRIGHTPLUS.equals(basicInfo.get("appTypeCode"))) {
+			
+			Date salesDt = (Date) basicInfo.get("ordDt");
+			
+			DateFormat formatter = new SimpleDateFormat("yyyyMMdd");		
+
+			Date dt = formatter.parse("20180101");
+
+			logger.debug("@#### salesDt:"+salesDt);
+			logger.debug("@#### dt:"+dt);
+					
+			boolean isNew = salesDt.after(dt);
+			
+			if(isNew) {
+    			Map<String, Object> map = new HashMap<String, Object>();
+    			
+    			map.put("salesOrdId", basicInfo.get("ordId"));
+    			
+    			EgovMap rsltMap = orderRequestMapper.selectObligtPriod(map);
+    			
+    			if(rsltMap != null) {
+    				obligationYear = CommonUtils.intNvl(rsltMap.get("obligtPriod"));
+    			}
+			}
+			else {
+				obligationYear = CommonUtils.intNvl(basicInfo.get("obligtYear"));
+			}
 		}
 		else if(SalesConstants.APP_TYPE_CODE_INSTALLMENT.equals(basicInfo.get("appTypeCode"))) {
 			
@@ -380,14 +409,20 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		basicInfo.put("mthRentalFees",       mthRentalFees);
 		basicInfo.put("installmentDuration", installmentDuration);
 		basicInfo.put("rentalStatus",        rentalStatus);
-		basicInfo.put("obligtYear", 		 Integer.valueOf(obligationYear)+ " " + "mth");
+		
+		if(obligationYear == 0) {
+			basicInfo.put("obligtYear", "-");
+		}
+		else {
+			basicInfo.put("obligtYear", Integer.valueOf(obligationYear)+ " " + " month");
+		}
 		
 		if(SalesConstants.PROMO_DISC_TYPE_EQUAL == CommonUtils.intNvl(basicInfo.get("promoDiscPeriodTp"))) {
 			basicInfo.put("PORMO_PERIOD_TYPE", basicInfo.get("promoDiscPeriodTpNm"));
 		}
 		else if(SalesConstants.PROMO_DISC_TYPE_EARLY == CommonUtils.intNvl(basicInfo.get("promoDiscPeriodTp"))
 				|| SalesConstants.PROMO_DISC_TYPE_LATE == CommonUtils.intNvl(basicInfo.get("promoDiscPeriodTp"))) {
-			basicInfo.put("PORMO_PERIOD_TYPE", (String)basicInfo.get("promoDiscPeriodTpNm") + "(" + basicInfo.get("promoDiscPeriodTp") + ")" );
+			basicInfo.put("PORMO_PERIOD_TYPE", (String)basicInfo.get("promoDiscPeriodTpNm") + "(" + basicInfo.get("promoDiscPeriod") + " month)" );
 		}
 		else {
 			basicInfo.put("PORMO_PERIOD_TYPE", "-");
