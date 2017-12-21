@@ -429,17 +429,20 @@ function fn_destroyConfirmGrid() {
 }
 
 function fn_isEmptyRefundInfo(data) {
+	var result = true;
 	for(var i = 0; i < data.length; i++) {
         if(FormUtil.isEmpty(data[i].refModeName)) {
+        	result = false;
         	Common.alert('Please enter Refund Mode of line ' + (i+1));
-        	return false;
+        	break;
         }
         if(FormUtil.isEmpty(data[i].bankAccName)) {
+        	result = false;
         	Common.alert('Please enter Bank Account of line ' + (i+1));
-            return false;
+            break;
         }
     }
-	return true;
+	return result;
 }
 
 function fn_gridDataGrouping(data) {
@@ -584,13 +587,19 @@ function fn_conversionForGridData(checkList, bRefundItem) {
 function fn_setConfirmPopEvent() {
 	$("#close_btn1").click(fn_closePop1);
     $("#allItem_btn").click(function() {
-        setFilterByValues(0);
+    	if(fn_validStusIdCheckForConfirm()) {
+    		setFilterByValues(0);
+    	}
     });
     $("#validItem_btn").click(function() {
-        setFilterByValues(4);
+    	if(fn_validStusIdCheckForConfirm()) {
+    		setFilterByValues(4);
+    	}
     });
     $("#invalidItem_btn").click(function() {
-        setFilterByValues(21);
+    	if(fn_validStusIdCheckForConfirm()) {
+    		setFilterByValues(21);
+    	}
     });
     
     $("#validCheck_btn").click(fn_checkRefundValid);
@@ -678,19 +687,24 @@ function fn_pClear() {
 }
 
 function fn_validStusIdCheckForConfirm() {
+	var result = true;
 	var gridDataList = AUIGrid.getGridData(confirmGridID);
 	for(var i = 0; i < gridDataList.length; i++) {
         if(FormUtil.isEmpty(gridDataList[i].validStusId)) {
+        	result = false;
         	Common.alert('Please check the validation first.');
-            return false;
+            break;
         }
     }
-    return true;
+    return result;
 }
 
 function fn_confirm() {
+	console.log("fn_confirm Action start");
 	if(fn_validStusIdCheckForConfirm()) {
+		console.log("if Action");
 		Common.confirm('Are you sure want to confirm this refund ?', function (){
+			console.log("confirmPop Action");
 	        if(Number($("#totInvalid").text()) > 0) {
 	            Common.alert('There is some invalid item exist.<br />Confirm is disallowed.');
 	        } else {
@@ -701,11 +715,11 @@ function fn_confirm() {
 	                    //$('#btnConf').hide();
 	                    //$('#btnDeactivate').hide();
 	                    
+	                    fn_selectRefundList();
+	                    
 	                    Common.alert(result.message);
 	                    
 	                    fn_closePop1();
-	                    
-	                    fn_selectRefundList();
 	                    
 	                    batchIdList = null
 	                    
@@ -716,25 +730,28 @@ function fn_confirm() {
 	        }
 	    });
 	}
+	console.log("fn_confirm Action end");
 }
 
 function fn_refundItemDisab() {
     console.log("remove Action");
-    if(detId > 0) {
-        Common.ajax("POST", "/payment/batchRefundItemDisab.do", {detId:detId,batchIdList:batchIdList}, function(result) {
-            console.log(result);
-            
-            //$('#btnConf').hide();
-            //$('#btnDeactivate').hide();
-            
-            Common.alert(result.message);
-            
-            fn_setConfirmRefund(result.data);
-            
-            detId = 0;
-        });
-    } else {
-        Common.alert('No item selected.');
+    if(fn_validStusIdCheckForConfirm()) {
+    	if(detId > 0) {
+            Common.ajax("POST", "/payment/batchRefundItemDisab.do", {detId:detId,batchIdList:batchIdList}, function(result) {
+                console.log(result);
+                
+                //$('#btnConf').hide();
+                //$('#btnDeactivate').hide();
+                
+                Common.alert(result.message);
+                
+                fn_setConfirmRefund(result.data);
+                
+                detId = 0;
+            });
+        } else {
+            Common.alert('No item selected.');
+        }
     }
 }
 </script>
