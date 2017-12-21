@@ -70,31 +70,37 @@
                     }
                 },{
                     dataField:"stkCode",
-                    headerText:"Filter Code",
+                    //headerText:"Filter Code",
+                    headerText : '<spring:message code="service.grid.FilterCode" />',
                     width:140,
                     height:30
                 }, {                        
                     dataField : "srvFilterId",
-                    headerText : "Filter id",
+                    //headerText : "Filter id",
+                    headerText : '<spring:message code="service.grid.FilterId" />',
                     width : 240,                             
                     visible:false 
                 }, {                        
                     dataField : "stkDesc",
-                    headerText : "Filter Name",
+                    //headerText : "Filter Name",
+                    headerText : '<spring:message code="service.grid.FilterName" />',
                     width : 240      
                }, {                        
                     dataField : "srvFilterPrvChgDt",
-                    headerText : "Last Change",
+                    //headerText : "Last Change",
+                    headerText : '<spring:message code="service.grid.LastChange" />',
                     width : 240 ,
                     dataType : "date",
                     formatString : "dd/mm/yyyy"       
               }, {                        
                     dataField : "c3",
-                    headerText : "Update By",
+                    //headerText : "Update By",
+                    headerText : '<spring:message code="service.grid.UpdateBy" />',
                     width : 240         
               }, {                        
                     dataField : "c2",
-                    headerText : "Update At",
+                    //headerText : "Update At",
+                    headerText : '<spring:message code="service.grid.UpdateAt" />',
                     width : 240,
                     dataType : "date",
                     formatString : "dd/mm/yyyy"  
@@ -153,40 +159,47 @@
                      }
                 },{      
                     dataField:"srvFilterId",
-                    headerText:"srvFilterId",
+                    //headerText:"srvFilterId",
+                    headerText : '<spring:message code="service.grid.SrvFilterId" />',
                     width:110,
                     height:30,          
                     visible:false
                 }, {                        
                     dataField:"stkCode",
-                    headerText:"Filter Code",
+                    //headerText:"Filter Code",
+                    headerText : '<spring:message code="service.grid.FilterCode" />',
                     width:110,
                     height:30,          
                     editable : false
                 }, {                        
                     dataField : "stkId",
-                    headerText : "Filter id",
+                    //headerText : "Filter id",
+                    headerText : '<spring:message code="service.grid.FilterId" />',
                     width : 240,                             
                     visible:false,          
                     editable : false 
                 }, {                        
                     dataField : "stkDesc",
-                    headerText : "Filter Name",
+                    //headerText : "Filter Name",
+                    headerText : '<spring:message code="service.grid.FilterName" />',
                     width : 240,          
                     editable : false
                 }, {                        
                     dataField : "c4",
-                    headerText : "Type",
+                    //headerText : "Type",
+                    headerText : '<spring:message code="service.grid.Type" />',
                     width : 100,          
                     editable : false
                 }, {                        
                     dataField : "srvFilterPriod",
-                    headerText : "Change Period",
+                    //headerText : "Change Period",
+                    headerText : '<spring:message code="service.grid.ChangePeriod" />',
                     width : 120,          
                     editable : false                    
 		         }, {                                  
                     dataField : "srvFilterPrvChgDt",
-                    headerText : "Last Change",
+                    //headerText : "Last Change",
+                    headerText : '<spring:message code="service.grid.LastChange" />',
                     width : 180,
                     dataType : "date",
                     formatString : "dd/mm/yyyy" ,
@@ -198,24 +211,28 @@
 				    }            
                 }, {                      
                     dataField : "c2",
-                    headerText : "CreateAt",
+                    //headerText : "CreateAt",
+                    headerText : '<spring:message code="service.grid.CreateAt" />',
                     width : 180,
                     dataType : "date",
                     formatString : "dd/mm/yyyy",          
                     editable : false                     
                 }, {                        
                     dataField : "c3",
-                    headerText : "CreateBy",
+                    //headerText : "CreateBy",
+                    headerText : '<spring:message code="service.grid.CreateBy" />',
                     width : 180,          
                     editable : false                                                                      
 	                },{                        
 	                dataField : "srvFilterLastSerial",
-	                headerText : "Last Serial",
+	                //headerText : "Last Serial",
+	                headerText : '<spring:message code="service.grid.LastSeria" />',
 	                width : 180,          
                     editable : false                                                                                 
 	                },{                        
 		            dataField : "srvFilterPrevSerial",
-		            headerText : "Prev Serial",
+		            //headerText : "Prev Serial",
+		            headerText : '<spring:message code="service.grid.PrevSeria" />',
 		            width : 180,          
                     editable : false         
                      },{
@@ -326,10 +343,10 @@
 	             if(result.code = "00"){
 	                 $("#popClose").click();
                     fn_getInActivefilterInfo();
-                    fn_getActivefilterInfo();
-	                  Common.alert("<b>The filter successfully deactivate.</b>",fn_close);
+                    fn_getActivefilterInfo(); 
+	                  Common.alert("<b><spring:message code='service.msg.filterDeactivate'/></b>",fn_close);
 	            }else{
-	                 Common.alert("<b>Failed to deactivate this filter. Please try again later.</b>");  
+	                 Common.alert("<b><spring:message code='service.msg.deactivate.fail'/></b>");  
 	            } 
 	         });
 	
@@ -410,9 +427,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>BS Management - Configuration - Filter Setting</h1>
+<h1><spring:message code='service.title.BSManagement'/> - <spring:message code='service.title.Configuration'/> - <spring:message code='service.title.FilterSetting'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -425,7 +442,7 @@
   
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Order Information</h2>
+<h2><spring:message code='service.title.OrderInformation'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -440,36 +457,36 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td>
     <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  value="${hSOrderView.ordNo}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; " />
     </td>
-    <th scope="row">Applicaton Type</th>
+    <th scope="row"><spring:message code='service.title.ApplicatonType'/></th>
     <td>
     <input type="text" title="" id="entry_appType" name="entry_appType"  value="${hSOrderView.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
-    <th scope="row"> Order Status</th>
+    <th scope="row"><spring:message code='service.title.OrderStatus'/></th>    
     <td>
     <input type="text" title="" id="entry_StusCode" name="entry_StusCode"  value="${hSOrderView.ordStusCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Product Code</th>
+    <th scope="row"><spring:message code='service.title.ProductCode'/></th>
     <td>
     <input type="text" title="" id="entry_product" name="entry_product"  value="${hSOrderView.stockCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
-    <th scope="row">Product Name</th>
+    <th scope="row"><spring:message code='service.title.ProductName'/></th>
     <td colspan="3">
     <input type="text" title="" id="entry_stockDesc" name="entry_stockDesc"  value="${hSOrderView.stockDesc}" placeholder="" class="readonly " readonly="readonly" style="width: 306px; "/>
     <input  type='hidden' id='stkId' name='stkId'  value='${hSOrderView.stkId}'></textarea>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>
     <td colspan="3">
     <input type="text" title="" id="entry_custName" name="entry_custName"  value="${hSOrderView.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 444px; "/>
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>    
     <td>
     <input type="text" title="" id="entry_nric" name="entry_nric"  value="${hSOrderView.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
@@ -478,7 +495,7 @@
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Inactive Filter List</h2>
+<h2><spring:message code='service.title.InactiveFilterList'/></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -486,9 +503,9 @@
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Filter Setting</h2>
+<h2><spring:message code='service.title.FilterSetting'/></h2>
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="javascript:fn_getAddFilter()"  id="addFilter">Add Filter</a></p></li>
+    <li><p class="btn_grid"><a href="javascript:fn_getAddFilter()"  id="addFilter"><spring:message code='service.btn.AddFilter'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

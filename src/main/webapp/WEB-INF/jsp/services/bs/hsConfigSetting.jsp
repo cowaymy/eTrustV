@@ -30,15 +30,18 @@
 		                            visible:false
 		                              },*/ {
 		                            dataField : "custId",
-		                            headerText : "Customer",
+		                            //headerText : "Customer",
+		                            headerText : '<spring:message code="service.grid.Customer" />',
 		                            width : 120
 		                        }, {
 		                            dataField : "name",
-		                            headerText : "Customer Name",
+		                            //headerText : "Customer Name",
+		                            headerText : '<spring:message code="service.grid.CustomerName" />',
 		                            width : 120
 		                       }, {
 		                            dataField : "salesOrdNo",
-		                            headerText : "Sales Order",
+		                            //headerText : "Sales Order",
+		                            headerText : '<spring:message code="service.grid.SalesOrder" />',
 		                            width : 120
 		                        }, /*{
 		                            dataField : "hsDate",
@@ -90,11 +93,13 @@
                                     visible:false
                                         },*/ {
                                     dataField : "codyMangrUserId",
-                                    headerText : "Cody Manager",
+                                    //headerText : "Cody Manager",
+                                    headerText : '<spring:message code="service.grid.CodyManager" />',
                                     width : 120
 		                              }, {
 		                            dataField : "codyBrnchCode",
-		                            headerText : "Branch Code",
+		                            //headerText : "Branch Code",
+		                            headerText : '<spring:message code="service.grid.BranchCode" />',
 		                            width : 120
 		                    }];
 
@@ -165,7 +170,8 @@
 
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             if(selectedItems.length  <= 0) {
-		        Common.alert("<b>No HS selected.</b>");
+		        //Common.alert("<b>No HS selected.</b>");
+		        Common.alert("<b><spring:message code='service.msg.NoHSData'/><b> ");
 		        return ;
 		    }
 
@@ -179,7 +185,8 @@
 
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             if(selectedItems.length  <= 0) {
-                Common.alert("<b>No HS selected.</b>");
+                //Common.alert("<b>No HS selected.</b>");
+                Common.alert("<b><spring:message code='service.msg.NoHSData'/><b> ");
                 return ;
             }
                Common.popupDiv("/services/bs/hSFilterSettingPop.do?&salesOrdId="+salesOrdId, null, null , true , '_FilterSetPop');
@@ -204,9 +211,9 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>HS Management</h2>
+<h2><spring:message code='service.title.HSManagement'/></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
@@ -232,7 +239,7 @@
             </colgroup>
             <tbody>
             <tr>
-                <th scope="row">Sales Order</th>
+                <th scope="row"><spring:message code='service.title.SalesOrder'/></th>
                 <td>
                     <input id="ManuaSalesOrder" name="ManuaSalesOrder"  type="text" title="" placeholder="Sales Order" class="w100p" />
                 </td>
@@ -240,7 +247,7 @@
                 <td>
                     <input id="ManuaMyBSMonth" name="ManuaMyBSMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
                 </td> -->
-                <th scope="row">Customer</th>
+                <th scope="row"><spring:message code='service.title.Customer'/></th>
                 <td>
                     <input id="manualCustomer" name="manualCustomer"  type="text" title="" placeholder="Customer" class="w100p" />
                 </td>
@@ -257,8 +264,8 @@
                 <dt>Link</dt>
                 <dd>
                 <ul class="btns">
-                    <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo">HS Basic Info</a> </p></li>
-                    <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet">HS Filter Maintenance</a></p></li>
+                    <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo"><spring:message code='service.title.HSBasicInfo'/></a> </p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet"><spring:message code='service.title.HSFilterMaintenance'/></a></p></li>
                 </ul>
                 <ul class="btns">
                 </ul>

@@ -15,54 +15,64 @@
 										
                                         {                        
                                             dataField : "resultType",
-                                            headerText : "Type",
+                                            //headerText : "Type",
+                                            headerText : '<spring:message code="service.grid.Type" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "resultYear",
-                                            headerText : "Year",
+                                            //headerText : "Year",
+                                            headerText : '<spring:message code="service.grid.Year" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "resultMonth",
-                                            headerText : "Month",
+                                            //headerText : "Month",
+                                            headerText : '<spring:message code="service.grid.Month" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "resultEntryNo",
-                                            headerText : "AS/BS No",
+                                            //headerText : "AS/BS No",
+                                            headerText : '<spring:message code="service.grid.AS_BSNo" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "resultNo",
-                                            headerText : "Result No",
+                                            //headerText : "Result No",
+                                            headerText : '<spring:message code="service.grid.ResultNo" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "setlDt",
-                                            headerText : "Settle Data",
+                                            //headerText : "Settle Data",
+                                            headerText : '<spring:message code="service.grid.SettleData" />',
                                             width : 120,
                                             dataType : "date",
                                             formatString : "dd/mm/yyyy"   
                                         },
                                         {                        
                                             dataField : "filterName",
-                                            headerText : "Name",
+                                            //headerText : "Name",
+                                            headerText : '<spring:message code="service.grid.Name" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "filterQty",
-                                            headerText : "Qty",
+                                            //headerText : "Qty",
+                                            headerText : '<spring:message code="service.grid.Qty" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "filterStusCode",
-                                            headerText : "Status",
+                                            //headerText : "Status",
+                                            headerText : '<spring:message code="service.grid.Status" />',
                                             width : 120 
                                         },
                                         {                        
                                             dataField : "filterPeriod",
-                                            headerText : "Period",
+                                            //headerText : "Period",
+                                            headerText : '<spring:message code="service.grid.Period" />',
                                             width : 120 
                                         } 
                                    ];
@@ -125,7 +135,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ORDER FILTER USE HISTORY</h1>
+<h1><spring:message code="service.title.orderFilterUseHistory" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -139,7 +149,7 @@
     
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Inactive Filter List</h2>
+<h2><spring:message code="service.title.InactiveFilterList" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

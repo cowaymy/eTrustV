@@ -101,9 +101,12 @@
                     $("#popClose").click();
                     fn_getInActivefilterInfo();
                     fn_getActivefilterInfo();
-                     Common.alert("<b>The filter successfully added.</b>",fn_close);
+                     //Common.alert("<b>The filter successfully added.</b>",fn_close);
+                     Common.alert("<b><spring:message code='service.msg.filter.add'/></b>",fn_close);
                }else{
-                    Common.alert("<b>Failed to add this filter. Please try again later.</b>");
+                    //Common.alert("<b>Failed to add this filter. Please try again later.</b>");
+                    Common.alert("<b><spring:message code='service.msg.filter.fail'/></b>");
+                    
                }
            });
     }
@@ -128,7 +131,8 @@
         
         
 	    if($("#ddlFilterCode option:selected").val() ==""){
-	        Common.alert("Some required FilterCode fields are empty.<br/>");
+	        //Common.alert("Some required FilterCode fields are empty.<br/>");
+	        Common.alert("<spring:message code='service.msg.filter.empty'/><br/>");
 	        return ;
 	    }
     
@@ -195,9 +199,9 @@ function fn_asAddFilter(){
 <div id="popup_filterAddwrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADD FILTER</h1>
+<h1><spring:message code='service.title.AddFilter'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -223,7 +227,7 @@ function fn_asAddFilter(){
     <td colspan="2"><span class="must" id="txtResult"><!-- *Some required fields are empty. --></span></td>
 </tr>
 <tr>
-    <th scope="row">Filter Code</th>
+    <th scope="row"><spring:message code='service.title.FilterCode'/></th>
     <td>
 	    <select class="w100p"  id ="ddlFilterCode" name = "ddlFilterCode"  onchange="" style="height: 26px; width: 407px" >
 	        <c:forEach var="list" items="${hSAddFilterSetInfo}" varStatus="status">
@@ -233,13 +237,13 @@ function fn_asAddFilter(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Previous Service Date</th>
+    <th scope="row"><spring:message code='service.title.PreviousServiceDate'/></th>
     <td>
         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpPrevServiceDate"  name="dpPrevServiceDate" style="height: 26px; "/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code='service.title.Remark'/></th>    
     <td>
         <textarea  id='txtRemark' name='txtRemark'   rows='5' placeholder=""  class="w100p" style="width: 407px; "></textarea>
     </td>
@@ -249,7 +253,7 @@ function fn_asAddFilter(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#"  onclick="fn_doSave()">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#"  onclick="fn_doSave()"><spring:message code='service.btn.Save'/></a></p></li>
 </ul>
 
 </article><!-- tap_area end -->

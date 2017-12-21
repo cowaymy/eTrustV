@@ -178,9 +178,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>HS Management - Configuration - Basic Info</h1>
+<h1><spring:message code='service.title.HSManagement'/> - <spring:message code='service.title.Configuration'/> - <spring:message code='service.title.BasicInfo'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -204,38 +204,38 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" >Order No</th>
+    <th scope="row" ><spring:message code='service.title.OrderNo'/></th>
    <%--  <td><span><c:out value="${basicInfo.ordNo}"/></span> --%>
     <td>
     <input type="text" title="" id="entry_orderNo" name="entry_orderNo"  value="${configBasicInfo.ordNo}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; " />
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row" ><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <input type="text" title="" id="entry_appType" name="entry_appType"  value="${configBasicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Installation Address</th>
+    <th scope="row" ><spring:message code='service.title.InstallationAddress'/></th>
     <td colspan="3">
     <input type="text" title="" id="entry_address" name="entry_address"  value="${configBasicInfo.appTypeCode}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Product</th>
+    <th scope="row" ><spring:message code='service.title.Product'/></th>    
     <td>
     <input type="text" title="" id="entry_product" name="entry_product"  value="${configBasicInfo.stock}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row" ><spring:message code='service.title.CustomerName'/></th>    
     <td>
     <input type="text" title="" id="entry_custName" name="entry_custName"  value="${configBasicInfo.custName}" placeholder="" class="readonly " readonly="readonly" style="width: 157px; "/>    
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row" ><spring:message code='service.title.NRIC_CompanyNo'/></th>    
     <td>
     <input type="text" title="" id="entry_nric" name="entry_nric"  value="${configBasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 188px; "/>
     </td>
-    <th scope="row">HS Availability</th>
+    <th scope="row" ><spring:message code='service.title.HSAvailability'/></th>    
     <td>
 <%--    <input type="text" title="" id="entry_availability" name="entry_availability"  value="${BasicInfo.custNric}" placeholder="" class="readonly " readonly="readonly" style="width: 464px; "/> --%>
     <select class="w100p" id="entry_availability" name="entry_availability">
@@ -246,22 +246,22 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">HS Cody Code</th>
+    <th scope="row" ><spring:message code='service.title.HSCodyCode'/></th>    
     <td>
         <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" />
     </td>
-    <th scope="row">Last HS Date</th>
+    <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>    
     <td>
     <input type="text" id="entry_lstHSDate" name="entry_lstHSDate" title="Create start Date" value="${configBasicInfo.c4}" placeholder="DD/MM/YYYY" class="j_date" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row" ><spring:message code='service.title.Remark'/></th>    
     <td colspan="3">
      <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" > ${configBasicInfo.configBsRem} </textarea> 
 </tr>
 <tr>
-    <th scope="row">Happy Call Service</th>
+    <th scope="row" ><spring:message code='service.title.HappyCallService'/></th>    
     <td colspan="3">
     <label><input type="checkbox" id="entry_settIns" name="entry_settIns" <c:if test="${configBasicInfo.configSettIns == 1}">checked</c:if> /><span>Installation Type</span></label>
     <label><input type="checkbox" id="entry_settHs" name="entry_settHs" <c:if test="${configBasicInfo.configSettBs == 1}">checked</c:if>/><span>BS Type</span></label>
@@ -269,7 +269,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Prefer HS Week</th>
+    <th scope="row" ><spring:message code='service.title.PreferHSWeek'/></th>    
     <td colspan="3">
     <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="0" <c:if test="${configBasicInfo.configBsWeek == 0}">checked</c:if> disabled/><span>None</span></label>
     <label><input type="radio" id="entry_srvBsWeek" name="entry_srvBsWeek" value="1" <c:if test="${configBasicInfo.configBsWeek == 1}">checked</c:if>/><span>Week 1</span></label>
@@ -282,7 +282,7 @@
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_doSave()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_doSave()"><spring:message code='service.btn.SAVE'/></a></p></li>
 </ul>
 </form> 
 

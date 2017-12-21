@@ -400,7 +400,7 @@ function fn_close(){
     <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td><input type="text" title="" id="orderNo" name="orderNo" placeholder="" class="" />
         <!-- <a href="javascript:fn_orderSearch();" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
-        <p class="btn_grid"><a href="javascript:fn_orderSearch();">search</a></p>
+        <p class="btn_grid"><a href="javascript:fn_orderSearch();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p>
     </td>
 </tr>
 </tbody>
