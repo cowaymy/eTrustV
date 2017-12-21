@@ -345,22 +345,22 @@ var gridPros = {
 <tr>
     <th scope="row" rowspan="4"><spring:message code='service.title.MailingAddress'/></th>    
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${customerInfo.state}"/></span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${customerInfo.city}"/></span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${customerInfo.area}"/></span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${customerInfo.country}"/></span>    
     </td>
 </tr>
 <tr>
@@ -426,22 +426,23 @@ var gridPros = {
 <tr>
     <th scope="row" rowspan="4"><spring:message code='service.title.InstallationAddress'/></th>    
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${installResult.city}"/></span>
+
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${installResult.city}"/></span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${installResult.area}"/></span>    
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span>1111</span>
+    <span><c:out value="${installResult.country}"/></span>
     </td>
 </tr>
 <tr>
