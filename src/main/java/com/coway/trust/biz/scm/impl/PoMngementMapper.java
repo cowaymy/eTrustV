@@ -34,6 +34,7 @@ public interface PoMngementMapper
 	List<EgovMap> selectPoRightMove(Map<String, Object> params); 
 	EgovMap selectPOIssueNewPoNo(Map<String, Object> params); 
 	
+	int updatePoIssueStatus(Map<String, Object> params);
 	int updatePOIssuItem(Map<String, Object> params);
 	int insertPOIssueDetail(Map<String, Object> params);
 	int insertPOIssueMaster(Map<String, Object> params);

@@ -27,6 +27,7 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectScmTeamCode(Map<String, Object> params);
 	List<EgovMap> selectStockCategoryCode(Map<String, Object> params);
 	List<EgovMap> selectStockCode(Map<String, Object> params);
+	List<EgovMap> selectStockCode_TEMP(Map<String, Object> params);
 	List<EgovMap> selectDefaultStockCode(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMngmentList(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMngmentPeriod(Map<String, Object> params);
@@ -46,6 +47,10 @@ public interface SalesPlanMngementMapper {
 	
 	void updateScmPlanMaster(Map<String, Object> params);
 	void insertSalesPlanDetail(Map<String, Object> params);
+	
+	void insertSalesPlanMaster(Map<String, Object> params);
+	/* interface */
+	String callSpCreateSalesPlanDetail(Map<String, Object> params);
 	
 	/* SALES PLAN ACCURACY */
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);

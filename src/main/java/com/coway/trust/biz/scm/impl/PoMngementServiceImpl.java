@@ -85,7 +85,7 @@ public class PoMngementServiceImpl implements PoMngementService {
 		return poMngementMapper.selectPoApprovalMainList(params);
 	}	
 	
-	//
+	//Interface Call..
 	@Override
 	public int updatePoApprovalDetail(List<Object> addList, Integer crtUserId) 
 	{
@@ -104,6 +104,8 @@ public class PoMngementServiceImpl implements PoMngementService {
 			((Map<String, Object>) obj).put("failINFKey", "");
 			
 			poMngementMapper.callSpPoApprovalINF155((Map<String, Object>) obj);
+			
+			poMngementMapper.updatePoIssueStatus((Map<String, Object>) obj);
 			
 			saveCnt++;
 			

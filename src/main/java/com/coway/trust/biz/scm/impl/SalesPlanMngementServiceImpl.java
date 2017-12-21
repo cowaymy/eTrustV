@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.scm.SalesPlanMngementService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -62,14 +63,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		return salesPlanMngementMapper.selectSupplyCdcMainList(params);
 	}	
 	
-	
 	// Supply-Corp
 	@Override
 	public List<EgovMap> selectSupplyCorpList(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSupplyCorpList(params);
 	}
-	
-	
 	
 	// Sales
 	@Override
@@ -111,6 +109,10 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public List<EgovMap> selectStockCode(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectStockCode(params);
 	}
+	@Override
+	public List<EgovMap> selectStockCode_TEMP(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectStockCode_TEMP(params);
+	}
 	
 	@Override
 	public List<EgovMap> selectDefaultStockCode(Map<String, Object> params) {
@@ -141,9 +143,6 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			LOGGER.debug(" >>>>> updateSCMPlanMaster ");
 			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
-			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
-			
 			saveCnt++;
 			
 			salesPlanMngementMapper.updateScmPlanMaster((Map<String, Object>) obj);
@@ -166,9 +165,6 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			LOGGER.debug(" >>>>> updatePlanByCDC ");
 			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("hidden");
-			//((Map<String, Object>) obj).put("userId", ((Map<String, Object>) obj).get("userId") );
-			
 			saveCnt++;
 			
 			salesPlanMngementMapper.updatePlanByCDC((Map<String, Object>) obj);
@@ -189,6 +185,28 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			saveCnt++;
 			salesPlanMngementMapper.insertSalesPlanDetail((Map<String, Object>) obj);
 		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO)
+	{
+		int saveCnt = 0;
+		
+		params.put("crtUserId", sessionVO.getUserId());
+		
+		salesPlanMngementMapper.insertSalesPlanMaster(params);
+		
+		//LOGGER.debug("SalesPlanMstId_SEQ: " + Integer.parseInt( String.valueOf(params.get("salesPlanMstSeq"))) );
+		
+		LOGGER.debug(" input_Params : {}", params.toString() );
+		
+		saveCnt++;
+		
+		salesPlanMngementMapper.callSpCreateSalesPlanDetail(params);
+		
+		LOGGER.debug(" return_Params : {} , SaveCnt: {} ", params.toString(), saveCnt );
 		
 		return saveCnt;
 	}

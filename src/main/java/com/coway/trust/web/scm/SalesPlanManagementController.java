@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -141,7 +142,8 @@ public class SalesPlanManagementController {
 	
 	@RequestMapping(value = "/selectStockCtgrySummary.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectStockCtgrySummaryList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes 
+	    ,	@RequestParam(value = "stockCategoryCbBox", required = false) Integer[] stockCategorys ) 
 	{
 		LOGGER.debug("selectStockCtgrySummaryList : {}", params.toString());
 		LOGGER.debug("stkCodes : {}", stkCodes.toString());
@@ -152,6 +154,14 @@ public class SalesPlanManagementController {
 			}
 			
 			params.put("stkCodes", stkCodes);
+		}
+		
+		if (stockCategorys != null) {
+			for (Integer id : stockCategorys) {
+				LOGGER.debug("summary_stockCategorys : {}", id);
+			}
+			
+			params.put("stockCategorys", stockCategorys);
 		}
 		
 		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);		
@@ -172,7 +182,8 @@ public class SalesPlanManagementController {
 	}
 	@RequestMapping(value = "/selectSalesPlanMngmentSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes 
+		,	@RequestParam(value = "scmStockType", required = false) Integer[] scmStockTypes ) 
 	{
 		LOGGER.debug("selectSalesPlanMngmentList : {}", params.toString());
 		LOGGER.debug("stkCodes : {}", stkCodes.toString());
@@ -185,11 +196,21 @@ public class SalesPlanManagementController {
 			params.put("stkCodes", stkCodes);
 		}
 		
+		if (scmStockTypes != null) {
+			for (Integer id : scmStockTypes) {
+				LOGGER.debug("scmStockTypes : {}", id);
+			}
+			
+			params.put("scmStockTypes", scmStockTypes);
+		}
+		
+		
 		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);		
 		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));		
 		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);	
 		
 		LOGGER.debug("addMonth_Param : {}", params.toString());
+		LOGGER.debug("scmTeamCbBox : {}", params.get("scmTeamCbBox").toString() );
 		
 		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
 		
@@ -278,8 +299,18 @@ public class SalesPlanManagementController {
 	}
 	
 	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params) {
-		
+	public ResponseEntity<List<EgovMap>> selectStockCode_TEMP(@RequestParam Map<String, Object> params) 	
+	{	
+		String codeIds = (String)params.get("codeIds");
+		LOGGER.debug("codeIds : {}", codeIds);
+		LOGGER.debug("params  : {}", params.toString());
+		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode_TEMP(params);
+		return ResponseEntity.ok(selectStockCodeList);
+	}
+	
+	@RequestMapping(value = "/selectStockCode_TEMP.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params ) 	
+	 {	
 		LOGGER.debug("selectStockCode : {}", params.toString());
 		
 		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
@@ -362,6 +393,33 @@ public class SalesPlanManagementController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("insertSalesPlanMaster_params : {}", params);
+		
+		
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		
+	    tmpCnt = salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
+		totCnt = totCnt + tmpCnt;
+		
+		// 콘솔로 찍어보기
+		//LOGGER.info("insertBizPlanMaster_수정 : {}", addList.toString());
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}		
+	
 	
 	// SALES PLAN ACCURACY	
 	@RequestMapping(value = "/selectAccuracyWeeklyDetail.do", method = RequestMethod.GET)

@@ -3,6 +3,8 @@ package com.coway.trust.biz.scm;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface SalesPlanMngementService 
@@ -25,6 +27,7 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectScmTeamCode(Map<String, Object> params);
 	List<EgovMap> selectStockCategoryCode(Map<String, Object> params);
 	List<EgovMap> selectStockCode(Map<String, Object> params);
+	List<EgovMap> selectStockCode_TEMP(Map<String, Object> params);
 	List<EgovMap> selectDefaultStockCode(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMngmentList(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMngmentPeriod(Map<String, Object> params);
@@ -45,6 +48,7 @@ public interface SalesPlanMngementService
 	
 	int updateSCMPlanMaster(List<Object> addList, Integer updUserId);
 	int insertSalesPlanDetail(List<Object> addList, Integer updUserId);
+	int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 	
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
 	
