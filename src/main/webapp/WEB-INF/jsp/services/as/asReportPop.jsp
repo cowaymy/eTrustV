@@ -8,8 +8,8 @@ $(document).ready(function(){
     
 	
 	doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
-	doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCodeFrom', 'S' ,  '');
-	doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCodeTo', 'S' ,  '');
+	doGetCombo('/services/as/report/selectMemCodeList.do', '', '','CTCodeFrom', 'S' ,  '');
+	doGetCombo('/services/as/report/selectMemCodeList.do', '', '','CTCodeTo', 'S' ,  '');
 	
 });
 
