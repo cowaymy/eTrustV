@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
 var myGridID,subGridID;
@@ -31,23 +31,21 @@ $(document).ready(function(){
 });
 
 var columnLayout=[
-    { dataField:"code" ,headerText:"Type" ,editable : false , visible : false},
-    { dataField:"memoItmTxs" ,headerText:"Adjustment Taxes" ,editable : false  , visible : false},
-    { dataField:"memoItmChrg" ,headerText:"Adjustment Charges" ,editable : false  , visible : false},
-    { dataField:"memoAdjRptNo" ,headerText:"Report No." ,editable : false  , visible : false},
-    { dataField:"memoAdjId" ,headerText:"Adjustment ID" ,editable : false  , visible : false},
-    
-
-    { dataField:"memoAdjRefNo" ,headerText:"CN/DN No." ,editable : false },
-    { dataField:"memoAdjInvcNo" ,headerText:"Invoice No." ,editable : false },
-    { dataField:"invcItmOrdNo" ,headerText:"Order No." ,editable : false},
-    { dataField:"memoItmAmt" ,headerText:"Adjustment Amount(RM)" ,editable : false },
-    { dataField:"resnDesc" ,headerText:"Reason" ,editable : false },
-    { dataField:"userName" ,headerText:"Requestor" ,editable : false },
-    { dataField:"deptName" ,headerText:"Department" ,editable : false },
-    { dataField:"memoAdjCrtDt" ,headerText:"Request Create Date" ,editable : false },    
-    { dataField:"code1" ,headerText:"Status" ,editable : false },
-    { dataField:"memoAdjRem" ,headerText:"Remark" ,editable : false }
+    { dataField:"code" ,headerText:"<spring:message code='pay.head.type'/>" ,editable : false , visible : false},
+    { dataField:"memoItmTxs" ,headerText:"<spring:message code='pay.head.adjustmentTaxes'/>" ,editable : false  , visible : false},
+    { dataField:"memoItmChrg" ,headerText:"<spring:message code='pay.head.adjustmentCharges'/>" ,editable : false  , visible : false},
+    { dataField:"memoAdjRptNo" ,headerText:"<spring:message code='pay.head.reportNo'/>" ,editable : false  , visible : false},
+    { dataField:"memoAdjId" ,headerText:"<spring:message code='pay.head.adjustmentId'/>" ,editable : false  , visible : false},
+    { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.cnDnNo'/>" ,editable : false },
+    { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>" ,editable : false },
+    { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false},
+    { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.adjustmentAmount'/>" ,editable : false },
+    { dataField:"resnDesc" ,headerText:"<spring:message code='pay.head.reason'/>" ,editable : false },
+    { dataField:"userName" ,headerText:"<spring:message code='pay.head.requestor'/>" ,editable : false },
+    { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
+    { dataField:"memoAdjCrtDt" ,headerText:"<spring:message code='pay.head.requestCreateDate'/>" ,editable : false },    
+    { dataField:"code1" ,headerText:"<spring:message code='pay.head.status'/>" ,editable : false },
+    { dataField:"memoAdjRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
     ];
 
 // 리스트 조회.
@@ -118,8 +116,8 @@ function fn_Clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -176,10 +174,10 @@ function fn_Clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();">New CN/DN request</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');">New Batch request</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('SUMMARY');">Generate Summary List</a></p></li>
-                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('APPROVAL');">Approval</a></p></li>                                                                      
+                        <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();"><spring:message code='pay.btn.link.newCnDnReq'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');"><spring:message code='pay.btn.link.newBatchReq'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('SUMMARY');"><spring:message code='pay.btn.link.genSummaryList'/></a></p></li>
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('APPROVAL');"><spring:message code='pay.btn.link.approval'/></a></p></li>                                                                      
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>

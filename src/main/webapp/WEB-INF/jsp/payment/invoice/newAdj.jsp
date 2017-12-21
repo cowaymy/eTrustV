@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
     var myGridID;
@@ -15,20 +15,20 @@
     };
 
     var columnLayout=[
-        { dataField:"txinvoiceitemid" ,headerText:"Tax Invoice Item Id" ,editable : false, visible:false },
-        { dataField:"txinvoiceitemtypeid" ,headerText:"Tax Invoice Type Id" ,editable : false, visible:false },
-        { dataField:"billitemtaxcodeid" ,headerText:"Bill Item Tax Code ID" ,editable : false, visible:false },
-        { dataField:"billitemtype" ,headerText:"Bill Type" ,editable : false ,width : 120},
-        { dataField:"billitemrefno" ,headerText:"Order No." ,editable : false ,width : 120 },
-        { dataField:"billitemunitprice" ,headerText:"Unit Price" ,editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemqty" ,headerText:"Quantity" ,editable : false ,width : 120},    
-        { dataField:"billitemtaxrate" ,headerText:"GST Rate" ,editable : false , postfix : "%" ,width : 120},    
-        { dataField:"billitemcharges" ,headerText:"Amount" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemtaxes" ,headerText:"GST" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemamount" ,headerText:"Total" ,editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+        { dataField:"txinvoiceitemid" ,headerText:"<spring:message code='pay.head.taxInvoiceItemId'/>" ,editable : false, visible:false },
+        { dataField:"txinvoiceitemtypeid" ,headerText:"<spring:message code='pay.head.taxInvoiceTypeId'/>" ,editable : false, visible:false },
+        { dataField:"billitemtaxcodeid" ,headerText:"<spring:message code='pay.head.billItemTaxCodeId'/>" ,editable : false, visible:false },
+        { dataField:"billitemtype" ,headerText:"<spring:message code='pay.head.billType'/>" ,editable : false ,width : 120},
+        { dataField:"billitemrefno" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false ,width : 120 },
+        { dataField:"billitemunitprice" ,headerText:"<spring:message code='pay.head.unitPrice'/>" ,editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+        { dataField:"billitemqty" ,headerText:"<spring:message code='pay.head.quantity'/>" ,editable : false ,width : 120},    
+        { dataField:"billitemtaxrate" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , postfix : "%" ,width : 120},    
+        { dataField:"billitemcharges" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+        { dataField:"billitemtaxes" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+        { dataField:"billitemamount" ,headerText:"<spring:message code='pay.head.total'/>" ,editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         {
             dataField : "totamount",
-            headerText : "Total Adjustment Amount",        
+            headerText : "<spring:message code='pay.head.totalAdjustmentAmount'/>",        
             dataType : "numeric",
             width : 220, 
             formatString : "#,##0.00",
@@ -248,7 +248,7 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Adjustment Management - New CN/DN Request</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_saveAdjustmentInfo();">SAVE</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_saveAdjustmentInfo();"><spring:message code='sys.btn.save'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -280,11 +280,11 @@
                         </td>
                         <td>
                             <p class="btn_sky">
-                                <a href="javascript:confirmList();" id="confirm" style="display: none">Confirm</a>
-                                <a href="javascript:fn_cmmSearchInvoicePop();" id="search" style="display: none">Search</a>
+                                <a href="javascript:confirmList();" id="confirm" style="display: none"><spring:message code='pay.btn.confirm'/></a>
+                                <a href="javascript:fn_cmmSearchInvoicePop();" id="search" style="display: none"><spring:message code='sys.btn.search'/></a>
                             </p>
                             <p class="btn_sky">
-                                <a href="javascript:fn_reSelect();" id="reSelect" style="display: none">Reselect</a>
+                                <a href="javascript:fn_reSelect();" id="reSelect" style="display: none"><spring:message code='pay.btn.reselect'/></a>
                             </p>
                         </td>
                     </tr>

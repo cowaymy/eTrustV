@@ -7,11 +7,11 @@ var myPopGridID;
 
 //AUIGrid 칼럼 설정
 var myPopLayout = [   
-    { dataField:"billItmType" ,headerText:"Bill Type",width: 200 , editable : false},
-    { dataField:"billItmRefNo" ,headerText:"Order Number",width: 200 , editable : false},
-    { dataField:"memoItmChrg" ,headerText:"Amount", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-    { dataField:"memoItmTxs" ,headerText:"GST", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-    { dataField:"memoItmAmt" ,headerText:"Total", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120}
+    { dataField:"billItmType" ,headerText:"<spring:message code='pay.head.billType'/>",width: 200 , editable : false},
+    { dataField:"billItmRefNo" ,headerText:"<spring:message code='pay.head.orderNumber'/>",width: 200 , editable : false},
+    { dataField:"memoItmChrg" ,headerText:"<spring:message code='pay.head.amount'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+    { dataField:"memoItmTxs" ,headerText:"<spring:message code='pay.head.gst'/>", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
+    { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.total'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120}
     
     ];
     
@@ -158,7 +158,7 @@ function fn_approve(process){
     <header class="pop_header">
         <h1>Credit Note / Debit Note</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
 
@@ -249,14 +249,14 @@ function fn_approve(process){
                 <ul id="history">				
                 </ul>
             </div><!-- tran_list end -->
-        <section>
+        </section>
 
         <ul class="center_btns mt20" id="centerBtn1" style="display: none">
-            <li><p class="btn_blue2"><a href="javascript:fn_generateReport();">Generate CN/DN</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_generateReport();"><spring:message code='pay.btn.generateCnDn'/></a></p></li>
         </ul>
         <ul class="center_btns mt20" id="centerBtn2" style="display: none">
-            <li><p class="btn_blue2"><a href="javascript:fn_approve('APPROVE');">Approve</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_approve('REJECT');">Reject</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_approve('APPROVE');"><spring:message code='pay.btn.approve'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_approve('REJECT');"><spring:message code='pay.btn.reject'/></a></p></li>
         </ul>
     </section><!-- pop_body end -->
 

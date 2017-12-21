@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var myGridID;
 var selectedEntryId;
@@ -61,22 +61,22 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"id", headerText:"poEntryId", visible:true},
-    {dataField:"salesOrdNo", headerText:"Order No"},
-    {dataField:"name", headerText:"Customer Name"},
-    {dataField:"poRefNo", headerText:"PO Reference #"},
-    {dataField:"period", headerText:"Period"},
-    {dataField:"userName", headerText:"Created By"},
-    {dataField:"poCrtDt", headerText:"Created At", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
-    {dataField:"username1", headerText:"Updated By"},
-    {dataField:"poUpdDt", headerText:"Last Update", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
-    {dataField:"name1", headerText:"Status"},
+    {dataField:"id", headerText:"<spring:message code='pay.head.poEntryId'/>", visible:true},
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>"},
+    {dataField:"name", headerText:"<spring:message code='pay.head.customerName'/>"},
+    {dataField:"poRefNo", headerText:"<spring:message code='pay.head.poReference'/>"},
+    {dataField:"period", headerText:"<spring:message code='pay.head.period'/>"},
+    {dataField:"userName", headerText:"<spring:message code='pay.head.createdBy'/>"},
+    {dataField:"poCrtDt", headerText:"<spring:message code='pay.head.createdAt'/>", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
+    {dataField:"username1", headerText:"<spring:message code='pay.head.updatedBy'/>"},
+    {dataField:"poUpdDt", headerText:"<spring:message code='pay.head.lastUpdate'/>", dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+    {dataField:"name1", headerText:"<spring:message code='pay.head.status'/>"},
     {
     	dataField : "disable",
-    	headerText :"Disable",
+    	headerText :"<spring:message code='pay.head.disable'/>",
     	renderer : {
     		type:"ButtonRenderer",
-    		labelText : "Disable",
+    		labelText : "<spring:message code='pay.head.disable'/>",
     		onclick : function(rowIndex, columnIndex, value, item){
     			if(item.name1 == 'Inactive'){
     				return false;
@@ -213,7 +213,7 @@ function fn_doSave(){
        <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
        <h2>Invoice/Statement Purchase Order</h2>   
        <ul class="right_btns">
-           <li><p class="btn_blue"><a href="javascript:fn_orderInfo();"><span class="search"></span>Search</a></p></li>
+           <li><p class="btn_blue"><a href="javascript:fn_orderInfo();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
        </ul>    
    </aside>
    <!-- title_line end -->
@@ -253,7 +253,7 @@ function fn_doSave(){
              <dt>Link</dt>
              <dd>
                  <ul class="btns">
-                     <li><p class="link_btn type2"><a href="javascript:fn_addEntry()">Add New Entry</a></p></li>
+                     <li><p class="link_btn type2"><a href="javascript:fn_addEntry()"><spring:message code='pay.btn.addNewEntry'/></a></p></li>
                  </ul>
                  <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
              </dd>
@@ -275,7 +275,7 @@ function fn_doSave(){
      <header class="pop_header"><!-- pop_header start -->
          <h1>INVOICE/STATEMENT P/O MAINTANENCE</h1>
          <ul class="right_opt">
-             <li><p class="btn_blue2"><a href="" onclick="javascript:fn_hidePopup();">CLOSE</a></p></li>
+             <li><p class="btn_blue2"><a href="" onclick="javascript:fn_hidePopup();"><spring:message code='sys.btn.close'/></a></p></li>
          </ul>
      </header><!-- pop_header end -->
 
@@ -316,7 +316,7 @@ function fn_doSave(){
 	</table><!-- table end -->
          </form>
          <ul class="center_btns">
-             <li><p class="btn_blue2 big"><a href="javascript:fn_doSave();" id="btnSave" onclick="">SAVE</a></p></li>
+             <li><p class="btn_blue2 big"><a href="javascript:fn_doSave();" id="btnSave" onclick=""><spring:message code='sys.btn.save'/></a></p></li>
          </ul>
 
      </section><!-- pop_body end -->

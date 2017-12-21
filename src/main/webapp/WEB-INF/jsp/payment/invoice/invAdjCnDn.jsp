@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
 var myGridID,subGridID;
@@ -17,17 +17,17 @@ $(document).ready(function(){
 });
 
 var columnLayout=[
-    { dataField:"code" ,headerText:"Type" ,editable : false },
-    { dataField:"invcItmOrdNo" ,headerText:"Order No." ,editable : false},
-    { dataField:"memoAdjRefNo" ,headerText:"Adjustment No." ,editable : false},
-    { dataField:"memoAdjInvcNo" ,headerText:"Invoice No." ,editable : false},
-    { dataField:"resnDesc" ,headerText:"Reason" ,editable : false },
-    { dataField:"memoItmAmt" ,headerText:"Adj.Amount" ,editable : false },
-    { dataField:"userName" ,headerText:"Requestor" ,editable : false},
-    { dataField:"deptName" ,headerText:"Department" ,editable : false },
-    { dataField:"memoAdjCrtDt" ,headerText:"Creation Date" ,editable : false },
-    { dataField:"updUserName" ,headerText:"Final Approval" ,editable : false },
-    { dataField:"memoAdjUpdDt" ,headerText:"Approval Date(FIN)" ,editable : false }
+    { dataField:"code" ,headerText:"<spring:message code='pay.head.type'/>" ,editable : false },
+    { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false},
+    { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.adjustmentNo'/>" ,editable : false},
+    { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>" ,editable : false},
+    { dataField:"resnDesc" ,headerText:"<spring:message code='pay.head.reason'/>" ,editable : false },
+    { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.adjAmount'/>" ,editable : false },
+    { dataField:"userName" ,headerText:"<spring:message code='pay.head.requestor'/>" ,editable : false},
+    { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
+    { dataField:"memoAdjCrtDt" ,headerText:"<spring:message code='pay.head.creationDate'/>" ,editable : false },
+    { dataField:"updUserName" ,headerText:"<spring:message code='pay.head.finalApproval'/>" ,editable : false },
+    { dataField:"memoAdjUpdDt" ,headerText:"<spring:message code='pay.head.approvalDateFin'/>" ,editable : false }
     ];
 
 // 리스트 조회.
@@ -77,7 +77,7 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->

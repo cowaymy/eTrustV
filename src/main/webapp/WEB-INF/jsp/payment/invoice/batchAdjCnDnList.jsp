@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 
 var myGridID,newBatchAdjGridID;
@@ -19,24 +19,24 @@ var gridPros = {
 };
 
 var columnLayout=[    
-    { dataField:"batchId" ,headerText:"Batch ID" ,editable : false},
-    { dataField:"memoAdjRefNo" ,headerText:"CN/DN No." ,editable : false },
-    { dataField:"memoAdjInvcNo" ,headerText:"Invoice No." ,editable : false },
-    { dataField:"invcItmOrdNo" ,headerText:"Order No." ,editable : false},
-    { dataField:"memoItmAmt" ,headerText:"Adjustment Amount(RM)" ,editable : false },
-    { dataField:"resnDesc" ,headerText:"Reason" ,editable : false },
-    { dataField:"userName" ,headerText:"Requestor" ,editable : false },
-    { dataField:"deptName" ,headerText:"Department" ,editable : false },
+    { dataField:"batchId" ,headerText:"<spring:message code='pay.head.batchId'/>" ,editable : false},
+    { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.cnDnNo'/>" ,editable : false },
+    { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>" ,editable : false },
+    { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false},
+    { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.adjustmentAmount'/>" ,editable : false },
+    { dataField:"resnDesc" ,headerText:"<spring:message code='pay.head.reason'/>" ,editable : false },
+    { dataField:"userName" ,headerText:"<spring:message code='pay.head.requestor'/>" ,editable : false },
+    { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
     { dataField:"memoAdjCrtDt" ,headerText:"Request Create Date" ,editable : false },    
-    { dataField:"code1" ,headerText:"Status" ,editable : false },
-    { dataField:"memoAdjRem" ,headerText:"Remark" ,editable : false }
+    { dataField:"code1" ,headerText:"<spring:message code='pay.head.status'/>" ,editable : false },
+    { dataField:"memoAdjRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
     ];
 
 var newBatchColLayout = [ 
-    {dataField : "0", headerText : "Invoice Number", editable : true},
-    {dataField : "1", headerText : "Order Number", editable : true},
-    {dataField : "2", headerText : "Item ID", editable : true},
-    {dataField : "3", headerText : "Adjustment Amount", editable : true, dataType : "numeric", formatString : "#,##0.00"}
+    {dataField : "0", headerText : "<spring:message code='pay.head.invoiceNumber'/>", editable : true},
+    {dataField : "1", headerText : "<spring:message code='pay.head.orderNumber'/>", editable : true},
+    {dataField : "2", headerText : "<spring:message code='pay.head.itemId'/>", editable : true},
+    {dataField : "3", headerText : "<spring:message code='pay.head.adjustmentAmount'/>", editable : true, dataType : "numeric", formatString : "#,##0.00"}
     ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -241,7 +241,7 @@ function fn_batchAdjFileUp(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Batch Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -319,7 +319,7 @@ function fn_batchAdjFileUp(){
     <header class="pop_header" id="newBatchAdj_header">
         <h1>NEW BATCH ADJUSTMENT</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#newBatchAdj_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#newBatchAdj_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -376,8 +376,8 @@ function fn_batchAdjFileUp(){
         <!-- search_table end -->
         
         <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_batchAdjFileUp();">Upload File</a></p></li>
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/InvoiceAdjustmentBatch_Format.csv">Download Template</a></p></li>          
+            <li><p class="btn_blue2"><a href="javascript:fn_batchAdjFileUp();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/InvoiceAdjustmentBatch_Format.csv"><spring:message code='pay.btn.downloadTemplate'/></a></p></li>          
         </ul>
     </section>
     </form>       

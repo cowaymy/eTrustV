@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
 .my-custom-up{
     text-align: left;
@@ -27,35 +27,35 @@ $(document).ready(function(){
 var detailListLayout = [ 
                        {
                            dataField : "accBillOrdNo",
-                           headerText : "Order No",
+                           headerText : "<spring:message code='pay.head.orderNo'/>",
                            editable : false
                        }, {
                            dataField : "accBillRefNo",
-                           headerText : "Bill No",
+                           headerText : "<spring:message code='pay.head.billNo'/>",
                            editable : false
                        }, {
                            dataField : "accBillSchdulPriod",
-                           headerText : "Installment",
+                           headerText : "<spring:message code='pay.head.installment'/>",
                            editable : false
                        }, {
                            dataField : "codeName",
-                           headerText : "Bill Type",
+                           headerText : "<spring:message code='pay.head.billType'/>",
                            editable : false
                        }, {
                            dataField : "codename1",
-                           headerText : "Bill Mode",
+                           headerText : "<spring:message code='pay.head.billMode'/>",
                            editable : false
                        }, {
                            dataField : "accBillSchdulAmt",
-                           headerText : "Inst Amount",
+                           headerText : "<spring:message code='pay.head.instAmount'/>",
                            editable : false
                        }, {
                            dataField : "accBillAdjAmt",
-                           headerText : "Adjsutment",
+                           headerText : "<spring:message code='pay.head.adjsutment'/>",
                            editable : false
                        }, {
                            dataField : "accBillNetAmt",
-                           headerText : "Net Amount",
+                           headerText : "<spring:message code='pay.head.netAmount'/>",
                            editable : false
                        }];
 
@@ -162,8 +162,8 @@ var detailListLayout = [
 		        </aside><!-- title_line end -->
 		        
 		        <ul class="right_btns mb10">
-                    <li><p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span>Search</a></p></li>
-                    <li><p class="btn_blue"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none"><span class="search"></span>Reselect</a></p></li>
+                    <li><p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+                    <li><p class="btn_blue"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none"><span class="search"></span><spring:message code='pay.btn.reselect'/></a></p></li>
                 </ul>
 		        
 				<table class="type1"><!-- table start -->
@@ -253,7 +253,7 @@ var detailListLayout = [
 						</table><!-- table end -->
 				      </section><!-- search_table end -->
 					  <ul class="center_btns">
-					    <li><p class="btn_blue2"><a href="#" id="btnSave">Save</a></p></li>
+					    <li><p class="btn_blue2"><a href="#" id="btnSave"><spring:message code='sys.btn.save'/></a></p></li>
 					  </ul>
 			       </div>
 			    </section><!-- content end -->

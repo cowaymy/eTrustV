@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var myGridID;
 
@@ -32,15 +32,15 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"taskId", headerText:"Task ID", width : 150},
-    {dataField:"taskType", headerText:"Task Type"},
-    {dataField:"billingYear", headerText:"Year" , width : 150},
-    {dataField:"billingMonth", headerText:"Month", width : 150},
-    {dataField:"sum", headerText:"Bills" , width : 150, dataType : "numeric", formatString : "#,##0"},
-    {dataField:"accBillNetAmt", headerText:"Amount", width : 150, dataType : "numeric", formatString : "#,##0.00"},
-    {dataField:"startDt", headerText:"Started", width : 200, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
-    {dataField:"endDt", headerText:"Ended", width : 200, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
-    {dataField:"isInvcGenrt", headerText:"Generate",width : 80,
+    {dataField:"taskId", headerText:"<spring:message code='pay.head.taskId'/>", width : 150},
+    {dataField:"taskType", headerText:"<spring:message code='pay.head.taskType'/>"},
+    {dataField:"billingYear", headerText:"<spring:message code='pay.head.year'/>" , width : 150},
+    {dataField:"billingMonth", headerText:"<spring:message code='pay.head.month'/>", width : 150},
+    {dataField:"sum", headerText:"<spring:message code='pay.head.bills'/>" , width : 150, dataType : "numeric", formatString : "#,##0"},
+    {dataField:"accBillNetAmt", headerText:"<spring:message code='pay.head.amount'/>", width : 150, dataType : "numeric", formatString : "#,##0.00"},
+    {dataField:"startDt", headerText:"<spring:message code='pay.head.started'/>", width : 200, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}, 
+    {dataField:"endDt", headerText:"<spring:message code='pay.head.ended'/>", width : 200, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"},
+    {dataField:"isInvcGenrt", headerText:"<spring:message code='pay.head.generate'/>",width : 80,
         renderer:{
         	type : "CheckBoxEditRenderer",
         	showLabel : false,
@@ -123,8 +123,8 @@ function fn_generateInv(){
 	    <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
 	    <h2>Invoice/Statement</h2>   
 	    <ul class="right_btns">
-	        <li><p class="btn_blue"><a href="javascript:fn_generateInv()">Generate Inv/Statement</a></p></li>
-	        <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList();"><span class="search"></span>Search</a></p></li>
+	        <li><p class="btn_blue"><a href="javascript:fn_generateInv()"><spring:message code='pay.btn.generateInvStatement'/></a></p></li>
+	        <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 	    </ul>    
 	</aside>
 	<!-- title_line end -->
@@ -165,7 +165,7 @@ function fn_generateInv(){
 	           <dt>Link</dt>
 	           <dd>
 	               <ul class="btns">
-	                   <li><p class="link_btn"><a href="javascript:fn_view()">View Details</a></p></li>
+	                   <li><p class="link_btn"><a href="javascript:fn_view()"><spring:message code='pay.btn.link.viewDetails'/></a></p></li>
 	               </ul>
 	               <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	           </dd>

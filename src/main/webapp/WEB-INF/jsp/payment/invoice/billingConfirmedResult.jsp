@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var myGridID;
 
@@ -26,17 +26,17 @@ var gridPros = {
 };
 
 var columnLayout=[
-    {dataField:"salesOrdNo", headerText:"Order No", width : 90},
-    {dataField:"accBillGrpId", headerText:"Bill Group", width : 90},
-    {dataField:"codeName", headerText:"Bill Type", width : 165},
-    {dataField:"accBillRefNo", headerText:"Bill No", width : 140},
-    {dataField:"name", headerText:"Customer Name", width : 250},
-    {dataField:"accBillSchdulPriod", headerText:"Installment", width : 100},
-    {dataField:"accBillSchdulAmt", headerText:"Amount" , width : 100},
-    {dataField:"accBillAdjAmt", headerText:"Descount Amount", width : 150},
-    {dataField:"accBillTxsAmt", headerText:"Taxes Amount", width : 100},
-    {dataField:"accBillNetAmt", headerText:"Net Amount", width : 100},
-    {dataField:"accBillRefDt", headerText:"Issued", width : 180, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>", width : 90},
+    {dataField:"accBillGrpId", headerText:"<spring:message code='pay.head.billGroup'/>", width : 90},
+    {dataField:"codeName", headerText:"<spring:message code='pay.head.billType'/>", width : 165},
+    {dataField:"accBillRefNo", headerText:"<spring:message code='pay.head.billNo'/>", width : 140},
+    {dataField:"name", headerText:"<spring:message code='pay.head.customerName'/>", width : 250},
+    {dataField:"accBillSchdulPriod", headerText:"<spring:message code='pay.head.installment'/>", width : 100},
+    {dataField:"accBillSchdulAmt", headerText:"<spring:message code='pay.head.amount'/>" , width : 100},
+    {dataField:"accBillAdjAmt", headerText:"<spring:message code='pay.head.descountAmount'/>", width : 150},
+    {dataField:"accBillTxsAmt", headerText:"<spring:message code='pay.head.taxesAmount'/>", width : 100},
+    {dataField:"accBillNetAmt", headerText:"<spring:message code='pay.head.netAmount'/>", width : 100},
+    {dataField:"accBillRefDt", headerText:"<spring:message code='pay.head.issued'/>", width : 180, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
 ];
 
 function fn_initData(){
@@ -130,7 +130,7 @@ function fn_billList(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Billing Result</h2>
         <ul class="right_opt">
-            <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList(1);"><span class="search"></span>Search</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -192,10 +192,10 @@ function fn_billList(){
             <dt>Link</dt>
             <dd>
                 <ul class="btns">
-                    <li><p class="link_btn"><a href="javascript:fn_billList()">Final Billing Raw Data</a></p></li>
+                    <li><p class="link_btn"><a href="javascript:fn_billList()"><spring:message code='pay.btn.link.finalBillRawData'/></a></p></li>
                 </ul>
                 <ul class="btns">
-                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()">Back to List Page</a></p></li>
+                    <li><p class="link_btn type2"><a href="javascript:fn_backPage()"><spring:message code='pay.btn.link.backtoListPage'/></a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>

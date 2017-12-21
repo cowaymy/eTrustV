@@ -7,18 +7,16 @@ var myPopGridID;
 
 //AUIGrid 칼럼 설정
 var myPopLayout = [
-    { dataField:"memoAdjId" ,headerText:"Adjustment ID",width: 200 , editable : false, visible : false},
-    { dataField:"memoAdjInvcTypeId" ,headerText:"Invoice Type ID",width: 200 , editable : false, visible : false},
-    { dataField:"memoAdjTypeId" ,headerText:"Adjustment Type ID",width: 200 , editable : false, visible : false},
-
-    { dataField:"batchId" ,headerText:"Batch ID",width: 100 , editable : false, visible : false},
-    { dataField:"memoAdjRefNo" ,headerText:"Adjustment No.",width: 120 , editable : false},
-    { dataField:"memoAdjInvcNo" ,headerText:"Invoice Number", editable : false, width : 120},
-    { dataField:"billItmRefNo" ,headerText:"Order No", editable : false ,width : 120},
-    { dataField:"custId" ,headerText:"Customer ID", editable : false, width : 120},
-    { dataField:"custName" ,headerText:"Customer Name", editable : false, width : 200},
-    { dataField:"memoAdjTotAmt" ,headerText:"Adjustment Amount(RM)", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120}
-    
+    { dataField:"memoAdjId" ,headerText:"<spring:message code='pay.head.adjustmentId'/>",width: 200 , editable : false, visible : false},
+    { dataField:"memoAdjInvcTypeId" ,headerText:"<spring:message code='pay.head.invoiceTypeId'/>",width: 200 , editable : false, visible : false},
+    { dataField:"memoAdjTypeId" ,headerText:"<spring:message code='pay.head.adjustmentTypeId'/>",width: 200 , editable : false, visible : false},
+    { dataField:"batchId" ,headerText:"<spring:message code='pay.head.batchId'/>",width: 100 , editable : false, visible : false},
+    { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.adjustmentNo'/>",width: 120 , editable : false},
+    { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNumber'/>", editable : false, width : 120},
+    { dataField:"billItmRefNo" ,headerText:"<spring:message code='pay.head.orderNo'/>", editable : false ,width : 120},
+    { dataField:"custId" ,headerText:"<spring:message code='pay.head.customerId'/>", editable : false, width : 120},
+    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customerName'/>", editable : false, width : 200},
+    { dataField:"memoAdjTotAmt" ,headerText:"<spring:message code='pay.head.adjustmentAmount'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120}
     ];
     
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
@@ -97,7 +95,7 @@ function fn_approve(process){
     <header class="pop_header">
         <h1>Credit Note / Debit Note</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
 
@@ -164,11 +162,11 @@ function fn_approve(process){
                 <ul id="history">				
                 </ul>
             </div><!-- tran_list end -->
-        <section>
+        </section>
 
         <ul class="center_btns mt20" id="centerBtn">
-            <li><p class="btn_blue2"><a href="javascript:fn_approve('APPROVE');">Approve</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_approve('REJECT');">Reject</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_approve('APPROVE');"><spring:message code='pay.btn.approve'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_approve('REJECT');"><spring:message code='pay.btn.reject'/></a></p></li>
         </ul>
     </section><!-- pop_body end -->
 

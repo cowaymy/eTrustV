@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 var  _invoiceResultGridID;
 
@@ -18,17 +18,17 @@ var invoiceResultGridPros = {
 };
 
 var invColumnLayout=[
-    {dataField:"salesOrdNo", headerText:"Order No", width : 90},
-    {dataField:"accBillGrpId", headerText:"Bill Group", width : 90},
-    {dataField:"codeName", headerText:"Bill Type", width : 165},
-    {dataField:"accBillRefNo", headerText:"Bill No", width : 140},
-    {dataField:"name", headerText:"Customer Name", width : 250},
-    {dataField:"accBillSchdulPriod", headerText:"Installment", width : 100},
-    {dataField:"accBillSchdulAmt", headerText:"Amount" , width : 100},
-    {dataField:"accBillAdjAmt", headerText:"Descount Amount", width : 150},
-    {dataField:"accBillTxsAmt", headerText:"Taxes Amount", width : 100},
-    {dataField:"accBillNetAmt", headerText:"Net Amount", width : 100},
-    {dataField:"accBillRefDt", headerText:"Issued", width : 180, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
+    {dataField:"salesOrdNo", headerText:"<spring:message code='pay.head.orderNo'/>", width : 90},
+    {dataField:"accBillGrpId", headerText:"<spring:message code='pay.head.billGroup'/>", width : 90},
+    {dataField:"codeName", headerText:"<spring:message code='pay.head.billType'/>", width : 165},
+    {dataField:"accBillRefNo", headerText:"<spring:message code='pay.head.billNo'/>", width : 140},
+    {dataField:"name", headerText:"<spring:message code='pay.head.customerName'/>", width : 250},
+    {dataField:"accBillSchdulPriod", headerText:"<spring:message code='pay.head.installment'/>", width : 100},
+    {dataField:"accBillSchdulAmt", headerText:"<spring:message code='pay.head.amount'/>" , width : 100},
+    {dataField:"accBillAdjAmt", headerText:"<spring:message code='pay.head.descountAmount'/>", width : 150},
+    {dataField:"accBillTxsAmt", headerText:"<spring:message code='pay.head.taxesAmount'/>", width : 100},
+    {dataField:"accBillNetAmt", headerText:"<spring:message code='pay.head.netAmount'/>", width : 100},
+    {dataField:"accBillRefDt", headerText:"<spring:message code='pay.head.issued'/>", width : 180, dataType : "date", formatString : "yyyy-mm-dd hh:MM:ss"}
 ];
 
 function fn_initData(){
@@ -119,7 +119,7 @@ function fn_billList(){
     <header class="pop_header">
         <h1>Billing Result</h1>
         <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a href="#" id="_close1"><spring:message code='sys.btn.close'/></a></p></li>
             </ul>
     </header>
      <!-- pop_header end -->
@@ -132,8 +132,8 @@ function fn_billList(){
             <input type="hidden" name="pageNo" id="pageNo" />
             
             <ul class="right_btns mb10">
-                <li><p class="btn_blue"><a href="javascript:fn_billList();">Final Billing Raw Data</a></p></li>
-                <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList(1);"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_billList();"><spring:message code='pay.btn.finalBillRawData'/></a></p></li>
+                <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
             
             <table class="type1"><!-- table start -->
