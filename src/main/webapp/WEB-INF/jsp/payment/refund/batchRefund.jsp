@@ -180,12 +180,7 @@ function fn_bRefundConfirmPop() {
     <td><input type="text" title="Batch ID (Number Only)" placeholder="Batch ID (Number Only)" class="w100p" id="batchId" name="batchId"/></td>
     <th scope="row">Paymode</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="payMode" name="payMode">
-    <option value="105">Cash</option>
-    <option value="106">Cheque (CHQ)</option>
-    <option value="107">Credit Card (CRC)</option>
-    <option value="108">Online Payment (ONL)</option>
-    </select>
+    <select class="multy_select w100p" multiple="multiple" id="payMode" name="payMode"></select>
     </td>
 </tr>
 <tr>
