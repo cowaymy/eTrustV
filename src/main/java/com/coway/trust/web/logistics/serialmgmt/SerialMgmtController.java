@@ -52,10 +52,22 @@ public class SerialMgmtController {
 	@Resource(name = "SerialMgmtService")
 	private SerialMgmtService serialMgmtService;
 
-	@RequestMapping(value = "/serialMgmtMain.do")
-	public String SerialLocation(@RequestParam Map<String, Object> params)
+	@RequestMapping(value = "/serialScanGRCDC.do")
+	public String SerialScanGRCDC(@RequestParam Map<String, Object> params)
 	{
-		return "logistics/SerialMgmt/serialMgmtMain";
+		return "logistics/SerialMgmt/serialScanGRCDC";
+	}
+
+	@RequestMapping(value = "/serialScanGICDC.do")
+	public String SerialScanGICDC(@RequestParam Map<String, Object> params)
+	{
+		return "logistics/SerialMgmt/serialScanGICDC";
+	}
+
+	@RequestMapping(value = "/serialScanGIRDC.do")
+	public String SerialScanGIRDC(@RequestParam Map<String, Object> params)
+	{
+		return "logistics/SerialMgmt/serialScanGIRDC";
 	}
 
 	@RequestMapping(value = "/selectDeliveryBalance.do", method = RequestMethod.GET)
