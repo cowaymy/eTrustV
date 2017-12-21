@@ -154,4 +154,6 @@ public class CommissionConstants {
 	public static final String COMIS_ACTION_TYPE = "A";
 	public static final String COMIS_SIMUL_TYPE = "S";//
 	
+	public static final int COMIS_INCO_YEAR = 2016; // commission Member IncomeStatement Start Year
+	
 }
