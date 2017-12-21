@@ -15,15 +15,15 @@ var SRVContractStatusData = [{"codeId": "ACT","codeName": "Active"},
 
 //AUIGrid 칼럼 설정
 var serviceContractSearchPopLayout = [   
-    { dataField:"srvCntrctRefNo" ,headerText:"SCS No.",width: 150 , editable : false},
-    { dataField:"cntrctRentalStus" ,headerText:"Rent Status",width: 150 , editable : false },
-    { dataField:"srvCntrctPacDesc" ,headerText:"Package", width: 200,editable : false},
-    { dataField:"code" ,headerText:"Status", width: 100, editable : false },
-    { dataField:"salesOrdNo" ,headerText:"Order No.",width: 100 , editable : false},
-    { dataField:"name" ,headerText:"Customer Name",width: 230 , editable : false},
+    { dataField:"srvCntrctRefNo" ,headerText:"<spring:message code='pay.head.scsNo'/>",width: 150 , editable : false},
+    { dataField:"cntrctRentalStus" ,headerText:"<spring:message code='pay.head.rentStatus'/>",width: 150 , editable : false },
+    { dataField:"srvCntrctPacDesc" ,headerText:"<spring:message code='pay.head.package'/>", width: 200,editable : false},
+    { dataField:"code" ,headerText:"<spring:message code='pay.head.status'/>", width: 100, editable : false },
+    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 100 , editable : false},
+    { dataField:"name" ,headerText:"<spring:message code='pay.head.customerName'/>",width: 230 , editable : false},
     { dataField:"srvCntrctId" ,headerText:"" , visible : false },
     { dataField:"salesOrdId" ,headerText:"" , visible : false },
-    { dataField:"custBillId" ,headerText:"custBillID" , visible : false }
+    { dataField:"custBillId" ,headerText:"<spring:message code='pay.head.custBillId'/>" , visible : false }
     ];
     
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.

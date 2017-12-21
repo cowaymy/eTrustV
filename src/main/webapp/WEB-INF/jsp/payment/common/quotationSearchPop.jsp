@@ -10,18 +10,18 @@ var _totalRowCount;
 
 //AUIGrid 칼럼 설정
 var serviceContractSearchPopLayout = [  
-	{ dataField:"quotId" ,headerText:"QuotationId",editable : false, visible : false},
-    { dataField:"quotStusId" ,headerText:"Quotation Status Id",editable : false, visible : false },
-    { dataField:"ordId" ,headerText:"Order Id",editable : false, visible : false },
-	{ dataField:"rnum", headerText:"No.", width : 80,editable : false },
-    { dataField:"quotNo" ,headerText:"Quotation No.",width: 130 , editable : false},
-    { dataField:"ordNo" ,headerText:"Order No",width: 130 , editable : false },
-    { dataField:"cntName" ,headerText:"Customer Name", width: 200,editable : false, visible : false},
-    { dataField:"quotStusCode" ,headerText:"Status", width: 90, editable : false },
-    { dataField:"validDt" ,headerText:"Valid Date",width: 100 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"pacDesc" ,headerText:"Package",width: 230 , editable : false},
-    { dataField:"dur" ,headerText:"Duration" , editable : false },
-    { dataField:"crtDt" ,headerText:"Create Date" , editable : false , dataType : "date", formatString : "dd-mm-yyyy"}
+	{ dataField:"quotId" ,headerText:"<spring:message code='pay.head.quotationId'/>",editable : false, visible : false},
+    { dataField:"quotStusId" ,headerText:"<spring:message code='pay.head.quotationStatusId'/>",editable : false, visible : false },
+    { dataField:"ordId" ,headerText:"<spring:message code='pay.head.orderId'/>",editable : false, visible : false },
+	{ dataField:"rnum", headerText:"<spring:message code='pay.head.no'/>", width : 80,editable : false },
+    { dataField:"quotNo" ,headerText:"<spring:message code='pay.head.quotationNo'/>",width: 130 , editable : false},
+    { dataField:"ordNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 130 , editable : false },
+    { dataField:"cntName" ,headerText:"<spring:message code='pay.head.customerName'/>", width: 200,editable : false, visible : false},
+    { dataField:"quotStusCode" ,headerText:"<spring:message code='pay.head.status'/>", width: 90, editable : false },
+    { dataField:"validDt" ,headerText:"<spring:message code='pay.head.validDate'/>",width: 100 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"pacDesc" ,headerText:"<spring:message code='pay.head.package'/>",width: 230 , editable : false},
+    { dataField:"dur" ,headerText:"<spring:message code='pay.head.duration'/>" , editable : false },
+    { dataField:"crtDt" ,headerText:"<spring:message code='pay.head.createDate'/>" , editable : false , dataType : "date", formatString : "dd-mm-yyyy"}
     ];
     
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
