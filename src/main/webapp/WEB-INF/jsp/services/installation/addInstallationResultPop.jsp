@@ -11,7 +11,7 @@ $(document).ready(function() {
     var callType = "${callType.typeId}";
     console.log(callType);
     if(callType == 0){
-        $(".red_text").text( "* Installation information data error. Please contact to IT Department.");
+        $(".red_text").text( "<spring:message code='service.msg.InstallationInformation'/>");
     }else{
         if(callType == 258){
             //$(".tap_type1").li[1].text("Product Exchange Info");
@@ -19,9 +19,11 @@ $(document).ready(function() {
 
         }
         if("${orderInfo.c9}" == 21){
-            $(".red_text").text( "* This installation status is failed. Please do the call log process again.");
+            //$(".red_text").text( "* This installation status is failed. Please do the call log process again.");
+            $(".red_text").text( "<spring:message code='service.msg.InstallationStatus'/>");
         }else if("${orderInfo.c9}" == 4){
-            $(".red_text").text( "* This installation status is completed.<br />  To reverse this order installation result, please proceed to order installation result reverse.");
+            //$(".red_text").text( "* This installation status is completed.<br />  To reverse this order installation result, please proceed to order installation result reverse.");
+        	$(".red_text").text( "<spring:message code='service.msg.InstallationCompleted'/>");
         }else{
 
         }
@@ -106,27 +108,32 @@ function createInstallationViewAUIGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "resultId",
-        headerText : "ID",
+        //headerText : "ID",
+        headerText : '<spring:message code="service.grid.ID" />',
         editable : false,
         width : 130
     }, {
         dataField : "code",
-        headerText : "Status",
+        //headerText : "Status",
+        headerText : '<spring:message code="service.grid.Status" />',  
         editable : false,
         width : 180
     }, {
         dataField : "installDt",
-        headerText : "Install Date",
+        //headerText : "Install Date",
+        headerText : '<spring:message code="service.grid.InstallDate" />',
         editable : false,
         width : 180
     }, {
         dataField : "memCode",
-        headerText : "CT Code",
+        //headerText : "CT Code",
+        headerText : '<spring:message code="service.grid.CTCode" />',
         editable : false,
         width : 250
     }, {
         dataField : "name",
-        headerText : "CT Name",
+        //headerText : "CT Name",
+        headerText : '<spring:message code="service.grid.CTName" />',
         editable : false,
         width : 180
     }];
@@ -201,7 +208,7 @@ var gridPros = {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Add Installation Result</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -209,10 +216,10 @@ var gridPros = {
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Order Info</a></li>
-    <li><a href="#">Customer Info</a></li>
-    <li><a href="#">Installation Info</a></li>
-    <li><a href="#">HP Info</a></li>
+    <li><a href="#" class="on"><spring:message code='sales.tap.order'/></a></li>
+    <li><a href="#"><spring:message code='sales.tap.customerInfo'/></a></li>
+    <li><a href="#"><spring:message code='sales.tap.installationInfo'/></a></li>
+    <li><a href="#"><spring:message code='sales.tap.HPInfo'/></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -234,29 +241,29 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type</th>
+    <th scope="row"><spring:message code='service.title.Type'/></th>
     <td>
     <span><c:out value="${installResult.codename1}"/></span>
     </td>
-    <th scope="row">Install No.</th>
+    <th scope="row"><spring:message code='service.title.InstallNo'/></th>
     <td>
     <span><c:out value="${installResult.installEntryNo}"/></span>
     </td>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td>
     <span><c:out value="${installResult.salesOrdNo}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Ref No.</th>
+    <th scope="row"><spring:message code='service.title.RefNo'/></th>    
     <td>
     <span><c:out value="${installResult.refNo}"/></span>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
     <td>
     <span><c:out value="${installResult.salesDt}"/></span>
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <c:if test="${installResult.codeid1  == '257' }">
         <td>
         <span><c:out value="${orderInfo.codeName}"/></span>
@@ -269,13 +276,13 @@ var gridPros = {
     </c:if>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code='service.title.Remark'/></th>
     <td colspan="5">
     <span><c:out value="${orderInfo.rem}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Last updated by</th>
+    <th scope="row"><spring:message code='service.title.LastUpdatedBy'/></th>
         <td>
         <span><c:out value="${installResult.userName}"/></span>
         </td>
@@ -290,7 +297,7 @@ var gridPros = {
         <span><c:out value="${orderInfo.c6} - ${orderInfo.c7} " /></span>
         </td>
     </c:if>
-    <th scope="row">Promotion</th>
+    <th scope="row"><spring:message code='service.title.Promotion'/></th>
     <c:if test="${installResult.codeid1  == '257' }">
         <td>
         <span><c:out value="${orderInfo.c3} - ${orderInfo.c4} " /></span>
@@ -303,7 +310,7 @@ var gridPros = {
     </c:if>
 </tr>
 <tr>
-    <th scope="row">Price</th>
+    <th scope="row"><spring:message code='service.title.Price'/></th>
     <c:if test="${installResult.codeid1  == '257' }">
         <td>
         <span><c:out value="${orderInfo.c5}"/></span>
@@ -314,7 +321,7 @@ var gridPros = {
         <span><c:out value="${orderInfo.c12}"/></span>
         </td>
     </c:if>
-    <th scope="row">PV</th>
+    <th scope="row"><spring:message code='service.title.PV'/></th>
     <c:if test="${installResult.codeid1  == '257' }">
         <td>
         <span><c:out value="${orderInfo.c6}"/></span>
@@ -337,7 +344,7 @@ var gridPros = {
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Information</h2>
+<h2><spring:message code='service.title.CustomerInformation'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -352,21 +359,21 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>
     <td>
    <span><c:out value="${customerInfo.name}"/></span>
     </td>
-    <th scope="row">Customer NRIC</th>
+    <th scope="row"><spring:message code='service.title.CustomerNRIC'/></th>
     <td>
     <span><c:out value="${customerInfo.nric}"/></span>
     </td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code='service.title.Gender'/></th>  
     <td>
     <span><c:out value="${customerInfo.gender}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row" rowspan="4">Mailing Address</th>
+    <th scope="row" rowspan="4"><spring:message code='service.title.MailingAddress'/></th>
     <td colspan="5">
     <span></span>
     </td>
@@ -387,29 +394,29 @@ var gridPros = {
     </td>
 </tr>
 <tr>
-    <th scope="row">Contact Person</th>
+    <th scope="row"><spring:message code='service.title.ContactPerson'/></th>
     <td>
     <span><c:out value="${customerContractInfo.name}"/></span>
     </td>
-    <th scope="row">Gender</th>
+        <th scope="row"><spring:message code='service.title.Gender'/></th>
     <td>
     <span><c:out value="${customerContractInfo.gender}"/></span>
     </td>
-    <th scope="row">Residence No.</th>
+    <th scope="row"><spring:message code='service.title.ResidenceNo'/></th>
     <td>
     <span><c:out value="${customerContractInfo.telR}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Mobile No.</th>
+    <th scope="row"><spring:message code='service.title.MobileNo'/></th>
     <td>
     <span><c:out value="${customerContractInfo.telM1}"/></span>
     </td>
-    <th scope="row">Office No.</th>
+    <th scope="row"><spring:message code='service.title.OfficeNo'/></th>
     <td>
     <span><c:out value="${customerContractInfo.telO}"/></span>
     </td>
-    <th scope="row">Fax No.</th>
+    <th scope="row"><spring:message code='service.title.OfficeNo'/></th>
     <td>
     <span><c:out value="${customerContractInfo.telF}"/></span>
     </td>
@@ -422,7 +429,7 @@ var gridPros = {
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Information</h2>
+<h2><spring:message code='service.title.InstallationInformation'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -437,17 +444,17 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Request Install Date</th>
+    <th scope="row"><spring:message code='service.title.RequestInstallDate'/></th>
     <td>
     <span><c:out value="${installResult.c1}"/></span>
     </td>
-    <th scope="row">Assigned CT</th>
+    <th scope="row"><spring:message code='service.title.AssignedCT'/></th>
     <td colspan="3">
         <span><c:out value="(${stock.memCode}) ${stock.name}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row" rowspan="4">Installation Address</th>
+    <th scope="row" rowspan="4"><spring:message code='service.title.InstallationAddress'/></th>
     <td colspan="5">
     <span><c:out value="${installation.Address}"/></span>
     </td>
@@ -468,14 +475,14 @@ var gridPros = {
     </td>
 </tr>
 <tr>
-    <th scope="row">Special Instruction</th>
+    <th scope="row"><spring:message code='service.title.SpecialInstruction'/></th>
     <td>
     <span><c:out value="${installation.instct}"/> </span>
     </td>
-    <th scope="row">Preferred Date</th>
+    <th scope="row"><spring:message code='service.title.PreferredDate'/></th>
     <td>
     </td>
-    <th scope="row">Preferred Time  </th>
+    <th scope="row"><spring:message code='service.title.PreferredTime'/></th>
     <td>
     </td>
 </tr>
@@ -483,7 +490,7 @@ var gridPros = {
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Contact Person:</h2>
+<h2><spring:message code='service.title.InstallationContactPerson'/></h2> 
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -498,28 +505,28 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code='service.title.Name'/></th>    
     <td>
     <span><c:out value="${installationContract.name}"/></span>
     </td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code='service.title.Gender'/></th>
     <td>
     </td>
-    <th scope="row">Residence No.</th>
+    <th scope="row"><spring:message code='service.title.ResidenceNo'/></th>
     <td>
     <span><c:out value="${installationContract.telR}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Mobile No.  </th>
+    <th scope="row"><spring:message code='service.title.MobileNo'/></th>
     <td>
     <span><c:out value="${installationContract.telM1}"/></span>
     </td>
-    <th scope="row">Office No.</th>
+    <th scope="row"><spring:message code='service.title.OfficeNo'/></th>
     <td>
     <span><c:out value="${installationContract.telO}"/></span>
     </td>
-    <th scope="row">Fax No.</th>
+    <th scope="row"><spring:message code='service.title.FaxNo'/></th>
     <td>
     <span><c:out value="${installationContract.telF}"/></span>
     </td>
@@ -532,7 +539,7 @@ var gridPros = {
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>HP Information</h2>
+<h2><spring:message code='service.title.HPInformation'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -547,43 +554,43 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">HP/Cody Code</th>
+    <th scope="row"><spring:message code='service.title.HP_CodyCode'/></th>
     <td>
     <span><c:out value="${hpMember.memCode}"/></span>
     </td>
-    <th scope="row">HP/Cody Name</th>
+    <th scope="row"><spring:message code='service.title.HP_CodyName'/></th>
     <td>
     <span><c:out value="${hpMember.name1}"/></span>
     </td>
-    <th scope="row">HP/Cody NRIC</th>
+    <th scope="row"><spring:message code='service.title.HP_CodyNRIC'/></th>
     <td>
     <span><c:out value="${hpMember.nric}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Mobile No.</th>
+    <th scope="row"><spring:message code='service.title.MobileNo'/></th>
     <td>
     <span><c:out value="${hpMember.telMobile}"/></span>
     </td>
-    <th scope="row">House No.</th>
+    <th scope="row"><spring:message code='sales.HouseNo'/></th>
     <td>
     <span><c:out value="${hpMember.telHuse}"/></span>
     </td>
-    <th scope="row">Office No.</th>
+    <th scope="row"><spring:message code='service.title.OfficeNo'/></th>
     <td>
     <span><c:out value="${hpMember.telOffice}"/></span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Department Code</th>
+    <th scope="row"><spring:message code='service.title.DepartmentCode'/></th>
     <td>
     <span><c:out value="${salseOrder.deptCode}"/></span>
     </td>
-    <th scope="row">Group Code</th>
+    <th scope="row"><spring:message code='service.title.GroupCode'/></th>
     <td>
     <span><c:out value="${salseOrder.grpCode}"/></span>
     </td>
-    <th scope="row">Organization Code</th>
+    <th scope="row"><spring:message code='service.title.OrganizationCode'/></th>
     <td>
     <span><c:out value="${salseOrder.orgCode}"/></span>
     </td>
@@ -596,7 +603,7 @@ var gridPros = {
 </section><!-- tap_wrap end -->
 
 <aside class="title_line mt30"><!-- title_line start -->
-<h2>View Installation Result</h2>
+<h2><spring:message code='service.title.ViewInstallationResult'/></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -604,7 +611,7 @@ var gridPros = {
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Add Installation Result</h2>
+<h2><spring:message code='service.title.AddInstallationResult'/></h2>
 </aside><!-- title_line end -->
 
 <form action="#" id="addInstallForm" method="post">
@@ -681,7 +688,7 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Install Status</th>
+    <th scope="row"><spring:message code='service.title.InstallStatust'/></th>
     <td>
     <select class="w100p" id="installStatus" name="installStatus">
         <c:forEach var="list" items="${installStatus }" varStatus="status">
@@ -689,15 +696,15 @@ var gridPros = {
         </c:forEach>
     </select>
     </td>
-    <th scope="row">Actual Install Date</th>
+    <th scope="row"><spring:message code='service.title.ActualInstallStatust'/></th>    
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="installDate"/></td>
 </tr>
 <tr>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td><input type="text" title="" placeholder="" class="" style="width:200px;" id="ctCode" name="ctCode" />
     <input type="hidden" title="" value="16495" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
     <p class="btn_sky"><a href="#">Search</a></p></td>
-    <th scope="row">CT Name</th>
+    <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td>
 </tr>
 </tbody>
@@ -717,20 +724,20 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">SIRIM No.</th>
+    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>    
     <td><input type="text" title="" placeholder="" class="w100p" id="sirimNo" name="sirimNo" /></td>
-    <th scope="row">Serial No.</th>
+    <th scope="row"><spring:message code='service.title.SerialNo'/></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="serialNo" name="serialNo"/></td>
-    <th scope="row">Ref No. (1)</th>
+    <th scope="row"><spring:message code='service.title.RefNo'/>(1)</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="refNo1" name="refNo1"/></td>
-    <th scope="row">Ref No. (2)</th>
+    <th scope="row"><spring:message code='service.title.RefNo'/>(2)</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="refNo2" name="refNo2"/></td>
 </tr>
 <tr>
     <td colspan="8">
-    <label><input type="checkbox" id="checkCommission" name="checkCommission"/><span>Allow Commission ?</span></label>
-    <label><input type="checkbox" id="checkTrade" name="checkTrade"/><span>Is trade in ?</span></label>
-    <label><input type="checkbox" id="checkSms" name="checkSms"/><span>Require SMS ?</span></label>
+    <label><input type="checkbox" id="checkCommission" name="checkCommission"/><span><spring:message code='service.btn.AllowCommission'/> ?</span></label>
+    <label><input type="checkbox" id="checkTrade" name="checkTrade"/><span><spring:message code='service.btn.IsTradeIn'/> ?</span></label>
+    <label><input type="checkbox" id="checkSms" name="checkSms"/><span><spring:message code='service.btn.RequireSMS'/> ?</span></label>
     </td>
 </tr>
 </tbody>
@@ -739,7 +746,7 @@ var gridPros = {
 
 
 <aside class="title_line" id="completedHide1"><!-- title_line start -->
-<h2>SMSInfo</h2>
+<h2><spring:message code='service.title.SMSInfo'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1" id="completedHide2"><!-- table start -->
@@ -751,14 +758,13 @@ var gridPros = {
 <tbody>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox" id="checkSend" name="checkSend" /><span>Send SMS to Sales Person?</span></label>
+    <label><input type="checkbox" id="checkSend" name="checkSend" /><span><spring:message code='service.title.SendSMSToSalesPerson'/></span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row" rowspan="2">Message</th>
+    <th scope="row" rowspan="2"><spring:message code='service.title.Message'/></th>
     <td>
-    <textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">
-RM0.00 COWAY DSC
+    <textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
 Install Status: Completed
 Order No: 0805892
 Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
@@ -777,7 +783,7 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Failed Reason</th>
+    <th scope="row"><spring:message code='service.title.FailedReason'/></th>
     <td>
         <select class="w100p" id="failReason" name="failReason">
 	        <c:forEach var="list" items="${failReason }" varStatus="status">
@@ -786,7 +792,7 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
 	        </c:forEach>
     </select>
     </td>
-    <th scope="row">Next Call Date</th>
+    <th scope="row"><spring:message code='service.title.NextCallDate'/></th>
     <td>
         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="nextCallDate" name="nextCallDate"/>
     </td>
@@ -801,14 +807,14 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code='service.title.Remark'/></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="remark" name="remark" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_saveInstall()">Save Installation Result</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult'/></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

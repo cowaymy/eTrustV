@@ -15,7 +15,8 @@ $(document).ready(function() {
           var statusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
           if(statusCode == "ACT"){
         	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
-        	  Common.alert("Installation is under status [active]. No result to view.");
+        	  //Common.alert("Installation is under status [active]. No result to view.");
+        	  Common.alert("<spring:message code='service.msg.activeView'/> ");
           }else{
         	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
         	  Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId")+"&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
@@ -52,13 +53,15 @@ function fn_addInstallation(codeid1){//active 일때만 열림
 	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 
     if(selectedItems.length  <= 0) {
-        Common.alert("<b>No AS selected.</b>");
+        //Common.alert("<b>No AS selected.</b>");
+        Common.alert("<spring:message code='expense.msg.NoData'/> ");
         return ;
     }
 
 
     if(selectedItems.length  > 1) {
-        Common.alert("<b>only select one row plz</b>");
+        //Common.alert("<b>only select one row plz</b>");
+        Common.alert("<b><spring:message code='service.msg.onlyPlz'/><b>");
         return ;
     }
 
@@ -78,7 +81,8 @@ function fn_addInstallation(codeid1){//active 일때만 열림
 	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId);
 	    }
 	}else{
-		Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
+		//Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
+		Common.alert("<spring:message code='service.msg.InstallationAdd'/> ");
 	}
 }
 
@@ -89,49 +93,49 @@ function createInstallationListAUIGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "code",
-        headerText : "Type",
+        headerText : '<spring:message code="service.grid.Type" />',
         editable : false,
         width : 130
     }, {
         dataField : "installEntryNo",
-        headerText : "Install No",
+        headerText : '<spring:message code="service.grid.InstallNo" />',        
         editable : false,
         width : 180
     }, {
         dataField : "salesOrdNo",
-        headerText : "Order No",
+        headerText : '<spring:message code="service.grid.OrderNo" />',        
         editable : false,
         width : 180
     }, {
         dataField : "c3",
-        headerText : "App Date",
+        headerText : '<spring:message code="service.grid.AppDate" />',        
         editable : false,
         width : 100
     }, {
         dataField : "stkDesc",
-        headerText : "Product",
+        headerText : '<spring:message code="service.grid.Product" />',        
         editable : false,
         style : "my-column",
         width : 180
     }, {
         dataField : "name",
-        headerText : "Customer",
+        headerText : '<spring:message code="service.grid.Customer" />',        
         editable : false,
         width : 250
     }, {
         dataField : "codeName",
-        headerText : "App Type",
+        headerText : '<spring:message code="service.grid.AppType" />',        
         editable : false,
         width : 150
 
     }, {
         dataField : "brnchId",
-        headerText : "App brnchId",
+        headerText : '<spring:message code="service.grid.AppBrnchId" />',        
         editable : false,
         width : 100
     }, {
         dataField : "code1",
-        headerText : "Status",
+        headerText : '<spring:message code="service.grid.Status" />',        
         width : 130
     }, {
         dataField : "installEntryId",
@@ -172,7 +176,7 @@ function createInstallationListAUIGrid() {
 
 function fn_excelDown(){
     // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    GridCommon.exportTo("grid_wrap", "xlsx", "Installation Result Log Search");
+    GridCommon.exportTo("grid_wrap", "xlsx", "<spring:message code='service.title.InstallationResultLogSearch'/>");
 }
 
 
@@ -184,7 +188,8 @@ function fn_assginCTTransfer(){
 
 
     if(selectedItems.length  <= 0) {
-        Common.alert("<b>No AS selected.</b>");
+        //Common.alert("<b>No AS selected.</b>");
+        Common.alert("<b><spring:message code='service.msg.NoData'/></b>");
         return ;
     }
 
@@ -206,7 +211,8 @@ function fn_assginCTTransfer(){
          }
 
          if(brnchId != selectedItems[i].item.brnchId ){
-             Common.alert("<b>동일한 브랜치 코드만 선택 가능합니다.</b>");
+        	 Common.alert("<b><spring:message code='service.msg.BranchCode'/></b>");
+             //Common.alert("<b>동일한 브랜치 코드만 선택 가능합니다.</b>");
              return ;
          }
     }
@@ -251,13 +257,14 @@ function fn_editInstallation(){//active 일때만 열림
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     
     if(selectedItems.length  <= 0) {
-        Common.alert("<b>No Installation record selected.</b>");
+        Common.alert("<b><spring:message code='service.msg.NoInstallation'/></b>");
         return ;
     }
     
 
     if(selectedItems.length  > 1) {
-        Common.alert("<b>only select one row plz</b>");
+        //Common.alert("<b>only select one row plz</b>");
+        Common.alert("<b><spring:message code='service.msg.onlyPlz'/></b>");
         return ;
     }
     
@@ -272,7 +279,8 @@ function fn_editInstallation(){//active 일때만 열림
     if(statusCode == "COM"){
                Common.popupDiv("/services/editInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
     }else{
-        Common.alert("<b>Only completed installation result is allowed to edit.</b>");
+        //Common.alert("<b>Only completed installation result is allowed to edit.</b>");
+        Common.alert("<b><spring:message code='service.msg.Onlycompleted'/></b>");
     }
 }
 </script>
@@ -285,11 +293,11 @@ function fn_editInstallation(){//active 일때만 열림
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Installation Result List</h2>
+<h2><spring:message code='service.title.InstallationResultList'/></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()">AssginCTTransfer</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='service.btn.AssginCTTransfer'/></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li> 
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sal.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -309,16 +317,16 @@ function fn_editInstallation(){//active 일때만 열림
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type</th>
+    <th scope="row"><spring:message code='service.title.Type'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="type" name="type">
         <option value="257">New Installation Order</option>
         <option value="258">Product Exchange</option>
     </select>
     </td>
-    <th scope="row">Install No</th>
+    <th scope="row"><spring:message code='service.title.InstallNo'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="installNo" name="installNo" /></td>
-    <th scope="row">Appointment Date</th>
+    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDate" name="startDate"/></p>
@@ -328,7 +336,7 @@ function fn_editInstallation(){//active 일때만 열림
     </td>
 </tr>
 <tr>
-    <th scope="row">Install Date</th>
+    <th scope="row"><spring:message code='service.title.InstallDate'/></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
@@ -336,17 +344,17 @@ function fn_editInstallation(){//active 일때만 열림
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="installEndDate" name="installEndDate"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="orderNo" name="orderNo"/></td>
-    <th scope="row">Order Ref No</th>
+    <th scope="row"><spring:message code='service.title.OrderRefNo'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="orderRefNo" name="orderRefNo"/></td>
 </tr>
 <tr>
-    <th scope="row">PO No</th>
+    <th scope="row"><spring:message code='service.title.PONo'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="poNo" name="poNo"/></td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="orderDate" name="orderDate"/></td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="appType" name="appType">
         <c:forEach var="list" items="${appTypeList }" varStatus="status">
@@ -356,7 +364,7 @@ function fn_editInstallation(){//active 일때만 열림
     </td>
 </tr>
 <tr>
-    <th scope="row">Installation Status</th>
+    <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>    
     <td>
     <select class="multy_select w100p" multiple="multiple" id="installStatus" name="installStatus">
         <c:forEach var="list" items="${installStatus }" varStatus="status">
@@ -364,9 +372,9 @@ function fn_editInstallation(){//active 일때만 열림
         </c:forEach>
     </select>
     </td>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="ctCode" name="ctCode"/></td>
-    <th scope="row">DSC Code</th>
+    <th scope="row"><spring:message code='service.title.DSCCode'/></th>
     <td>
     <select class="w100p" id="dscCode" name="dscCode">
         <option value="">11</option>
@@ -376,17 +384,17 @@ function fn_editInstallation(){//active 일때만 열림
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code='service.title.CustomerID'/></th>    
     <td><input type="text" class="w100p" title="" placeholder="" id="customerId" name="customerId"/></td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>    
     <td><input type="text" class="w100p" title="" placeholder="" id="customerName" name="customerName"/></td>
-    <th scope="row">Customer IC/Company No.</th>
+    <th scope="row"><spring:message code='service.title.CustomerIC_CompanyNo'/></th>    
     <td><input type="text" class="w100p" title="" placeholder="" id="customerIc" name="customerIc"/></td>
 </tr>
 <tr>
-    <th scope="row">SIRIM No.</th>
+    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>    
     <td><input type="text" class="w100p" title="" placeholder="" id="sirimNo" name="sirimNo"/></td>
-    <th scope="row">Serial No.</th>
+    <th scope="row"><spring:message code='service.title.SerialNo'/></th>    
     <td colspan="3"><input type="text" class="w100p" title="" placeholder="" id="serialNo" name="serialNo"/></td>
 </tr>
 </tbody>
@@ -398,8 +406,8 @@ function fn_editInstallation(){//active 일때만 열림
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a href="javascript:fn_addInstallation()" id="addInstallation">Add Installation Result</a></p></li>
-        <li><p class="link_btn"><a href="javascript:fn_editInstallation()" id="editInstallation">Edit Installation Result</a></p></li>        
+        <li><p class="link_btn"><a href="javascript:fn_addInstallation()" id="addInstallation"><spring:message code='service.btn.AddInstallationResult'/></a></p></li>
+        <li><p class="link_btn"><a href="javascript:fn_editInstallation()" id="editInstallation"><spring:message code='service.btn.EditInstallationResult'/></a></p></li>        
        <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
@@ -411,14 +419,14 @@ function fn_editInstallation(){//active 일때만 열림
     <ul class="btns">
         <!-- <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li> -->
         
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()">DO Active List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()">Installation Note Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()">Installation Note</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()">Installation Log Book Listing</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"> Installation Raw Data</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installFreeGiftList()">Installation Free Gift List</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()">Daily DSC Report</a></p></li>
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()">DSC Report</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()"><spring:message code='service.btn.EditInstallationResult'/><spring:message code='service.btn.DOActiveList'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()"><spring:message code='service.btn.InstallationNoteListing'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()"><spring:message code='service.btn.InstallationNote'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()"><spring:message code='service.btn.InstallationLogBookListing'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installRawData()"><spring:message code='service.btn.InstallationRawData'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installFreeGiftList()"><spring:message code='service.btn.InstallationFreeGiftList'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()"><spring:message code='service.btn.DailyDSCReport'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()"><spring:message code='service.btn.DSCReport'/></a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -426,7 +434,7 @@ function fn_editInstallation(){//active 일때만 열림
 </aside><!-- link_btns_wrap end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sys.btn.excel.dw'/></a></p></li> 
    <!--  <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
