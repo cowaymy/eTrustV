@@ -813,7 +813,7 @@
      <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration" name="hSConfiguration">Create HS Order</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
