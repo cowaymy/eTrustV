@@ -46,7 +46,7 @@
         {dataField : "netAmt",headerText : "CRC Net<br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
         {dataField : "fTrnscId",headerText : "Bank<br>Statement<br>ID",width : 200 , editable : false},
         {dataField : "creditAmt",headerText : "Credit<br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "mappingDate",headerText : "Mapping<br>Date",width : 240 , editable : false, dataType:"date", formatString:"dd/mm/yyyy"},
+        {dataField : "mappingDate",headerText : "Mapping<br>Date",width : 240 , editable : false},
    ];
     
     var columnUnMappedCrcLayout = [
@@ -129,7 +129,7 @@
 		item.codeId = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "codeId");
 		
 		item.mappingDate = curDate.getDate() + "/" + (curDate.getMonth() +1) +"/" + curDate.getFullYear();
-		
+
 		console.log(item);
 		AUIGrid.addRow(mappedGridID, item, "last");
 
