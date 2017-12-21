@@ -256,9 +256,9 @@ public class GlobalExceptionHandler {
 		if (isRest(request.getRequestURI(), contentType)) {
 			ReturnMessage message = new ReturnMessage();
 			message.setCode(AppConstants.FAIL);
-			if(ex.getCause().getCause() != null){
+			if (ex.getCause().getCause() != null) {
 				message.setMessage(ex.getCause().getCause().getMessage());
-			}else{
+			} else {
 				message.setMessage(ex.getCause().getMessage());
 			}
 			HttpHeaders headers = new HttpHeaders();

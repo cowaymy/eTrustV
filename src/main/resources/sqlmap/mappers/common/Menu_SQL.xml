@@ -171,6 +171,26 @@
                 ,MIN (DECODE (PGM_TRN_CODE, 2265, FUNC_YN) ) AS funcUserDefine3
                 ,MIN (DECODE (PGM_TRN_CODE, 2266, FUNC_YN) ) AS funcUserDefine4
                 ,MIN (DECODE (PGM_TRN_CODE, 2267, FUNC_YN) ) AS funcUserDefine5
+                ,MIN (DECODE (PGM_TRN_CODE, 2268, FUNC_YN) ) AS funcUserDefine6
+                ,MIN (DECODE (PGM_TRN_CODE, 2269, FUNC_YN) ) AS funcUserDefine7
+                ,MIN (DECODE (PGM_TRN_CODE, 2270, FUNC_YN) ) AS funcUserDefine8
+                ,MIN (DECODE (PGM_TRN_CODE, 2271, FUNC_YN) ) AS funcUserDefine9
+                ,MIN (DECODE (PGM_TRN_CODE, 2272, FUNC_YN) ) AS funcUserDefine10
+                ,MIN (DECODE (PGM_TRN_CODE, 2273, FUNC_YN) ) AS funcUserDefine11
+                ,MIN (DECODE (PGM_TRN_CODE, 2274, FUNC_YN) ) AS funcUserDefine12
+                ,MIN (DECODE (PGM_TRN_CODE, 2275, FUNC_YN) ) AS funcUserDefine13
+                ,MIN (DECODE (PGM_TRN_CODE, 2276, FUNC_YN) ) AS funcUserDefine14
+                ,MIN (DECODE (PGM_TRN_CODE, 2277, FUNC_YN) ) AS funcUserDefine15
+                ,MIN (DECODE (PGM_TRN_CODE, 2278, FUNC_YN) ) AS funcUserDefine16
+                ,MIN (DECODE (PGM_TRN_CODE, 2279, FUNC_YN) ) AS funcUserDefine17
+                ,MIN (DECODE (PGM_TRN_CODE, 2280, FUNC_YN) ) AS funcUserDefine18
+                ,MIN (DECODE (PGM_TRN_CODE, 2281, FUNC_YN) ) AS funcUserDefine19
+                ,MIN (DECODE (PGM_TRN_CODE, 2282, FUNC_YN) ) AS funcUserDefine20
+                ,MIN (DECODE (PGM_TRN_CODE, 2283, FUNC_YN) ) AS funcUserDefine21
+                ,MIN (DECODE (PGM_TRN_CODE, 2284, FUNC_YN) ) AS funcUserDefine22
+                ,MIN (DECODE (PGM_TRN_CODE, 2285, FUNC_YN) ) AS funcUserDefine23
+                ,MIN (DECODE (PGM_TRN_CODE, 2286, FUNC_YN) ) AS funcUserDefine24
+                ,MIN (DECODE (PGM_TRN_CODE, 2287, FUNC_YN) ) AS funcUserDefine25
             FROM (SELECT I.MENU_CODE
                         ,I.PGM_TRN_CODE
                         ,I.VALID_DT_FROM
