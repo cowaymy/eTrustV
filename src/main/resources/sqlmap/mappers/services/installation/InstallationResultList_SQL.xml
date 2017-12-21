@@ -383,7 +383,11 @@
 	            WHEN ( Extent3.CUST_BILL_ID IS NOT NULL ) THEN Extent3.CUST_BILL_ID
 	       ELSE 0
 	          END C7  ,
-	       Extent6.CODE_NAME CODENAME2
+           Extent6.CODE_NAME CODENAME2,
+           Extent18.city,
+           Extent18.STATE,
+           Extent18.COUNTRY,
+           Extent18.AREA
 	  FROM SAL0046D Extent1
 	         LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
 	         JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -402,6 +406,11 @@
 	         LEFT JOIN SYS0028M Extent16   ON ( Extent15.MEM_CODE = Extent16.WH_LOC_CODE )
 	         OR ( ( Extent15.MEM_CODE IS NULL )
 	         AND ( Extent16.WH_LOC_CODE IS NULL ) )
+             join SAL0023D Extent17           
+              on Extent10.CUST_ID = Extent17.CUST_ID      
+             join SYS0064M Extent18           
+              on Extent17.AREA_ID = Extent18.AREA_ID         
+        WHERE  Extent1.INSTALL_ENTRY_ID = #{installEntryId}	         
     WHERE  Extent1.INSTALL_ENTRY_ID = #{installEntryId}
      and rownum =1
 
@@ -580,10 +589,18 @@
 	       CASE
 	            WHEN ( 966 = Extent1.TYPE_ID ) THEN TO_NUMBER(1)
 	       ELSE TO_NUMBER(0)
-	          END C2
+              END C2,
+           extend64.city,
+           extend64.STATE,
+           extend64.COUNTRY,
+           extend64.AREA
 	  FROM SAL0029D Extent1
 	         LEFT JOIN SYS0013M Extent2   ON TO_NUMBER(Extent1.RACE_ID,99999) = Extent2.CODE_ID
 	         LEFT JOIN SYS0015M Extent3   ON TO_NUMBER(Extent1.NATION,99999) = Extent3.CNTY_ID
+             join SAL0023D extend23
+             ON Extent1.CUST_ID = extend23.CUST_ID
+            join sys0064m extend64
+              ON extend23.AREA_ID = extend64.AREA_ID	         
 	 WHERE  ( Extent1.CUST_ID = #{custId} )
 	          AND (TO_NUMBER(Extent1.STUS_CODE_ID,99999) = 1 )
 
@@ -848,15 +865,10 @@
 		  <select id="getMemberFullDetailsByMemberIDCode" parameterType="Map" resultType="egovMap">
 		  <![CDATA[
 					 SELECT Limit1.MEM_ID MEM_ID  ,
-			       --Limit1.ADDR1 ADDR1  ,
-			      -- Limit1.ADDR2 ADDR2  ,
-			      -- Limit1.ADDR3 ADDR3  ,
-			      -- Limit1.C1 C1  ,
 			       Limit1.C2 C2  ,
 			       Limit1.C3 C3  ,
 			       Limit1.C4 C4  ,
 			       Limit1.C5 C5  ,
-			      -- Limit1.C6 C6  ,
 			       Limit1.C7 C7  ,
 			       Limit1.C8 C8  ,
 			       Limit1.C9 C9  ,
@@ -909,7 +921,6 @@
 			       Limit1.C46 C46  ,
 			       Limit1.C47 C47  ,
 			       Limit1.C48 C48  ,
-			     --  Limit1.C49 C49  ,
 			       Limit1.C50 C50  ,
 			       Limit1.C51 C51  ,
 			       Limit1.C52 C52  ,
@@ -939,9 +950,6 @@
 			                Extent1.NAME NAME  ,
 			                Extent1.NRIC NRIC  ,
 			                Extent1.GENDER GENDER  ,
-			                --Extent1.ADDR1 ADDR1  ,
-			               -- Extent1.ADDR2 ADDR2  ,
-			               -- Extent1.ADDR3 ADDR3  ,
 			                Extent1.TEL_OFFICE TEL_OFFICE  ,
 			                Extent1.TEL_HUSE TEL_HUSE  ,
 			                Extent1.TEL_MOBILE TEL_MOBILE  ,
@@ -958,10 +966,6 @@
 			                Extent1.HSPTLZ HSPTLZ  ,
 			                Extent2.NAME NAME1  ,
 			                Extent3.CODE_NAME CODE_NAME   ,
-			              --  CASE
-			             --        WHEN (1 IS NOT NULL ) THEN 1
-			             --   ELSE 0
-			               --    END C1  ,
 			                CASE
 			                     WHEN ( Extent6.AREA_ID IS NOT NULL ) THEN Extent6.AREA_NAME
 			                ELSE ''
@@ -978,10 +982,6 @@
 			                     WHEN ( Extent10.BRNCH_ID IS NOT NULL ) THEN Extent10.NAME
 			                ELSE ''
 			                   END C5  ,
-			              --  CASE
-			              --       WHEN ( 1 IS NOT NULL ) THEN TO_NUMBER(1,99999.99)
-			               -- ELSE 0
-			               --    END C6  ,
 			                CASE
 			                     WHEN ( Extent9.CNTY_ID IS NOT NULL ) THEN Extent9.NAME
 			                ELSE ''
@@ -1238,10 +1238,6 @@
 			                     WHEN ( Extent1.RESIGN_DT IS NOT NULL ) THEN to_char(Extent1.RESIGN_DT,'yyyy-mm-dd')
 			                ELSE ''
 			                   END C48  ,
-			                --CASE
-			                 --    WHEN (1 IS NOT NULL ) THEN TO_NUMBER(1,99999.99)
-			                --ELSE 0
-			                 --  END C49  ,
 			                CASE
 			                     WHEN ( Extent8.STATE_ID IS NOT NULL ) THEN Extent8.NAME
 			                ELSE ''
