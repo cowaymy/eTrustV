@@ -33,4 +33,9 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
 		return ASReportMapper.selectViewLedger(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectMemCodeList() {
+		return ASReportMapper.selectMemCodeList();
+	}
+	
 }

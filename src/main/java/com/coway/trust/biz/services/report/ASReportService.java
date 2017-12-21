@@ -12,4 +12,6 @@ public interface ASReportService {
 	EgovMap selectOrderNum();
 	
 	List<EgovMap> selectViewLedger(Map<String, Object> params);
+	
+	List<EgovMap> selectMemCodeList();
 }

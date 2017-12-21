@@ -14,4 +14,6 @@ public interface ASReportMapper {
 	EgovMap selectOrderNum();
 	
 	List<EgovMap> selectViewLedger(Map<String, Object> params);
+	
+	List<EgovMap> selectMemCodeList();
 }
