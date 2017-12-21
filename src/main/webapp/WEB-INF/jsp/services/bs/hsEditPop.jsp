@@ -458,7 +458,7 @@
     <td>
     <select class="w100p"  id ="cmbStatusType2" name = "cmbStatusType2"></select>
     </td>
-    <th scope="row">Settle Date</th>
+    <th scope="row" style="width: 186px; ">Settle Date</th>
     <td><span><c:out value="${basicinfo.setlDt}"/></span> </td>
 </tr>
 <tr>
@@ -511,8 +511,8 @@
     <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> /><span>Week4</span></label>
 
  <%--    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label> --%>
-    </td>
-        <th scope="row" style="width: 244px; ">Cancel Request Number</th>
+    </td> 
+        <th scope="row" style="width: 186px; ">Cancel Request Number</th>
     <td>
         <span><c:out value="${basicinfo.cancReqNo}"/></span> 
     </td>
