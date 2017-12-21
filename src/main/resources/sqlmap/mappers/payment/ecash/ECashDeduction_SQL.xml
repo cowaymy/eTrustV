@@ -137,4 +137,5 @@
             call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
         }
     </update>
+
 </mapper>
