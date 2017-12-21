@@ -419,18 +419,19 @@
             Common.alert("Please select costomer type");
             return false;
         }
-    	console.log("2.  nric Check");
+    	 console.log("2.  nric Check");
         if($("#_nric_").val() == ''){
             Common.alert("Please key in NRIC/Company number");
             return false;
-        }else if($("#_nric_").length > 12){
+        }
+        /*else if($("#_nric_").length > 12){
             Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
         }else{
             if(FormUtil.checkNum($("#_nric_"))){
                 Common.alert("* Invalid nric number.");
                 return false;
             }
-        }
+        } */
         console.log("3.  name check");
         if($("#_custName_").val() == ''){
             Common.alert("Please key in customer name");
