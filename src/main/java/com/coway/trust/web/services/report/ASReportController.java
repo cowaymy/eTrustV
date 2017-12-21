@@ -106,5 +106,21 @@ public class ASReportController {
 	}
 	
 
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectMemCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemCodeList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> memberCode = ASReportService.selectMemCodeList();
+		//model.addAttribute("branchList", branchList);
+		logger.debug("memberCode {}", memberCode);
+		return ResponseEntity.ok(memberCode);
+	}
 	
 }
