@@ -118,7 +118,6 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	}
 
 	@Override
-	@Transactional
 	public Map<String, Object> insertPos(Map<String, Object> params) throws Exception {
 		
 		String docNoPsn = ""; //returnValue
@@ -325,29 +324,27 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
                 	posMapper.insertPosDetail(itemMap);
                 	LOGGER.info("############### 2 - " + idx + "  POS DETAIL INSERT END  ################");
                 	
-                	//FILTER 유무 확인 
-                	if((SalesConstants.POS_STOCK_TYPE_FILTER).equals(String.valueOf(itemMap.get("stkTypeId")))){  //62 Filter
-                		
-                		if(serialGrid != null){
-                			for (int i = 0; i < serialGrid.size(); i++) {
-                				Map<String, Object> serialMap = (Map<String, Object>)serialGrid.get(idx);
-                				int serialSeq =  posMapper.getSeqSal0147M();
-                				
-                				serialMap.put("serialSeq", serialSeq);
-                				serialMap.put("posMasterSeq", posMasterSeq);
-                				serialMap.put("userId", params.get("userId"));
-                				//TODO ITEM Status ID? 
-                				//serialMap.put("posItmStusId", 1);  
-                				
-                				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT START  ################");
-                				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT param : " + serialMap.toString());
-                				posMapper.insertSerialNo(serialMap);
-                				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT END  ################");
-                				
-            				}
-                		}
-                	}//Filter insert End
         		}//Detail Insert End
+                
+                //Serial Insert
+                if(serialGrid != null){
+        			for (int i = 0; i < serialGrid.size(); i++) {
+        				Map<String, Object> serialMap = (Map<String, Object>)serialGrid.get(i);
+        				int serialSeq =  posMapper.getSeqSal0147M();
+        				
+        				serialMap.put("serialSeq", serialSeq);
+        				serialMap.put("posMasterSeq", posMasterSeq);
+        				serialMap.put("userId", params.get("userId"));
+        				//TODO ITEM Status ID? 
+        				//serialMap.put("posItmStusId", 1);  
+        				
+        				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT START  ################");
+        				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT param : " + serialMap.toString());
+        				posMapper.insertSerialNo(serialMap);
+        				LOGGER.info("############### 2 - Serial - " + i + "  POS SERIAL INSERT END  ################");
+        				
+    				}
+        		}
 		}
         // 2). POST TYPE : DEDUCTION COMMISSION  //2391
 		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391

@@ -29,6 +29,19 @@ $(document).ready(function() {
 	$("#_newUpload").click(function() {
 		Common.popupDiv("/sales/rcms/ordUploadPop.do", null ,  null , true, '_updFileDiv');
 	});
+	
+	//View
+	$("#_viewUpload").click(function() {
+		
+		//Validation
+	    var selectedItem = AUIGrid.getSelectedItems(ordRemGridID);
+	    if(selectedItem.length <= 0){
+	        Common.alert(" No result selected. ");
+	        return;
+	    }
+		
+		Common.popupDiv("/sales/rcms/viewUploadBatchPop.do", {batchId : selectedItem[0].item.uploadMid}, null , true, '_viewBatchDiv');
+	});
 });
 
 function createOrderRemGrid(){

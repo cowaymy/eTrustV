@@ -1989,7 +1989,7 @@
     }
 </script>
 
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1 id="hTitle">Order Edit</h1>
@@ -2003,7 +2003,7 @@
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" method="post"/>
 <form action="#" method="post">
-
+<div style="display: none;">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -2020,7 +2020,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-
+</div>
 </form>
 </section><!-- search_table end -->
 

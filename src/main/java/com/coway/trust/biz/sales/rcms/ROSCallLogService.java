@@ -29,4 +29,6 @@ public interface ROSCallLogService {
 	List<EgovMap> selectOrderRemList(Map<String, Object> params) throws Exception;
 	
 	Map<String, Object> uploadOrdRem(Map<String, Object> params) throws Exception;
+	
+	EgovMap selectBatchViewInfo(Map<String, Object> params)throws Exception;
 }

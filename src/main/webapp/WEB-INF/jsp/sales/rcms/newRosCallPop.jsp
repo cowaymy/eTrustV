@@ -328,12 +328,12 @@ function fn_inputAmt(obj){
  function fn_editRentPaySetting() {
 	
 	//DIV --Grid ID Dup...
-	Common.popupDiv("/sales/order/orderModifyPop.do", {salesOrderId : '${ordId}' , ordEditType : 'PAY'}, null, true);
+	//Common.popupDiv("/sales/rcms/orderModifyPop.do", {salesOrderId : '${ordId}' , ordEditType : 'PAY'}, null, true);
 	
 	
 	//Window
-	//var winPopOpt = {width: "1000px",  height: "500px" };
-	//Common.popupWin("_winPopForm", "/sales/order/orderModifyPop.do", winPopOpt);
+	var winPopOpt = {width: "1000px",  height: "500px" };
+	Common.popupWin("_winPopForm", "/sales/rcms/orderModifyPop.do", winPopOpt);''
 	
 }
  

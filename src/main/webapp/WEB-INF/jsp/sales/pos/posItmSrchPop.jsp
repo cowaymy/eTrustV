@@ -298,14 +298,8 @@ $(document).ready(function() {
 			var idxObj;
 			var serialCodeArr = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
 			
-			
 			for (var idx = 0; idx < nullChkNo; idx++) {
 				idxObj = AUIGrid.getItemByRowIndex(basketGridID, idx); //해당 index행  가져오기 // item // basket
-				/* console.log("idxObj : " + idxObj);
-				console.log("idxObj.JSONstringify : " + JSON.stringify(idxObj));
-				console.log("idxObj.stkTypeId : " + idxObj.stkTypeId);
-				console.log("idxObj.stkCode : " + idxObj.stkCode);
-				console.log("idxObj.inputQty : " + idxObj.inputQty); */
 				if(idxObj.stkTypeId == 62){// filter
 					//idxObj.stkCode(String) 를  가지고 있는 serialGrid 와 매칭  serialCodeArr(Array)
 					var serialCnt = 0;
@@ -317,9 +311,9 @@ $(document).ready(function() {
 					// cnt 와 qty 매칭  // serialCnt == idxObj.inputQty
 ////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제					
 				  /*  if(serialCnt != idxObj.inputQty){
-						Common.alert(" * The quantity of the filter and the serial quantity does not match.");
+						Common.alert(" Please check the Serial No. for Filters.<br> Contact the LOG team for Serial.");
 						return;
-					}  */
+					} */
 ////////////////////////////////////////Serial Number Check ///////////////////////////////////////////////////
 
 				    //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
@@ -335,9 +329,9 @@ $(document).ready(function() {
 				    }else if(serialCnt > idxObj.inputQty){
 				    	Common.alert("Serial number quantities can not be more than the quantity entered.");
 				    	return;
-				    }
+				    }  
 				}else{
-					console.log("이놈은 필터가 아님");
+					console.log("not Filter");
 				}// Temp Logic
 				//Exsit Filter
 				$("#_mainSerialGrid").css("display" , "");

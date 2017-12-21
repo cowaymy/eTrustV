@@ -717,4 +717,32 @@ FROM DUAL
             }
     ]]>
 </select>
+
+<select id="selectBatchViewInfo" parameterType="Map" resultType="egovMap">
+    SELECT Limit1.UPLOAD_MID   ,
+       Limit1.STUS_ID   ,
+       Limit1.NAME   ,
+       Limit1.CRT_USER_ID   ,
+       Limit1.CRT_USER_NAME   ,
+       TO_CHAR(Limit1.CRT_DT, 'DD/MM/YYYY') CRT_DT  ,
+       Limit1.UPD_USER_ID   ,
+       Limit1.UPD_USER_NAME   ,
+       TO_CHAR(Limit1.UPD_DT, 'DD/MM/YYYY') UPD_DT   
+  FROM ( SELECT Extent1.UPLOAD_MID   ,
+                Extent1.STUS_ID   ,
+                Extent1.CRT_USER_ID   ,
+                Extent1.CRT_DT   ,
+                Extent1.UPD_USER_ID   ,
+                Extent1.UPD_DT   ,
+                Extent2.NAME   ,
+                CASE WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
+                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END UPD_USER_NAME  
+         FROM SAL0054D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
+          <![CDATA[ 
+          WHERE  Extent1.UPLOAD_MID = #{batchId} AND ROWNUM <= 1 ) Limit1
+          ]]>
+</select>
 </mapper>

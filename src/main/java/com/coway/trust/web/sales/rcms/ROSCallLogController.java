@@ -36,7 +36,9 @@ import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.config.excel.ExcelReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.excel.TerritoryRawDataVO;
+import com.coway.trust.web.sales.SalesConstants;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -311,5 +313,55 @@ public class ROSCallLogController {
 		Map<String, Object> rtnMap = rosCallLogService.uploadOrdRem(param);
 		//결과 
 		return ResponseEntity.ok(rtnMap);
+	}
+	
+	
+	
+	@RequestMapping(value = "/orderModifyPop.do")
+	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
+		
+		//[Tap]Basic Info
+		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//APP_TYPE_ID CUST_ID
+		EgovMap basicInfo = (EgovMap) orderDetail.get("basicInfo");
+
+		model.put("orderDetail",  orderDetail);
+		model.put("salesOrderId", params.get("salesOrderId"));
+		model.put("ordEditType",  params.get("ordEditType"));
+		model.put("custId",       basicInfo.get("custId"));
+		model.put("appTypeId",    basicInfo.get("appTypeId"));
+		model.put("appTypeDesc",  basicInfo.get("appTypeDesc"));
+		model.put("salesOrderNo", basicInfo.get("ordNo"));
+		model.put("custNric",     basicInfo.get("custNric"));
+		model.put("ordStusId",    basicInfo.get("ordStusId"));
+		model.put("toDay", 		  CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		model.put("promoCode",    basicInfo.get("ordPromoCode"));
+		model.put("promoDesc",    basicInfo.get("ordPromoDesc"));
+		model.put("srvPacId",     basicInfo.get("srvPacId"));
+		 
+		LOGGER.debug("!@##############################################################################");
+		LOGGER.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
+		LOGGER.debug("!@###### ordEditType  : "+model.get("ordEditType"));
+		LOGGER.debug("!@###### custId       : "+model.get("custId"));
+		LOGGER.debug("!@###### appTypeId    : "+model.get("appTypeId"));
+		LOGGER.debug("!@###### appTypeDesc  : "+model.get("appTypeDesc"));
+		LOGGER.debug("!@###### salesOrderNo : "+model.get("salesOrderNo"));
+		LOGGER.debug("!@###### custNric     : "+model.get("custNric"));
+		LOGGER.debug("!@##############################################################################");
+		
+		return "sales/rcms/editRentPayPop";
+	}
+	
+	
+	@RequestMapping(value = "/viewUploadBatchPop.do")
+	public String viewUploadBatchPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		EgovMap infoMap = null;
+		
+		infoMap = rosCallLogService.selectBatchViewInfo(params);
+		model.addAttribute("infoMap", infoMap);
+		model.addAttribute("batchId", params.get("batchId"));
+		
+		
+		return "/sales/rcms/viewUploadBatchPop";
 	}
 }

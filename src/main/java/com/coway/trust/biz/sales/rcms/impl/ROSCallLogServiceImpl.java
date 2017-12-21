@@ -1009,4 +1009,10 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 		
 		return rtnMap;
 	}
+
+	@Override
+	public EgovMap selectBatchViewInfo(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.selectBatchViewInfo(params);
+	}
 }

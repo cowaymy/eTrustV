@@ -59,4 +59,6 @@ public interface ROSCallLogMapper {
 	
 	Map<String, Object> spOrderRemarkUpload_DetVerify(Map<String, Object> param);
 	
+	EgovMap selectBatchViewInfo(Map<String, Object> params);
+	
 }
