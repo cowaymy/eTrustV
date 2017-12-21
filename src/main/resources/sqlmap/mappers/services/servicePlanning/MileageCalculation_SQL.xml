@@ -626,7 +626,7 @@ FROM
 /*     AND B.MEM_CODE                  = {memCode} */                                         /*'CD102098'*/
 /*    AND C.code                          = {branch}    */                                          /*'CDB-21'*/
     AND TO_CHAR(a.AS_APPNT_DT,'YYYY')                         = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)    /* 2017 SUBSTR(:month,0,2)*/
-    TO_CHAR(a.AS_APPNT_DT,'MM')                      = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)    /*  11 SUBSTR(:month,3,4) */
+    AND TO_CHAR(a.AS_APPNT_DT,'MM')                      = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)    /*  11 SUBSTR(:month,3,4) */
     /*AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') = '20171123' FOR DAILY MILEAGE CLAIM */
     ) A
   GROUP BY MEM_TYPE,
