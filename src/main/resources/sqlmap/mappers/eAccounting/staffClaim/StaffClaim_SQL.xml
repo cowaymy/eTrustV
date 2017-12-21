@@ -8,7 +8,7 @@
 SELECT T.CLM_NO, 
        T.MEM_ACC_ID, 
        T.MEM_ACC_NAME, 
-       T.CLM_MONTH, 
+       TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH, 
        T.REQST_DT, 
        'MYR' AS CUR, 
        T.TOT_AMT, 
