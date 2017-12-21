@@ -14,9 +14,11 @@
 			left join SAL0077D svc on svc.SRV_CNTRCT_ORD_ID = config.SALES_ORD_ID AND SRV_CNTRCT_STUS_ID = 4
 			join ORG0005D memOrg on memOrg.MEM_ID = sch.CODY_ID AND memOrg.ORG_STUS_CODE_ID = 1 and memOrg.LAST_DEPT_CODE <> ' '
 			left join SAL0001D som on som.SALES_ORD_ID = sch.SALES_ORD_ID and (som.BINDING_NO IS NOT NULL OR som.BINDING_NO <> ' ') AND SALES_ORD_ID_OLD > 0
-			where sch.MONTH = TO_CHAR(SYSDATE,'MM') 
-			AND sch.YEAR = TO_CHAR(SYSDATE,'YYYY')
-			GROUP BY memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE]]>
+			where sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
+			AND sch.YEAR =    to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
+			GROUP BY memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
+			
+			]]>
 
     </select>
 
@@ -30,11 +32,13 @@
 		,(CASE WHEN count(PD1.PAY_ITM_ID) >0 THEN (count(PD.PAY_ITM_ID)/count(PD1.PAY_ITM_ID) * 100) ELSE 0 END) ADD_PERCENT
 		from PAY0052S accDept
 		join PAY0053S accDept_sub on accDept_sub.ACC_DEBT_ORD_ID = accDept.ACC_DEBT_ORD_ID
-		join SVC0008D sch on sch.SALES_ORD_ID =accDept.ACC_DEBT_ORD_ID  --sch.SCHDUL_ID = accDept.ACC_DEBT_ORD_BS_SCHDUL_ID
+		join SVC0008D sch on sch.SALES_ORD_ID =accDept.ACC_DEBT_ORD_ID 
 		join ORG0005D memOrg on memOrg.MEM_ID = sch.CODY_ID AND memOrg.ORG_STUS_CODE_ID = 1 and memOrg.LAST_DEPT_CODE <> ' '
 		left join PAY0064D PM on PM.SALES_ORD_ID = accDept.ACC_DEBT_ORD_ID
 		left join PAY0065D PD on PD.PAY_ID = PM.PAY_ID AND PD.PAY_ITM_MODE_ID IN (106,107,108)
 		left join PAY0065D PD1 ON PD1.PAY_ID = PM.PAY_ID 
+		WHERE sch.MONTH = to_char(to_date('12/2017','mm/yyyy'),'mm')
+          AND sch.YEAR = to_char(to_date('12/2017','mm/yyyy'),'yyyy')
 		group by memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE]]>
     </select>
     
@@ -44,19 +48,19 @@
 
     <select id="selectPfReportHeartService"  parameterType="Map" resultType="egovMap">
 			 <![CDATA[ select  
-			f.mem_code as "SCM",
-			d.mem_code as "CM",
-			(case when b.mem_lvl = 4 then c.mem_code  else null end ) as "CODY", 
-			Count(a.schdul_id) as "No of Acct" ,
-			Count(case when a.stus_code_id = 1 then 1 else null end ) as "Active" ,
-			Count(case when a.stus_code_id = 4 then 1 else null end ) as "Complete" ,
-			count(case when a.stus_code_id =21 then 1 else null end ) as "Fail" ,
-			count(case when a.stus_code_id =10 then 1 else null end ) as "Cancel",
-			count(case when a.stus_code_id not in (1,4, 21,10) then 1 else null end ) as "Other",   /*22-High Outstanding,8-Inactive,0*/
+			f.mem_code as SCM,
+			d.mem_code as CM,
+			(case when b.mem_lvl = 4 then c.mem_code  else null end ) as CODY, 
+			Count(a.schdul_id) as No_of_Acct ,
+			Count(case when a.stus_code_id = 1 then 1 else null end ) as Active ,
+			Count(case when a.stus_code_id = 4 then 1 else null end ) as Complete ,
+			count(case when a.stus_code_id =21 then 1 else null end ) as Fail ,
+			count(case when a.stus_code_id =10 then 1 else null end ) as Cancel,
+			count(case when a.stus_code_id not in (1,4, 21,10) then 1 else null end ) as Other,
 			round((Count(case when a.stus_code_id = 4 then 1 else null end )/
 			(Count(case when a.stus_code_id = 1 then 1 else null end ) +
 			Count(case when a.stus_code_id = 4 then 1 else null end )  +
-			count(case when a.stus_code_id =21 then 1 else null end )  )*100) ,0)as "Complete%"
+			count(case when a.stus_code_id =21 then 1 else null end )  )*100) ,0)as Complete_percent
 			from svc0008D a
 			join org0005d b on b.mem_id = a.cody_id
 			join org0001D c on b.mem_id = c.mem_id
