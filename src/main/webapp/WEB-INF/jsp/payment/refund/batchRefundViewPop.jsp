@@ -66,7 +66,9 @@ var viewGridPros = {
     pageRowCount : 20,
     headerHeight : 40,
     height : 240,
-    enableFilter : true
+    enableFilter : true,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 $(document).ready(function () {

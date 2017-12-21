@@ -116,7 +116,9 @@ var confirmGridPros = {
     height : 240,
     enableFilter : true,
     // 헤더 높이 지정
-    headerHeight : 50
+    headerHeight : 50,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 //AUIGrid 를 생성합니다.

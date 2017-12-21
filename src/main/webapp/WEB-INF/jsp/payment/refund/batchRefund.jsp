@@ -54,7 +54,10 @@ var bRefundGridPros = {
     // 페이징 사용       
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
-    pageRowCount : 20
+    pageRowCount : 20,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells",
+    showStateColumn : true
 };
 
 var bRefundGridID;
@@ -112,7 +115,6 @@ function fn_bRefundViewPop() {
 	if(batchId > 0) {
 		Common.popupDiv("/payment/batchRefundViewPop.do", {batchId:batchId}, null, true, "bRefundViewPop");
 		
-		batchId = 0;
 	} else {
 		Common.alert('No batch selected.');
 	}
@@ -134,14 +136,12 @@ function fn_formClear() {
 function fn_bRefundUploadPop() {
 	Common.popupDiv("/payment/batchRefundUploadPop.do", null, null, true, "bRefundUploadPop");
 	
-	batchId = 0;
 }
 
 function fn_bRefundConfirmPop() {
 	if(batchId > 0) {
 		Common.popupDiv("/payment/batchRefundConfirmPop.do", {batchId:batchId}, null, true, "bRefundConfirmPop");
 		
-		batchId = 0;
     } else {
         Common.alert('No batch selected.');
     }

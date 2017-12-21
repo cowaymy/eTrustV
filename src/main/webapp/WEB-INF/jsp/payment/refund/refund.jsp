@@ -81,7 +81,9 @@ var refundGridPros = {
     showRowCheckColumn : false,
     showRowNumColumn : false,
     // 헤더 높이 지정
-    headerHeight : 50
+    headerHeight : 50,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 var refundGridID;
