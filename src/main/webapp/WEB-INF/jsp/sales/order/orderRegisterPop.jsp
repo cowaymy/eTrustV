@@ -1532,12 +1532,12 @@
                     msg += "* Please key in the reference no.<br>";
                 }
             }
-            
+/*
             if(fn_isExistESalesNo() == 'true') {
                 isValid = false;
                 msg += "* this Sales has posted, no amendment allow<br>";
             }
-            
+*/
             if(appTypeVal == '66') {
                 if($(':radio[name="advPay"]:checked').val() != '1' && $(':radio[name="advPay"]:checked').val() != '0') {
                     isValid = false;
