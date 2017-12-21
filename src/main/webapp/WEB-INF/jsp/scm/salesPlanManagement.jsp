@@ -196,6 +196,55 @@ function fnSelectPeriodReset()
        periodCheckBox.options[0] = new Option("Select a YEAR","");  
 }
 
+function fnCreate(obj)
+{
+  if ($("#scmYearCbBox").val().length < 1) 
+  {
+    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+    return false;
+  } 
+
+  if ($("#scmPeriodCbBox").val().length < 1) 
+  {
+    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
+    return false;
+  }
+
+  if ($("#scmTeamCbBox").val().length < 1) 
+  {
+    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
+    return false;
+  }
+	  
+	Common.ajax("POST", "/scm/insertSalesPlanMaster.do"
+	          , $("#MainForm").serializeJSON()    
+	          , function(result) 
+	           {
+	              Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	              //fnSearchBtnList() ;
+	              fnSettiingHeader();
+	              
+	              console.log("성공." + JSON.stringify(result));
+	              console.log("data : " + result.data);
+	           } 
+	         , function(jqXHR, textStatus, errorThrown) 
+	          {
+	            try 
+	            {
+	              console.log("Fail Status : " + jqXHR.status);
+	              console.log("code : "        + jqXHR.responseJSON.code);
+	              console.log("message : "     + jqXHR.responseJSON.message);
+	              console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	            } 
+	            catch (e) 
+	            {
+	              console.log(e);
+	            }
+	            Common.alert("Fail : " + jqXHR.responseJSON.message);
+	          }); 
+
+}
+
 
 
 function fnNumberCheck(inputs)
@@ -249,6 +298,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -333,6 +383,7 @@ function fnSetStockCategoryComboBox()
 	  // Call Back
     var stockCodeCallBack = function () 
         {
+        
     	    $('#stockCategoryCbBox').on("change", function () 
           {
             var $this = $(this);
@@ -345,7 +396,7 @@ function fnSetStockCategoryComboBox()
             {
                 CommonCombo.make("stockCodeCbBox"
 				                        , "/scm/selectStockCode.do"  
-				                        , { codeId: $this.val() }       
+				                        , { codeIds: $this.val() + "" }  //       
 				                        , ""                         
 				                        , {  
 				                        	  id  : "stkCode",          
@@ -366,7 +417,11 @@ function fnSetStockCategoryComboBox()
     	             , "/scm/selectStockCategoryCode.do"
     	             , "" 
     	             , "" 
-    	             , { chooseMessage: "ALL" }  
+    	             , { 
+                         id  : "codeId",          
+                         name: "codeName",  
+                         type: "M"
+        	           }  
 				           , stockCodeCallBack  // callback
 				            );  
 }
@@ -894,7 +949,7 @@ function fnSettiingHeader()
 	                  softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제               
 		              };
 
-  console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val());
+  console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /team: " + $('#scmTeamCbBox').val());
   Common.ajax("GET", "/scm/selectCalendarHeader.do"
            , $("#MainForm").serialize()
            , function(result) 
@@ -1971,7 +2026,7 @@ $(document).ready(function()
 <tr>
 	<th scope="row">Stock Category</th>
 	<td>
-	<select class="w100p" id="stockCategoryCbBox" name="stockCategoryCbBox">
+	<select class="w100p" id="stockCategoryCbBox" multiple="multiple" name="stockCategoryCbBox">
 	</select>
 	</td>
 	<th scope="row">Stock</th>
@@ -1982,7 +2037,7 @@ $(document).ready(function()
 	<!-- Stock Type 추가 -->
   <th scope="row">Stock Type</th>
   <td>
-  <select class="w100p" id="scmStockType" name="scmStockType"> 
+  <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType"> 
   </select>
   </td>
 </tr>
@@ -2025,12 +2080,16 @@ $(document).ready(function()
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-
 <ul class="right_btns">
 	<li>
 	 <p class="btn_grid">
-	<!-- <a href="javascript:void(0);">Create Plan</a> -->
-	<!-- <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> -->
+	  <a onclick="fnCreate(this);">Create</a>
+	 </p>
+	</li>
+	<li>
+	 <p class="btn_grid">
+	  <a href="javascript:void(0);">Delete</a>
+	  <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> 
 	 </p>
 	</li>
 	
