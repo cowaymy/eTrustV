@@ -177,7 +177,7 @@
 
     };
 
-    function fn_addCompPop() {edit
+    function fn_addCompPop() {
         Common.popupDiv("/services/compensation/compensationAddPop.do", null,
                 null, true, '');
     }
@@ -261,7 +261,7 @@
                     <a href="#" onClick="javascript:fn_searchASManagement()"><span class="search"></span><spring:message code="expense.btn.Search" /></a>
                 </p></li>
             <li><p class="btn_blue">
-                    <a href="#" onclick="javascript:$('#CompensationForm').clearForm();"><spanclass="clear"></span>Clear</a>
+                    <a href="#" onclick="javascript:$('#CompensationForm').clearForm();"><span class="clear"></span>Clear</a>
                 </p></li>
         </ul>
     </aside>
