@@ -115,19 +115,19 @@ $(document).ready(function() {
         //AUIGrid 칼럼 설정
         var columnLayout = [ {
             dataField : "callTypeCode",
-            headerText : "Type",
+            //headerText : "Type",
             headerText : '<spring:message code="service.grid.Type" />',
             editable : false,
             width : 100
         }, {
             dataField : "callStusCode",
-            headerText : "Status",
+            //headerText : "Status",
             headerText : '<spring:message code="service.grid.Status" />',
             editable : false,
             width : 100
         }, {
             dataField : "callLogDt",
-            headerText : "Date",
+            //headerText : "Date",
             headerText : '<spring:message code="service.grid.Date" />',
             editable : false,
             width : 130

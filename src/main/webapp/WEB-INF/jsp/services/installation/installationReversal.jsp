@@ -138,62 +138,73 @@ function createAUIGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "rnum",
-        headerText : "No.",
+        //headerText : "No.",
+        headerText : '<spring:message code="service.grid.No" />',
         editable : true,
         width : 50
     }, {
         dataField : "code",
         headerText : "Type",
+        headerText : '<spring:message code="service.grid.Type" />',
         editable : false,
         width : 120
     }, {
         dataField : "installEntryNo",
-        headerText : "install No",
+        //headerText : "install No",
+        headerText : '<spring:message code="service.grid.InstallNo" />',
         editable : false,
         width : 130
     }, {
         dataField : "salesOrdNo",
-        headerText : "Order No",
+        //headerText : "Order No",
+        headerText : '<spring:message code="service.grid.OrderNo" />',
         editable : false,
         width : 130
     }, {
         dataField : "salesDt",
-        headerText : "App Date",
+        //headerText : "App Date",
+        headerText : '<spring:message code="service.grid.AppDate" />',
         editable : false,
         style : "my-column",
         width : 130
     }, {
         dataField : "stkDesc",
-        headerText : "Product",
+        //headerText : "Product",
+        headerText : '<spring:message code="service.grid.Product" />',
         editable : false,
         width : 130
     }, {
         dataField : "name",
-        headerText : "Custermer",
+        //headerText : "Custermer",
+        headerText : '<spring:message code="service.grid.Custermer" />',
         editable : false,
         width : 130
 
     },
     {
         dataField : "codeName",
-        headerText : "App Type",
+        //headerText : "App Type",
+        headerText : '<spring:message code="service.grid.AppType" />',
         editable : false,
         width : 120
 
     },
     {
         dataField : "code1",
-        headerText : "Status",
+        //headerText : "Status",
+        headerText : '<spring:message code="service.grid.Status" />',
         width : 120
     },
     {
         dataField : "installEntryId",
-        headerText : "installentryid",
+        //headerText : "installentryid",
+        headerText : '<spring:message code="service.grid.Installentryid" />',
         width : 0
     },    
     {
         dataField : "salesOrdId",
-        headerText : "salesOrdId",
+        //headerText : "salesOrdId",
+        headerText : '<spring:message code="service.grid.SalesOrdId" />',
         width : 0
     }];
 
@@ -360,7 +371,7 @@ function fn_close(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Installation Result Reversal List</h2>
+<h2><spring:message code='service.title.InstallationResultReversalList'/></h2>
 </aside><!-- title_line end -->
 
 
@@ -386,7 +397,7 @@ function fn_close(){
 <tbody>
 
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td><input type="text" title="" id="orderNo" name="orderNo" placeholder="" class="" />
         <!-- <a href="javascript:fn_orderSearch();" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
         <p class="btn_grid"><a href="javascript:fn_orderSearch();">search</a></p>
@@ -454,7 +465,7 @@ function fn_close(){
 </aside><!-- grid_wrap end -->
     
 <aside class="title_line"><!-- title_line start -->
-<h3>Details</h3>
+<h3><spring:message code='service.title.Details'/></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -469,66 +480,66 @@ function fn_close(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>
     <td><span id="spanOrdNo"></span></td>
-    <th scope="row">App. Type</th>
+    <th scope="row"><spring:message code='service.title.AppType'/></th>
     <td><span id="spanAppType"></span></td>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code='service.title.CustomerID'/></th>    
     <td><span id="spanCustomerId"></span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>    
     <td><span id="spanCustomerName"></span></td>
-    <th scope="row">NRIC/Comp. No</th>
+    <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>    
     <td><span id="spanNric"></span></td>
-    <th scope="row">Installation No.</th>
+    <th scope="row"><spring:message code='service.title.InstallationNo'/></th>    
     <td><span id="spanInstallationNo"></span></td>
 </tr>
 <tr>
-    <th scope="row">Installation Type</th>
+    <th scope="row"><spring:message code='service.title.InstallationType'/></th>    
     <td><span id="spanInstallationType"></span></td>
-    <th scope="row">Installation Status</th>
+    <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>    
     <td><span id="spanInstallationStatus"></span></td>
-    <th scope="row">Actual Installed Date</th>
+    <th scope="row"><spring:message code='service.title.ActualInstalledDate'/></th>    
     <td><span id="spanActInsDate"></span></td>
 </tr>
 <tr>
-    <th scope="row">In-Charged CT</th>
+    <th scope="row"><spring:message code='service.title.In-ChargedCT'/></th>
     <td><span id="spanInCharedCt"></span></td>
-    <th scope="row">Install Product</th>
+    <th scope="row"><spring:message code='service.title.InstallProduct'/></th>
     <td><span id="spanInstallProduct"></span></td>
-    <th scope="row">DO Warehouse</th>
+    <th scope="row"><spring:message code='service.title.DOWarehouse'/></th>    
     <td><span id="spanDoWarehouse"></span></td>
 </tr>
 <tr>
-    <th scope="row">DO Date</th>
+    <th scope="row"><spring:message code='service.title.DODate'/></th>
     <td><span id="spanDoDate"></span></td>
-    <th scope="row">SIRIM No.</th>
+    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>    
     <td><span id="spanSirimNo"></span></td>
-    <th scope="row">Serial No.</th>
+    <th scope="row"><spring:message code='service.title.SerialNo'/></th>    
     <td><span id="spanSerialNo"></span></td>
 </tr>
 <tr>
-    <th scope="row">Ref No.(1)</th>
+    <th scope="row"><spring:message code='service.title.RefNo'/>(1)</th>
     <td><span id="spanRefNo1"></span></td>
-    <th scope="row">Ref No.(2)</th>
+    <th scope="row"><spring:message code='service.title.RefNo'/>(2)</th>
     <td colspan="3"><span id="spanRefNo2"></span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code='service.title.Remark'/></th>
     <td colspan="5" ><span id="spanRemark"></span></td>
 </tr>
 <tr>
     <td colspan="6">
-    <label><input type="checkbox" id="allowComm"/><span>Allow Commission ?</span></label>
-    <label><input type="checkbox" id="isTrade"/><span>Is trade in ?</span></label>
-    <label><input type="checkbox" id="reqSms"/><span>Require SMS ?</span></label>
+    <label><input type="checkbox" id="allowComm"/><span><spring:message code='service.btn.AllowCommission'/> ?</span></label>
+    <label><input type="checkbox" id="isTrade"/><span><spring:message code='service.btn.IsTradeIn'/> ?</span></label>
+    <label><input type="checkbox" id="reqSms"/><span><spring:message code='service.btn.RequireSMS'/> ?</span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">Result Key By</th>
+    <th scope="row"><spring:message code='service.title.ResultKeyBy'/></th>
     <td><span id="spanResultKeyBy"></span></td>
-    <th scope="row">Result Key At</th>
+    <th scope="row"><spring:message code='service.title.ResultKeyAt'/></th>
     <td colspan="3"><span id="spanResultKeyAt"></span></td>
 </tr>
 </tbody>
@@ -536,7 +547,7 @@ function fn_close(){
 
 <div id="divResultReversal">
 <aside class="title_line"><!-- title_line start -->
-<h3>installation Result Reversal</h3>
+<h3><spring:message code='service.title.InstallationResultReversal'/></h3>
 </aside><!-- title_line end -->
 <form action="" id="editForm" method="post">
 <input type="hidden" id="callTypeId" name = "callTypeId">
@@ -566,15 +577,15 @@ function fn_close(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Reversal Status</th>
+    <th scope="row"><spring:message code='service.title.ReversalStatus'/></th>
     <td><span id="lblShowRevInstallStatus1" style="font-weight:bold;">From</span>
     <span id="lblShowRevInstallStatus2" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic">Completed</span>
     <span id="lblShowRevInstallStatus3" style="font-weight:bold;">To</span>
     <span id="lblShowRevInstallStatus4" style="text-decoration: underline; font-weight:bold; color:brown; font-Style:italic">Fail</span>
     </td>
-    <th scope="row">Incharge CT</th>
+    <th scope="row"><spring:message code='service.title.InchargeCT'/></th>
     <td><span id="lblCT"></span></td>
-    <th scope="row">Install Date</th>
+    <th scope="row"><spring:message code='service.title.InstallDate'/></th>    
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
@@ -583,7 +594,7 @@ function fn_close(){
     
 </tr>
 <tr>
-    <th scope="row">Reverse Reason</th>
+    <th scope="row"><spring:message code='service.title.ReverseReason'/></th>    
     <td>
         <select class="w100p" id="reverseReason" name="reverseReason">
         <option value="" selected>Reverse Reason</option>
@@ -592,7 +603,7 @@ function fn_close(){
         </c:forEach>
         </select>
     </td>
-    <th scope="row">Fail Reason</th>
+    <th scope="row"><spring:message code='service.title.FailedReason'/></th>    
     <td>
         <select class="w100p" id="failReason" name="failReason">
         <option value="" selected>Fail Reason</option>
@@ -601,7 +612,7 @@ function fn_close(){
         </c:forEach>
         </select>
     </td>
-    <th scope="row">Next Call Date</th>
+    <th scope="row"><spring:message code='service.title.NextCallDate'/></th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" title="Next Call Date" placeholder="DD/MM/YYYY" class="j_date" id="nextCallStrlDate" name="nextCallStrlDate"/></p>
@@ -609,7 +620,7 @@ function fn_close(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Reverse Reason</th>
+    <th scope="row"><spring:message code='service.title.ReverseReason'/></th>
     <td colspan="5">
         <textarea cols="20" rows="5" id="reverseReasonText" name="reverseReasonText"></textarea>
     </span></td>
@@ -617,7 +628,7 @@ function fn_close(){
 </tbody>
 </table>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:fn_save()">Confirm to Reverse</a></p></li>
+    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:fn_save()"><spring:message code='service.btn.ConfirmToReverse'/></a></p></li>
 </ul>
 </form>
 </div>
