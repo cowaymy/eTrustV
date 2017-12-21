@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.rcms;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +20,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.rcms.ROSCallLogService;
+import com.coway.trust.biz.sales.rcms.vo.orderRemDataVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.config.excel.ExcelReadComponent;
+import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.web.organization.organization.excel.TerritoryRawDataVO;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -40,6 +50,9 @@ public class ROSCallLogController {
 	@Autowired
 	private AdaptorService adaptorService;
 	
+	@Autowired
+	private SessionHandler sessionHandler;
+	
 	@Resource(name = "rosCallLogService")
 	private ROSCallLogService rosCallLogService;
 	
@@ -48,6 +61,10 @@ public class ROSCallLogController {
 	
 	@Resource(name = "orderLedgerService")
 	private OrderLedgerService orderLedgerService;
+	
+	@Autowired
+	private CsvReadComponent csvReadComponent;
+	
 	
 	@RequestMapping(value = "/rosCallLogList.do")
 	public String rosCallLogList (@RequestParam Map<String, Object> params) throws Exception{
@@ -245,6 +262,54 @@ public class ROSCallLogController {
 			rtnMap.put("success", smsResult.getSuccessCount());
 		}
 		
+		return ResponseEntity.ok(rtnMap);
+	}
+	
+	
+	@RequestMapping(value = "/orderUploadBatchListPop.do")
+	public String orderUploadBatchListPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "/sales/rcms/orderUploadBatchListPop";
+	}
+	
+	
+	@RequestMapping(value = "/selectOrderRemList")
+	public ResponseEntity<List<EgovMap>> selectOrderRemList(@RequestParam Map<String, Object> params, HttpServletRequest request) throws Exception{
+		
+		List<EgovMap> ordRemList = null;
+		String stusArr[] = request.getParameterValues("batchStatus");
+		params.put("stusArr", stusArr);
+		ordRemList = rosCallLogService.selectOrderRemList(params);
+		
+		return ResponseEntity.ok(ordRemList);
+	}
+	
+	@RequestMapping(value = "/ordUploadPop.do")
+	public String ordUploadPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "/sales/rcms/ordUploadPop";
+	}
+	
+	
+	@RequestMapping(value = "/uploadOrdRem.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> readExcel(MultipartHttpServletRequest request,SessionVO sessionVO) throws Exception {
+
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+	
+		MultipartFile multipartFile = fileMap.get("csvFile");
+
+		//List<TerritoryRawDataVO> vos = excelReadComponent.readExcelToList(multipartFile, TerritoryRawDataVO::create);
+		List<orderRemDataVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,orderRemDataVO::create);
+		
+		//step 1 vaild 
+		Map param = new HashMap();
+		param.put("voList", vos);
+		param.put("userId", sessionVO.getUserId());
+		
+		//EgovMap  vailMap = territoryManagementService.uploadVaild(param,sessionVO);
+		Map<String, Object> rtnMap = rosCallLogService.uploadOrdRem(param);
+		//결과 
 		return ResponseEntity.ok(rtnMap);
 	}
 }

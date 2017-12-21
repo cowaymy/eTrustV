@@ -2,7 +2,6 @@ package com.coway.trust.biz.sales.rcms;
 
 import java.util.List;
 import java.util.Map;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ROSCallLogService {
@@ -26,4 +25,8 @@ public interface ROSCallLogService {
 	EgovMap getOrderServiceMemberViewByOrderID(Map<String, Object> params)throws Exception;
 	
 	boolean insertNewRosCall(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectOrderRemList(Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> uploadOrdRem(Map<String, Object> params) throws Exception;
 }

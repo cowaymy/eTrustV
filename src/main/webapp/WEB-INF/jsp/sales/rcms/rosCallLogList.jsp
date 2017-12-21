@@ -109,6 +109,11 @@ function fn_underDevelop(){
 	Common.alert("This Program is Under Development.");
 }
 
+function fn_orderUloadBatch(){
+	Common.popupDiv("/sales/rcms/orderUploadBatchListPop.do", null ,  null , true, '_updLoadDiv');
+}
+
+
 function createRosCallGrid(){
 	 var rosColumnLayout =  [ 
 	                            {dataField : "ordNo", headerText : "Order No", width : '10%' , editable : false}, 
@@ -172,6 +177,22 @@ function fn_chargeOrderBillingType(){
 function searchList(){
 	$("#_searchBtn").click();
 }
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
 </script>
 
 
@@ -189,9 +210,9 @@ function searchList(){
 <ul class="right_btns">
     <li><p class="btn_blue"><a onclick="javascript:fn_newROSCall()"><span ></span>NEW ROS Call</a></p></li>
     <li><p class="btn_blue"><a onclick="javascript:fn_chargeOrderBillingType()"><span ></span>Charge Order Billing Type</a></p></li>
-    <li><p class="btn_blue"><a onclick="javascript:fn_underDevelop()"><span ></span>Order Remark Upload Batch</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_orderUloadBatch()"><span ></span>Order Remark Upload Batch</a></p></li>
     <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a onclick="javascript:fn_underDevelop()"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li> 
 </ul>
 </aside><!-- title_line end -->
 

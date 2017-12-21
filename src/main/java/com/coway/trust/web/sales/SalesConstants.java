@@ -395,6 +395,9 @@ public class SalesConstants {
 	public static final int ROS_NEW_CALL_ENTRY_WAIT_CANCEL = 0;     //newCallEntry.IsWaitForCancel = false;
 	public static final int ROS_NEW_CALL_ENTRY_HAPPY_CALLER_ID = 0;  //newCallEntry.HappyCallerID = 0;
 	
+	public static final int ROS_ORD_REM_UPLOAD_STATUS = 1; //det.StatusID = 1;
+	public static final int ROS_ORD_VALID_STATUS_ID = 1;  //det.ValidStatusID = 1;
+	
 	/**
 	 * 메세지 KEY
 	 */

@@ -14,5 +14,105 @@
 	    CODE_MASTER_ID = #{codeMasterId}
 </select>
 
+<select id="chkUserNameByUserId" parameterType="Map" resultType="egovMap">
+	SELECT 
+	    USER_NAME 
+	FROM 
+	    SYS0047M
+	WHERE
+	    USER_NAME = #{userId}
+	AND
+	<![CDATA[   
+	   ROWNUM <= 1
+	]]>   
+</select>
 
+<select id="getSeqSAL0148M" resultType="java.lang.Integer">
+    SELECT SAL0148M_AGENT_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insAgentMaster" parameterType="Map">
+		INSERT INTO SAL0148M(
+											AGENT_ID,
+											AGENT_TYPE,
+											AGENT_NAME,
+											STUS_ID,
+											USER_ID,
+											CRT_USER_ID,
+											CRT_DT,
+											UPD_USER_ID,
+											UPD_DT
+									)
+							VALUES(
+											#{agentSeq},
+											#{agentType},
+											#{agentName},
+											#{stusId},
+											#{userId},
+											#{crtUserId},
+											SYSDATE,
+											#{crtUserId},
+							                SYSDATE
+							)
+</insert>
+
+<update id="updAgentMaster" parameterType="Map">
+    UPDATE
+        SAL0148M
+    SET
+        AGENT_TYPE = #{agentType},
+        AGENT_NAME = #{agentName},
+        STUS_ID = #{stusId},
+        USER_ID = #{userId},
+        UPD_USER_ID = #{crtUserId},
+        UPD_DT = SYSDATE
+    WHERE
+        AGENT_ID = #{agentId}  
+</update>
+
+
+<select id="chkDupWebId" parameterType="Map" resultType="egovMap">
+    SELECT 
+        USER_ID 
+    FROM 
+        SAL0148M
+    WHERE
+        USER_ID = #{userId}
+    AND
+    <![CDATA[   
+       ROWNUM <= 1
+    ]]>   
+</select>
+
+<select id="selectAgentList" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    AGENT_ID,
+			    AGENT_TYPE,
+			    AGENT_NAME,
+			    STUS_ID,
+			    USER_ID,
+			    CRT_USER_ID,
+			    TO_CHAR(CRT_DT , 'DD/MM/YYYY') CRT_DT,
+			    UPD_USER_ID,
+			    TO_CHAR(UPD_DT , 'DD/MM/YYYY') UPD_DT
+			FROM
+			    SAL0148M
+			WHERE
+			    1 = 1
+			    <if test=" agentName != null and agentName != '' ">
+                    AND UPPER(AGENT_NAME) LIKE '%'||UPPER(#{agentName})||'%'	
+			    </if>
+			    <if test="typeList != null and typeList.length > 0 ">
+			        AND AGENT_TYPE IN
+			        <foreach collection="typeList" item="item" open="(" separator="," close=")">
+			             #{item}
+			        </foreach>
+			    </if>
+			    <if test="statusList != null and statusList.length > 0">
+			         AND STUS_ID IN
+			         <foreach collection="statusList" item="item" open="(" separator="," close=")">
+			             #{item}
+			         </foreach>
+			    </if>
+</select>
 </mapper>

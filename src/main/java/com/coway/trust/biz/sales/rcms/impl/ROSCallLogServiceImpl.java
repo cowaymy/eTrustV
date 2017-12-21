@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
@@ -12,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.rcms.ROSCallLogService;
+import com.coway.trust.biz.sales.rcms.vo.orderRemDataVO;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -21,6 +26,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements ROSCallLogService{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ROSCallLogServiceImpl.class);
+	
+
 	
 	@Resource(name = "rosCallLogMapper")
 	private ROSCallLogMapper rosCallLogMapper;
@@ -897,5 +904,91 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 		}///Insert End
 		
 		return true;
+	}
+
+	@Override
+	public List<EgovMap> selectOrderRemList(Map<String, Object> params) throws Exception{
+		
+		return rosCallLogMapper.selectOrderRemList(params);
+	}
+
+	@Override
+
+	public Map<String, Object> uploadOrdRem(Map<String, Object> params) throws Exception{
+		
+		//Return Map
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+
+		
+		//(1)________________________________Insert Order Remark Upload Master
+		
+		Map<String, Object> ordMap = new HashMap<String, Object>();
+		int ordRemSeq = rosCallLogMapper.getSeqSAL0054D();
+		LOGGER.info("###################  ordRemSeq : " + ordRemSeq);
+		ordMap.put("ordRemSeq", ordRemSeq);
+		ordMap.put("ordRemStus", SalesConstants.ROS_ORD_REM_UPLOAD_STATUS);
+		ordMap.put("userId", params.get("userId"));
+		
+		rosCallLogMapper.insertOrderRem(ordMap);
+		
+		
+		//(2)________________________________Insert Order Remark Upload Detail (bulk)
+		List<orderRemDataVO> vos = (List)params.get("voList");
+		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		LOGGER.info("################### vos : " + vos.size());
+		
+		int seq = 0;
+		for (int idx = 0; idx < vos.size(); idx++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			LOGGER.info("________________________________________________________ before seq : " + seq);
+			seq  = rosCallLogMapper.getSeqSAL0055D();
+			LOGGER.info("________________________________________________________ After seq : " + seq);
+			
+			map.put("uploadDetId", seq);
+			map.put("uploadMId", ordRemSeq);
+			map.put("ordNo", vos.get(idx).getOrderNo());
+			map.put("rem", vos.get(idx).getRemark());
+			map.put("statusId", SalesConstants.ROS_ORD_REM_UPLOAD_STATUS);
+			map.put("orderId", 0);
+			map.put("userId", params.get("userId"));
+			map.put("validStatusId", SalesConstants.ROS_ORD_VALID_STATUS_ID);
+			map.put("validRem", "");
+			
+			list.add(idx, map);		
+			
+		}
+		
+		int size = 1000;
+		int page = list.size() / size;
+		int start;
+		int end;
+		
+		Map<String, Object> ordDMap = new HashMap<>();
+		for (int i = 0; i <= page; i++) {
+			start = i * size;
+			end = size;
+			if(i == page){
+				end = list.size();
+			}
+			ordDMap.put("list",
+					list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+			rosCallLogMapper.insertOrderRemDetail(ordDMap);
+		}
+		
+		
+		//(3)________________________________OrderRemarkUpload_DetVerify (call Procedure)
+		//posMapper.posBookingCallSP_LOGISTIC_REQUEST(logPram);
+		Map<String, Object> prcMap = new HashMap<String, Object>();
+		prcMap.put("ordRemSeq", ordRemSeq);
+		
+		rosCallLogMapper.spOrderRemarkUpload_DetVerify(prcMap);
+		
+		//Return
+		rtnMap.put("ordRemSeq", ordRemSeq);
+		
+		return rtnMap;
 	}
 }

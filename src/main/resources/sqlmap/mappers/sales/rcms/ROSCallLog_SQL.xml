@@ -594,4 +594,127 @@ INSERT INTO CCR0006D(
 </insert>
 
 
+<select id="selectOrderRemList" parameterType="Map" resultType="egovMap">
+			 SELECT Project1.UPLOAD_MID   ,
+			       Project1.STUS_ID   ,
+			       Project1.NAME   ,
+			       Project1.CRT_USER_ID   ,
+			       Project1.CRT_USER_NAME   ,
+			       TO_CHAR(Project1.CRT_DT, 'DD/MM/YYYY') CRT_DT  ,
+			       Project1.UPD_USER_ID   ,
+			       Project1.UPD_USER_NAME   ,
+			       TO_CHAR(Project1.UPD_DT, 'DD/MM/YYYY') UPD_DT   
+			  FROM ( SELECT Filter1.UPLOAD_MID   ,
+			                Filter1.STUS_ID   ,
+			                Filter1.CRT_USER_ID   ,
+			                Filter1.CRT_DT   ,
+			                Filter1.UPD_USER_ID   ,
+			                Filter1.UPD_DT   ,
+			                Filter1.NAME   ,
+			                CASE WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME ELSE ' ' END CRT_USER_NAME  ,
+			                CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE ' ' END UPD_USER_NAME  
+			         FROM ( SELECT Extent1.UPLOAD_MID   ,
+			                       Extent1.STUS_ID   ,
+			                       Extent1.CRT_USER_ID   ,
+			                       Extent1.CRT_DT   ,
+			                       Extent1.UPD_USER_ID   ,
+			                       Extent1.UPD_DT   ,
+			                       Extent2.NAME   ,
+			                       Extent3.USER_ID   ,
+			                       Extent3.USER_NAME   
+			                FROM SAL0054D Extent1
+			                       JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+			                       LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
+			                 <if test="stusArr != null and stusArr.length > 0">
+			                     WHERE  Extent1.STUS_ID IN
+			                         <foreach collection="stusArr" open="(" separator="," close=")" item="item">
+			                             #{item}
+			                         </foreach>     
+			                 </if>      
+			               ) Filter1
+			                LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Filter1.UPD_USER_ID
+			          WHERE  
+			                     1 = 1			                    
+			          <if test="batchId != null and batchId != '' ">
+			             AND Filter1.UPLOAD_MID = #{batchId}
+			          </if>             
+			          <if test="fromDt != null and fromDt != '' ">
+			             AND  Filter1.CRT_DT >= TO_DATE(#{fromDt}||' 00:00:00' , 'DD/MM/YYYY HH24:MI:SS')
+			          </if>
+			          <if test="toDT != null and toDT != '' ">
+                         <![CDATA[
+                         AND  Filter1.CRT_DT <= TO_DATE(#{toDT}||' 23:59:59' , 'DD/MM/YYYY HH24:MI:SS')
+                         ]]> 
+                      </if>
+			        ) Project1
+			        <if test="uploader != null and uploader != '' ">
+                        WHERE UPPER(Project1.CRT_USER_NAME) LIKE '%'||UPPER(#{uploader})||'%'
+                    </if>
+			  ORDER BY Project1.UPLOAD_MID ASC
+</select>
+
+<select id="getSeqSAL0054D" resultType="java.lang.Integer">
+    SELECT SAL0054D_UPLOAD_MID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertOrderRem" parameterType="Map">
+    INSERT INTO SAL0054D(
+                     UPLOAD_MID, 
+                     STUS_ID,
+                     CRT_USER_ID,
+                     CRT_DT,
+                     UPD_USER_ID,
+                     UPD_DT )
+        VALUES (#{ordRemSeq},
+                  #{ordRemStus},
+                  #{userId},
+                  SYSDATE,
+                  #{userId},
+                  SYSDATE
+                  )
+</insert>
+
+<select id="getSeqSAL0055D" resultType="int"  flushCache="true">
+    SELECT SAL0055D_UPLOAD_DET_ID_SEQ.NEXTVAL FROM DUAL
+</select>
+
+<insert id="insertOrderRemDetail" parameterType="java.util.List">
+INSERT INTO SAL0055D(
+								UPLOAD_DET_ID,
+								UPLOAD_MID,
+								ORD_NO,
+								REM,
+								STUS_ID,
+								ORD_ID,
+								CRT_USER_ID,
+								CRT_DT,
+								UPD_USER_ID,
+								UPD_DT,
+								VALID_STUS_ID,
+								VALID_REM)
+<foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+SELECT
+    #{item.uploadDetId},
+    #{item.uploadMId},
+    #{item.ordNo},
+    #{item.rem},
+    #{item.statusId},
+    #{item.orderId},
+    #{item.userId},
+    SYSDATE,
+    #{item.userId},
+    SYSDATE,
+    #{item.validStatusId},
+    #{item.validRem}
+FROM DUAL
+</foreach>
+</insert>
+
+<select id="spOrderRemarkUpload_DetVerify" parameterType="Map" statementType="CALLABLE">
+    <![CDATA[  
+            {
+                  call SP_ORD_REM_UP_DETVERIFY ( #{ordRemSeq})
+            }
+    ]]>
+</select>
 </mapper>

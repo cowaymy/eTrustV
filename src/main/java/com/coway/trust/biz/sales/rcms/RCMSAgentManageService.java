@@ -10,4 +10,11 @@ public interface RCMSAgentManageService {
 	
 	List<EgovMap> selectAgentTypeList(Map<String, Object> params)throws Exception;
 	
+	List<Object> checkWebId(Map<String, Object> params) throws Exception;
+	
+	List<Object> chkDupWebId(Map<String, Object> params) throws Exception;
+	
+	void insUpdAgent(Map<String, Object> params) throws Exception; 
+	
+	List<EgovMap> selectAgentList(Map<String, Object> params) throws Exception;
 }

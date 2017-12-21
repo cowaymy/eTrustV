@@ -47,4 +47,16 @@ public interface ROSCallLogMapper {
 	
 	void insertCallEntryInfo(Map<String, Object> params);
 	
+	List<EgovMap> selectOrderRemList(Map<String, Object> params);
+	
+	int getSeqSAL0054D();
+	
+	void insertOrderRem(Map<String, Object> params);
+	
+	int getSeqSAL0055D();
+	
+	void insertOrderRemDetail(Map<String, Object> params);
+	
+	Map<String, Object> spOrderRemarkUpload_DetVerify(Map<String, Object> param);
+	
 }

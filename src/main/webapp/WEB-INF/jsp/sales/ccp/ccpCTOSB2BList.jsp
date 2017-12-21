@@ -128,16 +128,16 @@ function searchNotFoundHandler(event) {
 
 function createCtosGrid(){
 	var  columnLayout = [
-	                     {dataField : "batchId", headerText : "Batch No", width : "9%" , editable : false},
-	                     {dataField : "fileName", headerText : "File Name", width : "10%" , editable : false},
-	                     {dataField : "rowCnt", headerText : "Total", width : "9%" , editable : false},
-	                     {dataField : "comple", headerText : "Complete", width : "9%" , editable : false},
-	                     {dataField : "act", headerText : "Act", width : "9%" , editable : false},
-	                     {dataField : "zero", headerText : "ZERO", width : "9%" , editable : false},
-	                     {dataField : "lt500", headerText : "LT500", width : "9%" , editable : false},
-	                     {dataField : "gt501", headerText : "GT501", width : "9%" , editable : false},
+	                     {dataField : "batchId", headerText : "Batch No", width : "7%" , editable : false},
+	                     {dataField : "fileName", headerText : "File Name", width : "14%" , editable : false},
+	                     {dataField : "rowCnt", headerText : "Total", width : "8%" , editable : false},
+	                     {dataField : "comple", headerText : "Complete", width : "8%" , editable : false},
+	                     {dataField : "act", headerText : "Act", width : "8%" , editable : false},
+	                     {dataField : "zero", headerText : "ZERO", width : "8%" , editable : false},
+	                     {dataField : "lt500", headerText : "LT500", width : "8%" , editable : false},
+	                     {dataField : "gt501", headerText : "GT501", width : "8%" , editable : false},
 	                     {dataField : "stus", headerText : "STATUS", width : "9%" , editable : false},
-	                     {dataField : "updDt", headerText : "Upload Time", width : "9%" , editable : false},
+	                     {dataField : "updDt", headerText : "Upload Time", width : "13%" , editable : false},
 	                     {dataField : "updUserId", headerText : "Upload User", width : "9%" , editable : false}
 	               ]
 	

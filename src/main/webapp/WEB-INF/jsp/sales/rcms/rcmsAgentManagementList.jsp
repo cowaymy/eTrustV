@@ -6,6 +6,7 @@
 var agentGridID;
 //Combo Option
 var comboOption = { isShowChoose: false , type: "M"};
+var comboStatusOption = { isShowChoose: false , type: "M", id: "stusCodeId", name: "codeName"};
 //Grid Code Array
 var typeArr;
 var statusArr;
@@ -21,7 +22,7 @@ $(document).ready(function() {
 	CommonCombo.make("_agentType", "/sales/rcms/selectAgentTypeList", typeParam, '',  comboOption);
 	
 	var statusParam = {selCategoryId : '17'};
-	CommonCombo.make("_agentStatus", "/status/selectStatusCategoryCdList.do", statusParam, '',  comboOption);
+	CommonCombo.make("_agentStatus", "/status/selectStatusCategoryCdList.do", statusParam, '',  comboStatusOption);
 	
 	//Create Grid
 	createAgentGrid();
@@ -35,29 +36,166 @@ $(document).ready(function() {
 		isVal = fn_chkAgentVal();
 		
 		//Save
-		/* if(isVal == false){
+		if(isVal == false){
 			return;
 		}else{
 			
 			//Save Start
 			
-		} */
+		}
 		
 	});
+	
+	
+	//Search
+	$("#_agentSearch").click(function() {
+		
+		Common.ajax("GET", "/sales/rcms/selectAgentList", $("#_searchForm").serialize(), function(result){
+			AUIGrid.setGridData(agentGridID, result);
+		});
+		
+	});
+	
+//Grid Edit
+AUIGrid.bind(agentGridID, "cellEditEndBefore", function( event ) {
+	
+	if(event.dataField == 'agentName'){
+		if(event.value.length > 15){
+			Common.alert("Please key in agent name under 16 digit(s).");
+			
+			if(event.oldValue == null || event.oldValue == ''){
+				return '';
+			}else{
+				return event.oldValue;	
+			}
+		}else{
+			return event.value;
+		}
+	}else{
+		return event.value;
+	}
 });
+	
+});//Doc Ready Func End////////////////////
 
 function fn_chkAgentVal(){
     
 	//Add Objects
-	var addArr = [];
-	addArr = AUIGrid.getAddedRowItems(agentGridID);
+	var editArr = [];
+	var isVal = true;
+	var data = {};
 	
-	console.log("addArr : " + JSON.stringify(addArr));
+	editArr = GridCommon.getEditData(agentGridID);
 	
+	//Valition 
+	//1. NullCheck
+	var agentSize = AUIGrid.getGridData(agentGridID);
+    if(agentSize == null || agentSize.length <= 0){
+        Common.alert("No Change Data.");
+        return false;
+    }
+	
+	if(editArr == null || editArr.size <= 0){
+		Common.alert("No Change Data.");
+		return false;
+	}
+	//1 - 1 . Add Row Check
+	if(editArr.add != null || editArr.add.size > 0){
+		$(editArr.add).each(function(idx, el) {
+			//console.log("el["+idx+"] : " + el.agentName + " , " +  el.userId);
+			if(el.agentName.trim() == ''){
+				Common.alert("Agent Name Can not be empty.");
+				isVal = false;
+				return false;
+			}
+			
+			if(el.userId.trim() == ''  ){
+				Common.alert("Web ID Can not be empty.");
+                isVal = false;
+                return false;
+			}
+		});
+		
+		if(isVal == false){
+			return;
+		}
+		
+		data.add = editArr.add;
+	}
+	//1 - 2 . Update Row Check
+	if(editArr.update != null || editArr.update.size > 0){
+        $(editArr.update).each(function(idx, el) {
+            //console.log("el["+idx+"] : " + el.agentName + " , " +  el.userId);
+            if(el.agentName.trim() == ''){
+                Common.alert("Agent Name Can not be empty.");
+                isVal = false;
+                return false;
+            }
+            
+            if(el.userId.trim() == ''  ){
+                Common.alert("Web ID Can not be empty.");
+                isVal = false;
+                return false;
+            }
+        });
+        
+        if(isVal == false){
+            return;
+        }
+        
+        data.upd = editArr.update;
+    }
+	//2. Web Id Check
+	
+	var rtnMsg = '';
+	Common.ajax("POST", "/sales/rcms/checkWebId", data, function(result){
+		
+		if(result != null && result.length > 0){
+			
+			$(result).each(function(idx, el){
+				if(idx == (result.length -1)){
+					rtnMsg += el;	
+				}else{
+					rtnMsg += el+", ";	
+				}
+			});
+		}
+	}, null , {async : false});
+	
+	if(rtnMsg != ''){
+		Common.alert("User Web ID not a vailid.<br>" + rtnMsg);
+		return;
+	}
+	
+	//3. User Id Dup Check
+	Common.ajax("POST", "/sales/rcms/chkDupWebId", data, function(result){
+	    
+		if(result != null && result.length > 0){
+            
+            $(result).each(function(idx, el){
+                if(idx == (result.length -1)){
+                    rtnMsg += el;   
+                }else{
+                    rtnMsg += el+", ";  
+                }
+            });
+        }
+	}, null , {async : false});
+	
+	if(rtnMsg != ''){
+        Common.alert("Duplicate User Web ID.<br>" + rtnMsg);
+        return;
+    }
+	// ____________________Validation Success
+	//Save
+	Common.ajax("POST", "/sales/rcms/insUpdAgent.do", data, function(result){
+		  Common.alert(result.message);
+		  $("#_agentSearch").click(); //Reload...
+	});
 }
 
 function fn_getCodeList(grpCode){
-	console.log("grpCode : " + grpCode);
+	//console.log("grpCode : " + grpCode);
 	var url;
 	
 	if(grpCode == '329'){  //type Array
@@ -86,7 +224,7 @@ function fn_getCodeList(grpCode){
 	             }
 	             typeArr = tempArr; 
 	             
-	             console.log("typeArr : " + JSON.stringify(typeArr));
+	             //console.log("typeArr : " + JSON.stringify(typeArr));
 	             
 	        },error: function () {
 	            Common.alert("Fail to Get Code List....");
@@ -119,7 +257,7 @@ function fn_getCodeList(grpCode){
 	                 tempArr.push(result[idx]); 
 	             }
 	             statusArr = tempArr; 
-	             console.log("statusArr : " + JSON.stringify(statusArr));
+	             //console.log("statusArr : " + JSON.stringify(statusArr));
 	        },error: function () {
 	            Common.alert("Fail to Get Code List....");
 	        }
@@ -221,13 +359,13 @@ function addRowToGrid(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Agent Management</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"><span id="_agentSave"></span>Save</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="_agentSave"><span></span>Save</a></p></li>
+    <li><p class="btn_blue"><a id="_agentSearch"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post">
+<form  id="_searchForm">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -247,11 +385,11 @@ function addRowToGrid(){
     </td>
     <th scope="row">Agent Name</th>
     <td>
-    <input type="text" title="Agent Name" placeholder="Agent Name" class="w100p" />
+    <input type="text" title="Agent Name" placeholder="Agent Name" class="w100p" name="agentName" />
     </td>
     <th scope="row">Status</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="_agentStatus"></select>
+    <select class="multy_select w100p" multiple="multiple" id="_agentStatus" name="agentStatus"></select>
     </td>
 </tr>
 </tbody>
