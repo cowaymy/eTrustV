@@ -2069,6 +2069,7 @@
                    AND C.MEM_TYPE =3
                    AND A.MEM_LVL  = 4
                    AND B.CODE =D.CT_BRNCH_CODE 
+                   AND A.CT_SUB_GRP =D.CT_SUB_GRP
                    AND C.STUS =1
      </select>
      

@@ -1377,7 +1377,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 		Map tradeamount= new HashMap();
 		tradeamount.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
-		Map outRightAmount = installationResultListMapper.getTradeAmount(tradeamount);
+		Map outRightAmount35d = installationResultListMapper.getTradeAmount(tradeamount);   //35d amt 
 		
 		
 		Map ordTamtPram= new HashMap();
@@ -1396,13 +1396,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		String tAmt = "0";  // String.valueOf( CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT")));
 		
 		if(null !=ordInfo){
-			tAmt = String.valueOf( CommonUtils.intNvl( ordInfo.get("totAmt"))); 
+			tAmt = String.valueOf( CommonUtils.intNvl( ordInfo.get("totAmt")));   // 
 		}
  		
-		double tradeOutrightPreAmount =  Double.parseDouble(String.valueOf(CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT"))));
+		double outright35dAmount =  Double.parseDouble(String.valueOf(CommonUtils.intNvl( outRightAmount35d.get("SUMTRADE_AMT"))));
 
 		double outrightTotalPrice = Double.parseDouble(tAmt ==""?"0" : tAmt);
-		double outrightBalance = outrightTotalPrice - tradeOutrightPreAmount;
+		double outrightBalance = outrightTotalPrice - outright35dAmount;
 		
         double outrightSubProcessing = 0;
         double outrightSubBalance = 0;
@@ -1476,18 +1476,18 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		
     		
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
-
-    			if(tradeOutrightPreAmount > 200){
-    				   outrightSubProcessing = 0;
-                       outrightSubBalance = tradeOutrightPreAmount - tradeOutrightPreAmount;
-    			}else{
-    				outrightSubProcessing = (200 - tradeOutrightPreAmount);
-                    outrightSubBalance = tradeOutrightPreAmount - (tradeOutrightPreAmount + (200 - tradeOutrightPreAmount));
-    			}
     			
+    			if(ApptypeID.equals("1412")){
+        			if(outright35dAmount > 200){
+        				   outrightSubProcessing = 0;
+                           outrightSubBalance = outrightTotalPrice - outright35dAmount;
+        			}else{
+        				outrightSubProcessing = (200 - outright35dAmount);
+                        outrightSubBalance = outrightTotalPrice - (outright35dAmount + (200 - outright35dAmount));
+        			}
+    			}  
     			
-    			
-    			 if (outrightTotalPrice  > tradeOutrightPreAmount) {
+    			 if (outrightTotalPrice  > outright35dAmount) {
     				 
     				 		isBillAvb =true;
     				 		
@@ -1634,18 +1634,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		
         	            		if(TAXRATE > 0){
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",Double.toString(outrightBalance  * 100 / 106 ));
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS",outrightSubProcessing - ( outrightSubProcessing  * 100 / 106));
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",Double.toString(outrightSubProcessing  * 100 / 106 ));
+        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightBalance  * 100 / 106);
+
         	                	}else{
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS","0");
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",outrightSubProcessing);
         	                	}
     
         	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",outrightSubProcessing);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE","0");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");            		
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));

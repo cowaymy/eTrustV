@@ -87,9 +87,13 @@ $(document).ready(function() {
 
 function fn_saveInstall(){
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
-        console.log("성공.");
-        console.log("data : " + result);
+        console.log(result);
         Common.alert(result.message);
+        
+        if(result.data =="Y" ){
+        	$("#sav_div").attr("style","display:none");
+        }
+       
     });
 }
 function fn_viewInstallResultSearch(){
@@ -813,9 +817,15 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
 </tbody>
 </table><!-- table end -->
 </form>
-<ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_saveInstall()"><spring:message code='service.btn.SaveInstallationResult'/></a></p></li>
+
+   <div  id='sav_div'>
+<ul class="center_btns" >
+
+    <li><p class="btn_blue2">
+        <a href="#" onclick="fn_saveInstall()">Save Installation Result</a></p>
+    </li>
 </ul>
+</div> 
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
