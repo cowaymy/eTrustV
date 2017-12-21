@@ -48,7 +48,7 @@
     <td>${orderDetail.basicInfo.ordPv}</td>
     <th scope="row">Normal Price/RPF</th>
     <td>${orderDetail.basicInfo.norAmt}</td>
-    <th scope="row">Price/RPF</th>
+    <th scope="row">Final Price/RPF</th>
     <td>${orderDetail.basicInfo.ordAmt}</td>
 </tr>
 <tr>
@@ -56,7 +56,7 @@
     <td>${orderDetail.basicInfo.pormoPeriodType}</td>
     <th scope="row">Normal<br>Rental Fees</th>
     <td>${orderDetail.basicInfo.norRntFee}</td>
-    <th scope="row">Promotion Rental Fees</th>
+    <th scope="row">Final Rental Fee</th>
     <td>${orderDetail.basicInfo.mthRentalFees}</td>
 </tr>
 <tr>

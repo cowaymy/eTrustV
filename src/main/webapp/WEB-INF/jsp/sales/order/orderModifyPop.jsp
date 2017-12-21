@@ -3,18 +3,18 @@
 
 <script type="text/javaScript" language="javascript">
     
-    var ORD_ID        = '${salesOrderId}';
-    var ORD_NO        = '${salesOrderNo}';
-    var ORD_STUS_ID   = '${ordStusId}';
-    var CUST_ID       = '${custId}';
-    var APP_TYPE_ID   = '${appTypeId}';
-    var APP_TYPE_DESC = '${appTypeDesc}';
-    var TAB_NM        = '${ordEditType}';
-    var CUST_NRIC     = '${custNric}';
-    var PROMO_CODE    = '${promoCode}';
-    var PROMO_DESC    = '${promoDesc}';
-    var SRV_PAC_ID    = '${srvPacId}';
-    var GST_CHK       = '${orderDetail.basicInfo.gstChk}';
+    var ORD_ID        = "${salesOrderId}";
+    var ORD_NO        = "${salesOrderNo}";
+    var ORD_STUS_ID   = "${ordStusId}";
+    var CUST_ID       = "${custId}";
+    var APP_TYPE_ID   = "${appTypeId}";
+    var APP_TYPE_DESC = "${appTypeDesc}";
+    var TAB_NM        = "${ordEditType}";
+    var CUST_NRIC     = "${custNric}";
+    var PROMO_CODE    = "${promoCode}";
+    var PROMO_DESC    = "${promoDesc}";
+    var SRV_PAC_ID    = "${srvPacId}";
+    var GST_CHK       = "${orderDetail.basicInfo.gstChk}";
     
     var keyValueList = [];
     
@@ -322,7 +322,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
 
-            $('#modApplyDate').val('${toDay}');
+            $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             $('#rentPayMode').val('');
@@ -344,7 +344,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
             
-            $('#modApplyDate').val('${toDay}');
+            $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             $('#rentPayMode').val('');
@@ -369,7 +369,7 @@
                 fn_clearRentPaySetDD();
                 fn_clearControlReject();
                 
-                $('#modApplyDate').val('${toDay}');
+                $('#modApplyDate').val("${toDay}");
                 $('#modSubmitDate').val('');
                 $('#modStartDate').val('');
                 $('#rentPayMode').val('');
@@ -389,7 +389,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
             
-            $('#modApplyDate').val('${toDay}');
+            $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             
@@ -970,7 +970,7 @@
             fn_clearRentPaySetDD();
             fn_clearControlReject();
             
-            $('#modApplyDate').val('${toDay}');
+            $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
             $('#rentPayMode').val('');
@@ -1017,7 +1017,7 @@
         $('#scPC_CrCard').removeClass("blind");
         
         fn_clearControlReject();
-        $('#modApplyDate').val('${toDay}');
+        $('#modApplyDate').val("${toDay}");
         $('#modSubmitDate').val('');
         $('#modStartDate').val('');
     }

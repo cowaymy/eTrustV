@@ -3,30 +3,30 @@
 
 <script type="text/javaScript" language="javascript">
     
-    var TAB_NM        = '${ordReqType}';
-    var ORD_ID        = '${orderDetail.basicInfo.ordId}';
-    var ORD_NO        = '${orderDetail.basicInfo.ordNo}';
-    var ORD_DT        = '${orderDetail.basicInfo.ordDt}';
-    var ORD_STUS_ID   = '${orderDetail.basicInfo.ordStusId}';
-    var ORD_STUS_CODE = '${orderDetail.basicInfo.ordStusCode}';
-    var CUST_ID       = '${orderDetail.basicInfo.custId}';
-    var CUST_TYPE_ID  = '${orderDetail.basicInfo.custTypeId}';
-    var APP_TYPE_ID   = '${orderDetail.basicInfo.appTypeId}';
-    var APP_TYPE_DESC = '${orderDetail.basicInfo.appTypeDesc}';
-    var CUST_NRIC     = '${orderDetail.basicInfo.custNric}';
-    var PROMO_ID      = '${orderDetail.basicInfo.ordPromoId}';
-    var PROMO_CODE    = '${orderDetail.basicInfo.ordPromoCode}';
-    var PROMO_DESC    = '${orderDetail.basicInfo.ordPromoDesc}';
-    var STOCK_ID      = '${orderDetail.basicInfo.stockId}';
-    var STOCK_DESC    = '${orderDetail.basicInfo.stockDesc}';
-    var CNVR_SCHEME_ID= '${orderDetail.basicInfo.cnvrSchemeId}';
-    var RENTAL_STUS   = '${orderDetail.basicInfo.rentalStus}';
-    var EMP_CHK       = '${orderDetail.basicInfo.empChk}';
-    var EX_TRADE      = '${orderDetail.basicInfo.exTrade}';
-    var TODAY_DD      = '${toDay}';
-    var SRV_PAC_ID    = '${orderDetail.basicInfo.srvPacId}';
-    var GST_CHK       = '${orderDetail.basicInfo.gstChk}';
-    var IS_NEW_VER    = '${orderDetail.isNewVer}';
+    var TAB_NM        = "${ordReqType}";
+    var ORD_ID        = "${orderDetail.basicInfo.ordId}";
+    var ORD_NO        = "${orderDetail.basicInfo.ordNo}";
+    var ORD_DT        = "${orderDetail.basicInfo.ordDt}";
+    var ORD_STUS_ID   = "${orderDetail.basicInfo.ordStusId}";
+    var ORD_STUS_CODE = "${orderDetail.basicInfo.ordStusCode}";
+    var CUST_ID       = "${orderDetail.basicInfo.custId}";
+    var CUST_TYPE_ID  = "${orderDetail.basicInfo.custTypeId}";
+    var APP_TYPE_ID   = "${orderDetail.basicInfo.appTypeId}";
+    var APP_TYPE_DESC = "${orderDetail.basicInfo.appTypeDesc}";
+    var CUST_NRIC     = "${orderDetail.basicInfo.custNric}";
+    var PROMO_ID      = "${orderDetail.basicInfo.ordPromoId}";
+    var PROMO_CODE    = "${orderDetail.basicInfo.ordPromoCode}";
+    var PROMO_DESC    = "${orderDetail.basicInfo.ordPromoDesc}";
+    var STOCK_ID      = "${orderDetail.basicInfo.stockId}";
+    var STOCK_DESC    = "${orderDetail.basicInfo.stockDesc}";
+    var CNVR_SCHEME_ID= "${orderDetail.basicInfo.cnvrSchemeId}";
+    var RENTAL_STUS   = "${orderDetail.basicInfo.rentalStus}";
+    var EMP_CHK       = "${orderDetail.basicInfo.empChk}";
+    var EX_TRADE      = "${orderDetail.basicInfo.exTrade}";
+    var TODAY_DD      = "${toDay}";
+    var SRV_PAC_ID    = "${orderDetail.basicInfo.srvPacId}";
+    var GST_CHK       = "${orderDetail.basicInfo.gstChk}";
+    var IS_NEW_VER    = "${orderDetail.isNewVer}";
 
     var filterGridID;
     
@@ -751,7 +751,7 @@
                 $("#visaExprOwnt").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#emailOwnt").val(custInfo.email); //Email
                 $("#custRemOwnt").val(custInfo.rem); //Remark
-                $("#empChkOwnt").val('${orderDetail.basicInfo.empChk}'); //Employee
+                $("#empChkOwnt").val("${orderDetail.basicInfo.empChk}"); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
 
                 if(custInfo.corpTypeId > 0) {
@@ -1398,14 +1398,10 @@
     function fn_isLockOrder(tabNm) {
         var isLock = false;
         var msg = "";
-        
-        console.log('isLok:'+'${orderDetail.logView.isLok}');
-        console.log('prgrsId:'+'${orderDetail.logView.prgrsId}');
-        console.log('prgrs:'+'${orderDetail.logView.prgrs}');
-        
-        if('${orderDetail.logView.isLok}' == '1' && '${orderDetail.logView.prgrsId}' != 2) {
+
+        if("${orderDetail.logView.isLok}" == '1' && "${orderDetail.logView.prgrsId}" != 2) {
             isLock = true;
-            msg = 'This order is under progress [' + '${orderDetail.logView.prgrs}' + '].<br />';
+            msg = 'This order is under progress [' + "${orderDetail.logView.prgrs}" + '].<br />';
         }
 
         if(isLock) {            
@@ -1515,9 +1511,9 @@
             fn_tabOnOffSetOwnt('BIL_GRP', 'SHOW');
         }
         
-        $('#dpPreferInstDateOwnt').val('${orderDetail.installationInfo.preferInstDt}');
-        $('#tpPreferInstTimeOwnt').val('${orderDetail.installationInfo.preferInstTm}');
-        $('#txtInstSpecialInstructionOwnt').val('${orderDetail.installationInfo.instct}');
+        $('#dpPreferInstDateOwnt').val("${orderDetail.installationInfo.preferInstDt}");
+        $('#tpPreferInstTimeOwnt').val("${orderDetail.installationInfo.preferInstTm}");
+        $('#txtInstSpecialInstructionOwnt').val("${orderDetail.installationInfo.instct}");
     }
             
     function fn_loadOrderInfoCanc() {
@@ -1570,7 +1566,7 @@
             if(FormUtil.isNotEmpty(vTotalUseMth)) {
                 $('#txtTotalUseMth').val(vTotalUseMth);
             }
-            $('#txtRentalFees').val('${orderDetail.basicInfo.ordMthRental}');
+            $('#txtRentalFees').val("${orderDetail.basicInfo.ordMthRental}");
             
             var vCurrentOutstanding = fn_getOrderOutstandingInfo();
             
@@ -2181,7 +2177,7 @@
     function fn_loadListOwnt() {
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChkOwnt',  'S'); //EMP_CHK
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'cmbRentPaymodeOwnt', 'S', ''); //Common Code
-        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '${orderDetail.installationInfo.dscId}', 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
+        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', "${orderDetail.installationInfo.dscId}", 'cmbDSCBranchOwnt',  'S', ''); //Branch Code
     }
     
     function fn_tabOnOffSetOwnt(tabNm, opt) {
