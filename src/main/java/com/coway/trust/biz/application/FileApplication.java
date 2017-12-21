@@ -8,7 +8,7 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.util.EgovFormBasedFileVo;
 
 public interface FileApplication {
-	void businessAttach(FileType type, List<FileVO> list, Map<String, Object> params);
+	int businessAttach(FileType type, List<FileVO> list, Map<String, Object> params);
 
 	int commonAttachByUserId(FileType type, List<FileVO> list, Map<String, Object> params);
 
@@ -17,4 +17,6 @@ public interface FileApplication {
 	void noticeAttach(FileType type, List<FileVO> list, Map<String, Object> params);
 
 	void updateNoticeAttach(List<FileVO> fileVOS, Map<String, Object> params);
+	
+	void updateBusinessAttach(List<FileVO> fileVOS, Map<String, Object> params);
 }

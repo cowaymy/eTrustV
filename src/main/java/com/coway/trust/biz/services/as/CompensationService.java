@@ -21,4 +21,6 @@ public interface CompensationService {
 	List<EgovMap> selectSalesOrdNoInfo(Map<String, Object> params);
 	
 	List<EgovMap> selectBranchWithNM();
+	
+	List<EgovMap> getAttachmentFileInfo(Map<String, Object> params);
 }

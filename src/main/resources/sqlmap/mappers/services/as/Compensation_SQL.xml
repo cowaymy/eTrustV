@@ -134,6 +134,8 @@
 			        ,COMP_ITEM_1            /*  Compensation Item 1         */  
 			        ,COMP_ITEM_2            /*  Compensation Item 2         */  
 			        ,COMP_ITEM_3            /*  Compensation Item 3         */
+			        ,ATCH_FILE_GRP_ID 
+			        ,CRT_USER_ID
 			        ,ORD_INFO.STK_DESC
                     ,ORD_INFO.INSTALL_DT
                     ,ORD_INFO.SERIAL_NO  
@@ -164,7 +166,7 @@
 				COMP_NO, CUST_ID, SALES_ORD_NO, AS_NO, AS_REQSTER_TYPE_ID, 
 				STUS_CODE_ID, COMP_DT, MAIN_DEPT, CODE, COMP_TOT_AMT, 
 				ISSUE_DT, AS_DEFECT_TYPE_ID, AS_MALFUNC_RESN_ID, ASR_ITM_PART_ID, ASR_ITM_PART_DESC, 
-				AS_SLUTN_RESN_ID, COMP_ITEM_1, COMP_ITEM_2, COMP_ITEM_3, ATTACH_FILE, 
+				AS_SLUTN_RESN_ID, COMP_ITEM_1, COMP_ITEM_2, COMP_ITEM_3, ATCH_FILE_GRP_ID, 
 				CRT_USER_ID, CRT_DT, UPD_USER_ID, UPD_DT
 				)
 		values
@@ -172,7 +174,7 @@
 				SVC0053M_COMP_NO_SEQ.NEXTVAL , #{custId}, #{salesOrdNo}, #{asNo}, #{asReqsterTypeId}, 
 				#{stusCodeId}, to_date(#{compDt}, 'yyyymmdd'), #{searchdepartment}, #{code}, #{compTotAmt}, 
 				to_date(#{issueDt}, 'yyyymmdd'), #{asDefectTypeId}, #{asMalfuncResnId}, #{asrItmPart_id}, #{asrItmPartDesc}, 
-				#{asSlutnResn_id}, #{compItem1}, #{compItem2}, #{compItem3}, #{hasAttach},
+				#{asSlutnResn_id}, #{compItem1}, #{compItem2}, #{compItem3}, #{atchFileGrpId},
 				#{updator}, SYSDATE, #{updator}, SYSDATE
 				)
     </insert>
@@ -197,10 +199,25 @@
               ,COMP_ITEM_1               = #{compItem1}
               ,COMP_ITEM_2               = #{compItem2}
               ,COMP_ITEM_3               = #{compItem3}
-              ,ATTACH_FILE                = #{hasAttach}
+              ,ATCH_FILE_GRP_ID         = nvl(#{atchFileGrpId}, ATCH_FILE_GRP_ID)
               ,UPD_USER_ID                = #{updator}
               ,UPD_DT                        = SYSDATE
      where COMP_NO =  #{compNo}    
     </insert>    
+    
+    
+    <select id="selectAttachmentFileInfo" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+    </select>
     
 </mapper>

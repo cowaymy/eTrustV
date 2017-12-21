@@ -25,6 +25,34 @@
             $("#code option[value='"+ codeStatusCd +"']").attr("selected", true);
 	     
             
+            /*AttachFile values*/
+            $("input[name=attachFile]").on("dblclick", function () {
+
+                Common.showLoader();
+
+                var $this = $(this);
+                var fileId = $this.attr("data-id");
+
+                $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+                    httpMethod: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    data: {
+                        fileId: fileId
+                    },
+                    failCallback: function (responseHtml, url, error) {
+                        Common.alert($(responseHtml).find("#errorMessage").text());
+                    }
+                })
+                    .done(function () {
+                        Common.removeLoader();
+                        console.log('File download a success!');
+                    })
+                    .fail(function () {
+                        Common.removeLoader();
+                    });
+                return false; //this is critical to stop the click event which will trigger a normal file download
+            });
+            
         });
  
     function fn_close() {
@@ -202,22 +230,34 @@
     <td colspan="3">
         <input type="text" title="" id="compItem1" name="compItem1"  value="${compensationView.compItem1}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
     </td>
-    <th scope="row">Attachment</th>
-    <td colspan="3">
-        <input type="text" title="" id="attachFile" name="attachFile"  value="${compensationView.attachFile}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
-    </td>  
-</tr>
-<tr>
-<th scope="row">Compensation Item</th>
+    <th scope="row">Compensation Item</th>
     <td colspan="3">
     <input type="text" title="" id="compItem2" name="compItem2"  value="${compensationView.compItem2}" readonly="readonly" placeholder="" class="readonly " style="width: 157px; "/>
-    </td>
+    </td> 
+</tr>
+<tr>
     <th scope="row">Compensation Item</th>
     <td colspan="3">
     <input type="text" title="" id="compItem3" name="compItem3"  value="${compensationView.compItem3}" readonly="readonly" class="readonly " style="width: 157px; "/>
     </td> 
+    <th scope="row"></th>
+    <td colspan="3">
+    </td> 
 </tr>
- 
+ <tr>
+    <th scope="row">Attachment</th>
+    <td colspan="7">
+        <c:forEach var="fileInfo" items="${files}" varStatus="status">
+            <div class="auto_file2"><!-- auto_file start -->
+                <input title="file add" style="width: 300px;" type="file">
+                    <label>
+                        <input type='text' class='input_text' readonly='readonly' name="attachFile"
+                                  value="${fileInfo.atchFileName}" data-id="${fileInfo.atchFileId}"/>
+                    </label>
+            </div>
+       </c:forEach>
+    </td>
+ </tr>
 </tbody>
 </table><!-- table end -->
     

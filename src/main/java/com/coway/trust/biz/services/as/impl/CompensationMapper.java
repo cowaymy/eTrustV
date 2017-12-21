@@ -22,4 +22,6 @@ public interface CompensationMapper {
 	 
 	List<EgovMap> selectSalesOrdNoInfo(Map<String, Object> params);
 	
+	List<EgovMap> selectAttachmentFileInfo(Map<String, Object> params);
+
 }

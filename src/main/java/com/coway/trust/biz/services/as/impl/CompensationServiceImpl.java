@@ -95,4 +95,10 @@ public class  CompensationServiceImpl  extends EgovAbstractServiceImpl implement
 		
 		return holidayMapper.selectBranchWithNM();
 	}
+	
+	@Override
+	public List<EgovMap> getAttachmentFileInfo(Map<String, Object> params) {
+		return compensationMapper.selectAttachmentFileInfo(params);
+	}
+	
 } 

@@ -177,7 +177,7 @@
 
     };
 
-    function fn_addCompPop() {
+    function fn_addCompPop() {edit
         Common.popupDiv("/services/compensation/compensationAddPop.do", null,
                 null, true, '');
     }
@@ -322,7 +322,8 @@
                         <th scope="row">Status</th>
                         <td>
                                  <select  class="w100p" id="status" name="status">
-                                         <option value="1">Active</option>
+                                        <option value="">All</option>
+                                        <option value="1">Active</option>
                                         <option value="44">Pending</option>
                                         <option value="34">Solved</option>
                                         <option value="35">Unsolved</option>

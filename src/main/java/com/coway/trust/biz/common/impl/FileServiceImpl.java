@@ -124,8 +124,10 @@ public class FileServiceImpl implements FileService {
 		FileVO fileVO = this.getFile(fileId);
 
 		try {
+			if(fileVO != null){
 			FileUtils.forceDelete(new File(
 					baseDir + File.separator + fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
+			}
 		} catch (IOException e) {
 			LOGGER.error("deleteFile Fail : {}", e.getMessage());
 			// throw new ApplicationException(e);

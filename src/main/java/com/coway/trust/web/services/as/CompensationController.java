@@ -87,7 +87,16 @@ public class CompensationController {
 		// 호출될 화면
 		params.put("compNo", params.get("compNo"));
 
+		//정보가져오기
 		EgovMap compensationView = compensationService.selectCompenSationView(params);
+		params.put("atchFileGrpId", compensationView.get("atchFileGrpId"));
+		logger.debug("Params(atchFileGrpId) : {}===========================", params);
+
+		//파일정보가져오기
+		List<EgovMap> files = compensationService.getAttachmentFileInfo(params);
+		
+		
+		
 		List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
 		List<EgovMap> mainDeptList = tagMgmtService.getMainDeptList() ;
 		
@@ -95,7 +104,8 @@ public class CompensationController {
 		model.put("branchWithNMList", branchWithNMList);
 		model.put("mainDeptList", mainDeptList);
 		model.put("compNo", params.get("compNo"));
-		
+		model.put("files", files);
+		//model.addAttribute("files", files);
 		
 		return "services/as/compensationEditPop";
 	}
@@ -110,10 +120,17 @@ public class CompensationController {
 		List<EgovMap> branchWithNMList = compensationService.selectBranchWithNM();
 		List<EgovMap> mainDeptList = tagMgmtService.getMainDeptList() ;
 		
+
+		//파일정보가져오기
+		params.put("atchFileGrpId", compensationView.get("atchFileGrpId"));
+		logger.debug("Params(atchFileGrpId) : {}===========================", params);
+		List<EgovMap> files = compensationService.getAttachmentFileInfo(params);
+		
 		model.put("compensationView", compensationView);
 		model.put("branchWithNMList", branchWithNMList);
 		model.put("mainDeptList", mainDeptList);
 		model.put("compNo", params.get("compNo"));
+		model.put("files", files);
 		
 
 		return "services/as/compensationViewPop";
@@ -163,10 +180,11 @@ public class CompensationController {
 
 		if(list.size() > 0){
 
-			params.put("hasAttach", 1);
+			//params.put("hasAttach", 1);
 			params.put("fileName", list.get(0).getServerSubPath()+ list.get(0).getFileName());			
 
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+			int fileGroupKey = fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+			params.put("atchFileGrpId", fileGroupKey);
 		}
 		
 		SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
@@ -190,7 +208,7 @@ public class CompensationController {
 	}
 	
 	@RequestMapping(value = "/updateCompensation.do",method = RequestMethod.POST)
-	public ResponseEntity<EgovMap> updateCompensation(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception{	
+	public ResponseEntity<ReturnMessage> updateCompensation(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception{	
 		
 		params.put("updator", sessionVO.getUserId());
 		
@@ -206,13 +224,13 @@ public class CompensationController {
 		
 		params.put("list", list);	
 		
-		if(list.size() > 0){
+/*		if(list.size() > 0){
 
-			params.put("hasAttach", 1);
+			//params.put("hasAttach", 1);
 			params.put("fileName", list.get(0).getServerSubPath()+ list.get(0).getFileName());			
 
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
-		}
+			//fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+		}*/
 		
 		SimpleDateFormat transFormat = new SimpleDateFormat("yyyyMMdd");
 		SimpleDateFormat transFormat1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -235,10 +253,14 @@ public class CompensationController {
 		//params.put("issueDt", transFormat.format(sdFormat.parse(issue.replaceAll("/", ""))));
 		//params.put("compDt", transFormat.format(sdFormat.parse(compdate.replaceAll("/", ""))));
 		
-		EgovMap resultValue = compensationService.updateCompensation(params);
+		fileApplication.updateBusinessAttach(FileVO.createList(list), params);
+		//EgovMap resultValue = compensationService.updateCompensation(params);
 		
-		 
-		return ResponseEntity.ok(resultValue);
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
 	}
 	
 	//selectSalesOrdNoInfo

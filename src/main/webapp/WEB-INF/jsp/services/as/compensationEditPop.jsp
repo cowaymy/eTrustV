@@ -34,7 +34,6 @@
                 }
             });
             
-            setInputFile2();
             
             var statusCd = "${compensationView.stusCodeId}";
             $("#stusCodeId option[value='"+ statusCd +"']").attr("selected", true);
@@ -45,11 +44,38 @@
             var codeStatusCd = "${compensationView.code}";
             $("#code option[value='"+ codeStatusCd +"']").attr("selected", true);
             
+            
+            /*AttachFile values*/
+            $("input[name=attachFile]").on("dblclick", function () {
+
+                Common.showLoader();
+
+                var $this = $(this);
+                var fileId = $this.attr("data-id");
+
+                $.fileDownload("${pageContext.request.contextPath}/file/fileDown.do", {
+                    httpMethod: "POST",
+                    contentType: "application/json;charset=UTF-8",
+                    data: {
+                        fileId: fileId
+                    },
+                    failCallback: function (responseHtml, url, error) {
+                        Common.alert($(responseHtml).find("#errorMessage").text());
+                    }
+                })
+                    .done(function () {
+                        Common.removeLoader();
+                        console.log('File download a success!');
+                    })
+                    .fail(function () {
+                        Common.removeLoader();
+                    });
+                return false; //this is critical to stop the click event which will trigger a normal file download
+            });
+            
         });
  
-    function setInputFile2(){//인풋파일 세팅하기
-        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
-    }
+
  
     function fn_close() {
         $("#popClose").click();
@@ -69,6 +95,12 @@
 		} else {            
              var formData = Common.getFormData("comPensationInfoForm");
              
+             formData.append("compNo", $("#compNo").val());
+             formData.append("crtUserId", $("#crtUserId").val());
+             formData.append("fileGroupId", $("#fileGroupId").val());
+             formData.append("updateFileIds", $("#updateFileIds").val());
+             formData.append("deleteFileIds", $("#deleteFileIds").val());
+             
              var obj = $("#comPensationInfoForm").serializeJSON();
              
              $.each(obj, function(key, value) {
@@ -78,17 +110,22 @@
             console.log("저장전 변수값 확인 : " +  JSON.stringify(formData)); 
               
             Common.ajaxFile("/services/compensation/updateCompensation.do",  formData , function(result) {
-				console.log("fn_doSave >>> .");
-				console.log(  JSON.stringify(result));
+            	Common.alert(result.message);
+                $("#popClose").click();         
+            });
+            	
+				//console.log("fn_doSave >>> .");
+				//console.log(  JSON.stringify(result));
 				
-				if(result.code = "00"){
+/* 				if(result.code = "00"){
                     $("#popClose").click();
                     fn_searchASManagement();
                      Common.alert("<b>Compensation successfully edited.</b>",fn_close);
                }else{
                     Common.alert("<b>Failed to edit this Compensation. Please try again later.</b>");
                }     
-        });
+            }); */
+            
     }             
 }
 
@@ -113,6 +150,24 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     });
     
 }
+
+//common_pub.js 에서 파일 change 이벤트 발생시 호출됨...
+function fn_abstractChangeFile(thisfakeInput) {
+    // modyfy file case
+    if (FormUtil.isNotEmpty(thisfakeInput.attr("data-id"))) {
+        var updateFileIds = $("#updateFileIds").val();
+        $("#updateFileIds").val(thisfakeInput.attr("data-id") + DEFAULT_DELIMITER + updateFileIds);
+    }
+}
+
+//common_pub.js 에서 파일 delete 이벤트 발생시 호출됨...
+function fn_abstractDeleteFile(thisfakeInput) {
+    // modyfy file case
+    if (FormUtil.isNotEmpty(thisfakeInput.attr("data-id"))) {
+        var deleteFileIds = $("#deleteFileIds").val();
+        $("#deleteFileIds").val(thisfakeInput.attr("data-id") + DEFAULT_DELIMITER + deleteFileIds);
+    }
+}
 </script>
 
 
@@ -123,13 +178,17 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Edit Compensation Log Detail</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="" method="post"  id='comPensationInfoForm' enctype="multipart/form-data"> 
     <input type="hidden" name="compNo"  id="compNo" value="${compensationView.compNo}"/>
+    <input type="hidden" id="fileGroupId" name="fileGroupId" value="${compensationView.atchFileGrpId}">
+    <input type="hidden" id="updateFileIds" name="updateFileIds" value="">
+    <input type="hidden" id="deleteFileIds" name="deleteFileIds" value="">
+    <input type="hidden" id="crtUserId" name="crtUserId" value="${compensationView.crtUserId}">
 
 <aside class="title_line"><!-- title_line start -->
 <h2>General</h2>
@@ -301,18 +360,34 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
 </tr>
  
  <tr>
-    <th scope="row">attachment</th>
+    <th scope="row">Attachment</th>
     <td colspan="7">
-    <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
-    <input type="file" title="file add" style="width:300px" id="attachFile" value="${compensationView.attachFile}"/>
-    </div><!-- auto_file end -->
-    </td>    
+        <c:forEach var="fileInfo" items="${files}" varStatus="status">
+            <div class="auto_file2"><!-- auto_file start -->
+                <input title="file add" style="width: 300px;" type="file">
+                    <label>
+                        <input type='text' class='input_text' readonly='readonly' name="attachFile"
+                                  value="${fileInfo.atchFileName}" data-id="${fileInfo.atchFileId}"/>
+                            <span class='label_text'><a href='#'>File</a></span>
+                    </label>
+                    <span class='label_text'><a href='#'>Add</a></span>
+                    <span class='label_text'><a href='#'>Delete</a></span>
+            </div>
+       </c:forEach>
+       
+       <div class="auto_file2"><!-- auto_file start -->
+             <input title="file add" style="width: 300px;" type="file"/>
+             <label>
+                <input type='text' class='input_text' readonly='readonly' value="" data-id=""/>
+                <span class='label_text'><a href='#'>File</a></span>
+            </label>
+            <span class='label_text'><a href='#'>Add</a></span>
+            <span class='label_text'><a href='#'>Delete</a></span>
+       </div>
+	</td>
  </tr>
 </tbody>
 </table><!-- table end -->
-    
-
-  
 </form>
 
 <ul class="center_btns">
