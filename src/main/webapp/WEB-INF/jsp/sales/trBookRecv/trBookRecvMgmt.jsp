@@ -14,13 +14,13 @@ function creatGrid(){
 
         var recvColLayout = [ 
               {dataField : "trnsitId", headerText : "", width : 140  , visible:false   },
-              {dataField : "trnsitNo", headerText : "Transit No", width : 150      },
-              {dataField : "trnsitDt", headerText : "Date", width : 150       },
-              {dataField : "trnsitFrom", headerText : "From", width : 130        },
-              {dataField : "trnsitTo", headerText : "To", width : 130        },
-              {dataField : "trnsitStusCode", headerText : "Status", width : 150      },
-              {dataField : "trnsitCrtUserId", headerText : "By", width : 150     },
-              {dataField : "trnsitTotBook", headerText : "Total Book", width : 140       }             
+              {dataField : "trnsitNo", headerText : "<spring:message code="sal.title.transitNo" />", width : 150      },
+              {dataField : "trnsitDt", headerText : "<spring:message code="sal.title.date" />", width : 150       },
+              {dataField : "trnsitFrom", headerText : "<spring:message code="sal.title.from" />", width : 130        },
+              {dataField : "trnsitTo", headerText : "<spring:message code="sal.title.to" />", width : 130        },
+              {dataField : "trnsitStusCode", headerText : "<spring:message code="sal.title.status" />", width : 150      },
+              {dataField : "trnsitCrtUserId", headerText : "<spring:message code="sal.title.by" />", width : 150     },
+              {dataField : "trnsitTotBook", headerText : "<spring:message code="sal.title.totalBook" />", width : 140       }             
               ];
         
 
@@ -70,7 +70,7 @@ function fn_clear(){
 function fn_updateRecv(){
 
     if($("#trnsitId").val()==""){  
-    	Common.alert("Transit Record Missing" + DEFAULT_DELIMITER + "No transit record selected.");
+    	Common.alert("<spring:message code="sal.alert.title.transitRecodeMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.transitRecodeMissing" />");
     }else{ 
         Common.popupDiv("/sales/trBookRecv/updateRecvPop.do",$("#listSForm").serializeJSON(), null, true, "updateRecvPop");
     }
@@ -87,11 +87,11 @@ function fn_updateRecv(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>TR Book Management TR Book receive</h2>
+<h2><spring:message code="sal.page.title.trBookRecv" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_updateRecv();">Update receive</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_updateRecv();"><spring:message code="sal.btn.updRecv" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -110,29 +110,29 @@ function fn_updateRecv(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Transit No</th>
+	<th scope="row"><spring:message code="sal.text.transitNo" /></th>
 	<td>
-	<input type="text" title="" placeholder="Transit No" class="w100p" id="trnsitNo" name="trnsitNo"/>
+	<input type="text" title="" placeholder="<spring:message code="sal.text.transitNo" />" class="w100p" id="trnsitNo" name="trnsitNo"/>
 	</td>
-	<th scope="row">Book No</th>
+	<th scope="row"><spring:message code="sal.text.bookNo" /></th>
 	<td>
-	<input type="text" title="" placeholder="Book No" class="w100p" id="trBookNo" name="trBookNo"/>
+	<input type="text" title="" placeholder="<spring:message code="sal.text.bookNo" />" class="w100p" id="trBookNo" name="trBookNo"/>
 	</td>
-	<th scope="row">Create Date</th>
+	<th scope="row"><spring:message code="sal.text.createDate" /></th>
 	<td>
-		<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="trnsitDt" name="trnsitDt"/>
+		<input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="trnsitDt" name="trnsitDt"/>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Create By</th>
+	<th scope="row"><spring:message code="sal.text.createBy" /></th>
 	<td>
-	<input type="text" title="" placeholder="Create By" class="w100p" id="crtuserId" name="crtuserId"/>
+	<input type="text" title="" placeholder="<spring:message code="sal.text.createBy" />" class="w100p" id="crtuserId" name="crtuserId"/>
 	</td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>
 		<select class="w100p" id="trnsitStusId" name="trnsitStusId">
-			<option value="1">Active/Pending</option>
-			<option value="36">Closed</option>
+			<option value="1"><spring:message code="sal.combo.text.actPen" /></option>
+			<option value="36"><spring:message code="sal.combo.text.closed" /></option>
 		</select>
 	</td>
 	<td colspan="2"></td>
@@ -146,7 +146,7 @@ function fn_updateRecv(){
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#">TR Book Summary</a></p></li>
+		<li><p class="link_btn"><a href="#"><spring:message code="sal.btn.trBookSummary" /></a></p></li>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

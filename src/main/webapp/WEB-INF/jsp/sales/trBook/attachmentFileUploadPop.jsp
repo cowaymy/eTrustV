@@ -11,12 +11,12 @@ $(document).ready(function(){
 function fn_attachFile(){
 	
 	if($("#fileName").val() ==""){
-		alert("Please select a file.");
+		Common.alert("<spring:message code="sal.alert.selectFile" />");
 		return;
 	}else{
 		var str = $("#fileName").val().split(".");
 		if(str[1] != "zip"){
-	        alert("Not a zip file.");
+	        Common.alert("<spring:message code="sal.alert.notZip" />");
 			return;
 		}else{
 
@@ -52,7 +52,7 @@ function fn_attachFile(){
 			          {
 			            console.log(e);
 			          }
-			          Common.alert("Error" + DEFAULT_DELIMITER + "Failed to report TR book lost. Please try again later.");
+			          Common.alert("<spring:message code="sal.alert.title.error" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.trBookLost" />");
 			    });
 		}
 	}
@@ -65,9 +65,9 @@ function setInputFile2(){//인풋파일 세팅하기
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ATTACHEMENT FILE UPLOAD</h1>
+<h1><spring:message code="sal.page.title.fileUpload" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -83,7 +83,7 @@ function setInputFile2(){//인풋파일 세팅하기
 	<input type="hidden" id="trAttBookNo" name="trAttBookNo" value="${trAttBookNo }">
 
 <aside class="title_line"><!-- title_line start -->
-<h2 class="fl_right">*** Attachment file will be replace if you re-upload the file.</h2>
+<h2 class="fl_right"><spring:message code="sal.page.subTitle.attachment" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -94,7 +94,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Attachment</th>
+	<th scope="row"><spring:message code="sal.text.attachment" /></th>
 	<td>
 	<div class="auto_file2">
 	<input type="file" title="file add" style="width:100px" />
@@ -103,7 +103,7 @@ function setInputFile2(){//인풋파일 세팅하기
 	</td>
 </tr>
 <tr>
-	<td scope="row" colspan="2"><span class="red_text">Allowed file extension : .zip || Allowed file size : <= 6MB</span></td>
+	<td scope="row" colspan="2"><span class="red_text"><spring:message code="sal.text.fileExtension" /></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -111,7 +111,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </form>
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onclick="fn_attachFile();">Upload Attachment</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" onclick="fn_attachFile();"><spring:message code="sal.btn.updAttachment" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

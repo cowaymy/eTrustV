@@ -56,26 +56,26 @@ function fn_Generate(){
     if ($("#trBookQuan").val() == "")
     {
         valid = false;
-        Message += "* Please key in the quantity.<br />";
+        Message += "<spring:message code="sal.alert.msg.auantity" /><br />";
     }
 
     if ($("#trBookPage").val() == "")
     {
         valid = false;
-        Message += "* Please key in the page per book.<br />";
+        Message += "<spring:message code="sal.alert.msg.page" /><br />";
     }
     
     if ($("#trBookNoStart").val() == "")
     {
         valid = false;
-        Message += "* Please key in the starting number.<br />";
+        Message += "<spring:message code="sal.alert.msg.start" /><br />";
     }
     else
     {                        
          if (isNaN($("#trBookNoStart").val().substring(0,1)))
          {
              valid = false;
-             Message += "* Invalid starting number.<br />";
+             Message += "<spring:message code="sal.alert.msg.notNumber" /><br />";
             }     
     }
     
@@ -89,7 +89,7 @@ function fn_Generate(){
         if (lNo.length > $("#trBookNoStart").val().length)
         {
             valid = false;
-            Message += "* Invalid starting number. Ending number exceed length.<br />";
+            Message += "<spring:message code="sal.alert.msg.exceedLength" /><br />";
         }
         else
         {
@@ -98,7 +98,7 @@ function fn_Generate(){
     }
     
     if (!valid)     
-         Common.alert("Generate Ending Number Summary "+DEFAULT_DELIMITER + Message);
+         Common.alert("<spring:message code="sal.alert.title.generateEndNumSummary" />"+DEFAULT_DELIMITER + Message);
 
     return valid;
 }
@@ -165,33 +165,33 @@ function validRequiredField_Save_Add()
     if ($("#branch").val() == "")
     {
         valid = false;
-        Message += "* Please select the branch.<br />";
+        Message += "<spring:message code="sal.alert.msg.selectBranch" /><br />";
     }
     if ($("#prefix").val() == "")
     {
         valid = false;
-        Message += "* Please select the prefix number.<br />";
+        Message += "<spring:message code="sal.alert.msg.selectPrefix" /><br />";
     }
     if ($("#trBookQuan").val() == "")
     {
         valid = false;
-        Message += "*  Please key in the quantity.<br />";
+        Message += "<spring:message code="sal.alert.msg.keyInQuantity" /><br />";
     }
     if ($("#trBookPage").val() == "")
     {
         valid = false;
-        Message += "* Please key in the page per book.<br />";
+        Message += "<spring:message code="sal.alert.msg.keyInPagePerBook" /><br />";
     }
     
     if ($("#trBookNoStart").val() == "")
     {
         valid = false;
-        Message += "* Please key in the starting number.<br />";
+        Message += "<spring:message code="sal.alert.msg.keyInStartNum" /><br />";
     }
     if ($("#trBookNoEnd").val() == "")
     {
         valid = false;
-        Message += "* Please generate the ending number.<br />";
+        Message += "<spring:message code="sal.alert.msg.generateEndNum" /><br />";
     }
 
     if ($("#trBookNoStart").val() != "" && $("#trBookNoEnd").val() != "")
@@ -209,7 +209,7 @@ function validRequiredField_Save_Add()
             if (result.data)
             {
                 valid = false;
-                Message += "* One or more receipt number(s) is same with existing TR book.<br />";
+                Message += "<spring:message code="sal.alert.msg.existTrBook" /><br />";
             }else{
             	
             	Common.ajax("GET", "/sales/trBook/selectTrBookDupBulk", $("#saveForm").serialize(), function(result) {
@@ -220,7 +220,7 @@ function validRequiredField_Save_Add()
                     if (result.data)
                     {
                         valid = false;
-                        Message += "* One or more receipt number(s) is same in bulk TR create batch.<br />";
+                        Message += "<spring:message code="sal.alert.msg.existTrBook" /><br />";
                     }
 
                }, "", {async: false} );
@@ -231,7 +231,7 @@ function validRequiredField_Save_Add()
     }
 
     if (!valid)       
-        Common.alert("Add TR Book Summary "+DEFAULT_DELIMITER + Message);
+        Common.alert("<spring:message code="sal.alert.title.addTrBookSummary" />"+DEFAULT_DELIMITER + Message);
     
     return valid;
 }
@@ -254,7 +254,7 @@ function fn_save(){
                 
                 $("#trBookAddBulkPop").hide();
                 //fn_selectCancellReqInfoAjax();
-                Common.alert("Bulk Batch Request Saved" + DEFAULT_DELIMITER + "TR bulk batch request successfully saved. <br />Request Number : " + result.data );
+                Common.alert("<spring:message code="sal.alert.title.bulkBatchSave" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.bulkBatchSave" />" + result.data );
               
             }
             , function(jqXHR, textStatus, errorThrown){
@@ -268,9 +268,9 @@ function fn_save(){
                 {
                   console.log(e);
                 }
-                alert("Fail : " + jqXHR.responseJSON.message);
+                //alert("Fail : " + jqXHR.responseJSON.message);
     
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to save TR bulk batch request.<br />Please try again later.");
+                Common.alert("<spring:message code="sal.alert.title.saveFail" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.saveFailBulkBatch" />");
             });
 
         }));
@@ -284,9 +284,9 @@ function fn_save(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADD NEW TR BOOK(BULK)</h1>
+<h1><spring:message code="sal.page.title.addBulkTrBook" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -305,28 +305,28 @@ function fn_save(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Branch</th>
+	<th scope="row"><spring:message code="sal.text.branch" /></th>
 	<td>
 		<select class=" w100p"  id="branch" name="branch">
 		</select>
 	</td>
-	<th scope="row">Prefix No</th>
+	<th scope="row"><spring:message code="sal.text.prefixNo" /></th>
 	<td>
 		<select class="disabled w100p" disabled="disabled" id="prefix" name="prefix">
-			<option value="SO">SO</option>
+			<option value="SO"><spring:message code="sal.combo.text.so" /></option>
 		</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Quantity</th>
+	<th scope="row"><spring:message code="sal.text.quantity" /></th>
 	<td><input type="text" title="" placeholder="" class=""  id="trBookQuan" name="trBookQuan" onkeydown="javascript:fn_numChk(this.event);" /><span>(Maximum:5000)</span></td>
-	<th scope="row">Page of Book</th>
+	<th scope="row"><spring:message code="sal.text.pageOfBook" /></th>
 	<td><input type="text" title="" placeholder="" class=""  id="trBookPage" name="trBookPage" onkeydown="javascript:fn_numChk(this.event);" /><span>(Maximum:200)</span></td>
 </tr>
 <tr>
-    <th scope="row">Stating No</th>
+    <th scope="row"><spring:message code="sal.text.statingNo" /></th>
     <td><input type="text" title="" placeholder="" class="" id="trBookNoStart" name="trBookNoStart"/><p class="btn_sky"><a href="#" onclick="javascript:fn_Generate();">Generate</a></p></td>
-    <th scope="row">Ending No</th>
+    <th scope="row"><spring:message code="sal.text.endingNo" /></th>
     <td><input type="text" title="" placeholder="" class="" id="trBookNoEnd" name="trBookNoEnd"/><p class="btn_sky"><a href="#"  onclick="javascript:fn_ReKey();" id="btnReKey">Re-Key</a></p></td>
 
 	<!-- <th scope="row">Stating No</th>
@@ -338,7 +338,7 @@ function fn_save(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();"  id="btnSave">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();"  id="btnSave"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </form>
 </section><!-- pop_body end -->

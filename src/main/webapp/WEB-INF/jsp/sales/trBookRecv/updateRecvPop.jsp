@@ -15,23 +15,23 @@ function creatTranGrid(){
 	 var tranColLayout = [ 
            {dataField : "trTrnsitDetId", headerText : "", width : 110  , visible:false },
            {dataField : "trBookId", headerText : "", width : 110  , visible:false },
-           {dataField : "trBookNo", headerText : "Book No", width : 90 ,  filter : {showIcon : true}},
-           {dataField : "trBookPrefixNo", headerText : "Prefix", width : 70, filter : {showIcon : true} },
-           {dataField : "trReciptNoStr", headerText : "From", width : 90,  filter : {showIcon : true} },
-           {dataField : "trReciptNoEnd", headerText : "To", width : 90,   filter : {showIcon : true} },
-           {dataField : "trBookQty", headerText : "Total <br/>Sheet(s)", width : 90 ,filter : {showIcon : true} },
-           {dataField : "code", headerText : "Status", width : 60     }          
+           {dataField : "trBookNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 90 ,  filter : {showIcon : true}},
+           {dataField : "trBookPrefixNo", headerText : "<spring:message code="sal.title.prefix" />", width : 70, filter : {showIcon : true} },
+           {dataField : "trReciptNoStr", headerText : "<spring:message code="sal.title.from" />", width : 90,  filter : {showIcon : true} },
+           {dataField : "trReciptNoEnd", headerText : "<spring:message code="sal.title.to" />", width : 90,   filter : {showIcon : true} },
+           {dataField : "trBookQty", headerText : "<spring:message code="sal.title.bookTotal" />", width : 90 ,filter : {showIcon : true} },
+           {dataField : "code", headerText : "<spring:message code="sal.title.status" />", width : 60     }          
            ]; 
       
 	 var tranToColLayout = [ 
            {dataField : "trTrnsitDetId", headerText : "", width : 110  , visible:false },
            {dataField : "trBookId", headerText : "", width : 110  , visible:false },
-           {dataField : "trBookNo", headerText : "Book No", width : 90    },
-           {dataField : "trBookPrefixNo", headerText : "Prefix", width : 70    },
-           {dataField : "trReciptNoStr", headerText : "From", width : 90         },
-           {dataField : "trReciptNoEnd", headerText : "To", width : 90           },
-           {dataField : "trBookQty", headerText : "Total <br/>Sheet(s)", width : 90   },
-           {dataField : "code", headerText : "Status", width : 60     }          
+           {dataField : "trBookNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 90    },
+           {dataField : "trBookPrefixNo", headerText : "<spring:message code="sal.title.prefix" />", width : 70    },
+           {dataField : "trReciptNoStr", headerText : "<spring:message code="sal.title.from" />", width : 90         },
+           {dataField : "trReciptNoEnd", headerText : "<spring:message code="sal.title.to" />", width : 90           },
+           {dataField : "trBookQty", headerText : "<spring:message code="sal.title.bookTotal" />", width : 90   },
+           {dataField : "code", headerText : "<spring:message code="sal.title.status" />", width : 60     }          
            ]; 
       
 
@@ -138,15 +138,15 @@ function fn_selectTranListAjax() {
 	    	if($("#transitStatusID").val() == "36"){
 
 	             $("#btnSave").hide();
-	            Common.alert("Result Save Successful" +DEFAULT_DELIMITER+ "Transit result successfully saved.<br />This transit was closed." );
+	            Common.alert("<spring:message code="sal.alert.title.saveSuccsess" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.saveSuccsess" /><br /><spring:message code="sal.alert.msg.saveClose" />" );
 	        }else{
 	            
 	            if(result.pendingCnt == 0 ){
 
 	                $("#btnSave").hide();
-	                Common.alert("Result Save Successful" +DEFAULT_DELIMITER+ "Transit result successfully saved.<br />No pending item found but the transit is still under pending status." );
+	                Common.alert("<spring:message code="sal.alert.title.saveSuccsess" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.saveSuccsess" /><br /><spring:message code="sal.alert.msg.savePending" />" );
 	            }else{
-	                Common.alert("Result Save Successful" +DEFAULT_DELIMITER+ "Transit result successfully saved." );
+	                Common.alert("<spring:message code="sal.alert.title.saveSuccsess" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.saveSuccsess" />" );
 	            }
 	        }
 	    }
@@ -158,7 +158,7 @@ function fn_selectTranListAjax() {
  function fn_save(){
 	
 	if(AUIGrid.getRowCount(tranToGridID) == 0){
-		Common.alert("Item To Update" +DEFAULT_DELIMITER+ "No item to update transit status.<br />Please add item to transit." );
+		Common.alert("<spring:message code="sal.alert.title.saveTransit" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.saveTransit" />" );
 		return;
 	}else{
 		
@@ -192,7 +192,7 @@ function fn_selectTranListAjax() {
 	           console.log(e);
 	         }
 	         
-	         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to save. Please try again later." );
+	         Common.alert("<spring:message code="sal.alert.title.saveFail" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.saveFail" />" );
 	         
 	     });
 	}
@@ -203,9 +203,9 @@ function fn_selectTranListAjax() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Management - Transit Receive Result Update</h1>
+<h1><spring:message code="sal.page.title.trBookTransitUpd" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -223,7 +223,7 @@ function fn_selectTranListAjax() {
 
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Transit Information</h2>
+<h2><spring:message code="sal.page.subTitle.transitInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1 mt10"><!-- table start -->
@@ -238,42 +238,42 @@ function fn_selectTranListAjax() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Transit No</th>
+    <th scope="row"><spring:message code="sal.text.transitNo" /></th>
     <td><span id="upTrnsitNo"></span></td>
-    <th scope="row">Transit Date</th>
+    <th scope="row"><spring:message code="sal.text.transitDate" /></th>
     <td><span id="upTrnsitDt"></span></td>
-    <th scope="row">Transit Status</th>
+    <th scope="row"><spring:message code="sal.text.transitStatus" /></th>
     <td><span id="upTrnsitStusName"></span></td>
 </tr>
 <tr>
-    <th scope="row">Transit From</th>
+    <th scope="row"><spring:message code="sal.text.transitFrom" /></th>
     <td><span id="upTrnsitFrom"></span></td>
-    <th scope="row">Transit To</th>
+    <th scope="row"><spring:message code="sal.text.transitTo" /></th>
     <td><span id="upTrnsitTo"></span></td>
-    <th scope="row">Close Date</th>
+    <th scope="row"><spring:message code="sal.text.closeDate" /></th>
     <td><span id="upTrnsitClosDt"></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Book Transit</th>
+    <th scope="row"><spring:message code="sal.text.totalBookTransit" /></th>
     <td><span id="upTrnsitTotBook"></span></td>
-    <th scope="row">Courier</th>
+    <th scope="row"><spring:message code="sal.text.courier" /></th>
     <td><span id="upTrnsitCurier"></span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td><span id="upTrnsitCurierName"></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Pending</th>
+    <th scope="row"><spring:message code="sal.text.totalPending" /></th>
     <td><span id="upPendingCnt"></span></td>
-    <th scope="row">Total Received</th>
+    <th scope="row"><spring:message code="sal.text.totalReceived" /></th>
     <td><span id="upRecvCnt"></span></td>
-    <th scope="row">Total Not Received</th>
+    <th scope="row"><spring:message code="sal.text.totalNotReceived" /></th>
     <td><span id="upNotRecvCnt"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Transit Result</h2>
+<h2><spring:message code="sal.page.subTitle.transitResult" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -288,14 +288,14 @@ function fn_selectTranListAjax() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Transit Status</th>
+	<th scope="row"><spring:message code="sal.text.transitStatus" /></th>
 	<td>
 		<select class="w100p" id="status" name="status">
-			<option value="4">Received</option>
-			<option value="50">Not Received</option>
+			<option value="4"><spring:message code="sal.combo.text.received" /></option>
+			<option value="50"><spring:message code="sal.combo.text.notReceived" /></option>
 		</select>
 	</td>
-	<td colspan="4"><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();" id="btnSave">Save</a></p></td>
+	<td colspan="4"><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();" id="btnSave"><spring:message code="sal.btn.save" /></a></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -304,7 +304,7 @@ function fn_selectTranListAjax() {
 
 <div class="tran_list" style="height:260px"><!-- tran_list start -->
 	<aside class="title_line"><!-- title_line start -->
-	<h3>Book In Transit</h3>
+	<h3><spring:message code="sal.page.subTitle.bookInTransit" /></h3>
 	</aside><!-- title_line end -->
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="tranGridID" style="height:230px; margin:0 auto;"></div>
@@ -318,7 +318,7 @@ function fn_selectTranListAjax() {
 
 <div class="tran_list" style="height:260px"><!-- tran_list start -->
 	<aside class="title_line"><!-- title_line start -->
-	<h3>Active List</h3>
+	<h3><spring:message code="sal.page.subTitle.activeList" /></h3>
 	</aside><!-- title_line end -->
 	<article class="grid_wrap"><!-- grid_wrap start -->
         <div id="tranToGridID" style="height:230px; margin:0 auto;"></div>

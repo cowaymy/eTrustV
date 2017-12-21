@@ -37,12 +37,12 @@ function creatTransitGrid(){
     var transitColLayout = [ 
           {dataField : "trBookId", headerText : "", width : 140  , visible:false   },
           {dataField : "trTrnsitResultStusId", headerText : "", width : 140  , visible:false   },
-          {dataField : "trBookNo", headerText : "Book No", width : 150      },
-          {dataField : "trBookPrefixNo", headerText : "Prefix", width : 150       },
-          {dataField : "trReciptNoStr", headerText : "From", width : 150        },
-          {dataField : "trReciptNoEnd", headerText : "To", width : 150        },
-          {dataField : "trBookQty", headerText : "Total Sheet(s)", width : 150      },
-          {dataField : "code", headerText : "Status", width : 150     }          
+          {dataField : "trBookNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 150      },
+          {dataField : "trBookPrefixNo", headerText : "<spring:message code="sal.title.prefix" />", width : 150       },
+          {dataField : "trReciptNoStr", headerText : "<spring:message code="sal.title.from" />", width : 150        },
+          {dataField : "trReciptNoEnd", headerText : "<spring:message code="sal.title.to" />", width : 150        },
+          {dataField : "trBookQty", headerText : "<spring:message code="sal.title.sheet" />", width : 150      },
+          {dataField : "code", headerText : "<spring:message code="sal.title.status" />", width : 150     }          
           ];
     
 
@@ -103,11 +103,11 @@ function fn_selectTransitListAjax(str) {
 	$("#searchType").val(str);
 	
 	if(str == "All"){
-	    $("#subTitle").html("All Transit Book List");
+	    $("#subTitle").html("<spring:message code="sal.page.subTitle.allList" />");
 	}else if(str == "Recv"){
-        $("#subTitle").html("Received List");
+        $("#subTitle").html("<spring:message code="sal.page.subTitle.recvList" />");
     }else if(str == "NotRecv"){
-        $("#subTitle").html("Not Received List");
+        $("#subTitle").html("<spring:message code="sal.page.subTitle.notRecvList" />");
     }
 	
 	Common.ajax("GET", "/sales/trBookRecv/selectTransitList", $("#searchForm").serializeJSON(), function(result) {
@@ -129,9 +129,9 @@ function fn_selectTransitListAjax(str) {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Management - Transit Receive View</h1>
+<h1><spring:message code="sal.page.title.trBooktTranRecvView" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -142,7 +142,7 @@ function fn_selectTransitListAjax(str) {
 	<input type="hidden" id="searchType" name="searchType">
 </form>
 <aside class="title_line"><!-- title_line start -->
-<h2>Transit Information</h2>
+<h2><spring:message code="sal.page.subTitle.transitInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -157,35 +157,35 @@ function fn_selectTransitListAjax(str) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Transit No</th>
+	<th scope="row"><spring:message code="sal.text.transitNo" /></th>
 	<td>${info.trnsitNo }</td>
-	<th scope="row">Transit Date</th>
+	<th scope="row"><spring:message code="sal.text.transitDate" /></th>
 	<td>${info.trnsitDt }</td>
-	<th scope="row">Transit Status</th>
+	<th scope="row"><spring:message code="sal.text.transitStatus" /></th>
 	<td>${info.trnsitStusName}</td>
 </tr>
 <tr>
-	<th scope="row">Transit From</th>
+	<th scope="row"><spring:message code="sal.text.transitFrom" /></th>
 	<td>${info.trnsitFrom} - ${info.trnsitFromName}</td>
-	<th scope="row">Transit To</th>
+	<th scope="row"><spring:message code="sal.text.transitTo" /></th>
 	<td>${info.trnsitTo} - ${info.trnsitToName}</td>
-	<th scope="row">Close Date</th>
+	<th scope="row"><spring:message code="sal.text.closeDate" /></th>
 	<td>${info.trnsitClosDt}</td>
 </tr>
 <tr>
-	<th scope="row">Total Book</th>
+	<th scope="row"><spring:message code="sal.text.totalBook" /></th>
 	<td>${info.trnsitTotBook}</td>
-	<th scope="row">Courier</th>
+	<th scope="row"><spring:message code="sal.text.courier" /></th>
 	<td>${info.trnsitCurier}</td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="sal.text.creator" /></th>
 	<td>${info.trnsitCurierName}</td>
 </tr>
 <tr>
-	<th scope="row">Total Pending</th>
+	<th scope="row"><spring:message code="sal.text.totalPending" /></th>
 	<td>${info.pendingCnt }</td>
-	<th scope="row">Total Received</th>
+	<th scope="row"><spring:message code="sal.text.totalReceived" /></th>
 	<td>${info.recvCnt }</td>
-	<th scope="row">Total Not Received</th>
+	<th scope="row"><spring:message code="sal.text.totalNotReceived" /></th>
 	<td>${info.notRecvCnt }</td>
 </tr>
 </tbody>
@@ -194,9 +194,9 @@ function fn_selectTransitListAjax(str) {
 <aside class="title_line"><!-- title_line start -->
 <h2>Book Transit</h2>
 <ul class="right_btns">
-    <li><p class="btn_grid right"><a href="#" onclick="javascript:fn_selectTransitListAjax('All');">All</a></p></li> 
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_selectTransitListAjax('Recv');">Received</a></p></li>    
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_selectTransitListAjax('NotRecv');">Not Receive</a></p></li>  
+    <li><p class="btn_grid right"><a href="#" onclick="javascript:fn_selectTransitListAjax('All');"><spring:message code="sal.btn.all" /></a></p></li> 
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_selectTransitListAjax('Recv');"><spring:message code="sal.btn.recv" /></a></p></li>    
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_selectTransitListAjax('NotRecv');"><spring:message code="sal.btn.notRecv" /></a></p></li>  
 </ul>
 </aside><!-- title_line end -->
 <div  class="mt10" style="text-align: center;"><span id="subTitle"> </span></div>
@@ -207,9 +207,9 @@ function fn_selectTransitListAjax(str) {
 
 </ul> -->
 <ul class="right_btns">
-    <li><span >Pending </span></li>
-    <li><span class="green_text">Received</span></li>
-    <li><span class="pink_text">Not Receive</span></li>
+    <li><span ><spring:message code="sal.text.pending" /> </span></li>
+    <li><span class="green_text"><spring:message code="sal.text.received" /></span></li>
+    <li><span class="pink_text"><spring:message code="sal.text.notReceived" /></span></li>
 </ul>
 
 </section><!-- pop_body end -->
