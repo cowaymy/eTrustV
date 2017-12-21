@@ -31,13 +31,13 @@
 
                                         <ul>
                                             <li class="active">
-                                                <a href="/logistics/SerialMgmt/serialMgmtMain.do" class="on status_new">SN</a>
+                                                <a href="/logistics/SerialMgmt/serialScanGRCDC.do" class="on status_new">GRCDC</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="status_dev">menu 4depth</a>
+                                                <a href="/logistics/SerialMgmt/serialScanGICDC.do" class="status_dev">GICDC</a>
                                             </li>
                                             <li>
-                                                <a href="#" class="status_upd">menu 4depth</a>
+                                                <a href="/logistics/SerialMgmt/serialScanGIRDC.do" class="status_upd">GIRDC</a>
                                             </li>
                                             <li>
                                                 <a href="#" class="disabled">menu 4depth</a>
