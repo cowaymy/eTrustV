@@ -10,14 +10,19 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.common.impl.SmsMapper;
+import com.coway.trust.biz.common.type.SMSTemplateType;
 import com.coway.trust.biz.logistics.returnusedparts.impl.ReturnUsedPartsMapper;
 import com.coway.trust.biz.services.as.impl.ASManagementListMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.impl.InstallationResultListMapper;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.ibm.icu.text.SimpleDateFormat;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -33,6 +38,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	
 	@Resource(name = "returnUsedPartsMapper")
 	private ReturnUsedPartsMapper returnUsedPartsMapper;
+	
+	@Autowired
+	private SmsMapper smsMapper;
 	
 	@Resource(name = "commonMapper")
 	private CommonMapper commonMapper;
@@ -632,6 +640,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public void upDateInstallFailJobResultM(Map<String, Object> params) {
 		MSvcLogApiMapper.upDateInstallFailJobResultM(params);
 		
+	}
+
+	@Override
+	public void insertCancelSMS(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.insertCancelSMS(params);
 	}
 	
 	

@@ -125,5 +125,7 @@ public interface MSvcLogApiService {
 
 	void setPRFailJobRequest(Map<String, Object> params);
 
+	void insertCancelSMS(Map<String, Object> params);
+
 
 }

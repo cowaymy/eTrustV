@@ -77,12 +77,15 @@ import com.coway.trust.api.mobile.services.sales.OutStandignResultDetail;
 import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.biz.services.mlog.MSvcLogApiService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -116,6 +119,8 @@ public class ServiceApiController {
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 	
+	@Autowired
+	private AdaptorService adaptorService;	
 	
 	@ApiOperation(value = "Heart Service Job List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceJobList", method = RequestMethod.GET)
@@ -1546,8 +1551,10 @@ public class ServiceApiController {
 	public ResponseEntity<CanCelDto> canSMSRequestRequest(@RequestBody CanCelSmsForm canCelSmsForm)
 			throws Exception {		
 		String transactionId = "";
+		SessionVO session = new SessionVO();		
 
 		Map<String, Object> params = CanCelSmsForm.createMap(canCelSmsForm);
+		List<String> mobileNumList = new ArrayList<String>();
 		
 		if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
 			MSvcLogApiService.saveCanSMSServiceLogs(params);
@@ -1556,8 +1563,13 @@ public class ServiceApiController {
 		
 //		// business service....
 //		// TODO : installResult 구현 필요.....
-//		MSvcLogApiService.insertProductReturnResult(params);		
-
+		MSvcLogApiService.insertCancelSMS(params);		
+		//send SMS
+		SmsVO sms = new SmsVO(session.getUserId(), 975);
+		
+		sms.setMessage("######test#####");
+		sms.setMobiles(canCelSmsForm.getReceiverTelNo());  
+		SmsResult smsResult = adaptorService.sendSMS(sms);
 		
 		// TODO : 리턴할 dto 구현.
 //		transactionId = productReturnResultForm.getTransactionId();

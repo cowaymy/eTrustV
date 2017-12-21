@@ -152,5 +152,7 @@ public interface MSvcLogApiMapper {
 	
 	String   getRetnCrtUserId(Map<String, Object> params);
 
+	void insertCancelSMS(Map<String, Object> params);
+
 	
 }
