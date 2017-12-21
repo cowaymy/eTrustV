@@ -2905,14 +2905,38 @@ LEFT OUTER JOIN (
        </insert>
          
          
-       <update id="updateAppTm_LOG0038D" parameterType="Map">
-                UPDATE  LOG0038D
+     <update id="updateAppTm_LOG0038D" parameterType="Map">
+            UPDATE LOG0038D
+               SET APP_DT = TO_DATE (#{appointmentDate}, 'YYYYMMDD'),
+                   APP_TM =
+                      TO_DATE ( (#{appointmentDate} || ' ' || #{appointmentTime} || '00'),
+                               'YYYYMMDD HH24MISS'),
+                   UPD_DT = SYSDATE,
+                   UPD_USER_ID =
+                      (SELECT MEM_ID
+                         FROM ORG0001D
+                        WHERE MEM_CODE = #{userId}),
+                   RT_SESION_CODE =
+                      (CASE
+                          WHEN (    NVL(TO_NUMBER (SUBSTR (NVL (#{appointmentTime}, ''), 1, 2), '99'), 0) <![CDATA[ >= ]]> 0
+                                AND NVL(TO_NUMBER (SUBSTR (NVL (#{appointmentTime}, ''), 1, 2), '99'), 0) <![CDATA[ <= ]]> 10)
+                          THEN
+                             'M'
+                          WHEN (    NVL(TO_NUMBER (SUBSTR (NVL (#{appointmentTime}, ''), 1, 2), '99'), 0) <![CDATA[ >= ]]> 10
+                                AND NVL(TO_NUMBER (SUBSTR (NVL (#{appointmentTime}, ''), 1, 2), '99'), 0) <![CDATA[ <= ]]> 14)
+                          THEN
+                             'A'
+                          WHEN (    NVL(TO_NUMBER (SUBSTR (NVL (#{appointmentTime}, ''), 1, 2), '99'), 0) <![CDATA[ >= ]]> 14
+                                AND NVL(TO_NUMBER (SUBSTR (NVL (#{appointmentTime}, ''), 1, 2), '99'), 0) <![CDATA[ <= ]]> 19)
+                          THEN
+                             'E'
+                          ELSE
+                             'O'
+                       END)
+             WHERE STK_RETN_ID = (SELECT STK_RETN_ID
+                                    FROM LOG0038D
+                                   WHERE RETN_NO = #{serviceNo}) 
                 
-                  SET      APP_DT            =  to_date(#{appointmentDate}, 'yyyymmdd'),
-                              APP_TM           = to_date(( #{appointmentDate} || ' ' || #{appointmentTime}|| '00'),'YYYYMMDD HH24MISS'),
-                             UPD_DT            = sysdate,
-                             UPD_USER_ID    =  (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
-                WHERE  STK_RETN_ID     =(select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}) 
        </update>
        
               
