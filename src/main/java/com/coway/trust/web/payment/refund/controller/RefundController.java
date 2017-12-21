@@ -71,6 +71,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(RefundController.cl
 		return ResponseEntity.ok(list);
 	}
 	
+	@RequestMapping(value = "/refundConfirmPop.do")
+	public String refundConfirmPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/refund/refundConfirmPop";
+	}
+	
 	@RequestMapping(value = "/checkRefundValid.do", method = RequestMethod.POST)	
 	public ResponseEntity<ReturnMessage> checkRefundValid(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		LOGGER.debug("params =====================================>>  " + params);
@@ -120,6 +125,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(RefundController.cl
 		EgovMap bRefundInfo = refundService.selectRefundInfo(params);
 		
 		return ResponseEntity.ok(bRefundInfo);
+	}
+	
+	@RequestMapping(value = "/refundInfoKeyInPop.do")
+	public String refundInfoKeyInPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/refund/refundInfoKeyInPop";
 	}
 	
 	@RequestMapping(value = "/refundConfirm.do", method = RequestMethod.POST)
