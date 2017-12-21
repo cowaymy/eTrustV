@@ -601,6 +601,7 @@
             join sys0064m extend64
               ON extend23.AREA_ID = extend64.AREA_ID	         
 	 WHERE  ( Extent1.CUST_ID = #{custId} )
+	          and extend23.stus_code_id = '9'
 	          AND (TO_NUMBER(Extent1.STUS_CODE_ID,99999) = 1 )
 
      </select>
