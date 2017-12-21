@@ -103,7 +103,7 @@ function fn_Generate(){
 			DodateTo = $("#doEndDt").val();
 			whereSql +=" AND inv.MOV_STUS_ID = 4 and inv.MOV_CNFM = 1 AND (inv.MOV_UPD_DT between to_date('"  + $("#doCrtDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#doEndDt").val()  + "', 'DD/MM/YYYY') ) ";
 	    }
-		if($("#appliType").val() != ''){
+		if($("#appliType").val() != '' && $("#appliType").val() != null){
 			appType = $("#appliType").val();
 			whereSql +=" AND tm.App_Type_ID IN(" + $("#appliType").val() + ") ";
 	    }
