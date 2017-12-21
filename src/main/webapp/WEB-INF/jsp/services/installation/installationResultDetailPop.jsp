@@ -426,7 +426,7 @@ var gridPros = {
 <tr>
     <th scope="row" rowspan="4"><spring:message code='service.title.InstallationAddress'/></th>    
     <td colspan="5">
-    <span><c:out value="${installResult.city}"/></span>
+    <span><c:out value="${customerInfo.state}"/></span>
 
     </td>
 </tr>
