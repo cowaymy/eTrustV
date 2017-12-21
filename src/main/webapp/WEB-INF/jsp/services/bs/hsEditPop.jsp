@@ -444,7 +444,7 @@
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>HS Result Information</h2>
 </aside><!-- title_line end -->
-<table class="type1"><!-- table start -->
+<table class="type1" style="width: 1040px; "><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -470,7 +470,7 @@
         </c:forEach>
     </select>
     </td>
-    <th scope="row">Collection Code<span class="must">*</span></th>
+    <th scope="row" style="width: 244px; ">Collection Code<span class="must">*</span></th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
             <c:forEach var="list" items="${ cmbCollectTypeComboList}" varStatus="status">
@@ -496,14 +496,14 @@
     </td>
 </tr> --%>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row" style="width: 176px; ">Remark</th>
     <td><span>${settleInfo.configBsRem}</span></td>
-    <th scope="row">Instruction</th>
+    <th scope="row" style="width: 59px; ">Instruction</th>
     <td><span>${settleInfo.configBsRem}</span></td>
 </tr>
 <tr>
     <th scope="row">Prefer Service Week</th>
-    <td colspan="3">
+    <td colspan="1">
     <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span>None</span></label>
     <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 1}">checked</c:if> /><span>Week1</span></label>
     <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 2}">checked</c:if> /><span>Week2</span></label>
@@ -511,6 +511,10 @@
     <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> /><span>Week4</span></label>
 
  <%--    <label><input type="radio" name="srvBsWeek" <c:if test="${basicinfo.srvBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label> --%>
+    </td>
+        <th scope="row" style="width: 244px; ">Cancel Request Number</th>
+    <td>
+        <span><c:out value="${basicinfo.cancReqNo}"/></span> 
     </td>
 </tr>
 </tbody>
