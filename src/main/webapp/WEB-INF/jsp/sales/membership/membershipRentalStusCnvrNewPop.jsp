@@ -128,6 +128,7 @@ function creatGrid(){
                showRowNumColumn    : false,
                usePaging : false,
                editable : false,
+               headerHeight : 30,
                softRemoveRowMode:false
          }; 
     
@@ -281,7 +282,7 @@ function fn_saveNewCnvr(){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="uploadGrid" style="width:100%; height:350px; margin:0 auto;"></div>
-    <div id="cnvrListGrid" style="width:100%; height:350px; margin:0 auto;"></div>
+    <div id="cnvrListGrid" style="width:100%; height:310px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
