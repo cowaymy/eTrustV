@@ -411,7 +411,6 @@
              join SYS0064M Extent18           
               on Extent17.AREA_ID = Extent18.AREA_ID         
         WHERE  Extent1.INSTALL_ENTRY_ID = #{installEntryId}	         
-    WHERE  Extent1.INSTALL_ENTRY_ID = #{installEntryId}
      and rownum =1
 
     </select>
