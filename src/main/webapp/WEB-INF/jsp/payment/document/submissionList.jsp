@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <script type="text/javaScript">
 	$(document).ready(function(){
 		doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'account' , 'S', '');
@@ -16,9 +17,9 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Submission List</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#">Generate PDF</a></p></li>
-	<li><p class="btn_blue"><a href="#">Generate Excel</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#"><spring:message code='pay.btn.generatePDF'/></a></p></li>
+	<li><p class="btn_blue"><a href="#"><spring:message code='pay.btn.generateExcel'/></a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
 .my-color-red div{
     color:#ff4800;
@@ -95,7 +96,7 @@ var receiveColumnLayout=[
 	                        }
 	                    }
 	                   },
-                  {dataField:"name", headerText:"Status",
+                  {dataField:"name", headerText:"<spring:message code='pay.head.satatus'/>",
 	                	   styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 	                		   if(value == "Incomplete"){
 	                               return "my-color-red";
@@ -140,8 +141,8 @@ var receiveColumnLayout=[
 	                      }
 	                  }
 	              },
-                  {dataField:"payDt", headerText:"pay Date"},
-                  {dataField:"isOnline", headerText:"is Online",
+                  {dataField:"payDt", headerText:"<spring:message code='pay.head.payDate'/>"},
+                  {dataField:"isOnline", headerText:"<spring:message code='pay.head.isOnline'/>",
 			        renderer:{
 			            type : "CheckBoxEditRenderer",
 			            showLabel : false,
@@ -150,17 +151,17 @@ var receiveColumnLayout=[
 			            unCheckValue : "0"
 			        }   
                   },
-                  {dataField:"oriCcNo", headerText:"Crc No"},
-                  {dataField:"amt", headerText:"Amount"},
-                  {dataField:"mid", headerText:"MID"},
-                  {dataField:"codeName1", headerText:"Crc Type"},
-                  {dataField:"ccHolderName", headerText:"Crc Holder"},
-                  {dataField:"ccExpr", headerText:"Crc Expiry"},
-                  {dataField:"appvNo", headerText:"Appv No",dataType:"date",formatString:"dd-mm-yyyy"},
-                  {dataField:"code2", headerText:"Bank"},
-                  {dataField:"accCode", headerText:"Settlement Acc"},
-                  {dataField:"refDt", headerText:"Ref Date"},
-                  {dataField:"", headerText:"Ref No"}
+                  {dataField:"oriCcNo", headerText:"<spring:message code='pay.head.crcNo'/>"},
+                  {dataField:"amt", headerText:"<spring:message code='pay.head.amount'/>"},
+                  {dataField:"mid", headerText:"<spring:message code='pay.head.mid'/>"},
+                  {dataField:"codeName1", headerText:"<spring:message code='pay.head.crcType'/>"},
+                  {dataField:"ccHolderName", headerText:"<spring:message code='pay.head.crcHolder'/>"},
+                  {dataField:"ccExpr", headerText:"<spring:message code='pay.head.crcExpiry'/>"},
+                  {dataField:"appvNo", headerText:"<spring:message code='pay.head.appvNo'/>",dataType:"date",formatString:"dd-mm-yyyy"},
+                  {dataField:"code2", headerText:"<spring:message code='pay.head.bank'/>"},
+                  {dataField:"accCode", headerText:"<spring:message code='pay.head.settlementAcc'/>"},
+                  {dataField:"refDt", headerText:"<spring:message code='pay.head.refDate'/>"},
+                  {dataField:"", headerText:"<spring:message code='pay.head.refNo'/>"}
            ];
  var creditCardColumnLayout=[
                             {
@@ -199,8 +200,8 @@ var receiveColumnLayout=[
                                     }
                                 }
                                },
-                               {dataField:"payDt", headerText:"Pay Date"},
-                               {dataField:"isOnline", headerText:"is Online",
+                               {dataField:"payDt", headerText:"<spring:message code='pay.head.payDate'/>"},
+                               {dataField:"isOnline", headerText:"<spring:message code='pay.head.isOnline'/>",
                                    renderer:{
                                        type : "CheckBoxEditRenderer",
                                        showLabel : false,
@@ -209,17 +210,17 @@ var receiveColumnLayout=[
                                        unCheckValue : "0"
                                    }   
                                  },
-                               {dataField:"oriCcNo", headerText:"Crc No"},
-                               {dataField:"amt", headerText:"Amount"},
-                               {dataField:"mid", headerText:"MID"},
-                               {dataField:"codeName", headerText:"Crc Type"},
-                               {dataField:"ccHolderName", headerText:"Crc Holder",dataType:"date",formatString:"dd-mm-yyyy"},
-                               {dataField:"ccExpr", headerText:"Crc Expiry"},
-                               {dataField:"appvNo", headerText:"Appv No"},
-                               {dataField:"code2", headerText:"Bank"},
-                               {dataField:"accCode", headerText:"Settlement Acc"},
-                               {dataField:"refDt", headerText:"Ref Date"},
-                               {dataField:"refNo", headerText:"Ref No"},
+                               {dataField:"oriCcNo", headerText:"<spring:message code='pay.head.crcNo'/>"},
+                               {dataField:"amt", headerText:"<spring:message code='pay.head.amount'/>"},
+                               {dataField:"mid", headerText:"<spring:message code='pay.head.mid'/>"},
+                               {dataField:"codeName", headerText:"<spring:message code='pay.head.crcType'/>"},
+                               {dataField:"ccHolderName", headerText:"<spring:message code='pay.head.crcHolder'/>",dataType:"date",formatString:"dd-mm-yyyy"},
+                               {dataField:"ccExpr", headerText:"<spring:message code='pay.head.crcExpiry'/>"},
+                               {dataField:"appvNo", headerText:"<spring:message code='pay.head.appvNo'/>"},
+                               {dataField:"code2", headerText:"<spring:message code='pay.head.bank'/>"},
+                               {dataField:"accCode", headerText:"<spring:message code='pay.head.settlementAcc'/>"},
+                               {dataField:"refDt", headerText:"<spring:message code='pay.head.refDate'/>"},
+                               {dataField:"refNo", headerText:"<spring:message code='pay.head.refNo'/>"},
                                {dataField:"trxId", headerText:"", visible:false},
                                {dataField:"payModeId", headerText:"", visible:false},
                                {dataField:"ccTypeId", headerText:"", visible:false},
@@ -227,10 +228,10 @@ var receiveColumnLayout=[
                                {dataField:"brnchId", headerText:"", visible:false}
                             ];
 var payItemColumnLayout=[
-								{dataField:"codeName", headerText:"Type"},
-								{dataField:"orNo", headerText:"Receipt No"},
-								{dataField:"c3", headerText:"Order No / Member Code"},
-								{dataField:"payItmAmt", headerText:"Amount"}
+								{dataField:"codeName", headerText:"<spring:message code='pay.head.type'/>"},
+								{dataField:"orNo", headerText:"<spring:message code='pay.head.receiptNo'/>"},
+								{dataField:"c3", headerText:"<spring:message code='pay.head.orderNoMemCode'/>"},
+								{dataField:"payItmAmt", headerText:"<spring:message code='pay.head.amount'/>"}
                             ];      
 $(document).ready(function(){
 	
@@ -331,8 +332,8 @@ function fn_confirmSave(){
     <dt class="click_add_on on"><a href="#">Receive List Management</a></dt>
     <dd>
     <ul class="right_btns">
-        <li><p class="btn_blue"><a href="javascript:fn_rSearch()"><span class="search"></span>Search</a></p></li>
-        <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_rSearch()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+        <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
     </ul>
     <form id="rSearchForm" name="rSearchForm">
     <table class="type1 mt10"><!-- table start -->
@@ -482,8 +483,8 @@ function fn_confirmSave(){
     <dt class="click_add_on"><a href="#">Pending List Management</a></dt>
     <dd>
     <ul class="right_btns">
-        <li><p class="btn_blue"><a href="javascript:fn_cSearch();"><span class="search"></span>Search</a></p></li>
-        <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_cSearch();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+        <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
     </ul>
 
     <form id="cSearchForm" name="cSearchForm">
@@ -622,7 +623,7 @@ function fn_confirmSave(){
 
 </div><!-- side_btns end -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="save" onclick="javascript:fn_save();">save</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="save" onclick="javascript:fn_save();"><spring:message code='sys.btn.save'/></a></p></li>
 </ul>
 </div><!-- border_box end -->
 
@@ -660,7 +661,7 @@ function fn_confirmSave(){
     <header class="pop_header">
         <h1> VIEW PAYMENT ITEM </h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick=""><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -678,7 +679,7 @@ function fn_confirmSave(){
     <header class="pop_header">
         <h1> PAYMENT DOCUMENT MANAGEMENT BATCH VIEW </h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick=""><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->
@@ -744,7 +745,7 @@ function fn_confirmSave(){
             <header class="pop_header"><!-- pop_header start -->
                 <h1>RECEIVE LIST-SAVE</h1>
                 <ul class="right_opt">
-                    <li><p class="btn_blue2"><a href="#" onclick="">CLOSE</a></p></li>
+                    <li><p class="btn_blue2"><a href="#" onclick=""><spring:message code='sys.btn.close'/></a></p></li>
                 </ul>
             </header><!-- pop_header end -->
             <section class="pop_body"><!-- pop_body start -->
@@ -781,7 +782,7 @@ function fn_confirmSave(){
                     </tbody>
                 </table><!-- table end -->
                 <ul class="center_btns">
-                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmSave();" id="btnConfirmResend">Confirm Send</a></p></li>
+                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmSave();" id="btnConfirmResend"><spring:message code='pay.btn.confirmSend'/></a></p></li>
                 </ul>
             </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
