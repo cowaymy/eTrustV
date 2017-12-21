@@ -312,11 +312,11 @@ var detailOptions =
         showRowNumColumn : false, // 순번 칼럼 숨김
         applyRestPercentWidth  : false,
         rowIdField : "rowId", // PK행 지정
-        selectionMode : "multipleRows",
+//         selectionMode : "multipleRows",
+        selectionMode : "multipleCells",
         editBeginMode : "click", // 편집모드 클릭
         /* aui 그리드 체크박스 옵션*/
         softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제
-
 };
 
 
