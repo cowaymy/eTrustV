@@ -86,9 +86,9 @@ $.fn.clearForm = function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Installation Raw Data</h1>
+<h1><spring:message code='service.btn.InstallationRawData'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -110,7 +110,7 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -122,14 +122,14 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>    
     <td>
     <select class="multy_select" multiple="multiple" id="appliType" name="appliType">
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">PV Month & PV Year</th>
+    <th scope="row"><spring:message code='service.title.PVMonth_PVYear'/></th>    
     <td>
     <input type="text" title="기준년월" class="j_date2" id="pvMonth" name="pvMonth"/>
     </td>
@@ -141,8 +141,8 @@ $.fn.clearForm = function() {
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#installationRawDataForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()"><spring:message code='service.btn.Generate'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#installationRawDataForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

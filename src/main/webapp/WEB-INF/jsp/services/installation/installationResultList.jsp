@@ -419,7 +419,7 @@ function fn_editInstallation(){//active 일때만 열림
     <ul class="btns">
         <!-- <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li> -->
         
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()"><spring:message code='service.btn.EditInstallationResult'/><spring:message code='service.btn.DOActiveList'/></a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()"><spring:message code='service.btn.DOActiveList'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()"><spring:message code='service.btn.InstallationNoteListing'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()"><spring:message code='service.btn.InstallationNote'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installBookListing()"><spring:message code='service.btn.InstallationLogBookListing'/></a></p></li>

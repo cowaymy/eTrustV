@@ -68,9 +68,9 @@ function fn_openReport(reportType){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Daily DSC Report</h1>
+<h1><spring:message code='service.title.DailyDSCReport'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -86,7 +86,7 @@ function fn_openReport(reportType){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Date</th>
+    <th scope="row"><spring:message code='service.title.Date'/></th>
     <td>
 
     <div class="date_set w100p"><!-- date_set start -->
@@ -96,7 +96,7 @@ function fn_openReport(reportType){
     </div><!-- date_set end -->
 
     </td>
-    <th scope="row">PV Month</th>
+    <th scope="row"><spring:message code='service.title.PVMonth'/></th>
     <td>
     <input type="text" title="기준년월" class="j_date2 w100p" id="pvMonth" name="pvMonth"/>
     </td>
@@ -116,8 +116,8 @@ function fn_openReport(reportType){
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="DOWN_FILE_NAME" />
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport('PDF');">Generate PDF</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport('EXCEL');">Generate Excel</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport('PDF');"><spring:message code='service.btn.GenerateToPDF'/></a></p></li> 
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport('EXCEL');"><spring:message code='service.btn.GenerateToExcel'/></a></p></li>
     <!-- <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport('EXCELFORM');">Generate PDF In Excel</a></p></li> -->
 </ul>
 

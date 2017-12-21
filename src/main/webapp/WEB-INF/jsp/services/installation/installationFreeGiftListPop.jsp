@@ -145,9 +145,9 @@ $.fn.clearForm = function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Installation Free Gift List</h1>
+<h1><spring:message code='service.btn.InstallationFreeGiftList'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -176,12 +176,12 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td>
     <select id="CTCode" name="CTCode">
     </select>
     </td>
-    <th scope="row">Promotion Code</th>
+    <th scope="row"><spring:message code='service.title.PromotionCode'/></th>
     <td>
     <select id="promotCode" name="promotCode">
         <option value=""></option>
@@ -192,30 +192,30 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code='service.title.OrderNo'/></th>    
     <td>
     <input type="text" title="" placeholder="Order No" class="" id="orderNo" name="orderNo"/>
     </td>
-    <th scope="row">Install No</th>
+    <th scope="row"><spring:message code='service.title.InstallNo'/></th>    
     <td>
     <input type="text" title="" placeholder="Install No" class="" id="installNo" name="installNo"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">App Type</th>
+    <th scope="row"><spring:message code='service.title.AppType'/></th>    
     <td>
     <select class="multy_select" multiple="multiple" id="appliType" name="appliType">
         <option value="66">Rental</option>
         <option value="67, 68">Outright</option>
     </select>
     </td>
-    <th scope="row">Install Date</th>
+    <th scope="row"><spring:message code='service.title.InstallDate'/></th>    
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="installDt" name="installDt"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">DSC Code</th>
+    <th scope="row"><spring:message code='service.title.DSCCode'/></th>    
     <td colspan="3">
     <select  id="branch" name="branch">
     </select>
@@ -227,9 +227,9 @@ $.fn.clearForm = function() {
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()">Generate PDF</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openExcel()">Generate Excel</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()"><spring:message code='service.btn.GenerateToPDF'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openExcel()"><spring:message code='service.btn.GenerateToExcel'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

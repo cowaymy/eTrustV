@@ -179,9 +179,9 @@ function fn_Generate(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>DO Active List</h1>
+<h1><spring:message code='service.title.DOActiveList'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li> 
 </ul>
 </header><!-- pop_header end -->
 
@@ -199,7 +199,7 @@ function fn_Generate(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type</th>
+    <th scope="row"><spring:message code='service.title.Type'/></th>
     <td>
     <select class="disabled" disabled="disabled" id="type" name="type">
         <option value=""></option>
@@ -208,7 +208,7 @@ function fn_Generate(){
         <option value="3">Active Installation (Call Log Ready)</option>
     </select>
     </td>
-    <th scope="row">Install Date</th>
+    <th scope="row"><spring:message code='service.title.InstallDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -220,12 +220,12 @@ function fn_Generate(){
     </td>
 </tr>
 <tr>
-    <th scope="row">DSC Branch</th>
+    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>    
     <td>
     <select class="multy_select" multiple="multiple" id="branch" name="branch">
     </select>
     </td>
-    <th scope="row">DO Date</th>
+    <th scope="row"><spring:message code='service.title.DODate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -237,12 +237,12 @@ function fn_Generate(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <select class="multy_select" multiple="multiple" id="appliType" name="appliType"> 
     </select>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -254,7 +254,7 @@ function fn_Generate(){
     </td>
 </tr>
 <tr>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -264,7 +264,7 @@ function fn_Generate(){
     </div><!-- date_set end -->
 
     </td>
-    <th scope="row">Sort By</th>
+    <th scope="row"><spring:message code='service.title.SortBy'/></th>    
     <td>
     <select id="sortType" name="sortType">
         <option value=""></option>
@@ -275,7 +275,7 @@ function fn_Generate(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code='service.title.OrderNumber'/></th>    
     <td colspan="3">
 
     <div class="date_set"><!-- date_set start -->
@@ -314,8 +314,8 @@ function fn_Generate(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#installationActiveForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()"><spring:message code='service.btn.Generate'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#installationActiveForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

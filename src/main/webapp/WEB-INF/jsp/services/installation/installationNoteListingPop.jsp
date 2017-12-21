@@ -43,64 +43,76 @@ function fn_noteListingGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "instno",
-        headerText : "Inst No",
+        //headerText : "Inst No",
+        headerText : '<spring:message code="service.grid.InstNo" />',
         editable : false,
         width : 130
     }, {
         dataField : "orderno",
-        headerText : "Order No",
+        //headerText : "Order No",
+        headerText : '<spring:message code="service.grid.OrderNo" />',
         editable : false,
         width : 130
     }, {
         dataField : "custname",
-        headerText : "Cust Name",
+        //headerText : "Cust Name",
+        headerText : '<spring:message code="service.grid.CustName" />',        
         editable : false,
         width : 130
     }, {
         dataField : "areaname",
-        headerText : "Area Name",
+        //headerText : "Area Name",
+        headerText : '<spring:message code="service.grid.AreaName" />',
         editable : false,
         width : 130
     }, {
         dataField : "appdate",
-        headerText : "App Date",
+        //headerText : "App Date",
+        headerText : '<spring:message code="service.grid.AppDate" />',
         editable : false,
         style : "my-column",
         width : 130
     }, {
         dataField : "dodate",
-        headerText : "Do Date",
+        //headerText : "Do Date",
+        headerText : '<spring:message code="service.grid.DoDate" />',
         editable : false,
         width : 130
     }, {
         dataField : "instdate",
-        headerText : "Inst Date",
+        //headerText : "Inst Date",
+        headerText : '<spring:message code="service.grid.InstDate" />',
         editable : false,
         width : 130
         
     }, {
         dataField : "ctcode",
-        headerText : "CT Code",
+        //headerText : "CT Code",
+        headerText : '<spring:message code="service.grid.CTCode" />',
         editable : false,
         width : 130
     }, {
         dataField : "product",
-        headerText : "Product",
+        //headerText : "Product",
+        headerText : '<spring:message code="service.grid.Product" />',
         editable : false,
         width : 130
     }, {
         dataField : "apptype",
-        headerText : "App Type",
+        //headerText : "App Type",
+        headerText : '<spring:message code="service.grid.AppType" />',
         editable : false,
         width : 130
     }, {
         dataField : "orderstatus",
-        headerText : "Order Status",
+        //headerText : "Order Status",
+        headerText : '<spring:message code="service.grid.OrderStatus" />',
         editable : false,
         width : 130
     }, {
         dataField : "inststatus",
-        headerText : "Ins Status",
+        //headerText : "Ins Status",
+        headerText : '<spring:message code="service.grid.InsStatus" />',
         editable : false,
         width : 130
     }];
@@ -383,9 +395,9 @@ $.fn.clearForm = function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Installation Note Listing</h1>
+<h1><spring:message code='service.btn.InstallationNoteListing'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -412,14 +424,14 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type</th>
+    <th scope="row"><spring:message code='service.title.Type'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="installType" name="installType">
         <option value="257">New Installation</option>
         <option value="258">Product Exchange</option>
     </select>
     </td>
-    <th scope="row">Appointment Date</th>
+    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>    
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -431,12 +443,12 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">DSC Branch</th>
+    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>    
     <td>
     <select class="multy_select" multiple="multiple" id="branch" name="branch">
     </select>
     </td>
-    <th scope="row">DO Date</th>
+    <th scope="row"><spring:message code='service.title.DODate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -448,12 +460,12 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <select class="multy_select" multiple="multiple"  id="appliType" name="appType">
     </select>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>    
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -465,7 +477,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>    
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -475,7 +487,7 @@ $.fn.clearForm = function() {
     </div><!-- date_set end -->
 
     </td>
-    <th scope="row">Sort By</th>
+    <th scope="row"><spring:message code='service.title.SortBy'/></th>    
     <td>
     <select id="sortType" name="sortType">
         <option value=""></option>
@@ -491,6 +503,7 @@ $.fn.clearForm = function() {
 </tr>
 <tr>
     <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code='service.title.OrderNumber'/></th>    
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -500,7 +513,7 @@ $.fn.clearForm = function() {
     </div><!-- date_set end -->
 
     </td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code='service.title.Status'/></th>
     <td>
     <select class="multy_select" multiple="multiple" id="status" name="status">
         <option value="1">Active</option>
@@ -510,7 +523,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code='service.title.Product'/></th>    
     <td colspan="3">
     <select class="multy_select" multiple="multiple" id="product" name="product">
     </select>
@@ -526,9 +539,9 @@ $.fn.clearForm = function() {
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_searchView()">View</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()">Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_searchView()"><spring:message code='service.btn.View'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()"><spring:message code='service.btn.Generate'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

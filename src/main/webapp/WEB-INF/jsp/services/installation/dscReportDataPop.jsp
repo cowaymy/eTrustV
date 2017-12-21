@@ -189,9 +189,9 @@ $.fn.clearForm = function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>DSC Report Data</h1>
+<h1><spring:message code='service.title.DSCReportData'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code='expense.CLOSE'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -211,7 +211,7 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Report Type</th>
+    <th scope="row"><spring:message code='service.title.ReportType'/></th>
     <td>
     <select id="reportType" name="reportType">
         <option value="1">DSC Report D+1</option>
@@ -222,7 +222,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Date</th>
+    <th scope="row"><spring:message code='service.title.Date'/></th>    
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -234,7 +234,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">PV Month & PV Year</th>
+    <th scope="row"><spring:message code='service.title.PVMonth_PVYear'/></th>    
     <td>
     <input type="text" title="기준년월" class="j_date2" id="yearMonth" name="yearMonth"/>
     </td>
@@ -243,9 +243,9 @@ $.fn.clearForm = function() {
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()">Generate PDF</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openExcel()">Generate EXCEL</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormDSC').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()"><spring:message code='service.btn.GenerateToPDF'/></a></p></li> 
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openExcel()"><spring:message code='service.btn.GenerateToExcel'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#reportFormDSC').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
 
 
