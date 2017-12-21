@@ -77,7 +77,9 @@ var approveLineGridPros = {
     enableRestore : true,
     showRowNumColumn : false,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-    softRemoveRowMode : false
+    softRemoveRowMode : false,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 var approveLineGridID;

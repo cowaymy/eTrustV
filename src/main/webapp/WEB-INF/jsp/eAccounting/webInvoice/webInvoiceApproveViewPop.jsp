@@ -82,7 +82,9 @@ var myGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     headerHeight : 40,
-    height : 160
+    height : 160,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 $(document).ready(function () {

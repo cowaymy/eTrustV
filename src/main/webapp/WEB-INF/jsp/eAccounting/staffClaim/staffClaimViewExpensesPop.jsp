@@ -189,7 +189,9 @@ var newGridPros = {
     // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
     height : 175,
     softRemoveRowMode : false,
-    rowIdField : "clmSeq"
+    rowIdField : "clmSeq",
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 var myGridColumnLayout = [ {
@@ -423,7 +425,9 @@ var myGridPros = {
     softRemoveRowMode : false,
     rowIdField : "clmSeq",
     headerHeight : 40,
-    height : 160
+    height : 160,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 var myGridID;
@@ -588,7 +592,9 @@ var mileageGridPros = {
     softRemoveRowMode : false,
     // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
     enableRestore : true,
-    rowIdField : "id"
+    rowIdField : "id",
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 var newGridID;

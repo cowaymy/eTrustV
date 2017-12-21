@@ -186,7 +186,9 @@ var myGridPros = {
     softRemoveRowMode : false,
     rowIdField : "clmSeq",
     headerHeight : 40,
-    height : 160
+    height : 160,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
 };
 
 $(document).ready(function () {
