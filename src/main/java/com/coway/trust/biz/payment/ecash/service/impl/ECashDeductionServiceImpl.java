@@ -103,4 +103,5 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
     public void updateECashDeductionResult(Map<String, Object> eCashMap){
 		eCashDeductionMapper.updateECashDeductionResult(eCashMap);
 	}
+
 }

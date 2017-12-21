@@ -44,4 +44,5 @@ public interface ECashDeductionService
      * @param params
      */
     void updateECashDeductionResult(Map<String, Object> eCashMap);
+
 }

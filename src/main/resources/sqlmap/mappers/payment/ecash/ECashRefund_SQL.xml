@@ -35,35 +35,32 @@
 			EXTENT1.FILE_BATCH_UPD_USER_ID
 		WHERE
 		1=1
-            <!-- <if test="batchId != null and batchId != ''">
-            AND Extent1.BATCH_ID = #{batchId}
+            <if test="batchId != null and batchId != ''">
+            AND Extent1.FILE_BATCH_ID = #{batchId}
             </if>
             <if test="creator != null and creator != ''">
             AND EXTENT4.USER_NAME =#{creator}
             </if>
             <if test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
-                AND Extent1.CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
-                AND Extent1.CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
+                AND Extent1.FILE_BATCH_CRT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_CRT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
             </if>
             <if test="status != null and status != ''">
                 AND Extent1.FILE_BATCH_STUS_ID = #{status}
             </if>
-            <if test="deductDt1 != null and deductDt2 != null and deductDt1 != '' and deductDt2 != '' ">
-                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
-                AND Extent1.FILE_BATCH_APPV_DT <![CDATA[   <= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{deductDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
-            </if>
-            <if test="issueBank != null and issueBank != ''">
-                AND Extent1.FILE_BATCH_BANK_ID = #{issueBank}
+            <if test="refundDt1 != null and refundDt2 != null and refundDt1 != '' and refundDt2 != '' ">
+                AND Extent1.FILE_BATCH_CHRG_BACK_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{refundDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
+                AND Extent1.FILE_BATCH_CHRG_BACK_DT <![CDATA[   < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{refundDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
             </if>
             <if test="batchName != null and batchName != ''">
                 AND Extent1.FILE_BATCH_NAME = #{batchName}
-            </if> -->
-         ORDER BY Extent1.BATCH_ID
+            </if>
+         ORDER BY Extent1.FILE_BATCH_ID
     </select>
 
     <!-- E-Cash - Deactivate e-AutoDebitDecution -->
-    <update id="deactivateEAutoDebitDeduction" parameterType="Map" >
-        UPDATE PAY0245M SET
+    <update id="deactivateEAutoDebitRefund" parameterType="Map" >
+        UPDATE PAY0242M SET
               FILE_BATCH_STUS_ID = 8
             , FILE_BATCH_UPD_DT = SYSDATE
             , FILE_BATCH_UPD_USER_ID = #{userId}
@@ -72,7 +69,7 @@
     </update>
 
     <!-- E-Cash - Deactivate e-AutoDebitDecution_Sub -->
-    <update id="deactivateEAutoDebitDeductionSub" parameterType="Map" >
+    <update id="deactivateEAutoDebitRefundSub" parameterType="Map" >
         UPDATE SAL0152M SET
               FILE_ITM_STUS_ID = 8
             , FILE_ITM_UPD = SYSDATE
@@ -86,7 +83,7 @@
         {
             call SP_INST_ECASH_GENDEDUCTION( #{new_issueBank},#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashMap})
         }
-    </select> -->
+    </select>
 
     <delete id="deleteECashResultItem" parameterType="Map" >
         DELETE FROM SAL0211T WHERE ITM_ID = #{fileBatchId}
@@ -100,5 +97,5 @@
         {
             call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
         }
-    </update>
+    </update>-->
 </mapper>
