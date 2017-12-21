@@ -42,9 +42,18 @@
 				 <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
 				  AND SCM39V.TEAM       = #{scmTeamCbBox} 
 				 </if>
-				 <if test="stockCategoryCbBox != null and stockCategoryCbBox !=''">
-				  AND SCM39V.STOCK_CTGRY = (SELECT CODE FROM SYS0013M WHERE CODE_ID = #{stockCategoryCbBox} )
-				 </if>
+				 
+				 <choose>
+         <when test=' stockCategorys != null and stockCategorys != "" '>
+         AND SCM39V.STOCK_CTGRY IN (SELECT CODE FROM SYS0013M WHERE CODE_ID IN 
+            <foreach item="item" collection="stockCategorys" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
+        </when>
+        <otherwise>
+        </otherwise>
+      </choose>
 				 
 				GROUP BY SCM39V.PLAN_MASTER_ID, SCM01M.PLAN_YEAR,SCM01M.PLAN_MONTH, SCM01M.PLAN_WEEK, SCM39V.TEAM, SCM39V.STOCK_CTGRY  
 				ORDER BY SCM39V.STOCK_CTGRY     
@@ -759,7 +768,7 @@
 				      ORDER BY CODE_ID, CODE   
 	  </select>
 
-    <select id="selectStockCode" parameterType="Map" resultType="egovMap">
+    <select id="selectStockCode_TEMP" parameterType="Map" resultType="egovMap">
 			SELECT SYS26M.STK_ID   
 			     , SYS26M.STK_CODE 
 			     , SYS26M.STK_DESC  
@@ -779,6 +788,37 @@
 		     AND ( 1 = SYS26M.STUS_CODE_ID )
 		     AND ( 0 = TO_NUMBER(SYS26M.IS_NCV) )
 		     AND ( Extent2.CODE_ID = #{codeId} )
+        </when>
+        <otherwise>
+          JOIN SCM0008M Extent4   ON SYS26M.STK_ID = Extent4.STOCK_ID
+        </otherwise>
+      </choose>
+			 ORDER BY SYS26M.STK_DESC   ASC
+    </select>
+    
+    <select id="selectStockCode" parameterType="Map" resultType="egovMap">
+			SELECT SYS26M.STK_ID   
+			     , SYS26M.STK_CODE 
+			     , SYS26M.STK_DESC  
+			     , Extent2.CODE_ID   
+			     , Extent2.CODE CODE 
+			     , Extent3.CODE_ID CODE_ID2  
+			     , Extent3.CODE CODE2  
+			  FROM SYS0026M SYS26M
+			  JOIN SYS0013M Extent2   ON SYS26M.STK_CTGRY_ID = Extent2.CODE_ID
+			  JOIN SYS0013M Extent3   ON SYS26M.STK_TYPE_ID = Extent3.CODE_ID
+			<choose>
+        <when test=' codeIds != null and codeIds != "" '>
+        WHERE EXISTS ( SELECT 1 C1  
+                         FROM SCM0008M Extent4
+                        WHERE  Extent4.STOCK_ID = SYS26M.STK_ID 
+                     ) 
+		     AND ( 1 = SYS26M.STUS_CODE_ID )
+		     AND ( 0 = TO_NUMBER(SYS26M.IS_NCV) )
+         AND  Extent2.CODE_ID IN ( SELECT REGEXP_SUBSTR (#{codeIds}, '[^,]+', 1, LEVEL)
+                                     FROM DUAL
+                                  CONNECT BY REGEXP_SUBSTR (#{codeIds}, '[^,]+', 1, LEVEL) IS NOT NULL
+                                 )
         </when>
         <otherwise>
           JOIN SCM0008M Extent4   ON SYS26M.STK_ID = Extent4.STOCK_ID
@@ -933,15 +973,24 @@
                                        FROM SCM0001M
                                       WHERE PLAN_YEAR = #{scmYearCbBox}
                                         AND PLAN_WEEK = #{scmPeriodCbBox}
-                                    <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
+                                    <if test='scmTeamCbBox != null and scmTeamCbBox !="" '>
                                         AND TEAM      = #{scmTeamCbBox}   
                                     </if>
-                                   )
-      <if test="scmStockType != null and scmStockType !=''">
-         AND STK_TYPE_ID = #{scmStockType}
-      </if>                                                                      
+                                   )                                                         
       <choose>
-        <when test=' stkCodes != null and stkCodes != "" '>
+        <when test='scmStockTypes != null and scmStockTypes != "" '>
+         AND  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+
+        </when>
+        <otherwise>
+        </otherwise>
+      </choose>
+                                                                         
+      <choose>
+        <when test='stkCodes != null and stkCodes != "" '>
 
          AND  STOCK_CODE IN
             <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
@@ -1436,6 +1485,36 @@ SELECT STK_ID
             </if>
            )
 
+</insert>
+
+
+<insert id="insertSalesPlanMaster" parameterType="Map">
+        <selectKey keyProperty="salesPlanMstSeq" resultType="int" order="BEFORE">
+            SELECT SCM0001M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+         
+            INSERT INTO SCM0001M
+				           (
+				             PLAN_ID
+				           , TEAM
+				           , PLAN_YEAR    
+				           , PLAN_MONTH
+				           , PLAN_WEEK
+				           , PLAN_STUS_ID
+				           , CRT_DT
+				           , CRT_USER_ID
+				           )
+             VALUES
+				          (
+				             #{salesPlanMstSeq}
+				           , #{scmTeamCbBox}
+				           , #{scmYearCbBox}
+				           , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
+				           , #{scmPeriodCbBox}
+				           , 4
+				           , SYSDATE
+				           , #{crtUserId}
+				          )
 </insert> 
 
 <select id="selectAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
@@ -2039,5 +2118,17 @@ SELECT STK_ID
   ORDER BY STOCK_CODE, DECODE(TEAM,'CODY',1,'DST',2 ,3)   
   
 </select> 
+
+<resultMap id="salePlanDetailInsertMap" type="egovMap"></resultMap>
+<select id="callSpCreateSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
+    { call SP_CREATE_SALES_PLAN_DETAIL(
+		                                    #{salesPlanMstSeq}
+		                                  , #{scmYearCbBox}
+		                                  , #{scmPeriodCbBox}
+		                                  , #{scmTeamCbBox}
+		                                  , #{p1, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanDetailInsertMap})
+    }
+</select>
+
   
 </mapper>

@@ -417,7 +417,7 @@
          , #{poMasterIdSeq}
          , SYSDATE
          , #{newPono}
-         , 5
+         , 1
          , NULL
          , SYSDATE
          , #{updUserId}
@@ -636,6 +636,12 @@ SELECT
       AND STOCK_CODE = #{stockCode}
 </update>
 
+<update id="updatePoIssueStatus" parameterType="Map">
+   UPDATE SCM0009M
+      SET PO_STUS = 5
+    WHERE PO_NO   = #{poNo}    
+</update>
+
 <resultMap id="poIssueMap" type="egovMap"></resultMap>
 <select id="callSpPoApprovalINF155" statementType="CALLABLE" parameterType="Map">
     { call SP_SCM_PO_APPROVAL_INF155(
@@ -644,7 +650,7 @@ SELECT
                                   , #{stockCode}
                                   , #{vender}
                                   , #{failINFKey}
-                                  , #{p1, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=poIssueMap})
+                                  , #{retValue, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=poIssueMap})
     }
 </select>
  
