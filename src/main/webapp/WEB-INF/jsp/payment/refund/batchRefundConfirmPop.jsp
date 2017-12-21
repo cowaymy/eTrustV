@@ -310,9 +310,9 @@ function fn_bRefundItemDisab() {
 	<c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
 	<li><p class="btn_grid"><a href="#" id="remove_btn">Remove</a></p></li>
 	</c:if>
-	<li><p class="btn_grid"><a href="#" id="allItem_btn">All Items</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="validItem_btn">Valid Items</a></p></li>
-	<li><p class="btn_grid"><a href="#" id="invalidItem_btn">Invalid Items</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="allItem_btn"><spring:message code='pay.btn.allItems'/></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="validItem_btn"><spring:message code='pay.btn.validItems'/></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="invalidItem_btn"><spring:message code='pay.btn.invalidItems'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -323,7 +323,7 @@ function fn_bRefundItemDisab() {
 
 <c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="pConfirm_btn">Confirm</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="pConfirm_btn"><spring:message code='pay.btn.confirm'/></a></p></li>
     <li><p class="btn_blue2 big"><a href="#" id="deactivate_btn">Deactivate</a></p></li>
 </ul>
 </c:if>
