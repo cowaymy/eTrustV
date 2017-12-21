@@ -935,10 +935,28 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 		//(2)________________________________Insert Order Remark Upload Detail (bulk)
 		List<orderRemDataVO> vos = (List)params.get("voList");
 		
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
 		
 		LOGGER.info("################### vos : " + vos.size());
 		
+		
+		List<Map> list = vos.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			final int seq  = rosCallLogMapper.getSeqSAL0055D();
+			map.put("uploadDetId", seq);
+			map.put("uploadMId", ordRemSeq);
+			map.put("ordNo", r.getOrderNo());
+			map.put("rem", r.getRemark());
+			map.put("statusId", SalesConstants.ROS_ORD_REM_UPLOAD_STATUS);
+			map.put("orderId", 0);
+			map.put("userId", params.get("userId"));
+			map.put("validStatusId", SalesConstants.ROS_ORD_VALID_STATUS_ID);
+			map.put("validRem", "");
+			return map;
+		})	.collect(Collectors.toList());
+		
+		/*
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		int seq = 0;
 		for (int idx = 0; idx < vos.size(); idx++) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -959,7 +977,7 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 			
 			list.add(idx, map);		
 			
-		}
+		}*/
 		
 		int size = 1000;
 		int page = list.size() / size;
