@@ -6,11 +6,14 @@
 
     <select id="selectDeliveryBalance" parameterType="Map"  resultType="EgovMap">
 		SELECT
-		       COUNT(CASE WHEN (DELVRY_GI_CMPLT = 'Y' AND NVL(DELVRY_GR_CMPLT, 'N') = 'N')
-		                   THEN 1 END) AS grcdc,
-
-		       COUNT(CASE WHEN NVL(DELVRY_GI_CMPLT, 'N') = 'N'
-		                   THEN 1 END) AS gicdc
+		    <if test="Type == '10'">
+                COUNT(CASE WHEN (DELVRY_GI_CMPLT = 'Y' AND NVL(DELVRY_GR_CMPLT, 'N') = 'N')
+                             THEN 1 END) AS grcdc
+            </if>
+            <if test="Type == '20'">
+                COUNT(CASE WHEN NVL(DELVRY_GI_CMPLT, 'N') = 'N'
+                             THEN 1 END) AS gicdc
+            </if>
 
 		FROM LOG0054M
     </select>
@@ -53,11 +56,11 @@
            AND l47.REQST_NO = l55.REQST_NO
            AND l54.DELVRY_NO = l55.DELVRY_NO
 
-     <if test="Type == 'GRCDC'">
+     <if test="Type == '10'">
            AND l54.DELVRY_GI_CMPLT = 'Y' AND NVL(l54.DELVRY_GR_CMPLT, 'N') = 'N'
      </if>
 
-     <if test="Type == 'GICDC'">
+     <if test="Type == '20'">
            AND NVL(l54.DELVRY_GI_CMPLT, 'N') = 'N'
      </if>
 
@@ -140,7 +143,7 @@
      <select id="selectUserDetails" resultType="EgovMap">
         SELECT
             WH_LOC_ID AS locid,
-            WH_LOC_DESC AS locdesc
+            WH_LOC_CODE || ' - ' || WH_LOC_DESC AS locdesc
 
         FROM SYS0028M
 
