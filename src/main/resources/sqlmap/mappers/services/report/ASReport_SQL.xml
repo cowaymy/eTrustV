@@ -4,7 +4,7 @@
      namespace="com.coway.trust.biz.services.report.impl.ASReportMapper">
      
      <select id="selectMemberCodeList" parameterType="Map" resultType="egovMap">
-		     SELECT Project1.MEM_CODE CODE_ID  ,
+		     SELECT Project1.MEM_ID CODE_ID  ,
 		       Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
 		       Project1.NAME NAME  ,
 		       Project1.NRIC NRIC  ,
@@ -62,6 +62,24 @@
 			  ORDER BY Project1.C1 ASC
 			   ]]>
 	</select>
+	
+	<select id="selectMemCodeList" parameterType="Map" resultType="egovMap">
+             SELECT Project1.MEM_CODE CODE_ID  ,
+               Project1.MEM_CODE|| '-' ||Project1.NAME CODE_NAME  ,
+               Project1.NAME NAME  ,
+               Project1.NRIC NRIC  ,
+               Project1.MEM_TYPE MEM_TYPE  
+          FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                        Extent1.MEM_CODE MEM_CODE  ,
+                        Extent1.MEM_TYPE MEM_TYPE  ,
+                        Extent1.NAME NAME  ,
+                        Extent1.NRIC NRIC  
+                 FROM ORG0001D Extent1
+                  WHERE  ( 1 = Extent1.STUS )
+                           AND ( Extent1.MEM_TYPE = 3 ) ) Project1
+          ORDER BY Project1.MEM_CODE ASC
+  </select>
+	
 	
 </mapper>
      
