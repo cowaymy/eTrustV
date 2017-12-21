@@ -80,7 +80,7 @@ function fn_openReport(){
         if($("#group").val() != '' && $("#group").val() != null){
         	whereSql +=" AND ie.CT_GRP = " + " '"+$("#group").val() +"' " + "  ";
         }
-        if($("#appliType").val() != ''){
+        if($("#appliType").val() != '' && $("#appliType").val() != null){
             appType = $("#appliType").val();
             whereSql +=" AND som.App_Type_ID IN(" + $("#appliType").val() + ") ";
         }
