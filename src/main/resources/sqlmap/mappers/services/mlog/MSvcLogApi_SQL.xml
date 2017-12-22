@@ -3004,7 +3004,8 @@ LEFT OUTER JOIN (
                                         ,CRT_USER_ID
                                         ,LOK
                                         ,PREV_CODY_ID
-                                        ,CANC_REQ_NO
+                                        ,(select GBSLCVD.FN_GET_CANC_REQ_NO
+                                            from dual )  CANC_REQ_NO
                             FROM (SELECT SALES_ORD_ID
                                         ,NO
                                         ,MONTH
