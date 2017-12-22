@@ -187,30 +187,30 @@ function fn_setToDay() {
 }
 
 function fn_refundConfirmPop() {
-	Common.popupDiv("/payment/refundConfirmPop.do", null, null, true, "refundConfirmPop", fn_showConfirmPop);
-}
-
-function fn_showConfirmPop() {
 	var checkList = AUIGrid.getItemsByValue(refundGridID, "isActive", "Active");
-    if(checkList.length > 0) {
-        //$("#conf_popup_wrap").show();
-        
-        fn_createConfirmAUIGrid();
-        
-        AUIGrid.setGridData(confirmGridID, checkList);
-        
-        fn_setConfirmPopEvent();
-        
-        $("#totItem").text("-");
-        $("#totValid").text("-");
-        $("#totInvalid").text("-");
-        $("#totRefAmt").text("-");
-        $("#totValidAmt").text("-");
-        $("#totInvalidAmt").text("-");
-        
-    } else {
+	if(checkList.length > 0) {
+		Common.popupDiv("/payment/refundConfirmPop.do", null, null, true, "refundConfirmPop", fn_showConfirmPop);
+	} else {
         Common.alert('No item selected.');
     }
+}
+
+function fn_showConfirmPop(checkList) {
+    var checkList = AUIGrid.getItemsByValue(refundGridID, "isActive", "Active");
+    //$("#conf_popup_wrap").show();
+    
+    fn_createConfirmAUIGrid();
+    
+    AUIGrid.setGridData(confirmGridID, checkList);
+    
+    fn_setConfirmPopEvent();
+    
+    $("#totItem").text("-");
+    $("#totValid").text("-");
+    $("#totInvalid").text("-");
+    $("#totRefAmt").text("-");
+    $("#totValidAmt").text("-");
+    $("#totInvalidAmt").text("-");
 }
 
 function fn_selectRefundList() {
