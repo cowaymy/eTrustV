@@ -55,9 +55,7 @@
                                       editable : false,
                                       showRowCheckColumn : false,
                                       showStateColumn : false,
-                                      showBranchOnGrouping : false,
-                                      scrollHeight4Mobile : true,
-                                      autoScrollSize: true
+                                      showBranchOnGrouping : false
                                    };
 
     var barScanGridPros = {
@@ -65,9 +63,7 @@
                                             showRowCheckColumn : true,
                                             showRowAllCheckBox : false,
                                             showStateColumn : false,
-                                            showBranchOnGrouping : false,
-                                            scrollHeight4Mobile : true,
-                                            autoScrollSize: true
+                                            showBranchOnGrouping : false
                                          };
 
 
