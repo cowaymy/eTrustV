@@ -30,25 +30,25 @@ function fn_openReport(){
       var appType="";
       var branchId = "";
       
-      if($("#CTCode").val() != ''){
+      if($("#CTCode").val() != '' && $("#CTCode").val() != null){
           memberId = $("#CTCode").val();
       }
-      if($("#promotCode").val() != ''){
+      if($("#promotCode").val() != '' && $("#promotCode").val() != null){
           promotionId = $("#promotCode").val();
       }
-      if($("#orderNo").val() != ''){
+      if($("#orderNo").val() != '' && $("#orderNo").val() != null){
           orderNo = $("#orderNo").val();
       }
-      if($("#installNo").val() != ''){
+      if($("#installNo").val() != '' && $("#installNo").val() != null){
           installNo = $("#installNo").val();
       }
-      if($("#installDt").val() != ''){
-          installDate = "to_date("+$("#installDt").val() + ",DD/MM/YYYY)";
+      if($("#installDt").val() != '' && $("#installDt").val() != null){
+          installDate = $("#installDt").val();
       }
-      if($("#appliType").val() != ''){
+      if($("#appliType").val() != '' && $("#appliType").val() != null){
           appType =  " ("+$("#appliType").val() + ") ";
       }
-      if($("#branch").val() != ''){
+      if($("#branch").val() != '' && $("#branch").val() != null){
           branchId = $("#branch").val();
       }
   
@@ -80,29 +80,29 @@ function fn_openExcel(){
 	    var installDate = "";
 	    var appType="";
 	    var branchId = "";
-	    var day = "";
+	    var day =date.getDate();
         if(date.getDate() < 10){
             day = "0"+date.getDate();
         }
-	    if($("#CTCode").val() != ''){
+	    if($("#CTCode").val() != '' && $("#CTCode").val() != null){
 	    	memberId = $("#CTCode").val();
 	    }
-	    if($("#promotCode").val() != ''){
+	    if($("#promotCode").val() != '' && $("#promotCode").val() != null){
 	    	promotionId = $("#promotCode").val();
         }
-	    if($("#orderNo").val() != ''){
+	    if($("#orderNo").val() != '' && $("#orderNo").val() != null){
 	    	orderNo = $("#orderNo").val();
         }
-	    if($("#installNo").val() != ''){
+	    if($("#installNo").val() != '' && $("#installNo").val() != null){
 	    	installNo = $("#installNo").val();
         }
-	    if($("#installDt").val() != ''){
-	    	installDate = "to_date("+$("#installDt").val() + ",DD/MM/YYYY)";
+	    if($("#installDt").val() != '' && $("#installDt").val() != null){
+	    	installDate = $("#installDt").val();
         }
-	    if($("#appliType").val() != ''){
+	    if($("#appliType").val() != '' && $("#appliType").val() != null){
 	    	appType = installNo = " ("+$("#appliType").val() + ") ";
         }
-	    if($("#branch").val() != ''){
+	    if($("#branch").val() != '' && $("#branch").val() != null){
 	    	branchId = $("#branch").val();
         }
 	
