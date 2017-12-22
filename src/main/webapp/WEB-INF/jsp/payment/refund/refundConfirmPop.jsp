@@ -228,7 +228,7 @@ function fn_setConfirmRefund(result) {
     
     var gridData = fn_conversionForGridData(checkList, result.gridDataList);
     
-    $("#conf_popup_wrap").show();
+    //$("#conf_popup_wrap").show();
     
     fn_createConfirmAUIGrid();
     
@@ -316,7 +316,7 @@ function fn_setConfirmPopEvent() {
     });
     
     $("#validCheck_btn").click(fn_checkRefundValid);
-    $("#pConfirm_btn").click(fn_confirm);
+    $("#pConfirm_btn").click(fn_refundConfirm);
     $("#pClear_btn").click(fn_pClear);
     $("#remove_btn").click(fn_refundItemDisab);
     
@@ -423,7 +423,7 @@ function fn_validStusIdCheckForConfirm() {
     return result;
 }
 
-function fn_confirm() {
+function fn_refundConfirm() {
     console.log("fn_confirm Action start");
     if(fn_validStusIdCheckForConfirm()) {
         console.log("if Action");
