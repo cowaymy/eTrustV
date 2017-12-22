@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 function fn_validation(){
 	
-		if($("#reqStrDate").val() != '' || $("#asAppDtFr").val() != ''){
+		if($("#reqStrDate").val() != '' && $("#asAppDtFr").val() != ''){
 	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
 	        return false;
 	    }
