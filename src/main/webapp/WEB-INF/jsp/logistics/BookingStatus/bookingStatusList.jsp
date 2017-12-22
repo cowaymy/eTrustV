@@ -199,7 +199,9 @@
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Booking Status</h2>
 		<ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>		
         </ul>
 	</aside><!-- title_line end -->
 
@@ -281,7 +283,9 @@
 	<section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>        
         </ul>
 	    <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 

@@ -329,7 +329,9 @@ function f_getTtype(g , v){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>    
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
@@ -430,8 +432,12 @@ function f_getTtype(g , v){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>        
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="insert">New</a></p></li>
+</c:if>
         </ul>
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
         

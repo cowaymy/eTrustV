@@ -302,7 +302,10 @@ function searchSMO(index){
 <aside class="title_line"><!-- title_line start -->
 <h3></h3>
     <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>
+    
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
     </ul>
 </aside><!-- title_line end -->
@@ -373,7 +376,9 @@ function searchSMO(index){
     </section><!-- search_table end -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>   
             <li><p class="btn_grid"><a id="insert">Create SMO</a></p></li>            
         </ul>
 
@@ -430,7 +435,9 @@ function searchSMO(index){
             </table>
             </form>
             <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li>
+</c:if>            
                 <!-- <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li> -->
             </ul>
 </section><!-- pop_body end -->

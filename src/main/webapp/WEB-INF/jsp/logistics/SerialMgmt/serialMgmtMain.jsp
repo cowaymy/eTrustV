@@ -802,7 +802,9 @@
                             <input type="text" id="grCDC" name="grCDC"  class="w100p"  readonly/>
                         </td>
                         <td>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
                             <p class="btn_blue"><a id="viewGRCDC">View</a></p>
+</c:if>
                         </td>
                     </tr>
                     <tr>
@@ -811,7 +813,9 @@
                             <input type="text"  id="giCDC" name="giCDC"  class="w100p"  readonly/>
                         </td>
                         <td>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
                             <p class="btn_blue"><a id="viewGICDC">View</a></p>
+</c:if>                        
                         </td>
                     </tr>
                     <tr>
@@ -820,7 +824,9 @@
                             <input type="text" id="giRDC" name="giRDC"  class="w100p" readonly />
                         </td>
                         <td>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
                             <p class="btn_blue"><a id="viewGIRDC">View</a></p>
+</c:if>                        
                         </td>
                     </tr>
                 </tbody>
@@ -896,8 +902,12 @@
 
             &nbsp;
 			<ul class="left_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 			    <li><p class="btn_blue"><a onclick="javascript:fn_showSerialRegistration();">Scan Barcode</a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 			    <li><p class="btn_blue"><a id="btnSave">SAVE</a></p></li>
+</c:if>			
 			</ul>
 
             &nbsp;
@@ -1006,8 +1016,10 @@
                 &nbsp;
 
                 <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue2 big"><a onclick="javascript:fn_confirmScanItem();">Confirm</a></p></li>
                     <li><p class="btn_blue2 big"><a onclick="javascript:fn_deleteScanItem();">Delete Checked Items</a></p></li>
+</c:if>                
                 </ul>
 
             </form>

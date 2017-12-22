@@ -5,30 +5,30 @@
 
 /* 커스텀 칼럼 스타일 정의 */
 .aui-grid-user-custom-left {
-    text-align:left;
+	text-align: left;
 }
 
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
-    color : #cccccc;
+	color: #cccccc;
 }
 
 /* 그리드 오버 시 행 선택자 만들기 */
 .aui-grid-body-panel table tr:hover {
-    background:#D9E5FF;
-    color:#000;
+	background: #D9E5FF;
+	color: #000;
 }
+
 .aui-grid-main-panel .aui-grid-body-panel table tr td:hover {
-    background:#D9E5FF;
-    color:#000;
+	background: #D9E5FF;
+	color: #000;
 }
 
 .my-row-style {
-    background:#9FC93C;
-    font-weight:bold;
-    color:#22741C;
+	background: #9FC93C;
+	font-weight: bold;
+	color: #22741C;
 }
-
 </style>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.blockUI.min.js"></script>
 <script type="text/javaScript" language="javascript">
@@ -735,7 +735,9 @@ function f_addrow(){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>    
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
     </ul>
 </aside><!-- title_line end -->
@@ -818,8 +820,13 @@ function f_addrow(){
     <section class="search_result"><!-- search_result start -->
     
         <ul class="right_btns">
+
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
          <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>        
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
          <li><p class="btn_grid"><a id="insert">New</a></p></li>            
+</c:if>
          <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
          <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
         </ul>
@@ -875,7 +882,9 @@ function f_addrow(){
             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->
             <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a onclick="javascript:giSave();">SAVE</a></p></li>
+</c:if>            
             </ul>
             </form>
         

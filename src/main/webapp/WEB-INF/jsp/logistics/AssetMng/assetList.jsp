@@ -1694,7 +1694,9 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Asset Management</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>
      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -1865,11 +1867,15 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="currentAsset">Branch/Department Current Asset</a></p></li>
 <%--     <li><p class="btn_grid"><a href="download"><spring:message code='sys.btn.excel.dw' /></a></p></li> --%>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid"><a id="exportTo"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
     <%-- <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
+</c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -1904,7 +1910,9 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
 <article class="tap_area" >
 
 <ul class="right_btns"  id="ViewTrnsBtn">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="ViewMoveTrns">View Movement Transaction</a></p></li>
+</c:if>
 </ul>
 <form id="masterForm" name="masterForm" method="POST">
 <table class="type1 mt10"><!-- table start -->
@@ -2076,12 +2084,15 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
 <!--         </tr> -->
 <!--     </table> -->
 <ul class="center_btns">
+
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="returnTrnsBtn">Confirm Return</a></p></li>
     <li><p class="btn_blue2 big"><a id="savePopbtn">SAVE</a></p></li>
 <!--     <li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li> -->
 <!--     <li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li> -->
     <li><p class="btn_blue2 big"><a id="updatePopbtn">UPDATE</a></p></li>
     <li><p class="btn_blue2 big"><a id="cancelPopbtn" onclick="javascript:fn_assetDetailCancel();">CANCEL</a></p></li>
+</c:if>
 </ul>
 </form>
 </article>
@@ -2118,13 +2129,17 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
                 <aside class="title_line"><!-- title_line start -->
                     <h3 >Add Dtails Info</h3>
                     <ul class="left_opt">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="detail_info_add">ADD</a></p></li>
+</c:if>                    
                     </ul>
                 </aside>
                 <div id="addDetail_grid" style="width:100%;">
                 </div>
                 <ul class="left_opt">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a onclick="javascript:detail_info_insert();">SAVE</a></p></li>
+</c:if>
                 </ul>         
  </div>  
 </article>
@@ -2134,7 +2149,9 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
                 <aside class="title_line"><!-- title_line start -->
                     <h3 >Update Dtails Info</h3>
                     <ul class="left_opt">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="item_info_add">ADD Item</a></p></li>
+</c:if>
                     </ul>
                     <!-- <li><p class="btn_blue"><a id="multi_item_add">ADD Item info</a></p></li> -->
                 </aside>
@@ -2142,7 +2159,9 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
                 </div>
                 <ul class="left_opt">
                     <!-- <li id="addItm"><p class="btn_blue"><a onclick="javascript:updateItem('M')">SAVE</a></p></li> -->
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li id="upItm"><p class="btn_blue"><a onclick="javascript:updateItem('E')">UPDATE</a></p></li>
+</c:if>
                 </ul>         
  </div>  
 </article>
@@ -2181,7 +2200,10 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
     </table>
 </form>
 <ul class="center_btns">
+
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="saveTrnsBtn">SAVE</a></p></li>
+</c:if>
 </ul>
 
 
@@ -2216,7 +2238,9 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
     </table>
 </form>
 <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="saveStatusBtn">SAVE</a></p></li>
+</c:if>
 </ul>
 
 
@@ -2264,6 +2288,8 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
                     </table>
                     <!-- table end -->
                     <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+</c:if>                    
                         <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li> 
                         <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
                     </ul>
@@ -2330,7 +2356,10 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
                     <!-- table end -->
               
                     <ul class="center_btns">
+
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                         <li><p class="btn_blue2 big"><a onclick="javascript:addRowItem();">SAVE</a></p></li> 
+</c:if>                    
                         <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
                     </ul>
                 </form> 
@@ -2419,7 +2448,9 @@ var updateLayout = [ {dataField:    "codeName",headerText :"<spring:message code
                     
                     <!-- table end -->
                     <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                         <li><p class="btn_blue2 big"><a id="transAsset">Transfer Asset</a></p></li>
+</c:if>
                     </ul>
                 </form> 
     </section>  

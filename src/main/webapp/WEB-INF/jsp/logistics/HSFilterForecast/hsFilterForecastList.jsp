@@ -255,7 +255,10 @@
 	   <h2>HS Filter Forecast</h2>
 
 		<ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 		    <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>
+		
 		    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
@@ -338,7 +341,9 @@
 
  	<section class="search_result">
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>        
         </ul>
         <div id="grid_wrap" class="mt10" style="height:500px"></div>
 
@@ -388,7 +393,9 @@
 				</table><!-- table end -->
 
 				<ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				    <li><p class="btn_blue2 big"><a onclick="javascript:fn_searchDetails();">Search</a></p></li>
+</c:if>				
 				    <li></li>
 				</ul>
 				&nbsp;

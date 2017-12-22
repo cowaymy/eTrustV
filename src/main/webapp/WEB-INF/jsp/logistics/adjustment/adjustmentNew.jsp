@@ -554,12 +554,15 @@ function fn_subGrid(invntryNo){
     <li><p class="btn_blue"><a id="list">List</a></p></li> 
     <li><p class="btn_blue"><a id="view">View</a></p></li>  
     -->
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li  id="close"><p class="btn_blue"><a id="close">Close</a></p></li>
     <li  id="detail"><p class="btn_blue"><a id="detail">Detail</a></p></li>
     <li id="approval"><p class="btn_blue"><a id="approval">Approval</a></p></li>
     <li id="create"><p class="btn_blue"><a id="create">Create</a></p></li>
-    <!-- <li><p class="btn_blue"><a id="search">Search</a></p></li> -->
+</c:if>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li  id="search"><p class="btn_blue"><a href="#"><span class="search"></span>Search</a></p></li>
+</c:if>
     <li  id="clear"><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -637,7 +640,9 @@ function fn_subGrid(invntryNo){
 
 <section class="search_result"><!-- search_result start -->
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="grid_wrap" style="height:450px"></div>
@@ -646,7 +651,9 @@ function fn_subGrid(invntryNo){
 <h3>Stock Audit Location Detail</h3>
 </aside><!-- title_line end -->
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="count">Count</a></p></li>
+</c:if>
 </ul>
 <section class="search_result"><!-- search_result start -->
 <article class="grid_wrap" id="grid_wrap_sub_art"><!-- grid_wrap start -->
@@ -714,7 +721,9 @@ function fn_subGrid(invntryNo){
 </table>
 </form>
             <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li> 
+</c:if>            
                <!--  <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li> -->
             </ul>
 </section><!-- pop_body end -->
@@ -768,9 +777,14 @@ function fn_subGrid(invntryNo){
 </table>
 </form>
             <ul class="center_btns">
+
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="autobtn">Auto</a></p></li>
                 <li><p class="btn_blue2 big"><a id="manualbtn">Manual</a></p></li>
+</c:if>            
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="viewbtn">View</a></p></li> 
+</c:if>
                 <!-- <li><p class="btn_blue2 big"><a id="count">Count</a></p></li> --> 
             </ul> 
 </section><!-- pop_body end -->

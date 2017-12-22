@@ -368,10 +368,16 @@ $(document).ready(function(){
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
       <li><p class="btn_blue"><a id="delete"><span class="delete"></span>Delete</a></p></li>
+</c:if>
       <!-- <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> -->
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
       <li><p class="btn_blue"><a id="complete"><span class="complete"></span>Complete</a></p></li>
+</c:if>
       <!-- <li><p class="btn_gray"><a id="cancle"><span class="cancle"></span>Cancle</a></p></li> -->
     </ul>
 </aside><!-- title_line end -->
@@ -448,7 +454,9 @@ $(document).ready(function(){
     <section class="search_result"><!-- search_result start -->
     
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
          <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>        
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 

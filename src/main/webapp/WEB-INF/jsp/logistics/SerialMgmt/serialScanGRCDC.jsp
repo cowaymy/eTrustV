@@ -674,8 +674,12 @@
 
             &nbsp;
             <ul class="left_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a onclick="javascript:fn_showSerialRegistration();">Scan Barcode</a></p></li>
+</c:if>            
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue"><a id="btnSave">SAVE</a></p></li>
+</c:if>
             </ul>
 
             &nbsp;
@@ -727,8 +731,10 @@
                 &nbsp;
 
                 <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue2 big"><a onclick="javascript:fn_confirmScanItem();">Confirm</a></p></li>
                     <li><p class="btn_blue2 big"><a onclick="javascript:fn_deleteScanItem();">Delete Checked Items</a></p></li>
+</c:if>                
                 </ul>
 
             </form>

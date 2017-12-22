@@ -505,7 +505,9 @@ function f_multiCombo() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Item Info</h3>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
         <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
+</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -573,8 +575,10 @@ function f_multiCombo() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Request Item</h3>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 <!--     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
+</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -595,11 +599,18 @@ function f_multiCombo() {
 
 </div><!-- divine_auto end -->
 
-<ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
-</ul>
+		<ul class="center_btns mt20">
+			<li><p class="btn_blue2 big">
+					<a id="list">List</a>
+				</p></li>&nbsp;&nbsp;
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+			<li><p class="btn_blue2 big">
+					<a id="save">Save</a>
+				</p></li>
+</c:if>				
+		</ul>
 
-</section><!-- search_result end -->
+	</section><!-- search_result end -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">

@@ -796,10 +796,14 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a id="create">New</a></p></li>
     <li><p class="btn_blue"><a id="edit">Edit</a></p></li>
+</c:if>
     <!-- <li><p class="btn_blue"><a id="view">View</a></p></li> -->
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -864,8 +868,12 @@ function f_multiCombo() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a id="excelUp"><spring:message code='sys.btn.excel.up' /></a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
  <li><p class="btn_grid"><a id="excelDown"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>
 <!--     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li>
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>  -->
@@ -901,14 +909,18 @@ function f_multiCombo() {
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a id="copy">Copy</a></p></li>
     <li><p class="btn_blue"><a id="add">Add</a></p></li>
+</c:if>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="popup_wrap_div"></div>
 </article><!-- grid_wrap end -->
             <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li>
+</c:if>            
                 <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li>
             </ul>
 </section><!-- pop_body end -->
@@ -929,17 +941,22 @@ function f_multiCombo() {
 <section class="pop_body"><!-- pop_body start -->
 <ul class="right_btns">
     <!-- <li><p class="btn_blue"><a id="add">Add</a></p></li> -->
+
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     
     <li><p class="btn_blue"><div class="auto_file"><!-- auto_file start -->
                                     <input type="file" id="fileSelector" title="file add" accept=".xlsx"/>
                                 </div>
     </p></li>
+</c:if>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
        <div id="popup_wrap_excel"></div>
 </article><!-- grid_wrap end -->
             <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="saveExcel">SAVE</a></p></li>
+</c:if>
                 <li><p class="btn_blue2 big"><a id="cancelExcel">CANCEL</a></p></li>
             </ul>
 </section><!-- pop_body end -->

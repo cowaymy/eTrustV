@@ -7,6 +7,9 @@
 .aui-grid-user-custom-left {
     text-align:left;
 }
+.aui-grid-user-custom-right {
+    text-align:right;
+}
 
 /* 커스컴 disable 스타일*/
 .mycustom-disable-color {
@@ -34,25 +37,39 @@ var rescolumnLayout=[
                      
                      
 					{dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-					{dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false},                         
-					{dataField: "rdc",headerText :"<spring:message code='log.head.rdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
-					{dataField: "rdcname",headerText :"<spring:message code='log.head.rdc'/>"   ,width:240 ,height:30, editable:false},                         
+					{dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false, visible:false},                         
+					{dataField: "cdc",headerText :"<spring:message code='log.head.cdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
+					{dataField: "cdcname",headerText :"<spring:message code='log.head.cdc'/>"   ,width:240 ,height:30, editable:false, visible:false},
 					{dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"    ,width:120 ,height:30, editable:false},                         
 					{dataField: "ctName",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
 					{dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
 					{dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
-					{dataField: "stkTypeId",headerText :"<spring:message code='log.head.materialtype'/>"    ,width:120 ,height:30, editable:false},                         
+					{dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
+					{dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+					{dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+					{dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+					{dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+					{dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+					{dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+					{dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+					{dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+					{dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+					{dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
+						,dataType : "date",
+					    formatString : "dd/mm/yyyy",
+					    editRenderer : {
+					        type : "CalendarRenderer",
+					        openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+					        onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+					        showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+					    }},                          
+					{dataField: "stkTypeId",headerText :"<spring:message code='log.head.materialtype'/>"    ,width:120 ,height:30, editable:false , visible:false},                         
 					{dataField: "stkTypeName",headerText :"<spring:message code='log.head.materialtypetext'/>"  ,width:120 ,height:30, editable:false},                         
 					{dataField: "stkCtgryId",headerText :"<spring:message code='log.head.stkctgryid'/>" ,width:120 ,height:30, editable:false, visible:false},                          
-					{dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false , visible:false},                         
+					{dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false},                         
 					{dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
-					{dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
-					{dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false , visible:false},                         
-					{dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false},                         
-					{dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:true},                          
-					{dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:true},                          
-					{dataField: "reordqty",headerText :"<spring:message code='log.head.reorderqty'/>"   ,width:120 ,height:30, editable:true},                          
-					{dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false},                         
+					{dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false},                          
+					{dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false, visible:false},                         
 					{dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
 					{dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false}  
 
@@ -101,11 +118,17 @@ $(document).ready(function(){
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
     });
     
+ 
     AUIGrid.bind(listGrid, "ready", function(event) {
-    });
-    
-    AUIGrid.bind(subGrid, "ready", function(event) {
     	
+        var rowCnt = AUIGrid.getRowCount(listGrid);
+        for (var i = 0 ; i < rowCnt ; i++){
+            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -AUIGrid.getCellValue(listGrid , i , 'availqty');
+            AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+            }
+        }
+        AUIGrid.resetUpdatedItems(listGrid, "all");
     });
     
 });
@@ -486,6 +509,14 @@ function SearchListAjax() {
     Common.ajax("POST" , url , param , function(data){
     	console.log(data);
         AUIGrid.setGridData(listGrid, data.data);
+        var rowCnt = AUIGrid.getRowCount(listGrid);
+        for (var i = 0 ; i < rowCnt ; i++){
+            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -AUIGrid.getCellValue(listGrid , i , 'availqty');
+            AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+            }
+        }
+        AUIGrid.resetUpdatedItems(listGrid, "all");
         
     });
 }
@@ -555,7 +586,9 @@ function f_multiCombos() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
     <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>    
       <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
@@ -583,16 +616,14 @@ function f_multiCombos() {
                     <td>
                         <select class="w100p" id="sloccode" name="sloccode"><option value="">Choose Category of Storage</option></select>
                     </td>
+                </tr>
+                <tr>
                     <th scope="row">Period<span style="color:red">*</span></th>
                     <td>
                           <input id="speriod" name="speriod" type="text" title="period" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
                     </td>
-                </tr>
-                <tr>
-                    <th scope="row">Material type</th>
-                    <td>
-                        <select class="w100p" id="sttype" name="sttype"></select>
-                    </td>
+                    <th></th>
+                    <td ></td>
                     <th></th>
                     <td ></td>
                 </tr>
@@ -628,6 +659,16 @@ function f_multiCombos() {
                        <select class="w100p" id="searchType" name="searchType"></select>
                    </td>    
                 </tr>
+                <tr>
+                    <th scope="row">Period<span style="color:red">*</span></th>
+                    <td>
+                          <input id="speriod" name="speriod" type="text" title="period" placeholder="MM/YYYY" class="j_date2 w100p" readonly />
+                    </td>
+                    <th></th>
+                    <td ></td>
+                    <th></th>
+                    <td ></td>
+                </tr>
                                        
             </tbody>
         </table><!-- table end -->
@@ -638,10 +679,12 @@ function f_multiCombos() {
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
             <li><p class="btn_grid"><a id="add">Add</a></p></li>
             <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
             <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li>
+</c:if>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
@@ -702,7 +745,10 @@ function f_multiCombos() {
             </table>
         
             <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="popsave">SAVE</a></p></li> 
+</c:if>
+            
             </ul>
             </form>
         

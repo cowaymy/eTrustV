@@ -381,10 +381,12 @@
 			</p>
 			<h2>BOM</h2>
 			<ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 				<li><p class="btn_blue">
 						<a id="search"><span class="search"></span>
 						<spring:message code='sys.btn.search' /></a>
 					</p></li>
+</c:if>
 				<li><p class="btn_blue">
 						<a id="clear"><span class="clear"></span>
 						<spring:message code='sys.btn.clear' /></a>
@@ -437,7 +439,9 @@
 		</section>
 		<section class="search_result">
 		<ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>		
         </ul>
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->
@@ -513,7 +517,9 @@
                     </ul> -->
                 </aside>
                 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 		            <li><p class="btn_grid"><a id="filterSave">SAVE</a></p></li>
+</c:if>                
 		        </ul>
                 <div id="filter_grid" style="width:100%;">
                 </div>                

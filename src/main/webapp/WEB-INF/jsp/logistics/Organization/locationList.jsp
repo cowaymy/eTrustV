@@ -594,7 +594,9 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Location</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li> 
+    </c:if>
     <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -658,11 +660,15 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
 <ul class="right_btns">
 
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.excel.up' /></a></p></li> --%>
+    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
+    </c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -788,7 +794,9 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
 </tbody>
 </table><!-- table end -->
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_updateGridRow();">SAVE</a></p></li>
+    </c:if>
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_updateCancel();">CANCEL</a></p></li>
 </ul>
 </form>
@@ -902,7 +910,9 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
 </table>
 
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertGrid();">SAVE</a></p></li> 
+    </c:if>
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_insertCancel();">CANCEL</a></p></li>
 </ul>
 </form>

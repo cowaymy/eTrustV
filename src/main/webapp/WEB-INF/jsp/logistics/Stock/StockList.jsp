@@ -1334,7 +1334,9 @@
         <h2>Material Code</h2>
         <ul class="right_opt">
           <%//@ include file="/WEB-INF/jsp/common/contentButton.jsp" %>
-            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+	            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+	    </c:if>
             <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
         </ul>
     </aside><!-- title_line end -->
@@ -1388,11 +1390,14 @@
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>EXCEL UP</a></p></li> -->
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+   </c:if>
 <!--             <li><p class="btn_grid"><a href="#"><span class="search"></span>DEL</a></p></li> -->
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="stockIns">New</a></p></li>
-            
+    </c:if>
 <!--             <li><p class="btn_grid"><a href="javascript:f_tabHide()">Add</p></li> -->
         </ul>
 
@@ -1414,7 +1419,9 @@
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Stock Information</h3>
                 <ul class="left_opt">
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="stock_info_edit">EDIT</a></p></li>
+                </c:if>
                 </ul>
                 </aside>
                 <form id="stockInfo" name="stockInfo" method="post">
@@ -1472,7 +1479,9 @@
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Price & Value Information</h3>
                 <ul class="left_opt">
+                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="price_info_edit">EDIT</a></p></li>
+                    </c:if>
                 </ul>
                 </aside>
                 <form id='priceForm' name='priceForm' method='post'>
@@ -1562,7 +1571,9 @@
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Service Charge Information List</h3>
                 <ul class="left_opt">
+                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="service_info_edit">EDIT</a></p></li>
+                    </c:if>
                 </ul>
                 </aside>
                 <div id="service_grid" style="width:100%;"></div>
@@ -1572,7 +1583,9 @@
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Service Point</h3>
                 <ul class="left_opt">
+                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="service_point_edit">EDIT</a></p></li>
+                     </c:if>
                 </ul>
                 </aside>
                 <form id="servicepoint" name="servicepoint" method="post">
@@ -1631,7 +1644,9 @@
                  <aside class="title_line">
                 <!-- <h3>Stock Information</h3> -->
                 <ul class="right_opt">
+                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="stock_comm_edit" style="display: none;"><spring:message code='sys.btn.save' /></a></p></li>
+                    </c:if>
                 </ul> 
                 </aside>
                 <form id='commForm' name='commForm' method='post'>
@@ -1789,8 +1804,10 @@
                         </tbody>
                     </table>
                     <!-- table end -->
-                    <ul class="center_btns">
+                    <ul class="center_btns">    
+                    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                         <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li> 
+                    </c:if>
                         <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
                     </ul>
                 </form> 
@@ -1836,7 +1853,9 @@
             </tbody>
         </table>
         <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
+    </c:if>        
             <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
         </ul>
     </form>       
@@ -1933,7 +1952,9 @@
 </tbody>
 </table><!-- table end -->
 <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_nonvalueItem('1');">SAVE</a></p></li>
+</c:if>
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_nonvalueItem('2');">CANCEL</a></p></li>
 </ul>
 </form>

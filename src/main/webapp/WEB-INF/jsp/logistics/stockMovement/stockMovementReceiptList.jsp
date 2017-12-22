@@ -558,8 +558,10 @@ function fn_gradComb(){
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Header Info</h3>
-    <ul class="right_btns">
+<ul class="right_btns"><c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
+</c:if>
+
             <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
         </ul>
 </aside><!-- title_line end -->
@@ -646,7 +648,9 @@ function fn_gradComb(){
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>        
             <li><p class="btn_grid"><a id="gissue">Goods Receipt</a></p></li>
             <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li>
         </ul>
@@ -693,7 +697,10 @@ function fn_gradComb(){
             <div id="receipt_grid" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->
 		    <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 		        <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li> 
+</c:if>
+		    
 		    </ul>
 		    </form>
 		

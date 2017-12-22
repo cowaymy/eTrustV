@@ -51,8 +51,10 @@ var rescolumnLayout=[
                     {dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
                         ,dataType : "date",
@@ -71,11 +73,10 @@ var rescolumnLayout=[
                     {dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false},                          
                     {dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false, visible:false},                         
                     {dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-                    {dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false},  
-                    
-                    {dataField: "avrqty",headerText :"<spring:message code='log.head.averageqty'/>"                  ,width:120    ,height:30 , editable:false},
-                    {dataField: "diffqty",headerText :"<spring:message code='log.head.diffqty'/>"                  ,width:120    ,height:30 , editable:false}
-                    ];
+                    {dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false}  
+
+                     
+                     ];
                      
 // AUIGrid.showColumnByDataField(myGridID, "sftyqty"); 
 // hideColumnByDataField
@@ -504,7 +505,7 @@ function fn_detail(data){
 
 function SearchListAjax() {
        
-    var url = "/logistics/replenishment/searchListRdc.do";
+    var url = "/logistics/replenishment/searchAutoCTList.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
@@ -527,7 +528,7 @@ function SearchListAjax2(str) {
         $("#speriod").val($("#period").val());
     } 
     
-    var url = "/logistics/replenishment/searchListRdc.do";
+    var url = "/logistics/replenishment/searchAutoCTList.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
@@ -576,12 +577,12 @@ function f_multiCombos() {
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
     <li>Replenishment</li>
-    <li>R.Mgmt Data</li>
+    <li>R.Mgmt Data(CODY)</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>R.Mgmt Data</h2>
+<h2>R.Mgmt Data(CODY)</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -596,6 +597,7 @@ function f_multiCombos() {
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+    <input type="hidden" id="isctcody" name="isctcody" value="cd"/>
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -694,7 +696,7 @@ function f_multiCombos() {
     </section><!-- search_result end -->
    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-            <h1 id="dataTitle">New R.Mgmt  Data</h1>
+            <h1 id="dataTitle">New R.Mgmt Data(CODY)</h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
