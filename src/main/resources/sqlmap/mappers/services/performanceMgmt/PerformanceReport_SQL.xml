@@ -78,9 +78,43 @@
     
     
     <select id="selectPfReportSales"  parameterType="Map" resultType="egovMap">
-        SELECT CODE_NAME 
-        FROM SYS0013M 
-        WHERE CODE_MASTER_ID = 1
+			<![CDATA[ 
+			
+			select 
+			g.mem_code as "SCM",
+			e.mem_code as "CM",
+			a.mem_id ,
+			b.mem_code as "CODY",
+			0 as "SALES TARGET",
+			Count(a.sales_ord_no) as Key_In, 
+			count(t.sales_ord_id) as "YS",
+			count(h.sales_ord_no)as "NET_SALES",
+			count(i.sales_ord_no)as "Extrade",
+			0 as "sales_Percent"
+			from SAL0001D a 
+			join org0001D b on b.mem_id = a.mem_id
+			join SYS0013M c on c.code_id = b.mem_type
+			join org0005d d on d.mem_id = b.mem_id
+			join org0001D e on e.mem_id = d.mem_up_ID
+			join org0005d f on f.mem_id = e.mem_id
+			join org0001D g on g.mem_id = f.mem_up_ID
+			left join SAL0001D h on a.sales_ord_id = h.sales_ord_id and h.pv_month <> 0 and h.pv_year <> 0
+			left join SAL0001D i on a.sales_ord_id = i.sales_ord_id and i.binding_no is not null
+			left join (select q.* 
+			from SAL0001D q
+			join SAL0046D w 
+			on q.sales_ord_id = w.sales_ord_id 
+			and w.stus_code_id = 4 
+			and q.pv_month = 0 
+			and q.pv_year = 0 
+			where q.mem_id='590')t on a.sales_ord_id = t.sales_ord_id
+			where TO_CHAR(a.sales_dt, 'yyyy') = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+			and to_char(a.sales_dt,'mm') = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+			AND a.stus_code_id=4 
+			and c.code_id = 2
+			group by b.mem_code, a.mem_id, g.mem_code, e.mem_code ,a.mem_id
+			order by b.mem_code
+        ]]>
     </select>        
 
 
