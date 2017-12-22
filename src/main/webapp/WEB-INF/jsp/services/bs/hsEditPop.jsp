@@ -317,7 +317,7 @@
 
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#addHsForm").serializeJSON();
-              Common.ajax("POST", "/services/bs/UpdateHsResult.do", jsonObj, function(result) {
+              Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
               Common.alert(result.message, fn_parentReload);
 
             });
@@ -369,10 +369,14 @@
  <input type="hidden" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
 
    
- <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode"/>
- <input type="hidden" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn"/>
- <input type="hidden" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct"/>
- <input type="hidden" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId"/>
+ <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
+ <input type="hidden" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
+ <input type="hidden" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct" name="renColct"/>
+ <input type="hidden" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
+ <input type="hidden" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt""/>
+ <input type="hidden" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem""/>
+ <input type="hidden" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction""/>
+  
  
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Information</h2>
