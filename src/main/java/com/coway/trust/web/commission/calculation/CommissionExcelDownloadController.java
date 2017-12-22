@@ -313,7 +313,7 @@ public class CommissionExcelDownloadController {
 							"performance incentive", "Personal sales Cmm", "Personal Rental Cmm", "bonus Cmm",
 							"sales encouragement allowance", "rental collection Cmm", "PE Encouragement",
 							"Healthy Family Fund", "newely entering allowance", "introduction fees", "Incentive",
-							"SHI Amt", "r30", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "r36",
+							"SHI Amt", "Sales Commission(R&Other Installment Month)", "Personal Rental Mem Cmm", "RentalMembership SHI_Amt", "Rental Membership Sales Commission",
 							"COmmincentive ovr_type", "Outright Plus Personal Rental Cmm", "Adjustment","W/S" };
 					downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 
