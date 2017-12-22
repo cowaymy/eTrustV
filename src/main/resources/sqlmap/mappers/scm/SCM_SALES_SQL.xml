@@ -1842,27 +1842,27 @@ SELECT STK_ID
                                               
                                   FROM
                                       (
-                                         SELECT 'ALL' TEAM, STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID 
-                                       ,SUM(ORD_VALUE) ORD_VALUE
-                                       ,SUM(W1_WEEK_00) ALL_W1_WEEK_00 ,SUM(ORD_VALUE) ALL_W1_ORD_VALUE
-                                       ,SUM(W2_WEEK_00) ALL_W2_WEEK_00 ,SUM(ORD_VALUE) ALL_W2_ORD_VALUE
-                                       ,SUM(W3_WEEK_00) ALL_W3_WEEK_00 ,SUM(ORD_VALUE) ALL_W3_ORD_VALUE
-                                       ,SUM(W4_WEEK_00) ALL_W4_WEEK_00 ,SUM(ORD_VALUE) ALL_W4_ORD_VALUE
-                                       ,SUM(W5_WEEK_00) ALL_W5_WEEK_00 ,SUM(ORD_VALUE) ALL_W5_ORD_VALUE
-                                       ,SUM(W6_WEEK_00) ALL_W6_WEEK_00 ,SUM(ORD_VALUE) ALL_W6_ORD_VALUE
-                                       ,SUM(W7_WEEK_00) ALL_W7_WEEK_00 ,SUM(ORD_VALUE) ALL_W7_ORD_VALUE
-                                       ,SUM(W8_WEEK_00) ALL_W8_WEEK_00 ,SUM(ORD_VALUE) ALL_W8_ORD_VALUE
-                                       ,SUM(W9_WEEK_00) ALL_W9_WEEK_00 ,SUM(ORD_VALUE) ALL_W9_ORD_VALUE
-                                       ,SUM(W10_WEEK_00) ALL_W10_WEEK_00 ,SUM(ORD_VALUE) ALL_W10_ORD_VALUE
-                                       ,SUM(W11_WEEK_00) ALL_W11_WEEK_00 ,SUM(ORD_VALUE) ALL_W11_ORD_VALUE
-                                       ,SUM(W12_WEEK_00) ALL_W12_WEEK_00 ,SUM(ORD_VALUE) ALL_W12_ORD_VALUE   
+                                        SELECT 'ALL' TEAM, STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID 
+				                                       ,SUM(ORD_VALUE) ORD_VALUE
+				                                       ,SUM(W1_WEEK_00) ALL_W1_WEEK_00 ,SUM(ORD_VALUE) ALL_W1_ORD_VALUE
+				                                       ,SUM(W2_WEEK_00) ALL_W2_WEEK_00 ,SUM(ORD_VALUE) ALL_W2_ORD_VALUE
+				                                       ,SUM(W3_WEEK_00) ALL_W3_WEEK_00 ,SUM(ORD_VALUE) ALL_W3_ORD_VALUE
+				                                       ,SUM(W4_WEEK_00) ALL_W4_WEEK_00 ,SUM(ORD_VALUE) ALL_W4_ORD_VALUE
+				                                       ,SUM(W5_WEEK_00) ALL_W5_WEEK_00 ,SUM(ORD_VALUE) ALL_W5_ORD_VALUE
+				                                       ,SUM(W6_WEEK_00) ALL_W6_WEEK_00 ,SUM(ORD_VALUE) ALL_W6_ORD_VALUE
+				                                       ,SUM(W7_WEEK_00) ALL_W7_WEEK_00 ,SUM(ORD_VALUE) ALL_W7_ORD_VALUE
+				                                       ,SUM(W8_WEEK_00) ALL_W8_WEEK_00 ,SUM(ORD_VALUE) ALL_W8_ORD_VALUE
+				                                       ,SUM(W9_WEEK_00) ALL_W9_WEEK_00 ,SUM(ORD_VALUE) ALL_W9_ORD_VALUE
+				                                       ,SUM(W10_WEEK_00) ALL_W10_WEEK_00 ,SUM(ORD_VALUE) ALL_W10_ORD_VALUE
+				                                       ,SUM(W11_WEEK_00) ALL_W11_WEEK_00 ,SUM(ORD_VALUE) ALL_W11_ORD_VALUE
+				                                       ,SUM(W12_WEEK_00) ALL_W12_WEEK_00 ,SUM(ORD_VALUE) ALL_W12_ORD_VALUE   
                                   FROM (
                                         SELECT  
                                              TEAM,STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID,ORD_VALUE
-                                              ,W1_WEEK_00 ,W1_RATTING  ,W2_WEEK_00 ,W2_RATTING,W3_WEEK_00,W3_RATTING  ,W4_WEEK_00,W4_RATTING  ,W5_WEEK_00,W5_RATTING  ,W6_WEEK_00,W6_RATTING  
-                                              ,W7_WEEK_00,W7_RATTING   ,W8_WEEK_00,W8_RATTING    ,W9_WEEK_00,W9_RATTING    ,W10_WEEK_00,W10_RATTING   ,W11_WEEK_00,W11_RATTING   ,W12_WEEK_00,W12_RATTING  
-                                              ,DECODE(SHORT_TERM_CNT, 0 , 0,  ROUND(SHORT_TERM_SUM / SHORT_TERM_CNT) ) SHORT_TERM_AVG
-                                              ,DECODE(MID_TERM_CNT, 0, 0,  ROUND(MID_TERM_SUM / MID_TERM_CNT) ) MID_TERM_AVG 
+                                              ,W1_WEEK_00 ,W1_RATTING  ,W2_WEEK_00 ,W2_RATTING  ,W3_WEEK_00,W3_RATTING  ,W4_WEEK_00,W4_RATTING   ,W5_WEEK_00,W5_RATTING   ,W6_WEEK_00  ,W6_RATTING  
+                                              ,W7_WEEK_00 ,W7_RATTING  ,W8_WEEK_00,W8_RATTING   ,W9_WEEK_00,W9_RATTING  ,W10_WEEK_00,W10_RATTING ,W11_WEEK_00,W11_RATTING ,W12_WEEK_00 ,W12_RATTING  
+                                              ,DECODE(SHORT_TERM_CNT, 0, 0,  ROUND(SHORT_TERM_SUM / SHORT_TERM_CNT) ) SHORT_TERM_AVG
+                                              ,DECODE(MID_TERM_CNT  , 0, 0,  ROUND(MID_TERM_SUM   / MID_TERM_CNT) ) MID_TERM_AVG 
                                           FROM
                                           (
                                            SELECT STEP5_DATA.*
