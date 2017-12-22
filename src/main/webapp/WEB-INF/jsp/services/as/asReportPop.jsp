@@ -16,7 +16,7 @@ $(document).ready(function(){
 
 function fn_validation(){
 	
-		if($("#reqStrDate").val() != '' && $("#asAppDtFr").val() != ''){
+		if($("#reqStrDate").val() != '' || $("#asAppDtFr").val() != ''){
 	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
 	        return false;
 	    }
@@ -60,7 +60,7 @@ function fn_openGenerate(){
 			orderBy = " t1.As_no ";
 		}
 		
-		if($("#branch").val() != ''){
+		if($("#branch").val() != '' && $("#branch").val() != null){
 			dscBranch = " WHERE t1.Brnch_Code like '" + $("#branch option:selected").text().substring(0,6)  + "%' ";
 		}
 		
