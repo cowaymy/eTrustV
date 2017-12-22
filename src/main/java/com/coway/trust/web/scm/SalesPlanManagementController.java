@@ -299,16 +299,6 @@ public class SalesPlanManagementController {
 	}
 	
 	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectStockCode_TEMP(@RequestParam Map<String, Object> params) 	
-	{	
-		String codeIds = (String)params.get("codeIds");
-		LOGGER.debug("codeIds : {}", codeIds);
-		LOGGER.debug("params  : {}", params.toString());
-		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode_TEMP(params);
-		return ResponseEntity.ok(selectStockCodeList);
-	}
-	
-	@RequestMapping(value = "/selectStockCode_TEMP.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params ) 	
 	 {	
 		LOGGER.debug("selectStockCode : {}", params.toString());

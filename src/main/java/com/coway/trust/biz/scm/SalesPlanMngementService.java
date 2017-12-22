@@ -27,7 +27,6 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectScmTeamCode(Map<String, Object> params);
 	List<EgovMap> selectStockCategoryCode(Map<String, Object> params);
 	List<EgovMap> selectStockCode(Map<String, Object> params);
-	List<EgovMap> selectStockCode_TEMP(Map<String, Object> params);
 	List<EgovMap> selectDefaultStockCode(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMngmentList(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMngmentPeriod(Map<String, Object> params);

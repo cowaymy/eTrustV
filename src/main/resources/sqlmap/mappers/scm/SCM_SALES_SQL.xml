@@ -767,35 +767,7 @@
 				    ) GROUP BY CODE_ID, CODE     
 				      ORDER BY CODE_ID, CODE   
 	  </select>
-
-    <select id="selectStockCode_TEMP" parameterType="Map" resultType="egovMap">
-			SELECT SYS26M.STK_ID   
-			     , SYS26M.STK_CODE 
-			     , SYS26M.STK_DESC  
-			     , Extent2.CODE_ID   
-			     , Extent2.CODE CODE 
-			     , Extent3.CODE_ID CODE_ID2  
-			     , Extent3.CODE CODE2  
-			  FROM SYS0026M SYS26M
-			  JOIN SYS0013M Extent2   ON SYS26M.STK_CTGRY_ID = Extent2.CODE_ID
-			  JOIN SYS0013M Extent3   ON SYS26M.STK_TYPE_ID = Extent3.CODE_ID
-			<choose>
-        <when test=' codeId != null and codeId != "" '>
-        WHERE EXISTS ( SELECT 1 C1  
-                         FROM SCM0008M Extent4
-                        WHERE  Extent4.STOCK_ID = SYS26M.STK_ID 
-                     ) 
-		     AND ( 1 = SYS26M.STUS_CODE_ID )
-		     AND ( 0 = TO_NUMBER(SYS26M.IS_NCV) )
-		     AND ( Extent2.CODE_ID = #{codeId} )
-        </when>
-        <otherwise>
-          JOIN SCM0008M Extent4   ON SYS26M.STK_ID = Extent4.STOCK_ID
-        </otherwise>
-      </choose>
-			 ORDER BY SYS26M.STK_DESC   ASC
-    </select>
-    
+   
     <select id="selectStockCode" parameterType="Map" resultType="egovMap">
 			SELECT SYS26M.STK_ID   
 			     , SYS26M.STK_CODE 

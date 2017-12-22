@@ -532,23 +532,6 @@ function fnInsertAddRow(Obj)
     return false;
   }
 
-/*   if ($("#stockCodeCbBox").val().length < 1) 
-  {
-    Common.alert("<spring:message code='sys.msg.necessary' arguments='Stock Code' htmlEscape='false'/>");
-    return false;
-  }
-
-  if ($("#stockCodeCbBox").val().length > 1) 
-  {
-    Common.alert("<spring:message code='sys.msg.necessary' arguments='Stock Code Only ONE' htmlEscape='false'/>");
-    return false;
-  }  
-
-  if ($("#scmStockType").val().length < 1) 
-  {
-    Common.alert("<spring:message code='sys.msg.necessary' arguments='Stock Type' htmlEscape='false'/>");
-    return false;
-  } */
 
   console.log($("#stockCategoryCbBox").val() + " /stockCodeCbBox: " + $("#stockCodeCbBox").val() + " /StockType: " + $("#scmStockType").val() );
 	
@@ -1044,7 +1027,6 @@ function fnSettiingHeader()
 			                                  // , width : 15
 		                                     , children : [
 		      		                                     // for insert  
-                                                   //PRE_M3_AVG_ORDED,PRE_M3_AVG_ISSU,M1_ORD,M2_ORD,M3_ORD,M_3_3(M3),M_2_2(M2),M_1_1(M1),M0_PLAN,M0_ORD,		      		                                     
 		                                                     {                            
 		                                                        dataField : "scmGrYear"
 		                                                        ,headerText : "<spring:message code='budget.Year' />"   
@@ -1439,7 +1421,7 @@ function fnSettiingHeader()
 
                      if (result.header[0][fieldStr] == "W52")
                      {
-                       console.log("M+2..W52..START");
+                      // console.log("M+2..W52..START");
                        nextRowFlag = "R2";
                      }
 		                 
