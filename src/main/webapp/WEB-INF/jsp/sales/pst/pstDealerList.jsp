@@ -3,9 +3,11 @@
 
 <script type="text/javaScript">
 
-var optionUnit = { 
-isShowChoose: false,
-type : 'M'
+var optionUnit = {
+	id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
+    name: "codeName",
+    isShowChoose: false,
+    type : 'M'
 };
 
 	//AUIGrid 생성 후 반환 ID
