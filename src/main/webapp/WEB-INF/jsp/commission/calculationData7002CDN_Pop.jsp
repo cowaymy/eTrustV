@@ -117,7 +117,7 @@
         editable : false
     },{
         dataField : "r30",
-        headerText : "R30",
+        headerText : "Sales Commission<br>(R&Other Installment Month)",
         style : "my-column",
         editable : false
     },{
@@ -132,7 +132,7 @@
         editable : false
     },{
         dataField : "r36",
-        headerText : "R36",
+        headerText : "Rental Membership<br>Sales Commission",
         style : "my-column",
         editable : false
     },{
