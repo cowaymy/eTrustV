@@ -234,7 +234,7 @@ var journalPopLayout = [
         }
 	},{
 	    dataField : "",
-	    headerText : "Journal Entry",
+	    headerText : "<spring:message code='pay.head.journalEntry'/>",
 	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
@@ -254,7 +254,7 @@ var journalPopLayout = [
 	    editable : false,
 	    renderer : {
             type : "ButtonRenderer",
-            labelText : "Exclude",
+            labelText : "<spring:message code='pay.head.exclude'/>",
             onclick : function(rowIndex, columnIndex, value, item) {
             	
             	if(item.isMatch == "X"){
