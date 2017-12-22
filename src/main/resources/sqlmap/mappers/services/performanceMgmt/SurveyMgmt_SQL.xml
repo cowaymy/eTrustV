@@ -22,7 +22,7 @@
         WHERE A.EVT_TYPE_ID = 2718
         AND A.EVT_MEM_ID = B.MEM_ID
         AND B.MEM_TYPE = C.CODE_ID
-        AND B.MEM_TYPE = 1
+        
 		]]>
 		<if test="cmbMemberTypeId != null and cmbMemberTypeId != '' ">
         AND C.CODE_DESC = #{cmbMemberTypeId}
