@@ -97,34 +97,34 @@
                 and b.BRNCH = #{BrnchCdList}
                 order by b.mem_code -->
 
-
-
-                 select rownum as rnum , a.*
-                  from (
-			                SELECT
-							DISTINCT
-							b.mem_id,
-							d.mem_code AS CODY_ID,
-							d.name AS CODY_NAME,
-							d.STUS
-							FROM SYS0005M a,
-							     org0005d b,
-							     SYS0064M c,
-							     ORG0001D D,
-							     SYS0038M EXTENT2,
-							     sal0023d e,
-							     sal0001d f
-							WHERE a.BRNCH_ID = d.BRNCH
-							  and c.CODY_BRNCH_CODE = a.code
-							  AND c.CODY_MANGR_USER_ID = b.dept_code
-							  AND b.mem_id = d.MEM_ID
-							  and e.area_id = c.area_id
-							  and f.cust_add_id = e.cust_add_id
-							  AND d.STUS = '1'
-							  AND d.MEM_TYPE = '2'
-							  and b.mem_lvl = '4'
-							  AND f.sales_ord_no in (#{SaleOrdList})
-							       ) a
+				SELECT ROWNUM AS rnum ,
+				           a.*
+				  FROM (
+				SELECT DISTINCT b.mem_id,
+				       d.mem_code AS cody_id,
+				       d.name AS cody_name,
+				       d.stus
+				  FROM sys0005m a,
+				       org0005d b,
+				       sys0064m c,
+				       org0001d d,
+				       sys0038m extent2,
+				       sal0023d e,
+				       sal0001d f,
+				       sal0045d g
+				  WHERE a.brnch_id = d.brnch
+				    AND c.cody_brnch_code = a.code
+				    AND c.cody_mangr_user_id = b.dept_code
+				    AND b.mem_id = d.mem_id
+				    AND e.area_id = c.area_id
+				    AND f.cust_id = e.cust_id
+				    AND f.sales_ord_id = g.sales_ord_id
+				    AND e.cust_add_id = g.add_id
+				    AND d.stus = '1'
+				    AND d.mem_type = '2'
+				    AND b.mem_lvl = '4'
+				    AND f.sales_ord_no IN (#{SaleOrdList})
+				    ) a
           </select>
 
 
@@ -1355,8 +1355,8 @@
                      FROM SVC0006D a
                     WHERE a.SCHDUL_ID = #{hidschdulId}
                     ORDER BY RESULT_ID DESC)
-                    WHERE ROWNUM = 1                            
-                            
+                    WHERE ROWNUM = 1
+
 
             </insert>
 
@@ -1380,9 +1380,9 @@
                         WHERE  Extent1.SCHDUL_ID = #{hidschdulId}
 
               </select>
-              
+
              <select id="getSVC008D_NO"  parameterType="Map" resultType="java.lang.String">
-                        SELECT NO 
+                        SELECT NO
                           FROM SVC0008D Extent1
                         WHERE  Extent1.SCHDUL_ID = #{hidschdulId}
 
@@ -2306,31 +2306,31 @@
 
 
                     <select id="selectHSAddFilterSetInfo" parameterType="Map" resultType="egovMap">
-                    
+
                             SELECT Distinct1.C1 C1  ,
                                    Distinct1.STK_ID code_Id  ,
                                    Distinct1.STK_CODE STK_CODE  ,
                                    (Distinct1.STK_CODE || '-' ||  Distinct1.STK_DESC) as code_Name ,
-                                   Distinct1.BOM_PART_PRIOD BOM_PART_PRIOD  
+                                   Distinct1.BOM_PART_PRIOD BOM_PART_PRIOD
                               FROM ( SELECT DISTINCT Extent2.BOM_PART_PRIOD BOM_PART_PRIOD  ,
                                                      Extent3.STK_ID STK_ID  ,
                                                      Extent3.STK_CODE STK_CODE  ,
                                                      Extent3.STK_DESC STK_DESC  ,
-                                                     1 C1  
+                                                     1 C1
                                      FROM SAL0002D Extent1
                                             JOIN LOG0001M Extent2   ON ( Extent2.BOM_STK_ID = Extent1.ITM_STK_ID )
                                             AND ( 1 = Extent2.BOM_PART_STUS_ID )
                                             AND ( Extent2.BOM_PART_PRIOD > 0 )
                                             LEFT JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.BOM_PART_ID
-                                      WHERE   Extent2.BOM_PART_PRIOD > 0 
-                                               AND  Extent1.SALES_ORD_ID = #{salesOrdId}  ) Distinct1  
-                    
+                                      WHERE   Extent2.BOM_PART_PRIOD > 0
+                                               AND  Extent1.SALES_ORD_ID = #{salesOrdId}  ) Distinct1
+
                     </select>
 
 
 
                     <select id="addSrvFilterIdCnt" parameterType="Map" resultType="egovMap">
-                    
+
                             SELECT count(*) cnt
                               FROM SAL0090D Extent1
                                      JOIN SAL0087D Extent2   ON Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID
@@ -2338,14 +2338,14 @@
                                       AND ( 1 = Extent1.SRV_STUS_ID )
                                       AND ( Extent2.SRV_FILTER_STK_ID = #{filterCode} )
                                       AND ( 1 = Extent2.SRV_FILTER_STUS_ID )
-                    
+
                     </select>
 
 
 
 
                 <select id="getSrvConfigFilter_SAL0087D" parameterType="Map" resultType="egovMap">
-                            
+
                             SELECT Extent1.SRV_FILTER_ID SRV_FILTER_ID  ,
                                    Extent1.SRV_CONFIG_ID SRV_CONFIG_ID  ,
                                    Extent1.SRV_FILTER_STK_ID SRV_FILTER_STK_ID  ,
@@ -2357,11 +2357,11 @@
                                    Extent1.SRV_FILTER_CRT_USER_ID SRV_FILTER_CRT_USER_ID  ,
                                    Extent1.SRV_FILTER_UPD_DT SRV_FILTER_UPD_DT  ,
                                    Extent1.SRV_FILTER_UPD_USER_ID SRV_FILTER_UPD_USER_ID  ,
-                                   Extent1.SRV_FILTER_EXPR_DT SRV_FILTER_EXPR_DT  
+                                   Extent1.SRV_FILTER_EXPR_DT SRV_FILTER_EXPR_DT
                               FROM SAL0087D Extent1
                              WHERE  ( Extent1.SRV_CONFIG_ID = #{salesOrdId} )
                              <![CDATA[           AND ( Extent1.SRV_FILTER_STK_ID = #{filterCode} ) AND ROWNUM <= 1 ]]>
-                            
+
                     </select>
 
 
@@ -2369,14 +2369,14 @@
 
           <insert id="saveChanges" parameterType="Map">
                         INSERT INTO GBSLCVD.SAL0087D (
-                               SRV_FILTER_ID, SRV_CONFIG_ID, SRV_FILTER_STK_ID, 
-                               SRV_FILTER_PRIOD, SRV_FILTER_PRV_CHG_DT, SRV_FILTER_STUS_ID, 
-                               SRV_FILTER_REM, SRV_FILTER_CRT_DT, SRV_FILTER_CRT_USER_ID, 
+                               SRV_FILTER_ID, SRV_CONFIG_ID, SRV_FILTER_STK_ID,
+                               SRV_FILTER_PRIOD, SRV_FILTER_PRV_CHG_DT, SRV_FILTER_STUS_ID,
+                               SRV_FILTER_REM, SRV_FILTER_CRT_DT, SRV_FILTER_CRT_USER_ID,
                                SRV_FILTER_UPD_DT, SRV_FILTER_UPD_USER_ID
-                               <!-- , SRV_FILTER_EXPR_DT, 
-                               SRV_FILTER_LAST_SERIAL, SRV_FILTER_PREV_SERIAL, PART_TYPE, 
+                               <!-- , SRV_FILTER_EXPR_DT,
+                               SRV_FILTER_LAST_SERIAL, SRV_FILTER_PREV_SERIAL, PART_TYPE,
                                FILTER_BARCD_CHK_Y_N, FILTER_BARCD_SERIAL_NO -->
-                               ) 
+                               )
                             VALUES ( SAL0087D_SRV_FILTER_ID_SEQ.nextval,
                                      #{SRV_CONFIG_ID},
                                      #{SRV_FILTER_STK_ID},
@@ -2394,41 +2394,41 @@
                                       PART_TYPE ,
                                       FILTER_BARCD_CHK_Y_N ,
                                       FILTER_BARCD_SERIAL_NO   -->
-                                     ) 
-            </insert>                
- 
- 
+                                     )
+            </insert>
+
+
                     <select id="getSrvConfigId_SAL009" parameterType="Map" resultType="String">
-                    
-                         SELECT Extent1.SRV_CONFIG_ID SRV_CONFIG_ID  
+
+                         SELECT Extent1.SRV_CONFIG_ID SRV_CONFIG_ID
                           FROM SAL0090D Extent1
                          WHERE  ( Extent1.SRV_SO_ID = #{salesOrdId} )
                     <![CDATA[             AND ( 1 = Extent1.SRV_STUS_ID ) AND ROWNUM <= 1   ]]>
 
                     </select>
-                    
-                    
+
+
 
                     <select id="getbomPartPriod_LOG0001M" parameterType="Map" resultType="String">
-                    
-                        SELECT Extent1.BOM_PART_PRIOD BOM_PART_PRIOD  
+
+                        SELECT Extent1.BOM_PART_PRIOD BOM_PART_PRIOD
                           FROM LOG0001M Extent1
                          WHERE  ( Extent1.BOM_PART_ID = #{filterCode} )
                                   AND ( 1 = Extent1.BOM_PART_STUS_ID )
                                   AND ( 547 = Extent1.BOM_TYPE_ID )
                         <![CDATA[          AND ( Extent1.BOM_STK_ID = #{productID} ) AND ROWNUM <= 1 ]]>
-                    
+
                     </select>
-                    
-                    
+
+
 
 
                     <select id="getSalesDtSAL_0001D" parameterType="Map" resultType="String">
-                    
-                        SELECT Extent1.SALES_DT SALES_DT  
+
+                        SELECT Extent1.SALES_DT SALES_DT
                           FROM SAL0001D Extent1
                         <![CDATA[   WHERE  Extent1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1 ]]>
-                    
+
                     </select>
 
 
@@ -2591,16 +2591,16 @@
                     </if>
 
                     </select>
-                    
+
                     <select id="selectCheckMemCode" parameterType="Map" resultType="egovMap">
                         SELECT MEM_CODE
                         FROM ORG0001D
                         WHERE MEM_CODE = #{hscodyId}
-                        AND STUS = '1' 
+                        AND STUS = '1'
                     </select>
-                    
+
                      <select id="selectSerMember" parameterType="Map" resultType="egovMap">
-                            SELECT   SRV_CODY_ID 
+                            SELECT   SRV_CODY_ID
                                         , MEM_CODE
                                 FROM SAL0090D A , SAL0001D B , ORG0001D C
                                 WHERE A.SRV_SO_ID = B.SALES_ORD_ID
@@ -2613,11 +2613,11 @@
                          from ORG0001D
                         where mem_Code = #{hscodyId}
                       </select>
-                      
+
                       <update id="updateSrvCodyId" parameterType="Map">
 
-                        update 
-                                 (  SELECT SRV_CODY_ID 
+                        update
+                                 (  SELECT SRV_CODY_ID
                                     FROM SAL0090D A , SAL0001D B
                                     WHERE A.SRV_SO_ID = B.SALES_ORD_ID
                                     AND B.SALES_ORD_NO =#{srvSoId}
@@ -2625,8 +2625,8 @@
                                  SET a.SRV_CODY_ID  = #{hscodyId}
 
                      </update>
-                     
-                     
+
+
                      <insert id="insertCcr0001d" parameterType="Map">
                             INSERT INTO CCR0001D (
 	                            HC_ID
@@ -2651,73 +2651,73 @@
 	                            CCR0001D_HC_ID_SEQ.NEXTVAL
 	                            , #{hcsoid}
 	                            , 0
-	                            , #{hcTypeNo}   
-	                            , 509  
-	                            , 33    
+	                            , #{hcTypeNo}
+	                            , 509
+	                            , 33
 	                            , 0
 	                            , 0
-	                            , 0   
-	                            , 0  
-	                            , #{crtUserId} 
+	                            , 0
+	                            , 0
+	                            , #{crtUserId}
 	                            , SYSDATE
-	                            , #{updUserId} 
-	                            , SYSDATE    
-	                            , 0      
+	                            , #{updUserId}
+	                            , SYSDATE
+	                            , 0
 	                            , 1
 	                            , 81
                             )
-                     
+
                      </insert>
-                     
-                     
-                     
+
+
+
                       <update id="saveDeactivateFilter" parameterType="Map">
 
 							UPDATE SAL0087D
 							   SET SRV_FILTER_STUS_ID = #{srvFilterStusId} ,
 							       SRV_FILTER_UPD_DT = sysdate,
-							       SRV_FILTER_UPD_USER_ID = #{updator} 
-							 WHERE   SRV_FILTER_ID = #{SRV_FILTER_ID} 
+							       SRV_FILTER_UPD_USER_ID = #{updator}
+							 WHERE   SRV_FILTER_ID = #{SRV_FILTER_ID}
 
                      </update>
-                     
-                     
-                     
-                     
+
+
+
+
                       <update id="saveFilterUpdate" parameterType="Map">
 
                              UPDATE SAL0087D
 							   SET SRV_FILTER_UPD_DT = to_date(#{SRV_FILTER_UPD_DT},'yyyymmdd'),
-							       SRV_FILTER_UPD_USER_ID = #{updator} 
+							       SRV_FILTER_UPD_USER_ID = #{updator}
 							 WHERE   SRV_FILTER_ID = #{SRV_FILTER_ID}
-                             
 
-                     </update>                     
-                                          
-                    
-                    
-                    
+
+                     </update>
+
+
+
+
            <resultMap id="thSFilterUseHistoryMap" type="egovMap"></resultMap>
            <select id="selecthSFilterUseHistorycall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
                  {
                     call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{StockID},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
                  }
-            </select>                     
-            
-            
-            
-            
-            
-         
+            </select>
+
+
+
+
+
+
      <select id="isHsAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
-        <![CDATA[     
-		       SELECT  COUNT(NO) CNT  
-		       FROM  SVC0008D 
+        <![CDATA[
+		       SELECT  COUNT(NO) CNT
+		       FROM  SVC0008D
 		       WHERE NO =#{serviceNo}  AND STUS_CODE_ID <> '1'
         ]]>
     </select>
-         
-            
-                    
+
+
+
 
 </mapper>
