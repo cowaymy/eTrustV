@@ -116,7 +116,7 @@ function fn_bRefundViewPop() {
 		Common.popupDiv("/payment/batchRefundViewPop.do", {batchId:batchId}, null, true, "bRefundViewPop");
 		
 	} else {
-		Common.alert('No batch selected.');
+		Common.alert('<spring:message code="pay.alert.noBatch"/>');
 	}
 }
 
@@ -143,7 +143,7 @@ function fn_bRefundConfirmPop() {
 		Common.popupDiv("/payment/batchRefundConfirmPop.do", {batchId:batchId}, null, true, "bRefundConfirmPop");
 		
     } else {
-        Common.alert('No batch selected.');
+        Common.alert('<spring:message code="pay.alert.noBatch"/>');
     }
 }
 </script>
@@ -154,8 +154,8 @@ function fn_bRefundConfirmPop() {
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Batch Refund</h2>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
+<h2><spring:message code='pay.title.batchRefund'/></h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectBatchRefundList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_formClear()"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
@@ -167,7 +167,7 @@ function fn_bRefundConfirmPop() {
 <form action="#" id="form_bRefund">
 
 <table class="type1"><!-- table start -->
-<caption>table</caption>
+<caption><spring:message code='pay.text.table'/></caption>
 <colgroup>
     <col style="width:180px" />
     <col style="width:*" />
@@ -176,40 +176,40 @@ function fn_bRefundConfirmPop() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Batch ID</th>
+    <th scope="row"><spring:message code='pay.head.batchId'/></th>
     <td><input type="text" title="Batch ID (Number Only)" placeholder="Batch ID (Number Only)" class="w100p" id="batchId" name="batchId"/></td>
-    <th scope="row">Paymode</th>
+    <th scope="row"><spring:message code='pay.head.paymode'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="payMode" name="payMode"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Create Date</th>
+    <th scope="row"><spring:message code='pay.head.createDate'/></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
-    <span>To</span>
+    <span><spring:message code='pay.text.to'/></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Confirm Status</th>
+    <th scope="row"><spring:message code='pay.head.confirmStatus'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cnfmStus" name="cnfmStus">
-    <option value="44">Pending</option>
-    <option value="77">Confirm</option>
+    <option value="44"><spring:message code='pay.combo.pending'/></option>
+    <option value="77"><spring:message code='pay.combo.confirm'/></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Batch Status</th>
+    <th scope="row"><spring:message code='pay.head.batchStatus'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="batchStus" name="batchStus">
-    <option value="1">Active</option>
-    <option value="4">Completed</option>
-    <option value="8">Inactive</option>
+    <option value="1"><spring:message code='pay.combo.active'/></option>
+    <option value="4"><spring:message code='pay.combo.completed'/></option>
+    <option value="8"><spring:message code='pay.combo.inactive'/></option>
     </select>
     </td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code='pay.head.creator'/></th>
     <td>
     <input type="text" title="Creator (Username)" placeholder="Creator (Username)" class="w100p" id="crdUserName" name="crtUserIdName"/>
     </td>
