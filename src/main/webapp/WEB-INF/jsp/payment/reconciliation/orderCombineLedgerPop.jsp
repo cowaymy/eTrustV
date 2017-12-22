@@ -210,14 +210,14 @@
 					<tr>
 					    <th scope="row">Summary</th>
 					    <td colspan="7">
-						    <p class="btn_sky"><a href="javascript:viewRentalLedger();">View Ledger (1)</a></p>
-						    <p class="btn_sky"><a href="javascript:viewRentalLedger2();">View Ledger (2)</a></p>
-						    <p class="btn_sky"><a href="javascript:viewOrderPaymentListing();">Payment Listing</a></p>
-						    <p class="btn_sky"><a href="#">Quotation Listing</a></p>
-						    <p class="btn_sky"><a href="#">Outright Membership</a></p>
-						    <p class="btn_sky"><a href="#">Rental Membership</a></p>
-						    <p class="btn_sky"><a href="javascript:viewASListing();">AS Listing</a></p>
-						    <p class="btn_sky"><a href="#">Transfer History</a></p>
+						    <p class="btn_sky"><a href="javascript:viewRentalLedger();"><spring:message code='pay.btn.viewLedger1'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewRentalLedger2();"><spring:message code='pay.btn.viewLedger2'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewOrderPaymentListing();"><spring:message code='pay.btn.paymentListing'/></a></p>
+						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.quotationListing'/></a></p>
+						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.outrightMembership'/></a></p>
+						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.rentalMembership'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewASListing();"><spring:message code='pay.btn.asListing'/></a></p>
+						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.transferHistory'/></a></p>
 					    </td>
 					</tr>
 					<tr>
