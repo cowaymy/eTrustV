@@ -6,9 +6,11 @@ import static org.junit.Assert.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -21,6 +23,7 @@ import javax.sql.DataSource;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.junit.Test;
@@ -234,5 +237,45 @@ public class SysTest {
 		for (NameValuePair nameValuePair : params) {
 			LOGGER.debug("{} : {}", nameValuePair.getName(), nameValuePair.getValue());
 		}
+	}
+
+	@Test
+	public void test() throws UnsupportedEncodingException {
+		String str = URLEncoder.encode("RM0.00 " + "OK@!#$test message by genSuite....").replaceAll("\\+", " ")
+				.replaceAll("%40", "@")
+				.replaceAll("%21", "!")
+				.replaceAll("%23", "#")
+				.replaceAll("%24", "$")
+				.replaceAll("%40", "@")
+				.replaceAll("%40", "@")
+				.replaceAll("%40", "@")
+				.replaceAll("%40", "@");
+		LOGGER.debug(str);
+
+		// ()-_=+:;'"~<>,.?
+		// String deStr = URLDecoder.decode(str);
+		// LOGGER.debug(deStr);
+	}
+
+	private String changeToHex(String value) {
+		if (StringUtils.isEmpty(value)) {
+			return "";
+		}
+
+		String returnValue = value;
+		// returnValue = returnValue.replaceAll("&", "%26");
+		// returnValue = returnValue.replaceAll("<", "%3C");
+		// returnValue = returnValue.replaceAll("`", "%60");
+		// returnValue = returnValue.replaceAll("~", "%7E");
+		// returnValue = returnValue.replaceAll("$", "%24");
+		// returnValue = returnValue.replaceAll("^", "%5E");
+		// returnValue = returnValue.replaceAll("_", "%5F");
+		// returnValue = returnValue.replaceAll("\\{", "%7B");
+		// returnValue = returnValue.replaceAll("}", "%7D");
+		// returnValue = returnValue.replaceAll("|", "%7C");
+		// returnValue = returnValue.replaceAll("\\[", "%5B");
+		// returnValue = returnValue.replaceAll("]", "%5D");
+		returnValue = returnValue.replaceAll("//+", " ");
+		return returnValue;
 	}
 }

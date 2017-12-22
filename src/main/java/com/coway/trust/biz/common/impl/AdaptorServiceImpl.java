@@ -9,7 +9,6 @@ import java.util.Map;
 
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -185,7 +184,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 			try {
 				smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
-						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name()).replaceAll("\\+", " ")
+						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
+								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
+								.replaceAll("%23", "#").replaceAll("%24", "$")
 						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID="
 						+ msgId;
 			} catch (UnsupportedEncodingException e) {
@@ -311,27 +312,27 @@ public class AdaptorServiceImpl implements AdaptorService {
 	 * @param value
 	 * @return
 	 */
-//	private String changeToHex(String value) {
-//		if (StringUtils.isEmpty(value)) {
-//			return "";
-//		}
-//
-//		String returnValue = value;
-//		returnValue = returnValue.replaceAll("&", "%26");
-//		returnValue = returnValue.replaceAll("<", "%3C");
-//		returnValue = returnValue.replaceAll("`", "%60");
-//		returnValue = returnValue.replaceAll("~", "%7E");
-//		returnValue = returnValue.replaceAll("$", "%24");
-//		returnValue = returnValue.replaceAll("^", "%5E");
-//		returnValue = returnValue.replaceAll("_", "%5F");
-//		returnValue = returnValue.replaceAll("\\{", "%7B");
-//		returnValue = returnValue.replaceAll("}", "%7D");
-//		returnValue = returnValue.replaceAll("|", "%7C");
-//		returnValue = returnValue.replaceAll("\\[", "%5B");
-//		returnValue = returnValue.replaceAll("]", "%5D");
-//		returnValue = returnValue.replaceAll("\\+", "%20");
-//		return returnValue;
-//	}
+	// private String changeToHex(String value) {
+	// if (StringUtils.isEmpty(value)) {
+	// return "";
+	// }
+	//
+	// String returnValue = value;
+	// returnValue = returnValue.replaceAll("&", "%26");
+	// returnValue = returnValue.replaceAll("<", "%3C");
+	// returnValue = returnValue.replaceAll("`", "%60");
+	// returnValue = returnValue.replaceAll("~", "%7E");
+	// returnValue = returnValue.replaceAll("$", "%24");
+	// returnValue = returnValue.replaceAll("^", "%5E");
+	// returnValue = returnValue.replaceAll("_", "%5F");
+	// returnValue = returnValue.replaceAll("\\{", "%7B");
+	// returnValue = returnValue.replaceAll("}", "%7D");
+	// returnValue = returnValue.replaceAll("|", "%7C");
+	// returnValue = returnValue.replaceAll("\\[", "%5B");
+	// returnValue = returnValue.replaceAll("]", "%5D");
+	// returnValue = returnValue.replaceAll("\\+", "%20");
+	// return returnValue;
+	// }
 
 	private int insertSMS(String mobileNo, String message, int senderUserId, int priority, int expireDayAdd,
 			int smsType, String remark, int statusId, int retryNo, String replyCode, String replyRemark,
