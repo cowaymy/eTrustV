@@ -212,6 +212,11 @@ function fn_sendEInvoice(){
 hideViewPopup=function(val){
     $(val).hide();
 }
+
+function fn_clear(){
+    $("#searchForm")[0].reset();
+    AUIGrid.clearGridData(myGridID);
+}
 </script>
  
  
@@ -228,7 +233,8 @@ hideViewPopup=function(val){
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getProformaInvoiceListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
-        </ul>    
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
+        </ul>
 
     <!-- search_table start -->
     <section class="search_table">

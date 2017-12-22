@@ -96,6 +96,11 @@ function fn_generateInvoice(){
         Common.alert('<b>No print type selected.</b>');
     }
 }
+
+function fn_clear(){
+    $("#searchForm")[0].reset();
+    AUIGrid.clearGridData(myGridID);
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
@@ -111,6 +116,7 @@ function fn_generateInvoice(){
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_generateInvoice();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getTaxInvoiceListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
 
     <!-- search_table start -->

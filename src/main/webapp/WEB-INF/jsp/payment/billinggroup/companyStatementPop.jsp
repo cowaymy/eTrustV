@@ -151,6 +151,11 @@ function fn_sendEStatementPop(){
 hideViewPopup=function(val){
     $(val).hide();
 }
+
+function fn_clear(){
+    $("#searchForm")[0].reset();
+    AUIGrid.clearGridData(myGridID);
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
@@ -166,6 +171,7 @@ hideViewPopup=function(val){
 <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 
 <section class="search_table">
