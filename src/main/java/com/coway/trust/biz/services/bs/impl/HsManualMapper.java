@@ -154,9 +154,64 @@ public interface HsManualMapper {
 	
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
 	
+	
 	String getSVC008D_NO(Map<String, Object> params);
 	
-
+	void updateHsResultM2(EgovMap params);
+	
+	String GetDocNo(Map<String, Object> params);
+	
+	int GetDocNo1(Map<String, Object> params);
+	
+	EgovMap selectQryBS_Rev(Map<String, Object> params);
+	
+	void addbsResultMas_Rev(Map<String, Object> params);
+	
+	List<EgovMap> selectQryResultDet(Map<String, Object> params);
+	
+	EgovMap selectQry_stkReqM(Map<String, Object> params);
+	
+	int getBSResultM_resultID();
+	
+	void addbsResultDet_Rev(Map<String, Object> params);
+	
+	void addstkReqM_Rev(Map<String, Object> params);
+	
+	int getMobileWarehouseByMemID(Map<String, Object> params);
+	
+	EgovMap selectQryBS(Map<String, Object> params);
+	
+	EgovMap qry_stkReqD_Rev(Map<String, Object> params);
+	
+	int getStkReqM_StkReqID();
+	
+	void addStkReqD_Rev(Map<String, Object> params);
+	
+	void addStkCrd_Rev(Map<String, Object> params);
+		
+	void updateQry_CurBS(Map<String, Object> params);
+	
+	void updateQry_New(Map<String, Object> params);
+	
+	void addbsResultMas(Map<String, Object> params);
+	
+	void updateQrySchedule(Map<String, Object> params);
+	
+	void updateQryConfig(Map<String, Object> params);
+	
+	void updateQryConfig4(Map<String, Object> params);
+	
+	int selectLocationID(Map<String, Object> params);
+	
+	EgovMap selectQrySchedule(Map<String, Object> params);
+	
+	void addStkCrd_new(Map<String, Object> params);
+	
+	EgovMap selectQryConfig(Map<String, Object> params);
+	
+	void updateQryFilter(Map<String, Object> params);
+	
+	void addBsResultDet_NoFilter(Map<String, Object> params);
 	//add by hgham  mobile 중복 처리 
 	int isHsAlreadyResult (Map<String, Object> params);
 		
