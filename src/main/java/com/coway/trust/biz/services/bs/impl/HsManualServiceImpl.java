@@ -1202,7 +1202,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		qryBS_Rev=hsManualMapper.selectQryBS_Rev(bsResultMas);
 		if(qryBS_Rev!=null){
     		//bsResultMas_Rev.put("ResultID", 0); //sequence
-    		bsResultMas_Rev.put("No", "");
+    		bsResultMas_Rev.put("No", docNo);
     		bsResultMas_Rev.put("TypeID", 307);
     		bsResultMas_Rev.put("ScheduleID", qryBS_Rev.get("schdulId"));
     		bsResultMas_Rev.put("SalesOrderId", qryBS_Rev.get("salesOrdId"));
