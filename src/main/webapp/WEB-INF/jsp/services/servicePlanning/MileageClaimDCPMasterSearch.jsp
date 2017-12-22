@@ -386,7 +386,9 @@ function DCPMasterGrid() {
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li> -->
     <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li> -->
     <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li> -->
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
+</c:if>
     <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li> -->
 </ul>
 
