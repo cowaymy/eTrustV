@@ -649,6 +649,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 	
 	
+	
+
+	@Override
+	public String getcancReqNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getcancReqNo(params);
+	}
 	   
 /*	@Override
 	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
