@@ -186,7 +186,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
 						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
 								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
-								.replaceAll("%23", "#").replaceAll("%24", "$")
+								.replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%2B", "+")
 						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID="
 						+ msgId;
 			} catch (UnsupportedEncodingException e) {

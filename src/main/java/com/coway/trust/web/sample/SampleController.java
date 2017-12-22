@@ -251,7 +251,7 @@ public class SampleController {
 		String strMsgID = "";
 		int vendorID = 2;
 
-		String message = "OK test message by genSuite";
+		String message = "++OK test message by genSuite";
 		String mobileNo = "01111922965";// 말레이시아 번호이어야 함. 01133681677, 0165420960
 
 		if (CommonUtils.isNotEmpty(params.get("phone"))) {
