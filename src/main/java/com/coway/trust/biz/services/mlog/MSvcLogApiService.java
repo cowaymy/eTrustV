@@ -127,5 +127,7 @@ public interface MSvcLogApiService {
 
 	void insertCancelSMS(Map<String, Object> params);
 
+	String getcancReqNo(Map<String, Object> params);
+
 
 }
