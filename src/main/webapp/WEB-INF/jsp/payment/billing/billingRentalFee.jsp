@@ -448,7 +448,7 @@ var billingTargetLayout = [
 							<div class="border_box" style="height:350px;"><!-- border_box start -->
 								<article id="grid_wrap2" class="grid_wrap"></article>
 								<ul class="left_btns">
-								    <li><p class="btn_blue2"><a href="#" id="btnAddToBillTarget"><spring:message code=pay.btn.addToBillTarget'/></a></p></li>
+								    <li><p class="btn_blue2"><a href="#" id="btnAddToBillTarget"><spring:message code='pay.btn.addToBillTarget'/></a></p></li>
 								</ul>
 							</div><!-- border_box end -->
 						</div>
@@ -459,8 +459,8 @@ var billingTargetLayout = [
 							<div class="border_box" style="height:350px;"><!-- border_box start -->
 								<article id="grid_wrap3" class="grid_wrap"></article>
 								<ul class="left_btns">
-								    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget"><spring:message code=pay.btn.removeFromBillTarget'/></a></p></li>
-								    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills"><spring:message code=pay.btn.createBills'/></a></p></li>
+								    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget"><spring:message code='pay.btn.removeFromBillTarget'/></a></p></li>
+								    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills"><spring:message code='pay.btn.createBills'/></a></p></li>
 								</ul>
 							</div><!-- border_box end -->
 						</div>
