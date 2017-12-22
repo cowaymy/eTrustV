@@ -1149,67 +1149,69 @@
 
         <select id="selectHsInitDetailPop"  parameterType="Map" resultType="egovMap">
 
-					SELECT Limit1.SCHDUL_ID SCHDUL_ID  ,
-					       Limit1.NO NO  ,
-					       Limit1.MONTH MONTH  ,
-					       Limit1.YEAR YEAR  ,
-			               Limit1.MONTH || '/' || Limit1.YEAR monthy,
-					       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
-					       Limit1.CODE CODE  ,
-					       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
-					       Limit1.CODE1 CODE1  ,
-					       Limit1.SALES_ORD_ID SALES_ORD_ID  ,
-					       Limit1.CODE_NAME CODE_NAME  ,
-					       Limit1.SRV_REM SRV_REM  ,
-					       Limit1.SRV_BS_WEEK SRV_BS_WEEK  ,
-					       CASE
-					            WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.NO1
-					       ELSE ''
-					          END C1  ,
-					       CASE
-					            WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.RESULT_ID
-					       ELSE 0
-					          END C2  ,
-					       Limit1.NAME NAME  ,
-					       Limit1.NRIC NRIC  ,
-					       Limit1.STK_CODE STK_CODE  ,
-					       Limit1.STK_DESC STK_DESC  ,
-					       Limit1.STK_ID STK_ID  ,
-					       Limit1.CODY_ID CODY_ID
-					  FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
-					                Extent1.NO NO  ,
-					                Extent1.MONTH MONTH  ,
-					                Extent1.YEAR YEAR  ,
-					                Extent1.CODY_ID CODY_ID  ,
-					                Extent1.STUS_CODE_ID STUS_CODE_ID  ,
-					                Extent2.CODE_NAME CODE_NAME  ,
-					                Extent3.CODE CODE  ,
-					                Extent4.SALES_ORD_ID SALES_ORD_ID  ,
-					                Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-					                Extent6.STK_ID STK_ID  ,
-					                Extent6.STK_CODE STK_CODE  ,
-					                Extent6.STK_DESC STK_DESC  ,
-					                Extent7.NAME NAME  ,
-					                Extent7.NRIC NRIC  ,
-					                Extent8.SRV_REM SRV_REM  ,
-					                Extent8.SRV_BS_WEEK SRV_BS_WEEK  ,
-					                Extent9.CODE CODE1  ,
-					                Extent11.RESULT_ID RESULT_ID  ,
-					                Extent11.NO NO1
-					         FROM SVC0008D Extent1
-					                JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
-					                JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
-					                JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
-					                JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
-					                JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
-					                JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
-					                LEFT  JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
-					                AND ( 1 = Extent8.SRV_STUS_ID )
-					                JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
-					                JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
-					                LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
-					                AND ( 1 = Extent11.RESULT_IS_CURR )
-				<![CDATA[	          WHERE  Extent1.SCHDUL_ID = #{schdulId} AND ROWNUM <= 1 ) Limit1 ]]>
+                    SELECT Limit1.SCHDUL_ID SCHDUL_ID  ,
+                           Limit1.NO NO  ,
+                           Limit1.MONTH MONTH  ,
+                           Limit1.YEAR YEAR  ,
+                           Limit1.MONTH || '/' || Limit1.YEAR monthy,
+                           Limit1.STUS_CODE_ID STUS_CODE_ID  ,
+                           Limit1.CODE CODE  ,
+                           Limit1.SALES_ORD_NO SALES_ORD_NO  ,
+                           Limit1.CODE1 CODE1  ,
+                           Limit1.SALES_ORD_ID SALES_ORD_ID  ,
+                           Limit1.CODE_NAME CODE_NAME  ,
+                           Limit1.SRV_REM SRV_REM  ,
+                           Limit1.SRV_BS_WEEK SRV_BS_WEEK  ,
+                           CASE
+                                WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.NO1
+                           ELSE ''
+                              END C1  ,
+                           CASE
+                                WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.RESULT_ID
+                           ELSE 0
+                              END C2  ,
+                           Limit1.NAME NAME  ,
+                           Limit1.NRIC NRIC  ,
+                           Limit1.STK_CODE STK_CODE  ,
+                           Limit1.STK_DESC STK_DESC  ,
+                           Limit1.STK_ID STK_ID  ,
+                           Limit1.CODY_ID CODY_ID,
+                           Limit1.CANC_REQ_NO CANC_REQ_NO
+                      FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
+                                    Extent1.NO NO  ,
+                                    Extent1.MONTH MONTH  ,
+                                    Extent1.YEAR YEAR  ,
+                                    Extent1.CODY_ID CODY_ID  ,
+                                    Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                                    Extent2.CODE_NAME CODE_NAME  ,
+                                    Extent3.CODE CODE  ,
+                                    Extent4.SALES_ORD_ID SALES_ORD_ID  ,
+                                    Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+                                    Extent6.STK_ID STK_ID  ,
+                                    Extent6.STK_CODE STK_CODE  ,
+                                    Extent6.STK_DESC STK_DESC  ,
+                                    Extent7.NAME NAME  ,
+                                    Extent7.NRIC NRIC  ,
+                                    Extent8.SRV_REM SRV_REM  ,
+                                    Extent8.SRV_BS_WEEK SRV_BS_WEEK  ,
+                                    Extent9.CODE CODE1  ,
+                                    Extent11.RESULT_ID RESULT_ID  ,
+                                    Extent11.NO NO1,
+                                    Extent1.CANC_REQ_NO CANC_REQ_NO                                 
+                             FROM SVC0008D Extent1
+                                    JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
+                                    JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+                                    JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
+                                    JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
+                                    JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
+                                    JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
+                                    LEFT  JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
+                                    AND ( 1 = Extent8.SRV_STUS_ID )
+                                    JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
+                                    JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                                    LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
+                                    AND ( 1 = Extent11.RESULT_IS_CURR )
+                <![CDATA[             WHERE  Extent1.SCHDUL_ID = #{schdulId} AND ROWNUM <= 1 ) Limit1 ]]>
 
 
         </select>
@@ -1611,88 +1613,88 @@
 
          <select id="selectHsViewBasicInfo" parameterType="Map" resultType="egovMap">
 
-					SELECT Limit1.SCHDUL_ID SCHDUL_ID  ,
-					       Limit1.NO NO  ,
-					       Limit1.MONTH MONTH  ,
-					       Limit1.YEAR YEAR  ,
+                    SELECT Limit1.SCHDUL_ID SCHDUL_ID  ,
+                           Limit1.NO NO  ,
+                           Limit1.MONTH MONTH  ,
+                           Limit1.YEAR YEAR  ,
                            Limit1.MONTH || '/' || Limit1.YEAR monthy,
-					       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
-					       Limit1.CODE CODE  ,
-					       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
-					       Limit1.CODE1 CODE1  ,
-					       Limit1.SALES_ORD_ID SALES_ORD_ID  ,
-					       Limit1.CODE_NAME CODE_NAME  ,
-					       Limit1.SRV_REM SRV_REM  ,
-					       Limit1.SRV_BS_WEEK SRV_BS_WEEK  ,
-					       CASE
-					            WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.NO1
-					       ELSE ''
-					          END C1  ,
-					       CASE
-					            WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.RESULT_ID
-					       ELSE 0
-					          END C2  ,
-					       Limit1.NAME NAME  ,
-					       Limit1.NRIC NRIC  ,
-					       Limit1.STK_CODE STK_CODE  ,
-					       Limit1.STK_DESC STK_DESC  ,
-					       Limit1.STK_ID STK_ID  ,
-					       Limit1.CODY_ID CODY_ID,
-					       Limit1.fail_resn_id fail_resn_id  ,
-					       Limit1.fail_resn_id fail_resn_id  ,
-					       Limit1.ren_colct_id ren_colct_id  ,
-					       Limit1.result_rem result_rem  ,
-					       to_char (Limit1.setl_dt,'YYYYMMDD') AS setl_dt,
-					       Limit1.prev_svc_area prev_svc_area,
+                           Limit1.STUS_CODE_ID STUS_CODE_ID  ,
+                           Limit1.CODE CODE  ,
+                           Limit1.SALES_ORD_NO SALES_ORD_NO  ,
+                           Limit1.CODE1 CODE1  ,
+                           Limit1.SALES_ORD_ID SALES_ORD_ID  ,
+                           Limit1.CODE_NAME CODE_NAME  ,
+                           Limit1.SRV_REM SRV_REM  ,
+                           Limit1.SRV_BS_WEEK SRV_BS_WEEK  ,
+                           CASE
+                                WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.NO1
+                           ELSE ''
+                              END C1  ,
+                           CASE
+                                WHEN ( Limit1.RESULT_ID IS NOT NULL ) THEN Limit1.RESULT_ID
+                           ELSE 0
+                              END C2  ,
+                           Limit1.NAME NAME  ,
+                           Limit1.NRIC NRIC  ,
+                           Limit1.STK_CODE STK_CODE  ,
+                           Limit1.STK_DESC STK_DESC  ,
+                           Limit1.STK_ID STK_ID  ,
+                           Limit1.CODY_ID CODY_ID,
+                           Limit1.fail_resn_id fail_resn_id  ,
+                           Limit1.fail_resn_id fail_resn_id  ,
+                           Limit1.ren_colct_id ren_colct_id  ,
+                           Limit1.result_rem result_rem  ,
+                           to_char (Limit1.setl_dt,'YYYYMMDD') AS setl_dt,
+                           Limit1.prev_svc_area prev_svc_area,
                            Limit1.next_svc_area next_svc_area,
                            Limit1.distance distance,
                            Limit1.CANC_REQ_NO
-					  FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
-					                Extent1.NO NO  ,
-					                Extent1.MONTH MONTH  ,
-					                Extent1.YEAR YEAR  ,
-					                Extent1.CODY_ID CODY_ID  ,
-					                Extent1.STUS_CODE_ID STUS_CODE_ID  ,
-					                Extent2.CODE_NAME CODE_NAME  ,
-					                Extent3.CODE CODE  ,
-					                Extent4.SALES_ORD_ID SALES_ORD_ID  ,
-					                Extent4.SALES_ORD_NO SALES_ORD_NO  ,
-					                Extent6.STK_ID STK_ID  ,
-					                Extent6.STK_CODE STK_CODE  ,
-					                Extent6.STK_DESC STK_DESC  ,
-					                Extent7.NAME NAME  ,
-					                Extent7.NRIC NRIC  ,
-					                Extent8.SRV_REM SRV_REM  ,
-					                Extent8.SRV_BS_WEEK SRV_BS_WEEK  ,
-					                Extent9.CODE CODE1  ,
-					                Extent11.RESULT_ID RESULT_ID  ,
-					                Extent11.NO NO1  ,
-					                extent11.fail_resn_id fail_resn_id  ,
-					                extent11.ren_colct_id ren_colct_id  ,
-					                extent11.result_rem result_rem  ,
-					                extent11.setl_dt setl_dt,
-					                Extent1.prev_svc_area prev_svc_area,
+                      FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
+                                    Extent1.NO NO  ,
+                                    Extent1.MONTH MONTH  ,
+                                    Extent1.YEAR YEAR  ,
+                                    Extent1.CODY_ID CODY_ID  ,
+                                    Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                                    Extent2.CODE_NAME CODE_NAME  ,
+                                    Extent3.CODE CODE  ,
+                                    Extent4.SALES_ORD_ID SALES_ORD_ID  ,
+                                    Extent4.SALES_ORD_NO SALES_ORD_NO  ,
+                                    Extent6.STK_ID STK_ID  ,
+                                    Extent6.STK_CODE STK_CODE  ,
+                                    Extent6.STK_DESC STK_DESC  ,
+                                    Extent7.NAME NAME  ,
+                                    Extent7.NRIC NRIC  ,
+                                    Extent8.SRV_REM SRV_REM  ,
+                                    Extent8.SRV_BS_WEEK SRV_BS_WEEK  ,
+                                    Extent9.CODE CODE1  ,
+                                    Extent11.RESULT_ID RESULT_ID  ,
+                                    Extent11.NO NO1  ,
+                                    extent11.fail_resn_id fail_resn_id  ,
+                                    extent11.ren_colct_id ren_colct_id  ,
+                                    extent11.result_rem result_rem  ,
+                                    extent11.setl_dt setl_dt,
+                                    Extent1.prev_svc_area prev_svc_area,
                                     Extent1.next_svc_area next_svc_area,
                                     Extent1.distance distance ,
                                     Extent1.CANC_REQ_NO
-					         FROM SVC0008D Extent1
-					                JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
-					                JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
-					                JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
-					                JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
-					                JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
-					                JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
-					                JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
-					                AND ( 1 = Extent8.SRV_STUS_ID )
-					                JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
-					                JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
-					                LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
-					                AND ( 1 = Extent11.RESULT_IS_CURR )
-					                 JOIN SAL0023D B ON B.CUST_ADD_ID  = Extent10.ADD_ID
+                             FROM SVC0008D Extent1
+                                    JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
+                                    JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+                                    JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
+                                    JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
+                                    JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
+                                    JOIN SAL0029D Extent7   ON Extent4.CUST_ID = Extent7.CUST_ID
+                                    JOIN SAL0090D Extent8   ON ( Extent4.SALES_ORD_ID = Extent8.SRV_SO_ID )
+                                    AND ( 1 = Extent8.SRV_STUS_ID )
+                                    JOIN SYS0013M Extent9   ON Extent4.APP_TYPE_ID = Extent9.CODE_ID
+                                    JOIN SAL0045D Extent10   ON Extent4.SALES_ORD_ID = Extent10.SALES_ORD_ID
+                                    LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
+                                    AND ( 1 = Extent11.RESULT_IS_CURR )
+                                     JOIN SAL0023D B ON B.CUST_ADD_ID  = Extent10.ADD_ID
                                      AND  Extent4.CUST_ID = B.CUST_ID
                                     LEFT JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
-					               WHERE  Extent1.SCHDUL_ID = #{schdulId}
-					               <![CDATA[            AND ROWNUM <= 1 ) Limit1 ]]>
+                                   WHERE  Extent1.SCHDUL_ID = #{schdulId}
+                                   <![CDATA[            AND ROWNUM <= 1 ) Limit1 ]]>
 
                             </select>
 
