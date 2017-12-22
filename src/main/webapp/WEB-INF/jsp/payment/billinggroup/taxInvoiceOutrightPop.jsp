@@ -31,8 +31,8 @@ $(document).ready(function(){
      { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
      { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 200, editable : false },
      { dataField:"codeName" ,headerText:"<spring:message code='pay.head.appType'/>",width: 150 ,editable : false },
-     { dataField:"invcItmProductModel" ,headerText:"<spring:message code='pay.head.taxInvcId'/>",width: 200 , editable : false },
-     { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.invcItmProductModel'/>" , editable : false },
+     { dataField:"invcItmProductModel" ,headerText:"<spring:message code='pay.head.productModel'/>",width: 200 , editable : false },
+     { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.customerName'/>" , editable : false },
      { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.#"}
      ];
        
