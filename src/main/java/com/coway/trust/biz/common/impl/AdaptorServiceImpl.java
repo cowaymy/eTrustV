@@ -1,5 +1,8 @@
 package com.coway.trust.biz.common.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -178,10 +181,15 @@ public class AdaptorServiceImpl implements AdaptorService {
 		result.setMsgId(msgId);
 		int vendorId = 2;
 		smsVO.getMobiles().forEach(mobileNo -> {
-			String smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId
-					+ "&Username=" + gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType
-					+ "&Message=" + changeToHex(smsVO.getMessage()) + "&SenderID=" + gensuiteSenderId + "&Phone="
-					+ gensuiteCountryCode + mobileNo + "&MsgID=" + msgId;
+			String smsUrl;
+			try {
+				smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
+						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
+						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name()) + "&SenderID="
+						+ gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID=" + msgId;
+			} catch (UnsupportedEncodingException e) {
+				throw new ApplicationException(e, AppConstants.FAIL);
+			}
 
 			ResponseEntity<String> response = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
 
@@ -302,26 +310,26 @@ public class AdaptorServiceImpl implements AdaptorService {
 	 * @param value
 	 * @return
 	 */
-	private String changeToHex(String value) {
-		if (StringUtils.isEmpty(value)) {
-			return "";
-		}
-
-		String returnValue = value;
-		returnValue = returnValue.replaceAll("&", "%26");
-		returnValue = returnValue.replaceAll("<", "%3C");
-		returnValue = returnValue.replaceAll("`", "%60");
-		returnValue = returnValue.replaceAll("~", "%7E");
-		returnValue = returnValue.replaceAll("$", "%24");
-		returnValue = returnValue.replaceAll("^", "%5E");
-		returnValue = returnValue.replaceAll("_", "%5F");
-		returnValue = returnValue.replaceAll("\\{", "%7B");
-		returnValue = returnValue.replaceAll("}", "%7D");
-		returnValue = returnValue.replaceAll("|", "%7C");
-		returnValue = returnValue.replaceAll("\\[", "%5B");
-		returnValue = returnValue.replaceAll("]", "%5D");
-		return returnValue;
-	}
+//	private String changeToHex(String value) {
+//		if (StringUtils.isEmpty(value)) {
+//			return "";
+//		}
+//
+//		String returnValue = value;
+//		returnValue = returnValue.replaceAll("&", "%26");
+//		returnValue = returnValue.replaceAll("<", "%3C");
+//		returnValue = returnValue.replaceAll("`", "%60");
+//		returnValue = returnValue.replaceAll("~", "%7E");
+//		returnValue = returnValue.replaceAll("$", "%24");
+//		returnValue = returnValue.replaceAll("^", "%5E");
+//		returnValue = returnValue.replaceAll("_", "%5F");
+//		returnValue = returnValue.replaceAll("\\{", "%7B");
+//		returnValue = returnValue.replaceAll("}", "%7D");
+//		returnValue = returnValue.replaceAll("|", "%7C");
+//		returnValue = returnValue.replaceAll("\\[", "%5B");
+//		returnValue = returnValue.replaceAll("]", "%5D");
+//		return returnValue;
+//	}
 
 	private int insertSMS(String mobileNo, String message, int senderUserId, int priority, int expireDayAdd,
 			int smsType, String remark, int statusId, int retryNo, String replyCode, String replyRemark,
