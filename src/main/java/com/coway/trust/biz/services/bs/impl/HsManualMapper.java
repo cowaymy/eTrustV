@@ -154,7 +154,11 @@ public interface HsManualMapper {
 	
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
 	
-	
 	String getSVC008D_NO(Map<String, Object> params);
+	
+
+	//add by hgham  mobile 중복 처리 
+	int isHsAlreadyResult (Map<String, Object> params);
+		
 
 }

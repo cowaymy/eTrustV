@@ -179,8 +179,9 @@ public interface InstallationResultListMapper {
 	
 	EgovMap getOrderByInstallEntryID(Map<String,Object> params);
 	
-	
-	
+
+	//add by hgham  mobile 중복 처리 
+	int isInstallAlreadyResult (Map<String, Object> params);
 	
 	
 }

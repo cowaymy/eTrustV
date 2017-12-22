@@ -26,12 +26,14 @@ function fn_addCallSave(){
         console.log("성공.");
         console.log("data : " + result);
         Common.alert(result.message);
+        
 
         $("#hideContent").hide();
         $("#hideContent1").hide();
         $("#hideContent3").hide();
         $("#hideContent4").hide();
         $("#hiddenBtn").hide();
+        $("#sav_div").attr("style","display:none");
         
     });
 }
@@ -49,6 +51,7 @@ $(document).ready(function() {
 	fn_callLogTransaction();
 	
 });
+
 var callLogTranID;
 function callLogTranGrid() {
     //AUIGrid 칼럼 설정
@@ -396,11 +399,12 @@ function fn_doAllaction(){
 </tbody>
 </table><!-- table end -->
 </form>
-
+ <div  id='sav_div'>
 <ul class="center_btns" id="hiddenBtn">
     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
 </ul>
+</div>
 
 </section><!-- pop_body end -->
 

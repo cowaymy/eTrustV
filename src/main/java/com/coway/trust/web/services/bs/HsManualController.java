@@ -850,6 +850,12 @@ public class HsManualController {
 		return ResponseEntity.ok(message);
 	}
 	
+	
+
+		
+	
+	
+	
 }
 	
 

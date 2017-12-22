@@ -106,5 +106,9 @@ public interface HsManualService {
 	int saveFilterUpdate(Map<String, Object> params);	
 	
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
+	
+
+	//add by hgham  mobile 중복 처리 
+	int isHsAlreadyResult (Map<String, Object> params);
 
 }

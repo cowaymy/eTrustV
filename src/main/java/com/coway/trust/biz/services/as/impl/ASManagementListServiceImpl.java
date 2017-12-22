@@ -159,6 +159,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
+
+	@Override
+	public int  isAsAlreadyResult(Map<String, Object> params) {
+		return ASManagementListMapper.isAsAlreadyResult(params);
+	} 
+	
+	
+	
 	@Override
 	public int  addASRemark(Map<String, Object> params) {
 
@@ -1294,7 +1302,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		this.setCCR0001DData(svc0004dmap);
 		
 		double AS_TOT_AMT =0;
-		AS_TOT_AMT = Double.parseDouble((String)svc0004dmap.get("AS_TOT_AMT"));
+		AS_TOT_AMT = Double.parseDouble( String.valueOf(svc0004dmap.get("AS_TOT_AMT")));
 		
 		
 		LOGGER.debug("				Logic 1===> AS_TOT_AMT["+AS_TOT_AMT+"]");
@@ -1369,7 +1377,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				 svc0004dmap.put("TaxCode", "39");
 				 svc0004dmap.put("TaxRate", "0");
 				 
-            			 if(  Double.parseDouble((String)svc0004dmap.get("AS_FILTER_AMT")) > 0 ){   //txtFilterCharge
+            			 if(  Double.parseDouble( String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0 ){   //txtFilterCharge
             				  if (addItemList.size() > 0) {  
             						for (int i = 0; i < addItemList.size(); i++) {
             							Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
@@ -1388,14 +1396,18 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             								    String filterCode ="";
             								    String filterName ="";
                 								if(! "".equals(updateMap.get("filterDesc") )){
-                									
                 									String temp =(String)updateMap.get("filterDesc");
-                									String[] animals = temp.split("-"); 
-                									
-                									if(animals.length>0){
-                										filterCode = animals[0];
-                										filterName = animals[1];
-                									}
+                		    						if(null != temp ){
+                		        						if(! temp.equals("API")){
+                		        					
+                		        							String[] animals = temp.split("-"); 
+                        									
+                        									if(animals.length>0){
+                        										filterCode = animals[0];
+                        										filterName = animals[1];
+                        									}
+                		        						}
+                		    						}
                 								}
                 								
                 								
@@ -1427,7 +1439,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				 svc0004dmap.put("TaxCode", "32");
 				 svc0004dmap.put("TaxRate", "6");
 				 
-    				 if(  Double.parseDouble((String)svc0004dmap.get("AS_FILTER_AMT")) > 0 ){   //txtFilterCharge
+    				 if(  Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0 ){   //txtFilterCharge
     					 if (addItemList.size() > 0) {  
        						for (int i = 0; i < addItemList.size(); i++) {
        							Map<String, Object> updateMap = (Map<String, Object>) addItemList.get(i);
@@ -1449,12 +1461,18 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            								if(! "".equals(updateMap.get("filterDesc") )){
            									
            									String temp =(String)updateMap.get("filterDesc");
-           									String[] animals = temp.split("-"); 
-           									   
-           									if(animals.length>0){
-           										filterCode = animals[0];
-           										filterName = animals[1];
-           									}
+        		    						if(null != temp ){
+        		        						if(! temp.equals("API")){
+        		        					
+        		        							String[] animals = temp.split("-"); 
+                									
+                									if(animals.length>0){
+                										filterCode = animals[0];
+                										filterName = animals[1];
+                									}
+        		        						}
+        		    						}
+        		    						
            								}
            								
            							    double t_SpareCharges = (ft *100/106);
@@ -1587,7 +1605,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	    svc0004dmap.put("AS_ID", svc0004dmap.get("AS_ENTRY_ID") );
 	    svc0004dmap.put("USER_ID", String.valueOf(svc0004dmap.get("updator")) );
 	    
-	    
+	       
 	    
 	    
 	    //IN_HOUSE_CLOSE 인경우 as_app_Type 변경  모바일 잡 리스트 에서 인하우스 오더는 내려가지 않도록 했음. 
@@ -1602,7 +1620,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	    Map<String, Object>  logPram = new HashMap<String, Object>();
 	    ///////물류 결과 ///////////////////////
 	    
-		if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")){
+		if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")){
 			 
 			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  == 0  ){
 				  	
@@ -1632,14 +1650,14 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		  }else{
 
 			  //인하우스 결과 등록 
-			  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("452")){
+			  if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")){
 				  svc0004dmap.put("AS_RESULT_STUS_ID", "1");
 			  }
 			  
 			  
 			  this.updateStateSVC0001D(svc0004dmap);
 			  
-			  if(svc0004dmap.get("AS_RESULT_STUS_ID").equals("4") ){
+			  if(String.valueOf(svc0004dmap.get("AS_RESULT_STUS_ID")).equals("4") ){
 					
 					//물류 호출   add by hgham
 					/////////////////////////물류 호출//////////////////////

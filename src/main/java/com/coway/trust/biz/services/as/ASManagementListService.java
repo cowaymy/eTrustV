@@ -79,5 +79,14 @@ public interface ASManagementListService {
 	List<EgovMap> assignCtList(Map<String, Object> params);
 	List<EgovMap> selectCTByDSC(Map<String, Object> params);
 	
+
+
+	//add by hgham  mobile 중복 처리 
+	int isAsAlreadyResult (Map<String, Object> params);
+		
+
+	
+	
+	
 	
 }

@@ -72,5 +72,8 @@ public interface InstallationResultListService {
 	int editInstallationResult(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
 	
 	
+	//add by hgham  mobile 중복 처리 
+	int isInstallAlreadyResult (Map<String, Object> params);
+	
 		
 }

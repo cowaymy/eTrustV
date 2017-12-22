@@ -163,6 +163,8 @@ public interface ASManagementListMapper {
 	 int updateInhouseSVC0001D_appdt(Map<String, Object> params);   
 	 int updateState_SERIAL_NO_SVC0004D(Map<String, Object> params);   
 	 
-	 
+
+	//add by hgham  mobile 중복 처리 
+	int isAsAlreadyResult (Map<String, Object> params);
 	 
 }

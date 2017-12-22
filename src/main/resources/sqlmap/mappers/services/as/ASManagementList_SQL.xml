@@ -3619,6 +3619,17 @@
      </insert>
      
             
+            
+            
+         
+     <select id="isAsAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[     
+             SELECT COUNT(AS_ID) 
+              FROM SVC0001D 
+              WHERE  AS_NO =#{serviceNo}  AND   AS_STUS_ID <> '1'
+        ]]>
+    </select>
+         
    
    
    

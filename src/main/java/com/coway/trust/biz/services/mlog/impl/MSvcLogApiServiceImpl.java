@@ -489,7 +489,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	public void savePrFailServiceLogs(Map<String, Object> params) {
 		MSvcLogApiMapper.insertPrFailServiceLog(params);	
 		
-	}
+	}   
 
 	@Override
 	public void saveInsFailServiceLogs(Map<String, Object> params) {

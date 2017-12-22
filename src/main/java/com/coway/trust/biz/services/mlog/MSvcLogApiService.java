@@ -120,7 +120,7 @@ public interface MSvcLogApiService {
 
 	void upDateInstallFailJobResultM(Map<String, Object> params);
 	
-	
+	   
 	EgovMap productReturnResult(Map<String, Object> params);
 
 	void setPRFailJobRequest(Map<String, Object> params);

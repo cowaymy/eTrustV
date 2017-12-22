@@ -4062,6 +4062,14 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
     
          
          
+     <select id="isInstallAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[     
+			SELECT   COUNT (INSTALL_ENTRY_ID) CNT
+			  FROM   SAL0046D
+			 WHERE   INSTALL_ENTRY_NO = #{serviceNo}  AND STUS_CODE_ID <> '1'
+        ]]>
+    </select>
+         
          
          
         

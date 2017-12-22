@@ -1105,5 +1105,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	}
 	
 	
+
+
+	@Override
+	public int  isHsAlreadyResult(Map<String, Object> params) {
+		return hsManualMapper.isHsAlreadyResult(params);
+	}
+	
+	
+	
+	
 	
 }

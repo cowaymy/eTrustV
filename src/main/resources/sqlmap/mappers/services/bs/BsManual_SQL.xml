@@ -2702,6 +2702,22 @@
                  {
                     call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{StockID},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
                  }
-            </select>                             
+            </select>                     
+            
+            
+            
+            
+            
+         
+     <select id="isHsAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[     
+		       SELECT  COUNT(NO) CNT  
+		       FROM  SVC0008D 
+		       WHERE NO =#{serviceNo}  AND STUS_CODE_ID <> '1'
+        ]]>
+    </select>
+         
+            
+                    
 
 </mapper>

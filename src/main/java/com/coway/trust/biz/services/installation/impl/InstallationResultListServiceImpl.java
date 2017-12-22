@@ -2043,4 +2043,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 		return resultValue;
 	}
+	
+	
+	@Override
+	public int  isInstallAlreadyResult(Map<String, Object> params) {
+		return installationResultListMapper.isInstallAlreadyResult(params);
+	}
+	
+	
 }

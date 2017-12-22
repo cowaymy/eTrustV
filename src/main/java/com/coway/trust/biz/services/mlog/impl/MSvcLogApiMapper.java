@@ -33,7 +33,7 @@ public interface MSvcLogApiMapper {
 	void insertHsResultSVC0006D(Map<String, Object> insMap);
 
 	int selectHSScheduleMCnt(Map<String, Object> insMap);
-
+ 
 	EgovMap selectHSResultMList(Map<String, Object> insMap);
 
 	void updateHsSVC0008D(Map<String, Object> insMap);
