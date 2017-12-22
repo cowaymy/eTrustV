@@ -180,6 +180,7 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(map);
 		
 	}
+	
 	@RequestMapping(value = "/selectSalesPlanMngmentSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestParam Map<String, Object> params,
 			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes 
@@ -221,7 +222,6 @@ public class SalesPlanManagementController {
 		map.put("salesPlanMainList", selectSalesPlanMngmentList);
 
 		return ResponseEntity.ok(map);
-		
 	}
 	
 	@RequestMapping(value = "/selectSalesCnt.do", method = RequestMethod.GET)
