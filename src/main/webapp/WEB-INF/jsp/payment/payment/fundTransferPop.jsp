@@ -77,7 +77,7 @@ var columnLayout = [
     },
     { 
         dataField:"allowTrnsfrId",
-        headerText:"Allow<br>Transfer",
+        headerText:"<spring:message code='pay.head.allowTransfer'/>",
         width: 80 ,
         renderer : {
             type : "CheckBoxEditRenderer",            
@@ -87,7 +87,7 @@ var columnLayout = [
     },
     { 
         dataField:"isFundTrnsfrItm",
-        headerText:"Fund Transfer<br>Item",
+        headerText:"<spring:message code='pay.head.fundTransferItem'/>",
         width: 100 ,
         renderer : {
             type : "CheckBoxEditRenderer",            
@@ -95,13 +95,13 @@ var columnLayout = [
             unCheckValue : "0"
         }    
     },
-    { dataField:"payMode" ,headerText:"Paymode",editable : false, width: 100 },
-    { dataField:"amt" ,headerText:"Amt" ,editable : false , width: 100, dataType : "numeric", formatString : "#,##0.00"},
-    { dataField:"revAmt" ,headerText:"Rev Amt" ,editable : false , width: 100, dataType : "numeric", formatString : "#,##0.00"},
-    { dataField:"availAmt" ,headerText:"Available<br>Amt" ,editable : false , width: 100, dataType : "numeric", formatString : "#,##0.00"},
+    { dataField:"payMode" ,headerText:"<spring:message code='pay.head.payMode'/>",editable : false, width: 100 },
+    { dataField:"amt" ,headerText:"<spring:message code='pay.head.amt'/>" ,editable : false , width: 100, dataType : "numeric", formatString : "#,##0.00"},
+    { dataField:"revAmt" ,headerText:"<spring:message code='pay.head.revAmt'/>" ,editable : false , width: 100, dataType : "numeric", formatString : "#,##0.00"},
+    { dataField:"availAmt" ,headerText:"<spring:message code='pay.head.availableAmt'/>" ,editable : false , width: 100, dataType : "numeric", formatString : "#,##0.00"},
     {
         dataField : "transferAmt",
-        headerText : "Transfer Amt",        
+        headerText : "<spring:message code='pay.head.transferAmt'/>",        
         dataType : "numeric",
         editable : true,
         width : 100, 
@@ -125,53 +125,53 @@ var columnLayout = [
             return "";
         }
     },
-    { dataField:"refNo" ,headerText:"Ref No" ,editable : false , width : 100},
-    { dataField:"refDt" ,headerText:"Ref Date" ,editable : false , width : 100 , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"chqNo" ,headerText:"Chq No" ,editable : false , width : 100 },
-    { dataField:"bankCode" ,headerText:"Iss Bank" ,editable : false , width : 100 },
-    { dataField:"cardType" ,headerText:"Card Type" ,editable : false , width : 100 },
-    { dataField:"ccType" ,headerText:"Crc Type" ,editable : false , width : 100 },
-    { dataField:"ccNo" ,headerText:"Crc No" ,editable : false , width : 100 },
-    { dataField:"ccHolderName" ,headerText:"Crc Holder" ,editable : false , width : 100 },
-    { dataField:"ccExpr" ,headerText:"Crc Expiry" ,editable : false , width : 100 },
-    { dataField:"isOnline" ,headerText:"Online?" ,editable : false , width : 100 },
-    { dataField:"accCode" ,headerText:"Acc Code" ,editable : false , width : 100 },
-    { dataField:"rem" ,headerText:"Remark" ,editable : false , width : 200 },
-    { dataField:"isAllowTrnsfr" ,headerText:"isAllowTransfer",editable : false , visible : false},
-    { dataField:"btnCheckYN" ,headerText:"btnCheckYN",editable : false , visible : false},
-    { dataField:"transferAmtChangeYN" ,headerText:"transferAmountChangeYN",editable : false , visible : false}
+    { dataField:"refNo" ,headerText:"<spring:message code='pay.head.refNo'/>" ,editable : false , width : 100},
+    { dataField:"refDt" ,headerText:"<spring:message code='pay.head.refDate'/>" ,editable : false , width : 100 , dataType : "date", formatString : "dd-mm-yyyy"},
+    { dataField:"chqNo" ,headerText:"<spring:message code='pay.head.chqNo'/>" ,editable : false , width : 100 },
+    { dataField:"bankCode" ,headerText:"<spring:message code='pay.head.issBank'/>" ,editable : false , width : 100 },
+    { dataField:"cardType" ,headerText:"<spring:message code='pay.head.cardType'/>" ,editable : false , width : 100 },
+    { dataField:"ccType" ,headerText:"<spring:message code='pay.head.crcType'/>" ,editable : false , width : 100 },
+    { dataField:"ccNo" ,headerText:"<spring:message code='pay.head.crcNo'/>" ,editable : false , width : 100 },
+    { dataField:"ccHolderName" ,headerText:"<spring:message code='pay.head.crcHolder'/>" ,editable : false , width : 100 },
+    { dataField:"ccExpr" ,headerText:"<spring:message code='pay.head.crcExpiry'/>" ,editable : false , width : 100 },
+    { dataField:"isOnline" ,headerText:"<spring:message code='pay.head.online'/>" ,editable : false , width : 100 },
+    { dataField:"accCode" ,headerText:"<spring:message code='pay.head.accCode'/>" ,editable : false , width : 100 },
+    { dataField:"rem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false , width : 200 },
+    { dataField:"isAllowTrnsfr" ,headerText:"<spring:message code='pay.head.isAllowTransfer'/>",editable : false , visible : false},
+    { dataField:"btnCheckYN" ,headerText:"<spring:message code='pay.head.btnCheckYN'/>",editable : false , visible : false},
+    { dataField:"transferAmtChangeYN" ,headerText:"<spring:message code='pay.head.btnCheckYN'/>",editable : false , visible : false}
 ];
 
 //AUIGrid 칼럼 설정 : targetRenMstGridID
 var targetRenMstColumnLayout = [
     
-    { dataField:"custBillId" ,headerText:"Billing Group" ,editable : false , width : 100},
-    { dataField:"salesOrdId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
-    { dataField:"salesOrdNo" ,headerText:"Order No" ,editable : false , width : 100 },
-    { dataField:"rpf" ,headerText:"RPF" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"rpfPaid" ,headerText:"RPF Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"mthRentAmt" ,headerText:"Monthly RF" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"balance" ,headerText:"Balance" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"unBilledAmount" ,headerText:"UnBill" ,editable : false , width : 100 },
-    { dataField:"lastPayment" ,headerText:"Last Payment" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
-    { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 250 }
+    { dataField:"custBillId" ,headerText:"<spring:message code='pay.head.billingGroup'/>" ,editable : false , width : 100},
+    { dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.orderId'/>" ,editable : false , width : 100, visible : false },
+    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false , width : 100 },
+    { dataField:"rpf" ,headerText:"<spring:message code='pay.head.rpf'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"rpfPaid" ,headerText:"<spring:message code='pay.head.rpfPaid'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"mthRentAmt" ,headerText:"<spring:message code='pay.head.mothlyRf'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"balance" ,headerText:"<spring:message code='pay.head.balance'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"unBilledAmount" ,headerText:"<spring:message code='pay.head.unbill'/>" ,editable : false , width : 100 },
+    { dataField:"lastPayment" ,headerText:"<spring:message code='pay.head.lastPayment'/>" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
+    { dataField:"custNm" ,headerText:"<spring:message code='pay.head.customerName'/>" ,editable : false , width : 250 }
 ];
 
 //AUIGrid 칼럼 설정 : targetRenDetGridID
 var targetRenDetColumnLayout = [
     
-    { dataField:"billGrpId" ,headerText:"Bill Group ID" ,editable : false , width : 120, visible : false },
-    { dataField:"billId" ,headerText:"Bill ID" ,editable : false , width : 100, visible : false },
-    { dataField:"billNo" ,headerText:"Bill No" ,editable : false , width : 150 },
-    { dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100 , visible : false },  
-    { dataField:"ordNo" ,headerText:"Order No" ,editable : false , width : 100 },      
-    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },      
-    { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
-    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 },
-    { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-    { dataField:"targetAmt" ,headerText:"Target Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
-    { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},
-    { dataField:"billStatus" ,headerText:"Bill Status" ,editable : false , width : 100},
+    { dataField:"billGrpId" ,headerText:"<spring:message code='pay.head.billGroupId'/>" ,editable : false , width : 120, visible : false },
+    { dataField:"billId" ,headerText:"<spring:message code='pay.head.billId'/>" ,editable : false , width : 100, visible : false },
+    { dataField:"billNo" ,headerText:"<spring:message code='pay.head.billNo'/>" ,editable : false , width : 150 },
+    { dataField:"ordId" ,headerText:"<spring:message code='pay.head.orderId'/>" ,editable : false , width : 100 , visible : false },  
+    { dataField:"ordNo" ,headerText:"<spring:message code='pay.head.orderNO'/>" ,editable : false , width : 100 },      
+    { dataField:"billTypeNm" ,headerText:"<spring:message code='pay.head.billType'/>" ,editable : false , width : 180 },      
+    { dataField:"installment" ,headerText:"<spring:message code='pay.head.installment'/>" ,editable : false , width : 100 },      
+    { dataField:"billAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , width : 100 },
+    { dataField:"paidAmt" ,headerText:"<spring:message code='pay.head.paid'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"targetAmt" ,headerText:"<spring:message code='pay.head.targetAmount'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"billDt" ,headerText:"<spring:message code='pay.head.billDate'/>" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},
+    { dataField:"billStatus" ,headerText:"<spring:message code='pay.head.billStatus'/>" ,editable : false , width : 100},
     {
         dataField : "btnCheck",
         headerText : " ",
@@ -187,31 +187,31 @@ var targetRenDetColumnLayout = [
 
 //AUIGrid 칼럼 설정 : targetNonRenMstGridID
 var targetNonRenMstColumnLayout = [
-    { dataField:"salesOrdId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
-    { dataField:"salesOrdNo" ,headerText:"Order Number" ,editable : false , width : 120 },
-    { dataField:"custNm" ,headerText:"Customer Name" ,editable : false , width : 180},      
-    { dataField:"productPrice" ,headerText:"Product Price" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"totalPaid" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"balance" ,headerText:"Balance<br>(-:Overpaid, +:Outstanding)" ,editable : false , width : 200 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"reverseAmount" ,headerText:"Reversed" ,editable : false , width : 100 },
-    { dataField:"lastPayment" ,headerText:"Last Payment" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
-    { dataField:"userName" ,headerText:"Creator Name" ,editable : false , width : 200 }
+    { dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.orderId'/>" ,editable : false , width : 100, visible : false },
+    { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNO'/>" ,editable : false , width : 120 },
+    { dataField:"custNm" ,headerText:"<spring:message code='pay.head.customerName'/>" ,editable : false , width : 180},      
+    { dataField:"productPrice" ,headerText:"<spring:message code='pay.head.productPrice'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"totalPaid" ,headerText:"<spring:message code='pay.head.paid'/>" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"balance" ,headerText:"<spring:message code='pay.head.balanceLongText'/>" ,editable : false , width : 200 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"reverseAmount" ,headerText:"<spring:message code='pay.head.reversed'/>" ,editable : false , width : 100 },
+    { dataField:"lastPayment" ,headerText:"<spring:message code='pay.head.lastPayment'/>" ,editable : false , width : 120 , dataType : "date", formatString : "yyyy-mm-dd"},
+    { dataField:"userName" ,headerText:"<spring:message code='pay.head.creatorName'/>" ,editable : false , width : 200 }
 ];
 
 //AUIGrid 칼럼 설정 : targetSvmMstGridID
 var targetSvmMstColumnLayout = [
-    { dataField:"memNo" ,headerText:"SVM No" ,editable : false , width : 120 },
-    { dataField:"stusCode" ,headerText:"Status" ,editable : false , width : 100 },
-    { dataField:"startDt" ,headerText:"Start Date" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},      
-    { dataField:"endDt" ,headerText:"End Date" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},      
-    { dataField:"pckgChrg" ,headerText:"Package<br>Charge" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"pckgOtstnd" ,headerText:"Package<br>Outstanding" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},      
-    { dataField:"filterChrg" ,headerText:"Filter<br>Charge" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
-    { dataField:"filterOtstnd" ,headerText:"Filter<br>Outstanding" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
-    { dataField:"totOtstnd" ,headerText:"Total<br>Outstanding" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"memNo" ,headerText:"<spring:message code='pay.head.svmNo'/>" ,editable : false , width : 120 },
+    { dataField:"stusCode" ,headerText:"<spring:message code='pay.head.status'/>" ,editable : false , width : 100 },
+    { dataField:"startDt" ,headerText:"<spring:message code='pay.head.startDate'/>" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},      
+    { dataField:"endDt" ,headerText:"<spring:message code='pay.head.endDate'/>" ,editable : false , width : 100 , dataType : "date", formatString : "yyyy-mm-dd"},      
+    { dataField:"pckgChrg" ,headerText:"<spring:message code='pay.head.packageCharge'/>" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"pckgOtstnd" ,headerText:"<spring:message code='pay.head.packageOutstanding'/>" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},      
+    { dataField:"filterChrg" ,headerText:"<spring:message code='pay.head.filterCharge'/>" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"filterOtstnd" ,headerText:"<spring:message code='pay.head.filterOutstanding'/>" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
+    { dataField:"totOtstnd" ,headerText:"<spring:message code='pay.head.totalOutstanding'/>" ,editable : false , width : 120 , dataType : "numeric", formatString : "#,##0.##"},
     {
         dataField : "btnCheck",
-        headerText : "Exclude",
+        headerText : "<spring:message code='pay.head.exclude'/>",
         width: 80,
         renderer : {
             type : "CheckBoxEditRenderer",            
