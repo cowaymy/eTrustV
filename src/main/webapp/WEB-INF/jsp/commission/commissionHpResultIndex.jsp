@@ -237,7 +237,8 @@
 	    {dataField : "aIncentive",           headerText : "Incentive",          style : "my-column", editable : false},
 	    {dataField : "aShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
-	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false}
+	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
+	    {dataField : "aAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
 	    /* {dataField : "aWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
 	];
 	
@@ -262,7 +263,8 @@
 	    {dataField : "aIncentive",           headerText : "Incentive",          style : "my-column", editable : false},
 	    {dataField : "aShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
-	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false}
+	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
+	    {dataField : "aAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
 	    /* {dataField : "aWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
 	];
 	
@@ -287,7 +289,8 @@
 	    {dataField : "aIncentive",           headerText : "Incentive",          style : "my-column", editable : false},
 	    {dataField : "aShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
-	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false}
+	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
+	    {dataField : "aAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
 	    /* {dataField : "aWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
 	];
     
@@ -313,7 +316,8 @@
 	    {dataField : "aShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
-	    {dataField : "aMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false}
+	    {dataField : "aMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false},
+	    {dataField : "aAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
 	    /* {dataField : "aWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
 	];
     
@@ -339,7 +343,8 @@
 	    {dataField : "aShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
 	    {dataField : "aRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
-	    {dataField : "aMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false}
+	    {dataField : "aMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false},
+	    {dataField : "aAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
 	    /* {dataField : "aWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
 	];
     
@@ -393,6 +398,7 @@
         {dataField : "sShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
         {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
+        {dataField : "sAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
         /* {dataField : "sWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
     ];
     
@@ -417,7 +423,8 @@
         {dataField : "sIncentive",           headerText : "Incentive",          style : "my-column", editable : false},
         {dataField : "sShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
-        {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false}
+        {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
+        {dataField : "sAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
         /* {dataField : "sWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
     ];
     
@@ -442,7 +449,8 @@
         {dataField : "sIncentive",           headerText : "Incentive",          style : "my-column", editable : false},
         {dataField : "sShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
-        {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false}
+        {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
+        {dataField : "sAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
         /* {dataField : "sWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
     ];
     
@@ -468,7 +476,8 @@
         {dataField : "sShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
         {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
-        {dataField : "sMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false}
+        {dataField : "sMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false},
+        {dataField : "sAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
         /* {dataField : "sWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
     ];
     
@@ -494,7 +503,8 @@
         {dataField : "sShiAmt",              headerText : "Shi Amt",            style : "my-column", editable : false},
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership Amt",       style : "my-column", editable : false},
         {dataField : "sRentalmembershipShiAmt", headerText : "Shi Rentalmembership Amt",   style : "my-column", editable : false},
-        {dataField : "sMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false}
+        {dataField : "sMeetingAllowances", headerText : "Meeting Allowances",   style : "my-column", editable : false},
+        {dataField : "sAmount",              headerText : "Grand Total",            style : "my-column", editable : false}
         /* {dataField : "sWsAward",              headerText : "WS AWARD",            style : "my-column", editable : false} */
     ];
     
@@ -550,7 +560,8 @@
 	    {headerText : "Shi Amt",                      children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
 	    {headerText : "Rentalmembership Amt",  children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	    
-	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]}
+	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]},
+	    {headerText : "Grand Total",  children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
 	
@@ -578,7 +589,8 @@
 	    {headerText : "Shi Amt",                      children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
 	    {headerText : "Rentalmembership Amt",  children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	    
-	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]}
+	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]},
+	    {headerText : "Grand Total",  children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
     var columnHMCompareLayout = [
@@ -605,7 +617,8 @@
 	    {headerText : "Shi Amt",                      children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
 	    {headerText : "Rentalmembership Amt",  children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	    
-	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]}
+	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]},
+	    {headerText : "Grand Total",  children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
     var columnSMCompareLayout = [
@@ -633,7 +646,8 @@
 	    {headerText : "Rentalmembership Amt",  children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	    
 	    {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]},
-	    {headerText : "Meeting Allowances",  children: [{dataField: "aMeetingAllowances", headerText: "A", editable : false}, {dataField: "sMeetingAllowances", headerText: "S", editable : false}]}
+	    {headerText : "Meeting Allowances",  children: [{dataField: "aMeetingAllowances", headerText: "A", editable : false}, {dataField: "sMeetingAllowances", headerText: "S", editable : false}]},
+	    {headerText : "Grand Total",  children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	    /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	];
     var columnGMCompareLayout = [
@@ -661,7 +675,8 @@
 	     {headerText : "Rentalmembership Amt",  children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	     
 	     {headerText : "Shi Rentalmembership Amt",  children: [{dataField: "aRentalmembershipShiAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipShiAmt", headerText: "S", editable : false}]},
-	     {headerText : "Meeting Allowances",  children: [{dataField: "aMeetingAllowances", headerText: "A", editable : false}, {dataField: "sMeetingAllowances", headerText: "S", editable : false}]}
+	     {headerText : "Meeting Allowances",  children: [{dataField: "aMeetingAllowances", headerText: "A", editable : false}, {dataField: "sMeetingAllowances", headerText: "S", editable : false}]},
+	     {headerText : "Grand Total",  children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	     /* {headerText : "WS Award",                      children: [{dataField: "aWsAward", headerText: "A", editable : false}, {dataField: "sWsAward", headerText: "S", editable : false}]} */
 	 ];
     var columnSGMCompareLayout = [

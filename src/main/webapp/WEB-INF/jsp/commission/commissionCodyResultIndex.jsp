@@ -250,7 +250,9 @@
 	    {dataField : "aCodyRegistrationFees",                   headerText : "Cody Registration Fees",        style : "my-column", editable : false },
 	    {dataField : "aShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false }, 
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-	    {dataField : "aShiRentalmembershipAmt", headerText : "SHI Rentalmembership AMT",        style : "my-column", editable : false } 
+	    {dataField : "aShiRentalmembershipAmt", headerText : "SHI Rentalmembership AMT",        style : "my-column", editable : false } ,
+	    {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+	    {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
 	];
     
     var columnCMActualLayout = [
@@ -293,7 +295,9 @@
         {dataField : "aShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false },
 
         {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false }
+        {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
+        {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
     ];
 	
     var columnSCMActualLayout = [
@@ -336,7 +340,9 @@
         {dataField : "aShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false },
 
         {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false }
+        {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
+        {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
     ];
 	
     var columnGCMActualLayout = [
@@ -379,7 +385,9 @@
         {dataField : "aShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false },
 
         {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false }
+        {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
+        {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
     ];
 	
 /** ****************************************************************
@@ -431,7 +439,9 @@
         {dataField : "sCodyRegistrationFees",                   headerText : "Cody Registration Fees",        style : "my-column", editable : false },
         {dataField : "sShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false }, 
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "sShiRentalmembershipAmt", headerText : "SHI Rentalmembership AMT",        style : "my-column", editable : false } 
+        {dataField : "sShiRentalmembershipAmt", headerText : "SHI Rentalmembership AMT",        style : "my-column", editable : false } ,
+        {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
 	];
 	
 	var columnCMSimulLayout = [
@@ -474,7 +484,9 @@
         {dataField : "sShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false },
 
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false }
+        {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
+        {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
 	];
 	
 	var columnSCMSimulLayout = [
@@ -517,7 +529,9 @@
         {dataField : "sShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false },
 
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false }
+        {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
+        {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
 	];
 	
 	var columnGCMSimulLayout = [
@@ -560,7 +574,9 @@
         {dataField : "sShiAmt",                         headerText : "SHI AMT",        style : "my-column", editable : false },
 
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
-        {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false }
+        {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
+        {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
+        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
 	];
 
 /** ****************************************************************
@@ -610,7 +626,9 @@
 	    {headerText : "aCodyRegistrationFees",                     children: [{dataField: "aCodyRegistrationFees", headerText: "A", editable : false}, {dataField: "sCodyRegistrationFees", headerText: "S", editable : false}]},
 	    {headerText : "SHI AMT",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]}, 
 	    {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-	    {headerText : "SHI Rentalmembership AMT",   children: [{dataField: "aShiRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sShiRentalmembershipAmt", headerText: "S", editable : false}]} 
+	    {headerText : "SHI Rentalmembership AMT",   children: [{dataField: "aShiRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sShiRentalmembershipAmt", headerText: "S", editable : false}]},
+	    {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]}, 
+	    {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 	var columnCMCompareLayout = [
@@ -653,7 +671,9 @@
 	    {headerText : "SHI AMT",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
 	    
 	    {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-	    {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]} 
+	    {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
+	    {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
+	    {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 	var columnSCMCompareLayout = [
@@ -696,7 +716,9 @@
         {headerText : "SHI AMT",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
         
         {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-        {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]} 
+        {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
+        {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
+        {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 	var columnGCMCompareLayout = [
@@ -739,7 +761,9 @@
         {headerText : "SHI AMT",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
         
         {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-        {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]} 
+        {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
+        {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
+        {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 

@@ -212,6 +212,8 @@
 			T1.A_TASK_ID,
 			T1.A_OUTPLS_AMT,
 			T1.A_CODY_REGISTRATION_FEES,
+			T1.A_AMOUNT,
+			T1.A_POS_DEDUCTION,
 			
 			--T2.S_MEM_CODE , 
             --T2.S_MEM_NAME , 
@@ -252,7 +254,9 @@
 			T2.S_RENTALMEMBERSHIP_AMT,
 			T2.S_SHI_RENTALMEMBERSHIP_AMT,
 			T2.S_OUTPLS_AMT,
-			T2.S_CODY_REGISTRATION_FEES
+			T2.S_CODY_REGISTRATION_FEES,
+			T2.S_AMOUNT,
+			T2.S_POS_DEDUCTION
 		FROM CMM0006T T0 JOIN ORG0001D T5 
             ON T0.EMPLY_ID=T5.MEM_ID 
                  AND T0.EMPLY_TYPE_ID=T5.MEM_TYPE
@@ -310,10 +314,14 @@
 					t0.R29 as A_SHI_AMT,
 					t0.R34 as A_RENTALMEMBERSHIP_AMT,
 					t0.R35 as A_SHI_RENTALMEMBERSHIP_AMT,
+					t0.R54 as A_POS_DEDUCTION,
 					t0.TASK_ID as A_TASK_ID,
 					t1.EMPLY_BIZ_TYPE_ID,
 					(TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as A_OUTPLS_AMT,
-					NVL(FN_GET_CMM_RULE('CDN-I19',t1.WORKING_MONTH),'0') as A_CODY_REGISTRATION_FEES
+					NVL(FN_GET_CMM_RULE('CDN-I19',t1.WORKING_MONTH),'0') as A_CODY_REGISTRATION_FEES,
+					(t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
+				        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
+				        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) A_AMOUNT  
 	        ]]>
 				from CMM0029D t0 join CMM0006T t1 
 				        on t0.EMPLY_ID  = t1.EMPLY_ID  
@@ -385,10 +393,14 @@
                         t0.R29 as S_SHI_AMT,
                         t0.R34 as S_RENTALMEMBERSHIP_AMT,
                         t0.R35 as S_SHI_RENTALMEMBERSHIP_AMT,
+                        t0.R54 as S_POS_DEDUCTION,
                         t0.TASK_ID as S_TASK_ID,
                         t1.EMPLY_BIZ_TYPE_ID,
                         (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as S_OUTPLS_AMT,
-                        NVL(FN_GET_CMM_RULE_S('CDN-I19',t1.WORKING_MONTH),'0') as S_CODY_REGISTRATION_FEES
+                        NVL(FN_GET_CMM_RULE_S('CDN-I19',t1.WORKING_MONTH),'0') as S_CODY_REGISTRATION_FEES,
+                        (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
+                        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
+                        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) S_AMOUNT  
 		        ]]>
 		            from CMM0029T t0 join CMM0006T t1 
 		                  on t0.EMPLY_ID  = t1.EMPLY_ID  
@@ -405,9 +417,9 @@
 		                --and (t0.R1+t0.R2+t0.R3+t0.R4+t0.R5+t0.R6+t0.R7+t0.R8+t0.R9+t0.R10+t0.R11+t0.R12+t0.R13+t0.R14+t0.R15
 		                --    +t0.R16+t0.R17+t0.R18+t0.R19+t0.R20+t0.R21 +t0.R22+t0.R23+t0.R24+t0.R25+t0.R34)>0
 		                ) t2 ON T0.COMM_TASK_ID=T2.TASK_ID AND T0.EMPLY_CODE=T2.S_MEM_CODE
-	        ]]>
 			WHERE t0.EMPLY_TYPE_ID= 2
 			     AND t0.COMM_TASK_ID=#{taskId}
+	        ]]>
 			     <![CDATA[  AND t0.EMPLY_STUS_ID<>3 ]]>
 			         AND t0.EMPLY_LEV = #{level}
 			     <if test="bizType != null and bizType != ''">
@@ -458,6 +470,8 @@
             t1.A_SHI_AMT,
             t1.A_RENTALMEMBERSHIP_AMT,
             t1.A_OUTPLS_AMT, 
+            t1.A_AMOUNT,
+            T1.A_POS_DEDUCTION,
             
             --t2.S_MEM_CODE , 
             --t2.S_MEM_NAME , 
@@ -493,7 +507,9 @@
             t2.S_ADJ,
             t2.S_SHI_AMT,
             t2.S_RENTALMEMBERSHIP_AMT,
-            t2.S_OUTPLS_AMT
+            t2.S_OUTPLS_AMT,
+            t2.S_AMOUNT,
+            T2.S_POS_DEDUCTION
         FROM CMM0006T T0 JOIN ORG0001D T5 
 	        ON T0.EMPLY_ID=T5.MEM_ID 
 	             AND T0.EMPLY_TYPE_ID=T5.MEM_TYPE
@@ -533,7 +549,11 @@
 	                    t0.R99 as A_ADJ,
 	                    t0.R29 as A_SHI_AMT,
 	                    t0.R34 as A_RENTALMEMBERSHIP_AMT,
-	                    (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as A_OUTPLS_AMT
+	                    t0.R54 as A_POS_DEDUCTION,
+	                    (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as A_OUTPLS_AMT,
+	                    (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
+	                        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
+	                        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) A_AMOUNT  
         ]]>
                 FROM CMM0029D t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID and t0.task_id=#{taskId}
@@ -585,7 +605,11 @@
                         t0.R99 as S_ADJ,
                         t0.R29 as S_SHI_AMT,
                         t0.R34 as S_RENTALMEMBERSHIP_AMT,
-                        (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as S_OUTPLS_AMT
+                        t0.R54 as S_POS_DEDUCTION,
+                        (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as S_OUTPLS_AMT,
+                        (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
+	                        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
+	                        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) S_AMOUNT  
         ]]>
                 FROM CMM0029T t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID and t0.task_id=#{taskId}
@@ -599,9 +623,9 @@
         ]]>) t2 ON T0.COMM_TASK_ID= T2.TASK_ID AND T0.EMPLY_CODE=T2.S_MEM_CODE
         
         WHERE t0.COMM_TASK_ID = #{taskId}
-                and t0.EMPLY_TYPE_ID=2
-                <![CDATA[ and EMPLY_STUS_ID<>3  ]]>
-                and t0.EMPLY_LEV = #{level}
+                AND t0.EMPLY_TYPE_ID=2
+                <![CDATA[ AND t0.EMPLY_STUS_ID<>3  ]]>
+                AND t0.EMPLY_LEV = #{level}
             <if test="memCode != null and memCode != ''">
                 AND t0.EMPLY_CODE LIKE '%'||#{memCode}||'%'
             </if>
@@ -637,6 +661,7 @@
 			t1.A_RENTALMEMBERSHIP_SHI_AMT,
 			t1.A_WS_AWARD,
 			t1.A_MEETING_ALLOWANCES,
+			t1.A_AMOUNT,
 			
 			t2.S_PI,
 			t2.S_PA,
@@ -655,7 +680,8 @@
 			t2.S_RENTALMEMBERSHIP_AMT,
 			t2.S_RENTALMEMBERSHIP_SHI_AMT,
 			t2.S_WS_AWARD,
-			t2.S_MEETING_ALLOWANCES
+			t2.S_MEETING_ALLOWANCES,
+			t2.S_AMOUNT
 		FROM CMM0006T T0 JOIN ORG0001D T5 
 			ON T0.EMPLY_ID=T5.MEM_ID 
 			 AND T0.EMPLY_TYPE_ID=T5.MEM_TYPE
@@ -687,7 +713,11 @@
 			        (case when EMPLY_LEV = 0 then 0
 	                  else t0.R50 end) as A_WS_AWARD,
 	                t0.R52 as A_MEETING_ALLOWANCES,
-			        t0.TASK_ID
+			        t0.TASK_ID,
+			        (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 
+				        + t0.R8 + t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 
+				        + t0.R20 + t0.R21 + t0.R22 + t0.R25 + NVL(t0.R26, 0) 
+				        + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34+NVL(t0.R52, 0)) A_AMOUNT
                 from CMM0029D t0 join CMM0006T t1 
 		            on t0.EMPLY_ID  = t1.EMPLY_ID 
 		                and t1.COMM_TASK_ID=t0.TASK_ID
@@ -733,7 +763,11 @@
                 (case when EMPLY_LEV = 0 then 0
                   else t0.R50 end) as S_WS_AWARD,
                 t0.R52 as S_MEETING_ALLOWANCES,
-                t0.TASK_ID
+                t0.TASK_ID,
+                (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 
+                        + t0.R8 + t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 
+                        + t0.R20 + t0.R21 + t0.R22 + t0.R25 + NVL(t0.R26, 0) 
+                        + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34+NVL(t0.R52, 0)) S_AMOUNT
 		    from CMM0029T t0 join CMM0006T t1 
 		            on t0.EMPLY_ID  = t1.EMPLY_ID 
 		                and t1.COMM_TASK_ID=t0.TASK_ID
@@ -924,6 +958,7 @@
 		WHERE t0.COMM_TASK_ID = #{taskId}
 		      AND T0.EMPLY_TYPE_ID=3
 		      AND t0.EMPLY_LEV=#{level}
+		      <![CDATA[  AND t0.EMPLY_STUS_ID<>3 ]]>
 		    <if test =" memCode != null and memCode != '' ">
 		      AND t0.EMPLY_CODE LIKE '%'||#{memCode}||'%'
 		    </if>
