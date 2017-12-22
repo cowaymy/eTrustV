@@ -11,6 +11,7 @@
 
     var docGridID;
     var docDefaultChk = false;
+    var GST_CHK = '';
     
     $(document).ready(function(){
 
@@ -296,20 +297,38 @@
                 $("#instCountry").val(custInfo.country); //Country
                 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-                
-//              if(!$("#gstChk").is('[disabled]')) {
 
+/*
+                if(custInfo.gstChk == '1') {
+                    $("#gstChk").val('1').prop("disabled", true);
+                    $("#pBtnCal").removeClass("blind");
+                    fn_tabOnOffSet('REL_CER', 'SHOW');
+                }
+                else {
+                    $("#gstChk").val('0').removeAttr("disabled");
+                    $('#pBtnCal').addClass("blind");
+                    fn_tabOnOffSet('REL_CER', 'HIDE');
+                }
+*/
+                GST_CHK = custInfo.gstChk;
+                
+                console.log('GST_CHK:'+GST_CHK);
+                
+                if($("#appType").val() == '66') {
+                    $("#gstChk").removeAttr("disabled");
+                }
+                else if($("#appType").val() != '' && $("#appType").val() != '66'){
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
                         $("#pBtnCal").removeClass("blind");
                         fn_tabOnOffSet('REL_CER', 'SHOW');
                     }
                     else {
-                        $("#gstChk").val('0').removeAttr("disabled");
+                        $("#gstChk").val('0').prop("disabled", true);
                         $('#pBtnCal').addClass("blind");
                         fn_tabOnOffSet('REL_CER', 'HIDE');
                     }
-//              }
+                }
             }
         });
     }
@@ -780,7 +799,8 @@
                             //?FD문서에서 아래 항목 빠짐
                             $('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
-                            $("#gstChk").val('0');
+                            
+                            $("#gstChk").val('0').removeAttr("disabled");
                             $('#pBtnCal').addClass("blind");
                             fn_tabOnOffSet('REL_CER', 'HIDE');
                             
@@ -789,7 +809,16 @@
                             break;
 
                         case '67' : //OUTRIGHT
-//                          $("#gstChk").removeAttr("disabled");
+                            if(GST_CHK == '1') {
+                                $("#gstChk").val('1').removeAttr("disabled");
+                                $("#pBtnCal").removeClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'SHOW');
+                            }
+                            else {
+                                $("#gstChk").val('0').removeAttr("disabled");
+                                $('#pBtnCal').addClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
                             
                             appSubType = '368';
                             
@@ -797,7 +826,17 @@
 
                         case '68' : //INSTALLMENT
                             $('#installDur').removeAttr("readonly").removeClass("readonly");
-//                          $("#gstChk").removeAttr("disabled");
+
+                            if(GST_CHK == '1') {
+                                $("#gstChk").val('1').removeAttr("disabled");
+                                $("#pBtnCal").removeClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'SHOW');
+                            }
+                            else {
+                                $("#gstChk").val('0').removeAttr("disabled");
+                                $('#pBtnCal').addClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
                             
                             appSubType = '369';
                             
@@ -807,25 +846,54 @@
                             $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
 
                             $('[name="advPay"]').removeAttr("disabled");
-//                          $("#gstChk").removeAttr("disabled");
+                            
+                            if(GST_CHK == '1') {
+                                $("#gstChk").val('1').removeAttr("disabled");
+                                $("#pBtnCal").removeClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'SHOW');
+                            }
+                            else {
+                                $("#gstChk").val('0').removeAttr("disabled");
+                                $('#pBtnCal').addClass("blind");
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
+                            }
                             
                             fn_tabOnOffSet('PAY_CHA', 'SHOW');
-                          //fn_tabOnOffSet('REL_CER', 'HIDE');
                             
                             appSubType = '370';
 
                             break;
-                        case '142' : //Sponsor                        
-                            appSubType = '371';    
+                        case '142' : //Sponsor
+                            appSubType = '371';  
+                            
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                              
                             break;                            
                         case '143' : //Service
                             appSubType = '372';
+                            
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                              
                             break;
                         case '144' : //Education
                             appSubType = '373';
+                            
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                              
                             break;
                         case '145' : //Free Trial
                             appSubType = '374';
+                            
+                            $("#gstChk").val('').prop("disabled", true);
+                            $('#pBtnCal').addClass("blind");
+                            fn_tabOnOffSet('REL_CER', 'HIDE');
+                              
                             break;
                         default :
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
