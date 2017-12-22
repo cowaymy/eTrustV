@@ -185,8 +185,9 @@ public class AdaptorServiceImpl implements AdaptorService {
 			try {
 				smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
-						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name()) + "&SenderID="
-						+ gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID=" + msgId;
+						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name()).replaceAll("\\+", " ")
+						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID="
+						+ msgId;
 			} catch (UnsupportedEncodingException e) {
 				throw new ApplicationException(e, AppConstants.FAIL);
 			}
@@ -328,6 +329,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 //		returnValue = returnValue.replaceAll("|", "%7C");
 //		returnValue = returnValue.replaceAll("\\[", "%5B");
 //		returnValue = returnValue.replaceAll("]", "%5D");
+//		returnValue = returnValue.replaceAll("\\+", "%20");
 //		return returnValue;
 //	}
 
