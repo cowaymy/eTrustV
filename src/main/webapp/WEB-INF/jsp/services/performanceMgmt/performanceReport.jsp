@@ -158,40 +158,40 @@
                      
                      
        var columnLayoutSales = [ {
-                            dataField:"SCM",
+                            dataField:"scm",
                             headerText:"SCM",
                             width:120,
                             height:30
                         }, {
-                            dataField : "custId",
+                            dataField : "cm",
                             headerText : "CM",
                             width : 120
                         }, {
-                            dataField : "name",
+                            dataField : "cody",
                             headerText : "CODY",
                             width : 120
                         }, {
-                            dataField : "salesOrdNo",
+                            dataField : "salesTarget",
                             headerText : "SALES TARGET",
                             width : 120
                         }, {
-                            dataField : "hsDate",
+                            dataField : "KeyIn",
                             headerText : "KEY IN",
                             width : 120 
                         }, {
-                            dataField : "no",
+                            dataField : "ys",
                             headerText : "YS",
                             width : 120
                         }, {
-                            dataField : "c5",
+                            dataField : "netSales",
                             headerText : "NET SALES",
                             width : 120
                         }, {
-                            dataField : "codyStatus",
+                            dataField : "extrade",
                             headerText : "EXTRADE",
                             width : 120
                         }, {
-                            dataField : "code",
+                            dataField : "salesPercent",
                             headerText : "SALES %",
                             width : 120
                      }];
