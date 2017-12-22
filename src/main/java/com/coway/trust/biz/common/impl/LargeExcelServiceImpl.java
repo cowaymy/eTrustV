@@ -289,7 +289,7 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	
 	@Override
 	public void downLoadClaimFileCrcCIMB(Object parameter, ClaimFileCrcCIMBHandler claimFileCrcCIMBHandler) {
-		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileCrcCIMBHandler);
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL_PAGING.getQueryId(), parameter, claimFileCrcCIMBHandler);
 	}
 	
 	@Override

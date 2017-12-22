@@ -67,7 +67,6 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 	public int addBulkData(Map<String, Object> master, List<Map<String, Object>> detail){
 		
 		List list = this.selectExistLogMList(master);
-		System.out.println("detail size : " + detail.size() + ", existing Size : " + list.size());
 		
 		String refNo = String.valueOf(master.get("fileRefNo"));
 		if(list != null && list.size() > 0){
@@ -78,13 +77,12 @@ public class CommDeductionServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		
 		this.insertMaster(master);
-		System.out.println("master : " + master);
+		
 		
 		for(int i=0; i<detail.size(); i++){
 			detail.get(i).put("fileId", master.get("fileId"));
 			detail.get(i).put("syncCompleted", false);
-			this.insertDetail(detail.get(i));
-			System.out.println(detail.get(i));
+			this.insertDetail(detail.get(i));		
 		}
 		
 		return Integer.parseInt(String.valueOf(master.get("fileId")));

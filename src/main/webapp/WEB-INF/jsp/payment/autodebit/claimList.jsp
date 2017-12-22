@@ -134,80 +134,84 @@ $(document).ready(function(){
     };
     
     // 파일 선택하기
-    $('#fileSelector').on('change', function(evt) {
-        if (!checkHTML5Brower()) {
-            // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
-            // 파일 내용 읽어 반환시켜 그리드에 적용.
-            commitFormSubmit();
-            
-            //alert("브라우저가 HTML5 를 지원하지 않습니다.");
-        } else {
-            var data = null;
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                return;
-            }
-            var reader = new FileReader();
-            //reader.readAsText(file); // 파일 내용 읽기
-            reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
-            reader.onload = function(event) {
-                if (typeof event.target.result != "undefined") {
-                    // 그리드 CSV 데이터 적용시킴
-                    AUIGrid.setCsvGridData(updResultGridID, event.target.result, false);
-                    
-                    //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
-                    AUIGrid.removeRow(updResultGridID,0);
-                } else {
-                    alert('No data to import!');
-                }
-            };
-            reader.onerror = function() {
-                alert('Unable to read ' + file.fileName);
-            };
-        }
-    
-        });
+	/*
+	$('#fileSelector').on('change', function(evt) {
+		if (!checkHTML5Brower()) {
+			// 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
+			// 파일 내용 읽어 반환시켜 그리드에 적용.
+			commitFormSubmit();
+			//alert("브라우저가 HTML5 를 지원하지 않습니다.");	
+			
+		} else {
+		
+			var data = null;
+			var file = evt.target.files[0];
+		
+			if (typeof file == "undefined") {
+				return;
+			}
+			
+			var reader = new FileReader();
+			//reader.readAsText(file); // 파일 내용 읽기
+			reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+
+			reader.onload = function(event) {		
+				if (typeof event.target.result != "undefined") {
+					// 그리드 CSV 데이터 적용시킴
+					AUIGrid.setCsvGridData(updResultGridID, event.target.result, false);
+
+					//csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+					AUIGrid.removeRow(updResultGridID,0);
+				} else {
+					alert('No data to import!');
+				}
+			};
+			reader.onerror = function() {
+				alert('Unable to read ' + file.fileName);
+			};
+		}	
+	});
+	*/
     
 
-  //HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
-  //서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
-  //즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
-  function commitFormSubmit() {
-   
-   AUIGrid.showAjaxLoader(updResultGridID);
-   
-   // Submit 을 AJax 로 보내고 받음.
-   // ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
-   // 링크 : http://malsup.com/jquery/form/
-   
-   $('#updResultForm').ajaxSubmit({
-       type : "json",
-       success : function(responseText, statusText) {
-           if(responseText != "error") {
-               
-               var csvText = responseText;
-               
-               // 기본 개행은 \r\n 으로 구분합니다.
-               // Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
-               // 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-               // 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
-               csvText = csvText.replace(/\r?\n/g, "\r\n")
-               
-               // 그리드 CSV 데이터 적용시킴
-               AUIGrid.setCsvGridData(updResultGridID, csvText);
-               
-               AUIGrid.removeAjaxLoader(updResultGridID);
-               
-             //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
-               AUIGrid.removeRow(updResultGridID,0);
-           }
-       },
-       error : function(e) {
-           alert("ajaxSubmit Error : " + e);
-       }
-   });
-   
-   }
+	//HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
+	//서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
+	//즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
+	/*
+	function commitFormSubmit() {
+		AUIGrid.showAjaxLoader(updResultGridID);
+
+		// Submit 을 AJax 로 보내고 받음.
+		// ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
+		// 링크 : http://malsup.com/jquery/form/
+
+		$('#updResultForm').ajaxSubmit({
+			type : "json",
+			success : function(responseText, statusText) {
+			
+				if(responseText != "error") {
+					var csvText = responseText;
+
+					// 기본 개행은 \r\n 으로 구분합니다.
+					// Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
+					// 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
+					// 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+					csvText = csvText.replace(/\r?\n/g, "\r\n")
+
+					// 그리드 CSV 데이터 적용시킴
+					AUIGrid.setCsvGridData(updResultGridID, csvText);
+					AUIGrid.removeAjaxLoader(updResultGridID);
+
+					//csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+					AUIGrid.removeRow(updResultGridID,0);
+				}
+			},
+			error : function(e) {
+				alert("ajaxSubmit Error : " + e);
+			}
+		});
+	}
+	*/
 });
 
 
@@ -443,6 +447,85 @@ function fn_updateResult(val){
 	$("#updResult_wrap").show();  
 }
 
+
+function fn_uploadFile(){
+
+	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
+	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+
+    var formData = new FormData();
+
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+	formData.append("ctrlId", ctrlId);
+	formData.append("ctrlIsCrc", ctrlIsCrc);
+	formData.append("bankId", bankId);
+    
+	Common.ajaxFile("/payment/updateClaimResultItemBulk.do", formData, 
+		function(result){
+			resetUpdatedItems(); // 초기화
+
+			var message = "";        
+			message += "Batch ID : " + result.data.ctrlId + "<br />";
+			message += "Total Result Item : " + result.data.totalItem + "<br />";
+			message += "Total Success : " + result.data.totalSuccess + "<br />";
+			message += "Total Failed : " + result.data.totalFail + "<br />";
+			message += "<br />Are you sure want to confirm this result ?<br />";
+
+			Common.confirm(message,
+				function (){
+					var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+
+					//param data array
+					var data = {};
+					data.form = [{"ctrlId":ctrlId, "ctrlIsCrc" : ctrlIsCrc , "bankId" : bankId}];
+
+					//CALIM RESULT UPDATE
+					if(updateResultItemKind == 'LIVE'){
+						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+							function(result) {
+								Common.alert("<b>Claim result successfully updated.</b>");
+							},
+							function(result) {
+								Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+							}
+						);     
+					}
+
+					//CALIM RESULT UPDATE NEXT DAY
+					if(updateResultItemKind == 'NEXT'){
+						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+							function(result) {
+								var resultMsg = "";
+								resultMsg += "<b>The result item have stored in our system.<br />";
+								resultMsg += "Syncrhonization process will run on schedule plan.<br />";
+								resultMsg += "Kindly check your claim result on next day.<br />Thank you.</b>";	                	   
+
+								Common.alert(resultMsg);
+							},
+							function(result) {
+								Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+							}
+						);
+					}
+				}
+			);
+		},  
+		function(jqXHR, textStatus, errorThrown) {
+			try {
+				console.log("status : " + jqXHR.status);
+				console.log("code : " + jqXHR.responseJSON.code);
+				console.log("message : " + jqXHR.responseJSON.message);
+				console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+			} catch (e) {
+				console.log(e);
+			}
+			alert("Fail : " + jqXHR.responseJSON.message);        
+		}
+	);
+	
+}
+
 //Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
 function fn_resultFileUp(){
 	
@@ -581,7 +664,7 @@ function fn_genClaim(){
                      message += "Batch ID : " + result.data.ctrlId + "<br />";
                      message += "Total Claim Amount : " + result.data.ctrlBillAmt + "<br />";
                      message += "Total Account : " + result.data.ctrlTotItm + "<br />";
-                     message += "Creator : " + result.data.crtUserName + "<br />";
+                     message += "Creator : " + result.data.crtUserId + "<br />";
                      message += "Create Date : " + result.data.crtDt + "<br />";
                      
 		         }else if(result.code == "FILE_FAIL"){
@@ -589,7 +672,7 @@ function fn_genClaim(){
                      message += "Batch ID : " + result.data.ctrlId + "<br />";
                      message += "Total Claim Amount : " + result.data.ctrlBillAmt + "<br />";
                      message += "Total Account : " + result.data.ctrlTotItm + "<br />";
-                     message += "Creator : " + result.data.crtUserName + "<br />";
+                     message += "Creator : " + result.data.crtUserId + "<br />";
                      message += "Create Date : " + result.data.crtDt + "<br />";
                      
 		         }else{
@@ -983,10 +1066,15 @@ function fn_openDivScheduleSettingPop() {
                         <th scope="row">Result File</th>
                         <td>
                             <!-- auto_file start -->
+							<!--
                            <div class="auto_file">
                                <input type="file" id="fileSelector" title="file add" accept=".csv" />
                            </div>
+						   -->
                            <!-- auto_file end -->
+						   <div class="auto_file"><!-- auto_file start -->
+							<input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
+							</div><!-- auto_file end -->
                         </td>
                     </tr>
                    </tbody>  
@@ -1000,7 +1088,8 @@ function fn_openDivScheduleSettingPop() {
         <!-- search_table end -->
         
         <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();"><spring:message code='pay.btn.upload'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
+            <!--<li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();"><spring:message code='pay.btn.upload'/></a></p></li>-->
             <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
     </section>

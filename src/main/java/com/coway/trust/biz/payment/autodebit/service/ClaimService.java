@@ -48,6 +48,12 @@ public interface ClaimService
     void updateClaimResultItem(Map<String, Object> claimMap, List<Object> resultItemList );
     
     /**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+    EgovMap updateClaimResultItemBulk(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception;
+	
+    /**
      * Auto Debit - Claim Result Update LIVE
      * @param params
      */
@@ -113,5 +119,14 @@ public interface ClaimService
 	 * @return
 	 */
     void removeScheduleClaimSettingPop(Map<String, Object> params);
+    
+    /**
+	 * Claim List - Regenerate CRC File 전체 카운트 조회 
+	 * @param params
+	 * @return
+	 */
+	int selectClaimDetailByIdCnt(Map<String, Object> params);
+	
+	
     
 }

@@ -3,6 +3,7 @@ package com.coway.trust.web.payment.autodebit.controller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.coway.trust.web.common.claim.FileInfoVO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +29,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
+import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.claim.FormDef;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
@@ -69,6 +75,9 @@ public class ClaimController {
 
 	@Resource(name = "claimService")
 	private ClaimService claimService;
+	
+	@Autowired
+	private CsvReadComponent csvReadComponent;
 
 	@Autowired
 	private LargeExcelService largeExcelService;
@@ -94,7 +103,7 @@ public class ClaimController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initClaimList.do")
-	public String initSearchPayment(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initClaimList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/autodebit/claimList";
 	}
 
@@ -261,7 +270,7 @@ public class ClaimController {
 			}
 		}
 
-		claimMap.put("totalItem", gridList.size());
+		claimMap.put("totalItem", resultItemList.size());
 		claimMap.put("totalSuccess", totalSuccess);
 		claimMap.put("totalFail", totalFail);
 
@@ -275,6 +284,53 @@ public class ClaimController {
 		message.setMessage("Saved Successfully");
 
 		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Claim Result Upload File 처리 - 새로운 방식으로....
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 * @RequestParam Map<String, Object> params
+	 */
+	@RequestMapping(value = "/updateClaimResultItemBulk.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateClaimResultItemBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
+		LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
+		LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
+		
+		//Master 정보 세팅
+		Map<String, Object> claimMap = new HashMap<String, Object>();
+		claimMap.put("ctrlId",request.getParameter("ctrlId"));
+		claimMap.put("ctrlIsCrc",request.getParameter("ctrlIsCrc"));
+		claimMap.put("bankId",request.getParameter("bankId"));
+		
+		//CVS 파일 세팅
+		Map<String, MultipartFile> fileMap = request.getFileMap();		
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ClaimResultUploadVO::create);
+		
+		//CVS 파일 객체 세팅 
+		Map<String, Object> cvsParam = new HashMap<String, Object>();				
+		cvsParam.put("voList", vos);
+		cvsParam.put("userId", sessionVO.getUserId());
+		
+		EgovMap resultMap = claimService.updateClaimResultItemBulk(claimMap, cvsParam);
+				
+		
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(resultMap);
+    	message.setMessage("Saved Successfully");
+    
+    	return ResponseEntity.ok(message);
 	}
 
 	/**
@@ -653,7 +709,20 @@ public class ClaimController {
             	this.createClaimFileMyClear(claimMap);
             }		
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			this.createClaimFileCrcCIMB(claimMap);		
+			
+			//10000건 단위로 추출하기 위해 전체 건수 조회
+			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+			
+			if (pageCnt > 0){
+				for(int i = 1 ; i <= pageCnt ; i++){					
+					claimMap.put("pageNo", i);
+					claimMap.put("rowCount", 10000);
+					this.createClaimFileCrcCIMB(claimMap);
+				}
+			}
+			//this.createClaimFileCrcCIMB(claimMap);
+			
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			this.createClaimFileFPX(claimMap);
 		}
@@ -1257,7 +1326,7 @@ public class ClaimController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");			
-			sFile = "CRC_" + todayDate + ".csv";
+			sFile = "CRC_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
 			
 			downloadHandler = getTextDownloadCrcCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);			
 			

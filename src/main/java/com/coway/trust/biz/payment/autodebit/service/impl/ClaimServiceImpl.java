@@ -1,8 +1,10 @@
 package com.coway.trust.biz.payment.autodebit.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
@@ -14,6 +16,7 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
+import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -109,6 +112,67 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 	}
 	
 	/**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	@Override
+	public EgovMap updateClaimResultItemBulk(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception{
+		
+		//기존 데이터 삭제
+		claimMapper.deleteClaimResultItem(claimMap);
+		
+		//cvs 파일 저장 처리
+		List<ClaimResultUploadVO> vos = (List<ClaimResultUploadVO>)cvsParam.get("voList");		
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		for (int idx = 0; idx < vos.size(); idx++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("refNo", vos.get(idx).getRefNo());
+			map.put("refCode", vos.get(idx).getRefCode());
+			map.put("id", claimMap.get("ctrlId"));
+			map.put("itemId", vos.get(idx).getItemId());
+			
+			list.add(idx, map);
+		}
+		
+		int size = 1000;
+		int page = list.size() / size;
+		int start;
+		int end;
+		
+		Map<String, Object> bulkMap = new HashMap<>();
+		for (int i = 0; i <= page; i++) {
+			start = i * size;
+			end = size;
+			if(i == page){
+				end = list.size();
+			}
+			bulkMap.put("list",
+					list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+			claimMapper.insertClaimResultItemBulk(bulkMap);
+		}
+		
+		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
+		if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
+				&& !"2".equals(String.valueOf(claimMap.get("bankId")))
+				&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
+			claimMapper.removeItmId(claimMap);
+		}
+		
+		// message 처리를 위한 값 세팅
+		EgovMap resultMap = null;
+		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {			
+			resultMap = claimMapper.selectUploadResultBank(claimMap);			
+		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			resultMap =  claimMapper.selectUploadResultCRC(claimMap);
+		}
+		
+		return resultMap;		
+		
+	}
+	
+	/**
      * Auto Debit - Claim Result Update Live
      * @param params
      */
@@ -201,6 +265,19 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
     public void removeScheduleClaimSettingPop(Map<String, Object> param){
 		claimMapper.removeScheduleClaimSettingPop(param);
 	}
+	
+	
+	/**
+	 * Claim List - Regenerate CRC File 전체 카운트 조회 
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int selectClaimDetailByIdCnt(Map<String, Object> params) {
+		return claimMapper.selectClaimDetailByIdCnt(params);
+	}
+	
+	
 	
 	
 }

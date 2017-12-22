@@ -47,6 +47,36 @@ public interface ClaimMapper {
 	void insertClaimResultItem(Map<String, Object> params);	
 	
 	/**
+	 * Auto Debit - Claim Result Update : 아이템 등록
+	 * @param params
+	 * @return
+	 */
+	void insertClaimResultItemBulk(Map<String, Object> params);
+	
+	/**
+	 * Auto Debit - Claim Result Update : 아이템 등록
+	 * @param params
+	 * @return
+	 */
+	void removeItmId(Map<String, Object> params);
+	
+	/**
+	 * Auto Debit - Claim Result Update : 결과 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectUploadResultBank(Map<String, Object> params);
+	
+	/**
+	 * Auto Debit - Claim Result Update : 결과 조회
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectUploadResultCRC(Map<String, Object> params);
+	
+	
+	
+	/**
 	 * Auto Debit - Claim Result Deactivate 처리 : 마스터 수정
 	 * @param params
 	 * @return
@@ -66,6 +96,13 @@ public interface ClaimMapper {
 	 * @return
 	 */
 	List<EgovMap> selectClaimDetailById(Map<String, Object> params);	
+	
+	/**
+	 * Auto Debit - Claim 조회 
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectClaimDetailByIdPaging(Map<String, Object> params);	
 	
 	/**
      * Auto Debit - Claim 생성 프로시저 호출
@@ -143,5 +180,12 @@ public interface ClaimMapper {
 	 * @return
 	 */
 	void removeScheduleClaimSettingPop(Map<String, Object> params);
+	
+	 /**
+	 * Claim List - Regenerate CRC File 전체 카운트 조회 
+	 * @param params
+	 * @return
+	 */
+	int selectClaimDetailByIdCnt(Map<String, Object> params);
 
 }
