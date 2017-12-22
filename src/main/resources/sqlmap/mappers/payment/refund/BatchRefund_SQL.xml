@@ -241,8 +241,8 @@
          FROM PAY0045D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.VALID_STUS_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
-                JOIN SYS0001M Extent4   ON Extent4.ACC_ID = Extent1.BANK_ACC_ID
-                JOIN SYS0004M Extent5   ON Extent5.BANK_ID = Extent1.ISS_BANK_ID
+                LEFT JOIN SYS0001M Extent4   ON Extent4.ACC_ID = Extent1.BANK_ACC_ID
+                LEFT JOIN SYS0004M Extent5   ON Extent5.BANK_ID = Extent1.ISS_BANK_ID
           WHERE  ( 0 = Extent1.DISAB )
                    AND ( 1 <![CDATA[ <> ]]> Extent1.VALID_STUS_ID )
                    AND ( Extent1.BATCH_ID = #{batchId} ) ) Project1
