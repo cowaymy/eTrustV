@@ -107,6 +107,8 @@ public interface HsManualService {
 	
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
 	
+	Map<String, Object> UpdateHsResult2(Map<String, Object> formMap, List<Object> docType, SessionVO sessionVO) throws ParseException;
+	
 
 	//add by hgham  mobile 중복 처리 
 	int isHsAlreadyResult (Map<String, Object> params);
