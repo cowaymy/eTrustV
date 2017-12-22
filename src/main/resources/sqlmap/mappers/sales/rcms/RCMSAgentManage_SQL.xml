@@ -115,4 +115,93 @@
 			         </foreach>
 			    </if>
 </select>
+
+<select id="selectRosCaller" resultType="egovMap">
+	SELECT A.AGENT_ID
+	           ,B.CODE || ' - ' ||A.AGENT_NAME AGENT_NAME  
+	  FROM SAL0148M A
+	    JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID 
+	                             AND B.CODE_MASTER_ID = 329  
+	                             AND DISAB = 0
+</select>
+
+<select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">
+	SELECT C.SALES_ORD_NO 
+		        ,A.SALES_ORD_ID
+		        ,A.CUST_ID
+		        ,B.NAME 
+		        ,B.CORP_TYPE_ID
+		        ,A.COLCT_TRGET
+		        ,(SELECT SUM(RENT_AMT) AS CURRENT_OS
+		            FROM PAY0022D
+		            WHERE RENT_SO_ID = C.SALES_ORD_ID
+		            GROUP BY RENT_SO_ID) RENT_AMT
+		        ,A.OPEN_MTH_AGING
+		        ,A.AGENT_ID
+		        ,CASE WHEN A.AGENT_ID = 0 THEN  (SELECT NVL(AGENT_ID, 0) FROM SAL0149D WHERE CUST_ID = A.CUST_ID AND AGENT_ID <![CDATA[<>]]> 0 AND ROWNUM =1)  ELSE A.AGENT_ID  END SUGGEST_AGENT
+		        ,CASE WHEN A.AGENT_ID = 0 THEN 'N' ELSE 'Y' END ASSIGNED 
+		        ,CASE WHEN A.SENSITIVE_FG = 0 THEN 'N' ELSE 'Y' END SENSITIVE_FG
+		        ,A.CURR_RENTAL_STUS
+		        ,C.STUS_CODE_ID
+		        ,B.TYPE_ID
+		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
+		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+		WHERE 1=1 
+		  <if test="orderStatus != null and orderStatus !='' ">
+		    AND C.STUS_CODE_ID = #{orderStatus} 
+		  </if>
+		  
+		  <if test="rentalStatus != null and rentalStatus != ''">
+	          AND A.OPEN_RENTAL_STUS IN
+	        <foreach item="item" collection="rentalStatus" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	      </if>
+		    
+	      <if test="customerType != null and customerType !='' ">
+		    AND B.TYPE_ID = #{customerType} 
+		  </if>
+		    	 
+		  <if test='customerType== "965" '>  	 
+			  <if test="companyType != null and companyType != ''">
+		          AND B.CORP_TYPE_ID IN
+		        <foreach item="item" collection="companyType" index="index" open="(" separator="," close=")">
+		          #{item}
+		        </foreach>
+		      </if>
+		    </if>
+	     <if test="openMonth != null and openMonth != ''">
+	          AND A.OPEN_MTH_AGING IN
+	        <foreach item="item" collection="openMonth" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	      </if>
+	      
+	      <if test="rosCaller != null and rosCaller != ''">
+	          AND A.AGENT_ID IN
+	        <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+	          #{item}
+	        </foreach>
+	      </if>
+	
+	      <if test="orderNo != null and orderNo !='' ">
+		    AND C.SALES_ORD_NO = #{orderNo}
+		    </if>	    
+	      <if test="customerId != null and customerId !='' ">
+		    AND A.CUST_ID = #{customerId}
+		    </if>
+	      <if test="assignYn != null and assignYn !='' ">
+		    AND A.AGENT_ID <![CDATA[<>]]> 0
+		    </if>
+		    ORDER BY SALES_ORD_NO
+</select>
+
+    <update id="updateAgent" parameterType="Map">
+		UPDATE SAL0149D
+		   SET AGENT_ID = #{agentId},
+		       UPD_AGENT_DT = SYSDATE,
+		       UPD_USER_ID = #{userId},
+		       UPD_DT = SYSDATE
+		 WHERE SALES_ORD_ID = #{salesOrdId}
+	 </update>
 </mapper>

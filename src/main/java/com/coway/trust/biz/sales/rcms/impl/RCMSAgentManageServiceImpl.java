@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.rcms.RCMSAgentManageService;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -148,5 +149,35 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 	}
 	
 	
+	
+	@Override
+	public List<EgovMap> selectRosCaller() {
+		// TODO Auto-generated method stub
+		return rcmsAgentManageMapper.selectRosCaller();
+	}
+
+	@Override
+	public List<EgovMap> selectAssignAgentList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return rcmsAgentManageMapper.selectAssignAgentList(params);
+	}
+
+	@Override
+	public void saveAssignAgent(Map<String, Object> params) {
+
+		List<EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
+    	
+		int o=0;
+    	if (updateItemList.size() > 0) {  
+			for (int i = 0; i < updateItemList.size(); i++) {
+				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+				
+				updateMap.put("userId", params.get("userId"));
+			
+				o = rcmsAgentManageMapper.updateAgent(updateMap) ;
+			}
+		}
+		
+	}
 	
 }

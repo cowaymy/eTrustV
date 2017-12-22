@@ -11,6 +11,12 @@ public interface RCMSAgentManageMapper {
 
 	List<EgovMap> selectAgentTypeList(Map<String, Object> params);
 	
+	List<EgovMap> selectRosCaller();
+
+	List<EgovMap> selectAssignAgentList(Map<String, Object> params);
+
+	int updateAgent(Map<String, Object> updateMap);
+	
 	EgovMap chkUserNameByUserId(Map<String, Object> params);
 	
 	int getSeqSAL0148M();
