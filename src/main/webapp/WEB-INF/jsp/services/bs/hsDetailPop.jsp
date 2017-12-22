@@ -285,7 +285,7 @@
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>HS Result Information</h2>
 </aside><!-- title_line end -->
-<table class="type1"><!-- table start -->
+<table class="type1" style="width: 994px; "><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -300,7 +300,7 @@
     <select class="w100p"  id ="cmbStatusType1" name = "cmbStatusType"  onchange="onChangeStatusType(this.value)"" >
     </select>
     </td>
-    <th scope="row">Settle Date<span class="must">*</span></th>
+    <th scope="row" style="width: 119px; ">Settle Date<span class="must">*</span></th>
     <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
@@ -341,19 +341,23 @@
     </td>
 </tr>
 <tr> --%>
-    <th scope="row">Remark<span class="must">*</span></th>
-    <td><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
-    <th scope="row">Instruction<span class="must">*</span></th>
-    <td><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
+    <th scope="row" style="width: 80px; ">Remark<span class="must">*</span></th>
+    <td style="width: 434px; "><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
+    <th scope="row" style="width: 133px; ">Instruction<span class="must">*</span></th>
+    <td style="width: 212px; "><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
 </tr>
 <tr>
     <th scope="row">Prefer Service Week</th>
-    <td colspan="3">
+    <td colspan="1">
     <label><input type="radio" name="srvBsWeek"  value="0"/><span>None</span></label>
     <label><input type="radio" name="srvBsWeek"  value="1"/><span>Week 1</span></label>
     <label><input type="radio" name="srvBsWeek"  value="2"/><span>Week 2</span></label>
     <label><input type="radio" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
     <label><input type="radio" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
+    </td> 
+        <th scope="row" style="width: 136px; ">Cancel Request Number</th>
+    <td>
+        <span><c:out value="${hsDefaultInfo.cancReqNo}"/></span> 
     </td>
 </tr>
 </tbody>
