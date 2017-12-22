@@ -19,23 +19,23 @@ var myRequestDCFGridID;
 	};
 // AUIGrid 칼럼 설정
 var requestDcfColumnLayout = [ 
-	{dataField : "groupSeq",headerText : "Payment<br>Group No.",width : 100 , editable : false, visible : false},
-	{dataField : "payItmModeId",headerText : "Pay Type ID",width : 240 , editable : false, visible : false},
-	{dataField : "appType",headerText : "App. Type",width : 130 , editable : false},
-	{dataField : "payItmModeNm",headerText : "Pay Type",width : 110 , editable : false},
-	{dataField : "custId",headerText : "Customer ID",width : 140 , editable : false},
-	{dataField : "salesOrdNo",headerText : "Sales<br>Order", editable : false},
-	{dataField : "payItmAmt",headerText : "Amount", width : 120 ,editable : false, dataType:"numeric", formatString : "#,##0.00" },
-	{dataField : "payItmRefDt",headerText : "Transaction<br>Date",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-	{dataField : "orNo",headerText : "WOR No.",width : 150,editable : false},
-	{dataField : "brnchId",headerText : "Key In<br>Branch",width : 100,editable : false, visible : false},
-	{dataField : "crcStateMappingId",headerText : "CRC State.<br>ID",width : 110,editable : false, visible : false},
-	{dataField : "crcStateMappingDt",headerText : "CRC Mapping<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
-	{dataField : "bankStateMappingId",headerText : "Bank State.<br>ID",width : 110,editable : false, visible : false},
-	{dataField : "bankStateMappingDt",headerText : "Bank Mapping<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
-	{dataField : "revStusId",headerText : "Reverse Status ID",width : 110,editable : false, visible : false},
-	{dataField : "revStusNm",headerText : "Reverse<br>Status",width : 110,editable : false, visible : false},
-	{dataField : "revDt",headerText : "Reverse<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false}
+	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 100 , editable : false, visible : false},
+	{dataField : "payItmModeId",headerText : "<spring:message code='pay.head.payTypeId'/>",width : 240 , editable : false, visible : false},
+	{dataField : "appType",headerText : "<spring:message code='pay.head.appType'/>",width : 130 , editable : false},
+	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.payType'/>",width : 110 , editable : false},
+	{dataField : "custId",headerText : "<spring:message code='pay.head.customerId'/>",width : 140 , editable : false},
+	{dataField : "salesOrdNo",headerText : "<spring:message code='pay.head.salesOrder'/>", editable : false},
+	{dataField : "payItmAmt",headerText : "<spring:message code='pay.head.amount'/>", width : 120 ,editable : false, dataType:"numeric", formatString : "#,##0.00" },
+	{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+	{dataField : "orNo",headerText : "<spring:message code='pay.head.worNo'/>",width : 150,editable : false},
+	{dataField : "brnchId",headerText : "<spring:message code='pay.head.keyInBranch'/>",width : 100,editable : false, visible : false},
+	{dataField : "crcStateMappingId",headerText : "<spring:message code='pay.head.crcStateId'/>",width : 110,editable : false, visible : false},
+	{dataField : "crcStateMappingDt",headerText : "<spring:message code='pay.head.crcMappingDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
+	{dataField : "bankStateMappingId",headerText : "<spring:message code='pay.head.bankStateId'/>",width : 110,editable : false, visible : false},
+	{dataField : "bankStateMappingDt",headerText : "<spring:message code='pay.head.bankMappingDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false},
+	{dataField : "revStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
+	{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false, visible : false},
+	{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy", visible : false}
 ];
 
 
@@ -211,8 +211,8 @@ function fn_reject(){
 		</section>
 
 		<ul class="center_btns">
-			<li><p class="btn_blue"><a href="javascript:fn_approval();">Approval</a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_reject();">Reject</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_approval();"><spring:message code='pay.btn.approval'/></a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_reject();"><spring:message code='pay.btn.reject'/></a></p></li>
 		</ul> 
 	</section>
 </div>

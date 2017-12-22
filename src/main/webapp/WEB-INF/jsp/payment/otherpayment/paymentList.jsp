@@ -30,22 +30,22 @@
 
 	// AUIGrid 칼럼 설정
 	var columnLayout = [ 
-        {dataField : "groupSeq",headerText : "Payment<br>Group No.",width : 100 , editable : false},
-        {dataField : "appType",headerText : "App. Type",width : 130 , editable : false},
-        {dataField : "payItmModeId",headerText : "Pay Type ID",width : 240 , editable : false, visible : false},
-        {dataField : "payItmModeNm",headerText : "Pay Type",width : 120 , editable : false},
-        {dataField : "custId",headerText : "Customer<br>ID",width : 100 , editable : false},
-		{dataField : "salesOrdNo",headerText : "Sales<br>Order", editable : false},
-		{dataField : "payItmRefDt",headerText : "Transaction<br>Date",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-		{dataField : "orNo",headerText : "WOR No.",width : 120,editable : false},
-		{dataField : "brnchId",headerText : "Key In<br>Branch",width : 100,editable : false},
-		{dataField : "crcStateMappingId",headerText : "CRC State.<br>ID",width : 110,editable : false},
-		{dataField : "crcStateMappingDt",headerText : "CRC Mapping<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-		{dataField : "bankStateMappingId",headerText : "Bank State.<br>ID",width : 110,editable : false},
-		{dataField : "bankStateMappingDt",headerText : "Bank Mapping<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-		{dataField : "revStusId",headerText : "Reverse Status ID",width : 110,editable : false, visible : false},
-		{dataField : "revStusNm",headerText : "Reverse<br>Status",width : 110,editable : false},
-		{dataField : "revDt",headerText : "Reverse<br>Date",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"}
+        {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 100 , editable : false},
+        {dataField : "appType",headerText : "<spring:message code='pay.head.appType'/>",width : 130 , editable : false},
+        {dataField : "payItmModeId",headerText : "<spring:message code='pay.head.payTypeId'/>",width : 240 , editable : false, visible : false},
+        {dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.payType'/>",width : 120 , editable : false},
+        {dataField : "custId",headerText : "<spring:message code='pay.head.customerId'/>",width : 100 , editable : false},
+		{dataField : "salesOrdNo",headerText : "<spring:message code='pay.head.salesOrder'/>", editable : false},
+		{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transDate'/>",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "orNo",headerText : "<spring:message code='pay.head.worNo'/>",width : 120,editable : false},
+		{dataField : "brnchId",headerText : "<spring:message code='pay.head.keyInBranch'/>",width : 100,editable : false},
+		{dataField : "crcStateMappingId",headerText : "<spring:message code='pay.head.crcStateId'/>",width : 110,editable : false},
+		{dataField : "crcStateMappingDt",headerText : "<spring:message code='pay.head.crcMappingDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "bankStateMappingId",headerText : "<spring:message code='pay.head.bankStateId'/>",width : 110,editable : false},
+		{dataField : "bankStateMappingDt",headerText : "<spring:message code='pay.head.bankMappingDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "revStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
+		{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false},
+		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"}
 	];
 	
     
@@ -137,8 +137,8 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Payment List</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>     
-            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
+            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -162,7 +162,7 @@
                         <td>
                             <input type="text" id="ordNo" name="ordNo" class="" />
                              <p class="btn_sky">
-                                 <a href="javascript:fn_orderSearchPop();" id="search">Search</a>
+                                 <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
                         <th scope="row">Transaction Date</th>
@@ -190,7 +190,7 @@
 			<dt>Link</dt>
 			<dd>
 				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();">Request DCF</a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.requestDcf'/></a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>

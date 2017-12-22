@@ -35,13 +35,13 @@
 
 	// AUIGrid 칼럼 설정
 	var columnLayout = [ 
-        {dataField : "dcfReqId",headerText : "DCF Request No.",width : 150 , editable : false},
-        {dataField : "grpSeq",headerText : "Payment Group Seq",width : 200 , editable : false},
-        {dataField : "dcfResnNm",headerText : "Reason",width : 240 , editable : false},
-        {dataField : "dcfCrtUserNm",headerText : "Requestor",width : 180 , editable : false},
-        {dataField : "dcfCrtDt",headerText : "Request Date",width : 180 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-        {dataField : "dcfStusId",headerText : "Status ID",width : 100 , editable : false, visible : false},
-        {dataField : "dcfStusNm",headerText : "Status",width : 150 , editable : false}
+        {dataField : "dcfReqId",headerText : "<spring:message code='pay.head.dcfRequestNo'/>",width : 150 , editable : false},
+        {dataField : "grpSeq",headerText : "<spring:message code='pay.head.paymentGroupSeq'/>",width : 200 , editable : false},
+        {dataField : "dcfResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 240 , editable : false},
+        {dataField : "dcfCrtUserNm",headerText : "<spring:message code='pay.head.requestor'/>",width : 180 , editable : false},
+        {dataField : "dcfCrtDt",headerText : "<spring:message code='pay.head.requestDate'/>",width : 180 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+        {dataField : "dcfStusId",headerText : "<spring:message code='pay.head.statusId'/>",width : 100 , editable : false, visible : false},
+        {dataField : "dcfStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 150 , editable : false}
 	];
 	
     
@@ -116,8 +116,8 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Confirm DCF</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>     
-            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
+            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -178,7 +178,7 @@
 			<dt>Link</dt>
 			<dd>
 				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:fn_confirmDCFPop();">Approval DCF</a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_confirmDCFPop();"><spring:message code='pay.btn.link.approvalDCF'/></a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>

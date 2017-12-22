@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
 .my-custom-up{
     text-align: left;
@@ -23,25 +23,25 @@ var gridPros2 = {
 };
 
 var advKeyInLayout = [ 
-	{dataField : "groupSeq",headerText : "Payment<br>Group No.",width : 90 , editable : false},
-	{dataField : "payItmModeNm",headerText : "Payment<br>Mode",width : 90 , editable : false},
-	{dataField : "payItmRefDt",headerText : "Transaction<br>Date",width : 100 , editable : false},
-	{dataField : "payItmBankAccNm",headerText : "Bank<br>Account",editable : false},
-	{dataField : "payItmBankInSlipNo",headerText : "Slip No",width : 120 , editable : false},
-	{dataField : "refDtl",headerText : "Ref Details<br>Jompay Ref",width : 120 , editable : false},
-	{dataField : "totAmt",headerText : "Amount",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" },
-	{dataField : "bankChgAmt",headerText : "Bank<br>Charge",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" }];
+	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
+	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : 90 , editable : false},
+	{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
+	{dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
+	{dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : 120 , editable : false},
+	{dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : 120 , editable : false},
+	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" },
+	{dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" }];
 
 var bankStmtLayout = [
-	{dataField : "fTrnscId",headerText : "ID",width : 150 , editable : false, visible : false},
-	{dataField : "fTrnscDt",headerText : "Transaction<br>Date",width : 100 , editable : false},
-	{dataField : "fTrnscRefChqNo",headerText : "Ref/<br>Cheq No",width : 120 , editable : false},
-	{dataField : "fTrnscRef1",headerText : "Description" , editable : false},
-	{dataField : "fTrnscRem",headerText : "TYPE",width : 100 , editable : false},
-	{dataField : "fTrnscCrditAmt",headerText : "Credit<br>Amount",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" },
-	{dataField : "fTrnscRef4",headerText : "Deposit Slip No/<br>EFT/MID",width : 100 , editable : false},
-	{dataField : "fTrnscNewChqNo",headerText : "Chq No.",width : 100 , editable : false},
-	{dataField : "fTrnscRefVaNo",headerText : "VA No.",width : 100 , editable : false}];
+	{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.id'/>",width : 150 , editable : false, visible : false},
+	{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
+	{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.refCheqNo'/>",width : 120 , editable : false},
+	{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.description'/>" , editable : false},
+	{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>",width : 100 , editable : false},
+	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" },
+	{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : 100 , editable : false},
+	{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>",width : 100 , editable : false},
+	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNo'/>",width : 100 , editable : false}];
 
 
 $(document).ready(function(){
@@ -309,8 +309,8 @@ function fn_saveDebtor(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Advance Payment Matching</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_searchAdvMatchList();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_searchAdvMatchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside><!-- title_line end -->
     
@@ -380,9 +380,9 @@ function fn_saveDebtor(){
 			<dt>Link</dt>
 			<dd>
 				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();">Reverse</a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_debtor();">Debtor</a></p></li>
-					<li><p class="link_btn"><a href="javascript:fn_mapping();">Match</a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.reverse'/></a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_debtor();"><spring:message code='pay.btn.debtor'/></a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
@@ -415,7 +415,7 @@ function fn_saveDebtor(){
     <header class="pop_header" id="pop_header">
         <h1>JOURNAL ENTRY</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#journal_entry_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#journal_entry_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -470,7 +470,7 @@ function fn_saveDebtor(){
             </table>
         </section>
         <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_saveMapping('Y');">SAVE</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_saveMapping('Y');"><spring:message code='sys.btn.save'/></a></p></li>
         </ul>
     </section>
     </form>       
@@ -488,7 +488,7 @@ function fn_saveDebtor(){
     <header class="pop_header" id="pop_header">
         <h1>Other Debtor with Ticket</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#debtor_wrapp')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#debtor_wrapp')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -518,7 +518,7 @@ function fn_saveDebtor(){
             </table>
         </section>
         <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_saveDebtor();">SAVE</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_saveDebtor();"><spring:message code='sys.btn.save'/></a></p></li>
         </ul>
     </section>
     </form>       
