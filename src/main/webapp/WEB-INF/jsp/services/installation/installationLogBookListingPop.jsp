@@ -68,10 +68,10 @@ function fn_openReport(){
         	showSortBy = $("#sortType").val();
         } 
         var whereSql = "";
-        if($("#strDt").val() != '' && $("#endDt").val() != ''){
+        if($("#strDt").val() != '' && $("#endDt").val() != '' && $("#strDt").val() != null && $("#endDt").val() !=null){
             whereSql +=" AND (ie.Install_DT between to_date('"  + $("#strDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#endDt").val()  + "', 'DD/MM/YYYY') ) ";
         }
-        if($("#CTCodeFr").val() != '' && $("#CTCodeTo").val() != ''){
+        if($("#CTCodeFr").val() != '' && $("#CTCodeTo").val() != '' && $("#CTCodeFr").val() !=null && $("#CTCodeTo").val() != null){
             whereSql +=" AND (m.mem_code between'"  + $("#CTCodeFr").val() + "' AND '" +$("#CTCodeTo").val()  + "') ";
         }
         if($("#branch").val() != '' && $("#branch").val() != null){
