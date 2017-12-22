@@ -1563,9 +1563,11 @@ public class ServiceApiController {
 		SmsVO sms = new SmsVO(session.getUserId(), 975);
 		sms.setMessage("Do you really want to cancel for the current month Heart Service?\n" + "HS Order Number :"+ params.get("salesOrderNo")
 		+ "\nCancel Request Number :"+ cancReqNo );
-		sms.setMobiles(canCelSmsForm.getReceiverTelNo());  
 
 		LOGGER.debug(" params1111 : {}" , canCelSmsForm.getReceiverTelNo());
+		
+		sms.setMobiles((String)canCelSmsForm.getReceiverTelNo());  
+
 		LOGGER.debug(" params2222 : {}" , sms.getMobiles());
 		
 		SmsResult smsResult = adaptorService.sendSMS(sms);
