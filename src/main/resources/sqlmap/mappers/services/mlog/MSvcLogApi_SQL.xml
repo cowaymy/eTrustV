@@ -2972,11 +2972,24 @@ LEFT OUTER JOIN (
          
          
          
-         
+      <select id="getcancReqNo" parameterType="Map" resultType="java.lang.String">
+         select GBSLCVD.FN_GET_CANC_REQ_NO  canc_Req_No  from dual
+      </select>
+      
+      
        <insert id="insertCancelSMS" parameterType="Map">
        
-       
-                 INSERT INTO svc0008d ( SCHDUL_ID
+           update svc0008d
+               set CANC_REQ_NO =  #{cancReqNo}
+              where SALES_ORD_ID = (select sales_ord_id
+                                        from sal0001d
+                                        where 1=1
+                                        and SALES_ORD_NO = #{salesOrderNo}  )
+                and NO =   #{serviceNo}                                 
+                                                
+                                                
+                                                
+<!--                  INSERT INTO svc0008d ( SCHDUL_ID
                                         ,NO
                                         ,SALES_ORD_ID
                                         ,MONTH
@@ -3024,8 +3037,8 @@ LEFT OUTER JOIN (
                                                             from sal0001d
                                                             where 1=1
                                                             and SALES_ORD_NO = #{salesOrderNo}  )
-                            and NO =   #{serviceNo}                           )
-       </insert>     
+                            and NO =   #{serviceNo}                           ) -->
+       </insert>    
        
                 
 </mapper>
