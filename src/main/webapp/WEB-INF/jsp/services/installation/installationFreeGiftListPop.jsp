@@ -9,7 +9,9 @@ $(document).ready(function(){
        }).multipleSelect({}); 
     
     doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S'); 
-    doGetCombo('/services/mileageCileage/selectMemberCode', 3, '','CTCode', 'S');
+    doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCode', 'S' ,  '');
+    //doGetCombo('/services/mileageCileage/selectMemberCode', 3, '','CTCode', 'S');
+    
     //doGetCombo('/services/bs/getCdList.do', '2' , ''   , 'CTCode' , 'S', '');
 });
 
