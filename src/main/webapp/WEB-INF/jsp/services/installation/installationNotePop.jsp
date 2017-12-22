@@ -61,28 +61,28 @@ function fn_openReport(){
 	    if(date.getDate() < 10){
 	    	day = "0"+date.getDate();
 	    }
-	    if($("#instalStatus").val() != ''){
+	    if($("#instalStatus").val() != '' && $("#instalStatus").val() != null){
 	        whereSeq += "AND ientry.stus_code_id = " + $("#instalStatus").val() + "  ";
 	    }
-	    if($("#orderNoFrom").val() != '' && $("#orderNoTo").val() != ''){
+	    if($("#orderNoFrom").val() != '' && $("#orderNoTo").val() != '' && $("#orderNoFrom").val() != null && $("#orderNoTo").val() != null){
 	        whereSeq += "AND (som.Sales_Ord_No between '" + $("#orderNoFrom").val() + "' AND '" + $("#orderNoTo").val() + "') ";
 	    }
-	    if($("#instalDtFrom").val() != '' && $("#instalDtTo").val() != ''){
+	    if($("#instalDtFrom").val() != '' && $("#instalDtTo").val() != '' && $("#instalDtFrom").val() != null && $("#instalDtTo").val() != null){
 	        whereSeq +="AND (ientry.Install_Dt between  to_date('"  + $("#instalDtFrom").val() + "' , 'DD/MM/YYYY') AND to_date('" +$("#instalDtTo").val()  + "', 'DD/MM/YYYY') ) ";
 	    }
-	    if($("#appliType").val() != '' ){
+	    if($("#appliType").val() != ''  && $("#appliType").val() != null){
 	        whereSeq += "AND som.App_Type_ID = " + $("#appliType").val() + "  ";
 	    }
-	    if($("#branch").val() != '' ){
+	    if($("#branch").val() != '' && $("#branch").val() != null){
 	        whereSeq += "AND install.brnch_ID = " + $("#branch").val() + "  ";
 	    }
-	    if($("#instalNoFrom").val() != '' && $("#instalNoTo").val() != ''){
+	    if($("#instalNoFrom").val() != '' && $("#instalNoTo").val() != '' && $("#instalNoFrom").val() != null && $("#instalNoTo").val() != null){
 	        whereSeq += "AND (ientry.Install_Entry_No between '" + $("#instalNoFrom").val() + "' AND '" + $("#instalNoTo").val() + "') ";
 	    }
-	    if($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != ''){
+	    if($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != '' && $("#CTCodeFrom").val() != null && $("#CTCodeTo").val() != null){
 	        whereSeq += "AND (CTMem.mem_Code between '" + $("#CTCodeFrom").val() + "' AND '" + $("#CTCodeTo").val() + "') ";
 	    }
-	    if($("#instalType").val() != ''){
+	    if($("#instalType").val() != '' && $("#instalType").val() != null){
 	        whereSeq += "AND ce.Type_ID In (" + $("#instalType").val() + ") ";
 	    }
 	    
