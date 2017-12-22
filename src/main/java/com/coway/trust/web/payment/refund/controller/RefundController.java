@@ -161,7 +161,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(RefundController.cl
 		ReturnMessage message = new ReturnMessage();
 
 		Map<String, Object> master = new HashMap<String, Object>();
-		String detId = (String) params.get("detId");
+		String detId = String.valueOf(params.get("detId"));
 		
 		master.put("detId", detId);
 		master.put("disabled", 1);

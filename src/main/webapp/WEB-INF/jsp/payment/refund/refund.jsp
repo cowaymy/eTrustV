@@ -203,8 +203,6 @@ function fn_showConfirmPop(checkList) {
     
     AUIGrid.setGridData(confirmGridID, checkList);
     
-    fn_setConfirmPopEvent();
-    
     $("#totItem").text("-");
     $("#totValid").text("-");
     $("#totInvalid").text("-");

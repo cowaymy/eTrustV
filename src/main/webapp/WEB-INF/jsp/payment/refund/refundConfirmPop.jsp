@@ -117,9 +117,34 @@ var confirmGridPros = {
     enableFilter : true,
     // 헤더 높이 지정
     headerHeight : 50,
+    softRemoveRowMode : false,
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells"
 };
+
+$(document).ready(function () {
+	$("#close_btn1").click(fn_closePop1);
+    $("#allItem_btn").click(function() {
+        if(fn_validStusIdCheckForConfirm()) {
+            setFilterByValues(0);
+        }
+    });
+    $("#validItem_btn").click(function() {
+        if(fn_validStusIdCheckForConfirm()) {
+            setFilterByValues(4);
+        }
+    });
+    $("#invalidItem_btn").click(function() {
+        if(fn_validStusIdCheckForConfirm()) {
+            setFilterByValues(21);
+        }
+    });
+    
+    $("#validCheck_btn").click(fn_checkRefundValid);
+    $("#pConfirm_btn").click(fn_refundConfirm);
+    $("#pClear_btn").click(fn_pClear);
+    $("#remove_btn").click(fn_refundItemDisab);
+});
 
 //AUIGrid 를 생성합니다.
 function fn_createConfirmAUIGrid() {
@@ -133,6 +158,31 @@ function fn_createConfirmAUIGrid() {
     confirmGridID = AUIGrid.create("#refund_confirm_grid_wrap", confirmColumnLayout, confirmGridPros);
     // AUIGrid 에 데이터 삽입합니다.
     //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
+    
+    fn_setConfirmGridEvent();
+}
+
+function fn_setConfirmGridEvent() {
+	AUIGrid.bind(confirmGridID, "cellClick", function( event ) {
+        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        console.log("CellClick detId : " + event.item.detId);
+        // TODO pettyCash Expense Info GET
+        detId = event.item.detId;
+    });
+    
+    AUIGrid.bind(confirmGridID, "cellDoubleClick", function( event ) {
+        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        console.log("CellDoubleClick detId : " + event.item.detId);
+        // TODO pettyCash Expense Info GET
+        if(FormUtil.isEmpty(event.item.validStusId)) {
+            selectedRowIndex = event.rowIndex;
+            selectedItem = event.item;
+            
+            fn_refundInfoKeyInPop();
+        } else {
+            Common.alert('You have already entered refund information.');
+        }
+    });
 }
 
 // 그리드를 제거합니다.
@@ -234,35 +284,7 @@ function fn_setConfirmRefund(result) {
     
     AUIGrid.setGridData(confirmGridID, gridData);
     
-    fn_setConfirmPopEvent();
-    
-    $("#totItem").text(result.totalItem);
-    $("#totValid").text(result.totalValid);
-    $("#totInvalid").text(result.totalInvalid);
-    
-    var str =""+ Number(result.totalAmt).toFixed(2);
-    var str2 = str.split(".");
-    if(str2.length == 1){           
-        str2[1] = "00";
-    }
-    str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
-    $("#totRefAmt").text(str);
-    
-    str =""+ Number(result.totalValidAmt).toFixed(2);
-    str2 = str.split(".");
-    if(str2.length == 1){           
-        str2[1] = "00";
-    }
-    str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
-    $("#totValidAmt").text(str);
-    
-    str =""+ Number(result.totalInvalidAmt).toFixed(2);
-    str2 = str.split(".");
-    if(str2.length == 1){           
-        str2[1] = "00";
-    }
-    str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
-    $("#totInvalidAmt").text(str);
+    fn_setConfirmRefundHeader(result);
 }
 
 function fn_conversionForGridData(checkList, bRefundItem) {
@@ -297,58 +319,11 @@ function fn_conversionForGridData(checkList, bRefundItem) {
     return checkList;
 }
 
-function fn_setConfirmPopEvent() {
-    $("#close_btn1").click(fn_closePop1);
-    $("#allItem_btn").click(function() {
-        if(fn_validStusIdCheckForConfirm()) {
-            setFilterByValues(0);
-        }
-    });
-    $("#validItem_btn").click(function() {
-        if(fn_validStusIdCheckForConfirm()) {
-            setFilterByValues(4);
-        }
-    });
-    $("#invalidItem_btn").click(function() {
-        if(fn_validStusIdCheckForConfirm()) {
-            setFilterByValues(21);
-        }
-    });
-    
-    $("#validCheck_btn").click(fn_checkRefundValid);
-    $("#pConfirm_btn").click(fn_refundConfirm);
-    $("#pClear_btn").click(fn_pClear);
-    $("#remove_btn").click(fn_refundItemDisab);
-    
-    AUIGrid.bind(confirmGridID, "cellClick", function( event ) {
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-        console.log("CellClick detId : " + event.item.detId);
-        // TODO pettyCash Expense Info GET
-        detId = event.item.detId;
-    });
-    
-    AUIGrid.bind(confirmGridID, "cellDoubleClick", function( event ) {
-        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-        console.log("CellDoubleClick detId : " + event.item.detId);
-        // TODO pettyCash Expense Info GET
-        if(FormUtil.isEmpty(event.item.validStusId)) {
-        	selectedRowIndex = event.rowIndex;
-            selectedItem = event.item;
-            
-            fn_refundInfoKeyInPop();
-        } else {
-            Common.alert('You have already entered refund information.');
-        }
-    });
-}
-
 function fn_refundInfoKeyInPop() {
     Common.popupDiv("/payment/refundInfoKeyInPop.do", null, null, true, "refundInfoKeyInPop", fn_showKeyInPop);
 }
 
 function fn_showKeyInPop() {
-    fn_setRefundPopEvent();
-    
     $("#rSalesOrdNo").val(selectedItem.ordNo);
     $("#rOrNo").val(selectedItem.worNo);
     $("#rCustName").val(selectedItem.custName);
@@ -461,7 +436,7 @@ function fn_refundItemDisab() {
     console.log("remove Action");
     if(fn_validStusIdCheckForConfirm()) {
         if(detId > 0) {
-            Common.ajax("POST", "/payment/batchRefundItemDisab.do", {detId:detId,batchIdList:batchIdList}, function(result) {
+            Common.ajax("POST", "/payment/refundItemDisab.do", {detId:detId,batchIdList:batchIdList}, function(result) {
                 console.log(result);
                 
                 //$('#btnConf').hide();
@@ -469,7 +444,10 @@ function fn_refundItemDisab() {
                 
                 Common.alert(result.message);
                 
-                fn_setConfirmRefund(result.data);
+                //fn_setConfirmRefund(result.data);
+                AUIGrid.removeRow(confirmGridID, AUIGrid.getRowIndexesByValue(confirmGridID, "detId", detId));
+                
+                fn_setConfirmRefundHeader(result.data);
                 
                 detId = 0;
             });
@@ -477,6 +455,36 @@ function fn_refundItemDisab() {
             Common.alert('No item selected.');
         }
     }
+}
+
+function fn_setConfirmRefundHeader(result) {
+	$("#totItem").text(result.totalItem);
+    $("#totValid").text(result.totalValid);
+    $("#totInvalid").text(result.totalInvalid);
+    
+    var str =""+ Number(result.totalAmt).toFixed(2);
+    var str2 = str.split(".");
+    if(str2.length == 1){           
+        str2[1] = "00";
+    }
+    str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
+    $("#totRefAmt").text(str);
+    
+    str =""+ Number(result.totalValidAmt).toFixed(2);
+    str2 = str.split(".");
+    if(str2.length == 1){           
+        str2[1] = "00";
+    }
+    str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
+    $("#totValidAmt").text(str);
+    
+    str =""+ Number(result.totalInvalidAmt).toFixed(2);
+    str2 = str.split(".");
+    if(str2.length == 1){           
+        str2[1] = "00";
+    }
+    str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
+    $("#totInvalidAmt").text(str);
 }
 </script>
 

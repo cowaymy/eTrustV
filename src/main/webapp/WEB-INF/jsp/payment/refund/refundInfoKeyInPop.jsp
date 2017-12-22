@@ -2,8 +2,8 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
-function fn_setRefundPopEvent() {
-    $("#close_btn2").click(fn_closePop2);
+$(document).ready(function () {
+$("#close_btn2").click(fn_closePop2);
     
     $("#rRefAmt").keydown(function (event) { 
         
@@ -55,7 +55,7 @@ function fn_setRefundPopEvent() {
        $("#rRefAmt").val(str);
        
    }); 
-}
+});
 
 function fn_closePop2() {
     $("#refundInfoKeyInPop").remove();
