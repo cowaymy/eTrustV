@@ -99,6 +99,7 @@ function fn_updateGridData() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
+<h1>Update Refund Data</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="close_btn2">Close</a></p></li>
 </ul>
