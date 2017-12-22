@@ -322,12 +322,24 @@ function fn_searchPosition(selectedData){
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberListSearch();"><span class="search"></span>Search</a></p></li>
 </c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
+</c:if>   
+ <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_confirmMemRegisPop()">Confirm Member Registration </a></p></li>
+</c:if>  
+ <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">  
     <li><p class="btn_blue"><a href="javascript:fn_hpMemRegisPop()">HP Approval</a></p></li>
+</c:if>    
 </ul>
 </aside><!-- title_line end -->
 
@@ -472,7 +484,9 @@ function fn_searchPosition(selectedData){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-<li><p class="btn_grid"><a href="javascript:fn_excelDown();">EXCEL DW</a></p></li>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+<li><p class="btn_grid"><a href="javascript:fn_excelDown();">GENERATE</a></p></li>
+</c:if>
    <!--  <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
 
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>

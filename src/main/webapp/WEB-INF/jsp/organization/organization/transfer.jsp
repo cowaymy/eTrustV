@@ -226,7 +226,9 @@ $(document).ready(function(){
 </section><!-- transfer_wrap end -->
 
 <ul class="center_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveConfirm();">Request Transfer</a></p></li>
+</c:if>    
 </ul>
 </form>
 </section><!-- content end -->
