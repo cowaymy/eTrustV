@@ -784,7 +784,7 @@
 	<section class="search_result"><!-- search_result start -->
 	
 		<ul class="right_btns">
-			<li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+			<li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='commission.button.generate'/></a></p></li>
 		</ul>
 	
 		<article class="grid_wrap"><!-- grid_wrap start -->
