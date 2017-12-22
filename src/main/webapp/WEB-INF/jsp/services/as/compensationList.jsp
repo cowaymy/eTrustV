@@ -258,7 +258,9 @@
         <ul class="right_btns">
             <!-- 171110 :: 선한이  -->
             <li><p class="btn_blue">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">            
                     <a href="#" onClick="javascript:fn_searchASManagement()"><span class="search"></span><spring:message code="expense.btn.Search" /></a>
+</c:if>                    
                 </p></li>
             <li><p class="btn_blue">
                     <a href="#" onclick="javascript:$('#CompensationForm').clearForm();"><span class="clear"></span>Clear</a>
@@ -359,10 +361,14 @@
 
             <ul class="right_btns">
                 <li><p class="btn_grid">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">                
                         <a href="#" onClick="fn_addCompPop()">Add Case</a>
+</c:if>                        
                     </p></li>
                 <li><p class="btn_grid">
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">                
                         <a href="#" onClick="fn_editCompPop()">Edit Case</a>
+</c:if>                        
                     </p></li>
             </ul>
 

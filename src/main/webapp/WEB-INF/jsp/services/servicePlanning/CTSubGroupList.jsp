@@ -439,16 +439,20 @@ function fn_CTSubAssign(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Service Group</h2>
 <ul class="right_btns">
-	
+	<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
     </div><!-- auto_file end -->
     </li>
-    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile();">Update Request</a></p></li>
-
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile();">UPLOAD</a></p></li>
+    </c:if>
     <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTSubGroupUpdateRequest()">Update Request</a></p></li> -->
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTSubGroupSearch()"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -579,8 +583,12 @@ function fn_CTSubAssign(){
 <tbody>
 <tr>
     <td>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <label><input type="radio" name="name" value="1" checked="checked" onclick="fn_radioButton(1)" /><span>CT Sub Group Display</span></label>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <label><input type="radio" name="name" value="2" onclick="fn_radioButton(2)"/><span>Sub Group – Area Display</span></label>
+    </c:if>
     </td>
 </tr>
 </tbody>
@@ -593,9 +601,14 @@ function fn_CTSubAssign(){
 
 <ul class="right_btns">
    <!--  <li><p class="btn_grid"><a href="#">Edit</a></p></li> -->
+   
      <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubAssign()">CT Sub Assignment</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">EXCEL DW</a></p></li>
+     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_exportTo()">TEMPLATE</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_CTSubGroupSave()">SAVE</a></p></li>
+    </c:if>
 <!--     <li><p class="btn_grid"><a href="#">Outstation Schedule Maintenance</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_openAreaMain()">CT Sub Group – Area ID Maintenance</a></p></li> -->
 </ul>

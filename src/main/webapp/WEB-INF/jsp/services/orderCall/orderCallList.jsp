@@ -255,8 +255,12 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code='service.title.OrderCallLogSearch'/></h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_openAddCall()"><spring:message code='service.btn.addCallLogResult'/></a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_orderCallList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+</c:if>        
     <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -423,7 +427,9 @@ function fn_excelDown(){
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate' /></a></p></li>
+</c:if>    
    <!-- <l  i><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>

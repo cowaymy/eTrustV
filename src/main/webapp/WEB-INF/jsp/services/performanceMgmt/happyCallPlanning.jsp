@@ -145,7 +145,7 @@ function happyCallGrid() {
                 dataField : "hcId",
                 headerText : 'HC ID',
                 editable : false, 
-                visible : false
+                visible : true
             } ];
 	
 	//그리드 속성 설정
@@ -319,7 +319,9 @@ function fn_search(){
 	</p>
 	<h2>Happy Call Planning</h2>
 	<ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">	
 		<li><p class="btn_blue"><a href="#" onclick="fn_search()"><span class="search"></span>Search</a></p></li>
+</c:if>		
 		<li><p class="btn_blue"><a href="#" onclick="fn_clear()"><span class="clear"></span>Clear</a></p></li>
 	</ul>
 </aside>
@@ -383,10 +385,14 @@ function fn_search(){
 <section class="search_result"><!-- search_result start -->
 
 	<ul class="right_btns">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>	
 		<li><p class="btn_grid"><a href="#" onclick="fn_addRow()">Add</a></p></li>
 		<li><p class="btn_grid"><a href="#" onclick="fn_removeRow()">Delete</a></p></li>
 		<li><p class="btn_grid"><a href="#" onclick="fn_save()">Save</a></p></li>
-		<li><p class="btn_grid"><a href="#" onclick="fn_exportTo()">EXCEL DW</a></p></li>
+<%-- </c:if> --%>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+		<li><p class="btn_grid"><a href="#" onclick="fn_exportTo()">GENERATE</a></p></li>
+</c:if>	
 		<!-- <li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li> -->
 		<!-- <li><p class="btn_grid"><a href="#">Edit Event</a></p></li> -->
 	</ul>

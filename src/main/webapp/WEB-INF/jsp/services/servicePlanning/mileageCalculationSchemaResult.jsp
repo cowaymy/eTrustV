@@ -87,7 +87,9 @@ function fn_excelDown(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Mileage Claim Master</h2>
 <ul class="right_btns"><!--javascript:fn_resultSearch()  -->
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a onclick="fn_resultSearch()"><span class="search"></span>Search</a></p></li>
+</c:if>    
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -144,7 +146,9 @@ function fn_excelDown(){
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_excelDown()">EXCEL DW</a></p></li>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_excelDown()"><spring:message code='service.btn.Generate' /></a></p></li></a></p></li>
+</c:if>    
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

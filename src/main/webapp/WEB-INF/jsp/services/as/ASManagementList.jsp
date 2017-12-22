@@ -687,15 +687,27 @@ function fn_invoice(){
 <ul class="right_btns">
     
     
-    
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li>
-    
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
+</c:if>     
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">    
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">  
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS Result</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_assginCTTransfer()">Assign CT Transfer</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">    
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_searchASManagement()"><span class="search"></span>Search</a></p></li>
+</c:if>    
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -788,7 +800,9 @@ function fn_invoice(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">    
       <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit </a></p></li>
+</c:if>      
       
         <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->
@@ -811,6 +825,7 @@ function fn_invoice(){
         <li><p class="link_btn"><a href="#">menu8</a></p></li> -->
     </ul>
     <ul class="btns">
+<c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">    
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_ASReport()">AS Report</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asLogBookList()">AS Log Book List</a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asRawData()">AS Raw Data</a></p></li>
@@ -818,6 +833,7 @@ function fn_invoice(){
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_asYsList()">AS YS List</a></p></li>
          <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_ledger()">View Ledger</a></p></li>
          <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_invoice()">AS Invoice</a></p></li>
+</c:if>         
     </ul> 
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -825,7 +841,9 @@ function fn_invoice(){
 </aside><!-- link_btns_wrap end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li>
+<c:if test="${PAGE_AUTH.funcUserDefine10 == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">GENERATE</a></p></li>
+</c:if>    
     <!-- <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>

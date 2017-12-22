@@ -217,11 +217,18 @@ $.fn.clearForm = function() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>In House Repair Progress Display</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_viewInHouseResultPop()">View Result</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_editResultPop()">Edit Result</a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">    
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_addRepairPop()">Add Repair</a></p></li>
-    
+</c:if>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">    
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>
+</c:if>    
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#inHoForm').clearForm();" ><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -281,7 +288,7 @@ $.fn.clearForm = function() {
 </tr>
 </tbody>
 </table><!-- table end -->
-
+<%-- 
  <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
@@ -298,7 +305,7 @@ $.fn.clearForm = function() {
     </dd>
 </dl>
 </aside><!-- link_btns_wrap end -->
-
+ --%>
 <ul class="right_btns">
     <!-- <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()">EXCEL DW</a></p></li> -->
 </ul>

@@ -398,15 +398,19 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>Search Option</h3>
 <ul class="right_btns">
-
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
     </div><!-- auto_file end -->
     </li>
-    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">Update Request</a></p></li>
-
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">UPLOAD</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getSsCapacityBrListAjax();"><span class="search"></span>Search</a></p></li>
+</c:if>    
 </ul>
 </aside><!-- title_line end -->
 
@@ -499,9 +503,13 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>CT Capacity Configuration</h3>
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">EXCEL DW</a></p></li>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">TEMPLATE</a></p></li>
+</c:if>    
     <!-- <li><p class="btn_grid"><a href="#" onclick="removeRow()">DEL</a></p></li> -->
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">    
     <li><p class="btn_grid"><a href="#" onclick="fn_save()">SAVE</a></p></li>
+</c:if>    
     <!-- <li><p class="btn_grid"><a href="#" onclick="addRow()">ADD</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->

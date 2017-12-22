@@ -160,9 +160,12 @@ function fn_tagLog() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Tag Log Search</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_tagLog()" >View Respond Ticket</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">    
     <li><p class="btn_blue"><a href="#" id ="search"><span class="search"></span>Search</a></p></li>
- 
+</c:if> 
 <!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 
@@ -236,11 +239,11 @@ function fn_tagLog() {
 
 
 <section class="search_result"><!-- search_result start -->
-
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="excelDown">EXCEL DW</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
 </ul>
-
+</c:if>
 <article class="grid_wrap"><!-- grid_wrap start  그리드 영역-->
     <div id="tagMgmt_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->

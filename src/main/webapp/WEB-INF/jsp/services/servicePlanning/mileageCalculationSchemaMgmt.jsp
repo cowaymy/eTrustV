@@ -150,7 +150,9 @@ function mileageCalSchemaList() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Mileage Calculation Schema Mgmt</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_schemaSearch()"><span class="search"></span>Search</a></p></li>
+</c:if>    
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -189,10 +191,12 @@ function mileageCalSchemaList() {
 </table><!-- table end -->
 
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:addRow()">ADD</a></p></li>
     <!-- <li><p class="btn_grid"><a href="#">EDIT Schema</a></p></li> -->
     <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow()">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="javascript:save()">SAVE</a></p></li>
+</c:if>        
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

@@ -213,7 +213,9 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code='service.title.HSManagement'/></h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBasicListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+</c:if>    
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
@@ -264,8 +266,12 @@
                 <dt>Link</dt>
                 <dd>
                 <ul class="btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">                
                     <li><p class="link_btn"> <a href="javascript:fn_basicInfo()" id="basicInfo"><spring:message code='service.title.HSBasicInfo'/></a> </p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                     <li><p class="link_btn"><a href="javascript:fn_filterSetInfo()" id="filterSet"><spring:message code='service.title.HSFilterMaintenance'/></a></p></li>
+</c:if>                    
                 </ul>
                 <ul class="btns">
                 </ul>

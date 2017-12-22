@@ -19,8 +19,10 @@ $(document).ready(function(){
    // doGetCombo('/common/selectCodeList.do', '45', '','comBranchType', 'S' , '');
 
     AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">     
         console.log(event.rowIndex);
         fn_selectDetailListAjax(AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo"))
+</c:if>        
     });
 
     AUIGrid.bind(gridID, "cellClick", function(event) {
@@ -184,10 +186,16 @@ function fn_Cancel(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Territory Management</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Update Request</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">    
     <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Comfirm()"><span class="Comfirm"></span>Comfirm</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <!-- <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li> -->
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
+</c:if>	
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 
 </ul>

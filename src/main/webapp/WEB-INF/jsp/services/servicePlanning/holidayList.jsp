@@ -438,7 +438,9 @@ $(document).ready(function(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Holiday List Search</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_holidayListSearch()"><span class="search"></span>Search</a></p></li>
+    </c:if>
 <!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -537,8 +539,12 @@ $(document).ready(function(){
 <tbody>
 <tr>
     <td>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <label><input type="radio" name="name" checked="checked" onclick="fn_radioBtn(1)"/><span>Holiday List Display</span></label>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <label><input type="radio" name="name" onclick="fn_radioBtn(2)" /><span>Replacement CT Assign Status</span></label>
+    </c:if>
     </td>
 </tr>
 </tbody>

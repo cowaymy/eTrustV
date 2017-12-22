@@ -169,9 +169,13 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Branch Management</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newBranch();">New</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_branchEditPop();">Edit</a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBranchListAjax();"><span class="search"></span>Search</a></p></li>
+</c:if>    
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -278,7 +282,9 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_excelDown()">EXCEL DW</a></p></li>
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_excelDown()">GENERATE</a></p></li>
+</c:if>    
    <!--  <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>

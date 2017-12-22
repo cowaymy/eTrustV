@@ -295,8 +295,12 @@ function fn_editInstallation(){//active 일때만 열림
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code='service.title.InstallationResultList'/></h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='service.btn.AssginCTTransfer'/></a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li> 
+</c:if>    
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+</c:if>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sal.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -406,8 +410,12 @@ function fn_editInstallation(){//active 일때만 열림
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">    
         <li><p class="link_btn"><a href="javascript:fn_addInstallation()" id="addInstallation"><spring:message code='service.btn.AddInstallationResult'/></a></p></li>
-        <li><p class="link_btn"><a href="javascript:fn_editInstallation()" id="editInstallation"><spring:message code='service.btn.EditInstallationResult'/></a></p></li>        
+</c:if>        
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">        
+        <li><p class="link_btn"><a href="javascript:fn_editInstallation()" id="editInstallation"><spring:message code='service.btn.EditInstallationResult'/></a></p></li>
+</c:if>  
        <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
@@ -418,7 +426,7 @@ function fn_editInstallation(){//active 일때만 열림
     </ul>
     <ul class="btns">
         <!-- <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li> -->
-        
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">        
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()"><spring:message code='service.btn.DOActiveList'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()"><spring:message code='service.btn.InstallationNoteListing'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()"><spring:message code='service.btn.InstallationNote'/></a></p></li>
@@ -427,6 +435,7 @@ function fn_editInstallation(){//active 일때만 열림
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installFreeGiftList()"><spring:message code='service.btn.InstallationFreeGiftList'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()"><spring:message code='service.btn.DailyDSCReport'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()"><spring:message code='service.btn.DSCReport'/></a></p></li>
+</c:if>        
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -434,7 +443,9 @@ function fn_editInstallation(){//active 일때만 열림
 </aside><!-- link_btns_wrap end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='sys.btn.excel.dw'/></a></p></li> 
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li> 
+</c:if>    
    <!--  <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>

@@ -280,16 +280,22 @@ function DCPMasterGrid() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>DCP Mgmt.</h2>
 <ul class="right_btns">
-
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".xlsx"/>
     </div><!-- auto_file end -->
     </li>
-    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">Update Request</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_AlldownFile()">EXCEL DW</a></p></li>
-
+</c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_blue"><a onclick="javascript:fn_uploadFile()">UPLOAD</a></p></li>
+</c:if>    
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_AlldownFile()">TEMPLATE</a></p></li>
+</c:if>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_DCPMasterSearch(1)"><span class="search"></span>Search</a></p></li>
+</c:if>    
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
