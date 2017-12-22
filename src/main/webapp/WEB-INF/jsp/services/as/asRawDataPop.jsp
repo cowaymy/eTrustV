@@ -27,7 +27,7 @@ function fn_openGenerate(){
         var keyInDateFrom =$("#reqstDateFr").val().substring(6,10) + "-" + $("#reqstDateFr").val().substring(3,5) + "-" + $("#reqstDateFr").val().substring(0,2) + " 12:00:00 AM";
         var keyInDateTo = $("#reqstDateTo").val().substring(6,10) + "-" + $("#reqstDateTo").val().substring(3,5) + "-" + $("#reqstDateTo").val().substring(0,2)+ " 12:00:00 AM";;
         
-        if($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != ''){
+        if($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != '' && $("#reqstDateFr").val() != null && $("#reqstDateTo").val() != null){
             whereSql += " and (a.AS_CRT_DT between to_date('" + $("#reqstDateFr").val() + "', 'DD/MM/YYYY') and to_date('" + $("#reqstDateTo").val() + "' , 'DD/MM/YYYY')) ";
         }
         
