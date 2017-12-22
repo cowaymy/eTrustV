@@ -341,13 +341,13 @@
     </td>
 </tr>
 <tr> --%>
-    <th scope="row" style="width: 80px; ">Remark<span class="must">*</span></th>
-    <td style="width: 434px; "><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
-    <th scope="row" style="width: 133px; ">Instruction<span class="must">*</span></th>
-    <td style="width: 212px; "><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
+    <th scope="row" style="width: 68px; ">Remark<span class="must">*</span></th>
+    <td style="width: 468px; "><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
+    <th scope="row" style="width: 94px; ">Instruction<span class="must">*</span></th>
+    <td style="width: 216px; "><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
 </tr>
 <tr>
-    <th scope="row">Prefer Service Week</th>
+    <th scope="row" style="width: 65px; ">Prefer Service Week</th>
     <td colspan="1">
     <label><input type="radio" name="srvBsWeek"  value="0"/><span>None</span></label>
     <label><input type="radio" name="srvBsWeek"  value="1"/><span>Week 1</span></label>
@@ -355,8 +355,8 @@
     <label><input type="radio" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
     <label><input type="radio" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
     </td> 
-        <th scope="row" style="width: 136px; ">Cancel Request Number</th>
-    <td>
+        <th scope="row" style="width: 91px; ">Cancel Request Number</th>
+    <td style="width: 242px; ">
         <span><c:out value="${hsDefaultInfo.cancReqNo}"/></span> 
     </td>
 </tr>
