@@ -121,9 +121,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 	<header class="pop_header"><!-- pop_header start -->
-		<h1>Log List</h1>
+		<h1><spring:message code='commission.title.pop.head.log'/></h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header><!-- pop_header end -->
 	
@@ -134,7 +134,7 @@
 	
 	<section class="pop_body"><!-- pop_body start -->
 		<aside class="title_line"><!-- title_line start -->
-		  <h2>JOB LOG  POPUP SCREEN</h2>
+		  <h2><spring:message code='commission.title.pop.body.log'/></h2>
 		</aside><!-- title_line end -->
 		<article class="grid_wrap2"><!-- grid_wrap start -->
 			<!-- grid_wrap start -->

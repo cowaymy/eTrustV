@@ -144,7 +144,8 @@
      }else  if (event.columnIndex == 5) {           
     	 var stVal =AUIGrid.getCellValue(myGridID, event.rowIndex, event.columnIndex-1);       
          if(parseInt(value.replace(/\//g,""))<=parseInt(stVal.replace(/\//g,""))){
-           Common.alert("Please enter a value greater than Start Date");
+           //Common.alert("Please enter a value greater than Start Date");
+           Common.setMsg("<spring:message code='commission.alert.dateGreaterCheck'/>");
            AUIGrid.setCellValue(myGridID, event.rowIndex, event.columnIndex,"");
          }    
     }      
@@ -296,8 +297,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Commission</li>
-		<li>Management</li>
+        <li><spring:message code='commission.text.head.commission'/></li>
+        <li><spring:message code='commission.text.head.masterMgmt'/></li>
+        <li><spring:message code='commission.text.head.weeklyMgmt'/></li>
 	</ul>
 
 	<aside class="title_line">
@@ -305,7 +307,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Weekly Management</h2>
+		<h2><spring:message code='commission.title.weekly'/></h2>
 
 		<ul class="right_btns">
 			<li><p class="btn_blue"> 
@@ -330,8 +332,8 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						  <th scope="row">Month/Year</th>
-            <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>						
+                        <th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
+                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>						
 					</tr>
 				</tbody>
 			</table>
@@ -346,7 +348,7 @@
 			<!-- search_result start -->
 			<ul class="right_btns">			   
 				<li><p class="btn_grid">
-	                    <a href="#" id="addRow">Add</a>
+	                    <a href="#" id="addRow"><spring:message code='sys.btn.add'/></a>
 	                </p></li>
 	       <li><p class="btn_grid">
                     <a href="#" id="save"><spring:message code='sys.btn.save'/></a>

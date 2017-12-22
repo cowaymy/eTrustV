@@ -148,8 +148,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.calculationMgmt'/></li>
+		<li><spring:message code='commission.text.head.basicDataCollection'/></li>
 	</ul>
 
 	<aside class="title_line">
@@ -157,11 +158,11 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Basic Data Collection</h2>
+		<h2><spring:message code='commission.title.calculationBasic'/></h2>
 
 		<ul class="right_btns">
 		<li><p class="btn_grid">    
-                    <a href="#"  id="logSearch" >LOG Data</a>
+                    <a href="#"  id="logSearch" ><spring:message code='commission.button.logData'/></a>
                 </p></li>
 			<li><p class="btn_blue">	
 					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
@@ -192,12 +193,12 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Month/Year</th>
+						<th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
 						<td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
 						
-						<th scope="row">Status</th>
+						<th scope="row"><spring:message code='commission.text.search.status'/></th>
 						<td><span id="status"></span></td>
-						<th scope="row">Execute Date</th>
+						<th scope="row"><spring:message code='commission.text.search.excuteDate'/></th>
 						<td><span id="exDate"></span></td>
 					</tr>
 				</tbody>

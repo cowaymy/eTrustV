@@ -33,14 +33,14 @@ $(document).on(//인풋파일 삭제
 	//sampleformet pop button
 	function fn_sampleFormat(val){
 		if(val == null || val ==""){
-			//Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
-			Common.alert('No Sample to show for this upload type.');
+			Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
+			//Common.alert('No Sample to show for this upload type.');
 		}else{
 			if (val == "1062"){
 				Common.popupDiv("/commission/calculation/incntivUploadSamplePop.do");
 	        }else{
-	        	//Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
-	        	Common.alert('No Sample to show for this upload type.');
+	        	Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
+	        	//Common.alert('No Sample to show for this upload type.');
 	        }
 		};
 	}
@@ -50,8 +50,8 @@ $(document).on(//인풋파일 삭제
 		if(fn_uploadValid()){
 			Common.ajax("GET", "/commission/calculation/csvFileOverlapCnt", $("#newForm").serialize(), function(result) {
 				if(result>0){
-					//Common.alert('<spring:message code="commission.alert.incentive.new.nonUpload"/>');
-					Common.alert('One active upload batch exist. New upload is disallowed.');
+					Common.alert('<spring:message code="commission.alert.incentive.new.nonUpload"/>');
+					//Common.alert('One active upload batch exist. New upload is disallowed.');
 				}else{
 					var formData = new FormData();
 					formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
@@ -61,9 +61,9 @@ $(document).on(//인풋파일 삭제
 			        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
 			        	$("#search").click();
 			        	document.newForm.reset();
-			        	//Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result.data+'" htmlEscape="false"/>');
+			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result.data+'" htmlEscape="false"/>');
 			        	//var cntId=result.data.uploadId;
-			           Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
+			           C//ommon.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
 			        });
 				}
 			});
@@ -72,18 +72,18 @@ $(document).on(//인풋파일 삭제
 	
 	function fn_uploadValid(){
 		if( $("#cmbType").val() == null || $("#cmbType").val() == ""){
-			//Common.alert('<spring:message code="sys.msg.first.Select" arguments="upload type" htmlEscape="false"/>');
-			Common.alert("Please select the upload type first.");
+			Common.alert('<spring:message code="sys.msg.first.Select" arguments="upload type" htmlEscape="false"/>');
+			//Common.alert("Please select the upload type first.");
 			return false;
 		}
 		if( $("#cmbMemberType").val() == null || $("#cmbMemberType").val() == ""){
-			//Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
-			Common.alert(" No Sample to show for this upload type");
+			Common.alert('<spring:message code="commission.alert.incentive.new.noSample"/>');
+			//Common.alert(" No Sample to show for this upload type");
             return false;
         }
 		if( $("#uploadfile").val() == null || $("#uploadfile").val() == ""){
-			//Common.alert('<spring:message code="sys.alert.upload.csv"/>');
-			Common.alert("Please select your csv file.");
+			Common.alert('<spring:message code="sys.alert.upload.csv"/>');
+			//Common.alert("Please select your csv file.");
             return false;
         }
 		return true;
@@ -92,9 +92,9 @@ $(document).on(//인풋파일 삭제
 <div id="popup_wrap" class="popup_wrap size_mid">
 	
 	<header class="pop_header">
-		<h1>INCENTIVE/TARGET UPLOAD - NEW UPLOAD</h1>
+		<h1><spring:message code='commission.title.pop.head.incentiveNew'/></h1>
 		<ul class="right_opt">
-			<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+			<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header>
 	
@@ -109,7 +109,7 @@ $(document).on(//인풋파일 삭제
 			</colgroup>
 			<tbody>
 				<tr>
-					<th scope="row">Type</th>
+					<th scope="row"><spring:message code='commission.text.search.type'/></th>
 					<td>
 						<select class="" name="cmbType" id="cmbType">
 						   <option value=""></option>
@@ -119,7 +119,7 @@ $(document).on(//인풋파일 삭제
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">Member Type</th>
+					<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 					<td>
 						<select class="" name="cmbMemberType" id="cmbMemberType">
 						   <option value=""></option>
@@ -130,7 +130,7 @@ $(document).on(//인풋파일 삭제
 					</td>
 				</tr>
 				<tr>
-					<th scope="row">File</th>
+					<th scope="row"><spring:message code='commission.text.search.file'/></th>
 					<td>
 	   					 <div class="auto_file attachment_file "><!-- auto_file start -->
 	   					 <!-- <div class="auto_file"> --><!-- auto_file start -->
@@ -142,9 +142,9 @@ $(document).on(//인풋파일 삭제
 		</table>
 		</form>
 		<ul class="center_btns">
-			<li><p class="btn_blue"><a href="javascript:fn_uploadCsvFile();">Upload File</a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_sampleFormat($('#cmbType').val());">Sample Format</a></p></li>
-			<li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/IncentiveTargetUploadFormat.csv">Download CSV Format</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_uploadCsvFile();"><spring:message code='commission.button.uploadFile'/></a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_sampleFormat($('#cmbType').val());"><spring:message code='commission.button.sampleFormat'/></a></p></li>
+			<li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/IncentiveTargetUploadFormat.csv"><spring:message code='commission.button.dwCsvFormat'/></a></p></li>
 		</ul>
 	
 	</section>

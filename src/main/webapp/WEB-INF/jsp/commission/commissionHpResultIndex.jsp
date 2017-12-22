@@ -201,11 +201,13 @@
         Common.showLoader();
         $.fileDownload("/commExcelFile.do?fileName=" + fileNm + "&code="+codeNm+"&year="+year+"&month="+month+"&orgCombo="+orgCombo+"&memCode="+memCode+"&actionType="+checkedValue)
         .done(function () {
-            Common.alert('File download a success!');                
+            //Common.alert('File download a success!');
+            Common.alert("<spring:message code='commission.alert.report.download.success'/>");
             Common.removeLoader();            
         })
         .fail(function () {
-            Common.alert('File download failed!');                
+            //Common.alert('File download failed!');
+            Common.alert("<spring:message code='commission.alert.report.download.fail'/>");
             Common.removeLoader();            
          });
     }
@@ -694,17 +696,18 @@
 <section id="content"><!-- content start -->
 	<ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Commission</li>
-        <li>HP Report</li>
-        <li>HP Result Index</li>
+        <li><spring:message code='commission.text.head.commission'/></li>
+                <li><spring:message code='commission.text.head.report'/></li>
+        <li><spring:message code='commission.text.head.hpReport'/></li>
+        <li><spring:message code='commission.text.head.hpCommissionResult'/></li>
     </ul>
 	
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>HP Commission Result</h2>
+		<h2><spring:message code='commission.title.resultHP'/></h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a href="#" id="search">Search</a></p></li>
-			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span>Clear</a></p></li>
+			<li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li>
+			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	
@@ -724,11 +727,11 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Commission Month</th>
+						<th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
 						<td>
 						  <input type="text" title="기준년월" class="j_date2 w50p" id="searchDt" name="searchDt" value="${searchDt }" />
 						</td>
-						<th scope="row">Member Group</th>
+						<th scope="row"><spring:message code='commission.text.search.orgGroup'/></th>
 						<td>
 							<select class="w50p" id="orgGrCombo" name="orgGrCombo" disabled="disabled">
 								<c:forEach var="list" items="${orgGrList }">
@@ -736,7 +739,7 @@
 								</c:forEach>
                             </select>
 						</td>
-						<th scope="row">Member Type</th>
+						<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 						<td>
                             <select class="w50p" id="orgCombo" name="orgCombo">
                                 <c:forEach var="list" items="${orgList }">
@@ -746,16 +749,16 @@
                         </td>
 					</tr>
 					<tr>
-						<th scope="row">Member Code</th>
+						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<td>
 						  <input type="text" style="width: 100px;" id="memCode" name="memCode" maxlength="20"/>
 						  <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
-						<th scope="row">Mode</th>
+						<th scope="row"><spring:message code='commission.text.search.mode'/></th>
                         <td colspan=3>
-                            <label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span>Actual</span></label>
-	                        <label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span>Simulation</span></label>
-	                        <label><input type="radio" name="actionType" id="actionTypeC" value="C"/><span>A & S</span></label>
+                            <label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label>
+	                        <label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label>
+	                        <label><input type="radio" name="actionType" id="actionTypeC" value="C"/><span><spring:message code='commission.text.search.compare'/></span></label>
                         </td>
 					</tr>
 				</tbody>
@@ -766,7 +769,7 @@
 	<section class="search_result"><!-- search_result start -->
 	
 		<ul class="right_btns">
-			<li><p class="btn_grid"><a href="javascript:fn_excelDown();">EXCEL DW</a></p></li>
+			<li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 		</ul>
 	
 		<article class="grid_wrap"><!-- grid_wrap start -->

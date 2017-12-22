@@ -56,13 +56,14 @@
 <section id="content">
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.calculationMgmt'/></li>
+		<li><spring:message code='commission.text.head.adjustment'/></li>
 	</ul>
 
 	<aside class="title_line"><!-- title_line start -->
 	<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-	<h2>Commission Adjustment</h2>
+	<h2><spring:message code='commission.title.adjustment'/></h2>
 	</aside><!-- title_line end -->
 
 
@@ -77,7 +78,7 @@
 			</colgroup>
 			<tbody>
 			<tr>
-				<th scope="row">Adjustment Type</th>
+				<th scope="row"><spring:message code='commission.text.search.adjType'/></th>
 				<td>
 				<select name="adjustmentType" id="adjustmentType">
 					<c:forEach var="list" items="${adjustList }">
@@ -87,25 +88,25 @@
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">Member Code</th>
+				<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 				<td>
 				<input type="text" name="memCode" id="memCode" title="" placeholder="Member Code" class="" />
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">Order No</th>
+				<th scope="row"><spring:message code='commission.text.search.ordNo'/></th>
 				<td>
 				<input type="text" name="ordNo" id="ordNo" title="" placeholder="Order No" class="" />
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">Adjustment Amt</th>
+				<th scope="row"><spring:message code='commission.text.search.adjAmt'/></th>
 				<td>
 				<input type="text" name="adjustmentAmt" id="adjustmentAmt"  title="" placeholder="Amont" class="" onchange="floatCh(this);"/>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">Adjustment Desc</th>
+				<th scope="row"><spring:message code='commission.text.search.adjDesc'/></th>
 				<td>
 				<textarea cols="20" name="adjustmentDesc" id="adjustmentDesc" rows="5" placeholder="Remark"></textarea>
 				</td>

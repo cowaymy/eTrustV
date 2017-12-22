@@ -42,7 +42,8 @@
 			Common.ajax("GET", "/commission/report/selectMemberCount", $("#searchForm").serialize(), function(result) {
 				console.log("<spring:message code='sys.msg.success'/>");
 				if (result < 1) {
-					Common.alert("Unable to find [" + salesPersonCd + "] in  HP Code .<br />Please ensure you key in the correct member code.");
+					//Common.alert("Unable to find [" + salesPersonCd + "] in  HP Code .<br />Please ensure you key in the correct member code.");
+					Common.alert("<spring:message code='commission.alert.report.unableHpCode' arguments='"+salesPersonCd+"' htmlEscape='false' />");
 					$("#searchForm [name=salesPersonCd]").val("");
 				} else {
 					$("#searchForm [name=confirmChk]").val("Y");
@@ -61,10 +62,12 @@
 			var salesPersonCd = $("#searchForm [name=salesPersonCd]").val(); //member code
 			 
 			if (type == "") {
-				Common.alert("Please select Report Type ");
+				//Common.alert("Please select Report Type ");
+				Common.alert("<spring:message code='commission.alert.report.selectType'/>");
 				return;
 			} else if (cmmDt == "") {
-				Common.alert("Please select Commission Period ");
+				//Common.alert("Please select Commission Period ");
+				Common.alert("<spring:message code='commission.alert.report.selectPeriod'/>");
 				return;
 		  } 
 
@@ -90,7 +93,8 @@
 			    Common.alert("<spring:message code='sys.common.alert.validation' arguments='Member Code' htmlEscape='false'/>");
 			    return;
 			  }else   if (confirmChk != "Y") {
-					Common.alert("Please key in the HP Code before confirmation");
+					//Common.alert("Please key in the HP Code before confirmation");
+					Common.alert("<spring:message code='commission.alert.report.enterHpCode'/>");
 					return;
 				}
 
@@ -199,8 +203,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Commission</li>
-		<li>Report</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+        <li><spring:message code='commission.text.head.report'/></li>
+        <li><spring:message code='commission.text.head.hpReport'/></li>
 	</ul>
 
 	<aside class="title_line">
@@ -208,7 +213,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>HP Commission Report</h2>
+		<h2><spring:message code='commission.title.reportHP'/></h2>
 	</aside>
 	<!-- title_line end -->
 
@@ -229,7 +234,7 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Report Type</th>
+						<th scope="row"><spring:message code='commission.text.search.reportType'/></th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
 								<option value="1">HP Commission Statement</option>
@@ -240,14 +245,14 @@
 						</select></td>
 					</tr>
 					<tr id="mConfirm" name="mConfirm" style="display: none;">
-						<th scope="row">Member Code</th>
+						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" title="" placeholder="" class="" /> <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 							<p class="btn_sky">
-								<a href="#" id="confirm" name="confirm">Confirm</a>
+								<a href="#" id="confirm" name="confirm"><spring:message code='commission.button.confirm'/></a>
 							</p></td>
 					</tr>
 					<tr>
-						<th scope="row">Commission Period</th>
+						<th scope="row"><spring:message code='commission.text.search.period'/></th>
 						<td colspan="3"><input type="text" id="cmmDt" name="cmmDt" title="Date" class="j_date2" value="${cmmDt }" /></td>
 					</tr>
 				</tbody>
@@ -256,10 +261,10 @@
 
 			<ul class="center_btns">
 				<li><p class="btn_blue2 big">
-						<a href="#" id="generate" id="generate">Generate</a>
+						<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
 					</p></li>
 				<li><p class="btn_blue2 big">
-						<a href="#" id="clear" name="clear">CLEAR</a>
+						<a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
 					</p></li>
 			</ul>
 

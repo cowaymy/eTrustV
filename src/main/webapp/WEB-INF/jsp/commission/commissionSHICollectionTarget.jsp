@@ -21,7 +21,8 @@ var today = "${today}";
 			var valid = $("#memCode").val();
 			
 			if(valid == null || valid == ""){
-				Common.alert("Please select the member code");
+				//Common.alert("Please select the member code");
+				Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
 				$("#teamCode").val("");
                 $("#level").val("");
 			}else{
@@ -35,7 +36,8 @@ var today = "${today}";
 							AUIGrid.setGridData(myGridID, result);
 						});
 					}else{
-						Common.alert("No member record found");
+						//Common.alert("No member record found");
+						Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noFound'/>");
 						$("#memCode").val("");
 						$("#teamCode").val("");
 						$("#level").val("");
@@ -66,7 +68,8 @@ var today = "${today}";
 		    var valid = $("#memCode").val();
             
             if(valid == null || valid == ""){
-                Common.alert("Please select the member code");
+                //Common.alert("Please select the member code");
+            	Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noSelect'/>");
             }else{
             	var date =$("#shiDate").val();
                 var month = Number(date.substring(0, 2));
@@ -178,16 +181,17 @@ var today = "${today}";
 <section id="content"><!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.report'/></li>
+		<li><spring:message code='commission.text.head.shiIndex'/></li>
 	</ul>
 	
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>SHI Index - Collection Target</h2>
+		<h2><spring:message code='commission.title.SHI'/></h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a href="#" id="search">Search</a></p></li>
-			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span>Clear</a></p></li>
+			<li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li>
+			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
 	
@@ -218,7 +222,7 @@ var today = "${today}";
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Member Type</th>
+						<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 						<td>
 							<select class="w100p" id="typeCode" name="typeCode">
 							<c:forEach var="list" items="${memType }">
@@ -226,29 +230,29 @@ var today = "${today}";
                                 </c:forEach>
 							</select>
 						</td>
-						<th scope="row">Member Code</th>
+						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<td>
 						  <input type="text" title="" placeholder="" id="memCode" name="memCode"/>
 						  <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
 						</td>
-						<th scope="row">Commission Month</th>
+						<th scope="row"><spring:message code='commission.text.search.commMonth'/></th>
 						<td>
 						  <input type="text" title="기준년월" class="j_date2 w100p" id="shiDate" name="shiDate" value="${searchDt }" />
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">* Team Code</th>
+						<th scope="row">* <spring:message code='commission.text.search.teamCode'/></th>
 						<td>
 						  <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly"  id="teamCode" name="teamCode"/>
 						</td>
-						<th scope="row">* Level</th>
+						<th scope="row">* <spring:message code='commission.text.search.level'/></th>
 						<td colspan="3">
 						  <input type="text" title="" placeholder="" class="w100p readonly" readonly="readonly" readonly="readonly"  id="level" name="level"/>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="6" class="col_all">
-						  <p><span>(*) Fields are depends on the commission month selected.</span></p>
+						  <p><span><spring:message code='commission.text.selectMonth'/></span></p>
 						</td>
 					</tr>
 					<tr>
@@ -304,7 +308,7 @@ var today = "${today}";
 	<section class="search_result"><!-- search_result start -->
 	
 	<ul class="right_btns">
-		<li><p class="btn_grid"><a href="#" id="generate">EXCEL DW</a></p></li>
+		<li><p class="btn_grid"><a href="#" id="generate"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 	</ul>
 	
 	<article class="grid_wrap"><!-- grid_wrap start -->

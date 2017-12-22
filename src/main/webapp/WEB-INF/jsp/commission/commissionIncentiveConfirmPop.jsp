@@ -114,7 +114,8 @@ var itemGridID;
 	//item RemoveAjax
 	function fn_removeItem(){
 		Common.ajax("POST", "/commission/calculation/removeIncentiveItem.do", GridCommon.getEditData(itemGridID) , function(result) {
-			Common.alert("The item has been removed.");
+			//Common.alert("The item has been removed.");
+			Common.alert('<spring:message code="commission.alert.incentive.itemRemove"/>');
 			$("#totalCntTxt").text(result.data.totalCnt);
             $("#totalValidTxt").text(result.data.totalValid);
             $("#totalInvalidTxt").text(result.data.totalInvalid);
@@ -129,15 +130,15 @@ var itemGridID;
 		Common.ajax("GET", "/commission/calculation/deactivateCheck", $("#conForm").serializeJSON() , function(result) {
 			if(result > 0){
 				Common.ajax("GET", "/commission/calculation/incentiveDeactivate", $("#conForm").serializeJSON() , function(result) {
-					//Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.success"/>');
-					Common.alert("This upload batch has been deactivated.");
+					Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.success"/>');
+					//Common.alert("This upload batch has been deactivated.");
 					$("#clearComfirm").click();
 					//$("#search").click();
 	                //$("#popup_wrap").remove();
 				});
 			}else{
-				//Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.fail"/>');
-				Common.alert("Failed to deactivate upload batch. Please try again later.");
+				Common.alert('<spring:message code="commission.alert.incentive.confirm.deactivate.fail"/>');
+				//Common.alert("Failed to deactivate upload batch. Please try again later.");
 			}
 		});
 	}
@@ -145,19 +146,18 @@ var itemGridID;
 	//master confirm button
 	function fn_confirm(){
 		if(Number($("#cntValid").val()) < 1){
-			//Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
-			Common.alert("No valid item in this batch.");
+			Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
+			//Common.alert("No valid item in this batch.");
 		}else{
 			Common.ajax("GET", "/commission/calculation/incentiveConfirm", $("#conForm").serializeJSON() , function(result) {
-				//Common.alert('<spring:message code="commission.alert.incentive.confirm.success"/>');
 				if(result.message != null){
-					Common.alert("No valid in this batch </br> "+result.message);
+					//Common.alert("No valid in this batch </br> "+result.message);
+					Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>");
 				}else{
-					Common.alert("This upload batch has been confirmed and saved.");
+					//Common.alert("This upload batch has been confirmed and saved.");
+					Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
 					$("#clearComfirm").click();
 				}
-				//$("#search").click(); //TODO close 시점으로 바꿔야함
-				//$("#popup_wrap").remove();
 			});
 		}
 	}
@@ -167,9 +167,9 @@ var itemGridID;
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>INCENTIVE/TARGET UPLOAD - CONFIRM UPLOAD BATCH</h1>
+<h1><spring:message code='commission.title.pop.head.incentiveConfirm'/></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#" id="clearComfirm">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="clearComfirm"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -185,32 +185,32 @@ var itemGridID;
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Bath ID</th>
+	<th scope="row"><spring:message code='commission.text.search.batchId'/></th>
 	<td>${detail.UPLOAD_ID }</td>
-	<th scope="row">Upload By</th>
+	<th scope="row"><spring:message code='commission.text.search.uploadBy'/></th>
 	<td>${detail.CRT_USER_NAME } (${detail.CRT_DT} )</td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code='commission.text.search.status'/></th>
 	<td>${detail.NAME }</td>
-	<th scope="row">Update By</th>
+	<th scope="row"><spring:message code='commission.text.search.updateBy'/></th>
 	<td>${detail.UPD_USER_NAME } (${detail.UPD_DT })</td>
 </tr>
 <tr>
-	<th scope="row">Upload Type</th>
+	<th scope="row"><spring:message code='commission.text.search.uploadType'/></th>
 	<td>${detail.CODE_NAME }</td>
-	<th scope="row">Target Month</th>
+	<th scope="row"><spring:message code='commission.text.search.targetMonth'/></th>
 	<td>${detail.ACTN_DT }</td>
 </tr>
 <tr>
-	<th scope="row">Total Item</th>
+	<th scope="row"><spring:message code='commission.text.search.totalItem'/></th>
 	<td><p id="totalCntTxt">${totalCnt }</p></td>
-	<th scope="row">Total Vaild / Invaild</th>
+	<th scope="row"><spring:message code='commission.text.search.totalVaild'/></th>
 	<td><p id="totalValidTxt">${totalValid }</p><p> / </p><p id="totalInvalidTxt">${totalInvalid }</p>
 	<input type="hidden" name="cntValid" id="cntValid" value="${totalValid }"></td>
 </tr>
 <tr>
-	<th scope="row">Member Type</th>
+	<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 	<td colspan="3">${detail.CODENAME1 }</td>
 </tr>
 </tbody>
@@ -224,11 +224,11 @@ var itemGridID;
 </form>
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('0');">ALL Items</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('4');">Vaild Items</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('21');">Invaild Items</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:fn_itemAdd();">Add Item</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:fn_removeItem();">remove Items</a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('0');"><spring:message code='commission.button.allItem'/></a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('4');"><spring:message code='commission.button.viildItem'/></a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('21');"><spring:message code='commission.button.invaildItem'/></a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemAdd();"><spring:message code='commission.button.addItem'/></a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_removeItem();"><spring:message code='commission.button.removeItem'/></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -236,8 +236,8 @@ var itemGridID;
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue"><a href="javascript:fn_confirm();">Confirm</a></p></li>
-	<li><p class="btn_blue"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
+	<li><p class="btn_blue"><a href="javascript:fn_confirm();"><spring:message code='commission.button.confirm'/></a></p></li>
+	<li><p class="btn_blue"><a href="javascript:fn_deactivate();"><spring:message code='commission.button.deactivate'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

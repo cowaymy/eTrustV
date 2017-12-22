@@ -94,7 +94,8 @@
                             console.log("실패하였습니다.");
                             console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
                             if(textStatus=="timeout" || jqXHR.status == 503){
-                                 Common.alert("Running... Please wait about 20 minutes ");
+                                 //Common.alert("Running... Please wait about 20 minutes ");
+                                 Common.alert("<spring:message code='commission.alert.calculation.wait503error'/>");
                          $("#search").trigger("click");
                             }
                         },option);
@@ -293,8 +294,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.calculationMgmt'/></li>
+		<li><spring:message code='commission.text.head.calculation'/></li>
 	</ul>
 
     <aside class="title_line">
@@ -353,7 +355,7 @@
 	       <input type="hidden" name="batchYn" id="batchYn"/>
 	       
 			<ul class="right_btns">
-				<li><p class="btn_grid"><a href="#" id="runBatch">RUN BATCH</a></p></li>
+				<li><p class="btn_grid"><a href="#" id="runBatch"><spring:message code='commission.button.runBatch'/></a></p></li>
 			</ul>
 			
 			<article class="grid_wrap">

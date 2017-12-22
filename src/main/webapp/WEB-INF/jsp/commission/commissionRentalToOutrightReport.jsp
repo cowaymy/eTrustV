@@ -21,7 +21,8 @@
 			var cmmDt = $("#searchForm #cmmDt").val(); //commission date
 			 
 		 if (cmmDt == "") {
-				Common.alert("Please select Commission Period ");
+				//Common.alert("Please select Commission Period ");
+				Common.alert("<spring:message code='commission.alert.report.selectPeriod'/>");
 				return;
 		  } 
 
@@ -75,8 +76,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Commission</li>
-		<li>Report</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.report'/></li>
+		<li><spring:message code='commission.text.head.rentalToOutrightReport'/></li>
 	</ul>
 
 	<aside class="title_line">
@@ -84,7 +86,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Rental To Outright Commission Raw Data</h2>
+		<h2><spring:message code='commission.title.rentalToOutright'/></h2>
 	</aside>
 	<!-- title_line end -->
 
@@ -101,7 +103,7 @@
 				</colgroup>
 				<tbody>				
 					<tr>
-						<th scope="row">Commission Period</th>
+						<th scope="row"><spring:message code='commission.text.search.period'/></th>
 						<td><input type="text" id="cmmDt" name="cmmDt" title="Date" class="j_date2" value="${cmmDt }" /></td>
 					</tr>
 				</tbody>
@@ -110,10 +112,10 @@
 
 			<ul class="center_btns">
 				<li><p class="btn_blue2 big">
-						<a href="#" id="generate" id="generate">Generate</a>
+						<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
 					</p></li>
 				<li><p class="btn_blue2 big">
-						<a href="#" id="clear" name="clear">CLEAR</a>
+						<a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
 					</p></li>
 			</ul>
 

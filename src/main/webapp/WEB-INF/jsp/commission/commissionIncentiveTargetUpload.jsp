@@ -167,12 +167,12 @@
 	//incentive confirm pop
 	function confirmUploadPop(){
 		if(uploadId == null || uploadId == ""){
-			//Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
-			Common.alert("No upload batch selected.");
+			Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
+			//Common.alert("No upload batch selected.");
 		}else{
 			if(stusId != "1"){
-				//Common.alert('<spring:message code="commission.alert.incentive.noActive"/>');
-				Common.alert("This upload batch "+uploadId+" is no longer active.<br />Confirm batch is disallowed.</b>");
+				Common.alert('<spring:message code="commission.alert.incentive.noActive"/>');
+				//Common.alert("This upload batch "+uploadId+" is no longer active.<br />Confirm batch is disallowed.</b>");
 	        }else{
 	            var valTemp = {"uploadId" : uploadId, "typeId" : typeId};
 	            Common.popupDiv("/commission/calculation/commIncntiveConfirmPop.do",valTemp);
@@ -183,8 +183,8 @@
 	//incentive confirm view
 	function uploadViewPop(){
         if(uploadId == null || uploadId == ""){
-        	//Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
-        	Common.alert("No upload batch selected.");
+        	Common.alert('<spring:message code="commission.alert.incentive.noSelect"/>');
+        	//Common.alert("No upload batch selected.");
         }else{
             var valTemp = {"uploadId" : uploadId};
             Common.popupDiv("/commission/calculation/commIncntivViewPop.do",valTemp);
@@ -212,13 +212,13 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Incentive/Target Upload</h2>
+		<h2><spring:message code='commission.title.incentiveTarget'/></h2>
 		<ul class="right_btns">
 			<li><p class="btn_blue">
-					<a href="#" id="search"><span class="search"></span>Search</a>
+					<a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
 				</p></li>
 			<li><p class="btn_blue">
-					<a href="javascript:fn_clearSearchForm();"><span class="clear"></span>Clear</a>
+					<a href="javascript:fn_clearSearchForm();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a>
 				</p></li>
 		</ul>
 	</aside>
@@ -241,26 +241,26 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Batch ID</th>
+						<th scope="row"><spring:message code='commission.text.search.batchId'/></th>
 						<td><input type="text" title="" placeholder="Batch ID" class="w100p" name="uploadId" id="uploadId" ' maxlength="20"/></td>
-						<th scope="row">Batch Status</th>
+						<th scope="row"><spring:message code='commission.text.search.batchStatus'/></th>
 						<td><select class="multy_select w100p" multiple="multiple" name="statusList[]" id="statusList">
 						</select></td>
-						<th scope="row">Upload Type</th>
+						<th scope="row"><spring:message code='commission.text.search.uploadType'/></th>
 						<td><select class="multy_select w100p" multiple="multiple" name="typeList[]" id="typeList">
 						</select></td>
 					</tr>
 					<tr>
-						<th>Target Month</th>
+						<th><spring:message code='commission.text.search.targetMonth'/></th>
 						<td><input type="text" title="기준년월" placeholder="MM/YY" class="j_date2 w100p" name="actionDate" id="actionDate" /></td>
-						<th>Upload Date</th>
+						<th><spring:message code='commission.text.search.uploadDate'/></th>
 						<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " name="uploadDateFr" id="uploadDateFr" /> 
 						<p>To</p> <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date " name="uploadDateTo" id="uploadDateTo" /></td>
-						<th>Uploader</th>
+						<th><spring:message code='commission.text.search.uploader'/></th>
 						<td><input type="text" title="" placeholder="Uploader (Username)" class="w100p" name="creator" id="creator" / maxlength="20"></td>
 					</tr>
 					<tr>
-						<th>Member Type</th>
+						<th><spring:message code='commission.text.search.orgType'/></th>
 						<td><select class="multy_select w100p" multiple="multiple" name="memberTypeList[]" id="memberTypeList">
 						</select></td>
 						<th></th>

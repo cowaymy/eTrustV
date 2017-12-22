@@ -145,9 +145,9 @@
 <div id="popup_wrap" class="popup_wrap size_mid" ><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>INCENTIVE/TARGET UPLOAD BATCH - NEW ITEM</h1>
+<h1><spring:message code='commission.title.pop.head.incentiveUpload'/></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -161,20 +161,20 @@
 			</colgroup>
 			<tbody>
 				<tr>
-					<th scope="row">Member Code</th>
+					<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 					<td><input type="text" id="itemMemCd" name="itemMemCd" maxlength="20">
 					<a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 				</tr>
 				<tr>
-					<th scope="row">Target Amount</th>
+					<th scope="row"><spring:message code='commission.text.search.targetAmt'/></th>
 					<td><input type="text" id="itemTAmt" name="itemTAmt" maxlength="20" onkeydown="floatCh(this);"></td>
 				</tr>
 				<tr>
-					<th scope="row">Ref Code</th>
+					<th scope="row"><spring:message code='commission.text.search.refCode'/></th>
 					<td><input type="text" id="itemRCd" name="itemRCd" maxlength="20" onkeydown="numberCh(this);"></td>
 				</tr>
 				<tr>
-					<th scope="row">Level</th>
+					<th scope="row"><spring:message code='commission.text.search.level'/></th>
 					<td><input type="text" id="itemLvl" name="itemLvl" readonly="readonly" maxlength="20" onkeydown="numberCh(this);"></td>
 				</tr>
 			</tbody>
@@ -188,7 +188,7 @@
 	</form>
 	
 	<ul class="center_btns">
-		<li><p class="btn_blue"><a href="javascript:fn_incenItemSavs();">save</a></p></li>
+		<li><p class="btn_blue"><a href="javascript:fn_incenItemSavs();"><spring:message code='sys.btn.save'/></a></p></li>
 	</ul>
 
 </section><!-- pop_body end -->

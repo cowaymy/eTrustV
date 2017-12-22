@@ -88,7 +88,8 @@
 	     
 	     $("#save").click(function(){
 	    	 if(AUIGrid.getGridData(siGridID).length <=0 ){
-	    		 Common.alert("Don't save to no Data");
+	    		 //Common.alert("Don't save to no Data");
+	    		 Common.setMsg("<spring:message code='commission.alert.version.noSave'/>");
 	    	 }else{
 	    		 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridCall);
 	    	 }
@@ -385,8 +386,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Commission</li>
-		<li>Management</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.masterMgmt'/></li>
+		<li><spring:message code='commission.text.head.ruleBookVersionMgmt'/></li>
 	</ul>
 	
 	<aside class="title_line">
@@ -394,7 +396,7 @@
 		<p class="fav">
 		  <a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Rule Version Management</h2>
+		<h2><spring:message code='commission.title.versionMgmt'/></h2>
 		<ul class="right_opt">
 			<li><p class="btn_blue">
 			<a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
@@ -422,12 +424,12 @@
 		</colgroup>
 		<tbody>
 			<tr>
-				<th scope="row">Month/Year<span class="must">*</span></th>
+				<th scope="row"><spring:message code='commission.text.search.monthYear'/><span class="must">*</span></th>
 				<td>
 				<input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width:200px;" />
 				</td>
 				
-				<th scope="row">ORG Group<span class="must">*</span></th>
+				<th scope="row"><spring:message code='commission.text.search.orgGroup'/><span class="must">*</span></th>
 				<td>
 					<select id="orgGrCombo" name="orgGrCombo" style="width:100px;">
 						<c:forEach var="list" items="${orgGrList }">
@@ -436,7 +438,7 @@
 					</select>
 				</td>
 				
-				<th scope="row">ORG Code</th>
+				<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 				<td>
 					<select id="orgCombo" name="orgCombo" style="width:100px;">
 						<option value=""></option>
@@ -446,7 +448,7 @@
 					</select>
 				</td>
 				
-				<th scope="row">USE YN</th>
+				<th scope="row"><spring:message code='commission.text.search.useYN'/></th>
 				<td>
 					<select id="useYnCombo" name="useYnCombo" style="width:100px;">
 						<option value=""></option>
@@ -470,7 +472,7 @@
 				
 				<div style="width:45%"><!-- 50% start -->
 					<aside class="title_line"><!-- title_line start -->
-					   <h3>ACTUAL</h3>
+					   <h3><spring:message code='commission.text.search.actual'/></h3>
 					</aside><!-- title_line end -->
 					<div class="border_box" style="height:330px;"><!-- border_box start -->
 						<article class="grid_wrap"><!-- grid_wrap start -->
@@ -488,11 +490,11 @@
 				
 				<div style="width:55%"><!-- 50% start -->
 					<aside class="title_line"><!-- title_line start -->
-					   <h3>SIMULATION </h3>
+					   <h3><spring:message code='commission.text.search.simulation'/> </h3>
 					   <ul class="right_btns">
 				            <li>
 				                <p class="btn_grid">
-				                    <a href="#" id="clear"><span class="clear"></span>Clear</a>
+				                    <a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a>
 				                </p>
 				            </li>
 				            <li>

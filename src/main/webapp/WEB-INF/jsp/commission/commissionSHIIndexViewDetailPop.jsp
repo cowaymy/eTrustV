@@ -109,15 +109,15 @@
 <div id="popup_wrap2" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1> SHI Index - Collection Target Details</h1>
+        <h1> <spring:message code='commission.title.pop.head.SHI'/></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     
     <section class="pop_body" style="max-height:600px;"><!-- pop_body start -->
        <aside class="title_line"><!-- title_line start -->
-          <h2> SHI Index - Collection Target Details<br>
+          <h2> <spring:message code='commission.title.pop.body.SHI'/><br>
           </h2>
         </aside><!-- title_line end -->
         
@@ -144,13 +144,13 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Member Code</th>
+                        <th scope="row"><spring:message code='commission.text.search.memCode'/></th>
                         <td>
                         <input type="text" id="memberCd" name="memberCd" value="${memCode }" readonly="readonly" >
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">RCM Month</th>
+                        <th scope="row"><spring:message code='commission.text.search.rcmMonth'/></th>
                          <td>
                          <input type="text" title="Create start Date" placeholder="MM/YYYY" name="searchDt" id="searchDtD" class="j_date2" value="${searchDtD }" />
                         </td>

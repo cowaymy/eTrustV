@@ -17,13 +17,13 @@ var cdGridID;
     	createAUIGridCd();
     	
     	Common.ajax("GET","/commission/calculation/incntivSampleHpList","", function(result) {
-            console.log("성공.");
+            //console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(hpGridID, result);
         });
     	
     	Common.ajax("GET","/commission/calculation/incntivSampleCdList","", function(result) {
-            console.log("성공.");
+            //console.log("성공.");
             console.log("data : " + result);
             AUIGrid.setGridData(cdGridID, result);
         });
@@ -98,9 +98,9 @@ var cdGridID;
 <div id="popup_wrap2" class="popup_wrap size_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>INCENTIVE/TARGET UPLOAD - REF CODE SAMPLE</h1>
+<h1><spring:message code='commission.title.pop.head.incentiveSample'/></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -110,7 +110,7 @@ var cdGridID;
 
 	<div style="width:50%">
 		<aside class="title_line"><!-- title_line start -->
-		<h2>Health Planner (HP)</h2>
+		<h2><spring:message code='commission.text.type.healthPlanner'/></h2>
 		</aside><!-- title_line end -->
 		<article class="grid_wrap"><!-- grid_wrap start -->
 		  <div id="grid_wrap_hp" style="width: 100%; height: 334px; margin: 0 auto;"></div>
@@ -119,7 +119,7 @@ var cdGridID;
 
 	<div style="width:50%">
 		<aside class="title_line"><!-- title_line start -->
-		<h2>Coway Lady (Cody)</h2>
+		<h2><spring:message code='commission.text.type.cowayLady'/></h2>
 		</aside><!-- title_line end -->
 		<article class="grid_wrap"><!-- grid_wrap start -->
 		  <div id="grid_wrap_cd" style="width: 100%; height: 334px; margin: 0 auto;"></div>

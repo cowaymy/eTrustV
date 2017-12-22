@@ -95,9 +95,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>INCENTIVE/TARGET UPLOAD - CONFIRM UPLOAD BATCH</h1>
+<h1><spring:message code='commission.title.pop.head.incentiveView'/></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -113,31 +113,31 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Bath ID</th>
+	<th scope="row"><spring:message code='commission.text.search.batchId'/></th>
 	<td>${detail.UPLOAD_ID }</td>
-	<th scope="row">Upload By</th>
+	<th scope="row"><spring:message code='commission.text.search.uploadBy'/></th>
 	<td>${detail.CRT_USER_NAME } (${detail.CRT_DT} )</td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code='commission.text.search.status'/></th>
 	<td>${detail.NAME }</td>
-	<th scope="row">Update By</th>
+	<th scope="row"><spring:message code='commission.text.search.updateBy'/></th>
 	<td>${detail.UPD_USER_NAME } (${detail.UPD_DT })</td>
 </tr>
 <tr>
-	<th scope="row">Upload Type</th>
+	<th scope="row"><spring:message code='commission.text.search.uploadType'/></th>
 	<td>${detail.CODE_NAME }</td>
-	<th scope="row">Target Month</th>
+	<th scope="row"><spring:message code='commission.text.search.targetMonth'/></th>
 	<td>${detail.ACTN_DT }</td>
 </tr>
 <tr>
-	<th scope="row">Total Item</th>
+	<th scope="row"><spring:message code='commission.text.search.totalItem'/></th>
 	<td>${totalCnt }</td>
-	<th scope="row">Total Vaild / Invaild</th>
+	<th scope="row"><spring:message code='commission.text.search.totalVaild'/></th>
 	<td>${totalValid } / ${totalInvalid }</td>
 </tr>
 <tr>
-	<th scope="row">Member Type</th>
+	<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 	<td colspan="3">${detail.CODENAME1 }</td>
 </tr>
 </tbody>
@@ -146,9 +146,9 @@
 <input type="hidden" name="uploadId" id="uploadUserId" value="${uploadId }">
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('0');">ALL Items</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('4');">Vaild Items</a></p></li>
-	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('21');">Invaild Items</a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('0');"><spring:message code='commission.button.allItem'/></a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('4');"><spring:message code='commission.button.viildItem'/></a></p></li>
+	<li><p class="btn_grid"><a href="javascript:fn_itemDetailSearch('21');"><spring:message code='commission.button.invaildItem'/></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

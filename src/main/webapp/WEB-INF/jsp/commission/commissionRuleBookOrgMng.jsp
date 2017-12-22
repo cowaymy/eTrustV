@@ -422,8 +422,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Commission</li>
-		<li>Management</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.masterMgmt'/></li>
+		<li><spring:message code='commission.text.head.organizationMgmt'/></li>
 	</ul>
 
 	<aside class="title_line">
@@ -431,7 +432,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Organization Mgmt</h2>
+		<h2><spring:message code='commission.title.organizationMgmt'/></h2>
 		<ul class="right_opt">
 			<li><p class="btn_blue">
                      <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>
@@ -459,16 +460,16 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Month/Year</th>
+						<th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
 						<td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width:200px;" /></td>
-						<th scope="row">ORG Group</th>
+						<th scope="row"><spring:message code='commission.text.search.orgGroup'/></th>
 						<td><select id="orgRgCombo" name="orgRgCombo" style="width:100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgGrList }">
 									<option value="${list.cdid}">${list.cd}</option>
 								</c:forEach>
 						</select></td>
-						<th scope="row">ORG Code</th>
+						<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 						<td><select id="orgCombo" name="orgCombo" style="width:100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgList }">
@@ -477,7 +478,7 @@
 						</select></td>
 						<input type="hidden" id="orgGubun" name="orgGubun" value="">
 						<input type="hidden" id="orgGrCd" name="orgGrCd" value="">
-						<th scope="row">USE YN</th>
+						<th scope="row"><spring:message code='commission.text.search.useYN'/></th>
             <td>
               <select id="useYnCombo" name="useYnCombo" style="width:100px;">
                 <option value=""></option>

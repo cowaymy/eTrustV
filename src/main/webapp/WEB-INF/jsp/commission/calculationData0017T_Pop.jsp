@@ -205,13 +205,15 @@
 			       Common.showLoader();
 	               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&ordId="+ordId+"&useYnCombo="+useYnCombo+"&memCd="+memCd+"&codeId="+codeId)
 	               .done(function () {
-	                   Common.alert('File download a success!');                
-	                   Common.removeLoader();            
-	               })
-	               .fail(function () {
-	                   Common.alert('File download failed!');                
-	                   Common.removeLoader();            
-	                });
+	                    //Common.alert('File download a success!');
+	                    Common.alert("<spring:message code='commission.alert.report.download.success'/>");
+	                    Common.removeLoader();            
+	                })
+	                .fail(function () {
+	                    //Common.alert('File download failed!');
+	                    Common.alert("<spring:message code='commission.alert.report.download.fail'/>");
+	                    Common.removeLoader();            
+	                 });
 			   }else{
 		           Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 		       }
@@ -236,11 +238,13 @@
 		      Common.showLoader();
               $.fileDownload("/commExcelFile.do?fileName=" + fileName + "&year="+year+"&month="+month+"&code="+code+"&codeId="+codeId)
               .done(function () {
-                  Common.alert('File download a success!');                
+                  //Common.alert('File download a success!');
+                  Common.alert("<spring:message code='commission.alert.report.download.success'/>");
                   Common.removeLoader();            
               })
               .fail(function () {
-                  Common.alert('File download failed!');                
+                  //Common.alert('File download failed!');
+                  Common.alert("<spring:message code='commission.alert.report.download.fail'/>");
                   Common.removeLoader();            
                });
            }else{
@@ -261,7 +265,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>${prdDec }</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     
@@ -288,28 +292,28 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Month/Year<span class="must">*</span></th>
+                        <th scope="row"><spring:message code='commission.text.search.monthYear'/><span class="must">*</span></th>
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0017T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">ORG Group<span class="must">*</span></th>
+                        <th scope="row"><spring:message code='commission.text.search.orgGroup'/><span class="must">*</span></th>
                         <td><select id="orgGroup_17" name="codeId" style="width: 100px;">
                                 <c:forEach var="list" items="${orgGrList }">
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Member Code<span class="must">*</span></th>
+                        <th scope="row"><spring:message code='commission.text.search.memCode'/><span class="must">*</span></th>
                         <td>
                               <input type="text" id="memCd_17T" name="memCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row">Order ID</th>
+                        <th scope="row"><spring:message code='commissiom.text.excel.ordId'/></th>
                         <td>
                               <input type="text" id="ordId_17T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
                         </td>
-                        <th scope="row">is Exclude</th>
+                        <th scope="row"><spring:message code='commission.text.isExclude'/></th>
                         <td colspan=3>
                           <select id="useYnCombo_17T" name="useYnCombo" style="width:100px;">
                             <option value=""selected></option>
@@ -326,7 +330,7 @@
             <!-- search_result start -->
             <ul class="right_btns">
                 <li><p class="btn_grid">
-                    <a href="javascript:fn_AlldownFile()" id="addRow">ALL Excel</a>
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><spring:message code='commission.button.allExcel'/></a>
                 </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><spring:message code='sys.btn.excel.dw' /></a>

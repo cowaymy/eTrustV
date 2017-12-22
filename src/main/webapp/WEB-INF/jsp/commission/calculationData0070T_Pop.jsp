@@ -291,7 +291,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>${prdDec }</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
     
@@ -319,24 +319,24 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Month/Year<span class="must">*</span></th>
+                        <th scope="row"><spring:message code='commission.text.search.monthYear'/><span class="must">*</span></th>
                         <td>
                         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" id="CMM0070T_Dt" class="j_date2" value="${searchDt_pop }" />
                         </td>
-                        <th scope="row">ORG Group<span class="must">*</span></th>
+                        <th scope="row"><spring:message code='commission.text.search.orgGroup'/><span class="must">*</span></th>
                         <td><select id="orgGroup_70" name="codeId" style="width: 100px;" >
                                 <c:forEach var="list" items="${orgGrList }">
                                     <option value="${list.cdid}">${list.cd}</option>
                                 </c:forEach>
                         </select></td>
-                        <th scope="row">Employed Code</th>
+                        <th scope="row"><spring:message code='commission.text.emplyCd'/></th>
                         <td>
                               <input type="text" id="emplyCd_70T" name="emplyCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                         </td>
                      </tr>
                      <tr>
-                        <th scope="row">is Exclude</th>
+                        <th scope="row"><spring:message code='commission.text.isExclude'/></th>
                         <td colspan=5>
                           <select id="useYnCombo_70T" name="useYnCombo" style="width:100px;">
                             <option value=""selected></option>
@@ -353,7 +353,7 @@
             <!-- search_result start -->
             <ul class="right_btns">
                 <li><p class="btn_grid">
-                    <a href="javascript:fn_AlldownFile()" id="addRow">ALL Excel</a>
+                    <a href="javascript:fn_AlldownFile()" id="addRow"><spring:message code='commission.button.allExcel'/></a>
                 </p></li>
                 <li><p class="btn_grid">
                     <a href="javascript:fn_downFile()" id="addRow"><spring:message code='sys.btn.excel.dw' /></a>

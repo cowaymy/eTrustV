@@ -133,13 +133,14 @@ var gridPros = {
 	<section id="content"><!-- content start -->
 		<ul class="path">
 			<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-			<li>Sales</li>
-			<li>Order list</li>
+			<li><spring:message code='commission.text.head.commission'/></li>
+			<li><spring:message code='commission.text.head.report'/></li>
+			<li><spring:message code='commission.text.head.ctReport'/></li>
 		</ul>
 		
 		<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>commission CT Upload - New Upload</h2>
+		<h2><spring:message code='commission.title.uploadCT'/></h2>
 		</aside><!-- title_line end -->
 	
 	
@@ -153,7 +154,7 @@ var gridPros = {
 					</colgroup>
 					<tbody>
 						<tr>
-							<th scope="row">File</th>
+							<th scope="row"><spring:message code='commission.text.search.file'/></th>
 							<td>
 								<div class="auto_file"><!-- auto_file start -->
 								     <input type="file" title="file add"  id="uploadfile" name="uploadfile"/>

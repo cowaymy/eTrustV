@@ -163,13 +163,14 @@
 <section id="content"><!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Sales</li>
-		<li>Order list</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.upload'/></li>
+		<li><spring:message code='commission.text.head.newNeopro'/></li>
 	</ul>
 
 	<aside class="title_line"><!-- title_line start -->
 	<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-	<h2>commission NeoPro Upload - New Upload</h2>
+	<h2><spring:message code='commission.title.neoPro'/></h2>
 	</aside><!-- title_line end -->
 
 
@@ -184,7 +185,7 @@
 			</colgroup>
 			<tbody>
 			<tr>
-			    <th scope="row">File</th>
+			    <th scope="row"><spring:message code='commission.text.search.file'/></th>
 			    <td>
 			
 			         <div class="auto_file"><!-- auto_file start -->
@@ -199,8 +200,8 @@
 		
 	
 		<ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-		    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/NeoproUploadFormat.csv">Download Format</a></p></li>
+		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();"><spring:message code='commission.button.uploadFile'/></a></p></li>
+		    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/NeoproUploadFormat.csv"><spring:message code='commission.button.dwFormat'/></a></p></li>
 		</ul>
 	    <!-- grid_wrap start -->
 	    <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>

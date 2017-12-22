@@ -240,7 +240,8 @@
       $("#versionTypeS").click(function(){
     	  Common.ajax("GET", "/commission/system/varsionVaildSearch", $("#searchFormRule").serialize(), function(result) {
     		  if(result == null){
-    			  Common.alert("There are no registered simulations.");
+    			  //Common.alert("There are no registered simulations.");
+    			  Common.alert("<spring:message code='commission.alert.simulations.noRegistered'/>");
     			  $("#versionTypeA").prop("checked", true);
     		  }else{
     			  $("#searchFormRule [name=simulItemSeq]").val(result);
@@ -984,8 +985,9 @@
 	<!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Commission</li>
-		<li>Management</li>
+		<li><spring:message code='commission.text.head.commission'/></li>
+		<li><spring:message code='commission.text.head.ruleBookMgmt'/></li>
+		<li><spring:message code='commission.text.head.groupRuleBookMgmt'/></li>
 	</ul>
 
 	<aside class="title_line">
@@ -993,7 +995,7 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Commission Group Rule Book Mgmt</h2>
+		<h2><spring:message code='commission.title.groupRulBookMgmt'/></h2>
 
 		<ul class="right_btns">
 			<li><p class="btn_blue">			
@@ -1023,16 +1025,16 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Month/Year</th>
+						<th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
 						<td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" /></td>
-						<th scope="row">ORG Group</th>
+						<th scope="row"><spring:message code='commission.text.search.orgGroup'/></th>
 						<td><select id="orgGrCombo" name="orgGrCombo" style="width: 100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgGrList }">
 									<option value="${list.orgGrCd}">${list.orgGrNm}</option>
 								</c:forEach>
 						</select></td>
-						<th scope="row">ORG Code</th>
+						<th scope="row"><spring:message code='commission.text.search.orgType'/></th>
 						<td><select id="orgCombo" name="orgSeqCombo" style="width: 100px;">
 								<option value=""></option>
 								<c:forEach var="list" items="${orgList }">
@@ -1040,7 +1042,7 @@
 								</c:forEach>
 						</select></td>					
 						<input type="hidden" id="orgGrCd" name="orgGrCd" value="">
-						<th scope="row">USE YN</th>
+						<th scope="row"><spring:message code='commission.text.search.useYN'/></th>
 						<td><select id="useYnCombo" name="useYnCombo" style="width: 100px;">
 								<option value=""></option>
 								<option value="Y">Y</option>
@@ -1087,7 +1089,7 @@
 <div id="popup_wrap" class="popup_wrap size_big"  style="display:none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Commission Rule Book Item Mgmt</h1>
+<h1><spring:message code='commission.title.pop.head.rulBookItemInfo'/></h1>
 <ul class="right_opt">
   <li><p class="btn_blue2"><a href="#" id="close01"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
@@ -1115,19 +1117,19 @@
 		</colgroup>
 		<tbody>
 			<tr>
-				<th scope="row">Month/Year</th>
+				<th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
 				<td>
 				    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" name="searchDt" class="j_date2" value="${searchDt }" />
 				</td>
-				<th scope="row">USE YN</th>
+				<th scope="row"><spring:message code='commission.text.search.useYN'/></th>
 				<td>
 					<select name="useYnCombo" style="width: 100px;">
 						<option value=""></option>
 						<option value="Y">Y</option>
 						<option value="N">N</option>
 					</select>
-					<label><input type="radio" name="versionType" id="versionTypeA" value="A" checked/><span>Actual</span></label>
-					<label><input type="radio" name="versionType" id="versionTypeS" value="S" /><span>Simulation</span></label>
+					<label><input type="radio" name="versionType" id="versionTypeA" value="A" checked/><span><spring:message code='commission.text.search.actual'/></span></label>
+					<label><input type="radio" name="versionType" id="versionTypeS" value="S" /><span><spring:message code='commission.text.search.simulation'/></span></label>
 				</td>
 			</tr>
 		</tbody>
@@ -1139,7 +1141,7 @@
 		</article><!-- award_wrap end -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		  <h2>Rule Information & Edit</h2>
+		  <h2><spring:message code='commission.title.pop.head.rulBookItemEdit'/></h2>
 		</aside><!-- title_line end -->
 		
 		<table class="type1 mt10"><!-- table start -->
@@ -1150,35 +1152,35 @@
 			</colgroup>
 			<tbody>
 				<tr>
-				  <th scope="row">ORG Name</th>
+				  <th scope="row"><spring:message code='commission.text.orgName'/></th>
 				  <td>
 					  <span id="orgNmText" name="orgNmText" ></span>
 					  <input type="hidden" title="" placeholder="Org Name" class=" w100p" id="orgNm" name="orgNm" readonly="readonly" /> 
 				  </td>
 				</tr>
 				<tr>
-				  <th scope="row">Title</th>
+				  <th scope="row"><spring:message code='commission.text.title'/></th>
 				  <td>
 					  <span id="itemNmText" name="itemNmText" ></span>
 					  <input type="hidden" title="" placeholder="Performance Evaluation Awards" class=" w100p"  id="itemNm" name="itemNm" readonly="readonly" /> 
 				  </td>
 				</tr>
 				<tr>
-				  <th scope="row">Range Value Name</th>
+				  <th scope="row"><spring:message code='commission.text.ranValName'/></th>
 				  <td>
 				  <span id="valueTypeNmText" name="valueTypeNmText" ></span>
 				  <input type="hidden" title="" class=" w100p"  id="valueTypeNm" name="valueTypeNm" readonly="readonly" /> 
 				  </td>
 				</tr>
 				<tr>
-				  <th scope="row">Range value type</th>
+				  <th scope="row"><spring:message code='commission.text.ranValType'/></th>
 				  <td>
 				  <span id="valueTypeText" name="valueTypeText" ></span>
 				  <input type="hidden" title="" class=" w100p" id="valueType" name="valueType" readonly="readonly"/> 
 				  </td>
 				</tr>
 				<tr>
-				  <th scope="row">Conditional Result Value Name</th>
+				  <th scope="row"><spring:message code='commission.text.conResValName'/></th>
 				  <td>
 				  <span id="resultValueNmText" name="resultValueNmText" ></span>
 				  <input type="hidden" title="" class=" w100p"  id="resultValueNm" name="resultValueNm" readonly="readonly"/>
@@ -1210,7 +1212,7 @@
 <div id="popup_wrap2" style="display:none;" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Commission Rule Book Mgmt</h1>
+<h1><spring:message code='commission.title.pop.head.rulBookItemEdit'/></h1>
 <ul class="right_opt">
   <li><p class="btn_blue2"><a href="#" id="close02"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
@@ -1236,17 +1238,17 @@
 </colgroup>
 <tbody>
 <tr>
-  <th scope="row">ORG Name</th>
+  <th scope="row"><spring:message code='commission.text.orgName'/></th>
   <td colspan="3"><input type="text" title="" placeholder="OGR Name" class="readonly w100p" id="orgDs" name="orgDs" readonly="readonly" /></td>  
 </tr>
 <tr>
-  <th scope="row">Item Name</th>
+  <th scope="row"><spring:message code='commission.text.itemName'/></th>
   <td colspan="3"><input type="text" title="" placeholder="Item Name" class="readonly w100p" id="codeName" name="codeName" readonly="readonly" /></td>
 </tr>
 <tr>
-  <th scope="row">Rule Name</th>
+  <th scope="row"><spring:message code='commission.text.ruleName'/></th>
   <td><input type="text" title="" placeholder="Rule Name" class="w100p" id="ruleNm" name="ruleNm" /></td>
-  <th scope="row">USE (Y/N)</th>
+  <th scope="row"><spring:message code='commission.text.search.useYN'/></th>
   <td>
   <select class="w100p" id="useYn" name="useYn">
     <option value="Y">Y</option>
@@ -1255,36 +1257,36 @@
   </td>
 </tr>
 <tr>
-  <th scope="row">Rule Category<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.ruleCategory'/><span class="must">*</span></th>
   <td colspan="3"><input type="text" title="" placeholder="Rule Category" class="w100p" id="ruleCategory" name="ruleCategory"   maxlength="50"/></td>
 </tr>
 <tr>
-  <th scope="row">Range Start Value<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.ranSrtName'/><span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Range Start Value" class="w100p" id="ruleOpt1" name="ruleOpt1"  onchange="floatCh(this);"  value="" maxlength="10"/></td>
-  <th scope="row">Range End Value<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.ranEndName'/><span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Range End Value" class="w100p" id="ruleOpt2" name="ruleOpt2"  onchange="floatCh(this);" value="" maxlength="10"/></td>
 </tr>
 <tr>
-  <th scope="row">Range Value Type<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.ranValType'/><span class="must">*</span></th>
   <td><select class="w100p" id="valueType" name="valueType">   
   </select></td>
-  <th scope="row">Range Value Type Name<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.ranValTypeName'/><span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Range Value Type Name" class="w100p" id="valueTypeNm" name="valueTypeNm" readonly="readonly" /></td>
 </tr>
 <tr>
-  <th scope="row">Result Value<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.resultVal'/><span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Result Value" class="w100p" id="resultValue" name="resultValue"  value="" onchange="floatCh(this);" maxlength="10"/></td>
-  <th scope="row">Result Value  Name<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.resultValName'/><span class="must">*</span></th>
   <td><select class="w100p" id="resultValueNm" name="resultValueNm" ></select></td>
 </tr>
 <tr>
-  <th scope="row">Print Order<span class="must">*</span></th>
+  <th scope="row"><spring:message code='commission.text.printOrder'/><span class="must">*</span></th>
   <td><input type="text" title="" placeholder="Print Order" class="w100p" id="printOrder" name="printOrder"  onchange="numberCh(this);" maxlength="2"/></td>
   
   <td colspan="2"></td>
 </tr>
 <tr>
-  <th scope="row">Description</th>
+  <th scope="row"><spring:message code='commission.text.desc'/></th>
   <td colspan="3">
     <textarea cols="40" rows="5"  id="ruleDesc" name="ruleDesc" placeholder="Rule Description" maxlength="1000"></textarea>
   </td>
