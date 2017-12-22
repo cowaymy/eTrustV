@@ -286,7 +286,7 @@ function fn_Clear(){
                           <input type="file" title="file add"  id="uploadfile" name="uploadfile"  accept=".csv"/>
                      </div><!-- auto_file end -->
                      <ul class="right_btns">
-                        <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/payment/BillingBatchUploadFormat.csv">Download CSV Format</a></p></li>
+                        <li><p class="btn_grid"><a href="${pageContext.request.contextPath}/resources/download/payment/BillingBatchUploadFormat.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
                      </ul>
                   </td>
               </tr>
