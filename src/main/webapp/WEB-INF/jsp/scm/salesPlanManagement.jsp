@@ -149,7 +149,7 @@ var options = {
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
 
-        if (AUIGrid.isAddedById(gInsertGridID,AUIGrid.getCellValue(gInsertGridID, event.rowIndex, 0)) == true
+        if (AUIGrid.isAddedById(gInsertGridID ,AUIGrid.getCellValue(gInsertGridID, event.rowIndex, 0)) == true
                 || String(event.value).length < 1)
             {
                     return false;
