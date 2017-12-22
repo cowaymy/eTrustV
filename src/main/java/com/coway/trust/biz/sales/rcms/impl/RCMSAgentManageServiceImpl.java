@@ -175,6 +175,7 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 				updateMap.put("userId", params.get("userId"));
 			
 				o = rcmsAgentManageMapper.updateAgent(updateMap) ;
+				rcmsAgentManageMapper.updateCompany(updateMap) ;
 			}
 		}
 		

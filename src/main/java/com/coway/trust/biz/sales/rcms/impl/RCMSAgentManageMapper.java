@@ -28,5 +28,7 @@ public interface RCMSAgentManageMapper {
 	EgovMap chkDupWebId(Map<String, Object> params);
 	
 	List<EgovMap> selectAgentList(Map<String, Object> params);
+
+	void updateCompany(Map<String, Object> updateMap);
 	
 }

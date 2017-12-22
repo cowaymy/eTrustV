@@ -204,4 +204,12 @@
 		       UPD_DT = SYSDATE
 		 WHERE SALES_ORD_ID = #{salesOrdId}
 	 </update>
+	 
+    <update id="updateCompany" parameterType="Map">
+		UPDATE SAL0029D
+		   SET CORP_TYPE_ID = #{corpTypeId}, 
+		   UPD_USER_ID = #{userId}, 
+		   UPD_DT = SYSDATE
+		 WHERE CUST_ID = #{custId}
+	 </update>
 </mapper>
