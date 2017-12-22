@@ -90,15 +90,15 @@ function fn_Generate(){
 		var CTCode = "";
 		var orderNoFrm = "";
 		var orderNoTo = "";
-		if($("#installCrtDt").val() != '' && $("#installEndDt").val() != ''){
+		if($("#installCrtDt").val() != '' && $("#installEndDt").val() != '' && $("#installCrtDt").val() != null && $("#installEndDt").val() != null){
 			instdateFrm  = $("#installCrtDt").val();
 			instdateTo = $("#installEndDt").val();
 			whereSql +=" AND (inse.Install_Dt between to_date('"  + $("#installCrtDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#installEndDt").val()  + "', 'DD/MM/YYYY') ) ";
 	    }
-		if($("#branch").val() != ''){
+		if($("#branch").val() != '' && $("#branch").val() != null){
 			whereSql += " AND branch.brnch_id In (" + $("#branch").val() + ") ";
 	    }
-		if($("#doCrtDt").val() != '' && $("#doEndDt").val() != ''){
+		if($("#doCrtDt").val() != '' && $("#doEndDt").val() != '' && $("#doCrtDt").val() != null && $("#doEndDt").val() != null){
 			DodateFrm = $("#doCrtDt").val();
 			DodateTo = $("#doEndDt").val();
 			whereSql +=" AND inv.MOV_STUS_ID = 4 and inv.MOV_CNFM = 1 AND (inv.MOV_UPD_DT between to_date('"  + $("#doCrtDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#doEndDt").val()  + "', 'DD/MM/YYYY') ) ";
@@ -107,16 +107,16 @@ function fn_Generate(){
 			appType = $("#appliType").val();
 			whereSql +=" AND tm.App_Type_ID IN(" + $("#appliType").val() + ") ";
 	    }
-		if($("#ordStrDt").val() != '' && $("#ordEndDt").val() != ''){
+		if($("#ordStrDt").val() != '' && $("#ordEndDt").val() != '' && $("#ordStrDt").val() != null && $("#ordEndDt").val() != null){
 			OrderdateFrm = $("#ordStrDt").val();
 			OrderdateTo = $("#ordEndDt").val();
 			whereSql +=" AND (tm.Sales_DT between to_date('"  + $("#ordStrDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#ordEndDt").val()  + "', 'DD/MM/YYYY') ) ";
 	    }
-		if($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != ''){
+		if($("#CTCodeFrom").val() != '' && $("#CTCodeTo").val() != '' && $("#CTCodeFrom").val() != null && $("#CTCodeTo").val() != null){
 			CTCode = $("#CTCodeFrom").val() + " To " + $("#CTCodeTo").val();
 			whereSql +=" AND (CTMem.mem_code between '"  + $("#CTCodeFrom").val() + "' AND '" +$("#CTCodeTo").val()  + "') ";
 	    }
-		if($("#orderNumFr").val() != '' && $("#orderNumTo").val() != ''){
+		if($("#orderNumFr").val() != '' && $("#orderNumTo").val() != '' && $("#orderNumFr").val() != null && $("#orderNumTo").val() != null){
 			orderNoFrm = $("#orderNumFr").val();
 			orderNoTo = $("#orderNumTo").val();
 			whereSql +=" AND (tm.Sales_Ord_No between '"  + $("#orderNumFr").val() + "' AND '" +$("#orderNumTo").val()  + "') ";
