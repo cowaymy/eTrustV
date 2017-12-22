@@ -385,11 +385,11 @@ function fn_search(){
 <section class="search_result"><!-- search_result start -->
 
 	<ul class="right_btns">
-<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>	
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">	
 		<li><p class="btn_grid"><a href="#" onclick="fn_addRow()">Add</a></p></li>
 		<li><p class="btn_grid"><a href="#" onclick="fn_removeRow()">Delete</a></p></li>
 		<li><p class="btn_grid"><a href="#" onclick="fn_save()">Save</a></p></li>
-<%-- </c:if> --%>
+</c:if>
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 		<li><p class="btn_grid"><a href="#" onclick="fn_exportTo()">GENERATE</a></p></li>
 </c:if>	
