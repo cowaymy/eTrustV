@@ -490,6 +490,28 @@ public class HsManualController {
 	 * @throws ParseException
 	 * @throws Exception
 	 */
+	
+	@RequestMapping(value = "/UpdateHsResult2.do",method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> UpdateHsResult2(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params : {}", params);
+
+		boolean success = false;
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+		resultValue = hsManualService.UpdateHsResult2(formMap, updList, sessionVO);
+
+		message.setMessage("Complete to Update a HS Result : " + formMap.get("hidHsno") );
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
 	@RequestMapping(value = "/UpdateHsResult.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> UpdateHsResult(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
 		ReturnMessage message = new ReturnMessage();
@@ -849,12 +871,6 @@ public class HsManualController {
 		}
 		return ResponseEntity.ok(message);
 	}
-	
-	
-
-		
-	
-	
 	
 }
 	
