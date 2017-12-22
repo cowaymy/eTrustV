@@ -75,9 +75,9 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
 					}
 				}//FeedbackType이 Standard일때
 				else if(insertValue.get("feedbackType").equals("Standard")){
-					for(int j=0; j<5; j++){
-						insertValue.put("hcAnsPoint", pointStandard[j]);
-						insertValue.put("hcAnsDesc", descStandard[j]);
+					for(int k=0; k<5; k++){
+						insertValue.put("hcAnsPoint", pointStandard[k]);
+						insertValue.put("hcAnsDesc", descStandard[k]);
 						happyCallPlanningMapper.insertHappyCallSub(insertValue);
 					}
 				}
