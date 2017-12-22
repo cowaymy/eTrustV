@@ -13,6 +13,7 @@ public class LoginVO {
 	private int userStatusId;
 	private int userTypeId;
 	private int userDeptId;
+	private int roleId;
 	private Date userUpdateAt;
 	private Date userPasswdLastUpdateAt;
 	private String userMobileNo;
@@ -116,6 +117,14 @@ public class LoginVO {
 
 	public void setUserDeptId(int userDeptId) {
 		this.userDeptId = userDeptId;
+	}
+
+	public int getRoleId() {
+		return roleId;
+	}
+
+	public void setRoleId(int roleId) {
+		this.roleId = roleId;
 	}
 
 	public Date getUserUpdateAt() {
