@@ -52,32 +52,32 @@ function fn_openGenerate(){
         var asNoFrom = "";
         var asNoTo = "";
         
-        if($("#asNumFr").val() != '' && $("#asNumTo").val() != ''){
+        if($("#asNumFr").val() != '' && $("#asNumTo").val() != '' && $("#asNumFr").val() != null && $("#asNumTo").val() != null){
             asNoFrom = $("#asNumFr").val();
             asNoTo =    $("#asNumTo").val();
             whereSql += "and (ae.AS_No between '" + asNoFrom + "' AND '" + asNoTo + "') ";
         }
         var asRnoFrom = "";
         var asRnoTo = "";
-        if($("#asResultNoFr").val() != '' && $("#asResultNoTo").val() != ''){
+        if($("#asResultNoFr").val() != '' && $("#asResultNoTo").val() != '' && $("#asResultNoFr").val() != null && $("#asResultNoTo").val() != null){
         	asRnoFrom = $("#asResultNoFr").val();
         	asRnoTo = $("#asResultNoTo").val();
         	whereSql +=  "and (am.AS_RESULT_NO between '" + asRnoFrom + "' AND '" + asRnoTo + "') ";
         }
         var ctCode = "";
-        if($("#CTCode").val() != ''){
+        if($("#CTCode").val() != '' && $("#CTCode").val() != null){
         	ctCode = $("#CTCode option:selected").text();
         	whereSql +=   "AND mr.Mem_ID = " + $("#CTCode").val() + " ";
         }
         var dscCode = "";
-        if($("#branch").val() != ''){
+        if($("#branch").val() != '' && $("#branch").val() != null){
         	dscCode = $("#branch  option:selected").text();
         	whereSql +=   "AND ae.AS_BRNCH_ID = " + $("#branch").val() + " ";
         }
         
         var appointDateFrom = "";
         var appointDateTo = "";
-        if($("#appDtFr").val() != '' && $("#appDtTo").val() != ''){
+        if($("#appDtFr").val() != '' && $("#appDtTo").val() != '' && $("#appDtFr").val() != null && $("#appDtTo").val() != null){
         	appointDateFrom = $("#appDtFr").val();
         	appointDateTo = $("#appDtTo").val();
         	whereSql +=  "AND ae.AS_APPNT_DT between to_date('" + $("#appDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#appDtTo").val()  + "', 'DD/MM/YYYY')  ";
@@ -85,14 +85,14 @@ function fn_openGenerate(){
         
         var requestDateFrom = "";
         var requestDateTo = "";
-        if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != ''){
+        if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != '' && $("#reqDtFr").val() != null && $("#reqDtTo").val() != null){
         	requestDateFrom = $("#reqDtFr").val();
         	requestDateTo = $("#reqDtTo").val();
         	whereSql +=  "AND ae.AS_REQST_DT  between to_date('" + $("#reqDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#reqDtTo").val()  + "', 'DD/MM/YYYY') ";
         }
         
         var asStus = "";
-        if($("#asStatus").val() != ''){
+        if($("#asStatus").val() != '' && $("#asStatus").val() != null){
         	asStus = $("#asStatus  option:selected").text();
         	whereSql +=   "AND ae.AS_STUS_ID = " + $("#asStatus").val() + " ";
         }
@@ -110,7 +110,7 @@ function fn_openGenerate(){
         }
         
         var asGroup = "";
-        if($("#CTGroup").val() != ''){
+        if($("#CTGroup").val() != '' && $("#CTGroup").val() != null){
         	asGroup = $("#CTGroup  option:selected").text();
         	whereSql +=   "AND ae.AS_MEM_GRP = '" + $("#CTGroup").val() + "' ";
         }
