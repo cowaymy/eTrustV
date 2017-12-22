@@ -87,7 +87,41 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 
 	@Override
 	public  EgovMap mPackageInfo(Map<String, Object> params) {
-		return membershipRentalQuotationMapper.mPackageInfo(params);
+		
+		String zeroRatYn = "Y";
+		String eurCertYn = "Y";
+		
+        params.put("srvSalesOrderId", params.get("SALES_ORD_ID"));
+        
+        logger.debug("zeroRat ==========================>>  " + membershipRentalQuotationMapper.selectGSTZeroRateLocation(params));
+        logger.debug("EURCert ==========================>>  " + membershipRentalQuotationMapper.selectGSTEURCertificate(params));
+        
+		
+		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
+		if(zeroRat > 0 ){
+			zeroRatYn = "N";
+		}	
+		
+		int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
+		if(EURCert > 0 ){
+			eurCertYn = "N";
+		}	
+		
+		EgovMap result = membershipRentalQuotationMapper.mPackageInfo(params);
+		
+		if(result == null){
+			result = new EgovMap();
+		}	
+
+		 logger.debug("zeroRat ==========================>>  " + zeroRatYn);
+	     logger.debug("EURCert ==========================>>  " + eurCertYn);
+		
+		result.put("zeroRatYn", zeroRatYn);
+		result.put("eurCertYn", eurCertYn);
+		
+//		return membershipRentalQuotationMapper.mPackageInfo(params);
+		return result;
+		
 	}
 
 	@Override
@@ -229,27 +263,22 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 eFilterMap.put("qotatItmExpDt", rMap.get("lastChngDt")); 
 					 eFilterMap.put("qotatItmChrg", rMap.get("prc"));
 					 
-					 if("39".equals(taxCode)){
+					 if("39".equals(taxCode) ||"28".equals(taxCode) ){
     				
-						 		eFilterMap.put("qotatItmAmt", "0");
-						 		eFilterMap.put("qotatItmGstRate", "0");
-						 		eFilterMap.put("ItmGstTaxCodeId", "39");
-						 		
-					}else if ("28".equals(taxCode)){
-						
-								eFilterMap.put("qotatItmAmt", "0");
-								eFilterMap.put("qotatItmGstRate", "0");
-								eFilterMap.put("ItmGstTaxCodeId", "39");
+				 		eFilterMap.put("qotatItmAmt", "0");
+				 		eFilterMap.put("qotatItmGstRate", "0");
+				 		eFilterMap.put("ItmGstTaxCodeId", "39");
+
 					}else{
 
-    						 	double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
-    						 	double   itemAmount  =  CommonUtils.intNvl((String)rMap.get("oriPrc"));
-    						 	double   amt  =Math.round((float)(chargePrice  * 100 / 106 ));
-    						
-    						 	eFilterMap.put("qotatItmChrg", amt);
-    						 	eFilterMap.put("qotatItmTxs", (itemAmount  -amt ));
-    						 	eFilterMap.put("qotatItmGstRate", "6");
-    						 	eFilterMap.put("ItmGstTaxCodeId", "32");
+					 	double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
+					 	double   itemAmount  =  CommonUtils.intNvl((String)rMap.get("oriPrc"));
+					 	double   amt  =Math.round((float)(chargePrice  * 100 / 106 ));
+					
+					 	eFilterMap.put("qotatItmChrg", amt);
+					 	eFilterMap.put("qotatItmTxs", (itemAmount  -amt ));
+					 	eFilterMap.put("qotatItmGstRate", "6");
+					 	eFilterMap.put("ItmGstTaxCodeId", "32");
 					}
 					 
 					 membershipRentalQuotationMapper.insertSrvMembershipQuot_Filter(eFilterMap);

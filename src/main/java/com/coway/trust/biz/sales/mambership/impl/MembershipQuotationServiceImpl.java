@@ -66,7 +66,40 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 
 	@Override
 	public  EgovMap mPackageInfo(Map<String, Object> params) {
-		return membershipQuotationMapper.mPackageInfo(params);
+		
+		String zeroRatYn = "Y";
+		String eurCertYn = "Y";
+		
+        params.put("srvSalesOrderId", params.get("ORD_ID"));
+		
+        logger.debug("zeroRat ==========================>>  " + membershipRentalQuotationMapper.selectGSTZeroRateLocation(params));
+        logger.debug("EURCert ==========================>>  " + membershipRentalQuotationMapper.selectGSTEURCertificate(params));
+        
+		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
+		if(zeroRat > 0 ){
+			zeroRatYn = "N";
+		}	
+		
+		int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
+		if(EURCert > 0 ){
+			eurCertYn = "N";
+		}	
+		
+		EgovMap result = membershipQuotationMapper.mPackageInfo(params);
+		
+		if(result == null){
+			result = new EgovMap();
+		}	
+		
+		 logger.debug("zeroRat ==========================>>  " + zeroRatYn);
+	     logger.debug("eurCertYn ==========================>>  " + eurCertYn);
+	        
+		
+		result.put("zeroRatYn", zeroRatYn);
+		result.put("eurCertYn", eurCertYn);
+		
+//		return membershipQuotationMapper.mPackageInfo(params);
+		return result;
 	}
 
 	@Override
@@ -161,45 +194,54 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		 }*/
 		  
 		  
-		if(verifyGSTZeroRateLocation){
+		if(!isVerifyGSTEURCertificate ){
 		
-    		 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
+    		 	//params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
+    		 	params.put("srvMemPacAmt", params.get("srvMemPacAmt"));
+    		 	params.put("srvMemPacNetAmt", params.get("srvMemPacNetAmt"));
     		    params.put("srvMemPacTaxes", "0");
-    		    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
-    		    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
-    		    params.put("srvMemBSTaxes", "0");
-			 
+		/*	 
 //		 }else if(verifyGSTZeroRateLocation){
-		 }else if(isVerifyGSTEURCertificate){
 			 
 			 	params.put("srvMemPacNetAmt", params.get("srvMemPacAmt"));
 			    params.put("srvMemPacTaxes", "0");
 			    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
 			    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
-			    params.put("srvMemBSTaxes", "0");
+			    params.put("srvMemBSTaxes", "0");*/
 			    
 		 }else {
 			 
 			 double   srvMemPacAmt =  0;  
 			 double   srvMemPacNetAmt  =  0;
-			 double   srvMemBSNetAmt =0;
-			 double	  srvMemBSAmt=0;
-			 
 			 
 			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
 			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
+			 
+			 //srvMemPacNetAmt  = Math.round((double)(srvMemPacAmt  * 100 / 106 ));
+			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
+			 params.put("srvMemPacTaxes", srvMemPacAmt - srvMemPacNetAmt);
+		 }
+		
+		
+		if(!isVerifyGSTEURCertificate || !verifyGSTZeroRateLocation){
+
+		    params.put("srvMemBSAmt", params.get("srvMemBSAmt"));
+		    params.put("srvMemBSNetAmt", params.get("srvMemBSAmt"));
+		    params.put("srvMemBSTaxes", "0");
+		    
+		}else{
+			
+			 double   srvMemBSNetAmt =0;
+			 double	  srvMemBSAmt=0;
+			 
 			 srvMemBSNetAmt  	= CommonUtils.intNvl((String)params.get("srvMemBSNetAmt"));
 			 srvMemBSAmt			= CommonUtils.intNvl((String)params.get("srvMemBSAmt"));
 			 
-			 srvMemPacNetAmt  = Math.round((double)(srvMemPacAmt  * 100 / 106 ));
-			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
-			 params.put("srvMemPacTaxes", srvMemPacNetAmt - srvMemPacNetAmt);
-			 
-			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 ));
+			 //srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 ));
 			 params.put("srvMemBSNetAmt",srvMemBSNetAmt );
 			 params.put("srvMemBSTaxes",srvMemBSAmt - srvMemBSNetAmt );
-		 }
-		
+			
+		}
 		
 		params.put("DOCNO", "20");
 		EgovMap  docNoMp = membershipQuotationMapper.getEntryDocNo(params); 
@@ -261,14 +303,17 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 					 eFilterMap.put("StkChargePrice", rMap.get("prc"));
 					 
 //					 if(verifyGSTZeroRateLocation){
-					 if(isVerifyGSTEURCertificate){
+					/* if(isVerifyGSTEURCertificate){
 						 
 						 eFilterMap.put("StkNetAmt", rMap.get("prc"));
 						 eFilterMap.put("StkTaxes", rMap.get("0"));
 						 
-					 }else if(verifyGSTZeroRateLocation){
+					 }else*/
+					 if(!verifyGSTZeroRateLocation || !isVerifyGSTEURCertificate){
+						 
 						 eFilterMap.put("StkNetAmt", rMap.get("prc"));
 						 eFilterMap.put("StkTaxes", rMap.get("0"));
+						 
 					 }else {
 						 
 						 double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));

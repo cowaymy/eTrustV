@@ -403,9 +403,7 @@ function fn_cYear_onChageEvent(){
     fn_getMembershipPackageInfo($("#cYear").val().trim());
     
     fn_getMembershipPackageFilterInfo();
-    
-    //TODO
-    fn_getFilterChargeList();
+        
     //fn_getFilterPromotionAmt();
     
     
@@ -463,7 +461,8 @@ function fn_onChange_cPromotionpac(o){
                      
                      if(result.length>0){
                         
-                         var oriprice                = Number($("#hiddenPacOriPrice").val()) ;
+                        // var oriprice                = Number($("#hiddenPacOriPrice").val()) ;
+                         var oriprice                = Number($("#hiddenNomalPrice").val()) ;
                          var promoPrcPrcnt     = Number( result[0]. promoPrcPrcnt) ;
                          var promoAddDiscPrc = Number( result[0]. promoAddDiscPrc) ;
                          
@@ -475,16 +474,35 @@ function fn_onChange_cPromotionpac(o){
                              // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );    
                              
                              
-                               var t1=    oriprice -( oriprice * ( promoPrcPrcnt /100 ) );
-                               var t2=    t1 -  promoAddDiscPrc;
+                               var t1 = oriprice - ( oriprice * ( promoPrcPrcnt /100 ) );
+                               var t2 = 0;
+                               if($("#eurCertYn").val() == "Y"){
+                                   t2 =    (t1 -  promoAddDiscPrc) * 100 /106;
+                                   $("#hiddenNomalPrice").val( Number( Math.floor(t1)));
+                               }else{
+                                   t2 = t1 -  promoAddDiscPrc;
+                               }
                                var t3 = Math.floor( t2);
                                $("#txtPackagePrice").html( Number(t3)); 
                               
                          }else if(result[0].promoDiscType =="1"){  //amt 
-                             $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  ))); 
+                        	 
+                        	 var t1 =  ( oriprice - promoPrcPrcnt) -promoAddDiscPrc;
+                             var t2 = 0;
+                             
+                        	 if($("#eurCertYn").val() == "Y"){
+                        		 t2 = t1 *100 / 106;
+                                 $("#hiddenNomalPrice").val(Number( Math.floor(t1)));
+                        	 }else{
+                        		 t2 = t1;
+                        	 }
+                             var t3 = Math.floor( t2);
+
+                             $("#txtPackagePrice").html( Number(t3)); 
+                            // $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  ))); 
                          
                          }else{
-                             alert('promoDiscType err ');
+                             Common.alert('promoDiscType err ');
                              return ;
                          }
                      }
@@ -518,25 +536,36 @@ function fn_getMembershipPackageInfo(_id){
     Common.ajax("GET", "/sales/membership/mPackageInfo", $("#getDataForm").serialize(), function(result) {
          console.log( result);
          
-         if( result.packageInfo ==null  ||  result.packageInfo ==""){
+         if( result.packageInfo.srvMemPacId ==null  ||  result.packageInfo.srvMemPacId ==""){
 
              $("#HiddenHasPackage").val(0);
              $("#txtBSFreq").html("");
-             $("#txtPackagePrice").html("0");
+             $("#txtPackagePrice").html("");
              $("#hiddenPacOriPrice").val(0);
+             $("#hiddenNomalPrice").val(0);
              
          }else{
              
               var   pacYear   =  parseInt($("#DUR").val() ,10) / 12;
               var   pacPrice =  Math.round((result.packageInfo.srvMemItmPrc * pacYear));
-              
-             
+               $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
+               $("#eurCertYn").val(result.packageInfo.eurCertYn);
+               
                $("#HiddenHasPackage").val(1);
                $("#txtBSFreq").html(result.packageInfo.srvMemItmPriod +" month(s)");
                $("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod );
+
+               $("#hiddenNomalPrice").val(pacPrice);
                
-               $("#txtPackagePrice").html(pacPrice);
-               $("#hiddenPacOriPrice").val(pacPrice);
+               if($("#eurCertYn").val() == "Y"){
+                   $("#txtPackagePrice").html(Math.round(pacPrice *100/106));
+                   $("#hiddenPacOriPrice").val(Math.round(pacPrice *100/106));
+               }else{
+                   $("#txtPackagePrice").html(pacPrice);
+                   $("#hiddenPacOriPrice").val(pacPrice);
+               }
+               
+               fn_getFilterChargeList();
        }
          
          
@@ -685,11 +714,7 @@ function fn_getFilterChargeList(){
     
     if($("#HiddenIsCharge").val() != "0"){
     	
-       /*  if($('#cPromo').val() == ""){
-        	
-            fn_getFilterPromotionAmt();   
-            
-        }else{ */
+       if($('#cTPackage').val() != ""){
         	
         	Common.ajax("GET", "/sales/membership/getFilterChargeListSum.do",{
                 SALES_ORD_NO : $("#ORD_NO").val(),
@@ -701,12 +726,22 @@ function fn_getFilterChargeList(){
                  
                 if(null != result){
                      if(result[0] !=null){
-                        $("#txtFilterCharge").text( result[0].amt);
+                    	 if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){
+                    		 alert("111");
+
+                    		 alert(result[0].amt);
+                             $("#txtFilterCharge").text( Math.round(result[0].amt * 100 / 106));
+                             alert( Math.round(result[0].amt * 100 / 106));
+                    	 }else{
+
+                             alert("222");
+                             $("#txtFilterCharge").text( result[0].amt);
+                    	 }
                     } 
                 	//$("#txtFilterCharge").text( result.amt);
                 }
             });
-        /* } */
+        } 
     }
 }
 
@@ -936,6 +971,7 @@ function    fn_SubscriptionYear_initEvt(){
      $("#txtBSFreq").html("");
      $("#txtPackagePrice").html("-");
      $("#hiddenPacOriPrice").val("");
+     $("#hiddenNomalPrice").val("");
      $("#txtFilterCharge").val("");
      $("#hiddenFilterCharge").val("");
      //$("#btnViewFilterCharge").attr("style" ,"display:none");
@@ -1198,8 +1234,14 @@ function  fn_DoSaveProcess(_saveOption){
     $("#srvSalesOrderId").val($("#ORD_ID").val());
     $("#srvMemQuotNo").val("");
     $("#srvMemPacId").val($("#cTPackage").val());
-    $("#srvMemPacAmt").val($("#txtPackagePrice").text());
+    
+    $("#srvMemPacNetAmt").val($("#txtPackagePrice").text());  // 
+    //$("#srvMemPacNetAmt").val($("#hiddenNomalPrice").text());  // nomalAmt
+    $("#srvMemPacAmt").val($("#hiddenNomalPrice").text()); //srvMemPacNetAmt
+    
     $("#srvMemBSAmt").val($("#txtFilterCharge").text());
+    $("#srvMemBSNetAmt").val($("#txtFilterCharge").text());  // srvMemBSNetAmt
+    
     $("#srvMemPv").val(0);
     $("#srvDuration").val($("#cYear").val());
     $("#srvRemark").val($("#txtRemark").val());
@@ -1470,6 +1512,7 @@ function createAUIGridOList() {
     <input type="text" name="HiddenIsCharge"  id="HiddenIsCharge"/>  
     <input type="text" name="HiddenHasPackage"  id="HiddenHasPackage"/> 
     <input type="text" name="hiddenPacOriPrice"  id="hiddenPacOriPrice"/> 
+    <input type="text" name="hiddenNomalPrice"  id="hiddenNomalPrice"/> 
     <input type="text" name="hiddenSalesPersonID"  id="hiddenSalesPersonID"/> 
     <input type="text" name="hiddentxtBSFreq"  id="hiddentxtBSFreq"/> 
 </div>
@@ -1508,8 +1551,8 @@ function createAUIGridOList() {
             <input type="text" name="srvPacPromoId" id="srvPacPromoId" />
             <input type="text" name="isFilterCharge" id="isFilterCharge" />
             <input type="text" name="empChk" id="empChk" />
-            
-            
+            <input type="text" name="zeroRatYn" id="zeroRatYn" />            
+            <input type="text" name="eurCertYn" id="eurCertYn" />            
     </div>
 </form>
 
@@ -1532,7 +1575,6 @@ function createAUIGridOList() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#"   id="sForm"  name="sForm" method="post" >
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
