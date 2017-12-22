@@ -55,8 +55,8 @@ public class RefundApplicationImpl implements RefundApplication {
 			hm.put("issBankId", 0);
 			hm.put("chqNo", String.valueOf(vo.get("chqNo")));
 			hm.put("refNo", String.valueOf(vo.get("refNo")));
-			hm.put("ccHolderName", "");
-			hm.put("ccNo", "");
+			hm.put("ccHolderName", String.valueOf(vo.get("cardHolder")));
+			hm.put("ccNo", String.valueOf(vo.get("cardNo")));
 			//hm.put("refundRemark", String.valueOf(vo.get("remark")));
 			hm.put("refundRemark", "");
 			hm.put("refDateMonth", "");
