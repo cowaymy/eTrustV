@@ -231,7 +231,6 @@ function fn_clear(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Sort By</th>
     <th scope="row"><spring:message code='service.title.SortBy'/></th>
     <td colspan="3">
     <select id="sortType" name="sortType">
