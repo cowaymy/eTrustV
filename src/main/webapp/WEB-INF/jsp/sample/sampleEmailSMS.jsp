@@ -33,6 +33,7 @@
 
 
 	<form id="dataForm">
+		phone : <input  id="phone" name="phone">
 		<input type="button" class="btn" onclick="javascript:fn_sendEmail();" value="email 전송 테스트" />
 		<input type="button" class="btn" onclick="javascript:fn_genSuiteSendSMS();" value="genSuiteSendSMS - 단건용(다건도 가능하나 좀 느림.)" />
 		<input type="button" class="btn" onclick="javascript:fn_mvgateSendSMS();" value="mvgateSendSMS - 다건용(속도 빠름. 비쌈.)" />
