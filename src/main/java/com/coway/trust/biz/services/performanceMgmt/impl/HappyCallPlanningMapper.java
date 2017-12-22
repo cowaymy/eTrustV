@@ -17,4 +17,5 @@ public interface HappyCallPlanningMapper {
 
 	void deleteHappyCall(Map<String, Object> deleteValue);
 
+	void insertHappyCallSub(Map<String, Object> insertValue);
 }

@@ -43,6 +43,45 @@ public class HappyCallPlanningServiceImpl implements HappyCallPlanningService{
     			insertValue.put("userId", sessionVO.getUserId());
     			logger.debug("insertValue {}", insertValue);
     			happyCallPlanningMapper.insertHappyCall(insertValue);
+    			
+    			String[] pointSpecial = new String[2];
+				pointSpecial[0] = "1";
+				pointSpecial[1] = "5";
+				
+				String[] descSpecial = new String[2];
+				descSpecial[0] = "Yes";
+				descSpecial[1] = "No";
+				
+				String[] pointStandard = new String[5];
+				pointStandard[0] = "1";
+				pointStandard[1] = "2";
+				pointStandard[2] = "3";
+				pointStandard[3] = "4";
+				pointStandard[4] = "5";
+				
+				String[] descStandard = new String[5];
+				descStandard[0] = "Excellent";
+				descStandard[1] = "Good";
+				descStandard[2] = "Average";
+				descStandard[3] = "Poor";
+				descStandard[4] = "Bad";
+				
+				//FeedbackType이 Special일때
+				if(insertValue.get("feedbackType").equals("Special")){	
+					for(int j=0; j<2; i++){
+						insertValue.put("hcAnsPoint", pointSpecial[j]);
+						insertValue.put("hcAnsDesc", descSpecial[j]);
+						happyCallPlanningMapper.insertHappyCallSub(insertValue);
+					}
+				}//FeedbackType이 Standard일때
+				else if(insertValue.get("feedbackType").equals("Standard")){
+					for(int j=0; j<5; j++){
+						insertValue.put("hcAnsPoint", pointStandard[j]);
+						insertValue.put("hcAnsDesc", descStandard[j]);
+						happyCallPlanningMapper.insertHappyCallSub(insertValue);
+					}
+				}
+    			 
     		}
     		addSuccess = true;
 		}else{

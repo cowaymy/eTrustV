@@ -66,7 +66,8 @@
 	       UPD_USER_ID, 
 	       HC_DEF_QUES_TYPE_ID, 
 	       PRIOD_FROM, 
-	       PRIOD_TO
+	       PRIOD_TO,
+	       EVT_ID
 	    )
 		VALUES (
 		   CCR0003M_HC_DEF_ID_SEQ.NEXTVAL,
@@ -92,7 +93,8 @@
             WHERE CODE_MASTER_ID = 103
             AND CODE_NAME = #{evaluationCriteria}), 
            TO_DATE(#{periodFrom}, 'YYYY/MM/DD'), 
-           TO_DATE(#{periodTo}, 'YYYY/MM/DD')
+           TO_DATE(#{periodTo}, 'YYYY/MM/DD'),
+           1
 		)
     </insert>
     
@@ -116,5 +118,52 @@
 		OR TO_DATE(#{periodFrom}, 'MM/YYYY') 
               BETWEEN TO_DATE(해당시작일, 'YYYY/MM/DD') AND TO_DATE(해당종료일, 'YYYY/MM/DD'))
     </update> -->
+
+    <insert id="insertHappyCallSub" parameterType="Map">
+        INSERT INTO CCR0004M (
+          HC_ANS_ID
+          , HC_DEF_ID
+          , HC_ANS_POINT
+          , HC_ANS_DESC
+          , HC_ANS_SEQ
+          , HC_ANS_STUS_ID
+          , HC_ANS_CRT_USER_ID
+          , HC_ANS_CRT_DT
+          , HC_ANS_UPD_USER_ID
+          , HC_ANS_UPD_DT
+       )
+      VALUES(
+          CCR0004M_HC_ANS_ID_SEQ.NEXTVAL
+          ,  (select MAX(HC_DEF_ID) FROM CCR0003M)
+          , #{hcAnsPoint}
+          , #{hcAnsDesc}
+          <if test="hcAnsDesc == 'Yes'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'No'">
+          , 2
+          </if>
+          <if test="hcAnsDesc == 'Excellent'">
+          , 1
+          </if>
+          <if test="hcAnsDesc == 'Good'">
+          , 2
+          </if>
+          <if test="hcAnsDesc == 'Average'">
+          , 3
+          </if>
+          <if test="hcAnsDesc == 'Poor'">
+          , 4
+          </if>
+          <if test="hcAnsDesc == 'Bad'">
+          , 5
+          </if>          
+          , 1
+          , #{userId}
+          , SYSDATE
+          , #{userId}
+          , SYSDATE
+      )
+    </insert>
 
 </mapper>
