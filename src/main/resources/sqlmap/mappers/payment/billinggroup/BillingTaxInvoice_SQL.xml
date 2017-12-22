@@ -113,7 +113,7 @@
         FROM
             PAY0031D Extent1
             INNER JOIN PAY0032D Extent2 ON Extent2.TAX_INVC_ID = Extent1.TAX_INVC_ID
-            INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_ID            
+            INNER JOIN SAL0001D Extent3 ON Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO            
         WHERE
             Extent1.TAX_INVC_TYPE = #{invoiceType}
             <if test="invoiceNo != null and invoiceNo != '' ">
@@ -123,7 +123,7 @@
             AND Extent1.TAX_INVC_SVC_NO = #{serviceNo}
             </if>
             <if test="orderNo != null and orderNo != '' ">
-            AND Extent3.SALES_ORD_NO = TO_NUMBER(#{orderNo})
+            AND Extent3.SALES_ORD_NO = #{orderNo}
             </if>
             <if test="invoicePeriod != null and invoicePeriod != '' ">
             AND Extent1.TAX_INVC_REF_DT  <![CDATA[   >= ]]> TO_DATE(#{invoicePeriod},'MM/YYYY')

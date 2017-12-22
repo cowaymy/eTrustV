@@ -124,6 +124,8 @@ public interface LargeExcelService {
 	void downLoadClaimFileCrcCIMB(Object parameter, ClaimFileCrcCIMBHandler claimFileCrcCIMBHandler);
 	
 	void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler);
+	
+	void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 

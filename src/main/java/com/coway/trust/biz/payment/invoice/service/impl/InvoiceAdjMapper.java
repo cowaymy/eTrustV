@@ -185,5 +185,12 @@ public interface InvoiceAdjMapper {
 	 */
     List<EgovMap> selectAdjBatchApprovalPopHist(Map<String, Object> params);
     
+    /**
+   	 * 
+   	 * @param params
+   	 * @return
+   	 */
+   	int countAdjustmentExcelList(Map<String, Object> params);
+    
     
 }

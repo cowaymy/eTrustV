@@ -296,6 +296,11 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler) {
 		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileFPXHandler);
 	}
+	
+	@Override
+	public void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.INVOICE_SUMMARY.getQueryId(), parameter, excelDownloadHandler);
+	}
 
 	@Override
 	public void downLoad(String id, Object parameter, ResultHandler resultHandler) {

@@ -407,4 +407,15 @@ public class InvoiceAdjServiceImpl extends EgovAbstractServiceImpl implements In
 	public List<EgovMap> selectAdjBatchApprovalPopHist(Map<String, Object> params) {
 		return invoiceMapper.selectAdjBatchApprovalPopHist(params);
 	}
+	
+	/**
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int countAdjustmentExcelList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return invoiceMapper.countAdjustmentExcelList(params);
+	}
 }

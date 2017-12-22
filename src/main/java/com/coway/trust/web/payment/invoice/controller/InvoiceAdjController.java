@@ -1,20 +1,17 @@
 package com.coway.trust.web.payment.invoice.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,11 +21,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.payment.billinggroup.service.BillingInvoiceService;
+import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.invoice.service.InvoiceAdjService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.common.excel.download.ExcelDownloadFormDef;
+import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
+import com.coway.trust.web.common.excel.download.ExcelDownloadVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -40,6 +40,9 @@ public class InvoiceAdjController {
 	
 	@Resource(name = "invoiceAdjService")
 	private InvoiceAdjService invoiceService;
+	
+	@Autowired
+	private LargeExcelService largeExcelService;
 	
 	/******************************************************
 	 *   AdjustmentCNDN
@@ -57,46 +60,8 @@ public class InvoiceAdjController {
 	
 	@RequestMapping(value = "/selectAdjustmentList.do")
 	public ResponseEntity<List<EgovMap>> selectInvoiceList(@RequestParam Map<String, Object> params, ModelMap model) {	
-		List<EgovMap> list = null;
 		
-		LOGGER.debug("params : {}", params);
-		
-		String orderNo = String.valueOf(params.get("orderNo")).trim();
-		String status = String.valueOf(params.get("status"));
-		String invoiceNo = String.valueOf(params.get("invoiceNo")).trim();
-		String adjNo = String.valueOf(params.get("adjNo")).trim();
-		String reportNo = String.valueOf(params.get("reportNo")).trim();
-		String creator = String.valueOf(params.get("creator"));
-		String date1 = String.valueOf(params.get("date1"));		
-		String batchId = String.valueOf(params.get("batchId"));
-		String deptNm = String.valueOf(params.get("deptNm"));		
-		
-		if(date1 != "null" && date1 != ""){
-			String tmp[] = date1.split("/");
-			date1 = tmp[2] + "/" + tmp[1] + "/" + tmp[0] + " 00:00:00";
-		}
-		String date2 = String.valueOf(params.get("date2"));
-		if(date2 != "null" && date2 != ""){
-			String tmp[] = date2.split("/");
-			date2 = tmp[2] + "/" + tmp[1] + "/" + tmp[0] + " 00:00:00";
-		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("orderNo", orderNo);
-		map.put("status", status);
-		map.put("invoiceNo", invoiceNo);
-		map.put("adjNo", adjNo);
-		map.put("reportNo", reportNo);
-		map.put("creator", creator);
-		map.put("date1", date1);
-		map.put("date2", date2);		
-		map.put("batchId", batchId);
-		map.put("deptNm", deptNm);
-		
-		LOGGER.debug("map : {} ", map);
-		
-		list = invoiceService.selectInvoiceAdj(map);
-		
+		List<EgovMap> list = invoiceService.selectInvoiceAdj(params);		
 		return ResponseEntity.ok(list);
 	}
 	
@@ -500,12 +465,6 @@ public class InvoiceAdjController {
 	@RequestMapping(value = "/approvalAdjustment.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> approvalAdjustment(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
 		
-		LOGGER.debug("adjId : {}", params.get("adjId"));
-		LOGGER.debug("process : {}", params.get("process"));
-		LOGGER.debug("invoiceType : {}", params.get("invoiceType"));
-		LOGGER.debug("memoAdjTypeId : {}", params.get("memoAdjTypeId"));
-		LOGGER.debug("invoiceNo : {}", params.get("invoiceNo"));
-		
 		//세션 정보 
 		params.put("userId", sessionVO.getUserId());
 		
@@ -736,12 +695,56 @@ public class InvoiceAdjController {
             //totalAmount += itemAdjsutment;					
             returnParam.put("memoItemInvoiceItmQty", Integer.parseInt(billItemQty));
             
-            
-        
         return returnParam;
     }
 	
-}
-
 	
-
+	
+	@RequestMapping(value = "/selectAdjustmentExcelList.do")
+	public void selectAdjustmentExcelList(HttpServletRequest request, HttpServletResponse response) {
+		
+		ExcelDownloadHandler downloadHandler = null;
+		
+		try {
+            
+            Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("status", request.getParameter("status") == null ? "4" :  request.getParameter("status"));
+    		map.put("date1", request.getParameter("date1") == null ? "01/01/1900" :  request.getParameter("date1"));
+    		map.put("date2", request.getParameter("date2") == null ? "01/01/1900" :  request.getParameter("date2"));		
+    		
+    		String[] columns;
+            String[] titles;
+			
+            columns = new String[] { "code","invcItmOrdNo","memoAdjRefNo","memoAdjInvcNo","resnDesc","memoItmAmt","userName","deptName","memoAdjCrtDt","updUserName","memoAdjUpdDt" };            
+			titles = new String[] {"TYPE","ORDER NO","ADJUSTMENT NO","INVOICE NO","REASON","ADJ. AMOUNT","REQUESTOR", "DEPARTMENT", "CREATE DATE", "FINAL APPROVAL", "FINAL APPROVAL DATE" };
+			
+			downloadHandler = getExcelDownloadHandler(response, "InvoiceAdjustmentSummary.xlsx", columns, titles);
+			
+			largeExcelService.downloadInvcAdjExcelList(map, downloadHandler);
+			
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+	}
+	
+	private ExcelDownloadHandler getExcelDownloadHandler(HttpServletResponse response, String fileName,
+			String[] columns, String[] titles) {
+		ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(fileName, columns, titles);
+		return new ExcelDownloadHandler(excelDownloadVO, response);
+	}
+	
+	@RequestMapping(value = "/countAdjustmentExcelList.do")
+	public ResponseEntity<Integer> countAdjustmentExcelList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		int cnt = invoiceService.countAdjustmentExcelList(params);
+		return ResponseEntity.ok(cnt);
+	}	
+}

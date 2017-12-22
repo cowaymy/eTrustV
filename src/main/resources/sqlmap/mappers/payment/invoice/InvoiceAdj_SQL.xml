@@ -79,33 +79,33 @@
 			                       LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID	
 			                       LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID		                       
 			                WHERE 1=1
-			                        <if test="orderNo != 'null' and orderNo != '' " >
+			                        <if test="orderNo != null and orderNo != '' " >
 								    AND Extent6.INVC_ITM_ORD_NO = #{orderNo} 
 								    </if>
-								    <if test="adjNo != 'null' and adjNo != '' ">
+								    <if test="adjNo != null and adjNo != '' ">
 								    AND Extent1.MEMO_ADJ_REF_NO = #{adjNo} 
 								    </if>
-								    <if test="status != 'null' and status != '' ">
+								    <if test="status != null and status != '' ">
 								    AND Extent1.MEMO_ADJ_STUS_ID = #{status} 
 								    </if>
-								    <if test="invoiceNo != 'null' and invoiceNo != '' ">
+								    <if test="invoiceNo != null and invoiceNo != '' ">
 								    AND Extent1.MEMO_ADJ_INVC_NO = #{invoiceNo}
 								    </if> 
-								    <if test="reportNo != 'null' and reportNo != '' ">
+								    <if test="reportNo != null and reportNo != '' ">
 								    AND Extent1.MEMO_ADJ_RPT_NO = #{reportNo} 
 								    </if>
-								    <if test="creator != 'null' and creator != '' ">
+								    <if test="creator != null and creator != '' ">
 								    AND Extent7.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
 								    </if>
-								    <if test="date1 != 'null' and date2 != 'null' and date1 != '' and date2 != '' ">
+								    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
 								    AND 
-								        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'YYYY-MM-DD HH24:MI:SS') 
-								        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'YYYY-MM-DD HH24:MI:SS')+1 
+								        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
+								        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
 								    </if>
-								    <if test="batchId != 'null' and batchId != '' ">
+								    <if test="batchId != null and batchId != '' ">
                                     AND Extent1.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
                                     </if>  
-                                    <if test="deptNm != 'null' and deptNm != '' ">
+                                    <if test="deptNm != null and deptNm != '' ">
                                     AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
                                     </if>
 			                UNION ALL 
@@ -142,33 +142,33 @@
 			                       LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID 
 			                       LEFT JOIN SYS0047M Extent151  ON Extent151.USER_ID = Extent9.MEMO_ADJ_UPD_USER_ID
 			                 WHERE 1=1   
-                                    <if test="orderNo != 'null' and orderNo != '' " >
+                                    <if test="orderNo != null and orderNo != '' " >
                                     AND Extent14.INVC_ITM_ORD_NO = #{orderNo} 
                                     </if>
-                                    <if test="adjNo != 'null' and adjNo != '' ">
+                                    <if test="adjNo != null and adjNo != '' ">
                                     AND Extent9.MEMO_ADJ_REF_NO = #{adjNo} 
                                     </if>
-                                    <if test="status != 'null' and status != '' ">
+                                    <if test="status != null and status != '' ">
                                     AND Extent9.MEMO_ADJ_STUS_ID = #{status} 
                                     </if>
-                                    <if test="invoiceNo != 'null' and invoiceNo != '' ">
+                                    <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent9.MEMO_ADJ_INVC_NO = #{invoiceNo}
                                     </if> 
-                                    <if test="reportNo != 'null' and reportNo != '' ">
+                                    <if test="reportNo != null and reportNo != '' ">
                                     AND Extent9.MEMO_ADJ_RPT_NO = #{reportNo} 
                                     </if>
-                                    <if test="creator != 'null' and creator != '' ">
+                                    <if test="creator != null and creator != '' ">
                                     AND Extent15.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
-                                    <if test="date1 != 'null' and date2 != 'null' and date1 != '' and date2 != '' ">
+                                    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
                                     AND 
-                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'YYYY-MM-DD HH24:MI:SS') 
-                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'YYYY-MM-DD HH24:MI:SS')+1 
+                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
+                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
                                     </if>
-                                    <if test="batchId != 'null' and batchId != '' ">                                     
+                                    <if test="batchId != null and batchId != '' ">                                     
                                     AND Extent9.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
                                     </if>  
-                                    <if test="deptNm != 'null' and deptNm != '' ">
+                                    <if test="deptNm != null and deptNm != '' ">
                                     AND Extent17.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
                                     </if>   
 			                       ) UnionAll1
@@ -207,37 +207,172 @@
 			                LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID 
 			                LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
 			        WHERE 1=1
-			                         <if test="orderNo != 'null' and orderNo != '' " >
+			                         <if test="orderNo != null and orderNo != '' " >
                                     AND Extent22.INVC_ITM_ORD_NO = #{orderNo} 
                                     </if>
-                                    <if test="adjNo != 'null' and adjNo != '' ">
+                                    <if test="adjNo != null and adjNo != '' ">
                                     AND Extent17.MEMO_ADJ_REF_NO = #{adjNo} 
                                     </if>
-                                    <if test="status != 'null' and status != '' ">
+                                    <if test="status != null and status != '' ">
                                     AND Extent17.MEMO_ADJ_STUS_ID = #{status} 
                                     </if>
-                                    <if test="invoiceNo != 'null' and invoiceNo != '' ">
+                                    <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent17.MEMO_ADJ_INVC_NO = #{invoiceNo}
                                     </if> 
-                                    <if test="reportNo != 'null' and reportNo != '' ">
+                                    <if test="reportNo != null and reportNo != '' ">
                                     AND Extent17.MEMO_ADJ_RPT_NO = #{reportNo} 
                                     </if>
-                                    <if test="creator != 'null' and creator != '' ">
+                                    <if test="creator != null and creator != '' ">
                                     AND Extent23.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
-                                    <if test="date1 != 'null' and date2 != 'null' and date1 != '' and date2 != '' ">
+                                    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
                                     AND 
-                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'YYYY-MM-DD HH24:MI:SS') 
-                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'YYYY-MM-DD HH24:MI:SS')+1 
+                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
+                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
                                     </if>
-                                    <if test="batchId != 'null' and batchId != '' ">                                     
+                                    <if test="batchId != null and batchId != '' ">                                     
                                     AND Extent17.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
                                     </if>  
-                                    <if test="deptNm != 'null' and deptNm != '' ">
+                                    <if test="deptNm != null and deptNm != '' ">
                                     AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
                                     </if>      
 			                ) UnionAll2
   ORDER BY UnionAll2.MEMOADJUSTID1 DESC
+    </select>
+    
+    <select id="countAdjustmentExcelList" parameterType="Map" resultType="int">
+        SELECT 
+            COUNT(1) AS CNT
+              FROM ( SELECT UnionAll1.MEMO_ADJ_ID MEMO_ADJ_ID  
+                     FROM ( SELECT Extent1.MEMO_ADJ_ID MEMO_ADJ_ID 
+                            FROM PAY0011D Extent1
+                                   JOIN PAY0012D Extent2   ON Extent2.MEMO_ADJ_ID = Extent1.MEMO_ADJ_ID
+                                   LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = Extent1.MEMO_ADJ_RESN_ID
+                                   LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.MEMO_ADJ_TYPE_ID
+                                   JOIN PAY0029D Extent5   ON Extent5.TAX_INVC_REF_NO = Extent1.MEMO_ADJ_INVC_NO
+                                   JOIN PAY0030D Extent6   ON Extent6.INVC_ITM_ID = Extent2.MEMO_ITM_INVC_ITM_ID
+                                   LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.MEMO_ADJ_CRT_USER_ID                                  
+                                   LEFT JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.MEMO_ADJ_STUS_ID
+                                   LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID   
+                                   LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID                             
+                            WHERE 1=1
+                                    <if test="orderNo != null and orderNo != '' " >
+                                    AND Extent6.INVC_ITM_ORD_NO = #{orderNo} 
+                                    </if>
+                                    <if test="adjNo != null and adjNo != '' ">
+                                    AND Extent1.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    </if>
+                                    <if test="status != null and status != '' ">
+                                    AND Extent1.MEMO_ADJ_STUS_ID = #{status} 
+                                    </if>
+                                    <if test="invoiceNo != null and invoiceNo != '' ">
+                                    AND Extent1.MEMO_ADJ_INVC_NO = #{invoiceNo}
+                                    </if> 
+                                    <if test="reportNo != null and reportNo != '' ">
+                                    AND Extent1.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    </if>
+                                    <if test="creator != null and creator != '' ">
+                                    AND Extent7.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
+                                    </if>
+                                    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
+                                    AND 
+                                        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
+                                        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    </if>
+                                    <if test="batchId != null and batchId != '' ">
+                                    AND Extent1.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
+                                    </if>  
+                                    <if test="deptNm != null and deptNm != '' ">
+                                    AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
+                                    </if>
+                            UNION ALL 
+                            SELECT Extent9.MEMO_ADJ_ID MEMO_ADJ_ID
+                            FROM PAY0011D Extent9
+                                   JOIN PAY0012D Extent10   ON Extent10.MEMO_ADJ_ID = Extent9.MEMO_ADJ_ID
+                                   LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent9.MEMO_ADJ_RESN_ID
+                                   LEFT JOIN SYS0013M Extent12   ON Extent12.CODE_ID = Extent9.MEMO_ADJ_TYPE_ID
+                                   JOIN PAY0033D Extent13   ON Extent13.TAX_INVC_REF_NO = Extent9.MEMO_ADJ_INVC_NO
+                                   JOIN PAY0034D Extent14   ON Extent14.INVC_ITM_ID = Extent10.MEMO_ITM_INVC_ITM_ID
+                                   LEFT JOIN SYS0047M Extent15   ON Extent15.USER_ID = Extent9.MEMO_ADJ_CRT_USER_ID
+                                   LEFT JOIN SYS0038M Extent16   ON Extent16.STUS_CODE_ID = Extent9.MEMO_ADJ_STUS_ID
+                                   LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID 
+                                   LEFT JOIN SYS0047M Extent151  ON Extent151.USER_ID = Extent9.MEMO_ADJ_UPD_USER_ID
+                             WHERE 1=1   
+                                    <if test="orderNo != null and orderNo != '' " >
+                                    AND Extent14.INVC_ITM_ORD_NO = #{orderNo} 
+                                    </if>
+                                    <if test="adjNo != null and adjNo != '' ">
+                                    AND Extent9.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    </if>
+                                    <if test="status != null and status != '' ">
+                                    AND Extent9.MEMO_ADJ_STUS_ID = #{status} 
+                                    </if>
+                                    <if test="invoiceNo != null and invoiceNo != '' ">
+                                    AND Extent9.MEMO_ADJ_INVC_NO = #{invoiceNo}
+                                    </if> 
+                                    <if test="reportNo != null and reportNo != '' ">
+                                    AND Extent9.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    </if>
+                                    <if test="creator != null and creator != '' ">
+                                    AND Extent15.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
+                                    </if>
+                                    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
+                                    AND 
+                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
+                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    </if>
+                                    <if test="batchId != null and batchId != '' ">                                     
+                                    AND Extent9.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
+                                    </if>  
+                                    <if test="deptNm != null and deptNm != '' ">
+                                    AND Extent17.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
+                                    </if>   
+                                   ) UnionAll1
+                             
+                     UNION ALL 
+                     SELECT Extent17.MEMO_ADJ_ID MEMO_ADJ_ID 
+                     FROM PAY0011D Extent17
+                            JOIN PAY0012D Extent18   ON Extent18.MEMO_ADJ_ID = Extent17.MEMO_ADJ_ID
+                            LEFT JOIN SYS0032M Extent19   ON Extent19.RESN_ID = Extent17.MEMO_ADJ_RESN_ID
+                            LEFT JOIN SYS0013M Extent20   ON Extent20.CODE_ID = Extent17.MEMO_ADJ_TYPE_ID
+                            JOIN PAY0031D Extent21   ON Extent21.TAX_INVC_REF_NO = Extent17.MEMO_ADJ_INVC_NO
+                            JOIN PAY0032D Extent22   ON Extent22.INVC_ITM_ID = Extent18.MEMO_ITM_INVC_ITM_ID
+                            LEFT JOIN SYS0047M Extent23   ON Extent23.USER_ID = Extent17.MEMO_ADJ_CRT_USER_ID
+                            LEFT JOIN SYS0038M Extent24   ON Extent24.STUS_CODE_ID = Extent17.MEMO_ADJ_STUS_ID
+                            LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID 
+                            LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
+                    WHERE 1=1
+                                     <if test="orderNo != null and orderNo != '' " >
+                                    AND Extent22.INVC_ITM_ORD_NO = #{orderNo} 
+                                    </if>
+                                    <if test="adjNo != null and adjNo != '' ">
+                                    AND Extent17.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    </if>
+                                    <if test="status != null and status != '' ">
+                                    AND Extent17.MEMO_ADJ_STUS_ID = #{status} 
+                                    </if>
+                                    <if test="invoiceNo != null and invoiceNo != '' ">
+                                    AND Extent17.MEMO_ADJ_INVC_NO = #{invoiceNo}
+                                    </if> 
+                                    <if test="reportNo != null and reportNo != '' ">
+                                    AND Extent17.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    </if>
+                                    <if test="creator != null and creator != '' ">
+                                    AND Extent23.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
+                                    </if>
+                                    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
+                                    AND 
+                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
+                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    </if>
+                                    <if test="batchId != null and batchId != '' ">                                     
+                                    AND Extent17.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
+                                    </if>  
+                                    <if test="deptNm != null and deptNm != '' ">
+                                    AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
+                                    </if>      
+                            ) UnionAll2
+  
     </select>
     
     <select id="selectNewAdjMaster" parameterType="Map" resultType="egovMap">

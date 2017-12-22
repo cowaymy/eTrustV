@@ -61,6 +61,37 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
     $('#_searchInvoice').hide();
     
 }
+
+function fn_excelDown(){
+	
+	var valid = ValidRequiredField();
+     if(!valid){
+    	Common.alert("* Please key in Create Date.");
+    }
+    else{
+		var date1 = $("#date1").val();
+		var date2 = $("#date2").val();
+		
+		Common.ajax("GET", "/payment/countAdjustmentExcelList.do", $("#searchForm").serialize(), function(result) {
+	       var cnt = result;
+	       if(cnt > 0){
+
+				Common.showLoader();
+		        $.fileDownload("/payment/selectAdjustmentExcelList.do?date1=" + date1 + "&date2="+date2+"&status=4")
+				.done(function () {
+			        Common.alert('File download a success!');                
+					Common.removeLoader();            
+		        })
+			    .fail(function () {
+					Common.alert('File download failed!');                
+		            Common.removeLoader();            
+				});
+		   }else{
+	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
+	       }
+       });
+   }
+}
 </script>
 
 <!-- content start -->
@@ -77,6 +108,7 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_excelDown();"><spring:message code='pay.btn.generateExcel'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
         </ul>
     </aside>
