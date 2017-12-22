@@ -10,27 +10,27 @@ var myGridID;
 var columnLayout = [ 
     {         
         dataField : "0",
-        headerText : "Transaction Date",
+        headerText : "<spring:message code='pay.head.transactionDate'/>",
         editable : true
     },{
         dataField : "1",
-        headerText : "CRC Number",
+        headerText : "<spring:message code='pay.head.crcNumber'/>",
         editable : true
     },{
         dataField : "2",
-        headerText : "Approval No.",
+        headerText : "<spring:message code='pay.head.approvalNo'/>",
         editable : true
     }, {
         dataField : "3",
-        headerText : "MID No.",
+        headerText : "<spring:message code='pay.head.midNo'/>",
         editable : true
     }, {
         dataField : "4",
-        headerText : "Ref No.",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : true
     }, {
         dataField : "5",
-        headerText : "Gross Amount",
+        headerText : "<spring:message code='pay.head.grossAmount'/>",
         dataType : "numeric",
         editable : true
     }];
@@ -256,9 +256,9 @@ function fn_testCallStoredProcedure(){
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>CRC Statement Upload</h2>
 		<ul class="right_opt">
-			<li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv">Download<br />CSV File Format</a></p></li>
+			<li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv"><spring:message code='pay.btn.download'/><br /><spring:message code='pay.btn.csvFileFormat'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_testCallStoredProcedure();">sp test</a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_testCallStoredProcedure();"><spring:message code='pay.btn.spTest'/></a></p></li>
 			
 		</ul>
 	</aside>
