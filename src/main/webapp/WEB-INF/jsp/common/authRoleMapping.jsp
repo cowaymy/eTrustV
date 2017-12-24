@@ -29,7 +29,7 @@
 var gSelMainRowIdx = 0;
 var gSelMstRolLvl = "";
 var gSelAuthRolLvl = "";
-var gAuthList =   ["EXT", "INT", "MGR"];
+var gAuthList =   ["EXT", "INT", "MGR","TLD"];
 var validFrom;
 var validTo;
 
@@ -313,7 +313,7 @@ function auiCellEditignHandler(event)
             return true;
          }
          else if(AUIGrid.isAddedById(AuthGridID, event.item.rowId) == false && (event.item.rowId != "PkAddNew") //수정모드
-                 && (authCode == "INT" || authCode == "EXT"  || authCode == "MGR") )
+                 && (authCode == "INT" || authCode == "EXT"  || authCode == "MGR" || authCode == "TLD") )
          {
              //Common.alert("Can't Edit Date In 'Base Auth.' ");
            Common.alert("<spring:message code='sys.msg.cannot' arguments='Edit Date ; Base Auth.' htmlEscape='false' argumentSeparator=';'/>");
@@ -380,7 +380,7 @@ function auiCellEditignHandler(event)
           }
 
           // levle-1에서만 base auth를 등록할 수 있다.
-          if (selAuthCode == "MGR" || selAuthCode == "EXT" || selAuthCode == "INT")
+          if (selAuthCode == "MGR" || selAuthCode == "EXT" || selAuthCode == "INT" || selAuthCode == "TLD")
           {
               if (gSelMstRolLvl != "1")
               {   //Level 1 should do.
@@ -409,6 +409,13 @@ function auiCellEditignHandler(event)
 
               if(selAuthCode == "EXT" && authData.indexOf("EXT") > -1){
                   Common.alert("<spring:message code='sys.msg.already.Registered' arguments='EXT' htmlEscape='false'/>");
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
+                  AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
+                  return false;
+              }
+
+              if(selAuthCode == "TLD" && authData.indexOf("TLD") > -1){
+                  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='TLD' htmlEscape='false'/>");
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authCode"] );
                   AUIGrid.restoreEditedCells(AuthGridID, [event.rowIndex, "authName"] );
                   return false;
@@ -496,8 +503,13 @@ function auiCellEditignHandler(event)
           }
           else if (selAuthCode == "INT")
           {
-          	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Intenal");
+          	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Staff");
           	AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
+          }
+          else if (selAuthCode == "TLD")
+          {
+            AUIGrid.setCellValue(AuthGridID, event.rowIndex, 1, "Base Auth - Team Leader");
+            AUIGrid.setCellValue(AuthGridID, event.rowIndex, 2,  $("#roleId").val());
           }
         }
 

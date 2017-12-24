@@ -111,7 +111,7 @@ WHERE  1 = 1
      (
        #{authCode}
       ,#{roleId}
-      ,DECODE( #{authCode},'EXT','0','MGR','0','INT','0',#{roleLvl})
+      ,DECODE( #{authCode},'EXT','0','MGR','0','INT','0','TLD','0',#{roleLvl})
       ,#{fromDt}
       ,#{toDt}
       ,#{crtUserId}
@@ -125,7 +125,7 @@ WHERE  1 = 1
      UPDATE SYS0054M
         SET AUTH_CODE = UPPER(#{authCode})
            ,ROLE_ID   = #{roleId}
-           ,ROLE_LVL  = DECODE( #{authCode},'EXT','0','MGR','0','INT','0',#{roleLvl})
+           ,ROLE_LVL  = DECODE( #{authCode},'EXT','0','MGR','0','INT','0','TLD','0',#{roleLvl})
            ,VALID_DT_FROM = #{fromDt}
            ,VALID_DT_TO   = #{toDt}
            ,UPD_USER_ID   = #{updUserId}
@@ -180,6 +180,7 @@ WHERE  1 = 1
           , TRIM(CASE SYS54M.AUTH_CODE WHEN 'INT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
                                        WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
                                        WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
+                                       WHEN 'TLD' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 313 AND CODE = SYS54M.AUTH_CODE )
                                        ELSE ( SELECT  SYS0053M.AUTH_NAME FROM SYS0053M   WHERE  SYS0053M.AUTH_CODE = SYS54M.AUTH_CODE )
             END) AUTH_NAME
 
@@ -197,8 +198,6 @@ WHERE  1 = 1
                               CONNECT BY NOCYCLE
                               PRIOR  PARENT_ROLE = SYS44M.ROLE_ID
                              )
-      AND SYS54M.VALID_DT_FROM <![CDATA[ <= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
-      AND SYS54M.VALID_DT_TO   <![CDATA[ >= ]]> TO_CHAR(SYSDATE,'YYYYMMDD')
 
     ORDER BY SYS54M.ROLE_LVL
 </select>
@@ -209,6 +208,7 @@ SELECT
       ,TRIM(CASE SYS54M.AUTH_CODE WHEN 'INT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
                              WHEN 'EXT' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
                              WHEN 'MGR' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
+                             WHEN 'TLD' THEN  ( SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = #{CodeMasterId} AND CODE = SYS54M.AUTH_CODE )
                              ELSE SYS53M.AUTH_NAME
        END) AUTH_NAME
       ,SYS54M.ROLE_ID
@@ -352,6 +352,7 @@ WITH AUTH_ROLE
             ,ROLE_ID3
             ,LEVEL_NM3
             ,RNK
+            , AUTH_CODE as row_id
         FROM AUTH_ROLE
 
         UNION ALL
@@ -376,6 +377,7 @@ WITH AUTH_ROLE
                     ELSE ''
                END LEVEL_NM3
               ,(ROW_NUMBER() OVER(ORDER BY AUTH_CODE)) RNK
+              , AUTH_CODE as row_id
         FROM SYS0053M
        WHERE 1 = 1
      <if test='authCode !=null and authCode != "" '>
@@ -403,7 +405,7 @@ WITH AUTH_ROLE
           )
     VALUES
          (
-           (SELECT (COUNT(1) +1) CNT FROM SYS0053M)
+           (SELECT MAX(TO_NUMBER(AUTH_CODE))+1 FROM SYS0053M)
           ,#{authName}
           ,#{roleId}
           ,#{roleId1}

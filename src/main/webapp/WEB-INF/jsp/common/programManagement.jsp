@@ -16,6 +16,7 @@
 
 </style>
 <script type="text/javaScript">
+
 var gAddRowCnt = 0;
 var gOrgList =   ["ORG", "LOG","SAL", "PAY", "SVC", "CCR", "CMM", "SYS", "MIS","SCM","FCM"];
 
@@ -512,8 +513,6 @@ function fnValidationCheck()
     return result;
 }
 
-
-
 function fnSelectPgmTransListAjax()
 {
 	 fnTransGridReset();
@@ -711,24 +710,19 @@ var myGridID, transGridID;
 
 $(document).ready(function()
 {
+    $("#ipt_pgmCode").focus();
 
-    $("#pgmCode").focus();
-
-//     $("#pgmCode").keydown(function(key)
-//     {
-//        if (key.keyCode == 13)
-//        {
-//     	   fnSelectPgmListAjax();
-//        }
-
-//     });
-
-    $("#pgmCode").bind("keyup", function()
+     $("#ipt_pgmCode").keydown(function(key)
+     {
+        if (key.keyCode == 13)
+        {
+     	   fnSelectPgmListAjax();
+        }
+     });
+    $("#ipt_pgmCode").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
-
-
     $("#pgmNm").keydown(function(key)
     {
        if (key.keyCode == 13)
@@ -743,7 +737,6 @@ $(document).ready(function()
     });
 
 
-/***************************************************[ Main GRID] ***************************************************/
 
     var options = {
                   usePaging : true,
@@ -797,9 +790,6 @@ $(document).ready(function()
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
     });
-
-
-/***************************************************[ Trans GRID] ***************************************************/
 
     var transOptions =
         {
@@ -920,9 +910,7 @@ $(document).ready(function()
 
     $("#delCancel").hide();
 
-
 });   //$(document).ready
-
 
 </script>
 
@@ -961,7 +949,9 @@ $(document).ready(function()
 <tr>
   <th scope="row">Program</th>
   <td>
-  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="Program Id or Name" class="w100p" />
+  <input type="text" title="" id="ipt_pgmCode" name="ipt_pgmCode" placeholder="Program Id or Name" class="" />
+
+  <input type="text" title="" id="ASDFASDF" name="ASDFASDF" placeholder="Program Id or Name" style="display:none;" class="" />
   </td>
   <!-- <th scope="row">Name</th>
   <td>
@@ -977,34 +967,6 @@ $(document).ready(function()
     <img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show"/>
   </a> --%>
 </p>
-<dl class="link_list">
-  <dt>Link</dt>
-  <dd>
-  <ul class="btns">
-    <li><p class="link_btn"><a href="#">menu1</a></p></li>
-    <li><p class="link_btn"><a href="#">menu2</a></p></li>
-    <li><p class="link_btn"><a href="#">menu3</a></p></li>
-    <li><p class="link_btn"><a href="#">menu4</a></p></li>
-    <li><p class="link_btn"><a href="#">Search Payment</a></p></li>
-    <li><p class="link_btn"><a href="#">menu6</a></p></li>
-    <li><p class="link_btn"><a href="#">menu7</a></p></li>
-    <li><p class="link_btn"><a href="#">menu8</a></p></li>
-  </ul>
-  <ul class="btns">
-    <li><p class="link_btn type2"><a href="#">menu1</a></p></li>
-    <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-    <li><p class="link_btn type2"><a href="#">menu3</a></p></li>
-    <li><p class="link_btn type2"><a href="#">menu4</a></p></li>
-    <li><p class="link_btn type2"><a href="#">Search Payment</a></p></li>
-    <li><p class="link_btn type2"><a href="#">menu6</a></p></li>
-    <li><p class="link_btn type2"><a href="#">menu7</a></p></li>
-    <li><p class="link_btn type2"><a href="#">menu8</a></p></li>
-  </ul>
-  <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-  </dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
-
 </form>
 </section><!-- search_table end -->
 

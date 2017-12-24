@@ -30,7 +30,7 @@ var MainColumnLayout =
 	     {
 	         dataField : "rowId",
 	         dataType : "string",
-	         visible : false
+	         visible : true
 	     },
         {
             dataField : "authCode",
@@ -219,10 +219,10 @@ function auiRemoveRowHandler(event)
 
   if (authCode != null)
 	{
-	  if (authCode == "INT" || authCode == "MGR" || authCode == "EXT")
+	  if (authCode == "INT" || authCode == "MGR" || authCode == "EXT" || authCode == "TLD")
 		{
 		//Common.alert("Can't Select UpperAuth In 'Lvl 1.' ");
-       Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; [INT ,MGR ,EXT] AuthCode' htmlEscape='false' argumentSeparator=';'/>");
+       Common.alert("<spring:message code='sys.msg.cannot' arguments='Delete  ; [INT ,MGR ,EXT,TLD] AuthCode' htmlEscape='false' argumentSeparator=';'/>");
       // removeAllCancel();
       AUIGrid.restoreSoftRows(myGridID, "all");
        return false;

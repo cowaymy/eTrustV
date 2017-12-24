@@ -19,7 +19,7 @@ function fnSelectRoleListAjax()
 {
   if ($("#roleSelectBox").val() == "01")  // role id
 	{
-	  $("#roleId").val($("#roleIdNm").val());   
+	  $("#roleId").val($("#roleIdNm").val());
 	  $("#roleNm").val("");
 	}
   else
@@ -27,10 +27,10 @@ function fnSelectRoleListAjax()
 	  $("#roleId").val("");
 	  $("#roleNm").val($("#roleIdNm").val());
 	}
-	
+
    Common.ajax("GET", "/authorization/selectRoleList.do"
            , $("#SearchForm").serialize()
-           , function(result) 
+           , function(result)
            {
               console.log("성공 data : " + result);
               AUIGrid.setGridData(searchRoleGridID, result);
@@ -47,9 +47,9 @@ function fnSelectBoxChanged()
    $("#roleIdNm").focus();
 }
 
-var SearchRoleColumnLayout = 
-    [      
-        {    
+var SearchRoleColumnLayout =
+    [
+        {
             dataField : "roleId",
             headerText : "<spring:message code='sys.authRolePop.grid1.RoleId' />",
             width : "15%"
@@ -77,22 +77,22 @@ var SearchRoleColumnLayout =
         }
     ];
 
-/***************************************************[ Main GRID] ***************************************************/    
+/***************************************************[ Main GRID] ***************************************************/
 var searchRoleGridID;
 
 $(document).ready(function()
 {
     $("#roleIdNm").focus();
-    
-    $("#roleIdNm").keydown(function(key) 
+
+    $("#roleIdNm").keydown(function(key)
     {
-          if (key.keyCode == 13) 
+          if (key.keyCode == 13)
           {
             fnSelectRoleListAjax();
           }
 
     });
-	
+
 
 	var searchOptions = {
 	                  usePaging : false,
@@ -100,18 +100,18 @@ $(document).ready(function()
 	                  editable : false,
 	                  showRowNumColumn : false  // 그리드 넘버링
 	                };
-	    
+
     // AUIGrid 그리드를 생성합니다.
 	    searchRoleGridID = GridCommon.createAUIGrid("search_grid_wrap", SearchRoleColumnLayout,"roleId", searchOptions);
 
 	    // cellClick event.
-	    AUIGrid.bind(searchRoleGridID, "cellClick", function( event ) 
+	    AUIGrid.bind(searchRoleGridID, "cellClick", function( event )
 	    {
-	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " event_value: " + event.value );        
+	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " event_value: " + event.value );
 	    });
 
 	 // 셀 더블클릭 이벤트 바인딩
-	    AUIGrid.bind(searchRoleGridID, "cellDoubleClick", function(event) 
+	    AUIGrid.bind(searchRoleGridID, "cellDoubleClick", function(event)
 	    {
 	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 
@@ -120,7 +120,7 @@ $(document).ready(function()
 	        var SerchRoleLev = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "roleLev");
 	        var SerchRoleCd1 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role1");
 	        var SerchRoleCd2 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role2");
-	        var SerchRoleCd3 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role3"); 
+	        var SerchRoleCd3 = AUIGrid.getCellValue(searchRoleGridID, event.rowIndex, "role3");
 
           var strRoleSplit = SerchRoleName.split(" > ");
           var role_1 =  String(strRoleSplit[0]).fnTrim();
@@ -128,7 +128,7 @@ $(document).ready(function()
           var role_3 =  String(strRoleSplit[2]).fnTrim();
 
           //value == "" || value == null || value == undefined || ( value != null && typeof value == "object" && !Object.keys(value).length ) ){
- 
+
           if (role_1 == 'undefined')
           {
               role_1 ="";
@@ -156,24 +156,24 @@ $(document).ready(function()
 
          /*  var hiddenRoleCode = SerchRoleCd1+","+SerchRoleCd2+","+SerchRoleCd3+",";
           console.log ("RoleCodeConCat: " + hiddenRoleCode); */
-              
+
 	        console.log("SerchRoleId: " + SerchRoleId +" / SerchRoleName: " + SerchRoleName +" / SerchRoleLev1: " + role_1
 	                   +" / SerchRoleLev2: " + role_2+" / SerchRoleLev3: " + role_3  );
-	        	        
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 1, SerchRoleName);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 2, SerchRoleId);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 3, SerchRoleLev);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 4, role_1);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 5, role_2);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 6, role_3);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 7, '');
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 8, SerchRoleCd1);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 9, SerchRoleCd2);
-	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 10, SerchRoleCd3);
+
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 2, SerchRoleName);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 3, SerchRoleId);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 4, SerchRoleLev);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 5, role_1);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 6, role_2);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 7, role_3);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 8, '');
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 9, SerchRoleCd1);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 10, SerchRoleCd2);
+	        AUIGrid.setCellValue(myGridID, gSelMainRowIdx, 11, SerchRoleCd3);
 
 	        $("#SearchRolePop").remove();
-	    }); 
-	
+	    });
+
 });   //$(document).ready
 
 
