@@ -48,6 +48,7 @@ public interface SalesPlanMngementService
 	int updateSCMPlanMaster(List<Object> addList, Integer updUserId);
 	int insertSalesPlanDetail(List<Object> addList, Integer updUserId);
 	int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
+	int insertSalesPlanMstCdc(Map<String, Object> params, SessionVO sessionVO);
 	
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
 	
