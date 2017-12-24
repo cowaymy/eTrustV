@@ -166,7 +166,7 @@ public class MemberListController {
 		
 		EgovMap selectMemberListView = null;
 		
-		if ( params.get("MemberType").equals("6")) {
+		if ( params.get("MemberType").equals("2803")) {
 			selectMemberListView = memberListService.selectHPMemberListView(params);
 		}else {
 			selectMemberListView = memberListService.selectMemberListView(params);
