@@ -69,7 +69,8 @@
 	    var columnLayout = [ {
                     dataField : "promoId",
                     headerText : "promo ID.",
-                    width : 120
+                    width : 120,
+                    visible:false     
                 }, {
 	                dataField : "reqstNo",
 	                headerText : "Request No.",
@@ -257,7 +258,7 @@ function f_info(data , v){
     <select  id="requestType" name="requestType" class="multy_select w100p" multiple="multiple">
         <option value="747">Promote</option>
         <option value="748">Demote</option>
-        <option value="749">Group Transfer</option>
+        <option value="749">Transfer</option>
         <option value="757">Terminate</option>
         <option value="758">Resign</option>
         <!--By KV - add 1 type request Type  -->
@@ -285,6 +286,7 @@ function f_info(data , v){
     <select id="memberType" name="memberType"  class="multy_select w100p" multiple="multiple">
          <option value="1">Health Planner</option>
          <option value="2">Coway Lady</option>
+         <option value="3">Coway Technician</option>
     </select>
     </td>
     <th scope="row">Member Code</th>

@@ -128,7 +128,7 @@
                        and Extent18.USER_NAME =  #{requestPerson}
                  </if>
                  <if test="memberCode != null and memberCode  !='' " >    
-                       AND Extent13.MEM_CODE LIKE #{memberCode}
+                       AND Extent13.MEM_CODE LIKE  TRIM(#{memberCode}) ||'%' 
                  </if>
                  
                  
@@ -186,7 +186,7 @@
                  </if>
 
                  <if test="memberCode != null and memberCode != '' " >    
-                       AND Extent4.MEM_CODE LIKE #{memberCode}
+                       AND Extent4.MEM_CODE LIKE  TRIM(#{memberCode}) ||'%' 
                  </if>
 			      <![CDATA[    
 			              
