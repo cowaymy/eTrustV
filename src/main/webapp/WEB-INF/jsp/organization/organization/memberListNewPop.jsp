@@ -736,6 +736,7 @@ function fn_selectState(selVal){
         <%-- <c:forEach var="list" items="${DeptCdList}" varStatus="status">
             <option value="${list.codeId}">${list.codeName } </option>
         </c:forEach>      --%>
+        <option value="CRS3001">CRS3001</option>
     </select>
     </td>
     <th scope="row">Transport Code<span class="must">*</span></th>
