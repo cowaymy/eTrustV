@@ -249,8 +249,12 @@
            var statusCd = "${basicinfo.stusCodeId}";
            $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
 
-           var failResnCd = "${basicinfo.failResnId}";
-           $("#failReason option[value='"+failResnCd +"']").attr("selected", true);
+            var failResnCd = "${basicinfo.failResnId}";
+            if(failResnCd != "0" ){
+                $("#failReason option[value='"+failResnCd +"']").attr("selected", true);
+            }else{
+            	$("#failReason").find("option").remove();
+            }
       
            var codyIdCd = "${basicinfo.codyId}";
            $("#cmbServiceMem option[value='"+codyIdCd +"']").attr("selected", true);
@@ -283,11 +287,11 @@
 
 
     function fn_getHsViewfilterInfoAjax(){
-         Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{salesOrdId : selSalesOrdId}, function(result) {
-            console.log("성공 fn_getHsViewfilterInfoAjax.");
-            console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID, result);            
-        }); 
+    	 Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{selSchdulId : selSchdulId}, function(result) {
+             console.log("성공 fn_getHsViewfilterInfoAjax.");
+             console.log("data : " + result);
+             AUIGrid.setGridData(myDetailGridID, result);            
+         }); 
         
 
 
@@ -495,7 +499,7 @@
 </tr> --%>
 <tr>
     <th scope="row" style="width: 176px; ">Remark</th>
-    <td><span>${settleInfo.configBsRem}</span></td>
+    <td><span>${basicinfo.resultRem}</span></td>
     <th scope="row" style="width: 59px; ">Instruction</th>
     <td><span>${settleInfo.configBsRem}</span></td>
 </tr>
