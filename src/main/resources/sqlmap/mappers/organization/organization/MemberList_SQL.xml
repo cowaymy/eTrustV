@@ -2889,7 +2889,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE CRT_DT, 
 		        CRT_USER_ID, 
 		        SYSDATE UPD_DT, 
-		        UPD_USER_ID,  '1' AS stus, APLCTN_ID,
+		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT 
 		from ORG0003D   d             
 		where 1=1 and APLCTN_ID = #{MemberID}
