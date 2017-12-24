@@ -167,21 +167,21 @@ public interface InstallationResultListMapper {
 	List<EgovMap>selectInstallationNoteListing(Map<String, Object> params);
 
 	String  getInvoiceNum( Map<String,Object>params);
-	
-	EgovMap  selectInstallInfo(Map<String,Object>params);
-	
-	int updateInstallResultEdit (Map<String, Object> params);
-	
-	
-	String  getPAY0033D_SEQ( Map<String,Object>params);
-	
-	EgovMap getOutrightPreBill(Map<String,Object> params);
-	
-	EgovMap getOrderByInstallEntryID(Map<String,Object> params);
-	
 
-	//add by hgham  mobile 중복 처리 
+	EgovMap  selectInstallInfo(Map<String,Object>params);
+
+	int updateInstallResultEdit (Map<String, Object> params);
+
+
+	String  getPAY0033D_SEQ( Map<String,Object>params);
+
+	EgovMap getOutrightPreBill(Map<String,Object> params);
+
+	EgovMap getOrderByInstallEntryID(Map<String,Object> params);
+
+
+	//add by hgham  mobile 중복 처리
 	int isInstallAlreadyResult (Map<String, Object> params);
-	
-	
+
+	EgovMap validationInstallationResult(Map<String,Object> params);
 }

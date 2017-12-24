@@ -44,15 +44,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
 
-	
+
 
 	@Resource(name = "membershipConvSaleMapper")
 	private MembershipConvSaleMapper membershipConvSaleMapper;
-	
-	
+
+
 	@Resource(name = "installationReversalMapper")
 	private InstallationReversalMapper installationReversalMapper;
-	
+
 
 	@Override
 	public List<EgovMap> selectApplicationType() {
@@ -193,26 +193,26 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			}else{
 				param.put("promotionId", "0");
 				resultView.put("promoId", "0");
-			}  
-			
+			}
+
 			param.put("productId", productId);
 			EgovMap defaultView = installationResultListMapper.getPromoPriceAndPV(param);
 
 			resultView.put("swapPormoPrice", CommonUtils.nvl(swapView.get("promoItmPrc")));
 			resultView.put("swapPromoPV", CommonUtils.nvl(swapView.get("promoItmPv")));
-			
-			
+
+
 			if (null != defaultView){
 				resultView.put("promoPrice",CommonUtils.nvl(defaultView.get("promoItmPrc")));
 				resultView.put("promoPV",CommonUtils.nvl(defaultView.get("promoItmPv")));
-				
+
 			}else{
 				resultView.put("promoPrice","0");
 				resultView.put("promoPV","0");
 			}
-			
-			
-			
+
+
+
 		}else{
 			logger.debug("22222222222222");
 			list =  installationResultListMapper.selectSalesPromoMs(promotionId);
@@ -378,8 +378,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 						boolean orderProgressIsLook = false;
 						int orderProgressRefId = 0;
 						if((int) installResult.get("statusCodeId") == 4){
-							
-    							
+
+
     						Map<String, Object> happyCall = new HashMap<String, Object>();
     						//happyCall.put("HCID", 0);
     						happyCall.put("HCSOID", salesOrderM.get("salesOrdId"));
@@ -389,7 +389,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     						happyCall.put("HCStatusId", 33);
     						happyCall.put("HCRemark", "");
     						happyCall.put("HCCommentTypeId", 0);
-    						
+
     						happyCall.put("HCCommentGId", 0);
     						happyCall.put("HCCommentSId", 0);
     						happyCall.put("HCCommentDId", 0);
@@ -403,7 +403,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     						logger.debug("happyCall : {}", happyCall);
     						installationResultListMapper.insertHappyCall(happyCall);
 
-						
+
 							/*//complete
 							if(sirimList != null && sirimList.size() > 0){
 								for(int i = 0; i< sirimList.size(); i++){
@@ -1109,7 +1109,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 
 						}
-					
+
 					//}
 				}
 			}
@@ -1248,11 +1248,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		installResult.put("serialNo", serialNo);
 		installResult.put("failId", failId);
 		installResult.put("nextCallDate", nextCallDate);
-		
+
 		installResult.put("allowComm", allowComm  == true ?"1" : "0");
 		installResult.put("inTradeIn", inTradeIn == true ?"1" : "0");
 		installResult.put("reqSms", reqSms == true ?"1" : "0");
-		
+
 		installResult.put("docRefNo1", refNo1);
 		installResult.put("docRefNo2", refNo2);
 		installResult.put("updated", new Date());
@@ -1344,9 +1344,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	}
 
 	private Map<String, Object> Save(boolean isfreepromo,Map<String, Object> params,SessionVO sessionVO) throws ParseException{
-		
+
 		boolean isBillAvb =false;
-		
+
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		Map<String, Object> callEntry = new HashMap<String, Object>();
 		Map<String, Object> callResult = new HashMap<String, Object>();
@@ -1377,36 +1377,36 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 		Map tradeamount= new HashMap();
 		tradeamount.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
-		Map outRightAmount35d = installationResultListMapper.getTradeAmount(tradeamount);   //35d amt 
-		
-		
+		Map outRightAmount35d = installationResultListMapper.getTradeAmount(tradeamount);   //35d amt
+
+
 		Map ordTamtPram= new HashMap();
-		
+
 		String  t_hidEntryId ="";
 		if(null == CommonUtils.nvl( params.get("hidEntryId")).toString()){
 			t_hidEntryId = CommonUtils.nvl( params.get("installEntryId")).toString();
 		}else{
 			t_hidEntryId  =CommonUtils.nvl( params.get("hidEntryId")).toString();
 		}
-		
+
 		ordTamtPram.put("INSTALL_ENTRY_ID",    t_hidEntryId);
-		
-		EgovMap   ordInfo =installationResultListMapper.getOrderByInstallEntryID(ordTamtPram); 
-			
+
+		EgovMap   ordInfo =installationResultListMapper.getOrderByInstallEntryID(ordTamtPram);
+
 		String tAmt = "0";  // String.valueOf( CommonUtils.intNvl( outRightAmount.get("SUMTRADE_AMT")));
-		
+
 		if(null !=ordInfo){
-			tAmt = String.valueOf( CommonUtils.intNvl( ordInfo.get("totAmt")));   // 
+			tAmt = String.valueOf( CommonUtils.intNvl( ordInfo.get("totAmt")));   //
 		}
- 		
+
 		double outright35dAmount =  Double.parseDouble(String.valueOf(CommonUtils.intNvl( outRightAmount35d.get("SUMTRADE_AMT"))));
 
 		double outrightTotalPrice = Double.parseDouble(tAmt ==""?"0" : tAmt);
 		double outrightBalance = outrightTotalPrice - outright35dAmount;
-		
+
         double outrightSubProcessing = 0;
         double outrightSubBalance = 0;
-		
+
 		//get outright refno
 		Map invoiceNum = new HashMap();
 		invoiceNum.put("DocNo", "119");
@@ -1417,7 +1417,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		cal.setTime(today);
 
 		int month = cal.get(Calendar.MONTH);
-		
+
 		EgovMap installResult = new EgovMap();
 
     		installResult.put("resultID", 0);
@@ -1433,11 +1433,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installResult.put("serialNo", serialNo);
     		installResult.put("failId", failId);
     		installResult.put("nextCallDate", nextCallDate);
-    		
+
     		installResult.put("allowComm", allowComm  ==  true ? "1" :"0");
     		installResult.put("inTradeIn", inTradeIn ==  true ? "1" :"0");
     		installResult.put("reqSms", reqSms  ==  true ? "1" :"0");
-    		
+
     		installResult.put("docRefNo1", refNo1);
     		installResult.put("docRefNo2", refNo2);
     		installResult.put("updated", new Date());
@@ -1453,30 +1453,30 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			salesOrderM.put("statusCodeId", CommonUtils.nvl( params.get("installStatus")).toString().equals("4") ? 4 : 1 );
     		}
 
-    		
-    		
+
+
     		///////////////////////add by hgham     get taxRate  //////////////////
     		int  TAXRATE   =0;
-    			
+
     		  	  params.put("srvSalesOrderId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
     		      TAXRATE = membershipConvSaleMapper.getTaxRate(params);
     		///////////////////////add by hgham     get taxRate  //////////////////
-  		
-    		
+
+
     		if(ApptypeID.equals("66") ){
-    			
+
     			int  salesDt =CommonUtils.intNvl(ordInfo.get("salesDt"));
     			int  salesGSTcutOffDate =CommonUtils.intNvl(CommonUtils.getNowDate());
-    			
+
 				if(salesDt < salesGSTcutOffDate){
-    					
-					  ////GST  do Not  2년 전부터 안했다고 함. 
+
+					  ////GST  do Not  2년 전부터 안했다고 함.
     			}
     		}
-    		
-    		
+
+
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
-    			
+
     			if(ApptypeID.equals("1412")){
         			if(outright35dAmount > 200){
         				   outrightSubProcessing = 0;
@@ -1485,12 +1485,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         				outrightSubProcessing = (200 - outright35dAmount);
                         outrightSubBalance = outrightTotalPrice - (outright35dAmount + (200 - outright35dAmount));
         			}
-    			}  
-    			
+    			}
+
     			 if (outrightTotalPrice  > outright35dAmount) {
-    				 
+
     				 		isBillAvb =true;
-    				 		
+
     				 		/////////////////////////////PAY0039D////////////////////////////////////////////
 				 		    Map<String,Object> accTRXMinus = new HashMap();
 				 		    accTRXMinus.put("TRXItemNo", 1);
@@ -1508,15 +1508,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		                    accTRXMinus.put("TRXCRCardSlip", "");
 		                    accTRXMinus.put("TRXBisNo", "");
 		                    accTRXMinus.put("TRXReconDate", new Date());
-		                    accTRXMinus.put("TRXRemark",CommonUtils.nvl( params.get("msgRemark")));  
+		                    accTRXMinus.put("TRXRemark",CommonUtils.nvl( params.get("msgRemark")));
 		                    accTRXMinus.put("TRXCurrID", "RM");
 		                    accTRXMinus.put("TRXCurrRate", 1);
 		                    accTRXMinus.put("TRXAmount",     -outrightBalance);
 		                    accTRXMinus.put("TRXAmountRM", -outrightBalance);
 		                    accTRXMinus.put("TRXIsSynch", 0);
 		                    installationReversalMapper.addAccTRXes(accTRXMinus);
-		                    
-		                    
+
+
 		                    Map<String,Object> accTRXPlus = new HashMap();
 		                    accTRXPlus.put("TRXItemNo", 2);
 				 		    accTRXPlus.put("TRXGLAccID", 38);
@@ -1533,7 +1533,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		                    accTRXPlus.put("TRXCRCardSlip", "");
 		                    accTRXPlus.put("TRXBisNo", "");
 		                    accTRXPlus.put("TRXReconDate", new Date());
-		                    accTRXPlus.put("TRXRemark",CommonUtils.nvl( params.get("msgRemark")));  
+		                    accTRXPlus.put("TRXRemark",CommonUtils.nvl( params.get("msgRemark")));
 		                    accTRXPlus.put("TRXCurrID", "RM");
 		                    accTRXPlus.put("TRXCurrRate", 1);
 		                    accTRXPlus.put("TRXAmount",     outrightBalance);
@@ -1541,14 +1541,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		                    accTRXPlus.put("TRXIsSynch", 0);
 		                    installationReversalMapper.addAccTRXes(accTRXPlus);
 		                   /////////////////////////////PAY0039D////////////////////////////////////////////
-		                    
-    				 		
-    				 		
+
+
+
 		                    /////////////////////////////PAY0033D////////////////////////////////////////////
         				 	String TAX_INVC_ID = installationResultListMapper.getPAY0033D_SEQ(invoiceNum);
-        	    			
+
         					//Insert TaxinvoiceOutright
-        					taxInvoiceOutright.put("TAX_INVC_ID",TAX_INVC_ID);           
+        					taxInvoiceOutright.put("TAX_INVC_ID",TAX_INVC_ID);
         					taxInvoiceOutright.put("TAX_INVC_REF_NO",invoiceNo);
         					taxInvoiceOutright.put("TAX_INVC_REF_DT", CommonUtils.getNowDate());
         					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( params.get("hidCustomerName")));
@@ -1563,34 +1563,34 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	        		taxInvoiceOutright.put("TAX_INVC_TASK_ID",0);
         	        		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
         	        		taxInvoiceOutright.put("TAX_INVC_REM",0);
-        	        		
-        	        		
+
+
         	        		 if (TAXRATE > 0)  {
         	        			 taxInvoiceOutright.put("TAX_INVC_CHRG",outrightBalance * 100 / 106 );
         	                 }else {
         	             		taxInvoiceOutright.put("TAX_INVC_CHRG",outrightBalance);
         	                 }
-        	        		
+
         	        		taxInvoiceOutright.put("TAX_INVC_OVERDU",0);
         	        		taxInvoiceOutright.put("TAX_INVC_AMT_DUE",outrightBalance);
         	        		taxInvoiceOutright.put("TAX_INVC_PO_NO","");
         	        		taxInvoiceOutright.put("AREA_ID", CommonUtils.nvl(params.get("hidInstallation_AreaID")));
         	        		taxInvoiceOutright.put("ADDR_DTL",CommonUtils.nvl( params.get("hidInstallation_AddDtl")));
-        	        		taxInvoiceOutright.put("STREET","");   
-        	        		logger.debug("Prepared TaxinvoiceOutright:{}",taxInvoiceOutright);   
+        	        		taxInvoiceOutright.put("STREET","");
+        	        		logger.debug("Prepared TaxinvoiceOutright:{}",taxInvoiceOutright);
         	        		/////////////////////////////PAY0033D////////////////////////////////////////////
-        	        		
-        	    			
-        	        		
+
+
+
         	        		/////////////////////////////PAY0034D////////////////////////////////////////////
         	    			if(ApptypeID.equals("1412"))	{
-        	    				
+
         	            		taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",TAXRATE);
-        	            		
-        	            		
+
+
         	            		if(TAXRATE > 0){
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",Double.toString(outrightBalance  * 100 / 106 ));
@@ -1602,11 +1602,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS","0");
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",outrightSubProcessing);
         	                	}
-    
+
         	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",outrightSubProcessing);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");            		
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
         	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
@@ -1614,24 +1614,24 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
-    
-        	            		
-        	      
+
+
+
         	            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
         	            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));
         	            		taxInvoiceOutrightSub.put("STREET","");
         	            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
-        	            		
-        	            		
-        	    				
+
+
+
         	    			}else{
-        	    				
+
         	    				taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",TAXRATE);
-        	            		
-        	            		
+
+
         	            		if(TAXRATE > 0){
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightBalance  * 100 / 106);
@@ -1640,27 +1640,27 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
         	                	}
-    
+
         	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE","0");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");            		
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
         	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");            		
-        	      
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
+
         	            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
         	            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));
         	            		taxInvoiceOutrightSub.put("STREET","");
         	            		logger.debug("Prepared taxInvoiceOutrightSub: ",taxInvoiceOutrightSub);
         	    			}
         	    			/////////////////////////////PAY0034D////////////////////////////////////////////
-    
-        	    			
+
+
         	    			AccTradeLedger.put("TRADE_RUN_ID", 0);
         	    			AccTradeLedger.put("TRADE_ID", 0);
         	    			AccTradeLedger.put("TRADE_SO_ID", Integer.parseInt(params.get("hidSalesOrderId").toString()));
@@ -1675,9 +1675,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			AccTradeLedger.put("TRADE_IS_SYNC", 0);
         	    			AccTradeLedger.put("R01", 0);
         	    			logger.debug("Prepared AccTradeLedger: ",AccTradeLedger);
-    
-        	    			
-        	    			
+
+
+
         	    			/////////////////////////////PAY0016D////////////////////////////////////////////
         	    			AccOrderBill.put("ACC_BILL_ID", 0);
         	    			AccOrderBill.put("ACC_BILL_TASK_ID", 0);
@@ -1694,37 +1694,37 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			AccOrderBill.put("ACC_BILL_ADJ_AMT", 0);
         	    			AccOrderBill.put("ACC_BILL_NET_AMT", outrightBalance);
         	    			AccOrderBill.put("ACC_BILL_STUS", 1);
-        	    			
+
         	    			if(null  !=params.get("hidTradeLedger_InstallNo") ){
         	        			AccOrderBill.put("ACC_BILL_REM",  (String) params.get("hidTradeLedger_InstallNo") );
         	    			}else{
         	    				AccOrderBill.put("ACC_BILL_REM",  " ");
         	    			}
-        	    			
+
         	    			AccOrderBill.put("ACC_BILL_CRT_DT", CommonUtils.getNowDate());
         	    			AccOrderBill.put("ACC_BILL_CRT_USER_ID", sessionVO.getUserId());
         	    			AccOrderBill.put("ACC_BILL_GRP_ID", 0);
         	    			AccOrderBill.put("ACC_BILL_TAX_CODE_ID", TAXRATE == 0 ? 28 : 39);
         	    			AccOrderBill.put("ACC_BILL_TAX_RATE", TAXRATE);
-        	    			
+
         	    			if(TAXRATE ==6){
         	      	    		 AccOrderBill.put("ACC_BILL_TXS_AMT", Double.toString(  outrightBalance  * 100 / 106));
         	    			}else{
         	    				AccOrderBill.put("ACC_BILL_TXS_AMT", 0);
         	    			}
-        	      	    	  
+
         	    			AccOrderBill.put("ACC_BILL_ACCT_CNVR", 0);
         	    			AccOrderBill.put("ACC_BILL_CNTRCT_ID", 0);
         	    			logger.debug("prepared AccOrderBill: ",AccOrderBill);
         	    			/////////////////////////////PAY0016D////////////////////////////////////////////
-        	    			
-        	    			
-        	    		}   
-        	    		
-    				 
+
+
+        	    		}
+
+
     			 }
-    			
-    		
+
+
     	//	//FAIL
 		if( params.get("installStatus").toString().equals("21")){
 			//FAIL
@@ -1780,12 +1780,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			logger.debug("orderLog : {}", orderLog);
 			//installationResultListMapper.insertOrderLog(orderLog);
 		}
-		
-		
+
+
 
 		if(Integer.parseInt(CommonUtils.nvl(params.get("installStatus")).toString()) == 4){
 			resultValue.put("value", "Completed");
-		
+
 			orderLog.put("LogID", 0);
 			orderLog.put("salesOrderId", Integer.parseInt(params.get("hidSalesOrderId").toString()));
 			orderLog.put("progressId",  5);
@@ -1794,15 +1794,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			orderLog.put("isLock", 0);
 			orderLog.put("logCreator", sessionVO.getUserId());
 			orderLog.put("logCreated", new Date());
-		
-		
+
+
 		}else{
 			resultValue.put("value", "Fail");
 		}
 		resultValue.put("installEntryNo", CommonUtils.nvl(params.get("hiddeninstallEntryNo")));
-		
-		
-		
+
+
+
 		//////////////////////////// insertInstallation ////////////////////////////////
 		insertInstallation(statusId
 							   ,ApptypeID
@@ -1818,13 +1818,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 							   ,salesOrderM ,isBillAvb );
 
         ////////////////////////////insertInstallation ////////////////////////////////
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
 		////////////////////////물류 호출   add by hgham/////////////////////////////
         Map<String, Object>  logPram = null ;
 		if(Integer.parseInt(params.get("installStatus").toString()) == 4 ){
@@ -1862,21 +1862,21 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
       }
        resultValue.put("spMap", logPram);
       ////////////////////////물류 호출   add by hgham/////////////////////////////
-       
-       
+
+
 		return resultValue;
 	}
-	
-	
-	
-	
+
+
+
+
 	@Transactional
 	private boolean insertInstallation(int statusId,String ApptypeID,Map<String, Object> installResult,Map<String, Object> callEntry
 													,Map<String, Object> callResult,Map<String, Object> orderLog, Map<String,Object> TaxinvoiceCompany
 													,Map<String,Object>AccTradeLedger,Map<String,Object>AccOrderBill,Map<String,Object>taxInvoiceOutright,
 													Map<String,Object>taxInvoiceOutrightSub,Map<String,Object>salesOrderM  ,boolean isBillAvb ) throws ParseException{
-    		
-		
+
+
 		//installEntry status가 1,21 이면 그 밑에 있는걸 ㅌ야된다(컴플릿이 되어도 다시 상태값 변경 가능하게 해야된다
     		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
     		EgovMap maxIdValue = new EgovMap();
@@ -1893,10 +1893,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
     		//update SalesM Status
     		installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
-    		
-    	
+
+
     		if("66".equals(ApptypeID)) {
-    			
+
     			if(installResult.get("statusCodeId").toString().equals("4")){
     				EgovMap  s46dup =new EgovMap();
     				s46dup.put("installResultId", maxId );
@@ -1904,19 +1904,19 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     				s46dup.put("updated",  installResult.get("created"));
     				s46dup.put("updator",  installResult.get("creator"));
     				s46dup.put("installEntryId",  installResult.get("entryId"));
-    				 
+
             		installationResultListMapper.updateInstallEntry(s46dup);
-            		
+
     			}
     		}
-    	
+
 
     		if("67".equals(ApptypeID)   || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
-    			
+
     			if(isBillAvb){
             		//insert taxinvoiceRental
             		//installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
-            		
+
         			//insert taxinvoiceOutright
             		installationResultListMapper.insertTaxInvoiceOutright(taxInvoiceOutright);
             		//insert taxinvoiceOutright_Sub
@@ -1925,24 +1925,24 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
             		//insert Accorderbill
             		installationResultListMapper.insertAccorderBill(AccOrderBill);
-        
+
     			}
-    
+
         		entry.put("installResultId", maxId);
         		entry.put("stusCodeId", installResult.get("statusCodeId"));
         		entry.put("updated",  installResult.get("created"));
         		entry.put("updator",  installResult.get("creator"));
         		installationResultListMapper.updateInstallEntry(entry);
 		}
-    		
-    		
-    		
+
+
+
     	//	Complete
-        if(installResult.get("statusCodeId").toString().equals("4")){	
+        if(installResult.get("statusCodeId").toString().equals("4")){
         	installationResultListMapper.insertOrderLog(orderLog);
         }
-		
-        
+
+
         //Fail
         if(installResult.get("statusCodeId").toString().equals("21")){
         	if(callEntry != null){
@@ -1961,14 +1961,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 				callEntry.put("callEntryId", maxId);
 				installationResultListMapper.updateCallEntry(callEntry);
 			}
-        	
+
         	installationResultListMapper.insertOrderLog(orderLog);
         }
-        
-        
-		
-        
-        
+
+
+
+
+
     	/////////////////////////////////	happyCall////////////////////////////
 		Map<String, Object> happyCall = new HashMap<String, Object>();
 		//happyCall.put("HCID", 0);
@@ -1979,7 +1979,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		happyCall.put("HCStatusId", 33);
 		happyCall.put("HCRemark", "");
 		happyCall.put("HCCommentTypeId", 0);
-		
+
 		happyCall.put("HCCommentGId", 0);
 		happyCall.put("HCCommentSId", 0);
 		happyCall.put("HCCommentDId", 0);
@@ -1991,7 +1991,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		happyCall.put("HCLock", false);
 		happyCall.put("HCCloseId", 0);
 		logger.debug("happyCall : {}", happyCall);
-		installationResultListMapper.insertHappyCall(happyCall);	
+		installationResultListMapper.insertHappyCall(happyCall);
 		/////////////////////////////////	happyCall////////////////////////////
 
 		return true;
@@ -2031,24 +2031,30 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 		return installationResultListMapper.selectInstallationNoteListing(params);
 	}
-	
+
 	@Override
 	public EgovMap selectInstallInfo(Map<String, Object> params) {
 		return installationResultListMapper.selectInstallInfo(params);
 	}
-	
+
 	@Override
 	public int editInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
-		int resultValue =installationResultListMapper.updateInstallResultEdit(params); 
+		int resultValue =installationResultListMapper.updateInstallResultEdit(params);
 
 		return resultValue;
 	}
-	
-	
+
+
 	@Override
 	public int  isInstallAlreadyResult(Map<String, Object> params) {
 		return installationResultListMapper.isInstallAlreadyResult(params);
 	}
-	
-	
+
+	@Override
+	public EgovMap validationInstallationResult(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return installationResultListMapper.validationInstallationResult(params);
+	}
+
+
 }

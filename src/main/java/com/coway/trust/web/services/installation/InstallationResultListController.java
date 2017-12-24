@@ -1,5 +1,6 @@
 package com.coway.trust.web.services.installation;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -36,19 +37,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/services")
 public class InstallationResultListController {
 	private static final Logger logger = LoggerFactory.getLogger(InstallationResultListController.class);
-	
+
 	@Resource(name = "installationResultListService")
 	private InstallationResultListService installationResultListService;
 	@Resource(name = "commonService")
 	private CommonService commonService;
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
-	
+
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
-	
+
 	/**
-	 * organization transfer page  
+	 * organization transfer page
 	 *
 	 * @param request
 	 * @param model
@@ -61,13 +62,13 @@ public class InstallationResultListController {
 		logger.debug("appTypeList : {}", appTypeList);
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
 		logger.debug("installStatus : {}", installStatus);
-		
+
 		model.addAttribute("appTypeList", appTypeList);
 		model.addAttribute("installStatus", installStatus);
 		// 호출될 화면
 		return "services/installation/installationResultList";
 	}
-	
+
 	/**
 	 * Search rule book management list
 	 *
@@ -82,7 +83,7 @@ public class InstallationResultListController {
 		String[] installStatusList = request.getParameterValues("installStatus");
 		String[] typeList = request.getParameterValues("type");
 		String[] appTypeList = request.getParameterValues("appType");
-		
+
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
 		params.put("appTypeList", appTypeList);
@@ -90,9 +91,9 @@ public class InstallationResultListController {
 		logger.debug("installationResultList : {}", installationResultList);
 		return ResponseEntity.ok(installationResultList);
 	}
-	
+
 	/**
-	 * Installation Result DetailPopup  
+	 * Installation Result DetailPopup
 	 *
 	 * @param request
 	 * @param model
@@ -109,7 +110,7 @@ public class InstallationResultListController {
 		}else{
 			orderInfo = installationResultListService.getOrderInfo(params);
 		}
-		
+
 		EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo == null ?installResult.get("custId") :  orderInfo.get("custId"));
 		//EgovMap customerAddress = installationResultListService.getCustomerAddressInfo(customerInfo);
 		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
@@ -136,12 +137,12 @@ public class InstallationResultListController {
 		model.addAttribute("salseOrder", salseOrder);
 		model.addAttribute("hpMember", hpMember);
 		model.addAttribute("callType", callType);
-		
-		
+
+
 		// 호출될 화면
 		return "services/installation/installationResultDetailPop";
 	}
-	
+
 	/**
 	 * InstallationResultDetailPop View Installation Result
 	 *
@@ -152,13 +153,13 @@ public class InstallationResultListController {
 	 */
 	@RequestMapping(value = "/viewInstallationSearch.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectViewInstallationSearch(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-		
+
 		logger.debug("params : {}", params);
 		List<EgovMap> viewInstallation = installationResultListService.selectViewInstallation(params);
 		logger.debug("viewInstallation : {}", viewInstallation);
 		return ResponseEntity.ok(viewInstallation);
 	}
-	
+
 	/**
 	 * InstallationResult Add Installation Result Popup
 	 *
@@ -177,46 +178,46 @@ public class InstallationResultListController {
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 		EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
 		EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
-		
+
 		EgovMap orderInfo = null;
 		if(params.get("codeId").toString().equals("258")){
 			orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
 		}else{
 			orderInfo = installationResultListService.getOrderInfo(params);
 		}
-		
+
 		if(null == orderInfo){
 			orderInfo = new EgovMap();
 		}
 		String promotionId = "";
 		if(CommonUtils.nvl(params.get("codeId")).toString().equals("258")){
-			promotionId = CommonUtils.nvl(orderInfo.get("c8"));  
+			promotionId = CommonUtils.nvl(orderInfo.get("c8"));
 		}else{
-			promotionId = CommonUtils.nvl(orderInfo.get("c2"));   
+			promotionId = CommonUtils.nvl(orderInfo.get("c2"));
 		}
-		
+
 		if( promotionId.equals("")){
 			promotionId="0";
 		}
-		
+
 		logger.debug("promotionId : {}", promotionId);
-		
+
 		EgovMap promotionView = new EgovMap();
-		
+
 		List<EgovMap> CheckCurrentPromo  = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(Integer.parseInt( promotionId));
 		if(CheckCurrentPromo.size() > 0){
 			promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),true);
 		}else{
 			if(promotionId != "0"){
 				 promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),false);
-				
+
 			}else{
-				
+
 
 				if(null == promotionView){
 					promotionView = new EgovMap();
 				}
-				
+
 				promotionView.put("promoId", "0");
 				promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")).toString() == "258" ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
 				promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")).toString() == "258" ?  CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
@@ -232,12 +233,12 @@ public class InstallationResultListController {
 		EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
 		EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
 		EgovMap hpMember= installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
-		
+
 		//if(params.get("codeId").toString().equals("258")){
-			
+
 		//}
-		
-		
+
+
 		logger.debug("installResult : {}", installResult);
 		logger.debug("orderInfo : {}", orderInfo);
 		logger.debug("customerInfo : {}", customerInfo);
@@ -269,13 +270,13 @@ public class InstallationResultListController {
 		model.addAttribute("sirimLoc", sirimLoc);
 		model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
 		model.addAttribute("promotionView", promotionView);
-		
+
 		// 호출될 화면
 		return "services/installation/addInstallationResultPop";
 	}
-	
+
 	/**
-	 * Installation Result DetailPopup  
+	 * Installation Result DetailPopup
 	 *
 	 * @param request
 	 * @param model
@@ -290,39 +291,39 @@ public class InstallationResultListController {
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVOl);
 		mode.addAttribute("viewDetail", viewDetail);
 		mode.addAttribute("orderDetail", orderDetail);
-		
+
 		// 호출될 화면
 		return "services/installation/addInstallationResultProductDetailPop";
 	}
-	
+
 	/**
 	 * Search rule book management list
 	 *
 	 * @param request
 	 * @param model
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveInstallationProductExchange.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertInstallationProductExchange(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		ReturnMessage message = new ReturnMessage();
 		logger.debug("params : {}", params);
-		
+
 		boolean success = false;
-		
+
 		success = installationResultListService.insertInstallationProductExchange(params, sessionVO);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * Search rule book management list
 	 *
 	 * @param requestaddInstallation
 	 * @param model
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addInstallation.do",method = RequestMethod.POST)
@@ -330,109 +331,115 @@ public class InstallationResultListController {
 		ReturnMessage message = new ReturnMessage();
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		logger.debug("params : {}", params);
-		
-		boolean success = false;
-		
-		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
-		
-		
-		if( null !=resultValue){
-			HashMap   spMap =(HashMap)resultValue.get("spMap");
-			logger.debug("spMap :"+ spMap.toString());   
-			if(!"000".equals(spMap.get("P_RESULT_MSG"))){
-				
-				resultValue.put("logerr","Y");
-				message.setMessage("Error in Logistics Transaction !");
-				
-			}else{
-				message.setData("Y");
-				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
 
-			}
-			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		boolean success = false;
+
+		EgovMap validMap =  installationResultListService.validationInstallationResult(params);
+		int resultCnt = ((BigDecimal)validMap.get("resultCnt")).intValue();
+
+		if(resultCnt > 0){
+			message.setMessage("There is complete sesult exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
+		} else {
+    		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
+
+
+    		if( null !=resultValue){
+    			HashMap   spMap =(HashMap)resultValue.get("spMap");
+    			logger.debug("spMap :"+ spMap.toString());
+    			if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+
+    				resultValue.put("logerr","Y");
+    				message.setMessage("Error in Logistics Transaction !");
+
+    			}else{
+    				message.setData("Y");
+    				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
+
+    			}
+    			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    		}
+
+
 		}
-		
-		
-		
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
+
+
+
 
 	@RequestMapping(value = "/assignCTTransferPop.do")
 	public String assignCTTransferPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		logger.debug("in  assignCTTransferPop ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");  
-		
+		logger.debug("			pram set end  ");
+
 		// 호출될 화면
-		return "services/installation/assignCTTransferPop"; 
+		return "services/installation/assignCTTransferPop";
 	}
-	
-	
+
+
 
 	@RequestMapping(value = "/assignCtList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> assignCtList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		logger.debug("in  assignCtList.....");		
+		logger.debug("in  assignCtList.....");
 		logger.debug("params : {}", params.toString());
 		//BRNCH_ID
 		List<EgovMap>  list = installationResultListService.assignCtList(params);
-		
-		return ResponseEntity.ok(list);  
+
+		return ResponseEntity.ok(list);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/assignCtOrderList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> assignCtOrderList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		
-		logger.debug("in  assignCtOrderList.....");		
+
+		logger.debug("in  assignCtOrderList.....");
 		logger.debug("params : {}", params.toString());
-		
+
 		String vAsNo =  (String)params.get("installNo");
 		String[] asNo =  null;
-		
-		if(! StringUtils.isEmpty(vAsNo)){ 
+
+		if(! StringUtils.isEmpty(vAsNo)){
 			asNo =  ((String)params.get("installNo")).split(",");
 			params.put("installNo" ,asNo);
 		}
-		
+
 		List<EgovMap>  list =  installationResultListService.assignCtOrderList(params);
-		
-		return ResponseEntity.ok(list);  
+
+		return ResponseEntity.ok(list);
 	}
-	
-	
+
+
 
 
 	@RequestMapping(value = "/assignCtOrderListSave.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> assignCtOrderListSave(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		logger.debug("in  assignCtOrderListSave ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");  
-		
-		params.put("updator", sessionVO.getUserId());   
+		logger.debug("			pram set end  ");
+
+		params.put("updator", sessionVO.getUserId());
 		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
-		logger.debug("asResultM ===>"+update.toString());  
-		
-		int   rtnValue = installationResultListService.updateAssignCT(params);  
-		
+		logger.debug("asResultM ===>"+update.toString());
+
+		int   rtnValue = installationResultListService.updateAssignCT(params);
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(99);
 		message.setMessage("");
 
-				
-		return ResponseEntity.ok(message);  
-		
+
+		return ResponseEntity.ok(message);
+
 	}
-	
+
 	/**
-	 * organization transfer page  
+	 * organization transfer page
 	 *
 	 * @param request
 	 * @param model
@@ -444,9 +451,9 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/installationNotePop";
 	}
-	
+
 	/**
-	 * Installation Report Do Active List  
+	 * Installation Report Do Active List
 	 *
 	 * @param request
 	 * @param model
@@ -458,9 +465,9 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/doActiveListPop";
 	}
-	
+
 	/**
-	 * Installation Report Do Active List  
+	 * Installation Report Do Active List
 	 *
 	 * @param request
 	 * @param model
@@ -472,9 +479,9 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/dailyDscReportPop";
 	}
-	
+
 	/**
-	 * Installation Report Installation Raw Data 
+	 * Installation Report Installation Raw Data
 	 *
 	 * @param request
 	 * @param model
@@ -486,9 +493,9 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/installationRawDataPop";
 	}
-	
+
 	/**
-	 * Installation Report Installation Log Book Listing 
+	 * Installation Report Installation Log Book Listing
 	 *
 	 * @param request
 	 * @param model
@@ -500,7 +507,7 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/installationLogBookListingPop";
 	}
-	
+
 	/**
 	 * Installation Report Installation Note Listing
 	 *
@@ -514,26 +521,26 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/installationNoteListingPop";
 	}
-	
+
 	/**
 	 * Installation Report Installation Note Listing Search
 	 *
 	 * @param request
 	 * @param model
 	 * @return
-	 * @throws ParseException 
+	 * @throws ParseException
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectInstallationNoteListing.do")
 	public  ResponseEntity<List<EgovMap>> selectInstallationNoteListing(@RequestParam Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		logger.debug("params : {}", params);
 		  installationResultListService.selectInstallationNoteListing(params);
-		  
+
 		  List<EgovMap>  list =  (List<EgovMap>)params.get("cv_1");
 		  logger.debug("list : {}", list);
-		return ResponseEntity.ok(list);  
+		return ResponseEntity.ok(list);
 	}
-	
+
 	/**
 	 * Installation Report Installation Free Gift List
 	 *
@@ -547,7 +554,7 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/installationFreeGiftListPop";
 	}
-	
+
 	/**
 	 * Installation Report Installation Free Gift List
 	 *
@@ -561,7 +568,7 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/dscReportDataPop";
 	}
-	
+
 	/**
 	 * InstallationResult edit Installation Result Popup
 	 *
@@ -572,28 +579,28 @@ public class InstallationResultListController {
 	 */
 	@RequestMapping(value = "/editInstallationPopup.do")
 	public String editInstallationPopup(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		EgovMap installInfo = installationResultListService.selectInstallInfo(params);
 		model.addAttribute("installInfo", installInfo);
 		// 호출될 화면
 		return "services/installation/editInstallationResultPop";
 	}
-	
+
 	@RequestMapping(value = "/editInstallation.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> editInstallationResult(@RequestBody Map<String, Object> params,SessionVO sessionVO) throws ParseException {
 		ReturnMessage message = new ReturnMessage();
 		int resultValue = 0;
-		
+
 		int userId = sessionVO.getUserId();
 		params.put("user_id", userId);
-		
+
 		resultValue = installationResultListService.editInstallationResult(params, sessionVO);
 		if(resultValue>0){
 			message.setMessage("Installation result successfully updated.");
 		}else{
 			message.setMessage("Failed to update installation result. Please try again later.");
 		}
-		
+
 		return ResponseEntity.ok(message);
 	}
 }

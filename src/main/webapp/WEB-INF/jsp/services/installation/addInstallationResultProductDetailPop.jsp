@@ -19,8 +19,13 @@ $(document).ready(function() {
 
 function fn_installProductExchangeSave(){
 	Common.ajax("POST", "/services/saveInstallationProductExchange.do",  $("#insertPopupForm").serializeJSON(), function(result) {
-		
+		Common.alert("Saved",fn_saveDetailclose);
+
     });
+}
+
+function fn_saveDetailclose(){
+	addinstallationResultProductDetailPopId.remove();
 }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -162,7 +167,7 @@ function fn_installProductExchangeSave(){
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
 
-<%-- 
+<%--
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>

@@ -76,9 +76,18 @@ function fn_addInstallation(codeid1){//active 일때만 열림
 
 	if(statusCode == "ACT"){
 		if(codeid1 == 257){
-	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1
+	        		  , ""
+        	          , null
+        	          , "false"
+        	          , "addInstallationPopupId");
 	    }else{
-	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId);
+	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId
+	        		 , ""
+                     , null
+                     , "false"
+                     , "addinstallationResultProductDetailPopId"
+	         );
 	    }
 	}else{
 		//Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
@@ -98,44 +107,44 @@ function createInstallationListAUIGrid() {
         width : 130
     }, {
         dataField : "installEntryNo",
-        headerText : '<spring:message code="service.grid.InstallNo" />',        
+        headerText : '<spring:message code="service.grid.InstallNo" />',
         editable : false,
         width : 180
     }, {
         dataField : "salesOrdNo",
-        headerText : '<spring:message code="service.grid.OrderNo" />',        
+        headerText : '<spring:message code="service.grid.OrderNo" />',
         editable : false,
         width : 180
     }, {
         dataField : "c3",
-        headerText : '<spring:message code="service.grid.AppDate" />',        
+        headerText : '<spring:message code="service.grid.AppDate" />',
         editable : false,
         width : 100
     }, {
         dataField : "stkDesc",
-        headerText : '<spring:message code="service.grid.Product" />',        
+        headerText : '<spring:message code="service.grid.Product" />',
         editable : false,
         style : "my-column",
         width : 180
     }, {
         dataField : "name",
-        headerText : '<spring:message code="service.grid.Customer" />',        
+        headerText : '<spring:message code="service.grid.Customer" />',
         editable : false,
         width : 250
     }, {
         dataField : "codeName",
-        headerText : '<spring:message code="service.grid.AppType" />',        
+        headerText : '<spring:message code="service.grid.AppType" />',
         editable : false,
         width : 150
 
     }, {
         dataField : "brnchId",
-        headerText : '<spring:message code="service.grid.AppBrnchId" />',        
+        headerText : '<spring:message code="service.grid.AppBrnchId" />',
         editable : false,
         width : 100
     }, {
         dataField : "code1",
-        headerText : '<spring:message code="service.grid.Status" />',        
+        headerText : '<spring:message code="service.grid.Status" />',
         width : 130
     }, {
         dataField : "installEntryId",
@@ -252,30 +261,30 @@ function fn_DscReport(){
 }
 
 function fn_editInstallation(){//active 일때만 열림
-    
-    
+
+
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    
+
     if(selectedItems.length  <= 0) {
         Common.alert("<b><spring:message code='service.msg.NoInstallation'/></b>");
         return ;
     }
-    
+
 
     if(selectedItems.length  > 1) {
         //Common.alert("<b>only select one row plz</b>");
         Common.alert("<b><spring:message code='service.msg.onlyPlz'/></b>");
         return ;
     }
-    
-      
+
+
     var   installEntryId =   selectedItems[0].item.installEntryId;
-    var   codeid1 =  selectedItems[0].item.codeid1;   
-    var  orderId =   selectedItems[0].item.salesOrdId;    
-    var docId =  selectedItems[0].item.c1;   
-    var  statusCode =  selectedItems[0].item.code1; 
+    var   codeid1 =  selectedItems[0].item.codeid1;
+    var  orderId =   selectedItems[0].item.salesOrdId;
+    var docId =  selectedItems[0].item.c1;
+    var  statusCode =  selectedItems[0].item.code1;
     var  salesOrderId =  selectedItems[0].item.salesOrdId;
-    
+
     if(statusCode == "COM"){
                Common.popupDiv("/services/editInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
     }else{
@@ -297,7 +306,7 @@ function fn_editInstallation(){//active 일때만 열림
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_assginCTTransfer()"><spring:message code='service.btn.AssginCTTransfer'/></a></p></li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_installationListSearch()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 </c:if>
@@ -368,7 +377,7 @@ function fn_editInstallation(){//active 일때만 열림
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="installStatus" name="installStatus">
         <c:forEach var="list" items="${installStatus }" varStatus="status">
@@ -388,17 +397,17 @@ function fn_editInstallation(){//active 일때만 열림
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.CustomerID'/></th>    
+    <th scope="row"><spring:message code='service.title.CustomerID'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="customerId" name="customerId"/></td>
-    <th scope="row"><spring:message code='service.title.CustomerName'/></th>    
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="customerName" name="customerName"/></td>
-    <th scope="row"><spring:message code='service.title.CustomerIC_CompanyNo'/></th>    
+    <th scope="row"><spring:message code='service.title.CustomerIC_CompanyNo'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="customerIc" name="customerIc"/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>    
+    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="sirimNo" name="sirimNo"/></td>
-    <th scope="row"><spring:message code='service.title.SerialNo'/></th>    
+    <th scope="row"><spring:message code='service.title.SerialNo'/></th>
     <td colspan="3"><input type="text" class="w100p" title="" placeholder="" id="serialNo" name="serialNo"/></td>
 </tr>
 </tbody>
@@ -410,12 +419,12 @@ function fn_editInstallation(){//active 일때만 열림
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">    
+<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="javascript:fn_addInstallation()" id="addInstallation"><spring:message code='service.btn.AddInstallationResult'/></a></p></li>
-</c:if>        
-<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">        
+</c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn"><a href="javascript:fn_editInstallation()" id="editInstallation"><spring:message code='service.btn.EditInstallationResult'/></a></p></li>
-</c:if>  
+</c:if>
        <!--  <li><p class="link_btn"><a href="#">Edit Installation Result</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>
@@ -426,7 +435,7 @@ function fn_editInstallation(){//active 일때만 열림
     </ul>
     <ul class="btns">
         <!-- <li><p class="link_btn type2"><a href="#" onclick="Common.alert('The program is under development')">Installation Note</a></p></li> -->
-<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">        
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_doActiveList()"><spring:message code='service.btn.DOActiveList'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installNoteListing()"><spring:message code='service.btn.InstallationNoteListing'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installationNote()"><spring:message code='service.btn.InstallationNote'/></a></p></li>
@@ -435,7 +444,7 @@ function fn_editInstallation(){//active 일때만 열림
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_installFreeGiftList()"><spring:message code='service.btn.InstallationFreeGiftList'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_dailyDscReport()"><spring:message code='service.btn.DailyDSCReport'/></a></p></li>
         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_DscReport()"><spring:message code='service.btn.DSCReport'/></a></p></li>
-</c:if>        
+</c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -444,8 +453,8 @@ function fn_editInstallation(){//active 일때만 열림
 
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li> 
-</c:if>    
+    <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li>
+</c:if>
    <!--  <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>

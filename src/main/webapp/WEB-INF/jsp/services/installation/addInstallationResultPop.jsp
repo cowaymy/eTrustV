@@ -3,6 +3,7 @@
 
 <script type="text/javaScript">
 $(document).ready(function() {
+
     var myGridID_view;
 
     createInstallationViewAUIGrid();
@@ -86,15 +87,16 @@ $(document).ready(function() {
 });
 
 function fn_saveInstall(){
+
+
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log(result);
-        Common.alert(result.message);
-        
-        if(result.data =="Y" ){
-        	$("#sav_div").attr("style","display:none");
-        }
-       
+        Common.alert(result.message,fn_saveclose);
     });
+}
+
+function fn_saveclose(){
+	addInstallationPopupId.remove();
 }
 function fn_viewInstallResultSearch(){
     var jsonObj = {
@@ -119,7 +121,7 @@ function createInstallationViewAUIGrid() {
     }, {
         dataField : "code",
         //headerText : "Status",
-        headerText : '<spring:message code="service.grid.Status" />',  
+        headerText : '<spring:message code="service.grid.Status" />',
         editable : false,
         width : 180
     }, {
@@ -259,7 +261,7 @@ var gridPros = {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.RefNo'/></th>    
+    <th scope="row"><spring:message code='service.title.RefNo'/></th>
     <td>
     <span><c:out value="${installResult.refNo}"/></span>
     </td>
@@ -371,7 +373,7 @@ var gridPros = {
     <td>
     <span><c:out value="${customerInfo.nric}"/></span>
     </td>
-    <th scope="row"><spring:message code='service.title.Gender'/></th>  
+    <th scope="row"><spring:message code='service.title.Gender'/></th>
     <td>
     <span><c:out value="${customerInfo.gender}"/></span>
     </td>
@@ -494,7 +496,7 @@ var gridPros = {
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2><spring:message code='service.title.InstallationContactPerson'/></h2> 
+<h2><spring:message code='service.title.InstallationContactPerson'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -509,7 +511,7 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code='service.title.Name'/></th>    
+    <th scope="row"><spring:message code='service.title.Name'/></th>
     <td>
     <span><c:out value="${installationContract.name}"/></span>
     </td>
@@ -700,14 +702,14 @@ var gridPros = {
         </c:forEach>
     </select>
     </td>
-    <th scope="row"><spring:message code='service.title.ActualInstallStatust'/></th>    
+    <th scope="row"><spring:message code='service.title.ActualInstallStatust'/></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="installDate"/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px;" id="ctCode" name="ctCode" />
+    <td><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:200px;" id="ctCode"  readonly="readonly" name="ctCode" />
     <input type="hidden" title="" value="16495" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
-    <p class="btn_sky"><a href="#">Search</a></p></td>
+    <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
     <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td>
 </tr>
@@ -728,7 +730,7 @@ var gridPros = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>    
+    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="sirimNo" name="sirimNo" /></td>
     <th scope="row"><spring:message code='service.title.SerialNo'/></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="serialNo" name="serialNo"/></td>
@@ -825,7 +827,7 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
         <a href="#" onclick="fn_saveInstall()">Save Installation Result</a></p>
     </li>
 </ul>
-</div> 
+</div>
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
