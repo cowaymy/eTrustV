@@ -2717,56 +2717,57 @@
               
               <select id="selectQryBS_Rev" parameterType="Map" resultType="egovMap">
 
-            select NO,SCHDUL_ID
-                ,SALES_ORD_ID
-                ,CODY_ID
-                ,SETL_DT
-                ,RESULT_STUS_CODE_ID
-                ,FAIL_RESN_ID
-                ,REN_COLCT_ID
-                ,WH_ID
-                ,RESULT_REM
+            select NO
+                ,SCHDUL_ID
+                ,nvl(SALES_ORD_ID,0) as SALES_ORD_ID
+                ,nvl(CODY_ID,0) as CODY_ID
+                ,to_char(SETL_DT,'yyyy-mm-dd') SETL_DT
+                ,nvl(RESULT_STUS_CODE_ID,0) as RESULT_STUS_CODE_ID
+                ,nvl(FAIL_RESN_ID,0) as FAIL_RESN_ID
+                ,nvl(REN_COLCT_ID,0) as REN_COLCT_ID
+                ,nvl(WH_ID,0) as WH_ID
+                ,nvl(RESULT_REM,0) as RESULT_REM
                 ,RESULT_STOCK_USE
-                ,RESULT_ID
+                ,nvl(RESULT_ID,0) as RESULT_ID
           from SVC0006D
           where SCHDUL_ID = #{ScheduleID}
             and SALES_ORD_ID = #{SalesOrderId}
-            and RESULT_IS_CURR = 0
+           <!--  and RESULT_IS_CURR = 0 -->
 
           </select>
           
           <insert id="addbsResultMas_Rev" parameterType="Map">
                 insert into svc0006d
-                (RESULT_ID
-                NO
-                TYPE_ID
-                SCHDUL_ID
-                SALES_ORD_ID
-                CODY_ID
-                SETL_DT
-                RESULT_STUS_CODE_ID
-                FAIL_RESN_ID
-                REN_COLCT_ID
-                WH_ID
-                RESULT_REM
-                RESULT_CRT_DT
-                RESULT_CRT_USER_ID
-                RESULT_IS_SYNC
-                RESULT_IS_EDIT
-                RESULT_STOCK_USE
-                RESULT_IS_CURR
-                RESULT_MTCH_ID
+                (RESULT_ID,
+                NO,
+                TYPE_ID,
+                SCHDUL_ID,
+                SALES_ORD_ID,
+                CODY_ID,
+                SETL_DT,
+                RESULT_STUS_CODE_ID,
+                FAIL_RESN_ID,
+                REN_COLCT_ID,
+                WH_ID,
+                RESULT_REM,
+                RESULT_CRT_DT,
+                RESULT_CRT_USER_ID,
+                RESULT_IS_SYNC,
+                RESULT_IS_EDIT,
+                RESULT_STOCK_USE,
+                RESULT_IS_CURR,
+                RESULT_MTCH_ID,
                 RESULT_IS_ADJ
                 )
                 values
                 (
-                SVC0006D_RESULT_ID_SEQ.nextval
-                ,#{No}
+                SVC0006D_RESULT_ID_SEQ.nextval,
+                #{No}
                 ,#{TypeId}
                 ,#{ScheduleID}
                 ,#{SalesOrderId}
                 ,#{CodyID}
-                ,#{SettleDate}
+                ,TO_DATE(#{SettleDate},'YYYY-MM-DD')
                 ,#{ResultStatusCodeID}
                 ,#{FailReasonID}
                 ,#{RenCollectionID}
@@ -3025,12 +3026,12 @@
             )
             values
             (SVC0006D_RESULT_ID_SEQ.nextval
-            #{No}
+            ,#{No}
             ,#{TypeID}
             ,#{ScheduleID}
             ,#{SalesOrderId}
             ,#{CodyID}
-            ,#{SettleDate}
+            ,TO_DATE(#{SettleDate},'YYYY-MM-DD')
             ,#{ResultStatusCodeID}
             ,#{FailReasonID}
             ,#{RenCollectionID}
@@ -3089,7 +3090,7 @@
           <insert id="addStkCrd_new" parameterType="Map">
           insert into log0014d
             (
-            ,SR_CARD_ID
+            SR_CARD_ID
             ,LOC_ID
             ,STOCK_ID
             ,ENTRY_DT
