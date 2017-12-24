@@ -198,9 +198,9 @@ function fn_asaAssignCtOderList(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>HS Order Create</h1>
+<h1>Assign CT Change</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="javascript:fn_ctChange();" >Assign Cody Change</a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:fn_ctChange();" >Assign CT Change</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 

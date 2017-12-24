@@ -774,16 +774,33 @@ function fn_AllocationConfirm(){
         sessionCode ="A";
     }
     
+    if( '${CallBackFun}' !=''){
+     
+    	  rtnObj = new Object();
+    	  
+    	  rtnObj.sessionCode = sessionCode;
+    	  rtnObj.memCode = selectedItems[0].item.memCode;
+    	  rtnObj.ct = selectedItems[0].item.ct;
+    	  rtnObj.ctSubGrp = selectedItems[0].item.ctSubGrp;
+    	  rtnObj.dDate = selectedItemsMain[0].item.dDate;
+    	  rtnObj.brnchId = selectedItemsMain[0].item.brnchId;
+    	 
+    	  $("#_doAllactionDiv").remove();
+    	  eval(${CallBackFun}(rtnObj));
+    	  
+    }else{
+    	$("#CTSSessionCode").val(sessionCode);
+        $("#CTCode").val(selectedItems[0].item.memCode);    
+        $("#CTID").val(selectedItems[0].item.ct);  
+        $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
+        $("#appDate").val(selectedItemsMain[0].item.dDate); 
+        $("#branchDSC").val(selectedItemsMain[0].item.brnchId); 
+        
+        
+        $("#_doAllactionDiv").remove();
+    	
+    }
     
-    $("#CTSSessionCode").val(sessionCode);
-    $("#CTCode").val(selectedItems[0].item.memCode);    
-    $("#CTID").val(selectedItems[0].item.ct);  
-    $("#CTgroup").val(selectedItems[0].item.ctSubGrp); 
-    $("#appDate").val(selectedItemsMain[0].item.dDate); 
-    $("#branchDSC").val(selectedItemsMain[0].item.brnchId); 
-    
-    
-    $("#_doAllactionDiv").remove();
     
 }
 

@@ -879,13 +879,15 @@
 					                      APP_DT,
 					                      CT_ID,
 					                      CT_GRP,
-					                      CALL_ENTRY_ID)
+					                      CALL_ENTRY_ID,
+					                      RT_SESION_CODE
+					                      )
 					           VALUES (#{stkRetnId},
 					                        #{stusCodeId},
 					                        #{typeId},
 					                        #{salesOrdId},
 					                        #{movId},
-					                        SYSDATE,
+					                        TO_DATE(#{requestDate}, 'DD/MM/YYYY'),
 					                        SYSDATE,
 					                        #{userId},
 					                        SYSDATE,
@@ -897,7 +899,8 @@
 					                        TO_DATE(#{appDt}, 'DD/MM/YYYY'),
 					                        #{ctId},
 					                        #{ctGrp},
-					                        #{callEntryId}
+					                        #{callEntryId},
+					                       #{cTSSessionCode}
 					                        )
     </insert>
     

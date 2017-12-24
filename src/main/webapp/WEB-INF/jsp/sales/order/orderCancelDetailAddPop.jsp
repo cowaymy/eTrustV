@@ -142,6 +142,40 @@
    }
     
     
+    
+	
+	//add by hgham 
+	function fn_doAllaction(){
+	    
+	    var ord_id ='${cancelReqInfo.ordId}'   ;// '143486';
+	    var  vdte   =$("#requestDate").val();
+	    
+	    var options ={
+	            ORD_ID: ord_id,
+	            S_DATE: vdte,
+	            CallBackFun:'fn_allactionFun'
+	    }
+	    
+	    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
+	}
+	
+	
+	
+	function fn_allactionFun(obj){
+		
+		   console.log(obj);
+		   $("#addAppRetnDt").val(obj.dDate);
+	       $("#ctId").val(obj.ct);
+           $("select[name=cmbAssignCt]").val(obj.ct);
+           $("select[name=cmbAssignCt]").addClass("w100p disabled");
+           $("select[name=cmbAssignCt]").attr('disabled','disabled');
+           
+           $("#CTGroup").val(obj.ctSubGrp);
+           $("#brnchId").val(obj.brnchId);
+           $("#CTSSessionCode").val(obj.sessionCode);
+   }
+
+    
     function onChangeStatusType(){
     	if($("#addStatus").val() == '19'){     // Recall
     		$("select[name=cmbAssignCt]").removeAttr("disabled");
@@ -176,7 +210,8 @@
             	$("select[name=cmbCtGroup]").removeAttr("disabled");
                 $("select[name=cmbCtGroup]").removeClass("w100p disabled");
                 $("select[name=cmbCtGroup]").addClass("w100p");
-                $("#addAppRetnDt").removeAttr("disabled");
+                //$("#addAppRetnDt").removeAttr("disabled");
+                $("#requestDate").removeAttr("disabled");
             }
             
         }
@@ -242,8 +277,8 @@
                     return false;
                 }
                 if(addCallForm.cmbCtGroup.value == ""){
-                    Common.alert("Please key in the CT Group");
-                    return false;
+                   // Common.alert("Please key in the CT Group");
+                   // return false;
                 }
                 if(addCallForm.addAppRetnDt.value == ""){
                     Common.alert("Please key in the Appointment Date");
@@ -669,6 +704,9 @@
     <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
     <input id="callStusId" name="callStusId" type="hidden" >
     
+    <!--  add by hgham  -->
+    <input id="ctId" name="ctId" type="hidden" >
+    
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -708,26 +746,48 @@
                     </c:forEach>
 			    </select>
 			    </td>
-			    <th scope="row">CT Group</th>
-			    <td>
-			    <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
-			        <option value="">CT Group</option>
-			        <option value="A">Group A</option>
-			        <option value="B">Group B</option>
-			        <option value="C">Group C</option>
-			    </select>
-			    </td>
+			    
+			    <th scope="row">DSC Branch</th>
+				    <td>  
+				            <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly "    readonly="readonly"  />                    
+				            <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly"    readonly="readonly" />
+				          <div  style="display:none">
+						   <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
+			                    <option value="">CT Group</option>
+			                    <option value="A">Group A</option>
+			                    <option value="B">Group B</option>
+			                    <option value="C">Group C</option>
+		                  </select>
+		                </div>
+				</td>
 			</tr>
+			
+    
+           <tr>
+	                <th scope="row">Request Date<span class="must">*</span></th>
+				    <td>
+				    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
+				    </td>
+			    
+	    
+	                <th scope="row">Appointment Date</th>
+	                <td>
+	                  <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
+	                </td>
+            </tr>
 			<tr>
-			    <th scope="row">Appointment Date</th>
-			    <td>
-			      <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
-			    </td>
-			    <th scope="row">Recall Date</th>
-			    <td>
-			      <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
-			    </td>
+			       <th scope="row">Recall Date</th>
+				    <td>
+				      <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
+				    </td>
+				    
+				      <th scope="row">Appointment <br> Sessione </th>
+                    <td>
+                          <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"    readonly="readonly"  />                    
+                    </td>
+               
 			</tr>
+			
 			<tr>
 			    <th scope="row">Remark<span class="must">*</span></th>
 			    <td colspan="3">

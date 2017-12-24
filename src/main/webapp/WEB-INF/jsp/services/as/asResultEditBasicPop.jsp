@@ -966,7 +966,7 @@ function fn_chSeriaNo(){
         <td>
         <input type="text" title="" placeholder="" class="readonly"   id='txtResultNo' name='txtResultNo'/>
         </td>
-        <th scope="row">Status</th>
+        <th scope="row">Status <span class="must">*</span> </th>
         <td>
         
 		    <select class="w100p"  id="ddlStatus" name="ddlStatus"  class="readonly"  disabled="disabled"  onChange="fn_ddlStatus_SelectedIndexChanged()">
@@ -981,7 +981,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Settle Date</th>
+        <th scope="row">Settle Date <span class="must">*</span> </th>
         <td>
         <input type="text" title="Create start Date"   class="readonly"   id='dpSettleDate'  name='dpSettleDate' placeholder="DD/MM/YYYY" class="readonly j_date" disabled="disabled" />
         </td>
@@ -991,7 +991,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Settle Time</th>
+        <th scope="row">Settle Time <span class="must">*</span> </th>
         <td>
 
         <div class="time_picker"><!-- time_picker start -->
@@ -1026,7 +1026,7 @@ function fn_chSeriaNo(){
         </div><!-- time_picker end -->
 
         </td>
-        <th scope="row">DSC Code</th>
+        <th scope="row">DSC Code <span class="must">*</span> </th>
         <td>
        <!-- <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >  </select>-->
          <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
@@ -1037,13 +1037,13 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Error Code</th>
+        <th scope="row">Error Code <span class="must">*</span> </th>
         <td>
         <select  id='ddlErrorCode' name='ddlErrorCode'>
                      <option value="9999">ErrorCode</option>
          </select>
         </td>
-        <th scope="row">CT Code</th>
+        <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
         
         
@@ -1058,7 +1058,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Error Description</th>
+        <th scope="row">Error Description <span class="must">*</span> </th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
              <option value="9999">Error code definition is required  </option>
@@ -1110,7 +1110,7 @@ function fn_chSeriaNo(){
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Defect Type</th>
+        <th scope="row">Defect Type <span class="must">*</span> </th>
         <td>
            <input type="text" title=""  id='def_type'  name ='def_type' placeholder="ex) DT3" class=""  onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
            <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
@@ -1120,7 +1120,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Defect Code</th>
+        <th scope="row">Defect Code <span class="must">*</span> </th>
         <td>
 	        <input type="text" title="" placeholder="ex) FF"   id='def_code' name ='def_code' class=""  onChange="fn_getASReasonCode2(this, 'def_code', '303')"  />
 	        <input type="hidden" title="" placeholder=""   id='def_code_id' name ='def_code_id' class="" />
@@ -1128,7 +1128,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Defect Part</th>
+        <th scope="row">Defect Part <span class="must">*</span> </th>
         <td>
         <input type="text" title="" placeholder="ex) FE12"   id='def_part' name ='def_part'   class=""  onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" /> 
           <input type="hidden" title="" placeholder=""id='def_part_id' name ='def_part_id'   class="" />
@@ -1136,7 +1136,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Detail of Defect</th>
+        <th scope="row">Detail of Defect <span class="must">*</span></th>
         <td>
           <input type="text" title="" placeholder="ex) 18 "   id='def_def' name ='def_def'  class="" onChange="fn_getASReasonCode2(this, 'def_def'  ,'304')"  />
           <input type="hidden" title="" placeholder="" id='def_def_id' name ='def_def_id'  class="" />
@@ -1144,7 +1144,7 @@ function fn_chSeriaNo(){
         </td>
     </tr>
     <tr>
-        <th scope="row">Solution Code</th>
+        <th scope="row">Solution Code <span class="must">*</span> </th>
         <td>
 	        <input type="text" title="" placeholder="ex) A9" class=""   id='solut_code' name ='solut_code'  onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')"   />
 	        <input type="hidden" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />

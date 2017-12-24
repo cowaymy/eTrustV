@@ -392,10 +392,6 @@ public class ServiceApiController {
         					if(! "000".equals(spMap.get("P_RESULT_MSG"))){
         						rtnValue.put("logerr","Y");
         						
-        					}else{
-        						if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-        							MSvcLogApiService.updateSuccessStatus(transactionId);
-        						}
         					}
         					
         					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
@@ -868,8 +864,6 @@ public class ServiceApiController {
                      				
                      				
                      				EgovMap  rtnValue = ASManagementListService.asResult_insert(asResultInsert);
-                     				
-                     				
                      
                      				if( null !=rtnValue){
                      					HashMap   spMap =(HashMap)rtnValue.get("spMap");

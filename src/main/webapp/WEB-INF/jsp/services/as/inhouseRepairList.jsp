@@ -16,6 +16,8 @@ function fn_selInhouseList(){
 
 $(document).ready(function() {
     createAUIGrid() ;
+    doGetCombo('/services/as/getBrnchId', '', '','branchDSC', 'S' , '');           
+
   
 });
 
@@ -24,34 +26,38 @@ function createAUIGrid() {
     var columnLayout = [
                         
                         {
-                            headerText : "As_Entry",
+                            headerText : "Open IHR Service",
                             children : [ 
-                                        {dataField : "asNo",     headerText  : "AS No" ,width  : 120 ,  editable       : false  } ,
-                                        {dataField : "asBrnchDesc",     headerText  : "DSC Branch" ,width  : 120 ,  editable       : false  } ,
-                                        { dataField : "memCode",     headerText  : "CT Code",  width  : 120 , editable       : false},
-                                        { dataField : "stkDesc",       headerText  : "Product",  width  : 200   , editable       : false},
-                                        {dataField : "asStus",             headerText  : "AS Statu ",  width  : 120,  editable       : false}
+                                  
+                                        {dataField : "salesOrdNo",     headerText  : "Order No" ,width  : 100 ,  editable       : false  } ,
+                                        {dataField : "custName",      headerText  : "Customer" ,width  : 120 ,  editable       : false  } ,
+                                        {dataField : "asNo",             headerText  : " Open IHR Service No",  width  : 130 , editable       : false},
+                                        {dataField : "memCode",       headerText  : " Open CT Code",  width  : 120   , editable       : false},
+                                        {dataField : "stkCode",         headerText  : "Customer Product ",  width  : 120,  editable       : false},
+                                        {dataField : "serialNo",          headerText  : "Customer Serial No",  width  : 120,  editable       : false},
+                                        {dataField : "inHuseRepairProductCode",             headerText  : "Loan Unit Product ",  width  : 120,  editable       : false},
+                                        {dataField : "inHuseRepairSerialNo",             headerText  : "Loan Unit Serial No ",  width  : 120,  editable       : false}
                             ]
                         },
                         {
-                            headerText : "Repair_Entry",
+                            headerText : "IHR Service",
                             children : [ 
+                                        {dataField :  "inAsNo",     headerText  : "IHR Service No" ,width  : 100 ,  editable       : false  } ,
                                         {dataField :  "inMemCode",     headerText  : "RCT Code" ,width  : 100 ,  editable       : false  } ,
-                                        {dataField :  "inAsNo",     headerText  : "Repair As No" ,width  : 100 ,  editable       : false  } ,
 
-                                        { dataField : "inAsCrtDt",    headerText  : "In-house <br> Reg Date",  width  : 150 ,  dataType : "date", formatString : "dd/mm/yyyy"  ,editable       : false},
-                                        { dataField : "inAsComDt", headerText  : "In-house <br> End Date ",  width  : 150    ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
-                                        { dataField : "inHuseRepairPromisDt", headerText  : "Promised <br>Com Date",  width  : 150   ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
-                                        {dataField :  "inAsStus", headerText  : "Repair Statu",  width  : 120 , editable    : false}
+                                        { dataField : "asAppntDt", headerText  : "IHR Promised Date",  width  : 150   ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
+                                        { dataField : "inAsCrtDt",    headerText  : "IHR Registration Date",  width  : 150 ,  dataType : "date", formatString : "dd/mm/yyyy"  ,editable       : false},
+                                        { dataField : "inAsComDt", headerText  : " IHR Complete Date",  width  : 150    ,dataType : "date", formatString : "dd/mm/yyyy"  , editable       : false},
+                                        {dataField :  "inAsStus", headerText  : "IHR Status",  width  : 120 , editable    : false}
                             ]
                         },
                         {
-                            headerText : "OnLoan Unit_Entry",
+                            headerText : "Close IHR Service",
                             children : [ 
-                                        {dataField : "onAsNo",     headerText  : "AS No" ,width  : 100 ,  editable       : false  } ,
-                                        { dataField : "onStkDesc",    headerText  : "Product",  width  : 150  , editable       : false},
-                                        { dataField : "onInHuseRepairSerialNo", headerText  : "Serial No",  width  : 150 , editable       : false},
-                                        {dataField :  "onAsStus", headerText  : "onLoan Statu",  width  : 120 , editable    : false}
+                                        {dataField : "onAsNo",     headerText  : "Close IHR Service No." ,width  : 100 ,  editable       : false  } ,
+                                        {dataField : "onMemCode",     headerText  : "Close CT Code" ,width  : 100 ,  editable       : false  } ,
+                                        {dataField :  "onAsStus", headerText  : "Close IHR Status",  width  : 120 , editable    : false},
+                                        { dataField : "onComDt",    headerText  : "Close IHR Complete Date",  width  : 150  , dataType : "date", formatString : "dd/mm/yyyy", editable       : false}
                             ]
                         }
    ];   
@@ -95,6 +101,31 @@ function fn_viewInHouseResultPop(){
     Common.popupDiv("/services/inhouse/inHouseAsResultEditBasicPop.do?mode=view"+pram  ,null, null , true , '_viewResultDiv');
 
 }
+
+
+
+
+
+function fn_asInhouseAddOrderPop(){
+    
+	var selectedItems = AUIGrid.getSelectedItems(inHouseRGridID);
+	    
+    if(selectedItems.length <= 0) {
+            Common.alert("<b>No Item selected.</b>");
+         return ;
+    }
+    console.log(selectedItems);
+    
+    var pram = "?salesOrderId="+selectedItems[0].item.salesOrdId+"&ordNo="+selectedItems[0].item.salesOrdNo+"&AS_ID="+selectedItems[0].item.asId+"&asResultId="+selectedItems[0].item.inAsResultId;
+    
+    Common.popupDiv("/services/as/resultASReceiveEntryPop.do"+pram  ,null, null , true , '_resultNewEntryPopDiv1');
+    
+    
+    //Common.popupDiv("/services/as/resultASReceiveEntryPop.do?salesOrderId="+salesOrdId+"&ordNo="+salesOrdNo+"&asResultId="+asResultId ,null, null , true , '_resultNewEntryPopDiv1');
+}
+
+
+
 
 
 
@@ -217,7 +248,12 @@ $.fn.clearForm = function() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>In House Repair Progress Display</h2>
 <ul class="right_btns">
+
+
+  <!--  <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li> -->
+
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_viewInHouseResultPop()">View Result</a></p></li>
 </c:if>    
 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
@@ -240,52 +276,111 @@ $.fn.clearForm = function() {
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:150px" />
+    <col style="width:120px" />
     <col style="width:*" />
-    <col style="width:140px" />
+    <col style="width:120px" />
     <col style="width:*" />
-    <col style="width:170px" />
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
+
+
 <tr>
-    <th scope="row">AS Number</th>
+    <th scope="row">Open IHR Service No </th>
     <td>
-         <input type="text" title="" placeholder="AS No" class="w100p" id="asNo" name="asNo"/>
+         <input type="text" title="" placeholder="Open IHR Service No" class="w100p" id="openServiceNo" name="openServiceNo"/>
     </td>
-    <th scope="row">Ord No</th>
+    <th scope="row"> Open CT Code </th>
     <td>
-          <input type="text" title="" placeholder="Ord No" class="w100p" id="ordNo" name="ordNo"/>
+          <input type="text" title="" placeholder="Open CT" class="w100p" id="openCt" name="openCt"/>
     </td>
-    <th scope="row">Registration CT Code</th>
+    <th scope="row">Customer Product</th>
      <td>
-        <input type="text" title="" placeholder="Registration CT Code" class="w100p" id="regCtCode" name="regCtCode"/>
+        <input type="text" title="" placeholder="Customer Product" class="w100p" id="custProduct" name="custProduct"/>
+    </td>
+      <th scope="row">Sales Order Number </th>
+     <td>
+        <input type="text" title="" placeholder="Sales Order Number" class="w100p" id="ordNo" name="ordNo"/>
     </td>
 </tr>
+
+
+
 <tr>
-    <th scope="row">AS Status</th>
+    <th scope="row">IHR Service No</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="repState" name="repState">
-            <option value="1"  selected>Active</option>
+         <input type="text" title="" placeholder="IHR Service No" class="w100p" id="ihrServiceNo" name="ihrServiceNo"/>
+    </td>
+    <th scope="row"> RCT Code </th>
+    <td>
+          <input type="text" title="" placeholder="RCT Code" class="w100p" id="rctCode" name="rctCode"/>
+    </td>
+    <th scope="row">Loan Unit Product</th>
+     <td>
+        <input type="text" title="" placeholder="Loan Unit Product" class="w100p" id="loanProduct" name="loanProduct"/>
+    </td>
+      <th scope="row">Customer </th>
+     <td>
+        <input type="text" title="" placeholder="Customer" class="w100p" id="custId" name="custId"/>
+    </td>
+</tr>
+
+<tr>
+    <th scope="row">Close IHR Service No</th>
+    <td>
+         <input type="text" title="" placeholder="Close IHR Service No" class="w100p" id="closeServiceNo" name="closeServiceNo"/>
+    </td>
+    <th scope="row"> Close CT Code </th>
+    <td>
+          <input type="text" title="" placeholder="Close CT Code" class="w100p" id="closeCtCode" name="closeCtCode"/>
+    </td>
+    <th scope="row">DSC Code</th>
+     <td>
+            <select class="w100p" id="branchDSC" name="branchDSC" >
+    </td>
+      <th scope="row">IHR Promised Date </th>
+     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"  name="promisedDate"/> </td>
+</tr>
+
+
+<tr>
+    <th scope="row">Customer Serial Number</th>
+    <td>
+         <input type="text" title="" placeholder="Customer Serial Number" class="w100p" id="custSerialNo" name="custSerialNo"/>
+    </td>
+    <th scope="row"> Loan Unit Serial Number </th>
+    <td>
+          <input type="text" title="" placeholder="Loan Unit Serial Number" class="w100p" id="loanSerialNo" name="loanSerialNo"/>
+    </td>
+    <th scope="row">IHR Status</th>
+     <td>            
+            <select class="w100p" id="ihrStatus" name="ihrStatus" >
+             <option value=""  selected>Choose One</option>
+            <option value="1" >Active</option>
             <option value="4">Completed</option>
             <option value="21">Fail</option>
             <option value="10">Cancelled</option>
-    </select>
-    
+            </select>
     </td>
-    <th scope="row">Repair CT Code</th>
-    <td><input type="text" title="" placeholder="Repair CT Code" class="w100p" id="rePairCtCode" name="rePairCtCode"/></td>
-    <th scope="row">Defect Type</th>
-    <td><input type="text" title="" placeholder="Defect Type" class="w100p" id="defType" name="defType"/></td>
+      <th scope="row">Close IHR Status</th>
+    
+        <td> 
+        <select class="w100p" id="closeStatus" name="closeStatus" >           
+            <option value="" selected> Choose One</option>
+            <option value="1" >Active</option>
+            <option value="4">Completed</option>
+            <option value="21">Fail</option>
+            <option value="10">Cancelled</option>
+    </select> </td>
 </tr>
-<tr>
-    <th scope="row">Product Code</th>
-    <td><input type="text" title="" placeholder="Product Code" class="w100p" id="stkCode" name="stkCode"/></td>
-    <th scope="row">Replacement Product Code</th>
-    <td><input type="text" title="" placeholder="Replacement Product Code" class="w100p" id="inReProdCode" name="inReProdCode"/></td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
+
+
+
+
+
 </tbody>
 </table><!-- table end -->
 <%-- 

@@ -676,7 +676,7 @@ function fn_invoice(){
 
 <!-- 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:()">ADD AS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS Result</a></p></li>

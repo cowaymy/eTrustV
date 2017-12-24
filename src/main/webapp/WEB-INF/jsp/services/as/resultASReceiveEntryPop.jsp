@@ -294,6 +294,23 @@ function fn_loadPageControl(){
 }
 
 
+// $("#sForm").attr({"target" :"_self" , "action" : "/sales/membershipRentalQut/mNewQuotation.do" }).submit();
+
+
+
+function fn_doReset(){
+	
+	try{
+		$("#_resultNewEntryPopDiv1").remove();
+		fn_newASPop();
+		
+	}catch(e){
+		//콜센터 
+		window.close();
+	}
+}
+
+
 function fn_doSave(){
 	  if( '${AS_NO}' !=""){
 		  fn_doUpDate();
@@ -420,6 +437,13 @@ function  fn_doNewSave(){
 	                	Common.alert("물류 오류 ..........." );
 	                	return ;
 	                }
+	                
+	                //인하우스 결과 등록 처리 
+	                if($("#IN_AsResultId").val() !="" ){
+	                    var param = "?ord_Id="+${as_ord_basicInfo.ordId}+"&ord_No="+${as_ord_basicInfo.ordNo}+"&as_No="+asNo+"&as_Id="+$("#AS_ID").val()+"&refReqst="+$("#IN_AsResultId").val() ;
+	                    Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
+	                }
+	                
 	                
 	                
 	                if(result.asNo !="" ){
@@ -860,6 +884,9 @@ function fn_addRemark(){
 <div id="popup_wrap"  class="popup_wrap "><!-- popup_wrap start -->
 <section id="content"><!-- content start -->
 
+
+<form action="#" method="post" id="sFm" name='sFm'>
+
 <header class="pop_header"><!-- pop_header start -->
 <h1>AS ReceiveEntry  <c:if test="${MOD eq 'VIEW'}">  EDIT  </c:if> </h1>
 <ul class="right_opt">
@@ -870,7 +897,7 @@ function fn_addRemark(){
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="">
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -885,7 +912,7 @@ function fn_addRemark(){
 </tr>
 </tbody>
 </table><!-- table end -->
-</form>
+
 </section><!-- search_table end -->
 
 
@@ -939,8 +966,6 @@ function fn_addRemark(){
 <h3>AS Application Information</h3>
 </aside><!-- title_line end -->
 
-
-<form action="#" method="post" id="sFm" name='sFm'>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1148,7 +1173,7 @@ function fn_addRemark(){
     
 </tbody>
 </table><!-- table end -->
-</form>
+
 
 
 <c:if test="${MOD eq 'VIEW'}">
@@ -1181,5 +1206,7 @@ function fn_addRemark(){
 </section><!-- search_result end -->
 </div>
 </section><!-- content end -->
+</form>
 </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
+

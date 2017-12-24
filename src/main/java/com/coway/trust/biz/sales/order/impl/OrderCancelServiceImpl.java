@@ -191,8 +191,15 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 				saveParam.put("isSynch", 0);
 				saveParam.put("retnNo", getDocId);
 				saveParam.put("appDt", params.get("addAppRetnDt"));
-				saveParam.put("ctId", params.get("cmbAssignCt"));
+				saveParam.put("ctId", params.get("ctId"));
 				saveParam.put("ctGrp", params.get("cmbCtGroup"));
+				
+				saveParam.put("cTSSessionCode", params.get("CTSSessionCode"));
+				saveParam.put("brnchId", params.get("brnchId"));
+				saveParam.put("requestDate", params.get("requestDate"));
+				saveParam.put("cTGroup", params.get("CTGroup"));
+				   
+				
 				String stkRetnIdSeq = orderCancelMapper.crtSeqLOG0038D();
 				saveParam.put("stkRetnId", stkRetnIdSeq);
 				orderCancelMapper.insertCancelLOG0038D(saveParam);

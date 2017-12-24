@@ -119,7 +119,10 @@
 					       D_DATE,
 					       ASCNT||'-'|| C_AS_SUM_CNT    ASCNT,
 					       INSCNT||'-'||C_INS_SUM_CNT  INSCNT,
-					       0||'-'||C_RTN_SUM_CNT          RTNCNT ,AS_SUM_CNT,INS_SUM_CNT,
+					       RTNCNT||'-'||C_RTN_SUM_CNT   RTNCNT,
+					       AS_SUM_CNT,
+					       INS_SUM_CNT,
+					       RTN_SUM_CNT,
 					       #{brnchId}  AS BRNCH_ID
 					FROM(
 					SELECT #{ct} CT,
@@ -144,7 +147,16 @@
 		                    (SELECT COUNT (*) CNT  FROM  SVC0001D  AA
                                                   WHERE  1=1
                                                   AND  AA.AS_MEM_ID =#{ct}
-                                                  AND  AA.AS_STUS_ID =1)AS_SUM_CNT,    
+                                                  AND  AA.AS_STUS_ID =1)AS_SUM_CNT,   
+                             (SELECT COUNT (*) CNT  FROM  LOG0038D  AA
+                                                     WHERE  1=1
+                                                     AND  AA.CT_ID =#{ct}
+                                                     AND  AA.STUS_CODE_ID =1
+                                                     AND  TO_CHAR (AA.APP_DT,'YYYY-MM-DD'  )  = TO_CHAR( ( TO_DATE(#{cDate},'YYYY-MM-DD') ) ,'YYYY-MM-DD'))RTNCNT,         
+                               (SELECT COUNT (*) CNT  FROM  LOG0038D  AA
+                                                  WHERE  1=1
+                                                  AND  AA.CT_ID =#{ct}
+                                                  AND  AA.STUS_CODE_ID =1)RTN_SUM_CNT,                        
 					       NVL(( SELECT  SUM(NVL(MORNG_SESION_INS,0) + NVL(AFTNON_SESION_INS,0) + NVL(EVNG_SESION_INS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = #{ct} ),0)  C_INS_SUM_CNT,
                            NVL(( SELECT  SUM(NVL(MORNG_SESION_AS,0) + NVL(AFTNON_SESION_AS,0) + NVL(EVNG_SESION_AS,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID =#{ct} ),0)      C_AS_SUM_CNT,
                            NVL(( SELECT  SUM(NVL(MORNG_SESION_RTN,0) + NVL(AFTNON_SESION_RTN,0) + NVL(EVNG_SESION_RTN,0) ) SUMSESION_CNT  FROM ORG0015M S WHERE  S.CT_ID = #{ct} ),0) C_RTN_SUM_CNT
@@ -297,15 +309,15 @@
                                                  0 I02 ,
                                                  0 I03 ,
                                                  0 I04 ,
-                                                 0 R01 ,
-                                                 0 R02 ,
-                                                 0 R03 ,
-                                                 0 R04 
-                                               FROM SAL0046D D
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'A',1,0)),0)   R01 ,
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'M',1,0)),0)   R02 ,
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'E',1,0)),0)   R03 ,
+                                                 NVL(SUM(DECODE(D.RT_SESION_CODE,'O',1,0)),0)   R04
+                                               FROM LOG0038D D
                                              WHERE 1=1
                                                 AND D.CT_ID = #{CT_ID}
                                                 AND D.STUS_CODE_ID =1  
-                                                AND to_char(D.INSTALL_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')         
+                                                AND to_char(D.APP_DT,'YYYYMMDD')  =  TO_CHAR(TO_DATE(#{P_DATE},'YYYY-MM-DD'),'YYYYMMDD')         
                                     )
                                   )
                              )
