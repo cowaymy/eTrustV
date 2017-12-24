@@ -106,7 +106,7 @@
     
         function fn_getUseHistoryInfo(){
             
-            Common.ajax("GET", "/services/bs/hSFilterUseHistory.do", {OrderID : $("#orderId").val() ,StockID :  $("#stkId").val() }, function(result) {
+            Common.ajax("GET", "/services/bs/hSFilterUseHistory.do", {OrderID : $("#orderId").val() ,StockID :  $("#stkId").val() ,SrvFilterStkId:$("#srvFilterStkId").val()}, function(result) {
                 console.log("fn_getUseHistoryInfo.");
                 console.log(  JSON.stringify(result));
                 AUIGrid.setGridData(myDetailGridIDInActive, result);        
@@ -146,6 +146,7 @@
     <input type="hidden" name="SRV_FILTER_ID"  id="SRV_FILTER_ID" value=""/>  
     <input type="hidden" name="orderId"  id="orderId" value="${orderId}"/>
     <input type="hidden" name="stkId"  id="stkId" value="${stkId}"/>
+    <input type="hidden" name="srvFilterStkId"  id="srvFilterStkId" value="${srvFilterStkId}"/>
     
 
 <aside class="title_line"><!-- title_line start -->

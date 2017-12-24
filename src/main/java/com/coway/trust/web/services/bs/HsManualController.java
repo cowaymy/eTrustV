@@ -823,6 +823,7 @@ public class HsManualController {
 		
 		model.put("orderId",(String) params.get("orderId"));
 		model.put("stkId",(String) params.get("stkId"));
+		model.put("srvFilterStkId",(String) params.get("srvFilterStkId"));
 		
 		// 호출될 화면
 		return "services/bs/hSFilterUseHistoryPop";

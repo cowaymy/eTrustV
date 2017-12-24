@@ -153,6 +153,9 @@
                                     return false;
                                }
                               
+                              var SRV_FILTER_STK_ID =    AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterStkId");
+                              $("#orderInfoForm #srvFilterStkId").val(SRV_FILTER_STK_ID);
+                              
                               //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
                               Common.popupDiv("/services/bs/hSFilterUseHistoryPop.do", $("#orderInfoForm").serializeJSON(), null , true , '');
                             }
@@ -172,12 +175,19 @@
                     height:30,          
                     editable : false
                 }, {                        
+                    dataField : "srvFilterStkId",
+                    //headerText : "Filter id",
+                    headerText : '<spring:message code="service.grid.srvFilterStkId" />',
+                    width : 240,          
+                    editable : false ,          
+                    visible:false
+                }, {                        
                     dataField : "stkId",
                     //headerText : "Filter id",
                     headerText : '<spring:message code="service.grid.FilterId" />',
-                    width : 240,                             
-                    visible:false,          
-                    editable : false 
+                    width : 240,          
+                    editable : false ,          
+                    visible:false
                 }, {                        
                     dataField : "stkDesc",
                     //headerText : "Filter Name",
@@ -438,6 +448,7 @@
     <input type="hidden" name="SRV_FILTER_ID"  id="SRV_FILTER_ID" value=${srvFilterId}/>  
     <input type="hidden" name="orderId"  id="orderId" value="${hSOrderView.ordId}"/>
     <input type="hidden" name="stkId"  id="stkId" value="${hSOrderView.stkId}"/>  
+    <input type="hidden" name="srvFilterStkId"  id="srvFilterStkId" value=${SRV_FILTER_STK_ID}/>  
 
   
 

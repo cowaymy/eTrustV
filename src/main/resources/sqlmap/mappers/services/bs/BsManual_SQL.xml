@@ -2689,7 +2689,7 @@
            <resultMap id="thSFilterUseHistoryMap" type="egovMap"></resultMap>
            <select id="selecthSFilterUseHistorycall" parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
                  {
-                    call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{StockID},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
+                    call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{SrvFilterStkId},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
                  }
             </select>
             
