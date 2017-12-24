@@ -1119,14 +1119,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			Map<String, Object> bsd = new HashMap<String, Object>();
 			Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
 			//bsd.put("BSResultItemID",0 );
-			bsd.put("BSResultID",params.get("hidschdulId") );
-			bsd.put("BSResultPartID",docSub.get("stkId") );
-			bsd.put("BSResultPartDesc",docSub.get("stkDesc") );
-			bsd.put("BSResultPartQty",docSub.get("name") );
+			bsd.put("BSResultID",String.valueOf(params.get("hidschdulId")));
+			bsd.put("BSResultPartID",String.valueOf(docSub.get("stkId") ));
+			bsd.put("BSResultPartDesc",String.valueOf(docSub.get("stkDesc") ));
+			bsd.put("BSResultPartQty",String.valueOf(docSub.get("name") ));
 			bsd.put("BSResultRemark","" );
 			//bsd.put("BSResultCreateAt",0 );
-			bsd.put("BSResultCreateBy",sessionVO.getUserId() );
-			bsd.put("BSResultFilterClaim",1 );
+			bsd.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()) );
+			bsd.put("BSResultFilterClaim",String.valueOf(1 ));
 			
 			bsResultDet.add(bsd);
 		}
@@ -1134,37 +1134,69 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		Map<String, Object> bsResultMas = new HashMap<String, Object>();
 		//bsResultMas.put("ResultID", 0);
 		bsResultMas.put("No", "");
-		bsResultMas.put("TypeID", 306);
-		bsResultMas.put("ScheduleID", params.get("hidschdulId"));
-		bsResultMas.put("SalesOrderId", params.get("hidSalesOrdId"));
-		bsResultMas.put("CodyID", params.get("cmbServiceMem"));
+		bsResultMas.put("TypeID", String.valueOf(306));
+		bsResultMas.put("ScheduleID", String.valueOf(params.get("hidschdulId")));
+		bsResultMas.put("SalesOrderId", String.valueOf(params.get("hidSalesOrdId")));
+		
+		if(params.get("cmbServiceMem")==null || params.get("cmbServiceMem")==""){
+			bsResultMas.put("CodyID", String.valueOf(sessionVO.getUserId()));
+		}else{
+			bsResultMas.put("CodyID", String.valueOf(params.get("cmbServiceMem")));
+		}		
+		
+		
 		//bsResultMas.put("SettleDate", params.get("setlDt"));
 		
 		if(params.get("setlDt")!=null||params.get("setlDt")!=""){
-			bsResultMas.put("SettleDate", params.get("setlDt"));
+			bsResultMas.put("SettleDate", String.valueOf(params.get("setlDt")));
 		}else{
 			bsResultMas.put("SettleDate", "01/01/1900");
 		}
-		bsResultMas.put("ResultStatusCodeID", params.get("cmbStatusType2"));
-		bsResultMas.put("FailReasonID", params.get("failReason"));
-		bsResultMas.put("RenCollectionID", params.get("cmbCollectType"));
-		bsResultMas.put("WarehouseID",params.get("wareHouse"));
-		bsResultMas.put("ResultRemark", params.get("configBsRem"));
+		
+		if(params.get("cmbStatusType2")==null || params.get("cmbStatusType2")==""){
+			bsResultMas.put("ResultStatusCodeID", String.valueOf("0"));
+		}else{
+			bsResultMas.put("ResultStatusCodeID", String.valueOf(params.get("cmbStatusType2")));
+		}
+		
+
+		if(params.get("failReason")==null || params.get("failReason")==""){
+			bsResultMas.put("FailReasonID", String.valueOf("0"));
+		}else{
+			bsResultMas.put("FailReasonID", String.valueOf(params.get("failReason")));
+		}
+		
+		bsResultMas.put("RenCollectionID", String.valueOf(params.get("cmbCollectType")));
+		
+		if(params.get("wareHouse")==null || params.get("wareHouse")==""){
+			bsResultMas.put("WarehouseID", String.valueOf("0"));
+		}else{
+			bsResultMas.put("WarehouseID",String.valueOf(params.get("wareHouse")));
+		}
+		
+		
+		
+		if(params.get("configBsRem")==null || params.get("configBsRem")==""){
+			bsResultMas.put("ResultRemark", String.valueOf("0"));
+		}else{
+			bsResultMas.put("ResultRemark", String.valueOf(params.get("configBsRem")));
+		}
+		
 		//bsResultMas.put("ResultCreated", sysdate);
-		bsResultMas.put("ResultCreator", sessionVO.getUserId());
+		bsResultMas.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
 		//bsResultMas.put("ResultUpdated", sysdate);
-		bsResultMas.put("ResultIsSync", 1);
-		bsResultMas.put("ResultIsEdit", 1);
+		bsResultMas.put("ResultIsSync", String.valueOf(1));
+		bsResultMas.put("ResultIsEdit", String.valueOf(1));
 		
 		if(bsResultDet.size()>0){
-			bsResultMas.put("ResultStockUse", 0);
+			bsResultMas.put("ResultStockUse", String.valueOf(0));
 		}else{
-			bsResultMas.put("ResultStockUse", 1);
+			bsResultMas.put("ResultStockUse", String.valueOf(1));
 		}
-		bsResultMas.put("ResultIsCurrent", 1);
-		bsResultMas.put("ResultMatchID", 0);
-		bsResultMas.put("ResultIsAdjust", 1);
-		bsResultMas.put("bsPreferWeek", params.get("srvBsWeek"));
+		bsResultMas.put("ResultIsCurrent", String.valueOf(1));
+		bsResultMas.put("ResultMatchID", String.valueOf(0));
+		bsResultMas.put("ResultIsAdjust", String.valueOf(1));
+		bsResultMas.put("bsPreferWeek", String.valueOf(params.get("srvBsWeek")));
 		
 		
 		
@@ -1202,25 +1234,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		qryBS_Rev=hsManualMapper.selectQryBS_Rev(bsResultMas);
 		if(qryBS_Rev!=null){
     		//bsResultMas_Rev.put("ResultID", 0); //sequence
-    		bsResultMas_Rev.put("No", docNo);
-    		bsResultMas_Rev.put("TypeID", 307);
-    		bsResultMas_Rev.put("ScheduleID", qryBS_Rev.get("schdulId"));
-    		bsResultMas_Rev.put("SalesOrderId", qryBS_Rev.get("salesOrdId"));
-    		bsResultMas_Rev.put("CodyID", qryBS_Rev.get("codyId"));
-    		bsResultMas_Rev.put("SettleDate", qryBS_Rev.get("setlDt"));
-    		bsResultMas_Rev.put("ResultStatusCodeID", qryBS_Rev.get("resultStusCodeId"));//RESULT_STUS_CODE_ID
-    		bsResultMas_Rev.put("FailReasonID", qryBS_Rev.get("failResnId"));//FAIL_RESN_ID
-    		bsResultMas_Rev.put("RenCollectionID", qryBS_Rev.get("renColctId"));//REN_COLCT_ID
-    		bsResultMas_Rev.put("WarehouseID", qryBS_Rev.get("whId"));//WH_ID
-    		bsResultMas_Rev.put("ResultRemark", qryBS_Rev.get("resultRem"));//RESULT_REM
+    		bsResultMas_Rev.put("No", String.valueOf(docNo));
+    		bsResultMas_Rev.put("TypeID", String.valueOf("307"));
+    		bsResultMas_Rev.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
+    		bsResultMas_Rev.put("SalesOrderId", String.valueOf(qryBS_Rev.get("salesOrdId")));
+    		bsResultMas_Rev.put("CodyID", String.valueOf(qryBS_Rev.get("codyId")));
+    		bsResultMas_Rev.put("SettleDate", String.valueOf(qryBS_Rev.get("setlDt")));
+    		bsResultMas_Rev.put("ResultStatusCodeID", String.valueOf(qryBS_Rev.get("resultStusCodeId")));//RESULT_STUS_CODE_ID
+    		bsResultMas_Rev.put("FailReasonID", String.valueOf(qryBS_Rev.get("failResnId")));//FAIL_RESN_ID
+    		bsResultMas_Rev.put("RenCollectionID", String.valueOf(qryBS_Rev.get("renColctId")));//REN_COLCT_ID
+    		bsResultMas_Rev.put("WarehouseID", String.valueOf(qryBS_Rev.get("whId")));//WH_ID
+    		bsResultMas_Rev.put("ResultRemark", String.valueOf(qryBS_Rev.get("resultRem")));//RESULT_REM
     		//bsResultMas_Rev.put("ResultCreated", "sysdate");
-    		bsResultMas_Rev.put("ResultCreator", sessionVO.getUserId());
-    		bsResultMas_Rev.put("ResultIsSync", 1);
-    		bsResultMas_Rev.put("ResultIsEdit", 0);
-    		bsResultMas_Rev.put("ResultStockUse", qryBS_Rev.get("resultStockUse"));//RESULT_STOCK_USE
-    		bsResultMas_Rev.put("ResultIsCurrent", 1);
-    		bsResultMas_Rev.put("ResultMatchID", qryBS_Rev.get("resultId"));//RESULT_ID
-    		bsResultMas_Rev.put("ResultIsAdjust", 1);
+    		bsResultMas_Rev.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
+    		bsResultMas_Rev.put("ResultIsSync", String.valueOf(1));
+    		bsResultMas_Rev.put("ResultIsEdit", String.valueOf(0));
+    		bsResultMas_Rev.put("ResultStockUse", String.valueOf(qryBS_Rev.get("resultStockUse")));//RESULT_STOCK_USE
+    		bsResultMas_Rev.put("ResultIsCurrent", String.valueOf(1));
+    		bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));//RESULT_ID
+    		bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
     		
     		hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev);
     		
@@ -1233,13 +1265,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			Map<String, Object> bsResultDet_Rev = new HashMap<String, Object>();
     			//bsResultDet_Rev.put("BSResultItemID", 0);
     			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
-    			bsResultDet_Rev.put("BSResultPartID", qryResultDet.get(i).get("bsResultPartId"));//BS_RESULT_PART_ID
-    			bsResultDet_Rev.put("BSResultPartDesc", qryResultDet.get(i).get("bsResultPartDesc"));//BS_RESULT_PART_DESC
-    			bsResultDet_Rev.put("BSResultPartQty", qryResultDet.get(i).get("bsResultPartQty"));//BS_RESULT_PART_QTY
-    			bsResultDet_Rev.put("BSResultRemark", qryResultDet.get(i).get("bsResultRem"));//BS_RESULT_REM
+    			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
+    			bsResultDet_Rev.put("BSResultPartDesc", String.valueOf(qryResultDet.get(i).get("bsResultPartDesc")));//BS_RESULT_PART_DESC
+    			bsResultDet_Rev.put("BSResultPartQty", String.valueOf(qryResultDet.get(i).get("bsResultPartQty")));//BS_RESULT_PART_QTY
+    			bsResultDet_Rev.put("BSResultRemark", String.valueOf(qryResultDet.get(i).get("bsResultRem")));//BS_RESULT_REM
     			bsResultDet_Rev.put("BSResultCreateAt","sysdate");//BS_RESULT_REM
-    			bsResultDet_Rev.put("BSResultCreateBy",sessionVO.getUserId());
-    			bsResultDet_Rev.put("BSResultFilterClaim",qryResultDet.get(i).get("bsResultFilterClm"));//BS_RESULT_FILTER_CLM
+    			bsResultDet_Rev.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()));
+    			bsResultDet_Rev.put("BSResultFilterClaim",String.valueOf(qryResultDet.get(i).get("bsResultFilterClm")));//BS_RESULT_FILTER_CLM
     			
     			hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	
     			
@@ -1278,12 +1310,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 */
                 Map<String, Object> stkReqM_Rev = new HashMap<String, Object>();
                 //stkReqM_Rev.put("StkReqID", 0);
-                stkReqM_Rev.put("StkReqNo", PDONo);
-                stkReqM_Rev.put("StkReqLocFromID", qry_stkReqM.get("stkReqLocFromId"));//STK_REQ_LOC_FROM_ID
-                stkReqM_Rev.put("StkReqLocToID", qry_stkReqM.get("stkReqLocToId"));//STK_REQ_LOC_TO_ID
-                stkReqM_Rev.put("StkReqRemark", qry_stkReqM.get("stkReqRem"));//STK_REQ_REM
+                stkReqM_Rev.put("StkReqNo", String.valueOf(PDONo));
+                stkReqM_Rev.put("StkReqLocFromID", String.valueOf(qry_stkReqM.get("stkReqLocFromId")));//STK_REQ_LOC_FROM_ID
+                stkReqM_Rev.put("StkReqLocToID", String.valueOf(qry_stkReqM.get("stkReqLocToId")));//STK_REQ_LOC_TO_ID
+                stkReqM_Rev.put("StkReqRemark", String.valueOf(qry_stkReqM.get("stkReqRem")));//STK_REQ_REM
                 stkReqM_Rev.put("StkReqCreateAt","sysdate");//STK_REQ_REM
-                stkReqM_Rev.put("StkReqCreateBy",sessionVO.getUserId());//STK_REQ_REM
+                stkReqM_Rev.put("StkReqCreateBy",String.valueOf(sessionVO.getUserId()));//STK_REQ_REM
                 
                 hsManualMapper.addstkReqM_Rev(stkReqM_Rev);
                 
@@ -1303,13 +1335,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 for(int i = 0 ; i< qry_stkReqD_Rev.size(); i++){
                 	Map<String, Object> stkReqD_Rev = new HashMap<String, Object>();
                 	//stkReqD_Rev.put("ReqItemID", 0);//sequence
-                	stkReqD_Rev.put("ReqID", stkReqM_StkReqID);//
-                	stkReqD_Rev.put("ReqItemTypeID", 464);//
-                	stkReqD_Rev.put("ReqItemRefID", BSResultM_resultID);//BSResultM_resultID
-                	stkReqD_Rev.put("ReqItemStkID", qryBS.get("bsResultPartId"));//BS_RESULT_PART_ID
-                	stkReqD_Rev.put("ReqItemStkDesc", qryBS.get("bsResultPartDesc"));//
+                	stkReqD_Rev.put("ReqID", String.valueOf(stkReqM_StkReqID));//
+                	stkReqD_Rev.put("ReqItemTypeID", String.valueOf("464"));//
+                	stkReqD_Rev.put("ReqItemRefID", String.valueOf(BSResultM_resultID));//BSResultM_resultID
+                	stkReqD_Rev.put("ReqItemStkID", String.valueOf(qryBS.get("bsResultPartId")));//BS_RESULT_PART_ID
+                	stkReqD_Rev.put("ReqItemStkDesc", String.valueOf(qryBS.get("bsResultPartDesc")));//
                 	stkReqD_Rev.put("ReqItemQty", Integer.parseInt(qryBS.get("bsResultPartQty").toString())*-1);//
-                	stkReqD_Rev.put("ReqItemStatusID", 1);//
+                	stkReqD_Rev.put("ReqItemStatusID", String.valueOf(1));//
                 	stkReqD_Rev.put("ReqItemRemark", "");//BS_RESULT_REM
                 	
                 	hsManualMapper.addStkReqD_Rev(stkReqD_Rev);
@@ -1318,26 +1350,26 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
                 	stkCrd_Rev.put("LocationID", LocationID_Rev);
                 	stkCrd_Rev.put("StockID", qry_stkReqD_Rev.get("bsResultPartId"));//BS_RESULT_PART_ID
                 	stkCrd_Rev.put("EntryDate", "sysdate");//
-                	stkCrd_Rev.put("TypeID", 464);//
+                	stkCrd_Rev.put("TypeID", String.valueOf("464"));//
                 	stkCrd_Rev.put("RefNo", qryBS.get("no"));
                 	stkCrd_Rev.put("SalesOrderId", qryBS.get("salesOrdId"));//SALES_ORD_ID
-                	stkCrd_Rev.put("SourceID", 477);
-                	stkCrd_Rev.put("ProjectID", 0);
-                	stkCrd_Rev.put("BatchNo", 0);
-                	stkCrd_Rev.put("Qty", qry_stkReqD_Rev.get("bsResultPartQty"));//BS_RESULT_PART_QTY
-                	stkCrd_Rev.put("CurrID", 479);
-                	stkCrd_Rev.put("CurrRate", 1);
-                	stkCrd_Rev.put("Cost", 0);
-                	stkCrd_Rev.put("Price", 0);
+                	stkCrd_Rev.put("SourceID", String.valueOf(477));
+                	stkCrd_Rev.put("ProjectID", String.valueOf(0));
+                	stkCrd_Rev.put("BatchNo", String.valueOf(0));
+                	stkCrd_Rev.put("Qty", String.valueOf(qry_stkReqD_Rev.get("bsResultPartQty")));//BS_RESULT_PART_QTY
+                	stkCrd_Rev.put("CurrID", String.valueOf(479));
+                	stkCrd_Rev.put("CurrRate", String.valueOf(1));
+                	stkCrd_Rev.put("Cost", String.valueOf(0));
+                	stkCrd_Rev.put("Price", String.valueOf(0));
                 	stkCrd_Rev.put("Remark", "");
                 	stkCrd_Rev.put("SerialNo", "");
                 	stkCrd_Rev.put("InstallNo", qryBS_Rev.get("no"));
                 	stkCrd_Rev.put("CostDate", "sysdate");
-                	stkCrd_Rev.put("AppTypeID", 0);
+                	stkCrd_Rev.put("AppTypeID", String.valueOf("0"));
                 	stkCrd_Rev.put("StkGrade", "A");
-                	stkCrd_Rev.put("InstallFail", 1);
-                	stkCrd_Rev.put("IsSynch", 1);
-                	stkCrd_Rev.put("EntryMethodID", 764);
+                	stkCrd_Rev.put("InstallFail", String.valueOf(1));
+                	stkCrd_Rev.put("IsSynch", String.valueOf(1));
+                	stkCrd_Rev.put("EntryMethodID", String.valueOf(764));
                 	stkCrd_Rev.put("Origin", "1");
                 	stkCrd_Rev.put("ItemNo", stkCrdCounter_Rev);
                 	
@@ -1348,26 +1380,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		}
     		
     		Map<String, Object> qry_CurBS = new HashMap<String, Object>();
-    		qry_CurBS.put("ScheduleID", bsResultMas.get("ScheduleID"));
-    		qry_CurBS.put("SalesOrderId", bsResultMas.get("SalesOrderId"));
+    		qry_CurBS.put("ScheduleID", String.valueOf(bsResultMas.get("ScheduleID")));
+    		qry_CurBS.put("SalesOrderId", String.valueOf(bsResultMas.get("SalesOrderId")));
     		qry_CurBS.put("userId", sessionVO.getUserId());
     		
     		hsManualMapper.updateQry_CurBS(qry_CurBS);
     		
     		String ResultNo_New  = null;
     		BS_RESULT=11;
-    		bsResultMas_Rev.put("doctype", BS_RESULT);
+    		bsResultMas_Rev.put("doctype", String.valueOf(BS_RESULT));
     		ResultNo_New = hsManualMapper.GetDocNo(bsResultMas_Rev);
     		
     		int ID_New = 11;
     		String nextDocNo_New = getNextDocNo(BS_RESULT_BSR,ResultNo_New);
     		
     		Map<String, Object> qry_New = new HashMap<String, Object>();
-    		qry_New.put("ID_New", BS_RESULT);
-    		qry_New.put("nextDocNo_New", nextDocNo_New);
+    		qry_New.put("ID_New", String.valueOf(BS_RESULT));
+    		qry_New.put("nextDocNo_New", String.valueOf(nextDocNo_New));
     		hsManualMapper.updateQry_New(qry_New);
     		
     		bsResultMas.put("No", ResultNo_New);
+    		bsResultMas.put("CodyId", String.valueOf(bsResultMas_Rev.get("codyId")));
+    		
     		hsManualMapper.addbsResultMas(bsResultMas);
     		
     		hsManualMapper.updateQrySchedule(bsResultMas);
@@ -1398,53 +1432,53 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     				if(LocationID!=0){
     					Map<String, Object> stkCrd_new = new HashMap<String, Object>();
     					//stkCrd_new.put("SRCardID", 0); sequence
-    					stkCrd_new.put("LocationID", LocationID);
-    					stkCrd_new.put("StockID", bsResultDet.get(i).get("BSResultPartID"));
+    					stkCrd_new.put("LocationID", String.valueOf(LocationID));
+    					stkCrd_new.put("StockID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
     					stkCrd_new.put("EntryDate","sysdate");
-    					stkCrd_new.put("TypeID",462);
+    					stkCrd_new.put("TypeID",String.valueOf(462));
     					stkCrd_new.put("RefNo",qrySchedule.get("no"));
-    					stkCrd_new.put("SalesOrderId",bsResultMas.get("SalesOrderId"));
-    					stkCrd_new.put("ItemNo",ItemNo);
-    					stkCrd_new.put("SourceID",477);
-    					stkCrd_new.put("ProjectID",0);
-    					stkCrd_new.put("BatchNo",0);
+    					stkCrd_new.put("SalesOrderId",String.valueOf(bsResultMas.get("SalesOrderId")));
+    					stkCrd_new.put("ItemNo",String.valueOf(ItemNo));
+    					stkCrd_new.put("SourceID",String.valueOf(477));
+    					stkCrd_new.put("ProjectID",String.valueOf(0));
+    					stkCrd_new.put("BatchNo",String.valueOf(0));
     					stkCrd_new.put("Qty",Integer.parseInt(bsResultDet.get(i).get("BSResultPartQty").toString())*-1);
-    					stkCrd_new.put("CurrID",479);
-    					stkCrd_new.put("CurrRate",1);
-    					stkCrd_new.put("Cost",0);
-    					stkCrd_new.put("Price",0);
+    					stkCrd_new.put("CurrID",String.valueOf(479));
+    					stkCrd_new.put("CurrRate",String.valueOf(1));
+    					stkCrd_new.put("Cost",String.valueOf(0));
+    					stkCrd_new.put("Price",String.valueOf(0));
     					stkCrd_new.put("Remark","");
     					stkCrd_new.put("SerialNo","");
     					stkCrd_new.put("InstallNo",bsResultMas.get("No"));
     					stkCrd_new.put("CostDate","1900-01-01");
-    					stkCrd_new.put("AppTypeID",0);
+    					stkCrd_new.put("AppTypeID",String.valueOf(0));
     					stkCrd_new.put("StkGrade","A");
-    					stkCrd_new.put("InstallFail",1);
-    					stkCrd_new.put("IsSynch",1);
-    					stkCrd_new.put("EntryMethodID",764);
+    					stkCrd_new.put("InstallFail",String.valueOf(1));
+    					stkCrd_new.put("IsSynch",String.valueOf(1));
+    					stkCrd_new.put("EntryMethodID",String.valueOf(764));
     					stkCrd_new.put("Origin","1");
     					
     					hsManualMapper.addStkCrd_new(stkCrd_new);
     				}
     				Map<String, Object> qryFilter_param = new HashMap<String, Object>();
-    				qryFilter_param.put("SrvConfigID", qryConfig.get("SrvConfigID"));
-    				qryFilter_param.put("BSResultPartID", bsResultDet.get(i).get("BSResultPartID"));
-    				qryFilter_param.put("SettleDate", bsResultMas.get("SettleDate"));
-    				qryFilter_param.put("ResultCreator", sessionVO.getUserId());
+    				qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("SrvConfigID")));
+    				qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
+    				qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+    				qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
     				hsManualMapper.updateQryFilter(qryFilter_param);
     				
     				ItemNo = ItemNo + 1;
     			}
     		}else{
     			Map<String, Object> bsResultDet_NoFilter = new HashMap<String, Object>();
-    			bsResultDet_NoFilter.put("BSResultItemID", 0);
+    			bsResultDet_NoFilter.put("BSResultItemID", String.valueOf(0));
     			bsResultDet_NoFilter.put("BSResultID", BSResultM_resultID);
-    			bsResultDet_NoFilter.put("BSResultPartID", 0);
+    			bsResultDet_NoFilter.put("BSResultPartID", String.valueOf(0));
     			bsResultDet_NoFilter.put("BSResultPartDesc", "");
-    			bsResultDet_NoFilter.put("BSResultPartQty", 0);
-    			bsResultDet_NoFilter.put("BSResultRemark", "");
+    			bsResultDet_NoFilter.put("BSResultPartQty", String.valueOf(0));
+    			bsResultDet_NoFilter.put("BSResultRemark", "0");
     			bsResultDet_NoFilter.put("BSResultCreateAt", "sysdate");
-    			bsResultDet_NoFilter.put("BSResultCreateBy", sessionVO.getUserId());
+    			bsResultDet_NoFilter.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
     			bsResultDet_NoFilter.put("BSResultFilterClaim", 1);
     			
     			hsManualMapper.addBsResultDet_NoFilter(bsResultDet_NoFilter);
