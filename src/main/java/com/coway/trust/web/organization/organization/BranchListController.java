@@ -192,5 +192,14 @@ public class BranchListController {
 		return "organization/organization/branchListDetailPop";
 	}
 	
+	@RequestMapping(value = "/selectBranchCdInfo.do")
+	public ResponseEntity<List<EgovMap>> selectBranchCdInfo(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+	
+		List<EgovMap> selectBranchCdInfo = branchListService.selectBranchCdInfo(params);
+	
+		logger.debug("mList : {}", selectBranchCdInfo);
+		
+	return ResponseEntity.ok(selectBranchCdInfo);
+	}	
 	
 }

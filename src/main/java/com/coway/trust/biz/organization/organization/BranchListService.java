@@ -26,7 +26,7 @@ public interface BranchListService {
 	
 	EgovMap getBranchAddrDetail(Map<String, Object> params);
 	
-	
+	List<EgovMap> selectBranchCdInfo(Map<String, Object> params);
 	
 	
 	

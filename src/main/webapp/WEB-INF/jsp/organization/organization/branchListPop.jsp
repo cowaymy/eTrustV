@@ -48,7 +48,20 @@
             $('#area').change(function (){
                     doGetCombo('/organization/getPostcodeList.do', $(this).val() , ''   , 'postcode' , 'S', '');
             });
+            
+            
+           $("select[name=selectbranchType]").change(function (){
+                if (  $(this).val() == '42' ||  $(this).val() == '43'  ) {
+                    Common.ajax("GET","/organization/selectBranchCdInfo.do", {branchCd: $(this).val()}, function(result){
+                        console.log(  JSON.stringify(result[0].brachCd));
+                        //$('#branchCd', ).val(result[0].brachCd);             
+                        
+                        $('#branchForm [name="branchCd"]').val(result[0].brachCd);      
 
+                    });
+                }
+            });
+            
         });
 
 
@@ -286,7 +299,7 @@
 <tr>
     <th scope="row">Branch Type<span class="must">*</span></th>
     <td>
-    <select id="branchType" name="branchType" class="w100p" >
+    <select id="branchType" name="selectbranchType" class="w100p" >
         <%-- <option value="${branchDetail.typeId}"  selected></option> --%>
            <c:forEach var="list" items="${branchType }" varStatus="status">
            <option value="${list.branchId}">${list.c1}</option>

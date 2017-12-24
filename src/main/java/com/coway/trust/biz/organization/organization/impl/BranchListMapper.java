@@ -26,5 +26,7 @@ public interface BranchListMapper {
 	List<EgovMap> getPostcodeList(Map<String, Object> params);
 	
 	EgovMap getBranchAddrDetail(Map<String, Object> params);
+	
+	List<EgovMap> selectBranchCdInfo(Map<String, Object> params);
 
 }

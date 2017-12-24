@@ -91,6 +91,11 @@ public class BranchListServiceImpl extends EgovAbstractServiceImpl implements Br
 		return branchListMapper.getBranchAddrDetail(params);
 	}
 
+	@Override
+	public List<EgovMap> selectBranchCdInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return branchListMapper.selectBranchCdInfo(params);
+	}
 
 
 }
