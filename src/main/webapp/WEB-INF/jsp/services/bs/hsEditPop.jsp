@@ -36,7 +36,8 @@
                 }, {                        
                     dataField : "stkId",
                     headerText : "Filter id",
-                    width : 140
+                    width : 140,
+                    visible:false   
                 }, {                        
                     dataField : "stkDesc",
                     headerText : "Filter Name",
@@ -114,7 +115,9 @@
                 }, {
                     dataField : "c1",
                     headerText : "Settle Date",
-                    width : 240                     
+                    width : 240 ,
+                    dataType : "date", 
+                    formatString : "dd/mm/yyyy"                  
                 }, {
                     dataField : "bsResultItmId",
                     headerText : "Has Filter",
@@ -162,33 +165,33 @@
     function createAUIGrid3(){
         // AUIGrid 칼럼 설정
         var fitercolumnLayout = [ {
-                    dataField:"stkCode",
+                    dataField:"no",
                     headerText:"BSR No",
                     width:200,
                     height:30
                 }, {                        
-                    dataField : "stkId",
+                    dataField : "stkDesc",
                     headerText : "Filter",
                     width : 140
                 }, {                        
-                    dataField : "stkDesc",
+                    dataField : "bsResultPartQty",
                     headerText : "Qty",
-                    width : 440              
+                    width : 90              
                 }, {
-                    dataField : "bsResultItmId",
+                    dataField : "bsResultFilterClm",
                     headerText : "Claim",
                     width : 240    ,
                     visible:false                       
                }, {
-                    dataField : "bsResultItmId",
+                    dataField : "resultCrtDt",
                     headerText : "Key At",
-                    width : 240    ,
-                    visible:false                       
+                    width : 240        ,
+                    visible:false                    
                }, {
-                    dataField : "bsResultItmId",
+                    dataField : "userName",
                     headerText : "Key By",
-                    width : 240    ,
-                    visible:false                       
+                    width : 240       ,
+                    visible:false                    
 
             }];
             // 그리드 속성 설정
@@ -268,6 +271,12 @@
                
             }else {
                 $("#stitle").text("HS - Result EDIT")  ;
+                
+                if($("#stusCode").val()==4) {
+                    $("#addHsForm").find("input, textarea, button, select").attr("disabled",true);
+                    $('#cmbCollectType').removeAttr('disabled'); 
+                }
+                
             }
     
     });
