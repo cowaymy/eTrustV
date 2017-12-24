@@ -2850,13 +2850,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		)
 		select  
 		        ORG0001D_MEM_ID_SEQ.nextval, 
-		        (SELECT CASE
-			                    WHEN ( Extent1.DOC_NO IS NOT NULL ) THEN Extent1.DOC_NO
-			               ELSE ''
-			                  END C1
-			          FROM SYS0022C Extent1
-			         WHERE  Extent1.DOC_NO_ID ='1'  AND ROWNUM <![CDATA[<=]]> 1
-			    )  AS MEM_CODE, 
+		        #{memberCode}  AS MEM_CODE, 
 		        '1'  AS MEM_TYPE, 
 		        APLICNT_NAME AS NAME, 
 		        APLICNT_FULL_NAME AS FULL_NAME,
@@ -2973,7 +2967,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     
     
     <select id="getDeptCdListList"  resultType="egovMap">
-         SELECT C.DEPT_CODE,  (SELECT DEPT_NAME FROM SYS0040M WHERE DEPT_STUS_ID = 1 AND DEPT_ID = B.USER_DEPT_ID) AS DEPT_NM
+         SELECT C.DEPT_CODE CODE_ID,  (SELECT DEPT_NAME FROM SYS0040M WHERE DEPT_STUS_ID = 1 AND DEPT_ID = B.USER_DEPT_ID) AS CODE_NAME
 		  FROM ORG0001D A,
 		       SYS0047M B,
 		       ORG0005D C

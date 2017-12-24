@@ -49,6 +49,7 @@ function fn_departmentCode(value){
      }else{
         $("#trTrainee").hide();
      }
+     
 	var action = value;
 	switch(action){
 	   case "1" :
@@ -87,6 +88,7 @@ function fn_departmentCode(value){
 
 	   case "5" :
            $("#traineeType1").change(function(){
+
         	   var traineeType =  $("#traineeType1").val();
         	   if( traineeType == '2'){
         		    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
@@ -161,7 +163,6 @@ $(document).ready(function() {
         } else {
             $('#course').removeAttr('disabled'); 
         }
-        
         fn_departmentCode(memberType);
         
         
@@ -732,9 +733,9 @@ function fn_selectState(selVal){
     <th scope="row">Department Code<span class="must">*</span></th>
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
-        <c:forEach var="list" items="${DeptCdList}" varStatus="status">
-            <option value="${list.deptCode}">${list.deptNm } </option>
-        </c:forEach>     
+        <%-- <c:forEach var="list" items="${DeptCdList}" varStatus="status">
+            <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>      --%>
     </select>
     </td>
     <th scope="row">Transport Code<span class="must">*</span></th>
@@ -798,7 +799,7 @@ function fn_selectState(selVal){
 <tr id = "trTrainee" >
     <th scope="row">Trainee Type </th>
     <td colspan="5">
-        <select class= "w100p" id="traineeType1" name="traineeType">
+        <select class= "w100p" id="traineeType1" name="traineeType1">
         <option value= "0">Please select ...</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>

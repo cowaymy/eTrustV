@@ -1484,6 +1484,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
 		Map<String, Object> CodeMap = new HashMap<String, Object>();
 
+		EgovMap selectMemberCode = null; // 각가 docNo, docNoId, prefix구함
+		
+		//nextDocNo = getNextDocNo("",selectMemberCode.get("docNo").toString());
+		
+		selectMemberCode = getDocNo("1");
+		String memberCode = selectMemberCode.get("docNo").toString();
+		params.put("memberCode", memberCode);
+		
 		int a =memberListMapper.hpMemRegister(params);
 
 		if(a> 0){
