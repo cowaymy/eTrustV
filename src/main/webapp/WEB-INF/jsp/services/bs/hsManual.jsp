@@ -291,17 +291,17 @@
                          });
                 }else {//hs_no  Create after
 
-                	$("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
-                	var HsCdBranch = $('#brnchId1').val();
-                	if($('#brnchId1').val().substring(0,3) != "CDB" ){
-                		HsCdBranch = "";
-                	}
+                    $("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
+                    var HsCdBranch = $('#brnchId1').val();
+                    if($('#brnchId1').val().substring(0,3) != "CDB" ){
+                        HsCdBranch = "";
+                    }
 
-                	$("#memId1").val($("#cmdCdManager1 option:selected").text());
-                	var memId = $("#memId1").val();
-                	if ($("#memId1").val().substring(0,3) != "CCS"){
-                		memId = "";
-                	}
+                    $("#memId1").val($("#cmdCdManager1 option:selected").text());
+                    var memId = $("#memId1").val();
+                    if ($("#memId1").val().substring(0,3) != "CCS"){
+                        memId = "";
+                    }
 
                        // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
                         Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
@@ -318,40 +318,40 @@
 
 
 
-			function fn_getHSAddListAjax(){
-//	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
+            function fn_getHSAddListAjax(){
+//             Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
                 var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
-	            if(checkedItems.length <= 0) {
-	                Common.alert('No data selected.');
-	                return;
-	            }else{
-	                var str = "";
-	                var custStr = "";
-	                var rowItem;
-	                var brnchId = "";
-	                var saleOrdList = "";
-	                var list = "";
-	                var brnchCnt = "";
+                if(checkedItems.length <= 0) {
+                    Common.alert('No data selected.');
+                    return;
+                }else{
+                    var str = "";
+                    var custStr = "";
+                    var rowItem;
+                    var brnchId = "";
+                    var saleOrdList = "";
+                    var list = "";
+                    var brnchCnt = "";
 
-	                //var saleOrdList = [];
-	                var saleOrd = {
-	                     salesOrdNo : ""
-	                };
+                    //var saleOrdList = [];
+                    var saleOrd = {
+                         salesOrdNo : ""
+                    };
 
 
 
-	                for(var i=0, len = checkedItems.length; i<len; i++) {
-	                    rowItem = checkedItems[i];
-	                    hsStuscd = rowItem.stusCodeId;
-	                    schdulId = rowItem.schdulId;
-	                    salesOrdId = rowItem.salesOrdId;
+                    for(var i=0, len = checkedItems.length; i<len; i++) {
+                        rowItem = checkedItems[i];
+                        hsStuscd = rowItem.stusCodeId;
+                        schdulId = rowItem.schdulId;
+                        salesOrdId = rowItem.salesOrdId;
 
-		                 if(hsStuscd == 4) {
-		                    Common.alert("already has result. Result entry is disallowed.");
-		                    return;
-		                 }
-	                }
+                         if(hsStuscd == 4) {
+                            Common.alert("already has result. Result entry is disallowed.");
+                            return;
+                         }
+                    }
                 }
 
 
@@ -366,9 +366,9 @@
                     return;
                  } */
 
-	           Common.popupDiv("/services/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');
+               Common.popupDiv("/services/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + schdulId + "&salesOrdId="+ salesOrdId ,null ,null, true, '_hsDetailPopDiv');
                 //Common.popupDiv("/sales/pos/selectPosViewDetail.do", $("#detailForm").serializeJSON(), null , true , '_editDiv');
-			}
+            }
 
 
 
@@ -481,10 +481,10 @@
 
 
                     var hsStutus = rowItem.code;
-		            if( hsStutus == "COM") {
-		                Common.alert("<b>  do no has result COM..");
-		                return ;
-		            }
+                    if( hsStutus == "COM") {
+                        Common.alert("<b>  do no has result COM..");
+                        return ;
+                    }
 
 
 
@@ -493,9 +493,9 @@
                     }
 
                     if(i !=0 ){
-	                    if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
-	                        brnchCnt += 1 ;
-	                    }
+                        if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
+                            brnchCnt += 1 ;
+                        }
                     }
 
                     ctBrnchCodeOld = rowItem.codyBrnchCode;
@@ -542,10 +542,10 @@
         //Start AUIGrid
         $(document).ready(function() {
 
-	          doDefCombo(StatusTypeData, '' ,'cmbStatusType', 'S', '');
+              doDefCombo(StatusTypeData, '' ,'cmbStatusType', 'S', '');
 
-	          $('#myBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
-	          $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
+              $('#myBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
+              $('#ManuaMyBSMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 
                 // AUIGrid 그리드를 생성합니다.
 //                createAUIGrid();
@@ -599,13 +599,13 @@
 
 
             AUIGrid.bind(myGridID, "cellClick", function(event) {
-			      //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-			      schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
-			      salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-			      hsStuscd = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
+                  //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+                  schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
+                  salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+                  hsStuscd = AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCodeId");
                   result =     AUIGrid.getCellValue(myGridID, event.rowIndex, "result");
                     //Common.popupDiv("/bs/selectHsInitDetailPop.do?isPop=true&schdulId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId") + "&salesOrdId="+ AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
-			  });
+              });
 
                  // 셀 더블클릭 이벤트 바인딩
                 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -613,15 +613,15 @@
 
                     if(radioVal == 1 ){
 /*                           _schdulId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId");
-		                  _salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-		                  _brnchId = AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"); */
+                          _salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+                          _brnchId = AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"); */
 
 
                         $("#_schdulId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "schdulId"));
                         $("#_salesOrdId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId"));
                         $("#_brnchId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId"));
-		                $("#_openGb").val("view");
-		                $("#_manuaMyBSMonth").val($("#ManuaMyBSMonth").val());
+                        $("#_openGb").val("view");
+                        $("#_manuaMyBSMonth").val($("#ManuaMyBSMonth").val());
 
 /*                          alert("_schdulId::"+  $("#_schdulId").val() +  $("#_salesOrdId").val()+  $("#_brnchId").val()); */
 
@@ -647,8 +647,8 @@
 
 
 
-						//$('#hSConfiguration').attr('disabled',true); //hash
-//						$('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화
+                        //$('#hSConfiguration').attr('disabled',true); //hash
+//                      $('#hSConfiguration').attr('disabled',false);  //SMS버튼 활성화
 //
 
                         //2번영역 데이터 클리어
@@ -703,19 +703,19 @@
                  editable :  false
                  }
 
-		// AUIGrid 를 생성합니다.
-		function createAssinAUIGrid(columnAssiinLayout) {
+        // AUIGrid 를 생성합니다.
+        function createAssinAUIGrid(columnAssiinLayout) {
 
           // 그리드 속성 설정
-		    // 실제로 #grid_wrap 에 그리드 생성
-		      myGridID = AUIGrid.create("#grid_wrap", columnAssiinLayout, gridProsAssiin);
-		}
+            // 실제로 #grid_wrap 에 그리드 생성
+              myGridID = AUIGrid.create("#grid_wrap", columnAssiinLayout, gridProsAssiin);
+        }
 
 
         // AUIGrid 를 생성합니다.
         function createManualAUIGrid(columnManualLayout) {
 
-	         // 그리드 속성 설정
+             // 그리드 속성 설정
 
 
             // 실제로 #grid_wrap 에 그리드 생성
@@ -810,25 +810,17 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
      <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
-</c:if>     
-<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
-</c:if>    
-<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue"><a id="hSConfiguration" name="hSConfiguration">Create HS Order</a></p></li>
-</c:if>  
-  <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-</c:if>    
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
     <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label> -->
 </aside><!-- title_line end -->
 
-<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y' or  PAGE_AUTH.funcUserDefine4 == '5'}">   
+
 <div id="hsManagement" style="display:block;">
 <form  id="hsManagement" method="post">
 
@@ -911,11 +903,9 @@
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
-<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">                 
-				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
-				        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li>
-</c:if>			        
-				    </ul>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li>
+                    </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
                     <li><p class="link_btn"><a href="#">menu2</a></p></li>
@@ -938,7 +928,7 @@
             </section><!-- search_table end -->
 </form>
 </div>
-</c:if> 
+
 
 
 <div id="hsManua" style="display:block;">
@@ -1011,12 +1001,10 @@
             </section><!-- search_table end -->
 </form>
 </div>
-<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+
                 <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
-</c:if>                
-<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">                
                 <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label><br><br>
-</c:if>
+
     <ul class="right_btns">
 
 
