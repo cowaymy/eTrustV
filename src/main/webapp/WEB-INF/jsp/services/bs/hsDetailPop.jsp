@@ -35,7 +35,8 @@
                 }, {                        
                     dataField : "stkId",
                     headerText : "Filter id",
-                    width : 240
+                    width : 240,
+                    visible:false   
                 }, {                        
                     dataField : "stkDesc",
                     headerText : "Filter Name",

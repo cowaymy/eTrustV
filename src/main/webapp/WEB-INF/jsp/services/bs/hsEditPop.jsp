@@ -327,6 +327,7 @@
 
     
      function fn_UpdateHsResult(){
+     
     	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
                     jsonObj.form = $("#editHSResultForm").serializeJSON();
@@ -535,10 +536,12 @@
 </ul>
 </form>
 <form id="editHSResultForm" method="post" action="#">
-<input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
+ <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
  <input type="hidden" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
  <input type="hidden" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
+ <input type="hidden" value="${basicinfo.srvBsWeek}" id="srvBsWeek" name="srvBsWeek"/>
+ <input type="hidden" value="${basicinfo.codyId}" id="cmbServiceMem" name="cmbServiceMem"/>
 
    
  <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
