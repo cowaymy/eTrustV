@@ -297,9 +297,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
 		
 		//Department
-		params.put("searchdepartment",params.get("searchdepartment").toString());
-		params.put("inputSubDept"		,params.get("inputSubDept").toString());
-
+		params.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
+		params.put("inputSubDept"		,params.get("inputSubDept").toString().trim()!=null ? params.get("inputSubDept").toString().trim() : "");
 
 		//두번째 탭 text 가져오기
 		params.put("spouseCode", params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
@@ -1559,5 +1558,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public List<EgovMap> getSpouseInfoView(Map<String, Object> params) {
 		return memberListMapper.getSpouseInfoView(params);
-	}	
+	}
+	
+	@Override
+	public EgovMap selectHPMemberListView(Map<String, Object> params) {
+		return memberListMapper.getHPMemberListView(params);
+	}
 }

@@ -33,6 +33,8 @@ public interface MemberListMapper {
 	List<EgovMap> selectHPApplicantList(Map<String, Object> params);
 
 	EgovMap selectMemberListView(Map<String, Object> params);
+	
+	EgovMap getHPMemberListView(Map<String, Object> params);
 
 	List<EgovMap> selectPromote(Map<String, Object> params);
 

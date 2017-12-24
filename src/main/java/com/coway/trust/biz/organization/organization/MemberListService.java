@@ -34,6 +34,7 @@ public interface MemberListService {
 	String selectLastGroupCode(Map<String, Object> params);
 
 	EgovMap selectMemberListView(Map<String, Object> params);
+	EgovMap selectHPMemberListView(Map<String, Object> params);
 
 	//<EgovMap> selectMemberTab(Map<String, Object> params);
 	List<EgovMap> selectPromote(Map<String, Object> params);

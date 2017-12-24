@@ -164,10 +164,14 @@ public class MemberListController {
 		
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 		
+		EgovMap selectMemberListView = null;
+		
 		if ( params.get("MemberType").equals("6")) {
-			
+			selectMemberListView = memberListService.selectHPMemberListView(params);
+		}else {
+			selectMemberListView = memberListService.selectMemberListView(params);
 		}
-		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		//EgovMap selectMemberListView = memberListService.selectMemberListView(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);

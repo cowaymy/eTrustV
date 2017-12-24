@@ -2994,5 +2994,432 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		 WHERE A.MEM_CODE = B.USER_NAME
 		   AND B.USER_NAME = #{userName}
 
-    </select>     
+    </select>
+    
+  <select id="getHPMemberListView" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+SELECT Limit1.MEM_ID MEM_ID  ,
+        Limit1.AREA_ID,
+        Limit1.STREET,
+        Limit1.ADDR_DTL,
+         Limit1.CITY,
+        Limit1.AREA,
+        Limit1.POSTCODE,
+        Limit1.STATE,
+        Limit1.COUNTRY,
+       Limit1.C3 C3  ,
+       Limit1.C4 C4  ,
+       Limit1.C5 C5  ,
+       Limit1.C8 C8  ,
+       Limit1.C9 C9  ,
+       Limit1.EMAIL EMAIL  ,
+       Limit1.GENDER GENDER  ,
+       Limit1.C10 C10  ,
+       Limit1.C11 C11  ,
+       Limit1.C12 C12  ,
+       Limit1.C13 C13  ,
+       Limit1.C14 C14  ,
+       Limit1.C15 C15  ,
+       Limit1.C16 C16  ,
+       Limit1.C17 C17  ,
+       Limit1.C18 C18  ,
+       Limit1.C19 C19  ,
+       Limit1.C20 C20  ,
+       Limit1.C21 C21  ,
+       Limit1.C22 C22  ,
+       Limit1.C23 C23  ,
+       Limit1.C24 C24  ,
+       Limit1.C25 C25  ,
+       Limit1.C26 C26  ,
+       Limit1.C27 C27  ,
+       Limit1.C28 C28  ,
+       Limit1.BANK BANK  ,
+       Limit1.BANK_ACC_NO BANK_ACC_NO  ,
+       Limit1.C29 C29  ,
+       Limit1.C30 C30  ,
+       Limit1.C31 C31  ,
+       Limit1.C32 C32  ,
+       Limit1.NAME1 NAME  ,
+       Limit1.MEM_CODE MEM_CODE  ,
+       Limit1.NAME NAME1  ,
+       Limit1.NRIC NRIC  ,
+       Limit1.MEM_TYPE MEM_TYPE  ,
+       Limit1.CODE_NAME CODE_NAME  ,
+       Limit1.C33 C33  ,
+       Limit1.C34 C34  ,
+       Limit1.C35 C35  ,
+       Limit1.C36 C36  ,
+       Limit1.C39 C39  ,
+       Limit1.C40 C40  ,
+       Limit1.C41 C41  ,
+       Limit1.C42 C42  ,
+       Limit1.C43 C43  ,
+       Limit1.C44 C44  ,
+       Limit1.C45 C45  ,
+       Limit1.C46 C46  ,
+       Limit1.C47 C47  ,
+       Limit1.C48 C48  ,
+       Limit1.C51 C51  ,
+       Limit1.C52 C52  ,
+       Limit1.C53 C53  ,
+       Limit1.C54 C54  ,
+       Limit1.C55 C55  ,
+       Limit1.C56 C56  ,
+       Limit1.TR_NO TR_NO  ,
+       Limit1.TEL_MOBILE TEL_MOBILE  ,
+       Limit1.TEL_HUSE TEL_HUSE  ,
+       Limit1.TEL_OFFICE TEL_OFFICE  ,
+       Limit1.C57 C57  ,
+       Limit1.SPUSE_CODE SPUSE_CODE  ,
+       Limit1.SPOUSE_NAME SPOUSE_NAME  ,
+       Limit1.SPOUSE_NRIC SPOUSE_NRIC  ,
+       Limit1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+       Limit1.C58 C58  ,
+       Limit1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+       Limit1.C59 C59  ,
+       Limit1.RANK RANK  ,
+       Limit1.C60 C60  ,
+       Limit1.HSPTLZ  HSPTLZ,
+       Limit1.MAIN_DEPT,
+       Limit1.SUB_DEPT,  
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course       
+  FROM (
+SELECT Extent1.APLCTN_ID MEM_ID  ,
+                Extent1.APLICNT_CODE MEM_CODE  ,
+                Extent1.APLICNT_TYPE MEM_TYPE  ,
+                Extent1.APLICNT_NAME NAME  ,
+                Extent1.APLICNT_NRIC NRIC  ,
+                Extent1.APLICNT_GENDER GENDER  ,
+                Extent26.AREA_ID,
+                Extent1.STREET,
+                Extent1.ADDR_DTL,
+                Extent26.CITY,
+                Extent26.AREA,
+                Extent26.POSTCODE,
+                Extent26.STATE,
+                Extent26.COUNTRY,
+                Extent1.APLICNT_TEL_OFFICE TEL_OFFICE  ,
+                Extent1.APLICNT_TEL_HUSE TEL_HUSE  ,
+                Extent1.APLICNT_TEL_MOBILE TEL_MOBILE  ,
+                Extent1.APLICNT_EMAIL EMAIL  ,
+                Extent1.APLICNT_SPOUSE_CODE SPUSE_CODE  ,
+                Extent1.APLICNT_SPOUSE_NAME SPOUSE_NAME  ,
+                Extent1.APLICNT_SPOUSE_NRIC SPOUSE_NRIC  ,
+                Extent1.APLICNT_SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                Extent1.APLICNT_SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                Extent1.APLICNT_BANK_ID BANK  ,
+                Extent1.APLICNT_BANK_ACC_NO BANK_ACC_NO  ,
+                '' RANK  ,
+                '' TR_NO  ,
+                '' HSPTLZ  ,
+                Extent2.NAME NAME1  ,
+                Extent3.CODE_NAME CODE_NAME   ,
+                '' C3  ,
+                '' C4  ,
+                '' C5  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_EDU_LEV IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_EDU_LEV,99999.99)
+                ELSE 0
+                   END C8  ,
+                CASE
+                     WHEN ( Extent11.CODE_ID IS NOT NULL ) THEN Extent11.CODE_NAME
+                ELSE ''
+                   END C9  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_LANG IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_LANG,99999.99)
+                ELSE 0
+                   END C10  ,
+                CASE
+                     WHEN ( Extent12.CODE_ID IS NOT NULL ) THEN Extent12.CODE_NAME
+                ELSE ''
+                   END C11  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.MEM_CODE
+                ELSE ''
+                   END C12  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.NAME
+                ELSE ''
+                   END C13  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.TEL_MOBILE
+                ELSE ''
+                   END C14  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.TEL_OFFICE
+                ELSE ''
+                   END C15  ,
+                CASE
+                     WHEN ( Extent13.MEM_ID IS NOT NULL ) THEN Extent13.TEL_HUSE
+                ELSE ''
+                   END C16  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.MEM_CODE
+                ELSE ''
+                   END C17  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.NAME
+                ELSE ''
+                   END C18  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.TEL_MOBILE
+                ELSE ''
+                   END C19  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.TEL_OFFICE
+                ELSE ''
+                   END C20  ,
+                CASE
+                     WHEN ( Extent14.MEM_ID IS NOT NULL ) THEN Extent14.TEL_HUSE
+                ELSE ''
+                   END C21  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.MEM_CODE
+                ELSE ''
+                   END C22  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.NAME
+                ELSE ''
+                   END C23  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.TEL_MOBILE
+                ELSE ''
+                   END C24  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.TEL_OFFICE
+                ELSE ''
+                   END C25  ,
+                CASE
+                     WHEN ( Extent15.MEM_ID IS NOT NULL ) THEN Extent15.TEL_HUSE
+                ELSE ''
+                   END C26  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_MARTL IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
+                ELSE 0
+                   END C27  ,
+                CASE
+                     WHEN ( Extent21.CODE_ID IS NOT NULL ) THEN Extent21.CODE_NAME
+                ELSE ''
+                   END C28  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_DOB IS NOT NULL ) THEN to_char(Extent1.APLICNT_DOB,'dd/mm/yyyy')
+                ELSE ''
+                   END C29  ,
+                '' C30  ,
+                CASE
+                     WHEN ( Extent25.USER_VAL_ID_TO IS NOT NULL ) THEN to_char(Extent25.USER_VAL_ID_TO,'yyyy-mm-dd')
+                ELSE ''
+                   END C31  ,
+                CASE
+                     WHEN ( Extent1.STUS_ID IS NOT NULL ) THEN Extent1.STUS_ID
+                ELSE 0
+                   END C32   ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.MEM_UP_ID
+                ELSE 0
+                   END C33  ,
+                CASE
+                     WHEN ( Extent22.WH_LOC_ID IS NOT NULL ) THEN Extent22.WH_LOC_ID
+                ELSE 0
+                   END C34  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_NATION IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_NATION,99999.99)
+                ELSE 0
+                   END C35  ,
+                CASE
+                     WHEN ( Extent17.CNTY_ID IS NOT NULL ) THEN Extent17.NAME
+                ELSE ''
+                   END C36  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_RACE IS NOT NULL ) THEN TO_NUMBER(Extent1.APLICNT_RACE,99999.99)
+                ELSE 0
+                   END C39  ,
+                CASE
+                     WHEN ( Extent18.CODE_ID IS NOT NULL ) THEN Extent18.CODE_NAME
+                ELSE ''
+                   END C40,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.DEPT_CODE
+                ELSE ''
+                   END C41  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.GRP_CODE
+                ELSE ''
+                   END C42  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.ORG_CODE
+                ELSE ''
+                   END C43  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.MEM_LVL
+                ELSE 0
+                   END C44  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.LVL3_UP_ID
+                ELSE 0
+                   END C45  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.LVL2_UP_ID
+                ELSE 0
+                   END C46  ,
+                CASE
+                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
+                       AND ( Extent4.MEM_CODE IS NULL )
+                       AND ( Extent4.MEM_LVL IS NULL )
+                       AND ( Extent4.DEPT_CODE IS NULL )
+                       AND ( Extent4.GRP_CODE IS NULL )
+                       AND ( Extent4.ORG_CODE IS NULL )
+                       AND ( Extent4.TOP_ORG_CODE IS NULL )
+                       AND ( Extent4.MEM_UP_ID IS NULL )
+                       AND ( Extent4.LVL3_UP_ID IS NULL )
+                       AND ( Extent4.LVL2_UP_ID IS NULL )
+                       AND ( Extent4.LVL1_UP_ID IS NULL )
+                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.LVL1_UP_ID
+                ELSE 0
+                   END C47,
+               '' C48  ,
+                CASE
+                     WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.MEM_CODE
+                ELSE ''
+                   END C51  ,
+                CASE
+                     WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.NAME
+                ELSE ''
+                   END C52  ,
+                CASE
+                     WHEN ( Extent20.MEM_ID IS NOT NULL ) THEN Extent20.NRIC
+                ELSE ''
+                   END C53  ,
+                '' C54  ,
+                '' C55  ,
+                '' C56  ,
+                CASE
+                     WHEN ( Extent5.MEM_ORG_DESC_ID IS NOT NULL ) THEN Extent5.MEM_ORG_DESC
+                ELSE ''
+                   END C57  ,
+                CASE
+                     WHEN ( Extent1.APLICNT_SPOUSE_DOB IS NOT NULL ) THEN to_char(Extent1.APLICNT_SPOUSE_DOB,'yyyy-mm-dd')
+                ELSE ''
+                   END C58  ,
+                '' C59  ,
+                '' C60,
+                EXTENT1.MAIN_DEPT,
+                EXTENT1.SUB_DEPT                   
+         FROM ORG0003D Extent1
+                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
+                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
+        LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                            FROM ORG1001V vMemberOrg  ) Extent4   ON Extent4.MEM_ID = Extent1.APLCTN_ID
+                LEFT JOIN ORG0012D Extent5   ON ( Extent5.MEM_ORG_LVL = Extent4.MEM_LVL )
+                AND ( Extent5.MEM_TYPE_ID = Extent1.APLICNT_TYPE )
+--                LEFT JOIN SYS0005M Extent10   ON Extent10.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,99999.99)
+                LEFT JOIN SYS0013M Extent11   ON Extent11.CODE_ID = TO_NUMBER(Extent1.APLICNT_EDU_LEV,99999.99)
+                LEFT JOIN SYS0013M Extent12   ON Extent12.CODE_ID = TO_NUMBER(Extent1.APLICNT_LANG,99999.99)
+                LEFT JOIN ORG0001D Extent13   ON Extent13.MEM_ID = Extent4.LVL1_UP_ID
+                LEFT JOIN ORG0001D Extent14   ON Extent14.MEM_ID = Extent4.LVL2_UP_ID
+                LEFT JOIN ORG0001D Extent15   ON Extent15.MEM_ID = Extent4.LVL3_UP_ID
+--                LEFT JOIN SYS0013M Extent16   ON Extent16.CODE_ID = TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
+                LEFT JOIN SYS0015M Extent17   ON Extent17.CNTY_ID = TO_NUMBER(Extent1.APLICNT_NATION,99999.99)
+                LEFT JOIN SYS0013M Extent18   ON Extent18.CODE_ID = TO_NUMBER(Extent1.APLICNT_RACE,99999.99)
+--                LEFT JOIN SYS0013M Extent19   ON Extent19.CODE_ID = Extent1.TRNSPRT
+                LEFT JOIN ORG0001D Extent20   ON Extent20.MEM_CODE = Extent1.APLICNT_SPOUSE_CODE
+                LEFT JOIN SYS0013M Extent21   ON Extent21.CODE_ID = TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
+                LEFT JOIN SYS0028M Extent22   ON ( Extent22.WH_LOC_CODE = Extent1.APLICNT_CODE )
+                AND ( Extent1.APLICNT_TYPE IN ( 2,3 )
+               )
+--        LEFT JOIN SYS0013M Extent23   ON Extent23.CODE_ID = Extent1.RANK
+--                LEFT JOIN SYS0013M Extent24   ON Extent24.CODE_ID = TO_NUMBER(Extent1.BIZ_TYPE,99999.99)
+                LEFT JOIN SYS0047M Extent25   ON Extent25.USER_FULL_NAME = Extent1.APLICNT_FULL_NAME
+                LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
+          WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
+           ]]>
+    </select>         
 </mapper>
