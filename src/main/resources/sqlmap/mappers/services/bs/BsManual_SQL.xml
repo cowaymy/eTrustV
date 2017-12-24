@@ -1076,7 +1076,7 @@
                                     and Extent4.SCHDUL_ID = Extent5.SCHDUL_ID
                                     and Extent5.RESULT_ID = Extent6.BS_RESULT_ID
                                     and Extent3.STK_ID = Extent6.BS_RESULT_PART_ID
-                                    and Extent4.SCHDUL_ID = #{salesOrdId}
+                                    and Extent4.SCHDUL_ID = #{selSchdulId}
                 ]]>
          </select>
 
