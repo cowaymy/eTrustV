@@ -323,9 +323,9 @@
 
     
      function fn_UpdateHsResult(){
-
+    	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
-                    jsonObj.form = $("#addHsForm").serializeJSON();
+                    jsonObj.form = $("#editHSResultForm").serializeJSON();
               Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
               Common.alert(result.message, fn_parentReload);
 
@@ -371,21 +371,6 @@
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="addHsForm" method="post">   
- 
- <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
- <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
- <input type="hidden" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
- <input type="hidden" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
-
-   
- <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
- <input type="hidden" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
- <input type="hidden" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct" name="renColct"/>
- <input type="hidden" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
- <input type="hidden" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt""/>
- <input type="hidden" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem""/>
- <input type="hidden" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction""/>
-  
  
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Information</h2>
@@ -544,7 +529,22 @@
 <!--     <li><p class="btn_blue2 big"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">Close</a></p></li> -->
 <!--     <li><p class="btn_blue2 big"><a href="#">Close</a></p></li> -->
 </ul>
-
-</section><!-- pop_body end -->
 </form>
+<form id="editHSResultForm" method="post" action="#">
+<input type="text" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
+ <input type="text" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
+ <input type="text" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
+ <input type="text" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
+
+   
+ <input type="text" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
+ <input type="text" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
+ <input type="text" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct" name="renColct"/>
+ <input type="text" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
+ <input type="text" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt"/>
+ <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem"/>
+ <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction"/>
+ <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType"/>
+</form>
+</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
