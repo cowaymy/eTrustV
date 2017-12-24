@@ -34,7 +34,40 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public PageAuthVO getPageAuth(Map<String, Object> params) {
-		return menuMapper.selectPageAuth(params);
+
+		/* 2017.12.24 Mundohyun Temporary Setting */
+		PageAuthVO tempVO  = new PageAuthVO();
+		tempVO.setFuncView("Y");
+		tempVO.setFuncChange("Y");
+		tempVO.setFuncPrint("Y");
+		tempVO.setFuncUserDefine1("Y");
+		tempVO.setFuncUserDefine2("Y");
+		tempVO.setFuncUserDefine3("Y");
+		tempVO.setFuncUserDefine4("Y");
+		tempVO.setFuncUserDefine5("Y");
+		tempVO.setFuncUserDefine6("Y");
+		tempVO.setFuncUserDefine7("Y");
+		tempVO.setFuncUserDefine8("Y");
+		tempVO.setFuncUserDefine9("Y");
+		tempVO.setFuncUserDefine10("Y");
+		tempVO.setFuncUserDefine11("Y");
+		tempVO.setFuncUserDefine12("Y");
+		tempVO.setFuncUserDefine13("Y");
+		tempVO.setFuncUserDefine14("Y");
+		tempVO.setFuncUserDefine15("Y");
+		tempVO.setFuncUserDefine16("Y");
+		tempVO.setFuncUserDefine17("Y");
+		tempVO.setFuncUserDefine18("Y");
+		tempVO.setFuncUserDefine19("Y");
+		tempVO.setFuncUserDefine20("Y");
+		tempVO.setFuncUserDefine21("Y");
+		tempVO.setFuncUserDefine22("Y");
+		tempVO.setFuncUserDefine23("Y");
+		tempVO.setFuncUserDefine24("Y");
+		tempVO.setFuncUserDefine25("Y");
+
+		return tempVO;
+//		return menuMapper.selectPageAuth(params);
 	}
 
 	@Override
