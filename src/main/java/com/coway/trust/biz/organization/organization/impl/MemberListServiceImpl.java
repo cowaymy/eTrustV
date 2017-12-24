@@ -943,7 +943,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memberListMapper.insertinvWH(invWH);
 			}
 			
-			if(params.get("memberType").toString().equals("5") ) {
+			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
 				if (params.get("traineeType").toString().equals("2") || params.get("traineeType").toString().equals("3") ){
 					 
 						params.put("MemberId", MemberId);
@@ -1286,11 +1286,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		int result = 0;
 		
-		memberListMapper.traineeUpdateInfo(params);
+		if ( !params.get("course").equals("")) {
 		
-		params.put("creator", params.get("user_id"));
+    		memberListMapper.traineeUpdateInfo(params);
+    		
+    		params.put("creator", params.get("user_id"));
+    		
+    		memberListMapper.traineeInsertInfor(params);
 		
-		memberListMapper.traineeInsertInfor(params);
+		}
 		
 		return result;
 	}

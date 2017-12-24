@@ -455,20 +455,24 @@
     </select>
     
    <select id="selectBranchCdInfo" parameterType="Map" resultType="egovMap">
-	SELECT    (SELECT code
-	             FROM sys0013m
-	            WHERE disab = 0 AND code_master_id = 45 AND code_id = #{branchCd})
-	       || '-'
-	       || num AS BRACH_CD
-	  FROM (SELECT MAX (SUBSTR (code, 5))+1 num
-	          FROM sys0005m
-	         WHERE 1 = 1
-	           AND code LIKE
-	                     (SELECT code
-	                        FROM sys0013m
-	                       WHERE disab = 0
-	                         AND code_master_id = 45
-	                         AND code_id = #{branchCd})
-	                  || '%')
+		SELECT    (SELECT CODE
+		             FROM SYS0013M
+		            WHERE DISAB = 0 AND CODE_MASTER_ID = 45 AND CODE_ID = #{branchCd})
+		       || '-'
+		       || LPAD(NVL(NUM,'01'),2,0) AS BRACH_CD
+		  FROM (SELECT MAX 
+		            ( CASE WHEN LENGTH(CODE) = 6 THEN SUBSTR( CODE, 5)
+		                   WHEN LENGTH(CODE) = 5 THEN SUBSTR( CODE, 4)
+		              END      
+		            ) +1   NUM
+		          FROM SYS0005M
+		         WHERE 1 = 1
+		           AND CODE LIKE
+		                     (SELECT CODE
+		                        FROM SYS0013M
+		                       WHERE DISAB = 0
+		                         AND CODE_MASTER_ID = 45
+		                         AND CODE_ID = #{branchCd} )
+		                  || '%')	                  
     </select>    
 </mapper>

@@ -78,7 +78,7 @@
 	         var tempCity = $("#getCity").val();
 	         var tempPostCode = $("#getPostCode").val();
 	         var tempArea = $("#getArea").val();
-         
+	         
 	         fn_updateInitField(tempState, tempCity , tempPostCode , tempArea);
         });
         
@@ -331,7 +331,7 @@
 <tr>
     <th scope="row">Branch Type<span class="must">*</span></th>
     <td>
-    <select id="branchType" name="branchType" class="w100p" >
+    <select id="branchType" name="branchType" class="w100p" disabled="disabled">
         <%-- <option value="${branchDetail.typeId}"  selected></option> --%>
            <c:forEach var="list" items="${branchType }" varStatus="status">
            <option value="${list.branchId}">${list.c1}</option>
@@ -340,7 +340,8 @@
     </td>
     <th scope="row">Branch Code<span class="must">*</span></th>
     <td>
-    <input id="branchCd" name="branchCd" type="text" title="" placeholder="Branch Type" class="w100p"  value= "${branchDetail.code}"/>
+    <%-- <input id="branchCd" name="branchCd" type="text" title="" placeholder="Branch Type" class="w100p"  class="readonly "  readonly="readonly" value= "${branchDetail.code}"/> --%>
+    <input type="text" title="" id="branchCd" name="branchCd" placeholder="" class="w100p readonly" readonly="readonly" value= "${branchDetail.code}"/>
     </td>
 </tr>
 <tr>

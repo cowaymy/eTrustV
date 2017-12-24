@@ -51,7 +51,7 @@
             
             
            $("select[name=selectbranchType]").change(function (){
-                if (  $(this).val() == '42' ||  $(this).val() == '43'  ) {
+                if (  $(this).val() == '42' ||  $(this).val() == '43'  ||  $(this).val() == '45'  ) {
                     Common.ajax("GET","/organization/selectBranchCdInfo.do", {branchCd: $(this).val()}, function(result){
                         console.log(  JSON.stringify(result[0].brachCd));
                         //$('#branchCd', ).val(result[0].brachCd);             
