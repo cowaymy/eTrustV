@@ -547,7 +547,12 @@ function saveAdvPayment(){
             return;
         } */   
 		
-		if( FormUtil.byteLength($("#cashRemark").val()) > 3000 ){
+	    if(FormUtil.checkReqValue($("#cashPayDate"))){
+	        Common.alert('* Pay Date is empty. Key in the value.');
+	        return;
+	    }
+        
+        if( FormUtil.byteLength($("#cashRemark").val()) > 3000 ){
 	        Common.alert('* Please input the Remark below or less than 3000 bytes.');
 	        return;
 	    }
@@ -595,6 +600,11 @@ function saveAdvPayment(){
             Common.alert('* No Ref Details/Jompay Ref ');
             return;
         } */
+        
+        if(FormUtil.checkReqValue($("#chequePayDate"))){
+            Common.alert('* Pay Date is empty. Key in the value.');
+            return;
+        }
 		
 		if( FormUtil.byteLength($("#chequeRemark").val()) > 3000 ){
             Common.alert('* Please input the Remark below or less than 3000 bytes.');
@@ -645,7 +655,12 @@ function saveAdvPayment(){
              }
          }
 		
-		if( FormUtil.byteLength($("#onlineRemark").val()) > 3000 ){
+         if(FormUtil.checkReqValue($("#onlinePayDate"))){
+             Common.alert('* Pay Date is empty. Key in the value.');
+             return;
+         }
+		
+         if( FormUtil.byteLength($("#onlineRemark").val()) > 3000 ){
             Common.alert('* Please input the Remark below or less than 3000 bytes.');
             return;
         }   
