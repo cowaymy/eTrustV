@@ -16,6 +16,7 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);  
 	void updatePlanByCDC(Map<String, Object> params);
+	void insertSalesPlanMstCdc(Map<String, Object> params);
 	
     /*Supply_CORP */
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);
@@ -48,6 +49,7 @@ public interface SalesPlanMngementMapper {
 	void insertSalesPlanDetail(Map<String, Object> params);
 	
 	void insertSalesPlanMaster(Map<String, Object> params);
+	void insertSalesCdcDetail(Map<String, Object> params);
 	/* interface */
 	String callSpCreateSalesPlanDetail(Map<String, Object> params);
 	
