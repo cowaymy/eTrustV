@@ -410,6 +410,28 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(message);
 	}		
 	
+	@RequestMapping(value = "/insertSalesPlanMstCdc.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertSalesPlanMstCdc(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("insertSalesPlanMstCdc_params : {}", params);
+		
+		
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		tmpCnt = salesPlanMngementService.insertSalesPlanMstCdc(params, sessionVO);
+		totCnt = totCnt + tmpCnt;
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}		
+	
 	
 	// SALES PLAN ACCURACY	
 	@RequestMapping(value = "/selectAccuracyWeeklyDetail.do", method = RequestMethod.GET)
