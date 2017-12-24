@@ -57,7 +57,7 @@ function fn_departmentCode(value){
 	    }
 	var action = value;
 	switch(action){
-	   case 1 :
+	   /* case 1 :
 		   $("#groupCode[memberLvl]").val(3);
 		   $("#groupCode[flag]").val("%CRS%");
 		   var jsonObj = {
@@ -65,7 +65,7 @@ function fn_departmentCode(value){
 	            flag :  "%CRS%"
 	    };
 		   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		   break;
+		   break; */
 	   case 2 :
 		   $("#groupCode[memberLvl]").val(3);
            $("#groupCode[flag]").val("%CCS%");
@@ -190,6 +190,10 @@ $(document).ready(function() {
 	
 	
 	fn_getMemInfo();
+
+    $("#searchdepartment").change(function(){
+        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
+    });
 });
 
 
@@ -248,7 +252,7 @@ function fn_setMemInfo(data){
     $("#sponsorNm").val(data.c52);
     
     $("#sponsorNric").val(data.c53);
-    alert(data.c68);
+    //alert(data.c68);
     $("#searchSt").val(data.c68);
     
     /*
@@ -281,6 +285,16 @@ function fn_setMemInfo(data){
     $("#trNo").val(data.trNo);
     
     $("#userId").val(data.c64);
+    
+    
+    
+    
+    $("#searchdepartment option[value='"+ data.mainDept +"']").attr("selected", true);
+    
+    $("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
+    
+    $("#course option[value='"+ data.course +"']").attr("selected", true);
+    
     
 }
 
@@ -937,7 +951,7 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">Date of Birth<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c58}"/>" />
+    <input type="text" title="Create start Date" id="Birth" name="Birth"placeholder="DD/MM/YYYY" class="j_date" value="<c:out value="${memberView.c29}"/>" />
     </td>
     <th scope="row">Race<span class="must">*</span></th>
     <td>
@@ -1128,6 +1142,24 @@ function fn_selectState(selVal){
     <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
     </td>
 </tr>
+<tr>
+    <th scope="row">Main Department</th>
+    <td colspan="2">
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+         <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+             <option value="${list.deptId}">${list.deptName } </option>
+        </c:forEach>  
+    </select>
+    </td>
+    <th scope="row">Sub Department</th>
+    <td colspan="2">
+    <select class="w100p" id="inputSubDept" name="inputSubDept">
+        <c:forEach var="list" items="${subDeptList}" varStatus="status">
+             <option value="${list.codeId}">${list.codeName } </option>
+        </c:forEach>  
+    </select>
+    </td>
+</tr>   
 </tbody>
 </table><!-- table end -->
 

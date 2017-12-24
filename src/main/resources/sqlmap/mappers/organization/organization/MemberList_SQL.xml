@@ -489,7 +489,10 @@
        Limit1.C59 C59  ,
        Limit1.RANK RANK  ,
        Limit1.C60 C60  ,
-       Limit1.HSPTLZ  HSPTLZ
+       Limit1.HSPTLZ  HSPTLZ,
+       Limit1.MAIN_DEPT,
+       Limit1.SUB_DEPT,  
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course       
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -618,7 +621,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 ELSE ''
                    END C28  ,
                 CASE
-                     WHEN ( Extent1.DOB IS NOT NULL ) THEN to_char(Extent1.DOB,'yyyy-mm-dd')
+                     WHEN ( Extent1.DOB IS NOT NULL ) THEN to_char(Extent1.DOB,'dd/mm/yyyy')
                 ELSE ''
                    END C29  ,
                 CASE
@@ -816,7 +819,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 CASE
                      WHEN ( Extent24.CODE_NAME IS NULL ) THEN ''
                 ELSE Extent24.CODE_NAME
-                   END C60
+                   END C60,
+                EXTENT1.MAIN_DEPT,
+                EXTENT1.SUB_DEPT                   
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -1115,6 +1120,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         , ADDR_DTL
         , STREET
         ,TRAINEE_TYPE
+        ,MAIN_DEPT
+        ,SUB_DEPT
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1173,6 +1180,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{streetDtl}
             , #{addrDtl}
              , #{traineeType}
+             , #{searchdepartment}
+             , #{inputSubDept}
              )
     </insert>
 
@@ -1690,6 +1699,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , AREA_ID
 	   , ADDR_DTL
 	   , STREET
+	   , MAIN_DEPT
+       , SUB_DEPT
 	   )
 	  VALUES (
 	  ORG0003D_APLCTN_ID_SEQ.NEXTVAL
@@ -1732,6 +1743,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{areaId}
 	  , #{streetDtl}
 	  , #{addrDtl}
+	  , #{searchdepartment}
+	  , #{inputSubDept}
 	  )
   </insert>
   <insert id="insertMemberAgr" parameterType="Map">
@@ -2342,7 +2355,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        Limit1.C65 C65,
        Limit1.C66 C66,
        Limit1.C67 C67,
-       Limit1.C68 c68
+       Limit1.C68 c68,
+       Limit1.MAIN_DEPT,
+       Limit1.SUB_DEPT,
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course  
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -2471,7 +2487,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 ELSE ''
                    END C28  ,
                 CASE
-                     WHEN ( Extent1.DOB IS NOT NULL ) THEN to_char(Extent1.DOB,'yyyy-mm-dd')
+                     WHEN ( Extent1.DOB IS NOT NULL ) THEN to_char(Extent1.DOB,'DD/MM/YYYY')
                 ELSE ''
                    END C29  ,
                 CASE
@@ -2686,7 +2702,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent1.FULL_NAME c65,
                  Extent1.AGRMNT_NO c66,
                  Extent1.SYNC_CHK c67,
-                 Extent26.AREA_ID c68
+                 Extent26.AREA_ID c68,
+                 EXTENT1.MAIN_DEPT,
+                 EXTENT1.SUB_DEPT
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -2753,7 +2771,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
               NAME = #{memberNm},
               FULL_NAME = #{fullName},
-              DOB = TO_DATE(#{Birth},'yyyy-mm-dd'),
+              DOB = TO_DATE(#{Birth},'DD-MM-YYYY'),
               GENDER = #{gender},
               RACE=TO_NUMBER(TRIM(#{cmbRace})),
               MARTL = TO_NUMBER(TRIM(#{marrital})),
@@ -2801,7 +2819,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               UPD_DT = SYSDATE,
               UPD_USER_ID = TO_NUMBER(TRIM(#{user_id})),
               JOIN_DT = TO_DATE(#{joinDate},'yyyy-mm-dd'),
-              RANK = TO_NUMBER(TRIM(#{rank}))
+              RANK = TO_NUMBER(TRIM(#{rank})),
+              MAIN_DEPT = #{searchdepartment},
+              SUB_DEPT = #{inputSubDept}
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
 
         ]]>
@@ -2826,6 +2846,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO 		
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
+		,MAIN_DEPT , SUB_DEPT 
 		)
 		select  
 		        ORG0001D_MEM_ID_SEQ.nextval, 
@@ -2868,7 +2889,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE CRT_DT, 
 		        CRT_USER_ID, 
 		        SYSDATE UPD_DT, 
-		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
+		        UPD_USER_ID,  '1' AS stus, APLCTN_ID,
+		        ,MAIN_DEPT , SUB_DEPT 
 		from ORG0003D   d             
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
@@ -2913,4 +2935,40 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ]]>
     </update>
 
+    <select id="selectMainDept"  resultType="egovMap">
+         SELECT DEPT_ID, DEPT_NAME FROM SYS0040M WHERE DEPT_PARENT_ID = '1'
+    </select>
+    
+    <select id="selectSubDept"  resultType="egovMap">
+         SELECT DEPT_ID AS CODE_ID, DEPT_NAME AS CODE_NAME FROM SYS0040M WHERE DEPT_PARENT_ID IN ( #{groupCode} )
+    </select>    
+
+     <update id="traineeUpdateInfo" parameterType="Map">
+     <![CDATA[
+        UPDATE MSC0009D
+        SET COURS_MEM_STUS_ID = '8'
+        WHERE 1=1
+        AND COURS_MEM_ID  =#{MemberID}
+        AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  =#{MemberID}) 
+        ]]>
+    </update>
+
+    <insert id="traineeInsertInfor" parameterType="Map">
+        INSERT INTO MSC0009D
+        (
+            COURS_ITM_ID, COURS_ID, COURS_MEM_ID, COURS_MEM_STUS_ID, COURS_D_UPD_USER_ID, COURS_D_UPD_DT, COURS_D_MEM_NAME, COURS_D_MEM_NRIC
+        )
+        VALUES
+        (
+        MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL , 
+        #{course},
+        #{MemberID},
+        '1',
+        #{creator},
+        SYSDATE, 
+        #{memberNm},
+        (SELECT NRIC FROM ORG0001D WHERE 1=1 AND MEM_ID  = #{MemberID} )
+        )
+    </insert>
+    
 </mapper>

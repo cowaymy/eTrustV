@@ -154,6 +154,12 @@ $(document).ready(function() {
         var memberType = $("#memberType").val();
         fn_departmentCode(memberType);
      });
+     
+     $("#searchdepartment").change(function(){
+             
+        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
+         
+     });
 });
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
@@ -757,13 +763,32 @@ function fn_selectState(selVal){
 </tr>
 <tr id = "trTrainee" >
     <th scope="row">Trainee Type </th>
-    <td colspan="2">
+    <td colspan="5">
         <select class= "w100p" id="traineeType1" name="traineeType">
         <option value= "0">Please select ...</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
     </select>
-    </tr>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Main Department</th>
+    <td colspan="2">
+    <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+         <c:forEach var="list" items="${mainDeptList}" varStatus="status">
+             <option value="${list.deptId}">${list.deptName } </option>
+        </c:forEach>  
+    </select>
+    </td>
+    <th scope="row">Sub Department</th>
+    <td colspan="2">
+    <select class="w100p" id="inputSubDept" name="inputSubDept">
+       <%-- <c:forEach var="list" items="${subDeptList}" varStatus="status">
+             <option value="${list.deptId}">${list.deptName} </option>
+        </c:forEach>  --%>
+    </select>
+    </td>
+</tr>    
 </tbody>
 </table><!-- table end -->
 

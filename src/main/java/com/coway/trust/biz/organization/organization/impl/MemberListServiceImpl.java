@@ -198,6 +198,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("areaId",params.get("areaId").toString());
 			MemApp.put("streetDtl",params.get("streetDtl1")!= null ?params.get("streetDtl1").toString() : "");
 			MemApp.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
+			
+			//Department
+			MemApp.put("searchdepartment",params.get("searchdepartment").toString());
+			MemApp.put("inputSubDept"		,params.get("inputSubDept").toString());
 
 			logger.debug("MemApp : {}",MemApp);
 			EgovMap appNo = getDocNo("145");
@@ -291,6 +295,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("areaId",params.get("areaId").toString());
 		params.put("streetDtl",params.get("streetDtl1")!= null ?params.get("streetDtl1").toString() : "");
 		params.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
+		
+		//Department
+		params.put("searchdepartment",params.get("searchdepartment").toString());
+		params.put("inputSubDept"		,params.get("inputSubDept").toString());
 
 
 		//두번째 탭 text 가져오기
@@ -934,6 +942,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("invWH : {}",invWH);
 				memberListMapper.insertinvWH(invWH);
 			}
+			
+			if(params.get("memberType").toString().equals("5") ) {
+				if (params.get("traineeType").toString().equals("2") || params.get("traineeType").toString().equals("3") ){
+					 
+						params.put("MemberId", MemberId);
+					
+						memberListMapper.traineeInsertInfor(params);
+				}
+			}
+			
+			
 			success=true;
 			String memCode = "";
 
@@ -1261,6 +1280,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public  int    memberListUpdate_member(Map<String, Object> params) {
 		return memberListMapper.memberListUpdate_member(params);
 	}
+	
+	@Override
+	public int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO) {
+
+		int result = 0;
+		
+		memberListMapper.traineeUpdateInfo(params);
+		
+		params.put("creator", params.get("user_id"));
+		
+		memberListMapper.traineeInsertInfor(params);
+		
+		return result;
+	}
+	
 
 	@Transactional
 	@Override
@@ -1499,4 +1533,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		return resultValue;
 	}
+	
+	@Override
+	public List<EgovMap> getMainDeptList() {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectMainDept();
+	}	
+	
+	@Override
+	public List<EgovMap> getSubDeptList(Map<String, Object> params) {
+		
+		return memberListMapper.selectSubDept(params);
+	}
+	
 }

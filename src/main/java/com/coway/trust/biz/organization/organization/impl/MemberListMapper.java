@@ -141,6 +141,10 @@ public interface MemberListMapper {
 	int memberListUpdate_memorg(Map<String, Object> params);
 
 	int memberListUpdate_member(Map<String, Object> params);
+	
+	int traineeUpdateInfo(Map<String, Object> params);
+	
+	int traineeInsertInfor(Map<String, Object> params);
 
 	void saveDocSubmission(DocSubmissionVO docSubmissionVO);
 
@@ -151,5 +155,9 @@ public interface MemberListMapper {
 	EgovMap selectHpOranization(Map<String, Object> params);
 	
 	void updateHpApproval(Map<String, Object> params);
+	
+	public List<EgovMap> selectMainDept();
+	
+	public List<EgovMap> selectSubDept(Map<String, Object> params);
 
 }

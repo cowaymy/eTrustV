@@ -82,6 +82,8 @@ public interface MemberListService {
 	int memberListUpdate_memorg(Map<String, Object> params);
 
 	int memberListUpdate_member(Map<String, Object> params);
+	
+	int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO);
 
 	boolean updateMember(Map<String, Object> params, List<Object> docType,SessionVO sessionVO);
 
@@ -91,4 +93,7 @@ public interface MemberListService {
 
 	List<EgovMap> selectHPApplicantList(Map<String, Object> params);
 
+	List<EgovMap> getMainDeptList();
+	
+	List<EgovMap> getSubDeptList(Map<String, Object> params);
 }

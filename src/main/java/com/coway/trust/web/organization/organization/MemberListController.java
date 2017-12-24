@@ -23,6 +23,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -39,6 +40,10 @@ public class MemberListController {
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
+	
+	@Resource(name = "tagMgmtService")
+	TagMgmtService tagMgmtService;
+	
 	/**
 	 * Call commission rule book management Page
 	 *
@@ -201,6 +206,10 @@ public class MemberListController {
 		params.put("mstCdId",3);
 		List<EgovMap> language = commonService.getDetailCommonCodeList(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		
+		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
+		params.put("groupCode", "");
+		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
 
 		logger.debug("race : {} "+race);
 		logger.debug("marrital : {} "+marrital);
@@ -216,6 +225,9 @@ public class MemberListController {
 		model.addAttribute("educationLvl", educationLvl);
 		model.addAttribute("language", language);
 		model.addAttribute("issuedBank", selectIssuedBank);
+		model.addAttribute("mainDeptList", mainDeptList);
+		model.addAttribute("subDeptList", subDeptList);
+		
 
 
 		// 호출될 화면
@@ -669,6 +681,12 @@ public class MemberListController {
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
+		
+		params.put("groupCode", selectMemberListView.get("mainDept"));
+		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
+		
+		
 		logger.debug("PAExpired : {}", PAExpired);
 		logger.debug("selectMemberListView : {}", selectMemberListView);
 		logger.debug("issuedBank : {}", selectIssuedBank);
@@ -677,6 +695,8 @@ public class MemberListController {
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);
 		model.addAttribute("issuedBank", selectIssuedBank);
+		model.addAttribute("mainDeptList", mainDeptList);
+		model.addAttribute("subDeptList", subDeptList);
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}
@@ -735,9 +755,13 @@ public class MemberListController {
 		int resultUpc1 = 0;
 		int resultUpc2 = 0;
 		int resultUpc3 = 0;
+		int resultUpc4 = 0;
 		resultUpc1 = memberListService.memberListUpdate_user(formMap);
 		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
 		resultUpc3 = memberListService.memberListUpdate_member(formMap);
+		
+		resultUpc4 = memberListService.traineeUpdateInfo(formMap, sessionVO);
+		
 		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
 
 		// 결과 만들기.
@@ -803,4 +827,15 @@ public class MemberListController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/selectSubDept.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getSubDept( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		params.put("groupCode",  params.get("groupCode"));
+		
+		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
+		
+		return ResponseEntity.ok( subDeptList);
+	}	
 }
