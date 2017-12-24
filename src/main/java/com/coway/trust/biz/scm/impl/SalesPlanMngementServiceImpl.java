@@ -185,6 +185,29 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		return saveCnt;
 	}
 	
+	/* CDC Master Detail Insert  */
+	@Override
+	public int insertSalesPlanMstCdc(Map<String, Object> params, SessionVO sessionVO)
+	{
+		int saveCnt = 0;
+		
+		params.put("crtUserId", sessionVO.getUserId());
+		
+		salesPlanMngementMapper.insertSalesPlanMstCdc(params);
+		
+		//LOGGER.debug("SalesPlanMstId_SEQ: " + Integer.parseInt( String.valueOf(params.get("salesPlanMstSeq"))) );
+		
+		LOGGER.debug(" input_Params : {}", params.toString() );
+		
+		saveCnt++;
+		
+		salesPlanMngementMapper.insertSalesCdcDetail(params);
+		
+		LOGGER.debug(" return_Params : {} , SaveCnt: {} ", params.toString(), saveCnt );
+		
+		return saveCnt;
+	}
+	
 	@Override
 	public int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO)
 	{
