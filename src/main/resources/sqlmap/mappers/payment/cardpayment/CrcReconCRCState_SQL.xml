@@ -93,7 +93,7 @@
                     B.CRDIT_CARD,
                     A.CRC_STATE_ACC_ID,
                     B.CRC_TRNSC_MID,
-                    D.CODE_ID  ) TB2 ON   TB1.PAY_ITM_CC_NO = TB2.CRC_TRNSC_NO
+                    D.CODE_ID  ) TB2 ON   SUBSTR(TB1.PAY_ITM_CC_NO, 1, 6) || SUBSTR(TB1.PAY_ITM_CC_NO, -4) = SUBSTR(TB2.CRC_TRNSC_NO, 1, 6) || SUBSTR(TB2.CRC_TRNSC_NO, -4)
                                                 AND TB1.PAY_ITM_REF_DT = TB2.CRC_TRNSC_DT
                                                 AND TB1.PAY_ITM_APPV_NO = TB2.CRC_TRNSC_APPV
                                                 AND TB1.AMOUNT = TB2.GROS_AMT

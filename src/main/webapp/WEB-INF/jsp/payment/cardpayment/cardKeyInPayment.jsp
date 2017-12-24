@@ -2536,7 +2536,7 @@ function addOutSrvcToFinal(){
 				        <td>
 				            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
 				            <span>-</span>
-				            <p class="short"><input type="password" id="keyInCardNo2" name="keyInCardNo2" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+				            <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				            <span>-</span>
 				            <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				        </td>
