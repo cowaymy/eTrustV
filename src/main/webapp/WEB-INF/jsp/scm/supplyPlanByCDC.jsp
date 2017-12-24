@@ -64,6 +64,54 @@ function fnSelectPeriodReset()
        periodCheckBox.options[0] = new Option("Select a WEEK","");
 }
 
+function fnCreate(obj)
+{
+	  if ($("#scmYearCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+	    return false;
+	  } 
+
+	  if ($("#scmPeriodCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
+	    return false;
+	  }
+
+	  if ($("#cdcCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='CDC' htmlEscape='false'/>");
+	    return false;
+	  }
+	    
+	  Common.ajax("POST", "/scm/insertSalesPlanMstCdc.do"
+	            , $("#MainForm").serializeJSON()    
+	            , function(result) 
+	             {
+	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                //fnSearchBtnList() ;
+	                fnSettiingHeader();
+	                
+	                console.log("성공." + JSON.stringify(result));
+	                console.log("data : " + result.data);
+	             } 
+	           , function(jqXHR, textStatus, errorThrown) 
+	            {
+	              try 
+	              {
+	                console.log("Fail Status : " + jqXHR.status);
+	                console.log("code : "        + jqXHR.responseJSON.code);
+	                console.log("message : "     + jqXHR.responseJSON.message);
+	                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	              } 
+	              catch (e) 
+	              {
+	                console.log(e);
+	              }
+	              Common.alert("Fail : " + jqXHR.responseJSON.message);
+	            }); 
+}
+
 function fnSelectCDCComboList(codeId)
 {
 	  CommonCombo.make("cdcCbBox"
@@ -1207,6 +1255,18 @@ $(document).ready(function()
 </ul>
 
 <ul class="right_btns">
+  <li>
+   <p class="btn_grid">
+    <a onclick="fnCreate(this);">Create</a>
+   </p>
+  </li>
+  <li>
+   <p class="btn_grid">
+    <a href="javascript:void(0);">Delete</a>
+    <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> 
+   </p>
+  </li>
+  
 	<li>
 	 <p class="btn_grid">
 	   <!-- <a href="javascript:void(0);">Re-Calculate</a> -->
