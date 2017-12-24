@@ -67,7 +67,7 @@
 		{dataField : "3", headerText : "<spring:message code='pay.head.description'/>", editable : true},
 		{dataField : "4", headerText : "<spring:message code='pay.head.ref6'/>", editable : true},
         {dataField : "5", headerText : "<spring:message code='pay.head.ref7'/>", editable : true},
-        {dataField : "6", headerText : "<spring:message code='pay.head.type'/>", editable : true},
+        {dataField : "6", headerText : "<spring:message code='pay.head.mode'/>", editable : true},
         {dataField : "7", headerText : "<spring:message code='pay.head.debit'/>", editable : true},
         {dataField : "8", headerText : "<spring:message code='pay.head.credit'/>", editable : true},        
 		{dataField : "9", headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : true},

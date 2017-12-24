@@ -1,1 +1,1 @@
-TellerId,Transaction Code,Ref/Cheq No,Description,ref6,ref7,TYPE,Debit,Credit,Deposit Slip No/EFT/MID,Chq No,VA number
+TellerId,Transaction Code,Ref/Cheq No,Description,ref6,ref7,Mode,Debit,Credit,Deposit Slip No/EFT/MID,Chq No,VA number

@@ -101,6 +101,32 @@ $(document).ready(function(){
         selectedItem = event.item.id;
         isMapped = event.item.stus;
         rowId = event.rowIndex;
+        var trDate = new Date(event.item.trnscDt);
+        var dd = trDate.getDate();
+        var mm = trDate.getMonth() + 1;
+        var yyyy = trDate.getFullYear();
+        
+        if(dd < 10) {
+            dd = "0" + dd;
+        }
+        if(mm < 10){
+            mm = "0" + mm
+        }
+        
+        trDate = dd + "/" + mm + "/" + yyyy;
+        if($("#payMode").val() == "105") {
+        	$("#cash").find("#amount").val(event.item.crdit);
+        	$("#trDateCash").val(trDate);
+            $("#keyInPayDateCash").val(trDate);
+        } else if($("#payMode").val() == "106") {
+        	$("#cheque").find("#amount").val(event.item.crdit);
+        	$("#trDateCheque").val(trDate);
+            $("#keyInPayDateCheque").val(trDate);
+        } else if($("#payMode").val() == "108") {
+        	$("#online").find("#amount").val(event.item.crdit);
+        	$("#trDateOnline").val(trDate);
+            $("#keyInPayDateOnline").val(trDate);
+        }
     });
     
 	 $("#cash").show();
@@ -118,6 +144,7 @@ $(document).ready(function(){
 		
 		 //cash일때, online<div>감추고 Cash에 대한 Bank Acc불러옴
 		 if($('#payMode').val() == '105'){
+			 fn_setSearchPayType();
 			 $("#online").hide();
 			 $("#onlineForm")[0].reset();
 			 $("#cheque").hide();
@@ -131,6 +158,7 @@ $(document).ready(function(){
              
              doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '106'){//cheque
+	    	 fn_setSearchPayType();
 	    	 $("#online").hide();
              $("#onlineForm")[0].reset();
              $("#cheque").hide();
@@ -145,6 +173,7 @@ $(document).ready(function(){
 
 	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'searchBankAcc', 'S', '' );
 	     }else if($('#payMode').val() == '108'){//online
+	    	 fn_setSearchPayType();
 	    	 $("#online").hide();
              $("#onlineForm")[0].reset();
              $("#cheque").hide();
@@ -344,7 +373,7 @@ var columnLayout = [
         editable : false
     },{
         dataField : "type",
-        headerText : "<spring:message code='pay.head.type'/>",
+        headerText : "<spring:message code='pay.head.mode'/>",
         editable : false
     },{
         dataField : "debt",
@@ -679,9 +708,12 @@ var columnLayout = [
 	      }
 	  }
 
+	  console.log(totalAmt);
 	  $("#paymentTotalAmtTxt").text("RM " + $.number(totalAmt,2)); 
-	  var tempPendingAmt = parseInt(AUIGrid.getCellValue(pendingGridID,1,"pendingAmount"));
+	  var tempPendingAmt = Number(AUIGrid.getCellValue(pendingGridID,0,"amount"));
+	  console.log(tempPendingAmt);
 	  var tempTot = tempPendingAmt - totalAmt;
+	  console.log(tempTot);
 	  AUIGrid.updateRow(pendingGridID, { "pendingAmount" : tempTot }, 0);
 	}
 
@@ -1345,8 +1377,9 @@ var columnLayout = [
     }
     
     function fn_clear(){
+    	$("#payMode").val("105");
     	$("#searchForm")[0].reset();
-    	AUIGrid.clearGridData();
+    	AUIGrid.clearGridData(bankGridID);
     }
     
     function fn_searchList(){
@@ -1518,13 +1551,17 @@ var columnLayout = [
                 	return;
                 }
                 
-    		}
-    		   else if($('#payMode').val() == '108'){
+    		} else if($('#payMode').val() == '108'){
     			var amt = 0;
     			var chgAmt = 0;
-    			amt = parseInt($("#online").find("#amount").val());
-    			chgAmt = parseInt($("#online").find("#chargeAmount").val());
+    			amt = Number($("#online").find("#amount").val());
+    			if(!FormUtil.isEmpty($("#online").find("#chargeAmount").val())) {
+    				chgAmt = Number($("#online").find("#chargeAmount").val());
+    			}
+    			console.log(amt);
+    			console.log(chgAmt);
     			var tot = amt+chgAmt;
+    			console.log(tot);
     			item.pendingAmount = tot;
     			
     			//Transaction Date 체크
@@ -1556,6 +1593,11 @@ var columnLayout = [
                     return;
                 }
             }
+    		
+    		if(AUIGrid.isCreated("#grid_wrap_pending")) {
+    			AUIGrid.destroy("#grid_wrap_pending");
+    			pendingGridID = GridCommon.createAUIGrid("grid_wrap_pending", columnPending,null,gridPros2);;
+    	    }
     		
     		AUIGrid.addRow(pendingGridID, item, "last");
     		
@@ -2192,6 +2234,23 @@ function addOutSrvcToFinal(){
     
     recalculatePaymentTotalAmt();
 }
+
+function fn_pageBack() {
+	$("#page1").show();
+    $("#page2").hide();
+}
+
+function fn_setSearchPayType() {
+	var payMode = $("#payMode").val();
+	console.log(payMode);
+	if(payMode == "105") {
+		$("#searchPayType").val("CSH");
+	} else if(payMode == "106") {
+		$("#searchPayType").val("CHQ");
+	} else if(payMode == "108") {
+		$("#searchPayType").val("ONL");
+	}
+}
 </script>
 <!-- content start -->
 
@@ -2260,7 +2319,7 @@ function addOutSrvcToFinal(){
                            <td>
                                 <select id="searchPayType" name="searchPayType" class="w100p" >
 	                                <option value="ALL">All</option>
-	                                <option value="CSH">Cash</option>
+	                                <option value="CSH" selected>Cash</option>
 	                                <option value="CHQ">Cheque</option>
 	                                <option value="ONL">Online</option>
                                 </select>
@@ -2317,7 +2376,7 @@ function addOutSrvcToFinal(){
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td>
-                    <input type="text" id="amount" name="amount" class="w100p"  maxlength="10" onkeydown='return FormUtil.onlyNumber(event)'/>
+                    <input type="text" id="amount" name="amount" class="w100p"   maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' disabled="disabled"/>
                 </td>
                 <th scope="row">Bank Charge Amount</th>
                 <td>
@@ -2419,7 +2478,7 @@ function addOutSrvcToFinal(){
             <tr>
                 <th scope="row">Amount<span class="must" >*</span></th>
                 <td>
-                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' disabled="disabled"/>
                 </td>
                 <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
@@ -2515,7 +2574,7 @@ function addOutSrvcToFinal(){
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td>
-                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' disabled="disabled"/>
                 </td>
                 <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
@@ -2599,6 +2658,9 @@ function addOutSrvcToFinal(){
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Normal Payment</h2>
+        <ul class="right_btns">
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_pageBack();">Back</a></p></li>
+</ul>
     </aside>
 <!-- grid_wrap start (Pending Amount)-->
         <article id="grid_wrap_pending" class="grid_wrap"></article>
