@@ -531,7 +531,7 @@
             inner JOIN sal0023d ad ON ad.cust_add_id = ins.add_id  --inner
             inner JOIN sys0064m mg ON mg.area_id = ad.area_id --inner
             LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
-            INNER JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
+            LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
             INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
             INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
             INNER JOIN org0001d cd ON cd.mem_id = hs.cody_id
