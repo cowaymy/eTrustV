@@ -657,10 +657,10 @@ function savePayment(){
     //}
     
     //Pay Date 체크
-    //if(FormUtil.checkReqValue($("#keyInPayDate"))){
-    //    Common.alert('* Pay Date is empty. Key in the value.');
-    //    return;
-    //}
+    if(FormUtil.checkReqValue($("#keyInPayDate"))){
+        Common.alert('* Pay Date is empty. Key in the value.');
+        return;
+    }
     
     if( FormUtil.byteLength($("#keyInRemark").val()) > 3000 ){
     	Common.alert('* Please input the Remark below or less than 3000 bytes.');
@@ -2604,7 +2604,7 @@ function addOutSrvcToFinal(){
 				                <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
                             </a>
 				        </td>
-				        <th scope="row">Pay Date</th>
+				        <th scope="row">Pay Date<span class="must">*</span></th>
 				        <td>
 				            <input id="keyInPayDate" name="keyInPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
