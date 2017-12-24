@@ -146,7 +146,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		String memCode = "";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
-		if(Integer.parseInt((String) params.get("memberType")) == 6){   //if HP Applicant
+		if(Integer.parseInt((String) params.get("memberType")) == 2803){   //if HP Applicant
 
 			MemApp.put("applicationID", 0);
 			MemApp.put("applicantCode", "");
@@ -200,8 +200,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
 			
 			//Department
-			MemApp.put("searchdepartment",params.get("searchdepartment").toString());
-			MemApp.put("inputSubDept"		,params.get("inputSubDept").toString());
+			MemApp.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
+			MemApp.put("searchSubDept"		,params.get("subDept").toString().trim()!=null ? params.get("subDept").toString().trim() : "");
 
 			logger.debug("MemApp : {}",MemApp);
 			EgovMap appNo = getDocNo("145");
@@ -298,7 +298,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		//Department
 		params.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
-		params.put("inputSubDept"		,params.get("inputSubDept").toString().trim()!=null ? params.get("inputSubDept").toString().trim() : "");
+		params.put("searchSubDept"		,params.get("searchSubDept").toString().trim()!=null ? params.get("searchSubDept").toString().trim() : "");
 
 		//두번째 탭 text 가져오기
 		params.put("spouseCode", params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
@@ -446,8 +446,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}else{
 			System.out.println("들어와얗ㅁ");
 			docNoLength = docNo.length();
+			
+			if ( prefixNo.equals("TR")) {
+				docNo = docNo.replace(prefixNo, "");
+				
+				docNo.substring(2);
+				logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo );
+				logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo.substring(2) );
+			}
 		}
 
+		logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo );
+		
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
 		logger.debug("nextDocNo : {}",nextDocNo);

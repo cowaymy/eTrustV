@@ -12,6 +12,7 @@ function fn_memberSave(){
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
 	            $("#traineeType").val(($("#traineeType1").value));
+	            $("#subDept").val(($("#searchSubDept").value));
 			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
@@ -168,7 +169,7 @@ $(document).ready(function() {
      
      $("#searchdepartment").change(function(){
              
-        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
+        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','searchSubDept', 'S' ,  ''); 
          
      });
      
@@ -537,6 +538,8 @@ function fn_selectState(selVal){
 <input type="hidden" id="streetDtl1" name="streetDtl">
 <input type="hidden" value ="addrDtl" id="addrDtl1" name="addrDtl">
 <input type="hidden" id="traineeType" name="traineeType">
+<input type="hidden" id="subDept" name="subDept">
+
 <!--<input type="hidden" id = "memberType" name="memberType"> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -730,7 +733,7 @@ function fn_selectState(selVal){
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
         <c:forEach var="list" items="${DeptCdList}" varStatus="status">
-            <option value="${list.deptCode}">${list.deptName } </option>
+            <option value="${list.deptCode}">${list.deptNm } </option>
         </c:forEach>     
     </select>
     </td>
@@ -813,7 +816,7 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">Sub Department</th>
     <td colspan="2">
-    <select class="w100p" id="inputSubDept" name="inputSubDept">
+    <select class="w100p" id="searchSubDept" name="searchSubDept">
        <%-- <c:forEach var="list" items="${subDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName} </option>
         </c:forEach>  --%>

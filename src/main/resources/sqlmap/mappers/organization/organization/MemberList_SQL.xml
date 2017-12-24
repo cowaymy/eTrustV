@@ -1181,7 +1181,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{addrDtl}
              , #{traineeType}
              , #{searchdepartment}
-             , #{inputSubDept}
+             , #{searchSubDept}
              )
     </insert>
 
@@ -1744,7 +1744,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{streetDtl}
 	  , #{addrDtl}
 	  , #{searchdepartment}
-	  , #{inputSubDept}
+	  , #{searchSubDept}
 	  )
   </insert>
   <insert id="insertMemberAgr" parameterType="Map">
