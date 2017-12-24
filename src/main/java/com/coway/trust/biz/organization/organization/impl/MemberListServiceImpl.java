@@ -1550,4 +1550,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectSubDept(params);
 	}
 	
+	@Override
+	public List<EgovMap> getDeptCdListList(Map<String, Object> params) {
+		
+		return memberListMapper.getDeptCdListList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getSpouseInfoView(Map<String, Object> params) {
+		return memberListMapper.getSpouseInfoView(params);
+	}	
 }

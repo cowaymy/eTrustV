@@ -163,7 +163,10 @@ public class MemberListController {
 		
 		
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
-
+		
+		if ( params.get("MemberType").equals("6")) {
+			
+		}
 		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
@@ -190,7 +193,7 @@ public class MemberListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectMemberListNewPop.do")
-	public String selectMemberListNewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String selectMemberListNewPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
 		params.put("mstCdId",2);
 		List<EgovMap> race = commonService.getDetailCommonCodeList(params);
@@ -210,13 +213,27 @@ public class MemberListController {
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
 		params.put("groupCode", "");
 		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
+		
+		params.put("mstCdId",377);
+		List<EgovMap> Religion = commonService.getDetailCommonCodeList(params);
 
+		String userName = sessionVO.getUserName();
+		params.put("userName", userName);
+		
+		List<EgovMap> DeptCdList = memberListService.getDeptCdListList(params);
+		
+		List<EgovMap> list = memberListService.getSpouseInfoView(params);
+		logger.debug("return_Values: " + list.toString());
+		
 		logger.debug("race : {} "+race);
 		logger.debug("marrital : {} "+marrital);
 		logger.debug("nationality : {} "+nationality);
 		logger.debug("state : {} "+state);
 		logger.debug("educationLvl : {} "+educationLvl);
 		logger.debug("language : {} "+language);
+		logger.debug("Religion : {} "+Religion);
+		
+		logger.debug("DeptCdList : {} "+DeptCdList);
 
 		model.addAttribute("race", race);
 		model.addAttribute("marrital", marrital);
@@ -227,7 +244,10 @@ public class MemberListController {
 		model.addAttribute("issuedBank", selectIssuedBank);
 		model.addAttribute("mainDeptList", mainDeptList);
 		model.addAttribute("subDeptList", subDeptList);
+		model.addAttribute("Religion", Religion);
+		model.addAttribute("DeptCdList", DeptCdList);
 		
+		model.addAttribute("spouseInfoView", list);
 
 
 		// 호출될 화면

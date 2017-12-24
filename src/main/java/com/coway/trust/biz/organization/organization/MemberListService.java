@@ -96,4 +96,8 @@ public interface MemberListService {
 	List<EgovMap> getMainDeptList();
 	
 	List<EgovMap> getSubDeptList(Map<String, Object> params);
+	
+	List<EgovMap> getDeptCdListList(Map<String, Object> params);	
+	
+	List<EgovMap> getSpouseInfoView(Map<String, Object> params);
 }

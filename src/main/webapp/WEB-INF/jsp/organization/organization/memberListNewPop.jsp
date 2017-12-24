@@ -117,6 +117,8 @@ function fn_departmentCode(value){
            doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
            break;
 	}
+	
+     
 }
 $(document).ready(function() {
 
@@ -125,9 +127,9 @@ $(document).ready(function() {
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
 
     //doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S', '' );
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S' , '');
+    //doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S' , '');
 
-    doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
+    //doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
@@ -152,7 +154,16 @@ $(document).ready(function() {
 
 	$("#memberType").change(function (){
         var memberType = $("#memberType").val();
+        
+        if ( memberType ==  "2803") {
+            $('#course').attr("disabled", true);
+        } else {
+            $('#course').removeAttr('disabled'); 
+        }
+        
         fn_departmentCode(memberType);
+        
+        
      });
      
      $("#searchdepartment").change(function(){
@@ -160,6 +171,14 @@ $(document).ready(function() {
         doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
          
      });
+     
+    //var nationalStatusCd = "1";
+    $("#national option[value=1]").attr('selected', 'selected');
+    
+    //var cmbRacelStatusCd = "10";
+    $("#cmbRace option[value=10]").attr('selected', 'selected');
+     
+
 });
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
@@ -530,11 +549,11 @@ function fn_selectState(selVal){
     <th scope="row">Member Type</th>
     <td>
     <select class="w100p" id="memberType" name="memberType">
-        <option value="1">Health Planner (HP)</option>
+        <!-- <option value="1">Health Planner (HP)</option> -->
      <%--    <option value="2">Coway Lady (Cody)</option>
         <option value="3">Coway Technician (CT)</option>--%>
         <option value="4">Coway Staff (Staff)</option>
-        <option value="5">Trainee</option>
+        <option value="5" selected="selected">Trainee</option>
         <option value="2803">HP Applicant</option>
     </select>
     </td>
@@ -589,6 +608,9 @@ function fn_selectState(selVal){
     <th scope="row">Race<span class="must">*</span></th>
     <td>
     <select class="w100p" id="cmbRace" name="cmbRace">
+        <c:forEach var="list" items="${race}" varStatus="status">
+            <option value="${list.detailcodeid}">${list.detailcodename } </option>
+        </c:forEach>       
     </select>
     </td>
 </tr>
@@ -596,6 +618,9 @@ function fn_selectState(selVal){
     <th scope="row">Nationality<span class="must">*</span></th>
     <td>
     <select class="w100p" id="national" name="national">
+     <c:forEach var="list" items="${nationality}" varStatus="status">
+             <option value="${list.countryid}">${list.name } </option>
+        </c:forEach>       
     </select>
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
@@ -704,6 +729,9 @@ function fn_selectState(selVal){
     <th scope="row">Department Code<span class="must">*</span></th>
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
+        <c:forEach var="list" items="${DeptCdList}" varStatus="status">
+            <option value="${list.deptCode}">${list.deptName } </option>
+        </c:forEach>     
     </select>
     </td>
     <th scope="row">Transport Code<span class="must">*</span></th>
@@ -722,6 +750,9 @@ function fn_selectState(selVal){
     <th scope="row">Religion</th>
     <td colspan="2">
     <select class="w100p">
+        <c:forEach var="list" items="${Religion}" varStatus="status">
+            <option value="${list.detailcodeid}">${list.detailcodename } </option>
+        </c:forEach>        
     </select>
     </td>
     <th scope="row">e-Approval Status</th>
@@ -909,30 +940,30 @@ function fn_selectState(selVal){
 <tbody>
 <tr>
     <th scope="row">MCode</th>
-    <td>
-    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode" />
+    <td>  
+    <input type="text" title="" placeholder="MCode" class="w100p readonly " id="spouseCode" readonly="readonly" name="spouseCode" value="${spouseInfoView[0].memCode}"/>
     </td>
     <th scope="row">Spouse Name</th>
     <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName"/>
+    <input type="text" title="" placeholder="Spouse Nam" class="w100p readonly " id="spouseName" readonly="readonly"  name="spouseName" value="${spouseInfoView[0].name}"/>
     </td>
     <th scope="row">NRIC / Passport No.</th>
     <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNRIC" name="spouseNRIC"/>
+    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNRIC" readonly="readonly"  name="spouseNRIC"  value="${spouseInfoView[0].nric}"/>
     </td>
 </tr>
 <tr>
     <th scope="row">Occupation</th>
     <td>
-    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" name="spouseOcc"/>
+    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" name="spouseOcc" value=""/>
     </td>
     <th scope="row">Date of Birth</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDOB" name="spouseDOB" />
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDOB" readonly="readonly"  name="spouseDOB" value="${spouseInfoView[0].dob}"/>
     </td>
     <th scope="row">Contact No.</th>
     <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" />
+    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="spouseContat" readonly="readonly"  name="spouseContat"  value="${spouseInfoView[0].telMobile}"/>
     </td>
 </tr>
 </tbody>

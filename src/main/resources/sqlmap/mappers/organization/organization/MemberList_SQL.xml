@@ -2971,4 +2971,28 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         )
     </insert>
     
+    
+    <select id="getDeptCdListList"  resultType="egovMap">
+         SELECT C.DEPT_CODE,  (SELECT DEPT_NAME FROM SYS0040M WHERE DEPT_STUS_ID = 1 AND DEPT_ID = B.USER_DEPT_ID) AS DEPT_NM
+		  FROM ORG0001D A,
+		       SYS0047M B,
+		       ORG0005D C
+		 WHERE A.MEM_CODE = B.USER_NAME
+		   AND A.MEM_ID = C.MEM_ID
+		   AND B.USER_NAME =  #{userName}
+    </select>        
+    
+
+    <select id="getSpouseInfoView"  resultType="egovMap">
+		SELECT A.MEM_CODE,
+		       A.NAME,
+		       A.NRIC,
+		       to_char(A.DOB, 'dd/mm/yyyy') DOB,
+		       A.TEL_MOBILE
+		  FROM ORG0001D A,
+		       SYS0047M B
+		 WHERE A.MEM_CODE = B.USER_NAME
+		   AND B.USER_NAME = #{userName}
+
+    </select>     
 </mapper>

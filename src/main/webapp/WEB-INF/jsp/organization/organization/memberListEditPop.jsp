@@ -898,11 +898,12 @@ function fn_selectState(selVal){
     <th scope="row">Member Type</th>
     <td>
     <select class="w100p" id="memberType" name="memberType">
-        <option value="1">Health Planner (HP)</option>
-        <option value="2">Coway Lady (Cody)</option>
-        <option value="3">Coway Technician (CT)</option>
+        <!-- <option value="1">Health Planner (HP)</option> -->
+        <!-- <option value="2">Coway Lady (Cody)</option> -->
+        <!-- <option value="3">Coway Technician (CT)</option> -->
         <option value="4">Coway Staff (Staff)</option>
-        <option value="5">Trainee</option>
+        <option value="5" selected="selected">Trainee</option>
+        <option value="2803">HP Applicant</option>
     </select>
     </td>
 </tr>

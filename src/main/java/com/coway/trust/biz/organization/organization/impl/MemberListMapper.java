@@ -159,5 +159,9 @@ public interface MemberListMapper {
 	public List<EgovMap> selectMainDept();
 	
 	public List<EgovMap> selectSubDept(Map<String, Object> params);
+	
+	public List<EgovMap> getDeptCdListList(Map<String, Object> params);
 
+	List<EgovMap> getSpouseInfoView(Map<String, Object> params);	
+	
 }
