@@ -197,30 +197,28 @@ var popColumnLayout = [
      { dataField:"history" ,
          width: 30,
          headerText:" ", 
-       
-        renderer : 
-                {
-               type : "IconRenderer",
-               iconTableRef :  {
-                   "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
-               },         
-               iconWidth : 16,
-               iconHeight : 16,
-              onclick : function(rowIndex, columnIndex, value, item) {
-            	  showDetailHistory(item.payItmId);
-            	  
-              } 
-            }
+         renderer : {
+             type : "IconRenderer",
+             iconTableRef :  {
+                 "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
+             },         
+             iconWidth : 16,
+             iconHeight : 16,
+             onclick : function(rowIndex, columnIndex, value, item) {
+                 showDetailHistory(item.payItmId);
+                 
+             } 
+          }
      }, 
      { dataField:"payId" ,headerText:"TEST",editable : false , visible : false },
      { dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false},
      { dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
      { dataField:"c7" ,headerText:"<spring:message code='pay.head.cardType'/>",editable : false },
-     { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
-     { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+     /* { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false },
+     { dataField:"codeName1" ,headerText:"<spring:message code='pay.head.CCType'/>" ,editable : false }, */
      { dataField:"payItmCcHolderName" ,headerText:"<spring:message code='pay.head.CCHolder'/>" ,editable : false },
      { dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-     { dataField:"" ,headerText:"<spring:message code='pay.head.CRCNo'/> ,editable : false }" ,editable : false },
+     { dataField:"payItmCcNo" ,headerText:"<spring:message code='pay.head.CRCNo'/>" ,editable : false },
      { dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
      { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },                   
      { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false },
