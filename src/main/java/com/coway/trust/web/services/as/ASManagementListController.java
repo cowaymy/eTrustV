@@ -799,26 +799,35 @@ public class ASManagementListController {
 		logger.debug("remove ===>"+remove.toString());
 		logger.debug("update ===>"+update.toString());
 		
-		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
-		
-		if( null !=rtnValue){
-			HashMap   spMap =(HashMap)rtnValue.get("spMap");
-			logger.debug("spMap :"+ spMap.toString());   
-			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-				rtnValue.put("logerr","Y");
-			}
-			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-		}
-		
-		
 		
 		
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(rtnValue.get("AS_NO"));
-		message.setMessage("");
-
-				
+		
+		HashMap   mp= new HashMap();
+		mp.put("serviceNo", asResultM.get("AS_NO"));
+		int  isAsCnt =	 ASManagementListService.isAsAlreadyResult(mp);
+		
+		
+		 if(isAsCnt == 0){
+    		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+    		if( null !=rtnValue){
+    			HashMap   spMap =(HashMap)rtnValue.get("spMap");
+    			logger.debug("spMap :"+ spMap.toString());   
+    			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+    				rtnValue.put("logerr","Y");
+    			}
+    			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    		}
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setData(rtnValue.get("AS_NO"));
+    		message.setMessage("");
+		
+		 }else{
+			 message.setCode("98");
+			 message.setData(asResultM.get("AS_NO"));
+	         message.setMessage("There is complete result exist already");
+		 }
+		
 		return ResponseEntity.ok(message);  
 		
 	}
@@ -1058,24 +1067,40 @@ public class ASManagementListController {
 		
 		params.put("updator", sessionVO.getUserId());    
 		
-		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
 		
-		if( null !=rtnValue){
-			HashMap   spMap =(HashMap)rtnValue.get("spMap");
-			logger.debug("spMap :"+ spMap.toString());   
-			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-				rtnValue.put("logerr","Y");
-			}
-			  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-			  logger.debug("			SP_SVC_LOGISTIC_REQUEST===> "+spMap.toString());  
-		}
-		
-		
-		
+
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-	    message.setData(rtnValue.get("asNo"));  
-		message.setMessage("");
+		
+		HashMap   mp= new HashMap();
+		Map  svc0004dmap =   (Map) params.get("asResultM");//hash
+		mp.put("serviceNo", svc0004dmap.get("AS_NO"));
+		int  isAsCnt =	 ASManagementListService.isAsAlreadyResult(mp);
+		
+		
+		 if(isAsCnt == 0){
+        		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
+        		
+        		if( null !=rtnValue){
+        			HashMap   spMap =(HashMap)rtnValue.get("spMap");
+        			logger.debug("spMap :"+ spMap.toString());   
+        			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+        				rtnValue.put("logerr","Y");
+        			}
+        			  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+        			  logger.debug("			SP_SVC_LOGISTIC_REQUEST===> "+spMap.toString());  
+        		}
+        		
+
+        		message.setCode(AppConstants.SUCCESS);
+        	    message.setData(rtnValue.get("asNo"));  
+        		message.setMessage("");
+        		
+		 }else{
+
+				message.setCode("98");
+			    message.setData( svc0004dmap.get("AS_NO") );  
+		        message.setMessage("There is complete result exist already");
+		 }	
 				
 		return ResponseEntity.ok(message);  
 		
