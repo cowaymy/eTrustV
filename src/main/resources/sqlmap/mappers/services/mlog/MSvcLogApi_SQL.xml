@@ -1028,7 +1028,7 @@ LEFT OUTER JOIN (
 			                  AS chg_YN,
 			               NULL AS ex_Chgid,
 			               NULL AS chg_Qty,
-			               NULL AS last_Chg_Time,
+			               TO_CHAR (S87A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time,
 			               NULL AS alternative_Used_YN,
 			               NULL AS alternative_Filter_Code,
 			               NULL AS alternative_Filter_Id,
