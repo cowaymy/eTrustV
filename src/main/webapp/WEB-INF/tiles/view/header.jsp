@@ -11,7 +11,7 @@
 	    <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
 	  <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
 	    <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
-	    <li>Installment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
+	    <li>Instalment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
 	    <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
 	    <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
 	</ul>
@@ -23,7 +23,7 @@
 	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
 	</ul>
 	</header><!-- header end -->
-	
+
 	<hr />
 
 <script type="text/javascript">
@@ -66,7 +66,7 @@
         $("#header_total").on("click", function(){
             Common.popupDiv("/chart/salesKeyInAnalysisPop.do", null, null, true, "salesKeyInAnalysisDivPop");
         });
-*/        
+*/
     }
 
     function fn_selectDailyCount(){
@@ -101,7 +101,7 @@
    $(function() {
        selectDailyCount(false);
        fn_selectMyMenuProgrmList();
-	   
+
        // draw menu path.
 		var $menuPathObj = $("#content > ul:first-child");
 		if($menuPathObj.hasClass("path")){
@@ -133,34 +133,34 @@
         $("#header_refresh").on("click", function(){
             selectDailyCount(true);
 		});
-        
-	   $(".fav a").bind("click",function(){		   		   
-		   if($(".fav a").attr("class")=="on"){	
+
+	   $(".fav a").bind("click",function(){
+		   if($(".fav a").attr("class")=="on"){
 			   var closeTag = false;
 		        Common.ajax(
-		                "POST", 
-		                "/common/savetMyMenuProgrmList.do", 
+		                "POST",
+		                "/common/savetMyMenuProgrmList.do",
 		                {add:[],update:[],remove:[{menuCode:$("input[name=CURRENT_MENU_CODE]").attr("value")}]},
 		                function(data, textStatus, jqXHR){ // Success
-		                	$(".fav a").removeClass("on");		                 
+		                	$(".fav a").removeClass("on");
 		                	alert("Removed menu.");
 		                	closeTag = true;
 		                },
 		                function(jqXHR, textStatus, errorThrown){ // Error
 		                    alert("Fail : " + jqXHR.responseJSON.message);
-		                }           
-		        )   			       
-		        if(closeTag) mymenuPop.remove();		        
-		   }else{			   			   			
+		                }
+		        )
+		        if(closeTag) mymenuPop.remove();
+		   }else{
 			   var popUpObj = Common.popupDiv
                (
                     "/common/mymenuPop.do"
-                    , "" 
-                    , null     
+                    , ""
+                    , null
                     , "false"
                     , "mymenuPop"
                );
-		   }			   		   		   
+		   }
 	   });
 
 		$("#menuLinkHelp").on("click", function(){
@@ -171,24 +171,24 @@
 			}
 		});
    });
-      
-   
-   function mymenuPopSelect(_mymenuCode){	   		 
+
+
+   function mymenuPopSelect(_mymenuCode){
 	   var closeTag = false;
 	   Common.ajax(
-               "POST", 
-               "/common/savetMyMenuProgrmList.do", 
+               "POST",
+               "/common/savetMyMenuProgrmList.do",
                {add:[{mymenuCode:_mymenuCode,menuCode:$("input[name=CURRENT_MENU_CODE]").attr("value")}],update:[],remove:[]},
                function(data, textStatus, jqXHR){ // Success
             	   $(".fav a").addClass("on");
             	   alert("Registered menu.");
-            	   mymenuPop.remove();                   
+            	   mymenuPop.remove();
                },
                function(jqXHR, textStatus, errorThrown){ // Error
                    alert("Fail : " + jqXHR.responseJSON.message);
-               }           
-       );                         
-       
+               }
+       );
+
    };
 
 function fn_selectMyMenuProgrmList() {
@@ -208,6 +208,6 @@ function fn_selectMyMenuProgrmList() {
     )
 }
 </script>
-    
-    
+
+
 
