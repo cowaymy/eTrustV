@@ -42,16 +42,16 @@
                     headerText : "Filter Name",
                     width : 240
                 }, {
-                    dataField : "name",
+                	dataField : "name",
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
 			        renderer : {
-			            type : "NumberStepRenderer",
+			        	type : "NumberStepRenderer",
 			            min : 0,
 			            max : 50,
 			            step : 1,
-			            textEditable : false
+			            textEditable : true
 			        }
                 }, {                        
                     dataField : "SerialNo",
@@ -110,7 +110,7 @@
          Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID, result);            
+            AUIGrid.setGridData(myDetailGridID, result);  
         }); 
     }   
     
@@ -165,8 +165,24 @@
                         
             
             
-             var jsonObj =  GridCommon.getEditData(myDetailGridID);
-                    jsonObj.form = $("#addHsForm").serializeJSON();
+             //var jsonObj =  GridCommon.getEditData(myDetailGridID);
+            // add by jgkim
+            var jsonObj = {};
+            var resultList = new Array();
+            var gridDataList = AUIGrid.getGridData(myDetailGridID);
+            //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
+            //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
+            console.log(gridDataList);
+            for(var i = 0; i < gridDataList.length; i++) {
+            	var item = gridDataList[i];
+            	if(item.name > 0) {
+            		resultList.push(gridDataList[i]);
+            	}
+            }
+            console.log(resultList);
+            jsonObj.add = resultList;        
+            jsonObj.form = $("#addHsForm").serializeJSON();
+            console.log(jsonObj);
               Common.ajax("POST", "/services/bs/addIHsResult.do", jsonObj, function(result) {
               //Common.alert(result.message.message);
                 console.log("message : " + result.message );

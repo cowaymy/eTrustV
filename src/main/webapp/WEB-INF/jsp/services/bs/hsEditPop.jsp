@@ -5,6 +5,9 @@
 
 <script type="text/javaScript">
 
+// add by jgkim
+var myDetailGridData = null;
+
         //Combo Data
     var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
 /*     cmbCollectType
@@ -57,7 +60,7 @@
                         min : 0,
                         max : 50,
                         step : 1,
-                        textEditable : false
+                        textEditable : true
                     }
             }];
             // 그리드 속성 설정
@@ -290,7 +293,8 @@
     	 Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{selSchdulId : selSchdulId}, function(result) {
              console.log("성공 fn_getHsViewfilterInfoAjax.");
              console.log("data : " + result);
-             AUIGrid.setGridData(myDetailGridID, result);            
+             AUIGrid.setGridData(myDetailGridID, result);   
+             myDetailGridData = result;
          }); 
         
 
@@ -330,7 +334,28 @@
      
     	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
+           // add by jgkim
+              //var jsonObj = {};
+              //var resultList = new Array();
+              //var gridDataList = AUIGrid.getGridData(myDetailGridID);
+              //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
+              //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
+              /* console.log(gridDataList);
+              for(var i = 0; i < gridDataList.length; i++) {
+                  var item = gridDataList[i];
+                  for(var j = 0; j < myDetailGridData.length; j++) {
+                	  var oriItem = myDetailGridData[j];
+                	  if(!FormUtil.isEmpty(item.name)) {
+                		  if(item.name != oriItem.name) {
+                              resultList.push(gridDataList[i]);
+                          }
+                	  }
+                  }
+              }
+              console.log(resultList); */
+              //jsonObj.update = resultList;    
                     jsonObj.form = $("#editHSResultForm").serializeJSON();
+                    console.log(jsonObj);
               Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
               Common.alert(result.message, fn_parentReload);
 

@@ -454,8 +454,8 @@ public class HsManualController {
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
-
-		resultValue = hsManualService.addIHsResult(formMap, updList, sessionVO);
+		
+		resultValue = hsManualService.addIHsResult(formMap, insList, sessionVO);
 		
 		  
 		if( null !=resultValue){
