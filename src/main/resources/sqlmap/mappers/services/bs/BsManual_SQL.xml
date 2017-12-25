@@ -401,11 +401,14 @@
                                         ,SYS0038M EXTENT2
                                         ,sal0023d sal023
                                         ,SYS0064M sys064
+       									,SAL0045D INS
                                 WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND SOM.SALES_ORD_ID = HSM.SALES_ORD_ID(+)
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
-                                AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
+                                AND SOM.CUST_ID = SAL023.CUST_ID
+								AND SOM.SALES_ORD_ID = INS.SALES_ORD_ID
+								AND SAL023.CUST_ADD_ID = INS.ADD_ID
                                 and sal023.area_id = sys064.area_id
                  <![CDATA[ AND SOM.STUS_CODE_ID <> 8    ]]>
                              <if test="ManuaMyBSMonth != null and ManuaMyBSMonth != ''">
