@@ -792,7 +792,8 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Religion</th>
     <td colspan="2">
-    <select class="w100p">
+    <select class="w100p" id="religion" name="religion">
+            <option value="">Choose One</option>
         <c:forEach var="list" items="${Religion}" varStatus="status">
             <option value="${list.detailcodeid}">${list.detailcodename } </option>
         </c:forEach>        
@@ -801,6 +802,7 @@ function fn_selectState(selVal){
     <th scope="row">e-Approval Status</th>
     <td colspan="2">
     <select class="w100p">
+        <option value="">Choose One</option>    
         <option value="">Pending</option>
         <option value="">Approved</option>
         <option value="">Rejected</option>
@@ -822,6 +824,7 @@ function fn_selectState(selVal){
     <th scope="row">Application Status</th>
     <td colspan="2">
     <select class="w100p">
+        <option value="">Choose One</option>    
         <option value="">Register</option>
         <option value="">Training</option>
         <option value="">Result-fail</option>
@@ -849,6 +852,7 @@ function fn_selectState(selVal){
     <th scope="row">Main Department</th>
     <td colspan="2">
     <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+            <option value="">Choose One</option>    
          <c:forEach var="list" items="${mainDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName } </option>
         </c:forEach>  
@@ -857,6 +861,7 @@ function fn_selectState(selVal){
     <th scope="row">Sub Department</th>
     <td colspan="2">
     <select class="w100p" id="searchSubDept" name="searchSubDept">
+             <option value="">Choose One</option>
        <%-- <c:forEach var="list" items="${subDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName} </option>
         </c:forEach>  --%>
