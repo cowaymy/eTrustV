@@ -111,6 +111,48 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params) {
 		return ASManagementListMapper.getASRulstSVC0004DInfo(params);
 	}	
+	 
+	@Override  
+	public List<EgovMap> getErrMstList(Map<String, Object> params) {
+		return ASManagementListMapper.getErrMstList(params);
+	}	
+	
+	@Override 
+	public List<EgovMap> getErrDetilList(Map<String, Object> params) {
+		return ASManagementListMapper.getErrDetilList(params);
+	}	
+	
+	
+
+	@Override 
+	public List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params) {
+		return ASManagementListMapper.getSLUTN_CODE_List(params);
+	}	
+	
+
+	@Override 
+	public List<EgovMap> getDTAIL_DEFECT_List(Map<String, Object> params) {
+		return ASManagementListMapper.getDTAIL_DEFECT_List(params);
+	}	
+	
+
+	@Override 
+	public List<EgovMap> getDEFECT_PART_List(Map<String, Object> params) {
+		return ASManagementListMapper.getDEFECT_PART_List(params);
+	}	
+	
+
+	@Override 
+	public List<EgovMap> getDEFECT_CODE_List(Map<String, Object> params) {
+		return ASManagementListMapper.getDEFECT_CODE_List(params);
+	}	
+	
+
+
+	@Override 
+	public List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params) {
+		return ASManagementListMapper.getDEFECT_TYPE_List(params);
+	}	
 	
 	
 

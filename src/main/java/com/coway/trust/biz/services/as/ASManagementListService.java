@@ -12,12 +12,27 @@ public interface ASManagementListService {
 	List<EgovMap> selectASManagementList(Map<String, Object> params);
 	
 	List<EgovMap> getASHistoryList(Map<String, Object> params);
-	 List<EgovMap> selectASDataInfo(Map<String, Object> params);
-
+	List<EgovMap> selectASDataInfo(Map<String, Object> params);
+	
+	List<EgovMap> getErrMstList(Map<String, Object> params);
+	List<EgovMap> getErrDetilList(Map<String, Object> params);
+	
+	
+	
+	List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params);
+	List<EgovMap> getDTAIL_DEFECT_List(Map<String, Object> params);
+	List<EgovMap> getDEFECT_PART_List(Map<String, Object> params);
+	List<EgovMap> getDEFECT_CODE_List(Map<String, Object> params);
+	List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params);
+	
+	
+	
+	
+	
 	List<EgovMap> getBSHistoryList(Map<String, Object> params);
 	List<EgovMap> getBrnchId(Map<String, Object> params);
 	
-	EgovMap  getMemberBymemberID(Map<String, Object> params);
+	EgovMap  getMemberBymemberID(Map<String, Object> params); 
 	
 	
 	EgovMap selectOrderBasicInfo(Map<String, Object> params);

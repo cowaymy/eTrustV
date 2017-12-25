@@ -152,7 +152,7 @@ function fn_loadPageControl(){
 <section class="pop_body"><!-- pop_body start -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="">
+<form action="#" method="post" id="" onsubmit="return false;">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

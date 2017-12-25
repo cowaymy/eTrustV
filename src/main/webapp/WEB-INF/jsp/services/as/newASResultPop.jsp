@@ -53,6 +53,27 @@ $(document).ready(function(){
 
 
 
+function fn_getErrMstList(_ordNo){
+    
+     var SALES_ORD_NO = _ordNo ;
+     $("#ddlErrorCode option").remove();
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+}
+
+
+
+function fn_errMst_SelectedIndexChanged(){
+    
+    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
+    
+     $("#ddlErrorDesc option").remove();
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+}
+
+
+
+
+
 function fn_getASRulstEditFilterInfo(){
     Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {REF_REQST:$('#REF_REQST').val() } , function(result) {
         console.log("fn_getASRulstEditFilterInfo.");
@@ -283,6 +304,9 @@ function fn_getASOrderInfo(){
             $("#txtInstruction").text(result[0].instct);
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
+            
+            fn_getErrMstList(result[0].ordNo);
+            
         });
 }
 
@@ -1386,9 +1410,9 @@ function fn_productGroup_SelectedIndexChanged(){
     </tr>
     <tr>
         <th scope="row">Error Code <span class="must">*</span>  </th>
-        <td>
-        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">ErrorCode</option>
+        <td>   
+        
+        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()">
          </select>
         </td>
         <th scope="row">CT Code <span class="must">*</span>  </th>
@@ -1401,7 +1425,6 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Error Description <span class="must">*</span>  </th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">Error code definition is required </option>
         </select>
         </td>
         <th scope="row">Warehouse</th>

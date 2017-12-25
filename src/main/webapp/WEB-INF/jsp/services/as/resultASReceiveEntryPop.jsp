@@ -26,6 +26,10 @@ $(document).ready(function(){
     fn_setComboBox();
     
     
+    
+    fn_getErrMstList('${as_ord_basicInfo.ordNo}');
+    
+    
     <c:if test="${MOD eq 'VIEW'}">
     fn_setEditValue();
     createASCallLogAUIGrid();
@@ -39,6 +43,29 @@ $(document).ready(function(){
     }
    
 });
+
+
+
+function fn_getErrMstList(_ordNo){
+	
+	 var SALES_ORD_NO = _ordNo ;
+     $("#errorCode option").remove();
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','errorCode', 'S' , '');            
+}
+
+
+
+function fn_errMst_SelectedIndexChanged(){
+    
+    var DEFECT_TYPE_CODE = $("#errorCode").val();
+    
+     $("#errorDesc option").remove();
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','errorDesc', 'S' , '');            
+}
+
+
+
+
 
 
 function fn_setComboBox(){
@@ -439,10 +466,10 @@ function  fn_doNewSave(){
 	                }
 	                
 	                //인하우스 결과 등록 처리 
-	                if($("#IN_AsResultId").val() !="" ){
-	                    var param = "?ord_Id="+${as_ord_basicInfo.ordId}+"&ord_No="+${as_ord_basicInfo.ordNo}+"&as_No="+asNo+"&as_Id="+$("#AS_ID").val()+"&refReqst="+$("#IN_AsResultId").val() ;
-	                    Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
-	                }
+	               // if($("#IN_AsResultId").val() !="" ){
+	               //     var param = "?ord_Id="+${as_ord_basicInfo.ordId}+"&ord_No="+${as_ord_basicInfo.ordNo}+"&as_No="+asNo+"&as_Id="+$("#AS_ID").val()+"&refReqst="+$("#IN_AsResultId").val() ;
+	               //     Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
+	               // }
 	                
 	                
 	                
@@ -1067,14 +1094,12 @@ function fn_addRemark(){
 <tr>
     <th scope="row">Error Code<span class="must">*</span></th>
     <td colspan="3">
-    <select class="w100p" id="errorCode" name="errorCode"> 
-            <option value="1">err code  </option>
+    <select class="w100p" id="errorCode" name="errorCode"  onChange="fn_errMst_SelectedIndexChanged()"> 
     </select>
     </td>
     <th scope="row">Error Description<span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p" id="errorDesc" name="errorDesc">
-             <option value="1">Error code definition is required </option>
     </select>
     </td>
 </tr>

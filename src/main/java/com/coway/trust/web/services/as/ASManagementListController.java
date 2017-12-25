@@ -1107,9 +1107,85 @@ public class ASManagementListController {
 	}
 	
 	
+
+	
+	@RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getErrMstList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> getErrMstList = ASManagementListService.getErrMstList(params);
+		logger.debug("getErrMstList {}", getErrMstList);
+		return ResponseEntity.ok(getErrMstList);
+	}
+
+	
+	@RequestMapping(value = "/getErrDetilList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getErrDetilList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		List<EgovMap> getErrDetilList = ASManagementListService.getErrDetilList(params);
+		logger.debug("getErrDetilList {}", getErrDetilList);
+		return ResponseEntity.ok(getErrDetilList);
+	}
 	
 	
 	
+
+	@RequestMapping(value = "/getSLUTN_CODE_List.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getSLUTN_CODE_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		List<EgovMap> getSLUTN_CODE_List = ASManagementListService.getSLUTN_CODE_List(params);
+		logger.debug("getErrDetilList {}", getSLUTN_CODE_List);
+		return ResponseEntity.ok(getSLUTN_CODE_List);
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/getDTAIL_DEFECT_List.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDTAIL_DEFECT_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		List<EgovMap> getDTAIL_DEFECT_List = ASManagementListService.getDTAIL_DEFECT_List(params);
+		logger.debug("getErrDetilList {}", getDTAIL_DEFECT_List);
+		return ResponseEntity.ok(getDTAIL_DEFECT_List);
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/getDEFECT_PART_List.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDEFECT_PART_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		List<EgovMap> getDEFECT_PART_List = ASManagementListService.getDEFECT_PART_List(params);
+		logger.debug("getErrDetilList {}", getDEFECT_PART_List);
+		return ResponseEntity.ok(getDEFECT_PART_List);
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/getDEFECT_CODE_List.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDEFECT_CODE_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		List<EgovMap> getDEFECT_CODE_List = ASManagementListService.getDEFECT_CODE_List(params);
+		logger.debug("getErrDetilList {}", getDEFECT_CODE_List);
+		return ResponseEntity.ok(getDEFECT_CODE_List);
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/getDEFECT_TYPE_List.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getDEFECT_TYPE_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		List<EgovMap> getDEFECT_TYPE_List = ASManagementListService.getDEFECT_TYPE_List(params);
+		logger.debug("getErrDetilList {}", getDEFECT_TYPE_List);
+		return ResponseEntity.ok(getDEFECT_TYPE_List);
+	}
 	
 	
 }

@@ -538,7 +538,7 @@
 <form id="editHSResultForm" method="post" action="#">
 
 
- <div  style="display:inline">
+ <div  style="display:none">
 
  <input type="text" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="text" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>

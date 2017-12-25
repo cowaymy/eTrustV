@@ -3633,4 +3633,102 @@
    
    
    
+    <select id="getErrMstList" parameterType="Map" resultType="egovMap">   
+        <![CDATA[     
+	             SELECT DEFECT_TYPE_CODE                    AS CODE_ID
+	                             , DEFECT_TYPE_CODE_DESC    AS CODE_NAME
+	                             , PRODUCT_CTGRY_CODE
+	                       FROM(
+	                           SELECT  DISTINCT D.DEFECT_TYPE_CODE 
+	                                           ,D.DEFECT_TYPE_CODE_DESC
+	                                           ,D.PRODUCT_CTGRY_CODE
+	                               FROM SAL0001D  A 
+	                                        , SAL0002D B  
+	                                        , SYS0026M C  
+	                                        , SVC0056M D 
+	                           WHERE  1=1   
+	                           AND  A.SALES_ORD_ID =  B.SALES_ORD_ID
+	                           AND  B.ITM_STK_ID   =  C.STK_ID
+	                           AND  C.STK_CTGRY_ID =  D.PRODUCT_CTGRY_CODE
+	                           AND  A.SALES_ORD_NO = #{SALES_ORD_NO}
+	                           UNION 
+	                           SELECT  DISTINCT A.DEFECT_TYPE_CODE 
+	                                             ,A.DEFECT_TYPE_CODE_DESC
+	                                             ,A.PRODUCT_CTGRY_CODE
+	                               FROM SVC0056M  A 
+	                           WHERE  1=1   
+	                           AND PRODUCT_CTGRY_CODE IN ('999')
+	                       ) ORDER BY PRODUCT_CTGRY_CODE DESC
+        ]]>
+    </select>
+         
+         
+         
+     <select id="getErrDetilList" parameterType="Map" resultType="egovMap">
+        <![CDATA[     
+                         SELECT  DEFECT_TYPE_CODE
+                                    ,DEFECT_DTL_CODE             AS CODE_ID
+                                    ,DEFECT_DTL_CODE_DESC    AS CODE_NAME
+                        FROM SVC0056M A
+                         WHERE DEFECT_TYPE_CODE = #{DEFECT_TYPE_CODE}
+        ]]>
+    </select>
+         
+   
+   
+   
+     <select id="getSLUTN_CODE_List" parameterType="Map" resultType="egovMap">
+        <![CDATA[     
+				                       
+				 SELECT   SLUTN_CODE        AS  CODE_ID
+				        , SLUTN_CODE_DESC   AS CODE_NAME
+				 FROM SVC0061C 
+        ]]>
+    </select>
+    
+    
+    
+     <select id="getDTAIL_DEFECT_List" parameterType="Map" resultType="egovMap">
+        <![CDATA[     
+                 SELECT CODE          AS  CODE_ID
+				        ,CODE_DESC     AS CODE_NAME
+				   FROM SVC0060C
+        ]]>
+    </select>
+    
+    
+    
+    
+     <select id="getDEFECT_PART_List" parameterType="Map" resultType="egovMap">
+        <![CDATA[     
+                
+			   SELECT CONDI_CODE   AS  CODE_ID
+			          ,DTL         AS CODE_NAME
+			    FROM SVC0059M
+        ]]>
+    </select>
+    
+    
+    
+    
+     <select id="getDEFECT_CODE_List" parameterType="Map" resultType="egovMap">
+        <![CDATA[     
+            SELECT DEFECT_CODE   AS  CODE_ID
+		          ,DEFECT_DESC    AS CODE_NAME
+		     FROM   SVC0058C
+        ]]>
+    </select>
+    
+    
+    
+    
+     <select id="getDEFECT_TYPE_List" parameterType="Map" resultType="egovMap">
+        <![CDATA[     
+		    SELECT DEFECT_TYPE_CODE   AS  CODE_ID
+		          ,DEFECT_TYPE_CODE_DESC    AS CODE_NAME
+		     FROM   SVC0057C
+        ]]>
+    </select>
+    
+   
 </mapper>

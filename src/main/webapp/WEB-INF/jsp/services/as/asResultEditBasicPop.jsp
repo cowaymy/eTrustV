@@ -30,11 +30,37 @@ $(document).ready(function(){
 	fn_getASEvntsInfo();
 	fn_getASHistoryInfo();
 	
-    fn_getASRulstSVC0004DInfo();
+   
     //fn_getASRulstEditFilterInfo();
 	
         	
 });
+
+
+
+
+function fn_getErrMstList(_ordNo){
+    
+     var SALES_ORD_NO = _ordNo ;
+     $("#ddlErrorCode option").remove();
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+     
+     
+     fn_getASRulstSVC0004DInfo();
+}
+
+
+
+function fn_errMst_SelectedIndexChanged(){
+    
+    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
+    
+     $("#ddlErrorDesc option").remove();
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+}
+
+
+
 
 
 function fn_setCTcodeValue(){
@@ -68,7 +94,16 @@ function fn_getASRulstSVC0004DInfo(){
 
 
 
+
+function fn_callback_ddlErrorDesc(){
+	
+	$("#ddlErrorDesc").val( asMalfuncResnId); 
+}
+
+
 var productCode ;
+var asMalfuncResnId; 
+
 
 function  fn_setSVC0004dInfo(result){
 	
@@ -82,6 +117,13 @@ function  fn_setSVC0004dInfo(result){
     $("#ddlDSCCode").val( result[0].asBrnchId); 
     $("#ddlErrorCode").val( result[0].asMalfuncId); 
     $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
+    asMalfuncResnId = result[0].asMalfuncResnId;
+
+    if(result[0].asMalfuncId !=""){
+        $("#ddlErrorDesc option").remove();
+        doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
+    }
+   
     
     $("#ddlCTCode").val( result[0].c12); 
     $("#CTID").val( result[0].c11); 
@@ -137,6 +179,10 @@ function  fn_setSVC0004dInfo(result){
     
 
     productCode = result[0].inHuseRepairProductCode;
+    
+    
+    
+    
     
     
     if( typeof(productCode) !=  "undefined"){
@@ -260,6 +306,8 @@ function fn_getASOrderInfo(){
             $("#txtExpiredDate").text(result[0].c6);
             
             
+            fn_getErrMstList(result[0].ordNo);
+            
         });
 }
 
@@ -276,7 +324,6 @@ function fn_getASEvntsInfo(){
         $("#txtMalfunctionReason").text('에러코드 desc');
         $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 );
         $("#txtInchargeCT").text(result[0].c10 +"-" +result[0].c11 );
-        
         $("#txtRequestor").text(result[0].c3);
         $("#txtASKeyBy").text(result[0].c1);
         $("#txtRequestorContact").text(result[0].asRemReqsterCntc); 
@@ -1039,8 +1086,7 @@ function fn_chSeriaNo(){
     <tr>
         <th scope="row">Error Code <span class="must">*</span> </th>
         <td>
-        <select  id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">ErrorCode</option>
+        <select  id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()">
          </select>
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
@@ -1061,7 +1107,6 @@ function fn_chSeriaNo(){
         <th scope="row">Error Description <span class="must">*</span> </th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">Error code definition is required  </option>
         </select>
         </td>
         <th scope="row">Warehouse</th>
@@ -1223,3 +1268,7 @@ function fn_chSeriaNo(){
 </section><!-- content end -->
 </section><!-- content end -->
 </div><!-- popup_wrap end -->
+
+<script>
+fn_callback_ddlErrorDesc();
+</script>
