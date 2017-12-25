@@ -365,9 +365,15 @@ function fn_saveValidation(){
         return false;
     }
 
+
 	if($("#nric").val() == ''){
         Common.alert("Please key  in NRIC");
         return false;
+    }
+
+    if (  $("#nric").val().length != 12 ) {
+        Common.alert("NRIC should be in 12 digit");
+        return false;    
     }
 
 	if($("#marrital").val() == ''){
