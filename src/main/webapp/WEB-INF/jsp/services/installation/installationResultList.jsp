@@ -132,7 +132,7 @@ function createInstallationListAUIGrid() {
         editable : false,
         width : 250
     }, {
-        dataField : "codeName",
+        dataField : "appType",
         headerText : '<spring:message code="service.grid.AppType" />',
         editable : false,
         width : 150

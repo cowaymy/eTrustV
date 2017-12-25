@@ -53,7 +53,7 @@
                         MEM.MEM_CODE,
                         STK.STK_DESC,
                         MEM.NAME,
-                        CD2.CODE as AppType,
+                        CD2.CODE as APP_TYPE,
                         ST.CODE CODE1,
                         IE.INSTALL_ENTRY_ID,
                         CE.CALL_ENTRY_ID,
@@ -4081,6 +4081,44 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
                    SAL0047D B
         WHERE A.INSTALL_ENTRY_ID = B.ENTRY_ID
             AND A.INSTALL_ENTRY_ID = #{hidEntryId}
+    </select>
+    
+    <select id="getUsePAY0033D_addr" parameterType="Map" resultType="egovMap">
+    <!-- PAY0033D -->
+SELECT B.ADDR_DTL AS TAX_INVC_ADDR1,
+       B.STREET AS TAX_INVC_ADDR2,
+       D.POSTCODE AS TAX_INVC_POST_CODE,
+       D.STATE AS TAX_INVC_STATE_NAME, 
+       D.COUNTRY AS TAX_INVC_CNTY
+  FROM SAL0001D A,
+       SAL0023D B,
+       SAL0045D C,
+       SYS0064M D
+ WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
+   AND B.CUST_ADD_ID = C.ADD_ID
+   AND A.CUST_ID = B.CUST_ID
+   AND B.AREA_ID = D.AREA_ID
+   AND A.SALES_ORD_NO = #{hidTaxInvDSalesOrderNo}
+    </select>
+    
+    <select id="getUsePAY0034D_addr" parameterType="Map" resultType="egovMap">
+    <!-- PAY0034D -->
+
+SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
+       B.STREET AS INVC_ITM_ADD2,
+       D.POSTCODE AS INVC_ITM_POST_CODE,
+       D.STATE AS INVC_ITM_STATE_NAME, 
+       D.COUNTRY AS INVC_ITM_CNTY
+  FROM SAL0001D A,
+       SAL0023D B,
+       SAL0045D C,
+       SYS0064M D
+ WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
+   AND B.CUST_ADD_ID = C.ADD_ID
+   AND A.CUST_ID = B.CUST_ID
+   AND B.AREA_ID = D.AREA_ID
+   AND A.SALES_ORD_NO = #{hidTaxInvDSalesOrderNo}
+    
     </select>
 
 

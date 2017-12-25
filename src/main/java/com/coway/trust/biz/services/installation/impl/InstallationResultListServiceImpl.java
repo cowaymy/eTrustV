@@ -1453,6 +1453,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			salesOrderM.put("statusCodeId", CommonUtils.nvl( params.get("installStatus")).toString().equals("4") ? 4 : 1 );
     		}
 
+    		///////////////////////add by jgkim     get addr  //////////////////
+    		// PAY0033D
+    		EgovMap addrM   =null;
+    		// PAY0034D
+    		EgovMap addrD   =null;
+
+    		  	addrM = installationResultListMapper.getUsePAY0033D_addr(params);
+    		  	addrD = installationResultListMapper.getUsePAY0034D_addr(params);
+    		  	logger.debug("Prepared addrM:{}",addrM);
+    		  	logger.debug("Prepared addrD:{}",addrD);
+    		///////////////////////add by hgham     get taxRate  //////////////////
 
 
     		///////////////////////add by hgham     get taxRate  //////////////////
@@ -1553,13 +1564,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         					taxInvoiceOutright.put("TAX_INVC_REF_DT", CommonUtils.getNowDate());
         					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( params.get("hidCustomerName")));
         	        		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(params.get("hidInatallation_ContactPerson")));
-        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",0);
-        	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",0);
+        	        		// set address
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",CommonUtils.nvl(addrM.get("taxInvcAddr2")));
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR3",0);
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR4",0);
-        	        		taxInvoiceOutright.put("TAX_INVC_POST_CODE",0);
-        	        		taxInvoiceOutright.put("TAX_INVC_STATE_NAME",0);
-        	        		taxInvoiceOutright.put("TAX_INVC_CNTY",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_POST_CODE",CommonUtils.nvl(addrM.get("taxInvcPostCode")));
+        	        		taxInvoiceOutright.put("TAX_INVC_STATE_NAME",CommonUtils.nvl(addrM.get("taxInvcStateName")));
+        	        		taxInvoiceOutright.put("TAX_INVC_CNTY",CommonUtils.nvl(addrM.get("taxInvcCnty")));
         	        		taxInvoiceOutright.put("TAX_INVC_TASK_ID",0);
         	        		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
         	        		taxInvoiceOutright.put("TAX_INVC_REM",0);
@@ -1608,12 +1620,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
-        	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
+        	            		// set address
+        	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1",CommonUtils.nvl(addrD.get("invcItmAdd1")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2",CommonUtils.nvl(addrD.get("invcItmAdd2")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE",CommonUtils.nvl(addrD.get("invcItmPostCode")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME",CommonUtils.nvl(addrD.get("invcItmStateName")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY",CommonUtils.nvl(addrD.get("invcItmCnty")));
 
 
 
@@ -1646,12 +1659,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
-        	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2","");
+        	            		// set address
+        	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1",CommonUtils.nvl(addrD.get("invcItmAdd1")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD2",CommonUtils.nvl(addrD.get("invcItmAdd2")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ADD3","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE",CommonUtils.nvl(addrD.get("invcItmPostCode")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME",CommonUtils.nvl(addrD.get("invcItmStateName")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY",CommonUtils.nvl(addrD.get("invcItmCnty")));
 
         	            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
         	            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));

@@ -184,4 +184,8 @@ public interface InstallationResultListMapper {
 	int isInstallAlreadyResult (Map<String, Object> params);
 
 	EgovMap validationInstallationResult(Map<String,Object> params);
+	
+	// add by jgkim
+	EgovMap getUsePAY0033D_addr(Map<String, Object> params);
+	EgovMap getUsePAY0034D_addr(Map<String, Object> params);
 }
