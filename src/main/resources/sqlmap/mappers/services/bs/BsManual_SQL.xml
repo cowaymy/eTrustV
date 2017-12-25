@@ -1166,7 +1166,8 @@
                            Limit1.STK_CODE STK_CODE  ,
                            Limit1.STK_DESC STK_DESC  ,
                            Limit1.STK_ID STK_ID  ,
-                           Limit1.CODY_ID CODY_ID
+                           Limit1.CODY_ID CODY_ID,
+                            Limit1.CANC_REQ_NO
                       FROM ( SELECT Extent1.SCHDUL_ID SCHDUL_ID  ,
                                     Extent1.NO NO  ,
                                     Extent1.MONTH MONTH  ,
@@ -1186,7 +1187,8 @@
                                     Extent8.SRV_BS_WEEK SRV_BS_WEEK  ,
                                     Extent9.CODE CODE1  ,
                                     Extent11.RESULT_ID RESULT_ID  ,
-                                    Extent11.NO NO1
+                                    Extent11.NO NO1,
+                                    Extent1.CANC_REQ_NO as CANC_REQ_NO 
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
                                     JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
