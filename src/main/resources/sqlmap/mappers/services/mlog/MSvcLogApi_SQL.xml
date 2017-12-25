@@ -1033,7 +1033,7 @@ LEFT OUTER JOIN (
 			               NULL AS alternative_Filter_Code,
 			               NULL AS alternative_Filter_Id,
 			               NULL AS alternative_Filter_Name,
-			               TO_CHAR (NVL (H.SERIALCHK, '')) AS filter_Barcd_Chk_YN,
+			               TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_YN,
 			               NULL AS filterBarcd_Serial_No,
 			               S90A.SRV_CODY_ID,
 			               (SELECT MEM_CODE
