@@ -643,12 +643,17 @@ public class MemberListController {
 
 	@RequestMapping(value = "/selectDeptCodeHp", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDeptCodeHp(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		logger.debug("params : {}", params);
+/*		logger.debug("params : {}", params);
 		params.put("memberLvl", params.get("groupCode[memberLvl]"));
 		params.put("flag", params.get("groupCode[flag]"));
 		params.put("branchVal", params.get("groupCode[branchVal]"));
-		logger.debug("params : {}", params);
-		List<EgovMap> deptCode = memberListService.selectDeptCodeHp(params);
+		logger.debug("params : {}", params);*/
+		//List<EgovMap> deptCode = memberListService.selectDeptCodeHp(params);
+		
+		String userName = sessionVO.getUserName();
+		params.put("userName", userName);
+		
+		List<EgovMap> deptCode = memberListService.getDeptCdListList(params);
 		return ResponseEntity.ok(deptCode);
 	}
 

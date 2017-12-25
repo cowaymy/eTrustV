@@ -131,20 +131,24 @@ function fn_departmentCode(value){
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 
-	   case "6" :
-		     var jsonObj = {
-				                memberLvl : 3,
-				                flag :  "%CRS%"
-              };
-           doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
+	   case "2803" :
+           Common.ajax("GET", "/organization/selectDeptCodeHp", null, function(result) {
+
+			$("#deptCd option").remove();
+			$("#deptCd option").remove();
+             console.log("-------------------------" + JSON.stringify(result));
+             $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeName+"</option>");
+
+        });
+           
            break;
            
-	    case "2803" :   // this is temp code  that   add by hgham    
+	/*     case "2803" :   // this is temp code  that   add by hgham    
 	    
 	    	     $("#deptCd option").remove();
 	             $("#deptCd option").remove();
                  $("#deptCd").append("<option value='CRS3001'>CRS3001</option>");
-            break;
+            break; */
 	}
 	
      
@@ -365,7 +369,6 @@ function fn_saveValidation(){
         Common.alert("Please key  in NRIC");
         return false;
     }
-
 
 	if($("#marrital").val() == ''){
         Common.alert("Please select marrital");
@@ -667,7 +670,7 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p" />
+    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12"/>
     </td>
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>
@@ -842,7 +845,7 @@ function fn_selectState(selVal){
     <th scope="row">Trainee Type </th>
     <td colspan="5">
         <select class= "w100p" id="traineeType1" name="traineeType1">
-        <option value= "0">Please select ...</option>
+        <option value="">Choose One</option>   
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
     </select>
