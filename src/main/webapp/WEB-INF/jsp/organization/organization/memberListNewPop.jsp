@@ -99,21 +99,33 @@ function fn_departmentCode(value){
         	   
         	   if( traineeType == '2'){
         		    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
+        		    
+		           $("#branch").change(function(){
+		               var jsonObj = {
+		                       memberLvl : 3,
+		                       flag :  "%CCS%",
+		                       branchVal : $("#branch").val()
+		               };
+		
+		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+		           });        		    
         	   }
         	   else if(traineeType == '3'){
+        	   
+		           $("#branch").change(function(){
+		               var jsonObj = {
+		                       memberLvl : 3,
+		                       flag :  "%CTS%",
+		                       branchVal : $("#branch").val()
+		               };
+		
+		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
+		           });        	   
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
         	   }
            });
 
-           $("#branch").change(function(){
-        	   var jsonObj = {
-                       memberLvl : 3,
-                       flag :  "%CCS%",
-                       branchVal : $("#branch").val()
-               };
 
-        	   doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-           });
 
 
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
