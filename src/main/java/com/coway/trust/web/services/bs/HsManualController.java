@@ -348,6 +348,9 @@ public class HsManualController {
 		EgovMap orderDetail = null;
 
 		params.put("salesOrderId", params.get("salesOrdId"));
+		logger.debug("===========================================>");  
+		logger.debug("params : {}", params);  
+		logger.debug("===========================================>");  
 
 		basicinfo = hsManualService.selectHsViewBasicInfo(params);
 		orderDetail = orderDetailService.selectOrderBasicInfo(params,sessionVO);

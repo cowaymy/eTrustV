@@ -25,6 +25,7 @@ import com.coway.trust.biz.sales.ccp.impl.CcpAgreementMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.organization.organization.MemberEventListController;
 import com.ibm.icu.util.StringTokenizer;
 
@@ -1263,15 +1264,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		
     		for(int i = 0 ; i<qryResultDet.size() ; i++){
     			Map<String, Object> bsResultDet_Rev = new HashMap<String, Object>();
+    			
     			//bsResultDet_Rev.put("BSResultItemID", 0);
     			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
     			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
-    			bsResultDet_Rev.put("BSResultPartDesc", String.valueOf(qryResultDet.get(i).get("bsResultPartDesc")));//BS_RESULT_PART_DESC
-    			bsResultDet_Rev.put("BSResultPartQty", String.valueOf(qryResultDet.get(i).get("bsResultPartQty")));//BS_RESULT_PART_QTY
-    			bsResultDet_Rev.put("BSResultRemark", String.valueOf(qryResultDet.get(i).get("bsResultRem")));//BS_RESULT_REM
+    			bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));//BS_RESULT_PART_DESC
+    			bsResultDet_Rev.put("BSResultPartQty",  CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")));//BS_RESULT_PART_QTY
+    			bsResultDet_Rev.put("BSResultRemark",   CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem")));//BS_RESULT_REM
     			bsResultDet_Rev.put("BSResultCreateAt","sysdate");//BS_RESULT_REM
     			bsResultDet_Rev.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()));
-    			bsResultDet_Rev.put("BSResultFilterClaim",String.valueOf(qryResultDet.get(i).get("bsResultFilterClm")));//BS_RESULT_FILTER_CLM
+    			bsResultDet_Rev.put("BSResultFilterClaim",CommonUtils.intNvl( qryResultDet.get(i).get("bsResultFilterClm")));//BS_RESULT_FILTER_CLM
     			
     			hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	
     			
@@ -1460,8 +1462,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     					
     					hsManualMapper.addStkCrd_new(stkCrd_new);
     				}
-    				Map<String, Object> qryFilter_param = new HashMap<String, Object>();
-    				qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("SrvConfigID")));
+    				Map<String, Object> qryFilter_param = new HashMap<String, Object>(); 
+    				//qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("SrvConfigID"))); 
+    				qryFilter_param.put("SrvConfigID", String.valueOf(qryConfig.get("srvConfigId")));   //edit hgham  25-12 -2017 
     				qryFilter_param.put("BSResultPartID", String.valueOf(bsResultDet.get(i).get("BSResultPartID")));
     				qryFilter_param.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
     				qryFilter_param.put("ResultCreator", String.valueOf(sessionVO.getUserId()));

@@ -536,22 +536,29 @@
 </ul>
 </form>
 <form id="editHSResultForm" method="post" action="#">
- <input type="hidden" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
- <input type="hidden" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
- <input type="hidden" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
- <input type="hidden" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
- <input type="hidden" value="${basicinfo.srvBsWeek}" id="srvBsWeek" name="srvBsWeek"/>
- <input type="hidden" value="${basicinfo.codyId}" id="cmbServiceMem" name="cmbServiceMem"/>
+
+
+ <div  style="display:inline">
+
+ <input type="text" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
+ <input type="text" value="${basicinfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
+ <input type="text" value="${basicinfo.no}" id="hidHsno" name="hidHsno"/>
+ <input type="text" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
+ <input type="text" value="${basicinfo.srvBsWeek}" id="srvBsWeek" name="srvBsWeek"/>
+ <input type="text" value="${basicinfo.codyId}" id="cmbServiceMem" name="cmbServiceMem"/>
 
    
- <input type="hidden" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
- <input type="hidden" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
- <input type="hidden" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct" name="renColct"/>
- <input type="hidden" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
- <input type="hidden" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt"/>
- <input type="hidden" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem"/>
- <input type="hidden" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction"/>
- <input type="hidden" value=""  id="cmbCollectType1" name="cmbCollectType"/>
+ <input type="text" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
+ <input type="text" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
+ <input type="text" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct" name="renColct"/>
+ <input type="text" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
+ <input type="text" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt"/>
+ <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem"/>
+ <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction"/>
+ <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType"/>
+ 
+ </div>
+ 
 </form>
 </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->

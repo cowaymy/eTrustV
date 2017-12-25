@@ -1668,7 +1668,7 @@
                                     Extent1.CANC_REQ_NO                                    
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
-                                    JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
+                                    JOIN  SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
                                     JOIN SAL0001D Extent4   ON Extent1.SALES_ORD_ID = Extent4.SALES_ORD_ID
                                     JOIN SAL0002D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
                                     JOIN SYS0026M Extent6   ON Extent5.ITM_STK_ID = Extent6.STK_ID
@@ -2813,7 +2813,7 @@
           </select>
           
           <select id="getBSResultM_resultID" parameterType="Map" resultType="int">
-                select max(result_id) result_id from svc0006d
+                select    SVC0006D_RESULT_ID_SEQ.nextval  result_id from dual
           </select>
           
           <insert id="addbsResultDet_Rev" parameterType="Map">
