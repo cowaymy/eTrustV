@@ -1662,7 +1662,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 					//물류 호출   add by hgham
 					/////////////////////////물류 호출//////////////////////
 		            logPram.put("ORD_ID",    svc0004dmap.get("AS_NO"));
-		            logPram.put("RETYPE", "REPAIRIN");  
+		            logPram.put("RETYPE", "REPAIROUT");  
 		            logPram.put("P_TYPE", "OD03");  
 		            logPram.put("P_PRGNM", "ASCOM_3");  
 		            logPram.put("USERID", String.valueOf(params.get("updator")));   
