@@ -2823,7 +2823,7 @@
             ,BS_RESULT_PART_ID
             ,BS_RESULT_PART_DESC
             ,BS_RESULT_PART_QTY
-            ,BS_RESULT_REM
+            ,BS_RESULT_REM 
             ,BS_RESULT_CRT_DT
             ,BS_RESULT_CRT_USER_ID
             ,BS_RESULT_FILTER_CLM
@@ -2833,12 +2833,12 @@
             SVC0007D_BS_RESULT_ITM_ID_SEQ.nextval
             ,#{BSResultID}
             ,#{BSResultPartID}
-            ,#{BSResultPartDesc}
-            ,#{BSResultPartQty}
-            ,#{BSResultRemark}
+            ,nvl(#{BSResultPartDesc},'')
+            ,nvl(#{BSResultPartQty},'0')
+            ,nvl(#{BSResultRemark},'')
             ,sysdate
             ,#{BSResultCreateBy}
-            ,#{BSResultFilterClaim}
+            ,nvl(#{BSResultFilterClaim},0)    
             )
           </insert>
           

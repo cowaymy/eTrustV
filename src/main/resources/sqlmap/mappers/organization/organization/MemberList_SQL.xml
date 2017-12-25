@@ -2229,7 +2229,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           WHERE  ( Extent1.MEM_LVL = #{memberLvl} )
                    AND (Extent1.BRNCH_ID = #{branchVal})
                    AND ( Extent1.DEPT_CODE LIKE #{flag})
-                   AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1 Distinct1.C2
+                   AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1  ORDER BY  Distinct1.C2
             </select>
 
             <select id="selectDeptCodeHp" parameterType="Map" resultType="egovMap">

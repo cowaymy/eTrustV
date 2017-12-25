@@ -51,6 +51,7 @@ function fn_departmentCode(value){
      }
      
 	var action = value;
+	
 	switch(action){
 	   case "1" :
 		   var jsonObj = {
@@ -113,12 +114,19 @@ function fn_departmentCode(value){
            break;
 
 	   case "6" :
-           var jsonObj = {
-                memberLvl : 3,
-                flag :  "%CRS%"
-        };
+		     var jsonObj = {
+				                memberLvl : 3,
+				                flag :  "%CRS%"
+              };
            doGetCombo("/organization/selectDeptCodeHp", jsonObj , ''   , 'deptCd' , 'S', '');
            break;
+           
+	    case "2803" :   // this is temp code  that   add by hgham    
+	    
+	    	     $("#deptCd option").remove();
+	             $("#deptCd option").remove();
+                 $("#deptCd").append("<option value='CRS3001'>CRS3001</option>");
+            break;
 	}
 	
      
@@ -140,12 +148,13 @@ $(document).ready(function() {
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
 
     $("#deptCd").change(function (){
-    	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
+    	//modify hgham 2017-12-25  주석 처리 
+    	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
 	createAUIGridDoc();
 	fn_docSubmission();
-	fn_departmentCode();
-
+	fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
+	
 	$("#state").change(function (){
 		var state = $("#state").val();
 		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
@@ -733,10 +742,10 @@ function fn_selectState(selVal){
     <th scope="row">Department Code<span class="must">*</span></th>
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
-        <%-- <c:forEach var="list" items="${DeptCdList}" varStatus="status">
+        <c:forEach var="list" items="${DeptCdList}" varStatus="status">
             <option value="${list.codeId}">${list.codeName } </option>
-        </c:forEach>      --%>
-        <option value="CRS3001">CRS3001</option>
+        </c:forEach>    
+   
     </select>
     </td>
     <th scope="row">Transport Code<span class="must">*</span></th>

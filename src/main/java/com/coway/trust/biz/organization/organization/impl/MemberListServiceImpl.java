@@ -534,7 +534,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         		memberCode = selectMemberCode.get("docNo").toString();
         		params.put("memberCode", memberCode);
         		ID=155;
-        		nextDocNo = getNextDocNo("",selectMemberCode.get("docNo").toString());
+        		nextDocNo = getNextDocNo("TR",selectMemberCode.get("docNo").toString());
         		logger.debug("nextDocNo : {}",nextDocNo);
         		selectMemberCode.put("nextDocNo", nextDocNo);
         		break;
@@ -1488,7 +1488,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		//nextDocNo = getNextDocNo("",selectMemberCode.get("docNo").toString());
 		
-		selectMemberCode = getDocNo("1");
+		//selectMemberCode = getDocNo("1");
+		
+		//edit  hgham 25-12-2017
+		Map mp = new HashMap();
+		mp.put("docNo", "1");
+		selectMemberCode = memberListMapper.getDocNo(mp);
+		
 		String memberCode = selectMemberCode.get("docNo").toString();
 		params.put("memberCode", memberCode);
 		
