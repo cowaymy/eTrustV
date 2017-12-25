@@ -1247,9 +1247,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			// add by jgkim
 			String retype = "REPAIRIN";
-			if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")){
+			if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("454")){
 				retype = "REPAIRIN";
-			} else if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("453")) {
+			} else if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")) {
 				retype = "REPAIROUT";
 			}
 			
