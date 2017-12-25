@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <style type="text/css">
 .my-custom-up{
     text-align: left;
@@ -353,8 +353,8 @@ var crcStateLayout = [
 
     
     <ul class="right_btns">
-        <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping">Mapping</a></p></li>
-        <li><p class="btn_blue2"><a href="javascript:fn_mappingListKnockOff();" id="btnKnockOff">Knock-Off</a></p></li>
+        <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping"><spring:message code='pay.btn.mapping'/></a></p></li>
+        <li><p class="btn_blue2"><a href="javascript:fn_mappingListKnockOff();" id="btnKnockOff"><spring:message code='pay.btn.knockOff'/></a></p></li>
     </ul>
 </section><!-- content end -->
     

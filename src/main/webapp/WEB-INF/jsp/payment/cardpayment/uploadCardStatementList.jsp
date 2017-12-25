@@ -29,45 +29,45 @@
 
     // AUIGrid 칼럼 설정
     var columnLayout = [ 
-        {dataField : "crcStateId",headerText : "CRC No.",width : 100 , editable : false},
-        {dataField : "bankAccName",headerText : "Bank Account",width : 300 , editable : false},
-        {dataField : "crcStateRefDt",headerText : "Transaction<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-        {dataField : "crcTotGrossAmt",headerText : "Gross(RM)",width : 100 , editable : false, dataType:"numeric", formatString:"#,##0.00"},               
-        {dataField : "crcStateUploadDt",headerText : "Upload<br>Date",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},        
-        {dataField : "crcStateUploadUserNm",headerText : "Upload By",width : 240 , editable : false},
-        {dataField : "crcBcStusName",headerText : "Cleared<br>Status",width : 240 , editable : false},
-        {dataField : "crcStateRem",headerText : "Remark",editable : false}
+        {dataField : "crcStateId",headerText : "<spring:message code='pay.head.crcNo'/>",width : 100 , editable : false},
+        {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",width : 300 , editable : false},
+        {dataField : "crcStateRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+        {dataField : "crcTotGrossAmt",headerText : "<spring:message code='pay.head.grossRm'/>",width : 100 , editable : false, dataType:"numeric", formatString:"#,##0.00"},               
+        {dataField : "crcStateUploadDt",headerText : "<spring:message code='pay.head.uploadDate'/>",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},        
+        {dataField : "crcStateUploadUserNm",headerText : "<spring:message code='pay.head.uploadBy'/>",width : 240 , editable : false},
+        {dataField : "crcBcStusName",headerText : "<spring:message code='pay.head.clearedStatus'/>",width : 240 , editable : false},
+        {dataField : "crcStateRem",headerText : "<spring:message code='pay.head.remark'/>",editable : false}
         ];
         
     var detailColumnLayout = [
-        {dataField : "crcTrnscId",headerText : "CRC Transaction ID",editable : false, visible : false},
-        {dataField : "crcTrnscMid",headerText : "MID", editable : false},                    
-        {dataField : "crcTrnscDt",headerText : "TR Date",editable : false, dataType:"date",formatString:"dd/mm/yyyy"},                    
-        {dataField : "crcTrnscNo",headerText : "Card<br>No", editable : false},
-        {dataField : "crcTrnscAppv",headerText : "Approval<br>No", editable : false},                    
-        {dataField : "crcGrosAmt",headerText : "Gross<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcBcAmt",headerText : "B/C<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcGstAmt",headerText : "GST<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcNetAmt",headerText : "Net<br>(RM)", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcTotBcAmt",headerText : "Total<br>B/C", editable : false, dataType:"numeric", formatString:"#,##0.00"},                    
-        {dataField : "crcTotGstAmt",headerText : "Total<br>GST", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcTotNetAmt",headerText : "Total<br>Net", editable : false, dataType:"numeric", formatString:"#,##0.00"}
+        {dataField : "crcTrnscId",headerText : "<spring:message code='pay.head.crcTransactionId'/>",editable : false, visible : false},
+        {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.mid'/>", editable : false},                    
+        {dataField : "crcTrnscDt",headerText : "<spring:message code='pay.head.trDate'/>",editable : false, dataType:"date",formatString:"dd/mm/yyyy"},                    
+        {dataField : "crcTrnscNo",headerText : "<spring:message code='pay.head.cardNo'/>", editable : false},
+        {dataField : "crcTrnscAppv",headerText : "<spring:message code='pay.head.approvalNo'/>", editable : false},                    
+        {dataField : "crcGrosAmt",headerText : "<spring:message code='pay.head.grossRM'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcBcAmt",headerText : "<spring:message code='pay.head.bcRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcGstAmt",headerText : "<spring:message code='pay.head.gstRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcNetAmt",headerText : "<spring:message code='pay.head.netRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTotBcAmt",headerText : "<spring:message code='pay.head.totalBc'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},                    
+        {dataField : "crcTotGstAmt",headerText : "<spring:message code='pay.head.totalGst'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTotNetAmt",headerText : "<spring:message code='pay.head.totalNet'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
         ];    
 
 
     //AUIGrid 칼럼 설정
     var uploadGridLayout = [
-        {dataField : "0",headerText : "MID", editable : true},                    
-        {dataField : "1",headerText : "Credit<br>Card",editable : true},                    
-        {dataField : "2",headerText : "Card<br>Number", editable : true},
-        {dataField : "3",headerText : "Approval<br>No", editable : true},                    
-        {dataField : "4",headerText : "Gross<br>(RM)", editable : true},
-        {dataField : "5",headerText : "B/C<br>(RM)", editable : true},
-        {dataField : "6",headerText : "GST<br>(RM)", editable : true},
-        {dataField : "7",headerText : "Net<br>(RM)", editable : true},
-        {dataField : "8",headerText : "Total<br>B/C", editable : true},                    
-        {dataField : "9",headerText : "Total<br>GST", editable : true},
-        {dataField : "10",headerText : "Total<br>Net", editable : true}
+        {dataField : "0",headerText : "<spring:message code='pay.head.mid'/>", editable : true},                    
+        {dataField : "1",headerText : "<spring:message code='pay.head.creditCard'/>",editable : true},                    
+        {dataField : "2",headerText : "<spring:message code='pay.head.cardNumber'/>", editable : true},
+        {dataField : "3",headerText : "<spring:message code='pay.head.approvalNo'/>", editable : true},                    
+        {dataField : "4",headerText : "<spring:message code='pay.head.grossRm'/>", editable : true},
+        {dataField : "5",headerText : "<spring:message code='pay.head.bcRm'/>", editable : true},
+        {dataField : "6",headerText : "<spring:message code='pay.head.gstRm'/>", editable : true},
+        {dataField : "7",headerText : "<spring:message code='pay.head.netRm'/>", editable : true},
+        {dataField : "8",headerText : "<spring:message code='pay.head.totalBc'/>", editable : true},                    
+        {dataField : "9",headerText : "<spring:message code='pay.head.totalGst'/>", editable : true},
+        {dataField : "10",headerText : "<spring:message code='pay.head.totalNet'/>", editable : true}
         ];
     
     
@@ -326,9 +326,9 @@ function commitFormSubmit() {
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Upload Credit Card Statement</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:showUploadPop();">New Upload</a></p></li>            
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>            
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -407,7 +407,7 @@ POP-UP (DETAIL)
     <header class="pop_header" id="detail_pop_header">
         <h1>Credit Card Statement Item</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#detail_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#detail_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -433,7 +433,7 @@ POP-UP (UPLOAD)
     <header class="pop_header">
         <h1>Upload Credit Card Statement</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#upload_wrap')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#upload_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -441,9 +441,9 @@ POP-UP (UPLOAD)
     <!-- getParams  -->
     <section class="pop_body">
         <ul class="right_btns mb10">
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/CreditCardStatement_Format.csv">Download Template</a></p></li>            
-            <li><p class="btn_blue2"><a href="javascript:uploadClear();">Clear</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:upload();">Upload</a></p></li>
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/CreditCardStatement_Format.csv"><spring:message code='pay.btn.downloadTemplate'/></a></p></li>            
+            <li><p class="btn_blue2"><a href="javascript:uploadClear();"><spring:message code='sys.btn.clear'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:upload();"><spring:message code='pay.btn.upload'/></a></p></li>
         </ul>
 
         <!-- pop_body start -->

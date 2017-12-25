@@ -38,23 +38,23 @@
     
     // AUIGrid 칼럼 설정
     var columnMappedLayout = [ 
-        {dataField : "codeId", headerText : "codeId.", editable : false, visible:false}, 
-		{dataField : "crcStateId", headerText : "crcId.", editable : false, visible:false}, 
-        {dataField : "fTrnscDt",headerText : "Transaction<br>Date",width : 240 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-        {dataField : "crcTrnscMid",headerText : "MID No",width : 200, editable : false},
-        //{dataField : "bnkAcc",headerText : "Bank<br>Account",width : 100 , editable : false},  
-        {dataField : "netAmt",headerText : "CRC Net<br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
-        {dataField : "fTrnscId",headerText : "Bank<br>Statement<br>ID",width : 200 , editable : false},
-        {dataField : "creditAmt",headerText : "Credit<br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "mappingDate",headerText : "Mapping<br>Date",width : 240 , editable : false},
+        {dataField : "codeId", headerText : "<spring:message code='pay.head.codeId'/>", editable : false, visible:false}, 
+		{dataField : "crcStateId", headerText : "<spring:message code='pay.head.crcId'/>", editable : false, visible:false}, 
+        {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 240 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+        {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.midNo'/>",width : 200, editable : false},
+        //{dataField : "bnkAcc",headerText : "<spring:message code='pay.head.bankAccount'/>",width : 100 , editable : false},  
+        {dataField : "netAmt",headerText : "<spring:message code='pay.head.crcNetAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
+        {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.bankStatementId'/>",width : 200 , editable : false},
+        {dataField : "creditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "mappingDate",headerText : "<spring:message code='pay.head.mappingDate'/>",width : 240 , editable : false},
    ];
     
     var columnUnMappedCrcLayout = [
-        {dataField : "crcStateId", headerText : "id", editable : false, visible:false}, 
-        {dataField : "crcTrnscDt", headerText : "Transaction<br>Date", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},    
-        {dataField : "crcTrnscMid", headerText : "MID No.", editable : false},    
-        {dataField : "accDesc", headerText : "Bank Account", editable : false},   
-        {dataField : "netAmt", headerText : "Total Net Amount", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcStateId", headerText : "<spring:message code='pay.head.id'/>", editable : false, visible:false}, 
+        {dataField : "crcTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},    
+        {dataField : "crcTrnscMid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
+        {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
+        {dataField : "netAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
         /*{
             dataField : "btnCheck",
             headerText : "CH.",
@@ -69,12 +69,12 @@
     ];
     
     var columnUnMappedBankLayout = [
-         {dataField : "codeId", headerText : "codeId", editable : false, visible:false},                  
-         {dataField : "fTrnscId", headerText : "id", editable : false, visible:false},                             
-         {dataField : "fTrnscDt", headerText : "Transaction<br>Date", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},    
-         {dataField : "mid", headerText : "MID No.", editable : false},    
-         {dataField : "accDesc", headerText : "Bank Account", editable : false},   
-         {dataField : "creditAmt", headerText : "Total Net Amount", editable : false, dataType:"numeric", formatString:"#,##0.00"}
+         {dataField : "codeId", headerText : "<spring:message code='pay.head.codeId'/>", editable : false, visible:false},                  
+         {dataField : "fTrnscId", headerText : "<spring:message code='pay.head.id'/>", editable : false, visible:false},                             
+         {dataField : "fTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},    
+         {dataField : "mid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
+         {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
+         {dataField : "creditAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
          /*{
              dataField : "btnCheck",
              headerText : "CH.",
@@ -180,8 +180,8 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Payment Matching Reconciliation</h2>
         <ul class="right_btns">           
-            <li><p class="btn_blue"><a href="javascript:fn_searchList();"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -269,8 +269,8 @@
 	    </div>
     </div><!-- divine_auto end -->
     <ul class="right_btns">
-        <li><p class="btn_blue2" id="mapping"><a href="javascript:fn_mapping();">Mapping</a></p></li>            
-        <li><p class="btn_blue2" id="knockOff"><a href="javascript:fn_knockOff();">Knock-Off</a></p></li>
+        <li><p class="btn_blue2" id="mapping"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.mapping'/></a></p></li>            
+        <li><p class="btn_blue2" id="knockOff"><a href="javascript:fn_knockOff();"><spring:message code='pay.btn.knockOff'/></a></p></li>
     </ul>
 
 </section>
