@@ -8,7 +8,7 @@
  *
  */
 function removePopupCallback(){
-    userManagementEditPop.remove();
+	userManagementNewPop.remove();
 }
 
 function chkPwd(str){
@@ -275,7 +275,6 @@ function fn_save(){
                 $("#saveForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl+"&userStusId=1"+"&roleId="+$("#saveForm #roleId3").val(), //Init status is 1
                 function(data, textStatus, jqXHR){ // Success
                     Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
-                    commonMyPop.remove();
                 },
                 function(jqXHR, textStatus, errorThrown){ // Error
                     Common.alert("Fail : " + jqXHR.responseJSON.message);
