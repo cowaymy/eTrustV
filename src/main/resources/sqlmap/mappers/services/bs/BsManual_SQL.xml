@@ -2718,23 +2718,36 @@
               
               
               <select id="selectQryBS_Rev" parameterType="Map" resultType="egovMap">
-
-            select NO
-                ,SCHDUL_ID
-                ,nvl(SALES_ORD_ID,0) as SALES_ORD_ID
-                ,nvl(CODY_ID,0) as CODY_ID
-                ,to_char(SETL_DT,'yyyy-mm-dd') SETL_DT
-                ,nvl(RESULT_STUS_CODE_ID,0) as RESULT_STUS_CODE_ID
-                ,nvl(FAIL_RESN_ID,0) as FAIL_RESN_ID
-                ,nvl(REN_COLCT_ID,0) as REN_COLCT_ID
-                ,nvl(WH_ID,0) as WH_ID
-                ,nvl(RESULT_REM,0) as RESULT_REM
-                ,RESULT_STOCK_USE
-                ,nvl(RESULT_ID,0) as RESULT_ID
-          from SVC0006D
-          where SCHDUL_ID = #{ScheduleID}
-            and SALES_ORD_ID = #{SalesOrderId}
-           <!--  and RESULT_IS_CURR = 0 -->
+				SELECT NO,
+				       SCHDUL_ID,
+				       NVL (SALES_ORD_ID, 0) AS SALES_ORD_ID,
+				       NVL (CODY_ID, 0) AS CODY_ID,
+				       SETL_DT SETL_DT,
+				       NVL (RESULT_STUS_CODE_ID, 0) AS RESULT_STUS_CODE_ID,
+				       NVL (FAIL_RESN_ID, 0) AS FAIL_RESN_ID,
+				       NVL (REN_COLCT_ID, 0) AS REN_COLCT_ID,
+				       NVL (WH_ID, 0) AS WH_ID,
+				       NVL (RESULT_REM, 0) AS RESULT_REM,
+				       RESULT_STOCK_USE,
+				       NVL (RESULT_ID, 0) AS RESULT_ID
+				  FROM (SELECT ROW_NUMBER ()
+				               OVER (PARTITION BY SCHDUL_ID, SALES_ORD_ID ORDER BY NO DESC)
+				                  RNN,
+				               NO,
+				               SCHDUL_ID,
+				               NVL (SALES_ORD_ID, 0) AS SALES_ORD_ID,
+				               NVL (CODY_ID, 0) AS CODY_ID,
+				               TO_CHAR (SETL_DT, 'YYYY-MM-DD') SETL_DT,
+				               NVL (RESULT_STUS_CODE_ID, 0) AS RESULT_STUS_CODE_ID,
+				               NVL (FAIL_RESN_ID, 0) AS FAIL_RESN_ID,
+				               NVL (REN_COLCT_ID, 0) AS REN_COLCT_ID,
+				               NVL (WH_ID, 0) AS WH_ID,
+				               NVL (RESULT_REM, 0) AS RESULT_REM,
+				               RESULT_STOCK_USE,
+				               NVL (RESULT_ID, 0) AS RESULT_ID
+				          FROM SVC0006D
+				         WHERE SCHDUL_ID = #{ScheduleID} AND SALES_ORD_ID = #{SalesOrderId})
+				 WHERE RNN = 1
 
           </select>
           
