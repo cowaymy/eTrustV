@@ -277,9 +277,9 @@ public class InvoiceAdjController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initInvAdjCnDn.do")
+	@RequestMapping(value = "/initInvAdjCnDnPop.do")
 	public String initInvInvoiceAdj(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/invoice/invAdjCnDn";
+		return "payment/invoice/invAdjCnDnPop";
 	}
 	
 	
@@ -292,9 +292,9 @@ public class InvoiceAdjController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initBatchAdjCnDnList.do")
+	@RequestMapping(value = "/initBatchAdjCnDnListPop.do")
 	public String initBatchAdjCnDn(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/invoice/batchAdjCnDnList";
+		return "payment/invoice/batchAdjCnDnListPop";
 	}
 	
 	/**
@@ -437,9 +437,9 @@ public class InvoiceAdjController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/initApprovalAdjCnDnList.do")
+	@RequestMapping(value = "/initApprovalAdjCnDnListPop.do")
 	public String initApprovalAdjCnDnList(@RequestParam Map<String, Object> params, ModelMap model) {
-		return "payment/invoice/approvalAdjCnDnList";
+		return "payment/invoice/approvalAdjCnDnListPop";
 	}
 	
 	

@@ -126,6 +126,8 @@ public interface LargeExcelService {
 	void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler);
 	
 	void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+	
+	void downloadMonthlyBillRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 

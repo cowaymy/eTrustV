@@ -68,4 +68,11 @@ public interface BillingMgmtService{
 	 * @return
 	 */
 	void confirmBills(Map<String, Object> params);
+	
+	/**
+	 * 
+	 * @param params
+	 * @return
+	 */
+    int countMonthlyRawData(Map<String, Object> params);
 }

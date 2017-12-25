@@ -11,6 +11,7 @@ var adjStatusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeNa
 //Grid Properties 설정 
 var gridPros = {            
         editable : false,                 // 편집 가능 여부 (기본값 : false)
+        headerHeight : 35,
         showStateColumn : false     // 상태 칼럼 사용
 };
 
@@ -82,19 +83,13 @@ function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value
 }
 
 function fn_openWinPop(val){
-	var url = "";
-	
 	if(val == 'BATCH_REQ'){
-		url = "/payment/initBatchAdjCnDnList.do";
+		Common.popupWin("searchForm", "/payment/initBatchAdjCnDnListPop.do", {width : "1200px", height : "550", resizable: "no", scrollbars: "no"});
 	}else if(val == 'SUMMARY'){
-		url = "/payment/initInvAdjCnDn.do";
+		Common.popupWin("searchForm", "/payment/initInvAdjCnDnPop.do", {width : "1200px", height : "450", resizable: "no", scrollbars: "no"});
 	}else if(val == 'APPROVAL'){
-		url = "/payment/initApprovalAdjCnDnList.do";
-	}
-	
-	if(url != ''){
-		Common.popupWin("searchForm", url, winPopOption);	
-	}
+		Common.popupWin("searchForm", "/payment/initApprovalAdjCnDnListPop.do", {width : "1200px", height : "650", resizable: "no", scrollbars: "no"});
+	}	
 }
 
 function fn_Clear(){

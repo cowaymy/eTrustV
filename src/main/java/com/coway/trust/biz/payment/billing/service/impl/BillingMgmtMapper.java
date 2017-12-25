@@ -84,4 +84,18 @@ public interface BillingMgmtMapper {
 	 * @return
 	 */
 	void confirmBills(Map<String, Object> params);
+	
+	/**
+   	 * 
+   	 * @param params
+   	 * @return
+   	 */
+   	int countMonthlyRawData(Map<String, Object> params);
+   	
+   	/**
+   	 * 
+   	 * @param params
+   	 * @return
+   	 */
+   	List<EgovMap> selectMonthlyRawData(Map<String, Object> params);
 }

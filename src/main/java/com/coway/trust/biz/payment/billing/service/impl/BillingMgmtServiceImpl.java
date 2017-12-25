@@ -96,5 +96,16 @@ public class BillingMgmtServiceImpl extends EgovAbstractServiceImpl implements B
 		billingRentalMapper.confirmBills(params);
 	}
 	
+	/**
+	 * 
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int countMonthlyRawData(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return billingRentalMapper.countMonthlyRawData(params);
+	}
+	
 	
 }

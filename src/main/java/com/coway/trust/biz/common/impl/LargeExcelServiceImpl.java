@@ -301,6 +301,11 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.INVOICE_SUMMARY.getQueryId(), parameter, excelDownloadHandler);
 	}
+	
+	@Override
+	public void downloadMonthlyBillRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
+		this.downLoad(LargeExcelQuery.MONTHLY_BILL_RAW.getQueryId(), parameter, excelDownloadHandler);
+	}
 
 	@Override
 	public void downLoad(String id, Object parameter, ResultHandler resultHandler) {

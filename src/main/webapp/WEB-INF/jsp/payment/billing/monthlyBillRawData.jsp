@@ -28,17 +28,43 @@ function fn_generateClick(){
 		Common.alert("Sorry. Bill raw data beyond current date cannot be generated.");
 	}else{
 		
-		//report form에 parameter 세팅
-		$("#reportPDFForm #v_ScheduleYear").val($("#year").val());
-		$("#reportPDFForm #v_ScheduleMonth").val($("#month").val());			        
-	    
-		//report 호출
-        var option = {
-        	    isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-        };
+		var year = $("#year").val();
+		var month = $("#month").val();
+		
+		Common.ajax("GET", "/payment/countMonthlyRawData.do", $("#searchForm").serialize(), function(result) {
+	       var cnt = result;
+		   alert(cnt);
+	       if(cnt > 0){
 
-        Common.report("reportPDFForm", option);
+				Common.showLoader();
+		        $.fileDownload("/payment/selectMonthlyRawDataExcelList.do?year=" + year + "&month="+month)
+				.done(function () {
+			        Common.alert('File download a success!');                
+					Common.removeLoader();            
+		        })
+			    .fail(function () {
+					Common.alert('File download failed!');                
+		            Common.removeLoader();            
+				});
+		   }else{
+	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
+	       }
+       });
+
 	}
+	
+	//report 안쓴다.
+	//report form에 parameter 세팅
+	//$("#reportPDFForm #v_ScheduleYear").val($("#year").val());
+	//$("#reportPDFForm #v_ScheduleMonth").val($("#month").val());			        
+	
+	//report 호출
+	//var option = {
+	//		isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	//};
+
+	//Common.report("reportPDFForm", option);
+	
 }
 
 </script>
@@ -64,7 +90,6 @@ function fn_generateClick(){
  <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-             <input type="hidden" name="taskId" id="taskId" value="${taskId }" />
              <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>

@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -14,9 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.billing.service.BillingMgmtService;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.web.common.excel.download.ExcelDownloadFormDef;
+import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
+import com.coway.trust.web.common.excel.download.ExcelDownloadVO;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -29,6 +37,9 @@ public class BillingMgmtController {
 	
 	@Resource(name = "billingRentalService")
 	private BillingMgmtService billingRentalService;
+	
+	@Autowired
+	private LargeExcelService largeExcelService;
 	
 	/**
 	 * BillingMgnt 초기화 화면 
@@ -114,6 +125,62 @@ public class BillingMgmtController {
 	public String initMonthlyRawData(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billing/monthlyBillRawData";
 	}
+	
+	/**
+	 * MonthlyRawDatat 카운트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/countMonthlyRawData.do")
+	public ResponseEntity<Integer> countMonthlyRawData(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		int cnt = billingRentalService.countMonthlyRawData(params);
+		return ResponseEntity.ok(cnt);
+	}	
+	
+	
+
+	@RequestMapping(value = "/selectMonthlyRawDataExcelList.do")
+	public void selectAdjustmentExcelList(HttpServletRequest request, HttpServletResponse response) {
+		
+		ExcelDownloadHandler downloadHandler = null;
+		
+		try {
+            
+            Map<String, Object> map = new HashMap<String, Object>();
+    		map.put("year", request.getParameter("year") == null ? "1900" :  request.getParameter("year"));
+    		map.put("month", request.getParameter("month") == null ? "01" :  request.getParameter("month"));		
+    		
+    		String[] columns;
+            String[] titles;
+			
+            columns = new String[] { "accBillRefDt","accBillRefNo","accBillOrdNo","modeNm","accBillSchdulPriod","accBillNetAmt", "accBillTxsAmt"};            
+            titles = new String[] {"ACC BILL REF DATE","ACC BILL REFNO","ACC BILL ORDER_NO","MODE NAME","ACC BILL SCHEDUL PERIOD","ACC BILL NET AMOUNT","ACC BILL TXS AMOUNT" };     
+	             
+			downloadHandler = getExcelDownloadHandler(response, "MonthlyBillRawData.xlsx", columns, titles);			
+			largeExcelService.downloadMonthlyBillRawData(map, downloadHandler);
+			
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+	}
+	
+	private ExcelDownloadHandler getExcelDownloadHandler(HttpServletResponse response, String fileName,
+			String[] columns, String[] titles) {
+		ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(fileName, columns, titles);
+		return new ExcelDownloadHandler(excelDownloadVO, response);
+	}
+	
+	
 	
 	@RequestMapping(value = "/createBills.do")
 	public ResponseEntity<ReturnMessage> createBills(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
