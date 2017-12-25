@@ -358,10 +358,10 @@
                and nvl(L54.DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'N' 
          </if>
 	   <if test="searchFromDate !=null and searchFromDate !=''">
-        AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYY/MM/DD'),'yyyymmdd') 
+        AND L54.DELVRY_DT <![CDATA[>=]]>  TO_CHAR (TO_DATE (#{searchFromDate},    'YYYYMMDD'),'yyyymmdd') 
         </if>
         <if test="searchToDate !=null and searchToDate !=''">
-        AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYY/MM/DD'),'yyyymmdd') 
+        AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYYMMDD'),'yyyymmdd') 
         </if>       
     </select>
 
