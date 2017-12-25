@@ -310,9 +310,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <form action="#" method="post" id="searchFormPop">
 <header class="pop_header"><!-- pop_header start -->
-<h1>HS Order Create</h1>
+<h1>Assign Cody Transfer</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();" id="btnSave" id="btnSave" >Save</a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:fn_codyAssignSave();" id="btnSave" id="btnSave" >Cody Transfer Confirm</a></p></li>
     <li><p class="btn_blue2"><a href="#" id="_close1">Close</a></p></li>
 </ul>
 
