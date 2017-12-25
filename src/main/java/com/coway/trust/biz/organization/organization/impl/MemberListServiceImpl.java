@@ -298,7 +298,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		//Department
 		params.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
-		params.put("searchSubDept"		,params.get("searchSubDept").toString().trim()!=null ? params.get("searchSubDept").toString().trim() : "");
+		params.put("searchSubDept"		,params.get("subDept").toString().trim()!=null ? params.get("subDept").toString().trim() : "");
 
 		//두번째 탭 text 가져오기
 		params.put("spouseCode", params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
@@ -953,8 +953,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			}
 			
 			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
-				if (params.get("traineeType").toString().equals("2") || params.get("traineeType").toString().equals("3") ){
-					 
+				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") ){
+			
+    					logger.debug("=============================================================================================================");
+    					logger.debug("=====================  memberType {}  traineeType {} ", params.get("memberType").toString(), params.get("traineeType").toString() );
+    					logger.debug("=============================================================================================================");
+					
 						params.put("MemberId", MemberId);
 					
 						memberListMapper.traineeInsertInfor(params);

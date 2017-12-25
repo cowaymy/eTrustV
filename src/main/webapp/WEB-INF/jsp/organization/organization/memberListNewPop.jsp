@@ -15,10 +15,12 @@ function fn_memberSave(){
 	            $("#subDept").val(($("#searchSubDept").value));
 			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
+			    
+			    console.log("-------------------------" + JSON.stringify(jsonObj));
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 				console.log("message : " + result.message );
 				Common.alert(result.message,fn_close);
-		});
+		}); 
 }
 
 function fn_close(){
@@ -51,7 +53,7 @@ function fn_departmentCode(value){
      }
      
 	var action = value;
-	
+	console.log("fn_departmentCode >> " + action)
 	switch(action){
 	   case "1" :
 		   var jsonObj = {
@@ -88,9 +90,13 @@ function fn_departmentCode(value){
            break;
 
 	   case "5" :
+	   
            $("#traineeType1").change(function(){
 
         	   var traineeType =  $("#traineeType1").val();
+        	   
+        	   console.log("fn_departmentCode traineeType>> " + traineeType)
+        	   
         	   if( traineeType == '2'){
         		    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
         	   }
@@ -164,7 +170,9 @@ $(document).ready(function() {
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
 
-	$("#memberType").change(function (){
+	$("#memberType").click(function (){
+	
+	console.log("================" +  $("#memberType").val());
         var memberType = $("#memberType").val();
         
         if ( memberType ==  "2803") {
@@ -189,6 +197,8 @@ $(document).ready(function() {
     //var cmbRacelStatusCd = "10";
     $("#cmbRace option[value=10]").attr('selected', 'selected');
      
+     
+     $('#memberType').trigger('click'); 
 
 });
 function createAUIGridDoc() {
@@ -387,6 +397,13 @@ function fn_saveValidation(){
     if($("#mState").val() == ''){
         Common.alert("Please key in the state.");
         return false;
+    }
+
+    if($("#memberNm").val() == '5'){ //Training Course
+	    if($("#course").val() == ''){
+	        Common.alert("Please key  in Training Course");
+	        return false;
+	    }
     }
 
 	return true;

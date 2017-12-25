@@ -2956,12 +2956,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         (
         MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL , 
         #{course},
-        #{MemberID},
+        #{MemberId},
         '1',
         #{creator},
         SYSDATE, 
         #{memberNm},
-        (SELECT NRIC FROM ORG0001D WHERE 1=1 AND MEM_ID  = #{MemberID} )
+        #{nric}
         )
     </insert>
     
