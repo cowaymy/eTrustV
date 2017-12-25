@@ -198,7 +198,7 @@ function fn_asaAssignCtOderList(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1> Assign CT Transfer</h1>CT Transfer Confirm
+<h1> Assign CT Transfer</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="javascript:fn_ctChange();" >CT Transfer Confirm</a></p></li>
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
