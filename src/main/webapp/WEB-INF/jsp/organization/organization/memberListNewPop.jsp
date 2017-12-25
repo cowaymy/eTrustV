@@ -108,7 +108,9 @@ function fn_departmentCode(value){
 		               };
 		
 		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		           });        		    
+		           });   
+		           
+		           //Training Course ajax콜 위치     		    
         	   }
         	   else if(traineeType == '3'){
         	   
@@ -122,6 +124,8 @@ function fn_departmentCode(value){
 		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
 		           });        	   
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
+        		   
+        		   //Training Course ajax콜 위치
         	   }
            });
 
@@ -137,7 +141,7 @@ function fn_departmentCode(value){
 			$("#deptCd option").remove();
 			$("#deptCd option").remove();
              console.log("-------------------------" + JSON.stringify(result));
-             $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeName+"</option>");
+             $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
 
         });
            

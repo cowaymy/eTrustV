@@ -1304,6 +1304,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		memberListMapper.traineeUpdateInfo(params);
     		
     		params.put("creator", params.get("user_id"));
+    		params.put("MemberId", params.get("MemberID"));
     		
     		memberListMapper.traineeInsertInfor(params);
 		

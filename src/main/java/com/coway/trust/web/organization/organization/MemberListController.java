@@ -26,6 +26,7 @@ import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -780,6 +781,8 @@ public class MemberListController {
 		//update = memberListService.updateMember(formMap, updList,sessionVO);
 
 		//update
+		
+		memCode =  (String)formMap.get("memCode");
 
 		int resultUpc1 = 0;
 		int resultUpc2 = 0;
@@ -789,7 +792,18 @@ public class MemberListController {
 		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
 		resultUpc3 = memberListService.memberListUpdate_member(formMap);
 		
-		resultUpc4 = memberListService.traineeUpdateInfo(formMap, sessionVO);
+		
+		String memType = (String)formMap.get("memType");
+		logger.debug("================================================================================");
+		logger.debug("=============== memType {} ",  memType);
+		logger.debug("================================================================================");
+		
+		if ( memType.trim().equals("5") ) {
+			logger.debug("================================================================================");
+			logger.debug("=============== insert =====================================");
+			logger.debug("================================================================================");
+			resultUpc4 = memberListService.traineeUpdateInfo(formMap, sessionVO);
+		}
 		
 		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
 
