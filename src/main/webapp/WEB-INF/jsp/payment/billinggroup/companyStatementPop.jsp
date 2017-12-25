@@ -170,7 +170,7 @@ function fn_clear(){
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
-            <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();"><spring:message code='sys.btn.search'/></a></p></li>
+            <li><p class="btn_blue"><a href="javascript:fn_getCompanyStatementListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 
