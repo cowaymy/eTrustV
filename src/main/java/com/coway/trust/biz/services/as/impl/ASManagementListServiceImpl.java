@@ -1245,13 +1245,20 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		//인하우스  oepen close 
 		if(chkInHouseOpenComp(svc0004dmap)){
 			
+			// add by jgkim
+			String retype = "REPAIRIN";
+			if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("452")){
+				retype = "REPAIRIN";
+			} else if(String.valueOf(svc0004dmap.get("AS_SLUTN_RESN_ID")).equals("453")) {
+				retype = "REPAIROUT";
+			}
 			
 			   //물류 호출   add by hgham
 	        Map<String, Object>  logPram = null ;
 			/////////////////////////물류 호출/////////////////////////
 			logPram =new HashMap<String, Object>();
             logPram.put("ORD_ID",     svc0004dmap.get("AS_NO") );
-            logPram.put("RETYPE", "REPAIRIN");  
+            logPram.put("RETYPE", retype);  
             logPram.put("P_TYPE", "OD03");  
             logPram.put("P_PRGNM", "ASCOM_1");  
             logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));   
@@ -1662,7 +1669,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 					//물류 호출   add by hgham
 					/////////////////////////물류 호출//////////////////////
 		            logPram.put("ORD_ID",    svc0004dmap.get("AS_NO"));
-		            logPram.put("RETYPE", "REPAIROUT");  
+		            logPram.put("RETYPE", "COMPLET");  
 		            logPram.put("P_TYPE", "OD03");  
 		            logPram.put("P_PRGNM", "ASCOM_3");  
 		            logPram.put("USERID", String.valueOf(params.get("updator")));   
