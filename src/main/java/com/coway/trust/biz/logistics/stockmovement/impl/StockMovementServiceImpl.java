@@ -214,7 +214,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 						}
 						scanno = (String)insSerial.get("scanno");
 					}
-					stockMoveMapper.updateMovementSerialScan(scanno);
+					if (scanno != null) stockMoveMapper.updateMovementSerialScan(scanno);
 				}
 				
 				insMap.put("scanno" , scanno);

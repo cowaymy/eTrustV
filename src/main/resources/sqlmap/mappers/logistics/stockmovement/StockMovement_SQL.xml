@@ -258,13 +258,12 @@
           FROM LOG0054M
          WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
     </select>
+
 <!--       
     <select id="selectDeliveryNobyReqsNo" parameterType="Map" resultType="String">
         select decode(count(1) , 0 , '0' ,max( DELVRY_NO)) dno from log0054m where reqst_no = #{reqno}
     </select>
-    
-    
-    -->
+-->
     <insert id="insertDeliveryStockMovement" parameterType="Map">
         MERGE INTO LOG0054M A
              USING DUAL

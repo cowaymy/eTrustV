@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<style type="text/css">
+    .my-row-style {
+	    background:#9FC93C;
+	    font-weight:bold;
+	    color:#22741C;
+	}
+	    
+</style>
 <script type="text/javaScript" language="javascript">
 
 var optionUnit = { 
@@ -8,9 +15,12 @@ isShowChoose: false,
 type : 'M'
 };
 
-
+var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName":"Completed"},{"codeId":"10","codeName":"Cancel"}];
+	
     //AUIGrid 생성 후 반환 ID
-    var myGridID;
+    var listGrid;
+    var serialGrid;
+    var serialchk = false;
     
     var gridValue;
     
@@ -19,41 +29,97 @@ type : 'M'
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        AUIGrid.setSelectionMode(myGridID, "singleRow");
+        AUIGrid.setSelectionMode(listGrid, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            $("#pstSalesOrdIdParam").val(event.item.pstSalesOrdId);
-            $("#pstDealerDelvryCntId").val(event.item.pstDealerDelvryCntId);
-            $("#pstDealerMailCntId").val(event.item.pstDealerMailCntId);
-            $("#pstDealerDelvryAddId").val(event.item.pstDealerDelvryAddId);
-            $("#pstDealerMailAddId").val(event.item.pstDealerMailAddId);
-            $("#pstStusIdParam").val(event.item.pstStusId);
-            Common.popupDiv("/sales/pst/getPstRequestDODetailPop.do", $("#searchForm").serializeJSON());
+        
+        //$('#pstStusId').multipleSelect("checkAll");
+        doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
+        doDefCombo(pststatuslist, '' ,'pstStusIds', 'M', 'f_multiCombo');
+        
+        
+        AUIGrid.bind(listGrid, "cellEditBegin", function (event){
+            if (event.item.balqty < 1){
+                return false;
+            }
+            var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
+            for(var i = 0 ; i < checklist.length ; i++){
+                 if (checklist[i].psono != event.item.psono){
+                    Common.alert("PST Salse Order No is different.");
+                    return false;
+                }
+            }
         });
         
-        $('#pstStusId').multipleSelect("checkAll");
+        AUIGrid.bind(listGrid, "cellEditEnd", function (event){
+        	
+        	if (event.item.balqty < event.value){
+        		Common.alert('The quantity you entered is too large.');
+        		AUIGrid.setCellValue(listGrid, event.rowIndex, event.columnIndex, 0);
+        	}else{
+        		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
+        	}
+        });
         
-     // 셀 더블클릭 이벤트 바인딩
-//        AUIGrid.bind(myGridID, "cellClick", function(event) {
-//            gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId");
-//        });
-    
+        AUIGrid.bind(serialGrid, "cellEditBegin", function(event) {
+            
+            if (event.item.scanno != ""){
+                return false;
+            }else{
+            	return true;
+            }
+           // AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);
+        });
+        AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
+            var tvalue = true;
+           var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
+           serial=serial.trim();
+           if(""==serial || null ==serial){
+              //alert(" ( " + event.rowIndex + ", " + event.columnIndex + ") : clicked!!");
+              //AUIGrid.setSelectionByIndex(serialGrid,event.rowIndex, event.columnIndex);
+               Common.alert('Please input Serial Number.');
+               return false;
+           }else{
+               for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+                   if (event.rowIndex != i){
+                       if (serial == AUIGrid.getCellValue(serialGrid, i, "serial")){
+                           tvalue = false;
+                           break;
+                       }
+                   }
+               }
+               
+               if (tvalue){
+                   fn_serialChck(event.rowIndex ,event.item , serial)
+               }else{
+                   AUIGrid.setCellValue(serialGrid , event.rowIndex , "statustype" , 'N' );
+                   AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+                       if (item.statustype  == 'N'){
+                           return "my-row-style";
+                       }
+                   });
+                   AUIGrid.update(serialGrid);
+               }
+              
+              if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
+                 f_addrow();      
+              }
+              
+           }
+        });
+        
     });
     
-    doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
-    
-
     // 조회조건 combo box
     function f_multiCombo(){
         $(function() {
-            $('#cmbDealerType').change(function() {
-            
+            $('#pstStusIds').change(function() {
+                
             }).multipleSelect({
                selectAll: true, // 전체선택 
                 width: '80%'
             });
-            $('#cmbDealerType').multipleSelect("checkAll");
+            $('#pstStusIds').multipleSelect("checkAll");
         });
     }
     
@@ -62,116 +128,98 @@ type : 'M'
         
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
-        var columnLayout = [ {
-                dataField : "pstRefNo",
-                headerText : "PST No",
-                width : 140,
-                editable : false,
-                style: 'left_style'
-            }, {
-                dataField : "dealerName",
-                headerText : "Dealer Name",
-                editable : false,
-                style: 'left_style'
-            }, {
-                dataField : "pstCustPo",
-                headerText : "Customer PO",
-                width : 170,
-                editable : false,
-                style: 'left_style'
-            }, {
-                dataField : "crtDt",
-                headerText : "PST Date",
-                width : 160,
-                dataType : "date",
-                formatString : "dd/mm/yyyy" ,
-                editable : false,
-                style: 'left_style'
-            }, {
-                dataField : "code1",
-                headerText : "PST Status",
-                width : 170,
-                editable : false,
-                style: 'left_style'
-            }, {
-                dataField : "pstSalesOrdId",
-                visible : false
-            }, {
-                dataField : "pstStusId",
-                visible : false
-            }];
-
-     // 그리드 속성 설정
-        var gridPros = {
-            
-            // 페이징 사용       
-            usePaging : true,
-            // 한 화면에 출력되는 행 개수 20(기본값:20)
-            pageRowCount : 20,
-            editable : true,
-            fixedColumnCount : 1,
-            showStateColumn : false, 
-            displayTreeOpen : true,
-            selectionMode : "multipleCells",
-            headerHeight : 30,
-            // 그룹핑 패널 사용
-            useGroupingPanel : false,
-            // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-            skipReadonlyColumns : true,
-            // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            wrapSelectionMove : true,
-            // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
+        var columnLayout =[ { dataField : "rnum"      , headerText : "<spring:message code='log.head.psono'/>"                     , width : 140, editable : false, visible: false },
+                            { dataField : "psoid"     , headerText : "<spring:message code='log.head.psono'/>"                     , width : 140, editable : false, visible: false },
+                            { dataField : "psono"     , headerText : "<spring:message code='log.head.psono'/>"                     , width : 140, editable : false, visible: true  },
+                            { dataField : "dtype"     , headerText : "<spring:message code='sys.gstexportation.grid1.dealerid'/>"  , width : 140, editable : false, visible: false },
+                            { dataField : "dealerid"  , headerText : "<spring:message code='sys.gstexportation.grid1.dealerid'/>"  , width : 140, editable : false, visible: false },
+                            { dataField : "dealernm"  , headerText : "<spring:message code='sys.gstexportation.grid1.dealername'/>", width : 140, editable : false, visible: true  },
+                            { dataField : "cntname"   , headerText : "<spring:message code='sys.gstexportation.grid1.dealername'/>", width : 140, editable : false, visible: false },
+                            { dataField : "pststus"   , headerText : "<spring:message code='log.head.psostus'/>"                   , width : 140, editable : false, visible: false },
+                            { dataField : "pststuscd" , headerText : "<spring:message code='log.head.psostus'/>"                   , width : 140, editable : false, visible: true  },
+                            { dataField : "pststusnm" , headerText : "<spring:message code='log.head.psostus'/>"                   , width : 140, editable : false, visible: false },
+                            { dataField : "pstlocid"  , headerText : "<spring:message code='log.head.location'/>"                  , width : 140, editable : false, visible: false },
+                            { dataField : "locid"     , headerText : "<spring:message code='log.head.location'/>"                  , width : 140, editable : false, visible: false },
+                            { dataField : "loccode"   , headerText : "<spring:message code='log.head.location'/>"                  , width : 140, editable : false, visible: false },
+                            { dataField : "locnm"     , headerText : "<spring:message code='log.head.location'/>"                  , width : 140, editable : false, visible: true  },
+                            { dataField : "itmid"     , headerText : "<spring:message code='log.head.materialcode'/>"              , width : 140, editable : false, visible: false },
+                            { dataField : "itmcd"     , headerText : "<spring:message code='log.head.materialcode'/>"              , width : 140, editable : false, visible: true  },
+                            { dataField : "itmnm"     , headerText : "<spring:message code='log.head.materialcodetext'/>"          , width : 140, editable : false, visible: true  },
+                            { dataField : "itmprc"    , headerText : "<spring:message code='log.head.materialcodetext'/>"          , width : 140, editable : false, visible: false },
+                            { dataField : "serialchk" , headerText : "<spring:message code='log.head.materialcodetext'/>"          , width : 140, editable : false, visible: false },
+                            { dataField : "qty"       , headerText : "<spring:message code='sys.scm.otdview.QTY'/>"                , width : 140, editable : false, visible: true  },
+                            { dataField : "doqty"     , headerText : "<spring:message code='log.head.deliveredqty'/>"              , width : 140, editable : false, visible: true  },
+                            { dataField : "balqty"    , headerText : "<spring:message code='log.head.remainqty'/>"                 , width : 140, editable : false, visible: true  },
+                            { dataField : "reqqty"    , headerText : "<spring:message code='log.head.reqqty'/>"                    , width : 140, editable : true , visible: true  },
+                            { dataField : "uom"       , headerText : "<spring:message code='log.head.uom'/>"                       , width : 140, editable : false, visible: false },
+                            { dataField : "uomcd"     , headerText : "<spring:message code='log.head.uom'/>"                       , width : 140, editable : false, visible: true  },
+                            { dataField : "crtdt"     , headerText : "<spring:message code='log.head.pstdate'/>"                   , width : 140, editable : false, visible: true , dataType:"date" , formatString : "dd/mm/yyyy" },
+                            { dataField : "crtdt1"    , headerText : "<spring:message code='log.head.pstdate'/>"                   , width : 140, editable : false, visible: false },
+                            { dataField : "psttypeid" , headerText : "<spring:message code='log.head.psttype'/>"                   , width : 140, editable : false, visible: false },
+                            { dataField : "psttype"   , headerText : "<spring:message code='log.head.psttype'/>"                   , width : 140, editable : false, visible: true  },
+                            { dataField : "pstpo"     , headerText : "<spring:message code='log.head.pstpo'/>"                     , width : 140, editable : false, visible: true  },
+                            { dataField : "nric"      , headerText : "<spring:message code='sales.NRIC'/>"                         , width : 140, editable : false, visible: false },
+                            { dataField : "userid"    , headerText : "<spring:message code='sys.title.user.id'/>"                  , width : 140, editable : false, visible: true  },
+                            { dataField : "pic"       , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
+                            { dataField : "pcr"       , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
+                            { dataField : "pcti"      , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
+                            { dataField : "pctcd"     , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false }
+                          ];
+        var serialcolumn =[ {dataField:"itmcd"        , headerText : "<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },               
+                            {dataField:"itmname"      , headerText : "<spring:message code='log.head.materialname'/>" ,width:"25%" ,height:30 },               
+                            {dataField:"serial"       , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,editable:true },                 
+                            {dataField:"cnt61"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+                            {dataField:"cnt62"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+                            {dataField:"cnt63"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+                            {dataField:"statustype"   , headerText : "<spring:message code='log.head.status'/>"       ,width:"30%" ,height:30,visible:false },
+                            {dataField:"scanno"       , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false }
+                           ];
         
-            groupingMessage : "Here groupping"
-        };
+        // 그리드 속성 설정
+        var gridPros = {rowIdField : "rnum",usePaging : true,pageRowCount : 20,editable : true,fixedColumnCount : 16,showStateColumn : false,
+        		        selectionMode : "multipleCells",headerHeight : 30,useGroupingPanel : false,skipReadonlyColumns : true,wrapSelectionMove : true,
+        		        showRowCheckColumn : true ,showBranchOnGrouping : false
+        		        };
         
-        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-        myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
+        var serialop = {editable : true};
+        
+        //listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+        listGrid = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
+        
+        serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
     }
     
+    // 리스트 조회.
+    function SearchListAjax(){
+    	Common.ajax("GET", "/logistics/pst/PstSearchList.do", $("#searchForm").serialize(), function(result) {
+    		
+            AUIGrid.setGridData(listGrid, result.data);
+        });
+    }
     
     // 리스트 조회.
     function fn_selectPstRequestDOListAjax() {        
         Common.ajax("GET", "/sales/pst/selectPstRequestDOJsonList", $("#searchForm").serialize(), function(result) {
-            AUIGrid.setGridData(myGridID, result);
+            AUIGrid.setGridData(listGrid, result);
         }
         );
     }
     
-//    function fn_goPstInfoEdit(){
-//      Common.popupWin("searchForm", "/sales/pst/getPstRequestDOEditPop.do?isPop=true&pstSalesOrdId=" + gridValue, option);
-//    }
-    
-    function fn_insertPstRequestDOReq(){
-        $("#dealerTypeFlag").val('REQ');
-        Common.popupDiv("/sales/pst/insertPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
-    }
-    
-    function fn_insertPstRequestDORet(){
-        $("#dealerTypeFlag").val('RET');
-        Common.popupDiv("/sales/pst/insertPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
-    }
-    
-    function fn_pstReport(){
-        Common.alert('The program is under development.');
-    }
-    
-    $.fn.clearForm = function() {
-        return this.each(function() {
-            var type = this.type, tag = this.tagName.toLowerCase();
-            if (tag === 'form'){
-                return $(':input',this).clearForm();
-            }
-            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-                this.value = '';
-            }else if (type === 'checkbox' || type === 'radio'){
-                this.checked = false;
-            }else if (tag === 'select'){
-                this.selectedIndex = -1;
-            }
-        });
-    };
+//     $.fn.clearForm = function() {
+//         return this.each(function() {
+//             var type = this.type, tag = this.tagName.toLowerCase();
+//             if (tag === 'form'){
+//                 return $(':input',this).clearForm();
+//             }
+//             if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+//                 this.value = '';
+//             }else if (type === 'checkbox' || type === 'radio'){
+//                 this.checked = false;
+//             }else if (tag === 'select'){
+//                 this.selectedIndex = -1;
+//             }
+//         });
+//     };
     
     function fn_dealerToPst(){
         
@@ -183,22 +231,243 @@ type : 'M'
 //      CommonCombo.make('cmbPstType', '/common/selectCodeList.do', {codeId : $("#cmbDealerType").val()} , '', {type: 'M'});
         CommonCombo.make("cmbPstType", "/sales/pst/pstTypeCmbJsonList", {groupCode : $("#cmbDealerType").val()} , '' , optionUnit); //Status
     }
+    
+    $(function(){
+    	$('#delivery').click(function(){
+            var checkDelqty= false; 
+            var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+            
+            if(checkedItems.length <= 0) {
+                Common.alert('No data selected.');
+                return false;
+            }else{
+                var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+                var str = "";
+                var rowItem;
+                for(var i=0, len = checkedItems.length; i<len; i++) {
+                    rowItem = checkedItems[i];
+                    if(rowItem.item.indelyqty==0){
+                        str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+                        checkDelqty= true;
+                    }
+                    if (rowItem.item.serialchk =='Y'){
+                        serialchk = true;
+                    }/*else{
+                        serialchk = false;
+                    }*/
+                    
+                }
+                if(checkDelqty){
+                    var option = {
+                        content : str,
+                        isBig:true
+                    };
+                    Common.alertBase(option); 
+                }else{
+                    $("#giopenwindow").show();
+                    $("#giptdate").val("");
+                    $("#gipfdate").val("");
+                    $("#doctext").val("");
+                    doSysdate(0 , 'giptdate');
+                    doSysdate(0 , 'gipfdate');
+                    AUIGrid.clearGridData(serialGrid);
+                    AUIGrid.resize(serialGrid);
+                    if (serialchk){
+                        //fn_itempopListSerial(checkedItems);
+                        fn_itempopList_T(checkedItems);
+                        $("#ascall").show();
+                        $("#serial_grid_wrap_div").show();
+                        AUIGrid.resize(serialGrid);
+                    }else{
+                        $("#serial_grid_wrap_div").hide();
+                        $("#ascall").hide();
+                    }
+                    
+                }
+            }
+            
+        });
+    	
+    	$("#sampleclick").click(function(){
+    		$.ajax({
+    	        type : "GET",
+    	        url : getContextPath() + "/logistics/pst/sampletest.do",
+    	        dataType : "json",
+    	        contentType : "application/json;charset=UTF-8",
+    	        success : function(data) {
+    	            
+    	        },
+    	        error: function(jqXHR, textStatus, errorThrown){
+    	            
+    	        },
+    	        complete: function(){
+    	        }
+    	    });
+    	});
+    });
+    
+    function fn_itempopList_T(data){
+        var itm_temp = "";
+        var itm_qty  = 0;
+        var itmdata = [];
+        
+        for (var i = 0 ; i < data.length ; i++){
+            if (data[i].item.serialchk == 'Y'){
+            	console.log(" 11 " + data[i].item.reqqty);
+	            itm_qty = itm_qty + Number(data[i].item.reqqty);	            
+            }
+        }
+        console.log(itm_qty)
+        $("#serialqty").val(itm_qty);       
+        
+        f_addrow();
+    }
+
+    function f_addrow(){
+        var rowPos = "last";
+        var item = new Object();
+        item = {"itmcd":"","itmname":"","serial":"","cnt61":"","cnt62":"","cnt63":"","statustype":"","scanno":""};    
+        AUIGrid.addRow(serialGrid, item, rowPos);
+        return false;
+    }
+    
+    function giFunc(){
+        var data = {};
+        var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+        var check     = AUIGrid.getCheckedRowItems(listGrid);
+        //var serials   = AUIGrid.getAddedRowItems(serialGrid);
+        var serials   = AUIGrid.getGridData(serialGrid);
+
+        if (serialchk){
+        //             if ($("#ascyn").val() == "Y"){
+        //                 console.log('111');
+        //             }else{
+            for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
+                if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
+                    Common.alert("Please check the serial.")
+                    return false;
+                }
+
+                if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
+                    Common.alert("Please check the serial.")
+                    return false;
+                }
+            }
+        //             }
+            if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
+                Common.alert("Please check the serial.")
+                return false;
+            }
+        }
+        data.check   = check;
+        data.checked = check;
+        data.add     = serials;
+        data.form    = $("#giForm").serializeJSON();
+        
+        console.log(data);
+
+        Common.ajax("POST", "/logistics/pst/pstMovementReqDelivery.do", data, function(result) {
+        	console.log(result);
+            //var msg = result.message + "<br>MDN NO : "+result.data[1];
+            Common.alert(result.message , SearchListAjax);
+            AUIGrid.resetUpdatedItems(listGrid, "all");    
+            $("#giopenwindow").hide();
+            $('#search').click();
+
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+        });
+        for (var i = 0 ; i < checkdata.length ; i++){
+            AUIGrid.addUncheckedRowsByIds(listGrid, checkdata[i].rnum);
+        }
+
+        serialchk = false;
+    }
+    
+    function fn_serialChck(rowindex , rowitem , str){
+        var schk = true;
+        var ichk = true;
+        var slocid = '';//session.locid;
+        var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
+        
+        var data = { serial : str , locid : slocid};
+        Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
+            if (result.data[0] == null){
+                AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
+                AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
+                AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
+                AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
+                AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
+                
+                schk = false;
+                ichk = false;
+                
+            }else{
+                 AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
+                 AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
+                 AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
+                 AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
+                 AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
+                 
+                 if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0){//} || result.data[0].L63CNT > 0){
+                     schk = false;
+                 }else{
+                     schk = true;
+                 }
+                 
+                 var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+                 
+                 for (var i = 0 ; i < checkedItems.length ; i++){
+                     if (result.data[0].STKCODE == checkedItems[i].itmcd){
+                         //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+                         ichk = true;
+                         break;
+                     }else{
+                         ichk = false;
+                     }
+                 }
+            }
+             
+             if (schk && ichk){
+                 AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
+             }else{
+                 AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
+             }
+              
+              //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
+              AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
+                  
+                  if (item.statustype  == 'N'){
+                      return "my-row-style";
+                  }
+              });
+              AUIGrid.update(serialGrid);
+                 
+        },  function(jqXHR, textStatus, errorThrown) {
+            try {
+            } catch (e) {
+            }
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
+           
+        });
+    }
 </script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>PST</li>
-    <li>PST list</li>
+    <li id="sampleclick">PST list</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>PST Request Do List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()">NEW PST Request</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDORet()">NEW PST Return</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:SearchListAjax()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -234,11 +503,7 @@ type : 'M'
     <td><input type="text" title="" id=pstRefNo name="pstRefNo" placeholder="PST Number" class="w100p" /></td>
     <th scope="row">PST Status</th>
     <td>
-    <select class="multy_select w100p" id="pstStusIds" name="pstStusId" multiple="multiple">
-        <option value="1" selected>Active</option>
-        <option value="4" selected>Completed</option>
-        <option value="10" selected>Cancel</option>
-    </select>
+        <select class="multy_select w100p" id="pstStusIds" name="pstStusIds" multiple="multiple"></select>
     </td>
     <th scope="row">Create Date</th>
     <td>
@@ -294,10 +559,68 @@ type : 'M'
     <li><p class="btn_grid"><a href="#">ADD</a></p></li>
 </ul>
 -->
+<ul class="right_btns">
+    <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+    <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>                        
+</ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
-    <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="list_grid_wrap" style="width:100%; height:350px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
 
+<div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
+     <header class="pop_header"><!-- pop_header start -->
+         <h1>Serial Check</h1>
+         <ul class="right_opt">
+             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+         </ul>
+     </header><!-- pop_header end -->
+     
+     <section class="pop_body"><!-- pop_body start -->
+         <form id="giForm" name="giForm" method="POST">
+         <input type="hidden" name="gtype"     id="gtype" value="GI"/>
+         <input type="hidden" name="serialqty" id="serialqty"/>
+         <input type="hidden" name="reqstno"   id="reqstno"/>
+         <input type="hidden" name="prgnm"     id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
+         <input type="hidden" name="ascyn"     id="ascyn" value=""/>
+         <table class="type1">
+         <caption>search table</caption>
+         <colgroup>
+             <col style="width:150px" />
+             <col style="width:*" />
+             <col style="width:150px" />
+             <col style="width:*" />
+         </colgroup>
+         <tbody>
+             <tr>
+                 <th scope="row">GI Posting Date</th>
+                 <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>    
+                 <th scope="row">GI Doc Date</th>
+                 <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+             </tr>
+             <tr>    
+                 <th scope="row">Header Text</th>
+                 <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+<!--                  <td><p class="btn_blue"><a id="ascall"><span class="search"></span>Auto Serial Call</a></p></td> -->
+             </tr>
+         </tbody>
+         </table>
+         <table class="type1">
+         <caption>search table</caption>
+         <colgroup id="serialcolgroup">
+         </colgroup>
+         <tbody id="dBody">
+         </tbody>
+         </table>
+         <article class="grid_wrap"  id="serial_grid_wrap_div"><!-- grid_wrap start -->
+         <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
+         </article><!-- grid_wrap end -->
+         <ul class="center_btns">
+             <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
+         </ul>
+         </form>
+     
+     </section>
+ </div>
 </section><!-- content end -->
