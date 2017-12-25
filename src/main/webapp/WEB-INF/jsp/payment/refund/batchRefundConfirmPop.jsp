@@ -310,7 +310,7 @@ function fn_bRefundItemDisab() {
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
 	<c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
-	<li><p class="btn_grid"><a href="#" id="remove_btn">Remove</a></p></li>
+	<li><p class="btn_grid"><a href="#" id="remove_btn"><spring:message code='pay.btn.remove'/></a></p></li>
 	</c:if>
 	<li><p class="btn_grid"><a href="#" id="allItem_btn"><spring:message code='pay.btn.allItems'/></a></p></li>
 	<li><p class="btn_grid"><a href="#" id="validItem_btn"><spring:message code='pay.btn.validItems'/></a></p></li>
@@ -326,7 +326,7 @@ function fn_bRefundItemDisab() {
 <c:if test="${bRefundInfo.batchStusId ne 4 && bRefundInfo.cnfmStusId ne 77}">
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" id="pConfirm_btn"><spring:message code='pay.btn.confirm'/></a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="deactivate_btn">Deactivate</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="deactivate_btn"><spring:message code='pay.btn.deactivate'/></a></p></li>
 </ul>
 </c:if>
 

@@ -101,7 +101,7 @@ function fn_updateGridData() {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Update Refund Data</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="close_btn2">Close</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="close_btn2"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -178,8 +178,8 @@ function fn_updateGridData() {
 </section><!-- search_table end -->
 
 <ul class="center_btns" id="confirm_btn_area">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_updateGridData()" >Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_rClear()">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_updateGridData()" ><spring:message code='sys.btn.save'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_rClear()"><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

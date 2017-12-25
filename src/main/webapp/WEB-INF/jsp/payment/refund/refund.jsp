@@ -27,45 +27,45 @@ var refundColumnLayout = [ {
     }
 },{
     dataField : "ordNo",
-    headerText : 'Order<br>No.'
+    headerText : "<spring:message code='pay.head.orderNo'/>"
 },{
     dataField : "worNo",
-    headerText : 'OR No.'
+    headerText : "<spring:message code='pay.head.orNo'/>"
 }, {
     dataField : "custName",
-    headerText : 'Customer Name',
+    headerText : "<spring:message code='pay.head.customerName'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "amt",
-    headerText : 'Amount',
+    headerText : "<spring:message code='pay.head.amount'/>",
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
     dataField : "appType",
-    headerText : 'App Type',
+    headerText : "<spring:message code='pay.head.appType'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "payMode",
-    headerText : 'Pay<br>Mode',
+    headerText : "<spring:message code='pay.head.payMode'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "issuebankPaytChannel",
-    headerText : 'Issue<br>Bank',
+    headerText : "<spring:message code='pay.head.issueBank'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "bankaccnoPaytChannel",
-    headerText : 'Bank<br>Account',
+    headerText : "<spring:message code='pay.head.bankAccount'/>",
 }, {
     dataField : "ccNo",
-    headerText : 'CRC No.'
+    headerText : "<spring:message code='pay.head.crcNo'/>"
 }, {
     dataField : "bankReconStus",
-    headerText : 'Bank<br>Recon<br>Status',
+    headerText : "<spring:message code='pay.head.bankReconStatus'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "canclDt",
-    headerText : 'Cancel<br>Date',
+    headerText : "<spring:message code='pay.head.cancelDate'/>",
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }
@@ -234,8 +234,8 @@ function fn_formClear() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Refund</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectRefundList()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_formClear()"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectRefundList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_formClear()"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -296,8 +296,8 @@ function fn_formClear() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="excel_down_btn">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="refund_btn">Refund</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="excel_down_btn"><spring:message code='pay.btn.exceldw'/></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="refund_btn"><spring:message code='pay.btn.refund'/></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="refund _grid_wrap"><!-- grid_wrap start -->

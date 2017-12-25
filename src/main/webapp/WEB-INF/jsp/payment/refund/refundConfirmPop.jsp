@@ -22,57 +22,57 @@ var confirmColumnLayout = [ {
     visible : false
 }, {
     dataField : "validStusId",
-    headerText : 'Valid Status'
+    headerText : "<spring:message code='pay.head.validStatus'/>"
 }, {
     dataField : "validRem",
-    headerText : 'Valid Remark',
+    headerText : "<spring:message code='pay.head.validRemark'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "ordNo",
-    headerText : 'Order<br>No.'
+    headerText : "<spring:message code='pay.head.orderNo'/>"
 },{
     dataField : "worNo",
-    headerText : 'OR No.'
+    headerText : "<spring:message code='pay.head.orNo'/>"
 }, {
     dataField : "custName",
-    headerText : 'Customer Name',
+    headerText : "<spring:message code='pay.head.customerName'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "amt",
-    headerText : 'Amount',
+    headerText : "<spring:message code='pay.head.amoumt'/>",
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
     dataField : "appType",
-    headerText : 'App Type',
+    headerText : "<spring:message code='pay.head.appType'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "payMode",
-    headerText : 'Pay<br>Mode',
+    headerText : "<spring:message code='pay.head.payMode'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "issuebankPaytChannel",
-    headerText : 'Issue<br>Bank',
+    headerText : "<spring:message code='pay.head.issueBank'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "bankaccnoPaytChannel",
-    headerText : 'Bank<br>Account',
+    headerText : "<spring:message code='pay.head.bankAccount'/>",
 }, {
     dataField : "ccNo",
-    headerText : 'CRC No.'
+    headerText : "<spring:message code='pay.head.crcNo'/>"
 }, {
     dataField : "bankReconStus",
-    headerText : 'Bank<br>Recon<br>Status',
+    headerText : "<spring:message code='pay.head.bankReconStatus'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "canclDt",
-    headerText : 'Cancel<br>Date',
+    headerText : "<spring:message code='pay.head.cancelDate'/>",
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "refAmt",
-    headerText : 'Refund<br>Amount',
+    headerText : "<spring:message code='pay.head.refundAmount'/>",
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
@@ -81,26 +81,26 @@ var confirmColumnLayout = [ {
     visible : false
 }, {
     dataField : "refModeName",
-    headerText : 'Refund<br>Mode',
+    headerText : "<spring:message code='pay.head.refundMode'/>",
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "bankAccCode",
     visible : false
 }, {
     dataField : "bankAccName",
-    headerText : 'Bank<br>Account'
+    headerText : "<spring:message code='pay.head.bankAccount'/>"
 }, {
     dataField : "cardNo",
-    headerText : 'Card No.'
+    headerText : "<spring:message code='pay.head.cardNo'/>"
 }, {
     dataField : "cardHolder",
-    headerText : 'Card<br>Holder'
+    headerText : "<spring:message code='pay.head.cardHolder'/>"
 }, {
     dataField : "chqNo",
-    headerText : 'Cheque No.'
+    headerText : "<spring:message code='pay.head.chequeNo'/>"
 }, {
     dataField : "refDt",
-    headerText : 'Refund<br>Date',
+    headerText : "<spring:message code='pay.head.refundDate'/>",
     dataType : "date",
     formatString : "dd/mm/yyyy"
 }
@@ -494,7 +494,7 @@ function fn_setConfirmRefundHeader(result) {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Refund Confirmation</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="close_btn1">Close</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="close_btn1"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 
 </header><!-- pop_header end -->
@@ -543,11 +543,11 @@ function fn_setConfirmRefundHeader(result) {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="validCheck_btn">Validation Check</a></p></li>
-    <li id="remove_btn_area"><p class="btn_grid"><a href="#" id="remove_btn">Remove</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="allItem_btn">All Items</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="validItem_btn">Valid Items</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="invalidItem_btn">Invalid Items</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="validCheck_btn"><spring:message code='pay.btn.validationCheck'/></a></p></li>
+    <li id="remove_btn_area"><p class="btn_grid"><a href="#" id="remove_btn"><spring:message code='pay.btn.remove'/></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="allItem_btn"><spring:message code='pay.btn.allItems'/></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="validItem_btn"><spring:message code='pay.btn.validItems'/></a></p></li>
+    <li><p class="btn_grid"><a href="#" id="invalidItem_btn"><spring:message code='pay.btn.invalidItems'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -557,8 +557,8 @@ function fn_setConfirmRefundHeader(result) {
 </section><!-- search_result end -->
 
 <ul class="center_btns" id="confirm_btn_area">
-    <li><p class="btn_blue2 big"><a href="#" id="pConfirm_btn">Confirm</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="pClear_btn">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="pConfirm_btn"><spring:message code='pay.btn.confirm'/></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="pClear_btn"><spring:message code='sys.btn.clear'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
