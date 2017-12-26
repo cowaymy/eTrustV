@@ -61,4 +61,21 @@ public class HSReportController {
 		logger.debug("HSReportSingle {}", HSReportSingle);
 		return ResponseEntity.ok(HSReportSingle);
 	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectHSReportGroup.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHSReportGroup(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap>  HSReportGroup = HSReportService.selectHSReportGroup(params);
+		logger.debug("HSReportGroup {}", HSReportGroup);
+		return ResponseEntity.ok(HSReportGroup);
+	}
+	
 }
