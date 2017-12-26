@@ -32,11 +32,12 @@ var mdcGrid;
 var myGridID;
 var detailGridID;
 
+
 // AUIGrid 칼럼 설정                                                                            visible : false
 var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log.head.materialcode'/>"                ,width:120    ,height:30 , visible:true},                         
 							{dataField: "stkDesc",headerText :"<spring:message code='log.head.materialcodetext'/>"           ,width:120    ,height:30 , visible:true},                          
-							{dataField: "revStorgNm",headerText :"<spring:message code='log.head.fromsloc'/>"                     ,width:120    ,height:30 , visible:true},                         
-							{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.tosloc'/>"                     ,width:120    ,height:30 , visible:true},                       
+							{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.fromsloc'/>"                     ,width:120    ,height:30 , visible:true},                         
+							{dataField: "revStorgNm",headerText :"<spring:message code='log.head.tosloc'/>"                     ,width:120    ,height:30 , visible:true},                       
 							{dataField: "trantype",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:true},                         
 							{dataField: "invntryMovType",headerText :"<spring:message code='log.head.movementype'/>"                   ,width:120    ,height:30 , visible:true},                        
 							{dataField: "movtype",headerText :"<spring:message code='log.head.movementtext'/>"                ,width:120    ,height:30 , visible:true},                         
