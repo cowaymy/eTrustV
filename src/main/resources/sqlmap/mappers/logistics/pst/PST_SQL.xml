@@ -249,7 +249,7 @@
 	       TAX_INVC_CRT_USER_ID)
 	   values (#{invoicetaxid} , #{invoiceno} , SYSDATE , #{reqstno} , 123 ,
 	           #{dealernm} , #{cntname} ,
-	           '' , '' , '' , '' , '' , '' , '' ,
+	           #{addr1} ,#{addr2} ,#{addr3} ,#{addr4} ,#{post} ,#{state} ,#{cnty} ,
 	           0 , #{pctcd} ,
 	           #{charges} , #{billnet} , #{ammount} , sysdate , #{userid}
 	    )
@@ -291,4 +291,10 @@
            0 , '' , 0 , 1 , 764 ,
            '')
  </insert>
+ <select id="selectDealerAddressMasic" parameterType="int" resultType="Map">
+    SELECT B.COUNTRY, B.STATE, B.POSTCODE, B.CITY, B.AREA, A.STREET, A.ADDR_DTL
+	  FROM SAL0031D A, SYS0064M B
+	 WHERE A.AREA_ID = B.AREA_ID
+	   AND A.DEALER_ID = #{dealerid}
+ </select>
 </mapper>

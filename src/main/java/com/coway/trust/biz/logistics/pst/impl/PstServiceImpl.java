@@ -253,9 +253,28 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			ordMap.put("charges", incharge);
 			ordMap.put("ammount", incharge+taxed);
 			
-			
+			Map<String , Object> addMap = pst.selectDealerAddressMasic((int)ordMap.get("dealerid"));
 			String invoicetaxid = pst.selectinvoiceTaxId();
 			ordMap.put("invoicetaxid", invoicetaxid);
+			if (addMap == null){
+				ordMap.put("addr1", "");
+				ordMap.put("addr2", "");
+				ordMap.put("addr3", "");
+				ordMap.put("addr4", "");
+				ordMap.put("post", "");
+				ordMap.put("state", "");
+				ordMap.put("cnty", "");
+				
+			}else{
+				ordMap.put("addr1", addMap.get("CITY"));
+				ordMap.put("addr2", addMap.get("AREA"));    
+				ordMap.put("addr3", addMap.get("ADDR_DTL"));
+				ordMap.put("addr4", "");
+				ordMap.put("post" , addMap.get("POSTCODE"));
+				ordMap.put("state", addMap.get("STATE"));
+				ordMap.put("cnty" , addMap.get("COUNTRY"));
+			}
+			
 			pst.InvoiceMListInsert(ordMap);
 			//invoiceD
 			for (int i = 0 ; i < invoiceList.size(); i++){
@@ -284,36 +303,12 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 	}
 	
 	public void testsample(){
-		String reqstSeq = "PST17122100001";
-		String mdnNo = pst.selectMdnNo();
-		List<EgovMap> reqlist = pst.selectRequestData(reqstSeq);
-		int psoid = 99999999;
-		logger.debug(" ::::: " + mdnNo);
-		
-		for (int i = 0 ; i < reqlist.size() ; i++){
-			Map<String, Object> stmp = (Map<String, Object>)reqlist.get(i);
-			logger.debug(" ::::: {} " , stmp);
-			//{TRNSTYPEDTL=OD18, REFDOCNO=PSO0000140, REQQTY=1, LOCID=1005, TRNSTYPE=OD, REQCRTDT=20171206, ITMNM=AP-1004AH (ACE), ITMCD=100928, 
-			// PFRQN=M, DEBIT=S, UOM=71, REQNOITM=1, CMVT=1, ITMCATEID=55, REQNO=PST17122100001, REQEDDT=20171221, ITMTYPEID=61} 
-			//{TRNSTYPEDTL=OD18, REFDOCNO=PSO0000140, REQQTY=1, frlocid=1005, TRNSTYPE=OD, REQCRTDT=20171206, ITMNM=(N.C.V.) BA08-AE, ITMCD=100389, 
-			//PFRQN=M, DEBIT=S, UOM=71, REQNOITM=2, CMVT=1, ITMCATEID=56, REQNO=PST17122100001, REQEDDT=20171221, ITMTYPEID=61}
-			stmp.put("mdnno", mdnNo);
-			stmp.put("psoid", String.valueOf(psoid));
-			stmp.put("headtext" , "1111");
-			stmp.put("userid" , 184);
-			if (i == 0){
-				pst.pstMaterialDocumentInsert(stmp);
-			}
-			
-			pst.pstMaterialDocumentInsertDetail(stmp);
-			
-			pst.pstMaterialStockBalance(stmp);
-			
-			if ("S".equals(((String)stmp.get("DEBIT")))){
-				pst.pstMaterialStockSerialInsert(stmp);
-			}else{
-				pst.pstMaterialStockSerialDelete(stmp);
-			}
+		Map<String , Object> addMap = pst.selectDealerAddressMasic(1);
+		logger.debug(" ::: {} " , addMap);
+		if (addMap == null){
+			logger.debug("1111");
+		}else{
+			logger.debug("2222");
 		}
 	}
 
