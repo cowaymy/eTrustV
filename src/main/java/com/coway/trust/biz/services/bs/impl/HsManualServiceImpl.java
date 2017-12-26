@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1127,7 +1128,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			bsd.put("BSResultRemark","" );
 			//bsd.put("BSResultCreateAt",0 );
 			bsd.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()) );
-			bsd.put("BSResultFilterClaim",String.valueOf(1 ));
+			bsd.put("BSResultFilterClaim",String.valueOf(1));
 			
 			bsResultDet.add(bsd);
 		}
@@ -1176,9 +1177,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		}
 		
 		
-		
-		if(params.get("configBsRem")==null || params.get("configBsRem")==""){
-			bsResultMas.put("ResultRemark", String.valueOf("0"));
+		logger.debug("configBsRem isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim()));
+		if(StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim())){
+			bsResultMas.put("ResultRemark", String.valueOf(0));
 		}else{
 			bsResultMas.put("ResultRemark", String.valueOf(params.get("configBsRem")));
 		}
@@ -1190,9 +1191,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		bsResultMas.put("ResultIsEdit", String.valueOf(1));
 		
 		if(bsResultDet.size()>0){
-			bsResultMas.put("ResultStockUse", String.valueOf(0));
-		}else{
 			bsResultMas.put("ResultStockUse", String.valueOf(1));
+		}else{
+			bsResultMas.put("ResultStockUse", String.valueOf(0));
 		}
 		bsResultMas.put("ResultIsCurrent", String.valueOf(1));
 		bsResultMas.put("ResultMatchID", String.valueOf(0));
@@ -1233,8 +1234,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 		EgovMap qryBS_Rev =  null;
 		qryBS_Rev=hsManualMapper.selectQryBS_Rev(bsResultMas);
+		logger.debug("qryBS_Rev : {}" + qryBS_Rev);
 		if(qryBS_Rev!=null){
-    		//bsResultMas_Rev.put("ResultID", 0); //sequence
+			int BSResultM_resultID = hsManualMapper.getBSResultM_resultID();
+    		bsResultMas_Rev.put("ResultID", BSResultM_resultID); //sequence
     		bsResultMas_Rev.put("No", String.valueOf(docNo));
     		bsResultMas_Rev.put("TypeID", String.valueOf("307"));
     		bsResultMas_Rev.put("ScheduleID", String.valueOf(qryBS_Rev.get("schdulId")));
@@ -1257,16 +1260,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		
     		hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev);
     		
-    		int BSResultM_resultID = hsManualMapper.getBSResultM_resultID();
-    		
-    		
+    		logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
     		List<EgovMap> qryResultDet =  hsManualMapper.selectQryResultDet(bsResultMas_Rev);
-    		
+    		logger.debug("qryResultDet : {}" + qryResultDet);
+    		logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
+    		// bsResultDet
     		for(int i = 0 ; i<qryResultDet.size() ; i++){
     			Map<String, Object> bsResultDet_Rev = new HashMap<String, Object>();
     			
     			//bsResultDet_Rev.put("BSResultItemID", 0);
-    			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
+    			bsResultDet_Rev.put("BSResultID", bsResultMas_Rev.get("ResultID"));
     			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
     			bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));//BS_RESULT_PART_DESC
     			bsResultDet_Rev.put("BSResultPartQty",  CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")));//BS_RESULT_PART_QTY
@@ -1405,6 +1408,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		bsResultMas.put("CodyId", String.valueOf(bsResultMas_Rev.get("codyId")));
     		
     		hsManualMapper.addbsResultMas(bsResultMas);
+    		
+    		for(int i = 0; i < bsResultDet.size(); i++) {
+    			Map<String, Object> row = bsResultDet.get(i);
+    			hsManualMapper.addbsResultDet_Rev(row);
+    		}
     		
     		hsManualMapper.updateQrySchedule(bsResultMas);
     		

@@ -2811,7 +2811,8 @@
                 )
                 values
                 (
-                SVC0006D_RESULT_ID_SEQ.nextval,
+                <!-- SVC0006D_RESULT_ID_SEQ.nextval, -->
+                #{ResultID},
                 #{No}
                 ,#{TypeId}
                 ,#{ScheduleID}
@@ -3118,7 +3119,7 @@
           <update id="updateQryConfig4" parameterType="Map">
           update SAL0090D
            set SRV_REM = #{ResultRemark}
-              ,SRV_PREV_DT = #{SettleDate}
+              ,SRV_PREV_DT = TO_DATE(#{SettleDate}, 'YYYYMMDD')
               ,SRV_BS_WEEK = #{bsPreferWeek}
         where SRV_STUS_ID = 1     
           and SRV_SO_ID =#{SalesOrderId}

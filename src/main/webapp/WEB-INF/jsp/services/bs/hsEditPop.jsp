@@ -335,27 +335,11 @@ var myDetailGridData = null;
     	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
            // add by jgkim
-              //var jsonObj = {};
-              //var resultList = new Array();
-              //var gridDataList = AUIGrid.getGridData(myDetailGridID);
-              //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
-              //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
-              /* console.log(gridDataList);
-              for(var i = 0; i < gridDataList.length; i++) {
-                  var item = gridDataList[i];
-                  for(var j = 0; j < myDetailGridData.length; j++) {
-                	  var oriItem = myDetailGridData[j];
-                	  if(!FormUtil.isEmpty(item.name)) {
-                		  if(item.name != oriItem.name) {
-                              resultList.push(gridDataList[i]);
-                          }
-                	  }
-                  }
-              }
-              console.log(resultList); */
-              //jsonObj.update = resultList;    
-                    jsonObj.form = $("#editHSResultForm").serializeJSON();
-                    console.log(jsonObj);
+              var cmbStatusType2 = $("#cmbStatusType2").val();
+              var form = $("#editHSResultForm").serializeJSON();
+              form.cmbStatusType2 = cmbStatusType2;
+              jsonObj.form = form;
+              console.log(jsonObj);
               Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
               Common.alert(result.message, fn_parentReload);
 
