@@ -397,6 +397,24 @@ public class SalesConstants {
 	
 	public static final int ROS_ORD_REM_UPLOAD_STATUS = 1; //det.StatusID = 1;
 	public static final int ROS_ORD_VALID_STATUS_ID = 1;  //det.ValidStatusID = 1;
+	public static final int ROS_ORD_VALID_STATUS_PASS_ID = 4;
+	public static final int ROS_ORD_DISABLE_ID = 8;
+	
+	public static final int ROS_ORD_VALID_REM = 4;
+	public static final int ROS_ORD_INVALID_REM = 21;
+	
+	public static final int ROS_CALLER_UPD_STATUS_ID = 1; //callerUpdateM.StatusCodeID = 1;
+	public static final int ROS_CALLER_UPD_TOT = 0;
+	public static final int ROS_CALLER_UPD_COMPL = 0;
+	public static final int ROS_CALLER_UPD_FAIL = 0;
+	
+	public static final int ROS_CALLER_UPD_DETAIL_STATUS_CODE_ID = 1; // det.ItemStatusCodeID = 1;
+	public static final int ROS_CALLER_SYS_ORD_ID = 0;   //  det.SysOrderID = 0;
+	public static final int RSO_CALLER_SYS_USER_ID = 0;  //det.SysUserID = 0;
+	
+	/*callerUpdateM.StatusCodeID = 1;
+    callerUpdateM.TotalComplete = 0;
+    callerUpdateM.TotalFail = 0;*/
 	
 	/**
 	 * 메세지 KEY
@@ -414,3 +432,4 @@ public class SalesConstants {
 	public static final String MSG_DCF_UNABLE = "sales.msg.dcfUnable"; // Unable to find DCF request record.
 
 }
+

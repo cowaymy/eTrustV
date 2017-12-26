@@ -775,7 +775,7 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		 //Approve Selected
 		 if( ("5").equals(params.get("statusEdit")) || ("13").equals(params.get("statusEdit"))  || ("14").equals(params.get("statusEdit"))){ 
  			
-			 //TODO Tem Disable Logic By Lee(2017/12/22) -- Logic Block by eCash Process
+			 //TODO Temp Disable Logic By Lee(2017/12/22) -- Logic Block by eCash Process
 			 /**
 			 //Call Entry Insert
 			 callSeq = ccpCalculateMapper.crtSeqCCR0006D();

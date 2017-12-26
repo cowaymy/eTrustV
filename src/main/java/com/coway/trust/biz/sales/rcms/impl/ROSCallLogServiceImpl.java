@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.sales.rcms.ROSCallLogService;
+import com.coway.trust.biz.sales.rcms.vo.callerDataVO;
 import com.coway.trust.biz.sales.rcms.vo.orderRemDataVO;
 import com.coway.trust.util.BeanConverter;
 import com.coway.trust.web.sales.SalesConstants;
@@ -1013,6 +1014,218 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 	@Override
 	public EgovMap selectBatchViewInfo(Map<String, Object> params) throws Exception {
 		
-		return rosCallLogMapper.selectBatchViewInfo(params);
+		EgovMap rtnInfoMap = null;
+		int totCnt = 0;
+		int validCnt = 0;
+		int inValidCnt = 0;
+		rtnInfoMap = rosCallLogMapper.selectBatchViewInfo(params); 
+		
+		totCnt = rosCallLogMapper.cntOrdRemUpload(params);
+		
+		params.put("validOrd", SalesConstants.ROS_ORD_VALID_REM);
+		validCnt = rosCallLogMapper.cntOrdRemUpload(params);
+		params.remove("validOrd");
+		
+		params.put("inValidOrd", SalesConstants.ROS_ORD_INVALID_REM);
+		inValidCnt = rosCallLogMapper.cntOrdRemUpload(params);
+		
+		rtnInfoMap.put("totCnt", totCnt);
+		rtnInfoMap.put("validCnt", validCnt);
+		rtnInfoMap.put("inValidCnt", inValidCnt);
+		
+		return rtnInfoMap;
+	}
+
+	@Override
+	public List<EgovMap> getBatchDetailInfoList(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.getBatchDetailInfoList(params);
+	}
+
+	@Override
+	public EgovMap searchExistOrdNo(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.searchExistOrdNo(params);
+	}
+
+	@Override
+	public EgovMap alreadyExistOrdNo(Map<String, Object> params) throws Exception {
+	
+		return rosCallLogMapper.alreadyExistOrdNo(params);
+	}
+
+	@Override
+	public void addNewOrdNo(Map<String, Object> params) throws Exception {
+		
+		int seq  = rosCallLogMapper.getSeqSAL0055D();
+		params.put("uploadDetId", seq);
+		if(params.get("addRem") == null){
+			params.put("addRem", "");
+		}
+		params.put("stusId", SalesConstants.ROS_ORD_REM_UPLOAD_STATUS);
+		params.put("validStatusId", SalesConstants.ROS_ORD_VALID_STATUS_PASS_ID);
+		params.put("validRemark", "");
+		
+		rosCallLogMapper.addNewOrdNo(params);
+	}
+
+	@Override
+	public void updOrdNo (Map<String, Object> params) throws Exception {
+		
+		params.put("stusId", SalesConstants.ROS_ORD_DISABLE_ID);
+		
+		rosCallLogMapper.updOrdNo(params);
+	}
+
+	@Override
+	public void updBatch(Map<String, Object> params) throws Exception {
+		
+		params.put("stusId", SalesConstants.ROS_ORD_DISABLE_ID);
+		rosCallLogMapper.updBatch(params);
+		
+	}
+
+	@Override
+	public void confirmBatch(Map<String, Object> params) throws Exception {
+		
+		EgovMap chkMap = null;
+		chkMap = rosCallLogMapper.chkBatchMasterInfo(params);
+		
+		if(chkMap != null){
+			
+			//Call Procedure 
+			Map<String, Object> prcMap = new HashMap<String, Object>();
+			prcMap.put("batchId", params.get("batchId"));
+			prcMap.put("userId", params.get("userId"));
+			
+			rosCallLogMapper.spOrderRemarkUpload_Confirm(prcMap);
+			
+			//Upd Master
+			Map<String, Object> insMap = new HashMap<String, Object>();
+			insMap.put("batchId", params.get("batchId"));  //det.UploadMID = int.Parse(Request["UploadMID"].ToString());
+			insMap.put("stusId", SalesConstants.ROS_ORD_VALID_STATUS_PASS_ID); //det.StatusID = 4;
+			insMap.put("userId", params.get("userId")); 
+			
+			rosCallLogMapper.updConfirmOrdRemMaster(insMap);
+		}
+	}
+	
+	
+	@Override
+	public List<EgovMap> selectCallerList(Map<String, Object> params) throws Exception {
+		
+		return rosCallLogMapper.selectCallerList(params);
+	}
+
+	@Override
+	public Map<String, Object> uploadCaller(Map<String, Object> params) throws Exception {
+
+		//Return Map
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+
+		
+		//(1)________________________________Insert Caller Master
+		
+		Map<String, Object> callerMap = new HashMap<String, Object>();
+		List<callerDataVO> vos = (List)params.get("voList");  // File List
+		
+		int batchId = rosCallLogMapper.getSeqMSC0011D();
+		LOGGER.info("###################  batchId : " + batchId);
+		callerMap.put("batchId", batchId);
+		callerMap.put("stusCodeId", SalesConstants.ROS_CALLER_UPD_STATUS_ID); //1
+		callerMap.put("userId", params.get("userId"));
+		callerMap.put("totUpDt", vos.size());
+		callerMap.put("totCmplt", SalesConstants.ROS_CALLER_UPD_COMPL);
+		callerMap.put("totFail", SalesConstants.ROS_CALLER_UPD_FAIL);
+		
+		rosCallLogMapper.instCallerMaster(callerMap);
+		
+		//(2)________________________________Insert Caller Detail (bulk)
+		
+		List<Map> list = vos.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			final int itmId  = rosCallLogMapper.getSeqMSC0012D();
+			map.put("itmId", itmId);
+			map.put("batchId", batchId);
+			map.put("stusCodeId", SalesConstants.ROS_CALLER_UPD_DETAIL_STATUS_CODE_ID);
+			map.put("itmMsg", "");  // det.ItemMessage = "";
+			map.put("ordNo", r.getOrderNo()); 
+			map.put("sysOrdId", SalesConstants.ROS_CALLER_SYS_ORD_ID); //  det.SysOrderID = 0;
+			map.put("userName", r.getCaller());
+			map.put("sysUserId", SalesConstants.RSO_CALLER_SYS_USER_ID);
+			return map;
+		})	.collect(Collectors.toList());
+		
+		/*
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		int seq = 0;
+		for (int idx = 0; idx < vos.size(); idx++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			LOGGER.info("________________________________________________________ before seq : " + seq);
+			seq  = rosCallLogMapper.getSeqSAL0055D();
+			LOGGER.info("________________________________________________________ After seq : " + seq);
+			
+			map.put("uploadDetId", seq);
+			map.put("uploadMId", ordRemSeq);
+			map.put("ordNo", vos.get(idx).getOrderNo());
+			map.put("rem", vos.get(idx).getRemark());
+			map.put("statusId", SalesConstants.ROS_ORD_REM_UPLOAD_STATUS);
+			map.put("orderId", 0);
+			map.put("userId", params.get("userId"));
+			map.put("validStatusId", SalesConstants.ROS_ORD_VALID_STATUS_ID);
+			map.put("validRem", "");
+			
+			list.add(idx, map);		
+			
+		}*/
+		
+		int size = 1000;
+		int page = list.size() / size;
+		int start;
+		int end;
+		
+		Map<String, Object> callerDMap = new HashMap<>();
+		for (int i = 0; i <= page; i++) {
+			start = i * size;
+			end = size;
+			if(i == page){
+				end = list.size();
+			}
+			callerDMap.put("list",
+					list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+			rosCallLogMapper.insertCallerDetail(callerDMap);
+		}
+		
+		
+		//(3)________________________________spROSCallerUpdate (call Procedure)
+		//posMapper.posBookingCallSP_LOGISTIC_REQUEST(logPram);
+		Map<String, Object> prcMap = new HashMap<String, Object>();
+		prcMap.put("batchId", batchId);
+		
+		rosCallLogMapper.spROSCallerUpdate(prcMap);
+		
+		
+		//(4)_________________________________ Count
+		
+		Map<String, Object> cntInfoMap = new HashMap<String, Object>();
+		EgovMap cntMap = null;
+		cntInfoMap.put("batchId", batchId);
+		cntMap = rosCallLogMapper.countInfoByBatchId(cntInfoMap);
+		
+		//Return
+		rtnMap.put("batchId", batchId);
+		rtnMap.put("totUpDt", cntMap.get("totUpDt"));
+		rtnMap.put("totCmplt", cntMap.get("totCmplt"));
+		rtnMap.put("totFail", cntMap.get("totFail"));
+		
+		return rtnMap;
+	}
+
+	@Override
+	public List<EgovMap> getCallerDetailList(Map<String, Object> params) throws Exception {
+	
+		return rosCallLogMapper.getCallerDetailList(params);
 	}
 }
+

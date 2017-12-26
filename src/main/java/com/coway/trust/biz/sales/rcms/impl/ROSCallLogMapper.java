@@ -61,4 +61,39 @@ public interface ROSCallLogMapper {
 	
 	EgovMap selectBatchViewInfo(Map<String, Object> params);
 	
+	List<EgovMap> getBatchDetailInfoList(Map<String, Object> params);
+	
+	int cntOrdRemUpload(Map<String, Object> params);
+	
+	EgovMap searchExistOrdNo(Map<String, Object> params);
+	
+	EgovMap alreadyExistOrdNo(Map<String, Object> params);
+	
+	void addNewOrdNo(Map<String, Object> params);
+	
+	void updOrdNo(Map<String, Object> params);
+	
+	void updBatch(Map<String, Object> params);
+	
+	EgovMap chkBatchMasterInfo(Map<String, Object> params);
+	
+	void updConfirmOrdRemMaster(Map<String, Object> params);
+	
+	Map<String, Object> spOrderRemarkUpload_Confirm(Map<String, Object> param);
+	
+	List<EgovMap> selectCallerList(Map<String, Object> params);
+	
+	int getSeqMSC0011D();
+	
+	void instCallerMaster(Map<String, Object> params);
+	
+	int getSeqMSC0012D();
+	
+	void insertCallerDetail(Map<String, Object> params);
+	
+	Map<String, Object> spROSCallerUpdate(Map<String, Object> params);
+	
+	EgovMap countInfoByBatchId (Map<String, Object> params);
+	
+	List<EgovMap> getCallerDetailList(Map<String, Object> params);
 }

@@ -322,7 +322,7 @@ $(document).ready(function() {
 				    	tempLength = idxObj.inputQty - serialCnt;
 				    	for (var j = 0; j < tempLength; j++) {
                             
-                            var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : '999999999999999'};
+                            var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : '999999999999999', stkId : idxObj.stkId};
 				    		
 				    		AUIGrid.addRow(serialConfirmGridID, addObj, 'first');
 						}
@@ -452,7 +452,8 @@ function fn_createSerialConfirmGrid(){
 	 var seriaConfirmlColumnLayout =  [ 
                                 {dataField : "matnr", headerText : "Filter Code", width : '33%' , editable : false} ,
                                 {dataField : "stkDesc", headerText : "Filter Name", width : '33%' , editable : false},
-                                {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false} 
+                                {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false},
+                                {dataField : "stkId" , visible : true}
                                ];
 	 
 	 serialConfirmGridID = GridCommon.createAUIGrid("#serial_grid_wrap", seriaConfirmlColumnLayout,'', serialGridPros);  

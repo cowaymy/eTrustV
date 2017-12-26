@@ -397,6 +397,7 @@
      <select id="getFilterSerialNum" parameterType="Map" resultType="egovMap">
                     SELECT 
                         T1.MATNR,
+                        T3.STK_ID,
                         T1.SERIAL_NO,
                         T3.STK_DESC,
                         T2.USER_ID,
@@ -974,7 +975,7 @@
 			                                  UPD_USER_ID)
                             VALUES (  #{serialSeq},
                                            #{posMasterSeq}, 
-                                           #{matnr},
+                                           #{stkId},
                                            #{serialNo},
                                            NULL, 
                                            SYSDATE,

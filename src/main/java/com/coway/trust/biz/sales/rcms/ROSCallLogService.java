@@ -31,4 +31,24 @@ public interface ROSCallLogService {
 	Map<String, Object> uploadOrdRem(Map<String, Object> params) throws Exception;
 	
 	EgovMap selectBatchViewInfo(Map<String, Object> params)throws Exception;
+	
+	List<EgovMap> getBatchDetailInfoList(Map<String, Object> params)throws Exception;
+	
+	EgovMap searchExistOrdNo(Map<String, Object> params)throws Exception;
+	
+	EgovMap alreadyExistOrdNo(Map<String, Object> params)throws Exception;
+	
+	void addNewOrdNo(Map<String, Object> params)throws Exception;
+	
+	void updOrdNo(Map<String, Object> params)throws Exception;
+	
+	void updBatch(Map<String, Object> params)throws Exception;
+	
+	void confirmBatch(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectCallerList(Map<String, Object> params)throws Exception;
+	
+	Map<String, Object> uploadCaller(Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> getCallerDetailList(Map<String, Object> params)throws Exception;
 }

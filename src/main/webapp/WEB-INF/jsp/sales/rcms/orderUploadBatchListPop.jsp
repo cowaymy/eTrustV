@@ -42,6 +42,24 @@ $(document).ready(function() {
 		
 		Common.popupDiv("/sales/rcms/viewUploadBatchPop.do", {batchId : selectedItem[0].item.uploadMid}, null , true, '_viewBatchDiv');
 	});
+	
+	//Confirm
+    $("#_confirmUpload").click(function() {
+    	
+        //Validation
+        //selected
+        var selectedItem = AUIGrid.getSelectedItems(ordRemGridID);
+        if(selectedItem.length <= 0){
+            Common.alert(" No result selected. ");
+            return;
+        }
+        if(selectedItem[0].item.stusId == '1'){  //Active Only
+        	Common.popupDiv("/sales/rcms/confirmUploadBatchPop.do", {batchId : selectedItem[0].item.uploadMid}, null , true, '_confirmBatchDiv');	
+        }else{
+        	Common.alert("<b>Upload batch ["+selectedItem[0].item.uploadMid+"] is no longer active.</b><br/><b>Confirm batch is disallowed.</b>");
+        }
+    });
+	
 });
 
 function createOrderRemGrid(){
@@ -49,7 +67,8 @@ function createOrderRemGrid(){
                             {dataField : "uploadMid", headerText : "Batch ID", width : '25%' , editable : false}, 
                             {dataField : "name", headerText : "Status", width : '25%', editable : false},
                             {dataField : "crtUserName", headerText : "Uploader", width : '25%' , editable : false},
-                            {dataField : "crtDt", headerText : "Upload Date", width : '25%' , editable : false}
+                            {dataField : "crtDt", headerText : "Upload Date", width : '25%' , editable : false},
+                            {dataField : "stusId", visible : false} 
                            ];
     
     //그리드 속성 설정

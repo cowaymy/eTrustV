@@ -1,0 +1,184 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javascript">
+
+
+var callerGridID;
+var callerDetGridID;
+
+$(document).ready(function() {    
+	createRosCallerGrid();
+	createRosCallerDetGrid();
+	
+	//Search
+	$("#_searchBtn").click(function() {
+		Common.ajax("GET", "/sales/rcms/selectCallerList", $("#_searchForm").serialize(), function(result) {
+			AUIGrid.setGridData(callerGridID, result);
+		});
+	});
+	
+	//Cell Click
+	AUIGrid.bind(callerGridID, "cellClick", function(event){
+		 Common.ajax("GET", "/sales/rcms/getCallerDetailList", {batchId : event.item.id}, function(result) {
+	            AUIGrid.setGridData(callerDetGridID, result);
+	     });
+	});
+});
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
+
+
+function fn_newCallerUpdate(){
+	Common.popupDiv("/sales/rcms/callerUploadPop.do", null ,  null , true, '_addFileDiv');
+}
+
+function createRosCallerGrid(){
+	
+	 var callerColumnLayout =  [ 
+                             
+                             {dataField : "id", headerText : "Batch ID", width : '10%', editable : false},
+                             {dataField : "totUpDt", headerText : "Total Rows", width : '10%' , editable : false},
+                             {dataField : "totCmplt", headerText : "Total Success", width : '10%' , editable : false},
+                             {dataField : "totFail", headerText : "Total Fail", width : '10%' , editable : false},
+                             {dataField : "rosYear", headerText : "ROS Year", width : '10%' , editable : false}, 
+                             {dataField : "rosMonth", headerText : "ROS Month", width : '10%' , editable : false},
+                             {dataField : "userName", headerText : "Updator", width : '20%' , editable : false},
+                             {dataField : "crtDt", headerText : "Update At", width : '20%' , editable : false}
+                         
+                            ];
+     
+     //그리드 속성 설정
+     var gridPros = {
+             
+             usePaging           : true,         //페이징 사용
+             pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+             fixedColumnCount    : 1,            
+             showStateColumn     : true,             
+             displayTreeOpen     : false,            
+             selectionMode       : "singleRow",  //"multipleCells",            
+             headerHeight        : 30,       
+             useGroupingPanel    : false,        //그룹핑 패널 사용
+             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+             noDataMessage       : "No Ros Caller found.",
+             groupingMessage     : "Here groupping"
+     };
+     
+     callerGridID = GridCommon.createAUIGrid("#caller_grid_wrap", callerColumnLayout,'', gridPros);  // address list
+}
+
+function createRosCallerDetGrid(){
+    
+    var callerDetColumnLayout =  [ 
+                            
+                            {dataField : "ordNo", headerText : "Order No", width : '20%', editable : false},
+                            {dataField : "sysOrdId", headerText : "Old Caller Id", width : '20%' , editable : false},
+                            {dataField : "sysUserName", headerText : "Old Caller Name", width : '20%' , editable : false},
+                            {dataField : "", headerText : "New Caller Id", width : '20%' , editable : false},
+                            {dataField : "", headerText : "New Caller Name", width : '20%' , editable : false}
+                        
+                           ];
+    
+    //그리드 속성 설정
+    var gridPros = {
+            
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            fixedColumnCount    : 1,            
+            showStateColumn     : true,             
+            displayTreeOpen     : false,            
+            selectionMode       : "singleRow",  //"multipleCells",            
+            headerHeight        : 30,       
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            noDataMessage       : "No Ros Caller found.",
+            groupingMessage     : "Here groupping"
+    };
+    
+    callerDetGridID = GridCommon.createAUIGrid("#caller_det_grid_wrap", callerDetColumnLayout,'', gridPros);  // address list
+}
+
+
+</script>
+
+
+<section id="content"><!-- content start -->
+<ul class="path">
+    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+    <li>Sales</li>
+    <li>Order list</li>
+</ul>
+
+<aside class="title_line"><!-- title_line start -->
+<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<h2>ROS Caller Update</h2>
+<ul class="right_btns">
+    <li><p class="btn_blue"><a onclick="javascript:fn_newCallerUpdate()"><span ></span>New Caller Update</a></p></li>
+    <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li> 
+</ul>
+</aside><!-- title_line end -->
+
+
+<section class="search_table"><!-- search_table start -->
+<form id="_searchForm">
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:130px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:170px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Batch ID</th>
+    <td>
+    <input type="text" title="" placeholder="Batch ID" class="w100p" id="_callBatchId" name="callBatchId" />
+    </td>
+    <th scope="row">Update Date</th>
+    <td>
+    <input type="text" title="key in Date" placeholder="DD/MM/YYYY" class="j_date"  name="srchDt" id="_srchDt"  readonly="readonly"/>
+    </td>
+    <th scope="row">Updator</th>
+    <td>
+    <input type="text" title="" placeholder="Updator" class="w100p" id="_callUpdtor" name="callUpdtor" />
+    </td>
+</tr>
+</tbody>
+</table><!-- table end -->
+
+</form>
+</section><!-- search_table end -->
+
+<section class="search_result"><!-- search_result start -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="caller_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="caller_det_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+</section><!-- search_result end -->
+
+</section><!-- content end -->

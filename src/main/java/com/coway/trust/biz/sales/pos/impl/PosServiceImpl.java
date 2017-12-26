@@ -833,7 +833,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           	//10.  ********************************************************************************************************* BOOKING 
 
         
-    		Map<String, Object>  logPram = new HashMap<String, Object>();
+    		/*Map<String, Object>  logPram = new HashMap<String, Object>();
     		
     		logPram.put("psno", docNoPsn);
     		logPram.put("retype", "POS");  
@@ -845,7 +845,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		LOGGER.info("#########  call Procedure Params : " + logPram.toString());
     		posMapper.posBookingCallSP_LOGISTIC_REQUEST(logPram);
     		LOGGER.debug("############ Procedure Result  ");
-    		LOGGER.info("############### 10. POS BOOKING  END  ################");
+    		LOGGER.info("############### 10. POS BOOKING  END  ################");*/
             
             
             LOGGER.info("################################## return value(docNoPsn): "  + docNoPsn);

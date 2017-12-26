@@ -91,6 +91,7 @@ $(document).ready(function() {
     //Wh List
     $("#_cmbWhBrnchIdPop").change(function() {
     	getLocIdByBrnchId($(this).val());
+    	$("#_payBrnchCode").val($(this).val());
     });
     
     //_insPosModuleType Change Func
@@ -853,7 +854,8 @@ var serialGridPros = {
   var serialConfirmlColumnLayout =  [ 
                              {dataField : "matnr", headerText : "Filter Code", width : '33%' , editable : false  } ,
                              {dataField : "stkDesc", headerText : "Filter Name", width : '33%' , editable : false },
-                             {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false } 
+                             {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false },
+                             {dataField : "stkId" , visible :true}//STK_ID
                             ];
     
     serialTempGridID = GridCommon.createAUIGrid("#serialTemp_grid_wrap", serialConfirmlColumnLayout,'', serialGridPros);

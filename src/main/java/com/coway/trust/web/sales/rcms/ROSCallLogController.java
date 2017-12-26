@@ -1,18 +1,15 @@
 package com.coway.trust.web.sales.rcms;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,22 +19,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderLedgerService;
 import com.coway.trust.biz.sales.rcms.ROSCallLogService;
+import com.coway.trust.biz.sales.rcms.vo.callerDataVO;
 import com.coway.trust.biz.sales.rcms.vo.orderRemDataVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.config.csv.CsvReadComponent;
-import com.coway.trust.config.excel.ExcelReadComponent;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.web.organization.organization.excel.TerritoryRawDataVO;
 import com.coway.trust.web.sales.SalesConstants;
 import com.google.gson.Gson;
 
@@ -67,6 +62,8 @@ public class ROSCallLogController {
 	@Autowired
 	private CsvReadComponent csvReadComponent;
 	
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 	
 	@RequestMapping(value = "/rosCallLogList.do")
 	public String rosCallLogList (@RequestParam Map<String, Object> params) throws Exception{
@@ -293,9 +290,6 @@ public class ROSCallLogController {
 	
 	@RequestMapping(value = "/uploadOrdRem.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> readExcel(MultipartHttpServletRequest request,SessionVO sessionVO) throws Exception {
-
-		
-		ReturnMessage message = new ReturnMessage();
 		
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 	
@@ -364,4 +358,181 @@ public class ROSCallLogController {
 		
 		return "/sales/rcms/viewUploadBatchPop";
 	}
+	
+	
+	@RequestMapping(value = "/getBatchDetailInfoList")
+	public ResponseEntity<List<EgovMap>> getBatchDetailInfoList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> listMap = null;
+		
+		listMap = rosCallLogService.getBatchDetailInfoList(params);
+		
+		return ResponseEntity.ok(listMap);
+		
+	}
+	
+	
+	@RequestMapping(value = "/confirmUploadBatchPop.do")
+	public String confirmUploadBatchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		EgovMap infoMap = null;
+		
+		infoMap = rosCallLogService.selectBatchViewInfo(params);
+		model.addAttribute("infoMap", infoMap);
+		model.addAttribute("batchId", params.get("batchId"));
+		
+		return "/sales/rcms/confirmUploadBatchPop";
+		
+	}
+	
+	
+	@RequestMapping(value = "/addOrderRemBatch.do")
+	public String addOrderRemBatch (@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+		
+		model.addAttribute("batchId", params.get("batchId"));
+		
+		return "/sales/rcms/addBatchItemPop";
+	}
+	
+	
+	@RequestMapping(value="/searchExistOrdNo")
+	public ResponseEntity<EgovMap> searchExistOrdNo(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap srcMap = null;
+		srcMap = rosCallLogService.searchExistOrdNo(params);
+		return ResponseEntity.ok(srcMap);
+	}
+	
+	
+	@RequestMapping(value = "/alreadyExistOrdNo")
+	public ResponseEntity<EgovMap> alreadyExistOrdNo(@RequestParam Map<String, Object> params) throws Exception{
+		EgovMap srcMap = null;
+		srcMap = rosCallLogService.alreadyExistOrdNo(params);
+		return ResponseEntity.ok(srcMap);
+	}
+	
+	
+	@RequestMapping(value = "/addNewOrdNo", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> addNewOrdNo(@RequestBody Map<String, Object> params) throws Exception{
+		
+		SessionVO session = sessionHandler.getCurrentSessionInfo();
+		
+		params.put("userId", session.getUserId());
+		rosCallLogService.addNewOrdNo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/updOrdNo", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updOrdNo (@RequestBody Map<String, Object> params) throws Exception{
+		
+		SessionVO session = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+		
+		rosCallLogService.updOrdNo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
+	
+	@RequestMapping(value = "/updBatch", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updBatch (@RequestBody Map<String, Object> params) throws Exception{
+		
+		SessionVO session = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+		
+		rosCallLogService.updBatch(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
+	//confirmBatch
+	@RequestMapping(value = "/confirmBatch", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> confirmBatch (@RequestBody Map<String, Object> params) throws Exception{
+		
+		SessionVO session = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", session.getUserId());
+		
+		rosCallLogService.confirmBatch(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+		
+	}
+	
+	@RequestMapping(value = "/rosCallerUpdList.do")
+	public String rosCallerUpdList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/rcms/rosCallerUpdList";
+	}
+	
+	
+	@RequestMapping(value = "/selectCallerList")
+	public ResponseEntity<List<EgovMap>> selectCallerList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> callerList = null;
+		
+		callerList = rosCallLogService.selectCallerList(params);
+		
+		
+		return ResponseEntity.ok(callerList);
+	}
+	
+	
+	@RequestMapping(value = "/callerUploadPop.do")
+	public String callerUploadPop (@RequestParam Map<String, Object> params) throws Exception{
+		return "/sales/rcms/callerUploadPop";
+	}
+	
+	
+	
+	@RequestMapping(value = "/uploadCaller.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> uploadCaller (MultipartHttpServletRequest request,SessionVO sessionVO) throws Exception {
+		
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+	
+		MultipartFile multipartFile = fileMap.get("csvFile");
+
+		//List<TerritoryRawDataVO> vos = excelReadComponent.readExcelToList(multipartFile, TerritoryRawDataVO::create);
+		List<callerDataVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,callerDataVO::create);
+		
+		//step 1 vaild 
+		Map param = new HashMap();
+		param.put("voList", vos);
+		param.put("userId", sessionVO.getUserId());
+		
+		//EgovMap  vailMap = territoryManagementService.uploadVaild(param,sessionVO);
+		Map<String, Object> rtnMap = rosCallLogService.uploadCaller(param);
+		//결과 
+		return ResponseEntity.ok(rtnMap);
+	}
+	
+	
+	@RequestMapping(value = "/getCallerDetailList")
+	public ResponseEntity<List<EgovMap>> getCallerDetailList(@RequestParam Map<String, Object> params) throws Exception{
+		
+		List<EgovMap> callerDetList = null;
+		callerDetList = rosCallLogService.getCallerDetailList(params);
+		
+		return ResponseEntity.ok(callerDetList);
+	}
 }
+
