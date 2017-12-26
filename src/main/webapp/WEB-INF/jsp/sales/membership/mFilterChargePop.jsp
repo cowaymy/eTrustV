@@ -20,6 +20,18 @@
        }, function(result) {
             console.log( result);
             AUIGrid.setGridData(gridFilterID, result);
+                        
+            var idx = AUIGrid.getRowCount(gridFilterID);
+            
+            for(var i = 0; i < idx ; i++){
+                
+                var amt = AUIGrid.getCellValue(gridFilterID, i, "prc");
+                
+                if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){                 
+                    AUIGrid.setCellValue(gridFilterID, i, "prc", Math.round(amt * 100 / 106))  
+                }
+                
+            }
             
        });
    }
@@ -58,7 +70,8 @@
 	        fixedColumnCount    : 1,      
 	        selectionMode       : "singleRow",  //"multipleCells",    
 	        showRowNumColumn    : true  ,
-	        showFooter : true  
+	        showFooter : true  ,
+	        showStateColumn :false
 	    };
 	    
 	   
