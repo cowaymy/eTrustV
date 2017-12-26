@@ -178,6 +178,11 @@
     }
     
     function fn_searchListAjax(){
+        if( $("#netSalesMonth").val() ==""  &&  $("#createStDate").val() ==""  &&  $("#createEnDate").val() ==""  ){
+            Common.alert("You must key-in at least one of Order Date / Net Sales Month");
+             return ;
+         }
+         
         Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
             
