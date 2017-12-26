@@ -50,7 +50,7 @@ function fn_getTaxInvoiceListAjax() {
             FormUtil.checkReqValue($("#rentalMembershipNo")) &&
             FormUtil.checkReqValue($("#orderNo")) &&
             FormUtil.checkReqValue($("#custName")) ){
-        Common.alert('* Please key-In Search Condition. <br />');
+        Common.alert("<spring:message code='pay.alert.searchCondition'/>");
         return;
     }
     
@@ -78,7 +78,7 @@ function fn_generateInvoice(){
       Common.report("reportPDFForm", option);
        
   }else{
-      Common.alert('<b>No print type selected.</b>');
+	  Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
 }
 

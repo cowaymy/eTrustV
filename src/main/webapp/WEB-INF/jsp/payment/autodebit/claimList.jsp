@@ -305,16 +305,13 @@ function fn_openDivPop(val){
 	        var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlFailSmsIsPump");
 	        
 	        if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
-                Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
-                        "Only [Active] batch is allowed to update claim result.</b>");   
+                Common.alert("<spring:message code='pay.alert.claimResult' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
 			}else if(val == "FILE" && ctrlStusId != 1){
-				Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
-					    "Only [Active] batch is allowed to re-generate claim file.</b>");
+				Common.alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
 			}else if(val == "SMS" && ctrlStusId != 4){
-                Common.alert("<b>Batch [" + ctrlId + "] is under status [" + stusName + "].<br />" +
-                "Only [Completed] batch is allowed to send failed deduction SMS.</b>");
+                Common.alert("<spring:message code='pay.alert.failSms' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
             }else if(val == "SMS" && smsSend == 1){
-                Common.alert("<b>Failed deduction SMS process for batch [" + ctrlId + "] was completed.</b>");
+                Common.alert("<spring:message code='pay.alert.failSmsProcess' arguments='"+ctrlId+"' htmlEscape='false'/>");
             }else{
             	
             	$('#sms_grid_wrap').hide();
@@ -389,7 +386,7 @@ function fn_openDivPop(val){
             }
 			
         }else{
-             Common.alert('No claim record selected.');
+             Common.alert("<spring:message code='pay.alert.noClaim'/>");
         }
 	}else{
 		$("#view_wrap").hide();
@@ -412,14 +409,14 @@ hideViewPopup=function(val){
 
 // Pop-UP 에서 Deactivate 처리
 function fn_deactivate(){
-	Common.confirm('<b>Are you sure want to deactivate this claim batch ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.deactivateBatch'/>",function (){
 	    var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	    
 	    Common.ajax("GET", "/payment/updateDeactivate.do", {"ctrlId":ctrlId}, function(result) {
-	    	Common.alert("<b>This claim batch has been deactivated.</b>","fn_openDivPop('VIEW')");
+	    	Common.alert("<spring:message code='pay.alert.deactivateSuccess'/>","fn_openDivPop('VIEW')");
 	    	
 	    },function(result) {
-	        Common.alert("<b>Failed to deactivate this claim batch.<br />Please try again later.</b>");   
+	        Common.alert("<spring:message code='pay.alert.deactivateFail'/>");   
 	    });
 	});
 }
@@ -429,10 +426,10 @@ function fn_sendFailDeduction(){
 	   var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	   
 	   Common.ajax("GET", "/payment/sendFaileDeduction.do", {"ctrlId":ctrlId}, function(result) {
-            Common.alert("<b>SMS successfully added into sending list.</b>",function () {fn_openDivPop('VIEW'); });
+            Common.alert("<spring:message code='pay.alert.claimSmsSuccess'/>",function () {fn_openDivPop('VIEW'); });
             
         },function(result) {
-            Common.alert("<b>Failed to send SMS. Please try again later.</b>");   
+            Common.alert("<spring:message code='pay.alert.claimSmsFail'/>");   
         });
     
 }
@@ -484,10 +481,10 @@ function fn_uploadFile(){
 					if(updateResultItemKind == 'LIVE'){
 						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
 							function(result) {
-								Common.alert("<b>Claim result successfully updated.</b>");
+								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 							},
 							function(result) {
-								Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+								Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
 							}
 						);     
 					}
@@ -497,14 +494,12 @@ function fn_uploadFile(){
 						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
 							function(result) {
 								var resultMsg = "";
-								resultMsg += "<b>The result item have stored in our system.<br />";
-								resultMsg += "Syncrhonization process will run on schedule plan.<br />";
-								resultMsg += "Kindly check your claim result on next day.<br />Thank you.</b>";	                	   
+								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";    	   
 
 								Common.alert(resultMsg);
 							},
 							function(result) {
-								Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+								Common.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
 							}
 						);
 					}
@@ -520,7 +515,7 @@ function fn_uploadFile(){
 			} catch (e) {
 				console.log(e);
 			}
-			alert("Fail : " + jqXHR.responseJSON.message);        
+			Common.alert("Fail : " + jqXHR.responseJSON.message);        
 		}
 	);
 	
@@ -541,7 +536,7 @@ function fn_resultFileUp(){
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
-        alert('Select the CSV file on the loca PC');
+    	Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
         return;
         //data.all = [];
     }
@@ -553,12 +548,11 @@ function fn_resultFileUp(){
     Common.ajax("POST", "/payment/updateClaimResultItem.do", data, function(result) {
     	resetUpdatedItems(); // 초기화
     	
-        var message = "";        
-        message += "Batch ID : " + result.data.ctrlId + "<br />";
-        message += "Total Result Item : " + result.data.totalItem + "<br />";
-        message += "Total Success : " + result.data.totalSuccess + "<br />";
-        message += "Total Failed : " + result.data.totalFail + "<br />";
-        message += "<br />Are you sure want to confirm this result ?<br />";
+        var message = "";
+    	message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+	    	result.data.totalItem+" ; "+
+	    	result.data.totalSuccess+" ; "+
+	    	result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
         
         Common.confirm(message,
         		function (){
@@ -572,10 +566,10 @@ function fn_resultFileUp(){
         	         if(updateResultItemKind == 'LIVE'){
 	        	         Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
 	        	        		 function(result) {
-	        	        	          Common.alert("<b>Claim result successfully updated.</b>");
+	        	        	          Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 	        	        	     },
 	        	        	     function(result) {
-	        	        	    	  Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+	        	        	    	  Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
 	        	        	    });     
         	         }
         	       //CALIM RESULT UPDATE NEXT DAY
@@ -583,14 +577,12 @@ function fn_resultFileUp(){
 	                   Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
 	                           function(result) {
 	                	            var resultMsg = "";
-	                	            resultMsg += "<b>The result item have stored in our system.<br />";
-	                	            resultMsg += "Syncrhonization process will run on schedule plan.<br />";
-	                	            resultMsg += "Kindly check your claim result on next day.<br />Thank you.</b>";	                	   
+	                	            resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 	                	   
 	                                Common.alert(resultMsg);
 	                           },
 	                           function(result) {
-	                                Common.alert("<b>Failed to update claim result.<br />Please try again later.</b>");
+	                                Common.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
 	                          });
         	       }
        });
@@ -618,25 +610,25 @@ function resetUpdatedItems() {
 function fn_genClaim(){
 	
 	if($("#new_claimType option:selected").val() == ''){
-		Common.alert("* Please select the claim type.<br />");
+		Common.alert("<spring:message code='pay.alert.selectClaimType'/>");
 		return;
 	}else{
 		
 		 if ($("#new_claimType option:selected").val() == "131" || $("#new_claimType option:selected").val() == "134") {             
 			 if ($("#new_claimDay option:selected").val() == '' ) {
-				 Common.alert("* Please select the claim day.<br />");
+				 Common.alert("<spring:message code='pay.alert.selectClaimDay'/>");
                  return;                 
              }
          } else if ($("#new_claimType option:selected").val() == "132") {
              if ($("#new_issueBank option:selected").val() == '') {
-            	 Common.alert("* Please select the issue bank.<br />");
+            	 Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
                  return;                 
              }
          }		
 	}
 	
 	if($("#new_debitDate").val() == ''){
-		Common.alert("* Please insert the debit date.<br />");
+		Common.alert("<spring:message code='pay.alert.insertDate'/>");
         return;
 	}
 	
@@ -653,36 +645,25 @@ function fn_genClaim(){
 		         var message = "";
 		         
 		         if(result.code == "IS_BATCH"){		        	 
-		        	 message += "There is one active batch exist.<br />";
-		        	 message += "Batch ID : " + result.data.ctrlId + "<br />";
-		        	 message += "Creator : " + result.data.crtUserName + "<br />";
-		        	 message += "Create Date : " + result.data.crtDt  + "<br />";
-		        	 message += "<br />You must deactive or complete the batch before create a new batch.<br />";
+		        	 message += "<spring:message code='pay.alert.claimIsBatch' arguments='"+result.data.ctrlId+" ; "+
+		        	 result.data.crtUserName+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
 		        	 
 		         }else if(result.code == "FILE_OK"){
-                     message += "New claim batch successfully generated.<br /><br />";
-                     message += "Batch ID : " + result.data.ctrlId + "<br />";
-                     message += "Total Claim Amount : " + result.data.ctrlBillAmt + "<br />";
-                     message += "Total Account : " + result.data.ctrlTotItm + "<br />";
-                     message += "Creator : " + result.data.crtUserId + "<br />";
-                     message += "Create Date : " + result.data.crtDt + "<br />";
+                     message += "<spring:message code='pay.alert.claimFileOk' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
+                     result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
                      
 		         }else if(result.code == "FILE_FAIL"){
-		        	 message += "New claim batch successfully generated, but failed to create claim file.<br /><br />";
-                     message += "Batch ID : " + result.data.ctrlId + "<br />";
-                     message += "Total Claim Amount : " + result.data.ctrlBillAmt + "<br />";
-                     message += "Total Account : " + result.data.ctrlTotItm + "<br />";
-                     message += "Creator : " + result.data.crtUserId + "<br />";
-                     message += "Create Date : " + result.data.crtDt + "<br />";
+                     message += "<spring:message code='pay.alert.claimFileFail' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
+                     result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
                      
 		         }else{
-		        	 message += "Failed to generate new claim batch. Please try again later.";
+		        	 message += "<spring:message code='pay.alert.generateFailClaimBatch'/>";
 		         }
 		         
 		         Common.alert("<b>" + message + "</b>");
 	       },
 	       function(result) {
-                 Common.alert("<b>Failed to generate new claim batch. Please try again later.</b>");   
+                 Common.alert("<spring:message code='pay.alert.generateFailClaimBatch'/>");   
            }
 	);
 }
@@ -698,11 +679,11 @@ function fn_createFile(){
     
     Common.ajax("POST", "/payment/createClaimFile.do", data,  
             function(result) {
-                 Common.alert("<b>Claim file has successfully created.</b>");
+                 Common.alert("<spring:message code='pay.alert.claimSucessCreate'/>");
            
            },
            function(result) {
-                 Common.alert("<b>Failed to generate claim file. Please try again later.</b>");   
+                 Common.alert("<spring:message code='pay.alert.claimFailGenFile'/>");   
            }
     );
 	

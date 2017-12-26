@@ -49,7 +49,7 @@ var columnLayout = [
         width: 100,
         renderer : {
             type : "ButtonRenderer",
-            labelText : "Delete",
+            labelText : "<spring:message code='pay.head.delete'/>",
             onclick : function(rowIndex, columnIndex, value, item) {
                 //alert(rowIndex);
                 AUIGrid.removeRow(myGridID, "selectedIndex");
@@ -86,7 +86,7 @@ function _callBackQuotationPop(obj){
 	
 	//추가하려는 객체의 Quotation ID값이 이미 존재하는지 체크
     if(srvMemQuotIdTxtArray.indexOf(obj.srvMemQuotIdTxt) > -1){
-        Common.alert('<b>Selected Bill Existing in List.</b>');     
+        Common.alert("<spring:message code='pay.alert.selectedBillExistingList'/>");     
         return;
         
     }else{
@@ -111,7 +111,7 @@ function fn_createBills(){
 	var rowCount = AUIGrid.getRowCount(myGridID);
 	
 	if(rowCount < 1){
-		Common.alert("<b>No record(s) found at Gridview.</b>");
+		Common.alert("<spring:message code='pay.alert.noRecordsGridView'/>");
 		return;
 	}else if (rowCount == 1){
 		fn_showRemark();
@@ -149,15 +149,15 @@ function fn_save(){
     Common.ajax("POST", "/payment/saveSrvMembershipBilling.do", data, function(result) {       
     	var msg = '';    	
     	if(result.message == 1){
-    		msg = '<b>Quotation successfully converted to membership sales.</b>';
+    		msg = "<spring:message code='pay.alert.quotationSuccess'/>";
     	}else if (result.message == 99){
-    		msg = '<b>Failed to generate invoice. Please try again later.</b>';
+    		msg = "<spring:message code='pay.alert.failedToInvoice'/>";
         }else if (result.message == 98){
-        	msg = '<b>Failed to convert to sales. Please try again later.</b>';                      
+        	msg = "<spring:message code='pay.alert.failedToConvert'/>";                      
         }else if (result.message == 97){
-    	    msg = '<b>Failed to save. Please try again later.</b>';    	   
+    	    msg = "<spring:message code='pay.alert.failedToSave'/>";    	   
         }else {
-    	    msg = '<b>Failed to save. Please try again later.</b>';
+    	    msg = "<spring:message code='pay.alert.failedToSave'/>";
         }
     	
     	Common.alert(msg, function(){

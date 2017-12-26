@@ -68,12 +68,12 @@ $(document).ready(function(){
 function fn_selectListAjax() {     
 	
 	if(FormUtil.checkReqValue($("#batchMonth"))){
-		Common.alert('* Please input Batch Month <br />');
+		Common.alert("<spring:message code='pay.alert.inputBatchMonth'/>");
 		return;
 	}
 
 	if(FormUtil.checkReqValue($("#claimType  option:selected"))){
-		Common.alert('* Please select Claim Type <br />');
+		Common.alert("<spring:message code='pay.alert.selectClaimType'/>");
 		return;
 	}
 
@@ -110,7 +110,7 @@ function setScheduleDt(){
 //등록 팝업에서 Claim Type 수정시
 function chgClaimType(){
 	if( $("#new_scheduleDt").val() == ''){
-		Common.alert("<b>Please select the schedule date first.</b>");
+		Common.alert("<spring:message code='pay.alert.selectScheduleDateFirst'/>");
 		setScheduleDt();
 
 	}else{
@@ -155,14 +155,14 @@ function chgIssueBank(){
 function fn_saveSchedule(){
 
 	if( $("#new_scheduleDt").val() == ''){
-		Common.alert("<b>Please select the schedule date </b>");
+		Common.alert("<spring:message code='pay.alert.selectScheduleDate'/>");
 		return;
 	}else{
 		var schDate =  new Date( $("#new_scheduleDt").datepicker("getDate"));
 		var today = new Date();
 
 		if (schDate <= today){
-			Common.alert("<b>Schedule date must be future date.</b>");
+			Common.alert("<spring:message code='pay.alert.futureDate'/>");
 			return;
 		}
 	}
@@ -170,36 +170,36 @@ function fn_saveSchedule(){
 	var claimType = $("#new_claimType").val();
 
 	if( claimType == ''){
-		Common.alert("<b>Please select the claim type </b>");
+		Common.alert("<spring:message code='pay.alert.selectClaimType'/>");
 		return;
 	}
 	
 	if(claimType == '131' || claimType == '134'){
 		if($("#new_claimDay").val() == ''){
-			Common.alert("<b>Please select the claim day </b>");
+			Common.alert("<spring:message code='pay.alert.selectClaimDay'/>");
 			return;
 		}	
 	}else{
 		if($("#new_issueBank").val() == ''){
-			Common.alert("<b>Please select the issued bank </b>");
+			Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
 			return;
 		}	
 	}
 
 	if( $("#new_debitDt").val() == ''){
-		Common.alert("<b>Please select the debit date </b>");
+		Common.alert("<spring:message code='pay.alert.selectDebitDate'/>");
 		return;
 	}
 
 	//저장처리
 	Common.ajax("GET", "/payment/isScheduleClaimSettingPop.do", $("#_newScheduleForm").serialize(), function(result) {
 		if(result > 0 ){
-			Common.alert("<b>This schedule date is exist.</b>");
+			Common.alert("<spring:message code='pay.alert.scheduleDateExist'/>");
 			return;
 
 		} else{
 			Common.ajax("GET", "/payment/saveScheduleClaimSettingPop.do", $("#_newScheduleForm").serialize(), function(result) {
-				Common.alert("<b>New claim schedule saved.</b>");
+				Common.alert("<spring:message code='pay.alert.scheduleSaved'/>");
 			});
 		}
     });
@@ -221,19 +221,19 @@ function fn_deleteSchedule(){
 		var today = new Date();
 		
 		if (schDate <= today){
-			Common.alert("<b>Unable to delete this schedule due to this is past schedule.</b>");
+			Common.alert("<spring:message code='pay.alert.noDelete'/>");
 			return;
 		}else{
-			Common.confirm("<b/>Are you want to delete this schedule ?</b>",
+			Common.confirm("<spring:message code='pay.alert.deleteSchedule'/>",
 					function (){
 			            Common.ajax("GET", "/payment/removeScheduleClaimSettingPop.do", { "schdulId" : schdulId }, function(result) {
-							Common.alert("<b>Schedule has been deleted.</b>");
+							Common.alert("<spring:message code='pay.alert.scheduleDeleted'/>");
 							fn_selectListAjax();
 					});
 	        });
 		}
 	}else{
-		Common.alert('<b>No batch selected.</b>');
+		Common.alert("<spring:message code='pay.alert.noBatch'/>");
 		return;
 	}	
 }

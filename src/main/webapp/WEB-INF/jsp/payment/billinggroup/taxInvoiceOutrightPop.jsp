@@ -66,7 +66,7 @@ function f_multiCombo() {
 function fn_getTaxInvoiceListAjax() {   
     
     if(FormUtil.checkReqValue($("#orderNo")) &&  FormUtil.checkReqValue($("#invoiceNo"))){
-        Common.alert('* Please key in either Invoice No. or Order No. <br />');
+        Common.alert("<spring:message code='pay.alert.invoiceNoOROrderNo'/>");
         return;
     }
     
@@ -92,7 +92,7 @@ function fn_generateInvoice(){
       Common.report("reportPDFForm", option);
        
   }else{
-      Common.alert('<b>No print type selected.</b>');
+	  Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
 }
 

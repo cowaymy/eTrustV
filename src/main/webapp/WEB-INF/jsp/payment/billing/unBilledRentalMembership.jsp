@@ -250,7 +250,7 @@ var billingTargetLayout = [
             var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
             
             if(currentDay >= 26 || currentDay == 1){
-                Common.alert("Unable to perform this between 26 and 1 next month");
+                Common.alert("<spring:message code='pay.alert.unable26And1'/>");
                 return;
             }
 			
@@ -284,7 +284,7 @@ var billingTargetLayout = [
                         AUIGrid.removeCheckedRows(billingscheduleGridId);
                         AUIGrid.setSorting(billingTargetGridId, sortingInfo);   
                     }else{
-                        Common.alert("Can not skip the previous unbilled schedules.");
+                        Common.alert("<spring:message code='pay.alert.notSkipSchedules'/>");
                     }
                 }
             }
@@ -325,7 +325,7 @@ var billingTargetLayout = [
 	                    AUIGrid.removeCheckedRows(billingTargetGridId);
 	                    AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
 	                }else{
-	                    Common.alert("Remove latest one.");
+	                    Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
 	                }
 	            }
 			}

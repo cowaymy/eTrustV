@@ -127,22 +127,22 @@ function fn_changeBillSave(){
     
     if($("#changePop_post").is(":checked") == false && $("#changePop_sms").is(":checked") == false && $("#changePop_estm").is(":checked") == false ){
         valid = false;
-        message += "* Please select at least one billing type.<br />";
+        message += "<spring:message code='pay.alert.selectBillingType'/>";
     }
     
     if($("#changePop_sms").is(":checked") && custTypeId == "965"){
         valid = false;
-        message += "* SMS is not allow for company type customer.<br />";
+        message += "<spring:message code='pay.alert.smsNotAllow'/>";
     }
     
     if($.trim(reasonUpd) ==""){
         valid = false;
-        message += "* Please key in the reason to update.<br />";
+        message += "<spring:message code='pay.alert.reasonToUpdate'/>";
         
     }else{
         if ($.trim(reasonUpd).length > 200){
             valid = false;
-            message += "* Reason to update cannot more than 200 characters.<br />";
+            message += "<spring:message code='pay.alert.than200Characters'/>";
         }
     }
     
@@ -173,28 +173,28 @@ function fn_newReqSave(){
     
     if($.trim(reqEmail) == ""){
         valid = false;
-        message += "* Please key in the email address.<br />";
+        message += "<spring:message code='pay.alert.emailAddress.'/>";
     }else{
         if(FormUtil.checkEmail($.trim(reqEmail)) == true){
             valid = false;
-            message += "* The email is invalid.<br />"; 
+            message += "<spring:message code='pay.alert.invalidEmail.'/>"; 
          }
     }
     
     if($.trim(reqAdditionalEmail) != ""){
     	if(FormUtil.checkEmail($.trim(reqAdditionalEmail)) == true){
             valid = false;
-            message += "* The additional email is invalid.<br />"; 
+            message += "<spring:message code='pay.alert.invalidAddEmail'/>"; 
         }
     }
     
     if($.trim(reasonUpd) ==""){
         valid = false;
-        message += "* Please key in the reason to update.<br />";
+        message += "<spring:message code='pay.alert.reasonToUpdate'/>";
     }else{
         if ($.trim(reasonUpd).length > 200){
             valid = false;
-            message += "* Reason to update cannot more than 200 characters.<br />";
+            message += "<spring:message code='pay.alert.than200Characters'/>";
         }
     }
     

@@ -80,7 +80,7 @@ var discountLayout = [
                                    if(item.dcStusId != "8"){
                                 	   fn_disableDiscount(item.dscntEntryId);
                                    }else{
-                                	   Common.alert("Disabled Successfully.");
+                                	   Common.alert("<spring:message code='pay.alert.disabledSuccess'/>");
                                    }
                                }
                            }
@@ -117,7 +117,7 @@ var discountLayout = [
     	var salesOrdId = $('#salesOrdId').val().trim();
     	
     	if(FormUtil.isEmpty(salesOrdId)){
-    		Common.alert("Select an Order first.");
+    		Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
     		return;
     	}else{
     		
@@ -147,46 +147,46 @@ var discountLayout = [
         var contractId = "";
         
         if(FormUtil.isEmpty(salesOrdId)){
-            Common.alert("Select an Order first.");
+            Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
             return;
         }
     	
     	if(discountType == ""){
-    		Common.alert("Required Field(Discount Type) was not fulfilled");
+    		Common.alert("<spring:message code='pay.alert.requiredFieldDisType'/>");
             return;
     	}
     	
     	if(startPeriod == "" || endPeriod == ""){
-            Common.alert("Required Field(Discount Period) was not fulfilled");
+            Common.alert("<spring:message code='pay.alert.requiredFieldDisPeriod'/>");
             return;
         }
     	
     	if((endPeriod - startPeriod) > 60){
-            Common.alert("Discount Period cannot more than 60 month");
+            Common.alert("<spring:message code='pay.alert.cannot60Month'/>");
             return;
         }
     	
     	if(discountAmount == ""){
-            Common.alert("Required Field(Discount Amount) was not fulfilled");
+            Common.alert("<spring:message code='pay.alert.requiredFieldDisAmt'/>");
             return;
         }else{
         	if(discountType == "1251"){
         		
         		if(discountAmount > 0){
-        			Common.alert("Extra charge value must be less than 0.");
+        			Common.alert("<spring:message code='pay.alert.mustBeLessThan0'/>");
                     return;
         		}
         		
         	}else{
         		if(discountAmount < 0){
-                    Common.alert("Extra charge value must not be less than 0.");
+                    Common.alert("<spring:message code='pay.alert.mustNotLessThan0'/>");
                     return;
                 }
         	}
         }
     	
     	if(FormUtil.isEmpty(remarks)){
-    		Common.alert("Required Field(Remarks) was not fulfilled");
+    		Common.alert("<spring:message code='pay.alert.requiredFieldRemarks'/>");
             return;
     	}
     	
@@ -218,7 +218,7 @@ var discountLayout = [
     		Common.alert(dscntEntryId);
     	}else{
     		
-    		Common.confirm('Are you sure you want to disable the selected discount entry? Once disabled, can not restore.',function (){
+    		Common.confirm("<spring:message code='pay.alert.saveDisableDiscount'/>",function (){
                 Common.ajax("GET","/payment/saveDisableDiscount.do", {"dscntEntryId" : dscntEntryId, "salesOrdId" : salesOrdId}, function(result){
                     
                     //BASIC INFO

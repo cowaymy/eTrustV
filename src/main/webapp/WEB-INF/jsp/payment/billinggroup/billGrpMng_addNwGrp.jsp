@@ -100,7 +100,7 @@ var contPersonLayout = [
 	    var custAddr = $("#custAddr").val();
 	    
 	    if(custTypeId == ""){
-	    	Common.alert("Please select the order first.<br />");
+	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
 	        
 	        Common.ajax("GET","/payment/selectCustMailAddrList.do", {"custBillCustId":custTypeId, "custAddr" : custAddr}, function(result){
@@ -126,7 +126,7 @@ var contPersonLayout = [
 	    var custTypeId = $("#custTypeId").val();
 	    
 	    if(custTypeId == ""){
-	    	Common.alert("Please select the order first.<br />");
+	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
 	    	Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', {"custId" : custTypeId,  "callParam" : "billGroup"}, null , true ,'_editDiv2New');
 	    }
@@ -137,7 +137,7 @@ var contPersonLayout = [
 	    var custTypeId = $("#custTypeId").val();
 	    if(custTypeId == ""){
 	    	
-	    	Common.alert("Please select the order first.<br />");
+	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
 	    	Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {"custId":custTypeId, "callParam" : "billGroup"}, null , true ,'_editDiv3New');
 	    }
@@ -149,7 +149,7 @@ var contPersonLayout = [
 	    var personKeyword = $("#personKeyword").val();
 	    
 	    if(custTypeId == ""){
-	    	Common.alert("Please select the order first.<br />");
+	    	Common.alert("<spring:message code='pay.alert.selectTheOrderFirst'/>");
 	    }else{
 	    	
 	        Common.ajax("GET","/payment/selectContPersonList.do", {"custBillCustId":custTypeId , "personKeyword" : personKeyword}, function(result){
@@ -236,11 +236,11 @@ var contPersonLayout = [
                     $('#residenceNumber').text(result.data.contactInfo.telR);
                     $('#faxNumber').text(result.data.contactInfo.telf);
                 }else{
-                    Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+                    Common.alert("<spring:message code='pay.alert.notRentalType'/>");
                 } 
             	
             }else{
-            	Common.alert("Order not found.");
+            	Common.alert("<spring:message code='pay.alert.orderNotFound'/>");
             } 
         });
     }
@@ -288,12 +288,12 @@ var contPersonLayout = [
                     
                 }else{
                 	$('#orderNo').val("");
-                	Common.alert("Order is not rental type or rental membership not found in outright or installment type.");
+                	Common.alert("<spring:message code='pay.alert.notRentalType'/>");
                 }
             	
             }else{
             	displayReset();
-            	Common.alert("Order not found.");
+            	Common.alert("<spring:message code='pay.alert.orderNotFound'/>");
             }
         });
     }
@@ -333,31 +333,31 @@ var contPersonLayout = [
     	
         if(salesOrdId == ""){
         	valid = false;
-        	message += "* Please select an order.<br />";
+        	message += "<spring:message code='pay.alert.selectAnOrder'/>";
         }
         
         if($("#post").is(":checked") == false && $("#sms").is(":checked") == false && $("#estm").is(":checked") == false ){
             
             valid = false;
-            message += "* Please select at least one billing type.<br />";
+            message += "<spring:message code='pay.alert.selectBillingType'/>";
         }else{
         	
         	if($("#changePop_sms").is(":checked") && custTypeId == "965"){
                 
                 valid = false;
-                message += "* SMS is not allow for company type customer.<br />";
+                message += "<spring:message code='pay.alert.smsNotAllow'/>";
             }
         	
             if($("#estm").is(":checked")){
                 
                 if($("#email").val().trim() == ""){
                 	valid = false;
-                	message += "* Please key in the email address.<br />";
+                	message += "<spring:message code='pay.alert.emailAddress'/>";
                 }else{
                 	
                 	if(FormUtil.checkEmail(($("#email").val().trim())) == true){
                         valid = false;
-                        message += "* Invalid email address.<br />"; 
+                        message += "<spring:message code='pay.alert.invalidEmail'/>"; 
                      }
                 }
             }
@@ -365,12 +365,12 @@ var contPersonLayout = [
         
         if(custAddId == ""){
             valid = false;
-            message += "* Please select an address.<br />";
+            message += "<spring:message code='pay.alert.selectAnAddress'/>";
         }
         
         if(custCntcId == ""){
             valid = false;
-            message += "* Please select a contact person.<br />";
+            message += "<spring:message code='pay.alert.selectContPerson'/>";
         }
         
         if(valid){

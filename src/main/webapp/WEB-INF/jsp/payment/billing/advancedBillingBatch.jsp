@@ -133,7 +133,7 @@ function fn_selectDetail(statusId){
 }
 
 function fn_clickDeactivate(){
-	Common.confirm("Are you sure to deactivate this batch conversion.", function(){
+	Common.confirm("<spring:message code='pay.alert.deactivateConversionBatch'/>", function(){
 		
 		var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
 		
@@ -164,7 +164,7 @@ function fn_clickDeactivate(){
 }
 
 function fn_clickApprove(){
-    Common.confirm("<b>Are you sure to approve this batch conversion. </b>", function(){
+    Common.confirm("<spring:message code='pay.alert.approveConversionBatch'/>", function(){
     	
         var batchId = AUIGrid.getCellValue(myGridID, selectedItem, "advBillBatchId");
         

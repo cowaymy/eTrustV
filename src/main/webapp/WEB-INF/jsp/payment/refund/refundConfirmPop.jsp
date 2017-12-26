@@ -180,7 +180,7 @@ function fn_setConfirmGridEvent() {
             
             fn_refundInfoKeyInPop();
         } else {
-            Common.alert('You have already entered refund information.');
+            Common.alert("<spring:message code='pay.alert.eneterRefundInfo'/>");
         }
     });
 }
@@ -402,10 +402,10 @@ function fn_refundConfirm() {
     console.log("fn_confirm Action start");
     if(fn_validStusIdCheckForConfirm()) {
         console.log("if Action");
-        Common.confirm('Are you sure want to confirm this refund ?', function (){
+        Common.confirm("<spring:message code='pay.alert.confirmRefund'/>", function (){
             console.log("confirmPop Action");
             if(Number($("#totInvalid").text()) > 0) {
-                Common.alert('There is some invalid item exist.<br />Confirm is disallowed.');
+                Common.alert("<spring:message code='pay.alert.invalidItemExist'/>");
             } else {
                 if(Number($("#totValid").text()) > 0) {
                     Common.ajax("POST", "/payment/refundConfirm.do", {batchIdList:batchIdList}, function(result) {
@@ -424,7 +424,7 @@ function fn_refundConfirm() {
                         
                     });
                 } else {
-                    Common.alert('No valid item found.<br />Confirm is disallowed.');
+                    Common.alert("<spring:message code='pay.alert.validItemFound'/>");
                 }
             }
         });
@@ -452,7 +452,7 @@ function fn_refundItemDisab() {
                 detId = 0;
             });
         } else {
-            Common.alert('No item selected.');
+            Common.alert("<spring:message code='pay.alert.noItem'/>");
         }
     }
 }

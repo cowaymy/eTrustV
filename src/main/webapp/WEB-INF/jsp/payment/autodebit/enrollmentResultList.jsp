@@ -53,11 +53,11 @@ $(document).ready(function(){
                   //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                     AUIGrid.removeRow(newGridID,0);
                 } else {
-                    alert('No data to import!');
+                	Common.alert("<spring:message code='pay.alert.noData'/>");
                 }
             };
             reader.onerror = function() {
-                alert('Unable to read ' + file.fileName);
+            	Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
             };
         }
     });
@@ -99,7 +99,7 @@ $('#myForm').ajaxSubmit({
        }
    },
    error : function(e) {
-       alert("ajaxSubmit Error : " + e);
+	   Common.alert("ajaxSubmit Error : " + e);
    }
 });
 }
@@ -165,7 +165,7 @@ showViewPopup = function() {
 		 });
 	}else{
         $("#view_wrap").hide();
-        Common.alert("No enrollment record selected.");
+        Common.alert("<spring:message code='pay.alert.noEnrollment'/>");
         return;
     }
 }
@@ -202,7 +202,7 @@ function fn_saveGridMap(){
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
-    	Common.alert('Select the CSV file on the loca PC');
+    	Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
         return;
         //data.all = [];
     }
@@ -226,7 +226,7 @@ function fn_saveGridMap(){
         } catch (e) {
             console.log(e);
         }
-        alert("Fail : " + jqXHR.responseJSON.message);        
+        Common.alert("Fail : " + jqXHR.responseJSON.message);        
     });
 }
 

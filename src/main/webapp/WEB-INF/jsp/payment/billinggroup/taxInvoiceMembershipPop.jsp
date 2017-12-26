@@ -51,7 +51,7 @@ $(document).ready(function(){
 function fn_getTaxInvoiceListAjax() {   
     
     if(FormUtil.checkReqValue($("#invoiceType option:selected")) ){
-        Common.alert('* Please select the invoice type. <br />');
+        Common.alert("<spring:message code='pay.alert.selectInvoiceType'/>");
         return;
     }
     
@@ -79,7 +79,7 @@ function fn_generateInvoice(){
         Common.report("reportPDFForm", option);
      
     }else{
-        Common.alert('<b>No print type selected.</b>');
+    	Common.alert("<spring:message code='pay.alert.noPrintType'/>");
     }
 }
 

@@ -44,11 +44,11 @@ function fn_validRequiredField(orderId){
 			  if(canResult == false){
 				  
 				  valid = false;
-				  message += "* Please register for order cancellation before bill generate.<br />";
+				  message += "<spring:message code='pay.alert.orderCancelGenerate'/>";
 			  }else{
 				  if(penResult == true){
 					  valid = false;
-					  message += "* Early Termination Bill was generated.<br />";
+					  message += "<spring:message code='pay.alert.earlyTerminationBillGenerated'/>";
 				  }
 			  }
 			  
@@ -127,13 +127,13 @@ function fn_createBills(){
 var errorMsg = function(){
 	var errorMessage = "";
     if($("#orderId").val() == null || $("#orderId").val() == '' ){
-        errorMessage = "Select Order First";
+        errorMessage = "<spring:message code='pay.alert.selectOrderFirst'/>";
     }else{
         if($("#amount").val() == null || $("#amount").val() == ''){
-            errorMessage = "Input Penalty Amount";
+            errorMessage = "<spring:message code='pay.alert.inputPenaltyAmount'/>";
         }else{
             if($("#remark").val() == null || $("#remark").val() == ''){
-                errorMessage = "Input Remark";
+                errorMessage = "<spring:message code='pay.alert.inputRemark'/>";
             }
         }
     }
@@ -147,7 +147,7 @@ function fn_clickViewDetail(){
     if(orderId != '' && orderId != undefined){
     	 Common.popupDiv("/sales/order/orderDetailPop.do", {salesOrderId : orderId});
     }else{
-        Common.alert("SELECT ORDER FIRST");
+        Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
     }
 }
 </script>

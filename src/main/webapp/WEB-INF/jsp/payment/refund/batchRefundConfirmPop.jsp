@@ -143,7 +143,7 @@ function setFilterByValues(validStusId) {
 }
 
 function fn_deactivate() {
-	Common.confirm('Are you sure want to deactivate this refund batch ?',function (){
+	Common.confirm("<spring:message code='pay.alert.deactivateRefundBatch'/>",function (){
 		Common.ajax("GET", "/payment/batchRefundDeactivate.do", $("#form_bRefundConfirm").serialize(), function(result) {
 	        console.log(result);
 	        
@@ -157,9 +157,9 @@ function fn_deactivate() {
 }
 
 function fn_confirm() {
-	Common.confirm('Are you sure want to confirm this refund batch ?',function (){
+	Common.confirm("<spring:message code='pay.alert.confRefundBatch'/>",function (){
 		if(Number($("#totInvalidCount").text()) > 0) {
-	        Common.alert('There is some invalid item exist.<br />Batch confirm is disallowed.');
+	        Common.alert('<spring:message code="pay.alert.invalidItemExist"/>');
 	    } else {
 	        if(Number($("#totValidCount").text()) > 0) {
 	            Common.ajax("GET", "/payment/batchRefundConfirm.do", $("#form_bRefundConfirm").serialize(), function(result) {
@@ -175,7 +175,7 @@ function fn_confirm() {
 	                fn_selectBatchRefundList();
 	            });
 	        } else {
-	            Common.alert('No valid item found.<br />Batch confirm is disallowed.');
+	            Common.alert('<spring:message code="pay.alert.noValidItem"/>');
 	        }
 	    }
 	});
@@ -226,7 +226,7 @@ function fn_bRefundItemDisab() {
             detId = 0;
         });
 	} else {
-		Common.alert('No item selected.');
+		Common.alert("<spring:message code='pay.alert.noItem'/>");
 	}
 }
 </script>

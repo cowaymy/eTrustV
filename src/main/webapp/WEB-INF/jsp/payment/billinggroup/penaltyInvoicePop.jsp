@@ -12,7 +12,7 @@ $(document).ready(function(){
 function fn_generateStatement(){
     
     if(FormUtil.checkReqValue($("#orderNo")) &&  FormUtil.checkReqValue($("#billNo"))){
-        Common.alert('* Please key in either RET No or Order No. <br>');
+    	Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
         return;
     }
     

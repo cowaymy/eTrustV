@@ -85,7 +85,7 @@ function fn_generateStatement(){
       $("#reportPDFForm #viewType").val("PDF");
       Common.report("reportPDFForm");
   }else{
-      Common.alert('<b>No print type selected.</b>');
+	  Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
 }
 
@@ -95,7 +95,7 @@ function fn_sendEInvoice(){
 
   if (selectedItem[0] > -1){
       if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
-          Common.alert('* Please key in the email.<br />');
+    	  Common.alert("<spring:message code='pay.alert.emailAddress.'/>");
           return;
       }
       //report form에 parameter 세팅
@@ -103,15 +103,7 @@ function fn_sendEInvoice(){
       $("#reportPDFForm #viewType").val("MAIL_PDF");
       
       var message = "";
-      message += "Dear customer,\n\n" +
-          "Please refer to the attachment of the re-send invoice as per requested.\n" +
-          "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
-          "\n\n" +
-          "NOTE :Please do not reply this email as this is computer generated e-mail." +
-          "\n\n\n" +
-          "Thank you and have a wonderful day.\n\n" +
-          "Regards\n" +
-          "Management Team of Coway Malaysia Sdn. Bhd.";
+      message += "<spring:message code='pay.alert.emailMsg1'/>" +"<spring:message code='pay.alert.emailMsg2'/>"+"<spring:message code='pay.alert.emailMsg3'/>"
           
       //E-mail 제목
       var emailTitle = "Outright Invoice " + AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId");
@@ -122,7 +114,7 @@ function fn_sendEInvoice(){
       Common.report("reportPDFForm");
    
   }else{
-      Common.alert('<b>No print type selected.</b>');
+	  Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
 }
 

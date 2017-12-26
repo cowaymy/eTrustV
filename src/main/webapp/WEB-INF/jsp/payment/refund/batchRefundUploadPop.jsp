@@ -41,12 +41,12 @@ function fn_uploadFile(){
     var remark = $("#remark").val();
     
     if(payMode == ""){
-        Common.alert('Please select the payment mode.');
+        Common.alert('<spring:message code="pay.alert.selectPayMode"/>');
         return;
     }
     
     if(FormUtil.isEmpty($("#uploadfile").val())) {
-    	Common.alert('Please select your CSV file.');
+    	Common.alert('<spring:message code="pay.alert.selectCsvFile"/>');
         return;
     }
     

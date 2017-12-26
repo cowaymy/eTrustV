@@ -46,7 +46,7 @@ $("#close_btn2").click(fn_closePop2);
        }
        
        if(Number($("#rRefAmt").val().replace(/,/gi, "")) > Number($("#rAmt").val().replace(/,/gi, ""))) {
-           Common.alert('Refund Amount can not be greater than Amount.');
+           Common.alert('<spring:message code="pay.alert.noItem"/>');
            str = $("#rAmt").val().replace(/,/gi, "");
        }
        

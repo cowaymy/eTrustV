@@ -38,7 +38,7 @@ var gridPros2 = {
 
         rowCheckableFunction : function(rowIndex, isChecked, item) {
             if(item.billingStus == "Completed") { 
-            	Common.alert("This billing schedule had been finished. Can not create bill twice.");
+            	Common.alert("<spring:message code='pay.alert.notBillTwice'/>");
                 return false;
             }
             return true;
@@ -323,7 +323,7 @@ var billingTargetLayout = [
 	                    AUIGrid.removeCheckedRows(billingscheduleGridId);
 	                    
 	                }else{
-	                    Common.alert("Can not skip the previous unbilled schedules.");
+	                    Common.alert("<spring:message code='pay.alert.notSkipSchedules'/>");
 	                }
 	            }
 			}
@@ -363,7 +363,7 @@ var billingTargetLayout = [
                         AUIGrid.removeCheckedRows(billingTargetGridId);
                         AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
                     }else{
-                        Common.alert("Remove latest one.");
+                        Common.alert("<spring:message code='pay.alert.removeLatestOne'/>");
                     }
                 }
             }

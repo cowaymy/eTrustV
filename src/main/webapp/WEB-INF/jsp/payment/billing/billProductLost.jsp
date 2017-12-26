@@ -73,13 +73,13 @@ function commaSeparateNumber(val){
 var errorMsg = function(){
     var errorMessage = "";
     if($("#orderId").val() == null || $("#orderId").val() == '' ){
-        errorMessage = "Select Order First";
+        errorMessage = "<spring:message code='pay.alert.selectOrderFirst'/>";
     }else{
         if($("#lossFee").val() == null || $("#lossFee").val() == ''){
-            errorMessage = "Input Penalty Amount";
+            errorMessage = "<spring:message code='pay.alert.inputPenaltyAmount'/>";
         }else{
             if($("#remark").val() == null || $("#remark").val() == ''){
-                errorMessage = "Input Remark";
+                errorMessage = "<spring:message code='pay.alert.inputRemark'/>";
             }
         }
     }
@@ -127,7 +127,7 @@ function fn_clickViewDetail(){
 	if(orderId != '' && orderId != undefined){
 	   Common.popupDiv("/sales/order/orderDetailPop.do", {salesOrderId : orderId});
     }else{
-    	Common.alert("SELECT ORDER FIRST");
+    	Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
     }
 }
 </script>

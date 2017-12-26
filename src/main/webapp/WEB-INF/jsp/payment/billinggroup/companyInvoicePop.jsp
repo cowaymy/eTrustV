@@ -43,7 +43,7 @@ $(document).ready(function(){
 function fn_getCompanyInvoiceListtAjax() {        
     var valid = ValidRequiredField();
     if(!valid){
-         Common.alert("* Please key in either Bill No or Order No.<br />");
+         Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
     }else{
         Common.ajax("GET", "/payment/selectInvoiceList.do", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
@@ -113,7 +113,7 @@ function fn_generateInvoice(){
         Common.report("reportPDFForm", option);
    
   }else{
-      Common.alert('<b>No print type selected.</b>');
+      Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
 }
 
@@ -125,7 +125,7 @@ function fn_sendEInvoice(){
     if (selectedItem[0] > -1){
         
         if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
-            Common.alert('* Please key in the email.<br />');
+            Common.alert("<spring:message code='pay.alert.emailAddress.'/>");
             return;
         }
         
@@ -137,15 +137,7 @@ function fn_sendEInvoice(){
         
         //E-mail 내용
         var message = "";
-        message += "Dear customer,\n\n" +
-            "Please refer to the attachment of the re-send invoice as per requested.\n" +
-            "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
-            "\n\n" +
-            "NOTE :Please do not reply this email as this is computer generated e-mail." +
-            "\n\n\n" +
-            "Thank you and have a wonderful day.\n\n" +
-            "Regards\n" +
-            "Management Team of Coway Malaysia Sdn. Bhd.";
+        message += "<spring:message code='pay.alert.emailMsg1'/>" +"<spring:message code='pay.alert.emailMsg2'/>"+"<spring:message code='pay.alert.emailMsg3'/>"
             
         //E-mail 제목
         var emailTitle = "Rental Invoice " + paramMonth + "/" + year;
@@ -174,7 +166,7 @@ function fn_sendEInvoice(){
         Common.report("reportPDFForm", option);
    
   }else{
-      Common.alert('<b>No print type selected.</b>');
+      Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
 }
 

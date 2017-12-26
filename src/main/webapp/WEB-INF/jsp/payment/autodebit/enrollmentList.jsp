@@ -111,12 +111,12 @@ var columnLayout2 = [
                  AUIGrid.setGridData(myGridID2, result.resultList);
 
              },function(jqXHR, textStatus, errorThrown) {
-                 Common.alert("실패하였습니다.");
+                 Common.alert("<spring:message code='pay.alert.fail'/>");
              });
         	 
         }else{
         	$("#popup_wrap").hide();
-        	Common.alert("No enrollment record selected.");
+        	Common.alert("<spring:message code='pay.alert.noEnrollment'/>");
             return;
         }
     }
@@ -148,18 +148,18 @@ var columnLayout2 = [
         
         if($("#cmbIssueBank2 option:selected").val() ==""){
         	
-        	Common.alert("* Please select the issue bank.");
+        	Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
         	return;
         	
         }else if($("#rdpCreateDateFr2").val() ==""){
         	
-        	Common.alert("* Please insert the debit date.");
+        	Common.alert("<spring:message code='pay.alert.insertDate'/>");
         	return;
         	
         }else if($("#cmbIssueBank2 option:selected").val() =="7"){
         	
         	if($("#rdpCreateDateTo2").val() ==""){
-        		Common.alert("* Please insert the debit date (To).");
+        		Common.alert("<spring:message code='pay.alert.debitDateTo'/>");
                 return;
                 
         	}else{
@@ -173,7 +173,7 @@ var columnLayout2 = [
         		
         		if($("#rdpCreateDateFr2").val() != ""){
         			if(startDateCompare.getTime() > endDateCompare.getTime()) {
-        				 Common.alert("* Debit date (To) must later or same to debit date (From).");
+        				 Common.alert("<spring:message code='pay.alert.debitDateFromTo'/>");
         				 return;
         			}
         		}

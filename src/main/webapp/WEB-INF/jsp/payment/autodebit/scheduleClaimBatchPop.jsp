@@ -101,19 +101,19 @@ function fn_selectListAjax() {
 	
 	if(FormUtil.checkReqValue($("#createDt1")) &&
 		FormUtil.checkReqValue($("#createDt2"))){
-		Common.alert('* Please input Create Date <br />');
+		Common.alert("<spring:message code='pay.alert.inputCreateDate'/>");
 		return;
 	}
 
 	if((!FormUtil.checkReqValue($("#debitDt1")) && FormUtil.checkReqValue($("#debitDt2"))) ||
 		(FormUtil.checkReqValue($("#debitDt1")) && !FormUtil.checkReqValue($("#debitDt2"))) ){
-		Common.alert('* Please input Debit Date <br />');
+		Common.alert("<spring:message code='pay.alert.inputDebitDate'/>");
 		return;
 	}
 
 	if((!FormUtil.checkReqValue($("#createDt1")) && FormUtil.checkReqValue($("#createDt2"))) ||
 		(FormUtil.checkReqValue($("#createDt1")) && !FormUtil.checkReqValue($("#createDt2"))) ){
-		Common.alert('* Please input Create Date <br />');
+		Common.alert("<spring:message code='pay.alert.inputCreateDate'/>");
 		return;
 	}
 
@@ -164,11 +164,11 @@ function fn_openDivPop(){
 			});  
 
 		}else{
-			Common.alert('<b>This process does not has successful claim batch.</b>');
+			Common.alert("<spring:message code='pay.alert.sucessClaimBatch'/>");
 			return;
 		}
 	}else{
-		Common.alert('<b>No process selected.</b>');
+		Common.alert("<spring:message code='pay.alert.noProcess'/>");
 		return;
 	}	
 }

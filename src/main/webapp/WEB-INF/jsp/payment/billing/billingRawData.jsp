@@ -26,12 +26,12 @@ $(document).ready(function(){
 function fn_generate(){
 	
 	if(FormUtil.checkReqValue($("#reportType option:selected"))){
-        Common.alert('* Please select a report type. <br />');
+        Common.alert("<spring:message code='pay.alert.selectReportType'/>");
         return;
     }
 	
     if(FormUtil.checkReqValue($("#issueMonth"))){
-        Common.alert('* Please key in the Issue Month.<br />');
+        Common.alert("<spring:message code='pay.alert.selectIssueMonth'/>");
         return;
     }
     

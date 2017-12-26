@@ -23,9 +23,9 @@ function fn_generateClick(){
     var cutDate = new Date(2015,04,01, 0, 0,  0);
 
 	if(inputDate < cutDate){
-		Common.alert("Sorry. Bill raw data before April 2015 cannot be generated.");
+		Common.alert("<spring:message code='pay.alert.april2015CannotGenerated'/>");
 	}else if(inputDate > curDate){
-		Common.alert("Sorry. Bill raw data beyond current date cannot be generated.");
+		Common.alert("<spring:message code='pay.alert.currentDateCannotGenerated'/>");
 	}else{
 		
 		var year = $("#year").val();
@@ -39,11 +39,11 @@ function fn_generateClick(){
 				Common.showLoader();
 		        $.fileDownload("/payment/selectMonthlyRawDataExcelList.do?year=" + year + "&month="+month)
 				.done(function () {
-			        Common.alert('File download a success!');                
+			        Common.alert("<spring:message code='pay.alert.downSuccess'/>");
 					Common.removeLoader();            
 		        })
 			    .fail(function () {
-					Common.alert('File download failed!');                
+					Common.alert("<spring:message code='pay.alert.downFail'/>");
 		            Common.removeLoader();            
 				});
 		   }else{

@@ -42,7 +42,7 @@ $(document).ready(function(){
 function fn_getTaxInvoiceListAjax() {   
     
     if(FormUtil.checkReqValue($("#billingNo")) && FormUtil.checkReqValue($("#orderNo"))){
-        Common.alert('* Please key-In Billing No. OR Please key-In Order No. <br />');
+    	Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
         return;
     }
     
@@ -67,7 +67,7 @@ function fn_generateInvoice(){
         Common.report("reportPDFForm", option);
          
     }else{
-        Common.alert('<b>No print type selected.</b>');
+    	Common.alert("<spring:message code='pay.alert.noPrintType'/>");
     }
 }
 

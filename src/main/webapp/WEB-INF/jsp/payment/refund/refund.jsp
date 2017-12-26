@@ -247,7 +247,7 @@ function fn_refundConfirmPop() {
 	if(checkList.length > 0) {
 		Common.popupDiv("/payment/refundConfirmPop.do", null, null, true, "refundConfirmPop", fn_showConfirmPop);
 	} else {
-        Common.alert('No item selected.');
+        Common.alert('<spring:message code="pay.alert.noItem"/>');
     }
 }
 

@@ -398,14 +398,14 @@ var addOrderLayout = [
                 
         if(currentDay >= 26 || currentDay == 1){
             
-            Common.alert("Unable to perform this between 26 and 1 next month");
+            Common.alert("<spring:message code='pay.alert.unable26And1'/>");
             return;
             
         }else{
             
             if(orderNo == ""){
                 valid = false;
-                message = "Please key in the order number."
+                message = "<spring:message code='pay.alert.orderNumber'/>"
             }
             
             if(valid){
@@ -483,11 +483,11 @@ var addOrderLayout = [
                         $("#displayVisible").hide();
                         $("#orderNo").removeClass('readonly');
                         $("#orderNo").prop('readonly', false);
-                        Common.alert("No billing group found for this order.");
+                        Common.alert("<spring:message code='pay.alert.noBilling'/>");
                     }
                     
                 },function(jqXHR, textStatus, errorThrown) {
-                    Common.alert("Fail.");
+                    Common.alert("<spring:message code='pay.alert.fail'/>");
                     $("#displayVisible").hide();
                 });
                 
@@ -564,11 +564,11 @@ var addOrderLayout = [
         
         if($.trim(reasonUpd) == ""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
         }else{
             if($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
 
@@ -666,22 +666,14 @@ var addOrderLayout = [
                //Contact Person
                var descFrom = "";
                var descTo = "";
-               
-                descFrom += "Name : ("+result.data.cntcIdOldHistory.code+") " + result.data.cntcIdOldHistory.name + "<br>";
-                descFrom += "NRIC : " + result.data.cntcIdOldHistory.nric + " <br>";
-                descFrom += "Race : " + result.data.cntcIdOldHistory.codeName + " <br>";
-                descFrom += "Tel (M) : " + result.data.cntcIdOldHistory.telM1 + " <br>";
-                descFrom += "Tel (O) : " + result.data.cntcIdOldHistory.telO + " <br>";
-                descFrom += "Tel (R) : " + result.data.cntcIdOldHistory.telR + " <br>";
-                descFrom += "Tel (F) : " + result.data.cntcIdOldHistory.telf + " <br>";
                 
-                descTo += "Name : ("+result.data.cntcIdNewHistory.code+") " + result.data.cntcIdNewHistory.name +" <br>";
-                descTo += "NRIC : " + result.data.cntcIdNewHistory.nric + " <br>";
-                descTo += "Race : " + result.data.cntcIdNewHistory.codeName + " <br>";
-                descTo += "Tel (M) : " + result.data.cntcIdNewHistory.telM1 + " <br>";
-                descTo += "Tel (O) : " + result.data.cntcIdNewHistory.telO + " <br>";
-                descTo += "Tel (R) : " + result.data.cntcIdNewHistory.telR + " <br>";
-                descTo += "Tel (F) : " + result.data.cntcIdNewHistory.telf + " <br>";
+                descFrom += "<spring:message code='pay.alert.personDescFrom' arguments='"+result.data.cntcIdOldHistory.code+" ; "+result.data.cntcIdOldHistory.name+
+                " ; "+result.data.cntcIdOldHistory.nric+" ; "+result.data.cntcIdOldHistory.codeName+" ; "+result.data.cntcIdOldHistory.telM1+
+                " ; "+result.data.cntcIdOldHistory.telO+" ; "+result.data.cntcIdOldHistory.telR+" ; "+result.data.cntcIdOldHistory.telf+"' htmlEscape='false' argumentSeparator=';' />";
+                
+                descTo += "<spring:message code='pay.alert.personDescFrom' arguments='"+result.data.cntcIdNewHistory.code+" ; "+result.data.cntcIdNewHistory.name+
+                " ; "+result.data.cntcIdNewHistory.nric+" ; "+result.data.cntcIdNewHistory.codeName+" ; "+result.data.cntcIdNewHistory.telM1+
+                " ; "+result.data.cntcIdNewHistory.telO+" ; "+result.data.cntcIdNewHistory.telR+" ; "+result.data.cntcIdNewHistory.telf+"' htmlEscape='false' argumentSeparator=';' />";
                 
                 $('#det_descFrom').html(descFrom);
                 $('#det_descTo').html(descTo);
@@ -703,57 +695,65 @@ var addOrderLayout = [
                
                //Post
                if(result.data.detailHistoryView.isPostOld == "1"){
-                   descFrom += "Post : Yes<br>";
+                   descFrom += "<spring:message code='pay.alert.postYes'/>";
                    
                }else{
-                   descFrom += "Post : No<br>";
+                   descFrom += "<spring:message code='pay.alert.postNo'/>";
                }
                
                //SMS
                if(result.data.detailHistoryView.isSmsOld == "1"){
-                   descFrom += "SMS : Yes<br>";
+                   descFrom += "<spring:message code='pay.alert.smsYes'/>";
                    
                }else{
-                   descFrom += "SMS : No<br>";
+                   descFrom += "<spring:message code='pay.alert.smsNo'/>";
                }
                
                //E-Statement
                if(result.data.detailHistoryView.isEStateOld == "1"){
-                   descFrom += "E-Statement : Yes<br>";
+                   descFrom += "<spring:message code='pay.alert.estmYes'/>";
                    
                }else{
-                   descFrom += "E-Statement : No<br>";
+                   descFrom += "<spring:message code='pay.alert.estmNo'/>";
                }
                
                //Email
-               descFrom += "Email : " + result.data.detailHistoryView.emailOld;
+               if(result.data.detailHistoryView.emailOld != undefined){
+            	   descFrom += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailOld+"' htmlEscape='false'/>";
+               }else{
+            	   descFrom += "<spring:message code='pay.alert.emailNull'/>";
+               }
                
                //Post
                if(result.data.detailHistoryView.isPostNw == "1"){
-                   descTo += "Post : Yes<br>";
+                   descTo += "<spring:message code='pay.alert.postYes'/>";
                    
                }else{
-                   descTo += "Post : No<br>";
+                   descTo += "<spring:message code='pay.alert.postNo'/>";
                }
                
                //SMS
                if(result.data.detailHistoryView.isSmsNw == "1"){
-                   descTo += "SMS : Yes<br>";
+                   descTo += "<spring:message code='pay.alert.smsYes'/>";
                    
                }else{
-                   descTo += "SMS : No<br>";
+                   descTo += "<spring:message code='pay.alert.smsNo'/>";
                }
                
                //E-Statement
                if(result.data.detailHistoryView.isEStateNw == "1"){
-                   descTo += "E-Statement : Yes<br>";
+                   descTo += "<spring:message code='pay.alert.estmYes'/>";
                    
                }else{
-                   descTo += "E-Statement : No<br>";
+                   descTo += "<spring:message code='pay.alert.estmNo'/>";
                }
                
                //Email
-               descTo += "Email : " + result.data.detailHistoryView.emailNw;
+               if(result.data.detailHistoryView.emailNw != undefined){
+            	   descTo += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailNw+"' htmlEscape='false'/>";
+               }else{
+            	   descTo += "<spring:message code='pay.alert.emailNull'/>";
+               }
                
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
@@ -765,27 +765,21 @@ var addOrderLayout = [
                var descTo = "";
                
                if(result.data.salesOrderMsOld == null ||result.data.salesOrderMsOld == ""){
-                   descFrom += "Order Number : " + "<br>" +
-                   "Order Date : "  + "<br>" +
-                   "Rental Fees : " + "<br>" +
-                   "Product : ";
+                   descFrom += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
-                   descFrom += "Order Number : " + result.data.salesOrderMsOld.salesOrdNo + "<br>" +
-                   "Order Date : " + result.data.salesOrderMsOld.salesDt + "<br>" +
-                   "Rental Fees : " + result.data.salesOrderMsOld.mthRentAmt + "<br>" +
-                   "Product : " + result.data.salesOrderMsOld.product;
+                   descFrom += "<spring:message code='pay.alert.groupingDesc' arguments='"+result.data.salesOrderMsOld.salesOrdNo+" ; "+
+                   result.data.salesOrderMsOld.salesDt+" ; "+
+                   result.data.salesOrderMsOld.mthRentAmt+" ; "+
+                   result.data.salesOrderMsOld.product+"' htmlEscape='false' argumentSeparator=';' />"
                }
                
                if(result.data.salesOrderMsNw == null || result.data.salesOrderMsNw == ""){
-                   descTo += "Order Number : "  + "<br>" +
-                   "Order Date : " + "<br>" +
-                   "Rental Fees : "  + "<br>" +
-                   "Product : " ;
+                   descTo += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
-                   descTo += "Order Number : " + result.data.salesOrderMsNw.salesOrdNo + "<br>" +
-                   "Order Date : " + result.data.salesOrderMsNw.salesDt + "<br>" +
-                   "Rental Fees : " + result.data.salesOrderMsNw.mthRentAmt + "<br>" +
-                   "Product : " + result.data.salesOrderMsNw.product;
+                   descTo += "<spring:message code='pay.alert.groupingDesc' arguments='"+result.data.salesOrderMsNw.salesOrdNo+" ; "+
+                   result.data.salesOrderMsNw.salesDt+" ; "+
+                   result.data.salesOrderMsNw.mthRentAmt+" ; "+
+                   result.data.salesOrderMsNw.product+"' htmlEscape='false' argumentSeparator=';' />";
                }
 
                $('#det_descFrom').html(descFrom);
@@ -797,25 +791,33 @@ var addOrderLayout = [
                var descTo = "";
                
                if(result.data.detailHistoryView.isEStateOld == "1"){
-                   descFrom += "E-Statement : Yes<br>";
+                   descFrom += "<spring:message code='pay.alert.estmYes'/>";
                    
                }else{
-                   descFrom += "E-Statement : No<br>";
+                   descFrom += "<spring:message code='pay.alert.estmNo'/>";
                }
                
                //Email
-               descFrom += "Email : " + result.data.detailHistoryView.emailOld;
+               if(result.data.detailHistoryView.emailOld != undefined){
+                   descFrom += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailOld+"' htmlEscape='false'/>";
+               }else{
+                   descFrom += "<spring:message code='pay.alert.emailNull'/>";
+               }
                
                //E-Statement
                if(result.data.detailHistoryView.isEStateNw == "1"){
-                   descTo += "E-Statement : Yes<br>";
+                   descTo += "<spring:message code='pay.alert.estmYes'/>";
                    
                }else{
-                   descTo += "E-Statement : No<br>";
+                   descTo += "<spring:message code='pay.alert.estmNo'/>";
                }
                
                //Email
-               descTo += "Email : " + result.data.detailHistoryView.emailNw;
+               if(result.data.detailHistoryView.emailNw != undefined){
+                   descTo += "<spring:message code='pay.alert.emailDesc' arguments='"+result.data.detailHistoryView.emailNw+"' htmlEscape='false'/>";
+               }else{
+                   descTo += "<spring:message code='pay.alert.emailNull'/>";
+               }
                
                $('#det_descFrom').html(descFrom);
                $('#det_descTo').html(descTo);
@@ -826,27 +828,21 @@ var addOrderLayout = [
                var descTo = "";
                
                if(result.data.salesOrderMsOld == null ||result.data.salesOrderMsOld == ""){
-                   descFrom += "Order Number : " + "<br>" +
-                   "Order Date : "  + "<br>" +
-                   "Rental Fees : " + "<br>" +
-                   "Product : ";
+            	   descFrom += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
-                   descFrom += "Order Number : " + result.data.salesOrderMsOld.salesOrdNo + "<br>" +
-                   "Order Date : " + result.data.salesOrderMsOld.salesDt + "<br>" +
-                   "Rental Fees : " + result.data.salesOrderMsOld.mthRentAmt + "<br>" +
-                   "Product : " + result.data.salesOrderMsOld.product;
+                   descFrom += "<spring:message code='pay.alert.groupingDesc' arguments='"+result.data.salesOrderMsOld.salesOrdNo+" ; "+
+                   result.data.salesOrderMsOld.salesDt+" ; "+
+                   result.data.salesOrderMsOld.mthRentAmt+" ; "+
+                   result.data.salesOrderMsOld.product+"' htmlEscape='false' argumentSeparator=';' />"
                }
                
                if(result.data.salesOrderMsNw == null || result.data.salesOrderMsNw == ""){
-                   descTo += "Order Number : "  + "<br>" +
-                   "Order Date : " + "<br>" +
-                   "Rental Fees : "  + "<br>" +
-                   "Product : " ;
+            	   descTo += "<spring:message code='pay.alert.groupingDescNull'/>";
                }else{
-                   descTo += "Order Number : " + result.data.salesOrderMsNw.salesOrdNo + "<br>" +
-                   "Order Date : " + result.data.salesOrderMsNw.salesDt + "<br>" +
-                   "Rental Fees : " + result.data.salesOrderMsNw.mthRentAmt + "<br>" +
-                   "Product : " + result.data.salesOrderMsNw.product;
+                   descTo += "<spring:message code='pay.alert.groupingDesc' arguments='"+result.data.salesOrderMsNw.salesOrdNo+" ; "+
+                   result.data.salesOrderMsNw.salesDt+" ; "+
+                   result.data.salesOrderMsNw.mthRentAmt+" ; "+
+                   result.data.salesOrderMsNw.product+"' htmlEscape='false' argumentSeparator=';' />";
                }
              
                $('#det_descFrom').html(descFrom);
@@ -875,7 +871,7 @@ var addOrderLayout = [
                 
                 $("#selectMaillAddrPop").hide();
                 AUIGrid.destroy(emailAddrPopGridID);
-                Common.alert("New address selected.<br/>Click save to confirm change address.");
+                Common.alert("<spring:message code='pay.alert.newAddrSelected'/>");
 
             });
         });
@@ -892,16 +888,16 @@ var addOrderLayout = [
         
         if(newAddr == ""){
             valid = false;
-            message += "* Please select the address.<br />";
+            message += "<spring:message code='pay.alert.selectAddr'/>";
         }
         
         if($.trim(reasonUpd) == ""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
         }else{
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
         
@@ -944,7 +940,7 @@ var addOrderLayout = [
                 
                 $("#selectContPersonPop").hide();
                 AUIGrid.destroy(contPersonPopGridID);
-                Common.alert("New contact person selected.<br />Click save to confirm change contact person.");
+                Common.alert("<spring:message code='pay.alert.selectPerson'/>");
             });
         });
     }
@@ -959,16 +955,16 @@ var addOrderLayout = [
         
         if(custCntcId == ""){
             valid = false;
-            message += "* Please select the contact person.<br />";
+            message += "<spring:message code='pay.alert.selectContactPerson'/>";
         }
         
         if($.trim(reasonUpd) == ""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
         }else{
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
         
@@ -1053,23 +1049,23 @@ var addOrderLayout = [
                 
                 if(stusId != "44"){
                     valid = false;
-                    message += "* This E-Statement request is no longer in pending status.<br />";
+                    message += "<spring:message code='pay.alert.estmNoPendingStatus'/>";
                 }
-            }else{
-                valid = false;
-                message += "* This E-Statement request is no longer valid.<br />";
-            }
+	            }else{
+	                valid = false;
+	                message += "<spring:message code='pay.alert.estmReqValid'/>";
+	            }
         });
         
         if($.trim(reasonUpd) ==""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
             
         }else{
             
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
         
@@ -1085,7 +1081,7 @@ var addOrderLayout = [
                         $("#btnApprReq").hide();
 
                 },function(jqXHR, textStatus, errorThrown) {
-                    Common.alert("Failed to approve this E-Statement request. Please try again later.");
+                    Common.alert("<spring:message code='pay.alert.estmFailToApprove'/>");
                 });
                 
             }else{
@@ -1101,7 +1097,7 @@ var addOrderLayout = [
                     $("#btnCancelReq").hide();
                     
                 },function(jqXHR, textStatus, errorThrown) {
-                    Common.alert("Failed to cancel this E-Statement request. Please try again later.");
+                    Common.alert("<spring:message code='pay.alert.estmFailToCancel'/>");
 
                 });
                 
@@ -1152,18 +1148,18 @@ var addOrderLayout = [
         
         if($.trim(reasonUpd) ==""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
             
         }else{
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
         
         if(valid){
             
-            Common.confirm('Are you sure want to set this address as main address ?',function (){
+            Common.confirm("<spring:message code='pay.alert.mainAddress'/>",function (){
                 
                 Common.ajax("GET", "/payment/saveRemoveOrder.do", {"custBillId" : custBillId, "reasonUpd":reasonUpd, "salesOrdId":salesOrdId}, function(result) {
                     
@@ -1219,16 +1215,16 @@ var addOrderLayout = [
         
         if(selectedItems.length <= 0) {
             valid = false;
-            message += "* Please select at least one order.<br />";
+            message += "<spring:message code='pay.alert.selectOneOrder'/>";
         }
         
         if($.trim(reasonUpd) ==""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
         }else{
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
         
@@ -1245,8 +1241,7 @@ var addOrderLayout = [
             
             var salesOrdNoArr = str.substring(0, str.length -1);
             var salesOrdIdArr = str2.substring(0, str2.length -1);
-            var message2 = "There are " + selectedItems.length + " order(s) selected.<br />" +
-            "Are you sure want to add the order(s) into billing group ?";
+            var message2 = "<spring:message code='pay.alert.orderIntoBillingGroup' arguments='"+selectedItems.length+"' htmlEscape='false'/>";
             
             Common.confirm(message2,function (){
                 
@@ -1272,19 +1267,19 @@ var addOrderLayout = [
         if(selectedGridValue == undefined){
             
             valid = false;
-            message += "* Please select the target order.<br />";
+            message += "<spring:message code='pay.alert.selectTargetOrder'/>";
             
         }
         
         if($.trim(reasonUpd) ==""){
             valid = false;
-            message += "* Please key in the reason to update.<br />";
+            message += "<spring:message code='pay.alert.reasonToUpdate'/>";
             
         }else{
             
             if ($.trim(reasonUpd).length > 200){
                 valid = false;
-                message += "* Reason to update cannot more than 200 characters.<br />";
+                message += "<spring:message code='pay.alert.than200Characters'/>";
             }
         }
         
@@ -1294,7 +1289,7 @@ var addOrderLayout = [
             var salesOrdNo = $("#salesOrdNo").val();
             var custBillSoId = $("#custBillSoId").val();
             
-            var message2= "You have select order [" +salesOrdNo +"].<br />"  + "Are you sure want to set this order as the main order of group ?";
+            var message2= "<spring:message code='pay.alert.mainOrderGroup' arguments='"+salesOrdNo+"' htmlEscape='false'/>";
             
             Common.confirm(message2,function (){
                 

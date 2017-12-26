@@ -83,7 +83,7 @@ function fn_view(){
         Common.popupDiv('/payment/initBillingResultPop.do', {taskId:value}, null , true ,'_billingDetailViewPop');      
         
     }else{
-        Common.alert("No Task ID Selected.");
+        Common.alert("<spring:message code='pay.alert.noTaskId'/>");
     }
 }
 
@@ -93,10 +93,10 @@ function fn_createBills(){
     var curDate = new Date();
     
     if(inputYear == null ){
-        Common.alert("Selecte year for bill generations.");
+        Common.alert("<spring:message code='pay.alert.selectYear'/>");
     }
     else if(inputMonth == null){
-        Common.alert("Selecte month for bill generations.");
+        Common.alert("<spring:message code='pay.alert.selectMonth'/>");
     }
     
     if(inputYear != null && inputMonth != null){
@@ -122,7 +122,7 @@ function fn_complete(){
                 Common.ajax("GET", "/payment/getExistBill.do", {"year" : $("#year").val(), "month" : $("#month").val(), "taskId" : taskId}, function(result) {
                        existBillMonthYear = result;
                        if(existBillMonthYear > 0){
-                             Common.alert("Failed to save request. Selected Task Monthly Bill Was Generated.");
+                             Common.alert("<spring:message code='pay.alert.failSaveReqBillGen'/>");
                        }else{
                              var taskType = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskType");
                              var success = -1;
@@ -133,22 +133,22 @@ function fn_complete(){
                                  console.log("success : " + success);
                                  if(success == 1){
                                      fn_getBillingList();
-                                     Common.alert("Bill Task Confirmed.");
+                                     Common.alert("<spring:message code='pay.alert.billTaskConf'/>");
                                  }else{
-                                     Common.alert("Failed to save  request. Please try again later.");
+                                     Common.alert("<spring:message code='pay.alert.failSaveReqAgain'/>");
                                  }
                              });
                              
                        }
                 });
             }else{
-                Common.alert("Failed to save request. Selected Task ID should be Success Status.");
+                Common.alert("<spring:message code='pay.alert.failSaveSuccessStatus'/>");
             }
         }else{
-            Common.alert("Failed to save request. Selected Task ID Was Generated.");
+            Common.alert("<spring:message code='pay.alert.failSaveReqTaskGen'/>");
         }
     }else{
-        Common.alert("No Task ID Selected.");
+        Common.alert("<spring:message code='pay.alert.noTaskId'/>");
     }
 }
 </script>
