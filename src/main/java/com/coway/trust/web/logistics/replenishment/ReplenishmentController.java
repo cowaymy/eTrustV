@@ -72,6 +72,12 @@ public class ReplenishmentController {
 		return "logistics/replenishment/replenishmentCT";
 	}
 
+	@RequestMapping(value = "/replenishmentcd.do")
+	public String cdlist(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/replenishment/replenishmentCODY";
+	}
+
 	@RequestMapping(value = "/exceldata.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> excelDataSearch(@RequestParam Map<String, Object> params, Model model) throws Exception {
 
@@ -162,5 +168,51 @@ public class ReplenishmentController {
 		map.put("data", list);
 
 		return ResponseEntity.ok(map);
+	}
+
+	@RequestMapping(value = "/relenishmentSaveCt.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> relenishmentSaveCt(@RequestBody Map<String, Object> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		logger.debug("insList {}", insList);
+
+		Map<String, Object> param = new HashMap();
+		param.put("add", insList);
+		param.put("userId", loginId);
+		// String reqNo = replenishment.relenishmentSaveCt(param);
+		replenishment.relenishmentSaveCt(param);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setData(reqNo);
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/relenishmentSaveRdc.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> relenishmentSaveRdc(@RequestBody Map<String, Object> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		logger.debug("insList {}", insList);
+
+		Map<String, Object> param = new HashMap();
+		param.put("add", insList);
+		param.put("userId", loginId);
+		// String reqNo = replenishment.relenishmentSaveCt(param);
+		replenishment.relenishmentSaveRdc(param);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		// message.setData(reqNo);
+
+		return ResponseEntity.ok(message);
 	}
 }
