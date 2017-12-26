@@ -221,7 +221,6 @@ function fnCreate(obj)
 	          , function(result) 
 	           {
 	              Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	              //fnSearchBtnList() ;
 	              fnSettiingHeader();
 	              
 	              console.log("성공." + JSON.stringify(result));
@@ -933,8 +932,8 @@ function fnSettiingHeader()
 		              };
 
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /team: " + $('#scmTeamCbBox').val());
-  Common.ajax("GET", "/scm/selectCalendarHeader.do"
-           , $("#MainForm").serialize()
+  Common.ajax("POST", "/scm/selectCalendarHeader.do"
+           , $("#MainForm").serializeJSON()
            , function(result) 
            {     
 	           if(result.planInfo != null && result.planInfo.length > 0)
@@ -971,7 +970,7 @@ function fnSettiingHeader()
 
             	 return false;  
              }
-		                         
+
             //  AUIGrid.setGridData(myGridID, result);
               if(result.header != null && result.header.length > 0)
               {
@@ -1646,8 +1645,6 @@ function fnSaveScmSalesPlan(Obj)
         , function(result) 
           {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-            //AUIGrid.hideColumnByDataField(myGridID, insertVisibleFields );
-            //AUIGrid.clearGridData(myGridID);
             fnSearchBtnList() ;
             
             console.log("성공." + JSON.stringify(result));
@@ -1819,19 +1816,19 @@ function fnGetDetailAndSeqMstId()
            });
 }
 
-function fnCheckPlanMsterInfoByTeam()
+function fnGetMonthInfo()
 {
    Common.ajax("GET", "/scm/selectPlanId.do"
            , $("#MainForm").serialize()
            , function(result) 
            {
-              console.log("성공 SearchBtnData_planId : " + result[0].planId);
+              console.log("성공 SearchBtnData_planId : " + result.planMonth);
               //AUIGrid.setGridData(myGridID, result);
               if(result != null && result.length > 0)
               {
-               $("#planMasterId").val(result[0].planId);
-               gPlanId = result[0].planId;
-               console.log("select Plan id: " + gPlanId );
+               $("#selectPlanMonth").val(result.planMonth);
+               //gPlanId = result[0].planId;
+               console.log("select Plan Month: " +  $("#selectPlanMonth").val() );
               }
            });
 }
@@ -1839,63 +1836,76 @@ function fnCheckPlanMsterInfoByTeam()
 
 function selectStockCtgrySummaryList()
 {
-   Common.ajax("GET", "/scm/selectStockCtgrySummary.do"
-           , $("#MainForm").serialize()
-           , function(result) 
-           {
-              console.log("성공 selectStockCtgrySummary: " + result.selectSalesSummaryList);
-              AUIGrid.setGridData(summaryGridID, result.selectSalesSummaryList);
-              if(result != null && result.length > 0)
-              {
-              }
-           });
+	  var params = {
+		      stkCategories : $('#stockCategoryCbBox').multipleSelect('getSelects'),
+		      scmStockTypes : $('#scmStockType').multipleSelect('getSelects'),
+		      stkCodes : $('#stockCodeCbBox').multipleSelect('getSelects')
+		      };
+
+	 params = $.extend($("#MainForm").serializeJSON(), params);
+		  
+   Common.ajax("POST"
+			       , "/scm/selectStockCtgrySummary.do"
+	           , params
+	           , function(result) 
+	           {
+	              console.log("성공 selectStockCtgrySummary: " + result.selectSalesSummaryList);
+	              AUIGrid.setGridData(summaryGridID, result.selectSalesSummaryList);
+	              if(result != null && result.length > 0)
+	              {
+	              }
+	           });
    
 }
 
 function fnSearchBtnList()
 {
-   Common.ajax("GET", "/scm/selectSalesPlanMngmentSearch.do"
-           , $("#MainForm").serialize()
-           , function(result) 
-           {
-              console.log("성공 fnSearchBtnList: " + result.length);
-              AUIGrid.setGridData(myGridID, result.salesPlanMainList);
-              if(result != null && result.salesPlanMainList.length > 0)
-              {
-            	  //console.log("성공 salesPlanMainList_length: " + result.salesPlanMainList.length);
-            	  $('#btnAddrow').removeClass("btn_disabled");
-            	  $('#btnExcel').removeClass("btn_disabled");
-            	  $('#btnUpdate').removeClass("btn_disabled");
-            	  $('#btnCancel').addClass("btn_disabled");
-            	  $('#btnInsert').addClass("btn_disabled");
-              }
-              else if (result.salesPlanMainList.length == 0)
-              {
-            	  $('#btnAddrow').addClass("btn_disabled");
-            	  $('#btnExcel').addClass("btn_disabled");
-            	  $('#btnCancel').addClass("btn_disabled");
-            	  $('#btnUpdate').addClass("btn_disabled");
-            	  $('#btnInsert').addClass("btn_disabled");
-              }
+	var params = {
+			stkCategories : $('#stockCategoryCbBox').multipleSelect('getSelects'),
+			scmStockTypes : $('#scmStockType').multipleSelect('getSelects'),
+			stkCodes : $('#stockCodeCbBox').multipleSelect('getSelects')
+			};
 
-              gAddrowCnt = 0;
-                  
-           });
+	params = $.extend($("#MainForm").serializeJSON(), params);
+
+  Common.ajax("POST", "/scm/selectSalesPlanMngmentSearch.do"
+	           , params
+	           , function(result) 
+	           {
+	              console.log("성공 fnSearchBtnList: " + result.length);
+	              AUIGrid.setGridData(myGridID, result.salesPlanMainList);
+	              if(result != null && result.salesPlanMainList.length > 0)
+	              {
+	            	  $('#btnAddrow').removeClass("btn_disabled");
+	            	  $('#btnExcel').removeClass("btn_disabled");
+	            	  $('#btnUpdate').removeClass("btn_disabled");
+	            	  $('#btnCancel').addClass("btn_disabled");
+	            	  $('#btnInsert').addClass("btn_disabled");
+	              }
+	              else if (result.salesPlanMainList.length == 0)
+	              {
+	            	  $('#btnAddrow').addClass("btn_disabled");
+	            	  $('#btnExcel').addClass("btn_disabled");
+	            	  $('#btnCancel').addClass("btn_disabled");
+	            	  $('#btnUpdate').addClass("btn_disabled");
+	            	  $('#btnInsert').addClass("btn_disabled");
+	              }
+	
+	              gAddrowCnt = 0;
+	                  
+	           });
    
 }
 
 function fnSelectSalesCnt(inputCode)
 {
    Common.ajax("GET", "/scm/selectSalesCnt.do"
-         //  , $("#MainForm").serialize()
            , { stockCode: inputCode }  
            , function(result) 
            {
               console.log("성공 selectSalesCnt: " + result[0].saleCnt );
-              //AUIGrid.setGridData(myGridID, result);
               if(result != null && result.length > 0)
               {
-               // fnSetSelectedColumn(myGridID, 0);
               }
            });
 }
@@ -1969,6 +1979,7 @@ $(document).ready(function()
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="">
   <input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
+  <input type ="hidden" id="selectPlanMonth" name="selectPlanMonth" value=""/>
   
 <table class="type1"><!-- table start -->
 <caption>table</caption>

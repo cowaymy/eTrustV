@@ -145,17 +145,24 @@ function fnExcelExport()
 // search
 function fnSearchBtnList()
 {
-   Common.ajax("GET", "/scm/selectSupplyCorpListSearch.do"
-           , $("#MainForm").serialize()
-           , function(result) 
-           {
-              console.log("성공 fnSearchBtnList: " + result.length);
-              AUIGrid.setGridData(myGridID, result.selectSupplyCorpList);
-              if(result != null && result.length > 0)
-              {
-              }
-           });
-   
+	  var params = {
+		      scmStockTypes : $('#scmStockType').multipleSelect('getSelects'),
+		      stkCodes : $('#stockCodeCbBox').multipleSelect('getSelects')
+		      };
+
+	  params = $.extend($("#MainForm").serializeJSON(), params);
+
+	  Common.ajax("POST"
+		  		    , "/scm/selectSupplyCorpListSearch.do"
+		  		    , params
+		          , function(result) 
+		          {
+		             console.log("성공 fnSearchBtnList: " + result.length);
+		             AUIGrid.setGridData(myGridID, result.selectSupplyCorpList);
+		             if(result != null && result.length > 0)
+		             {
+		             }
+		          });
 }
 
 function fnSettiingHeader()
@@ -193,8 +200,8 @@ function fnSettiingHeader()
                   };
 
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /stock: " + $('#stockCodeCbBox').val());  
-  Common.ajax("GET", "/scm/selectCalendarHeader.do"
-          , $("#MainForm").serialize()
+  Common.ajax("POST", "/scm/selectCalendarHeader.do"
+          , $("#MainForm").serializeJSON()
           , function(result) 
           {     
 
@@ -770,7 +777,6 @@ function fnSettiingHeader()
                ////////////////////////////////////
                //Data Search
                ////////////////////////////////////
-               
                fnSearchBtnList();
                                
              }

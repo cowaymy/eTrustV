@@ -89,7 +89,6 @@ function fnCreate(obj)
 	            , function(result) 
 	             {
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                //fnSearchBtnList() ;
 	                fnSettiingHeader();
 	                
 	                console.log("성공." + JSON.stringify(result));
@@ -275,8 +274,16 @@ function fnExcelExport(fileNm)
 // search
 function fnSearchBtnList()
 {
-   Common.ajax("GET", "/scm/selectSupplyPlanCDCSearch.do"
-           , $("#MainForm").serialize()
+   var params = {
+	                scmStockTypes : $('#scmStockType').multipleSelect('getSelects'),
+	                stkCodes : $('#stockCodeCbBox').multipleSelect('getSelects')
+	              };
+
+	 params = $.extend($("#MainForm").serializeJSON(), params);
+		    
+   Common.ajax("POST"
+		       , "/scm/selectSupplyPlanCDCSearch.do"
+	         , params
            , function(result) 
            {
               console.log("성공 fnSearchBtnList: " + result.selectSupplyPlanCDCList.length);
@@ -521,8 +528,8 @@ function fnSettiingHeader()
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /stock: " + $('#stockCodeCbBox').val()
 		         +"cdc: " + $('#cdcCbBox').val() );  
   
-  Common.ajax("GET", "/scm/selectCalendarHeader.do"
-          , $("#MainForm").serialize()
+  Common.ajax("POST", "/scm/selectCalendarHeader.do"
+          , $("#MainForm").serializeJSON()
           , function(result) 
           {     
 
