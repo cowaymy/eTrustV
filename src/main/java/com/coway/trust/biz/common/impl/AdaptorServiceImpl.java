@@ -186,7 +186,12 @@ public class AdaptorServiceImpl implements AdaptorService {
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
 						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
 								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
-								.replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%2B", "+")
+								.replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%3A", ":")
+								.replaceAll("%28", "(").replaceAll("%2F", "/").replaceAll("%29", ")")
+								.replaceAll("%26", "&").replaceAll("%3C", "<").replaceAll("%60", "`")
+								.replaceAll("%7E", "~").replaceAll("%24", "$").replaceAll("%5E", "^")
+								.replaceAll("%5F", "_").replaceAll("%7B", "{").replaceAll("%7D", "}")
+								.replaceAll("%7C", "|").replaceAll("%5B", "[").replaceAll("%5D", "]")
 						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID="
 						+ msgId;
 			} catch (UnsupportedEncodingException e) {

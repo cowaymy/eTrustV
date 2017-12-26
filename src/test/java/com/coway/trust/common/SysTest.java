@@ -241,15 +241,28 @@ public class SysTest {
 
 	@Test
 	public void test() throws UnsupportedEncodingException {
-		String str = URLEncoder.encode("RM0.00 " + "OK@!#$test message by genSuite....").replaceAll("\\+", " ")
+		String str = URLEncoder.encode("RM0.00 " + "Coway^ : PERINGATAN TERAKHIR: Sila bayar tunggakan RM780 dgn JomPAY (code 9928/Ref-1-10965515) utk mengelakkan nama anda disenaraihitamkan oleh semua Bank. ")
+				.replaceAll("\\+", " ")
 				.replaceAll("%40", "@")
 				.replaceAll("%21", "!")
 				.replaceAll("%23", "#")
 				.replaceAll("%24", "$")
-				.replaceAll("%40", "@")
-				.replaceAll("%40", "@")
-				.replaceAll("%40", "@")
-				.replaceAll("%40", "@");
+				.replaceAll("%3A", ":")
+				.replaceAll("%28", "(")
+				.replaceAll("%2F", "/")
+				.replaceAll("%29", ")")
+				.replaceAll("%26", "&")
+				.replaceAll( "%3C", "<")
+				.replaceAll( "%60", "`")
+				.replaceAll( "%7E", "~")
+				.replaceAll( "%24", "$")
+				.replaceAll( "%5E", "^")
+				.replaceAll( "%5F", "_")
+				.replaceAll( "%7B", "{")
+				.replaceAll( "%7D", "}")
+				.replaceAll( "%7C", "|")
+				.replaceAll( "%5B", "[")
+				.replaceAll( "%5D", "]");
 		LOGGER.debug(str);
 
 		// ()-_=+:;'"~<>,.?
