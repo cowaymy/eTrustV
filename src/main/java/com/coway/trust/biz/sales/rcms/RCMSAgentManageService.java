@@ -23,4 +23,12 @@ public interface RCMSAgentManageService {
 	void insUpdAgent(Map<String, Object> params) throws Exception; 
 	
 	List<EgovMap> selectAgentList(Map<String, Object> params) throws Exception;
+
+	List<EgovMap> checkAssignAgentList(Map<String, Object> params);
+
+	void saveAgentList(Map<String, Object> params);
+
+	void updateRemark(Map<String, Object> params);
+
+	EgovMap selectRcmsInfo(Map<String, Object> params);
 }

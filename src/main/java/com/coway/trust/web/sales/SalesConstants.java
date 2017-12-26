@@ -430,6 +430,9 @@ public class SalesConstants {
 	public static final String MSG_DCF_SETTLED = "sales.msg.settled"; // Approval result has settled.
 	public static final String MSG_DCF_SUCC = "sales.msg.dcfSucc"; // TR book lost result successfully saved.
 	public static final String MSG_DCF_UNABLE = "sales.msg.dcfUnable"; // Unable to find DCF request record.
+	
+	public static final String MSG_INV_ORDNO = "sales.msg.invOrd"; // Unable to find DCF request record.
+	public static final String MSG_INV_AGENTID = "sales.msg.invAgent"; // Unable to find DCF request record.
 
 }
 

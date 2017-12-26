@@ -10,9 +10,9 @@ var agentList = [];
 $(document).ready(function(){
 
     //Application Type
-    CommonCombo.make("appType", "/common/selectCodeList.do", {groupCode : '10'}, 'REN', 
+    CommonCombo.make("appType", "/common/selectCodeList.do", {groupCode : '10'}, '66', 
     		{
-		        id: "code",
+		        id: "codeId",
 		        name:"codeName",
 		        isShowChoose: false 
 		      });
@@ -141,7 +141,8 @@ function creatGrid(){
 	                  keyField   : "agentId", // key 에 해당되는 필드명
 	                  valueField : "agentName" // value 에 해당되는 필드명
 	              }  
-	            } ,            
+	            } ,  
+	          {dataField : "prevAgentId", headerText : "", width : 90    ,     visible:false, editable       : false},
               {dataField : "agentId", headerText : "ROS Caller", width : 90    ,     editable       : true
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                       var retStr = value;
@@ -160,8 +161,8 @@ function creatGrid(){
 	                  valueField : "agentName" // value 에 해당되는 필드명
 	              }  
 	            } ,            
-              {dataField : "assigned", headerText : "Assigned", width : 70       } ,            
-              {dataField : "sensitiveFg", headerText : "Sensitive", width : 70       }             
+              {dataField : "assigned", headerText : "Assigned", width : 70  , editable       : false     } ,            
+              {dataField : "sensitiveFg", headerText : "Sensitive", width : 70   ,editable       : false    }             
               ];
         
 
@@ -182,11 +183,13 @@ function creatGrid(){
              
               Common.popupDiv("/sales/trBookRecv/trBookRecvViewPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRecvViewPop");
               
-         });
-        // 셀 더블클릭 이벤트 바인딩
-         AUIGrid.bind(recvGridID, "cellClick", function(event){            
-              $("#trnsitId").val(AUIGrid.getCellValue(recvGridID , event.rowIndex , "trnsitId"));              
-         }); */
+         });*/
+         
+         //셀 클릭 이벤트 바인딩
+         AUIGrid.bind(assignGrid, "cellClick", function(event){            
+              $("#orderNo").val(AUIGrid.getCellValue(assignGrid , event.rowIndex , "salesOrdNo"));              
+              $("#salesOrdId").val(AUIGrid.getCellValue(assignGrid , event.rowIndex , "salesOrdId"));              
+         }); 
          
         
         // 에디팅 시작 이벤트 바인딩
@@ -219,7 +222,6 @@ function fn_selectListAjax() {
     // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
     AUIGrid.forceEditingComplete(assignGrid, null, false);
 	 
-    alert($("#rentalStatus").val());
 	 if($("#rentalStatus").val() == ""){
 	        Common.alert("Please select a Rental Status.");
 	        return ;
@@ -229,12 +231,17 @@ function fn_selectListAjax() {
           $("#companyType").val("");   
     }
 	 
+	$("#appType").prop("disabled", false);
     Common.ajax("GET", "/sales/rcms/selectAssignAgentList", $("#searchForm").serialize(), function(result) {
       
        console.log("성공.");
        console.log( result);
        
       AUIGrid.setGridData(assignGrid, result);
+      
+      $("#orderNo").val("");              
+      $("#salesOrdId").val("");  
+      $("#appType").prop("disabled", true);
 
   });
 }
@@ -266,12 +273,23 @@ function fn_customerChng(){
 	
 	if($("#customerType").val() == "964"){
         $("#companyType").multipleSelect("disable");
-		//CommonCombo.make("companyType", "/common/selectCodeList.do", {groupCode : '95'}, '', {isShowChoose: false ,isEnable: false, isCheckAll : false, type: "M"});
 	}else{
         $("#companyType").multipleSelect("enable");
-		//CommonCombo.make("companyType", "/common/selectCodeList.do", {groupCode : '95'}, '', {isShowChoose: false ,isEnable: true, isCheckAll : false, type: "M"});
 	}
 	
+}
+
+function fn_uploadPop(){
+	Common.popupDiv("/sales/rcms/uploadAssignAgentPop.do",null, fn_selectListAjax, true, "uploadAssignAgentPop");
+}
+
+function fn_edit(){
+	
+	if($("#salesOrdId").val() == ""){
+		Common.alert("Please select data to edit. ");
+		return;
+	}
+	Common.popupDiv("/sales/rcms/updateRemarkPop.do",null, fn_selectListAjax, true, "updateRemarkPop");
 }
 
 </script>
@@ -289,7 +307,7 @@ function fn_customerChng(){
 <h2>RCMS Assign Agent</h2>
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" ><span class="new"></span>Upload (Assign)</a></p></li>
+    <li><p class="btn_blue"><a href="#"  id="btnUpload" onclick="javascript:fn_uploadPop();"></span>Upload (Assign)</a></p></li>
     <li><p class="btn_blue"><a href="#" id="btnSave" onclick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -297,6 +315,10 @@ function fn_customerChng(){
 
 
 <section class="search_table"><!-- search_table start -->
+<form id="editForm" name="editForm" action="#" method="post">
+    <input type="hidden" id="orderNo" name="orderNo" />
+    <input type="hidden" id="salesOrdId" name="salesOrdId" />
+</form>
     <form id="searchForm" name="searchForm" action="#" method="post">
     <table class="type1"><!-- table start -->
     <caption>table</caption>
@@ -390,6 +412,7 @@ function fn_customerChng(){
 <section class="search_result"><!-- search_result start -->
 <ul class="right_btns mt10">
     <li><p class="btn_grid"><a href="#" id="excelDown">Download</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_edit();">EDIT</a></p></li>   
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_save();">SAVE</a></p></li>   
 </ul>
 

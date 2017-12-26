@@ -9,11 +9,17 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.rcms.RCMSAgentManageService;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -23,6 +29,10 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 	
 	@Resource(name = "rcmsAgentManageMapper")
 	private RCMSAgentManageMapper rcmsAgentManageMapper;
+	
+	// DataBase message accessor....
+	@Autowired
+	private MessageSourceAccessor messageAccessor;
 	
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RCMSAgentManageServiceImpl.class);
@@ -152,13 +162,11 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 	
 	@Override
 	public List<EgovMap> selectRosCaller() {
-		// TODO Auto-generated method stub
 		return rcmsAgentManageMapper.selectRosCaller();
 	}
 
 	@Override
 	public List<EgovMap> selectAssignAgentList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return rcmsAgentManageMapper.selectAssignAgentList(params);
 	}
 
@@ -179,6 +187,95 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 			}
 		}
 		
+	}
+
+
+	@Override
+	public List<EgovMap> checkAssignAgentList(Map<String, Object> params) {
+
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+				
+		String msg = null;
+
+		List checkList = new ArrayList();
+		
+		for (Object obj : list) 
+		{			
+			LOGGER.debug(" >>>>> checkAssignAgentList ");
+			LOGGER.debug(" OrderNo : {}", ((Map<String, Object>) obj).get("0"));
+			LOGGER.debug(" Agent ID : {}", ((Map<String, Object>) obj).get("1"));
+
+			EgovMap result = new EgovMap();
+			
+			if(!CommonUtils.isEmpty(((Map<String, Object>) obj).get("0"))){
+				
+				result.put("orderNo", String.format("%07d", Integer.parseInt(((Map<String, Object>) obj).get("0").toString())));
+				result.put("agentId", ((Map<String, Object>) obj).get("1"));		
+				
+				//check OrderNo 
+				if(rcmsAgentManageMapper.checkOrderNo(result) <= 0){					
+					msg = messageAccessor.getMessage(SalesConstants.MSG_INV_ORDNO);
+					((Map<String, Object>) obj).put("orderNo", result.get("orderNo"));
+					((Map<String, Object>) obj).put("agentId", result.get("agentId"));
+					((Map<String, Object>) obj).put("msg", msg);
+					checkList.add(obj);
+					continue;
+				}
+				
+				//check Agent ID 
+				if(rcmsAgentManageMapper.checkAgentId(result) <= 0){					
+					msg = messageAccessor.getMessage(SalesConstants.MSG_INV_AGENTID);
+					((Map<String, Object>) obj).put("orderNo", result.get("orderNo"));
+					((Map<String, Object>) obj).put("agentId", result.get("agentId"));
+					((Map<String, Object>) obj).put("msg", msg);
+					checkList.add(obj);
+					continue;
+				}
+			}				
+		}
+		
+		return checkList;
+	}
+
+	@Override
+	public void saveAgentList(Map<String, Object> params) {
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+				
+		for (Object obj : list) 
+		{	
+			
+			LOGGER.debug(" >>>>> saveAgentList ");
+			LOGGER.debug(" OrderNo : {}", ((Map<String, Object>) obj).get("0"));
+			LOGGER.debug(" Agent ID : {}", ((Map<String, Object>) obj).get("1"));
+			
+			EgovMap updateMap = new EgovMap();
+			
+			if(!CommonUtils.isEmpty(((Map<String, Object>) obj).get("0"))){
+    			updateMap.put("orderNo", String.format("%07d", Integer.parseInt(((Map<String, Object>) obj).get("0").toString())));
+    			updateMap.put("agentId", ((Map<String, Object>) obj).get("1"));		
+    			updateMap.put("userId", params.get("userId"));
+    			
+    			EgovMap map = rcmsAgentManageMapper.selectRcmsInfo(updateMap);
+    			
+    			updateMap.put("salesOrdId", map.get("salesOrdId"));
+    			updateMap.put("prevAgentId", map.get("agentId"));
+    			
+    			rcmsAgentManageMapper.updateAgent(updateMap);
+			}
+		}
+	}
+
+	@Override
+	public void updateRemark(Map<String, Object> params) {
+
+		EgovMap updateMap = new EgovMap();		
+		
+		rcmsAgentManageMapper.updateRemark(params);
+	}
+
+	@Override
+	public EgovMap selectRcmsInfo(Map<String, Object> params) {
+		return rcmsAgentManageMapper.selectRcmsInfo(params);
 	}
 	
 }

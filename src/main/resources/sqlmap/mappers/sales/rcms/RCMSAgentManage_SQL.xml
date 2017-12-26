@@ -132,12 +132,24 @@
 		        ,B.NAME 
 		        ,B.CORP_TYPE_ID
 		        ,A.COLCT_TRGET
-		        ,(SELECT SUM(RENT_AMT) AS CURRENT_OS
-		            FROM PAY0022D
-		            WHERE RENT_SO_ID = C.SALES_ORD_ID
-		            GROUP BY RENT_SO_ID) RENT_AMT
+		         <choose>
+                  <when test="appType == 66">                   
+                      ,(SELECT SUM(RENT_AMT) AS CURRENT_OS
+                    FROM PAY0022D
+                    WHERE RENT_SO_ID = C.SALES_ORD_ID
+                    GROUP BY RENT_SO_ID) RENT_AMT
+                  </when>
+                  <otherwise>  
+                      ,(SELECT SUM(TRADE_AMT) AS CURRENT_OS
+                    FROM PAY0035D
+                    WHERE RENT_SO_ID = C.SALES_ORD_ID
+                    GROUP BY RENT_SO_ID) RENT_AMT
+                  </otherwise>
+                 </choose>  		            
+		        
 		        ,A.OPEN_MTH_AGING
 		        ,A.AGENT_ID
+		        ,A.AGENT_ID PREV_AGENT_ID
 		        ,CASE WHEN A.AGENT_ID = 0 THEN  (SELECT NVL(AGENT_ID, 0) FROM SAL0149D WHERE CUST_ID = A.CUST_ID AND AGENT_ID <![CDATA[<>]]> 0 AND ROWNUM =1)  ELSE A.AGENT_ID  END SUGGEST_AGENT
 		        ,CASE WHEN A.AGENT_ID = 0 THEN 'N' ELSE 'Y' END ASSIGNED 
 		        ,CASE WHEN A.SENSITIVE_FG = 0 THEN 'N' ELSE 'Y' END SENSITIVE_FG
@@ -147,6 +159,9 @@
 		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
 		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
 		WHERE 1=1 
+		  <if test="appType != null and appType !='' ">
+		    AND C.APP_TYPE_ID = #{appType} 
+		  </if>
 		  <if test="orderStatus != null and orderStatus !='' ">
 		    AND C.STUS_CODE_ID = #{orderStatus} 
 		  </if>
@@ -199,7 +214,17 @@
     <update id="updateAgent" parameterType="Map">
 		UPDATE SAL0149D
 		   SET AGENT_ID = #{agentId},
+		       PREV_AGENT_ID = #{prevAgentId},
 		       UPD_AGENT_DT = SYSDATE,
+		       UPD_USER_ID = #{userId},
+		       UPD_DT = SYSDATE
+		 WHERE SALES_ORD_ID = #{salesOrdId}
+	 </update>
+	 
+    <update id="updateRemark" parameterType="Map">
+		UPDATE SAL0149D
+		   SET REM = #{remark},
+		       SENSITIVE_FG = #{sensitiveFg},
 		       UPD_USER_ID = #{userId},
 		       UPD_DT = SYSDATE
 		 WHERE SALES_ORD_ID = #{salesOrdId}
@@ -212,4 +237,34 @@
 		   UPD_DT = SYSDATE
 		 WHERE CUST_ID = #{custId}
 	 </update>
+	 
+	 <select id="checkOrderNo" parameterType="Map" resultType="int">
+		 SELECT count(-1) cnt
+		  FROM SAL0149D A JOIN SAL0001D B 
+		                              ON A.SALES_ORD_ID = B.SALES_ORD_ID
+		                              AND B.APP_TYPE_ID = 66
+		 WHERE B.SALES_ORD_NO =  #{orderNo} 
+	 </select>
+	 
+	 <select id="checkAgentId" parameterType="Map" resultType="int">
+	    SELECT COUNT(-1) CNT
+	      FROM SAL0148M A
+	        JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID 
+	                                 AND B.CODE_MASTER_ID = 329  
+	                                 AND DISAB = 0
+	      WHERE A.AGENT_ID = #{agentId}                                 
+    </select>
+    
+    <select id="selectRcmsInfo" parameterType="Map" resultType="egovMap">
+         SELECT A.SALES_ORD_ID, 
+                    A.AGENT_ID, 
+                    A.REM, 
+                    A.SENSITIVE_FG, 
+                    B.SALES_ORD_NO
+          FROM SAL0149D A JOIN SAL0001D B 
+                                      ON A.SALES_ORD_ID = B.SALES_ORD_ID
+                                      AND B.APP_TYPE_ID = 66
+         WHERE B.SALES_ORD_NO =  #{orderNo}    
+     </select>
+	 
 </mapper>

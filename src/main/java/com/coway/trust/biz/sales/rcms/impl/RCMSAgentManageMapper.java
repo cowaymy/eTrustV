@@ -30,5 +30,13 @@ public interface RCMSAgentManageMapper {
 	List<EgovMap> selectAgentList(Map<String, Object> params);
 
 	void updateCompany(Map<String, Object> updateMap);
+
+	int checkOrderNo(Map<String, Object> params);
+
+	int checkAgentId(Map<String, Object> params);
+
+	EgovMap selectRcmsInfo(Map<String, Object> params);
+
+	void updateRemark(Map<String, Object> params);
 	
 }
