@@ -58,6 +58,7 @@
               #{item}
               </foreach>
            </if>
+           ORDER BY HOLIDAY
     </select>
     <select id="selectCTList"  parameterType="Map" resultType="egovMap">
         SELECT B.MEM_CODE, B.NAME,count(C.ct_mem_id) as total_assign_date, B.MEM_ID

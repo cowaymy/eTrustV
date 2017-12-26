@@ -92,7 +92,7 @@ public class HolidayController {
     			
     			alreadyHoliday =holidayService.checkAlreadyHoliday(insertValue);
     			
-    			if(!alreadyHoliday){
+    			if(alreadyHoliday){
     				message.setMessage("Already Exist");
     				return ResponseEntity.ok(message);
     			}
