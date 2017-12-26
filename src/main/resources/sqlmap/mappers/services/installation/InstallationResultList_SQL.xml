@@ -52,6 +52,7 @@
                         IE.INSTALL_DT,
                         MEM.MEM_CODE,
                         STK.STK_DESC,
+                        SOM.CUST_ID,
                         MEM.NAME,
                         CD2.CODE as APP_TYPE,
                         ST.CODE CODE1,

@@ -506,6 +506,12 @@ public class HsManualController {
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+		
+		logger.debug("UpdateHsResult2=============> in ");
+		logger.debug("["+params.toString()+"]");  
+		logger.debug("UpdateHsResult2=============> in");
+		
+		
 
 		resultValue = hsManualService.UpdateHsResult2(formMap, updList, sessionVO);
 

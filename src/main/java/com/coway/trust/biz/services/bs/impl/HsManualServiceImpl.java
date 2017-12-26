@@ -1235,6 +1235,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		EgovMap qryBS_Rev =  null;
 		qryBS_Rev=hsManualMapper.selectQryBS_Rev(bsResultMas);
 		logger.debug("qryBS_Rev : {}" + qryBS_Rev);
+		
 		if(qryBS_Rev!=null){
 			int BSResultM_resultID = hsManualMapper.getBSResultM_resultID();
     		bsResultMas_Rev.put("ResultID", BSResultM_resultID); //sequence
@@ -1264,12 +1265,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		List<EgovMap> qryResultDet =  hsManualMapper.selectQryResultDet(bsResultMas_Rev);
     		logger.debug("qryResultDet : {}" + qryResultDet);
     		logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
+    		
+    		
     		// bsResultDet
     		for(int i = 0 ; i<qryResultDet.size() ; i++){
     			Map<String, Object> bsResultDet_Rev = new HashMap<String, Object>();
     			
     			//bsResultDet_Rev.put("BSResultItemID", 0);
-    			bsResultDet_Rev.put("BSResultID", bsResultMas_Rev.get("ResultID"));
+    			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
     			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
     			bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));//BS_RESULT_PART_DESC
     			bsResultDet_Rev.put("BSResultPartQty",  CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")));//BS_RESULT_PART_QTY
@@ -1288,7 +1291,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		if(qry_stkReqM!=null){
         		String PDONo  = null;
         		int PDO_REQUEST = 26;
-        		bsResultMas_Rev.put("docType", PDO_REQUEST);
+        		bsResultMas_Rev.put("docType", PDO_REQUEST);  
         		PDONo = hsManualMapper.GetDocNo(bsResultMas_Rev);
         		bsResultMas_Rev.put("PDONo", PDONo);
         		
@@ -1404,13 +1407,19 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		qry_New.put("nextDocNo_New", String.valueOf(nextDocNo_New));
     		hsManualMapper.updateQry_New(qry_New);
     		
+    		
+    		
+			int BSResultM_resultID2 = hsManualMapper.getBSResultM_resultID();			
     		bsResultMas.put("No", ResultNo_New);
+    		bsResultMas.put("ResultId", BSResultM_resultID2);
     		bsResultMas.put("CodyId", String.valueOf(bsResultMas_Rev.get("codyId")));
     		
     		hsManualMapper.addbsResultMas(bsResultMas);
     		
     		for(int i = 0; i < bsResultDet.size(); i++) {
     			Map<String, Object> row = bsResultDet.get(i);
+    			
+    			row.put("BSResultID", BSResultM_resultID2);
     			hsManualMapper.addbsResultDet_Rev(row);
     		}
     		

@@ -2811,8 +2811,7 @@
                 )
                 values
                 (
-                <!-- SVC0006D_RESULT_ID_SEQ.nextval, -->
-                #{ResultID},
+                   #{ResultID},
                 #{No}
                 ,#{TypeId}
                 ,#{ScheduleID}
@@ -3075,8 +3074,9 @@
             ,RESULT_MTCH_ID
             ,RESULT_IS_ADJ
             )
-            values
-            (SVC0006D_RESULT_ID_SEQ.nextval
+            values 
+            (
+            #{ResultId}
             ,#{No}
             ,#{TypeID}
             ,#{ScheduleID}
