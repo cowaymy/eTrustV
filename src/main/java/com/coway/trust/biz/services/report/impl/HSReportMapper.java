@@ -11,5 +11,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface HSReportMapper {
 	
 	List<EgovMap> selectHSReportSingle(Map<String, Object> params);
+	
+	List<EgovMap> selectHSReportGroup(Map<String, Object> params);
 
 }
