@@ -727,14 +727,10 @@ function fn_getFilterChargeList(){
                 if(null != result){
                      if(result[0] !=null){
                     	 if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){
-                    		 alert("111");
-
-                    		 alert(result[0].amt);
+                    		 
                              $("#txtFilterCharge").text( Math.round(result[0].amt * 100 / 106));
-                             alert( Math.round(result[0].amt * 100 / 106));
-                    	 }else{
 
-                             alert("222");
+                    	 }else{
                              $("#txtFilterCharge").text( result[0].amt);
                     	 }
                     } 
