@@ -2376,7 +2376,7 @@ function fn_setSearchPayType() {
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td>
-                    <input type="text" id="amount" name="amount" class="w100p"   maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' disabled="disabled"/>
+                    <input type="text" id="amount" name="amount" class="readonly w100p"   maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly />
                 </td>
                 <th scope="row">Bank Charge Amount</th>
                 <td>
@@ -2478,7 +2478,7 @@ function fn_setSearchPayType() {
             <tr>
                 <th scope="row">Amount<span class="must" >*</span></th>
                 <td>
-                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' disabled="disabled"/>
+                   <input type="text" id="amount" name="amount" class="readonly w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly />
                 </td>
                 <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
@@ -2574,7 +2574,7 @@ function fn_setSearchPayType() {
             <tr>
                 <th scope="row">Amount<span class="must">*</span></th>
                 <td>
-                   <input type="text" id="amount" name="amount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' disabled="disabled"/>
+                   <input type="text" id="amount" name="amount" class="readonly w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' readonly />
                 </td>
                 <th scope="row">Bank Type<span class="must">*</span></th>
                 <td>
