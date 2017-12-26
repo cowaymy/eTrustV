@@ -4,7 +4,7 @@
 
 
 var callerGridID;
-var callerDetGridID;
+//var callerDetGridID;
 
 $(document).ready(function() {    
 	createRosCallerGrid();
@@ -17,12 +17,12 @@ $(document).ready(function() {
 		});
 	});
 	
-	//Cell Click
+/* 	//Cell Click
 	AUIGrid.bind(callerGridID, "cellClick", function(event){
 		 Common.ajax("GET", "/sales/rcms/getCallerDetailList", {batchId : event.item.id}, function(result) {
 	            AUIGrid.setGridData(callerDetGridID, result);
 	     });
-	});
+	}); */
 });
 
 $.fn.clearForm = function() {
@@ -82,7 +82,7 @@ function createRosCallerGrid(){
      callerGridID = GridCommon.createAUIGrid("#caller_grid_wrap", callerColumnLayout,'', gridPros);  // address list
 }
 
-function createRosCallerDetGrid(){
+/* function createRosCallerDetGrid(){
     
     var callerDetColumnLayout =  [ 
                             
@@ -113,7 +113,7 @@ function createRosCallerDetGrid(){
     };
     
     callerDetGridID = GridCommon.createAUIGrid("#caller_det_grid_wrap", callerDetColumnLayout,'', gridPros);  // address list
-}
+} */
 
 
 </script>
@@ -174,7 +174,7 @@ function createRosCallerDetGrid(){
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="caller_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+<div id="caller_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="caller_det_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
