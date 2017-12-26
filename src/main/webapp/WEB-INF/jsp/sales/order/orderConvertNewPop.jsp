@@ -16,7 +16,7 @@ var cnvrListGrid;
 	$(document).ready(function(){
 		setInputFile();
 		creatGrid();
-		$("#uploadGrid").hide();
+//		$("#uploadGrid").hide();
 		
 		fn_changeCombo("REG");
 		
@@ -68,7 +68,7 @@ var cnvrListGrid;
 	               showRowNumColumn    : true,
 	               usePaging : false,
 	               editable : false,
-	               softRemoveRowMode:true
+	               softRemoveRowMode:false
 	         }; 
 	    
 	    uploadGrid = GridCommon.createAUIGrid("#uploadGrid", upColLayout, "", upOptions);
