@@ -111,7 +111,9 @@ function fn_Clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getAdjustmentListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_Clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
@@ -169,10 +171,18 @@ function fn_Clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
+                        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                         <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();"><spring:message code='pay.btn.link.newCnDnReq'/></a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
                         <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');"><spring:message code='pay.btn.link.newBatchReq'/></a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
                         <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('SUMMARY');"><spring:message code='pay.btn.link.genSummaryList'/></a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                         <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('APPROVAL');"><spring:message code='pay.btn.link.approval'/></a></p></li>                                                                      
+                        </c:if>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>

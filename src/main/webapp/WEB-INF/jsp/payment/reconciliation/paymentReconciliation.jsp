@@ -361,7 +361,9 @@ var maintenancePopLayout = [
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2>Payment Reconciliation</h2>
 		<ul class="right_opt">
+		    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 		    <li><p class="btn_blue"><a href="javascript:searchList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>		   
 		    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->

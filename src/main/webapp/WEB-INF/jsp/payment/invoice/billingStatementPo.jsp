@@ -247,6 +247,7 @@ function fn_doSave(){
 		</table><!-- table end -->
      </form>
      <!-- link_btns_wrap start -->
+     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
      <aside class="link_btns_wrap">
          <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
          <dl class="link_list">
@@ -259,6 +260,7 @@ function fn_doSave(){
              </dd>
          </dl>
      </aside>
+     </c:if>
      <!-- link_btns_wrap end -->
     </section>
 
