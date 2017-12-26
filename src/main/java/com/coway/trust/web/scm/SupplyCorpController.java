@@ -86,9 +86,8 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(selectSalesPlanMaster);
 	}
 
-	@RequestMapping(value = "/selectSupplyPlanCDCSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectSupplyPlanCDCSearch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectSupplyPlanCDC_Input : {}", params.toString());
 		
@@ -118,26 +117,10 @@ public class SupplyCorpController {
 		return "/scm/supplyPlanSummaryView";  
 	}  
 	
-	@RequestMapping(value = "/selectSupplyCorpListSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectSupplyCorpListSearch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestBody Map<String, Object> params)
 	{
 		LOGGER.debug("selectSupplyCorpList_InpParams : {}", params.toString());
-/*		LOGGER.debug("stkCodes : {}", stkCodes.toString());
-		
-		if (stkCodes != null) {
-			for (Integer id : stkCodes) {
-				LOGGER.debug("stkCode : {}", id);
-			}
-			
-			params.put("stkCodes", stkCodes);
-		}
-		
-		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);		
-		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));		
-		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);	
-		
-		LOGGER.debug("addMonth_Param : {}", params.toString());*/
 		
 		List<EgovMap> selectSupplyCorpList = salesPlanMngementService.selectSupplyCorpList(params);
 		

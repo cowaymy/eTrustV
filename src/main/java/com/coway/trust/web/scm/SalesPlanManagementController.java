@@ -50,8 +50,8 @@ public class SalesPlanManagementController {
 		return "/scm/salesPlanManagement";  
 	}
 	
-	@RequestMapping(value = "/selectCalendarHeader.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectCalendarHeaderList(@RequestParam Map<String, Object> params) 
+	@RequestMapping(value = "/selectCalendarHeader.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectCalendarHeaderList(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
 		
@@ -140,35 +140,16 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(selectPlanIdList);
 	}
 	
-	@RequestMapping(value = "/selectStockCtgrySummary.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectStockCtgrySummaryList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes 
-	    ,	@RequestParam(value = "stockCategoryCbBox", required = false) Integer[] stockCategorys ) 
+	@RequestMapping(value = "/selectStockCtgrySummary.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectStockCtgrySummaryList(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectStockCtgrySummaryList : {}", params.toString());
-		LOGGER.debug("stkCodes : {}", stkCodes.toString());
-		
-		if (stkCodes != null) {
-			for (Integer id : stkCodes) {
-				LOGGER.debug("summary_StkCode : {}", id);
-			}
-			
-			params.put("stkCodes", stkCodes);
-		}
-		
-		if (stockCategorys != null) {
-			for (Integer id : stockCategorys) {
-				LOGGER.debug("summary_stockCategorys : {}", id);
-			}
-			
-			params.put("stockCategorys", stockCategorys);
-		}
 		
 		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);		
 		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));		
 		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);	
 		
-		LOGGER.debug("addMonth_Param : {}", params.toString());
+		LOGGER.debug("SummaryParams : {}", params.toString());
 		
 		List<EgovMap> selectStockCtgrySummaryList = salesPlanMngementService.selectStockCtgrySummary(params);
 		
@@ -181,37 +162,17 @@ public class SalesPlanManagementController {
 		
 	}
 	
-	@RequestMapping(value = "/selectSalesPlanMngmentSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes 
-		,	@RequestParam(value = "scmStockType", required = false) Integer[] scmStockTypes ) 
+	@RequestMapping(value = "/selectSalesPlanMngmentSearch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectSalesPlanMngmentList : {}", params.toString());
-		LOGGER.debug("stkCodes : {}", stkCodes.toString());
-		
-		if (stkCodes != null) {
-			for (Integer id : stkCodes) {
-				LOGGER.debug("stkCode : {}", id);
-			}
-			
-			params.put("stkCodes", stkCodes);
-		}
-		
-		if (scmStockTypes != null) {
-			for (Integer id : scmStockTypes) {
-				LOGGER.debug("scmStockTypes : {}", id);
-			}
-			
-			params.put("scmStockTypes", scmStockTypes);
-		}
-		
 		
 		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);		
 		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));		
 		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);	
 		
 		LOGGER.debug("addMonth_Param : {}", params.toString());
-		LOGGER.debug("scmTeamCbBox : {}", params.get("scmTeamCbBox").toString() );
+		//LOGGER.debug("scmTeamCbBox : {}", params.get("scmTeamCbBox").toString() );
 		
 		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
 		

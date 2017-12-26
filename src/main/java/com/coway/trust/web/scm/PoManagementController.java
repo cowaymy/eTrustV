@@ -59,9 +59,8 @@ public class PoManagementController {
 	}  
 	
 	// search btn
-	@RequestMapping(value = "/selectScmPrePoItemView.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectScmPrePoItemView.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectScmPrePoItemView_Input : {}", params.toString());
 		
