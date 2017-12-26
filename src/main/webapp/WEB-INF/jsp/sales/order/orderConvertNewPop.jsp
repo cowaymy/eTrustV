@@ -16,7 +16,7 @@ var cnvrListGrid;
 	$(document).ready(function(){
 		setInputFile();
 		creatGrid();
-//		$("#uploadGrid").hide();
+		$("#uploadGrid").hide();
 		
 		fn_changeCombo("REG");
 		
