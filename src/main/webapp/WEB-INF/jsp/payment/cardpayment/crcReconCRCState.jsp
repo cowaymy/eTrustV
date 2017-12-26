@@ -49,149 +49,149 @@ $(document).ready(function(){
 var mappingLayout = [ 
                        {
                            dataField : "crditCard",
-                           headerText : "Credit Card",
+                           headerText : "<spring:message code='pay.head.creditCard'/>",
                            editable : false
                        }, {
                            dataField : "crcMcName",
-                           headerText : "Bank Account",
+                           headerText : "<spring:message code='pay.head.bankAccount'/>",
                            editable : false
                        }, {
                            dataField : "crcTrnscDt",
-                           headerText : "Transaction Date",
+                           headerText : "<spring:message code='pay.head.transactionDate'/>",
                            editable : false
                        },{
                            dataField : "crcTrnscNo",
-                           headerText : "Card No",
+                           headerText : "<spring:message code='pay.head.cardNo'/>",
                            editable : false
                        }, {
                            dataField : "cardModeName",
-                           headerText : "Card Mode",
+                           headerText : "<spring:message code='pay.head.cardMode'/>",
                            editable : false
                        }, {
                            dataField : "crcTrnscAppv",
-                           headerText : "Approval No",
+                           headerText : "<spring:message code='pay.head.approvalNo'/>",
                            editable : false
                        }, {
                            dataField : "amount",
-                           headerText : "Amount",
+                           headerText : "<spring:message code='pay.head.amount'/>",
                            editable : false,
                            dataType:"numeric", 
                            formatString:"#,##0.00"
                        },{
                            dataField : "groupSeq",
-                           headerText : "groupSeq",
+                           headerText : "<spring:message code='pay.head.groupSeq'/>",
                            visible : false
                        },{
                            dataField : "crcTrnscId",
-                           headerText : "crcTrnscId",
+                           headerText : "<spring:message code='pay.head.crcTrnscId'/>",
                            visible : false
                        },{
                            dataField : "crcStateAccId",
-                           headerText : "crcStateAccId",
+                           headerText : "<spring:message code='pay.head.crcStateAccId'/>",
                            visible : false
                        },{
                            dataField : "orNo",
-                           headerText : "orNo",
+                           headerText : "<spring:message code='pay.head.orNo'/>",
                            visible : false
                        },{
                            dataField : "ordNo",
-                           headerText : "ordNo",
+                           headerText : "<spring:message code='pay.head.ordNo'/>",
                            visible : false
                        },{
                            dataField : "crcTrnscMid",
-                           headerText : "crcTrnscMid",
+                           headerText : "<spring:message code='pay.head.crcTrnscMid'/>",
                            visible : false
                        }, {
                            dataField : "codeId",
-                           headerText : "codeId",
+                           headerText : "<spring:message code='pay.head.codeId'/>",
                            visible : false
                        }];
 
 var crcKeyInLayout = [ 
                        {
                            dataField : "crcMcName",
-                           headerText : "M/C Bank",
+                           headerText : "<spring:message code='pay.head.mcBank'/>",
                            editable : false
                        }, {
                            dataField : "payItmRefDt",
-                           headerText : "TR Date",
+                           headerText : "<spring:message code='pay.head.trDate'/>",
                            editable : false,
                            dataType : "date", 
                            formatString : "dd/mm/yyyy"
                        }, {
                            dataField : "payItmCcNo",
-                           headerText : "Card No",
+                           headerText : "<spring:message code='pay.head.cardNo'/>",
                            editable : false,
                        }, {
                            dataField : "cardModeName",
-                           headerText : "Card Mode",
+                           headerText : "<spring:message code='pay.head.Card Mode'/>",
                            editable : false,
                        }, {
                            dataField : "payItmAppvNo",
-                           headerText : "Approval No",
+                           headerText : "<spring:message code='pay.head.Approval No'/>",
                            editable : false
                        }, {
                            dataField : "amount",
-                           headerText : "Amount",
+                           headerText : "<spring:message code='pay.head.Amount'/>",
                            editable : false,
                            dataType:"numeric", 
                            formatString:"#,##0.00"
                        },{
                            dataField : "groupSeq",
-                           headerText : "groupSeq",
+                           headerText : "<spring:message code='pay.head.groupSeq'/>",
                            visible : false
                        },{
                            dataField : "rnum",
-                           headerText : "rnum",
+                           headerText : "<spring:message code='pay.head.rnum'/>",
                            visible : false
                        },{
                            dataField : "orNo",
-                           headerText : "orNo",
+                           headerText : "<spring:message code='pay.head.orNo'/>",
                            visible : false
                        },{
                            dataField : "ordNo",
-                           headerText : "ordNo",
+                           headerText : "<spring:message code='pay.head.ordNo'/>",
                            visible : false
                        }];
 
 var crcStateLayout = [ 
                       {
                           dataField : "bankAccName",
-                          headerText : "Bank Account",
+                          headerText : "<spring:message code='pay.head.bankAccount'/>",
                           editable : false
                       }, {
                           dataField : "crcTrnscDt",
-                          headerText : "TR Date",
+                          headerText : "<spring:message code='pay.head.trDate'/>",
                           editable : false
                       }, {
                           dataField : "crcTrnscNo",
-                          headerText : "Card No",
+                          headerText : "<spring:message code='pay.head.cardNo'/>",
                           editable : false
                       }, {
                           dataField : "crcTrnscAppv",
-                          headerText : "Approval No",
+                          headerText : "<spring:message code='pay.head.approvalNo'/>",
                           editable : false
                       }, {
                           dataField : "grosAmt",
-                          headerText : "Gross Amount",
+                          headerText : "<spring:message code='pay.head.grossAmount'/>",
                           editable : false,
                           dataType:"numeric", 
                           formatString:"#,##0.00"
                       }, {
                           dataField : "crcTrnscId",
-                          headerText : "crcTrnscId",
+                          headerText : "<spring:message code='pay.head.crcTrnscId'/>",
                           visible : false
                       }, {
                           dataField : "crcStateAccId",
-                          headerText : "crcStateAccId",
+                          headerText : "<spring:message code='pay.head.crcStateAccId'/>",
                           visible : false
                       }, {
                           dataField : "crcTrnscMid",
-                          headerText : "crcTrnscMid",
+                          headerText : "<spring:message code='pay.head.crcTrnscMid'/>",
                           visible : false
                       }, {
                           dataField : "codeId",
-                          headerText : "codeId",
+                          headerText : "<spring:message code='pay.head.codeId'/>",
                           visible : false
                       }];
 
