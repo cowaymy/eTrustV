@@ -122,6 +122,32 @@ var paramdata;
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
 var uomlist = f_getTtype('42' , '');
 var paramdata;
+
+/* Required Date 초기화 */
+var date = new Date();
+var getdate = date.getDate();
+var datemonth = date.getMonth() + 1;
+if(getdate < 10) {
+    getdate = '0'+date.getDate();
+} 
+if(datemonth < 10) {
+	datemonth = '0' + datemonth;
+}
+today = getdate + '/' + datemonth + '/' + date.getFullYear();
+
+var nextdate = date.setDate(date.getDate()+6);
+var nextmonth = date.getMonth() + 1;
+if(date.getDate() < 10) {
+    getdate = '0'+date.getDate();
+}
+if(nextmonth < 10) {
+	nextmonth = '0' + nextmonth;
+}
+nextdate = getdate + '/' + nextmonth + '/' + date.getFullYear();
+
+
+
+
 $(document).ready(function(){
     /**********************************
     * Header Setting
@@ -134,8 +160,8 @@ $(document).ready(function(){
     doDefCombo(amdata, '${searchVal.sam}' ,'sam', 'S', '');
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
-    $("#reqsdt").val('${searchVal.reqsdt}');
-    $("#reqedt").val('${searchVal.reqedt}');
+    $("#reqsdt").val(today);
+    $("#reqedt").val(nextdate);
     
     /**********************************
      * Header Setting End
@@ -176,7 +202,9 @@ function f_change(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-        SearchListAjax();
+    	if(validation()) {
+    		 SearchListAjax();
+    	}
     });
     $('#clear').click(function() {
         $('#streq').val('');
@@ -244,6 +272,14 @@ function fn_itempopList(data){
     $("#svalue").val();
 } 
 
+function validation() {
+	if ($("#reqsdt").val() == '' ||$("#reqedt").val() == ''){
+        Common.alert('Please enter Required Date.');
+        return false;
+    } else {
+    	return true;
+    }
+}
 function SearchListAjax() {
     
 	if ($("#flocationnm").val() == ""){

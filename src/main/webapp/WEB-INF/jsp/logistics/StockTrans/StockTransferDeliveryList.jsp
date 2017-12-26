@@ -92,6 +92,31 @@ var paramdata;
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
 var uomlist = f_getTtype('42' , '');
 var paramdata;
+
+
+/* Required Date 초기화 */
+var date = new Date();
+var getdate = date.getDate();
+var datemonth = date.getMonth() + 1;
+if(getdate < 10) {
+    getdate = '0'+date.getDate();
+} 
+if(datemonth < 10) {
+    datemonth = '0' + datemonth;
+}
+today = getdate + '/' + datemonth + '/' + date.getFullYear();
+
+var nextdate = date.setDate(date.getDate()+6);
+var nextmonth = date.getMonth() + 1;
+if(date.getDate() < 10) {
+    getdate = '0'+date.getDate();
+}
+if(nextmonth < 10) {
+    nextmonth = '0' + nextmonth;
+}
+nextdate = getdate + '/' + nextmonth + '/' + date.getFullYear();
+
+
 $(document).ready(function(){
 	
 	/**********************************
@@ -223,6 +248,8 @@ $(document).ready(function(){
        }
     });
     
+    $("#crtsdt").val(today);
+    $("#crtedt").val(nextdate);
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
@@ -231,7 +258,9 @@ function f_change(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	SearchListAjax();
+    	if(validation()) {
+    	      SearchListAjax();
+    	}
     });
     $('#clear').click(function() {
         $('#seldelno').val('');
@@ -413,6 +442,14 @@ function fn_itempopList(data){
     $("#svalue").val();
 } 
 
+function validation() {
+	if($("#crtsdt").val() == "" || ($("#crtedt").val() == "")) {
+		Common.alert('Please enter Dlvd.Req.Date');
+		return false;
+	} else {
+		return true;
+	}
+}
 function SearchListAjax() {
 	if ($("#flocationnm").val() == ""){
         $("#flocation").val('');
@@ -684,7 +721,7 @@ function f_addrow(){
                 </tr>
                 
                 <tr>
-                    <th scope="row">Delivery Date</th>
+                    <th scope="row">Dlvd.Req.Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
 					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
@@ -692,7 +729,7 @@ function f_addrow(){
 					    <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
 					    </div><!-- date_set end -->                        
                     </td>
-                    <th scope="row">Required Date</th>
+                    <th scope="row">GI Date</th>
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
                         <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
