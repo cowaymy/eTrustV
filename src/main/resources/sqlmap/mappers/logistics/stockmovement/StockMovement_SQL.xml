@@ -27,10 +27,10 @@
              , l47.GOODS_RCIPT grcipt
              , l47.RCIV_CDC_RDC rcvloc
              , s28c.wh_loc_code rcvlocnm
-             , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
+             , s28c.wh_loc_code || '-' || DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
              , l47.reqst_cdc_rdc reqloc
              , s28q.wh_loc_code  reqlocnm
-             , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
+             , s28q.wh_loc_code || '-' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
              , l48.itm_code      itmcd
              , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pd_chk = 'Y' then 'Y' else 'N' end
                       when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_ft_chk = 'Y'  then 'Y' else 'N' end
@@ -336,10 +336,10 @@
              , uomt.code_name uomnm
              , l47.RCIV_CDC_RDC rcvloc
              , s28c.wh_loc_code rcvlocnm
-             , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
+             , s28c.wh_loc_code || '-' || DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
              , l47.reqst_cdc_rdc reqloc
              , s28q.wh_loc_code  reqlocnm
-             , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
+             , s28q.wh_loc_code || '-' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
              , l48.reqst_no_itm ritmno
              , nvl(l55.rcipt_qty , 0) rciptqty
              , NVL (L54.DELVRY_GR_CMPLT , 'N') grcmplt
@@ -398,10 +398,10 @@
               and l54.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
             <if test="reqsdt !=null and reqsdt !=''">
-              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'yyyymmdd')
+              and l54.DELVRY_GI_DT <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
            <if test="reqedt !=null and reqedt !=''">
-              and to_char(l47.reqst_require_dt , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
+              and l54.DELVRY_GI_DT <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
            <if test="gtype !=null and gtype =='receipt'">
               and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
