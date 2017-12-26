@@ -213,14 +213,38 @@
 															                vI.INST_CNT_POST ,
 															                vI.VRIFY_REM
 														            FROM SAL1010V vI ) E3   ON E3.ORD_ID = E1.ORD_ID
-		                               WHERE  ( ( 144 = (CASE WHEN ( E1.APP_TYPE_ID IS NOT NULL ) THEN E1.APP_TYPE_ID
-		                        ELSE 0 END) )
-		                                        OR ( 145 = (CASE WHEN ( E1.APP_TYPE_ID IS NOT NULL ) THEN E1.APP_TYPE_ID
-		                        ELSE 0 END) )
-		                                        OR ( 68 = (CASE WHEN ( E1.APP_TYPE_ID IS NOT NULL ) THEN E1.APP_TYPE_ID
-		                        ELSE 0 END) ) )
-		                                        AND ( 10 = (CASE WHEN ( E1.STUS_ID IS NOT NULL ) THEN E1.STUS_ID
-		                        ELSE 0 END) ) ) F1
+		                               WHERE  1=1
+		                               <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
+						                   AND E1.APP_TYPE_ID IN
+						                  <foreach item="item" collection="cmbAppTypeList" index="index" open="(" separator="," close=")">
+						                      #{item}
+						                  </foreach>
+						               </if>
+						               <if test="cmbCondition == 1 ">
+						                   AND E1.STUS_ID = 1
+						               </if>
+						               <if test="cmbCondition == 2 ">
+                                           AND E1.STUS_ID = 10
+                                       </if>
+                                       <if test="cmbCondition == 3 ">
+                                           AND E1.STUS_ID = 4
+                                           AND E1.PV_YEAR <![CDATA[>]]> 0
+                                           AND E1.PV_MONTH <![CDATA[>]]> 0
+                                       </if>
+                                       <if test="cmbCondition == 4 ">
+                                           AND E1.STUS_ID = 4
+                                           AND E1.PV_YEAR = 0
+                                           AND E1.PV_MONTH = 0
+                                       </if>
+                                       <if test="cmbCondition == 5 ">
+                                           AND E1.INSTALL_STUS_ID = 21
+                                           AND E1.STUS_ID != 10
+                                       </if>
+                                       <if test="cmbCondition == 6 ">
+                                           AND E1.INSTALL_STUS_ID = 1
+                                           AND E1.STUS_ID != 10
+                                       </if>
+		                                        ) F1
 		                              JOIN ( SELECT vB.ORD_ID ,
 		                                            vB.ORD_NO ,
 		                                            vB.RENTAL_STUS ,
@@ -309,17 +333,11 @@
 	          <if test="custIc != null and custIc != ''">
 	              AND UPPER(F1.CUST_IC) LIKE '%'|| UPPER(#{custIc}) || '%'
 	          </if>
-	          <if test="ordNo != null and ordNo != ''">
-	              AND F1.ORD_NO = #{ordNo}
-	          </if>
 	          <if test="createStDate != null and createStDate != ''">
-	              AND  F1.ORD_DT <![CDATA[>=]]> TO_DATE( #{createStDate} , 'DD/MM/YYYY')
+	              AND  F1.ORD_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
 	          </if>
 	          <if test="createEnDate != null and createEnDate != ''">
-	              AND F1.ORD_DT <![CDATA[<=]]> TO_DATE( #{createEnDate} , 'DD/MM/YYYY')
-	          </if>
-	          <if test="ordNo != null and ordNo != ''">
-	              AND F1.ORD_NO = #{ordNo}
+	              AND F1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	          </if>
 	          <if test="stkId != null and stkId != ''">
 	              AND F1.STK_ID = #{cmbProduct}
@@ -343,9 +361,6 @@
 	          </if>
 	          <if test="promoCode != null and promoCode != ''">
 	              AND F1.PROMO_CODE = #{promoCode}
-	          </if>
-	          <if test="cmbCondition != null and cmbCondition != ''">
-	              AND F1.INSTALL_STUS_ID = #{cmbCondition}
 	          </if>
                ) D1
         ORDER BY D1.ORD_ID DESC
