@@ -335,6 +335,9 @@
     <th scope="row"></th>
     <td></td>
 </tr>
+<tr>
+    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Order Date / Net Sales Month</span>  </th>
+</tr>
 </tbody>
 </table><!-- table end -->
 
