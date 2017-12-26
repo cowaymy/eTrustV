@@ -11,7 +11,7 @@ $(document).ready(function(){
 
     createCFilterAUIGrid() ;
     
-    doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , ''); 
+    doGetCombo('/services/as/getASFilterInfo.do?AS_ID=${AS_ID}', '', '','ddlFilterCode', 'S' , ''); 
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
     
@@ -21,7 +21,6 @@ $(document).ready(function(){
       
    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
    
- 
 });
 
 function createCFilterAUIGrid() {
@@ -784,7 +783,7 @@ function  fn_setSaveFormData(){
 
 
 <form  id="asDataForm" method="post">
-    <div style='display:none'>
+    <div style='display:inline'>
                <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/> 
                <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/> 
                <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/> 
