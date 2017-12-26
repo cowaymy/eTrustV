@@ -283,8 +283,8 @@ function fn_save(){
             <b><h2>Do you want continue to proceed?</h2></b>
         </ul>
         <ul class="center_btns mt10" >
-            <li><p class="btn_blue2"><a href="javascript:fn_showRemark();">Yes</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:hideViewPopup('#viewDetail_wrap');">No</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_showRemark();"><spring:message code='pay.alert.manualBillingYes'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:hideViewPopup('#viewDetail_wrap');"><spring:message code='pay.alert.manualBillingNo'/></a></p></li>
         </ul>        
     </section>
 </div>
