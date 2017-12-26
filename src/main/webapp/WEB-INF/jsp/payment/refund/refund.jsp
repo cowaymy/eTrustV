@@ -25,10 +25,13 @@ var refundColumnLayout = [ {
         checkValue : "Active", // true, false 인 경우가 기본
         unCheckValue : "Inactive"
     }
-},{
+}, {
+    dataField : "ordId",
+    headerText : "<spring:message code='pay.head.orderId'/>"
+}, {
     dataField : "ordNo",
     headerText : "<spring:message code='pay.head.orderNo'/>"
-},{
+}, {
     dataField : "worNo",
     headerText : "<spring:message code='pay.head.orNo'/>"
 }, {
@@ -50,15 +53,68 @@ var refundColumnLayout = [ {
     headerText : "<spring:message code='pay.head.payMode'/>",
     style : "aui-grid-user-custom-left"
 }, {
-    dataField : "issuebankPaytChannel",
+    dataField : "issueBankCode",
+    headerText : "IssueBank Code",
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "issueBank",
     headerText : "<spring:message code='pay.head.issueBank'/>",
     style : "aui-grid-user-custom-left"
 }, {
-    dataField : "bankaccnoPaytChannel",
-    headerText : "<spring:message code='pay.head.bankAccount'/>",
+    dataField : "bankAccNo",
+    headerText : "Bank Account No",
 }, {
     dataField : "ccNo",
     headerText : "<spring:message code='pay.head.crcNo'/>"
+}, {
+    dataField : "ccHolderName",
+    headerText : "<spring:message code='pay.head.crcHolder'/>"
+}, {
+    dataField : "approveNo",
+    headerText : "APProve No"
+}, {
+    dataField : "requestStage",
+    headerText : "Request Stage"
+}, {
+    dataField : "cancelReason",
+    headerText : "Cancel Reason"
+}, {
+    dataField : "cancelReasonDesc",
+    headerText : "Cancel Reason<br>Description"
+}, {
+    dataField : "rejectId",
+    headerText : "Reject ID"
+}, {
+    dataField : "payType",
+    headerText : "Pay Type"
+}, {
+    dataField : "payBranchCode",
+    headerText : "Pay Branch Code"
+}, {
+    dataField : "installStus",
+    headerText : "Install Status"
+}, {
+    dataField : "ocrRemark",
+    headerText : "OCR Remark"
+}, {
+    dataField : "instAddress",
+    headerText : "Install Address"
+}, {
+    dataField : "mobileNo",
+    headerText : "Mobile No"
+}, {
+    dataField : "mobileNo",
+    headerText : "Mobile No"
+}, {
+    dataField : "officeNo",
+    headerText : "Office No"
+}, {
+    dataField : "houseNo",
+    headerText : "House No"
+}, {
+    dataField : "ordRem",
+    headerText : "ORD Remark",
+    style : "aui-grid-user-custom-left"
 }, {
     dataField : "bankReconStus",
     headerText : "<spring:message code='pay.head.bankReconStatus'/>",
