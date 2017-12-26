@@ -127,11 +127,17 @@ function createInstallationListAUIGrid() {
         style : "my-column",
         width : 180
     }, {
+        dataField : "custId",
+        headerText : "Customer ID",
+        editable : false,
+        width : 100
+    },
+    /*{
         dataField : "name",
         headerText : '<spring:message code="service.grid.Customer" />',
         editable : false,
         width : 250
-    }, {
+    },*/ {
         dataField : "appType",
         headerText : '<spring:message code="service.grid.AppType" />',
         editable : false,
