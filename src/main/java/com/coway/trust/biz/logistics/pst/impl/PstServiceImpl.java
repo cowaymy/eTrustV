@@ -261,9 +261,9 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				ordMap.put("addr2", "");
 				ordMap.put("addr3", "");
 				ordMap.put("addr4", "");
-				ordMap.put("post", "");
+				ordMap.put("post" , "");
 				ordMap.put("state", "");
-				ordMap.put("cnty", "");
+				ordMap.put("cnty" , "");
 				
 			}else{
 				ordMap.put("addr1", addMap.get("CITY"));
