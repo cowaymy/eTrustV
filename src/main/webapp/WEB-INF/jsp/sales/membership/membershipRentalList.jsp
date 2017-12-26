@@ -319,7 +319,7 @@ function fn_goSVMDetails(){
 	
 	</ul>
 	<ul class="btns">
-		<li><p class="link_btn"><a onclick="javascript:fn_goSVMDetails()" href="#">View Rental SVM Details</a></p></li>
+		<!-- <li><p class="link_btn"><a onclick="javascript:fn_goSVMDetails()" href="#">View Rental SVM Details</a></p></li> -->
 		<li><p class="link_btn"><a onclick="javascript:fn_goLEDGER()" href="#">LEDGER</a></p></li>
 		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()" href="#">Key-in List</a></p></li>
 		<li><p class="link_btn type2"><a onclick="javascript:fn_goYSList()" href="#">YS List</a></p></li>
