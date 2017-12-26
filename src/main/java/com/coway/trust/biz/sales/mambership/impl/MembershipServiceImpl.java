@@ -3,6 +3,7 @@
  */
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
@@ -103,7 +104,23 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 	 */
 	@Override
 	public List<EgovMap>    selectMembershipViewLeader(Map<String, Object> params) {
-		return membershipMapper.selectMembershipViewLeader(params);
+		
+		List<EgovMap> resultList = new ArrayList<EgovMap>();
+		
+		resultList = membershipMapper.selectMembershipViewLeader(params);
+		 
+		int c7 = 0;
+		
+		for(EgovMap result : resultList){
+			
+			c7  += Integer.parseInt(result.get("c4").toString()) - Integer.parseInt(result.get("c5").toString());
+			
+			result.put("c7" , c7);  
+			
+		}
+		
+		 
+		 return resultList;
 	}
 	
 
