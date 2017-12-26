@@ -37,7 +37,6 @@
     <script type="text/javaScript" language="javascript">
     
     var ctm;
-    var ctm_row;
     
         // AUIGrid 생성 후 반환 ID
        var myGridID;
@@ -169,7 +168,7 @@
                 // 한 화면에 출력되는 행 개수 20(기본값:20)
                 pageRowCount : 20,
                 
-                editable : true,
+                //editable : true,
                 
                 displayTreeOpen : true,
                 
@@ -189,8 +188,24 @@
         
             };
 
-                 myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-
+              //myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
+                 
+              // Create AUIGrid
+              myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "memCode", gridPros);
+              
+              AUIGrid.bind(myGridID, "cellEditBegin", function (event){
+            	  
+            	  var ctm_row = -1;
+            	  if( ctm ) {
+            		  ctm_row = AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm);
+            	  }
+            	  
+            	  if (event.rowIndex == ctm_row) {
+            		  return false;
+           		  }else{
+                      return true;
+                  }
+              });
                  
     }
     
@@ -246,20 +261,18 @@
 		        console.log("data : " + result1);
 		        AUIGrid.setGridData(myGridID, result1);
 		    
-			    /* Common.ajax("GET", "/organization/selectSsCapacityCTM", $("#searchForm").serialize(), function(result2) {
+		        ctm = "";
+			    Common.ajax("GET", "/organization/selectSsCapacityCTM", $("#searchForm").serialize(), function(result2) {
 	                
-			    	if (result2.length == 1) {
 		                console.log("성공(CTM).");
 		                console.log("data : " + result2);
 		                
 		                for( i in result2){
 		                    //console.log(result2[i]);
-		                    ctm = result2[i]
-	                    	ctm_row = AUIGrid.getRowIndexesByValue(myGridID, "memCode", result2[i]);
+		                    ctm = result2[i];
+		                    console.log("CTM : " + ctm);
 		                }
-	                   	//alert("CTM : " + ctm + "는 " + ctm_row + "번째 줄");
-			    	}
-	            }); */
+	            });
 		    });
 		}
 		var bobj = new Object();
@@ -370,13 +383,6 @@
                });
     };
 
-    // 셀스타일 함수 정의
-    /* function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField) {
-	    if(rowIndex == ctm_row)
-	        return "mycustom-disable-bold";
-	    return null;
-    }; */
-    
     </script>
 
 <section id="content"><!-- content start -->

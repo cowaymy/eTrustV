@@ -217,7 +217,9 @@ function createAUIGrid() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="expense.title" /></h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -265,8 +267,10 @@ function createAUIGrid() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" onClick="javascript:fn_expenseTypePop();"><spring:message code="expense.AddExpenseType" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onClick="javascript:fn_expenseEdit();"><spring:message code="expense.Edit" /></a></p></li>
+	</c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

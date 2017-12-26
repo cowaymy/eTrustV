@@ -123,8 +123,12 @@ function fn_generateInv(){
 	    <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
 	    <h2>Invoice/Statement</h2>   
 	    <ul class="right_btns">
+	        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 	        <li><p class="btn_blue"><a href="javascript:fn_generateInv()"><spring:message code='pay.btn.generateInvStatement'/></a></p></li>
+	        </c:if>
+	        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	        <li><p class="btn_blue"><a href="javascript:fn_getInvoiceList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+	        </c:if>
 	    </ul>    
 	</aside>
 	<!-- title_line end -->
@@ -165,7 +169,9 @@ function fn_generateInv(){
 	           <dt>Link</dt>
 	           <dd>
 	               <ul class="btns">
+	                   <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 	                   <li><p class="link_btn"><a href="javascript:fn_view()"><spring:message code='pay.btn.link.viewDetails'/></a></p></li>
+	                   </c:if>
 	               </ul>
 	               <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	           </dd>

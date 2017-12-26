@@ -462,7 +462,9 @@ function fn_budgetDelete() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="budget.BudgetAdjustmentList" /></h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" id="btnSearch" ><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -560,9 +562,11 @@ function fn_budgetDelete() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetDelete();"><spring:message code="budget.Delete" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetAdjustmentPop('pop');"><spring:message code="budget.NewAdjustment" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_budgetApproval();"><spring:message code="budget.Submit" /></a></p></li>
+	</c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

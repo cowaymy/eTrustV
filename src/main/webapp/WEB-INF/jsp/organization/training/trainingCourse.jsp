@@ -569,7 +569,9 @@ function fn_courseReporExcel() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Course Management</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span>Search</a></p></li>
+	</c:if>
 	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -628,7 +630,9 @@ function fn_courseReporExcel() {
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+</c:if>
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
@@ -651,10 +655,18 @@ function fn_courseReporExcel() {
     <!-- <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li> -->
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="viewEdit_btn">Edit</a></p></li>
-   <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+    <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -665,9 +677,11 @@ function fn_courseReporExcel() {
 <h4>Attendee List</h4>
 <ul class="right_btns">
     <!-- <li><p class="btn_grid"><a href="#" id="attendee_btn">Attendee</a></p></li> -->
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="addRow_btn">Add</a></p></li>
     <li><p class="btn_grid"><a href="#" id="delRow_btn">Del</a></p></li>
     <li><p class="btn_grid"><a href="#" id="attendee_save_btn">Save</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 

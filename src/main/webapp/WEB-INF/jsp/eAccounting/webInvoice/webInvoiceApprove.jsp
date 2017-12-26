@@ -416,7 +416,9 @@ function fn_appvRejctSubmit(type, rejctResn) {
 <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
 <h2><spring:message code="invoiceApprove.title" /></h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectApproveList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -477,8 +479,10 @@ function fn_appvRejctSubmit(type, rejctResn) {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" id="approve_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" id="reject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+	</c:if>
 </ul>
 
 <article class="grid_wrap" id="approve_grid_wrap"><!-- grid_wrap start -->

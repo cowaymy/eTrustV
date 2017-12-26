@@ -1131,8 +1131,10 @@ function fn_myGridSetEvent() {
 <p class="fav"><a href="#" class="click_add_on"><spring:message code="webInvoice.fav" /></a></p>
 <h2><spring:message code="staffClaim.title" /></h2>
 <ul class="right_btns">
-	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectStaffClaimList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+	</c:if>
+	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
 
@@ -1177,7 +1179,9 @@ function fn_myGridSetEvent() {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="pettyCashExp.newExpClm" /></a></p></li>
+	</c:if>
 </ul>
 
 <article class="grid_wrap" id="staffClaim_grid_wrap"><!-- grid_wrap start -->

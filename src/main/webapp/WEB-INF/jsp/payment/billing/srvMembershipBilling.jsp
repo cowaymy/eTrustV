@@ -196,7 +196,9 @@ function fn_save(){
 	    <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 	    <h2>Membership</h2>	    
         <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_createBills();"><spring:message code='pay.btn.createBills'/></a></p></li>
+            </c:if>
         </ul>
         
 	</aside>

@@ -865,8 +865,12 @@ function fn_clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Search Payment</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();"><spring:message code='pay.btn.officialReceipt'/></a></p></li>            
+            <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();"><spring:message code='pay.btn.officialReceipt'/></a></p></li>
+            </c:if>      
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">      
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
@@ -992,8 +996,12 @@ function fn_clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
+                        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');"><spring:message code='pay.btn.link.viewDetails'/></a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');"><spring:message code='pay.btn.link.editDetails'/></a></p></li>
+                        </c:if>
                         <!-- <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>  -->                                                                      
                     </ul>
                     <!-- 

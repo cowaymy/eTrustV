@@ -132,6 +132,7 @@
 					AND A.BRNCH = #{cmbbranchId} 
 					AND A.MEM_TYPE = '3' 
 					AND B.MEM_LVL = '2'
+					<!-- AND ROWNUM = 1 -->
         </select>
         
         <insert id="insertCapacity" parameterType="Map">

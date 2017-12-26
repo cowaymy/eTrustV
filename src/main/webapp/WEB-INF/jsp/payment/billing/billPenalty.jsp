@@ -237,7 +237,9 @@ function fn_clickViewDetail(){
 			</table><!-- table end -->
 
 			<ul class="center_btns">
+			    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 			    <li><p class="btn_blue2 big"><a href="javascript:fn_createBills();"><spring:message code='pay.btn.createBills'/></a></p></li>
+			    </c:if>
 			</ul>
 
         </form>

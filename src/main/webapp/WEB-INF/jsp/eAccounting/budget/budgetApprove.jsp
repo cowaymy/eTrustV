@@ -394,7 +394,9 @@ function fn_saveApprove(value){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="budget.BudgetApprove" /></h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" id="btnSearch" ><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 
