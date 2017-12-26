@@ -61,6 +61,7 @@ var rescolumnLayout=[
                         formatString : "dd/mm/yyyy",
                         editRenderer : {
                             type : "CalendarRenderer",
+                            defaultFormat : "dd/mm/yyyy",
                             openDirectly : true, // 에디팅 진입 시 바로 달력 열기
                             onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
                             showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
@@ -195,6 +196,33 @@ $(function(){
 
             Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
+    });
+    $('#insert').click(function() {
+        var addedItems = AUIGrid.getColumnValues(listGrid,"reqqty");
+        if (addedItems.length > 0){
+            for (var i = 0 ; i < addedItems.length ; i++){
+                if(""==addedItems[i] || 0==addedItems[i]){
+                    Common.alert("Plese Check "+"<spring:message code='log.head.requestqty'/>" +".");
+                    return false;
+                }       
+            }
+        }
+       // if (f_validatation('save')){
+            var dat = GridCommon.getGridData(listGrid);
+          //  dat.form = $("#headForm").serializeJSON();
+          console.log(dat);
+            Common.ajax("POST", "/logistics/replenishment/relenishmentSaveCt.do", dat, function(result) {
+                //Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
+                //Common.alert(result.message , locationList);
+                AUIGrid.resetUpdatedItems(listGrid, "all");
+                //location.href = '/logistics/stockMovement/StockMovementList.do'; 
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+       // }
     });
     $('#popsave').click(function(){
 
@@ -682,12 +710,13 @@ function f_multiCombos() {
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
+<!--             <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
             <li><p class="btn_grid"><a id="add">Add</a></p></li>
             <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
-            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li>
-</c:if>        
+            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li> -->
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <li><p class="btn_grid"><a id="insert">New</a></p></li>
+</c:if>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
