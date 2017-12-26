@@ -128,4 +128,55 @@
 				  ORDER BY Distinct1.SCHDUL_ID ASC
 				  ]]>
         </select>
+        <select id="selectHSReportGroup" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+                SELECT Distinct2.C1 C1  ,
+					       Distinct2.C2 C2  ,
+					       Distinct2.C3 C3  
+					  FROM ( SELECT DISTINCT 1 C1  ,
+					                         CASE 
+					                              WHEN ( Distinct1.MEM_CODE LIKE 'CT%' ) THEN Distinct1.MEM_CODE || '_' || #{dayYear} || '_' || #{dayMonth}
+					                         ELSE Distinct1.DEPT_CODE || '_' || #{dayYear} || '_' || #{dayMonth}
+					                            END C2  ,
+					                         CASE 
+					                              WHEN ( Distinct1.MEM_CODE LIKE 'CT%' ) THEN Distinct1.MEM_CODE
+					                         ELSE Distinct1.DEPT_CODE
+					                            END C3  
+					         FROM ( SELECT DISTINCT Extent2.MEM_CODE MEM_CODE  ,
+					                                Extent2.DEPT_CODE DEPT_CODE  ,
+					                                Extent2.GRP_CODE GRP_CODE  ,
+					                                Extent2.ORG_CODE ORG_CODE  ,
+					                                Extent2.TOP_ORG_CODE TOP_ORG_CODE  
+					                FROM SVC0008D Extent1
+					                       JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+					                                     vMemberOrg.MEM_CODE MEM_CODE  ,
+					                                     vMemberOrg.MEM_LVL MEM_LVL  ,
+					                                     vMemberOrg.DEPT_CODE DEPT_CODE  ,
+					                                     vMemberOrg.GRP_CODE GRP_CODE  ,
+					                                     vMemberOrg.ORG_CODE ORG_CODE  ,
+					                                     vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+					                                     vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+					                                     vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+					                                     vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+					                                     vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+					                                     vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+					                              FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.CODY_ID
+					                 WHERE  ( Extent1.MONTH =  to_char(sysdate, 'mm' ) )
+					                          AND ( Extent1.YEAR = to_char(sysdate, 'yyyy' ) ) 
+					                          ]]>
+					                     <if test="orgCode != null and orgCode != ''">
+                                             AND Extent2.ORG_CODE = #{orgCode}
+                                        </if>
+                                        <if test="grpCode != null and grpCode != ''">
+                                             AND Extent2.GRP_CODE =#{grpCode}
+                                        </if>
+                                        <if test="deptCode != null and deptCode != ''">
+                                             AND Extent2.DEPT_CODE = #{deptCode}
+                                        </if>
+                                        
+                                        <![CDATA[
+					                          ) Distinct1 ) Distinct2
+					                       ]]>
+		      
+        </select>
      </mapper>
