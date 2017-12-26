@@ -93,8 +93,8 @@ function fn_Generate(){
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
-	$("#searchHsReport #V_CODYDEPTCODE").val(BSNo);
-	$("#searchHsReport #reportFileName").val('/services/BSReport_ByBSNo.rpt');
+	$("#searchHsReport #V_HSNO").val(BSNo);
+	$("#searchHsReport #reportFileName").val('/services/BSReport_ByBSNo_Single.rpt');
     $("#searchHsReport #viewType").val("PDF");
     $("#searchHsReport #reportDownFileName").val(BSNo + "_"+day+month+date.getFullYear());
     
@@ -135,7 +135,7 @@ $.fn.clearForm = function() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="searchHsReport">
-<input type="hidden" id="V_CODYDEPTCODE" name="V_CODYDEPTCODE" />
+<input type="hidden" id="V_HSNO" name="V_HSNO" />
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
