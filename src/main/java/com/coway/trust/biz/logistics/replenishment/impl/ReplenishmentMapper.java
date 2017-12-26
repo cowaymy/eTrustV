@@ -19,4 +19,10 @@ public interface ReplenishmentMapper {
 	List<EgovMap> searchAutoCTList(Map<String, Object> params);
 
 	List<EgovMap> PopCheck(Map<String, Object> params);
+
+	String selectStockMovementSeq();
+
+	void insStockMovementDetail(Map<String, Object> map);
+
+	void insStockMovementHead(Map<String, Object> map);
 }

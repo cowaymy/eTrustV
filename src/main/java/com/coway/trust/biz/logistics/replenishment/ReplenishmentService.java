@@ -28,4 +28,8 @@ public interface ReplenishmentService {
 
 	List<EgovMap> PopCheck(Map<String, Object> params);
 
+	void relenishmentSaveCt(Map<String, Object> param);
+
+	void relenishmentSaveRdc(Map<String, Object> param);
+
 }
