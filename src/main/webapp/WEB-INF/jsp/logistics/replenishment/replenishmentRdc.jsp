@@ -36,42 +36,43 @@ var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeNam
 var rescolumnLayout=[
                      
                      
-					{dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-					{dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false, visible:false},                         
-					{dataField: "cdc",headerText :"<spring:message code='log.head.cdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
-					{dataField: "cdcname",headerText :"<spring:message code='log.head.cdc'/>"   ,width:240 ,height:30, editable:false, visible:false},
-					{dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"    ,width:120 ,height:30, editable:false},                         
-					{dataField: "ctName",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
-					{dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
-					{dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
-					{dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
-					{dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-					{dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-					{dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-					{dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-					{dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-					{dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-					{dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-					{dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-					{dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-					{dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
-						,dataType : "date",
-					    formatString : "dd/mm/yyyy",
-					    editRenderer : {
-					        type : "CalendarRenderer",
-					        openDirectly : true, // 에디팅 진입 시 바로 달력 열기
-					        onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-					        showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
-					    }},                          
-					{dataField: "stkTypeId",headerText :"<spring:message code='log.head.materialtype'/>"    ,width:120 ,height:30, editable:false , visible:false},                         
-					{dataField: "stkTypeName",headerText :"<spring:message code='log.head.materialtypetext'/>"  ,width:120 ,height:30, editable:false},                         
-					{dataField: "stkCtgryId",headerText :"<spring:message code='log.head.stkctgryid'/>" ,width:120 ,height:30, editable:false, visible:false},                          
-					{dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false},                         
-					{dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
-					{dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false},                          
-					{dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false, visible:false},                         
-					{dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-					{dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false}  
+                    {dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
+                    {dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false, visible:false},                         
+                    {dataField: "cdc",headerText :"<spring:message code='log.head.cdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
+                    {dataField: "cdcname",headerText :"<spring:message code='log.head.cdc'/>"   ,width:240 ,height:30, editable:false, visible:false},
+                    {dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"    ,width:120 ,height:30, editable:false},                         
+                    {dataField: "ctName",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
+                    {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
+                    {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
+                    {dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
+                    {dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
+                        ,dataType : "date",
+                        formatString : "dd/mm/yyyy",
+                        editRenderer : {
+                            type : "CalendarRenderer",
+                            defaultFormat : "dd/mm/yyyy",
+                            openDirectly : true, // 에디팅 진입 시 바로 달력 열기
+                            onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+                            showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
+                        }},                          
+                    {dataField: "stkTypeId",headerText :"<spring:message code='log.head.materialtype'/>"    ,width:120 ,height:30, editable:false , visible:false},                         
+                    {dataField: "stkTypeName",headerText :"<spring:message code='log.head.materialtypetext'/>"  ,width:120 ,height:30, editable:false},                         
+                    {dataField: "stkCtgryId",headerText :"<spring:message code='log.head.stkctgryid'/>" ,width:120 ,height:30, editable:false, visible:false},                          
+                    {dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false},                         
+                    {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
+                    {dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false},                          
+                    {dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false, visible:false},                         
+                    {dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
+                    {dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false}  
 
                      
                      ];
@@ -120,7 +121,7 @@ $(document).ready(function(){
     
  
     AUIGrid.bind(listGrid, "ready", function(event) {
-    	
+        
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
             if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
@@ -136,10 +137,10 @@ $(document).ready(function(){
 //btn clickevent
 $(function(){
     $('#search').click(function() {
-    	if(""==$("#speriod").val()){
-    		Common.alert('Please Input Period.');
-    		return false;
-    	}
+        if(""==$("#speriod").val()){
+            Common.alert('Please Input Period.');
+            return false;
+        }
         SearchListAjax();
     });
     $("#clear").click(function(){
@@ -177,11 +178,11 @@ $(function(){
        
     });
     $('#add').click(function(){
-    	$("#popForm")[0].reset();
-    	$("#giopenwindow").show();
+        $("#popForm")[0].reset();
+        $("#giopenwindow").show();
     });
     $('#save').click(function(){
-    	var dat = GridCommon.getEditData(listGrid);
+        var dat = GridCommon.getEditData(listGrid);
         Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
             //Common.alert(result.message , SearchListAjax2);
             Common.alert(result.message);
@@ -194,45 +195,72 @@ $(function(){
             Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
     });
+    $('#insert').click(function() {
+        var addedItems = AUIGrid.getColumnValues(listGrid,"reqqty");
+        if (addedItems.length > 0){
+            for (var i = 0 ; i < addedItems.length ; i++){
+                if(""==addedItems[i] || 0==addedItems[i]){
+                    Common.alert("Plese Check "+"<spring:message code='log.head.requestqty'/>" +".");
+                    return false;
+                }       
+            }
+        }
+       // if (f_validatation('save')){
+            var dat = GridCommon.getGridData(listGrid);
+          //  dat.form = $("#headForm").serializeJSON();
+          console.log(dat);
+            Common.ajax("POST", "/logistics/replenishment/relenishmentSaveRdc.do", dat, function(result) {
+                //Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
+                //Common.alert(result.message , locationList);
+                AUIGrid.resetUpdatedItems(listGrid, "all");
+                //location.href = '/logistics/stockMovement/StockMovementList.do'; 
+            },  function(jqXHR, textStatus, errorThrown) {
+                try {
+                } catch (e) {
+                }
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+            });
+       // }
+    });
     $('#popsave').click(function(){
 
-    	var param = $('#popForm').serializeJSON();
+        var param = $('#popForm').serializeJSON();
         
         if (validationchk()){
-        	var valChck=true;
-        	var str="";
-        	$.extend(param,{'chckLoc':'CTCODY'});//강제세팅함 
-        	 Common.ajax("POST", "/logistics/replenishment/PopCheck.do", param, function(result) {
+            var valChck=true;
+            var str="";
+          //  $.extend(param,{'chckLoc':'CTCODY'});//강제세팅함 
+             Common.ajax("POST", "/logistics/replenishment/PopCheck.do", param, function(result) {
                  //Common.alert(result.message , SearchListAjax2);
                  console.log(result);
                  var data = result.data;
                  if(0==data[0].itmchck & 0==data[0].locchck){
-                	 valChck=false;
-                	 str +=" CT or Cody at Location, filter or spare-part in Meterial .";
+                     valChck=false;
+                     str +=" CT or Cody at Location, filter or spare-part in Meterial .";
                  }else if(1==data[0].itmchck & 0==data[0].locchck){
-                	 str +=" CT or Cody at Location. ";
-                	 valChck=false;
+                     str +=" CT or Cody at Location. ";
+                     valChck=false;
                  }else if(0==data[0].itmchck & 1==data[0].locchck){
-                	 str +=" filter or spare-part in Meterial. ";
-                	 valChck=false;
+                     str +=" filter or spare-part in Meterial. ";
+                     valChck=false;
                  }
                  
                  if(valChck){
-			        Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
-			        	//Common.alert(result.message , SearchListAjax2);
-			            Common.alert(result.message);
-			            SearchListAjax2("P");
-			        	$("#giopenwindow").hide();
-			        },  function(jqXHR, textStatus, errorThrown) {
-			            try {
-			            } catch (e) {
-			            }
-			
-			            Common.alert("Fail : " + jqXHR.responseJSON.message);
-			        });  
-                	 
+                    Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
+                        //Common.alert(result.message , SearchListAjax2);
+                        Common.alert(result.message);
+                        SearchListAjax2("P");
+                        $("#giopenwindow").hide();
+                    },  function(jqXHR, textStatus, errorThrown) {
+                        try {
+                        } catch (e) {
+                        }
+            
+                        Common.alert("Fail : " + jqXHR.responseJSON.message);
+                    });  
+                     
                  }else{
-                	 Common.alert("Please Input "+str);
+                     Common.alert("Please Input "+str);
                  }
              },  function(jqXHR, textStatus, errorThrown) {
                  try {
@@ -241,20 +269,20 @@ $(function(){
      
                  Common.alert("Fail : " + jqXHR.responseJSON.message);
              });
-        	
-        	
+            
+            
         }else{
-        	return false;
+            return false;
         }
     });
     $('#slocgb').change(function(){
-    	var paramdata ={"locgb":$('#slocgb').val()};
-    	doGetComboData('/common/selectStockLocationList.do', paramdata, '','sloccode', 'S' , '');
-    	if ($('#slocgb').val() == '03' || $('#slocgb').val() == '04'){
-    		AUIGrid.hideColumnByDataField(listGrid, "sftyqty");
-    	}else{
-    		AUIGrid.showColumnByDataField(listGrid, "sftyqty");
-    	}
+        var paramdata ={"locgb":$('#slocgb').val()};
+        doGetComboData('/common/selectStockLocationList.do', paramdata, '','sloccode', 'S' , '');
+        if ($('#slocgb').val() == '03' || $('#slocgb').val() == '04'){
+            AUIGrid.hideColumnByDataField(listGrid, "sftyqty");
+        }else{
+            AUIGrid.showColumnByDataField(listGrid, "sftyqty");
+        }
     });
     $('#sloccode').change(function(){
     });
@@ -296,18 +324,18 @@ $(function(){
         $('#fileSelector').click();
     });
     $("#itmnm").keyup(function(e) {
-    	if (event.which == '13') {
-        	$("#sUrl").val("/logistics/material/materialcdsearch.do");
-        	$("#svalue").val($("#itmnm").val());
+        if (event.which == '13') {
+            $("#sUrl").val("/logistics/material/materialcdsearch.do");
+            $("#svalue").val($("#itmnm").val());
             Common.searchpopupWin("popupForm", "/common/searchPopList.do","stock");
         }
     });
     $("#locnm").keyup(function(e) {
-	    if (event.which == '13') {
-	        $("#sUrl").val("/logistics/organization/locationCdSearch.do");
-	        $("#svalue").val($("#locnm").val());
-	        Common.searchpopupWin("popupForm", "/common/searchPopList.do","location");
-	    }
+        if (event.which == '13') {
+            $("#sUrl").val("/logistics/organization/locationCdSearch.do");
+            $("#svalue").val($("#locnm").val());
+            Common.searchpopupWin("popupForm", "/common/searchPopList.do","location");
+        }
     });
     $(".numberAmt").keyup(function(e) {
         //regex = /^[0-9]+(\.[0-9]+)?$/g;
@@ -324,62 +352,62 @@ $(function(){
 });
 
 function validationchk(){
-	if ($("#period").val() == ''){
-		Common.alert('Please enter a period.');
-		return false;
-	}
-	if ($("#loccd").val() == ''){
-		Common.alert('Please enter a Location.');
+    if ($("#period").val() == ''){
+        Common.alert('Please enter a period.');
         return false;
     }
-	if ($("#locnm").val() == ''){
-		Common.alert('Please enter a Location.');
+    if ($("#loccd").val() == ''){
+        Common.alert('Please enter a Location.');
         return false;
     }
-	if ($("#itmcd").val() == ''){
-		Common.alert('Please enter a Material.');
+    if ($("#locnm").val() == ''){
+        Common.alert('Please enter a Location.');
         return false;
     }
-	if ($("#itmnm").val() == ''){
-		Common.alert('Please enter a Material.');
+    if ($("#itmcd").val() == ''){
+        Common.alert('Please enter a Material.');
         return false;
     }
-	if ($("#maxqty").val() == ''){
-		Common.alert('Please enter a Maxmum Qty.');
+    if ($("#itmnm").val() == ''){
+        Common.alert('Please enter a Material.');
+        return false;
+    }
+    if ($("#maxqty").val() == ''){
+        Common.alert('Please enter a Maxmum Qty.');
         return false;
     }
     if ($("#reordqty").val() == ''){
-    	Common.alert('Please enter a Reorder Qty.');
+        Common.alert('Please enter a Reorder Qty.');
         return false;
     }
     if ($("#sftyqty").val() == ''){
-    	Common.alert('Please enter a Safety Stock Qty.');
+        Common.alert('Please enter a Safety Stock Qty.');
         return false;
     }
     if ($("#planqty").val() == ''){
-    	Common.alert('Please enter a Planned Qty.');
+        Common.alert('Please enter a Planned Qty.');
         return false;
     }
     return true;
 }
 
 function fn_itempopList(d){
-	
-	if (d[0].item.itemcode != undefined && d[0].item.itemcode != "undefined" && d[0].item.itemcode != null){
-		$("#itmcd").val(d[0].item.itemcode);
-		$("#itmnm").val(d[0].item.itemname);
-	}
-	
-	if (d[0].item.loccd != undefined && d[0].item.loccd != "undefined" && d[0].item.loccd != null){
+    
+    if (d[0].item.itemcode != undefined && d[0].item.itemcode != "undefined" && d[0].item.itemcode != null){
+        $("#itmcd").val(d[0].item.itemcode);
+        $("#itmnm").val(d[0].item.itemname);
+    }
+    
+    if (d[0].item.loccd != undefined && d[0].item.loccd != "undefined" && d[0].item.loccd != null){
         $("#loccd").val(d[0].item.loccd);
         $("#locnm").val(d[0].item.locdesc);
         
        /*  if (d[0].item.locgb == '01' || d[0].item.locgb == '02' || d[0].item.locgb == '05'){
-        	
-        	$("#sftyqty").prop("disabled", false);
+            
+            $("#sftyqty").prop("disabled", false);
         }else{
-        	$("#sftyqty").val(0);
-        	$("#sftyqty").prop("disabled", true);
+            $("#sftyqty").val(0);
+            $("#sftyqty").prop("disabled", true);
         } */
     }
 }
@@ -471,19 +499,19 @@ function createInitGrid() {
 }
 
 function fn_detail(data){
-	var period;
-	var location;
-	var itmcd;
-	var rowList = [];
-	var iCnt = 0;
-	for (var i = 1 ; i <= data.length ; i++){
-		Common.ajaxSync("GET" , "/logistics/replenishment/exceldata.do" , data[i-1] , function(data){
-			
-			if (data != null){
-			rowList[iCnt] = {
-		            period   : data.PERIOD,
-		            locid    : data.LOCID,
-		            loccd    : data.LOCCD,
+    var period;
+    var location;
+    var itmcd;
+    var rowList = [];
+    var iCnt = 0;
+    for (var i = 1 ; i <= data.length ; i++){
+        Common.ajaxSync("GET" , "/logistics/replenishment/exceldata.do" , data[i-1] , function(data){
+            
+            if (data != null){
+            rowList[iCnt] = {
+                    period   : data.PERIOD,
+                    locid    : data.LOCID,
+                    loccd    : data.LOCCD,
                     locnm    : data.LOCNM,
                     itmcd    : data.ITMCD,
                     itmnm    : data.ITMNM,
@@ -492,22 +520,22 @@ function fn_detail(data){
                     sftyqty  : data.SFTYQTY,
                     avrqty   : 0,
                     planqty   : data.PlANNEDQTY // rdc 용 추가함
-		        }
-				iCnt++;
-			}
-		});
-	}
+                }
+                iCnt++;
+            }
+        });
+    }
 
-	AUIGrid.addRow(subGrid, rowList, "last");
+    AUIGrid.addRow(subGrid, rowList, "last");
 }
 
 function SearchListAjax() {
-	   
+       
     var url = "/logistics/replenishment/searchListRdc.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
-    	console.log(data);
+        console.log(data);
         AUIGrid.setGridData(listGrid, data.data);
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
@@ -521,11 +549,11 @@ function SearchListAjax() {
     });
 }
 function SearchListAjax2(str) {
-	if("P"==str){
-		$("#searchForm")[0].reset();
-		$("#speriod").val($("#period").val());
-	} 
-	
+    if("P"==str){
+        $("#searchForm")[0].reset();
+        $("#speriod").val($("#period").val());
+    } 
+    
     var url = "/logistics/replenishment/searchListRdc.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
@@ -679,11 +707,12 @@ function f_multiCombos() {
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
+<!--             <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
             <li><p class="btn_grid"><a id="add">Add</a></p></li>
             <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
-            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li>
+            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li> -->
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <li><p class="btn_grid"><a id="insert">New</a></p></li>
 </c:if>
         </ul>
 
