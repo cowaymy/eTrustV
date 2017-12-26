@@ -246,7 +246,8 @@ var TransColumnLayout =
                                   }
                                ],
                                width : 150
-                }, {
+                },
+                {
                     headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_5'/>",
                       children : [ {
                                       dataField : "funcUserDfn5",
@@ -277,8 +278,654 @@ var TransColumnLayout =
                                     }
                                  ],
                                  width : 150
-                  }
-                , {
+                },
+
+
+
+                ///////////////////////////////////////////////////////////////////
+
+
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_6'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn6",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn6 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn6",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc6'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_7'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn7",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn7 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn7",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc7'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_8'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn8",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn8 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn8",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc8'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_9'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn9",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn9 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn9",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc9'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_10'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn10",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn10 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn10",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc10'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_11'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn11",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn11 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn11",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc11'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_12'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn12",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn12 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn12",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc12'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_13'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn13",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn13 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn13",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc13'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_14'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn14",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn14 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn14",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc14'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_15'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn15",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn15 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn15",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc15'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_16'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn16",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn16 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn16",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc16'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_17'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn17",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn17 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn17",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc17'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_18'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn18",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn18 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn18",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc18'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_19'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn19",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn19 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn19",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc19'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_20'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn20",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn20 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn20",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc20'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_21'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn21",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn21 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn21",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc21'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_22'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn22",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn22 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn22",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc22'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_23'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn23",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn23 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn23",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc23'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_24'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn24",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn24 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn24",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc24'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
+                    headerText : "<spring:message code='sys.progmanagement.grid1.User_Define_25'/>",
+                      children : [ {
+                                      dataField : "funcUserDfn25",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Checked'/>",
+                                      editable : true,
+                                      renderer :
+                                      {
+                                          type : "CheckBoxEditRenderer",
+                                          showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                          editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                          checkValue : "Y", // true, false 인 경우가 기본
+                                          unCheckValue : "N",
+                                          // 체크박스 Visible 함수
+                                          visibleFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField)
+                                           {
+                                             if(item.funcUserDfn25 == "Y")
+                                             {
+                                              return true; // checkbox visible
+                                             }
+
+                                             return true;
+                                           }
+                                      }  //renderer
+                                    }
+                                  , {
+                                      dataField : "descUserDfn25",
+                                      headerText : "<spring:message code='sys.progmanagement.grid1.Desc25'/>",
+                                    }
+                                 ],
+                                 width : 150
+                },
+                {
                     dataField : "pgmCode",
                     headerText : "<spring:message code='sys.progmanagement.grid1.Id'/>",
                     editable : false,
@@ -357,6 +1004,7 @@ function fnAddRowTrans()
 	item.funcView  = "N";
 	item.funcChng  = "N";
 	item.funcPrt   = "N";
+
 	item.funcUserDfn1 ="N";
 	item.descUserDfn1 ="";
 	item.funcUserDfn2 ="N";
@@ -367,6 +1015,50 @@ function fnAddRowTrans()
 	item.descUserDfn4 ="";
 	item.funcUserDfn5 ="N";
 	item.descUserDfn5 ="";
+
+    item.funcUserDfn6 ="N";
+    item.descUserDfn6 ="";
+    item.funcUserDfn7 ="N";
+    item.descUserDfn7 ="";
+    item.funcUserDfn8 ="N";
+    item.descUserDfn8 ="";
+    item.funcUserDfn9 ="N";
+    item.descUserDfn9 ="";
+    item.funcUserDfn10 ="N";
+    item.descUserDfn10 ="";
+
+    item.funcUserDfn11 ="N";
+    item.descUserDfn11 ="";
+    item.funcUserDfn12 ="N";
+    item.descUserDfn12 ="";
+    item.funcUserDfn13 ="N";
+    item.descUserDfn13 ="";
+    item.funcUserDfn14 ="N";
+    item.descUserDfn14 ="";
+    item.funcUserDfn15 ="N";
+    item.descUserDfn15 ="";
+
+    item.funcUserDfn16 ="N";
+    item.descUserDfn16 ="";
+    item.funcUserDfn17 ="N";
+    item.descUserDfn17 ="";
+    item.funcUserDfn18 ="N";
+    item.descUserDfn18 ="";
+    item.funcUserDfn19 ="N";
+    item.descUserDfn19 ="";
+    item.funcUserDfn20 ="N";
+    item.descUserDfn20 ="";
+
+    item.funcUserDfn21 ="N";
+    item.descUserDfn21 ="";
+    item.funcUserDfn22 ="N";
+    item.descUserDfn22 ="";
+    item.funcUserDfn23 ="N";
+    item.descUserDfn23 ="";
+    item.funcUserDfn24 ="N";
+    item.descUserDfn24 ="";
+    item.funcUserDfn25 ="N";
+    item.descUserDfn25 ="";
   // parameter
   // item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
   // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
@@ -571,17 +1263,57 @@ function fnSavePgmId()
 function fnUpdateTrans()
 {
 
+	var dfnDesc1 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn1");
+	var dfnDesc2 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn2");
+	var dfnDesc3 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn3");
+	var dfnDesc4 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn4");
+	var dfnDesc5 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn5");
+	var dfnDesc6 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn6");
+	var dfnDesc7 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn7");
+	var dfnDesc8 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn8");
+	var dfnDesc9 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn9");
+	var dfnDesc10 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn10");
+	var dfnDesc11 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn11");
+	var dfnDesc12 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn12");
+	var dfnDesc13 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn13");
+	var dfnDesc14 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn14");
+	var dfnDesc15 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn15");
+	var dfnDesc16 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn16");
+	var dfnDesc17 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn17");
+	var dfnDesc18 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn18");
+	var dfnDesc19 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn19");
+	var dfnDesc20 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn20");
+	var dfnDesc21 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn21");
+	var dfnDesc22 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn22");
+	var dfnDesc23 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn23");
+	var dfnDesc24 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn24");
+	var dfnDesc25 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn25");
+
 	var dfnChk1 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn1");
 	var dfnChk2 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn2");
 	var dfnChk3 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn3");
 	var dfnChk4 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn4");
 	var dfnChk5 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn5");
-
-	var dfnDesc1 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn1");
-	var dfnDesc2 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn2");
-    var dfnDesc3 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn3");
-    var dfnDesc4 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn4");
-    var dfnDesc5 = AUIGrid.getCellValue(transGridID, 0, "descUserDfn5");
+	var dfnChk6 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn6");
+	var dfnChk7 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn7");
+	var dfnChk8 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn8");
+	var dfnChk9 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn9");
+	var dfnChk10 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn10");
+	var dfnChk11 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn11");
+	var dfnChk12 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn12");
+	var dfnChk13 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn13");
+	var dfnChk14 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn14");
+	var dfnChk15 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn15");
+	var dfnChk16 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn16");
+	var dfnChk17 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn17");
+	var dfnChk18 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn18");
+	var dfnChk19 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn19");
+	var dfnChk20 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn20");
+	var dfnChk21 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn21");
+	var dfnChk22 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn22");
+	var dfnChk23 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn23");
+	var dfnChk24 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn24");
+	var dfnChk25 = AUIGrid.getCellValue(transGridID, 0, "funcUserDfn25");
 
     if(dfnChk1 == "Y" && (dfnDesc1 == "" || typeof(dfnDesc1) == "undefined")){
     	//The {0} Must Exist.
@@ -613,6 +1345,134 @@ function fnUpdateTrans()
         return false;
     }
 
+    ///////////
+
+    if(dfnChk6 == "Y" && (dfnDesc6 == "" || typeof(dfnDesc6) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#6 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk7 == "Y" && (dfnDesc7 == ""  || typeof(dfnDesc7) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#7 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk8 == "Y" && (dfnDesc8 == "" || typeof(dfnDesc8) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#8 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk9 == "Y" && (dfnDesc9 == "" || typeof(dfnDesc9) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#9 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk10 == "Y" && (dfnDesc10 == "" || typeof(dfnDesc10) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#10 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    /////////////////////////////
+
+    if(dfnChk11 == "Y" && (dfnDesc11 == "" || typeof(dfnDesc11) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#11 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk12 == "Y" && (dfnDesc12 == ""  || typeof(dfnDesc12) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#12 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk13 == "Y" && (dfnDesc13 == "" || typeof(dfnDesc13) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#13 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk14 == "Y" && (dfnDesc14 == "" || typeof(dfnDesc14) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#14 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk15 == "Y" && (dfnDesc15 == "" || typeof(dfnDesc15) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#15 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    /////////////////////////////////////////////////////
+
+
+    if(dfnChk16 == "Y" && (dfnDesc16 == "" || typeof(dfnDesc16) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#16 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk17 == "Y" && (dfnDesc17 == ""  || typeof(dfnDesc17) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#17 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk18 == "Y" && (dfnDesc18 == "" || typeof(dfnDesc18) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#18 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk19 == "Y" && (dfnDesc19 == "" || typeof(dfnDesc19) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#19 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk20 == "Y" && (dfnDesc20 == "" || typeof(dfnDesc20) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#20 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    /////////////////////////////
+
+    if(dfnChk21 == "Y" && (dfnDesc21 == "" || typeof(dfnDesc21) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#21 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk22 == "Y" && (dfnDesc22 == ""  || typeof(dfnDesc22) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#22 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk23 == "Y" && (dfnDesc23 == "" || typeof(dfnDesc23) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#23 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk24 == "Y" && (dfnDesc24 == "" || typeof(dfnDesc24) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#24 Desc' htmlEscape='false'/>");
+        return false;
+    }
+
+    if(dfnChk25 == "Y" && (dfnDesc25 == "" || typeof(dfnDesc25) == "undefined")){
+        //The {0} Must Exist.
+        Common.alert("<spring:message code='sys.msg.Exists' arguments='UserDFN#25 Desc' htmlEscape='false'/>");
+        return false;
+    }
 
 	 gAddRowCnt = 0;
 	 Common.ajax("POST", "/program/updateTrans.do"
@@ -710,16 +1570,16 @@ var myGridID, transGridID;
 
 $(document).ready(function()
 {
-    $("#ipt_pgmCode").focus();
+    $("#pgmCode").focus();
 
-     $("#ipt_pgmCode").keydown(function(key)
+     $("#pgmCode").keydown(function(key)
      {
         if (key.keyCode == 13)
         {
      	   fnSelectPgmListAjax();
         }
      });
-    $("#ipt_pgmCode").bind("keyup", function()
+    $("#pgmCode").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
@@ -744,6 +1604,7 @@ $(document).ready(function()
                   showRowNumColumn : false, // 순번 칼럼 숨김
                   // 셀 병합 실행
                   enableCellMerge : true,
+                  editBeginMode : "click", // 편집모드 클릭
                   selectionMode : "multipleRows",
                   // 셀머지된 경우, 행 선택자(selectionMode : singleRow, multipleRows) 로 지정했을 때 병합 셀도 행 선택자에 의해 선택되도록 할지 여부
                   rowSelectionWithMerge : true,
@@ -785,7 +1646,7 @@ $(document).ready(function()
         console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedParamPgmId: " + $("#paramPgmId").val() +" / "+ $("#paramPgmName").val());
     });
 
- // 셀 더블클릭 이벤트 바인딩
+    // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
     {
         console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
@@ -901,9 +1762,334 @@ $(document).ready(function()
             var myValue_desc5 = AUIGrid.getCellValue(transGridID, 0, 12);
 
             if(myValue_desc5.length == 0 ){
-                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn12"] );
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn5"] );
             }else{
                 AUIGrid.setCellValue(transGridID, 0, 12, "");
+            }
+        }
+
+        ///////////////////////////////////////
+
+         if (event.columnIndex == 13 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn6"] );
+        }
+        else if (event.columnIndex == 13 &&  event.value == "N")
+        {
+            var myValue_desc6 = AUIGrid.getCellValue(transGridID, 0, 14);
+
+            if(myValue_desc6.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn6"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 14, "");
+            }
+        }
+
+        if (event.columnIndex == 15 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn7"] );
+        }
+        else if (event.columnIndex == 15 &&  event.value == "N")
+        {
+            var myValue_desc7 = AUIGrid.getCellValue(transGridID, 0, 16);
+
+            if(myValue_desc7.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn7"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 16, "");
+            }
+        }
+
+        if (event.columnIndex == 17 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn8"] );
+        }
+        else if (event.columnIndex == 17 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 8, "");
+            var myValue_desc8 = AUIGrid.getCellValue(transGridID, 0, 18);
+
+            if(myValue_desc8.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn8"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 18, "");
+            }
+        }
+
+        if (event.columnIndex == 19 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn9"] );
+        }
+        else if (event.columnIndex == 19 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 10, "");
+            var myValue_desc9 = AUIGrid.getCellValue(transGridID, 0, 20);
+
+            if(myValue_desc9.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn9"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 20, "");
+            }
+        }
+
+        if (event.columnIndex == 21 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn10"] );
+        }
+        else if (event.columnIndex == 21 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc10 = AUIGrid.getCellValue(transGridID, 0, 22);
+
+            if(myValue_desc10.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn10"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 22, "");
+            }
+        }
+
+
+        /////////////////////
+
+
+         if (event.columnIndex == 23 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn11"] );
+        }
+        else if (event.columnIndex == 23 &&  event.value == "N")
+        {
+            var myValue_desc11 = AUIGrid.getCellValue(transGridID, 0, 24);
+
+            if(myValue_desc11.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn11"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 24, "");
+            }
+        }
+
+        if (event.columnIndex == 25 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn12"] );
+        }
+        else if (event.columnIndex == 25 &&  event.value == "N")
+        {
+            var myValue_desc12 = AUIGrid.getCellValue(transGridID, 0, 26);
+
+            if(myValue_desc12.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn12"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 26, "");
+            }
+        }
+
+        if (event.columnIndex == 27 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn13"] );
+        }
+        else if (event.columnIndex == 27 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 8, "");
+            var myValue_desc13 = AUIGrid.getCellValue(transGridID, 0, 28);
+
+            if(myValue_desc13.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn13"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 28, "");
+            }
+        }
+
+        if (event.columnIndex == 29 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn14"] );
+        }
+        else if (event.columnIndex == 29 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 10, "");
+            var myValue_desc14 = AUIGrid.getCellValue(transGridID, 0, 30);
+
+            if(myValue_desc14.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn14"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 30, "");
+            }
+        }
+
+        if (event.columnIndex == 31 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn15"] );
+        }
+        else if (event.columnIndex == 31 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc15 = AUIGrid.getCellValue(transGridID, 0, 32);
+
+            if(myValue_desc15.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn15"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 32, "");
+            }
+        }
+
+
+        //////////////////////////////
+
+
+
+         if (event.columnIndex == 33 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn16"] );
+        }
+        else if (event.columnIndex == 33 &&  event.value == "N")
+        {
+            var myValue_desc16 = AUIGrid.getCellValue(transGridID, 0, 34);
+
+            if(myValue_desc16.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn16"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 34, "");
+            }
+        }
+
+        if (event.columnIndex == 35 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn17"] );
+        }
+        else if (event.columnIndex == 35 &&  event.value == "N")
+        {
+            var myValue_desc17 = AUIGrid.getCellValue(transGridID, 0, 36);
+
+            if(myValue_desc17.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn17"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 36, "");
+            }
+        }
+
+        if (event.columnIndex == 37 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn18"] );
+        }
+        else if (event.columnIndex == 37 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 8, "");
+            var myValue_desc18 = AUIGrid.getCellValue(transGridID, 0, 38);
+
+            if(myValue_desc18.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn18"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 38, "");
+            }
+        }
+
+        if (event.columnIndex == 39 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn19"] );
+        }
+        else if (event.columnIndex == 39 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 10, "");
+            var myValue_desc19 = AUIGrid.getCellValue(transGridID, 0, 40);
+
+            if(myValue_desc19.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn19"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 40, "");
+            }
+        }
+
+        if (event.columnIndex == 41 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn20"] );
+        }
+        else if (event.columnIndex == 41 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc20 = AUIGrid.getCellValue(transGridID, 0, 42);
+
+            if(myValue_desc20.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn20"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 42, "");
+            }
+        }
+
+        if (event.columnIndex == 43 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn21"] );
+        }
+        else if (event.columnIndex == 43 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc21 = AUIGrid.getCellValue(transGridID, 0, 44);
+
+            if(myValue_desc21.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn21"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 44, "");
+            }
+        }
+
+        if (event.columnIndex == 45 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn22"] );
+        }
+        else if (event.columnIndex == 45 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc22 = AUIGrid.getCellValue(transGridID, 0, 46);
+
+            if(myValue_desc22.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn22"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 46, "");
+            }
+        }
+
+        if (event.columnIndex == 47 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn23"] );
+        }
+        else if (event.columnIndex == 47 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc23 = AUIGrid.getCellValue(transGridID, 0, 48);
+
+            if(myValue_desc23.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn23"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 48, "");
+            }
+        }
+
+        if (event.columnIndex == 49 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn24"] );
+        }
+        else if (event.columnIndex == 49 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc24 = AUIGrid.getCellValue(transGridID, 0, 50);
+
+            if(myValue_desc24.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn24"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 50, "");
+            }
+        }
+
+        if (event.columnIndex == 51 &&  event.value == "Y")
+        {
+            AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn25"] );
+        }
+        else if (event.columnIndex == 51 &&  event.value == "N")
+        {
+            //AUIGrid.setCellValue(transGridID, 0, 12, "");
+            var myValue_desc25 = AUIGrid.getCellValue(transGridID, 0, 52);
+
+            if(myValue_desc25.length == 0 ){
+                AUIGrid.restoreEditedCells(transGridID, [0, "descUserDfn25"] );
+            }else{
+                AUIGrid.setCellValue(transGridID, 0, 52, "");
             }
         }
     });
@@ -949,9 +2135,9 @@ $(document).ready(function()
 <tr>
   <th scope="row">Program</th>
   <td>
-  <input type="text" title="" id="ipt_pgmCode" name="ipt_pgmCode" placeholder="Program Id or Name" class="" />
+  <input type="text" title="" id="pgmCode" name="pgmCode" placeholder="Program Id or Name" class="" />
 
-  <input type="text" title="" id="ASDFASDF" name="ASDFASDF" placeholder="Program Id or Name" style="display:none;" class="" />
+  <input type="text" title="" id="hiddenInput" name="hiddenInput" placeholder="hiddenInput" style="display:none;" class="" />
   </td>
   <!-- <th scope="row">Name</th>
   <td>
@@ -998,7 +2184,7 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역2 -->
- <div id="transGrid" style="height:80px;"></div>
+ <div id="transGrid" style="height:95px;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

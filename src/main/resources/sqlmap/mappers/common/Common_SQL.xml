@@ -91,6 +91,7 @@
        WHERE MENU_CODE    =  UPPER(#{menuCode})
   </update>
 
+<!-- Program Management -->
 
   <delete id="deletePgmId" parameterType="Map">
       DELETE SYS0050M  WHERE PGM_CODE  = #{pgmCode}
@@ -156,6 +157,226 @@
          </otherwise>
        </choose>
 
+       <choose>
+         <when test='funcUserDfn6 == "N" '>
+             ,FUNC_USER_DFN6   = 'N'
+             ,DESC_USER_DFN6   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN6   = #{funcUserDfn6}
+             ,DESC_USER_DFN6   = #{descUserDfn6}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn7 == "N" '>
+             ,FUNC_USER_DFN7   = 'N'
+             ,DESC_USER_DFN7   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN7   = #{funcUserDfn7}
+             ,DESC_USER_DFN7   = #{descUserDfn7}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn8 == "N" '>
+             ,FUNC_USER_DFN8   = 'N'
+             ,DESC_USER_DFN8   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN8   = #{funcUserDfn8}
+             ,DESC_USER_DFN8   = #{descUserDfn8}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn9 == "N" '>
+             ,FUNC_USER_DFN9   = 'N'
+             ,DESC_USER_DFN9   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN9   = #{funcUserDfn9}
+             ,DESC_USER_DFN9   = #{descUserDfn9}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn10 == "N" '>
+             ,FUNC_USER_DFN10   = 'N'
+             ,DESC_USER_DFN10   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN10   = #{funcUserDfn10}
+             ,DESC_USER_DFN10   = #{descUserDfn10}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn11 == "N" '>
+             ,FUNC_USER_DFN11   = 'N'
+             ,DESC_USER_DFN11   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN11   = #{funcUserDfn11}
+             ,DESC_USER_DFN11   = #{descUserDfn11}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn12 == "N" '>
+             ,FUNC_USER_DFN12   = 'N'
+             ,DESC_USER_DFN12   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN12   = #{funcUserDfn12}
+             ,DESC_USER_DFN12   = #{descUserDfn12}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn13 == "N" '>
+             ,FUNC_USER_DFN13   = 'N'
+             ,DESC_USER_DFN13   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN13   = #{funcUserDfn13}
+             ,DESC_USER_DFN13   = #{descUserDfn13}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn14 == "N" '>
+             ,FUNC_USER_DFN14   = 'N'
+             ,DESC_USER_DFN14   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN14   = #{funcUserDfn14}
+             ,DESC_USER_DFN14   = #{descUserDfn14}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn15 == "N" '>
+             ,FUNC_USER_DFN15   = 'N'
+             ,DESC_USER_DFN15   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN15   = #{funcUserDfn15}
+             ,DESC_USER_DFN15   = #{descUserDfn15}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn16 == "N" '>
+             ,FUNC_USER_DFN16   = 'N'
+             ,DESC_USER_DFN16   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN16   = #{funcUserDfn16}
+             ,DESC_USER_DFN16   = #{descUserDfn16}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn17 == "N" '>
+             ,FUNC_USER_DFN17   = 'N'
+             ,DESC_USER_DFN17   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN17   = #{funcUserDfn17}
+             ,DESC_USER_DFN17   = #{descUserDfn17}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn18 == "N" '>
+             ,FUNC_USER_DFN18   = 'N'
+             ,DESC_USER_DFN18   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN18   = #{funcUserDfn18}
+             ,DESC_USER_DFN18   = #{descUserDfn18}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn19 == "N" '>
+             ,FUNC_USER_DFN19   = 'N'
+             ,DESC_USER_DFN19   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN19   = #{funcUserDfn19}
+             ,DESC_USER_DFN19   = #{descUserDfn19}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn20 == "N" '>
+             ,FUNC_USER_DFN20   = 'N'
+             ,DESC_USER_DFN20   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN20   = #{funcUserDfn20}
+             ,DESC_USER_DFN20   = #{descUserDfn20}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn21 == "N" '>
+             ,FUNC_USER_DFN21   = 'N'
+             ,DESC_USER_DFN21   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN21   = #{funcUserDfn21}
+             ,DESC_USER_DFN21   = #{descUserDfn21}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn22 == "N" '>
+             ,FUNC_USER_DFN22   = 'N'
+             ,DESC_USER_DFN22   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN22   = #{funcUserDfn22}
+             ,DESC_USER_DFN22   = #{descUserDfn22}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn23 == "N" '>
+             ,FUNC_USER_DFN23   = 'N'
+             ,DESC_USER_DFN23   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN23   = #{funcUserDfn23}
+             ,DESC_USER_DFN23   = #{descUserDfn23}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn24 == "N" '>
+             ,FUNC_USER_DFN24   = 'N'
+             ,DESC_USER_DFN24   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN24   = #{funcUserDfn24}
+             ,DESC_USER_DFN24   = #{descUserDfn24}
+         </otherwise>
+       </choose>
+
+       <choose>
+         <when test='funcUserDfn25 == "N" '>
+             ,FUNC_USER_DFN25   = 'N'
+             ,DESC_USER_DFN25   = ''
+         </when>
+         <otherwise>
+             ,FUNC_USER_DFN25   = #{funcUserDfn25}
+             ,DESC_USER_DFN25   = #{descUserDfn25}
+         </otherwise>
+       </choose>
+
 
             ,UPD_USER_ID      = #{updUserId}
             ,UPD_DT           = SYSDATE
@@ -182,11 +403,33 @@
             ,FUNC_VIEW
             ,FUNC_CHNG
             ,FUNC_PRT
+
             ,FUNC_USER_DFN1
             ,FUNC_USER_DFN2
             ,FUNC_USER_DFN3
             ,FUNC_USER_DFN4
             ,FUNC_USER_DFN5
+            ,FUNC_USER_DFN6
+            ,FUNC_USER_DFN7
+            ,FUNC_USER_DFN8
+            ,FUNC_USER_DFN9
+            ,FUNC_USER_DFN10
+            ,FUNC_USER_DFN11
+            ,FUNC_USER_DFN12
+            ,FUNC_USER_DFN13
+            ,FUNC_USER_DFN14
+            ,FUNC_USER_DFN15
+            ,FUNC_USER_DFN16
+            ,FUNC_USER_DFN17
+            ,FUNC_USER_DFN18
+            ,FUNC_USER_DFN19
+            ,FUNC_USER_DFN20
+            ,FUNC_USER_DFN21
+            ,FUNC_USER_DFN22
+            ,FUNC_USER_DFN23
+            ,FUNC_USER_DFN24
+            ,FUNC_USER_DFN25
+
             ,CRT_USER_ID
             ,CRT_DT
             ,UPD_USER_ID
@@ -207,10 +450,31 @@
             ,'N'
             ,'N'
             ,'N'
-            ,'N'
-            ,'N'
-            ,'N'
-            ,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+			,'N'
+
             ,#{crtUserId}
             ,SYSDATE
             ,#{updUserId}
@@ -228,16 +492,59 @@
 		      ,FUNC_VIEW
 		      ,FUNC_CHNG
 		      ,FUNC_PRT
-		      ,FUNC_USER_DFN1
+			,FUNC_USER_DFN1
+			,FUNC_USER_DFN2
+			,FUNC_USER_DFN3
+			,FUNC_USER_DFN4
+			,FUNC_USER_DFN5
+			,FUNC_USER_DFN6
+			,FUNC_USER_DFN7
+			,FUNC_USER_DFN8
+			,FUNC_USER_DFN9
+			,FUNC_USER_DFN10
+			,FUNC_USER_DFN11
+			,FUNC_USER_DFN12
+			,FUNC_USER_DFN13
+			,FUNC_USER_DFN14
+			,FUNC_USER_DFN15
+			,FUNC_USER_DFN16
+			,FUNC_USER_DFN17
+			,FUNC_USER_DFN18
+			,FUNC_USER_DFN19
+			,FUNC_USER_DFN20
+			,FUNC_USER_DFN21
+			,FUNC_USER_DFN22
+			,FUNC_USER_DFN23
+			,FUNC_USER_DFN24
+			,FUNC_USER_DFN25
+
 		      ,DESC_USER_DFN1
-		      ,FUNC_USER_DFN2
 		      ,DESC_USER_DFN2
-		      ,FUNC_USER_DFN3
 		      ,DESC_USER_DFN3
-		      ,FUNC_USER_DFN4
 		      ,DESC_USER_DFN4
-		      ,FUNC_USER_DFN5
 		      ,DESC_USER_DFN5
+		      ,DESC_USER_DFN6
+		      ,DESC_USER_DFN7
+		      ,DESC_USER_DFN8
+		      ,DESC_USER_DFN9
+		      ,DESC_USER_DFN10
+		      ,DESC_USER_DFN11
+		      ,DESC_USER_DFN12
+		      ,DESC_USER_DFN13
+		      ,DESC_USER_DFN14
+		      ,DESC_USER_DFN15
+		      ,DESC_USER_DFN16
+		      ,DESC_USER_DFN17
+		      ,DESC_USER_DFN18
+		      ,DESC_USER_DFN19
+		      ,DESC_USER_DFN20
+		      ,DESC_USER_DFN21
+		      ,DESC_USER_DFN22
+		      ,DESC_USER_DFN23
+		      ,DESC_USER_DFN24
+		      ,DESC_USER_DFN25
+
+
 		      ,CRT_USER_ID
 		      ,CRT_DT
 		      ,UPD_USER_ID
@@ -269,16 +576,57 @@
 				,FUNC_VIEW
 				,FUNC_CHNG
 				,FUNC_PRT
-				,FUNC_USER_DFN1
-				,DESC_USER_DFN1
-				,FUNC_USER_DFN2
-				,DESC_USER_DFN2
-				,FUNC_USER_DFN3
-				,DESC_USER_DFN3
-				,FUNC_USER_DFN4
-				,DESC_USER_DFN4
-				,FUNC_USER_DFN5
-				,DESC_USER_DFN5
+                ,FUNC_USER_DFN1
+                ,FUNC_USER_DFN2
+	            ,FUNC_USER_DFN3
+	            ,FUNC_USER_DFN4
+	            ,FUNC_USER_DFN5
+	            ,FUNC_USER_DFN6
+	            ,FUNC_USER_DFN7
+	            ,FUNC_USER_DFN8
+	            ,FUNC_USER_DFN9
+	            ,FUNC_USER_DFN10
+	            ,FUNC_USER_DFN11
+	            ,FUNC_USER_DFN12
+	            ,FUNC_USER_DFN13
+	            ,FUNC_USER_DFN14
+	            ,FUNC_USER_DFN15
+	            ,FUNC_USER_DFN16
+	            ,FUNC_USER_DFN17
+	            ,FUNC_USER_DFN18
+	            ,FUNC_USER_DFN19
+	            ,FUNC_USER_DFN20
+	            ,FUNC_USER_DFN21
+	            ,FUNC_USER_DFN22
+	            ,FUNC_USER_DFN23
+	            ,FUNC_USER_DFN24
+	            ,FUNC_USER_DFN25
+
+                ,DESC_USER_DFN1
+                ,DESC_USER_DFN2
+                ,DESC_USER_DFN3
+                ,DESC_USER_DFN4
+                ,DESC_USER_DFN5
+                ,DESC_USER_DFN6
+                ,DESC_USER_DFN7
+                ,DESC_USER_DFN8
+                ,DESC_USER_DFN9
+                ,DESC_USER_DFN10
+                ,DESC_USER_DFN11
+                ,DESC_USER_DFN12
+                ,DESC_USER_DFN13
+                ,DESC_USER_DFN14
+                ,DESC_USER_DFN15
+                ,DESC_USER_DFN16
+                ,DESC_USER_DFN17
+                ,DESC_USER_DFN18
+                ,DESC_USER_DFN19
+                ,DESC_USER_DFN20
+                ,DESC_USER_DFN21
+                ,DESC_USER_DFN22
+                ,DESC_USER_DFN23
+                ,DESC_USER_DFN24
+                ,DESC_USER_DFN25
 	FROM SYS0050M
 	WHERE PGM_CODE = #{paramPgmId}
 	ORDER BY PGM_CODE
@@ -1045,25 +1393,25 @@
             </if>
 			<if test="groupCode != null and groupCode == 'ONLINE'">
                 AND IS_PAY_ONLINE = 1
-            </if>             
+            </if>
             <if test="groupCode != null and groupCode == 'CRC2708' ">
-                AND IS_PAY_CRC = 1 
+                AND IS_PAY_CRC = 1
                 AND ACC_ID IN (102,107,105)
             </if>
             <if test="groupCode != null and groupCode == 'CRC2709' ">
-                AND IS_PAY_CRC = 1 
+                AND IS_PAY_CRC = 1
                 AND ACC_ID IN (102,107)
             </if>
             <if test="groupCode != null and groupCode == 'CRC2710' ">
-                AND IS_PAY_CRC = 1 
+                AND IS_PAY_CRC = 1
                 AND ACC_ID IN (100,102,104,105,106,107,553,563)
             </if>
             <if test="groupCode != null and groupCode == 'CRC2711' ">
-                AND IS_PAY_CRC = 1 
+                AND IS_PAY_CRC = 1
                 AND ACC_ID = 102
-            </if>            
+            </if>
             <if test="groupCode != null and groupCode == 'CRC2712' ">
-                AND IS_PAY_CRC = 1 
+                AND IS_PAY_CRC = 1
                 AND ACC_ID = 102
             </if>
         ORDER BY ACC_CODE ASC
@@ -1071,44 +1419,44 @@
 
     <select id ="selectBankAccountList" parameterType="Map" resultType="egovMap">
         SELECT
-             B.CODE_ID, 
+             B.CODE_ID,
              B.CODE || '-' || A.ACC_DESC  AS CODE_NAME
-        FROM SYS0001M A 
-        JOIN SYS0013M B ON A.ACC_CODE = B.CODE 
+        FROM SYS0001M A
+        JOIN SYS0013M B ON A.ACC_CODE = B.CODE
         WHERE CODE_MASTER_ID = 384
     </select>
-    
+
     <select id="selectCountryList" parameterType="Map" resultType="egovMap">
        SELECT CNTY_ID CODE_ID, NAME CODE_NAME FROM SYS0015M
     </select>
-    
+
     <select id="selectStateList" parameterType="Map" resultType="egovMap">
-        SELECT STATE_ID CODE_ID, NAME CODE_NAME 
+        SELECT STATE_ID CODE_ID, NAME CODE_NAME
         FROM SYS0035M
         WHERE 1=1
         <if test = "groupCode != null and groupCode != ''">
          AND CNTY_ID = #{groupCode}
         </if>
     </select>
-    
+
     <select id="selectAreaList" parameterType="Map" resultType="egovMap">
-        SELECT AREA_ID CODE_ID, area_name CODE_NAME 
+        SELECT AREA_ID CODE_ID, area_name CODE_NAME
         FROM SYS0039M
         WHERE 1=1
         <if test = "groupCode != null and groupCode != ''">
-         AND AREA_STATE_ID = #{groupCode} 
+         AND AREA_STATE_ID = #{groupCode}
         </if>
     </select>
-    
+
     <select id="selectPostCdList" parameterType="Map" resultType="egovMap">
-        SELECT post_code CODE_ID, POST_CODE CODE_NAME 
+        SELECT post_code CODE_ID, POST_CODE CODE_NAME
         FROM SYS0030C
         WHERE 1=1
         <if test = "groupCode != null and groupCode != ''">
-         AND AREA_ID = #{groupCode}   
+         AND AREA_ID = #{groupCode}
         </if>
     </select>
-    
+
     <select id="selectAddrSelCode" parameterType="Map" resultType="egovMap">
         SELECT
               <choose>
@@ -1167,7 +1515,7 @@
                 UNION
                SELECT DISTINCT T1.STK_ID
                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
-                    , T3.CODE_NAME 
+                    , T3.CODE_NAME
                  FROM SYS0026M T1
                     , SYS0013M T3
                 WHERE T1.STK_CTGRY_ID = T3.CODE_ID
@@ -1197,9 +1545,9 @@
 	    </select>
 
     <select id="selectStockLocationList" parameterType="Map" resultType="egovMap">
-        SELECT 
-                WH_LOC_ID CODE_ID, 
-                WH_LOC_CODE CODE , 
+        SELECT
+                WH_LOC_ID CODE_ID,
+                WH_LOC_CODE CODE ,
                WH_LOC_CODE || ' - ' ||WH_LOC_DESC CODE_NAME
           FROM SYS0028M S28M
          WHERE 1 = 1
@@ -1257,7 +1605,7 @@
            <if test="stkGrade != null and stkGrade != '' and stkGrade != 'All'">
              AND S28M.WH_LOC_STK_GRAD = #{stkGrade}
            </if>
-         ORDER BY WH_LOC_GB , CODE_NAME 
+         ORDER BY WH_LOC_GB , CODE_NAME
     </select>
 
     <select id="selectBrnchIdByPostCode" parameterType="Map" resultType="egovMap">
