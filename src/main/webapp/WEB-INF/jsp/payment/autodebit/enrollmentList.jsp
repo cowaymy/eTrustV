@@ -286,7 +286,9 @@ var columnLayout2 = [
             <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
             <h2>Enrollment</h2>   
             <ul class="right_btns">
+               <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+               </c:if>
                 <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
             </ul>    
         </aside>
@@ -345,19 +347,25 @@ var columnLayout2 = [
         <section class="search_result">
             <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
-                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
                 <dl class="link_list">
                     <dt>Link</dt>
                     <dd>
                         <ul class="btns">
+                      
                             <li><p class="link_btn"><a href="javascript:view_Enrollment()"><spring:message code='pay.btn.link.viewEnrollment'/></a></p></li>
+                       
                         </ul>
-                        <ul class="btns">                            
+                        <ul class="btns"> 
+                                                
                             <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()"><spring:message code='pay.btn.link.enrollment'/></a></p></li>                            
+                      
                         </ul>
                         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
+               </c:if>
             </aside>
             <!-- link_btns_wrap end -->
             <!-- grid_wrap start -->

@@ -519,7 +519,9 @@ var batchInfoLayout = [
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Internal Staff Payment</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
+             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="#" onclick="fn_clear();"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside><!-- title_line end -->
@@ -583,6 +585,7 @@ var batchInfoLayout = [
 		    </table>
 		    <!-- table end -->
 		    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+			  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 			    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 			    <dl class="link_list">
 			        <dt>Link</dt>
@@ -595,7 +598,9 @@ var batchInfoLayout = [
 			        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			        </dd>
 			    </dl>
+			    </c:if>
 		    </aside><!-- link_btns_wrap end -->
+		    
 	    </form>
     </section><!-- search_table end -->
     <!-- search_result start -->

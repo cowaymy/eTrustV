@@ -81,7 +81,10 @@ function fn_generateClick(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Monthly Bill Raw Data</h2>   
         <ul class="right_btns">
+        
+           <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_generateClick();"><spring:message code='pay.btn.generate'/></a></p></li>
+           </c:if>
         </ul>    
     </aside>
     <!-- title_line end -->

@@ -175,17 +175,24 @@ function fn_clickArea2(){
     </aside><!-- title_line end -->
 
     <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
         <li><p class="btn_blue"><a href="javascript:fn_createPayment();"><spring:message code='pay.btn.createPayment'/></a></p></li>
+     </c:if>  
+      <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
         <li><p class="btn_blue"><a href="javascript:fn_viewResult();"><spring:message code='pay.btn.viewResult'/></a></p></li>
+      </c:if>
     </ul>         
 
     <ul class="left_btns mt20">
+    
         <li>
             <div class="auto_file"><!-- auto_file start -->
                 <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
             </div><!-- auto_file end -->
         </li>
-        <li><p class="btn_sky"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
+         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+             <li><p class="btn_sky"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
+         </c:if>
         <!-- <li><p class="btn_sky"><a href="#">Download CSV Format</a></p></li> -->
     </ul>
 

@@ -201,9 +201,15 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Confirm Bank Charge & GST</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:postStatement();"><spring:message code='pay.btn.posting'/></a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:postStatement();"><spring:message code='pay.btn.posting'/></a></p></li>
+           </c:if>
+           <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:detailStatement();"><spring:message code='pay.btn.detailed'/></a></p></li>
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+           </c:if>
+             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>

@@ -137,7 +137,9 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Payment List</h2>
         <ul class="right_btns">
+           <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
+           </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
@@ -190,7 +192,9 @@
 			<dt>Link</dt>
 			<dd>
 				<ul class="btns">
+				 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.requestDcf'/></a></p></li>
+				</c:if>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>

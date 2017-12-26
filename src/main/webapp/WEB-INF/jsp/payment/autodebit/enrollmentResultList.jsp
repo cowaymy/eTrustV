@@ -254,7 +254,9 @@ function fn_clear(){
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Enrollment Result</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>    
     </aside>
@@ -314,7 +316,9 @@ function fn_clear(){
 
         <!-- link_btns_wrap start -->
         <aside class="link_btns_wrap">
+           <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+        
             <dl class="link_list">
                 <dt>Link</dt>
                 <dd>
@@ -327,6 +331,8 @@ function fn_clear(){
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                 </dd>
             </dl>
+            </c:if>
+            
         </aside>
         <!-- link_btns_wrap end -->
 

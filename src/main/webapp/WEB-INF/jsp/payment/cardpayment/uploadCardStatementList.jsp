@@ -326,8 +326,12 @@ function commitFormSubmit() {
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Upload Credit Card Statement</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>            
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+           <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>            
+           </c:if> 
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+                <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>

@@ -539,7 +539,9 @@ var contPersonLayout = [
 						</article><!-- tap_area end -->
 					</section><!-- tap_wrap end -->
 					<ul class="center_btns mt10">
+					   <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 					    <li><p class="btn_blue2 big"><a href="javascript:fn_createNewGroup();" id="_btnSave"><spring:message code='sys.btn.save'/></a></p></li>
+					   </c:if>
 					</ul>
 				</section><!-- content end -->
 			</section><!-- container end -->

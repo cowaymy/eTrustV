@@ -43,7 +43,9 @@ function fn_clear(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Daily Collection Raw</h2>
         <ul class="right_btns">
+            <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_genDocument();"><spring:message code='pay.btn.generate'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
