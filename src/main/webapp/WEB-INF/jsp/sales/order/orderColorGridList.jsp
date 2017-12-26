@@ -39,6 +39,7 @@
         });
         // 셀 클릭 이벤트 바인딩
 
+        CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
     });
 	
 	function createAUIGrid() {
