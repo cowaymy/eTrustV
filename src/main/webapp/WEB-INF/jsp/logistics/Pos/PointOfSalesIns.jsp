@@ -907,7 +907,7 @@ function locationList(){
 <h3>Item Info</h3>
 
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
         <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
 </c:if>
 </ul>
