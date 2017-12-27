@@ -88,19 +88,19 @@ function creatGrid(){
         width : 110
     },{
         dataField : "batchStatus",
-        headerText : '<spring:message code="sales.BatchStatus" />',
+        headerText : '<spring:message code="sales.title.batchStatus" />',
         width : 75
     },{
         dataField : "rsCnvrStusFrom",
-        headerText : '<spring:message code="sales.StatusFrom" />',
+        headerText : '<spring:message code="sales.title.statusFrom" />',
         width : 75
     },{
         dataField : "rsCnvrStusTo",
-        headerText : '<spring:message code="sales.StatusTo" />',
+        headerText : '<spring:message code="sales.title.statusTo" />',
         width : 75
     }, {
         dataField : "convertStatus",
-        headerText : '<spring:message code="sales.ConvertStatus" />',
+        headerText : '<spring:message code="sales.title.convertStatus" />',
         width : 75
     },{
         dataField : "rsCnvrDt",
