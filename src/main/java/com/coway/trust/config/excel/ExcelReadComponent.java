@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
 
+import static com.coway.trust.AppConstants.EXCEL_UPLOAD_MAX_ROW;
+
 @Component
 public class ExcelReadComponent {
 
@@ -53,6 +55,10 @@ public class ExcelReadComponent {
 		final Workbook workbook = readWorkbook(multipartFile);
 		final Sheet sheet = workbook.getSheetAt(0);
 		final int rowCount = sheet.getPhysicalNumberOfRows();
+
+		if(rowCount > EXCEL_UPLOAD_MAX_ROW){
+			throw new ApplicationException(AppConstants.FAIL, "Too many rows... Max row is " + EXCEL_UPLOAD_MAX_ROW);
+		}
 
 		return IntStream.range(startRow, rowCount).mapToObj(rowIndex -> rowFunc.apply(sheet.getRow(rowIndex)))
 				.collect(Collectors.toList());

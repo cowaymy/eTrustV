@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.xml.sax.SAXException;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.excel.upload.ExcelUploadService;
@@ -53,72 +51,73 @@ public class MileageExcelUploaderController {
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
 
-
 	@RequestMapping(value = "/saveDCPMasterByExcel.do", method = RequestMethod.POST)
-	public ResponseEntity readExcelCTArea(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException
-	{
+	public ResponseEntity readExcelCTArea(MultipartHttpServletRequest request, SessionVO sessionVO)
+			throws IOException, InvalidFormatException {
 
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("excelFile");
 
-		List<MileageExcelUploaderDataVO> vos = excelReadComponent.readExcelToList(multipartFile, true, MileageExcelUploaderDataVO::create);
+		List<MileageExcelUploaderDataVO> vos = excelReadComponent.readExcelToList(multipartFile, true,
+				MileageExcelUploaderDataVO::create);
 		List<Map<String, Object>> updateList = new ArrayList<Map<String, Object>>();
 
-		for (MileageExcelUploaderDataVO vo : vos)
-		{
+		for (MileageExcelUploaderDataVO vo : vos) {
 			LOGGER.debug("DETAIL >>>> MemberType : {}, Branch : {}, DCPFrom : {}, DCPTo : {}, Distance : {}",
-												vo.getMemberType(), vo.getBranch(), vo.getDCPFrom(), vo.getDCPTo(), vo.getDistance());
+					vo.getMemberType(), vo.getBranch(), vo.getDCPFrom(), vo.getDCPTo(), vo.getDistance());
 
 			HashMap<String, Object> updateMap = new HashMap<String, Object>();
 
-			updateMap.put("memType",vo.getMemberType());
-			updateMap.put("brnchCode",vo.getBranch());
-			updateMap.put("dcpFrom",vo.getDCPFrom());
-			updateMap.put("dcpFromId",vo.getDCPFromID());
-			updateMap.put("dcpTo",vo.getDCPTo());
-			updateMap.put("dcpToId",vo.getDCPToID());
-			updateMap.put("distance",vo.getDistance());
+			updateMap.put("memType", vo.getMemberType());
+			updateMap.put("brnchCode", vo.getBranch());
+			updateMap.put("dcpFrom", vo.getDCPFrom());
+			updateMap.put("dcpFromId", vo.getDCPFromID());
+			updateMap.put("dcpTo", vo.getDCPTo());
+			updateMap.put("dcpToId", vo.getDCPToID());
+			updateMap.put("distance", vo.getDistance());
 
 			// update datas
 			updateList.add(updateMap);
 		}
 
 		// 파일 유효성 검사
-		List<MileageExcelUploaderDataVO> vosValid = excelReadComponent.readExcelToList(multipartFile, false, MileageExcelUploaderDataVO::create);
+		List<MileageExcelUploaderDataVO> vosValid = excelReadComponent.readExcelToList(multipartFile, false,
+				MileageExcelUploaderDataVO::create);
 		String memTypeValid = vosValid.get(0).getMemberType();
 		String brnchCodeValid = vosValid.get(0).getBranch();
 		String cityFromValid = vosValid.get(0).getCityFrom();
 		String dcpFromValid = vosValid.get(0).getDCPFrom();
 		String dcpFromIdValid = vosValid.get(0).getDCPFromID();
-		LOGGER.debug("memTypeValid : " + memTypeValid + " / brnchCodeValid : " + brnchCodeValid
-								+ " / cityFromValid : " + cityFromValid + " / dcpFromValid : " + dcpFromValid + " / dcpFromIdValid : " + dcpFromIdValid);
+		LOGGER.debug("memTypeValid : " + memTypeValid + " / brnchCodeValid : " + brnchCodeValid + " / cityFromValid : "
+				+ cityFromValid + " / dcpFromValid : " + dcpFromValid + " / dcpFromIdValid : " + dcpFromIdValid);
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 
-		if (memTypeValid.equals("Member Type") && brnchCodeValid.equals("Branch")
-				&& cityFromValid.equals("City From") && dcpFromValid.equals("DCP From") && dcpFromIdValid.equals("DCP From ID")) {
-			//updateCTSubGroupArea
+		if (memTypeValid.equals("Member Type") && brnchCodeValid.equals("Branch") && cityFromValid.equals("City From")
+				&& dcpFromValid.equals("DCP From") && dcpFromIdValid.equals("DCP From ID")) {
+			// updateCTSubGroupArea
 			LOGGER.debug("udtList {}", updateList);
-			mileageCalculationService.updateDCPMasterByExcel(updateList,sessionVO);
+			mileageCalculationService.updateDCPMasterByExcel(updateList, sessionVO);
 
 			message.setCode(AppConstants.SUCCESS);
-//			//message.setData(totCnt);
+			// //message.setData(totCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		} else {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
 
-		LOGGER.debug("message : "+message);
+		LOGGER.debug("message : " + message);
 
 		return ResponseEntity.ok(message);
 
 	}
 
+	//임시 테스트 코드임 : 건수가 많으면 OOM 발생. (아직 건수 체크 안함.)
 	@RequestMapping(value = "/saveDCPMasterByExcelLarge.do", method = RequestMethod.POST)
 	public ResponseEntity saveDCPMasterByExcelLarge(MultipartHttpServletRequest request, SessionVO sessionVO)
-			throws IOException, OpenXML4JException, SAXException {
+			throws IOException {
 		List<File> fileList = getUploadExcelFiles(request, uploadDir);
 
 		String[] columns = { "no", "memType", "brnchCode", "cityFrom", "dcpFrom", "dcpFromId", "cityTo", "dcpTo",
