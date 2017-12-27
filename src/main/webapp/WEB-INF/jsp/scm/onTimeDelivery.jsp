@@ -42,6 +42,12 @@ $(function()
   fnSelectStockTypeComboList('15');   
 });
 
+function fnChangeEventStockType(object)
+{
+  $("#paramStockType").val(object.value);
+}
+
+
 function fnSelectExcuteYear()
 {
   CommonCombo.make("scmYearCbBox"
@@ -72,6 +78,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -256,10 +263,16 @@ function fnSearchBtnList()
 
    var dynamicWeeklyHeadStartPoint = {};
    var dynamicWeeklyHeadDataList = {};
+
+   var params = {
+					        scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+					      };
+
+   params = $.extend($("#MainForm").serializeJSON(), params);
     
-   Common.ajax("GET"
+   Common.ajax("POST"
              , "/scm/selectOnTimeDeliverySearch.do"
-             , $("#MainForm").serialize()
+             , params
              , function(result) 
                {
                   console.log("성공 fnSearchBtnList: " + result.selectOnTimeWeeklyStartPoint.length);
@@ -733,7 +746,8 @@ $(document).ready(function()
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="get" action="" >
-  <input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
+  <input type ="hidden" id="paramStockType" name="paramStockType" value=""/>
+  
 <table class="type1 mt10"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -796,7 +810,7 @@ $(document).ready(function()
 <tr>
   <th scope="row">Stock Type</th>
   <td>
-      <select id="scmStockType" name="scmStockType" onchange="fnChangeEventStockType(this);">
+      <select id="scmStockType" name="scmStockType" multiple="multiple" onchange="fnChangeEventStockType(this);">
       </select>
   </td>
   <th scope="row">On-time</th>

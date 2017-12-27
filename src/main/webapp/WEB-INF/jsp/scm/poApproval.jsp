@@ -49,6 +49,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -162,20 +163,6 @@ function fnSummaryHidden(paramHiddenListObj)
 	}
 }
 
-function fnSetStockComboBox()
-{
-    CommonCombo.make("stockCodeCbBox"
-                   , "/scm/selectStockCode.do"  
-                   , ""                         
-                   , ""                         
-                   , {  
-                       id  : "stkCode",          
-                       name: "stkDesc",
-                       type: "S",
-                       chooseMessage: "All"
-                     }
-                   , "");
-}
 function getTimeStamp() 
 {
   function leadingZeros(n, digits) {
@@ -219,9 +206,15 @@ function fnSearchBtnList()
      return false;
    }
 
-   Common.ajax("GET"
+   var params = {
+		              scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+		            };
+
+		   params = $.extend($("#MainForm").serializeJSON(), params);
+
+   Common.ajax("POST"
              , "/scm/selectPoApprovalSearchBtn.do"
-             , $("#MainForm").serialize()
+             , params
              , function(result) 
                {
                  // GridLayout Create
@@ -959,7 +952,7 @@ $(document).ready(function()
   <!-- Stock Type 추가 -->
   <th scope="row">Stock Type</th>
   <td>
-    <select id="scmStockType" name="scmStockType">
+    <select id="scmStockType" name="scmStockType" multiple="multiple" >
     </select>
   </td>
 </tr>

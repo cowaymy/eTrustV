@@ -47,6 +47,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -140,9 +141,15 @@ function fnSearchBtnList()
 
    $("#spanText").text(""); 
 
-   Common.ajax("GET"
+   var params = {
+		              scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+					      };
+
+   params = $.extend($("#MainForm").serializeJSON(), params);
+
+   Common.ajax("POST"
 		         , "/scm/selectInterfaceSearch.do"
-             , $("#MainForm").serialize()
+	           , params
 	           , function(result) 
 		           {
 		              console.log("성공 fnSearchBtnList: " + result.selectInterfaceList.length);
@@ -427,7 +434,7 @@ $(document).ready(function()
 <tr>
   <th scope="row">Stock Type</th>
   <td>
-    <select class="w100p" id="scmStockType" name="scmStockType">
+    <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType">
     </select>
   </td>
   <th scope="row">Last Interface</th> 

@@ -91,6 +91,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeName",     // use By query's parameter values                
                   name: "codeName",
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -247,9 +248,15 @@ function fnSearchBtnList()
      AUIGrid.destroy(gDetailQuantityGridID);
    } 
 
-   Common.ajax("GET"
+   var params = {
+		              scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+		            };
+
+	 params = $.extend($("#MainForm").serializeJSON(), params);
+	             
+   Common.ajax("POST"
              , "/scm/selectInvenRPTSearch.do"
-             , $("#MainForm").serialize()
+             , params
              , function(result) 
                {
                   console.log("성공 fnSearchBtnList: " + result.selectInvenRptTotalStatusList.length
@@ -1848,7 +1855,7 @@ $(document).ready(function()
 		</td>
     <th scope="row">Stock Type</th>
     <td>
-      <select id="scmStockType" name="scmStockType" onchange="fnChangeEventStockType(this);" class="w100p">
+      <select id="scmStockType" multiple="multiple" name="scmStockType" onchange="fnChangeEventStockType(this);" class="w100p">
       </select>
     </td>
 	</tr>

@@ -65,6 +65,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -77,9 +78,9 @@ function fnSetStockComboBox()
                 , ""                         
                 , ""                         
                 , {  
-                    id  : "stkId",   //value        
-                    name: "stkDesc", //view
-                    type: "S"
+                    id  : "stkCode",          
+                    name: "stkDesc",
+                    type: "M"
                   }
                 , "");
 }
@@ -123,12 +124,12 @@ function fnSetStockCategoryComboBox()
           {
               CommonCombo.make("stockCodeCbBox"
                               , "/scm/selectStockCode.do"  
-                              , { codeId: $this.val() }       
+                              , { codeIds: $this.val() + "" }   
                               , ""                         
                               , {  
-                                  id  : "stkId",    //value         
+                                  id  : "stkCode",  //value         
                                   name: "stkDesc",  //view
-                                  type: "S"
+                                  type: "M"
                                 }
                               , "");
           }
@@ -144,7 +145,11 @@ function fnSetStockCategoryComboBox()
                  , "/scm/selectStockCategoryCode.do"
                  , "" 
                  , "" 
-                 , { chooseMessage: "ALL" }  
+                 , { 
+                     id  : "codeId",          
+                     name: "codeName",  
+                     type: "M"
+                   }  
                  , stockCodeCallBack  
                   );  
 }
@@ -162,10 +167,19 @@ function fnSearchBtnList()
 {
    console.log( "selectBox: " + $("#stockCategoryCbBox").val() 
        + " // Index: " + $("#stockCategoryCbBox option").index($("#stockCategoryCbBox option:selected")));
+   AUIGrid.clearGridData(myGridID);
 
-   Common.ajax("GET"
+   var params = {
+		              stkCategories : $('#stockCategoryCbBox').multipleSelect('getSelects'),
+					        scmStockTypes : $('#scmStockType').multipleSelect('getSelects'),
+					        stkCodes : $('#stockCodeCbBox').multipleSelect('getSelects')
+					      };
+
+	 params = $.extend($("#MainForm").serializeJSON(), params);
+		  
+   Common.ajax("POST"
              , "/scm/selectMasterMngmentSerch.do"
-             , $("#MainForm").serialize()
+             , params
              , function(result) 
                {
                   console.log("성공 fnSearchBtnList: " + result.scmMasterMngMentServiceList.length);
@@ -807,17 +821,17 @@ $(document).ready(function()
 <tr>
 	<th scope="row">Stock Category</th>
 	<td>
-  <select id="stockCategoryCbBox" name="stockCategoryCbBox" class="w100p">
+  <select multiple="multiple" id="stockCategoryCbBox" name="stockCategoryCbBox" class="w100p">
   </select>
 	</td>
 	<th scope="row">Stock</th>
 	<td>
-  <select id="stockCodeCbBox" name="stockCodeCbBox" class="w100p">
+  <select multiple="multiple" id="stockCodeCbBox" name="stockCodeCbBox" class="w100p">
   </select>
 	</td>
   <th scope="row">Stock Type</th>
   <td>
-    <select id="scmStockType" name="scmStockType" class="w100p">
+    <select multiple="multiple" id="scmStockType" name="scmStockType" class="w100p">
     </select>
   </td>
 </tr>

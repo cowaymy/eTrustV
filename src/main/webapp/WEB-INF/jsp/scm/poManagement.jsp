@@ -64,6 +64,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -151,7 +152,9 @@ function fnChangeEventPeriod(object)
   //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
 
   Common.ajax("GET", "/scm/selectMonthCombo.do"
-	       , $("#MainForm").serialize()
+	       ,  { scmYearCbBox: $("#scmYearCbBox").val(),
+	            scmPeriodCbBox: $("#scmPeriodCbBox").val()
+            }     
 	       , function(result) 
 	       {
 			     console.log("성공." + JSON.stringify(result));
@@ -232,7 +235,7 @@ function fnSetStockComboBox()
                    , {  
                        id  : "stkCode",          
                        name: "stkDesc",
-                       type: "S",
+                       type: "M",
                        chooseMessage: "All"
                      }
                    , "");
@@ -343,7 +346,19 @@ function fnMoveRight()
 	
 	   Common.ajax("GET"
 	             , "/scm/selectPoRightMove.do"
-	             , $("#MainForm").serialize()
+	             , {
+	                 scmPeriodCbBox : $('#scmPeriodCbBox').val(),
+	                 inStockCode : $("#inStockCode").val(),
+	                 inStkCtgryId: $("#inStkCtgryId").val(),
+	                 inPlanQty : $("#inPlanQty").val(),
+	                 inPoQty : $("#inPoQty").val(),
+	                 inStkTypeId : $("#inStkTypeId").val(),
+	                 inMoq : $("#inMoq").val(),
+	                 inPreCdc : $("#inPreCdc").val(),
+	                 inPreYear : $("#inPreYear").val(),
+	                 inPreWeekTh : $("#inPreWeekTh").val(),
+	                 inRoundUpPoQty : $("#inRoundUpPoQty").val() 	                 
+	               }
 	             , function(result) 
 	               {
 	                  console.log("성공 fnSearchBtnList: " + result.selectPoRightMoveList.length);
@@ -766,9 +781,16 @@ function fnSearchBtnSCMPrePOView()
 	  AUIGrid.clearGridData(SCMPOViewGridID);
 	  gSumAmount = 0;
 	  gMyGridSelRowIdx = "";
-	  
-	  Common.ajax("GET", "/scm/selectScmPrePoItemView.do"
-	          , $("#MainForm").serialize()
+
+	  var params = {
+		      scmStockTypes : $('#scmStockType').multipleSelect('getSelects'),
+		      stkCodes : $('#stockCodeCbBox').multipleSelect('getSelects')
+		      };
+
+	  params = $.extend($("#MainForm").serializeJSON(), params);
+		  
+	  Common.ajax("POST", "/scm/selectScmPrePoItemView.do"
+	          , params
 	          , function(result) 
 	          {
               console.log("성공 selectScmPoViewList: " + result.selectScmPoViewList.length);
@@ -1049,13 +1071,13 @@ $(document).ready(function()
 <tr>
 	<th scope="row">Stock</th>
 	<td>
-    <select class="w100p" id="stockCodeCbBox" name="stockCodeCbBox">
+    <select class="w100p" multiple="multiple" id="stockCodeCbBox" name="stockCodeCbBox">
     </select>
 	</td>
 	<!-- Stock Type 추가 -->
   <th scope="row">Stock Type</th>
   <td>
-    <select class="w100p" id="scmStockType" name="scmStockType">
+    <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType">
     </select>
   </td>
 	<th scope="row">PO Status</th>

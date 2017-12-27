@@ -114,8 +114,7 @@ function fnSetStockComboBox()
                    , {  
                        id  : "stkCode",          
                        name: "stkDesc",
-                       type: "S",
-                       chooseMessage: "All"
+                       type: "M"
                      }
                    , "");
 }
@@ -129,6 +128,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values                
                   name: "codeName",
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -858,13 +858,13 @@ $(document).ready(function()
 		</td>
 		<th scope="row">Stock</th>
 		<td>
-		<select class="w100p" id="stockCodeCbBox" name="stockCodeCbBox">
+		<select class="w100p" multiple="multiple" id="stockCodeCbBox" name="stockCodeCbBox">
 		</select>
 		</td>
 	  <!-- Stock Type 추가 -->
     <th scope="row">Stock Type</th>
     <td>
-    <select class="w100p" id="scmStockType" name="scmStockType">
+    <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType">
     </select>
     </td>
 	</tr>

@@ -100,6 +100,7 @@ function fnSelectStockTypeComboList(codeId)
               , {  
                   id  : "codeId",     // use By query's parameter values(real value)               
                   name: "codeName",   // display
+                  type: "M",
                   chooseMessage: "All"
                  }
               , "");     
@@ -323,9 +324,15 @@ function fnSearchBtnList()
      AUIGrid.destroy(gMonthlyGridID);
    }
 
-   Common.ajax("GET"
+   var params = {
+		              scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+		            };
+
+	 params = $.extend($("#MainForm").serializeJSON(), params);
+
+	 Common.ajax("POST"
              , "/scm/selectPSDashSearchBtnList.do"
-             , $("#MainForm").serialize()
+             , params
              , function(result) 
                {
                   console.log("성공 fnSearchBtnList: " + result.selectChartDataList.length);
@@ -1379,6 +1386,8 @@ function getMyAvgValue(dataField, rowIndex, ownDepth)
   for(var i=rowIndex-1; i>=0; i--) 
 	{
     item = tempGridData[i];
+
+    console.log("item: " + item +" /item._$depth: " + item._$depth);
     
     if(item._$isGroupSumField && (ownDepth >= item._$depth)) {
       break;
@@ -2418,7 +2427,7 @@ $(document).ready(function()
   <!-- Stock Type 추가 -->
   <th scope="row">Stock Type</th>
   <td>
-	  <select class="w100p" id="scmStockType" name="scmStockType"> 
+	  <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType"> 
 	  </select>
   </td> 
   <td></td>
