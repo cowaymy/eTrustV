@@ -16,11 +16,11 @@ function tagRespondGrid() {
                                        {
                                            dataField: "asignFlag",
                                            headerText: "Assign",
-                                           width: 160
+                                           width: 0
                                        }, {
                                            dataField : "checkFlag",
-                                           headerText : ' ',
-                                           width: 65,
+                                           headerText : 'Assign ',
+                                           width: 100,
                                            renderer : {
                                                type : "CheckBoxEditRenderer",
                                                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -32,11 +32,11 @@ function tagRespondGrid() {
                                        {
                                            dataField: "majorGrp",
                                            headerText: "Major",
-                                           width: 160
+                                           width: 0
                                        }, {
                                            dataField : "radioFlag",
-                                           headerText : ' ',
-                                           width: 65,
+                                           headerText : 'Major',
+                                           width: 100,
                                            renderer : {
                                                type : "CheckBoxEditRenderer",
                                                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -140,13 +140,7 @@ function fn_CTAssignSave(){
 <input type="hidden" id="branchCode" name="branchCode" value="${params.branchCode}">
 
 
-<aside class="title_line"><!-- title_line start -->
-<h2>CT Sub Group Assign</h2>
-</aside><!-- title_line end -->
 
-<ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_AssignSubgroup()">Assign</a></p></li>
-</ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="CTList_grid_wap" style="width:100%; height:300px; margin:0 auto;">

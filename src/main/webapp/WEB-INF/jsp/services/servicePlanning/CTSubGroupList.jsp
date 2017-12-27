@@ -274,10 +274,10 @@ $(document).ready(function() {
 	            console.log("data : " + result);
 	            subList = new Array()
 	            for (var i = 0; i < result.length; i++) {
-	                var list = new Object();
-	                list.ctSubGrp = result[i].codeId;
-	                list.codeName = result[i].codeName;
-	                subList.push(list);
+		                var list = new Object();
+		                list.ctSubGrp = result[i].codeId;
+		                list.codeName = result[i].codeName;
+		                subList.push(list);
 	                 }
 	            return subList;
 	            //AUIGrid.setGridData(myGridID, result);
