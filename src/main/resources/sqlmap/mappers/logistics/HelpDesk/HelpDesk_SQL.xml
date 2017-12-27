@@ -952,7 +952,8 @@ INSERT INTO MSC0036D
 </select>
 
 <select id="trRcordIdCreateSeq" resultType="Integer">
-     SELECT NVL(MAX(TR_RCORD_ID),0) + 1 from MSC0036D
+     <!-- SELECT NVL(MAX(TR_RCORD_ID),0) + 1 from MSC0036D -->
+     SELECT MSC0036D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL 
 </select>
 
         
