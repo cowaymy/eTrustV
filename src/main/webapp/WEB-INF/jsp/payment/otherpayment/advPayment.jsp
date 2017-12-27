@@ -275,8 +275,10 @@ var gridPros = {
 
 //Grid Properties 설정 
 var targetGridPros = {                    
-  pageRowCount : 5,              //페이지당 row 수
-  showStateColumn : false      // 상태 칼럼 사용
+		headerHeight : 35,               // 기본 헤더 높이 지정
+		pageRowCount : 5,              //페이지당 row 수
+		showStateColumn : false ,     // 상태 칼럼 사용
+		softRemoveRowMode:false
 };
 
 $(document).ready(function(){ 
@@ -287,7 +289,7 @@ $(document).ready(function(){
     targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros);
     targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
 	targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros);
-    targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,gridPros);
+    targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
     
     //Rental Billing Grid 에서 체크/체크 해제시
     AUIGrid.bind(targetRenDetGridID, "cellClick", function( event ){
