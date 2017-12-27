@@ -102,7 +102,7 @@ public class OrderConversionServiceImpl extends EgovAbstractServiceImpl implemen
 			params.put("ordNo", ((Map<String, Object>) obj).get("0"));
 			
 			if(!StringUtils.isEmpty(params.get("ordNo"))){
-				((Map<String, Object>) obj).put("ordNo",  ((Map<String, Object>) obj).get("0"));
+				((Map<String, Object>) obj).put("ordNo",  String.format("%07d", Integer.parseInt(((Map<String, Object>) obj).get("0").toString())));
 				
 				EgovMap info = orderConversionMapper.orderCnvrInfo(params);
 				
