@@ -14,6 +14,27 @@ public interface ECashDeductionService
 	 */
     List<EgovMap> selectECashDeductList(Map<String, Object> params);
 
+    /**
+	 * E-Cash - ById
+	 * @param params
+	 * @return
+	 */
+    EgovMap selectECashDeductById(Map<String, Object> params);
+
+    /**
+	 * E-Cash - ById
+	 * @param params
+	 * @return
+	 */
+    List<EgovMap>  selectECashDeductSubById(Map<String, Object> params);
+
+    /**
+	 * E-Cash - ById
+	 * @param params
+	 * @return
+	 */
+    int  selectECashDeductSubByIdCnt(Map<String, Object> params);
+
 	/**
 	 * E-Cash Sub - List
 	 * @param params

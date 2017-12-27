@@ -13,6 +13,7 @@ import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
 import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
 import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
+import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
 public interface LargeExcelService {
@@ -58,19 +59,19 @@ public interface LargeExcelService {
 	void downLoad25T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad26T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad60T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad67T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad68T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad69T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad70T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad71T(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad28CD(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad28CT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
@@ -82,7 +83,7 @@ public interface LargeExcelService {
 	void downLoad29CT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad29HP(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoad28TCD(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad28TCT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
@@ -94,42 +95,44 @@ public interface LargeExcelService {
 	void downLoad29TCT(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoad29THP(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoadHPResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoadCDResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoadCMResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoadCTResultIndex(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downLoadClaimFileALB(Object parameter, ClaimFileALBHandler claimFileALBHandler);
-	
+
 	void downLoadClaimFileNewALB(Object parameter, ClaimFileNewALBHandler claimFileNewALBHandler);
-	
+
 	void downLoadClaimFileCIMB(Object parameter, ClaimFileCIMBHandler claimFileCIMBHandler);
-	
+
 	void downLoadClaimFileHLBB(Object parameter, ClaimFileHLBBHandler claimFileHLBBHandler);
-	
+
 	void downLoadClaimFileMBB(Object parameter, ClaimFileMBBHandler claimFileMBBHandler);
-	
+
 	void downLoadClaimFilePBB(Object parameter, ClaimFilePBBHandler claimFilePBBHandler);
-	
+
 	void downLoadClaimFileRHB(Object parameter, ClaimFileRHBHandler claimFilePBBHandler);
-	
+
 	void downLoadClaimFileBSN(Object parameter, ClaimFileBSNHandler claimFileBSNHandler);
-	
+
 	void downLoadClaimFileMyClear(Object parameter, ClaimFileMyClearHandler claimFileMyClearHandler);
-	
+
 	void downLoadClaimFileCrcCIMB(Object parameter, ClaimFileCrcCIMBHandler claimFileCrcCIMBHandler);
-	
+
 	void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler);
-	
+
 	void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downloadMonthlyBillRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+
+	void downLoadECashDeductionFileCIMB(Object parameter, ECashDeductionFileCIMBHandler downloadHandler);
 
 	void downLoad(String id, Object parameter, ResultHandler excelDownloadHandler);
 }

@@ -49,6 +49,38 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	/**
+	 *  E-Cash - eCash By ID
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public EgovMap selectECashDeductById(Map<String, Object> params) {
+		return eCashDeductionMapper.selectECashDeductById(params);
+	}
+
+	/**
+	 *  E-Cash - eCash By ID
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<EgovMap>  selectECashDeductSubById(Map<String, Object> params) {
+		return eCashDeductionMapper.selectECashDeductSubById(params);
+	}
+
+
+	/**
+	 *  E-Cash - eCash By ID Count
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public int selectECashDeductSubByIdCnt(Map<String, Object> params) {
+		return eCashDeductionMapper.selectECashDeductSubByIdCnt(params);
+	}
+
+
+	/**
 	 * E-Cash sub - List
 	 * @param params
 	 * @return
@@ -103,5 +135,6 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
     public void updateECashDeductionResult(Map<String, Object> eCashMap){
 		eCashDeductionMapper.updateECashDeductionResult(eCashMap);
 	}
+
 
 }

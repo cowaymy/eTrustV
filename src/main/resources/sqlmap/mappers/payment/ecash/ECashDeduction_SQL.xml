@@ -62,7 +62,57 @@
          ORDER BY Extent1.FILE_BATCH_ID
     </select>
 
-<select id="selectECashDeductSubList" parameterType="Map" resultType="egovMap">
+    <select id="selectECashDeductById" parameterType="Map" resultType="egovMap">
+        SELECT
+	        FILE_BATCH_ID ,
+			FILE_BATCH_NAME ,
+			FILE_BATCH_BANK_ID ,
+			FILE_BATCH_TOT_RCORD ,
+			FILE_BATCH_TOT_AMT ,
+			FILE_BATCH_REJCT_RCORD ,
+			FILE_BATCH_APPV_RCORD ,
+			FILE_BATCH_APPV_AMT ,
+			FILE_BATCH_STUS_ID ,
+			FILE_BATCH_REM ,
+			FILE_BATCH_CRT_USER_ID ,
+			FILE_BATCH_CRT_DT ,
+			FILE_BATCH_UPD_USER_ID ,
+			FILE_BATCH_UPD_DT ,
+			FILE_BATCH_APPV_DT
+        FROM PAY0245M
+        WHERE
+            FILE_BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectECashDeductSubById" parameterType="Map" resultType="egovMap">
+    SELECT
+        EXTENT1.FILE_ITM_ID,
+        EXTENT2.SALES_ORD_NO,
+        EXTENT1.FILE_ITM_ACC_NO,
+        EXTENT1.FILE_ITM_AMT,
+        EXTENT1.FILE_ITM_ACC_EXPR,
+        EXTENT1.FILE_ITM_REF,
+        EXTENT4.CUST_CRC_OWNER,
+        EXTENT3.ISSU_NRIC
+        FROM  SAL0152M EXTENT1
+            JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+            JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+            JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+        WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+         ORDER BY Extent1.FILE_ITM_ID
+    </select>
+
+        <select id="selectECashDeductSubByIdCnt" parameterType="Map" resultType="int">
+    SELECT
+        COUNT(1) AS CNT
+        FROM  SAL0152M EXTENT1
+            JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+            JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+            JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+        WHERE Extent1.FILE_BATCH_ID = #{batchId}
+    </select>
+
+    <select id="selectECashDeductSubList" parameterType="Map" resultType="egovMap">
 	SELECT
 		EXTENT1.FILE_ITM_ID,
 		EXTENT1.FILE_BATCH_ID,

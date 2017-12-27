@@ -33,6 +33,13 @@ public interface ECashDeductionMapper {
 	List<EgovMap> selectECashDeductList(Map<String, Object> params);
 
 	/**
+	 *  E-Cash - List
+	 * @param params
+	 * @return
+	 */
+	EgovMap selectECashDeductById(Map<String, Object> params);
+
+	/**
      * E-Cash - Create new claim
      * @param params
      */
@@ -80,5 +87,17 @@ public interface ECashDeductionMapper {
 	 */
 	List<EgovMap> selectECashDeductSubList(Map<String, Object> params);
 
+	/**
+	 *  E-Cash_Sub - List
+	 * @param params
+	 * @return
+	 */
+	List<EgovMap> selectECashDeductSubById(Map<String, Object> params);
 
+	/**
+	 *  E-Cash_Sub - List
+	 * @param params
+	 * @return
+	 */
+	int selectECashDeductSubByIdCnt(Map<String, Object> params);
 }

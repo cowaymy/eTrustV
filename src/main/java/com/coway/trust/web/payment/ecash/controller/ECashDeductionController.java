@@ -1,5 +1,6 @@
 package com.coway.trust.web.payment.ecash.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +22,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.ecash.service.ECashDeductionService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
-
+import com.coway.trust.web.common.claim.ClaimFileALBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.FileInfoVO;
+import com.coway.trust.web.common.claim.FormDef;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -48,9 +57,18 @@ public class ECashDeductionController {
 	@Resource(name = "eCashDeductionService")
 	private ECashDeductionService eCashDeductionService;
 
+	@Autowired
+	private LargeExcelService largeExcelService;
+
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	private String[] claimFileColumns = new String[] { "bankDtlId", "bankDtlCtrlId", "salesOrdId", "bankDtlDrDt",
+			"bankDtlDrBankTypeId", "bankDtlDrAccNo", "bankDtlDrName", "bankDtlAmt", "taskId", "crtUserId",
+			"crtDt", "updUserId", "updDt", "bankDtlDrNric", "bankDtlRenStus", "svcCntrctId", "bankDtlBankId",
+			"bankAppv", "bankDtlApprDt", "bic", "bankDtlFpxId", "fpxCode", "salesOrdNo", "bankDtlRptAmt",
+			"bankDtlRenAmt", "bankDtlCrcExpr", "srvCntrctRefNo", "billNo", "cntrctNOrdNo" };
 
 	/******************************************************
 	 * Claim List
@@ -281,9 +299,9 @@ public class ECashDeductionController {
 				resultItemList.add(uploadMap);
 
 				if ("".equals(String.valueOf(uploadMap.get("appvCode")))) {
-					totalApproved++;
-				} else if (!"".equals(String.valueOf(uploadMap.get("appvCode")))) {
 					totalRejected++;
+				} else if (!"".equals(String.valueOf(uploadMap.get("appvCode")))) {
+					totalApproved++;
 				}
     		}
     		settleDate = String.valueOf(hm.get("9")).trim();
@@ -333,4 +351,96 @@ public class ECashDeductionController {
 
     	return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/createECashDeductionFile.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> createECashDeductionFile(@RequestBody Map<String, ArrayList<Object>> params,
+			Model model) throws Exception {
+
+		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+
+		// Calim Master 데이터 조회
+		Map<String, Object> map = (Map<String, Object>) formList.get(0);
+		EgovMap claimMap = eCashDeductionService.selectECashDeductById(map);
+
+        //CIMB
+		if ("3".equals(String.valueOf(claimMap.get("fileBatchBankId")))) {
+			//10000건 단위로 추출하기 위해 전체 건수 조회
+			int totRowCount = eCashDeductionService.selectECashDeductSubByIdCnt(map);
+			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+
+			if (pageCnt > 0){
+				for(int i = 1 ; i <= pageCnt ; i++){
+					claimMap.put("pageNo", i);
+					claimMap.put("rowCount", 10000);
+					this.createECashDeductionFileCIMB(claimMap);
+				}
+			}
+        }
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+
+	}
+
+	private ECashDeductionFileCIMBHandler getTextDownloadCIMBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new ECashDeductionFileCIMBHandler(excelDownloadVO, params);
+	}
+
+	/**
+	 * CRC CIMB - Create eCash Deduction File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createECashDeductionFileCIMB(EgovMap claimMap) throws Exception {
+
+		ECashDeductionFileCIMBHandler downloadHandler = null;
+		String sFile;
+		String todayDate;
+		String inputDate;
+
+		try {
+			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+			sFile = "eCash_CIMB_CIMB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
+
+			downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+
+			largeExcelService.downLoadECashDeductionFileCIMB(claimMap, downloadHandler);
+			//downloadHandler.writeFooter();
+
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/CRC/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("CIMB eAuto Debit CRC Deduction File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+
+	}
 }

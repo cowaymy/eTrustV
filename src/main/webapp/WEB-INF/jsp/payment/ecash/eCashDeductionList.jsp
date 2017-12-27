@@ -178,7 +178,7 @@ function fn_getECashListAjax() {
 
 //View Claim Pop-UP
 function fn_openDivPop(val){
-	if(val == "VIEW" || val == "RESULT"){
+	if(val == "VIEW" || val == "RESULT" || val == "FILE"){
 
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
@@ -232,7 +232,15 @@ function fn_openDivPop(val){
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
                 $('#center_btns4').hide();
-			}
+
+			}else if (val == "FILE"){
+                $('#pop_header h1').text('E-DEDUCTION FILE GENERATOR');
+                $('#center_btns1').hide();
+                $('#center_btns2').hide();
+                $('#center_btns3').show();
+                $('#center_btns4').hide();
+
+            }
 
         }else{
              Common.alert('No claim record selected.');
@@ -388,13 +396,13 @@ function fn_genClaim(){
 //NEW CLAIM Pop-UP 에서 Generate Claim 처리
 function fn_createFile(){
 
-	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
 
 	//param data array
     var data = {};
-    data.form = [{"ctrlId":ctrlId}];
+    data.form = [{"batchId":fileBatchId}];
 
-    Common.ajax("POST", "/payment/createClaimFile.do", data,
+    Common.ajax("POST", "/payment/createECashDeductionFile.do", data,
             function(result) {
                  Common.alert("<b>Claim file has successfully created.</b>");
 
@@ -507,6 +515,7 @@ function fn_clear(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View eDeduction</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New eDeduction</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">eDeduction Result</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
                     </ul>
                     <ul class="btns">
                     </ul>
