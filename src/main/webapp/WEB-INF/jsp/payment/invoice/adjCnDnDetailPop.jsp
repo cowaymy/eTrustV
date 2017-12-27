@@ -97,7 +97,7 @@ function selectAdjustmentDetailPop(adjId){
 function fn_generateReport(){
 	
 	if (memoStatus != 4){
-		Common.alert('<b>Only in complete status is allow to print.</b>');
+		Common.alert("<spring:message code='pay.alert.onlyComplete'/>");
         return;
 	}
     

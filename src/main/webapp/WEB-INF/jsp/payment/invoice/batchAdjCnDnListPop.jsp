@@ -90,11 +90,11 @@ $(document).ready(function(){
                   //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                     AUIGrid.removeRow(newBatchAdjGridID,0);
                 } else {
-                    alert('No data to import!');
+                	Common.alert("<spring:message code='pay.alert.noData'/>");
                 }
             };
             reader.onerror = function() {
-                alert('Unable to read ' + file.fileName);
+            	Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
             };
         }
     
@@ -143,7 +143,7 @@ function commitFormSubmit() {
             }
     		   },
     		   error : function(e) {
-    			   alert("ajaxSubmit Error : " + e);
+    			   Common.alert("ajaxSubmit Error : " + e);
     			   }
     		   });
  
@@ -152,7 +152,7 @@ function commitFormSubmit() {
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
 	if(FormUtil.checkReqValue($("#batchId"))){
-        Common.alert('* Please select the batch ID<br />');
+		Common.alert("<spring:message code='pay.alert.selectBatchId'/>");
         return;
     }
 	
@@ -184,30 +184,28 @@ function fn_batchAdjFileUp(){
     
       
     if(FormUtil.checkReqValue($("#newAdjType option:selected")) ){ 
-        Common.alert('* Please select the adjustment type.<br />');
+    	Common.alert("<spring:message code='pay.alert.selectAdjType'/>");
         return;
     }
     
     if(FormUtil.checkReqValue($("#newAdjReason option:selected")) ){    
-        Common.alert('* Please select the adjustment reason.<br />');
+    	Common.alert("<spring:message code='pay.alert.selectAdjReason'/>");
         return;
     }
     
     if(FormUtil.checkReqValue($("#newRemark")) ){    
-        Common.alert('* Please select the adjustment remark.<br />');
+    	Common.alert("<spring:message code='pay.alert.selectAdjRemark'/>");
         return;
     }
     
     if(data.all.length < 1){
-    	Common.alert('* Select the CSV file on the loca PC<br />');
+    	Common.alert("<spring:message code='pay.alert.selectCsvFile'/>");
         return;
     }
     
     //Ajax 호출
     Common.ajax("POST", "/payment/saveBatchNewAdjList.do", data, function(result) {
-        var returnMsg = "CN/DN request is sent<br> ";
-        returnMsg += "Kindly refer to request reference no. <br> ";
-        returnMsg += "<b>BATCH ID is : " + result.data+ " </b><br> ";
+    	var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
         
         Common.alert(returnMsg, function (){
         	hideViewPopup('#newBatchAdj_wrap');
@@ -222,7 +220,7 @@ function fn_batchAdjFileUp(){
         } catch (e) {
             console.log(e);
         }
-        alert("Fail : " + jqXHR.responseJSON.message);        
+        Common.alert("Fail : " + jqXHR.responseJSON.message);        
     });
     
 }

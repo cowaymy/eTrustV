@@ -34,7 +34,7 @@ var columnLayout=[
 function fn_getAdjustmentListAjax() {
     var valid = ValidRequiredField();
     if(!valid){
-    	Common.alert("* Please key in Create Date.");
+    	Common.alert("<spring:message code='pay.alert.createDate'/>");
     }
     else{
 		AUIGrid.destroy(subGridID);//subGrid 초기화
@@ -66,7 +66,7 @@ function fn_excelDown(){
 	
 	var valid = ValidRequiredField();
      if(!valid){
-    	Common.alert("* Please key in Create Date.");
+    	 Common.alert("<spring:message code='pay.alert.createDate'/>");
     }
     else{
 		var date1 = $("#date1").val();
@@ -79,11 +79,11 @@ function fn_excelDown(){
 				Common.showLoader();
 		        $.fileDownload("/payment/selectAdjustmentExcelList.do?date1=" + date1 + "&date2="+date2+"&status=4")
 				.done(function () {
-			        Common.alert('File download a success!');                
+			        Common.alert("<spring:message code='pay.alert.fileDownSuceess'/>");                
 					Common.removeLoader();            
 		        })
 			    .fail(function () {
-					Common.alert('File download failed!');                
+					Common.alert("<spring:message code='pay.alert.fileDownFailed'/>");                
 		            Common.removeLoader();            
 				});
 		   }else{

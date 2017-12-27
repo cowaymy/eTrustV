@@ -55,7 +55,7 @@ function fn_getAdjustmentListAjax() {
 	if(FormUtil.checkReqValue($("#orderNo")) &&
 			FormUtil.checkReqValue($("#invoiceNo")) &&
 			FormUtil.checkReqValue($("#adjNo"))){
-        Common.alert('* Please select the order number or invoice number or adjustment number. <br />');
+        Common.alert("<spring:message code='pay.alert.orderNoOrInvoiceNoOrAdjNo'/>");
         return;
     }
 	

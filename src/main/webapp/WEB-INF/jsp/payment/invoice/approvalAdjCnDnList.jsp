@@ -56,7 +56,7 @@ function fn_getAdjustmentListAjax() {
             FormUtil.checkReqValue($("#invoiceNo")) &&
             FormUtil.checkReqValue($("#batchId")) &&
             FormUtil.checkReqValue($("#adjNo"))){
-        Common.alert('* Please enter at least one entry. <br />');
+        Common.alert("<spring:message code='pay.alert.oneEntry'/>");
         return;
     }
     

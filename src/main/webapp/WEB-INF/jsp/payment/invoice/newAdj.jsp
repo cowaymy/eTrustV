@@ -149,7 +149,7 @@
     //confirm 버튼 클릭
     function confirmList(){
         if(FormUtil.checkReqValue($("#invoiceNo")) ){
-            Common.alert('<b>Please insert invoice number.</b>');
+            Common.alert("<spring:message code='pay.alert.insertInvoiceNumber'/>");
             return;
         }
 
@@ -185,22 +185,22 @@
     function fn_saveAdjustmentInfo(){
     	
     	if(FormUtil.checkReqValue($("#adjType option:selected")) ){	
-            Common.alert('* Please select the adjustment type.<br />');
+    		Common.alert("<spring:message code='pay.alert.selectAdjType'/>");
             return;
         }
     	
     	if(FormUtil.checkReqValue($("#adjReason option:selected")) ){    
-            Common.alert('* Please select the adjustment reason.<br />');
+    		Common.alert("<spring:message code='pay.alert.selectAdjReason'/>");
             return;
         }
     	
         if(FormUtil.checkReqValue($("#remark")) ){    
-            Common.alert('* Please select the adjustment remark.<br />');
+        	Common.alert("<spring:message code='pay.alert.selectAdjRemark'/>");
             return;
         }
         
         if(Number($("#totAdjustment").text()) < 1){
-        	Common.alert('* Please select the adjustment amount.<br />');
+        	Common.alert("<spring:message code='pay.alert.selectAdjAmt'/>");
         	return;
         }
         
@@ -210,9 +210,7 @@
         
         //Ajax 호출
         Common.ajax("POST", "/payment/saveNewAdjList.do", data, function(result) {
-        	var returnMsg = "CN/DN request is sent<br> ";
-        	returnMsg += "Kindly refer to request reference no. <br> ";
-        	returnMsg += "<b>" + result.data+ " </b><br> ";
+        	var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
         	
         	Common.alert(returnMsg, function (){
         		location.href = "/payment/initAdjCnDn.do";
@@ -228,7 +226,7 @@
             } catch (e) {
                 console.log(e);
             }
-            alert("Fail : " + jqXHR.responseJSON.message);        
+            Common.alert("Fail : " + jqXHR.responseJSON.message);        
         });
     	
     }

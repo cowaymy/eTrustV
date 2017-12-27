@@ -72,7 +72,7 @@ function fn_getInvoiceList(){
 	        selectedGridValue = undefined;
 	    });
 	}else{
-		Common.alert("select issueYear and issueMonth first.");
+		Common.alert("<spring:message code='pay.alert.yearMonthFirst'/>");
 	}
 }
 
@@ -83,7 +83,7 @@ function fn_view(){
 		//location.href="/payment/initBillingConfirmedResult.do?taskId="+value;
 		Common.popupDiv('/payment/initBillingConfirmedResultPop.do', {taskId:value}, null , true ,'_billingDetailViewPop')
 	}else{
-		Common.alert("No Task ID Selected.");
+		Common.alert("<spring:message code='pay.alert.noTaskId'/>");
 	}
 }
 
@@ -95,17 +95,17 @@ function fn_generateInv(){
 		   
 		if(taskInvoiceGenerate != 1){
 			Common.ajax("GET", "/payment/generateInvoice.do", {"taskId" : taskId}, function(result) {
-	            if(result == false) Common.alert("Failed to save request. Please try again later.");
+	            if(result == false) Common.alert("<spring:message code='pay.alert.failSaveReqAgain'/>");
 	            else {
 	            	fn_getInvoiceList();
-	            	Common.alert("Bill Task Confirmed.");
+	            	Common.alert("<spring:message code='pay.alert.billTaskConf'/>");
 	            }
 	        });
 		}else{
-			Common.alert("Selected Task ID Was Generated.");
+			Common.alert("<spring:message code='pay.alert.taskIdGenerated'/>");
 		}
 	}else{
-		Common.alert("No Task ID Selected.");
+		Common.alert("<spring:message code='pay.alert.noTaskId'/>");
 	} 
 }
 </script>
