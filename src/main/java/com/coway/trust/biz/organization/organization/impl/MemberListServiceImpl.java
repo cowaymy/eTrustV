@@ -1598,6 +1598,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 	@Override
 	public List<EgovMap>  selectCoureCode(Map<String, Object> params) {
-		return memberListMapper.selectCoureCode(params);
+		return memberListMapper.selectCoureCode(params); 
 	}	
 }

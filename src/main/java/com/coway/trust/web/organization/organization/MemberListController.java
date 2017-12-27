@@ -894,8 +894,6 @@ public class MemberListController {
 	public ResponseEntity<List<EgovMap>> selectCoureCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("selectCoureCode params : {}", params);
 		
-		//List<EgovMap> deptCode = null;
-		
 		List<EgovMap> deptCode = memberListService.selectCoureCode(params);
 		return ResponseEntity.ok(deptCode);
 	}
