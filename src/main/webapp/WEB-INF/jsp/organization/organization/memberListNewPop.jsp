@@ -111,7 +111,21 @@ function fn_departmentCode(value){
 		           });   
 		           
 		           //Training Course ajax콜 위치     		    
-		           doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+		           //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+                   var groupCode  = {groupCode : traineeType}; 
+		           Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+		
+			            $("#course").find('option').each(function() {
+			                $(this).remove();
+			            });			            
+			             console.log("-------------------------" + JSON.stringify(result));
+			             if (result!= null) {
+			             $("#course").append("<option value=''>Choose One</option>");
+			                for( var i=0; i< result.length; i++) {
+			                 $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+			                }
+			             }	
+		             });	           
 		           
         	   }
         	   else if(traineeType == '3'){
@@ -128,7 +142,21 @@ function fn_departmentCode(value){
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
         		   
         		   //Training Course ajax콜 위치
-        		   doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+        		   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+        		   var groupCode  = {groupCode : traineeType}; 
+                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+        
+                        $("#course").find('option').each(function() {
+                            $(this).remove();
+                        });                     
+                         console.log("-------------------------" + JSON.stringify(result));
+                         if (result!= null) {
+                         $("#course").append("<option value=''>Choose One</option>");
+                            for( var i=0; i< result.length; i++) {
+                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                            }
+                         }  
+                     });    
         	   }
            });
 

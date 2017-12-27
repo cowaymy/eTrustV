@@ -2841,12 +2841,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		INSERT INTO ORG0001D
 		(
 		MEM_ID 		,MEM_CODE 		,MEM_TYPE 		,NAME 		,FULL_NAME
-		,NRIC 		,DOB 		,GENDER 		,RACE 		,MARTL
+		,NRIC 		,PASSWD           ,DOB 		,GENDER 		,RACE 		,MARTL
 		,NATION 		,TEL_OFFICE 		,TEL_HUSE 		,TEL_MOBILE 		,EMAIL
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO 		
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
-		,MAIN_DEPT , SUB_DEPT 
+		,MAIN_DEPT , SUB_DEPT, JOIN_DT 
 		)
 		select  
 		        ORG0001D_MEM_ID_SEQ.nextval, 
@@ -2856,6 +2856,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        APLICNT_FULL_NAME AS FULL_NAME,
 		        
 		        APLICNT_NRIC AS  NRIC, 
+		        SUBSTR(APLICNT_NRIC, 7) AS PASSWD,
 		        APLICNT_DOB AS DOB, 
 		        APLICNT_GENDER AS GENDER, 
 		        APLICNT_RACE AS RACE, 
@@ -2885,6 +2886,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE UPD_DT, 
 		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT 
+		        ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') JOIN_DT
 		from ORG0003D   d             
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>

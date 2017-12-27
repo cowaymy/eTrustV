@@ -533,6 +533,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				selectMemberCode = getDocNo("155");
         		memberCode = selectMemberCode.get("docNo").toString();
         		params.put("memberCode", memberCode);
+        		
+        		params.put("traineeType", params.get("traineeType1").toString());
+        		
         		ID=155;
         		nextDocNo = getNextDocNo("TR",selectMemberCode.get("docNo").toString());
         		logger.debug("nextDocNo : {}",nextDocNo);
@@ -1528,8 +1531,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memOrg.put("memberId",MemberId);
 				memOrg.put("memberUpID",Integer.parseInt((deptParentID)));
 				memOrg.put("memberLvl", 4);
-				memOrg.put("deptCode",params.get("deptCode"));
-				memOrg.put("orgUpdateBy",params.get("creator"));
+				memOrg.put("deptCode",selectOrganization.get("deptCode"));
+				memOrg.put("orgUpdateBy",selectOrganization.get("creator"));
 				memOrg.put("orgUpdateAt",new Date());
 				memOrg.put("prevDeptCode","");
 				memOrg.put("prevGroupCode","");
@@ -1540,7 +1543,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memOrg.put("prMemberId",0);
 				memOrg.put("grandPrCode","");
 				memOrg.put("grandPrMemberId",0);
-				memOrg.put("lastDeptCode",params.get("deptCode"));
+				memOrg.put("lastDeptCode",selectOrganization.get("deptCode"));
 				memOrg.put("lastGrpCode",lastGroupCode);
 				memOrg.put("lastOrgCode",lastOrgCode);
 				memOrg.put("lastTopOrgCode","");
