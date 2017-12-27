@@ -707,7 +707,7 @@
                     <caption>search table</caption>
 
                     <colgroup>
-                    <col style="width:140px" />
+                        <col style="width:140px" />
                     </colgroup>
 
                     <tbody>
