@@ -1,6 +1,7 @@
 package com.coway.trust.config.excel;
 
 import static com.coway.trust.AppConstants.EXCEL_UPLOAD_MAX_ROW;
+import static com.coway.trust.AppConstants.UPLOAD_EXCEL_MAX_SIZE;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,8 +23,6 @@ import com.coway.trust.util.CommonUtils;
 
 @Component
 public class ExcelReadComponent {
-
-	static final long UPLOAD_EXCEL_MAX_SIZE = 1024 * 1024 * 10; // 업로드 최대 사이즈 설정 (10M)
 
 	public static String getValue(Cell cell) {
 		String value;
