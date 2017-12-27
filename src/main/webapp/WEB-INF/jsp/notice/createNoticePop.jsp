@@ -80,7 +80,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>New Notice</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
 
@@ -98,7 +98,7 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th scope="row">Subject<span class="must">*</span></th>
+                    <th scope="row"><spring:message code='sys.title.subject'/><span class="must">*</span></th>
                     <td colspan="3">
                         <input id="ntceSubject" name="ntceSubject" type="text" title="" placeholder="Subject"
                                class="w100p"/>
