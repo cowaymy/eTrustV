@@ -174,20 +174,15 @@ function happyCallGrid() {
         }       
     });
 	
-    /* // 에디팅 정상 종료 이벤트 바인딩
-    AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); */
+    /* // 에디팅 정상 종료 이벤트 바인딩*/
+    AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); 
 
 }
 
-/* //편집 핸들러
+/* //편집 핸들러  */
 function auiCellEditingHandler(event) {
-    if(event.columnIndex == 0 && event.value == "Public Holiday"){
-        AUIGrid.setCellValue(gridID, event.rowIndex,  1, "");
-        AUIGrid.setColumnProp( gridID, 1, { editable : false } );
-    } else if(event.columnIndex == 0 && event.value != "Public Holiday") {
-        AUIGrid.setColumnProp( gridID, 1, { editable : true } );
-    }
-}; */
+    console.log("edit_event: " + event.value);
+}; 
 
 function fn_clear(){
 	$("#cmbCallType").val('');
@@ -315,14 +310,14 @@ function fn_search(){
 <aside class="title_line">
 	<!-- title_line start -->
 	<p class="fav">
-		<a href="#" class="click_add_on">My menu</a>
+		<a href="javascript:void(0);" class="click_add_on">My menu</a>
 	</p>
 	<h2>Happy Call Planning</h2>
 	<ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">	
-		<li><p class="btn_blue"><a href="#" onclick="fn_search()"><span class="search"></span>Search</a></p></li>
+		<li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_search()"><span class="search"></span>Search</a></p></li>
 </c:if>		
-		<li><p class="btn_blue"><a href="#" onclick="fn_clear()"><span class="clear"></span>Clear</a></p></li>
+		<li><p class="btn_blue"><a href="javascript:void(0);" onclick="fn_clear()"><span class="clear"></span>Clear</a></p></li>
 	</ul>
 </aside>
 <!-- title_line end -->
@@ -386,15 +381,15 @@ function fn_search(){
 
 	<ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">	
-		<li><p class="btn_grid"><a href="#" onclick="fn_addRow()">Add</a></p></li>
-		<li><p class="btn_grid"><a href="#" onclick="fn_removeRow()">Delete</a></p></li>
-		<li><p class="btn_grid"><a href="#" onclick="fn_save()">Save</a></p></li>
+		<li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_addRow()">Add</a></p></li>
+		<li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_removeRow()">Delete</a></p></li>
+		<li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_save()">Save</a></p></li>
 </c:if>
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-		<li><p class="btn_grid"><a href="#" onclick="fn_exportTo()">GENERATE</a></p></li>
+		<li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_exportTo()">GENERATE</a></p></li>
 </c:if>	
-		<!-- <li><p class="btn_grid"><a href="#" onClick="javascript:fn_newEvent();">New Event</a></p></li> -->
-		<!-- <li><p class="btn_grid"><a href="#">Edit Event</a></p></li> -->
+		<!-- <li><p class="btn_grid"><a href="javascript:void(0);" onClick="javascript:fn_newEvent();">New Event</a></p></li> -->
+		<!-- <li><p class="btn_grid"><a href="javascript:void(0);">Edit Event</a></p></li> -->
 	</ul>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
