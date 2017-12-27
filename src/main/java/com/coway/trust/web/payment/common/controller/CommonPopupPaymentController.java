@@ -206,4 +206,20 @@ public class CommonPopupPaymentController {
 
 		return ResponseEntity.ok(result);
 	}
+	
+	
+	/******************************************************
+	 * Payment - Fund Transfer New Order Search Pop-up
+	 *****************************************************/	
+	/**
+	 * Payment - Fund Transfer New Order Search Pop-Up 초기화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initNewOrderSearchPop.do")
+	public String initNewOrderSearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.put("appTypeId", params.get("appTypeId"));
+		return "payment/common/newOrderSearchPop";
+	}
 }

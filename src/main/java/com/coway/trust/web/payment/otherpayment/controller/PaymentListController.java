@@ -107,6 +107,24 @@ public class PaymentListController {
 	}
 	
 	/**
+	 * Payment List - Request DCF 대상 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectRequestDCFByGroupSeq.do")
+	public ResponseEntity<List<EgovMap>> selectRequestDCFByGroupSeq(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		
+		//조회.
+		List<EgovMap> resultList = paymentListService.selectRequestDCFByGroupSeq(params);
+		
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}	
+	
+	
+	/**
 	 * Payment List - Request DCF 정보 조회 
 	 * @param params
 	 * @param model
@@ -233,6 +251,200 @@ public class PaymentListController {
 		// 저장
 		params.put("userId", sessionVO.getUserId());
 		paymentListService.approvalDCF(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
+    	
+	}
+	
+	/**
+	 * Payment List - Request FT 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	@RequestMapping(value = "/initRequestFTPop.do")
+	public String initRequestFTPop(@RequestParam Map<String, Object> params, ModelMap model) {		
+		
+		model.put("groupSeq", params.get("groupSeq"));		
+		model.put("payId", params.get("payId"));
+		model.put("appTypeId", params.get("appTypeId"));
+		LOGGER.debug("payment List params : {} ", params);
+		
+        // 조회.
+        //List<EgovMap> resultList = paymentListService.selectPaymentListByGroupSeq(params);        
+        //model.put("paymentList", resultList);        
+        
+		return "payment/otherpayment/requestFTPop";
+	}
+	
+	/**
+	 * Payment List - Request FT 대상 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectFTOldData.do")
+	public ResponseEntity<EgovMap> selectFTOldData(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		EgovMap returnMap = null;
+		//조회.
+		List<EgovMap> resultList = paymentListService.selectFTOldData(params);
+		
+		if (resultList != null && resultList.size() > 0) {
+			returnMap = resultList.get(0);
+		} else {
+			returnMap = new EgovMap();
+		}
+
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(returnMap);
+	}
+	
+	
+	/**
+	 * Request Fund Transfer
+	 * @param Map
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/requestFT", method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> requestFT(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+		
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+		
+		Map<String, Object> formInfo = new HashMap<String, Object> ();
+		
+		System.out.println("formList.size : " + formList.size());
+		
+		if(formList.size() > 0){
+    		for(Object obj : formList){
+    			Map<String, Object> map = (Map<String, Object>) obj;
+    			System.out.println("VAlues : " + (String)map.get("name") + " / "+ map.get("value"));		
+    			
+    			formInfo.put((String)map.get("name"), map.get("value"));
+    		}
+    	}		
+		//User ID 세팅
+		formInfo.put("userId", sessionVO.getUserId());		
+		// 저장
+		EgovMap resultMap = paymentListService.requestFT(formInfo,gridList);		
+		// 조회 결과 리턴.
+    	return ResponseEntity.ok(resultMap);	    	
+	}	
+	
+	
+	/******************************************************
+	 * Payment List - Confirm Fund Transfer
+	 *****************************************************/	
+	/**
+	 * Payment List - Confirm FT 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initConfirmFT.do")
+	public String initConfirmFT(@RequestParam Map<String, Object> params, ModelMap model) {        
+        
+		return "payment/otherpayment/confirmFT";
+	}
+	
+	/**
+	 * Payment List - Request FT 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectRequestFTList.do")
+	public ResponseEntity<List<EgovMap>> selectRequestFTList(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		
+		//조회.
+		List<EgovMap> resultList = paymentListService.selectRequestFTList(params);
+		
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * Payment List - Confirm FT 리스트 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initConfirmFTPop.do")
+	public String initConfirmFTPop(@RequestParam Map<String, Object> params, ModelMap model) {		
+		
+		model.put("ftReqId", params.get("ftReqId"));
+		model.put("ftStusId", params.get("ftStusId"));
+		
+		LOGGER.debug("payment List params : {} ", params);       
+        
+		return "payment/otherpayment/confirmFTPop";
+	}
+	
+	/**
+	 * Payment List - Request FT 상세정보 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectReqFTInfo.do")
+	public ResponseEntity<EgovMap> selectReqFTInfo(@RequestBody Map<String, Object> params, ModelMap model) {
+		LOGGER.debug("params : {} ", params);
+		
+		//조회.
+		EgovMap resultMap = paymentListService.selectReqFTInfo(params);
+		
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
+	/**
+	 * Payment List - Reject FT 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/rejectFT.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> rejectFT(
+			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params : {} ", params);		
+		// 저장
+		params.put("userId", sessionVO.getUserId());
+		paymentListService.rejectFT(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
+    	
+	}
+	
+	/**
+	 * Payment List - Approval FT 처리 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/approvalFT.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> approvalFT(
+			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params : {} ", params);
+		
+		// 저장
+		params.put("userId", sessionVO.getUserId());
+		paymentListService.approvalFT(params);
 		
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();

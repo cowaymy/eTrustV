@@ -47,7 +47,7 @@ $(document).ready(function(){
 
 // ajax list 조회.
 function searchDCFList(){
-	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
+	Common.ajax("POST","/payment/selectRequestDCFByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
 		AUIGrid.setGridData(myRequestDCFGridID, result);
 		recalculateTotalAmt();
 		searchReqDCFInfo();

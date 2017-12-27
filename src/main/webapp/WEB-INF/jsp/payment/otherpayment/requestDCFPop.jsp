@@ -51,12 +51,12 @@ $(document).ready(function(){
 function searchDCFList(){
 	Common.ajax("POST","/payment/selectPaymentListByGroupSeq.do",$("#_dcfSearchForm").serializeJSON(), function(result){    		
 		AUIGrid.setGridData(myRequestDCFGridID, result);
-		recalculateTotalAmt();
+		recalculateDCFTotalAmt();
 	});
 }
 
 //clear 처리
-function fn_clear(){
+function fn_DCFClear(){
 	//form.reset 함수는 쓰지 않는다. groupSeq 때문임.
 	$("#reason").val('');
 	$("#remark").val('');
@@ -64,7 +64,7 @@ function fn_clear(){
 }
 
 //Amount 계산
-function recalculateTotalAmt(){
+function recalculateDCFTotalAmt(){
     var rowCnt = AUIGrid.getRowCount(myRequestDCFGridID);
     var totalAmt = 0;
 
@@ -79,7 +79,7 @@ function recalculateTotalAmt(){
 }
 
 //저장처리
-function fn_request(){
+function fn_DCFRequest(){
 
 	//Merchant Bank 체크
     if(FormUtil.checkReqValue($("#reason option:selected"))){
@@ -168,8 +168,8 @@ function fn_request(){
 		</section>
 
 		<ul class="center_btns">
-			<li><p class="btn_blue"><a href="javascript:fn_request();"><spring:message code='pay.btn.request'/></a></p></li>
-			<li><p class="btn_blue"><a href="javascript:fn_clear();"><spring:message code='sys.btn.clear'/></a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_DCFRequest();"><spring:message code='pay.btn.request'/></a></p></li>
+			<li><p class="btn_blue"><a href="javascript:fn_DCFClear();"><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul> 
 	</section>
 </div>
