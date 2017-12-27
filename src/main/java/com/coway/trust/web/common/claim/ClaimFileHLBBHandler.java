@@ -78,7 +78,7 @@ public class ClaimFileHLBBHandler extends BasicTextDownloadHandler implements Re
         sdocno = (String.valueOf(dataRow.get("cntrctNOrdNo"))).trim();
         try {
 			stextDetails = StringUtils.leftPad(String.valueOf(counter), 3, "0") + ",EPY1000991,HLBB," + sdrname + "," + sdraccno + "," + samt + ",DR," + sdocno + "," + 
-					CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "ddMMyyyy");
+					CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "dd/MM/yyyy");
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

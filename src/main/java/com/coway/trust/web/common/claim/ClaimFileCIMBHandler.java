@@ -34,9 +34,9 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 	String sUnusedA = "";
 	String debitAmount = "";
 
-	double sLimit = 0.0D;
-	double iTotalAmt = 0.0D;
-	double ihashtot3 = 0.0D;	
+	long sLimit = 0;
+	long iTotalAmt = 0;
+	long ihashtot3 = 0;	
 	int iTotalCnt = 0;
 	
 	// footer 작성
@@ -110,9 +110,9 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 				? ((String) dataRow.get("bankDtlDrNric")).trim().substring(0, 16)
 				: StringUtils.rightPad((String) dataRow.get("bankDtlDrNric"), 16, " ");
 
-		sLimit = ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue() * 100;
+		sLimit = ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100;
 		iTotalAmt = iTotalAmt + sLimit;
-		ihashtot3 = ihashtot3 + sLimit + Double.parseDouble(sDrAccNo.trim());
+		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(sDrAccNo.trim());
 		iTotalCnt++;
 		
 		debitAmount = StringUtils.leftPad(String.valueOf(sLimit), 13, "0");

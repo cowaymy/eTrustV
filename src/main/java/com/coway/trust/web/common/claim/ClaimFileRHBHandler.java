@@ -67,7 +67,7 @@ public class ClaimFileRHBHandler extends BasicTextDownloadHandler implements Res
 		// 헤더 작성
 		inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
 		sText = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + "00035" + "061" + "001" + "0"
-				+ "21413800109431" + StringUtils.rightPad("", 16, " ") + StringUtils.rightPad("WOONGJIN COWAY", 35, " ")
+				+ "21413800109431" + StringUtils.rightPad("", 16, " ") + StringUtils.rightPad("Coway (M) Sdn Bhd", 35, " ")
 				+ StringUtils.rightPad("735420-H", 12, " ") + StringUtils.rightPad("", 303, " ");
 
 		out.write(sText);

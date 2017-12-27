@@ -860,7 +860,8 @@ public class ClaimController {
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
-			sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "B01.dat";
+			//sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "B01.dat";
+			sFile = "BILLING_ORG2120_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + ".txt";
 			
 			downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CIMB/ClaimBank/", claimMap);			
 			
