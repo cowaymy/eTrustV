@@ -27,6 +27,8 @@ import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -893,6 +895,35 @@ public class MemberListController {
 	@RequestMapping(value = "/selectCoureCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCoureCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("selectCoureCode params : {}", params);
+		
+		
+		Calendar Startcal = Calendar.getInstance();
+		
+		Startcal.add(Calendar.MONTH,2);
+		
+		//현재 년도, 월, 일
+	    StringBuffer today2 = new StringBuffer();
+	    today2.append(String.format("%04d", Startcal.get(Startcal.YEAR)));
+	    today2.append(String.format("%02d", Startcal.get(Startcal.MONTH)));
+        //today2.append(String.format("%02d",  01));
+	    
+	    String startDay = today2.toString(); 
+	    
+		Calendar Endcal = Calendar.getInstance();
+	    
+		Endcal.add(Calendar.MONTH,3);
+		//Endcal.set(year, month+3, day); //월은 -1해줘야 해당월로 인식
+		
+	    StringBuffer today3 = new StringBuffer();
+	    today3.append(String.format("%04d", Endcal.get(Endcal.YEAR)));
+	    today3.append(String.format("%02d", Endcal.get(Endcal.MONTH) ));
+	    //today3.append(String.format("%02d", Endcal.getActualMaximum(Endcal.DAY_OF_MONTH)));
+		
+	    String endDay = today3.toString();
+		logger.debug("=====================todate2=========================" +startDay + " <>  " + endDay);
+		
+		params.put("startDay", startDay);
+		params.put("endDay", endDay);
 		
 		List<EgovMap> deptCode = memberListService.selectCoureCode(params);
 		return ResponseEntity.ok(deptCode);
