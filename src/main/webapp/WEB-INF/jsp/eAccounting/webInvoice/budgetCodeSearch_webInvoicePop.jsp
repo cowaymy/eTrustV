@@ -91,6 +91,7 @@ function fn_selectBudgetListAjax() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="bgSForm" >
+<input type="hidden" name="costCentrName" value="${costCentrName}">
 <input type="hidden" name="costCentr" value="${costCentr}">
 
 <table class="type1"><!-- table start -->
@@ -104,7 +105,7 @@ function fn_selectBudgetListAjax() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" placeholder="" class="readonly w100p" readonly="readonly" value="${costCentrName}"/></td>
+	<td><input type="text" placeholder="" class="readonly w100p" readonly="readonly" value="${costCentr}"/></td>
 	<th scope="row"><spring:message code="expense.ActivityName" /></th>
     <td><input type="text" id="budgetCodeText" name ="budgetCodeText"  title="<spring:message code='expense.ActivityName' />" placeholder="" class="w100p" /></td>
 </tr>

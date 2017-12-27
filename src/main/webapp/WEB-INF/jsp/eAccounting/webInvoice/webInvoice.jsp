@@ -335,7 +335,7 @@ function fn_selectWebInvoiceItemList(clmNo) {
 
 //Budget Code Pop 호출
 function fn_budgetCodePop(rowIndex){
-    if(!FormUtil.isEmpty($("#newCostCenterText").val())){
+    if(!FormUtil.isEmpty($("#newCostCenter").val())){
     	var data = {
     			rowIndex : rowIndex
     			,costCentr : $("#newCostCenter").val()
