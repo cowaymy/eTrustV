@@ -33,6 +33,7 @@ var gridDataLength = 0;
 var gridId = null;
 var rIndex = 0;
 var coursId = 0;
+var timerId = null;
 var keyValueList = $.parseJSON('${courseStatusList}');
 var courseColumnLayout = [ {
     dataField : "coursId",
@@ -143,7 +144,7 @@ var attendeeColumnLayout = [ {
     dataField : "memTypeName",
     headerText : 'Member Type',
 }, {
-    dataField : "coursMemId",
+    dataField : "memCode",
     headerText : 'Member Code',
     colSpan : 2
 }, {
@@ -177,6 +178,9 @@ var attendeeColumnLayout = [ {
 }, {
     dataField : "code",
     headerText : 'Branch',
+}, {
+    dataField : "coursAttendDay",
+    headerText : 'Attend Day',
 }, {
     dataField : "coursTestResult",
     headerText : 'Result',
@@ -249,23 +253,34 @@ $(document).ready(function () {
         type:"S"
     });
 	
+	// Memeber (Y/N)
+    CommonCombo.make("generalCode", "/common/selectCodeList.do", {groupCode : '328'}, "", {
+        id: "codeId",
+        name: "code",
+        isShowChoose: false,
+        type:"S"
+    });
+    
+    // Member Type
+    CommonCombo.make("memType", "/common/selectCodeList.do", {groupCode : '1'}, "", {
+        id: "codeId",
+        name: "code",
+        type:"S"
+    });
+    
 	// search list
 	$("#search_btn").click(fn_selectCourseList);
 	
 	// view/edit popup
-	AUIGrid.bind(courseGridID, "cellClick", function( event ) 
-            {
-                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-                console.log("CellClick coursId : " + event.item.coursId);
-                // TODO detail popup open
-                if(event.dataField != "coursLimit" && event.dataField != "stusCodeId") {
-                	fn_selectAttendeeList(event.item.coursId);
-                    coursId = event.item.coursId;
-                }
-            });
-	
+	// 셀 더블클릭 이벤트 바인딩
+    AUIGrid.bind(courseGridID, "cellDoubleClick", function(event){
+    	fn_courseViewPop(event.item.coursId);
+    });
+
+	AUIGrid.bind(courseGridID, "selectionChange", auiGridSelectionChangeHandler );
+
 	$("#registration_btn").click(fn_courseNewPop);
-	$("#viewEdit_btn").click(fn_courseViewPop);
+//	$("#viewEdit_btn").click(fn_courseViewPop);
 	$("#attendee_btn").click(function() {
 		fn_attendeePop("");
 	});
@@ -286,10 +301,32 @@ $(document).ready(function () {
 	fn_setToDay();
 });
 
+function auiGridSelectionChangeHandler(event) { 
+    // 200ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
+    if(timerId) {
+        clearTimeout(timerId);
+    }
+
+    timerId = setTimeout(function() {
+    	var selectedItems = event.selectedItems;
+//        if(selectedItems.length <= 0)
+//            return;
+        
+        var rowItem = selectedItems[0].item; // 행 아이템들
+        var corId = rowItem.coursId; // 선택한 행의 고객 ID 값
+        
+//        if(event.dataField != "coursLimit" && event.dataField != "stusCodeId") {
+
+            fn_selectAttendeeList(corId);
+            coursId = corId;
+//        }
+    }, 200);
+}
+
 function fn_setAttendeeGridCheckboxEvent() {
 	// ready 이벤트 바인딩
     AUIGrid.bind(attendeeGridID, "ready", function(event) {
-        gridDataLength = AUIGrid.getGridData(attendeeGridID).length; // 그리드 전체 행수 보관
+        gridDataLength = AUIGrid.getRowCount(attendeeGridID); // 그리드 전체 행수 보관
     });
     
     // 헤더 클릭 핸들러 바인딩
@@ -377,10 +414,10 @@ function fn_selectCourseList() {
 	fn_setAttendeeGridCheckboxEvent();
 }
 
-function fn_courseViewPop() {
-	if(coursId > 0) {
+function fn_courseViewPop(couseIdVal) {
+	if(couseIdVal > 0) {
 		var data = {
-	            coursId : coursId
+	            coursId : couseIdVal
 	    };
 	    Common.popupDiv("/organization/training/courseViewPop.do", data, null, true, "courseViewPop");
 	    
@@ -428,7 +465,7 @@ function fn_checkAttendance() {
 
 function fn_attendeePop(pType) {
 	var data = {
-			pType : pType
+			pType : pType, coursId : coursId
 	};
 	Common.popupDiv("/organization/training/attendeePop.do", data, null, true, "attendeePop");
 }
@@ -558,6 +595,23 @@ function fn_courseReporExcel() {
     }
 	
 }
+
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -569,10 +623,11 @@ function fn_courseReporExcel() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Course Management</h2>
 <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+    <li><p class="btn_blue"><a href="#" id="registration_btn"><span class="new"></span>New</a></p></li>
+	<c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span>Search</a></p></li>
 	</c:if>
-	<!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
+	<li><p class="btn_blue"><a href="#" onclick="javascript:$('#form_course').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -584,13 +639,13 @@ function fn_courseReporExcel() {
 <colgroup>
 	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:130px" />
+	<col style="width:170px" />
 	<col style="width:*" />
-	<col style="width:140px" />
+	<col style="width:130px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<!-- <tr>
 	<th scope="row">Course Code</th>
 	<td>
 	<input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
@@ -606,25 +661,58 @@ function fn_courseReporExcel() {
 	</select>
 	</td>
 </tr>
+ -->
+ <tr>
+    <th scope="row">Course Type</th>
+    <td>
+    <select class="w100p" id="codeId" name="codeId">
+    </select>
+    </td>
+    <th scope="row">Member(Y/N)/Type</th>
+    <td>
+    <select class="w23_5p" id="generalCode" name="generalCode">
+    </select>
+    <select class="ml5"  style="width: 73%"  id="memType" name="memType">
+    </select>
+    </td>
+    <th scope="row">Effective date</th>
+    <td>
+        <div class="date_set"><!-- date_set start -->
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart" value="${courseInfo.coursStart}"/></p>
+<!--         <span>To</span>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="newCoursEnd" name="coursEnd" value="${courseInfo.coursEnd}"/></p>
+-->
+        </div><!-- date_set end -->
+    </td>
+</tr>
 <tr>
+    <th scope="row">Course Status</th>
+    <td>
+    <select class="w100p" id="stusCodeId" name="stusCodeId">
+    </select>
+    </td>
 	<th scope="row">Course Name</th>
 	<td>
 	<input type="text" title="Course Name" placeholder="" class="w100p" id="coursName" name="coursName"/>
 	</td>
+	<th scope="row">Course Code</th>
+    <td>
+    <input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
+    </td>
+<!-- 
 	<th scope="row">Location</th>
 	<td>
 	<input type="text" title="Location" placeholder="" class="w100p" id="coursLoc" name="coursLoc"/>
 	</td>
 	<th scope="row">Training Period</th>
 	<td>
-
-	<div class="date_set"><!-- date_set start -->
+	<div class="date_set"><!-- date_set start --
 	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart"/></p>
 	<span>To</span>
 	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="coursEnd" name="coursEnd"/></p>
-	</div><!-- date_set end -->
-
+	</div><!-- date_set end --
 	</td>
+-->
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -654,14 +742,10 @@ function fn_courseReporExcel() {
 <ul class="right_btns">
     <!-- <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-    <li><p class="btn_grid"><a href="#">DEL</a></p></li> -->
+    <li><p class="btn_grid"><a href="#">DEL</a></p></li> 
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_grid"><a href="#" id="viewEdit_btn">Edit</a></p></li>
-    </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-    <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>
-    </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+   <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>-->
     <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
