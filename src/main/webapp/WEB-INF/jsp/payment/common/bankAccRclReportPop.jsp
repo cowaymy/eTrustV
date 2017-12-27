@@ -21,12 +21,12 @@ var reportTypeData = [{"codeId": "1","codeName": "Deposit (Key-In vs Deposit Ent
         
         if(reportType == ""){
             valid = false;
-            message += "* Please select the report type.<br />";
+            message += "<spring:message code='pay.alert.selectReportType'/>";
         }
         
         if (FormUtil.checkReqValue($("#dpDateFr")) || FormUtil.checkReqValue($("#dpDateTo"))) {
             valid = false;
-            message += "* Please select the date (From & To).<br />";
+            message += "<spring:message code='pay.alert.dateFormTo'/>";
         }
         
         if(valid){

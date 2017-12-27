@@ -71,13 +71,13 @@ var modeTypeData = [{"codeId": "105","codeName": "Cash"},
         
         if(reportType == ""){
             valid = false;
-            message += "* Please select the report type.<br />";
+            message += "<spring:message code='pay.alert.selectReportType'/>";
             
         }
         
         if (FormUtil.checkReqValue($("#fromUploadDate")) || FormUtil.checkReqValue($("#toUploadDate"))) {
             valid = false;
-            message += "* Please select the date (From & To).<br />";
+            message += "<spring:message code='pay.alert.dateFormTo'/>";
         }
         
         if(valid){

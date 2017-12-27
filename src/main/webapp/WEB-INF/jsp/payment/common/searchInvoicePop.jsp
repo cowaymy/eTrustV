@@ -63,14 +63,14 @@ $(document).ready(function(){
 //리스트 조회.
 function fn_getInvoiceListAjax() {   
 	if(FormUtil.checkReqValue($("#invoiceType option:selected")) ){
-		Common.alert('* Please select the Invoice Type. <br/>');
+		Common.alert("<spring:message code='pay.alert.selectInvoiceType'/>");
 		return;
 	}
 	
 	if(FormUtil.checkReqValue($("#_invoicePopForm #invoiceNo")) &&
 			FormUtil.checkReqValue($("#_invoicePopForm #serviceNo")) &&
 			FormUtil.checkReqValue($("#_invoicePopForm #orderNo"))){
-        Common.alert('* Please key in either Invoice No or Order number or Service number. <br />');
+        Common.alert("<spring:message code='pay.alert.invoiceNoOrOrderNoOrServiceNo'/>");
         return;
     }
 	
