@@ -529,7 +529,7 @@ function savePayment(){
 	//Validation Start !!!!!!
 	//금액 체크
 	if(FormUtil.checkReqValue($("#keyInAmount")) ||$("#keyInAmount").val() <= 0 ){
-        Common.alert('* No Amount ');
+        Common.alert("<spring:message code='pay.btn.noAmount'/>");
         return;
     }
 	
@@ -537,7 +537,7 @@ function savePayment(){
 	if(FormUtil.checkReqValue($("#keyInCardNo1")) || 
 			FormUtil.checkReqValue($("#keyInCardNo2")) ||
 			FormUtil.checkReqValue($("#keyInCardNo3"))){
-        Common.alert('* No CRC No.');
+        Common.alert("<spring:message code='pay.head.noCrcNo'/>");
         return;
     }else{
     	var cardNo1Size = $("#keyInCardNo1").val().length;
@@ -546,7 +546,7 @@ function savePayment(){
     	var cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size;
     	
     	if(cardNoAllSize != 16){
-    		Common.alert('* Invalid CRC No.');
+    		Common.alert("<spring:message code='pay.head.ivalidCrcNo'/>");
             return;
     	}
     }
@@ -554,13 +554,13 @@ function savePayment(){
 	//Card Holder 체크
 	//금액 체크
     if(FormUtil.checkReqValue($("#keyInHolderNm"))){
-        Common.alert('* No CRC Holder Name');
+        Common.alert("<spring:message code='pay.head.noCrcHolderName'/>");
         return;
     }
 	
 	//카드 유효일자 체크
     if(FormUtil.checkReqValue($("#keyInExpiryMonth")) || FormUtil.checkReqValue($("#keyInExpiryYear"))){
-        Common.alert('* No CRC Expiry Date');
+        Common.alert("<spring:message code='pay.head.noCrcExpiryDate'/>");
         return;
     }else{
         var expiry1Size = $("#keyInExpiryMonth").val().length;
@@ -569,19 +569,19 @@ function savePayment(){
         var expiryAllSize = expiry1Size  + expiry2Size;
         
         if(expiryAllSize != 4){
-            Common.alert('* Invalid CRC Expiry Date');
+            Common.alert("<spring:message code='pay.head.invalidCrcExpiryDate '/>");
             return;
         }
         
         if(Number($("#keyInExpiryMonth").val()) > 12){
-        	Common.alert('* Invalid CRC Expiry Date');
+        	Common.alert("<spring:message code='pay.head.invalidCrcExpiryDate'/>");
             return;
         }
     }
 	
 	//카드 브랜드 체크
     if(FormUtil.checkReqValue($("#keyInCrcType option:selected"))){
-        Common.alert('* No CRC Brand');
+        Common.alert("<spring:message code='pay.head.noCrcBrand'/>");
         return;
     
     }else{
@@ -592,14 +592,14 @@ function savePayment(){
     	
     	if(cardNo1st1Val == 4){    		
     		if(crcType != 112){
-    			Common.alert('* Invalid credit card type');
+    			Common.alert("<spring:message code='pay.head.invalidCrcType'/>");
                 return;
     		}
     	}
     	
     	if((cardNo1st2Val >= 51 && cardNo1st2Val <= 55) || (cardNo1st4Val >= 2221 && cardNo1st4Val <= 2720)){            
             if(crcType != 111){
-                Common.alert('* Invalid credit card type');
+                Common.alert("<spring:message code='pay.head.invalidCrcType'/>");
                 return;
             }
         }
@@ -607,62 +607,62 @@ function savePayment(){
 	
 	//카드 모드 체크
     if(FormUtil.checkReqValue($("#keyInCardMode option:selected"))){
-        Common.alert('* No CRC Mode');
+        Common.alert("<spring:message code='pay.head.noCrcMode'/>");
         return;
     }
 	
     //승인 번호 체크
     if(FormUtil.checkReqValue($("#keyInApprovalNo"))){
-        Common.alert('* No Approval Number');
+        Common.alert("<spring:message code='pay.head.noApprovalNumber'/>");
         return;
     }else{
     	
     	var appValSize = $("#keyInApprovalNo").val().length;        
         
         if(appValSize != 6){
-            Common.alert('* Invalid approval No length');
+            Common.alert("<spring:message code='pay.head.invalidApprovalNoLength '/>");
             return;
         }
     }
     
     //Issue Bank 체크
     if(FormUtil.checkReqValue($("#keyInIssueBank option:selected"))){
-        Common.alert('* No Issue Bank Selected');
+        Common.alert("<spring:message code='pay.head.noIssueBankSelected'/>");
         return;
     }
     
     //Merchant Bank 체크
     if(FormUtil.checkReqValue($("#keyInMerchantBank option:selected"))){
-        Common.alert('* No Merchant Bank Selected');
+        Common.alert("<spring:message code='pay.head.noMerchantBankSelected'/>");
         return;
     }
     
     //Transaction Date 체크
     if(FormUtil.checkReqValue($("#keyInTrDate"))){
-        Common.alert('* Transaction Date is empty');
+        Common.alert("<spring:message code='pay.head.transDateEmpty'/>");
         return;
     }
     
     //TR No 체크
     //if(FormUtil.checkReqValue($("#keyInTrNo"))){
-    //    Common.alert('* TR No. is empty. Key in the value.');
+    //    Common.alert("<spring:message code='pay.head.trNoIsEmpty'/>");
     //    return;
     //}
     
     //TR Issue Date 체크
     //if(FormUtil.checkReqValue($("#keyInTrIssueDate"))){
-    //    Common.alert('* TR Issue Date is empty. Key in the value.');
+    //    Common.alert("<spring:message code='pay.head.trDateIsEmpty'/>");
     //    return;
     //}
     
     //Pay Date 체크
     if(FormUtil.checkReqValue($("#keyInPayDate"))){
-        Common.alert('* Pay Date is empty. Key in the value.');
+        Common.alert("<spring:message code='pay.head.payDateIsEmpty'/>");
         return;
     }
     
     if( FormUtil.byteLength($("#keyInRemark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+    	Common.alert("<spring:message code='pay.head.lessThan3000Bytes'/>");
     	return;
     }	  
 	
@@ -678,7 +678,7 @@ function savePayment(){
 	if(gridList.length > 0) {
 		data.all = gridList;
 	}  else {
-		Common.alert("There is no Payment Key-In Row Data");
+		Common.alert("<spring:message code='pay.head.noRowData'/>");
 		return;
 	}
 	    
@@ -688,7 +688,7 @@ function savePayment(){
     //Bill Payment : Order 정보 조회
     Common.ajax("POST", "/payment/common/savePayment.do", data, function(result) {
     	
-    	var message = "<b>Success Payment Process<br><br></b>";
+    	var message = "<spring:message code='pay.alert.successProc'/>";
     	
     	if(result != null && result.length > 0){
     		for(i=0 ; i < result.length ; i++){
@@ -743,7 +743,7 @@ function fn_changeCardNo1(){
 function removeFromFinal(){
     
     if (selectedGridValue  > -1){
-        Common.confirm('Are you sure you want to remove the Selected Row?'
+        Common.confirm("<spring:message code='pay.alert.selectedRow'/>"
         ,function (){
             //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
             AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
@@ -752,7 +752,7 @@ function removeFromFinal(){
             recalculatePaymentTotalAmt();
         });
     }else{
-        Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+        Common.alert("<spring:message code='pay.alert.removeRowData'/>");
     }
 }
 
@@ -1182,7 +1182,7 @@ function addRentalToFinal(){
     }
     
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.head.selectBillingData'/>");
     }
     recalculatePaymentTotalAmt();
 }
@@ -1194,7 +1194,7 @@ function viewRentalLedger(){
         Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         
     }else{
-    	Common.alert('<b>Please Select a Order Info first</b>');
+    	Common.alert("<spring:message code='pay.head.SelectOrderInfoFirst'/>");
     	return;
     }
 		
@@ -1326,7 +1326,7 @@ function addOutToFinal(){
     
 
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.head.selectBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();
@@ -1780,7 +1780,7 @@ function addSrvcToFinal(){
     }
     
     if(addedCount == 0){
-        Common.alert("There is no billing data and can not be selected.");
+        Common.alert("<spring:message code='pay.head.selectBillingData'/>");
     }
     recalculatePaymentTotalAmt();  
 }
@@ -1791,7 +1791,7 @@ function viewSrvcLedger(){
         $("#ledgerForm #ordId").val($("#srvcOrdId").val());
         Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
-        Common.alert('<b>Please Select a Order Info first</b>');
+        Common.alert("<spring:message code='pay.head.SelectOrderInfoFirst'/>");
         return;
     }
         
@@ -1822,7 +1822,7 @@ function fn_changeBillType(){
 function fn_billOrderSearch(){
 	
 	if(FormUtil.checkReqValue($("#billSearchTxt"))){
-        Common.alert("Please Key-In Search Keywords");
+        Common.alert("<spring:message code='pay.head.searchKeywords'/>");
         return;
     }
 	
@@ -1861,7 +1861,7 @@ function addBillToFinal(){
     var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
     if(checkArray.length > 1){
-        Common.alert("Bill Payment is allowed for only one bill. Exclude other bills excepting target one bill.");
+        Common.alert("<spring:message code='pay.head.onlyOneBill'/>");
         return;     
     }else{      
         var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);      
@@ -1909,7 +1909,7 @@ function addBillToFinal(){
         }
         
         if(addedCount == 0){
-            Common.alert("There is no billing data and can not be selected.");
+            Common.alert("<spring:message code='pay.head.selectBillingData'/>");
         }
         
         recalculatePaymentTotalAmt();
@@ -2056,7 +2056,7 @@ function addOutSrvcToFinal(){
     
 
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.head.selectBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();

@@ -86,9 +86,6 @@
         
         
     });
-        
-
-      
 
     // ajax list 조회.
     function searchList(){
@@ -100,19 +97,19 @@
                 FormUtil.checkReqValue($("#tranDateTo")) &&
                 FormUtil.checkReqValue($("#uploadDateFr")) &&
                 FormUtil.checkReqValue($("#uploadDateTo")) ){
-            Common.alert('* Please input search condition <br />');
+            Common.alert("<spring:message code='pay.alert.searchCondition'/>");
             return;
         }
         
         if((!FormUtil.checkReqValue($("#tranDateFr")) && FormUtil.checkReqValue($("#tranDateTo"))) ||
                 (FormUtil.checkReqValue($("#tranDateFr")) && !FormUtil.checkReqValue($("#tranDateTo"))) ){
-            Common.alert('* Please input Transaction Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputTransactionDate'/>");
             return;
         }
         
         if((!FormUtil.checkReqValue($("#uploadDateFr")) && FormUtil.checkReqValue($("#uploadDateTo"))) ||
                 (FormUtil.checkReqValue($("#uploadDateFr")) && !FormUtil.checkReqValue($("#uploadDateTo"))) ){
-            Common.alert('* Please input Upload Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputUploadDate'/>");
             return;
         }
         
@@ -132,8 +129,6 @@
         //AUIGrid.clearGridData(myUploadGridID);       
     }
     
-   
-    
   //Layer close
   hideViewPopup=function(val){       
       $(val).hide();
@@ -147,13 +142,13 @@
 	        var crcBcStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "crcBcStusId");
 	        
 	        if(crcBcStusId != 1){
-	        	Common.alert("<b>Only Active Status is allowed to post CRC Statement.</b>");
+	        	Common.alert("<spring:message code='pay.alert.onlyActiveStatus'/>");
 	        }else{
-	        	Common.confirm("Are you sure you want to save this Expenses form?",
+	        	Common.confirm("<spring:message code='pay.alert.saveThisForm'/>",
 	                    function(){
 	                        Common.ajax("GET","/payment/postCardStatement.do", {"crcStateId" : crcStateId}, 
 	                            function(result){
-	                                Common.alert("This Expenses form has successfully been saved.", 
+	                                Common.alert("<spring:message code='pay.alert.formSuccessSaved.'/>", 
 	                                    function (){
 	                                        searchList();  
 	                                    }
@@ -165,7 +160,7 @@
 	        }
 	        
 	    }else{
-	        Common.alert('No record selected.');
+	        Common.alert("<spring:message code='pay.alert.noRecord'/>");
 	    }
 	}
   
@@ -182,7 +177,7 @@
               AUIGrid.resize(myDetailGridID);
           });
       }else{
-          Common.alert('No record selected.');
+          Common.alert("<spring:message code='pay.head.noRecord'/>");
       }
   }
   

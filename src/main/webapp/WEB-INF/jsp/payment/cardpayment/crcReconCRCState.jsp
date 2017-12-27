@@ -246,11 +246,11 @@ var crcStateLayout = [
                 AUIGrid.removeCheckedRows(crcKeyInGridId);
                 AUIGrid.removeCheckedRows(crcStateGridId);
             }else{
-                Common.alert("Please select CRC Statement Data");
+                Common.alert("<spring:message code='pay.alert.crcStateData'/>");
             }
             
     	}else{
-    		Common.alert("Please select CRC KeyIn Data");
+    		Common.alert("<spring:message code='pay.alert.crcKeyInData'/>");
     	}
         
     }
@@ -262,7 +262,7 @@ var crcStateLayout = [
         if(gridList.length > 0) {
             data.all = gridList;
             
-            Common.confirm('<b>Are you sure you want to match this Payment & CRC items?</b>',function (){
+            Common.confirm("<spring:message code='pay.alert.knockOffCrc'/>",function (){
             	
             	Common.ajax("POST","/payment/updCrcReconState.do", data , function(result){
                     console.log(result);
@@ -274,7 +274,7 @@ var crcStateLayout = [
             });
             
         }else{
-        	Common.alert("No Mapping Data");
+        	Common.alert("<spring:message code='pay.alert.noMapping'/>");
         }
     }
 	

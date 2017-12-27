@@ -158,7 +158,7 @@
             });
     		
     	}else{
-    		Common.alert("No Mapping Data");
+    		Common.alert("<spring:message code='pay.alert.noMapping'/>");
     	}
     }
     

@@ -148,19 +148,19 @@
                 FormUtil.checkReqValue($("#uploadDateFr")) &&
                 FormUtil.checkReqValue($("#uploadDateTo")) &&
                 FormUtil.checkReqValue($("#uploadUserNm")) ){
-            Common.alert('* Please input search condition <br />');
+            Common.alert("<spring:message code='pay.alert.searchCondition'/>");
             return;
         }
         
         if((!FormUtil.checkReqValue($("#tranDateFr")) && FormUtil.checkReqValue($("#tranDateTo"))) ||
                 (FormUtil.checkReqValue($("#tranDateFr")) && !FormUtil.checkReqValue($("#tranDateTo"))) ){
-            Common.alert('* Please input Transaction Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputTransaction Date'/>");
             return;
         }
         
         if((!FormUtil.checkReqValue($("#uploadDateFr")) && FormUtil.checkReqValue($("#uploadDateTo"))) ||
                 (FormUtil.checkReqValue($("#uploadDateFr")) && !FormUtil.checkReqValue($("#uploadDateTo"))) ){
-            Common.alert('* Please input Upload Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputUploadDate'/>");
             return;
         }
         
@@ -213,30 +213,30 @@ function upload(){
     data.form = $("#uploadForm").serializeJSON();
     
     if(FormUtil.checkReqValue($("#uploadTranDt")) ){
-        Common.alert('* Please select the Transaction Date.<br />');
+        Common.alert("<spring:message code='pay.alert.selectTransactionDate'/>");
         return;
     }
 
     if(FormUtil.checkReqValue($("#uploadBankAccount option:selected")) ){    
-        Common.alert('* Please select the Bank Account.<br />');
+        Common.alert("<spring:message code='pay.alert.selectankAccount'/>");
         return;
     }
 
     if(FormUtil.checkReqValue($("#uploadRemark")) ){    
-        Common.alert('* Please insert the Remark<br />');
+        Common.alert("<spring:message code='pay.alert.insertTheRemark'/>");
         return;
     }
     
     if(data.all.length < 1){
-        Common.alert('* Select the CSV file on the loca PC<br />');
+        Common.alert("<spring:message code='pay.alert.selectCsvFile'/>");
         return;
     }
 
     //Ajax 호출
-    Common.confirm('<b>Are you sure want to save this Credit Card Statement form?</b>',function (){
+    Common.confirm("<spring:message code='pay.alert.saveCrcStateForm'/>",function (){
         Common.ajax("POST", "/payment/uploadCardStatement.do", data, 
                 function(result) {
-                    var returnMsg = "This Credit Card Statement form has successfully been saved.";
+                    var returnMsg = "<spring:message code='pay.alert.crcSuccessForm'/>";
         
                     Common.alert(returnMsg, function (){
                         hideViewPopup('#upload_wrap');
@@ -253,7 +253,7 @@ function upload(){
                         console.log(e);
                     }
                     
-                    alert("Fail : " + jqXHR.responseJSON.message);        
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);        
                 });
     });    
        
@@ -304,7 +304,7 @@ function commitFormSubmit() {
             }
         },
         error : function(e) {
-            alert("ajaxSubmit Error : " + e);
+        	Common.alert("ajaxSubmit Error : " + e);
         }
     });
 
