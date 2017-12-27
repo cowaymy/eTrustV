@@ -130,7 +130,7 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 	public static List<File> getUploadExcelFiles(MultipartHttpServletRequest request, String uploadDir) throws IOException {
 		List<File> fileList = new ArrayList<>();
 		Iterator<?> fileIter = request.getFileNames();
-		long maxFileSize = AppConstants.UPLOAD_MAX_FILE_SIZE;
+		long maxFileSize = AppConstants.UPLOAD_EXCEL_MAX_SIZE;
 
 		while (fileIter.hasNext()) {
 			MultipartFile mFile = request.getFile((String) fileIter.next());
