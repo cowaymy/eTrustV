@@ -32,21 +32,26 @@ $(document).ready(function() {
 	//Edit
 	 // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(calGrid, "cellDoubleClick", function(event){
-    	if(event.item.ccpStusId == 1){
-    		$("#_ccpId").val(event.item.ccpId);
-            $("#_salesOrdId").val(event.item.salesOrdId);
-            $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-            //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
-           
-            Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
-            
+    	
+    	if('${PAGE_AUTH.funcChange}' == 'Y'){
+    		if(event.item.ccpStusId == 1){
+                $("#_ccpId").val(event.item.ccpId);
+                $("#_salesOrdId").val(event.item.salesOrdId);
+                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+                //Common.popupDiv("/sales/ccp/selectCalCcpViewEditPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewEditDiv'); //Edit
+               
+                Common.popupWin('_detailForm', "/sales/ccp/selectCalCcpViewEditPop.do", option);
+                
+            }else{
+                $("#_ccpId").val(event.item.ccpId);
+                $("#_salesOrdId").val(event.item.salesOrdId);
+                $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
+                //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
+                
+                Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
+            }
     	}else{
-    		$("#_ccpId").val(event.item.ccpId);
-            $("#_salesOrdId").val(event.item.salesOrdId);
-            $("#_ccpTotScrePoint").val(event.item.ccpTotScrePoint);
-            //Common.popupDiv("/sales/ccp/ccpCalCCpViewPop.do", $("#_detailForm").serializeJSON(), null , true , '_viewDiv'); //View
-            
-            Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
+    		Common.alert("access deny.");
     	}
     });
 	
@@ -201,9 +206,15 @@ function popup(location){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Customer Credibility Point List</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue type2"><a id="_updPayBtn">Update Payment Channel</a></p></li> 
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue type2"><a id="_updPayBtn">Update Payment Channel</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}"> 
     <li><p class="btn_blue type2"><a id="_updCustBtn">Update Customer Info</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue type2"><a id="_calSearch"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue type2"><a href="#" onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -317,9 +328,15 @@ function popup(location){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="#" onclick="javascript : popup('rawData')">RAW Data</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="#" onclick="javascript : popup('performance')">Performance</a></p></li>
+        </c:if>
     </ul>
     <ul class="btns">
     </ul>

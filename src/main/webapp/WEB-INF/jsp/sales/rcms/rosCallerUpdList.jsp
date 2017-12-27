@@ -1,10 +1,20 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+
+<style type="text/css">
+.my-pink-style {
+    background:#FFA7A7;
+    font-weight:bold;
+    color:#22741C;
+}
+</style>
+
+
 <script type="text/javascript">
 
 
 var callerGridID;
-//var callerDetGridID;
+var callerDetGridID;
 
 $(document).ready(function() {    
 	createRosCallerGrid();
@@ -17,12 +27,20 @@ $(document).ready(function() {
 		});
 	});
 	
-/* 	//Cell Click
+ 	//Cell Click
 	AUIGrid.bind(callerGridID, "cellClick", function(event){
 		 Common.ajax("GET", "/sales/rcms/getCallerDetailList", {batchId : event.item.id}, function(result) {
 	            AUIGrid.setGridData(callerDetGridID, result);
+	            AUIGrid.setProp(callerDetGridID, "rowStyleFunction", function(rowIndex, item) {
+	            	if(item.itmStusCodeId == '21'){
+	            		return "my-pink-style";
+	            	}else{
+	            		return "";
+	            	}
+	            });
+	            AUIGrid.update(callerDetGridID);
 	     });
-	}); */
+	});
 });
 
 $.fn.clearForm = function() {
@@ -82,16 +100,14 @@ function createRosCallerGrid(){
      callerGridID = GridCommon.createAUIGrid("#caller_grid_wrap", callerColumnLayout,'', gridPros);  // address list
 }
 
-/* function createRosCallerDetGrid(){
+ function createRosCallerDetGrid(){
     
     var callerDetColumnLayout =  [ 
                             
                             {dataField : "ordNo", headerText : "Order No", width : '20%', editable : false},
-                            {dataField : "sysOrdId", headerText : "Old Caller Id", width : '20%' , editable : false},
-                            {dataField : "sysUserName", headerText : "Old Caller Name", width : '20%' , editable : false},
-                            {dataField : "", headerText : "New Caller Id", width : '20%' , editable : false},
-                            {dataField : "", headerText : "New Caller Name", width : '20%' , editable : false}
-                        
+                            {dataField : "userName", headerText : "Username", width : '20%' , editable : false},
+                            {dataField : "itmMsg", headerText : "Message", width : '60%' , editable : false},
+                            {dataField : "itmStusCodeId", visible : false}
                            ];
     
     //그리드 속성 설정
@@ -113,7 +129,7 @@ function createRosCallerGrid(){
     };
     
     callerDetGridID = GridCommon.createAUIGrid("#caller_det_grid_wrap", callerDetColumnLayout,'', gridPros);  // address list
-} */
+} 
 
 
 </script>

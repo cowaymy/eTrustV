@@ -207,8 +207,12 @@ function popup(location){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Government Agreement List</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>New</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -297,10 +301,18 @@ function popup(location){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('rowData')">ROW Data</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('summary')">Summary</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('consignmentCourier')">Consignment Courier</a></p></li>
+        </c:if>
     </ul>
     <ul class="btns">
     </ul>

@@ -207,10 +207,18 @@ $.fn.clearForm = function() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>ROS Call Log</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a onclick="javascript:fn_newROSCall()"><span ></span>NEW ROS Call</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a onclick="javascript:fn_chargeOrderBillingType()"><span ></span>Charge Order Billing Type</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue"><a onclick="javascript:fn_orderUloadBatch()"><span ></span>Order Remark Upload Batch</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li> 
 </ul>
 </aside><!-- title_line end -->

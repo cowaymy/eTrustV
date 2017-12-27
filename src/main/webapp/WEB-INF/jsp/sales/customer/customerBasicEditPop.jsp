@@ -69,30 +69,53 @@ $(document).ready(function(){
         var status = $("#_selectParam").val();
        
         if(status == '1'){
-            Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
-            $("#_close").click();
+            if('${PAGE_AUTH.funcUserDefine2}' == 'Y'){
+            	Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
+                $("#_close").click();
+            }else{
+            	Common.alert("access deny.");
+            }
         }
         if(status == '2'){
-            Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
-            $("#_close").click();
+            if('${PAGE_AUTH.funcUserDefine3}' == 'Y'){
+            	Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
+                $("#_close").click();
+            }else{
+                Common.alert("access deny.");
+            }
         }
         if(status == '3'){
-            Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
-            $("#_close").click();
+            if('${PAGE_AUTH.funcUserDefine4}' == 'Y'){
+            	Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
+                $("#_close").click();
+            }else{
+                Common.alert("access deny.");
+            }
         }
         if(status == '4'){
-            Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
-            $("#_close").click();
+            if('${PAGE_AUTH.funcUserDefine5}' == 'Y'){
+            	Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
+                $("#_close").click();
+            }else{
+                Common.alert("access deny.");
+            }
         }
         if(status == '5'){
-            Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
-            $("#_close").click();
+            if('${PAGE_AUTH.funcUserDefine6}' == 'Y'){
+            	Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
+                $("#_close").click();
+            }else{
+                Common.alert("access deny.");
+            }
         }
         if(status == '6'){ 
-           Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
-           $("#_close").click();
+        	if('${PAGE_AUTH.funcUserDefine7}' == 'Y'){
+        		Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
+                $("#_close").click();
+            }else{
+                Common.alert("access deny.");
+            }
         }
-        
     });
     
     
@@ -483,7 +506,9 @@ $(document).ready(function(){
 </table><!-- table end -->
 </form><!-- form end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#none" id="_updBtn">Update</a></p></li> 
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+    <li><p class="btn_blue2 big"><a href="#none" id="_updBtn">Update</a></p></li>
+    </c:if> 
 </ul>
 </section><!-- pop_body end -->
 </div>

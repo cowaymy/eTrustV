@@ -623,9 +623,15 @@ function fn_getDateGap(sdate, edate){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>POS Other income Listing</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_systemBtn">POS System</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_reversalBtn">POS Reversal</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_underDevelop()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -702,11 +708,17 @@ function fn_getDateGap(sdate, edate){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">POS Receipt</a></p></li>
+        </c:if>
     </ul>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">POS Payment Listing</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">POS Raw Data</a></p></li>
+        </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -732,7 +744,9 @@ function fn_getDateGap(sdate, edate){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_posStatusBtn">Save</a></p></li>  
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <li><p class="btn_blue2 big"><a id="_posStatusBtn">Save</a></p></li>
+    </c:if>  
 </ul>
 <!--item Grid  -->
 <div id="_itmDetailGridDiv">
@@ -744,7 +758,9 @@ function fn_getDateGap(sdate, edate){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="_itemStatusBtn">Save</a></p></li>
+    </c:if>
 </ul>
 </div>
 </section><!-- search_result end -->

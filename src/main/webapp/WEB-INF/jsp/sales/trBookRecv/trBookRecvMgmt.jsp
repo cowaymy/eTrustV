@@ -89,8 +89,12 @@ function fn_updateRecv(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="sal.page.title.trBookRecv" /></h2>
 <ul class="right_btns">
+	<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_updateRecv();"><spring:message code="sal.btn.updRecv" /></a></p></li>
+	</c:if>
+	<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -146,7 +150,9 @@ function fn_updateRecv(){
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a href="#"><spring:message code="sal.btn.trBookSummary" /></a></p></li>
+		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

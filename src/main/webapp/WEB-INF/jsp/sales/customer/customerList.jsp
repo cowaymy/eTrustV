@@ -240,8 +240,12 @@
 <h2>Customer list</h2>
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_listSearchBtn"><span class="search"></span>Search</a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -310,7 +314,9 @@
         <dt>Link</dt>
         <dd>
         <ul class="btns">
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="_custVALetterBtn">Customer VA Letter</a></p></li>
+            </c:if>
         </ul>
         <ul class="btns">
         </ul>

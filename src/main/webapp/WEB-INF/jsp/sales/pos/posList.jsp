@@ -792,9 +792,15 @@ function fn_getPosListAjax(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>POS Listing</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_systemBtn">POS System</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_reversalBtn">POS Reversal</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -877,11 +883,17 @@ function fn_getPosListAjax(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">POS Receipt</a></p></li>
+        </c:if>
     </ul>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">POS Payment Listing</a></p></li>
+        </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn type2"><a id="_posRawDataBtn">POS Raw Data</a></p></li>
+        </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -907,7 +919,9 @@ function fn_getPosListAjax(){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="_headerSaveBtn">Save</a></p></li>
+    </c:if>
 </ul>
 <!-- deduction Grid -->
 <div id="_deducGridDiv"> 
@@ -918,7 +932,9 @@ function fn_getPosListAjax(){
 <div id="deduc_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="_deducSaveBtn">Save</a></p></li>
+    </c:if>
 </ul>
 </div>
 <!--item Grid  -->
@@ -931,7 +947,9 @@ function fn_getPosListAjax(){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a id="_itemSaveBtn">Save</a></p></li>
+    </c:if>
 </ul>
 </div>
 </section><!-- search_result end -->

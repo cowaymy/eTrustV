@@ -296,7 +296,9 @@ function fn_detailComplete() {
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>CTOS(B2B) Result</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_search"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->

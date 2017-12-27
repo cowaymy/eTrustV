@@ -159,12 +159,16 @@
 			</p>
 			<h2>Rental Membership Confirmation List</h2>
 			<ul class="right_btns">
+				<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 				<li><p class="btn_blue">
                        <a href="#" id="_confirmBtn">Confirm Result</a> 
                    </p></li>
+                </c:if>   
+                <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue">
                         <a href="#" id="_btnSearch"><span class="search"></span>Search</a>
                     </p></li>
+                 </c:if>   
 				<li><p class="btn_blue">
 						<a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a>
 					</p></li>

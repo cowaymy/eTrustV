@@ -7,16 +7,18 @@
     	
     	//View Report
     	$("#reportType").change(function() {
-			if($(this).val() == '0'){
-				$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
+    		if($(this).val() == '0'){
+    			
+    			$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
 				$("#viewType").val("WINDOW");
 				loader(0);
-			}
-			
-		    if($(this).val() == '1'){
+			}else if($(this).val() == '1'){
 		    	$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
 		    	$("#viewType").val("WINDOW");
 		    	loader(1);
+            }else{
+            	$("#reportFileName").val('');
+                $("#viewType").val("");
             }
 		});
     	
@@ -127,6 +129,7 @@
     <th scope="row">Report Type</th>
     <td>
     <select class="w100p" id="reportType" name="reportType">
+        <option>choose one</option>
         <option value="0">HP Analysis</option>
         <option value="1">Cody Analysis</option>
     </select>
@@ -135,7 +138,7 @@
 </tbody>
 </table><!-- table end -->
 
-    <iframe onload="fn_onLoad(0)" name="reportIframe"  width="950px" height="600px" src="" scrolling="auto" frameborder="0"></iframe>
+    <iframe  name="reportIframe"  width="950px" height="600px" src="" scrolling="auto" frameborder="0"></iframe>
 
 </section>
 <!-- content end -->
