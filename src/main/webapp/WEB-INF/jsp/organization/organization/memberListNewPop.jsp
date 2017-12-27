@@ -111,6 +111,8 @@ function fn_departmentCode(value){
 		           });   
 		           
 		           //Training Course ajax콜 위치     		    
+		           doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
+		           
         	   }
         	   else if(traineeType == '3'){
         	   
@@ -126,6 +128,7 @@ function fn_departmentCode(value){
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
         		   
         		   //Training Course ajax콜 위치
+        		   doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
         	   }
            });
 

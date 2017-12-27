@@ -1593,4 +1593,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap selectHPMemberListView(Map<String, Object> params) {
 		return memberListMapper.getHPMemberListView(params);
 	}
+	@Override
+	public List<EgovMap>  selectCoureCode(Map<String, Object> params) {
+		return memberListMapper.selectCoureCode(params);
+	}	
 }
