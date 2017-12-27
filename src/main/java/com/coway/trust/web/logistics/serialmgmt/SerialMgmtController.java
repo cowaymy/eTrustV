@@ -137,7 +137,6 @@ public class SerialMgmtController {
 		return ResponseEntity.ok(map);
 	}
 
-
 	@RequestMapping(value = "/selectBoxNoList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> selectBoxNoList(@RequestBody Map<String, Object> params, Model model)
 	throws Exception
@@ -193,20 +192,22 @@ public class SerialMgmtController {
 
 		Map<String, Object> map = new HashMap();
 
-		if(paramArray.get("scantype") == null)
+		int scanType = Integer.parseInt(formItems.get("scantype").toString());
+
+		if(scanType == 30)
 		{
 			paramArray.put("reqstno", formItems.get(""));
 			paramArray.put("reqstdt", formItems.get("reqstDt"));
 			paramArray.put("frmlocid", formItems.get("RDCFrmLocID"));
-			paramArray.put("tolocid", formItems.get("RDCToLocID"));
-			paramArray.put("scantype", "30");
+			paramArray.put("tolocid", formItems.get("RDCToLoc"));
+			paramArray.put("scantype", formItems.get("scantype"));
 
 			serialMgmtService.insertScanItems(paramArray);
 		}
 		else
 		{
-			paramArray.put("reqstno", formItems.get("txtDelNo"));
-			paramArray.put("reqstdt", formItems.get("txtCrtDt"));
+			paramArray.put("reqstno", formItems.get("reqstno"));
+			paramArray.put("reqstdt", formItems.get("reqstdt"));
 			paramArray.put("frmlocid", formItems.get("frmlocid"));
 			paramArray.put("tolocid", formItems.get("tolocid"));
 			paramArray.put("scantype", formItems.get("scantype"));
@@ -214,7 +215,7 @@ public class SerialMgmtController {
 			serialMgmtService.insertScanItems(paramArray);
 
 			Map<String, Object> delNo = new HashMap();
-			delNo.put("delno", formItems.get("txtDelNo"));
+			delNo.put("delno", formItems.get("reqstno"));
 
 			List<EgovMap> list = serialMgmtService.selectScanList(delNo);
 			map.put("data", list);
