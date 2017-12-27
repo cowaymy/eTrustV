@@ -1,5 +1,7 @@
 package com.coway.trust.api.mobile.services;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1555,14 +1557,14 @@ public class ServiceApiController {
 		
 		//send SMS
 		SmsVO sms = new SmsVO(session.getUserId(), 975);
-		sms.setMessage("Do you really want to cancel for the current month Heart Service?\n" + "HS Order Number :"+ params.get("salesOrderNo")
-		+ "\nCancel Request Number :"+ cancReqNo );
-
-		LOGGER.debug(" params1111 : {}" , canCelSmsForm.getReceiverTelNo());
 		
+		String smsString = ("Do you really want to cancel for the current month Heart Service? " + "\n" + " HS Order Number :" + params.get("serviceNo")
+		+  "\n" + " Cancel Request Number :" + cancReqNo );
+
+		sms.setMessage(URLEncoder.encode(smsString , StandardCharsets.UTF_8.name()));
 		sms.setMobiles((String)canCelSmsForm.getReceiverTelNo());  
 
-		LOGGER.debug(" params2222 : {}" , sms.getMobiles());
+		LOGGER.debug("  : {}" , smsString);
 		
 		SmsResult smsResult = adaptorService.sendSMS(sms);
 		
