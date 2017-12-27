@@ -1,5 +1,7 @@
 package com.coway.trust.config.excel;
 
+import static com.coway.trust.AppConstants.EXCEL_UPLOAD_MAX_ROW;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
@@ -10,16 +12,18 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
-
-import static com.coway.trust.AppConstants.EXCEL_UPLOAD_MAX_ROW;
+import com.coway.trust.util.CommonUtils;
 
 @Component
 public class ExcelReadComponent {
+
+	static final long UPLOAD_EXCEL_MAX_SIZE = 1024 * 1024 * 10; // 업로드 최대 사이즈 설정 (10M)
 
 	public static String getValue(Cell cell) {
 		String value;
@@ -47,6 +51,13 @@ public class ExcelReadComponent {
 	public <T> List<T> readExcelToList(final MultipartFile multipartFile, boolean isIncludeHeader,
 			final Function<Row, T> rowFunc) throws IOException, InvalidFormatException {
 
+		if (multipartFile.getSize() > UPLOAD_EXCEL_MAX_SIZE) {
+			throw new ApplicationException(AppConstants.FAIL,
+					CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class).getMessage(
+							AppConstants.MSG_FILE_MAX_LIMT,
+							new Object[] { CommonUtils.formatFileSize(UPLOAD_EXCEL_MAX_SIZE) }));
+		}
+
 		int startRow = 0;
 		if (isIncludeHeader) {
 			startRow = 1;
@@ -56,7 +67,7 @@ public class ExcelReadComponent {
 		final Sheet sheet = workbook.getSheetAt(0);
 		final int rowCount = sheet.getPhysicalNumberOfRows();
 
-		if(rowCount > EXCEL_UPLOAD_MAX_ROW){
+		if (rowCount > EXCEL_UPLOAD_MAX_ROW) {
 			throw new ApplicationException(AppConstants.FAIL, "Too many rows... Max row is " + EXCEL_UPLOAD_MAX_ROW);
 		}
 
@@ -64,8 +75,8 @@ public class ExcelReadComponent {
 				.collect(Collectors.toList());
 	}
 
-	public <T> List<T> readExcelToList(final MultipartFile multipartFile, int startRow,
-									   final Function<Row, T> rowFunc) throws IOException, InvalidFormatException {
+	public <T> List<T> readExcelToList(final MultipartFile multipartFile, int startRow, final Function<Row, T> rowFunc)
+			throws IOException, InvalidFormatException {
 
 		final Workbook workbook = readWorkbook(multipartFile);
 		final Sheet sheet = workbook.getSheetAt(0);
@@ -99,9 +110,9 @@ public class ExcelReadComponent {
 		return fileName.endsWith(AppConstants.XLS);
 	}
 
-//	private boolean isExcelXlsx(String fileName) {
-//		return fileName.endsWith(AppConstants.XLSX);
-//	}
+	// private boolean isExcelXlsx(String fileName) {
+	// return fileName.endsWith(AppConstants.XLSX);
+	// }
 
 	private Workbook multipartFileToWorkbook(MultipartFile multipartFile) throws IOException, InvalidFormatException {
 		if (isExcelXls(multipartFile.getOriginalFilename())) {
