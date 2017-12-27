@@ -166,8 +166,10 @@ var gridPros = {
 			</form>
 		
 		<ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
-		    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/CTCommUploadFormat.csv">Download Format</a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+			    <li><p class="btn_blue2 big"><a href="javascript:fn_uploadFile();">Upload File</a></p></li>
+			    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/CTCommUploadFormat.csv">Download Format</a></p></li>
+		    </c:if>
 		</ul>
 		<!-- grid_wrap start -->
 	    <article id="grid_wrap_new" class="grid_wrap" style="display:none;"></article>

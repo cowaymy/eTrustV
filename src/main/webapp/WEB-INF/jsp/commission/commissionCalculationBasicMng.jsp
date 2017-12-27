@@ -80,22 +80,22 @@
 		// 아이템 AUIGrid 칼럼 설정
 		var columnLayout = [ { 
 			dataField : "codeName",
-	        headerText : "Procedure Name",
+	        headerText : "<spring:message code='commission.text.grid.procedureName'/>",
 	        style : "my-column",
 	        editable : false,
 	        width : 200
 		}, {
 			dataField : "cdds",
-	        headerText : "Description",
+	        headerText : "<spring:message code='commission.text.desc'/>",
 	        style : "my-column",
 	        editable : false
 		}, {
 	        dataField : "DATA",
-	        headerText : "Data Search",
+	        headerText : "<spring:message code='commission.text.grid.dataSearch'/>",
 	        style : "my-column",
 	        renderer : {
 	            type : "ButtonRenderer",
-	            labelText : "SEARCH",
+	            labelText : "<spring:message code='sys.btn.search'/>",
 	            onclick : function(rowIndex, columnIndex, value, item) {
 	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 5));
 	            	$("#prdNm").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 0));
@@ -107,11 +107,11 @@
 	        width : 105
 	    },{
 	        dataField : "LOGE",
-	        headerText : "Log Search",
+	        headerText : "<spring:message code='commission.text.grid.logSearch'/>",
 	        style : "my-column",
 	        renderer : {
 	            type : "ButtonRenderer",
-	            labelText : "SEARCH",
+	            labelText : "<spring:message code='sys.btn.search'/>",
 	            onclick : function(rowIndex, columnIndex, value, item) {
 	            	$("#codeId").val(AUIGrid.getCellValue(myGridID_Basic, rowIndex, 4));
 	            	Common.popupDiv("/commission/calculation/calBasicLogPop.do", $("#basicForm").serializeJSON());
@@ -122,11 +122,9 @@
 	        width : 105
 	    }, {
 			dataField : "codeId",
-	        headerText : "CODE ID",
 	       visible : false
 		},  {
 	        dataField : "code",
-	        headerText : "CODE",
 	        visible : false
 	    }];
 		
@@ -162,10 +160,10 @@
 
 		<ul class="right_btns">
 		<li><p class="btn_grid">    
-                    <a href="#"  id="logSearch" ><spring:message code='commission.button.logData'/></a>
+                    <c:if test="${PAGE_AUTH.funcView == 'Y'}"><a href="#"  id="logSearch" ><spring:message code='commission.button.logData'/></a></c:if>
                 </p></li>
 			<li><p class="btn_blue">	
-					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
+					<c:if test="${PAGE_AUTH.funcView == 'Y'}"><a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a></c:if>
 				</p></li>
 		</ul>
 

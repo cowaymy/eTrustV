@@ -46,43 +46,43 @@
 	function createAUIGrid() {
         var columnLayout = [ {
             dataField : "accdebtyear",
-            headerText : "RCM Year",
+            headerText : "<spring:message code='commission.text.grid.rcmYear'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "accdebtmonth",
-            headerText : "RCM Month",
+            headerText : "<spring:message code='commission.text.grid.rcmMonth'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "orderno",
-            headerText : "Order No",
+            headerText : "<spring:message code='commission.text.search.ordNo'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "custname",
-            headerText : "Customer Name",
+            headerText : "<spring:message code='commission.text.grid.customerName'/>",
             style : "my-column",
             width:300,
             editable : false
         },{
             dataField : "targetamount",
-            headerText : "Collection Target",
+            headerText : "<spring:message code='commission.text.grid.collectionTarget'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "collectedamount",
-            headerText : "Current Collection",
+            headerText : "<spring:message code='commission.text.grid.currentCollection'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "collectionrate",
-            headerText : "Collection Rate",
+            headerText : "<spring:message code='commission.text.grid.collectionRate'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "susTet",
-            headerText : "TER/SUS",
+            headerText : "<spring:message code='commission.text.grid.susTet'/>",
             style : "my-column",
             editable : false
         }];

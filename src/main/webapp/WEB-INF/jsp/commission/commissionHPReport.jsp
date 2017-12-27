@@ -237,16 +237,21 @@
 						<th scope="row"><spring:message code='commission.text.search.reportType'/></th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
-								<option value="1">HP Commission Statement</option>
-								<option value="2">HP Commission Raw (All)</option>								
-								<option value="3">HP TBB File Data Raw</option>
-								<option value="4">HP Comm Calculation</option>
-								<option value="5">HP SHI Index Raw</option>								
+								<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' || PAGE_AUTH.funcUserDefine2 == 'Y'}">
+								    <option value="1">HP Commission Statement</option>
+								</c:if>
+								<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+									<option value="2">HP Commission Raw (All)</option>								
+									<option value="3">HP TBB File Data Raw</option>
+									<option value="4">HP Comm Calculation</option>
+									<option value="5">HP SHI Index Raw</option>
+								</c:if>						
 						</select></td>
 					</tr>
 					<tr id="mConfirm" name="mConfirm" style="display: none;">
 						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
-						<td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" title="" placeholder="" class="" /> <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+						<td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" value="${loginId }" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">readonly</c:if> /> 
+						  <c:if test="${PAGE_AUTH.funcView == 'Y'}"><a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if>
 							<p class="btn_sky">
 								<a href="#" id="confirm" name="confirm"><spring:message code='commission.button.confirm'/></a>
 							</p></td>
@@ -260,9 +265,11 @@
 			<!-- table end -->
 
 			<ul class="center_btns">
-				<li><p class="btn_blue2 big">
-						<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
-					</p></li>
+			     <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+					<li><p class="btn_blue2 big">
+							<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
+						</p></li>
+				</c:if>
 				<li><p class="btn_blue2 big">
 						<a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
 					</p></li>

@@ -161,7 +161,7 @@
 	// AUIGrid 칼럼 설정
 	var columnLayout = [ {
 		dataField : "orgGrCd",
-		headerText : "ORG GR CD",
+		headerText : "<spring:message code='commission.text.grid.orgGrpCode'/>",
 		//width : 120,
 		editRenderer : {
 			type : "ComboBoxRenderer",
@@ -176,13 +176,13 @@
         width : "10%"
 	}, {
 		dataField : "orgGrNm",
-		headerText : "ORG GR NM",
+		headerText : "<spring:message code='commission.text.grid.orgGrpName'/>",
 		//width : 120,
 		editable : false,
         width : "10%"
 	}, {
 		dataField : "orgCd",
-		headerText : "ORG CD",
+		headerText : "<spring:message code='commission.text.grid.orgCode'/>",
 		//width : 120,
 		/*   labelFunction : function(rowIndex, columnIndex, value,
 		          headerText, item) {
@@ -207,20 +207,20 @@
         width : "10%"
 	}, {
 		dataField : "orgNm",
-		headerText : "ORG NAME",
+		headerText : "<spring:message code='commission.text.orgName'/>",
 		//width : 120,
 		editable : false,
 		style:"my-column",
         width : "10%"
     }, {
 		dataField : "cdds",
-		headerText : "DESCRIPTION",
+		headerText : "<spring:message code='commission.text.desc'/>",
 		editable : false,
 		//width : 180,
 		style : "my-column"
 	}, {
 		dataField : "useYn",
-		headerText : "USE YN",
+		headerText : "<spring:message code='commission.text.search.useYN'/>",
 		width : 120,
 		editRenderer : {
 			type : "ComboBoxRenderer",
@@ -233,7 +233,7 @@
 		}
 	}, {
 		dataField : "endDt",
-		headerText : "END DATE",
+		headerText : "<spring:message code='commission.text.grid.endDate'/>",
 		//width : 120,
 		editable : false,
         width : "10%"
@@ -243,7 +243,7 @@
 		width : 0
 	},{
         dataField : "updDt",
-        headerText : "UPDATE",
+        headerText : "<spring:message code='commission.text.grid.updateDate'/>",
         //width : 120,
         editable : false,
         width : "10%"
@@ -434,9 +434,11 @@
 		</p>
 		<h2><spring:message code='commission.title.organizationMgmt'/></h2>
 		<ul class="right_opt">
-			<li><p class="btn_blue">
-                     <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>
-                 </p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">		  
+				<li><p class="btn_blue">
+	                     <a href="javascript:fn_getRuleBookMngListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+	                 </p></li>
+            </c:if>
 		</ul>
 	</aside>
 	<!-- title_line end -->
@@ -501,16 +503,18 @@
     <li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
     <li><p class="btn_grid"><a href="#">DEL</a></p></li>
     <li><p class="btn_grid"><a href="#">INS</a></p></li> -->
-			<li>
-    			<p class="btn_grid">
-					<a href="javascript:addRow();"><spring:message code='sys.btn.add'/></a>
-				</p>
-			</li>
-			<li>
-				<p class="btn_grid">
-                    <a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a>
-                </p>
-			</li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+				<li>
+	    			<p class="btn_grid">
+						<a href="javascript:addRow();"><spring:message code='sys.btn.add'/></a>
+					</p>
+				</li>
+				<li>
+					<p class="btn_grid">
+	                    <a href="javascript:fn_saveGridMap();"><spring:message code='sys.btn.save'/></a>
+	                </p>
+				</li>
+			</c:if>
 		</ul>
 
 		<article class="grid_wrap">

@@ -111,9 +111,11 @@
 			<!-- table end -->
 
 			<ul class="center_btns">
-				<li><p class="btn_blue2 big">
-						<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
-					</p></li>
+                <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+					<li><p class="btn_blue2 big">
+							<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
+						</p></li>
+                </c:if>
 				<li><p class="btn_blue2 big">
 						<a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
 					</p></li>

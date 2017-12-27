@@ -544,7 +544,7 @@
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2><spring:message code='commission.title.resultCT'/></h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li>
+			<c:if test="${PAGE_AUTH.funcView == 'Y'}"><li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li></c:if>
 			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
@@ -594,9 +594,9 @@
 						</td>
 						<th scope="row"><spring:message code='commission.text.search.mode'/></th>
                         <td colspan=3>
-                            <label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label>
-	                        <label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label>
-	                        <label><input type="radio" name="actionType" id="actionTypeC" value="C"/><span><spring:message code='commission.text.search.compare'/></span></label>
+                            <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label></c:if>
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label></c:if>
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeC" value="C"/><span><spring:message code='commission.text.search.compare'/></span></label></c:if>
                         </td>
 					</tr>
 				</tbody>
@@ -607,7 +607,7 @@
 	<section class="search_result"><!-- search_result start -->
 	
 		<ul class="right_btns">
-			<li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='commission.button.generate'/></a></p></li>
+			<c:if test="${PAGE_AUTH.funcPrint == 'Y'}"><li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='commission.button.generate'/></a></p></li></c:if>
 		</ul>
 	
 		<article class="grid_wrap"><!-- grid_wrap start -->

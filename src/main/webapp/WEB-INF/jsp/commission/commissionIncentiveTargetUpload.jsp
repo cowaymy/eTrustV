@@ -214,9 +214,11 @@
 		</p>
 		<h2><spring:message code='commission.title.incentiveTarget'/></h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue">
-					<a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
-				</p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+				<li><p class="btn_blue">
+						<a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+					</p></li>
+            </c:if>
 			<li><p class="btn_blue">
 					<a href="javascript:fn_clearSearchForm();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a>
 				</p></li>
@@ -281,53 +283,21 @@
 					<dt>Link</dt>
 					<dd>
 						<ul class="btns">
-							<li><p class="link_btn">
-									<a href="javascript:confirmUploadPop();">Confirm Upload</a>
-								</p></li>
-							<li><p class="link_btn">
-									<a href="javascript:uploadViewPop();">View Upload Batch</a>
-								</p></li>
-							<!-- <li><p class="link_btn">
-									<a href="#">menu4</a>
-								</p></li>
-							<li><p class="link_btn">
-									<a href="#">Search Payment</a>
-								</p></li>
-							<li><p class="link_btn">
-									<a href="#">menu6</a>
-								</p></li>
-							<li><p class="link_btn">
-									<a href="#">menu7</a>
-								</p></li>
-							<li><p class="link_btn">
-									<a href="#">menu8</a>
-								</p></li> -->
+                            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+								<li><p class="link_btn">
+										<a href="javascript:confirmUploadPop();">Confirm Upload</a>
+									</p></li>
+								<li><p class="link_btn">
+										<a href="javascript:uploadViewPop();">View Upload Batch</a>
+									</p></li>
+                            </c:if>
 						</ul>
 						<ul class="btns">
-							<li><p class="link_btn type2">
-									<a href="javascript:newUploadPop();">New Upload</a>
-								</p></li>
-							<!-- <li><p class="link_btn type2">
-									<a href="#">Search Payment</a>
-								</p></li>
-							<li><p class="link_btn type2">
-									<a href="#">menu3</a>
-								</p></li>
-							<li><p class="link_btn type2">
-									<a href="#">menu4</a>
-								</p></li>
-							<li><p class="link_btn type2">
-									<a href="#">Search Payment</a>
-								</p></li>
-							<li><p class="link_btn type2">
-									<a href="#">menu6</a>
-								</p></li>
-							<li><p class="link_btn type2">
-									<a href="#">menu7</a>
-								</p></li>
-							<li><p class="link_btn type2">
-									<a href="#">menu8</a>
-								</p></li> -->
+                            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+								<li><p class="link_btn type2">
+										<a href="javascript:newUploadPop();">New Upload</a>
+									</p></li>
+                            </c:if>
 						</ul> 
 						<p class="hide_btn">
 							<a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a>

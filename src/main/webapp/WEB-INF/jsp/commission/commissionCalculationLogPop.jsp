@@ -30,67 +30,66 @@
    function createAUIGrid() {
 	var columnLayout2 = [ {
         dataField : "code",
-        headerText : "Excute<br>Group",
+        headerText : "<spring:message code='commission.text.grid.excuteGroup'/>",
         style : "my-column",
         editable : false,
         width: 60
     },{
         dataField : "calYearMonth",
-        headerText : "Excute<br>Date",
+        headerText : "<spring:message code='commission.text.grid.excuteDate'/>",
         style : "my-column",
         editable : false,
         width: 60
     },{
         dataField : "codeName",
-        headerText : "Procedure<br>Name",
+        headerText : "<spring:message code='commission.text.grid.procedureName'/>",
         style : "my-column",
         editable : false,
         width: 140
     },{
         dataField : "codeDesc",
-        headerText : "Description",
+        headerText : "<spring:message code='commission.text.desc'/>",
         style : "my-column",
         editable : false,
         width: 250
     },{
         dataField : "calStartTime",
-        headerText : "Start Date",
+        headerText : "<spring:message code='commission.text.grid.startDate'/>",
         style : "my-column",
         editable : false,
         width : 160
     },{
         dataField : "calEndTime",
-        headerText : "End Date",
+        headerText : "<spring:message code='commission.text.grid.endDate'/>",
         style : "my-column",
         editable : false,
         width : 160
     },{
         dataField : "calState",
-        headerText : "Result",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "statenm",
-        headerText : "Result",
+        headerText : "<spring:message code='commission.text.grid.result'/>",
         style : "my-column",
         editable : false,
         width: 70
     },{
         dataField : "calErrorCode",
-        headerText : "Error<br>Code",
+        headerText : "<spring:message code='commission.text.grid.errorCd'/>",
         style : "my-column",
         editable : false,
         width: 55
     },{
         dataField : "calErrorContents",
-        headerText : "ErrorContens",
+        headerText : "<spring:message code='commission.text.grid.errorContens'/>",
         style : "my-column",
         editable : false,
         width: 250
     },{
         dataField : "crtUserId",
-        headerText : "User ID",
+        headerText : "<spring:message code='commission.text.grid.userId'/>",
         style : "my-column",
         editable : false
     }];

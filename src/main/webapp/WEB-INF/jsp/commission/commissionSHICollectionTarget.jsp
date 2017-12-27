@@ -109,42 +109,42 @@ var today = "${today}";
 	function createAUIGrid() {
 	    var columnLayout3 = [{
 	        dataField : "topOrgCode",
-	        headerText : "Top Org Code",
+	        headerText : "<spring:message code='commission.text.grid.topOrgCode'/>",
 	        editable : false
 	    },{
 	        dataField : "orgCode",
-	        headerText : "Org Code",
+	        headerText : "<spring:message code='commission.text.grid.orgCode'/>",
 	        editable : false
 	    },{
 	        dataField : "grpCode",
-	        headerText : "Grp Code",
+	        headerText : "<spring:message code='commission.text.grid.grpCode'/>",
 	        editable : false
 	    },{
 	        dataField : "deptCode",
-	        headerText : "Dept Code",
+	        headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",
 	        editable : false
 	    },{
 	        dataField : "memCode",
-	        headerText : "Member Code",
+	        headerText : "<spring:message code='commission.text.search.memCode'/>",
 	        editable : false
 	    },{
 	        dataField : "unit",
-	        headerText : "Unit",
+	        headerText : "<spring:message code='commission.text.grid.unit'/>",
 	        style : "right-column",
 	        editable : false
 	    },{
 	        dataField : "targetatmt",
-	        headerText : "Target",
+	        headerText : "<spring:message code='commission.text.grid.target'/>",
 	        style : "right-column",
 	        editable : false
 	    },{
 	        dataField : "collectamt",
-	        headerText : "Current Collection",
+	        headerText : "<spring:message code='commission.text.grid.currentCollection'/>",
 	        style : "right-column",
 	        editable : false
 	    },{
 	        dataField : "collectrate",
-	        headerText : "Collection Rate",
+	        headerText : "<spring:message code='commission.text.grid.collectionRate'/>",
 	        style : "right-column",
 	        editable : false
 	    }];
@@ -190,7 +190,7 @@ var today = "${today}";
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2><spring:message code='commission.title.SHI'/></h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li>
+			<c:if test="${PAGE_AUTH.funcView == 'Y'}"><li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li></c:if>
 			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
@@ -232,8 +232,13 @@ var today = "${today}";
 						</td>
 						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<td>
-						  <input type="text" title="" placeholder="" id="memCode" name="memCode"/>
-						  <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+						  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+						      <input type="text" title="" placeholder="" id="memCode" name="memCode" value="${loginId }" readonly/>
+						  </c:if>
+						  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+							  <input type="text" title="" placeholder="" id="memCode" name="memCode"/>
+							  <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+						  </c:if>
 						</td>
 						<th scope="row"><spring:message code='commission.text.search.commMonth'/></th>
 						<td>

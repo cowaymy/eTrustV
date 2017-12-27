@@ -143,9 +143,9 @@
 						<th scope="row"><spring:message code='commission.text.search.reportType'/></th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
-								<option value="4">Finance Commisision</option>
-								<option value="10">Sales PV Report</option>								
-								<option value="12">Advanced Payment Report</option>							
+								<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"><option value="4">Finance Commisision</option></c:if>
+								<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"><option value="10">Sales PV Report</option></c:if>								
+								<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"><option value="12">Advanced Payment Report</option></c:if>							
 						</select></td>
 					</tr>					
 					<tr>
@@ -157,9 +157,11 @@
 			<!-- table end -->
 
 			<ul class="center_btns">
-				<li><p class="btn_blue2 big">
+				<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+				    <li><p class="btn_blue2 big">
 						<a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
 					</p></li>
+                </c:if>
 				<li><p class="btn_blue2 big">
 						<a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
 					</p></li>

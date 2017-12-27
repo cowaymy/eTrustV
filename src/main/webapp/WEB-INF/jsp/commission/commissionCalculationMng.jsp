@@ -9,10 +9,16 @@
 	text-align: left;
 	margin-top: -20px;
 }
+
+.edit-column {
+    visibility:hidden;
+}
 </style>
 
 <script type="text/javaScript">
-	  
+	chan = "${PAGE_AUTH.funcChange}";
+	view = "${PAGE_AUTH.funcView}";
+
 	// Make AUIGrid 
 	var myGridID_CAL;
 	var orgList = new Array(); //그룹 리스트
@@ -131,40 +137,39 @@
 	function createAUIGrid() {
 		var columnLayout = [ {
 			dataField : "codeName",
-			headerText : "Procedure Name",
+			headerText : "<spring:message code='commission.text.grid.procedureName'/>",
 			style : "my-column",
 			editable : false,
 			width : 200
 		}, {
 			dataField : "cdds",
-			headerText : "Description",
+			headerText : "<spring:message code='commission.text.desc'/>",
 			style : "my-column",
 			editable : false
 		}, {
 			dataField : "calState",
-			headerText : "result",
 			style : "my-column",
 			editable : false,
 			visible : false
 		}, {
 			dataField : "statenm",
-			headerText : "result",
+			headerText : "<spring:message code='commission.text.grid.result'/>",
 			style : "my-column",
 			editable : false,
 			width : 100
 		}, {
 			dataField : "calStartTime",
-			headerText : "date",
+			headerText : "<spring:message code='commission.text.grid.date'/>",
 			style : "my-column",
 			editable : false,
 			width : 160
 		}, {
 			dataField : "DATA",
-			headerText : "Data Search",
-			style : "my-column",
+			headerText : "<spring:message code='commission.text.grid.dataSearch'/>",
+			style : cellStyleNonView,
 			renderer : {
 				type : "ButtonRenderer",
-				labelText : "SEARCH",
+				labelText : "<spring:message code='sys.btn.search'/>",
 				onclick : function(rowIndex, columnIndex, value, item) {
 					$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
 					$("#code").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "code"));
@@ -177,11 +182,11 @@
 			width : 105
 		}, {
 			dataField : "LOGE",
-			headerText : "Log Search",
-			style : "my-column",
+			headerText : "<spring:message code='commission.text.grid.logSearch'/>",
+			style : cellStyleNonView,
 			renderer : {
 				type : "ButtonRenderer",
-				labelText : "SEARCH",
+				labelText : "<spring:message code='sys.btn.search'/>",
 				onclick : function(rowIndex, columnIndex, value, item) {
 					$("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
 					Common.popupDiv("/commission/calculation/calCommLogPop.do", $("#searchForm").serializeJSON());
@@ -191,11 +196,11 @@
 			width : 105
 		}, {
             dataField : "exBtn",
-            headerText : "Execute",
-            style : "my-column",
+            headerText : "<spring:message code='commission.text.grid.execute'/>",
+            style : cellStyleNonChan,
             renderer : {
                 type : "ButtonRenderer",
-                labelText : "EXECUTE",
+                labelText : "<spring:message code='commission.text.grid.execute'/>",
                 onclick : function(rowIndex, columnIndex, value, item) {
                     $("#procedureNm").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeName"));
                     $("#codeId").val(AUIGrid.getCellValue(myGridID_CAL, rowIndex, "codeId"));
@@ -266,11 +271,9 @@
 			width : 105
 		}, {
 			dataField : "codeId",
-			headerText : "CODE ID",
 			visible : false
 		}, {
 			dataField : "code",
-			headerText : "CODE",
 			visible : false
 		}, {
 			dataField : "cd",
@@ -287,6 +290,20 @@
 		};
 		myGridID_CAL = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 	}
+	
+	//addcolum button hidden
+    function cellStyleNonChan(rowIndex, columnIndex, value, headerText, item, dataField){
+        if(chan != "Y"){
+            return "edit-column";
+        }
+        return "";
+    }
+    function cellStyleNonView(rowIndex, columnIndex, value, headerText, item, dataField){
+        if(view != "Y"){
+            return "edit-column";
+        }
+        return "";
+    }
 </script>
 
 
@@ -308,7 +325,7 @@
 
 		<ul class="right_btns">
 			<li><p class="btn_blue">		
-					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
+					<c:if test="${PAGE_AUTH.funcView == 'Y'}"><a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a></c:if>
 				</p></li>
 		</ul>
 
@@ -342,9 +359,10 @@
                                 <c:forEach var="list" items="${orgGrList }">
                                     <option value="${list.code}">${list.code}</option>
                                 </c:forEach>
-                        </select>
-                        <label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label>
-                        <label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label></td>
+	                        </select>
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label></c:if>
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label></c:if>
+                        </td>
 					</tr>
 				</tbody>
 			</table>
@@ -355,7 +373,7 @@
 	       <input type="hidden" name="batchYn" id="batchYn"/>
 	       
 			<ul class="right_btns">
-				<li><p class="btn_grid"><a href="#" id="runBatch"><spring:message code='commission.button.runBatch'/></a></p></li>
+				<c:if test="${PAGE_AUTH.funcChange == 'Y'}"><li><p class="btn_grid"><a href="#" id="runBatch"><spring:message code='commission.button.runBatch'/></a></p></li></c:if>
 			</ul>
 			
 			<article class="grid_wrap">

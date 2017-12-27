@@ -18,6 +18,7 @@
 <script type="text/javaScript">
 	
 	// Make AUIGrid 
+	chan = "${PAGE_AUTH.funcChange}";
 	var myGridID;
 	var myGridID2;
 	var orgList = new Array(); //그룹 리스트
@@ -492,19 +493,19 @@
 	// 아이템 AUIGrid 칼럼 설정
 	var columnLayout = [ {
 		dataField : "orgSeq",
-		headerText : "ORG SEQ",
+		headerText : "<spring:message code='commission.text.grid.orgSeq'/>",
 		visible : false
 	}, {
 		dataField : "orgGrCd",
-		headerText : "ORG GR CD",
+		headerText : "<spring:message code='commission.text.grid.orgGrpCode'/>",
 		visible : false
 	}, {
 		dataField : "itemSeq",
-		headerText : "ITEM SEQ",
+		headerText : "<spring:message code='commission.text.grid.itemSeq'/>",
 		visible : false
 	}, {
 		dataField : "orgCd",
-		headerText : "ORG CD",
+		headerText : "<spring:message code='commission.text.grid.orgCode'/>",
 		width : 100,
 		editRenderer : {
 			type : "ComboBoxRenderer",
@@ -518,13 +519,13 @@
 		}
 	}, {
 		dataField : "orgds",
-		headerText : "ORG NAME",
+		headerText : "<spring:message code='commission.text.orgName'/>",
 		width : 120,
 		style : "my-column",
 		editable : false
 	}, {
 		dataField : "itemCd",
-		headerText : "ITEM CODE",
+		headerText : "<spring:message code='commission.text.grid.itemCode'/>",
 		width : 100,
 		editRenderer : {
 			type : "ComboBoxRenderer",
@@ -539,17 +540,17 @@
 		}
 	}, {
 		dataField : "codeName",
-		headerText : "Description",
+		headerText : "<spring:message code='commission.text.desc'/>",
 		editable : false,
 		style : "my-column"
 		//width : 617
 	}, {
 		dataField : "editBtn",
-		headerText : "Management<br>RULE",
+		headerText : "<spring:message code='commission.text.grid.mngtRule'/>",
 		styleFunction : cellStyleFunction,
 		renderer : {
 			type : "ButtonRenderer",
-			labelText : "EDIT",
+			labelText : "<spring:message code='commission.text.grid.edit'/>",
 			onclick : function(rowIndex, columnIndex, value, item) {
 				$("#popup_wrap").show();
                 //console.log("itemCd : " + AUIGrid.getCellValue(myGridID, rowIndex, 5));
@@ -601,7 +602,7 @@
         width : 150
 	}, {
 		dataField : "useYn",
-		headerText : "USE YN",
+		headerText : "<spring:message code='commission.text.search.useYN'/>",
 		width : 120,
 		editRenderer : {
 			type : "ComboBoxRenderer",
@@ -614,7 +615,7 @@
 		}
 	}, {
 		dataField : "typeCd",
-		headerText : "Level",
+		headerText : "<spring:message code='commission.text.search.level'/>",
 		width : 120,
 		visible : false,
 		editRenderer : {
@@ -631,24 +632,21 @@
 		}
 	}, {
 		dataField : "endDt",
-		headerText : "END DATE",
+		headerText : "<spring:message code='commission.text.grid.endDate'/>",
 		editable : false,
         width : 150
 	}, {
 		dataField : "orgNm",
-		headerText : "ORG Name",
 		visible : false,
 	}, {
 		dataField : "itemNm",
-		headerText : "Item Name",
 		visible : false,
 	}, {
 	    dataField : "code",
-	    headerText : "code",
 	    visible : false,
 	  },{
         dataField : "updDt",
-        headerText : "UPDATE<br>DATE",
+        headerText : "<spring:message code='commission.text.grid.updateDate'/>",
         width : 120
       } ];
 
@@ -657,79 +655,74 @@
 	**********************/
 	var columnLayout2 = [   {
 	    dataField : "orgds",
-	    headerText : "ORG Name",
+	    headerText : "<spring:message code='commission.text.orgName'/>",
 	    width : 120,
 	    style : "my-column",
 	    editable : false
 	  } ,{
 		dataField : "orgSeq",
-		headerText : "ORG SEQ",
 		editable : false,
 		visible : false
 	}, {
 		dataField : "itemSeq",
-		headerText : "ITEM SEQ",
 		editable : false,
 		visible : false
 	},  {
 		dataField : "ruleSeq",
-		headerText : "RULE SEQ",
 		editable : false,
 		visible : false
 	} , {
 		dataField : "ruleLevel",
-		headerText : "RULE Level",
 		editable : false,
 		visible : false
 	}, {
 		dataField : "ruleCategory",
-		headerText : "RULE CATEGORY",
+		headerText : "<spring:message code='commission.text.grid.ruleCategory'/>",
 		width : 200,
 		editable : false,
 		style : "my-column"
 	}, {
 		dataField : "ruleOpt1",
-		headerText : "Range Start Value",
+		headerText : "<spring:message code='commission.text.grid.rangeStartValue'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "ruleOpt2",
-		headerText : "Range End Value",
+		headerText : "<spring:message code='commission.text.grid.rangeEndValue'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "valueType",
-		headerText : "Range Value Type",
+		headerText : "<spring:message code='commission.text.grid.rangeValueType'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "resultValue",
-		headerText : "Conditional Value",
+		headerText : "<spring:message code='commission.text.grid.conditionalValue'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "resultValueNm",
-		headerText : "Condition Value Type",
+		headerText : "<spring:message code='commission.text.grid.conditionValueType'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "startDt",
-		headerText : "Start Month/Year",
+		headerText : "<spring:message code='commission.text.grid.startDate'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "endDt",
-		headerText : "End Month/Year",
+		headerText : "<spring:message code='commission.text.grid.endDate'/>",
 		editable : false,
 		width : 100
 	}, {
 		dataField : "useYn",
-		headerText : "USE(Y/N)",
+		headerText : "<spring:message code='commission.text.search.useYN'/>",
 		editable : false,
 		width : 100
 	}, {
 	    dataField : "rulePid",
-	    headerText : "Rule Parent ID",
 	    editable : false,
 	    visible : false
 	  }  ];
@@ -783,7 +776,7 @@
     
     //addcolum button hidden
     function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataField){
-        if(item.endDt == "" || item.endDt==null){
+        if(item.endDt == "" || item.endDt==null || chan != "Y"){
             return "edit-column";
         }
         return "";
@@ -998,9 +991,11 @@
 		<h2><spring:message code='commission.title.groupRulBookMgmt'/></h2>
 
 		<ul class="right_btns">
-			<li><p class="btn_blue">			
-					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
-				</p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+				<li><p class="btn_blue">			
+						<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
+					</p></li>
+            </c:if>
 		</ul>
 
 	</aside>
@@ -1059,12 +1054,14 @@
 	<section class="search_result">
 		<!-- search_result start -->
 		<ul class="right_btns">
-			<li><p class="btn_grid">
-					<a href="#" id="addRow"><spring:message code='sys.btn.add'/></a>
-				</p></li>
-			<li><p class="btn_grid">
-                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
-                </p></li>
+            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+				<li><p class="btn_grid">
+						<a href="#" id="addRow"><spring:message code='sys.btn.add'/></a>
+					</p></li>
+				<li><p class="btn_grid">
+	                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
+	                </p></li>
+            </c:if>
 		</ul>
 
 		<article class="grid_wrap">

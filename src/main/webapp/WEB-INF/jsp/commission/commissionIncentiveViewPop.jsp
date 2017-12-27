@@ -13,42 +13,42 @@
 	function createAUIGrid() {
 	    var columnLayout = [{
 	        dataField : "userMemCode",
-	        headerText : "Member Code",
+	        headerText : "<spring:message code='commission.text.search.memCode'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "codeNm",
-	        headerText : "Type",
+	        headerText : "<spring:message code='commission.text.search.type'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "memNm",
-	        headerText : "Member Name",
+	        headerText : "<spring:message code='commission.text.grid.memberName'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "code",
-	        headerText : "Status",
+	        headerText : "<spring:message code='commission.text.search.status'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "validRem",
-	        headerText : "Remark",
+	        headerText : "<spring:message code='commission.text.grid.remark'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "userTrgetAmt",
-	        headerText : "Target AMT",
+	        headerText : "<spring:message code='commission.text.grid.targetAmt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "userRefCode",
-	        headerText : "Ref Code",
+	        headerText : "<spring:message code='commission.text.search.refCode'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "userRefLvl",
-	        headerText : "Lvl",
+	        headerText : "<spring:message code='commission.text.search.level'/>",
 	        style : "my-column",
 	        editable : false
 	    },{

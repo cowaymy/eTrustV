@@ -206,7 +206,7 @@
    **************************************************************** **/
 	
 	var columnCDActualLayout = [
-	    {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+	    {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
 	    {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -252,11 +252,11 @@
 	    {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
 	    {dataField : "aShiRentalmembershipAmt", headerText : "SHI Rentalmembership AMT",        style : "my-column", editable : false } ,
 	    {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-	    {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
+	    {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
 	];
     
     var columnCMActualLayout = [
-        {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
         {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -297,11 +297,11 @@
         {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
         {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
     ];
 	
     var columnSCMActualLayout = [
-        {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
         {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -342,11 +342,11 @@
         {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
         {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
     ];
 	
     var columnGCMActualLayout = [
-        {dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+        {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
         {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -387,7 +387,7 @@
         {dataField : "aRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "aOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
         {dataField : "aPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "aAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
     ];
 	
 /** ****************************************************************
@@ -395,7 +395,7 @@
 **************************************************************** **/
 
 	var columnCDSimulLayout = [
-		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+		{dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
 		{dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
 		{dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
 		{dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -441,11 +441,11 @@
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "sShiRentalmembershipAmt", headerText : "SHI Rentalmembership AMT",        style : "my-column", editable : false } ,
         {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
 	];
 	
 	var columnCMSimulLayout = [
-		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+		{dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
         {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -486,11 +486,11 @@
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
         {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
 	];
 	
 	var columnSCMSimulLayout = [
-		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+		{dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
         {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -531,11 +531,11 @@
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
         {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
 	];
 	
 	var columnGCMSimulLayout = [
-		{dataField : "memCode",           headerText : "Mem Code",     style : "my-column", editable : false, width : 80 },
+		{dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",     style : "my-column", editable : false, width : 80 },
         {dataField : "memName",          headerText : "Mem Name",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "Rank",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "Nric",              style : "my-column", editable : false, width : 110 },
@@ -576,14 +576,14 @@
         {dataField : "sRentalmembershipAmt",     headerText : "Rentalmembership AMT",        style : "my-column", editable : false },
         {dataField : "sOutplsAmt", headerText : "Outpls Amt",        style : "my-column", editable : false },
         {dataField : "sPosDeduction",                   headerText : "Pos Deduction",        style : "my-column", editable : false },
-        {dataField : "sAmount",                   headerText : "Total",        style : "my-column", editable : false }
+        {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.total'/>",        style : "my-column", editable : false }
 	];
 
 /** ****************************************************************
     COMPARE GRID
 **************************************************************** **/
 	var columnCDCompareLayout = [
-	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",            style : "my-column", editable : false, width : 80},
 	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
@@ -628,11 +628,11 @@
 	    {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	    {headerText : "SHI Rentalmembership AMT",   children: [{dataField: "aShiRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sShiRentalmembershipAmt", headerText: "S", editable : false}]},
 	    {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]}, 
-	    {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
+	    {headerText : "<spring:message code='commissiom.text.excel.total'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 	var columnCMCompareLayout = [
-	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",            style : "my-column", editable : false, width : 80},
 	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
@@ -673,11 +673,11 @@
 	    {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
 	    {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
 	    {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
-	    {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
+	    {headerText : "<spring:message code='commissiom.text.excel.total'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 	var columnSCMCompareLayout = [
-	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",            style : "my-column", editable : false, width : 80},
 	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
@@ -718,11 +718,11 @@
         {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
         {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
-        {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
+        {headerText : "<spring:message code='commissiom.text.excel.total'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 	var columnGCMCompareLayout = [
-	    {dataField : "memCode",           headerText : "Mem Code",            style : "my-column", editable : false, width : 80},
+	    {dataField : "memCode",           headerText : "<spring:message code='commissiom.text.excel.memCode'/>",            style : "my-column", editable : false, width : 80},
 	    {dataField : "memName",          headerText : "Mem Name",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "Rank",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "Nric",             style : "my-column", editable : false, width : 110 },
@@ -763,7 +763,7 @@
         {headerText : "Rentalmembership AMT",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
         {headerText : "Outpls Amt",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "Pos Deduction",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
-        {headerText : "Total",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
+        {headerText : "<spring:message code='commissiom.text.excel.total'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
 	
 
@@ -784,7 +784,7 @@
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 		<h2><spring:message code='commission.title.resultCD'/></h2>
 		<ul class="right_btns">
-			<li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li>
+			<c:if test="${PAGE_AUTH.funcView == 'Y'}"><li><p class="btn_blue"><a href="#" id="search"><spring:message code='sys.btn.search'/></a></p></li></c:if>
 			<li><p class="btn_blue"><a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		</ul>
 	</aside><!-- title_line end -->
@@ -834,9 +834,9 @@
 						</td>
 						<th scope="row"><spring:message code='commission.text.search.mode'/></th>
                         <td colspan=3>
-                            <label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label>
-	                        <label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label>
-	                        <label><input type="radio" name="actionType" id="actionTypeC" value="C"/><span><spring:message code='commission.text.search.compare'/></span></label>
+                            <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeA" value="A"checked/><span><spring:message code='commission.text.search.actual'/></span></label></c:if>
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeS" value="S"/><span><spring:message code='commission.text.search.simulation'/></span></label></c:if>
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}"><label><input type="radio" name="actionType" id="actionTypeC" value="C"/><span><spring:message code='commission.text.search.compare'/></span></label></c:if>
                         </td>
 					</tr>
 				</tbody>
@@ -847,7 +847,7 @@
 	<section class="search_result"><!-- search_result start -->
 	
 		<ul class="right_btns">
-			<li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='commission.button.generate'/></a></p></li>
+			<c:if test="${PAGE_AUTH.funcPrint == 'Y'}"><li><p class="btn_grid"><a href="javascript:fn_excelDown();"><spring:message code='commission.button.generate'/></a></p></li></c:if>
 		</ul>
 	
 		<article class="grid_wrap"><!-- grid_wrap start -->

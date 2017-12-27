@@ -143,12 +143,12 @@
 	        }
 	    },{
 	          dataField : "codeName",
-	          headerText : "CODE NAME",
+	          headerText : "<spring:message code='commission.text.grid.codeName'/>",
 	          style : "my-column",
 	          editable : false
 	      },{
               dataField : "cdds",
-              headerText : "Description",
+              headerText : "<spring:message code='commission.text.desc'/>",
               style : "my-column",
               editable : false
           },{
@@ -219,12 +219,12 @@
 	function createSimulAUIGrid(){
 		var columnLayout = [ {
             dataField : "codeName",
-            headerText : "CODE NAME",
+            headerText : "<spring:message code='commission.text.grid.codeName'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "cdds",
-            headerText : "Description",
+            headerText : "<spring:message code='commission.text.desc'/>",
             style : "my-column",
             editable : false
         },{
@@ -398,9 +398,11 @@
 		</p>
 		<h2><spring:message code='commission.title.versionMgmt'/></h2>
 		<ul class="right_opt">
-			<li><p class="btn_blue">
-			<a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
-			</p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+				<li><p class="btn_blue">
+				    <a href="#" id="search"><span class="search"></span><spring:message code='sys.btn.search'/></a>
+				</p></li>
+			</c:if>
 		</ul>
 	</aside>
 	<!-- title_line end -->
@@ -497,11 +499,13 @@
 				                    <a href="#" id="clear"><span class="clear"></span><spring:message code='sys.btn.clear'/></a>
 				                </p>
 				            </li>
-				            <li>
-				                <p class="btn_grid">
-				                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
-				                </p>
-				            </li>
+				            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+					            <li>
+					                <p class="btn_grid">
+					                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
+					                </p>
+					            </li>
+				            </c:if>
 				        </ul>
 					</aside><!-- title_line end -->
 					<div class="border_box" style="height:330px;"><!-- border_box start -->

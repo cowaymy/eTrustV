@@ -118,7 +118,9 @@
 	</section><!-- search_table end -->
 
 	<ul class="center_btns">
-		<li><p class="btn_blue2 big"><a href="#" id="save"><spring:message code='sys.btn.save'/></a></p></li>
+        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+            <li><p class="btn_blue2 big"><a href="#" id="save"><spring:message code='sys.btn.save'/></a></p></li>
+        </c:if>
 		<li><p class="btn_blue2 big"><a href="javascript:clearForm();"><spring:message code='sys.btn.clear'/></a></p></li>
 	</ul>
 

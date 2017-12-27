@@ -269,23 +269,29 @@
                         <th scope="row"><spring:message code='commission.text.search.reportType'/></th>
                         <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
                                 <option value="">Report/Raw Data Type</option>
-                                <option value="1">Coway Technician Commission</option>
-                                <option value="2">Coway Technician Commission Raw (Excel)</option>                              
-                                <option value="3">Coway Technician Commission (All)</option>
-                                <option value="4">Coway Technician Comm (AS)</option>
-                                <option value="5">Coway Technician Comm (BS)</option>                               
-                                <option value="6">Coway Technician Comm (Collection)</option>                               
-                                <option value="7">Coway Technician Comm (Installation)</option>                             
-                                <option value="8">Coway Technician Comm (Membership)</option>                               
-                                <option value="9">Coway Technician Comm (ProdRet)</option>                              
+                                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' || PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                                    <option value="1">Coway Technician Commission</option>
+                                </c:if>
+                                <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+	                                <option value="2">Coway Technician Commission Raw (Excel)</option>                              
+	                                <option value="3">Coway Technician Commission (All)</option>
+	                                <option value="4">Coway Technician Comm (AS)</option>
+	                                <option value="5">Coway Technician Comm (BS)</option>                               
+	                                <option value="6">Coway Technician Comm (Collection)</option>                               
+	                                <option value="7">Coway Technician Comm (Installation)</option>                             
+	                                <option value="8">Coway Technician Comm (Membership)</option>                               
+	                                <option value="9">Coway Technician Comm (ProdRet)</option>       
+                                </c:if>                       
                         </select></td>
                     </tr>
                     <tr id="mConfirm" name="mConfirm" style="display: none;">
                         <th scope="row"><spring:message code='commission.text.search.memCode'/></th>
-                        <td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" title="" placeholder="" class="" /> <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                        <td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" value="${loginId }" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">readonly</c:if>  /> 
+                            <c:if test="${PAGE_AUTH.funcView == 'Y'}"><a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if>
                             <p class="btn_sky">
                                 <a href="#" id="confirm" name="confirm"><spring:message code='commission.button.confirm'/></a>
-                            </p></td>
+                            </p>
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row"><spring:message code='commission.text.search.period'/></th>
@@ -296,9 +302,11 @@
             <!-- table end -->
 
             <ul class="center_btns">
-                <li><p class="btn_blue2 big">
-                        <a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
-                    </p></li>
+                <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+	                <li><p class="btn_blue2 big">
+	                        <a href="#" id="generate" id="generate"><spring:message code='commission.button.generate'/></a>
+	                    </p></li>
+                </c:if>
                 <li><p class="btn_blue2 big">
                         <a href="#" id="clear" name="clear"><spring:message code='sys.btn.clear'/></a>
                     </p></li>

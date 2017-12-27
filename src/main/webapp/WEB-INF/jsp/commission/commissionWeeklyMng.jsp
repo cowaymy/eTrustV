@@ -169,12 +169,12 @@
 	// Weekly AUIGrid 칼럼 설정
 	var columnLayout = [{
 	    dataField : "seq",
-	    headerText : "SEQ",
+	    headerText : "<spring:message code='commission.text.grid.seq'/>",
 	    width : 0,
 	    visible : false
 	  }, {
 		dataField : "year",
-		headerText : "YEAR",
+		headerText : "<spring:message code='commission.text.grid.year'/>",
 		dataType : "numeric",	
 		editRenderer : {
 			  type : "InputEditRenderer",
@@ -189,7 +189,7 @@
 		width : "10%"
 	}, {
 		dataField : "month",
-        headerText : "MONTH",
+        headerText : "<spring:message code='commission.text.grid.month'/>",
         dataType : "numeric", 
         editRenderer : {
             type : "InputEditRenderer",
@@ -203,7 +203,7 @@
         width : "10%"
 	}, {
 		dataField : "weeks",
-        headerText : "WEEKS",
+        headerText : "<spring:message code='commission.text.grid.keeks'/>",
         dataType : "numeric", 
         editRenderer : {
             type : "InputEditRenderer",
@@ -217,7 +217,7 @@
           width : "10%"
 	},{
 		dataField : "startDt",
-        headerText : "START DATE",
+        headerText : "<spring:message code='commission.text.grid.startDate'/>",
         dataType : "date",
         formatString : "yyyy/mm/dd",
         width:160,
@@ -230,7 +230,7 @@
         width : "10%"
 	},  {
         dataField : "endDt",
-        headerText : "END DATE",
+        headerText : "<spring:message code='commission.text.grid.endDate'/>",
         dataType : "date",
         formatString : "yyyy/mm/dd",
         width:160,
@@ -310,9 +310,11 @@
 		<h2><spring:message code='commission.title.weekly'/></h2>
 
 		<ul class="right_btns">
-			<li><p class="btn_blue"> 
-					<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
-				</p></li>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+				<li><p class="btn_blue"> 
+						<a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a>
+					</p></li>
+            </c:if>
 		</ul>
 
 	</aside>
@@ -346,13 +348,15 @@
 	   <form id="callForm" action="" method="post">
 	       <input type="hidden" name="procedureNm" id="procedureNm"/>
 			<!-- search_result start -->
-			<ul class="right_btns">			   
-				<li><p class="btn_grid">
-	                    <a href="#" id="addRow"><spring:message code='sys.btn.add'/></a>
-	                </p></li>
-	       <li><p class="btn_grid">
-                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
-                </p></li>          
+			<ul class="right_btns">
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+					<li><p class="btn_grid">
+		                    <a href="#" id="addRow"><spring:message code='sys.btn.add'/></a>
+		                </p></li>
+		           <li><p class="btn_grid">
+	                    <a href="#" id="save"><spring:message code='sys.btn.save'/></a>
+	                </p></li>         
+                </c:if> 
 			</ul>
 	
 			<article class="grid_wrap">
