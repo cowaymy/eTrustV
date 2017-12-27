@@ -190,34 +190,34 @@ var attendeeColumnLayout = [ {
         keyField : "coursTestResult", // key 에 해당되는 필드명
         valueField : "name" // value 에 해당되는 필드명
     }
-}, {
-    dataField : "coursMemShirtSize",
-    headerText : 'Shirt Size',
-    renderer : {
-        type : "DropDownListRenderer",
-        list : [{"coursMemShirtSize":"S","name":"S"},{"coursMemShirtSize":"M","name":"M"},{"coursMemShirtSize":"L","name":"L"},{"coursMemShirtSize":"XL","name":"XL"},{"coursMemShirtSize":"XXL","name":"XXL"},{"coursMemShirtSize":"XXXL","name":"XXXL"}], //key-value Object 로 구성된 리스트
-        keyField : "coursMemShirtSize", // key 에 해당되는 필드명
-        valueField : "name" // value 에 해당되는 필드명
-    }
-}, {
-    dataField : "coursItmMemPup",
-    headerText : 'PUP',
-    renderer : {
-        type : "DropDownListRenderer",
-        list : [{"coursItmMemPup":"344","name":"Central"},{"coursItmMemPup":"345","name":"Northen"},{"coursItmMemPup":"346","name":"Southern"}], //key-value Object 로 구성된 리스트
-        keyField : "coursItmMemPup", // key 에 해당되는 필드명
-        valueField : "name" // value 에 해당되는 필드명
-    }
-}, {
-    dataField : "coursItmMemIsVege",
-    headerText : 'IS VEG?',
-    renderer : {
-        type : "DropDownListRenderer",
-        list : [{"coursItmMemIsVege":"1","name":"Yes"},{"coursItmMemIsVege":"0","name":"No"}], //key-value Object 로 구성된 리스트
-        keyField : "coursItmMemIsVege", // key 에 해당되는 필드명
-        valueField : "name" // value 에 해당되는 필드명
-    }
-}
+}//, {
+//    dataField : "coursMemShirtSize",
+//    headerText : 'Shirt Size',
+//    renderer : {
+//        type : "DropDownListRenderer",
+//        list : [{"coursMemShirtSize":"S","name":"S"},{"coursMemShirtSize":"M","name":"M"},{"coursMemShirtSize":"L","name":"L"},{"coursMemShirtSize":"XL","name":"XL"},{"coursMemShirtSize":"XXL","name":"XXL"},{"coursMemShirtSize":"XXXL","name":"XXXL"}], //key-value Object 로 구성된 리스트
+//        keyField : "coursMemShirtSize", // key 에 해당되는 필드명
+//        valueField : "name" // value 에 해당되는 필드명
+//    }
+//}, {
+//    dataField : "coursItmMemPup",
+//    headerText : 'PUP',
+//    renderer : {
+//        type : "DropDownListRenderer",
+//        list : [{"coursItmMemPup":"344","name":"Central"},{"coursItmMemPup":"345","name":"Northen"},{"coursItmMemPup":"346","name":"Southern"}], //key-value Object 로 구성된 리스트
+//        keyField : "coursItmMemPup", // key 에 해당되는 필드명
+//        valueField : "name" // value 에 해당되는 필드명
+//    }
+//}, {
+//    dataField : "coursItmMemIsVege",
+//    headerText : 'IS VEG?',
+//    renderer : {
+//        type : "DropDownListRenderer",
+//        list : [{"coursItmMemIsVege":"1","name":"Yes"},{"coursItmMemIsVege":"0","name":"No"}], //key-value Object 로 구성된 리스트
+//        keyField : "coursItmMemIsVege", // key 에 해당되는 필드명
+//        valueField : "name" // value 에 해당되는 필드명
+//    }
+//}
 ];
 
 //그리드 속성 설정
