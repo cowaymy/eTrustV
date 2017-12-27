@@ -29,20 +29,20 @@
 var resGrid;
 var reqGrid;
 
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:120    ,height:30 ,visible:false},                         
-                     {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"              ,width:120    ,height:30 ,visible:false},                         
-                     {dataField: "stkid",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30 ,visible:false},                        
-                     {dataField: "stkcd",headerText :"<spring:message code='log.head.matcode'/>"            ,width:120    ,height:30,editable:false},                        
-                     {dataField: "stknm",headerText :"<spring:message code='log.head.materialname'/>"             ,width:120    ,height:30,editable:false},                          
-                     {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"       ,width:120    ,height:30, editable:false},                         
-                     {dataField: "serialchck" ,headerText:    ""       ,width:120    ,height:30, editable:false},                         
-                     {dataField: "typeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120    ,height:30,visible:false},                         
-                     {dataField: "typenm",headerText :"<spring:message code='log.head.type'/>"            ,width:120    ,height:30,editable:false},                          
-                     {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},                         
-                     {dataField: "catenm",headerText :"<spring:message code='log.head.category'/>"             ,width:120    ,height:30,editable:false},                         
-                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false} 
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:120    ,height:30 ,visible:false},
+                     {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"              ,width:120    ,height:30 ,visible:false},
+                     {dataField: "stkid",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30 ,visible:false},
+                     {dataField: "stkcd",headerText :"<spring:message code='log.head.matcode'/>"            ,width:120    ,height:30,editable:false},
+                     {dataField: "stknm",headerText :"<spring:message code='log.head.materialname'/>"             ,width:120    ,height:30,editable:false},
+                     {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"       ,width:120    ,height:30, editable:false},
+                     {dataField: "serialchck" ,headerText:    ""       ,width:120    ,height:30, editable:false},
+                     {dataField: "typeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120    ,height:30,visible:false},
+                     {dataField: "typenm",headerText :"<spring:message code='log.head.type'/>"            ,width:120    ,height:30,editable:false},
+                     {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},
+                     {dataField: "catenm",headerText :"<spring:message code='log.head.category'/>"             ,width:120    ,height:30,editable:false},
+                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false}
                     ];
-                    
+
 var reqcolumnLayout;
 
 var resop = {rowIdField : "rnum", showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
@@ -59,27 +59,27 @@ $(document).ready(function(){
     doSysdate(0 , 'reqcrtdate');
     paramdata = { groupCode : '306' ,Codeval: 'US' , orderValue : 'CRT_DT' , likeValue:''};
     doGetComboData('/common/selectCodeList.do', paramdata, 'US','sttype', 'S' , 'transferTypeFunc');
-    //paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록 
-   //2017-11-28 From Location : CDC , RDC, CDC & RDC 가 보일 수 있도록 처리 
-    paramdata = {locgb:'010205', endlikeValue:$("#locationType").val() }; // session 정보 등록 
+    //paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록
+   //2017-11-28 From Location : CDC , RDC, CDC & RDC 가 보일 수 있도록 처리
+    paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
-    doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); 
+    doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
-    
+
     $("#cancelTr").hide();
     /**********************************
      * Header Setting End
      ***********************************/
-    
-     reqcolumnLayout=[{dataField:    "itmid",headerText :"<spring:message code='log.head.itemid'/>"          ,width:120    ,height:30 , visible:false},                          
-                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"         ,width:120    ,height:30 , editable:false},                         
-                      {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"        ,width:120    ,height:30 , editable:false},                       
-                      {dataField: "aqty",headerText :"<spring:message code='log.head.availableqty'/>"     ,width:120    ,height:30 , editable:false},                         
-                      {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30},                          
-                      {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"               ,width:120    ,height:30, editable:false 
+
+     reqcolumnLayout=[{dataField:    "itmid",headerText :"<spring:message code='log.head.itemid'/>"          ,width:120    ,height:30 , visible:false},
+                      {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"         ,width:120    ,height:30 , editable:false},
+                      {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"        ,width:120    ,height:30 , editable:false},
+                      {dataField: "aqty",headerText :"<spring:message code='log.head.availableqty'/>"     ,width:120    ,height:30 , editable:false},
+                      {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30},
+                      {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"               ,width:120    ,height:30, editable:false
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
-                              
+
                               for(var i=0,len=uomlist.length; i<len; i++) {
                                   if(uomlist[i]["codeId"] == value) {
                                       retStr = uomlist[i]["codeName"];
@@ -87,7 +87,7 @@ $(document).ready(function(){
                                   }
                               }
                               return retStr == "" ? value : retStr;
-                          },editRenderer : 
+                          },editRenderer :
                           {
                              type : "ComboBoxRenderer",
                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -97,27 +97,27 @@ $(document).ready(function(){
                           }
                       }
                      ];
-    
+
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
     reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", reqop);
-    
+
     AUIGrid.bind(resGrid, "addRow", function(event){});
     AUIGrid.bind(reqGrid, "addRow", function(event){});
-    
+
     AUIGrid.bind(resGrid, "cellEditBegin", function (event){});
     AUIGrid.bind(reqGrid, "cellEditBegin", function (event){
-    	
+
     });
-    
+
     AUIGrid.bind(resGrid, "cellEditEnd", function (event){});
     AUIGrid.bind(reqGrid, "cellEditEnd", function (event){
-    	
+
     	if(event.dataField == "itmcd"){
     		$("#svalue").val(AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd"));
     		$("#sUrl").val("/logistics/material/materialcdsearch.do");
     		Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
     	}
-    	
+
     	if(event.dataField == "rqty"){
             if(AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")){
             	Common.alert('The requested quantity is up to '+AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")+'.');
@@ -126,19 +126,19 @@ $(document).ready(function(){
             }
         }
     });
-    
+
     AUIGrid.bind(resGrid, "cellClick", function( event ) {});
     AUIGrid.bind(reqGrid, "cellClick", function( event ) {});
-    
+
     AUIGrid.bind(resGrid, "cellDoubleClick", function(event){});
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event){});
-    
+
     AUIGrid.bind(resGrid, "ready", function(event) {});
     AUIGrid.bind(reqGrid, "ready", function(event) {});
-    
+
 });
 function tlocationFunc(){
-	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val(), endlikeValue:$("#locationType").val()}, '','flocation', 'S' , '');
+	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val(), grade:$("#locationType").val()}, '','flocation', 'S' , '');
 }
 
 function transferTypeFunc(){
@@ -170,7 +170,7 @@ $(function(){
     	if (f_validatation('save')){
 	    	var dat = GridCommon.getEditData(reqGrid);
 	    	dat.form = $("#headForm").serializeJSON();
-	    	
+
 	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
 // 	    		Common.alert(result.message,locationList);
 	    		Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
@@ -179,7 +179,7 @@ $(function(){
 	            try {
 	            } catch (e) {
 	            }
-	
+
 	            Common.alert("Fail : " + jqXHR.responseJSON.message);
 	        });
     	}
@@ -189,7 +189,7 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, 'US03','smtype', 'S' , '');
     });
     $("#smtype").change(function(){
-        
+
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
@@ -198,9 +198,9 @@ $(function(){
 	        var rowPos = "first";
 	        var item = new Object();
 	        var rowList = [];
-	        
+
 	        for (var i = 0 ; i < checkedItems.length ; i++){
-	        	
+
 	        	rowList[i] = {
                             itmid : checkedItems[i].stkid,
                             itmcd : checkedItems[i].stkcd,
@@ -208,23 +208,23 @@ $(function(){
                             aqty : checkedItems[i].qty,
                             uom : checkedItems[i].uom
                         }
-	        	
+
 	            AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
 	        }
-	        
+
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);
         }
     });
     $("#tlocation").change(function(){
-    	
+
     	tlocationFunc();
     });
 });
 
 function fn_changeLocation() {
-	 paramdata = {locgb:'010205', endlikeValue:$("#locationType").val() }; // session 정보 등록 
+	 paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
 	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
-} 
+}
 function locationList(){
 	$('#list').click();
 }
@@ -252,14 +252,14 @@ function f_validatation(v){
     	}
     }
     return true;
-    
+
 }
 
 function SearchListAjax() {
-    
+
     var url = "/logistics/stocktransfer/stockTransferTolocationItemList.do";
     var param = $('#searchForm').serialize();
-    
+
     Common.ajax("GET" , url , param , function(result){
     	AUIGrid.setGridData(resGrid, result.data);
     });
@@ -273,7 +273,7 @@ function SearchListAjax() {
         contentType : "application/json;charset=UTF-8",
         success : function(data) {
             var gridData = data;
-            
+
 
             AUIGrid.setGridData(resGrid, gridData.data);
         },
@@ -288,17 +288,17 @@ function SearchListAjax() {
 
 function addRow() {
     var rowPos = "first";
-       
+
     var item = new Object();
-       
+
     AUIGrid.addRow(reqGrid, item, rowPos);
 }
 
 function fn_itempopList(data){
-	
+
     var rowPos = "first";
     var rowList = [];
-   	
+
     AUIGrid.removeRow(reqGrid, "selectedIndex");
    	AUIGrid.removeSoftRows(reqGrid);
    	for (var i = 0 ; i < data.length ; i++){
@@ -308,9 +308,9 @@ function fn_itempopList(data){
 	    	itmname : data[i].item.itemname
     	}
 	}
-    
+
     AUIGrid.addRow(reqGrid, rowList, rowPos);
-    
+
 }
 
 function f_getTtype(g , v){
@@ -337,14 +337,14 @@ function f_getTtype(g , v){
            complete: function(){
            }
        });
-    
+
     return rData;
 }
 function f_AddRow() {
     var rowPos = "first";
-    
+
     var item = new Object();
-        
+
     AUIGrid.addRow(reqGrid, item, rowPos);
 }
 
@@ -416,7 +416,7 @@ function f_multiCombo() {
     <th scope="row">Location Type </th>
     <td>
     <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
-        <option> All </option>
+        <option value=""> All </option>
         <option selected> A </option>
         <option> B </option>
     </select></td>
@@ -430,7 +430,7 @@ function f_multiCombo() {
     </td>
 </tr>
 <tr>
-    
+
 </tr>
 <tr>
     <th scope="row">Remark</th>
