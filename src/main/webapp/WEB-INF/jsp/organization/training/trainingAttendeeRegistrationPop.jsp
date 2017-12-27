@@ -10,6 +10,12 @@
 .aui-grid-user-custom-right {
     text-align:right;
 }
+/* 커스텀 행 스타일 */
+.my-row-style {
+    background:#9FC93C;
+    font-weight:bold;
+    color:#22741C;
+}
 </style>
 <script type="text/javascript">
 //그리드에 삽입된 데이터의 전체 길이 보관
@@ -18,6 +24,7 @@ function setInputFile(){//인풋파일 세팅하기
     $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 }
 
+var uploadGrid;
 var atteRgistGridID;
 
 $(document).ready(function() {
@@ -27,6 +34,7 @@ $(document).ready(function() {
     
 	setInputFile();
     
+	$("#uploadGrid").hide();
     // 최초 그리드 생성함.
     createInitGrid();
     
@@ -70,47 +78,76 @@ $(document).ready(function() {
     
     // 파일 선택하기
     $('#fileSelector').on('change', function(evt) {
-        if (!checkHTML5Brower()) {
-            Common.alert("* Not Support HTML5 your Browser!. Please Upload To Server.");
+    	var data = null;
+        var file = evt.target.files[0];
+        if (typeof file == "undefined") {
             return;
-            
-        	// 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
-            // 파일 내용 읽어 반환시켜 그리드에 적용.
-            //commitFormSubmit();
-        } else {
-            var data = null;
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                Common.alert("* can not Select this File.");
-                return;
-            }
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                var data = e.target.result;
-
-                /* 엑셀 바이너리 읽기 */
-                var workbook;
-
-                if(rABS) { // 일반적인 바이너리 지원하는 경우
-                    workbook = XLSX.read(data, {type: 'binary'});
-                } else { // IE 10, 11인 경우
-                    var arr = fixdata(data);
-                    workbook = XLSX.read(btoa(arr), {type: 'base64'});
-                }
-
-                var jsonObj = process_wb(workbook);
-
-                setAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
-            };
-
-            if(rABS) reader.readAsBinaryString(file);
-            else reader.readAsArrayBuffer(file);
-            
         }
+        
+        var reader = new FileReader();
+        //reader.readAsText(file); // 파일 내용 읽기
+        reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
+        reader.onload = function(event) {
+            if (typeof event.target.result != "undefined") {
+                                    
+                // 그리드 CSV 데이터 적용시킴
+                AUIGrid.setCsvGridData(uploadGrid, event.target.result, false);
+                
+                //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
+                AUIGrid.removeRow(uploadGrid,0);
+                
+                fn_checkNewAttend();
+                
+            } else {
+                alert('No data to import!');
+            }
+        };
+
+        reader.onerror = function() {
+            alert('Unable to read ' + file.fileName);
+        };
     });
     
 });
+
+function fn_checkNewAttend(){
+    var data = GridCommon.getGridData(uploadGrid);
+    data.form = $("#form_atteRgist").serializeJSON();
+
+    Common.ajax("POST", "/organization/training/chkNewAttendList.do", data, function(result)    {
+
+        console.log("성공." + JSON.stringify(result));
+        console.log("data : " + result.data);              
+                                
+        AUIGrid.setGridData(atteRgistGridID, result.data);
+                
+        AUIGrid.setProp(atteRgistGridID, "rowStyleFunction", function(rowIndex, item) {
+            if(item.chkFlag == "Y") { 
+                return "my-row-style";
+            }
+            return "";
+
+        }); 
+
+        // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+        AUIGrid.update(atteRgistGridID);
+                
+        }
+    , function(jqXHR, textStatus, errorThrown){
+         try {
+                console.log("Fail Status : " + jqXHR.status);
+                console.log("code : "        + jqXHR.responseJSON.code);
+                console.log("message : "     + jqXHR.responseJSON.message);
+                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+          }
+          catch (e)
+          {
+              console.log(e);
+          }
+                  alert("Fail : " + jqXHR.responseJSON.message);
+     });
+
+}
 
 //그리드 헤더 클릭 핸들러
 function atteRgistHeaderClickHandler(event) {
@@ -224,16 +261,36 @@ function setAUIGrid(jsonData) {
 //최초 그리드 생성..
 function createInitGrid() {
  
+	var upColLayout = [ {
+        dataField : "0",
+        headerText : "nric",
+        width : 100
+    },{
+        dataField : "1",
+        headerText : "result",
+        width : 100
+    }];
+	
 	var atteRgistColumnLayout = [
                         {dataField : "coursDMemName" , headerText : "Member Name", width : "20%",  editable : false },
                         {dataField : "coursDMemNric" , headerText : "NRIC", width : "20%",  editable : false },
                         {dataField : "coursMemShirtSize" , headerText : "Shirt Size", width : "20%",  editable : false },
                         {dataField : "coursItmMemPup" , headerText : "PUP", width : "20%",  editable : false },
                         {dataField : "coursItmMemIsVege" , headerText : "IS VEG?", width : "20%",  editable : false },
+                        {dataField : "chkFlag" , visible : false },
                       ];
 	var atteRgistGridPros = {
 			showFooter : true
 			};
+	
+	var upOptions = {
+            showStateColumn:false,
+            showRowNumColumn    : true,
+            usePaging : false,
+            editable : false,
+            softRemoveRowMode:true
+      };
+	
 	// 푸터 설정
     var footerObject = [ {
         labelText : "Total number",
@@ -256,7 +313,8 @@ function createInitGrid() {
              return AUIGrid.getRowCount(atteRgistGridID);
          }
     }];
-	atteRgistGridID = AUIGrid.create("#atteRgist_grid_wrap", atteRgistColumnLayout, atteRgistGridPros);
+    uploadGrid = GridCommon.createAUIGrid("#uploadGrid", upColLayout, "", upOptions);
+	atteRgistGridID = AUIGrid.create("#atteRgistGridID", atteRgistColumnLayout, atteRgistGridPros);
 	// 푸터 객체 세팅
     AUIGrid.setFooter(atteRgistGridID, footerObject);
 }
@@ -301,6 +359,13 @@ function commitFormSubmit() {
 function fn_setGridDataByUploadData(pType) {
 	var atteRgistGridData = AUIGrid.getGridData(atteRgistGridID);
 	console.log(atteRgistGridData);
+	
+	var idx = AUIGrid.getRowCount(atteRgistGridID);
+	for(var i=0; i < idx; i++){
+		if(AUIGrid.getCellValue(atteRgistGridID, i, "chkFlag") == "Y"){
+	        Common.alert("Already registered NRIC.");
+	    }
+	}
 	
 	var nricArray = [];
 	var gridArray = [];
@@ -475,7 +540,7 @@ function fn_setGridDataByUploadData(pType) {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_atteRgist">
-
+<input type="hidden" id="coursId" name="coursId" value="${coursId}">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -506,6 +571,8 @@ function fn_setGridDataByUploadData(pType) {
 </aside>title_line end -->
 
 <article class="grid_wrap" id="atteRgist_grid_wrap"><!-- grid_wrap start -->
+    <div id="uploadGrid" style="width:100%; height:250px; margin:0 auto;"></div>
+    <div id="atteRgistGridID" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">

@@ -160,9 +160,6 @@ $(document).ready(function () {
         type:"S"
     });
     
-    fn_checkMemberType();
-    fn_checkAttendance();
-    
     $("#newAttendee_btn").click(function() {
     	fn_attendeePop("new");
     });
@@ -174,6 +171,28 @@ $(document).ready(function () {
     });
     $("#new_save_btn").click(fn_insertCourseAttendee);
 });
+
+function fn_checkMemberTypeNew(){
+    var val = $("#generalCodeNew").val();
+    if(val == "2318") {
+        $("#memTypeNew").removeAttr("disabled");
+    } else {
+        $("#memTypeNew").attr("disabled", "disabled");
+    }
+}
+
+function fn_checkAttendanceNew(){
+    var val = $("#attendanceNew").val();
+    if(val == "2315") {
+        $("#coursLimit").attr("readonly", "readonly");
+        $("#coursLimit").val("9999");
+        $("#newAttendee_btn").show();
+    } else {
+        $("#coursLimit").removeAttr("readonly");
+        $("#coursLimit").val("");
+        $("#newAttendee_btn").hide();
+    }
+}
 
 //그리드 헤더 클릭 핸들러
 function newHeaderClickHandler(event) {
@@ -206,6 +225,29 @@ function newCheckAll(isChecked) {
     // 헤더 체크 박스 일치시킴.
     document.getElementById("newAllCheckbox").checked = isChecked;
 }
+
+//Memeber (Y/N)
+CommonCombo.make("generalCodeNew", "/common/selectCodeList.do", {groupCode : '328'}, "${courseInfo.coursMemYnId}", {
+    id: "codeId",
+    name: "code",
+    isShowChoose: false,
+    type:"S"
+});
+
+// Member Type
+CommonCombo.make("memTypeNew", "/common/selectCodeList.do", {groupCode : '1'}, "${courseInfo.coursMemTypeId}", {
+    id: "codeId",
+    name: "code",
+    type:"S"
+});
+
+// Attendance
+CommonCombo.make("attendanceNew", "/common/selectCodeList.do", {groupCode : '327'}, "${courseInfo.coursAttendOwner}", {
+    id: "codeId",
+    name: "code",
+    isShowChoose: false,
+    type:"S"
+});
 
 function fn_insertCourseAttendee() {
 	var obj = $("#form_newCours").serializeJSON();
@@ -260,16 +302,9 @@ function fn_insertCourseAttendee() {
 	</td>
 	<th scope="row">Member(Y/N)/Type<span class="must">*</span></th>
 	<td>
-	<select class="wAuto" id="generalCode" onchange="javascript:fn_checkMemberType()">
-		<option value="2318">Y</option>
-		<option value="2319">N</option>
+	<select class="wAuto" id="generalCodeNew" onchange="javascript:fn_checkMemberTypeNew()">
 	</select>
-	<select class="wAuto ml5" id="memType" name="memType">
-		<option value=""></option>
-		<option value="1">HP</option>
-		<option value="2">Cody</option>
-		<option value="3">CT</option>
-		<option value="4">Staff</option>
+	<select class="wAuto ml5" id="memTypeNew" name="memType">
 	</select>
 	</td>
 	<th scope="row">Training Period<span class="must">*</span></th>
@@ -293,9 +328,7 @@ function fn_insertCourseAttendee() {
 	<th scope="row">Attendance / Course Limit <span class="must">*</span></th>
 	<td>
 		<div class="text_select">
-			<select id="attendance" onchange="javascript:fn_checkAttendance()">
-				<option value="2315">EDU</option>
-				<option value="2316">EMP</option>
+			<select id="attendanceNew" name="attendance" onchange="javascript:fn_checkAttendanceNew()">
 			</select>
 			<input type="text" title="" placeholder="" id="coursLimit" name="coursLimit"/>
 		</div>

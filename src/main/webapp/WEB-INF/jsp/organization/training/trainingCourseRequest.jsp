@@ -33,6 +33,15 @@ var courseColumnLayout = [ {
 }, {
     dataField : "codeId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "coursMemId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "coursDMemName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "coursDMemNric",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
     dataField : "codeName",
     headerText : 'Course Type',
@@ -53,17 +62,11 @@ var courseColumnLayout = [ {
     editable : false,
     style : "aui-grid-user-custom-left"
 }, {
-    dataField : "coursLimit",
-    headerText : 'Limit',
-    dataType : "numeric",
-    style : "aui-grid-user-custom-right",
-    editable : true
-}, {
-    dataField : "coursStart",
+    dataField : "courseFromDate",
     headerText : 'Start',
     editable : false
 }, {
-    dataField : "coursEnd",
+    dataField : "courseToDate",
     headerText : 'End',
     editable : false
 }, {
@@ -73,54 +76,41 @@ var courseColumnLayout = [ {
     dataType : "numeric",
     style : "aui-grid-user-custom-right"
 }, {
-    dataField : "passed",
-    headerText : 'Passed',
-    editable : false,
-    dataType : "numeric",
-    style : "aui-grid-user-custom-right"
-} , {
-    dataField : "stusCodeId",
-    headerText : 'Status',
-    editable : false,
+    dataField : "coursMemStusId",
+    headerText : 'Course Status',
+    editable : false
+},{
+    dataField : "undefined",
+    headerText : "Request",
+    width : 110,
     renderer : {
-        type : "DropDownListRenderer",
-        list : keyValueList, //key-value Object 로 구성된 리스트
-        keyField : "stusCodeId", // key 에 해당되는 필드명
-        valueField : "name" // value 에 해당되는 필드명
-    }
-}, {
-	dataField : "loginUserApplyYn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-	dataField : "",
-	headerText : '',
-    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-        var myString = "";
-        // 로직 처리
-        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
-        if(item.loginUserApplyYn == "Y") {
-            myString = 'Cancel';
-        } else {
-        	myString = 'Request';
-        }
-        return myString;
-     }, 
+          type : "ButtonRenderer",
+          labelText : "Request",
+          onclick : function(rowIndex, columnIndex, value, item) {
+               //pupupWin
+              $("#coursId").val(item.coursId);
+              $("#memId").val(item.coursMemId);
+              $("#memName").val(item.coursDMemName);
+              $("#memNric").val(item.coursDMemNric);
+              fn_courseRequest();
+              Common.popupDiv("/organization/training/registerCourseReq.do", $("#form_course").serializeJSON(), null , true , '_editDiv1');
+          }
+   }
+},{
+    dataField : "undefined",
+    headerText : "Cancel",
+    width : 110,
     renderer : {
-        type : "ButtonRenderer",
-        onclick : function(rowIndex, columnIndex, value, item) {
-            console.log("click item.loginUserApplyYn : " + item.loginUserApplyYn + ", click item.coursId : " + item.coursId);
-            if(item.loginUserApplyYn == "Y") {
-                console.log("Cancel Action");
-                fn_courseCancel(item.coursId);
-            } else {
-            	console.log("Request Action");
-            	fn_courseRequest(item.coursId);
-            }
-            
-        }
-    }
-}
-];
+          type : "ButtonRenderer",
+          labelText : "Cancel",
+          onclick : function(rowIndex, columnIndex, value, item) {
+               //pupupWin
+              $("#coursId").val(item.coursId);
+              $("#memId").val(item.coursMemId);
+              Common.popupDiv("/organization/training/cancelCourseReq.do", $("#form_course").serializeJSON(), null , true , '_editDiv1');
+          }
+   }
+}];
 
 //그리드 속성 설정
 var courseGridPros = {
@@ -180,20 +170,6 @@ $(document).ready(function () {
 	attendeeGridID = AUIGrid.create("#attendee_grid_wrap", attendeeColumnLayout, attendeeGridPros);
 	
 	fn_setAttendeeGridCheckboxEvent();
-	
-	// course status
-    CommonCombo.make("stusCodeId", "/organization/training/selectCourseStatusList.do", null, "", {
-        id: "stusCodeId",
-        name: "name",
-        type:"S"
-    });
-	
-	// course type
-	CommonCombo.make("codeId", "/organization/training/selectCourseTypeList.do", null, "", {
-        id: "codeId",
-        name: "codeName",
-        type:"S"
-    });
 	
 	// search list
 	$("#search_btn").click(fn_selectCourseList);
@@ -309,7 +285,7 @@ function fn_setToDay() {
 }
 
 function fn_selectCourseList() {
-	Common.ajax("GET", "/organization/training/selectCourseList.do?_cacheId=" + Math.random(), $("#form_course").serialize(), function(result) {
+	Common.ajax("GET", "/organization/training/selectCourseRequestList.do", $("#form_course").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(courseGridID, result);
     });
@@ -337,7 +313,7 @@ function fn_selectAttendeeList(coursId) {
 	var data = {
             coursId : coursId
     };
-	Common.ajax("GET", "/organization/training/selectAttendeeList.do?_cacheId=" + Math.random(), data, function(result) {
+	Common.ajax("GET", "/organization/training/selectMyAttendeeList.do?_cacheId=" + Math.random(), data, function(result) {
         console.log(result);
         AUIGrid.setGridData(attendeeGridID, result);
     });
@@ -472,33 +448,27 @@ function fn_courseResultPop() {
     }
 }
 
-function fn_courseRequest(coursId) {
-	var data = {
-            coursId : coursId
-    };
-    Common.ajax("POST", "/organization/training/insertAttendee.do", data, function(result) {
+function fn_courseRequest() {
+	
+    Common.ajax("POST", "/organization/training/registerCourseReq.do", $("#form_course").serializeJSON(), function(result) {
         console.log(result);
         
         fn_selectCourseList();
         
         Common.alert('Request successful.');
-        
-        //coursId = 0;
+
     });
 }
 
-function fn_courseCancel(coursId) {
-    var data = {
-            coursId : coursId
-    };
-    Common.ajax("POST", "/organization/training/deleteAttendee.do", data, function(result) {
+function fn_courseCancel() {
+
+    Common.ajax("POST", "/organization/training/cancelCourseReq.do", $("#form_course").serializeJSON(), function(result) {
         console.log(result);
         
         fn_selectCourseList();
         
         Common.alert('Cancel successful.');
         
-        //coursId = 0;
     });
 }
 </script>
@@ -518,7 +488,11 @@ function fn_courseCancel(coursId) {
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_course">
+<form method="post" id="form_course" name="form_course">
+<input type="hidden" id="coursId" name="coursId">
+<input type="hidden" id="memId" name="memId">
+<input type="hidden" id="memName" name="memName">
+<input type="hidden" id="memNric" name="memNric">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -527,44 +501,16 @@ function fn_courseCancel(coursId) {
 	<col style="width:*" />
 	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:140px" />
-	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Course Code</th>
+	<th scope="row">Member ID</th>
 	<td>
-	<input type="text" title="Course Code" placeholder="" class="w100p" id="coursCode" name="coursCode"/>
+	<input type="text" title="Member ID" placeholder="" class="w100p" id="memberId" name="memberId"/>
 	</td>
-	<th scope="row">Course Status</th>
+	<th scope="row">Start Date</th>
 	<td>
-	<select class="w100p" id="stusCodeId" name="stusCodeId">
-	</select>
-	</td>
-	<th scope="row">Course Type</th>
-	<td>
-	<select class="w100p" id="codeId" name="codeId">
-	</select>
-	</td>
-</tr>
-<tr>
-	<th scope="row">Course Name</th>
-	<td>
-	<input type="text" title="Course Name" placeholder="" class="w100p" id="coursName" name="coursName"/>
-	</td>
-	<th scope="row">Location</th>
-	<td>
-	<input type="text" title="Location" placeholder="" class="w100p" id="coursLoc" name="coursLoc"/>
-	</td>
-	<th scope="row">Training Period</th>
-	<td>
-
-	<div class="date_set"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart"/></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="coursEnd" name="coursEnd"/></p>
-	</div><!-- date_set end -->
-
+	   <input type="text" title="Start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart"/>
 	</td>
 </tr>
 </tbody>
@@ -596,8 +542,8 @@ function fn_courseCancel(coursId) {
     <li><p class="btn_grid"><a href="#">DEL</a></p></li> -->
     <!-- <li><p class="btn_grid"><a href="#" id="viewEdit_btn">Edit</a></p></li>
    <li><p class="btn_grid"><a href="#" id="registration_btn">New</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li> -->
-    <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="result_btn">Result</a></p></li> 
+    <li><p class="btn_grid"><a href="#" id="course_Save_btn">Save</a></p></li>-->
 </ul>
 </aside><!-- title_line end -->
 

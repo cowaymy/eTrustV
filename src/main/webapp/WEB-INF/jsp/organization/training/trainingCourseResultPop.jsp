@@ -94,7 +94,7 @@ var attendeeReColumnLayout = [ {
     dataField : "memTypeName",
     headerText : 'Member Type',
 }, {
-    dataField : "coursMemId",
+    dataField : "memCode",
     headerText : 'Member Code'
 }, {
     dataField : "coursDMemName",
@@ -109,6 +109,9 @@ var attendeeReColumnLayout = [ {
 }, {
     dataField : "code",
     headerText : 'Branch',
+}, {
+    dataField : "coursAttendDay",
+    headerText : 'Course Attend Day',
 }, {
     dataField : "coursTestResult",
     headerText : 'Result',
@@ -265,14 +268,18 @@ function setAUIGrid(jsonData) {
      $("#fileSelector").val("");
      return;
  }
- 
+
     var gridArray = [];
     $.each(firstRow, function(key , value) {
         var keyValue = {};
       $.each(value, function(k, v) {
-            //console.log("key : " + k)
+            console.log("key : " + k);
+            console.log("key : " + v);
             if(k.trim() == "NRIC"){  //Template
                 keyValue.coursDMemNric = v;
+            }
+            if(k.trim() == "ATTEND_DAY"){  //Template
+                keyValue.coursAttendDay = v;
             }
             if(k.trim() == "Result"){  //Template
                 keyValue.coursTestResult = v;
@@ -326,7 +333,22 @@ function fn_setGridDataByUploadData(array) {
             var rows = AUIGrid.getRowIndexesByValue(attendeeReGridID, "coursDMemNric", existArray[idx].coursDMemNric);
             console.log("rows");
             console.log(rows);
+            
+            var upperResult = existArray[idx].coursTestResult.toUpperCase();
+            var attendDay = Number(existArray[idx].coursAttendDay);
+
+            if(upperResult != "P" && upperResult != "F" && upperResult != "AB"){
+            	Common.alert("Invalid Result Code.");
+            	return false;
+            }
+            
+            if(attendDay < 0 ){
+            	Common.alert("Can not key-in Minus day");
+                return false;
+            }
+            
             AUIGrid.setCellValue(attendeeReGridID, rows[0], "coursTestResult", existArray[idx].coursTestResult);
+            AUIGrid.setCellValue(attendeeReGridID, rows[0], "coursAttendDay", existArray[idx].coursAttendDay);
         }
     }
 }
@@ -386,7 +408,7 @@ function fn_courseResultSave() {
 	<th scope="row">File<span class="must">*</span></th>
 	<td>
 		<div class="auto_file"><!-- auto_file start -->
-		<input type="file" id="fileSelector" title="file add" accept=".xlsx" />
+		<input type="file" id="fileSelector" title="file add" accept=".csv" />
 		</div><!-- auto_file end -->
 		<p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/organization/training/ResultKeyInUploadTemplate.xlsx">Download Format</a></p>
 	</td>

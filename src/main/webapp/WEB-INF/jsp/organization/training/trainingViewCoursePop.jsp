@@ -47,7 +47,7 @@ var newAttendeeColumnLayout = [ {
     dataField : "memTypeName",
     headerText : 'Member Type',
 }, {
-    dataField : "coursMemId",
+    dataField : "memCode",
     headerText : 'Member Code',
     colSpan : 2
 }, {
@@ -160,8 +160,50 @@ $(document).ready(function () {
         type:"S"
     });
     
-    fn_checkMemberType();
-    fn_checkAttendance();
+    // Memeber (Y/N)
+    CommonCombo.make("generalCodeView", "/common/selectCodeList.do", {groupCode : '328'}, "${courseInfo.coursMemYnId}", {
+        id: "codeId",
+        name: "code",
+        isShowChoose: false,
+        type:"S"
+    });
+    
+    // Member Type
+    CommonCombo.make("memTypeView", "/common/selectCodeList.do", {groupCode : '1'}, "${courseInfo.coursMemTypeId}", {
+        id: "codeId",
+        name: "code",
+        type:"S"
+    });
+    
+    // Attendance
+    CommonCombo.make("attendanceView", "/common/selectCodeList.do", {groupCode : '327'}, "${courseInfo.coursAttendOwner}", {
+        id: "codeId",
+        name: "code",
+        isShowChoose: false,
+        type:"S"
+    });
+    
+    function fn_checkMemberTypeView(){
+    	var val = $("#generalCodeView").val();
+        if(val == "2318") {
+            $("#memTypeView").removeAttr("disabled");
+        } else {
+            $("#memTypeView").attr("disabled", "disabled");
+        }
+    }
+    
+    function fn_checkAttendanceView(){
+    	var val = $("#attendanceView").val();
+        if(val == "2315") {
+            $("#coursLimit").attr("readonly", "readonly");
+            $("#coursLimit").val("9999");
+            $("#newAttendee_btn").show();
+        } else {
+            $("#coursLimit").removeAttr("readonly");
+            $("#coursLimit").val("");
+            $("#newAttendee_btn").hide();
+        }
+    }
     
     $("#newAttendee_btn").click(function() {
     	fn_attendeePop("new");
@@ -223,6 +265,20 @@ function fn_updateCourseAttendee() {
         fn_selectCourseList();
     });
 }
+
+var prev = "";
+var regexp = /^\d*(\.\d{0,2})?$/;
+
+function fn_inputAmt(obj){
+    
+    if(obj.value.search(regexp) == -1){
+        obj.value = prev;
+    }else{
+        prev = obj.value;
+    }
+    
+}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -263,16 +319,9 @@ function fn_updateCourseAttendee() {
 	</td>
 	<th scope="row">Member(Y/N)/Type<span class="must">*</span></th>
 	<td>
-	<select class="wAuto" id="generalCode" onchange="javascript:fn_checkMemberType()">
-		<option value="2318">Y</option>
-		<option value="2319">N</option>
+	<select class="wAuto" id="generalCodeView" name="generalCode" onchange="javascript:fn_checkMemberTypeView()">
 	</select>
-	<select class="wAuto ml5" id="memType" name="memType">
-		<option value=""></option>
-		<option value="1">HP</option>
-		<option value="2">Cody</option>
-		<option value="3">CT</option>
-		<option value="4">Staff</option>
+	<select class="wAuto ml5" id="memTypeView" name="memType">
 	</select>
 	</td>
 	<th scope="row">Training Period<span class="must">*</span></th>
@@ -296,11 +345,9 @@ function fn_updateCourseAttendee() {
 	<th scope="row">Attendance / Course Limit <span class="must">*</span></th>
 	<td>
 		<div class="text_select">
-			<select id="attendance" onchange="javascript:fn_checkAttendance()">
-				<option value="2315">EDU</option>
-				<option value="2316">EMP</option>
+			<select id="attendanceView" name="attendance" onchange="javascript:fn_checkAttendanceView()">
 			</select>
-			<input type="text" title="" placeholder="" id="coursLimit" name="coursLimit" value="${courseInfo.coursLimit}"/>
+			<input type="text" title="" placeholder="" id="coursLimit" name="coursLimit" value="${courseInfo.coursLimit}" onkeyup="fn_inputAmt(this)"/>
 		</div>
 	</td>
 </tr>
