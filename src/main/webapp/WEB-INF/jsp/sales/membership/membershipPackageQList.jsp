@@ -537,9 +537,12 @@ function auiCellEditignHandler(event)
 <h2>Package Maintenance - Outright</h2>
 <ul class="right_btns">
 
-
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_new()" >New</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"  ><span class="search"></span>Search</a></p></li>
+	</c:if>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()" ><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -598,8 +601,9 @@ function auiCellEditignHandler(event)
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_gSave()">Save</a></p></li>
+    </c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -610,16 +614,24 @@ function auiCellEditignHandler(event)
 
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_selectDetailListAjax('1')"  >Active</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_selectDetailListAjax('8')"  >InActive</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goAdd()">ADD</a></p></li>
+    </c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
       <div id="detail_list_grid_wrap" style="width:100%; height:250px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_grid"><a href="#" onclick="javascript:fn_filterSave()">Save</a></p></li>
+    </c:if>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
       <div id="filter_list_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>

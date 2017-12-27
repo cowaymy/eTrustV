@@ -167,9 +167,13 @@ function creatGrid(){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code="sales.statusTitle" /></h2>
 <ul class="right_btns">
+	<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_blue"><a href="#" id="btnSearch"><span class="search"></span><spring:message code="sales.Search" /></a></p></li>
+	</c:if>
 	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span><spring:message code="sales.Clear" /></a></p></li>
+	<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_blue"><a href="#" id="btnNew"><spring:message code="sales.new" /></a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 

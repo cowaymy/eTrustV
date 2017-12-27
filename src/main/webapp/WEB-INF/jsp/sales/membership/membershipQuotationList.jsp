@@ -279,9 +279,15 @@ function fn_doPrint(){
 
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goNewQuotation()">NEW Quotation</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goConvertSale()">Convert to Sale</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"><span class="search"></span>Search</a></p></li>
+    </c:if>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -354,8 +360,12 @@ function fn_doPrint(){
 	
 	</ul>
 	<ul class="btns">
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a href="#" onclick="javascript:fn_doPrint()">Quotation Download</a></p></li>
+		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a href="#"  onclick="javascript:fn_doViewQuotation()">View Quotation</a></p></li>
+		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

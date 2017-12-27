@@ -267,9 +267,12 @@ function fn_clear(){
       <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
                <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMOutSPay();">Outstanding Payment</a></p></li>
      </c:if>
-     
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();">Free Membership</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
+    </c:if>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -336,12 +339,24 @@ function fn_clear(){
 	<dd>
 
 	<ul class="btns">
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li>
+		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')">Invoice</a></p></li>
+		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" >Key-in List</a></p></li>
+		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_YSListing()">YS List</a></p></li>
+		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireList()">Expire List</a></p></li>
+		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireListRental()">Expire List (Year)</a></p></li>
+		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
