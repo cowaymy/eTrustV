@@ -62,7 +62,9 @@ function fn_goSelectedPage() {
         <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
         <h2>Invoice Generate</h2>   
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()"><spring:message code='pay.btn.go'/></a></p></li>            
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a href="#" onclick ="javascript:fn_goSelectedPage()"><spring:message code='pay.btn.go'/></a></p></li>
+            </c:if>            
         </ul>    
     </aside>
     <!-- title_line end -->
