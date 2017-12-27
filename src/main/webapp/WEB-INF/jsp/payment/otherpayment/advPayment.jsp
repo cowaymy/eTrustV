@@ -510,50 +510,50 @@ function saveAdvPayment(){
 		var cashBankAcc = $("#cashBankAcc").val();
 		
 		if(FormUtil.checkReqValue($("#cashAmount")) ||$("#cashAmount").val() <= 0 ){
-	        Common.alert('* No Amount ');
+	        Common.alert("<spring:message code='pay.alert.noAmount'/>");
 	        return;
 	    }
 		
 		if(cashBankType == "2730"){
 			if(cashVAAccount.length != 16 || cashVAAccount == "" ){
-				Common.alert('* No VA Account ');
+				Common.alert("<spring:message code='pay.alert.noVAAccount'/>");
 				return;
 			}
 			
 		}else{
 			if(FormUtil.checkReqValue($("#cashBankAcc"))){
-				Common.alert('* No Bank Account Selected');
+				Common.alert("<spring:message code='pay.alert.noBankAccountSelected'/>");
                 return;
 			}
 		}
 		
 		if(FormUtil.checkReqValue($("#cashTransDate"))){
-	        Common.alert('* Transaction Date is empty');
+	        Common.alert("<spring:message code='pay.alert.transDateEmpty '/>");
 	        return;
 	    }
 		
 		if(FormUtil.checkReqValue($("#cashSlipNo"))){
-            Common.alert('* No Slip No');
+            Common.alert("<spring:message code='pay.alert.noSlipNo'/>");
             return;
         }
 		
 		/* if(FormUtil.checkReqValue($("#cashPayName"))){
-            Common.alert('* No PayerName');
+            Common.alert("<spring:message code='pay.alert.noPayerName'/>");
             return;
         }   
         
 		if(FormUtil.checkReqValue($("#cashRefDetails"))){
-            Common.alert('* No Ref Details/Jompay Ref ');
+            Common.alert("<spring:message code='pay.alert.noRefDetailsJompayRef'/>");
             return;
         } */   
 		
 	    if(FormUtil.checkReqValue($("#cashPayDate"))){
-	        Common.alert('* Pay Date is empty. Key in the value.');
+	        Common.alert("<spring:message code='pay.alert.payDateEmpty'/>");
 	        return;
 	    }
         
         if( FormUtil.byteLength($("#cashRemark").val()) > 3000 ){
-	        Common.alert('* Please input the Remark below or less than 3000 bytes.');
+	        Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
 	        return;
 	    }
 		
@@ -564,50 +564,50 @@ function saveAdvPayment(){
         var chequeBankAcc = $("#chequeBankAcc").val();
 		
 		if(FormUtil.checkReqValue($("#chequeAmount")) ||$("#chequeAmount").val() <= 0 ){
-            Common.alert('* No Amount ');
+            Common.alert("<spring:message code='pay.alert.noAmount'/>");
             return;
         }
 		
 		if(chequeBankType == "2730"){
             if(chequeVAAccount.length != 16 || chequeVAAccount == "" ){
-                Common.alert('* No VA Account ');
+                Common.alert("<spring:message code='pay.alert.noVAAccount'/>");
                 return;
             }
             
         }else{
             if(FormUtil.checkReqValue($("#chequeBankAcc"))){
-            	Common.alert('* No Bank Account Selected');
+            	Common.alert("<spring:message code='pay.alert.noBankAccountSelected'/>");
                 return;
             }
         }
         
         if(FormUtil.checkReqValue($("#chequeTransDate"))){
-            Common.alert('* Transaction Date is empty');
+            Common.alert("<spring:message code='pay.alert.transDateEmpty '/>");
             return;
         }
         
         if(FormUtil.checkReqValue($("#chequeChqNo"))){
-            Common.alert('* No Slip Number');
+            Common.alert("<spring:message code='pay.alert.noSlipNo'/>");
             return;
         }
         
         /* if(FormUtil.checkReqValue($("#chequePayName"))){
-            Common.alert('* No PayerName');
+            Common.alert("<spring:message code='pay.alert.noPayerName'/>");
             return;
         }   
         
         if(FormUtil.checkReqValue($("#chequeRefDetails"))){
-            Common.alert('* No Ref Details/Jompay Ref ');
+            Common.alert("<spring:message code='pay.alert.noRefDetailsJompayRef'/>");
             return;
         } */
         
         if(FormUtil.checkReqValue($("#chequePayDate"))){
-            Common.alert('* Pay Date is empty. Key in the value.');
+            Common.alert("<spring:message code='pay.alert.payDateEmpty'/>");
             return;
         }
 		
 		if( FormUtil.byteLength($("#chequeRemark").val()) > 3000 ){
-            Common.alert('* Please input the Remark below or less than 3000 bytes.');
+            Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
             return;
         }   
 		
@@ -618,12 +618,12 @@ function saveAdvPayment(){
         var onlineBankAcc = $("#onlineBankAcc").val();
 		
 		if(FormUtil.checkReqValue($("#onlineAmount")) ||$("#onlineAmount").val() <= 0 ){
-            Common.alert('* No Amount ');
+            Common.alert("<spring:message code='pay.alert.noAmount'/>");
             return;
         }
 		
 		 if(FormUtil.checkReqValue($("#onlineTransDate"))){
-			    Common.alert('* Transaction Date is empty');
+			    Common.alert("<spring:message code='pay.alert.transDateEmpty '/>");
 	            return;
 	     }
 	     
@@ -644,24 +644,24 @@ function saveAdvPayment(){
          
          if(onlineBankType == "2730"){
              if(onlineVAAccount.length != 16 || onlineVAAccount == "" ){
-                 Common.alert('* No VA Account ');
+                 Common.alert("<spring:message code='pay.alert.noVAAccount'/>");
                  return;
              }
              
          }else{
              if(FormUtil.checkReqValue($("#onlineBankAcc"))){
-            	 Common.alert('* No Bank Account Selected');
+            	 Common.alert("<spring:message code='pay.alert.noBankAccountSelected'/>");
                  return;
              }
          }
 		
          if(FormUtil.checkReqValue($("#onlinePayDate"))){
-             Common.alert('* Pay Date is empty. Key in the value.');
+             Common.alert("<spring:message code='pay.alert.payDateEmpty'/>");
              return;
          }
 		
          if( FormUtil.byteLength($("#onlineRemark").val()) > 3000 ){
-            Common.alert('* Please input the Remark below or less than 3000 bytes.');
+            Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
             return;
         }   
 	}
@@ -686,7 +686,7 @@ function saveAdvPayment(){
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
-        Common.alert("There is no Payment Key-In Row Data");
+        Common.alert("<spring:message code='pay.alert.rowData'/>");
         return;
     }
         
@@ -695,7 +695,7 @@ function saveAdvPayment(){
     
     Common.ajax("POST", "/payment/saveAdvPayment.do", data, function(result) {
         
-        var message = "<b>Success Payment Process<br><br></b>";
+        var message = "<spring:message code='pay.alert.successProc'/>";
         
         if(result != null && result.length > 0){
             for(i=0 ; i < result.length ; i++){
@@ -729,7 +729,7 @@ function recalculatePaymentTotalAmt(){
 function removeFromFinal(){
     
     if (selectedGridValue  > -1){
-        Common.confirm('Are you sure you want to remove the Selected Row?'
+        Common.confirm("<spring:message code='pay.alert.removeSelectedRow'/>"
         ,function (){
             //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
             AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
@@ -738,7 +738,7 @@ function removeFromFinal(){
             recalculatePaymentTotalAmt();
         });
     }else{
-        Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+        Common.alert("<spring:message code='pay.alert.removeRowData'/>");
     }
 }
 
@@ -1171,7 +1171,7 @@ function addRentalToFinal(){
     }
     
     if(addedCount == 0){
-        Common.alert("There is no billing data and can not be selected.");
+        Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();
@@ -1314,7 +1314,7 @@ function addOutToFinal(){
     } 
     
     if(addedCount == 0){
-        Common.alert("There is no billing data and can not be selected.");
+        Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();
@@ -1768,7 +1768,7 @@ function addSrvcToFinal(){
     }
     
     if(addedCount == 0){
-        Common.alert("There is no billing data and can not be selected.");
+        Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();  
@@ -1779,7 +1779,7 @@ function viewSrvcLedger(){
     	$("#ledgerForm #ordId").val($("#srvcOrdId").val());
         Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
-        Common.alert('<b>Please Select a Order Info first</b>');
+        Common.alert("<spring:message code='pay.alert.selectOrder'/>");
         return;
     }
         
@@ -1810,7 +1810,7 @@ function fn_changeBillType(){
 function fn_billOrderSearch(){
     
     if(FormUtil.checkReqValue($("#billSearchTxt"))){
-        Common.alert("Please Key-In Search Keywords");
+        Common.alert("<spring:message code='pay.alert.searchKeywords'/>");
         return;
     }
     
@@ -1849,7 +1849,7 @@ function addBillToFinal(){
     var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
     if(checkArray.length > 1){
-        Common.alert("Bill Payment is allowed for only one bill. Exclude other bills excepting target one bill.");
+        Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
         return;     
     }else{      
         var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);      
@@ -1898,7 +1898,7 @@ function addBillToFinal(){
         }
         
         if(addedCount == 0){
-            Common.alert("There is no billing data and can not be selected.");
+            Common.alert("<spring:message code='pay.alert.noBillingData'/>");
         }
         
         recalculatePaymentTotalAmt();
@@ -2136,7 +2136,7 @@ function addOutSrvcToFinal(){
     
 
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();
