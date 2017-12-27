@@ -148,7 +148,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1>View Notice</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header><!-- pop_header end -->
 
@@ -171,24 +171,24 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th scope="row">Subject<span class="must">*</span></th>
+                    <th scope="row"><spring:message code='sys.title.subject'/><span class="must">*</span></th>
                     <td colspan="5">
                         <input id="ntceSubject" name="ntceSubject" value="${noticeInfo.ntceSubject}" type="text"
                                title="" placeholder="" class="w100p"/>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Writer</th>
+                    <th scope="row"><spring:message code='sys.title.writer'/></th>
                     <td>
                         <input id="rgstUserNm" value="${noticeInfo.rgstUserNm}" type="text" title="" placeholder=""
                                class="readonly w100p" readonly="readonly"/>
                     </td>
-                    <th scope="row">Issue Date</th>
+                    <th scope="row"><spring:message code='sys.title.issue'/> <spring:message code='sys.title.date'/></th>
                     <td>
                         <input id="crtDt" name="crtDt" value="${fn:substring(noticeInfo.crtDt,0,10)}" type="text"
                                title="" placeholder="" class="readonly w100p" readonly="readonly"/>
                     </td>
-                    <th scope="row">Read Count</th>
+                    <th scope="row"><spring:message code='sys.title.read'/> <spring:message code='sys.title.count'/></th>
                     <td>
                         <input id="readCnt" name="readCnt" value="${noticeInfo.readCnt}" type="text" title=""
                                placeholder="" class="readonly w100p" readonly="readonly"/>
@@ -246,10 +246,10 @@
                             <label>
                                 <input type='text' class='input_text' readonly='readonly' name="attachFile"
                                        value="${fileInfo.atchFileName}" data-id="${fileInfo.atchFileId}"/>
-                                <span class='label_text'><a href='#'>File</a></span>
+                                <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
                             </label>
-                            <span class='label_text'><a href='#'>Add</a></span>
-                            <span class='label_text'><a href='#'>Delete</a></span>
+                            <span class='label_text'><a href='#'><spring:message code='sys.btn.add'/></a></span>
+                            <span class='label_text'><a href='#'><spring:message code='sys.btn.delete'/></a></span>
                         </div>
                         </c:forEach>
 
@@ -257,10 +257,10 @@
                             <input title="file add" style="width: 300px;" type="file">
                             <label>
                                 <input type='text' class='input_text' readonly='readonly' value="" data-id=""/>
-                                <span class='label_text'><a href='#'>File</a></span>
+                                <span class='label_text'><a href='#'><spring:message code="viewEditWebInvoice.file" /></a></span>
                             </label>
-                            <span class='label_text'><a href='#'>Add</a></span>
-                            <span class='label_text'><a href='#'>Delete</a></span>
+                            <span class='label_text'><a href='#'><spring:message code='sys.btn.add'/></a></span>
+                            <span class='label_text'><a href='#'><spring:message code='sys.btn.delete'/></a></span>
                         </div>
 
 </div><!-- auto_file end -->
