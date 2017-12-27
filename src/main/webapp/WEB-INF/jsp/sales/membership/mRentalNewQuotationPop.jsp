@@ -460,7 +460,7 @@ function fn_getFilterChargeList(){
                             
                             if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){
 
-                                $("#txtFilterCharge").val( Math.round(result[0].amt * 100 / 106));
+                                $("#txtFilterCharge").val( Math.floor(result[0].amt * 100 / 106));
                             }else{
 
                                 $("#txtFilterCharge").val( result[0].amt);
@@ -1169,8 +1169,8 @@ function   fn_LoadRentalSVMPackage(_packId){
              $("#eurCertYn").val(result.packageInfo.eurCertYn);
              
         	 if($("#eurCertYn").val() == "Y"){  
-                 $("#hiddenOriFees").val(Math.round(result.packageInfo.srvPacItmRental *100 /106));
-                 $("#txtMonthlyFee").val(Math.round(result.packageInfo.srvPacItmRental *100 /106));  
+                 $("#hiddenOriFees").val(Math.floor(result.packageInfo.srvPacItmRental *100 /106));
+                 $("#txtMonthlyFee").val(Math.floor(result.packageInfo.srvPacItmRental *100 /106));  
         	 }else{
                  $("#hiddenOriFees").val(result.packageInfo.srvPacItmRental);
                  $("#txtMonthlyFee").val( result.packageInfo.srvPacItmRental);  

@@ -558,8 +558,8 @@ function fn_getMembershipPackageInfo(_id){
                $("#hiddenNomalPrice").val(pacPrice);
                
                if($("#eurCertYn").val() == "Y"){
-                   $("#txtPackagePrice").html(Math.round(pacPrice *100/106));
-                   $("#hiddenPacOriPrice").val(Math.round(pacPrice *100/106));
+                   $("#txtPackagePrice").html(Math.floor(pacPrice *100/106));
+                   $("#hiddenPacOriPrice").val(Math.floor(pacPrice *100/106));
                }else{
                    $("#txtPackagePrice").html(pacPrice);
                    $("#hiddenPacOriPrice").val(pacPrice);
@@ -728,7 +728,7 @@ function fn_getFilterChargeList(){
                      if(result[0] !=null){
                     	 if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){
                     		 
-                             $("#txtFilterCharge").text( Math.round(result[0].amt * 100 / 106));
+                             $("#txtFilterCharge").text( Math.floor(result[0].amt * 100 / 106));
 
                     	 }else{
                              $("#txtFilterCharge").text( result[0].amt);
