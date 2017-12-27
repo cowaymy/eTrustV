@@ -202,7 +202,7 @@ function DCPMasterGrid() {
            console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
            formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
          
-         Common.ajaxFile("/services/mileageCileage/excel/saveDCPMasterByExcel.do"
+         Common.ajaxFile("/services/mileageCileage/excel/saveDCPMasterByExcelLarge.do"
                    , formData
                    , function (result) 
                     {

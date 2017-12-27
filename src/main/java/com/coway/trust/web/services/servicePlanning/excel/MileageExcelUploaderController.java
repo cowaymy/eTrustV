@@ -114,7 +114,6 @@ public class MileageExcelUploaderController {
 
 	}
 
-	//임시 테스트 코드임 : 건수가 많으면 OOM 발생. (아직 건수 체크 안함.)
 	@RequestMapping(value = "/saveDCPMasterByExcelLarge.do", method = RequestMethod.POST)
 	public ResponseEntity saveDCPMasterByExcelLarge(MultipartHttpServletRequest request, SessionVO sessionVO)
 			throws IOException {
