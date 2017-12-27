@@ -686,10 +686,10 @@ function fn_invoice(){
 
 <ul class="right_btns">
     
-    
+    <!-- 
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li>
-</c:if>    
+</c:if>     -->
 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASPop()">ADD AS Order</a></p></li>
 </c:if>     

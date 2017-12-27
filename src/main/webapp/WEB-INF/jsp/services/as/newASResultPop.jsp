@@ -51,8 +51,22 @@ $(document).ready(function(){
         $("#IN_HOUSE_CLOSE").val("Y"); 
         $("#btnSaveDiv").attr("style","display:inline");
     }
+    
+    //inhouse close of  auto 
+    if('${IS_AUTO}' == "true"){
+        $("#inHouseRepair_div").attr("style","display:none");
+    }
+    
+    
 });
 
+
+
+function fn_inHouseAutoClose(){
+	if('${IS_AUTO}' == "true"){
+		setTimeout(function(){ $("#_newASResultDiv1").remove();  }, 2000);
+    }
+}
 
 
 
@@ -99,9 +113,11 @@ function fn_getASRulstEditFilterInfo(){
                    AUIGrid.addRow(myFltGrd10, result[i], "last"); 
                }
            }
-       }
-        
-        //AUIGrid.setGridData(myFltGrd10, result);        
+       } 
+       
+       
+       fn_inHouseAutoClose();
+       
     });  
 }
 
@@ -1641,8 +1657,8 @@ function fn_productGroup_SelectedIndexChanged(){
     
     
     <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-    <dt class="click_add_on"><a href="#">In-House Repair Entry</a></dt>
-    <dd  id='inHouseRepair_div' style="display:none">
+    <dt class="click_add_on"  ><a href="#">In-House Repair Entry</a></dt>
+    <dd   id='inHouseRepair_div' style="display:none">
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>

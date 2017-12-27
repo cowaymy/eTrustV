@@ -1832,6 +1832,29 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		 int reverse_SVC0004D_cnt = ASManagementListMapper.reverse_SVC0004D(svc0004dmap);
 		 int reverse_CURR_SVC0004D_cnt =ASManagementListMapper.reverse_CURR_SVC0004D(svc0004dmap);
 		 int reverse_SVC0005D_cnt =ASManagementListMapper.reverse_CURR_SVC0005D(svc0004dmap);
+		 
+
+     	 //물류 reverse 호출 하기 ...   OLD_AS_RESULT_ID로  호출 
+		 
+		 /////////////////////////물류 호출/////////////////////////
+		 Map<String, Object>  logPram = null ;
+	     logPram =new HashMap<String, Object>();
+         logPram.put("ORD_ID", NEW_AS_RESULT_ID);   
+         logPram.put("RETYPE", "RETYPE");  
+         logPram.put("P_TYPE", "OD04");  
+         logPram.put("P_PRGNM", "ASCEN");  
+         logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));   
+         
+
+         Map   SRMap=new HashMap(); 
+         LOGGER.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
+ 		 servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
+ 		 LOGGER.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
+ 		 
+         //////////////////ADD NEW AS RESULT  ////////////////   
+     	 
+		 
+		 
 		 EgovMap  cm = ASManagementListMapper. getLog0016DCount(svc0004dmap); 
 		 int  log0016dCnt = Integer.parseInt( String.valueOf(cm.get("cnt")));
 		 
@@ -2313,25 +2336,6 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
  		 ((Map) params.get("asResultM")).put("AUTOINSERT", "TRUE");//hash
  		 EgovMap   returnemp= this.asResult_insert(params);
      	 returnemp.put("NEW_AS_RESULT_NO", NEW_AS_RESULT_NO);
-     	 
-     	 //물류 reverse 호출 하기 ...   OLD_AS_RESULT_ID로  호출 
-		 
-		 /////////////////////////물류 호출/////////////////////////
-		 Map<String, Object>  logPram = null ;
-	     logPram =new HashMap<String, Object>();
-         logPram.put("ORD_ID", NEW_AS_RESULT_ID);   
-         logPram.put("RETYPE", "RETYPE");  
-         logPram.put("P_TYPE", "OD04");  
-         logPram.put("P_PRGNM", "ASCEN");  
-         logPram.put("USERID", String.valueOf(svc0004dmap.get("updator")));   
-         
-
-         Map   SRMap=new HashMap(); 
-         LOGGER.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
- 		 servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
- 		 LOGGER.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
- 		 
-         //////////////////ADD NEW AS RESULT  ////////////////   
      	 
      	 return returnemp;
          

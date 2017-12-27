@@ -1017,7 +1017,7 @@ LEFT OUTER JOIN (
 			               TO_CHAR (S87A.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD')
 			                  AS last_Chg_Date,
 			               S87A.SRV_FILTER_PRIOD AS parts_Period,
-			               NVL2 (L44A.ALTER_ITM_GRP, 'N', 'Y') AS alternative_YN,
+			               NVL2 (L44A.ALTER_ITM_GRP, 'N', 'Y') AS alternative_Y_N,
 			               S06A.RESULT_ID,
 			               S07A.BS_RESULT_PART_ID,
 			               S07A.BS_RESULT_PART_QTY,
@@ -1025,15 +1025,15 @@ LEFT OUTER JOIN (
 			                  WHEN TO_NUMBER(S07A.BS_RESULT_PART_QTY, '99999') <![CDATA[ > ]]> 0 THEN 'Y'
 			                  ELSE 'N'
 			               END
-			                  AS chg_YN,
+			                  AS chg_Y_N,
 			               NULL AS ex_Chgid,
 			               NULL AS chg_Qty,
 			               TO_CHAR (S87A.SRV_FILTER_PRV_CHG_DT, 'HHMM') AS last_Chg_Time,
-			               NULL AS alternative_Used_YN,
+			               NULL AS alternative_Used_Y_N,
 			               NULL AS alternative_Filter_Code,
 			               NULL AS alternative_Filter_Id,
 			               NULL AS alternative_Filter_Name,
-			               TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_YN,
+			               TO_CHAR (NVL (H.SERIALCHK, 'N')) AS filter_Barcd_Chk_Y_N,
 			               NULL AS filterBarcd_Serial_No,
 			               S90A.SRV_CODY_ID,
 			               (SELECT MEM_CODE

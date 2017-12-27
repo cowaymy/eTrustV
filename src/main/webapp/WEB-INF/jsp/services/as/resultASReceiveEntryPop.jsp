@@ -466,10 +466,19 @@ function  fn_doNewSave(){
 	                }
 	                
 	                //인하우스 결과 등록 처리 
-	               // if($("#IN_AsResultId").val() !="" ){
-	               //     var param = "?ord_Id="+${as_ord_basicInfo.ordId}+"&ord_No="+${as_ord_basicInfo.ordNo}+"&as_No="+asNo+"&as_Id="+$("#AS_ID").val()+"&refReqst="+$("#IN_AsResultId").val() ;
-	               //     Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
-	               // }
+	               if($("#IN_AsResultId").val() !="" ){
+
+	            	   var  inAsR = AUIGrid.getSelectedItems(inHouseRGridID);
+
+	            	    var asid=inAsR[0].item.asId;
+	            	    var asNo=inAsR[0].item.asNo;
+	            	    var salesOrdNo=inAsR[0].item.salesOrdNo;
+	            	    var salesOrdId=inAsR[0].item.salesOrdId;
+	            	    var refReqst  =$("#IN_AsResultId").val();
+	            	   
+	                    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&refReqst="+refReqst+"&isAuto=true" ;
+	                   Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
+	                }
 	                
 	                
 	                
@@ -1199,8 +1208,6 @@ function fn_addRemark(){
 </tbody>
 </table><!-- table end -->
 
-
-
 <c:if test="${MOD eq 'VIEW'}">
 		<aside class="title_line"><!-- title_line start -->
 		<h2>AS Call-Log Transaction</h2>
@@ -1210,8 +1217,6 @@ function fn_addRemark(){
 		      <div id="ascallLog_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 		</article><!-- grid_wrap end -->
 </c:if>
-
-
 
 <div style="display:none">
            <input type="text" title="" placeholder="ISRAS"  id="ISRAS" name="ISRAS"/>

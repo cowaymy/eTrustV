@@ -357,8 +357,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
         Map<String, Object>  logPram = null ;
 		/////////////////////////물류 호출/////////////////////////
 		logPram =new HashMap<String, Object>();
-        logPram.put("ORD_ID",   params.get("salesOrderNo") );
-        logPram.put("RETYPE",  "COMPLET");  
+        logPram.put("ORD_ID",   params.get("serviceNo") );
+        logPram.put("RETYPE",  "COMPLET");    
         logPram.put("P_TYPE",  "OD91");  
         logPram.put("P_PRGNM","LOG39");  
         logPram.put("USERID", MSvcLogApiMapper.getRetnCrtUserId(params));   
@@ -372,7 +372,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
         /////////////////////////물류 호출 END //////////////////////   	
 		
 		rMp.put("SP_MAP", logPram);
-		
+		   
 		return rMp;
 		
 	}

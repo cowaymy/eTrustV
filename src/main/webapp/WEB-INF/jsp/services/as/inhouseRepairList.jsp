@@ -268,11 +268,10 @@ $.fn.clearForm = function() {
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>
 </c:if>    
  -->
-  <!--  <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li> -->
+  <!--   -->
 
-
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_viewInHouseResultPop()">View Result</a></p></li>
-
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_editResultPop()">Edit Result</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_addRepairPop()">Add Repair</a></p></li>
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>

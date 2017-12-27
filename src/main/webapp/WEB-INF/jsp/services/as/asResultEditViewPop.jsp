@@ -362,8 +362,8 @@ function fn_selectASDataInfo(){
                  AS_SO_ID:'${ORD_ID}', 
                  AS_RESULT_ID: '${AS_RESULT_ID}',
                  AS_RESULT_NO:'${AS_RESULT_NO}',
-                 MOD: "EDIT"
-                            
+                 MOD: "EDIT",
+                 ORD_NO :'${ORD_NO}'  
         };
         
         fn_setASDataInit(options);

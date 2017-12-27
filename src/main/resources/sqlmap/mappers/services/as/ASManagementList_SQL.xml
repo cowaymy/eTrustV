@@ -2694,7 +2694,7 @@
 					       S.AS_RESULT_STOCK_USE, 
 					       459, 
 					       0, 
-					       S.AS_RESULT_MTCH_ID, 
+					       #{OLD_AS_RESULT_ID}, 
 					       '', 
 					       S.AS_RESULT_UPD_DT, 
 					       S.AS_RESULT_UPD_USER_ID, 
@@ -2725,7 +2725,7 @@
 	            ) 
 				SELECT 
 				   SVC0005D_ASR_ITM_ID_SEQ.NEXTVAL , 
-				   #{AS_RESULT_ID}, 
+				   #{NEW_AS_RESULT_ID}, 
 				   S.ASR_ITM_PART_ID, 
 				   S.ASR_ITM_PART_DESC, 
 				   (S.ASR_ITM_PART_QTY * -1), 

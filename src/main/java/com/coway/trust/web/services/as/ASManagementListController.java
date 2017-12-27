@@ -282,25 +282,22 @@ public class ASManagementListController {
 		
 		EgovMap sm = ASManagementListService.saveASEntry(params);
 		logger.debug("sm :"+ sm.toString());
-		
-		
-		if( null !=sm){
-			HashMap   spMap =(HashMap)sm.get("spMap");
-			logger.debug("spMap :"+ spMap.toString());   
-			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-				sm.put("logerr","Y");
-			}
-			
-			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-		}
+//		
+//		
+//		if( null !=sm){
+//			HashMap   spMap =(HashMap)sm.get("spMap");
+//			logger.debug("spMap :"+ spMap.toString());   
+//			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+//				sm.put("logerr","Y");
+//			}
+//			
+//			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+//		}
 		
 		
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
 	}
-	
-	
-	
 
 	/**
 	 * Services - AS  - saveASInHouseEntry in house 
@@ -320,6 +317,15 @@ public class ASManagementListController {
 		params.put("updator", sessionVO.getUserId());
 		
 		EgovMap sm = ASManagementListService.saveASInHouseEntry(params);
+		
+		if( null !=sm){
+			HashMap   spMap =(HashMap)sm.get("spMap");
+			logger.debug("spMap :"+ spMap.toString());   
+			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+			}
+			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		 }
+		
 		
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
@@ -395,6 +401,7 @@ public class ASManagementListController {
 		model.put("AS_NO", (String)params.get("as_No"));    
 		model.put("AS_ID", (String)params.get("as_Id"));   
 		model.put("REF_REQST", (String)params.get("refReqst"));     
+		model.put("IS_AUTO", (String)params.get("isAuto"));     
 		
 
 		model.put("USER_ID", sessionVO.getUserId());
@@ -861,7 +868,10 @@ public class ASManagementListController {
 		EgovMap  rtnValue = ASManagementListService.asResult_update(params);  
 		
 		
+		
 		logger.debug("newResultUpdate   done!!--->"+rtnValue.toString());  
+		
+		
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

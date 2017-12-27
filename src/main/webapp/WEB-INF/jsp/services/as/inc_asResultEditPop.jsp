@@ -62,11 +62,17 @@ function createCFilterAUIGrid() {
 
 
 
+
+function fn_setASRulstSVC0004DInfo(){
+	
+	
+}
+
 function fn_getErrMstList(_ordNo){
     
      var SALES_ORD_NO = _ordNo ;
      $("#ddlErrorCode option").remove();
-     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , 'fn_errCallbackFun');            
 }
 
 
@@ -814,8 +820,18 @@ function  fn_setSaveFormData(){
                  }
              });
         }
-       
   }      
+  
+  
+    //reroad 
+    
+    try{
+    	fn_searchASManagement();
+    	$("#_newASResultDiv1").remove();
+    	
+    }catch(e){}
+    
+    
     
 }
 
@@ -1292,6 +1308,8 @@ function fn_setASDataInit(ops){
     $("#asData_AS_RESULT_ID").val(ops.AS_RESULT_ID);
     $("#asData_AS_RESULT_NO").val(ops.AS_RESULT_NO);
     $("#requestMod").val(ops.MOD);
+    
+
 
     fn_getASRulstEditFilterInfo();   //AS_RESULT_NO
     fn_getASRulstSVC0004DInfo();  //AS_RESULT_NO
@@ -1300,10 +1318,16 @@ function fn_setASDataInit(ops){
     
     //as result edit
     if(ops.MOD =="RESULTEDIT"){
+          fn_getErrMstList('${ORD_NO}' , 'fn_errCallbackFun') ;
           fn_HasFilterUnclaim();
     }
 }
 
+
+
+function fn_errCallbackFun(){
+	fn_getASRulstSVC0004DInfo(); 
+}
 
 
 </script>
