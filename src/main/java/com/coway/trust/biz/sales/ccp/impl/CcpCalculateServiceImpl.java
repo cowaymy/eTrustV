@@ -512,6 +512,14 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		LOGGER.info("_________________________________________________________________________________________");
 		LOGGER.info("_______________  // 1. Update CCP Decision <Update Data.CcpDecisionM> Start _________________________");
 		LOGGER.info("_________________________________________________________________________________________");
+		
+		//params Tranlate  969// 970  > saveCustTypeId
+		if(SalesConstants.APPLICANT_TYPE_ID_INDIVIDUAL.equals(String.valueOf(params.get("saveCustTypeId")))){  // 964
+			params.put("saveCustTypeId", SalesConstants.CCP_SCHEME_TYPE_CODE_ID_ICS);
+		}else{
+			params.put("saveCustTypeId", SalesConstants.CCP_SCHEME_TYPE_CODE_ID_CCS);
+		}
+		
 		ccpCalculateMapper.updateCcpDecision(params);
 		LOGGER.info("_________________________________________________________________________________________");
 		LOGGER.info("_______________ // 1. Update CCP Decision <Update Data.CcpDecisionM> End _________________________");
@@ -630,8 +638,14 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 			if(appTypeDecimal.intValue() == 66 ){
 				//Rent
 				accMap = ccpCalculateMapper.getAccRentLedgerAmt(params);  // if (updatesalesOrderM.AppTypeID == 66)
-				tempoVal = (BigDecimal)accMap.get("rentAmt");
-				totalOutstanding = tempoVal.doubleValue();
+				
+				if(accMap == null){
+					totalOutstanding = 0;
+				}else{
+					tempoVal = (BigDecimal)accMap.get("rentAmt");
+					totalOutstanding = tempoVal.doubleValue();
+				}
+				
 			}else{
 				//Trade
 				accMap = ccpCalculateMapper.getAccTradeLedgerAmt(params); //  else
