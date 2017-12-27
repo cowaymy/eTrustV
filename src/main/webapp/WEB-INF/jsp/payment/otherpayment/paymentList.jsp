@@ -45,7 +45,8 @@
 		{dataField : "bankStateMappingDt",headerText : "<spring:message code='pay.head.bankMappingDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 		{dataField : "revStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
 		{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false},
-		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"}
+		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : false}
 	];
 	
     
@@ -117,6 +118,48 @@
 			} else {
 				Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
 			}
+		}else{
+             Common.alert('No Payment List selected.');
+        }	
+	}
+
+
+	//Request Fund Transfer 팝업
+	function fn_requestFTPop(){
+		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+		
+		if (selectedItem[0] > -1){
+			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
+			var payId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payId");
+			var appType = AUIGrid.getCellValue(myGridID, selectedGridValue, "appType");
+
+			var appTypeId;
+			if(appType == 'RENTAL'){
+				appTypeId = 1;
+			}else if(appType == 'OUT') {
+				appTypeId = 2;
+			}else if(appType == 'MEMBERSHIP') {
+				appTypeId = 3;
+			}else if(appType == 'AS' || appType == 'HP') {
+				appTypeId = 4;
+			}else if(appType == 'OUT_MEM') {
+				appTypeId = 5;
+			}
+
+			if(appTypeId == ''){
+	             Common.alert('This Payment App Type is not valid.');
+				 return;
+			}
+
+
+			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+
+			if (revStusId == 0) {
+				Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
+			} else {
+				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");   
+			} 
+
 		}else{
              Common.alert('No Payment List selected.');
         }	
@@ -195,6 +238,7 @@
 				 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.requestDcf'/></a></p></li>
 				</c:if>
+					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();"><spring:message code='pay.btn.requestFT'/></a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
