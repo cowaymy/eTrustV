@@ -19,8 +19,8 @@
     <select id="selectHappyCallList" parameterType="Map" resultType="egovMap">
         SELECT A.HC_DEF_ID HC_ID, B.CODE_NAME CALL_TYPE, A.HC_DEF_ITM_NO QUESTION_NUMBER, C.CODE_NAME FEEDBACK_TYPE
         , D.CODE_NAME EVALUATION_CRITERIA, A.HC_DEF_DESC QUESTION
-        , TO_CHAR(A.PRIOD_FROM ,'mm-dd-yyyy') PERIOD_FROM 
-        , TO_CHAR(A.PRIOD_TO ,'mm-dd-yyyy')  PERIOD_TO
+        , TO_CHAR(A.PRIOD_FROM ,'yyyy-mm-dd') PERIOD_FROM 
+        , TO_CHAR(A.PRIOD_TO ,'yyyy-mm-dd')  PERIOD_TO
         , E.NAME STATUS
 		FROM CCR0003M A
 		JOIN SYS0013M B ON A.HC_DEF_TYPE_ID = B.CODE_ID
@@ -122,6 +122,23 @@
 		OR TO_DATE(#{periodFrom}, 'MM/YYYY') 
               BETWEEN TO_DATE(해당시작일, 'YYYY/MM/DD') AND TO_DATE(해당종료일, 'YYYY/MM/DD'))
     </update> -->
+    
+    <update id="updateHappyCall" parameterType="Map">
+	    UPDATE CCR0003M
+		SET HC_DEF_QUES_TYPE_ID = (SELECT CODE_ID
+						                          FROM SYS0013M 
+						                          WHERE CODE_MASTER_ID = 103
+						                          AND CODE_NAME = #{evaluationCriteria}),
+		    HC_DEF_DESC = #{question},
+		    PRIOD_FROM = TO_DATE(#{periodFrom}, 'YYYY/MM/DD'),
+		    PRIOD_TO = TO_DATE(#{periodTo}, 'YYYY/MM/DD'),
+		    HC_DEF_STUS_ID = (SELECT STUS_CODE_ID 
+				                      FROM SYS0038M 
+				                      WHERE NAME = #{status}),
+		    UPD_DT = SYSDATE,
+		    UPD_USER_ID = #{userId}
+		WHERE HC_DEF_ID = #{hcId}
+    </update>
 
     <insert id="insertHappyCallSub" parameterType="Map">
         INSERT INTO CCR0004M (
@@ -169,5 +186,10 @@
           , SYSDATE
       )
     </insert>
+    
+    <delete id="deleteHappyCallSub" parameterType="Map">
+        DELETE FROM CCR0004M 
+        WHERE HC_DEF_ID = #{hcId}
+    </delete>
 
 </mapper>

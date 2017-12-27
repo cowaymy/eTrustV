@@ -17,7 +17,7 @@ public interface HappyCallPlanningService {
 
 	boolean insertHappyCall(List<Object> addList, SessionVO sessionVO);
 	
-	//boolean updateHappyCall(List<Object> udtList, SessionVO sessionVO);
+	boolean updateHappyCall(List<Object> udtList, SessionVO sessionVO);
 
 	boolean deleteHappyCall(List<Object> delList, SessionVO sessionVO);
 	

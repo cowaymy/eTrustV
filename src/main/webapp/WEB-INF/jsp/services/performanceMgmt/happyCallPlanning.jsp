@@ -174,12 +174,12 @@ function happyCallGrid() {
         }       
     });
 	
-    /* // 에디팅 정상 종료 이벤트 바인딩*/
+    // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); 
 
 }
 
-/* //편집 핸들러  */
+//편집 핸들러
 function auiCellEditingHandler(event) {
     console.log("edit_event: " + event.value);
 }; 

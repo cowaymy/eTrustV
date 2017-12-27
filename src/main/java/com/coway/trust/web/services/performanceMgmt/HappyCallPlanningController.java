@@ -84,7 +84,7 @@ public class HappyCallPlanningController {
 			addSuccess = happyCallPlanningService.insertHappyCall(addList,sessionVO);
 		}
 		if(udtList != null){
-			//updateSuccess = happyCallPlanningService.updateHappyCall(udtList,sessionVO);
+			updateSuccess = happyCallPlanningService.updateHappyCall(udtList,sessionVO);
 		}
 		if(delList != null){
 			delSuccess = happyCallPlanningService.deleteHappyCall(delList,sessionVO);
