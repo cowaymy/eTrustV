@@ -19,7 +19,9 @@ $(document).ready(function(){
    //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
    
       
-   doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');         
+   doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');    
+   
+   fn_getErrMstList('${ORD_NO}') ;
    
 });
 
@@ -59,6 +61,27 @@ function createCFilterAUIGrid() {
 
 
 
+
+function fn_getErrMstList(_ordNo){
+    
+     var SALES_ORD_NO = _ordNo ;
+     $("#ddlErrorCode option").remove();
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+}
+
+
+
+function fn_errMst_SelectedIndexChanged(){
+    
+    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
+    
+     $("#ddlErrorDesc option").remove();
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+}
+
+
+
+
 function fn_getASRulstEditFilterInfo(){
     Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {AS_RESULT_NO:$('#asData_AS_RESULT_NO').val() } , function(result) {
         console.log("fn_getASRulstEditFilterInfo.");
@@ -82,6 +105,16 @@ function fn_getASRulstSVC0004DInfo(){
 
 
 
+var asMalfuncResnId;
+
+
+
+function fn_callback_ddlErrorDesc(){
+    
+    $("#ddlErrorDesc").val( asMalfuncResnId); 
+}
+
+
 
 function  fn_setSVC0004dInfo(result){
 
@@ -93,10 +126,26 @@ function  fn_setSVC0004dInfo(result){
     $("#ddlFailReason").val( result[0].c2); 
     $("#tpSettleTime").val( result[0].asSetlTm); 
     $("#ddlDSCCode").val( result[0].asBrnchId); 
+    
+    
     $("#ddlErrorCode").val( result[0].asMalfuncId); 
     $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
     
-    $("#ddlCTCode").val( result[0].c12); 
+    
+
+    asMalfuncResnId = result[0].asMalfuncResnId;
+
+    if(result[0].asMalfuncId !=""){
+        $("#ddlErrorDesc option").remove();
+        doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
+    }
+   
+    
+    
+    
+   // $("#ddlCTCode").val( result[0].c12); 
+    //$("#CTID").val( result[0].c11);
+    
     $("#ddlWarehouse").val( result[0].asWhId); 
     $("#txtRemark").val( result[0].asResultRem); 
     
@@ -164,6 +213,7 @@ function  fn_setSVC0004dInfo(result){
    $('#serialNo') .val(result[0].inHuseRepairSerialNo);
    $('#inHouseRemark') .val(result[0].inHuseRepairRem);
    $('#promisedDate') .val(result[0].inHuseRepairPromisDt);
+   
    
 }
 
@@ -277,7 +327,7 @@ function fn_openField_Complete(){
     $("#txtRemark").val(asDataInfo[0].callRem);
     $("#ddlErrorCode").val(asDataInfo[0].c12);
     $("#ddlErrorDesc").val(asDataInfo[0].c15);
-    $("#ddlCTCode").val(asDataInfo[0].c9);
+    //$("#ddlCTCode").val(asDataInfo[0].c9);
     $("#ddlDSCCode").val(asDataInfo[0].c6);
     
     if(asDataInfo[0].asAllowComm =="1"){
@@ -698,13 +748,6 @@ function  fn_setSaveFormData(){
                    IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val()
     }
     
-    var inhouse ={
-            IH_T1 : "T1",
-            IH_T2 : "T2",
-            IH_T3 : "T3",
-            IH_T4 : "T4",
-            IH_T5 : "T5"
-    }
     
     
    var saveForm;
@@ -714,8 +757,7 @@ function  fn_setSaveFormData(){
               "asResultM": asResultM ,
               "add" : addedRowItems,
               "update" : editedRowItems,
-              "remove" : removedRowItems,
-              "inhouse" :inhouse
+              "remove" : removedRowItems
       }
       
       Common.ajax("POST", "/services/inhouse/save.do", saveForm, function(result) {
@@ -759,16 +801,16 @@ function  fn_setSaveFormData(){
                       "remove" : removedRowItems
               }
               
-            
              Common.ajax("POST", "/services/as/newResultUpdate.do", saveForm, function(result) {
                  console.log("newResultUpdate.");
                  console.log( result);       
                  
-                 if(result.asNo !=""){
-                     $("#newResultNo").val(result.asNo);
+                 if(result.data !=""){
+                     $("#newResultNo").html("<B>"+result.data+"</B>");
                      Common.alert("<b>AS result successfully saved.</b>");
                      //fn_DisablePageControl();
                      fn_asResult_viewPageContral();
+                     $("#btnSaveDiv").attr("style","display:none");
                  }
              });
         }
@@ -783,7 +825,7 @@ function  fn_setSaveFormData(){
 
 
 <form  id="asDataForm" method="post">
-    <div style='display:inline'>
+    <div style='display:none'>
                <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/> 
                <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/> 
                <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/> 
@@ -813,7 +855,7 @@ function  fn_setSaveFormData(){
         <th scope="row">New Result No</th>
         <td colspan="3">
             <div  id='newRno'  style='display:none'>
-               <input type="text"   id= 'newResultNo' name='newResultNo'/> 
+                <span  id= 'newResultNo' > </span>
             </div>
         </td>
     </tr>
@@ -893,9 +935,8 @@ function  fn_setSaveFormData(){
     <tr>
         <th scope="row">Error Code <span class="must">*</span>  </th>
         <td>
-        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">ErrorCode</option>
-         </select>
+        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()"> </select>
+
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
@@ -906,25 +947,22 @@ function  fn_setSaveFormData(){
 	         </select> 
          -->
         
-         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+         <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
          <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
          
-    
+         
    
         </td>
     </tr>
     <tr>
         <th scope="row">Error Description <span class="must">*</span> </th>
         <td>
-        <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">Error code definition is required  </option>
-        </select>
+            <select id='ddlErrorDesc' name='ddlErrorDesc'> </select>
         </td>
         <th scope="row">Warehouse</th>
         <td>
         <select class="disabled" disabled="disabled"  id='ddlWarehouse' name='ddlWarehouse'>
-        
-    </select>
+       </select>
         </td>
     </tr>
     <tr>
@@ -1168,9 +1206,6 @@ function  fn_setSaveFormData(){
     </dd>
       <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
     
-    
-    
-    
 </dl>
 </article><!-- acodi_wrap end -->
 
@@ -1260,16 +1295,15 @@ function fn_setASDataInit(ops){
 
     fn_getASRulstEditFilterInfo();   //AS_RESULT_NO
     fn_getASRulstSVC0004DInfo();  //AS_RESULT_NO
-    fn_setCTcodeValue();
+   // fn_setCTcodeValue();
     
     
     //as result edit
     if(ops.MOD =="RESULTEDIT"){
           fn_HasFilterUnclaim();
     }
-  
-        
 }
+
 
 
 </script>

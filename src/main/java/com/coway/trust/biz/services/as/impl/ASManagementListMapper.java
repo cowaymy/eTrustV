@@ -122,7 +122,7 @@ public interface ASManagementListMapper {
 	 
 	 
 	 List<EgovMap> getResult_SVC0004D(Map<String, Object> params);
-	 List<EgovMap> getResult_PAY0016D(Map<String, Object> params);
+	 EgovMap  getResult_PAY0016D(Map<String, Object> params);
 	 List<EgovMap> getResult_PAY0031D(Map<String, Object> params);
 	 List<EgovMap> getResult_PAY0006D(Map<String, Object> params);
 	 List<EgovMap> getResult_DocNo_PAY0006D(Map<String, Object> params);	 

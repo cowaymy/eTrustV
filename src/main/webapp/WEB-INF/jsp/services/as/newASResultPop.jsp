@@ -9,7 +9,7 @@ var  regGridID;
 var  myFltGrd10;
 
 $(document).ready(function(){
-	
+    
     createAUIGrid();
     createCFilterAUIGrid() ;
 
@@ -19,6 +19,9 @@ $(document).ready(function(){
     AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+    
+    
+    fn_getErrMstList('${ORD_NO}');
     
     doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
@@ -31,11 +34,11 @@ $(document).ready(function(){
     
     
     
-	fn_getASOrderInfo();
-	fn_getASEvntsInfo();
-	fn_getASHistoryInfo();
-	
-	fn_DisablePageControl();
+    fn_getASOrderInfo();
+    fn_getASEvntsInfo();
+    fn_getASHistoryInfo();
+    
+    fn_DisablePageControl();
     $("#ddlStatus").attr("disabled", false); 
 
     AUIGrid.resize(myFltGrd10, 950,200);
@@ -43,7 +46,7 @@ $(document).ready(function(){
     
     //get inhouse close data
     if('${REF_REQST}' >0){
-    	fn_getASRulstSVC0004DInfo();
+        fn_getASRulstSVC0004DInfo();
         fn_getASRulstEditFilterInfo();
         $("#IN_HOUSE_CLOSE").val("Y"); 
         $("#btnSaveDiv").attr("style","display:inline");
@@ -54,22 +57,31 @@ $(document).ready(function(){
 
 
 function fn_getErrMstList(_ordNo){
-    
+	 
      var SALES_ORD_NO = _ordNo ;
      $("#ddlErrorCode option").remove();
-     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');         
+     
+   
 }
 
 
 
 function fn_errMst_SelectedIndexChanged(){
     
-    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
-    
+
+     $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");  
+     var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
+
      $("#ddlErrorDesc option").remove();
-     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , 'fn_errDetail_SetVal');            
+     //$("#ddlErrorCode").attr("disabled", true); 
 }
 
+
+function fn_errDetail_SetVal(){
+	 $("#ddlErrorDesc").val( asMalfuncResnId); 
+}
 
 
 
@@ -80,13 +92,13 @@ function fn_getASRulstEditFilterInfo(){
         console.log( result);
         
        if(result != null){
-    	   if(result.length >0 ){
-    		  // console.log(result);
-    		   for( i  in  result){
-    			   console.log(result[i]);
-    			   AUIGrid.addRow(myFltGrd10, result[i], "last"); 
-    		   }
-    	   }
+           if(result.length >0 ){
+              // console.log(result);
+               for( i  in  result){
+                   console.log(result[i]);
+                   AUIGrid.addRow(myFltGrd10, result[i], "last"); 
+               }
+           }
        }
         
         //AUIGrid.setGridData(myFltGrd10, result);        
@@ -112,7 +124,7 @@ function fn_getASRulstSVC0004DInfo(){
 
 
 var productCode ;
-
+var asMalfuncResnId ;
 function  fn_setSVC0004dInfo(result){
     
     $("#creator").val( result[0].c28); 
@@ -120,7 +132,7 @@ function  fn_setSVC0004dInfo(result){
     $("#txtResultNo").text( result[0].asResultNo); 
     
     if('${REF_REQST}' >0){
-    	 $("#txtResultNo").text(""); 
+         $("#txtResultNo").text(""); 
     }
     
     $("#ddlStatus").val( result[0].asResultStusId); 
@@ -129,7 +141,12 @@ function  fn_setSVC0004dInfo(result){
     $("#tpSettleTime").val( result[0].asSetlTm); 
     $("#ddlDSCCode").val( result[0].asBrnchId); 
     $("#ddlErrorCode").val( result[0].asMalfuncId); 
-    $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
+    $("#ddlErrorDesc").val( result[0].asMalfuncResnId);
+    
+    asMalfuncResnId =result[0].asMalfuncResnId;
+    
+    fn_errMst_SelectedIndexChanged(result[0].asMalfuncResnId);
+    
     
     $("#ddlCTCode").val( result[0].c12); 
     $("#CTID").val( result[0].c11); 
@@ -305,7 +322,7 @@ function fn_getASOrderInfo(){
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
             
-            fn_getErrMstList(result[0].ordNo);
+           
             
         });
 }
@@ -335,7 +352,7 @@ function fn_getASEvntsInfo(){
 
 
 function fn_getASHistoryInfo(){
-	
+    
     Common.ajax("GET", "/services/as/getASHistoryInfo.do", $("#resultASForm").serialize(), function(result) {
         console.log("fn_getASHistoryInfo.");
         console.log( result);
@@ -346,12 +363,12 @@ function fn_getASHistoryInfo(){
 
 
 function fn_getASReasonCode2(_obj , _tobj, _v){
-	
-	
-	//txtDefectType.Text.Trim(), 387
-	
-	var   reasonCode =$(_obj).val();
-	var   reasonTypeId =_v;
+    
+    
+    //txtDefectType.Text.Trim(), 387
+    
+    var   reasonCode =$(_obj).val();
+    var   reasonTypeId =_v;
     
     Common.ajax("GET", "/services/as/getASReasonCode2.do", {RESN_TYPE_ID: reasonTypeId  ,CODE:reasonCode} , function(result) {
         console.log("fn_getASHistoryInfo.");
@@ -362,35 +379,35 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
             $("#"+_tobj+"_id").val(result[0].resnId);
             
             
-	            if('337' == _v){
-	                if(  result[0].codeId.trim()   =='B8'  ||   result[0].codeId.trim()   =='B6' ) {  //Solution Code  B8인 경우만 가능함 .
-	
-	                    $("#replacement").attr("disabled", false); 
-	                    $("#promisedDate").attr("disabled", false); 
-	                    $("#productGroup").attr("disabled", false); 
-	                    $("#productCode").attr("disabled", false); 
-	                    $("#serialNo").attr("disabled", false); 
-	                    $("#inHouseRemark").attr("disabled", false); 
-	                    
-	                    $("#inHouseRepair_div").attr("style","display:inline");
-	                    
-	                    
-	                }else{
-	
-	                    $("#replacement").val("").attr("disabled", true); 
-	                    $("#promisedDate").val("").attr("disabled", true); 
-	                    $("#productGroup").val("").attr("disabled", true); 
-	                    $("#productCode").val("").attr("disabled", true); 
-	                    $("#serialNo").val("").attr("disabled", true); 
-	                    $("#inHouseRemark").val("").attr("disabled", true); 
-	                    
-	                    $("#inHouseRepair_div").attr("style","display:none");
-	                    
-	                }
-	             }
+                if('337' == _v){
+                    if(  result[0].codeId.trim()   =='B8'  ||   result[0].codeId.trim()   =='B6' ) {  //Solution Code  B8인 경우만 가능함 .
+    
+                        $("#replacement").attr("disabled", false); 
+                        $("#promisedDate").attr("disabled", false); 
+                        $("#productGroup").attr("disabled", false); 
+                        $("#productCode").attr("disabled", false); 
+                        $("#serialNo").attr("disabled", false); 
+                        $("#inHouseRemark").attr("disabled", false); 
+                        
+                        $("#inHouseRepair_div").attr("style","display:inline");
+                        
+                        
+                    }else{
+    
+                        $("#replacement").val("").attr("disabled", true); 
+                        $("#promisedDate").val("").attr("disabled", true); 
+                        $("#productGroup").val("").attr("disabled", true); 
+                        $("#productCode").val("").attr("disabled", true); 
+                        $("#serialNo").val("").attr("disabled", true); 
+                        $("#inHouseRemark").val("").attr("disabled", true); 
+                        
+                        $("#inHouseRepair_div").attr("style","display:none");
+                        
+                    }
+                 }
         }else{
-        	
-        	   $("#"+_tobj+"_text").val("* No such detail of defect found.");
+            
+               $("#"+_tobj+"_text").val("* No such detail of defect found.");
         }
     });
     
@@ -400,33 +417,33 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
 
 
 function getASStockPrice(_PRC_ID){
-	
-	var ret = 0;
+    
+    var ret = 0;
     
     Common.ajaxSync("GET", "/services/as/getASStockPrice.do",{PRC_ID: _PRC_ID}, function(result) {
         console.log("getASStockPrice.");
         console.log( result);
         
         try{
-        	ret = parseInt( result[0].amt,10);
+            ret = parseInt( result[0].amt,10);
         }catch(e){
-        	alert('SAL0016M no data ');
-        	ret = 0;
+            alert('SAL0016M no data ');
+            ret = 0;
         }
     });
-	
-	return ret;
+    
+    return ret;
     
 }
 
 
 
 function fn_filterAddVaild(){
-	
+    
      if(FormUtil.checkReqValue($("#ddlFilterCode option:selected")) ){    
         return false;
      }
-	
+    
      if(FormUtil.checkReqValue($("#ddlFilterQty option:selected")) ){    
          return false;
      }
@@ -442,41 +459,41 @@ function fn_filterAddVaild(){
 
 
 function fn_filterAdd(){
-	
-	if(fn_filterAddVaild() ==false){
+    
+    if(fn_filterAddVaild() ==false){
         Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');
         return  false;
     }
-	
     
-	 var  fitem = new Object();
-		 
-	    fitem.filterType =$("#ddlFilterPayType").val();
-	    fitem.filterDesc =$("#ddlFilterCode option:selected").text();
-	    fitem.filterExCode =$("#ddlFilterExchangeCode").val();
-	    fitem.filterQty =$("#ddlFilterQty").val();  
-	    fitem.filterRemark =$("#txtFilterRemark").val();    
-	    fitem.filterID =$("#ddlFilterCode").val(); 
-	    //fitem.filterCODE =$("#ddlFilterCode").va();
-	   fitem.srvFilterLastSerial  =$("#ddSrvFilterLastSerial").val();  
-	    
-	    var chargePrice =0;
-	    if (fitem.filterType  == "CHG") {
-	    	chargePrice  = getASStockPrice(fitem.filterID);        
-	    }
-	    
-	    fitem.filterPrice = Number(chargePrice);
+    
+     var  fitem = new Object();
+         
+        fitem.filterType =$("#ddlFilterPayType").val();
+        fitem.filterDesc =$("#ddlFilterCode option:selected").text();
+        fitem.filterExCode =$("#ddlFilterExchangeCode").val();
+        fitem.filterQty =$("#ddlFilterQty").val();  
+        fitem.filterRemark =$("#txtFilterRemark").val();    
+        fitem.filterID =$("#ddlFilterCode").val(); 
+        //fitem.filterCODE =$("#ddlFilterCode").va();
+       fitem.srvFilterLastSerial  =$("#ddSrvFilterLastSerial").val();  
         
-	    var  chargeTotalPrice = 0;
-	    
-	    chargeTotalPrice =  Number($("#ddlFilterQty").val())  *  Number( chargePrice);
-	    fitem.filterTotal =   Number(chargeTotalPrice);
-	    
-	    
-	    var v =  Number(  $("#txtFilterCharge").val() ) + chargeTotalPrice;
-	    $("#txtFilterCharge").val( v);
-	    
-	    
+        var chargePrice =0;
+        if (fitem.filterType  == "CHG") {
+            chargePrice  = getASStockPrice(fitem.filterID);        
+        }
+        
+        fitem.filterPrice = Number(chargePrice);
+        
+        var  chargeTotalPrice = 0;
+        
+        chargeTotalPrice =  Number($("#ddlFilterQty").val())  *  Number( chargePrice);
+        fitem.filterTotal =   Number(chargeTotalPrice);
+        
+        
+        var v =  Number(  $("#txtFilterCharge").val() ) + chargeTotalPrice;
+        $("#txtFilterCharge").val( v);
+        
+        
     if( AUIGrid.isUniqueValue (myFltGrd10,"filterID" ,fitem.filterID )){
          fn_addRow(fitem);
     }else{
@@ -489,17 +506,17 @@ function fn_filterAdd(){
 
 
 function fn_filterClear(){
-	
-	
-	  $("#ddlFilterCode").val("");
-	  $("#ddlFilterQty").val("1");
-	  $("#ddlFilterPayType").val("1");
-	  $("#ddlFilterExchangeCode").val("");
-	  $("#ddSrvFilterLastSerial").val("");
-	  $("#txtFilterRemark").val("");
-	
-	  //AUIGrid.clearGridData(myFltGrd10);
-		
+    
+    
+      $("#ddlFilterCode").val("");
+      $("#ddlFilterQty").val("1");
+      $("#ddlFilterPayType").val("1");
+      $("#ddlFilterExchangeCode").val("");
+      $("#ddSrvFilterLastSerial").val("");
+      $("#txtFilterRemark").val("");
+    
+      //AUIGrid.clearGridData(myFltGrd10);
+        
 }
 
 
@@ -510,27 +527,27 @@ function  fn_addRow(gItem) {
 
 
 function fn_LabourCharge_CheckedChanged(_obj){
-	
-	  if(_obj.checked){
-	      $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");     
-		  $("#cmbLabourChargeAmt").val("50");
-		  $("#txtLabourCharge").val("50.00");
-	  }else{
-	      $("#cmbLabourChargeAmt").val("");
-		  $("#cmbLabourChargeAmt").attr("disabled", true); 
-	  }
-	  
-	  fn_calculateTotalCharges();
+    
+      if(_obj.checked){
+          $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");     
+          $("#cmbLabourChargeAmt").val("50");
+          $("#txtLabourCharge").val("50.00");
+      }else{
+          $("#cmbLabourChargeAmt").val("");
+          $("#cmbLabourChargeAmt").attr("disabled", true); 
+      }
+      
+      fn_calculateTotalCharges();
 }
 
 
 
 function fn_calculateTotalCharges(){
-	
-	var  labourCharges =0;
-	var filterCharges =0; 
-	var totalCharges =0;
-	
+    
+    var  labourCharges =0;
+    var filterCharges =0; 
+    var totalCharges =0;
+    
     labourCharges =   $("#txtLabourCharge").val();
     filterCharges   =   $("#txtFilterCharge").val();  
     totalCharges = Number( labourCharges ) + Number( filterCharges);
@@ -541,27 +558,27 @@ function fn_calculateTotalCharges(){
 
 
 function fn_cmbLabourChargeAmt_SelectedIndexChanged(){
-	
-	var  v =$("#cmbLabourChargeAmt").val();
-	$("#txtLabourCharge").val(v);
-	fn_calculateTotalCharges();
+    
+    var  v =$("#cmbLabourChargeAmt").val();
+    $("#txtLabourCharge").val(v);
+    fn_calculateTotalCharges();
 }
 
 
 
 
 function fn_ddlStatus_SelectedIndexChanged(){
-	
-	fn_clearPageField();
-	
+    
+    fn_clearPageField();
+    
     switch ($("#ddlStatus").val()) {
         case "4":
             //COMPLETE
             fn_openField_Complete();
             var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-			$("#ddlCTCode").val(selectedItems[0].item.asMemId);
-			$("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-				
+            $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+            $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+                
             break;
             
         case "1":   //inhouse
@@ -587,8 +604,8 @@ function fn_ddlStatus_SelectedIndexChanged(){
 
 
 function fn_openField_Complete(){
-	
-	$("#btnSaveDiv").attr("style","display:inline");
+    
+    $("#btnSaveDiv").attr("style","display:inline");
     $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");     
     $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");     
     $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");     
@@ -630,18 +647,18 @@ function fn_openField_Complete(){
 }
 
 function fn_openField_Cancel(){
-	
-	$("#btnSaveDiv").attr("style","display:inline");
+    
+    $("#btnSaveDiv").attr("style","display:inline");
     $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
     $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
 }
 
 
 function fn_openField_Fail(){
-	
-	   $("#btnSaveDiv").attr("style","display:inline");
-	   $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
-	   $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
+    
+       $("#btnSaveDiv").attr("style","display:inline");
+       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
+       $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
 }
 
 
@@ -650,7 +667,7 @@ function fn_openField_Fail(){
 
 
 function fn_clearPageMessage(){
-	
+    
 }
 
 
@@ -683,18 +700,18 @@ function fn_clearPageField(){
 
 
 function fn_doSave(){
-	
-	if ( ! fn_validRequiredField_Save_ResultInfo()) {
+    
+    if ( ! fn_validRequiredField_Save_ResultInfo()) {
        return ;
     }
-	
+    
    if($("#ddlStatus").val()==4  ||  $("#ddlStatus").val()==1   ){
-	     
-	     //COMPLETE STATUS
+         
+         //COMPLETE STATUS
           if (! fn_validRequiredField_Save_DefectiveInfo()) {
                  return ;
           }
-	   
+       
    }
    
    fn_setSaveFormData();
@@ -720,7 +737,7 @@ $.fn.clearForm = function() {
 
 
 function  fn_setSaveFormData(){
-	
+    
     //추가된 행 아이템들(배열)
     var addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10);
         
@@ -745,68 +762,68 @@ function  fn_setSaveFormData(){
              _AS_DEFECT_PART_ID=          $('#def_part_id').val(); 
              _AS_DEFECT_DTL_RESN_ID=   $('#def_def_id').val() ; 
              _AS_SLUTN_RESN_ID=           $('#solut_code_id').val(); 
-	 }
-	    
-	
-	var asResultM ={
-			       AS_NO:                       $("#AS_NO").val(),
-			       AS_ENTRY_ID:              $("#AS_ID").val(),
-				   AS_SO_ID:                   $("#ORD_ID").val(),
-				   AS_CT_ID:                   $('#ddlCTCode').val(),
-				   AS_SETL_DT:               $('#dpSettleDate').val() , 
-				   AS_SETL_TM:               $('#tpSettleTime').val(),   
-				   AS_RESULT_STUS_ID:    $('#ddlStatus').val(),  
-				   AS_FAIL_RESN_ID:         $('#ddlFailReason').val(),  
-				   AS_REN_COLCT_ID:        0,
-				   AS_CMMS:                   $("#iscommission").prop("checked") ? '1': '0' ,    
-				   AS_BRNCH_ID:              $('#ddlDSCCode').val() , 
-				   AS_WH_ID:                  $('#ddlWarehouse').val() ,
-				   AS_RESULT_REM:          $('#txtRemark').val() ,
-				   AS_MALFUNC_ID:          $('#ddlErrorCode').val() ,
-				   AS_MALFUNC_RESN_ID:  $('#ddlErrorDesc').val() , 
-				    AS_DEFECT_TYPE_ID :_AS_DEFECT_TYPE_ID ,     
-				    AS_DEFECT_GRP_ID:_AS_DEFECT_GRP_ID,     
-				    AS_DEFECT_ID:_AS_DEFECT_ID,         
-				    AS_DEFECT_PART_GRP_ID:_AS_DEFECT_PART_GRP_ID,
-				    AS_DEFECT_PART_ID:_AS_DEFECT_PART_ID, 
-				    AS_DEFECT_DTL_RESN_ID:_AS_DEFECT_DTL_RESN_ID,
-				    AS_SLUTN_RESN_ID:_AS_SLUTN_RESN_ID,
-				   AS_WORKMNSH:                  $('#txtLabourCharge').val()  ,
-				   AS_FILTER_AMT:                  $('#txtFilterCharge').val()  , 
-				   AS_ACSRS_AMT:                 0,
-				   AS_TOT_AMT:                    $('#txtTotalCharge').val()  ,   
-				   AS_RESULT_IS_SYNCH:        0,
-				   AS_RCALL:                         0,
-				   AS_RESULT_STOCK_USE:   addedRowItems.length  >0 ? 1:0,//detail 리스트 카운트  
-				   AS_RESULT_TYPE_ID:   457,
-				   AS_RESULT_IS_CURR: 1,
-				   AS_RESULT_MTCH_ID:  0,
-				   AS_RESULT_NO_ERR: '',
-				   AS_ENTRY_POINT:  0,
-				   AS_WORKMNSH_TAX_CODE_ID: 0,
-				   AS_WORKMNSH_TXS: 0,
-				   AS_RESULT_MOBILE_ID: 0,
-				   IN_HUSE_REPAIR_REM: $("#inHouseRemark").val(),
-	               IN_HUSE_REPAIR_REPLACE_YN:$("#replacement").val(),
-	               IN_HUSE_REPAIR_PROMIS_DT: $("#promisedDate").val(),
-	               IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
-	               IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
-	               IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val(),
-	               CHANGBN:'WEB',
-	               IN_HOUSE_CLOSE:  $("#IN_HOUSE_CLOSE").val()
-	}
-	
-	var  saveForm ={
-			"asResultM": asResultM ,
-		    "add" : addedRowItems,
-	        "update" : editedRowItems,
-	        "remove" : removedRowItems
-	}
-	
-	
-	console.log(saveForm);
-	
-	
+     }
+        
+    
+    var asResultM ={
+                   AS_NO:                       $("#AS_NO").val(),
+                   AS_ENTRY_ID:              $("#AS_ID").val(),
+                   AS_SO_ID:                   $("#ORD_ID").val(),
+                   AS_CT_ID:                   $('#ddlCTCode').val(),
+                   AS_SETL_DT:               $('#dpSettleDate').val() , 
+                   AS_SETL_TM:               $('#tpSettleTime').val(),   
+                   AS_RESULT_STUS_ID:    $('#ddlStatus').val(),  
+                   AS_FAIL_RESN_ID:         $('#ddlFailReason').val(),  
+                   AS_REN_COLCT_ID:        0,
+                   AS_CMMS:                   $("#iscommission").prop("checked") ? '1': '0' ,    
+                   AS_BRNCH_ID:              $('#ddlDSCCode').val() , 
+                   AS_WH_ID:                  $('#ddlWarehouse').val() ,
+                   AS_RESULT_REM:          $('#txtRemark').val() ,
+                   AS_MALFUNC_ID:          $('#ddlErrorCode').val() ,
+                   AS_MALFUNC_RESN_ID:  $('#ddlErrorDesc').val() , 
+                    AS_DEFECT_TYPE_ID :_AS_DEFECT_TYPE_ID ,     
+                    AS_DEFECT_GRP_ID:_AS_DEFECT_GRP_ID,     
+                    AS_DEFECT_ID:_AS_DEFECT_ID,         
+                    AS_DEFECT_PART_GRP_ID:_AS_DEFECT_PART_GRP_ID,
+                    AS_DEFECT_PART_ID:_AS_DEFECT_PART_ID, 
+                    AS_DEFECT_DTL_RESN_ID:_AS_DEFECT_DTL_RESN_ID,
+                    AS_SLUTN_RESN_ID:_AS_SLUTN_RESN_ID,
+                   AS_WORKMNSH:                  $('#txtLabourCharge').val()  ,
+                   AS_FILTER_AMT:                  $('#txtFilterCharge').val()  , 
+                   AS_ACSRS_AMT:                 0,
+                   AS_TOT_AMT:                    $('#txtTotalCharge').val()  ,   
+                   AS_RESULT_IS_SYNCH:        0,
+                   AS_RCALL:                         0,
+                   AS_RESULT_STOCK_USE:   addedRowItems.length  >0 ? 1:0,//detail 리스트 카운트  
+                   AS_RESULT_TYPE_ID:   457,
+                   AS_RESULT_IS_CURR: 1,
+                   AS_RESULT_MTCH_ID:  0,
+                   AS_RESULT_NO_ERR: '',
+                   AS_ENTRY_POINT:  0,
+                   AS_WORKMNSH_TAX_CODE_ID: 0,
+                   AS_WORKMNSH_TXS: 0,
+                   AS_RESULT_MOBILE_ID: 0,
+                   IN_HUSE_REPAIR_REM: $("#inHouseRemark").val(),
+                   IN_HUSE_REPAIR_REPLACE_YN:$("#replacement").val(),
+                   IN_HUSE_REPAIR_PROMIS_DT: $("#promisedDate").val(),
+                   IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
+                   IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
+                   IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val(),
+                   CHANGBN:'WEB',
+                   IN_HOUSE_CLOSE:  $("#IN_HOUSE_CLOSE").val()
+    }
+    
+    var  saveForm ={
+            "asResultM": asResultM ,
+            "add" : addedRowItems,
+            "update" : editedRowItems,
+            "remove" : removedRowItems
+    }
+    
+    
+    console.log(saveForm);
+    
+    
     Common.ajax("POST", "/services/as/newASInHouseAdd.do", saveForm, function(result) {
         console.log("newASInHouseAdd.");
         console.log( result);       
@@ -824,19 +841,19 @@ function  fn_setSaveFormData(){
 
 
 function   fn_clearPanelField_ASChargesFees(){
-	
-	  $('#ddlFilterCode').val("") ;
-	  $('#ddlFilterQty').val(""); 
-	  $('#ddlFilterPayType').val("") ;
-	  $('#ddlFilterExchangeCode').val("") ;
-	  $('#txtFilterRemark').val("") ;
-	      
+    
+      $('#ddlFilterCode').val("") ;
+      $('#ddlFilterQty').val(""); 
+      $('#ddlFilterPayType').val("") ;
+      $('#ddlFilterExchangeCode').val("") ;
+      $('#txtFilterRemark').val("") ;
+          
 }
 
 
 
 function fn_DisablePageControl(){
-	
+    
     $("#ddlStatus").attr("disabled", true); 
     $("#dpSettleDate").attr("disabled", true); 
     $("#ddlFailReason").attr("disabled", true); 
@@ -889,8 +906,8 @@ function fn_DisablePageControl(){
 
 
 function fn_validRequiredField_Save_DefectiveInfo(){
-	
-	   
+    
+       
     var rtnMsg ="";
     var rtnValue =true;
     
@@ -929,73 +946,73 @@ function fn_validRequiredField_Save_DefectiveInfo(){
 
 
 function fn_validRequiredField_Save_ResultInfo(){
-	
-	var rtnMsg ="";
-	var rtnValue =true;
-	
+    
+    var rtnMsg ="";
+    var rtnValue =true;
+    
     if(FormUtil.checkReqValue($("#ddlStatus"))){
         rtnMsg  +="Please select the ddlStatus.<br/>" ;
         rtnValue =false; 
     }else{
-    	
-    	if($("#ddlStatus").val()==4   || $("#ddlStatus").val()==1 ){
-    		
-    		 if(FormUtil.checkReqValue($("#dpSettleDate"))){
-    		        rtnMsg  +="Please select the dpSettleDate.<br/>" ;
-    		        rtnValue =false; 
-    		  }else{
-    			  
-    			  var asno =$("#txtASNo").val();
-    			  if(asno.match("AS")){
-    				     var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
-    			         var  nowdateArry  =nowdate.split("-");
-    			                nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
-    			         var  rdateArray   =$("#dpSettleDate").val().split("/");
-    			         var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
-    			     
-    			         if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
-    			            rtnMsg  +="* Request date should not be longer than 14 days from current date.<br />" ;
-    			            rtnValue =false; 
-    			        }
-    				  
-    			  }    			  
-    		  }
-    		 
-    		 if(FormUtil.checkReqValue($("#tpSettleTime"))){
+        
+        if($("#ddlStatus").val()==4   || $("#ddlStatus").val()==1 ){
+            
+             if(FormUtil.checkReqValue($("#dpSettleDate"))){
+                    rtnMsg  +="Please select the dpSettleDate.<br/>" ;
+                    rtnValue =false; 
+              }else{
+                  
+                  var asno =$("#txtASNo").val();
+                  if(asno.match("AS")){
+                         var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
+                         var  nowdateArry  =nowdate.split("-");
+                                nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
+                         var  rdateArray   =$("#dpSettleDate").val().split("/");
+                         var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
+                     
+                         if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
+                            rtnMsg  +="* Request date should not be longer than 14 days from current date.<br />" ;
+                            rtnValue =false; 
+                        }
+                      
+                  }               
+              }
+             
+             if(FormUtil.checkReqValue($("#tpSettleTime"))){
                  rtnMsg  +="Please select the tpSettleTime.<br/>" ;
                  rtnValue =false; 
              }
-    		 
-    		 if(FormUtil.checkReqValue($("#ddlDSCCode"))){
+             
+             if(FormUtil.checkReqValue($("#ddlDSCCode"))){
                  rtnMsg  +="Please select the ddlDSCCode.<br/>" ;
                  rtnValue =false; 
              }
-    		 
-    		 
-    		  if(FormUtil.checkReqValue($("#ddlErrorCode"))){
+             
+             
+              if(FormUtil.checkReqValue($("#ddlErrorCode"))){
                   rtnMsg  +="Please select the ddlErrorCode.<br/>" ;
                   rtnValue =false; 
               }
-    		  
-    		  
-    		  if(FormUtil.checkReqValue($("#ddlCTCode"))){
+              
+              
+              if(FormUtil.checkReqValue($("#ddlCTCode"))){
                   rtnMsg  +="Please select the ddlCTCode.<br/>" ;
                   rtnValue =false; 
               }
-    	}else{
-    		
-    		  if(FormUtil.checkReqValue($("#ddlFailReason"))){
-    	            rtnMsg  +="Please select the ddlFailReason.<br/>" ;
-    	            rtnValue =false; 
-    	        }
-    	}
+        }else{
+            
+              if(FormUtil.checkReqValue($("#ddlFailReason"))){
+                    rtnMsg  +="Please select the ddlFailReason.<br/>" ;
+                    rtnValue =false; 
+                }
+        }
     }
     
 
     if( rtnValue ==false ){
         Common.alert("Required Fields Missing" +DEFAULT_DELIMITER +rtnMsg );
     }
-	
+    
      return rtnValue;
 }
 
@@ -1112,12 +1129,12 @@ function fn_productGroup_SelectedIndexChanged(){
 
 <form id="resultASForm" method="post">
     <div  style="display:none">
-	        <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
-	        <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
-	        <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
-	        <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
-	        <input type="text" name="REF_REQST"   id="REF_REQST"  value="${REF_REQST}"/>
-	        <input type="text" name="IN_HOUSE_CLOSE"   id="IN_HOUSE_CLOSE" />
+            <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
+            <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
+            <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
+            <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
+            <input type="text" name="REF_REQST"   id="REF_REQST"  value="${REF_REQST}"/>
+            <input type="text" name="IN_HOUSE_CLOSE"   id="IN_HOUSE_CLOSE" />
     </div>
 </form>
 
@@ -1341,14 +1358,14 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Status <span class="must">*</span> </th>
         <td>
         
-		    <select class="w100p"  id="ddlStatus" name="ddlStatus"  onChange="fn_ddlStatus_SelectedIndexChanged()">
-		         <option value=""></option>
-		         <option value="1"> Active</option>
-		         <option value="4">Complete</option>
-		         <option value="10">Cancel</option>
-		         <option value="21">Failure</option>
-		    </select>
-		    
+            <select class="w100p"  id="ddlStatus" name="ddlStatus"  onChange="fn_ddlStatus_SelectedIndexChanged()">
+                 <option value=""></option>
+                 <option value="1"> Active</option>
+                 <option value="4">Complete</option>
+                 <option value="10">Cancel</option>
+                 <option value="21">Failure</option>
+            </select>
+            
         </td>
     </tr>
     <tr>
@@ -1424,8 +1441,7 @@ function fn_productGroup_SelectedIndexChanged(){
     <tr>
         <th scope="row">Error Description <span class="must">*</span>  </th>
         <td>
-        <select id='ddlErrorDesc' name='ddlErrorDesc'>
-        </select>
+        <select id='ddlErrorDesc' name='ddlErrorDesc'> </select>
         </td>
         <th scope="row">Warehouse</th>
         <td>
@@ -1473,9 +1489,9 @@ function fn_productGroup_SelectedIndexChanged(){
     <tr>
         <th scope="row">Defect Code <span class="must">*</span>  </th>
         <td>
-	        <input type="text" title="" placeholder="ex) FF"  disabled="disabled"  id='def_code' name ='def_code' class=""  onChange="fn_getASReasonCode2(this, 'def_code', '303')"  />
-	        <input type="hidden" title="" placeholder=""   id='def_code_id' name ='def_code_id' class="" />
-	         <input type="text" title="" placeholder=""id='def_code_text' name ='def_code_text'   class="" />
+            <input type="text" title="" placeholder="ex) FF"  disabled="disabled"  id='def_code' name ='def_code' class=""  onChange="fn_getASReasonCode2(this, 'def_code', '303')"  />
+            <input type="hidden" title="" placeholder=""   id='def_code_id' name ='def_code_id' class="" />
+             <input type="text" title="" placeholder=""id='def_code_text' name ='def_code_text'   class="" />
         </td>
     </tr>
     <tr>
@@ -1497,9 +1513,9 @@ function fn_productGroup_SelectedIndexChanged(){
     <tr>
         <th scope="row">Solution Code <span class="must">*</span>  </th>
         <td>
-	        <input type="text" title="" placeholder="ex) A9" class=""  disabled="disabled"  id='solut_code' name ='solut_code'  onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')"   />
-	        <input type="hidden" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />
-	        <input type="text" title="" placeholder="" class=""   id='solut_code_text' name ='solut_code_text'  />
+            <input type="text" title="" placeholder="ex) A9" class=""  disabled="disabled"  id='solut_code' name ='solut_code'  onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')"   />
+            <input type="hidden" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />
+            <input type="text" title="" placeholder="" class=""   id='solut_code_text' name ='solut_code_text'  />
           
         </td>
     </tr>

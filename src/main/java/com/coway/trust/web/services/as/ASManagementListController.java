@@ -88,14 +88,19 @@ public class ASManagementListController {
 	public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
 		// 호출될 화면
 				
-
+		logger.debug("========sessionVO.getUserId()===========>"+sessionVO.getUserId());
 		
-
+		logger.debug("===================>"+params.toString());
+		
+		
 		model.put("USER_ID", sessionVO.getUserId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
+		model.put("ORD_NO", params.get("ord_No"));
+		
+		
 		
 		return "services/as/inc_asResultEditPop";
 	}
@@ -860,7 +865,7 @@ public class ASManagementListController {
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(rtnValue.get("AS_NO"));
+		message.setData(rtnValue.get("asNo"));
 		message.setMessage("");
 
 				

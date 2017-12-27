@@ -2632,12 +2632,12 @@
 			   ACC_INV_VOID_SUB_CRDIT_NOTE_ID, ACC_INV_VOID_SUB_REM) 
 			VALUES ( 
 			       PAY0018D_SEQ.NEXTVAL,
-			       #{accInvVoidId}
-			       #{accInvVoidSubOrdId} 
-			       #{accInvVoidSubBillId}
-			       #{accInvVoidSubBillAmt}
-			       #{accInvVoidSubCrditNote}
-			       #{accInvVoidSubCrditNoteId}
+			       #{accInvVoidId},
+			       #{accInvVoidSubOrdId} ,
+			       #{accInvVoidSubBillId},
+			       #{accInvVoidSubBillAmt},
+			       #{accInvVoidSubCrditNote},
+			       #{accInvVoidSubCrditNoteId},
 			       #{accInvVoidSubRem} 
 			       )
        </insert>
@@ -3171,7 +3171,7 @@
   <insert id="reverse_StateUpPAY0007D" parameterType="Map" >      
               UPDATE PAY0007D 
                     SET  BILL_IS_PAID =1 ,
-                           STUS_ID =4
+                           STUS_ID =4,
                            UPD_DT =SYSDATE,
                            UPD_USER_ID = #{updator}
               WHERE  BILL_NO =#{AS_RESULT_NO}

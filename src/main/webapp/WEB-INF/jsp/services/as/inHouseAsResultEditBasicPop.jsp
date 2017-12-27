@@ -19,6 +19,7 @@ $(document).ready(function(){
     AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+    fn_getErrMstList('${ORD_NO}');
     
     doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
@@ -55,7 +56,33 @@ $(document).ready(function(){
     
     
     AUIGrid.resize(myFltGrd10, 950,200);
+    
+
+
 });
+
+
+
+
+
+function fn_getErrMstList(_ordNo){
+ 
+     var SALES_ORD_NO = _ordNo ;
+     $("#ddlErrorCode option").remove();
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+}
+
+
+
+function fn_errMst_SelectedIndexChanged(){
+    
+    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
+    
+     $("#ddlErrorDesc option").remove();
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+}
+
+
 
 function fn_getASRulstEditFilterInfo(){
     Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {AS_RESULT_NO:$('#AS_RESULT_NO').val() } , function(result) {
@@ -151,7 +178,16 @@ function fn_getASRulstSVC0004DInfo(){
 
 
 
+
+function fn_callback_ddlErrorDesc(){
+    
+    $("#ddlErrorDesc").val( asMalfuncResnId); 
+}
+
+
+
 var productCode ;
+var asMalfuncResnId; 
 
 function  fn_setSVC0004dInfo(result){
     
@@ -164,7 +200,14 @@ function  fn_setSVC0004dInfo(result){
     $("#tpSettleTime").val( result[0].asSetlTm); 
     $("#ddlDSCCode").val( result[0].asBrnchId); 
     $("#ddlErrorCode").val( result[0].asMalfuncId); 
-    $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
+    asMalfuncResnId = result[0].asMalfuncResnId;
+    
+
+    if(result[0].asMalfuncId !=""){
+        $("#ddlErrorDesc option").remove();
+        doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
+    }
+    
     
     $("#ddlCTCode").val( result[0].c12); 
     $("#CTID").val( result[0].c11); 
@@ -246,6 +289,9 @@ function fn_getASOrderInfo(){
             $("#txtASNo").text($("#AS_NO").val());
             
             $("#txtOrderNo").text(result[0].ordNo);
+            
+            
+            
             $("#txtAppType").text(result[0].appTypeCode);
             $("#txtCustName").text(result[0].custName);
             $("#txtCustIC").text(result[0].custNric);
@@ -765,6 +811,8 @@ function  fn_setSaveFormData(){
         
         if(result.data !=""){
               Common.alert("<b> result successfully edited.</b>");
+              fn_selInhouseList();
+              $("#btnSaveDiv").attr("style","display:none");
         }
         
     });
@@ -1446,25 +1494,21 @@ function fn_productGroup_SelectedIndexChanged(){
     </tr>
     <tr>
         <th scope="row">Error Code <span class="must">*</span> </th>
-        <td>
-        <select    id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">ErrorCode</option>
-         </select>
+        <td>        <select    id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()"></select>
+
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
         <input type="text" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
         
-    </select> 
         </td>
     </tr>
     <tr>
         <th scope="row">Error Description <span class="must">*</span> </th>
         <td>
-        <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">Error code definition is required </option>
-        </select>
+        <select id='ddlErrorDesc' name='ddlErrorDesc'> </select>
+
         </td>
         <th scope="row">Warehouse</th>
         <td>

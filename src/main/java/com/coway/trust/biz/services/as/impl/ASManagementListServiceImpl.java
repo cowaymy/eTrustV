@@ -1239,7 +1239,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	public boolean  chkInHouseOpenComp(Map<String, Object>  svc0004dmap ){
 		
 		boolean chkInHouseOpenComp =false;
-
+		
+		
+		//as update 시 발생코드 
+		 if(CommonUtils.nvl(svc0004dmap.get("AUTOINSERT")).toString().equals("TRUE")){
+			 return chkInHouseOpenComp;
+		 }
 		
 		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")  &&  !  "WEB".equals(svc0004dmap.get("CHANGBN"))){
 			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  != 0  ){
@@ -1251,7 +1256,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				    
 				 
 		            chkInHouseOpenComp = true;
-		            
+		             
 			  }
 		  }
 		  
@@ -1855,6 +1860,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                	//AccOrderBill
          		int reverse_updatePAY0016D_cnt=	 ASManagementListMapper.reverse_updatePAY0016D(svc0004dmap);
          	}
+         	
+         	
+         	pay0016dData = (EgovMap) ASManagementListMapper.getResult_PAY0016D(svc0004dmap);
+         	
+         	
         	 
         	 EgovMap CN_DocNoMap=null;
         	 String CNNO=null;
@@ -2276,8 +2286,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
          
          
          
+     	
          //////////////////ADD NEW AS RESULT  //////////////// 
-     	 EgovMap   returnemp= this.asResult_insert(params);
+ 		 ((Map) params.get("asResultM")).put("AUTOINSERT", "TRUE");//hash
+ 		 EgovMap   returnemp= this.asResult_insert(params);
+     	 returnemp.put("NEW_AS_RESULT_NO", NEW_AS_RESULT_NO);
          //////////////////ADD NEW AS RESULT  ////////////////   
      	 
      	 return returnemp;

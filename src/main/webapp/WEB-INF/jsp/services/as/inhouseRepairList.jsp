@@ -250,7 +250,9 @@ $.fn.clearForm = function() {
 <ul class="right_btns">
 
 
-  <!--  <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li> -->
+
+<!-- 
+
 
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 
@@ -265,6 +267,15 @@ $.fn.clearForm = function() {
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">    
     <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>
 </c:if>    
+ -->
+  <!--  <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asInhouseAddOrderPop()">IHR ADD AS Order</a></p></li> -->
+
+
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_viewInHouseResultPop()">View Result</a></p></li>
+
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_editResultPop()">Edit Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_addRepairPop()">Add Repair</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="javascript:fn_selInhouseList()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#inHoForm').clearForm();" ><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->

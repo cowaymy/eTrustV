@@ -54,6 +54,29 @@ $(document).ready(function(){
 
 
 
+
+function fn_getErrMstList(_ordNo){
+    
+     var SALES_ORD_NO = _ordNo ;
+     $("#ddlErrorCode option").remove();
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , '');            
+}
+
+
+
+function fn_errMst_SelectedIndexChanged(){
+    
+    var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
+    
+     $("#ddlErrorDesc option").remove();
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+}
+
+
+
+
+
+
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) {
  
@@ -134,6 +157,9 @@ function fn_getASOrderInfo(){
             
             $("#asOrdNo").val(result[0].ordNo);
             $("#asOpenOrdNo").val(result[0].ordNo);
+            
+            
+            fn_getErrMstList(result[0].ordNo);
             
             $("#txtOrderNo").text(result[0].ordNo);
             $("#txtAppType").text(result[0].appTypeCode);
@@ -1318,23 +1344,20 @@ function fn_productGroup_SelectedIndexChanged(){
     <tr>
         <th scope="row">Error Code <span class="must">*</span> </th>
         <td>
-        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode'>
-                     <option value="9999">ErrorCode</option>
-         </select>
+        <select   disabled="disabled" id='ddlErrorCode' name='ddlErrorCode' onChange="fn_errMst_SelectedIndexChanged()"></select>
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
         <input type="text" title="" placeholder="" class=""  id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
-    </select> 
+   
         </td>
     </tr>
     <tr>
         <th scope="row">Error Description <span class="must">*</span> </th>
         <td>
-        <select id='ddlErrorDesc' name='ddlErrorDesc'>
-             <option value="9999">Error code definition is required </option>
-        </select>
+        <select id='ddlErrorDesc' name='ddlErrorDesc'> </select>
+
         </td>
         <th scope="row">Warehouse</th>
         <td>
