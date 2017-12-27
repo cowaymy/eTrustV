@@ -431,7 +431,9 @@ var billingTargetLayout = [
 							    <td>
 								    <input type="text"  id="orderNo" name="orderNo" title="" placeholder="" class="readonly" />
 								    <p class="btn_sky">
+								         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 								         <a href="javascript:fn_orderSearch();" id="search"><spring:message code='sys.btn.search'/></a>
+								         </c:if>
 								    </p>
 							    </td>
 							</tr>
@@ -501,7 +503,9 @@ var billingTargetLayout = [
 					</tbody>
 				</table><!-- table end -->
 				<ul class="center_btns">
+				    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 				    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick=""><spring:message code='sys.btn.save'/></a></p></li>
+				    </c:if>
 				</ul>
 			</section><!-- pop_body end -->
 		</div><!-- popup_wrap end -->
