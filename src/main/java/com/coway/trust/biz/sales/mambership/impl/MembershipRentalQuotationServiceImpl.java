@@ -273,7 +273,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 
 					 	double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
 					 	double   itemAmount  =  CommonUtils.intNvl((String)rMap.get("oriPrc"));
-					 	double   amt  =Math.round((float)(chargePrice  * 100 / 106 ));
+					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 ));
 					
 					 	eFilterMap.put("qotatItmChrg", amt);
 					 	eFilterMap.put("qotatItmTxs", (itemAmount  -amt ));

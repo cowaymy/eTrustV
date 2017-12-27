@@ -319,7 +319,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 						 double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 						 double   stkNetAmt  =  0;
 						 
-						 stkNetAmt = Math.round((float)(chargePrice  * 100 / 106 ));
+						 stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ));
 						 
 						 eFilterMap.put("StkNetAmt", stkNetAmt);
 						 eFilterMap.put("StkTaxes", chargePrice -stkNetAmt  );
