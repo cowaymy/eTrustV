@@ -65,7 +65,7 @@ var detailListLayout = [
 		var statementNo = $("#statementNo").val();
 		
 		if(statementNo.trim() == "" || statementNo.trim().length < 11 ){
-			Common.alert("You must key in the Invoice/Statement No. first.");
+			Common.alert("<spring:message code='pay.alert.invoiceStateNo'/>");
 		}else{
 			
 			Common.ajax("GET","/payment/selectInvoiceInfo.do", {"statementNo" : statementNo}, function(result){
@@ -91,7 +91,7 @@ var detailListLayout = [
 	                detailListGridId = GridCommon.createAUIGrid("detailGrid_wrap", detailListLayout ,"",gridPros);
 	                AUIGrid.setGridData(detailListGridId, result.data.invoiceDetailList);
 	            }else{
-	            	Common.alert("No Invoice/Statement record found for this order number.");
+	            	Common.alert("<spring:message code='pay.alert.orderNoNotFound'/>");
 	            }
 	        });
 		}
@@ -129,11 +129,10 @@ var detailListLayout = [
 	        	Common.ajax("GET","/payment/saveInvoiceVoidResult.do", {"statementNo" : statementNo, "remark" : remark}, function(result){
 	                
 	                fn_reSelect();
-	                Common.alert("Result Saved successfully.<br />" +
-                    "Statement No. [" + statementNo + "] has been Voided.");
+	                Common.alert("<spring:message code='pay.alert.saveInvoiceVoidResult' arguments='"+statementNo+"' htmlEscape='false'/>");
 	                
 	            }, function(jqXHR, textStatus, errorThrown) {
-	            	Common.alert("Data preparation failed. Please try again later.");
+	            	Common.alert("<spring:message code='pay.alert.dataFailed'/>");
 	            });
 	        }
 	        

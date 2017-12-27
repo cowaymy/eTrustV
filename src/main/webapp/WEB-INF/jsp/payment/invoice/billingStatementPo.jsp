@@ -83,8 +83,8 @@ var columnLayout=[
     			}else{
     				console.log("entryId : " +item.id);
                     selectedEntryId = item.id;
-    				 Common.confirm("Are you sure you want to disable the selected Invoice P/O #? Once disabled, can not restore.", fn_doDisable);
-    				 
+    				Common.confirm("<spring:message code='pay.alert.invoiceDisable'/>", fn_doDisable);
+    				
     			}
     		} 
     	}
@@ -97,9 +97,9 @@ function fn_doDisable(){
 		Common.ajax("GET", "/payment/disablePOEntry.do", {"poEntryId" : selectedEntryId}, function(result) {
 	        if(result.message == '') {
 	        	fn_loadOrderPO($("#orderId").val());
-	        	Common.alert("Disabled Successfully.");
+	        	Common.alert("<spring:message code='pay.alert.disableSuccess'/>");
 	        }
-	        else Common.alert("ERROR : "+result.message);
+	        else Common.alert("<spring:message code='pay.alert.error' arguments='"+result.message+"' htmlEscape='false'/>");
 	    });
 	}
 }
@@ -136,7 +136,7 @@ function fn_addEntry(){
 	if($("#orderId").val() != undefined && $("#orderId").val() != ''){
 		   $("#newEntry").show();
 	}else{
-		Common.alert("Select an Order first.");
+		Common.alert("<spring:message code='pay.alert.selectAnOrderFirst'/>");
 	}
 }
 
@@ -149,7 +149,7 @@ function fn_hidePopup(){
 
 function fn_doSave(){
 	if($("#orderId").val() == undefined || $("#orderId").val() == ''){
-		Common.alert("Select an Order first.");
+		Common.alert("<spring:message code='pay.alert.selectAnOrderFirst'/>");
 	}else{
 		var orderId = $("#orderId").val();
 		var startPeriod = $("#startPeriod").val();
@@ -161,21 +161,21 @@ function fn_doSave(){
 		    	Common.alert(result.message);
 		    }else{
 		    	if(startPeriod == '' || startPeriod == 0 || endPeriod == '' || endPeriod == 0){
-		    		Common.alert("Required Field(Period) was not fulfilled.");
+		    		Common.alert("<spring:message code='pay.alert.requiredPeriod'/>");
 		    		return;
 		    	}else{
 		    		if(startPeriod > endPeriod){
-		    			Common.alert("Period Range was not fulfilled");
+		    			Common.alert("<spring:message code='pay.alert.periodNotFulfilled'/>");
 		    			return;
 		    		}
 		    	}
 		    	
 		    	var poNo = $("#referenceNo").val();
 		    	if(poNo == undefined || poNo == '' ){
-		    		Common.alert("Required Field(P/O No.) was not fulfilled.");
+		    		Common.alert("<spring:message code='pay.alert.requiredPONo'/>");
 		    		return;
 		    	}else if(poNo.length > 20){
-		    		Common.alert("P/O no. cannot exceed 20 characters");
+		    		Common.alert("<spring:message code='pay.alert.not20Char'/>");
 		    		return;
 		    	}
 		    	
