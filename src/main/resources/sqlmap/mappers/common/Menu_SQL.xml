@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.common.impl.MenuMapper">
 
     <select id="selectMenuList" parameterType="sessionVO" resultType="egovMap">
-        SELECT     MENU.MENU_LVL
+        SELECT MENU.MENU_LVL
                   ,MENU.MENU_CODE
                   ,MENU.UPPER_MENU_CODE
                   ,MENU.MENU_NAME
@@ -163,34 +163,34 @@
 
     <select id="selectPageAuth" parameterType="Map" resultType="pageAuthVO">
         SELECT   DISTINCT
-                MIN (DECODE (PGM_TRN_CODE, 2260, FUNC_YN) ) AS funcView
-                ,MIN (DECODE (PGM_TRN_CODE, 2261, FUNC_YN) ) AS funcChange
-                ,MIN (DECODE (PGM_TRN_CODE, 2262, FUNC_YN) ) AS funcPrint
-                ,MIN (DECODE (PGM_TRN_CODE, 2263, FUNC_YN) ) AS funcUserDefine1
-                ,MIN (DECODE (PGM_TRN_CODE, 2264, FUNC_YN) ) AS funcUserDefine2
-                ,MIN (DECODE (PGM_TRN_CODE, 2265, FUNC_YN) ) AS funcUserDefine3
-                ,MIN (DECODE (PGM_TRN_CODE, 2266, FUNC_YN) ) AS funcUserDefine4
-                ,MIN (DECODE (PGM_TRN_CODE, 2267, FUNC_YN) ) AS funcUserDefine5
-                ,MIN (DECODE (PGM_TRN_CODE, 2268, FUNC_YN) ) AS funcUserDefine6
-                ,MIN (DECODE (PGM_TRN_CODE, 2269, FUNC_YN) ) AS funcUserDefine7
-                ,MIN (DECODE (PGM_TRN_CODE, 2270, FUNC_YN) ) AS funcUserDefine8
-                ,MIN (DECODE (PGM_TRN_CODE, 2271, FUNC_YN) ) AS funcUserDefine9
-                ,MIN (DECODE (PGM_TRN_CODE, 2272, FUNC_YN) ) AS funcUserDefine10
-                ,MIN (DECODE (PGM_TRN_CODE, 2273, FUNC_YN) ) AS funcUserDefine11
-                ,MIN (DECODE (PGM_TRN_CODE, 2274, FUNC_YN) ) AS funcUserDefine12
-                ,MIN (DECODE (PGM_TRN_CODE, 2275, FUNC_YN) ) AS funcUserDefine13
-                ,MIN (DECODE (PGM_TRN_CODE, 2276, FUNC_YN) ) AS funcUserDefine14
-                ,MIN (DECODE (PGM_TRN_CODE, 2277, FUNC_YN) ) AS funcUserDefine15
-                ,MIN (DECODE (PGM_TRN_CODE, 2278, FUNC_YN) ) AS funcUserDefine16
-                ,MIN (DECODE (PGM_TRN_CODE, 2279, FUNC_YN) ) AS funcUserDefine17
-                ,MIN (DECODE (PGM_TRN_CODE, 2280, FUNC_YN) ) AS funcUserDefine18
-                ,MIN (DECODE (PGM_TRN_CODE, 2281, FUNC_YN) ) AS funcUserDefine19
-                ,MIN (DECODE (PGM_TRN_CODE, 2282, FUNC_YN) ) AS funcUserDefine20
-                ,MIN (DECODE (PGM_TRN_CODE, 2283, FUNC_YN) ) AS funcUserDefine21
-                ,MIN (DECODE (PGM_TRN_CODE, 2284, FUNC_YN) ) AS funcUserDefine22
-                ,MIN (DECODE (PGM_TRN_CODE, 2285, FUNC_YN) ) AS funcUserDefine23
-                ,MIN (DECODE (PGM_TRN_CODE, 2286, FUNC_YN) ) AS funcUserDefine24
-                ,MIN (DECODE (PGM_TRN_CODE, 2287, FUNC_YN) ) AS funcUserDefine25
+	                MIN (DECODE (PGM_TRN_CODE, 'VIEW', FUNC_YN) ) AS funcView
+	                ,MIN (DECODE (PGM_TRN_CODE, 'CHNG', FUNC_YN) ) AS funcChange
+	                ,MIN (DECODE (PGM_TRN_CODE, 'PRNT', FUNC_YN) ) AS funcPrint
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN1', FUNC_YN) ) AS funcUserDefine1
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN2', FUNC_YN) ) AS funcUserDefine2
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN3', FUNC_YN) ) AS funcUserDefine3
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN4', FUNC_YN) ) AS funcUserDefine4
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN5', FUNC_YN) ) AS funcUserDefine5
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN6', FUNC_YN) ) AS funcUserDefine6
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN7', FUNC_YN) ) AS funcUserDefine7
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN8', FUNC_YN) ) AS funcUserDefine8
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN9', FUNC_YN) ) AS funcUserDefine9
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN10', FUNC_YN) ) AS funcUserDefine10
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN11', FUNC_YN) ) AS funcUserDefine11
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN12', FUNC_YN) ) AS funcUserDefine12
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN13', FUNC_YN) ) AS funcUserDefine13
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN14', FUNC_YN) ) AS funcUserDefine14
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN15', FUNC_YN) ) AS funcUserDefine15
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN16', FUNC_YN) ) AS funcUserDefine16
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN17', FUNC_YN) ) AS funcUserDefine17
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN18', FUNC_YN) ) AS funcUserDefine18
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN19', FUNC_YN) ) AS funcUserDefine19
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN20', FUNC_YN) ) AS funcUserDefine20
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN21', FUNC_YN) ) AS funcUserDefine21
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN22', FUNC_YN) ) AS funcUserDefine22
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN23', FUNC_YN) ) AS funcUserDefine23
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN24', FUNC_YN) ) AS funcUserDefine24
+	                ,MIN (DECODE (PGM_TRN_CODE, 'USER_DFN25', FUNC_YN) ) AS funcUserDefine25
             FROM (SELECT I.MENU_CODE
                         ,I.PGM_TRN_CODE
                         ,I.VALID_DT_FROM
