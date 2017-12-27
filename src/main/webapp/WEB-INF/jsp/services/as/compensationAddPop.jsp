@@ -295,7 +295,7 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
     </td> 
 </tr>
  <tr>
-    <th scope="row">attachment</th>
+    <th scope="row">Attachment</th>
     <td colspan="7">
     <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
     <input type="file" title="file add" style="width:300px" />

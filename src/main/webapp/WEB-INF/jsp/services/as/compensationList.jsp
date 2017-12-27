@@ -231,7 +231,7 @@
             <a href="#" class="click_add_on">My menu</a>
         </p>
         <!-- <h2>Compensation Log Search</h2> -->
-        <h2><spring:message code="expense.title" /></h2>
+        <h2><spring:message code='service.title.Compensation'/></h2>
 
         <!-- <form action="#" id="inHOForm">
 <div   style="display:none" >
