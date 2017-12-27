@@ -258,7 +258,7 @@ public class GlobalExceptionHandler {
 			message.setCode(AppConstants.FAIL);
 			if (ex.getCause() != null && ex.getCause().getCause() != null) {
 				message.setMessage(ex.getCause().getCause().getMessage());
-			} else if (ex.getCause() != null){
+			} else if (ex.getCause() != null) {
 				message.setMessage(ex.getCause().getMessage());
 			} else {
 				message.setMessage(ex.getMessage());
