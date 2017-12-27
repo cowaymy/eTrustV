@@ -13,5 +13,11 @@
  	<bean class="egovframework.rte.psl.dataaccess.mapper.MapperConfigurer">
 		<property name="basePackage" value="com.coway.trust.biz" />
 	</bean>
-    
+
+
+	<bean id="sqlSessionTemplateBatch" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+		<constructor-arg index="0" ref="sqlSession" />
+		<constructor-arg index="1" value="BATCH" />
+	</bean>
+
 </beans>

@@ -351,4 +351,16 @@
 			</if>
 	</select>
 
+
+
+
+    <insert id="insertBatch" parameterType="Map">
+        INSERT INTO TEST_EXCEL(ID, FIRST_NAME, LAST_NAME)
+        VALUES (
+        #{id},
+        #{firstName},
+        #{lastName}
+        )
+    </insert>
+
 </mapper>

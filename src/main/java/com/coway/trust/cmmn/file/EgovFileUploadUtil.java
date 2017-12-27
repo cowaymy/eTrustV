@@ -1,6 +1,7 @@
 package com.coway.trust.cmmn.file;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -124,5 +125,68 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 		}
 
 		return list;
+	}
+
+	public static List<File> getUploadExcelFiles(MultipartHttpServletRequest request, String uploadDir) throws IOException {
+		List<File> fileList = new ArrayList<>();
+		Iterator<?> fileIter = request.getFileNames();
+		long maxFileSize = AppConstants.UPLOAD_MAX_FILE_SIZE;
+
+		while (fileIter.hasNext()) {
+			MultipartFile mFile = request.getFile((String) fileIter.next());
+
+			if (mFile.getSize() > maxFileSize) {
+				throw new ApplicationException(AppConstants.FAIL,
+						CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class).getMessage(
+								AppConstants.MSG_FILE_MAX_LIMT,
+								new Object[] { CommonUtils.formatFileSize(maxFileSize) }));
+			}
+
+			EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
+
+			String tmp = mFile.getOriginalFilename();
+
+			if (tmp.lastIndexOf("\\") >= 0) {
+				tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
+			}
+
+			String blackUploadPath = EgovWebUtil.filePathBlackList(uploadDir);
+			String blackSubPath = EgovWebUtil.filePathBlackList("temp");
+
+			vo.setFileName(tmp);
+			vo.setContentType(mFile.getContentType());
+			vo.setServerPath(blackUploadPath);
+			vo.setServerSubPath(blackSubPath);
+
+			String physicalName = UUIDGenerator.get().toUpperCase();
+			vo.setPhysicalName(physicalName);
+			vo.setSize(mFile.getSize());
+			vo.setExtension(FilenameUtils.getExtension(tmp).toLowerCase());
+
+			if (mFile.getSize() > 0) {
+				InputStream is = null;
+				File f;
+				try {
+					is = mFile.getInputStream();
+
+					if (MimeTypeUtil.isNotAllowFile(is)) {
+						throw new ApplicationException(AppConstants.FAIL,
+								mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
+					}
+					f = new File(EgovWebUtil.filePathBlackList(
+							blackUploadPath + SEPERATOR + blackSubPath + SEPERATOR + vo.getPhysicalName()) + "."
+							+ vo.getExtension());
+					EgovFormBasedFileUtil.saveFile(is, f);
+				} finally {
+					if (is != null) {
+						is.close();
+					}
+				}
+
+				fileList.add(f);
+			}
+
+		}
+		return fileList;
 	}
 }

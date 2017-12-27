@@ -41,6 +41,18 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
         });
     }
 
+    function fn_uploadFile2() {
+
+        var formData = new FormData();
+        formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
+        formData.append("param0111", "param0111");
+        formData.append("param0222", "param0222");
+
+        Common.ajaxFile("/excelUpload.do", formData, function (result) {
+            Common.alert("대용량 엑셀 업로드 완료~")
+        });
+    }
+
     function fn_uploadCsvFile() {
 
         var formData = new FormData();
@@ -69,6 +81,7 @@ sample 소스의 브라우저 스팩은 IE10 부터 지원 합니다.
     <input type="file" id="uploadfile" name="uploadfile"/>
     <input type="text" id="param01" name="param01"/>
     <a class="" href="javascript:fn_uploadFile();">[엑셀 전송]</a>
+    <a class="" href="javascript:fn_uploadFile2();">[대용량 엑셀 전송]</a>
     <a class="" href="javascript:fn_uploadCsvFile();">[CSV 전송]</a>
 </form>
 
