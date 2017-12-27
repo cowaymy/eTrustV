@@ -132,9 +132,6 @@ function fn_departmentCode(value){
         	   }
            });
 
-
-
-
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 
@@ -144,7 +141,9 @@ function fn_departmentCode(value){
 			$("#deptCd option").remove();
 			$("#deptCd option").remove();
              console.log("-------------------------" + JSON.stringify(result));
-             $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
+             if (result!= null) {
+                $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
+             }
 
         });
            
@@ -174,7 +173,7 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
-    doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
+    //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
 
     $("#deptCd").change(function (){
     	//modify hgham 2017-12-25  주석 처리 
