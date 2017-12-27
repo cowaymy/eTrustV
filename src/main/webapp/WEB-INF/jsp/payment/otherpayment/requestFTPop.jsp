@@ -91,7 +91,7 @@ function fn_FTRequest(){
 
 	if( Number($("#oldAmt").val()) != Number($("#newAmt").val())){
     	Common.alert('* The Amount is different.');
-    	//return;
+    	return;
     }	
 
 	if( FormUtil.byteLength($("#newRemark").val()) > 3000 ){
