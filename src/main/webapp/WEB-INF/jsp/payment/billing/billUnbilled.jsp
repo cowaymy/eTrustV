@@ -428,7 +428,9 @@ var billingTargetLayout = [
 							<article id="grid_wrap3" class="grid_wrap"></article>
 							<ul class="left_btns">
 							    <li><p class="btn_blue2"><a href="javascript:void(0);" id="btnRemoveBillTarget"><spring:message code='pay.btn.removeFromBillTarget'/></a></p></li>
+							    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 							    <li><p class="btn_blue2"><a href="javascript:void(0);" id="createBills"><spring:message code='pay.btn.createBills'/></a></p></li>
+							    </c:if>
 							</ul>
 						</div><!-- border_box end -->
 					</div>
@@ -469,9 +471,7 @@ var billingTargetLayout = [
 					</tbody>
 				</table><!-- table end -->
 				<ul class="center_btns">
-				    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 				    <li><p class="btn_blue2 big"><a href="javascript:void(0);" id="btnSave" onclick=""><spring:message code='sys.btn.save'/></a></p></li>
-				    </c:if>
 				</ul>
 			</section><!-- pop_body end -->
 		</div><!-- popup_wrap end -->
