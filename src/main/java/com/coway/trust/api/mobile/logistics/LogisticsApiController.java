@@ -46,6 +46,8 @@ import com.coway.trust.api.mobile.logistics.filterinventorydisplay.UserFilterDLi
 import com.coway.trust.api.mobile.logistics.filterinventorydisplay.UserFilterListForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryAllListForm;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryOnHandStockDto;
+import com.coway.trust.api.mobile.logistics.inventory.InventoryOnHandStockForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOverallStockDto;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryOverallStockForm;
 import com.coway.trust.api.mobile.logistics.inventory.InventoryReqTransferMForm;
@@ -815,6 +817,25 @@ public class LogisticsApiController {
 
 	}
 	
+	@ApiOperation(value = "Inventory Status Display - On Hand Stock (My Stock)조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/inventoryOnHandStock", method = RequestMethod.GET)
+	public ResponseEntity<List<InventoryOnHandStockDto>> getInventoryOnHandStock(@ModelAttribute InventoryOnHandStockForm inventoryOnHandStockForm)
+			throws Exception {
+
+		Map<String, Object> params = InventoryOnHandStockForm.createMap(inventoryOnHandStockForm);
+
+		List<EgovMap> getInventoryOnHandStock = MlogApiService.getInventoryOnHandStock(params);
+
+		for (int i = 0; i < getInventoryOnHandStock.size(); i++) {
+			LOGGER.debug("MyStockList    값 : {}", getInventoryOnHandStock.get(i));
+
+		}
+
+		List<InventoryOnHandStockDto> list = getInventoryOnHandStock.stream().map(r -> InventoryOnHandStockDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
 	
 	
 	/**

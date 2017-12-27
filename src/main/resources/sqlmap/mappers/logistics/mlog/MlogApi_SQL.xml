@@ -2,6 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
     
+    <select id="getInventoryOnHandStock" parameterType="Map" resultType="egovMap">
+        SELECT
+        /*+ leading(S28) use_nl(L56 L75) */  
+        L56.LOC_ID,
+        L56.STK_CODE PARTS_CODE,
+        L56.STK_DESC PARTS_NAME,
+        L56.STK_TYPE_ID PARTS_TYPE,
+        L56.STK_CTGRY_ID,
+        <!-- QTY STOCK_QTY, -->
+        (case when L63.SERIAL_NO is not null then 1 else QTY end) STOCK_QTY,
+        WH_LOC_DESC,
+        L63.SERIAL_NO SERIAL_NO,
+        T1.REF_DOC_NO SERVICE_NO,
+        QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
+        S26.STK_ID PARTS_ID,
+        (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) rdc_code
+        FROM LOG0056M L56,
+        SYS0028M S28,
+        LOG0063D L63,
+        SYS0026m S26,
+        (SELECT L61.SERIAL_NO,
+        L61.DELVRY_NO,
+        L47.REQST_NO,
+        L47.REF_DOC_NO
+        FROM LOG0061D L61, LOG0055D L55, LOG0047M L47
+        WHERE L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO) T1,
+        ( SELECT l75.loc_id,
+        l75.itm_code,
+        SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
+        FROM log0075m l75
+        WHERE NVL (l75.final_cmplt, 'N') <![CDATA[<>]]> 'Y'
+        AND l75.reqst_no IN (SELECT reqst_no
+        FROM log0047m
+        WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+        GROUP BY l75.loc_id, l75.itm_code) L75
+        WHERE 1 = 1
+        AND L63.SERIAL_NO = T1.SERIAL_NO(+)
+        AND L56.STK_CODE = L63.MATNR(+)
+        AND L56.LOC_ID = L63.LOC_ID(+)
+        AND L56.STK_CODE = L75.ITM_CODE(+)
+        AND L56.LOC_ID = L75.LOC_ID(+)
+        AND L56.STK_CODE =S26.STK_CODE
+        AND L56.LOC_ID = S28.WH_LOC_ID
+        AND S28.WH_LOC_ID = (SELECT WH_LOC_ID FROM sys0028m WHERE WH_LOC_CODE = #{userId})
+        <if test="searchType == 1 "> 
+                AND L56.STK_CODE= #{searchKeyword} 
+        </if> 
+        <if test="searchType == 2 "> 
+                AND UPPER(L56.STK_DESC) LIKE UPPER(#{searchKeyword}) || '%' 
+        </if>
+        GROUP BY L56.LOC_ID,L56.STK_CODE,L56.STK_DESC,L56.STK_TYPE_ID, L56.STK_CTGRY_ID,QTY,WH_LOC_DESC,L63.SERIAL_NO,T1.REF_DOC_NO,QTY - NVL (L75.BOOKING_QTY, 0) ,S26.STK_ID,S28.rdc_code 
+    </select>
+    
+ 
     <select id="getUserFilterList"  resultType="egovMap">
     <if test="querytype eq 'sum'.toString() ">
      SELECT NVL(SUM (tobe_Change_Qty),0) total_Tobe_Change_Qty,
