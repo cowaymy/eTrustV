@@ -24,6 +24,7 @@ import com.coway.trust.api.mobile.common.CommonConstants;
 import com.coway.trust.biz.organization.training.TrainingService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.web.eAccounting.budget.BudgetController;
 import com.google.gson.Gson;
 
@@ -43,6 +44,9 @@ public class TrainingController {
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+	
+	@Autowired
+	private SessionHandler sessionHandler;
 	
 	@Autowired
 	private TrainingService trainingService;
@@ -173,7 +177,7 @@ public class TrainingController {
 	public String attendeePop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
-		
+		model.addAttribute("coursId", params.get("coursId"));
 		model.addAttribute("pType", params.get("pType"));
 		return "organization/training/trainingAttendeeRegistrationPop";
 	}
@@ -318,6 +322,98 @@ public class TrainingController {
 		List<EgovMap> courseList = trainingService.selectApplicantLog(params);
 		
 		return ResponseEntity.ok(courseList);
+	}
+	
+	
+	@RequestMapping(value = "/chkNewAttendList", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> chkNewAttendList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{
+		
+		LOGGER.debug("in  chkNewAttendList ");
+		
+		LOGGER.debug("params =====================================>>  " + params.toString());
+		LOGGER.debug("coursId =====================================>>  " + params.get("coursId"));
+		params.put("userId", sessionVO.getUserId());
+		
+		List<EgovMap> chkList = trainingService.chkNewAttendList(params);
+		
+		// 결과 만들기 예.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(chkList);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    
+    	return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/selectCourseRequestList.do")
+	public ResponseEntity<List<EgovMap>> selectCourseRequestList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> requestList = trainingService.selectCourseRequestList(params);
+		
+		return ResponseEntity.ok(requestList);
+	}
+	
+	
+	@RequestMapping(value = "/selectMyAttendeeList.do")
+	public ResponseEntity<List<EgovMap>> selectMyAttendeeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String getUserId = Integer.toString(sessionVO.getUserId());
+		params.put("userId", getUserId);
+		
+		EgovMap memInfo = trainingService.selectMemInfo(params);
+		params.put("coursMemId", memInfo.get("memId"));
+		
+		List<EgovMap> attendeeList = trainingService.selectMyAttendeeList(params);
+		
+		return ResponseEntity.ok(attendeeList);
+	}
+	
+	@RequestMapping(value = "/registerCourseReq.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> registerCourseReq(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String userNric = trainingService.selectLoginUserNric(sessionVO.getUserId());
+		
+		params.put("coursId", params.get("coursId"));
+		params.put("userId", sessionVO.getUserId());
+		
+		trainingService.registerCourseReq(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/cancelCourseReq.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> cancelCourseReq(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String userNric = trainingService.selectLoginUserNric(sessionVO.getUserId());
+		
+		params.put("coursId", params.get("coursId"));
+		params.put("userId", sessionVO.getUserId());
+		
+		trainingService.cancelCourseReq(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 
 }
