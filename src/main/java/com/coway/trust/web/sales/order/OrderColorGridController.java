@@ -41,6 +41,10 @@ public class OrderColorGridController {
 	public ResponseEntity<List<EgovMap>> orderColorGridJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
 		logger.info("##################### params #####" +params.toString());
+		logger.info("##################### cmbCondition #####" +params.get("cmbCondition"));
+		
+		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
+		params.put("cmbAppTypeList", cmbAppTypeList);
 		
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
 		
