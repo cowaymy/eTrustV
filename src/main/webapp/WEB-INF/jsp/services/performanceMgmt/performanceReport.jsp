@@ -148,7 +148,7 @@
                             headerText : "CANCEL",
                             width : 120
                         }, {
-                            dataField : "CompletePercent",
+                            dataField : "completePercent",
                             headerText : "COMPLETE%",
                             width : 120
                      }];
