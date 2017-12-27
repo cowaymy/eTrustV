@@ -463,9 +463,9 @@ function f_multiCombo() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Item Info</h3>
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
         <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 </aside><!-- title_line end -->
 
@@ -537,10 +537,10 @@ function f_multiCombo() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Request Item</h3>
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 <!--     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 </aside><!-- title_line end -->
 
@@ -562,9 +562,9 @@ function f_multiCombo() {
 </div><!-- divine_auto end -->
 
 <ul class="center_btns mt20">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 
 </section><!-- search_result end -->

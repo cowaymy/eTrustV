@@ -31,20 +31,20 @@ var reqGrid;
 
 var movpathdata = [{"codeId": "02","codeName": "RDC to CT/Cody"},{"codeId": "CT","codeName": "CT/Cody to CT/Cody"},{"codeId": "CTOR","codeName": "CT/Cody to RDC"}];
 
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:120    ,height:30 ,visible:false},
-                     {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"              ,width:120    ,height:30 ,visible:false},
-                     {dataField: "stkid",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30 ,visible:false},
-                     {dataField: "stkcd",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30,editable:false},
-                     {dataField: "stknm",headerText :"<spring:message code='log.head.itemname'/>"             ,width:120    ,height:30,editable:false},
-                     {dataField: "typeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120    ,height:30,visible:false},
-                     {dataField: "typenm",headerText :"<spring:message code='log.head.typename'/>"            ,width:120    ,height:30,editable:false},
-                     {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},
-                     {dataField: "catenm",headerText :"<spring:message code='log.head.category'/>"             ,width:120    ,height:30,editable:false},
-                     {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"       ,width:120    ,height:30, editable:false},
-                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false},
-                     {dataField: "serialChk",headerText :"<spring:message code='log.head.serial'/>"      ,width:120    ,height:30, editable:false}
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rnum'/>"               ,width:120    ,height:30 ,visible:false},                         
+                     {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"              ,width:120    ,height:30 ,visible:false},                         
+                     {dataField: "stkid",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30 ,visible:false},                        
+                     {dataField: "stkcd",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30,editable:false},                        
+                     {dataField: "stknm",headerText :"<spring:message code='log.head.itemname'/>"             ,width:120    ,height:30,editable:false},                          
+                     {dataField: "typeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120    ,height:30,visible:false},                         
+                     {dataField: "typenm",headerText :"<spring:message code='log.head.typename'/>"            ,width:120    ,height:30,editable:false},                          
+                     {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},                         
+                     {dataField: "catenm",headerText :"<spring:message code='log.head.category'/>"             ,width:120    ,height:30,editable:false},                         
+                     {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"       ,width:120    ,height:30, editable:false},                         
+                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"                  ,width:120    ,height:30, visible:false},                        
+                     {dataField: "serialChk",headerText :"<spring:message code='log.head.serial'/>"      ,width:120    ,height:30, editable:false} 
                     ];
-
+                    
 var reqcolumnLayout;
 
 var resop = {rowIdField : "rnum", showRowCheckColumn : true ,usePaging : true,useGroupingPanel : false , Editable:false};
@@ -68,21 +68,21 @@ $(document).ready(function(){
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo'); //청구처 리스트 조회
     doSysdate(0 , 'docdate');
     doSysdate(0 , 'reqcrtdate');
-
+    
     //$("#cancelTr").hide();
     /**********************************
      * Header Setting End
      ***********************************/
-
-     reqcolumnLayout=[{dataField:    "itmid",headerText :"<spring:message code='log.head.itemid'/>"          ,width:120    ,height:30 , visible:false},
-                      {dataField: "itmcd",headerText :"<spring:message code='log.head.itemcd'/>"          ,width:120    ,height:30 , editable:false},
-                      {dataField: "itmname",headerText :"<spring:message code='log.head.itemname'/>"        ,width:120    ,height:30 , editable:false},
-                      {dataField: "aqty",headerText :"<spring:message code='log.head.availableqty'/>"     ,width:120    ,height:30 , editable:false},
-                      {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30},
+    
+     reqcolumnLayout=[{dataField:    "itmid",headerText :"<spring:message code='log.head.itemid'/>"          ,width:120    ,height:30 , visible:false},                          
+                      {dataField: "itmcd",headerText :"<spring:message code='log.head.itemcd'/>"          ,width:120    ,height:30 , editable:false},                         
+                      {dataField: "itmname",headerText :"<spring:message code='log.head.itemname'/>"        ,width:120    ,height:30 , editable:false},                       
+                      {dataField: "aqty",headerText :"<spring:message code='log.head.availableqty'/>"     ,width:120    ,height:30 , editable:false},                         
+                      {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30},                          
                       {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"               ,width:120    ,height:30, editable:false
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
-
+                              
                               for(var i=0,len=uomlist.length; i<len; i++) {
                                   if(uomlist[i]["codeId"] == value) {
                                       retStr = uomlist[i]["codeName"];
@@ -90,7 +90,7 @@ $(document).ready(function(){
                                   }
                               }
                               return retStr == "" ? value : retStr;
-                          },editRenderer :
+                          },editRenderer : 
                           {
                              type : "ComboBoxRenderer",
                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -99,29 +99,29 @@ $(document).ready(function(){
                              valueField : "codeName"
                           }
                       },
-                      {dataField:  "itmserial",headerText :"<spring:message code='log.head.serial'/>"      ,width:120    ,height:30,editable:false}
+                      {dataField:  "itmserial",headerText :"<spring:message code='log.head.serial'/>"      ,width:120    ,height:30,editable:false}    
                      ];
-
+    
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
     reqGrid = GridCommon.createAUIGrid("req_grid_wrap", reqcolumnLayout,"", reqop);
-
+    
     AUIGrid.bind(resGrid, "addRow", function(event){});
     AUIGrid.bind(reqGrid, "addRow", function(event){});
-
+    
     AUIGrid.bind(resGrid, "cellEditBegin", function (event){});
     AUIGrid.bind(reqGrid, "cellEditBegin", function (event){
-
+        
     });
-
+    
     AUIGrid.bind(resGrid, "cellEditEnd", function (event){});
     AUIGrid.bind(reqGrid, "cellEditEnd", function (event){
-
+        
         if(event.dataField == "itmcd"){
             $("#svalue").val(AUIGrid.getCellValue(reqGrid, event.rowIndex, "itmcd"));
             $("#sUrl").val("/logistics/material/materialcdsearch.do");
             Common.searchpopupWin("popupForm", "/common/searchPopList.do","stocklist");
         }
-
+        
         if(event.dataField == "rqty"){
             if(AUIGrid.getCellValue(reqGrid, event.rowIndex, "rqty") > AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")){
                 Common.alert('The requested quantity is up to '+AUIGrid.getCellValue(reqGrid, event.rowIndex, "aqty")+'.');
@@ -130,16 +130,16 @@ $(document).ready(function(){
             }
         }
     });
-
+    
     AUIGrid.bind(resGrid, "cellClick", function( event ) {});
     AUIGrid.bind(reqGrid, "cellClick", function( event ) {});
-
+    
     AUIGrid.bind(resGrid, "cellDoubleClick", function(event){});
     AUIGrid.bind(reqGrid, "cellDoubleClick", function(event){});
-
+    
     AUIGrid.bind(resGrid, "ready", function(event) {});
     AUIGrid.bind(reqGrid, "ready", function(event) {});
-
+    
 });
 
 //btn clickevent
@@ -169,7 +169,7 @@ $(function(){
                 if(""==addedItems[i] || 0==addedItems[i]){
                     Common.alert("Plese Check Request Item Grid Request Qty.");
                     return false;
-                }
+                }       
             }
         }
         if (f_validatation('save')){
@@ -179,7 +179,7 @@ $(function(){
             	Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
             	//Common.alert(result.message , locationList);
                 AUIGrid.resetUpdatedItems(reqGrid, "all");
-                //location.href = '/logistics/stockMovement/StockMovementList.do';
+                //location.href = '/logistics/stockMovement/StockMovementList.do'; 
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {
@@ -193,7 +193,7 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
     });
     $("#smtype").change(function(){
-
+        
     });
     $("#movpath").change(function(){
     	if($("#movpath").val() == ""){
@@ -201,20 +201,20 @@ $(function(){
     		doDefCombo([], '' ,'flocation', 'S', '');
     	}else{
 	    	//var paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:$("#movpath").val()}; // session 정보 등록
-	    	var paramdata = { locgb:$("#movpath").val(),  grade:$("#locationType").val()}; // session 정보 등록
+	    	var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val()}; // session 정보 등록
 	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 	        doDefCombo([], '' ,'flocation', 'S', '');
     	}
     });
     $("#tlocation").change(function(){
     	if ($("#movpath").val() == "CT"){
-    		var paramdata = { ctloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록
+    		var paramdata = { ctloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록 
             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
     	}else if($("#movpath").val() == "CTOR"){
             var paramdata = { locgb:'02'}; // session 정보 등록
             doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
     	}else{
-	        var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록
+	        var paramdata = { rdcloc:$("#tlocation").val() , locgb:'CT'}; // session 정보 등록 
 	        doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','flocation', 'S' , '');
     	}
     });
@@ -225,9 +225,9 @@ $(function(){
             var rowPos = "first";
             var item = new Object();
             var rowList = [];
-
+            
             for (var i = 0 ; i < checkedItems.length ; i++){
-
+                
                 rowList[i] = {
                             itmid : checkedItems[i].stkid,
                             itmcd : checkedItems[i].stkcd,
@@ -236,20 +236,20 @@ $(function(){
                             uom : checkedItems[i].uom,
                             itmserial : checkedItems[i].serialChk
                         }
-
+                
                 AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
             }
-
+            
             AUIGrid.addRow(reqGrid, rowList, rowPos);
         }
     });
 });
 
 function fn_changeLocation() {
-	var paramdata = { locgb:$("#movpath").val(),  grade:$("#locationType").val()}; // session 정보 등록
+	var paramdata = { locgb:$("#movpath").val(),  endlikeValue:$("#locationType").val()}; // session 정보 등록
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
     doDefCombo([], '' ,'flocation', 'S', '');
-}
+} 
 
 function transferTypeFunc(){
 //     paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
@@ -285,14 +285,14 @@ function f_validatation(v){
         }
     }
     return true;
-
+    
 }
 
 function SearchListAjax() {
-
+    
     var url = "/logistics/stockMovement/StockMovementTolocationItemList.do";
     var param = $('#searchForm').serialize();
-
+    
 //     Common.ajax("GET" , url , param , function(result){
 //         AUIGrid.setGridData(resGrid, result.data);
 //     });
@@ -322,17 +322,17 @@ function SearchListAjax() {
 
 function addRow() {
     var rowPos = "first";
-
+       
     var item = new Object();
-
+       
     AUIGrid.addRow(reqGrid, item, rowPos);
 }
 
 function fn_itempopList(data){
-
+    
     var rowPos = "first";
     var rowList = [];
-
+    
     AUIGrid.removeRow(reqGrid, "selectedIndex");
     AUIGrid.removeSoftRows(reqGrid);
     for (var i = 0 ; i < data.length ; i++){
@@ -342,9 +342,9 @@ function fn_itempopList(data){
             itmname : data[i].item.itemname
         }
     }
-
+    
     AUIGrid.addRow(reqGrid, rowList, rowPos);
-
+    
 }
 
 function f_getTtype(g , v){
@@ -371,14 +371,14 @@ function f_getTtype(g , v){
            complete: function(){
            }
        });
-
+    
     return rData;
 }
 function f_AddRow() {
     var rowPos = "first";
-
+    
     var item = new Object();
-
+        
     AUIGrid.addRow(reqGrid, item, rowPos);
 }
 
@@ -393,7 +393,7 @@ function f_multiCombo() {
 
         }).multipleSelect({
             selectAll : true
-        });
+        });       
     });
 }
 </script>
@@ -410,9 +410,9 @@ function f_multiCombo() {
 <h2>SMO</h2>
 </aside><!-- title_line end -->
 
-<aside class="title_line">
+<aside class="title_line"> 
 <h3>Header Info</h3>
-</aside>
+</aside> 
 <!-- search_table start -->
 <section class="search_table">
 <form id="headForm" name="headForm" method="post">
@@ -433,7 +433,7 @@ function f_multiCombo() {
     <th scope="row">SMO Number</th>
     <td colspan="3"><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Movement Path</th>
-    <td colspan="3">
+    <td colspan="3"> 
         <select class="w100p" id="movpath" name="movpath"></select>
     </td>
 </tr>
@@ -457,7 +457,7 @@ function f_multiCombo() {
     <th scope="row">Location Type </th>
     <td>
     <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
-        <option value=""> All </option>
+        <option> All </option>
         <option selected> A </option>
         <option> B </option>
     </select></td>
@@ -490,7 +490,7 @@ function f_multiCombo() {
 <!--         <option value="">22</option> -->
 <!--         <option value="">33</option> -->
 <!--     </select> -->
-<!--     </td> -->
+<!--     </td> --> 
 <!--     <td> -->
 <!--     </td> -->
 <!--     <td> -->
@@ -504,10 +504,10 @@ function f_multiCombo() {
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Item Info</h3>
-<ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<ul class="right_btns"><c:out value="${PAGE_AUTH}"></c:out>
+<%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
         <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 </aside><!-- title_line end -->
 
@@ -533,7 +533,7 @@ function f_multiCombo() {
     <td colspan="3">
         <select class="w100p" id="catetype" name="catetype"></select>
     </td>
-
+    
 </tr>
 <tr>
      <th scope="row">Material Code</th>
@@ -575,10 +575,10 @@ function f_multiCombo() {
 <aside class="title_line"><!-- title_line start -->
 <h3>Request Item</h3>
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 <!--     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 </aside><!-- title_line end -->
 
@@ -603,11 +603,11 @@ function f_multiCombo() {
 			<li><p class="btn_blue2 big">
 					<a id="list">List</a>
 				</p></li>&nbsp;&nbsp;
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 			<li><p class="btn_blue2 big">
 					<a id="save">Save</a>
 				</p></li>
-</c:if>
+<%-- </c:if>				 --%>
 		</ul>
 
 	</section><!-- search_result end -->

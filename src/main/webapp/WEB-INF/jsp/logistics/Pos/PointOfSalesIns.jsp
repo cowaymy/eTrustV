@@ -907,9 +907,9 @@ function locationList(){
 <h3>Item Info</h3>
 
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
         <li><p class="btn_blue2"><a id="search"><spring:message code='sys.btn.search' /></a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 </aside><!-- title_line end -->
 
@@ -978,19 +978,19 @@ function locationList(){
 <h3>Request Item</h3>
 
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue2"><a id="attachment">File Attachment</a><input type="hidden" id="fileYn" name="fileYn"></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 </aside><!-- title_line end -->
 
 <div class="border_box" style="height:340px;"><!-- border_box start -->
 
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li>
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -1011,9 +1011,9 @@ function locationList(){
 
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue2 big"><a id="save">SAVE</a></p></li>
-</c:if>    
+<%-- </c:if>     --%>
     <!-- <li><p class="btn_blue2 big"><a id="list">List</a></p></li>&nbsp;&nbsp;<li><p class="btn_blue2 big"><a onclick="javascript:insPosInfo();">SAVE</a></p></li> -->
 </ul>
 
@@ -1046,9 +1046,9 @@ function locationList(){
 <!--             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div> -->
 <!--             </article>grid_wrap end -->
             <ul class="center_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
                 <li><p class="btn_blue2 big"><a onclick="javascript:saveSerialInfo();">SAVE</a></p></li>
-</c:if>            
+<%-- </c:if>             --%>
             </ul>
             </form>
         
@@ -1091,9 +1091,9 @@ function locationList(){
 	</table><!-- table end -->
 	</form>
 	<ul class="center_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 	    <li><p class="btn_blue2 big"><a id="newUp">Upload File</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 	</ul>
 	</section><!-- pop_body end -->
 	
