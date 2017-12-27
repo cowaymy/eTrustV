@@ -3419,7 +3419,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            ]]>
     </select>
     
-         <select id="selectCoureCode" parameterType="Map" resultType="egovMap">
+         <select id="selectCoureCode" parameterType="Map" resultType="egovMap"> 
          <choose>
             <when test="groupCode == 2">
 			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
