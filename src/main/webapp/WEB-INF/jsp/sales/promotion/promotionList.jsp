@@ -10,6 +10,8 @@
     var keyValueList = [];
 
     var timerId = null;
+    
+    var AUTH_CHNG = "${PAGE_AUTH.funcChange}";
 
     $(document).ready(function(){
         
@@ -79,13 +81,13 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Application<br>Type",  dataField : "promoAppTypeName", editable : false,   width : 100 }
-          , { headerText : "Promotion<br>Type",    dataField : "promoTypeName",    editable : false,   width : 100 }
-          , { headerText : "Promotion Code",    dataField : "promoCode",        editable : false,   width : 140 }
-          , { headerText : "Promotion Name",    dataField : "promoDesc",        editable : false }
-          , { headerText : "Start",             dataField : "promoDtFrom",      editable : false,   width : 100 }
-          , { headerText : "End",               dataField : "promoDtEnd",       editable : false,   width : 100 }
-          , { headerText : "Status",            dataField : "promoStusId",      editable : true,    width : 80
+            { headerText : "<spring:message code='sales.AppType2'/>",        dataField : "promoAppTypeName", editable : false,   width : 100 }
+          , { headerText : "<spring:message code='sales.promo.promoType'/>", dataField : "promoTypeName",    editable : false,   width : 100 }
+          , { headerText : "<spring:message code='sales.promo.promoCd'/>",   dataField : "promoCode",        editable : false,   width : 140 }
+          , { headerText : "<spring:message code='sales.promo.promoNm'/>",   dataField : "promoDesc",        editable : false }
+          , { headerText : "<spring:message code='sales.StartDate'/>",       dataField : "promoDtFrom",      editable : false,   width : 100 }
+          , { headerText : "<spring:message code='sales.EndDate'/>",         dataField : "promoDtEnd",       editable : false,   width : 100 }
+          , { headerText : "<spring:message code='sales.Status'/>",          dataField : "promoStusId",      editable : true,    width : 80
             , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                   var retStr = "";
                                   for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -131,25 +133,25 @@
         
         //AUIGrid 칼럼 설정
         var columnLayoutPrd = [
-            { headerText : "Product CD",   dataField : "itmcd",   width : 100 }
-          , { headerText : "Product Name", dataField : "itmname"              }
-          , { headerText : "Normal" 
-            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "amt",         width : 100 }
-                          , { headerText : "RPF",                   dataField : "prcRpf",      width : 100 }
-                          , { headerText : "PV",                    dataField : "prcPv",       width : 100 }]}
-          , { headerText : "Promotion" 
-            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",    width : 100 }
-                          , { headerText : "RPF",                   dataField : "promoPrcRpf", width : 100 }
-                          , { headerText : "PV",                    dataField : "promoItmPv",  width : 100 }]}
+            { headerText : "<spring:message code='sales.prodCd'/>", dataField : "itmcd",   width : 100 }
+          , { headerText : "<spring:message code='sales.prodNm'/>", dataField : "itmname"              }
+          , { headerText : "<spring:message code='sales.normal'/>" 
+            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "amt",         width : 100 }
+                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf",      width : 100 }
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",       width : 100 }]}
+          , { headerText : "<spring:message code='sales.title.Promotion'/>" 
+            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    width : 100 }
+                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", width : 100 }
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  width : 100 }]}
           , { headerText : "itmid",      dataField   : "promoItmStkId", visible : false, width : 80 }
           , { headerText : "promoItmId", dataField   : "promoItmId",    visible : false, width : 80 }
           ];
 
         //AUIGrid 칼럼 설정
         var columnLayoutGft = [
-            { headerText : "Product CD",   dataField : "itmcd",              width : 180 }
-          , { headerText : "Product Name", dataField : "itmname" }
-          , { headerText : "Product QTY",  dataField : "promoFreeGiftQty",   width : 180 }
+            { headerText : "<spring:message code='sales.prodCd'/>", dataField : "itmcd",              width : 180 }
+          , { headerText : "<spring:message code='sales.prodNm'/>", dataField : "itmname" }
+          , { headerText : "<spring:message code='sales.prdQty'/>", dataField : "promoFreeGiftQty",   width : 180 }
           , { headerText : "itmid",        dataField : "promoFreeGiftStkId", visible : false}
           , { headerText : "promoItmId",   dataField : "promoItmId",         visible : false}
           ];
@@ -207,7 +209,7 @@
         
         Common.ajax("POST", "/sales/promotion/updatePromoStatus.do", promotionVO, function(result) {
 
-            Common.alert("Promotion Status Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("<spring:message code='sales.promo.msg1'/>" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
             fn_selectPromoListAjax();
             
@@ -218,7 +220,7 @@
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                Common.alert("<spring:message code='sal.alert.title.saveFail'/>" + DEFAULT_DELIMITER + "<b><spring:message code='sales.fail.msg'/></b>");
             }
             catch (e) {
                 console.log(e);
@@ -307,18 +309,20 @@
 <section id="content">
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Sales</li>
-    <li>Order list</li>
+	<li><spring:message code='sales.path.sales'/></li>
+	<li><spring:message code='sales.path.Promotion'/></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Promotion Maintenance </h2>
+<h2><spring:message code='sales.title.promoList'/></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="btnNew" href="#" >New</a></p></li>
-    <li><p class="btn_blue"><a id="btnSaveStatus" href="#">Save</a></p></li>
-    <li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
+  <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <li><p class="btn_blue"><a id="btnNew" href="#" ><spring:message code='sales.btn.new'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnSaveStatus" href="#"><spring:message code='sales.btn.save'/></a></p></li>
+  </c:if>
+    <li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.btn.search'/></a></p></li>
+    <li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.btn.clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -338,27 +342,27 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Promotion Application</th>
+    <th scope="row"><spring:message code='sales.promo.promoApp'/></th>
     <td>
     <select id="list_promoAppTypeId" name="promoAppTypeId" class="multy_select w100p" multiple="multiple"></select>
     </td>
-    <th scope="row">Promotion Type</th>
+    <th scope="row"><spring:message code='sales.promo.promoType'/></th>
     <td>
     <select id="list_promoTypeId" name="promoTypeId" class="multy_select w100p" multiple="multiple"></select>
     </td>
-    <th scope="row">Effective Date</th>
+    <th scope="row"><spring:message code='sales.EffectDate'/></th>
     <td>
-    <input id="list_promoDt" name="promoDt" type="text" title="Create Promotion Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date w100p" />
+    <input id="list_promoDt" name="promoDt" type="text" title="<spring:message code='sales.EffetDate'/>" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code='sales.Status'/></th>
     <td>
     <select id="list_promoStusId" name="promoStusId" class="w100p"></select>
     </td>
-    <th scope="row">Promotion Code</th>
+    <th scope="row"><spring:message code='sales.promo.promoCd'/></th>
     <td><input id="list_promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Promotion Name</th>
+    <th scope="row"><spring:message code='sales.promo.promoNm'/></th>
     <td><input id="list_promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
@@ -402,7 +406,7 @@
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Product List</h2>
+<h2><spring:message code='sales.title.promoList2'/></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -410,7 +414,7 @@
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Free Gift List</h2>
+<h2><spring:message code='sales.title.promoList3'/></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

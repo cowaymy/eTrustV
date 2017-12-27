@@ -25,20 +25,20 @@
         
     	//AUIGrid 칼럼 설정
         var columnLayout1 = [
-            { dataField : "itemcode",   headerText : "Stock Code", editable : false, width : 120 }
-          , { dataField : "itemname",   headerText : "Name",       editable : false }
-          , { dataField : "catename",   headerText : "Category",   editable : false, width : 150 }
-          , { dataField : "typename",   headerText : "Type",       editable : false, width : 120 }
-          , { dataField : "statusname", headerText : "Status",     editable : false, width : 80  }
+            { dataField : "itemcode",   headerText : "<spring:message code='sales.stkCd'/>",    editable : false, width : 120 }
+          , { dataField : "itemname",   headerText : "<spring:message code='sys.title.name'/>", editable : false }
+          , { dataField : "catename",   headerText : "<spring:message code='sales.category'/>", editable : false, width : 150 }
+          , { dataField : "typename",   headerText : "<spring:message code='sales.type'/>",     editable : false, width : 120 }
+          , { dataField : "statusname", headerText : "<spring:message code='sales.Status'/>",   editable : false, width : 80  }
           , { dataField : "itemid",     headerText : "itemid",     visible  : false }
           ];
 
     	//AUIGrid 칼럼 설정
         var columnLayout2 = [
-            { dataField : "itemcode",   headerText : "Stock Code", editable : false, width : 120 }
-          , { dataField : "itemname",   headerText : "Name",       editable : false }
-          , { dataField : "catename",   headerText : "Category",   editable : false, width : 150 }
-          , { dataField : "statusname", headerText : "Status",     editable : false, width : 80  }
+            { dataField : "itemcode",   headerText : "<spring:message code='sales.stkCd'/>",    editable : false, width : 120 }
+          , { dataField : "itemname",   headerText : "<spring:message code='sys.title.name'/>", editable : false }
+          , { dataField : "catename",   headerText : "<spring:message code='sales.category'/>", editable : false, width : 150 }
+          , { dataField : "statusname", headerText : "<spring:message code='sales.Status'/>",   editable : false, width : 80  }
           , { dataField : "itemid",     headerText : "itemid",     visible  : false }
           ];
 
@@ -93,15 +93,15 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Product / Free gift Search</h1>
+<h1><spring:message code='sales.title.productList'/></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <ul class="right_btns">
-	<li><p class="btn_blue"><a id="btnProductSearch" href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a id="btnProductSearch" href="#"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
 </ul>
 <form id="popSearchForm" name="popSearchForm" action="#">
     <input id="gubun" name="gubun" value="${gubun}" type="hidden" />
@@ -122,7 +122,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Category<span class="must">*</span></th>
+	<th scope="row"><spring:message code='sales.category'/><span class="must">*</span></th>
 	<td>
 	<select id="stkCtgryId" name="cateid" class="w100p"></select>
 	</td>
@@ -132,25 +132,15 @@
 	<select id="stkTypeId" name="typeid" class="w100p" disabled></select>
 	</td>
 -->
-	<th scope="row">Stock Code</th>
+	<th scope="row"><spring:message code='sales.stkCd'/></th>
 	<td><input id="stkCode" name="scode" type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Stock Name</th>
+	<th scope="row"><spring:message code='sales.stkNm'/></th>
 	<td><input id="stkNm" name="sname" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
-<!--
-<ul class="right_btns">
-	<li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-	<li><p class="btn_grid"><a href="#">NEW</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
-	<li><p class="btn_grid"><a href="#">EXCEL DW</a></p></li>
-	<li><p class="btn_grid"><a href="#">DEL</a></p></li>
-	<li><p class="btn_grid"><a href="#">INS</a></p></li>
-	<li><p class="btn_grid"><a href="#">ADD</a></p></li>
-</ul>
--->
+
 <article class="grid_wrap mt10"><!-- grid_wrap start -->
 <div id="pop_grid_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->

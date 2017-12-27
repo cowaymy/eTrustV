@@ -34,6 +34,9 @@
         doGetComboData('/common/selectCodeList.do', {groupCode :'348'}, TAB_NM, 'ordReqType', 'S'); //Order Edit Type
         
         if(FormUtil.isNotEmpty(TAB_NM)) {
+            
+            if(!fn_checkAccessRequest(TAB_NM)) return false;
+            
             fn_changeTab(TAB_NM);
         }        
     });

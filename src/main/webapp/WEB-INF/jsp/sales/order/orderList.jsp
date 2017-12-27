@@ -5,6 +5,8 @@
 
 	//AUIGrid 생성 후 반환 ID
 	var listMyGridID;
+	var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';	
+	var MEM_TYPE     = '${SESSION_INFO.userTypeId}';	
 
     var _option = {
     	width : "1200px", // 창 가로 크기
@@ -17,21 +19,32 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {
-            fn_setDetail(listMyGridID, event.rowIndex);
+            if(IS_3RD_PARTY == '0') {
+                fn_setDetail(listMyGridID, event.rowIndex);
+            }
+            else {
+                Common.alert("Access Rights" + DEFAULT_DELIMITER + "<b>No User Access Rights</b>");
+            }
         });
         
-        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
+        if(IS_3RD_PARTY == '0') {
+            doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType', 'M', 'fn_multiCombo2'); //Common Code
+        }
+        else {
+            doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '66', 'listAppType',  'S'); //Common Code
+        }
+        
         //doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
         
-        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo')
+        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo');
     });
 
     function fn_setOptGrpClass() {
-        $("optgroup").attr("class" , "optgroup_text")
+        $("optgroup").attr("class" , "optgroup_text");
     }
     
     // 컬럼 선택시 상세정보 세팅.
@@ -41,10 +54,15 @@
     }
     
     // 리스트 조회.
-    function fn_selectListAjax() {        
+    function fn_selectListAjax() {
+        
+        if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
+        
         Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
+        
+        if(IS_3RD_PARTY == '1') $("#listAppType").prop("disabled", true);
     }
     
     function fn_copyChangeOrderPop() {
@@ -135,6 +153,31 @@
         });
         $('#btnYsListing').click(function() {
         	Common.popupDiv("/sales/order/orderSalesYSListingPop.do", null, null, true);
+        });
+        $('#_btnLedger1').click(function() {
+            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+            
+            if(selIdx > -1) {
+                $('#_ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
+                Common.popupWin("frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+            }
+            else {
+                Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+            }
+        });
+        $('#_btnLedger2').click(function() {
+            var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
+
+            if(selIdx > -1) {
+                $('#_ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
+                Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+            }
+            else {
+                Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+            }
+        });
+        $('#_btnTaxInvc').click(function() {
+            fn_invoicePop();
         });
     });
     
@@ -264,13 +307,6 @@
     }
     
     function fn_multiCombo(){
-        $('#listAppType').change(function() {
-            //console.log($(this).val());
-        }).multipleSelect({
-            selectAll: true, // 전체선택 
-            width: '100%'
-        });
-        $('#listAppType').multipleSelect("checkAll");
         $('#listKeyinBrnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
@@ -292,6 +328,73 @@
         });
 //      $('#listRentStus').multipleSelect("checkAll");
     }
+
+    function fn_multiCombo2(){
+        $('#listAppType').change(function() {
+            //console.log($(this).val());
+        }).multipleSelect({
+            selectAll: true, // 전체선택 
+            width: '100%'
+        });
+        $('#listAppType').multipleSelect("checkAll");
+    }
+    
+    function fn_invoicePop() {    	
+    	Common.popupDiv("/payment/initTaxInvoiceRentalPop.do", '', null, true);    	
+    }
+    
+    function fn_checkAccessModify(tabNm) {
+        
+        var isValid = true, msg = "";
+        
+        if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'CNT' && '${PAGE_AUTH.funcUserDefine5}'  != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'NRC' && '${PAGE_AUTH.funcUserDefine6}'  != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'INS' && '${PAGE_AUTH.funcUserDefine9}'  != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'PAY' && '${PAGE_AUTH.funcUserDefine11}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'DOC' && '${PAGE_AUTH.funcUserDefine7}'  != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'RFR' && '${PAGE_AUTH.funcUserDefine13}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'PRM' && '${PAGE_AUTH.funcUserDefine12}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'GST' && '${PAGE_AUTH.funcUserDefine8}'  != 'Y') {
+            isValid = false;
+        }
+        
+        if(!isValid) Common.alert("Access Rights" + DEFAULT_DELIMITER + "<b>No User Access Rights</b>");
+        
+        return isValid;
+    }
+        
+    function fn_checkAccessRequest(tabNm) {
+        
+        var isValid = true, msg = "";
+        
+        if(tabNm == 'CANC' && '${PAGE_AUTH.funcUserDefine15}'  != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'PEXC' && '${PAGE_AUTH.funcUserDefine17}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'SCHM' && '${PAGE_AUTH.funcUserDefine18}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'AEXC' && '${PAGE_AUTH.funcUserDefine14}' != 'Y') {
+            isValid = false;
+        } else if(tabNm == 'OTRN' && '${PAGE_AUTH.funcUserDefine16}' != 'Y') {
+            isValid = false;
+        }
+        
+        if(!isValid) Common.alert("Access Rights" + DEFAULT_DELIMITER + "<b>No User Access Rights</b>");
+        
+        return isValid;
+    }
+
 
     $.fn.clearForm = function() {
         return this.each(function() {
@@ -321,19 +424,37 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code='sales.title.orderList'/></h2>
 <ul class="right_btns">
+<c:if test="${SESSION_INFO.userIsExternal == '0'}">
+  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a id="btnCopy" href="#" ><spring:message code='sales.btn.copyChange'/></a></p></li>
+  </c:if>
+  <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue"><a id="btnCopyBulk" href="#" ><spring:message code='sales.btn.copyBulk'/></a></p></li>
+  </c:if>
+  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a id="btnNew" href="#" ><spring:message code='sales.btn.new'/></a></p></li>
+  </c:if>
     <li><p class="btn_blue"><a id="btnEdit" href="#"><spring:message code='sales.btn.edit'/></a></p></li>
     <li><p class="btn_blue"><a id="btnReq" href="#"><spring:message code='sales.btn.request'/></a></p></li>
+  <c:if test="${PAGE_AUTH.funcUserDefine19 == 'Y'}">
     <li><p class="btn_blue"><a id="btnSimul" href="#"><spring:message code='sales.btn.simul'/></a></p></li>
+  </c:if>
+</c:if>
+<c:if test="${SESSION_INFO.userIsExternal == '1'}">
+	<li><p class="btn_blue"><a id="_btnLedger1" href="#">Order Ledger(1)</a></p></li>
+	<li><p class="btn_blue"><a id="_btnLedger2" href="#">Order Ledger(2)</a></p></li>
+	<li><p class="btn_blue"><a id="_btnTaxInvc" href="#">Tax Invoice(Rental)</a></p></li>
+</c:if>
 	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-
+<!-- Ledger Form -->
+<form id="frmLedger" name="frmLedger" action="#" method="post">
+    <input id="_ordId" name="ordId" type="hidden" value="" />
+</form>
 <!-- report Form -->
 <form id="dataForm">
     <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter.rpt" /><!-- Report Name  -->
@@ -366,7 +487,12 @@
 	</td>
 	<th scope="row"><spring:message code='sales.AppType2'/></th>
 	<td>
+<c:if test="${SESSION_INFO.userIsExternal == '0'}">
 	<select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple"></select>
+</c:if>
+<c:if test="${SESSION_INFO.userIsExternal == '1'}">
+	<select id="listAppType" name="appType" class="w100p" disabled></select>
+</c:if>
 	</td>
 	<th scope="row"><spring:message code='sales.ordDt'/></th>
 	<td>
@@ -479,18 +605,29 @@
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
+      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
 		<li><p class="link_btn"><a href="#" id="btnVaLetter"><spring:message code='sales.btn.custVALetter'/></a></p></li>
+	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
 		<li><p class="link_btn"><a href="#" id="btnExport"><spring:message code='sales.btn.exptSrchList'/></a></p></li>
+	  </c:if>
 	</ul>
 	<ul class="btns">
-<!--
-		<li><p class="link_btn type2"><a href="#" id="btnSim">Rental to Outright Simulator</a></p></li>
--->
+      <c:if test="${PAGE_AUTH.funcUserDefine21 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnRentalPaySet"><spring:message code='sales.btn.rentPaySet'/></a></p></li>
+	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine22 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnSof"><spring:message code='sales.btn.sof'/></a></p></li>
+	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine23 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnDdCrc"><spring:message code='sales.btn.ddcrc'/></a></p></li>
+	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnAsoSales"><spring:message code='sales.btn.aso'/></a></p></li>
+	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnYsListing"><spring:message code='sales.btn.ys'/></a></p></li>
+	  </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>

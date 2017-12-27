@@ -31,26 +31,26 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout1 = [
-            { headerText : "Product CD",    dataField  : "itmcd",   editable : false,   width : 100 }
-          , { headerText : "Product Name",  dataField  : "itmname", editable : false                  }
-          , { headerText : "Normal" 
-            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "amt",          editable : false, width : 100  }
-                          , { headerText : "RPF",                   dataField : "prcRpf",       editable : false, width : 100  }
-                          , { headerText : "PV",                    dataField : "prcPv",        editable : false, width : 100  }]}
-          , { headerText : "Promotion" 
-            , children   : [{ headerText : "Monthly Fee<br>/Price", dataField : "promoAmt",     editable : false, width : 100  }
-                          , { headerText : "RPF",                   dataField : "promoPrcRpf",  editable : false, width : 100  }
-                          , { headerText : "PV",                    dataField : "promoItmPv",   editable : true,  width : 100  }]}
+            { headerText : "<spring:message code='sales.prodCd'/>", dataField  : "itmcd",   editable : false,   width : 100 }
+          , { headerText : "<spring:message code='sales.prodNm'/>", dataField  : "itmname", editable : false                  }
+          , { headerText : "<spring:message code='sales.normal'/>" 
+            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "amt",         editable : false, width : 100  }
+                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "prcRpf",      editable : false, width : 100  }
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "prcPv",       editable : false, width : 100  }]}
+          , { headerText : "<spring:message code='sales.title.Promotion'/>" 
+            , children   : [{ headerText : "<spring:message code='sales.mthFeePrc'/>", dataField : "promoAmt",    editable : false, width : 100  }
+                          , { headerText : "<spring:message code='sales.rpf'/>",       dataField : "promoPrcRpf", editable : false, width : 100  }
+                          , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100  }]}
           , { headerText : "promoItmPvGst", dataField   : "promoItmPvGst",  visible  : false,     width : 80  }
           , { headerText : "itmid",         dataField   : "promoItmStkId",  visible  : false,     width : 80  }
           ];
 
         //AUIGrid 칼럼 설정
         var columnLayout2 = [
-            { headerText : "Product CD",    dataField : "itmcd",    editable : false,   width : 100 }
-          , { headerText : "Product Name",  dataField : "itmname",  editable : false                }
-          , { headerText : "Product QTY",   dataField : "promoFreeGiftQty",   editable : true, width : 120 }
-          , { headerText : "itmid",         dataField : "promoFreeGiftStkId", visible  : false }
+            { headerText : "<spring:message code='sales.prodCd'/>", dataField : "itmcd",              editable : false, width : 100 }
+          , { headerText : "<spring:message code='sales.prodNm'/>", dataField : "itmname",            editable : false                }
+          , { headerText : "<spring:message code='sales.prdQty'/>", dataField : "promoFreeGiftQty",   editable : true,  width : 120 }
+          , { headerText : "itmid",                                 dataField : "promoFreeGiftStkId", visible  : false }
           ];
 
         //그리드 속성 설정
@@ -111,7 +111,7 @@
 
         Common.ajax("POST", "/sales/promotion/registerPromotion.do", promotionVO, function(result) {
 
-            Common.alert("New Promotion Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            Common.alert("<spring:message code='sales.promo.msg5'/>" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
             
             fn_selectPromoListAjax();
 
@@ -125,7 +125,7 @@
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
 //              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save promotion.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save promotion.</b>");
+                Common.alert("<spring:message code='sal.alert.title.saveFail'/>" + DEFAULT_DELIMITER + "<b><spring:message code='sales.fail.msg'/></b>");
             }
             catch (e) {
                 console.log(e);
@@ -263,17 +263,17 @@
         $('#btnProductAdd').click(function() {
             var isValid = true, msg = "";
             
-            if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
+            if(FormUtil.isEmpty($('#promoAppTypeId').val())) {
                 isValid = false;
-                msg += "* Please select the promotion application.<br />";
+                msg += "<spring:message code='sales.promo.msg6'/><br />";
             }
-            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.checkReqValue($('#promoSrvMemPacId'))) {
+            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
                 isValid = false;
-                msg += "* Please select the membership package.<br />";
+                msg += "<spring:message code='sales.promo.msg7'/><br />";
             }
             
             if(!isValid) {
-                Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+                Common.alert("<spring:message code='sales.promo.msg8'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
                 return false;
             }
         
@@ -367,17 +367,17 @@
     function fn_validPromotion() {
         var isValid = true, msg = "";
 
-        if(FormUtil.checkReqValue($('#promoAppTypeId'))) {
+        if(FormUtil.isEmpty($('#promoAppTypeId').val())) {
             isValid = false;
-            msg += "* Please select the promotion application.<br />";
+            msg += "<spring:message code='sales.promo.msg9'/><br />";
         }
-        if(FormUtil.checkReqValue($('#promoTypeId'))) {
+        if(FormUtil.isEmpty($('#promoTypeId').val())) {
             isValid = false;
-            msg += "* Please select the promotion type.<br />";
+            msg += "<spring:message code='sales.promo.msg10'/><br />";
         }
         if(FormUtil.isEmpty($('#promoDtFrom').val()) || FormUtil.isEmpty($('#promoDtEnd').val())) {
             isValid = false;
-            msg += "* Please key in the promotion period.<br />";
+            msg += "<spring:message code='sales.promo.msg11'/><br />";
         }        
 /*
         if(FormUtil.checkReqValue($('#promoCode'))) {
@@ -392,25 +392,25 @@
             msg += "* Please select the customer type.<br />";
         }
 */
-        if(!$('#exTrade').is(":disabled") && FormUtil.checkReqValue($('#exTrade'))) {
+        if(!$('#exTrade').is(":disabled") && FormUtil.isEmpty($('#exTrade').val())) {
             isValid = false;
-            msg += "* Please select the Ex-Trade.<br />";
+            msg += "<spring:message code='sales.promo.msg12'/><br />";
         }
-        if(!$('#empChk').is(":disabled") && FormUtil.checkReqValue($('#empChk'))) {
+        if(!$('#empChk').is(":disabled") && FormUtil.isEmpty($('#empChk').val())) {
             isValid = false;
-            msg += "* Please select the employee.<br />";
+            msg += "<spring:message code='sales.promo.msg13'/><br />";
         }
-        if(!$('#promoDiscValue').is(":disabled") && FormUtil.checkReqValue($('#promoDiscValue'))) {
+        if(!$('#promoDiscValue').is(":disabled") && FormUtil.isEmpty($('#promoDiscValue').val())) {
             isValid = false;
-            msg += "* Please key in the discount value.<br />";
+            msg += "<spring:message code='sales.promo.msg14'/><br />";
         }
-        if(!$('#promoRpfDiscAmt').is(":disabled") && FormUtil.checkReqValue($('#promoRpfDiscAmt'))) {
+        if(!$('#promoRpfDiscAmt').is(":disabled") && FormUtil.isEmpty($('#promoRpfDiscAmt').val())) {
             isValid = false;
-            msg += "* Please key in the RPF discount.<br />";
+            msg += "<spring:message code='sales.promo.msg15'/><br />";
         }
-        if(!$('#promoDiscPeriod').is(":disabled") && FormUtil.checkReqValue($('#promoDiscPeriod'))) {
+        if(!$('#promoDiscPeriod').is(":disabled") && FormUtil.isEmpty($('#promoDiscPeriod').val())) {
             isValid = false;
-            msg += "* Please key in the discount period.<br />";
+            msg += "<spring:message code='sales.promo.msg16'/><br />";
         }
 /*
         if(!$('#promoFreesvcPeriodTp').is(":disabled") && FormUtil.checkReqValue($('#promoFreesvcPeriodTp'))) {
@@ -418,12 +418,12 @@
             msg += "* Please select the free svc period.<br />";
         }
 */
-        if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.checkReqValue($('#promoSrvMemPacId'))) {
+        if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
             isValid = false;
-            msg += "* Please select the membership package.<br />";
+            msg += "<spring:message code='sales.promo.msg17'/><br />";
         }
         
-        if(!isValid) Common.alert("Add Product Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert("<spring:message code='sales.promo.msg18'/>" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         
         return isValid;
     }
@@ -648,16 +648,16 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Promotion Management – NEW promotion</h1>
+<h1><spring:message code='sales.title.promoList'/> – <spring:message code='sales.title.promo.new'/></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnClosePop" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnClosePop" href="#"><spring:message code='sys.btn.close'/></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Promotion Information</h2>
+<h2><spring:message code='sales.title.sub.promo.promoInfo'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -670,17 +670,17 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Promotion Application<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.promoApp'/><span class="must">*</span></th>
     <td>
     <select id="promoAppTypeId" name="promoAppTypeId" class="w100p"></select>
     </td>
-    <th scope="row">Promotion Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.promoType'/><span class="must">*</span></th>
     <td>
     <select id="promoTypeId" name="promoTypeId" class="w100p"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Promotion Period<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.period'/><span class="must">*</span></th>
     <td colspan="3">
     <div class="date_set w100p"><!-- date_set start -->
     <p><input id="promoDtFrom" name="promoDtFrom" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
@@ -690,16 +690,16 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Promotion Name</th>
+    <th scope="row"><spring:message code='sales.promo.promoNm'/></th>
     <td><input id="promoDesc" name="promoDesc" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Promotion Code<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promoCd'/><span class="must">*</span></th>
     <td><input id="promoCode" name="promoCode" type="text" title="" placeholder="" class="w100p" disabled /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Information</h2>
+<h2><spring:message code='sales.title.sub.promo.custInfo'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -714,15 +714,15 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.custType'/><span class="must">*</span></th>
     <td>
     <select id="promoCustType" name="promoCustType" class="w100p"></select>
     </td>
-    <th scope="row">Ex-Trade<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.extrade'/><span class="must">*</span></th>
     <td>
     <select id="exTrade" name="exTrade" class="w100p" disabled></select>
     </td>
-    <th scope="row">Employee<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.employee'/><span class="must">*</span></th>
     <td>
     <select id="empChk" name="empChk" class="w100p" disabled></select>
     </td>
@@ -732,7 +732,7 @@
 
 <section id="sctPromoDetail">
 <aside class="title_line"><!-- title_line start -->
-<h2>Promotion Detail</h2>
+<h2><spring:message code='sales.title.sub.promo.dtl'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -745,7 +745,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Discount(Type/Value)<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.discTypeVal'/><span class="must">*</span></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p>
@@ -756,13 +756,13 @@
     </p>
     </div>    
     </td>
-    <th scope="row">RPF Discunt<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.rpfDisc'/><span class="must">*</span></th>
     <td>
     <input id="promoRpfDiscAmt" name="promoRpfDiscAmt" type="text" title="" placeholder="" class="w100p" disabled />
     </td>
 </tr>
 <tr>
-    <th scope="row">Discount period<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.discPeriod'/><span class="must">*</span></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p>
@@ -779,15 +779,15 @@
     <select id="promoFreesvcPeriodTp" name="promoFreesvcPeriodTp" class="w100p"></select>
     </td>
 -->
-    <th scope="row">Service Package<span class="must">*</span></th>
+    <th scope="row"><spring:message code='sales.promo.svcPack'/><span class="must">*</span></th>
     <td>
     <select id="promoSrvMemPacId" name="promoSrvMemPacId" class="w100p"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Additional Discount (RM)</th>
+    <th scope="row"><spring:message code='sales.promo.addDisc'/></th>
     <td><input id="promoAddDiscPrc" name="promoAddDiscPrc" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Additional Discount (PV)</th>
+    <th scope="row"><spring:message code='sales.promo.addDiscPV'/></th>
     <td><input id="promoAddDiscPv" name="promoAddDiscPv" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <!--
@@ -805,12 +805,12 @@
 </section>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Product List</h2>
+<h2><spring:message code='sales.title.sub.promo.prodList'/></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="btnProductDel" href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a id="btnProductAdd" href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a id="btnProductDel" href="#"><spring:message code='sys.btn.del'/></a></p></li>
+    <li><p class="btn_grid"><a id="btnProductAdd" href="#"><spring:message code='sys.btn.add'/></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -818,12 +818,12 @@
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Free Gift List</h2>
+<h2><spring:message code='sales.title.sub.promo.giftList'/></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="btnFreeGiftDel" href="#">DEL</a></p></li>
-    <li><p class="btn_grid"><a id="btnFreeGiftAdd" href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a id="btnFreeGiftDel" href="#"><spring:message code='sys.btn.del'/></a></p></li>
+    <li><p class="btn_grid"><a id="btnFreeGiftAdd" href="#"><spring:message code='sys.btn.add'/></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -835,7 +835,7 @@
     <li><p class="btn_blue2"><a href="#">Product</a></p></li>
     <li><p class="btn_blue2"><a href="#">From Gift</a></p></li>
 -->
-    <li><p class="btn_blue"><a id="btnPromoSave" href="#">Save</a></p></li>
+    <li><p class="btn_blue"><a id="btnPromoSave" href="#"><spring:message code='sys.btn.save'/></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

@@ -30,6 +30,12 @@
     var modRfrGridID;
     
     $(document).ready(function(){
+
+        if(MEM_TYPE == '2') {
+            TAB_NM = 'CNT';
+            $("#ordEditType").prop("disabled", true);
+        }
+
         doGetComboData('/common/selectCodeList.do', {groupCode :'335'}, TAB_NM, 'ordEditType', 'S'); //Order Edit Type
         doGetComboSepa('/common/selectBranchCodeList.do', '1', ' - ', '', 'modKeyInBranch', 'S'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do', '5', ' - ', '', 'dscBrnchId',     'S'); //Branch Code
@@ -41,6 +47,9 @@
         fn_statusCodeSearch();
 
         if(FormUtil.isNotEmpty(TAB_NM)) {
+            
+            if(!fn_checkAccessModify(TAB_NM)) return false;
+            
             fn_changeTab(TAB_NM);
         }
         
@@ -56,7 +65,7 @@
         //Attach File
         $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='btnDownGstCert' href='#' class='blind'>Download GST Cert</a></span>");
     });
-
+    
     function fn_statusCodeSearch(){
         Common.ajax("GET", "/sales/order/selectStateCodeList.do", $("#searchForm").serialize(), function(result) {
             keyValueList = result;

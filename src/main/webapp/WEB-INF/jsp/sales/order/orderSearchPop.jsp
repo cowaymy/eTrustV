@@ -63,27 +63,27 @@
         
     	//AUIGrid 칼럼 설정
         var columnLayout = [{
-                dataField   : "ordNo",          headerText  : "Order No",
+                dataField   : "ordNo",          headerText  : "<spring:message code='sales.OrderNo'/>",
                 width       : 80,               editable    : false,
                 style       : 'left_style'
             }, {
-                dataField   : "refNo",          headerText  : "Ref No",
+                dataField   : "refNo",          headerText  : "<spring:message code='sales.refNo2'/>",
                 width       : 120,              editable    : false,
                 style       : 'left_style'
             }, {
-                dataField   : "ordDt",          headerText  : "Order Date",
+                dataField   : "ordDt",          headerText  : "<spring:message code='sales.ordDt'/>",
                 width       : 100,              editable    : false,
                 style       : 'left_style'
             }, {
-                dataField   : "appTypeCode",    headerText  : "App Type",
+                dataField   : "appTypeCode",    headerText  : "<spring:message code='sales.AppType'/>",
                 width       : 80,               editable    : false,
                 style       : 'left_style'
             }, {
-                dataField   : "productName",    headerText  : "Product",
+                dataField   : "productName",    headerText  : "<spring:message code='sales.prod'/>",
                 width       : 170,              editable    : false,
                 style       : 'left_style'
             }, {
-                dataField   : "custName",       headerText  : "Customer Name",
+                dataField   : "custName",       headerText  : "<spring:message code='sales.cusName'/>",
                 editable    : false,            style       : 'left_style'
             }, {
                 dataField   : "ordId",          visible     : false //salesOrderId
@@ -127,7 +127,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Search Order</h1>
+<h1><spring:message code='sales.title.searchOrder'/></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
 </ul>
@@ -145,58 +145,58 @@
 <table class="type1 mt10"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:160px" />
+	<col style="width:150px" />
 	<col style="width:*" />
-	<col style="width:160px" />
+	<col style="width:170px" />
 	<col style="width:*" />
 	<col style="width:120px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Order No</th>
+	<th scope="row"><spring:message code='sales.OrderNo'/></th>
 	<td>
-	<input id="popOrdNo" name="ordNo" type="text" title="" placeholder="Order No" class="w100p" />
+	<input id="popOrdNo" name="ordNo" type="text" title="" placeholder="<spring:message code='sales.OrderNo'/>" class="w100p" />
 	</td>
-	<th scope="row">Order Ref No</th>
+	<th scope="row"><spring:message code='sales.refNo3'/></th>
 	<td>
-	<input id="popRefNo" name="refNo" type="text" title="" placeholder="Reference No" class="w100p" />
+	<input id="popRefNo" name="refNo" type="text" title="" placeholder="<spring:message code='sales.refNo3'/>" class="w100p" />
 	</td>
-	<th scope="row">Order Date</th>
+	<th scope="row"><spring:message code='sales.ordDt'/></th>
 	<td>
 	<input id="popOrdDt" name="ordDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Order PO #</th>
+	<th scope="row"><spring:message code='sales.poNum'/> #</th>
 	<td>
-	<input id="popPoNo" name="poNo" type="text" title="" placeholder="PO No" class="w100p" />
+	<input id="popPoNo" name="poNo" type="text" title="" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
 	</td>
-	<th scope="row">Invoice/Statement PO #</th>
+	<th scope="row"><spring:message code='sales.invPo'/> #</th>
 	<td colspan="3">
-	<input id="popInvoicePoNo" name="invoicePoNo" type="text" title="" placeholder="Invoice/Statement PO No" class="w100p" />
+	<input id="popInvoicePoNo" name="invoicePoNo" type="text" title="" placeholder="<spring:message code='sales.invPo'/>" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Customer ID</th>
+	<th scope="row"><spring:message code='sales.custId2'/></th>
 	<td>
-	<input id="popCustId" name="custId" type="text" title="" placeholder="Customer ID(Numeric)" class="w100p" />
+	<input id="popCustId" name="custId" type="text" title="" placeholder="<spring:message code='sales.custId2'/>" class="w100p" />
 	</td>
-	<th scope="row">Customer Name</th>
+	<th scope="row"><spring:message code='sales.cusName'/></th>
 	<td colspan="3">
-	<input id="popCustName" name="custName" type="text" title="" placeholder="Customer Name" class="w100p" />
+	<input id="popCustName" name="custName" type="text" title="" placeholder="<spring:message code='sales.cusName'/>" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">NRIC/Company No</th>
+	<th scope="row"><spring:message code='sales.NRIC2'/></th>
 	<td>
-	<input id="popCustIc" name="custIc" type="text" title="" placeholder="NRIC/Company No" class="w100p" />
+	<input id="popCustIc" name="custIc" type="text" title="" placeholder="<spring:message code='sales.NRIC2'/>" class="w100p" />
 	</td>
-	<th scope="row">Application Type</th>
+	<th scope="row"><spring:message code='sales.AppType2'/></th>
 	<td>
 	<select id="popAppType" name="appType" class="multy_select w100p"></select>
 	</td>
-	<th scope="row">Order Status</th>
+	<th scope="row"><spring:message code='sales.ordStus'/></th>
 	<td>
 	<select id="popOrdStusId" name="ordStusId" class="multy_select w100p">
 		<option value="">Choose One</option>
@@ -207,7 +207,7 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row">Key-In Branch</th>
+	<th scope="row"><spring:message code='sales.keyInBranch'/></th>
 	<td colspan="5">
 	<select id="popKeyinBrnchId" name="keyinBrnchId" class="multy_select w100p"></select>
 	</td>

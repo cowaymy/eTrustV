@@ -143,7 +143,7 @@ public class PromotionController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setMessage(messageAccessor.getMessage("Promotion status successfully saved."));
+		message.setMessage(messageAccessor.getMessage("sales.promo.msg2"));
 
 		return ResponseEntity.ok(message);
 	}
@@ -180,7 +180,7 @@ public class PromotionController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setMessage(messageAccessor.getMessage("New promotion successfully saved."));
+		message.setMessage(messageAccessor.getMessage("sales.promo.msg3"));
 
 		return ResponseEntity.ok(message);
 	}
@@ -194,7 +194,7 @@ public class PromotionController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setMessage(messageAccessor.getMessage("Promotion successfully saved."));
+		message.setMessage(messageAccessor.getMessage("sales.promo.msg4"));
 
 		return ResponseEntity.ok(message);
 	}
