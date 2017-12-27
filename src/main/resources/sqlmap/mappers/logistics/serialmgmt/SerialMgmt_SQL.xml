@@ -86,7 +86,6 @@
             l87.SERIAL_NO AS serialno,
             l87.MATNR AS itmcode,
             S26.STK_DESC AS itmdesc,
-            l87.SCANINFO_STUS AS scanstus,
             TO_CHAR(TO_DATE(l87.REQST_DT, 'dd/mm/yyyy'), 'dd/mm/yyyy') AS reqstdt,
             DBMS_LOB.SUBSTR (s28c.WH_LOC_DESC, 4000) AS frmloc,
             DBMS_LOB.SUBSTR (s28q.WH_LOC_DESC, 4000) AS toloc,
@@ -98,6 +97,8 @@
 	        LEFT JOIN SYS0028M s28c ON l87.FROM_LOC_ID = s28c.WH_LOC_ID
 	        LEFT JOIN SYS0028M s28q ON l87.TO_LOC_ID = s28q.WH_LOC_ID
         WHERE l87.SCAN_TYPE = 30 AND l87.SCANINFO_STUS = 'N'
+
+        ORDER BY l87.CRT_DT DESC
     </select>
 
     <select id="selectScanList" parameterType="Map"  resultType="EgovMap">
