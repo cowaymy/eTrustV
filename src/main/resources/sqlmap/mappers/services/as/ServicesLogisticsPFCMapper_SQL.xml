@@ -20,10 +20,17 @@
       
       
       
-      
       <select id="SP_SVC_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
       {
             call SP_SVC_LOGISTIC_REQUEST( #{ORD_ID},#{RETYPE},#{P_TYPE}, #{P_PRGNM}, #{USERID} ,#{P_RESULT_TYPE},#{P_RESULT_MSG}  )
+      }
+     </select>     
+      
+      
+      
+      <select id="SP_LOGISTIC_REQUEST_REVERSE" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_REVERSE( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
       }
      </select>     
       
