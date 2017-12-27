@@ -30,22 +30,21 @@
                                   {dataField:"seq", headerText:"Seq No.", width:80, height:30},
                                   {dataField:"serialno", headerText:"Serial No.", width:180, height:30},
                                   {dataField:"itmcode", headerText:"Item Code", width:130, height:30},
-                                  {dataField:"itmdesc", headerText:"Item Description", width:300, height:30},
-                                  {dataField:"scanstus", headerText:"Scan Status", width:90, height:30},
+                                  {dataField:"itmdesc", headerText:"Item Description", width:280, height:30},
                                   {dataField:"reqstdt", headerText:"Request Date", width:120, height:30},
-                                  {dataField:"frmloc", headerText:"From Location", width:220, height:30},
-                                  {dataField:"toloc", headerText:"To Location", width:220, height:30},
+                                  {dataField:"frmloc", headerText:"From Location", width:250, height:30},
+                                  {dataField:"toloc", headerText:"To Location", width:300, height:30},
                                   {dataField:"crt", headerText:"Creator", width:110, height:30},
                                   {dataField:"crtdt", headerText:"Created Date", width:120, height:30}
                                 ];
 
     var barScanLayout = [
-                         {dataField:"seqno", headerText:"Seq No.", width:70, height:30},
-                         {dataField:"itmcode", headerText:"Item Code", width:110, height:30},
-                         {dataField:"boxno", headerText:"Box No.", width:230, height:30},
-                         {dataField:"unit", headerText:"Unit", width:60, height:30},
-                         {dataField:"status", headerText:"Status", width:40, height:30, visible:false},
-                         {dataField:"serialno", headerText:"Serial No", width:40, height:30, visible:false}
+				                         {dataField:"seqno", headerText:"Seq No.", width:70, height:30},
+				                         {dataField:"itmcode", headerText:"Item Code", width:140, height:30},
+				                         {dataField:"boxno", headerText:"Box No.", width:230, height:30},
+				                         {dataField:"unit", headerText:"Unit", width:60, height:30},
+				                         {dataField:"status", headerText:"Status", width:40, height:30, visible:false},
+				                         {dataField:"serialno", headerText:"Serial No", width:40, height:30, visible:false}
                                       ];
 
 
@@ -53,6 +52,7 @@
                                       groupingFields : ["scanno"],
                                       enableCellMerge : true,
                                       editable : false,
+                                      fixedColumnCount : 2,
                                       showRowCheckColumn : false,
                                       showStateColumn : false,
                                       showBranchOnGrouping : false
@@ -258,6 +258,7 @@
                 }
 
                 AUIGrid.addRow(myBarScanGridID, items, "last");
+                AUIGrid.addCheckedRowsByValue(myBarScanGridID, "status", "0");
             }
 
             if(hasBox == true)
@@ -292,7 +293,7 @@
                         status = "0";
                     }
 
-                    if(status == 1)
+                    if(status == "1")
                     {
                         serialno = myData.data[key]["serialno"];
                     }
@@ -309,7 +310,7 @@
                                        }
 
                     AUIGrid.updateRow(myBarScanGridID, items, rowIndex);
-
+                    AUIGrid.addUncheckedRowsByValue(myBarScanGridID, "status", "1");
                 });
 
                 AUIGrid.update(myBarScanGridID);
@@ -363,6 +364,9 @@
 
                 $("#barScanWindow").hide();
 
+                fn_ViewRDCScanList();
+                fn_balanceGIRDC();
+
                 Common.alert("Scanned Item(s) Saved.");
 
             },  function(jqXHR, textStatus, errorThrown) {
@@ -396,43 +400,10 @@
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Serial No. Scanning (Goods Issue RDC)</h2>
+
     </aside><!-- title_line end -->
-
-    <section class="search_table"><!-- search_table start -->
-
-        <form id="searchForm" name="searchForm">
-
-            <table class="type1"><!-- table start -->
-
-                <caption>table</caption>
-
-                <colgroup>
-                    <col style="width:100px" />
-                    <col style="width:80px" />
-                </colgroup>
-
-                <tbody>
-                    <tr>
-                        <th scope="row">Active GI</th>
-                        <td>
-                            <input type="text" id="giRDC" name="giRDC"  class="w100p" readonly />
-                        </td>
-                        <td>
-                            <p class="btn_blue"><a id="refresh">Refresh</a></p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table><!-- table end -->
-        </form>
-
-    </section><!-- search_table end -->
-
-
+    &nbsp;
     <section class="search_table" id="RDCSection"><!-- search_table start -->
-
-        <aside class="title_line">
-            <h2>Delivery No. Details</h2>
-        </aside>
 
         <form id="GIRDCForm" name="GIRDCForm">
 
@@ -448,17 +419,24 @@
 
                 <colgroup>
                     <col style="width:150px" />
-                    <col style="width:250px" />
+                    <col style="width:220px" />
                     <col style="width:150px" />
-                    <col style="width:250px" />
-                    <col style="width:150px" />
+                    <col style="width:80px" />
+                    <col style="width:300px" />
                 </colgroup>
 
                 <tbody>
                     <tr>
-                        <th scope="row">Request Date</th>
+                        <th scope="row">Request Date *</th>
                         <td>
                             <input id="reqstDt"  name="reqstDt" type="text" title="Reqest Date" placeholder="DD/MM/YYYY" class="j_date" readonly />
+                        </td>
+                        <th scope="row">Active Scanned GI</th>
+                        <td>
+                            <input type="text" id="giRDC" name="giRDC"  class="w100p" readonly />
+                        </td>
+                        <td>
+                            <p class="btn_blue"><a id="refresh">Refresh</a></p>
                         </td>
                     </tr>
                     <tr>
@@ -466,8 +444,8 @@
                         <td>
                             <input type="text"  id="RDCFrmLoc" name="RDCFrmLoc"  class="w100p"  readonly />
                         </td>
-                        <th scope="row">To Location</th>
-                        <td>
+                        <th scope="row">To Location *</th>
+                        <td colspan="2">
                             <select class="w100p" id="RDCToLoc" name="RDCToLoc"></select>
                         </td>
                     </tr>
@@ -488,7 +466,7 @@
     </section><!-- search_table end -->
 
 
-    <div class="popup_wrap" id="barScanWindow" style="display:none; width:51%;"><!-- popup_wrap start -->
+    <div class="popup_wrap" id="barScanWindow" style="display:none; width:45%;"><!-- popup_wrap start -->
 
         <header class="pop_header">
 
@@ -508,17 +486,15 @@
                     <caption>search table</caption>
 
                     <colgroup>
-                    <col style="width:140px" />
+                    <col style="width:120px" />
                     </colgroup>
 
                     <tbody>
                         <tr>
                             <th scope="row"><b>BARCODE</b></th>
                             <td>
-                                 <input type="text"  id="txtBarcode" name="txtBarcode"
-                                            onchange="javascript:fn_splitBarcode();"
-                                            placeholder="Please select here before scanning."
-                                            style="height:40px;width:340px;" />
+                                 <input type="text"  id="txtBarcode" name="txtBarcode" onchange="javascript:fn_splitBarcode();"
+                                            placeholder="Please select here before scanning." style="height:40px;width:430px;" />
                             </td>
                         </tr>
                      </tbody>
@@ -529,8 +505,12 @@
                 &nbsp;
 
                 <ul class="center_btns">
+<<<<<<< .mine
+                    <li><p class="btn_blue2 big"><a onclick="javascript:fn_confirmScanItem();">Confirm Items</a></p></li>
+=======
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue2 big"><a onclick="javascript:fn_confirmScanItem();">Confirm</a></p></li>
+>>>>>>> .r6792
                     <li><p class="btn_blue2 big"><a onclick="javascript:fn_deleteScanItem();">Delete Checked Items</a></p></li>
 </c:if>                
                 </ul>
