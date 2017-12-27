@@ -89,6 +89,7 @@ public class MaterialdocumentController {
 		String   sdocno        = request.getParameter("sdocno");
 		String   sreqstno      = request.getParameter("sreqstno");
 		String   sdelvno       = request.getParameter("sdelvno");
+		String   sam       = request.getParameter("sam");
 		
 		Map<String, Object> pmap = new HashMap();
 		pmap.put("trantype"      , trantype    );
@@ -109,6 +110,7 @@ public class MaterialdocumentController {
 		pmap.put("sdocno"        , sdocno      );
 		pmap.put("sreqstno"      , sreqstno    );
 		pmap.put("sdelvno"       , sdelvno     );
+		pmap.put("sam"       , sam     );
 		
 		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchList(pmap);
 		

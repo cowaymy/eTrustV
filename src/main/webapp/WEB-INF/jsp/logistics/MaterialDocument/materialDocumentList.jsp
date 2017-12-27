@@ -104,6 +104,8 @@ $(document).ready(function(){
     doGetCombo('/common/selectCodeList.do', '15', '', 'smattype', 'M' ,'f_multiCombos');
     doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
     
+    doDefCombo(amdata, 'A' ,'sam', 'S', '');
+    
 //     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
 //         id: "code",
 //         name: "codeName",
@@ -378,7 +380,10 @@ function f_multiCombos() {
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>
-                    <td colspan='2'></td>              
+                    <th scope="row">Auto / Manual</th>
+                    <td>
+                        <select class="w100p" id="sam" name="sam"></select>
+                    </td>          
                 </tr>
                 <tr>
                     <th scope="row">From Location Type</th>

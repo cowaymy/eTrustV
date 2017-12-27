@@ -142,6 +142,9 @@
         <if test="sdelvno !=null and sdelvno !=''">
             and l60.DELVRY_NO = #{sdelvno}
         </if>
+          <if test="sam !=null and sam !=''">
+            and  l60.AUTO_CRT_ITM= #{sam}
+        </if>
 		order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
 	</select>
 	
