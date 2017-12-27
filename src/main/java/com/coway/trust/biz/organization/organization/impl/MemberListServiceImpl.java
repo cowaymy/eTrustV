@@ -158,7 +158,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("applicantDOB",params.get("Birth").toString());
 			MemApp.put("applicantGender", params.get("gender"));
 			MemApp.put("applicantRace",Integer.parseInt((String) params.get("cmbRace")));
-			MemApp.put("applicantMarital",0);
+			MemApp.put("applicantMarital",Integer.parseInt((String) params.get("marrital")));
 			MemApp.put("applicantNationality",Integer.parseInt((String) params.get("national")));
 			//MemApp.put("applicantAdd1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
 			//MemApp.put("applicantAdd2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
@@ -168,11 +168,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			//MemApp.put("applicantPostCodeId",params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
 			//MemApp.put("applicantStateId",params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
 			//MemApp.put("applicantCountryId",params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
-			MemApp.put("applicantTelOffice","");
+			MemApp.put("applicantTelOffice",params.get("officeNo").toString().trim()!=null ? params.get("officeNo").toString().trim() : "");
 			MemApp.put("applicantTelHouse",params.get("residenceNo").toString().trim()!=null ? params.get("residenceNo").toString().trim() : "");
 			MemApp.put("applicantTelMobile",params.get("mobileNo").toString().trim()!=null ? params.get("mobileNo").toString().trim() : "");
 			MemApp.put("applicantEmail",params.get("email").toString().trim()!=null ? params.get("email").toString().trim() : "");
-			MemApp.put("applicantSpouseCode","");
+			
+			MemApp.put("applicantSpouseCode",params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
 			MemApp.put("applicantSpouseName",params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
 			MemApp.put("applicantSpouseNRIC",params.get("spouseNRIC").toString().trim()!=null ? params.get("spouseNRIC").toString().trim() : "");
 			MemApp.put("applicantSpouseOccupation",params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
@@ -1532,7 +1533,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memOrg.put("memberUpID",Integer.parseInt((deptParentID)));
 				memOrg.put("memberLvl", 4);
 				memOrg.put("deptCode",selectOrganization.get("deptCode"));
-				memOrg.put("orgUpdateBy",selectOrganization.get("creator"));
+				memOrg.put("orgUpdateBy",params.get("orgUpdUserId"));
 				memOrg.put("orgUpdateAt",new Date());
 				memOrg.put("prevDeptCode","");
 				memOrg.put("prevGroupCode","");
@@ -1547,7 +1548,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				memOrg.put("lastGrpCode",lastGroupCode);
 				memOrg.put("lastOrgCode",lastOrgCode);
 				memOrg.put("lastTopOrgCode","");
-				memOrg.put("branchId",0);
+				memOrg.put("branchId",0);				
 
 
 				logger.debug("memOrg : {}",memOrg);

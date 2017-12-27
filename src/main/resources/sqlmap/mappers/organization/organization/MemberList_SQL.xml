@@ -2886,7 +2886,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE UPD_DT, 
 		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT 
-		        ,TO_CHAR(SYSDATE, 'YYYY-MM-DD') JOIN_DT
+		        ,SYSDATE JOIN_DT
 		from ORG0003D   d             
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>

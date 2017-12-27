@@ -52,6 +52,53 @@ function fn_departmentCode(value){
         $("#trTrainee").hide();
      }
      
+     if($("#memberType").val() == 2803){
+     
+         var spouseCode = "${spouseInfoView[0].memCode}";
+         var spouseName = "${spouseInfoView[0].name}";
+         var spouseNric = "${spouseInfoView[0].nric}";
+         var spouseDob = "${spouseInfoView[0].dob}";
+         var spouseTel = "${spouseInfoView[0].telMobile}";
+     
+        $('#spouseCode').val(spouseCode);
+        $('#spouseName').val(spouseName);
+        $('#spouseNRIC').val(spouseNric); 
+        $('#spouseDOB').val(spouseDob);
+        $('#spouseContat').val(spouseTel);
+        
+        $('#spouseCode', '#memberAddForm').attr("readonly", true );
+        $('#spouseName', '#memberAddForm').attr("readonly",  true );
+        $('#spouseNRIC', '#memberAddForm').attr("readonly", true );
+        $('#spouseDOB', '#memberAddForm').attr("readonly", true );
+        $('#spouseContat', '#memberAddForm').attr("readonly",  true );
+        
+        $('#spouseCode', '#memberAddForm').attr('class','w100p readonly ');
+        $('#spouseName', '#memberAddForm').attr('class','w100p readonly ');
+        $('#spouseNRIC', '#memberAddForm').attr('class','w100p readonly ');
+        $('#spouseDOB', '#memberAddForm').attr('class','w100p readonly ');
+        $('#spouseContat', '#memberAddForm').attr('class','w100p readonly ');
+
+     } else {
+        $('#spouseCode').val('');
+        $('#spouseName').val('');
+        $('#spouseNRIC').val(''); 
+        $('#spouseDOB').val('');
+        $('#spouseContat').val('');     
+        
+        $('#spouseCode', '#memberAddForm').attr("readonly", false);
+        $('#spouseName', '#memberAddForm').attr("readonly", false);
+        $('#spouseNRIC', '#memberAddForm').attr("readonly", false);
+        $('#spouseDOB', '#memberAddForm').attr("readonly", false);
+        $('#spouseContat', '#memberAddForm').attr("readonly", false);
+        
+        $('#spouseCode', '#memberAddForm').attr('class','w100p  ');
+        $('#spouseName', '#memberAddForm').attr('class','w100p  ');
+        $('#spouseNRIC', '#memberAddForm').attr('class','w100p  ');
+        $('#spouseDOB', '#memberAddForm').attr('class','w100p  ');
+        $('#spouseContat', '#memberAddForm').attr('class','w100p  ');
+     }
+     
+     
 	var action = value;
 	console.log("fn_departmentCode >> " + action)
 	switch(action){
@@ -1035,15 +1082,15 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">MCode</th>
     <td>  
-    <input type="text" title="" placeholder="MCode" class="w100p readonly " id="spouseCode" readonly="readonly" name="spouseCode" value="${spouseInfoView[0].memCode}"/>
+    <input type="text" title="" placeholder="MCode" class="w100p readonly " id="spouseCode" readonly="readonly" name="spouseCode" value=""/>
     </td>
     <th scope="row">Spouse Name</th>
     <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p readonly " id="spouseName" readonly="readonly"  name="spouseName" value="${spouseInfoView[0].name}"/>
+    <input type="text" title="" placeholder="Spouse Nam" class="w100p readonly " id="spouseName" readonly="readonly"  name="spouseName" value=""/>
     </td>
     <th scope="row">NRIC / Passport No.</th>
     <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNRIC" readonly="readonly"  name="spouseNRIC"  value="${spouseInfoView[0].nric}"/>
+    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNRIC" readonly="readonly"  name="spouseNRIC"  value=""/>
     </td>
 </tr>
 <tr>
@@ -1053,11 +1100,11 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">Date of Birth</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDOB" readonly="readonly"  name="spouseDOB" value="${spouseInfoView[0].dob}"/>
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDOB" readonly="readonly"  name="spouseDOB" value=""/>
     </td>
     <th scope="row">Contact No.</th>
     <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="spouseContat" readonly="readonly"  name="spouseContat"  value="${spouseInfoView[0].telMobile}"/>
+    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="spouseContat" readonly="readonly"  name="spouseContat"  value=""/>
     </td>
 </tr>
 </tbody>
