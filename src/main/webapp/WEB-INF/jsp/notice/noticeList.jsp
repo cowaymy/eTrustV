@@ -24,7 +24,7 @@
         visible: false
     }, {
         dataField: "ntceSubject",  //NTCE_SUBJECT
-        headerText: "Subject",
+        headerText: "<spring:message code='sys.title.subject'/>",
         editable: false,
         visible: true,
         style: "aui-grid-user-custom-left",
@@ -48,7 +48,7 @@
         visible: true
     }, {
         dataField: "crtDt",     //CRT_DT
-        headerText: "Issue Date",
+        headerText: "<spring:message code='sys.title.issue'/> <spring:message code='sys.title.date'/>",
         width: 170,
         editable: false,
         visible: true,
@@ -56,13 +56,13 @@
         formatString: "dd-mm-yyyy"
     }, {
         dataField: "readCnt",     //READ_CNT
-        headerText: "Read Count",
+        headerText: "<spring:message code='sys.title.read'/> <spring:message code='sys.title.count'/>",
         width: 140,
         editable: false,
         visible: true
     }, {
         dataField: "imgFlag",
-        headerText: "Img Flag",
+        headerText: "<spring:message code='sys.title.image'/> <spring:message code='sys.title.flag'/>",
         width: 140,
         editable: false,
         visible: false
