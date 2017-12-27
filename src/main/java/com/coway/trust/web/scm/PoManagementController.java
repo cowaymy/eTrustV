@@ -156,9 +156,8 @@ public class PoManagementController {
 	}  
 	
 	// search btn
-	@RequestMapping(value = "/selectPoApprovalSearchBtn.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectPoApprovalSearchBtn(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectPoApprovalSearchBtn.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectPoApprovalSearchBtn(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectPoApprovalSearchBtn_Input : {}", params.toString());
 		
@@ -217,9 +216,8 @@ public class PoManagementController {
 	}
 	
 	// search btn
-	@RequestMapping(value = "/selectOtdStatusViewSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectOtdStatusView(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectOtdStatusViewSearch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectOtdStatusView(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectOtdStatusView_Input : {}", params.toString());
 		

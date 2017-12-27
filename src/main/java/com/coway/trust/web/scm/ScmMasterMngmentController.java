@@ -62,9 +62,8 @@ public class ScmMasterMngmentController {
 	}  
 
 	// search btn
-	@RequestMapping(value = "/selectMasterMngmentSerch.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectMasterMngmentSerch(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectMasterMngmentSerch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectMasterMngmentSerch(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectMasterMngmentSerch_Input : {}", params.toString());
 		
@@ -318,9 +317,8 @@ public class ScmMasterMngmentController {
 	}
 	
 	// search Btn
-	@RequestMapping(value = "/selectBizPlanMngerSearch.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectBizPlanManager(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectBizPlanMngerSearch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectBizPlanManager(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectBizPlanManager_Input : {}", params.toString());
 		
@@ -448,9 +446,8 @@ public class ScmMasterMngmentController {
 	}		
 	
 	// Quarter Rate
-	@RequestMapping(value = "/selectPSDashSearchBtnList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectPSDashSearchBtnList(@RequestParam Map<String, Object> params,
-			@RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) 
+	@RequestMapping(value = "/selectPSDashSearchBtnList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectPSDashSearchBtnList(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectPSDashSearchBtnList_Input : {}", params.toString());
 		

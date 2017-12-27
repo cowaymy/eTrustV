@@ -137,7 +137,6 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 			
 			scmMasterMngMentMapper.updateMasterMngSupplyPlanTgtMoq((Map<String, Object>) obj);
 
-			saveCnt++;
 		}
 		
 		return saveCnt;
