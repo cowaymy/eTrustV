@@ -36,12 +36,25 @@
 			      , DFLT_STOCK   
 			 FROM SCM0046V  
 			 WHERE STOCK_ID <![CDATA[ > ]]> 0
-		<if test="stockCodeCbBox != null and stockCodeCbBox !=''">
-			   AND STOCK_ID = #{stockCodeCbBox}
-		</if>
-    <if test="scmStockType != null and scmStockType !=''">
-         AND STK_TYPE_ID = #{scmStockType}    
-   </if>		
+		
+    <choose>
+      <when test='stkCodes != null and !stkCodes.isEmpty '>
+       AND  STOCK_CODE IN
+          <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+              #{item}
+          </foreach>
+      </when>
+    </choose>
+		
+    <choose>
+      <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+       AND  STK_TYPE_ID IN
+          <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+              #{item}
+          </foreach>
+      </when>
+    </choose>
+	
 			 ORDER BY STK_CTGRY_CODE
 			         ,STOCK_DESC	 
   </select> 
@@ -316,9 +329,15 @@
 			  WHERE TEAM = #{scmTeamCbBox} 
 			    AND YYYY = #{scmYearCbBox}
 			    AND VER  = #{scmPeriodCbBox}
-       <if test="scmStockType != null and scmStockType !=''">
-          AND STK_TYPE_ID = #{scmStockType}
-       </if>			    
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>
+		    
 			  ORDER BY STOCK_NAME  
   </select> 
   
@@ -571,9 +590,16 @@
 		          <if test='paramStockCtgry != null and paramStockCtgry !=""'>
 		          AND STOCK_CTGRY = #{paramStockCtgry}
 		          </if>
-		          <if test="scmStockType != null and scmStockType !=''">
-              AND STK_TYPE_ID = #{scmStockType}
-              </if>
+	              
+			      <choose>
+			        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+			         AND  STK_TYPE_ID IN
+			            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+			                #{item}
+			            </foreach>
+			        </when>
+			      </choose>              
+              
 		          <if test='paramGrp != null and paramGrp !=""'>
 		          AND GRP= #{paramGrp}
 		          </if>

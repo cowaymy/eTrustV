@@ -114,9 +114,16 @@
 		 <if test='viewCbBox != null and viewCbBox !=""'>
 			  AND IS_CMPLT_ON_TM = #{viewCbBox} 
 		 </if>
-     <if test="scmStockType != null and scmStockType !=''">
-        AND STK_TYPE_ID = #{scmStockType}
-     </if>		 
+		 
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>
+	 
 		  ORDER BY PO_NO 
 			        ,PO_ITM_NO 
  
@@ -179,10 +186,17 @@
 				      , ROUND( (AGING_AMT_PREV - AGING_AMT_CURR), 2) AGING_AMT_GAP
 				
 				FROM SCM0054V
-				WHERE YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )    
-				<if test='scmStockType != null and scmStockType !=""'>
-				 AND STOCK_TYPE = #{scmStockType}  
-			  </if>
+				WHERE YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )
+				
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>				
+
 				ORDER BY STOCK_TYPE ASC  
   </select> 
   
@@ -224,9 +238,15 @@
 			  
 			FROM SCM0054V
 			WHERE YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )    
-      <if test='scmStockType != null and scmStockType !=""'>
-        AND STOCK_TYPE = #{scmStockType}  
-      </if>
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>
+      
 			ORDER BY STOCK_TYPE ASC
   </select> 
   
@@ -257,9 +277,14 @@
 			      ,SB_AMT_PREV    
 			  FROM SCM0055V
 			 WHERE CURR_YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )
-			<if test='paramStockType != null and paramStockType !=""'>
-        AND STOCK_TYPE = #{paramStockType}  
-      </if>
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>			 
 			  AND ((OH_QTY_CURR <![CDATA[>]]> 0) OR (IS_QTY_CURR <![CDATA[>]]> 0) OR (SB_QTY_CURR <![CDATA[>]]> 0))
 			ORDER BY M1_AMT_CURR   
   </select> 
@@ -291,9 +316,14 @@
 			      ,SB_QTY_PREV            
 			  FROM SCM0055V
 			 WHERE CURR_YYYYMM = (SELECT #{scmYearCbBox} || LPAD(#{scmMonthCbBox},2,'0') FROM DUAL )
-      <if test='paramStockType != null and paramStockType !=""'>
-         AND STOCK_TYPE = #{paramStockType}  
-      </if>
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STOCK_TYPE IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose> 
 			   AND ((OH_QTY_CURR <![CDATA[>]]> 0) OR (IS_QTY_CURR <![CDATA[>]]> 0) OR (SB_QTY_CURR <![CDATA[>]]> 0))
 			ORDER BY M1_AMT_CURR			
   

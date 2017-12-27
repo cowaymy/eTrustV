@@ -44,9 +44,15 @@
      <if test='statusSelBox != null and statusSelBox !="" '>
       AND PO_STUS   =  #{statusSelBox}
      </if>
-     <if test="scmStockType != null and scmStockType !=''">
-      AND STOCK_TYPE = #{scmStockType}
-     </if>     
+     <choose>
+       <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+        AND  STOCK_TYPE IN
+           <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+     </choose> 
+    
 </select>
 
 <select id="selectOtdSOGIDetailPop" parameterType="Map" resultType="egovMap">
@@ -153,10 +159,17 @@
 	      , WAERS_USD   
 	  FROM SCM0045V  
 	 WHERE SPMON = #{targetDateCbBox}
- <if test="scmStockType != null and scmStockType !=''">
-     AND STK_TYPE_ID = #{scmStockType}
- </if>	 
+  <choose>
+    <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+     AND  STK_TYPE_ID IN
+        <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </when>
+  </choose>	 
+   
 	 ORDER BY MATNR DESC
+	 
 </select>
 
 <select id="selectInterfaceLastState" parameterType="Map" resultType="egovMap">
@@ -250,12 +263,24 @@
 		   <if test='cdcCbBox != null and cdcCbBox !="" '>  
 		   AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 		   </if>
-		   <if test='stockCodeCbBox != null and stockCodeCbBox !="" '> 
-		   AND PRE_STOCK_CODE = #{stockCodeCbBox}      
-		   </if>
-       <if test="scmStockType != null and scmStockType !=''">
-       AND STK_TYPE_ID = #{scmStockType}    
-       </if>		   
+		   
+       <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+       </choose>
+                                                                         
+       <choose>
+        <when test='stkCodes != null and !stkCodes.isEmpty '>
+         AND  PRE_STOCK_CODE IN
+            <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+       </choose>		   
 </select>
  
 <select id="selectPoRightMove" parameterType="Map" resultType="egovMap">
@@ -504,9 +529,14 @@ WITH PO_APPROVAL_SUMMARY
        FROM SCM0043V
       WHERE PRE_SCM_YEAR = #{scmYearCbBox} 
         AND PRE_EST_WEEK = #{scmPeriodCbBox}
-        <if test="scmStockType != null and scmStockType !=''">
-        AND STK_TYPE_ID = #{scmStockType}
-        </if>  
+      <choose>
+       <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+        AND  STK_TYPE_ID IN
+           <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+      </choose>
       GROUP BY ROLLUP (STOCK_CTGRY,PRE_CDC)
     )
    SELECT STOCK_CTGRY
@@ -574,10 +604,17 @@ WITH PO_APPROVAL_SUMMARY
  SELECT CDC 
    FROM SCM0043V 
   WHERE BAS_YEAR = #{scmYearCbBox}
-    AND EST_WEEK = #{scmPeriodCbBox}   
-  <if test="scmStockType != null and scmStockType !=''"> 
-    AND STK_TYPE_ID = #{scmStockType}
-  </if>    
+    AND EST_WEEK = #{scmPeriodCbBox} 
+    
+   <choose>
+     <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+      AND  STK_TYPE_ID IN
+         <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+             #{item}
+         </foreach>
+     </when>
+   </choose>    
+ 
   GROUP BY CDC
 </select>
  
@@ -620,10 +657,15 @@ SELECT
   FROM SCM0043V S43V
       ,ITF0156M IF56
  WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
-   AND S43V.EST_WEEK = #{scmPeriodCbBox} 
- <if test="scmStockType != null and scmStockType !=''"> 
-   AND S43V.STK_TYPE_ID = #{scmStockType}
- </if>   
+   AND S43V.EST_WEEK = #{scmPeriodCbBox}
+<choose>
+  <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+   AND S43V.STK_TYPE_ID IN
+      <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+          #{item}
+      </foreach>
+  </when>
+</choose>     
    AND S43V.PO_NO IS NOT NULL
    AND S43V.PO_NO = IF56.PO_NO(+)
 </select>
