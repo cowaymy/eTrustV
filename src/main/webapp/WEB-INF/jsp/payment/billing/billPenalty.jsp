@@ -180,8 +180,10 @@ function fn_clickViewDetail(){
 					    <td>
 						    <input type="hidden" id="orderId" name="orderId" />
 						    <input type="text" id="orderNo" name="orderNo" title="" placeholder="" class="readonly" readonly/>
+						    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 						    <p class="btn_sky"><a href="javascript:fn_orderSearch();"><spring:message code='sys.btn.search'/></a></p>
 						    <p class="btn_sky"><a href="javascript:fn_clickViewDetail()"><spring:message code='pay.btn.link.viewDetails'/></a></p>
+						    </c:if>
 					    </td>
 						</tr>
 				</tbody>
