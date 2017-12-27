@@ -8,6 +8,8 @@
 SELECT PROJECT1.COURS_ID, 
        PROJECT1.COURS_CODE, 
        PROJECT1.COURS_NAME, 
+       PROJECT1.COURS_MEM_YN_ID, 
+       PROJECT1.COURS_MEM_TYPE_ID, 
        PROJECT1.CODE_ID, 
        PROJECT1.CODE_NAME, 
        PROJECT1.STUS_CODE_ID, 
@@ -38,6 +40,8 @@ FROM   (
                 SELECT   PROJECT1.COURS_ID, 
                          PROJECT1.COURS_CODE, 
                          PROJECT1.COURS_NAME, 
+                         PROJECT1.COURS_MEM_YN_ID, 
+                         PROJECT1.COURS_MEM_TYPE_ID, 
                          PROJECT1.COURS_LOC, 
                          PROJECT1.COURS_START, 
                          PROJECT1.COURS_END, 
@@ -58,6 +62,8 @@ FROM   (
                                 SELECT EXTENT1.COURS_ID, 
                                        EXTENT1.COURS_CODE, 
                                        EXTENT1.COURS_NAME, 
+                                       EXTENT1.COURS_MEM_YN_ID, 
+                                       EXTENT1.COURS_MEM_TYPE_ID, 
                                        EXTENT1.COURS_LOC, 
                                        TO_CHAR(EXTENT1.COURS_START, 'DD/MM/YYYY') AS COURS_START,
                                        TO_CHAR(EXTENT1.COURS_END, 'DD/MM/YYYY')   AS COURS_END, 
@@ -107,7 +113,7 @@ FROM   (
                                 JOIN   SYS0038M EXTENT2 
                                 ON     EXTENT1.COURS_STUS_ID = EXTENT2.STUS_CODE_ID 
                                 JOIN   SYS0013M EXTENT3 
-                                ON     EXTENT1.COURS_TYPE_CODE_ID = EXTENT3.CODE_ID 
+                                ON     EXTENT1.COURS_TYPE_CODE_ID = EXTENT3.CODE_ID
                                 WHERE  1 = 1
                           <if test="coursCode != null and coursCode != ''">
                           AND ( Extent1.COURS_CODE LIKE '%' || #{coursCode} || '%' ESCAPE '~' )
@@ -119,17 +125,15 @@ FROM   (
                           <![CDATA[ 
                           AND ( Extent1.COURS_START >= TO_DATE(#{coursStart} || ' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') )
                           ]]>
+                          </if>
+                          <if test="generalCode != null and generalCode != ''">
+                          AND Extent1.COURS_MEM_YN_ID = #{generalCode}
                           </if>   
-                          <if test="coursEnd != null and coursEnd != ''">
-                          <![CDATA[ 
-                          AND ( Extent1.COURS_END <= TO_DATE(#{coursEnd} || ' 23:59:59', 'DD/MM/YYYY HH24:MI:SS') )
-                          ]]>
+                          <if test="memType != null and memType != ''">
+                          AND Extent1.COURS_MEM_TYPE_ID = #{memType}
                           </if>   
                           <if test="coursName != null and coursName != ''">
-                          AND ( Extent1.COURS_NAME LIKE '%' || #{coursName} || '%' ESCAPE '~' )
-                          </if>
-                          <if test="coursLoc != null and coursLoc != ''">
-                          AND ( Extent1.COURS_LOC LIKE '%' || #{coursLoc} || '%' ESCAPE '~' )
+                          AND ( Extent1.COURS_NAME LIKE '%' || #{coursName} || '%' )
                           </if>
                           <if test="codeId != null and codeId != ''">
                           AND ( Extent3.CODE_ID = #{codeId} )
@@ -189,6 +193,7 @@ SELECT Extent1.COURS_ITM_ID   ,
        WHEN 3 THEN 'Coway Technician'
        WHEN 4 THEN 'Staff' END) AS MEM_TYPE_NAME,
        Extent1.COURS_MEM_ID  ,
+       Extent2.MEM_CODE  ,
        Extent1.COURS_TEST_RESULT   ,
        Extent1.COURS_MEM_STUS_ID   ,
        Extent1.COURS_D_UPD_USER_ID   ,
@@ -198,6 +203,7 @@ SELECT Extent1.COURS_ITM_ID   ,
        Extent1.COURS_ITM_MEM_PUP   ,
        Extent1.COURS_D_MEM_NAME   ,
        Extent1.COURS_D_MEM_NRIC ,
+       DECODE(Extent1.COURS_ATTEND_DAY, 0, 0, Extent1.COURS_ATTEND_DAY) COURS_ATTEND_DAY, 
        Extent3.CODE
   FROM MSC0009D Extent1
   LEFT JOIN ORG0001D Extent2
@@ -233,6 +239,9 @@ SELECT Extent1.BRNCH AS BRNCH_ID   ,
        </if>
        ,COURS_UPD_DT = SYSDATE
        ,COURS_UPD_USER_ID = #{userId}
+       ,COURS_MEM_YN_ID = #{generalCode}
+       ,COURS_MEM_TYPE_ID = #{memType}
+       ,COURS_ATTEND_OWNER = #{attendance}
     WHERE COURS_ID = #{coursId}       
 </update>
 
@@ -249,6 +258,9 @@ SELECT Extent1.BRNCH AS BRNCH_ID   ,
        ,COURS_ITM_MEM_PUP = #{coursItmMemPup}
        ,COURS_D_MEM_NAME = #{coursDMemName}
        ,COURS_D_MEM_NRIC = #{coursDMemNric}
+       <if test="coursAttendDay != null and coursAttendDay != ''">
+       ,COURS_ATTEND_DAY = #{coursAttendDay}
+       </if>
     WHERE COURS_ITM_ID = #{coursItmId}       
 </update>
 
@@ -272,7 +284,10 @@ INSERT INTO MSC0008D
              COURS_UPD_DT, 
              COURS_LIMIT, 
              COURS_CRT_DT, 
-             COURS_CRT_USER_ID) 
+             COURS_CRT_USER_ID,
+             COURS_MEM_YN_ID,
+             COURS_MEM_TYPE_ID,
+             COURS_ATTEND_OWNER) 
 VALUES      ( #{coursId}, 
               #{codeId}, 
               #{coursCode}, 
@@ -285,7 +300,9 @@ VALUES      ( #{coursId},
               SYSDATE, 
               #{coursLimit}, 
               SYSDATE, 
-              #{userId} ) 
+              #{generalCode},
+              #{memType},
+              #{attendance} ) 
 </insert>
 
 <insert id="insertAttendee" parameterType="Map">
@@ -391,7 +408,10 @@ SELECT EXTENT1.COURS_ID,
                AND COURS_MEM_STUS_ID = 1 
                AND COURS_TEST_RESULT != 'P' 
                AND COURS_TEST_RESULT != 'F' 
-               AND COURS_TEST_RESULT != 'AB')     AS OTHERS 
+               AND COURS_TEST_RESULT != 'AB')     AS OTHERS, 
+        EXTENT1.COURS_MEM_YN_ID,
+        EXTENT1.COURS_MEM_TYPE_ID,
+        EXTENT1.COURS_ATTEND_OWNER
 FROM   MSC0008D EXTENT1 
        JOIN SYS0038M EXTENT2 
          ON EXTENT1.COURS_STUS_ID = EXTENT2.STUS_CODE_ID 
@@ -480,5 +500,131 @@ AND JOIN4.NAME = #{memName}
 AND JOIN4.NRIC = #{nric}
 </if>
 </select>
+
+<select id="courseNricDup" parameterType="Map" resultType="int">
+/* trainingMapper.courseNricDup */
+SELECT COUNT(0) FROM MSC0009D
+ WHERE COURS_ID = #{coursId}
+     AND COURS_D_MEM_NRIC= #{nric}
+</select>
+
+<select id="selectCourseRequestList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectCourseRequestList */
+SELECT A.COURS_CODE, 
+               A.COURS_NAME, 
+               D.CODE_NAME,
+               A.COURS_LOC, 
+               A.COURS_LIMIT, 
+               (SELECT COUNT(COURS_ID)  CNT 
+                   FROM MSC0009D 
+                  WHERE COURS_ID = A.COURS_ID
+                      AND COURS_MEM_STUS_ID = 1)  AS COURSE_JOIN_CNT ,
+               TO_CHAR(A.COURS_START,'dd/mm/yyyy') AS COURSE_FROM_DATE,
+               TO_CHAR(A.COURS_END, 'dd/mm/yyyy') AS COURSE_TO_DATE,
+               A.COURS_ID,
+               A.COURS_ATTEND_OWNER,
+               E.COURS_MEM_ID,
+               E.COURS_D_MEM_NAME,
+               E.COURS_MEM_STUS_ID,
+               ( 
+                    SELECT Count(*) 
+                    FROM   MSC0009D 
+                    WHERE  COURS_ID = A.COURS_ID 
+                    AND    COURS_MEM_STUS_ID = 1) AS TOTAL 
+      FROM MSC0008D A 
+      INNER JOIN SYS0013M D ON  A.COURS_TYPE_CODE_ID = D.CODE_ID
+      JOIN MSC0009D E ON  E.COURS_ID = A.COURS_ID
+    WHERE A.COURS_STUS_ID = 1
+        AND A.COURS_MEM_YN_ID = 2318 
+        <if test="coursStart != null and coursStart != ''">
+        AND A.COURS_START <![CDATA[ > ]]> TO_DATE(#{coursStart}, 'dd/mm/yyyy') 
+        </if>
+        <if test="memberId != null and memberId != ''">
+        AND E.COURS_MEM_ID = #{memberId}
+        </if>
+</select>
+
+<select id="selectMemInfo" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectCourseRequestList */
+    SELECT MEM_ID 
+	         , MEM_TYPE
+	         , NAME
+	         , NRIC
+      FROM ORG0001D 
+    WHERE MEM_CODE = #{userId}
+</select>
+
+<select id="selectMyAttendeeList" parameterType="Map" resultType="egovMap">
+/* trainingMapper.selectMyAttendeeList */
+SELECT Extent1.COURS_ITM_ID   ,
+	       Extent1.COURS_ID   ,
+	       Extent2.MEM_TYPE,
+	       (CASE Extent2.MEM_TYPE 
+	       WHEN 1 THEN 'Health Planner'
+	       WHEN 2 THEN 'Cody'
+	       WHEN 3 THEN 'Coway Technician'
+	       WHEN 4 THEN 'Staff' END) AS MEM_TYPE_NAME,
+	       Extent1.COURS_MEM_ID  ,
+	       Extent2.MEM_CODE  ,
+	       Extent1.COURS_TEST_RESULT   ,
+	       Extent1.COURS_MEM_STUS_ID   ,
+	       Extent1.COURS_D_UPD_USER_ID   ,
+	       Extent1.COURS_D_UPD_DT   ,
+	       Extent1.COURS_MEM_SHIRT_SIZE   ,
+	       Extent1.COURS_ITM_MEM_IS_VEGE  ,
+	       Extent1.COURS_ITM_MEM_PUP   ,
+	       Extent1.COURS_D_MEM_NAME   ,
+	       Extent1.COURS_D_MEM_NRIC ,
+	       DECODE(Extent1.COURS_ATTEND_DAY, 0, 0, Extent1.COURS_ATTEND_DAY) COURS_ATTEND_DAY, 
+	       Extent3.CODE
+	  FROM MSC0009D Extent1
+	  LEFT JOIN ORG0001D Extent2
+	  ON Extent1.COURS_MEM_ID = Extent2.MEM_ID
+	  LEFT JOIN SYS0005M Extent3
+	  ON Extent2.BRNCH = Extent3.BRNCH_ID
+	 WHERE ( Extent1.COURS_ID = #{coursId} )
+	     AND Extent1.COURS_MEM_ID = #{coursMemId}
+         AND ( 1 = Extent1.COURS_MEM_STUS_ID )
+</select>
+
+<update id="registerCourseReq" parameterType="Map">
+        MERGE
+         INTO MSC0009D
+        USING DUAL
+           ON (COURS_ID = #{coursId} AND COURS_MEM_ID = #{memId})
+         WHEN MATCHED THEN
+              UPDATE
+                 SET COURS_MEM_STUS_ID = 1
+         WHEN NOT MATCHED THEN
+              INSERT
+                   ( COURS_ITM_ID
+                   , COURS_ID
+                   , COURS_MEM_ID
+                   , COURS_MEM_STUS_ID
+                   , COURS_D_UPD_USER_ID
+                   , COURS_D_UPD_DT
+                   , COURS_D_MEM_NAME
+                   , COURS_D_MEM_NRIC
+                   )
+              VALUES
+                   ( MSC0009D_COURS_ITM_ID_SEQ.NEXTVAL
+                   , #{coursId}
+                   , #{memId}
+                   , 1
+                   , #{userId}
+                   , SYSDATE
+                   , #{memName}
+                   , #{memNric}
+                   )
+    </update>
+    
+    <update id="cancelCourseReq" parameterType="Map">
+        UPDATE MSC0009D
+           SET COURS_MEM_STUS_ID = 8
+             , COURS_D_UPD_USER_ID = #{userId}
+             , COURS_D_UPD_DT = SYSDATE
+         WHERE COURS_ID = #{coursId}
+           AND COURS_MEM_ID = #{memId}
+    </update>
 
 </mapper>
