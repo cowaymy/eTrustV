@@ -1,5 +1,6 @@
 package com.coway.trust.biz.organization.training.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +10,9 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.training.TrainingService;
 import com.coway.trust.biz.sales.ccp.impl.CcpAgreementServieImpl;
 
@@ -276,5 +279,89 @@ public class TrainingServiceImpl implements TrainingService {
 		// TODO Auto-generated method stub
 		return trainingMapper.selectApplicantLog(params);
 	}
+	
+	@Override
+	public List<EgovMap> chkNewAttendList(Map<String, Object> params) {
+		List<Object> list = (List<Object>) params.get(AppConstants.AUIGRID_ALL);
+		Map<String, Object> formData =  (Map<String, Object>) params.get("form");
+		
+		EgovMap result = new EgovMap();
+		
+		String msg = null;
 
+		Map<String, Object> map = new HashMap();
+		
+		
+		
+		List checkList = new ArrayList();
+		
+		for (Object obj : list) 
+		{			
+			((Map<String, Object>) obj).put("userId", params.get("userId"));
+			
+			Logger.debug(" nric : {}", ((Map<String, Object>) obj).get("0"));
+			Logger.debug(" result : {}", (Map<String, Object>) params.get("form"));
+			Logger.debug(" coursId : {}", formData.get("coursId"));
+			params.put("nric", ((Map<String, Object>) obj).get("0"));
+			params.put("coursId", formData.get("coursId"));
+			
+			if(!StringUtils.isEmpty(params.get("nric"))){
+				((Map<String, Object>) obj).put("nric",  ((Map<String, Object>) obj).get("0"));
+				
+				int info = trainingMapper.courseNricDup(params);
+				String chkFlag = "N";
+				if(info < 1){
+					chkFlag = "N";
+				}else{
+					chkFlag = "Y";
+				}
+				((Map<String, Object>) obj).put("chkFlag", chkFlag);
+				((Map<String, Object>) obj).put("coursDMemNric", ((Map<String, Object>) obj).get("0"));
+//				((Map<String, Object>) obj).put("appTypeCode", info.get("appTypeCode"));
+//				((Map<String, Object>) obj).put("rentalStus", info.get("rentalStus"));
+//				Logger.debug("info ================>>  " + info.get("ordNo"));
+//				Logger.debug("info ================>>  " + info.get("ordStusCode"));
+//				Logger.debug("info ================>>  " + info.get("appTypeCode"));
+//				Logger.debug("info ================>>  " + info.get("rentalStus"));
+				checkList.add(obj);
+				continue;
+			}
+		}
+		return checkList;
+	}
+
+	@Override
+	public List<EgovMap> selectCourseRequestList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return trainingMapper.selectCourseRequestList(params);
+	}
+	
+	
+	@Override
+	public List<EgovMap> selectMyAttendeeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return trainingMapper.selectMyAttendeeList(params);
+	}
+	
+	
+	@Override
+	public EgovMap selectMemInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return trainingMapper.selectMemInfo(params);
+	}
+	
+	
+	@Override
+	public void registerCourseReq(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		trainingMapper.registerCourseReq(params);
+	}
+	
+	
+	@Override
+	public void cancelCourseReq(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		trainingMapper.cancelCourseReq(params);
+	}
+	
 }

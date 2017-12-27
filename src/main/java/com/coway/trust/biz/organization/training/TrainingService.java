@@ -40,5 +40,16 @@ public interface TrainingService {
 	int selectLoginUserMemId(int userId);
 	
 	List<EgovMap> selectApplicantLog(Map<String, Object> params);
+	
+	List<EgovMap> chkNewAttendList(Map<String, Object> params);
+	
+	List<EgovMap> selectCourseRequestList(Map<String, Object> params);
 
+	EgovMap selectMemInfo(Map<String, Object> params);
+	
+	List<EgovMap> selectMyAttendeeList(Map<String, Object> params);
+	
+	void registerCourseReq(Map<String, Object> params);
+	
+	void cancelCourseReq(Map<String, Object> params);
 }
