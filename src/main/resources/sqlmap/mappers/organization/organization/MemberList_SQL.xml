@@ -3420,8 +3420,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
     
          <select id="selectCoureCode" parameterType="Map" resultType="egovMap"> 
+
          <choose>
             <when test="groupCode == 2">
+            <![CDATA[
 			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
 			  FROM MSC0008D MS8,
 			       (SELECT   COURS_ID, COUNT (1) CNT
@@ -3436,8 +3438,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			   AND COURS_LIMIT > MS9.CNT
 			   AND COURS_START BETWEEN TO_CHAR (ADD_MONTHS (TO_CHAR(SYSDATE, 'YYYYMM')||'01', 1), 'YYYYMMDD')
 			                       AND TO_CHAR (ADD_MONTHS (SYSDATE, 2), 'YYYYMMDD')
+            ]]>			                       
             </when>
             <when test="groupCode == 3">
+            <![CDATA[
 			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
 			  FROM MSC0008D MS8,
 			       (SELECT   COURS_ID, COUNT (1) CNT
@@ -3453,8 +3457,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			   AND COURS_START  BETWEEN TO_CHAR (ADD_MONTHS (TO_CHAR(SYSDATE, 'YYYYMM')||'01', 1), 'YYYYMMDD')
 			                       AND TO_CHAR (ADD_MONTHS (SYSDATE, 2), 'YYYYMMDD')
 			   AND COURS_END    BETWEEN TO_CHAR (ADD_MONTHS (TO_CHAR(SYSDATE, 'YYYYMM')||'01', 1), 'YYYYMMDD')
-			                       AND TO_CHAR (ADD_MONTHS (SYSDATE, 2), 'YYYYMMDD')                
+			                       AND TO_CHAR (ADD_MONTHS (SYSDATE, 2), 'YYYYMMDD')
+            ]]>			                                       
             </when>
-         </choose>			                       
+         </choose>	
+         
          </select>             
 </mapper>

@@ -883,13 +883,16 @@ function fn_selectState(selVal){
 </tr>
 <tr id = "trTrainee" >
     <th scope="row">Trainee Type </th>
-    <td colspan="5">
+    <td colspan="2">
         <select class= "w100p" id="traineeType1" name="traineeType1">
         <option value="">Choose One</option>   
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
     </select>
     </td>
+    <th scope="row"></th>
+    <td colspan="2">
+    </td>    
 </tr>
 <tr>
     <th scope="row">Main Department</th>
