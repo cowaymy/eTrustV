@@ -68,16 +68,19 @@ public class CommissionReportController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/commissionCDReport.do")
-	public String commissionCDReport(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String commissionCDReport(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
 		String today = df.format(date);	
 		String dt = CommonUtils.getCalMonth(-1);
 		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
 		
 		model.addAttribute("memberType", CommissionConstants.COMIS_CD_GRCD);
 		model.addAttribute("today", today);
 		model.addAttribute("cmmDt", dt);
+		model.addAttribute("loginId",loginId);
+		
 		// 호출될 화면
 		return "commission/commissionCDReport";
 	}
@@ -91,16 +94,19 @@ public class CommissionReportController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/commissionHPReport.do")
-	public String commissionHPReport(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String commissionHPReport(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
 		String today = df.format(date);	
 		String dt = CommonUtils.getCalMonth(-1);
 		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
 		
 		model.addAttribute("memberType", CommissionConstants.COMIS_HP_GRCD);
 		model.addAttribute("today", today);
 		model.addAttribute("cmmDt", dt);
+		model.addAttribute("loginId",loginId);
+		
 		// 호출될 화면
 		return "commission/commissionHPReport";
 	}
@@ -114,16 +120,19 @@ public class CommissionReportController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/commissionCTReport.do")
-	public String commissionCTReport(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String commissionCTReport(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
 		String today = df.format(date);	
 		String dt = CommonUtils.getCalMonth(-1);
 		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
 		
 		model.addAttribute("memberType", CommissionConstants.COMIS_CT_GRCD);
 		model.addAttribute("today", today);
 		model.addAttribute("cmmDt", dt);
+		model.addAttribute("loginId",loginId);
+		
 		// 호출될 화면
 		return "commission/commissionCTReport";
 	}
@@ -147,18 +156,20 @@ public class CommissionReportController {
 	}
 	
 	@RequestMapping(value = "/commSHIIndexView.do")
-	public String commSHICollection(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String commSHICollection(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		String dt = CommonUtils.getCalMonth(0);
 		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
 		
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
 		String today = df.format(date);	
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
 		
 		List memType = commissionReportService.commissionGroupType(params);
 		model.addAttribute("memType", memType);
 		model.addAttribute("today", today);
 		model.addAttribute("searchDt", dt);
+		model.addAttribute("loginId",loginId);
 		// 호출될 화면
 		return "commission/commissionSHICollectionTarget";
 	}

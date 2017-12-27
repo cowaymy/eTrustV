@@ -105,12 +105,12 @@
 				</colgroup>
 				<tbody>					
 					<tr>
-						<th scope="row">Member Code</th>
+						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<td colspan="3"><input type="text" id="memCode" name="memCode" title="" class="readonly w100p" readonly="readonly" value="${loginId }" />
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">Statement Year</th>
+						<th scope="row"><spring:message code='commission.text.search.statementYear'/></th>
 						<td colspan="3">
 						  <select id="cmmYear" name="cmmYear" style="width:100px;">
                 <option value=""></option>
@@ -125,9 +125,11 @@
 			<!-- table end -->
 
 			<ul class="center_btns">
-				<li><p class="btn_blue2 big">
-						<a href="#" id="generate" id="generate">Generate</a>
-					</p></li>
+                <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+					<li><p class="btn_blue2 big">
+							<a href="#" id="generate" id="generate">Generate</a>
+						</p></li>
+                </c:if>
 				<li><p class="btn_blue2 big">
 						<a href="#" id="clear" name="clear">CLEAR</a>
 					</p></li>
