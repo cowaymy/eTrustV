@@ -341,8 +341,8 @@ var myDetailGridData = null;
               jsonObj.form = form;
               console.log(jsonObj);
               Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
-              Common.alert(result.message, fn_parentReload);
-
+            	  Common.alert(result.message, fn_parentReload);
+            	  
             });
         }
     

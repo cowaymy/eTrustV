@@ -1259,13 +1259,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		bsResultMas_Rev.put("ResultMatchID", String.valueOf(qryBS_Rev.get("resultId")));//RESULT_ID
     		bsResultMas_Rev.put("ResultIsAdjust", String.valueOf(1));
     		
-    		hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev);
+    		
+    	
     		
     		logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
     		List<EgovMap> qryResultDet =  hsManualMapper.selectQryResultDet(bsResultMas_Rev);
     		logger.debug("qryResultDet : {}" + qryResultDet);
     		logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
     		
+    		int checkInt =0 ;
     		
     		// bsResultDet
     		for(int i = 0 ; i<qryResultDet.size() ; i++){
@@ -1275,14 +1277,27 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
     			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
     			bsResultDet_Rev.put("BSResultPartDesc", CommonUtils.nvl(qryResultDet.get(i).get("bsResultPartDesc")));//BS_RESULT_PART_DESC
-    			bsResultDet_Rev.put("BSResultPartQty",  CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")));//BS_RESULT_PART_QTY
+    			if(String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != ""){
+    				bsResultDet_Rev.put("BSResultPartQty",  CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty"))*-1);//BS_RESULT_PART_QTY
+    				logger.debug("jinmu {}" + String.valueOf(qryBS_Rev.get("resultId")));
+    			}
+    			else{
+    				bsResultDet_Rev.put("BSResultPartQty",  CommonUtils.intNvl(qryResultDet.get(i).get("bsResultPartQty")));
+    				logger.debug("jinmu111 {}" + String.valueOf(qryBS_Rev.get("resultId")));
+    			}
     			bsResultDet_Rev.put("BSResultRemark",   CommonUtils.nvl(qryResultDet.get(i).get("bsResultRem")));//BS_RESULT_REM
     			bsResultDet_Rev.put("BSResultCreateAt","sysdate");//BS_RESULT_REM
     			bsResultDet_Rev.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()));
     			bsResultDet_Rev.put("BSResultFilterClaim",CommonUtils.intNvl( qryResultDet.get(i).get("bsResultFilterClm")));//BS_RESULT_FILTER_CLM
     			
-    			hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	
-    			
+    			if(CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")) > 0){
+    				hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	//insert svc 0007d c
+    				checkInt ++;
+    			}
+    		}
+    		
+    		if(checkInt > 0){
+    			hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev); //svc 0006d B insert
     		}
     		
     		EgovMap qry_stkReqM = null;
@@ -1392,7 +1407,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		qry_CurBS.put("SalesOrderId", String.valueOf(bsResultMas.get("SalesOrderId")));
     		qry_CurBS.put("userId", sessionVO.getUserId());
     		
-    		hsManualMapper.updateQry_CurBS(qry_CurBS);
+    		hsManualMapper.updateQry_CurBS(qry_CurBS); // 업데이트 svc0006d
+    
+    		
+    	    EgovMap getResultId =	hsManualMapper.selectResultId(qry_CurBS);
+    		
+    		//물류 프로시져 호출
+    	    Map<String, Object>  logPram = null ;
+    	      logPram =new HashMap<String, Object>();
+    	         logPram.put("ORD_ID", getResultId.get("resultId").toString());   
+    	         logPram.put("RETYPE", "RETYPE");  
+    	         logPram.put("P_TYPE", "OD06");  
+    	         logPram.put("P_PRGNM", "HSCEN");  
+    	         logPram.put("USERID", String.valueOf(sessionVO.getUserId()));   
+    	         
+
+    	         Map   SRMap=new HashMap(); 
+    	    logger.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
+    	   servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
+    	    logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
     		
     		String ResultNo_New  = null;
     		BS_RESULT=11;
@@ -1414,19 +1447,47 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		bsResultMas.put("ResultId", BSResultM_resultID2);
     		bsResultMas.put("CodyId", String.valueOf(bsResultMas_Rev.get("codyId")));
     		
-    		hsManualMapper.addbsResultMas(bsResultMas);
+    	
     		
+    		//확인용
+    		int cnt = 0;
     		for(int i = 0; i < bsResultDet.size(); i++) {
     			Map<String, Object> row = bsResultDet.get(i);
     			
     			row.put("BSResultID", BSResultM_resultID2);
-    			hsManualMapper.addbsResultDet_Rev(row);
+    			
+    			if(row.get("BSResultPartQty") != null && !row.get("BSResultPartQty").toString().equals("0")){
+    				hsManualMapper.addbsResultDet_Rev(row); //인서트 svc 0007d
+    				cnt++;
+    			}
+    		}
+    		//0인건 업데이트 하지말기 
+    		if(cnt != 0){
+    			hsManualMapper.addbsResultMas(bsResultMas); // insert 1건 svc0006d
     		}
     		
-    		hsManualMapper.updateQrySchedule(bsResultMas);
+    		hsManualMapper.updateQry_CurBSZero(qry_CurBS);// 최신거 업데이트
+    		
+    		hsManualMapper.updateQrySchedule(bsResultMas);// 업데이트 00008d
     		
     		Map<String, Object> qrySchedule = new HashMap<String, Object>();
     		qrySchedule = hsManualMapper.selectQrySchedule(bsResultMas);
+    		//////////////////////물류호출/////////////////////
+    		Map<String, Object> logPram2 =new HashMap<String, Object>();
+            logPram2.put("ORD_ID",  qrySchedule.get("no"));
+            logPram2.put("RETYPE", "COMPLET");
+            logPram2.put("P_TYPE", "OD05");
+            logPram2.put("P_PRGNM", "HSCOM");
+            logPram2.put("USERID", sessionVO.getUserId());
+
+            logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram2.toString());
+            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram2);
+            logger.debug("HSCOMCALL 물류 호출 결과 ===> {}" , logPram2);
+    	
+    		
+    		
+    		
+    		
     		
     		hsManualMapper.updateQryConfig(bsResultMas);
     		Map<String, Object> qryConfig = new HashMap<String, Object>();

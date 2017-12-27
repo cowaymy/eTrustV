@@ -214,6 +214,10 @@ public interface HsManualMapper {
 	void addBsResultDet_NoFilter(Map<String, Object> params);
 	//add by hgham  mobile 중복 처리 
 	int isHsAlreadyResult (Map<String, Object> params);
+
+	void updateQry_CurBSZero(Map<String, Object> qry_CurBS);
+
+	EgovMap selectResultId(Map<String, Object> qry_CurBS);
 		
 
 }

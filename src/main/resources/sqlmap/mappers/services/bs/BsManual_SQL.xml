@@ -2869,7 +2869,7 @@
             ,#{BSResultID}
             ,#{BSResultPartID}
             ,nvl(#{BSResultPartDesc},'')
-            ,nvl(#{BSResultPartQty},'0')
+            ,#{BSResultPartQty}
             ,nvl(#{BSResultRemark},'')
             ,sysdate
             ,#{BSResultCreateBy}
@@ -3042,6 +3042,30 @@
         and RESULT_IS_CURR = 0
         and SALES_ORD_ID = #{SalesOrderId}
           </update>
+          
+                
+          <update id="updateQry_CurBSZero" parameterType="Map">
+          update SVC0006D
+           set RESULT_IS_CURR = 0
+              ,RESULT_UPD_DT = sysdate
+              ,RESULT_UPD_USER_ID = #{userId}
+	        where schdul_id = #{ScheduleID}
+	        and RESULT_IS_CURR = 1
+	        and  result_id not in(
+									     select max(result_id)
+									     from SVC0006D
+									     where SCHDUL_ID  = #{ScheduleID}
+                                   )
+          </update>
+          
+          <select id="selectResultId" parameterType="Map"  resultType="egovMap">
+             select max(result_id) result_id
+             from SVC0006D
+             where SCHDUL_ID  = #{ScheduleID}
+             and  RESULT_IS_CURR = 1
+          
+          
+          </select> 
           
           <update id="updateQry_New" parameterType="Map">
           update SYS0022C

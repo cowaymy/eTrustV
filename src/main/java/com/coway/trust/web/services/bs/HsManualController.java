@@ -362,6 +362,7 @@ public class HsManualController {
 
 
 		model.addAttribute("basicinfo", basicinfo);
+		logger.debug("basicinfo : {}", basicinfo);  
 		model.addAttribute("orderDetail", orderDetail);
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 		model.addAttribute("failReasonList", failReasonList);
