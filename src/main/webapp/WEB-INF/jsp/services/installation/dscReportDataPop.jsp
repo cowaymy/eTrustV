@@ -117,6 +117,9 @@ function fn_openReport(){
              Common.report("reportFormDSC");
             }
         }
+		else{
+            Common.alert("Please only Print Excel");
+        }
 	}
 }
 
@@ -162,6 +165,8 @@ function fn_openExcel(){
              $("#reportFormDSC #reportDownFileName").val("DSCReportD5ByStock_" +day+monthDay+date.getFullYear());
              
              Common.report("reportFormDSC");
+        }else{
+        	Common.alert("Please only Print PDF ");
         }
     }
 }
