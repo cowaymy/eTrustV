@@ -239,8 +239,7 @@
                                         )
                   ELSE
                     (CASE WHEN LENGTH(Extent3.SALES_ORD_NO) = 7 AND SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
-                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,1,LENGTH(Extent3.SALES_ORD_NO)))
-                    
+                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))                    
                     ELSE
                         TRIM(Extent3.SALES_ORD_NO)
                     END)
@@ -324,8 +323,7 @@
                                         )
                   ELSE
                     (CASE WHEN LENGTH(Extent3.SALES_ORD_NO) = 7 AND SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
-                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,1,LENGTH(Extent3.SALES_ORD_NO)))
-                    
+                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))                    
                     ELSE
                         TRIM(Extent3.SALES_ORD_NO)
                     END)
