@@ -225,7 +225,9 @@ function fn_save(){
 	                    <th scope="row">Membership Quotation</th>
 	                    <td>
 	                        <input type="text"  id="quoNo" name="quoNo"  title="" placeholder="" class="readonly" readonly="readonly" />
+	                        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	                        <p class="btn_sky"><a href="javascript:fn_search();"><spring:message code='sys.btn.search'/></a></p>
+	                        </c:if>
 	                    </td>
 	                </tr>
 	            </tbody>
