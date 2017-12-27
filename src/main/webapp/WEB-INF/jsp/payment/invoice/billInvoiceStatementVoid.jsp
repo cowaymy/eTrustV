@@ -162,7 +162,9 @@ var detailListLayout = [
 		        </aside><!-- title_line end -->
 		        
 		        <ul class="right_btns mb10">
+                    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                     <li><p class="btn_blue"><a href="javascript:searchList();" id="btnSearch"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+                    </c:if>
                     <li><p class="btn_blue"><a href="javascript:fn_reSelect();" id="btnReSelect" style="display: none"><span class="search"></span><spring:message code='pay.btn.reselect'/></a></p></li>
                 </ul>
 		        
@@ -253,7 +255,9 @@ var detailListLayout = [
 						</table><!-- table end -->
 				      </section><!-- search_table end -->
 					  <ul class="center_btns">
+					    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 					    <li><p class="btn_blue2"><a href="#" id="btnSave"><spring:message code='sys.btn.save'/></a></p></li>
+					    </c:if>
 					  </ul>
 			       </div>
 			    </section><!-- content end -->
