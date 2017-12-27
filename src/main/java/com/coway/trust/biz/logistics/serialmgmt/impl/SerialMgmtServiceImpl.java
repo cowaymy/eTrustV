@@ -86,9 +86,11 @@ public class SerialMgmtServiceImpl implements SerialMgmtService
 	public void insertScanItems(Map<String, Object> params) {
 
 		List<Object> serialList = (List<Object>) params.get("scanItems");
+		int scanType = Integer.parseInt(params.get("scantype").toString());
 		String seq;
 
-		if (params.get("scantype") == "30")
+
+		if (scanType == 30)
 		{
     	    seq = serialMgmtMapper.selectScanNoSeq();
 
