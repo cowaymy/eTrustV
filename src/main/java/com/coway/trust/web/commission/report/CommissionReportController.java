@@ -785,7 +785,39 @@ public class CommissionReportController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/commissionMemberIncomeStatement.do")
+	@RequestMapping(value = "/commissionHPIncomeStatement.do")
+	public String commissionHPIncomeStatement(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
+		Date date = new Date();
+		String loginId = String.valueOf(sessionVO.getUserName());	//member code
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
+		String today = df.format(date);	
+	
+		List<EgovMap> yearList = new ArrayList <EgovMap> ();
+		int year = Integer.parseInt(today.substring(4));
+		int startYear = year-5 > CommissionConstants.COMIS_INCO_YEAR ?year-5:CommissionConstants.COMIS_INCO_YEAR ;
+		
+		for(int i=startYear ;i<year;i++){	//Start From 2016 Year
+			EgovMap em = new EgovMap();
+			em.put("cmmYear" ,String.valueOf(i));
+			yearList.add(em);
+		}
+		
+		model.addAttribute("yearList", yearList);
+		model.addAttribute("today", today);		
+		model.addAttribute("loginId", loginId);		
+		// 호출될 화면
+		return "commission/commissionHPIncomeStatement";
+	}
+	
+	/**
+	 * Call Income Statement commission report 
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/commissionCDIncomeStatement.do")
 	public String commissionMemberIncomeStatement(@RequestParam Map<String, Object> params, ModelMap model , SessionVO sessionVO) {
 		Date date = new Date();
 		String loginId = String.valueOf(sessionVO.getUserName());	//member code
@@ -806,7 +838,7 @@ public class CommissionReportController {
 		model.addAttribute("today", today);		
 		model.addAttribute("loginId", loginId);		
 		// 호출될 화면
-		return "commission/commissionMemberIncomeStatement";
+		return "commission/commissionCDIncomeStatement";
 	}
 	
 }
