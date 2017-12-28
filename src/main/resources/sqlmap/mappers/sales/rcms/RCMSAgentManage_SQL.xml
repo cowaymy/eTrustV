@@ -123,7 +123,10 @@
 	    JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID 
 	                             AND B.CODE_MASTER_ID = 329  
 	                             AND DISAB = 0
-     WHERE A.STUS_ID = 1	                             
+     WHERE A.STUS_ID = 1	    
+     <if test="userName != null and userName != '' "> 
+          AND A.USER_ID= #{userName}                   
+      </if>     
 </select>
 
 <select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">
@@ -285,5 +288,140 @@
                                       AND B.APP_TYPE_ID = 66
          WHERE B.SALES_ORD_NO =  #{orderNo}    
      </select>
+     
+     <select id="selectAssignedList" parameterType="Map" resultType="egovMap">
+		   SELECT C.SALES_ORD_ID
+			        ,C.SALES_ORD_NO
+			        ,C.CUST_BILL_ID
+			        ,TO_CHAR(C.SALES_DT, 'dd/mm/yyyy') SALES_DT
+			        ,C.APP_TYPE_ID
+			        ,G.CODE
+			        ,A.OPEN_RENTAL_STUS
+			        ,E.ITM_STK_ID
+			        ,F.STK_DESC
+			        ,A.CUST_ID
+			        ,B.NAME 
+			        ,B.NRIC
+			        ,MAX(A.COLCT_TRGET)    COLCT_TRGET 
+                 <choose>
+                  <when test="appType == 66">                   
+                     ,MAX((SELECT SUM(RENT_AMT) AS CURRENT_OS
+                    FROM PAY0022D
+                    WHERE RENT_SO_ID = C.SALES_ORD_ID
+                    GROUP BY RENT_SO_ID)) RENT_AMT
+                  </when>
+                  <otherwise>  
+                      ,MAX((SELECT SUM(TRADE_AMT) AS CURRENT_OS
+                    FROM PAY0035D
+                    WHERE RENT_SO_ID = C.SALES_ORD_ID
+                    GROUP BY RENT_SO_ID)) RENT_AMT
+                  </otherwise>
+                 </choose>                      
+                 ,A.OPEN_MTH_AGING
+			     ,CASE WHEN A.SENSITIVE_FG = 0 THEN 'N' ELSE 'Y' END SENSITIVE_FG                
+			FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
+			            JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+			            JOIN MSC0013D D ON  A.SALES_ORD_ID = D.SALES_ORD_ID
+			            JOIN sal0002d E ON A.SALES_ORD_ID = E.SALES_ORD_ID
+			            JOIN SYS0026M F ON E.ITM_STK_ID = F.STK_ID
+			            JOIN SYS0013M G ON C.APP_TYPE_ID = G.CODE_ID
+			        WHERE A.AGENT_ID = #{rosCaller}
+			            AND TO_CHAR(A.COLLECT_DT, 'yyyymm') = TO_CHAR(SYSDATE, 'yyyymm')
+        
+        <choose>
+            <when test="orderNo != null and orderNo !=''">   
+                AND C.SALES_ORD_NO = #{orderNo}
+                <if test="customerId != null and customerId !='' ">
+                    AND A.CUST_ID = #{customerId}
+                </if>
+            </when>
+            <when test="customerId != null and customerId !='' "> 
+                AND A.CUST_ID = #{customerId}
+            </when>
+            <otherwise>
+                  <if test="appType != null and appType !='' ">
+                    AND C.APP_TYPE_ID = #{appType} 
+                  </if>
+                  <if test="orderStatus != null and orderStatus !='' ">
+                    AND C.STUS_CODE_ID = #{orderStatus} 
+                  </if>
+                  
+                  <if test="rentalStatus != null and rentalStatus != ''">
+                      AND A.OPEN_RENTAL_STUS IN
+                    <foreach item="item" collection="rentalStatus" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>
+                  </if>
+                    
+                  <if test="customerType != null and customerType !='' ">
+                    AND B.TYPE_ID = #{customerType} 
+                  </if>
+                         
+                  <if test='customerType== "965" '>      
+                      <if test="companyType != null and companyType != ''">
+                          AND B.CORP_TYPE_ID IN
+                        <foreach item="item" collection="companyType" index="index" open="(" separator="," close=")">
+                          #{item}
+                        </foreach>
+                      </if>
+                    </if>
+                 <if test="openMonth != null and openMonth != ''">
+                      AND ( A.OPEN_MTH_AGING IN
+                    <foreach item="item" collection="openMonth" index="index" open="(" separator="," close=")">
+                      #{item}
+                    </foreach>             
+                      <if test="month != null and month !='' ">
+                      OR A.OPEN_MTH_AGING <![CDATA[>=]]> #{month}
+                      </if>
+                      )
+                  </if>                 
+                  <if test="rosStatus != null and rosStatus != ''">
+                    AND D.ROS_STUS = #{rosStatus}
+                   </if>
+                   
+                   <if test="reCallDtYmd != null and reCallDtYmd != '' ">
+                   AND TO_CHAR(D.ROS_CALL_RECALL_DT, 'yyyymmdd') = TO_CHAR( TO_DATE(#{reCallDtYmd}, 'dd/mm/yyyy'), 'yyyymmdd')
+                   </if> 
+                   <if test="stReCallTime != null and stReCallTime != '' ">
+                   AND TO_CHAR(D.ROS_CALL_RECALL_DT , 'HH24MISS') <![CDATA[>=]]> TO_CHAR( TO_DATE(#{stReCallTime}, 'HH24:MI:SS'),  'HH24MISS')
+                   </if> 
+                   <if test="edReCallTime != null and edReCallTime != '' ">
+                   AND TO_CHAR(D.ROS_CALL_CRT_DT ,  'HH24MISS') <![CDATA[<=]]> TO_CHAR( TO_DATE(#{edReCallTime}, 'HH24:MI:SS'),  'HH24MISS')
+                    </if> 
+                   <if test="stPtpDate != null and stPtpDate != '' ">
+                   AND TO_CHAR(D.PTP_DT, 'yyyymmdd') <![CDATA[>=]]> TO_CHAR( TO_DATE(#{stPtpDate}, 'dd/mm/yyyy'), 'yyyymmdd')            
+                    </if> 
+                   <if test="edPptpDate != null and edPptpDate != '' ">
+                   AND TO_CHAR(D.PTP_DT, 'yyyymmdd') <![CDATA[<=]]> TO_CHAR( TO_DATE(#{edPptpDate}, 'dd/mm/yyyy'), 'yyyymmdd')
+                    </if> 
+                                     
+                </otherwise>
+                </choose>
+	            GROUP BY  C.SALES_ORD_ID
+					        ,C.SALES_ORD_NO
+					        ,C.CUST_BILL_ID
+					        ,SALES_DT
+					        ,C.APP_TYPE_ID
+					        ,G.CODE
+					        ,A.OPEN_RENTAL_STUS
+					        ,E.ITM_STK_ID
+					        ,F.STK_DESC
+					        ,A.CUST_ID
+					        ,B.NAME 
+					        ,B.NRIC
+					        ,A.COLCT_TRGET
+					        ,A.OPEN_MTH_AGING 
+					        ,A.SENSITIVE_FG
+				ORDER BY SALES_ORD_NO        
+    </select>
+     
+    <select id="selectRosCallDetailList" parameterType="map" resultType="egovMap">
+     SELECT ROS_YEAR || '/' || ROS_MONTH ROS_DT
+	          ,  , CASE WHEN ROS_CALLER_USER_ID = 0 THEN null ELSE ROS_CALLER_USER_ID END ROS_CALLER_USER_ID
+	  FROM MSC0013D
+	 WHERE SALES_ORD_ID = #{salesOrdId}
+	     
+     </select>
+     
 	 
 </mapper>

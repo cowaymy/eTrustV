@@ -26,7 +26,7 @@ function fn_selectAjax() {
 	     
 	     if(result.data.sensitiveFg == "1"){
              $("#sensitiveFg").val(result.data.sensitiveFg);
-             $("#sensitiveFg").attr("checked","checked");
+             $("#chkSensitiveFg").attr("checked","checked");
          }
 
 	});
@@ -34,7 +34,7 @@ function fn_selectAjax() {
 
 
 function fn_chk(){
-	if($("input:checkbox[id='sensitiveFg']").is(":checked")){
+	if($("input:checkbox[id='chkSensitiveFg']").is(":checked")){
 		$("#sensitiveFg").val("1");
 	}else{
         $("#sensitiveFg").val("0");
@@ -80,6 +80,7 @@ function fn_save(){
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="saveForm" name="saveForm">
     <input type="hidden" id="popOrdId" name="salesOrdId" />
+    <input type="hidden" id="sensitiveFg" name="sensitiveFg" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -94,7 +95,7 @@ function fn_save(){
 	<th scope="row">Order No.</span></th>
 	<td><input type="text" title="" class="readonly" readonly="readonly" style="width: 100%" id="popOrderNo"  name="popOrderNo"/></td>
 	<th scope="row">Sensitive<span class="must"></span></th>
-	<td><input type="checkbox"  id="sensitiveFg"  name="sensitiveFg" onclick="fn_chk()"/></td>
+	<td><input type="checkbox"  id="chkSensitiveFg"  name="chkSensitiveFg" onclick="fn_chk()"/></td>
 </tr>
 <tr>
     <th scope="row">Remark </th>

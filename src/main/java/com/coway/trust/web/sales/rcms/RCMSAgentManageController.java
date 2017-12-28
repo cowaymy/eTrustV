@@ -66,6 +66,11 @@ public class RCMSAgentManageController {
 		
 		return "sales/rcms/updateRemarkPop";
 	}
+	@RequestMapping(value = "/rcmsAssignedList.do")
+	public String rcmsAssignedList (@RequestParam Map<String, Object> params) throws Exception{
+		
+		return "sales/rcms/rcmsAssignedList";
+	}
 	
 	@RequestMapping(value = "/selectAgentTypeList")
 	public ResponseEntity<List<EgovMap>> selectAgentTypeList (@RequestParam Map<String, Object> params) throws Exception{
@@ -263,5 +268,48 @@ public class RCMSAgentManageController {
 		
 	}
 	
+	@RequestMapping(value = "/selectAssignedList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectAssignedList (@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception{
+		
+		LOGGER.debug("param ===================>>  " + params);
+		
+		String rentalStatus[] = request.getParameterValues("rentalStatus");
+		String companyType[] = request.getParameterValues("companyType");
+		String openMonth[] = request.getParameterValues("openMonth");
+		
+		for (String str : openMonth){
+			
+			if("7".equals(str)){
+				
+				params.put("month", "8");
+			}
+			
+		}
+		
+		params.put("rentalStatus", rentalStatus);
+		params.put("companyType", companyType);
+		params.put("openMonth", openMonth);
+		
+		
+		List<EgovMap> assignAgentList = null;
+		
+		assignAgentList = rcmsAgentService.selectAssignedList(params);
+		
+		return ResponseEntity.ok(assignAgentList);
+		
+	}
+	
+	@RequestMapping(value = "/selectRosCallDetailList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectRosCallDetailList (@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model) throws Exception{
+		
+		LOGGER.debug("param ===================>>  " + params);
+				
+		List<EgovMap> rosCallDetailList = rcmsAgentService.selectRosCallDetailList(params);
+		
+		return ResponseEntity.ok(rosCallDetailList);
+		
+	}
 	
 }

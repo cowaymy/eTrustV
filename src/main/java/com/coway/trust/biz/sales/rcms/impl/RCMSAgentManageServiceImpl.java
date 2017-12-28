@@ -267,15 +267,22 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 
 	@Override
 	public void updateRemark(Map<String, Object> params) {
-
-		EgovMap updateMap = new EgovMap();		
-		
 		rcmsAgentManageMapper.updateRemark(params);
 	}
 
 	@Override
 	public EgovMap selectRcmsInfo(Map<String, Object> params) {
 		return rcmsAgentManageMapper.selectRcmsInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAssignedList(Map<String, Object> params) {
+		return rcmsAgentManageMapper.selectAssignedList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectRosCallDetailList(Map<String, Object> params) {
+		return rcmsAgentManageMapper.selectRosCallDetailList(params);
 	}
 	
 }

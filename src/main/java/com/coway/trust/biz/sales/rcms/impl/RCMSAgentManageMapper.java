@@ -38,5 +38,9 @@ public interface RCMSAgentManageMapper {
 	EgovMap selectRcmsInfo(Map<String, Object> params);
 
 	void updateRemark(Map<String, Object> params);
+
+	List<EgovMap> selectAssignedList(Map<String, Object> params);
+
+	List<EgovMap> selectRosCallDetailList(Map<String, Object> params);
 	
 }
