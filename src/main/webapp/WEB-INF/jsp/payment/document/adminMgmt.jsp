@@ -88,12 +88,12 @@ var watingColumnLayout = [
 	},
     {
         dataField : "payDate",
-        headerText : "Pay Date",
+        headerText : "<spring:message code='pay.head.payDate'/>",
         editable : false
     }, 
     {
         dataField : "isOnline",
-        headerText : "Is Online",
+        headerText : "<spring:message code='pay.head.isOnline'/>",
         editable : true,
         visible:true,
         renderer : 
@@ -109,51 +109,51 @@ var watingColumnLayout = [
         }
     }, {
         dataField : "oriCcNo",
-        headerText : "Crc No",
+        headerText : "<spring:message code='pay.head.crcNo'/>",
         editable : false
     }, {
         dataField : "amount",
-        headerText : "Amount",
+        headerText : "<spring:message code='pay.head.amount'/>",
         editable : false
     }, {
         dataField : "updDt",
-        headerText : "MID",
+        headerText : "<spring:message code='pay.head.mid'/>",
         editable : false
     }, {
         dataField : "crcType",
-        headerText : "Crc Type",
+        headerText : "<spring:message code='pay.head.crcType'/>",
         editable : false
     }, {
         dataField : "ccHolderName",
-        headerText : "Crc Holder",
+        headerText : "<spring:message code='pay.head.crcHolder'/>",
         editable : false
     }, {
         dataField : "ccExpr",
-        headerText : "Crc Expiry",
+        headerText : "<spring:message code='pay.head.crcExpiry'/>",
         editable : false
     }, {
         dataField : "appvNo",
-        headerText : "Appv No",
+        headerText : "<spring:message code='pay.head.appvNo'/>",
         editable : false
     },{
         dataField : "bank",
-        headerText : "Bank",
+        headerText : "<spring:message code='pay.head.bank'/>",
         editable : false
     },{
         dataField : "accCode",
-        headerText : "Settlement Acc",
+        headerText : "<spring:message code='pay.head.settlementAcc'/>",
         editable : false
     },{
         dataField : "refDate",
-        headerText : "Ref Date",
+        headerText : "<spring:message code='pay.head.refDate'/>",
         editable : false
     },{
         dataField : "Ref No",
-        headerText : "refNo",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : false
     },{
         dataField : "trxId",
-        headerText : "trxId",
+        headerText : "<spring:message code='pay.head.trxId'/>",
         editable : false,
         visible : false
     }];
@@ -198,7 +198,7 @@ var reviewColumnLayout = [
 	},
     {
         dataField : "name",
-        headerText : "Status",
+        headerText : "<spring:message code='pay.head.status'/>",
         editable : false
     },
     {
@@ -216,11 +216,11 @@ var reviewColumnLayout = [
     }, 
     {
         dataField : "payDt",
-        headerText : "Pay Date",
+        headerText : "<spring:message code='pay.head.payDate'/>",
         editable : false
     }, {
     	dataField : "isOnline",
-        headerText : "Is Online",
+        headerText : "<spring:message code='pay.head.isOnline'/>",
         editable : true,
         visible:true,
         renderer : 
@@ -236,47 +236,47 @@ var reviewColumnLayout = [
         }
     }, {
         dataField : "oriCcNo",
-        headerText : "Crc No",
+        headerText : "<spring:message code='pay.head.crcNo'/>",
         editable : false
     }, {
         dataField : "amt",
-        headerText : "Amount",
+        headerText : "<spring:message code='pay.head.amount'/>",
         editable : false
     }, {
         dataField : "mid",
-        headerText : "MID",
+        headerText : "<spring:message code='pay.head.mid'/>",
         editable : false
     },{
         dataField : "c5",
-        headerText : "Crc Type",
+        headerText : "<spring:message code='pay.head.crcType'/>",
         editable : false
     }, {
         dataField : "ccHolderName",
-        headerText : "Crc Holder",
+        headerText : "<spring:message code='pay.head.crcHolder'/>",
         editable : false
     }, {
         dataField : "ccExpr",
-        headerText : "Crc Expiry",
+        headerText : "<spring:message code='pay.head.crcExpiry'/>",
         editable : false
     }, {
         dataField : "appvNo",
-        headerText : "Appv No",
+        headerText : "<spring:message code='pay.head.appvNo'/>",
         editable : false
     }, {
         dataField : "c2",
-        headerText : "Bank",
+        headerText : "<spring:message code='pay.head.bank'/>",
         editable : false
     }, {
         dataField : "c1",
-        headerText : "Settlement Acc",
+        headerText : "<spring:message code='pay.head.settlementAcc'/>",
         editable : false
     }, {
         dataField : "crtDt",
-        headerText : "Ref Date",
+        headerText : "<spring:message code='pay.head.refDate'/>",
         editable : false
     }, {
         dataField : "",
-        headerText : "Ref No",
+        headerText : "<spring:message code='pay.head.refNo'/>",
         editable : false
     }];
 
@@ -284,19 +284,19 @@ var reviewColumnLayout = [
 var watingPopColumnLayout = [ 
     {
         dataField : "codeName",
-        headerText : "Type",
+        headerText : "<spring:message code='pay.head.type'/>",
         editable : false
     }, {
         dataField : "orNo",
-        headerText : "Receipt No",
+        headerText : "<spring:message code='pay.head.receiptNo'/>",
         editable : false
     }, {
         dataField : "c3",
-        headerText : "Order No / Member Code",
+        headerText : "<spring:message code='pay.head.orderNoMemberCode'/>",
         editable : false
     }, {
         dataField : "c4",
-        headerText : "Amount",
+        headerText : "<spring:message code='pay.head.amount'/>",
         dataType: "numeric",
         formatString : "#,##0.00",
         editable : false
@@ -429,7 +429,7 @@ var watingPopColumnLayout = [
     		$("#totalSelectedWating").text(selectedItems.length);
     		$("#totalAmountWating").text(totalAmount);
     	}else{
-    		Common.alert('No item selected.');
+    		Common.alert("<spring:message code='pay.alert.noItem'/>");
     	}
     }
     
@@ -460,7 +460,7 @@ var watingPopColumnLayout = [
             
             $("#totalSelectedReview").text(selectedItems.length);
         }else{
-            Common.alert('No item selected.');
+            Common.alert("<spring:message code='pay.alert.noItem'/>");
         }
     }
     
@@ -569,12 +569,9 @@ var watingPopColumnLayout = [
 <section id="content"><!-- content start -->
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	    <li>Payment</li>
-	    <li>Document Control</li>
-	    <li>Admin Management</li>
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 		<h2>Admin Management</h2>
 	</aside><!-- title_line end -->
 	
@@ -583,8 +580,8 @@ var watingPopColumnLayout = [
 		    <dt class="click_add_on on"><a href="#" id="watingList">>> Waiting List Management</a></dt>
 		    <dd>
 		    <ul class="right_btns">
-		        <li><p class="btn_blue"><a href="javascript:fn_watingLoadInfo();"><span class="search"></span>Search</a></p></li>
-		        <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+		        <li><p class="btn_blue"><a href="javascript:fn_watingLoadInfo();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+		        <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		    </ul>
 		    <form name="waitingForm" id="waitingForm"  method="post">
 			    <table class="type1 mt10"><!-- table start -->
@@ -685,8 +682,8 @@ var watingPopColumnLayout = [
 		    <dt class="click_add_on"><a href="#">>> Review List Management</a></dt>
 		    <dd>
 		    <ul class="right_btns">
-		        <li><p class="btn_blue"><a href="javascript:fn_reviewLoadInfo();"><span class="search"></span>Search</a></p></li>
-		        <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+		        <li><p class="btn_blue"><a href="javascript:fn_reviewLoadInfo();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+		        <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
 		    </ul>
 		    <form name="reviewForm" id="reviewForm"  method="post">
 			    <table class="type1 mt10"><!-- table start -->
@@ -882,7 +879,7 @@ var watingPopColumnLayout = [
             <header class="pop_header"><!-- pop_header start -->
                 <h1>Wating List - Send</h1>
                 <ul class="right_opt">
-                    <li><p class="btn_blue2"><a href="#" onclick="fn_waitingSendPopClose('#sendWatingPop_wrap');">CLOSE</a></p></li>
+                    <li><p class="btn_blue2"><a href="#" onclick="fn_waitingSendPopClose('#sendWatingPop_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
                 </ul>
             </header><!-- pop_header end -->
             <section class="pop_body"><!-- pop_body start -->
@@ -912,7 +909,7 @@ var watingPopColumnLayout = [
                     </tbody>
                 </table><!-- table end -->
                 <ul class="center_btns">
-                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmSendWating();" id="btnConfirmSend">Confirm Send</a></p></li>
+                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmSendWating();" id="btnConfirmSend"><spring:message code='pay.btn.confirmSend'/></a></p></li>
                 </ul>
             </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
@@ -920,7 +917,7 @@ var watingPopColumnLayout = [
             <header class="pop_header"><!-- pop_header start -->
                 <h1>Review List - Resend</h1>
                 <ul class="right_opt">
-                    <li><p class="btn_blue2"><a href="#" onclick="fn_reviewSendPopClose('#sendReviewPop_wrap');">CLOSE</a></p></li>
+                    <li><p class="btn_blue2"><a href="#" onclick="fn_reviewSendPopClose('#sendReviewPop_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
                 </ul>
             </header><!-- pop_header end -->
             <section class="pop_body"><!-- pop_body start -->
@@ -947,7 +944,7 @@ var watingPopColumnLayout = [
                     </tbody>
                 </table><!-- table end -->
                 <ul class="center_btns">
-                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmResendReview();" id="btnConfirmResend">Confirm Send</a></p></li>
+                    <li><p class="btn_blue2 big"><a href="javascript:fn_confirmResendReview();" id="btnConfirmResend"><spring:message code='pay.btn.confirmSend'/></a></p></li>
                 </ul>
             </section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
@@ -955,7 +952,7 @@ var watingPopColumnLayout = [
     <header class="pop_header">
         <h1>Payment Document Management Batch View</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#batch_view_popup_wrap');">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="fn_hideViewPop('#batch_view_popup_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_body start -->

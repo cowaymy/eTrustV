@@ -61,10 +61,6 @@
         {dataField : "crcTotGstAmt",headerText : "<spring:message code='pay.head.totalGst'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "crcTotNetAmt",headerText : "<spring:message code='pay.head.totalNet'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
         ];    
-
-
-   
-    
     
     $(document).ready(function(){
         
@@ -186,14 +182,11 @@
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Credit Card Payment</li>
-        <li>Confirm Bank Charge & GST</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Confirm Bank Charge & GST</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">

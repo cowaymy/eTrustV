@@ -284,7 +284,7 @@ function fn_save(){
 		$("#savePop").show();
 		$("#totalSelectedItem").text(selectedItems.length);
 	}else{
-		Common.alert("No item selected.");
+		Common.alert("<spring:message code='pay.alert.noItem'/>");
 	}
 }
 
@@ -304,12 +304,10 @@ function fn_confirmSave(){
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Payment</li>
-    <li>Document Control</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 <h2>Finance Management</h2>
 </aside><!-- title_line end -->
 <ul class="right_btns">

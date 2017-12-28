@@ -1184,7 +1184,7 @@ function viewRentalLedger(){
     	$("#ledgerForm #ordId").val($("#rentalOrdId").val());
         Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
     }else{
-        Common.alert('<b>Please Select a Order Info first</b>');
+        Common.alert("<spring:message code='pay.alert.selectOrder'/>");
         return;
     }
         
@@ -2150,13 +2150,11 @@ function addOutSrvcToFinal(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Advance Key-In</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Advance Key-In</h2>
     </aside>
     <!-- title_line end -->

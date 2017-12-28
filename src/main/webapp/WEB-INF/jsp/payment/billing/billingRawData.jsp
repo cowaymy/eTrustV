@@ -16,8 +16,6 @@ $(document).ready(function(){
     var today = new Date();
     $("#issueMonth").val(FormUtil.lpad((today.getMonth()+1),2,"0") + "/" + today.getFullYear());
     
-    
-    
 });
 
 
@@ -61,13 +59,11 @@ function fn_generate(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Billing</li>
-        <li>Billing Raw Data</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Billing Raw Data</h2>        
         <ul class="right_btns">            
             <li><p class="btn_blue2"><a href="javascript:fn_generate();"><spring:message code='pay.btn.generate'/></a></p></li>

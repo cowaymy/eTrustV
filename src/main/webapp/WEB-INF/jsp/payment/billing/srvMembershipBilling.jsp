@@ -186,14 +186,11 @@ function fn_save(){
 <section id="content"><!-- content start -->
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	        <li>Billing</li>
-	        <li>Manual Billing</li>
-	        <li>Membership</li>
 	</ul>
 	
 	<!-- title_line start -->
 	<aside class="title_line">
-	    <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+	    <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 	    <h2>Membership</h2>	    
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcChange == 'Y'}">

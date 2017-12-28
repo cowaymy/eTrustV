@@ -458,7 +458,7 @@ function recalculatePaymentTotalAmt(){
 function removeFromFinal(){
     
     if (selectedGridValue  > -1){
-        Common.confirm('Are you sure you want to remove the Selected Row?'
+        Common.confirm("<spring:message code='pay.alert.removeSelectedRow'/>"
         ,function (){
             //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
             AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
@@ -467,7 +467,7 @@ function removeFromFinal(){
             recalculatePaymentTotalAmt();
         });
     }else{
-        Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+        Common.alert("<spring:message code='pay.alert.removeSelectedRow'/>");
     }
 }
 
@@ -489,7 +489,7 @@ function fn_apply(){
 	if(gridList.length > 0) {
 		data.all = gridList;
 	}  else {
-		Common.alert("There is no Fund Transfer Row Data");
+		Common.alert("<spring:message code='pay.alert.noFundTransferRowData'/>");
 		return;
 	}
 	    
@@ -930,7 +930,7 @@ function addRentalToFinal(){
     }
     
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     recalculatePaymentTotalAmt();
 }
@@ -1066,7 +1066,7 @@ function addOutToFinal(){
     
 
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();
@@ -1523,7 +1523,7 @@ function addSrvcToFinal(){
     }
     
     if(addedCount == 0){
-        Common.alert("There is no billing data and can not be selected.");
+        Common.alert("<spring:message code='pay.alert.futureDate'/>");
     }
     recalculatePaymentTotalAmt();  
 }
@@ -1558,7 +1558,7 @@ function fn_billOrderSearch(){
 	$("#paymentTotalAmtTxt").text("RM " + $.number(0,2));
 	
 	if(FormUtil.checkReqValue($("#billSearchTxt"))){
-        Common.alert("Please Key-In Search Keywords");
+        Common.alert("<spring:message code='pay.alert.searchKeywords'/>");
         return;
     }
 	
@@ -1597,7 +1597,7 @@ function addBillToFinal(){
     var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
     if(checkArray.length > 1){
-        Common.alert("Bill Payment is allowed for only one bill. Exclude other bills excepting target one bill.");
+        Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
         return;     
     }else{      
         var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);      
@@ -1645,7 +1645,7 @@ function addBillToFinal(){
         }
         
         if(addedCount == 0){
-            Common.alert("There is no billing data and can not be selected.");
+            Common.alert("<spring:message code='pay.alert.noBillingData'/>");
         }
         
         recalculatePaymentTotalAmt();
@@ -1794,7 +1794,7 @@ function addOutSrvcToFinal(){
     
 
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();

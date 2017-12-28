@@ -130,7 +130,7 @@ var discountLayout = [
                 	
                 }else{
                 	
-                	Common.alert("Meaga Deal order is not allowed for discount entry.");
+                	Common.alert("<spring:message code='pay.alert.meagaNotAllow'/>");
                 }
             });
     	}
@@ -249,12 +249,9 @@ var discountLayout = [
 		<section id="content"><!-- content start -->
 			<ul class="path">
 			        <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-			        <li>Payment</li>
-			        <li>Billing</li>
-			        <li>Discount Mgmt</li>
 			</ul>
 			<aside class="title_line"><!-- title_line start -->
-				<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+				<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 				<h2>Discount Mgmt</h2>
 			</aside><!-- title_line end -->
 			<table class="type1"><!-- table start -->

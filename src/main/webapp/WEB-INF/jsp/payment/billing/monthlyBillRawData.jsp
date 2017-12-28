@@ -73,12 +73,11 @@ function fn_generateClick(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Monthly Bill Raw Data</li>
     </ul>
     
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="javascript:;" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Monthly Bill Raw Data</h2>   
         <ul class="right_btns">
         

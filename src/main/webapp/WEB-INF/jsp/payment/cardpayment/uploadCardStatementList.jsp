@@ -323,7 +323,7 @@ function commitFormSubmit() {
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Upload Credit Card Statement</h2>
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">

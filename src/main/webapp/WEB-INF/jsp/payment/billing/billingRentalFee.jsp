@@ -51,7 +51,6 @@ var gridPros2 = {
             }
             return true;
         }
-
        
 };
 
@@ -72,9 +71,7 @@ var gridPros3 = {
 
 $(document).ready(function(){
 	
-	
 });
-
 
 var orderListLayout = [ 
                        {
@@ -411,11 +408,9 @@ var billingTargetLayout = [
 			<section id="content"><!-- content start -->
 				<ul class="path">
 				    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-				    <li>Manual Billing </li>
-		            <li>Advance Rental Fees</li>
 				</ul>
 				<aside class="title_line"><!-- title_line start -->
-					<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+					<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 					<h2>Advance Rental Fees</h2>
 				</aside><!-- title_line end -->
 				<section class="search_table"><!-- search_table start -->

@@ -186,12 +186,10 @@ function fn_Clear(){
 <section id="content"><!-- content start -->
 	<ul class="path">
 		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-		<li>Payment</li>
-		<li>Advanced Billing Batch</li>
 	</ul>
 	
 	<aside class="title_line"><!-- title_line start -->
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 		<h2>Advanced Billing Batch</h2>
 		<ul class="right_btns">
 		    <c:if test="${PAGE_AUTH.funcView == 'Y'}">

@@ -361,7 +361,7 @@ function fn_clear(){
     <header class="pop_header" id="pop_header">
         <h1>PRINT OPTION</h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#popup_wrap2')">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#popup_wrap2')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->

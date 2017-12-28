@@ -34,7 +34,7 @@ var columnLayout=[
 function fn_getAdjustmentListAjax() {
     var valid = ValidRequiredField();
     if(!valid){
-    	Common.alert("* Please key in Create Date.");
+    	Common.alert("<spring:message code='pay.alert.createDate'/>");
     }
     else{
 		AUIGrid.destroy(subGridID);//subGrid 초기화
@@ -66,7 +66,7 @@ function fn_excelDown(){
 	
 	var valid = ValidRequiredField();
      if(!valid){
-    	Common.alert("* Please key in Create Date.");
+    	Common.alert("<spring:message code='pay.alert.createDate'/>");
     }
     else{
 		var date1 = $("#date1").val();
@@ -79,11 +79,11 @@ function fn_excelDown(){
 				Common.showLoader();
 		        $.fileDownload("/payment/selectAdjustmentExcelList.do?date1=" + date1 + "&date2="+date2+"&status=4")
 				.done(function () {
-			        Common.alert('File download a success!');                
+			        Common.alert("<spring:message code='pay.alert.fileDownSuceess'/>");                
 					Common.removeLoader();            
 		        })
 			    .fail(function () {
-					Common.alert('File download failed!');                
+					Common.alert("<spring:message code='pay.alert.fileDownFailed'/>");                
 		            Common.removeLoader();            
 				});
 		   }else{
@@ -98,14 +98,11 @@ function fn_excelDown(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Invoice/Statement</li>
-        <li>Adjustment (CN/DN)</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Invoice Adjustment (CN / DN)</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_excelDown();"><spring:message code='pay.btn.generateExcel'/></a></p></li>

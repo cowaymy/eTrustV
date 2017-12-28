@@ -118,13 +118,10 @@ function fn_billList(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Billing</li>
-        <li>Billing Result</li>
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Billing Result</h2>
         <ul class="right_opt">
             <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>

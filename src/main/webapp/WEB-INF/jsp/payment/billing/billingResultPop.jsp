@@ -64,9 +64,7 @@ function fn_getBillingList(goPage){
                 // 1페이지에서 보여줄 행의 수
                 rowCount : $("#rowCount").val()
         };
-        
         GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
-        
     });
 }
 
@@ -75,7 +73,6 @@ function fn_getBillingList(goPage){
 function moveToPage(goPage){
     //페이징 변수 세팅
     $("#pageNo").val(goPage);
-    
     Common.ajax("GET", "/payment/selectBillingResultListPaging.do", $("#_billingResultPopForm").serialize(), function(result) {        
         AUIGrid.setGridData(_billingResultGridID, result.detail);
         
@@ -130,7 +127,6 @@ function fn_billList(){
                 <li><p class="btn_blue"><a href="javascript:fn_billList();"><spring:message code='budget.ExcelDownload'/></a></p></li>
                 <li><p class="btn_blue"><a href="javascript:fn_getBillingList(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </ul>
-        
         
             <table class="type1"><!-- table start -->
                 <caption>table</caption>

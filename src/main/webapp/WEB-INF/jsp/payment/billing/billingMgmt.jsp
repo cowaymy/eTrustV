@@ -157,14 +157,11 @@ function fn_complete(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Billing</li>
-        <li>Monthly Batch Billing</li>
-        <li>Rental</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="javascript:;" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="javascript:;" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Rental</h2>   
         <ul class="right_btns">
          <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
