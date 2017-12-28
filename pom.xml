@@ -86,16 +86,6 @@
 	</repositories>
 
 	<dependencies>
-
-		<!-- TODO : weblogic jndi 연결 테스트용. 차후 연결확인 되면 삭제할 것 . 운영시 불필요한 jar. -->
-		<dependency>
-			<groupId>weblogic</groupId>
-			<artifactId>wlclient</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${webinf-lib}/wlclient.jar</systemPath>
-		</dependency>
-
 		<!-- crystal report -->
 		<dependency>
 			<groupId>crystal</groupId>
