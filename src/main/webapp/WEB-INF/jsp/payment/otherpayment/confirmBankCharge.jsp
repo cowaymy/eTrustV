@@ -101,7 +101,7 @@ function fn_searchBankChgMatchList(){
 
 	if(FormUtil.checkReqValue($("#transDateFr")) ||
 		FormUtil.checkReqValue($("#transDateTo"))){
-		Common.alert('* Please input Transaction Date <br />');
+		Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
 		return;
 	}
 
@@ -128,7 +128,7 @@ function fn_mapping(){
 	var fTrnscId =0;
 
 	if( norKeyInItems.length < 1 || bankStmtItem.length < 1){
-		Common.alert("Please check Manual Key In List and Bank Statement List");
+		Common.alert("<spring:message code='pay.alert.checkManualKeyInListStateList'/>");
 		return;
 	}else{
 
@@ -141,7 +141,7 @@ function fn_mapping(){
 		fTrnscId = stateRowItem.item.fTrnscId;
 
 		if(keyInAmount != stmtAmount){
-           	Common.alert("<b>Transaction cannot done due to error : </b><br> -Transaction Amount Not Same.",
+           	Common.alert("<spring:message code='pay.alert.amountNotSame.'/>",
 				function (){
 					
 					$("#journal_entry_wrap").show();   					
@@ -172,24 +172,24 @@ function fn_saveMapping(withPop){
 	//Journal Entry 팝업을 띄웠을때만 validation check를 한다. 
 	if(withPop == 'Y'){
 		if(FormUtil.checkReqValue($("#accCode option:selected"))){
-			Common.alert('* Please select Account Code<br />');
+			Common.alert("<spring:message code='pay.alert.selectAccountCode'/>");
 			return;
 		}
 
 		if(FormUtil.checkReqValue($("#remark"))){
-			Common.alert('* Please input Remark<br />');
+			Common.alert("<spring:message code='pay.alert.inputRemark'/>");
 			return;
 		}
 
 		if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-			Common.alert('* Please input the Remark below or less than 3000 bytes.');
+			Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     		return;
 	    }
 	}
 	
-	Common.confirm('<b>Are you sure want to Save?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
 	    Common.ajax("POST", "/payment/saveBankChgMapping.do", $("#entryForm").serializeJSON(), function(result) {
-			var message = "<b>This Mapping has successfully saved</b>";
+			var message = "<spring:message code='pay.alert.mappingSuccess'/>";
 
     		Common.alert(message, function(){
 				fn_searchBankChgMatchList();
@@ -205,12 +205,10 @@ function fn_saveMapping(withPop){
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Other Payment</li>
-        <li>Confirm Bank Charge</li>
     </ul>
     
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Confirm Bank Charge</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_searchBankChgMatchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
