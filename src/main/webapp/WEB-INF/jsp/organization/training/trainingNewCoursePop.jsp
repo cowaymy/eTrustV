@@ -302,10 +302,10 @@ function fn_insertCourseAttendee() {
 	</td>
 	<th scope="row">Member(Y/N)/Type<span class="must">*</span></th>
 	<td>
-	<select class="wAuto" id="generalCodeNew" onchange="javascript:fn_checkMemberTypeNew()">
-	</select>
-	<select class="wAuto ml5" id="memTypeNew" name="memType">
-	</select>
+		<select class="wAuto" id="generalCodeNew" onchange="javascript:fn_checkMemberTypeNew()">
+		</select>
+		<select class="ml5"  style="width: 60%" id="memTypeNew" name="memType">
+		</select>
 	</td>
 	<th scope="row">Training Period<span class="must">*</span></th>
 	<td>
