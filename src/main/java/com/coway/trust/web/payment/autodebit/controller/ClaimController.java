@@ -314,7 +314,7 @@ public class ClaimController {
 		//CVS 파일 세팅
 		Map<String, MultipartFile> fileMap = request.getFileMap();		
 		MultipartFile multipartFile = fileMap.get("csvFile");
-		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ClaimResultUploadVO::create);
+		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ClaimResultUploadVO::create);
 		
 		//CVS 파일 객체 세팅 
 		Map<String, Object> cvsParam = new HashMap<String, Object>();				

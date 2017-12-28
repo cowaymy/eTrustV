@@ -114,7 +114,15 @@
         $('#btnOrdSearch').click(function() {
         	fn_selectListAjax();
         });
+        
+        $('#btnOrdClear').click(function() {
+            $("#popSearchForm")[0].reset();  
+            AUIGrid.clearGridData(popOrderGridID);
+        });
     });
+    
+    
+    
 	    // 리스트 조회.
     function fn_selectListAjax() {        
         Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#popSearchForm").serialize(), function(result) {
@@ -136,8 +144,8 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-	<li><p class="btn_blue"><a id="btnOrdSearch"href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a id="btnOrdSearch" href="#"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a id="btnOrdClear" href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
 <form id="popSearchForm" name="popSearchForm" action="#" method="post">
     <input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />

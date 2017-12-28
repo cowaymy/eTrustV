@@ -54,7 +54,7 @@ $(document).ready(function(){
 
 $(function(){
 	$('#btnOrderClear').click(function() {
-		$("#_serviceContractForm")[0].reset();
+		$("#_quoSearchPopForm")[0].reset();
 		AUIGrid.clearGridData(quotationSearchPopGridID);
 	});
 });
