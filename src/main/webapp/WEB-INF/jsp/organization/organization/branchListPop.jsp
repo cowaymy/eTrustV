@@ -20,7 +20,7 @@
 
 
 
-        //doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'S' , ''); //branchType
+        doGetCombo('/common/selectCodeList.do', '45', '','branchType', 'S' , ''); //branchType
 
         //Start AUIGrid
         $(document).ready(function() {
@@ -68,14 +68,15 @@
 
         //Update
         function fn_branchSave() {
+        	
 
-            if (validRequiredField()){
+             if (validRequiredField()){
                 Common.ajax("GET","/organization/branchListUpdate", $("#branchForm").serialize(), function(result){
                     console.log(result);
                     Common.alert("Branch Save successfully .",fn_close);
                 });
 
-            }
+            } 
 
         }
 
@@ -122,6 +123,11 @@
 
         if($("#mState").val() == ''){
             Common.alert("Please key in the state.");
+            return false;
+        }
+        
+        if($("#dtStartFromDt").val() == ''){
+        	Common.alert("Please key in the start from date.");
             return false;
         }
         return true;
@@ -388,7 +394,7 @@
 </tr>
 
 <tr>
-    <th scope="row">Start From Date</th>
+    <th scope="row">Start From Date<span class="must">*</span></th>
     <td>
         <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartFromDt" name="dtStartFromDt"/>
     </td>

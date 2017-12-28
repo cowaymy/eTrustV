@@ -434,7 +434,7 @@
                                          ,    #{txtTel2}
                                          ,    #{txtFax}
                                          ,    #{contact}
-                                         ,    #{branchType}
+                                         ,    #{selectbranchType}
                                          ,    #{user_id}
                                          ,    sysdate
                                          ,    #{cmRegion}
