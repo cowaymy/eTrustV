@@ -5,6 +5,12 @@
 
 function fn_setParameter(method){
     
+	//validation
+	if($("#_inputDate").val() == null || $("#_inputDate").val() == ''){
+		Common.alert("Please key in date");
+		return;
+	}
+	
 	//variable
     var runNo = 0;
     var whereSQL = '';
