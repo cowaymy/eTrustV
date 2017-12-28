@@ -51,10 +51,27 @@ public class OrgChartListController {
 		params.put("memLvl",  sessionVO.getMemberLevel());
 		//params.put("groupCode","");
 		
+		String type="";
+		if (params.get("memType" ) == "4" ) {
+			type = orgChartListService.selectLastGroupCode(params);        
+		}
 		
-        // 조회.
-		orgChartHpList = orgChartListService.selectOrgChartHpList(params);        
+		logger.debug("type : {}", type);
 
+		if ( type == "42") {
+			params.put("memType", "2");
+		} else if ( type == "42") {
+			params.put("memType", "3");
+		} else if ( type == "45") {
+			params.put("memType", "1");			
+		} else {
+			params.put("memType", "");
+		}
+		
+		if ( params.get("memType").equals("") || params.get("memType").equals("1")) {
+        // 조회.
+			orgChartHpList = orgChartListService.selectOrgChartHpList(params);        
+		}
 		return ResponseEntity.ok(orgChartHpList);
 	}
 	
@@ -108,6 +125,8 @@ public class OrgChartListController {
 	@RequestMapping(value = "/selectOrgChartCdList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCdChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
 		
+		List<EgovMap> orgChartCdList = null;
+		
 		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
 		logger.debug("userName : {}", sessionVO.getUserName());
 		
@@ -118,9 +137,27 @@ public class OrgChartListController {
 		params.put("memLvl",  sessionVO.getMemberLevel());
 		//params.put("groupCode","");
 		
-        // 조회.
-		List<EgovMap> orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
+		String type="";
+		if (params.get("memType" ) == "4" ) {
+			type = orgChartListService.selectLastGroupCode(params);        
+		}
 		
+		logger.debug("type : {}", type);
+
+		if ( type == "42") {
+			params.put("memType", "2");
+		} else if ( type == "42") {
+			params.put("memType", "3");
+		} else if ( type == "45") {
+			params.put("memType", "1");			
+		} else {
+			params.put("memType", "");
+		}
+		
+		if ( params.get("memType").equals("") || params.get("memType").equals("2") || params.get("memType").equals("3")) {
+			// 조회.
+			orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
+		}
 		return ResponseEntity.ok(orgChartCdList);
 	}
 	

@@ -768,7 +768,7 @@
                     , V1.PAC_NAME
                     , V1.MBRSH_CRT_DT
                     , V1.MBRSH_START_DT
-                    , TO_DATE(V1.MBRSH_START_DT,'DD-MON-YY') as MBRSH_START_DT2
+                    , TO_DATE(V1.MBRSH_START_DT,'DD-MM-YY') as MBRSH_START_DT2
                     , V1.MBRSH_EXPR_DT
                     , V1.MBRSH_DUR
                  FROM SAL1003V V1

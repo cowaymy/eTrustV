@@ -158,8 +158,7 @@
 					          WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
 					                   AND ( '''' <> Extent1.DEPT_CODE )
 					                   AND ( 1 = Extent2.STUS )
-					                   AND ( Extent2.MEM_TYPE = #{memType} )
-					                   AND ( Extent1.MEM_LVL = #{memLvl} )
+
 ]]> 					                   
                                     <choose>
                                             <when test="memberLevel == 1">
@@ -964,6 +963,11 @@
         
         </select>
         
+        
+        
+     <select id="selectLastGroupCode" parameterType="Map" resultType="String">
+       SELECT B.TYPE_ID  FROM ORG0001D A, SYS0005M B WHERE   A.BRNCH = B.BRNCH_ID AND A.MEM_CODE = #{userName}
+    </select>        
         
         
         

@@ -95,6 +95,8 @@ public class OrgChartListServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 
-
+	public String selectLastGroupCode(Map<String,Object> params){
+		return orgChartListMapper.selectLastGroupCode(params);
+	}
 	
 }

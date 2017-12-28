@@ -22,7 +22,7 @@ public interface OrgChartListService {
 	List<EgovMap> selectOrgChartDetList(Map<String, Object> params);
 	
 	
-	
+	String selectLastGroupCode(Map<String, Object> params);
 
 	
 }

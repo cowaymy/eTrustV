@@ -26,6 +26,8 @@ public interface OrgChartListMapper {
 
 	List<EgovMap> selectOrgChartDetList(Map<String, Object> params);
 	
+	
+	String selectLastGroupCode(Map<String, Object> params);
 
 	
 }
