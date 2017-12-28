@@ -140,15 +140,15 @@
 		var time = new Date();
 		var day = time.getDate();
 
-		if( (day >= 26 || day == 1) && ($("#rsCnvrStusFrom").val() == 'REG') && ($("#rsCnvrStusTo").val() == 'INV')){
-		    Common.alert("This coversion type is not allowed from 26 until 1 next month.");
-		    return false;
-		}else{
-			if($("#allRows").val() <= 0){
-				Common.alert("<b>There are no item to convert in this conversion batch.<br />Confirm conversion batch is disallowed.");
-				return false;
-			}
-		}
+//		if( (day >= 26 || day == 1) && ($("#rsCnvrStusFrom").val() == 'REG') && ($("#rsCnvrStusTo").val() == 'INV')){
+//		    Common.alert("This coversion type is not allowed from 26 until 1 next month.");
+//		    return false;
+//		}else{
+//			if($("#allRows").val() <= 0){
+//				Common.alert("<b>There are no item to convert in this conversion batch.<br />Confirm conversion batch is disallowed.");
+//				return false;
+//			}
+//		}
 		var msg = "<b>This conversion batch will process on daily schedule plan after you confirm with it.<br />";
 		     msg += "Are you sure want to confirm this conversion batch ?</b>";
 		Common.confirm(msg,fn_confirmOK);
