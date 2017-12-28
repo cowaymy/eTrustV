@@ -92,8 +92,10 @@ function fn_setdetail(result){
 	$("#ectid").val(result.list1.c6);
 	$("#applicationTypeID").val(result.list1.codeId);
 	
-	if(result.list5.whLocId!=null){
+	if(CommonUtils.nvl(result.list5.whLocId)!=null){
 		   $("#inChargeCTWHID").val(result.list5.whLocId);
+	}else{
+	   $("#inChargeCTWHID").val(0);
 	}
 	
 	if(result.list1.installStkId!=null){
@@ -550,7 +552,7 @@ function fn_close(){
 <h3><spring:message code='service.title.InstallationResultReversal'/></h3>
 </aside><!-- title_line end -->
 <form action="" id="editForm" method="post">
-<input type="hidden" id="callTypeId" name = "callTypeId">
+<input type="text" id="callTypeId" name = "callTypeId">
 <input type="hidden"  id="einstallEntryNo" name="einstallEntryNo"/>
 <input type="hidden"  id="esalesOrdNo" name="esalesOrdNo"/>
 <input type="hidden"  id="einstallEntryId" name="einstallEntryId"/>
