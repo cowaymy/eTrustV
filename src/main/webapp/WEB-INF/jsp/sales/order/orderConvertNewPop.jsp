@@ -225,7 +225,7 @@ var cnvrListGrid;
 	            console.log("성공." + JSON.stringify(result));
 	            console.log("data : " + result.data);
 	            
-	            Common.alert("New conversion batch successfully saved.");       // 메시지 다시 만들어야함.
+	            Common.alert("New conversion batch successfully saved.", fn_end);       // 메시지 다시 만들어야함.
 	          
 	        }
 	        , function(jqXHR, textStatus, errorThrown){
@@ -244,6 +244,10 @@ var cnvrListGrid;
 
 	    }));
 	}
+	
+	function fn_end(){
+		$("#_closeNew").click();
+	}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -251,7 +255,7 @@ var cnvrListGrid;
 <header class="pop_header"><!-- pop_header start -->
 <h1>NEW CONVERSION BATCH</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" >CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_closeNew">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

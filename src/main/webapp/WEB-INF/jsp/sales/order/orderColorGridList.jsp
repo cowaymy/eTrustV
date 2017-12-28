@@ -39,6 +39,19 @@
         });
         // 셀 클릭 이벤트 바인딩
 
+        if($("#memType").val() == 1 || $("#memType").val() == 2){
+            $("#orgTable").show();
+        }//else{
+        //  $("#orgTable").hide();
+        //}
+        
+        if($("#memType").val() == 1){
+            $("#grpCode").removeAttr("readonly");
+        }else if($("#memType").val() == 2){
+            $("#grpCode").attr("readonly");
+            $("#grpCode").val($("#initGrpCode").val());
+        }
+        
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
     });
 	
@@ -340,6 +353,28 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+<table class="type1" id="orgTable">
+                <!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width: 170px" />
+                    <col style="width: *" />
+                    <col style="width: 160px" />
+                    <col style="width: *" />
+                    <col style="width: 170px" />
+                    <col style="width: *" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Org Code</th>
+                        <td><input type="text" title="" id="orgCode" name="orgCode" value="${lastOrgCode }" placeholder="" class="w100p" readonly/></td>
+                        <th scope="row">Grp Code</th>
+                        <td><input type="text" title="" id="grpCode" name="grpCode" placeholder="" class="w100p" /></td>
+                        <th scope="row">Dept Code</th>
+                        <td><input type="text" title="" id="deptCode" name="deptCode" placeholder="" class="w100p" /></td>
+                    </tr>
+                </tbody>
+            </table>
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start --
 <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>

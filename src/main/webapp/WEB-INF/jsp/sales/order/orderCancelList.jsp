@@ -268,10 +268,18 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Order Cancellation</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()">New Log Result</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_ctAssignment()">CT Assignment</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTBulk()">Change Assign CT(bulk)</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#"  onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -396,7 +404,9 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()">Request Raw Data</a></p></li>
+    </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

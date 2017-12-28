@@ -193,7 +193,9 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Exchange List</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -284,7 +286,9 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()">Exchange Raw Data</a></p></li>
+        </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

@@ -578,7 +578,9 @@
 </form>
 
 <ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2"><a href="#" onclick="fn_callResultSave()">SAVE</a></p></li>
+    </c:if>
 </ul>
 </div>
 

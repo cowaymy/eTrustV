@@ -154,8 +154,12 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Suspend List</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_newSuspend()">New</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_assignIncharge()">Re-AssignIncharge</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
     <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>

@@ -551,7 +551,9 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveInvest();">SAVE</a></p></li> 
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveInvest();">SAVE</a></p></li>
+    </c:if> 
 </ul>
 </div>
 

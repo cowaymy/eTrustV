@@ -133,7 +133,9 @@
 <h2>Exchange Information</h2>
 <c:if test="${exchgStus eq 1}">
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="btnCancel" onclick="fn_cancelReq()">Cancel Request</a></p></li>
+    </c:if>
 </ul>
 </c:if>
 </aside><!-- title_line end -->

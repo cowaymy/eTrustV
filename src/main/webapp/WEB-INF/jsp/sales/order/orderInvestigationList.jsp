@@ -17,7 +17,19 @@
 			$("#invReqId").val(event.item.invReqId);
 			Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON(), null, true, 'dtPop');
 		});
-		// 셀 클릭 이벤트 바인딩
+	    
+		if($("#memType").val() == 1 || $("#memType").val() == 2){
+			$("#orgTable").show();
+		}//else{
+		//	$("#orgTable").hide();
+		//}
+		
+		if($("#memType").val() == 1){
+            $("#grpCode").removeAttr("readonly");
+        }else if($("#memType").val() == 2){
+        	$("#grpCode").attr("readonly");
+        	$("#grpCode").val($("#initGrpCode").val());
+        }
 
 	});
 
@@ -156,6 +168,8 @@
 </script>
 <form id="popForm" method="post">
 	<input type="hidden" name="invReqId" id="invReqId" />
+	<input type="hidden" name="memType" id="memType" value="${memType }"/>
+	<input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
 </form>
 <section id="content">
 	<!-- content start -->
@@ -180,10 +194,12 @@
 			<li><p class="btn_blue">
 					<a href="#" onClick="fn_goBatch()">New Request(Batch)</a>
 				</p></li>
+		    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 			<li><p class="btn_blue">
 					<a href="#" onClick="fn_orderInvestigationListAjax()"><span
 						class="search"></span>Search</a>
 				</p></li>
+		    </c:if>
 			<li><p class="btn_blue">
 					<a href="#" onClick="fn_clear()" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a>
 				</p></li>
@@ -256,6 +272,28 @@
 					</tr>
 				</tbody>
 			</table>
+			<table class="type1" id="orgTable">
+                <!-- table start -->
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width: 150px" />
+                    <col style="width: *" />
+                    <col style="width: 160px" />
+                    <col style="width: *" />
+                    <col style="width: 170px" />
+                    <col style="width: *" />
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Org Code</th>
+                        <td><input type="text" title="" id="orgCode" name="orgCode" value="${lastOrgCode }" placeholder="" class="w100p" readonly/></td>
+                        <th scope="row">Grp Code</th>
+                        <td><input type="text" title="" id="grpCode" name="grpCode" placeholder="" class="w100p" /></td>
+                        <th scope="row">Dept Code</th>
+                        <td><input type="text" title="" id="deptCode" name="deptCode" placeholder="" class="w100p" /></td>
+                    </tr>
+                </tbody>
+            </table>
 			<!-- table end -->
 		</form>
 
