@@ -248,7 +248,9 @@
                          <if test="position != null and position != ' ' ">
                             AND Extent7.MEM_LVL= #{position}
                          </if>
-
+                         <if test="code == null or code == ''">
+                           AND  UPPER(Extent4.MEM_CODE) LIKE  UPPER('%' ||  #{userName} || '%')
+                         </if>
 			            )  GroupBy1
 			            WHERE 1=1
 			            
@@ -298,6 +300,10 @@
                            /*By KV - Position*/
                           <if test="position != null and position != ''">
                             AND Extent5.MEM_LVL= #{position}
+                         </if>
+
+                         <if test="code == null or code == ''">
+                           AND  UPPER(Extent1.MEM_CODE) LIKE  UPPER('%' ||  #{userName} || '%')
                          </if>
 
 						<choose>
