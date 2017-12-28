@@ -36,14 +36,14 @@ var columnLayout = [
         dataField : "ctBrnchCode",
         headerText : "CT Branch",
     }, {
-        dataField : "status",
-        headerText : "Status",
-    }, {
         dataField : "codyMangrUserId",
         headerText : "Cody Manager",
     }, {
         dataField : "ctSubGrp",
         headerText : "CT Sub Group",
+    }, {
+        dataField : "status",
+        headerText : "Status",
     }
 ];
 

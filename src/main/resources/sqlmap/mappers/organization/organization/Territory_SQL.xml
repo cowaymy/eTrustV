@@ -212,12 +212,14 @@
 	    SELECT DISTINCT CODY_BRNCH_CODE CODE_ID, CODY_BRNCH_CODE CODE_NAME
 		FROM SYS0064M
 		WHERE CODY_BRNCH_CODE IS NOT NULL
+		ORDER BY CODY_BRNCH_CODE ASC
     </select>
     
     <select id="selectCTBranch"  parameterType="Map" resultType="egovMap">
         SELECT DISTINCT CT_BRNCH_CODE CODE_ID, CT_BRNCH_CODE CODE_NAME
 		FROM SYS0064M
 		WHERE CT_BRNCH_CODE IS NOT NULL
+		ORDER BY CT_BRNCH_CODE ASC
     </select>
     
     <select id="selectCurrentTerritory"  parameterType="Map" resultType="egovMap">
@@ -231,25 +233,25 @@
 		FROM SYS0064M A
 		WHERE 1=1
 		<if test="area != null and area != ''">
-			AND A.AREA = #{area}
+			AND UPPER(A.AREA) LIKE UPPER('%'||#{area}||'%')
 		</if>
-		<if test="areaId != null and areaId != ''">
-			AND A.AREA_ID = #{areaId}
+		<if test="areaID != null and areaID != ''">
+			AND REPLACE(A.AREA_ID, '-', '') =  REPLACE(#{areaID}, '-', '')
 		</if>
         <if test="city != null and city != ''">
-			AND A.CITY = #{city}
+			AND UPPER(A.CITY) LIKE UPPER('%'||#{city}||'%')
 		</if>
         <if test="state != null and state != ''">
-			AND A.STATE = #{state}
+			AND UPPER(A.STATE) LIKE UPPER('%'||#{state}||'%')
 		</if>
         <if test="postcode != null and postcode != ''">
 			AND A.POSTCODE = #{postcode}
 		</if>
-        <if test="codyBrnchCode != null and codyBrnchCode != ''">
-			AND A.CODY_BRNCH_CODE = #{codyBrnchCode}
+        <if test="codyBranch != null and codyBranch != ''">
+			AND A.CODY_BRNCH_CODE = #{codyBranch}
 		</if>
-        <if test="ctBrnchCode != null and ctBrnchCode != ''">
-			AND A.CT_BRNCH_CODE = #{ctBrnchCode}
+        <if test="ctBranch != null and ctBranch != ''">
+			AND A.CT_BRNCH_CODE = #{ctBranch}
 		</if>
         <if test="status != null and status != ''">
             <if test=" status == 'Active' ">
