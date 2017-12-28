@@ -134,7 +134,7 @@
        </if>
 		and l59.matrl_doc_no = l60.matrl_doc_no
 		<if test="sdocno !=null and sdocno !=''">
-            and l59.matrl_doc_no = #{sdocno}
+            and l59.REF_DOC_NO = #{sdocno}
         </if>
         <if test="sreqstno !=null and sreqstno !=''">
             and l60.STOCK_TRNSFR_REQST = #{sreqstno}
