@@ -143,7 +143,7 @@ function fn_openExcel(){
              $("#reportFormDSC #PVMonth").val(month);
              $("#reportFormDSC #PVYear").val(year);               
              $("#reportFormDSC #reportFileName").val('/services/DSCNetSalesReportD_5_PDF.rpt');
-             $("#reportFormDSC #viewType").val("PDF");
+             $("#reportFormDSC #viewType").val("EXCEL");
              $("#reportFormDSC #reportDownFileName").val("DSCReportD5_" +day+monthDay+date.getFullYear());
              
          
@@ -161,7 +161,7 @@ function fn_openExcel(){
              $("#reportFormDSC #PVMonth").val(month);
              $("#reportFormDSC #PVYear").val(year);               
              $("#reportFormDSC #reportFileName").val('/services/DSCNetSalesReportD_5_ByStock.rpt');
-             $("#reportFormDSC #viewType").val("PDF");
+             $("#reportFormDSC #viewType").val("EXCEL");
              $("#reportFormDSC #reportDownFileName").val("DSCReportD5ByStock_" +day+monthDay+date.getFullYear());
              
              Common.report("reportFormDSC");
