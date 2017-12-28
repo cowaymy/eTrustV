@@ -742,25 +742,26 @@ function fn_AllocationConfirm(){
         valArray = rowInfoObj.value.split("-");
     
         if(rowInfoObj.dataField =="sumascnt" ||  rowInfoObj.dataField =="suminscnt" ||  rowInfoObj.dataField =="sumrtncnt"   ){
-        	Common.alert("Summary can not be selected.);
+        	Common.alert("Summary can not be selected.");
             return ;
         }
         
         
-        
-        if(rowInfoObj.dataField  !="othascnt"  &&   rowInfoObj.dataField !="othinscnt"  &&   rowInfoObj.dataField  !="othrtncnt"  ){
-	            if(Number(valArray[1]) == "0" ){
-	                Common.alert("CAPA is not registered in the selected session.");
-	                return ;
-	            }
-	            
-	            
-	           if(Number(valArray[0] )>  Number(valArray[1] )){
-	                Common.alert("The selected session has already been completed. Please select another session ");
-	                return ;
-	           }
-        }
+        if(rowInfoObj.dataField !="othascnt"  &&   rowInfoObj.dataField !="othinscnt" && rowInfoObj.dataField !="othrtncnt"  ){
+         
 
+            if(Number(valArray[1]) == "0" ){
+                Common.alert("CAPA is not registered in the selected session.");
+                return ;
+            }
+            
+            
+           if(Number(valArray[0]) >  Number(valArray[1]) ){
+                Common.alert("The selected session has already been completed. Please select another session ");
+                return ;
+           }
+        }
+        
     }
     
     
