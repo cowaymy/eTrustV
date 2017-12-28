@@ -74,7 +74,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 				|| ! CommonUtils.isEmpty(params.get("dscCode")) && ! CommonUtils.isEmpty(params.get("serialNo"))
 		)
 		{
-			installationList = installationResultListMapper.installationResultList2(params);
+			//installationList = installationResultListMapper.installationResultList2(params);
+			installationList = installationResultListMapper.installationResultList(params);
 		}else{
 			installationList = installationResultListMapper.installationResultList(params);
 		}
