@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.installation.InstallationReversalService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -120,13 +122,13 @@ public class InstallationReversalController {
 		//Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
 		//formData.put("user_id", userId);
 		
-		int callTypeId = Integer.parseInt(params.get("callTypeId").toString());	//ccr0006d.type_id
+		int callTypeId = CommonUtils.intNvl(Integer.parseInt(params.get("callTypeId").toString()));	//ccr0006d.type_id
 		int result = 0 ;
 		
-		int installResultID = Integer.parseInt(params.get("einstallEntryId").toString());
-		int installEntryID = Integer.parseInt(params.get("einstallEntryId").toString());
-		String installDate = params.get("instalStrlDate").toString();
-		String nextCallDate = params.get("nextCallStrlDate").toString();
+		int installResultID = CommonUtils.intNvl(Integer.parseInt(params.get("einstallEntryId").toString()));
+		int installEntryID = CommonUtils.intNvl(Integer.parseInt(params.get("einstallEntryId").toString()));
+		String installDate = CommonUtils.nvl(params.get("instalStrlDate").toString());
+		String nextCallDate = CommonUtils.nvl(params.get("nextCallStrlDate").toString());
 		
 		logger.debug("-----------------------installDate-------------------------");;
 		logger.debug(installDate);;
