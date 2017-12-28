@@ -41,9 +41,9 @@
 
         if($("#memType").val() == 1 || $("#memType").val() == 2){
             $("#orgTable").show();
-        }//else{
-        //  $("#orgTable").hide();
-        //}
+        }else{
+          $("#orgTable").hide();
+        }
         
         if($("#memType").val() == 1){
             $("#grpCode").removeAttr("readonly");
