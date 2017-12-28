@@ -137,10 +137,13 @@ public class CTSubGroupListServiceImpl  extends EgovAbstractServiceImpl implemen
     			
     			// 이미 있나 확인 
     			EgovMap ctSubGroup = CTSubGroupListMapper.selectOneCTSubGrb(insertValue);
+    			logger.debug("ctSubGroup {}", ctSubGroup);
     			if( ctSubGroup != null && ctSubGroup.size() != 0){
     				continue;
+    				
     			}
     			else {
+    			
     				CTSubGroupListMapper.insertSvc0054m(insertValue); 
     			}
     			
