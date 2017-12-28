@@ -91,16 +91,13 @@ function fn_hpMemRegisPop(){
 	         console.log( result);
 	
 	         if(result !="" ){
-	             Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
+	             Common.alert(" Health Planner registration has been completed. { "+membercode+" } to { "+ result.message +" }");
 	              fn_memberListSearch();
 	         }
 	     });
 	     
-	    } else {
-	    	alert('이미 수정했습니다. ');
-	    }
     } else {
-    	alert('HP Applicant만 해당 됩니다. ');
+    	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
     }
 
 }
