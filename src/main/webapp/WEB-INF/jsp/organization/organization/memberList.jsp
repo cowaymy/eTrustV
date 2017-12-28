@@ -25,21 +25,35 @@ function fn_excelDown(){
 }
 
 function fn_TerminateResign(val){
+
+console.log( memberType )
+
+
+
 	if(val == '1'){
-		 var jsonObj = {
-				     MemberID :memberid,
-		            MemberType : memberType
-		    };
-		console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1");
-		Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1", null ,null , true  ,'_fn_TerminateResignDiv');
+        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {	
+			 var jsonObj = {
+					     MemberID :memberid,
+			            MemberType : memberType
+			    };
+			console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1");
+			Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1", null ,null , true  ,'_fn_TerminateResignDiv');
+		} else {
+            Common.alert("Only available to entry with Terminate/Resign Request in regular type of member");
+		}
 	}else{
-		 var jsonObj = {
-                 MemberID :memberid,
-                MemberType : memberType
-        };
-		 console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2");
-    Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2" , null ,null , true  ,'_fn_TerminateResignDiv');
+	   if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
+	        var jsonObj = {
+	                 MemberID :memberid,
+	                MemberType : memberType
+	        };
+			console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2");
+	        Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2" , null ,null , true  ,'_fn_TerminateResignDiv');
+		} else {
+		    Common.alert("Only available to entry with Promote/Demote Request in regular type of member");
+		}        
 	}
+ 
 }
 
 /*By KV start - requestVacationPop*/
@@ -48,8 +62,14 @@ function fn_requestVacationPop(){
              MemberID :memberid,
             MemberType : memberType
     };
-	 console.log("MemberID="+memberid+"&MemberType="+memberType);
-    Common.popupDiv("/organization/requestVacationPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType ,  null ,null , true  ,'_fn_requestVacationPopDiv');
+    
+    console.log("MemberID="+memberid+"&MemberType="+memberType);
+    
+    if (memberType == 3 ) {
+        Common.popupDiv("/organization/requestVacationPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType ,  null ,null , true  ,'_fn_requestVacationPopDiv');
+    }else {
+        Common.alert("Only available to entry with request vacation in case of CT member");
+    }
 }
 /*By KV end - requestVacationPop*/
 
