@@ -2046,6 +2046,7 @@ function fnSearchBtnList()
 	            	  $('#btnAddrow').removeClass("btn_disabled");
 	            	  $('#btnExcel').removeClass("btn_disabled");
 	            	  $('#btnUpdate').removeClass("btn_disabled");
+	            	  $('#btnDelete').removeClass("btn_disabled");
 	            	  $('#btnCancel').addClass("btn_disabled");
 	            	  $('#btnInsert').addClass("btn_disabled");
 	              }
@@ -2056,6 +2057,7 @@ function fnSearchBtnList()
 	            	  $('#btnCancel').addClass("btn_disabled");
 	            	  $('#btnUpdate').addClass("btn_disabled");
 	            	  $('#btnInsert').addClass("btn_disabled");
+	            	  $('#btnDelete').addClass("btn_disabled");
 	              }
 	
 	              gAddrowCnt = 0;
@@ -2246,11 +2248,11 @@ $(document).ready(function()
 	  <a onclick="fnCreate(this);">Create</a>
 	 </p>
 	</li>
-	<li>
+<!-- 	<li>
 	 <p class="btn_grid">
 	  <a onclick="fnDelete(this);">Delete</a>
 	 </p>
-	</li>
+	</li> -->
 	
 	<li>
 	 <p class="btn_grid">
@@ -2322,9 +2324,9 @@ $(document).ready(function()
 </article><!-- grid_wrap end -->
 <div class="side_btns">
   <ul class="right_btns">
-  <!--   <li><p id='show'   class="btn_grid "><a onclick="fnShowGrid();">show</a></p></li>
-    <li><p id='hide'   class="btn_grid "><a onclick="fnHideGrid();">hide</a></p></li> -->
-    <li><p id='btnUpdate'   class="btn_grid btn_disabled"><a onclick="fnSaveScmSalesPlan(this);">Update</a></p></li>
+  <!--   <li><p id='show'   class="btn_grid "><a onclick="fnShowGrid();">show</a></p></li> -->
+    <li><p id='btnDelete' class="btn_grid btn_disabled"><a onclick="fnDelete(this)">Delete</a></p></li> 
+    <li><p id='btnUpdate' class="btn_grid btn_disabled"><a onclick="fnSaveScmSalesPlan(this);">Update</a></p></li>
     <li><p id='btnAddrow' class="btn_grid btn_disabled"><a onclick="fnInsertAddRow(this);">AddRow</a></p></li>
     <li><p id='btnInsert' class="btn_grid btn_disabled"><a onclick="fnInsertSave(this);">Insert</a></p></li>
     <li><p id='btnCancel' class="btn_grid btn_disabled"><a onclick="fnCancel(this);">Cancel</a></p></li> 
