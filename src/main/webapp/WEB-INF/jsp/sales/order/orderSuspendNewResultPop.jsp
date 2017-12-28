@@ -193,10 +193,10 @@
 	  var time = new Date();
 	  var day = time.getDate();
 	  
-	  if( day >= 26 || day == 1){
-		  Common.alert("This action is not allowed within 26 to 1 next month.");
-		  return false;
-	  }
+//	  if( day >= 26 || day == 1){
+//		  Common.alert("This action is not allowed within 26 to 1 next month.");
+//		  return false;
+//	  }
 	  
 	  if(document.statusForm.newSuspResultStus.value == ""){
 		  Common.alert("Please select the status");
