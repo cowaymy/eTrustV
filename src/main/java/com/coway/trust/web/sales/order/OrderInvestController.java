@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderInvestService;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
@@ -38,6 +39,9 @@ public class OrderInvestController {
 	@Resource(name = "orderInvestService")
 	private OrderInvestService orderInvestService; 
 	
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService; 
+	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
@@ -49,8 +53,22 @@ public class OrderInvestController {
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
+		
+		EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+		if(getUserInfo != null){
+			if("1".equals(getUserInfo.get("memType")) || "2".equals(getUserInfo.get("memType"))){
+				model.put("memType", getUserInfo.get("memType"));
+				model.put("orgCode", getUserInfo.get("lastOrgCode"));
+				model.put("grpCode", getUserInfo.get("lastGrpCode"));
+				model.put("deptCode", getUserInfo.get("lastDeptCode"));
+			}
+		}
+		
 		
 		return "sales/order/orderInvestigationList";
 	}
