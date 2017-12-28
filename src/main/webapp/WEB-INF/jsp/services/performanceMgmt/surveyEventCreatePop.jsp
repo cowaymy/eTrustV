@@ -10,8 +10,6 @@ var nullCount = 0;
 var notNullCount = 0;
 var duplicatedCount = 0;
 var salesOrderListLength = 0;
-//var duplicationChkList = new Array();
-
 
 var  CodeList = [];
 
@@ -34,9 +32,9 @@ var columnLayout_q=[
 ];
 
 var columnLayout_target=[             
- {dataField:"salesOrdNo", headerText:'Sales Order', width: 250, editable : true},
- {dataField:"name", headerText:'Name', width: 250, editable : true},
- {dataField:"contNo", headerText:'Contact Number', width: 250, editable : true },
+ {dataField:"salesOrdNo", headerText:'Sales Order', width: "25%", editable : true},
+ {dataField:"name", headerText:'Name', width: "25%", editable : true},
+ {dataField:"contNo", headerText:'Contact Number', width: "25%", editable : true },
  {dataField:"callMem", headerText:'Calling Agent', editable : true},
 ];
 
@@ -64,7 +62,7 @@ var gridOptions_q = {
 var gridOptions2 = {
         selectionMode: "singleRow",
         showStateColumn: false,
-        //showRowNumColumn: false,
+        showRowNumColumn: false,
         usePaging : true,
         pageRowCount : 20, //한 화면에 출력되는 행 개수 20(기본값:20)
         showFooter : false
@@ -89,6 +87,60 @@ $(document).ready(function(){
     fn_getCodeSearch('');
     
     
+    /*Excel Upload*/
+    // IE10, 11은 readAsBinaryString 지원을 안함. 따라서 체크함.
+     var rABS = typeof FileReader !== "undefined" && typeof FileReader.prototype !== "undefined" && typeof FileReader.prototype.readAsBinaryString !== "undefined";
+
+     // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
+     function checkHTML5Brower() {
+         var isCompatible = false;
+         if (window.File && window.FileReader && window.FileList && window.Blob) {
+             isCompatible = true;
+         }
+         return isCompatible;
+     };
+     
+  // 파일 선택하기
+     $('#fileSelector').on('change', function(evt) {
+         if (!checkHTML5Brower()) {
+             alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+             return;
+         } else {
+             var data = null;
+             var file = evt.target.files[0];
+             if (typeof file == "undefined") {
+                 //alert("파일 선택 시 오류 발생!!");
+                 return;
+             }
+             var reader = new FileReader();
+
+             reader.onload = function(e) {
+                 var data = e.target.result;
+
+                 /* 엑셀 바이너리 읽기 */
+                 var workbook;
+
+                 if(rABS) { // 일반적인 바이너리 지원하는 경우
+                     workbook = XLSX.read(data, {type: 'binary'});
+                 } else { // IE 10, 11인 경우
+                     var arr = fixdata(data);
+                     workbook = XLSX.read(btoa(arr), {type: 'base64'});
+                 }
+
+                 var jsonObj = process_wb(workbook);
+                 
+                 console.log(JSON.stringify(jsonObj));
+                 
+                 createAUIGrid( jsonObj[Object.keys(jsonObj)[0]] );
+             };
+
+             if(rABS) reader.readAsBinaryString(file);
+             else reader.readAsArrayBuffer(file);
+             
+         }
+     }); //Excel Upload
+    
+    
     //두번째 grid 행 추가
      $("#addRow_q").click(function() { 
         var item_q = {"hcDefCtgryId" : "", "hcDefDesc" : ""}; //row 추가
@@ -111,10 +163,12 @@ $(document).ready(function(){
    
      //save
      $("#save_create").click(function() {
+    	 //alert("getGridData"+GridCommon.getGridData(myGridID_Target));    	 
          if (validation_info()) {
              
              var addList_info = AUIGrid.getAddedRowItems(myGridID_Info);
              var v_evtMemId = addList_info[0].evtMemId;
+             
 
              Common.ajax("GET", "/services/performanceMgmt/selectEvtMemIdList.do", {memId : v_evtMemId}, function(result) {
                  if(result.length == 0){
@@ -123,12 +177,15 @@ $(document).ready(function(){
                  } else {
                      
                      var rowCount_t = AUIGrid.getRowCount(myGridID_Target);
+                     //alert("rowCount_t::"+rowCount_t);
                      
                      if(rowCount_t > 0) {
                     	 
-                    	 var salesOrdNo= AUIGrid.getColumnValues(myGridID_Target, "salesOrdNo");
-                         var addList_t = AUIGrid.getAddedRowItems(myGridID_Target);
-                         salesOrderListLength = addList_t.length;
+                    	 var salesOrdNo = AUIGrid.getColumnValues(myGridID_Target, "salesOrdNo");
+                    	 //alert("salesOrdNo::"+salesOrdNo);
+                    	 
+                         salesOrderListLength = rowCount_t;
+                         
                          nullCount = 0;
                          notNullCount = 0;
                          duplicatedCount = 0;
@@ -136,8 +193,11 @@ $(document).ready(function(){
                          var i = 0;
                          var j = 0;
                          
-                         for ( i; i < addList_t.length; i++) {
-                             var v_salesOrdNo = addList_t[i].salesOrdNo;
+                         //for ( i; i < addList_t.length; i++) {
+                         for (i; i < salesOrderListLength; i++){
+                             //var v_salesOrdNo = addList_t[i].salesOrdNo;
+                             var v_salesOrdNo = salesOrdNo[i];
+                             //alert("v_salesOrdNo::"+v_salesOrdNo);
                              if(v_salesOrdNo != ""){
                             	 notNullCount ++;
                             	 if (i == 0){
@@ -147,8 +207,6 @@ $(document).ready(function(){
                                  for(j; j < i; j++){
                                 	 //alert("두번째i::"+i +"::duplicationChkList ["+duplicationChkList +"]");
                                 	 if(duplicationChkList[j] != v_salesOrdNo){
-                                		 //alert("안에서v_salesOrdNo"+v_salesOrdNo);
-                                		 //alert("안에서duplicationChkList[j]"+duplicationChkList[j]);
                                 		 duplicationChkList[i] = v_salesOrdNo;
                                 	 }else{
                                 		 duplicatedCount ++;
@@ -214,12 +272,14 @@ function fn_saveGridData_create(){
     
     var params = {
             aGrid : GridCommon.getEditData(myGridID_Info),
-            bGrid : GridCommon.getEditData(myGridID_Target),
+            bGrid : GridCommon.getGridData(myGridID_Target),
             cGrid : GridCommon.getEditData(myGridID_Q)
+            //eGrid : AUIGrid.exportToObject("#grid_wrap_target")
     };
     
     
     if(rowCount_target > 0 || rowCount_q > 0) {
+    
         Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventTarget.do", params, 
        //Common.ajax("POST", "/services/performanceMgmt/saveSurveyEventTarget.do", $("#listGForm").serialize(), 
         function(result) {
@@ -429,44 +489,98 @@ function removeRow_target(){
 function auiRemoveRowHandler(){
 }
 
-/* function fn_uploadFile() 
-{
-   var formData = new FormData();
-   console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
-   formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
-   
-   var radioVal = $("input:radio[name='name']:checked").val();
-   formData.append("radioVal", radioVal );
+/*Excel Upload*/
 
-   //alert('read');
-   
-   if( radioVal == 1 ){
-       Common.ajaxFile("/services/serviceGroup/excel/updateCTSubGroupByExcel.do"
-               , formData
-               , function (result) 
-                {
-                     //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-                     if(result.code == "99"){
-                         Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
-                     }else{
-                         Common.alert(result.message);
-                     }
-            });
-   } else {
-       Common.ajaxFile("/services/serviceGroup/excel/updateCTAreaByExcel.do"
-               , formData
-               , function (result) 
-                {
-                    //Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-                    if(result.code == "99"){
-                        Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
-                    }else{
-                        Common.alert(result.message);
-                    }
-            });
-   }
+//IE10, 11는 바이너리스트링 못읽기 때문에 ArrayBuffer 처리 하기 위함.
+function fixdata(data) {
+    var o = "", l = 0, w = 10240;
+    for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
+    o+=String.fromCharCode.apply(null, new Uint8Array(data.slice(l*w)));
+    return o;
+};
 
-} */
+//파싱된 시트의 CDATA 제거 후 반환.
+function process_wb(wb) {
+    var output = "";
+    output = JSON.stringify(to_json(wb));
+
+    output = output.replace( /<!\[CDATA\[(.*?)\]\]>/g, '$1' );
+    return JSON.parse(output);
+};
+
+
+// 엑셀 시트를 파싱하여 반환
+function to_json(workbook) {
+    var result = {};
+    workbook.SheetNames.forEach(function(sheetName) {
+        var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName], {defval:""});
+
+        console.log(roa);
+
+        for(var i=0; i<roa.length; i++){
+	        var obj = roa[i];
+	        //var obj = JSON.stringify(roa);
+	        obj["salesOrdNo"] = obj["Sales Order"];
+	        delete obj["Sales Order"];
+	        obj["name"] = obj["Name"];
+	        delete obj["Name"];
+	        obj["contNo"] = obj["Contact Number"];
+	        delete obj["Contact Number"];
+	        obj["callMem"] = obj["Calling Agent"];
+	        delete obj["Calling Agent"];
+        }
+        var json = JSON.stringify([obj]);
+
+
+        if(roa.length > 0){
+            result[sheetName] = roa;
+        }
+    });
+    return result;
+}
+
+// 엑셀 파일 시트에서 파싱한 JSON 데이터 기반으로 그리드 동적 생성
+function createAUIGrid(jsonData) {
+    if(AUIGrid.isCreated(myGridID_Target)) {
+        AUIGrid.destroy(myGridID_Target);
+        myGridID_Target = null;
+    }
+    
+    //var columnLayout_target= [];
+    
+    
+
+    // 현재 엑셀 파일의 0번째 행을 기준으로 컬럼을 작성함.
+    // 만약 상단에 문서 제목과 같이 있는 경우
+    // 조정 필요.
+    var firstRow = jsonData[0];
+
+    if(typeof firstRow == "undefined") {
+        alert("AUIGrid 로 변환할 수 없는 엑셀 파일입니다.");
+        return;
+    }
+
+      /* $.each(firstRow, function(n,v) {
+    	  
+    	 // console.log("n : " + n);
+    	 // console.log("v : " + v);
+      
+        columnLayout_target.push({
+            dataField : n,
+            //headerText : n,
+            width : "25%"
+        });
+    }); */
+   
+    // 그리드 생성
+    myGridID_Target = AUIGrid.create("#grid_wrap_target", columnLayout_target);
+    
+    // 그리드에 데이터 삽입
+    AUIGrid.setGridData(myGridID_Target, jsonData);
+
+};
+
+
 
 
 </script>   
@@ -498,8 +612,8 @@ function auiRemoveRowHandler(){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="addRow_q">add</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_q()">del</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="addRow_q">Add</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_q()">Del</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -511,18 +625,19 @@ function auiRemoveRowHandler(){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-     <!-- <li>
+      <li>
         <div class="auto_file">
             <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
-                 <input title="file add" type="file" id="uploadfile" name="uploadfile">
+                 <input type="file" id="fileSelector" name="files" accept=".xlsx">
+                 <!-- <input title="file add" type="file" id="uploadfile" name="uploadfile">  -->
                  <label><span class="label_text"><a href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
             </form>
          </div>
     </li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_uploadFile();">ExcelUpLoad</a></p></li> -->
-    <li><p class="btn_grid"><a href="#" id="excelDown_target">ExcelDownLoad</a></p></li>
-    <li><p class="btn_grid"><a href="#" id="addRow_target">add</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_target()">del</a></p></li>
+    <!-- <li><p class="btn_grid"><a href="#" onclick="javascript:fn_uploadFile();">Excel Upload</a></p></li> -->
+    <li><p class="btn_grid"><a href="#" id="excelDown_target">Excel Download</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="addRow_target">Add</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_target()">Del</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

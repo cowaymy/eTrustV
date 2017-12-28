@@ -100,7 +100,7 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 			
 			
 			//두번째 그리드 등록...
-			ArrayList<Object> b_addList = bGrid.get(AppConstants.AUIGRID_ADD);
+			ArrayList<Object> b_addList = bGrid.get(AppConstants.AUIGRID_ALL);
 			
 			for(Object row : b_addList){
 				Map<String, Object> bRow = (Map<String, Object>) row;
@@ -108,6 +108,7 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 				//xxxMapper.insertBB(bRow);
 				((Map<String, Object>) bRow).put("crtUserId", loginId);
 				((Map<String, Object>) bRow).put("updUserId", loginId);
+				
 				surveyMgmtMapper.addSurveyEventTarget((Map<String, Object>) bRow);
 			}
 			

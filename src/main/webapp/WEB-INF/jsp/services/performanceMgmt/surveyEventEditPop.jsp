@@ -462,8 +462,8 @@ function validationCom_targetEdit(list){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="addRow_qEdit">add</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_qEdit()">del</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="addRow_qEdit">Add</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_qEdit()">Del</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -475,8 +475,8 @@ function validationCom_targetEdit(list){
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="addRow_targetEdit">add</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_targetEdit()">del</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="addRow_targetEdit">Add</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:removeRow_targetEdit()">Del</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

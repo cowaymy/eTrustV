@@ -137,6 +137,8 @@ public class SurveyMgmtController {
 			loginId=String.valueOf(sessionVO.getUserId());
 		}
 		
+		LOGGER.debug("params ======================================================={}", params);
+		
 		surveyMgmtService.addSurveyEventTarget(params, loginId);
 		
 		// 결과 만들기 예.
