@@ -84,21 +84,21 @@ function recalculateTotalAmt(){
 function fn_approval(){
 
 	if($("#dcfStusId").val() != 1 ){
-        Common.alert("<b>Only [Active] Request is allowed to Approval.</b>");   
+        Common.alert("<spring:message code='pay.alert.approvalOnlyActive'/>");   
         return;
 	}
 
 	if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to confirm DCF ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.confirmDcf'/>",function (){
 
 	    
 	    Common.ajax("POST", "/payment/approvalDCF.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
-			var message = "<b>DCF has successfully approval<br></b>";
+			var message = "<spring:message code='pay.alert.dcfSuccessApproval'/>";
 
     		Common.alert(message, function(){
 				searchList();
@@ -111,24 +111,24 @@ function fn_approval(){
 //반려처리
 function fn_reject(){
 	if($("#dcfStusId").val() != 1 ){
-        Common.alert("<b>Only [Active] Request is allowed to Reject.</b>");   
+        Common.alert("<spring:message code='pay.alert.rejectOnlyActive'/>");   
         return;
 	}
 
     if(FormUtil.checkReqValue($("#remark"))){
-        Common.alert('* Please input the Remark');
+        Common.alert("<spring:message code='pay.alert.inputRemark'/>");
         return;
     }
 
 	if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to reject DCF ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.wantToRejectDcf'/>",function (){
 	    Common.ajax("POST", "/payment/rejectDCF.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
-			var message = "<b>DCF has successfully reject<br></b>";
+			var message = "<spring:message code='pay.alert.dcfSuccessReject'/>";
 
     		Common.alert(message, function(){
 				searchList();

@@ -153,10 +153,6 @@ $(document).ready(function () {
         GridCommon.exportTo("refund _grid_wrap", 'xlsx', 'Refund List');
     });
 	
-	/* $("#payMode").multipleSelect("checkAll");
-    $("#confirmStatus").multipleSelect("setSelects", [44]);
-    $("#batchStatus").multipleSelect("setSelects", [1]); */
-	
     CommonCombo.make("payMode", "/payment/selectCodeList.do", null, "", {
         id: "code",
         name: "codeName",
@@ -287,7 +283,7 @@ function fn_formClear() {
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 <h2>Refund</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectRefundList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>

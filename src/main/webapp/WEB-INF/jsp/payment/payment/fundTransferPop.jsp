@@ -380,7 +380,7 @@ function recalculateTransferAmt(){
 //Search Order 팝업
 function fn_orderSearch(){	
 	if(FormUtil.checkReqValue($("#tranType option:selected"))){ 
-        Common.alert('<b>Please select Transfer Type</b>');
+        Common.alert("<spring:message code='pay.alert.selectTransType'/>");
         return;
     }	
 	
@@ -537,14 +537,10 @@ function recalculateSvmRentalTotalAmt(){
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Payment</li>
-        <li>Search Payment</li>
-        <li>Fund Transfer</li>
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Fund Transfer</h2>
     </aside><!-- title_line end -->
     

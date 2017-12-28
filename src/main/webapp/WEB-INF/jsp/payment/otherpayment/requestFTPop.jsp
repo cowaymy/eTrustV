@@ -80,32 +80,32 @@ function fn_FTRequest(){
 
 	//Merchant Bank 체크
     if(FormUtil.checkReqValue($("#newReason option:selected"))){
-        Common.alert('* No Reason Selected');
+        Common.alert("<spring:message code='pay.alert.noReasonSelected'/>");
         return;
     }
 	
 	if( Number($("#newAmt").val()) <= 0 ){
-    	Common.alert('* Total Target amount is less than zero');
+    	Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
     	return;
     }	
 
 	if( Number($("#oldAmt").val()) != Number($("#newAmt").val())){
-    	Common.alert('* The Amount is different.');
+    	Common.alert("<spring:message code='pay.alert.amountDifferent'/>");
     	return;
     }	
 
 	if( FormUtil.byteLength($("#newRemark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 		if( FormUtil.byteLength($("#newRemark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+    	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to request Fund Transfer ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.wantToReqFundTransfer'/>",function (){
 
 		//param data array
 		var data = {};
@@ -117,7 +117,7 @@ function fn_FTRequest(){
 		if(gridList.length > 0) {
 			data.all = gridList;
 		}  else {
-			Common.alert("There is no Payment Key-In Row Data");
+			Common.alert("<spring:message code='pay.alert.noPaymentData'/>");
 			return;
 		}
 	    
@@ -127,8 +127,8 @@ function fn_FTRequest(){
 
 	    
 	    Common.ajax("POST", "/payment/requestFT.do", data, function(result) {
-			var message = "<b>FT has successfully request<br></b>";
-			message += "<b>FT No : " + result.returnKey + "</b><br>";
+			
+			var message = "<spring:message code='pay.alert.ftSuccessReq' arguments='"+result.returnKey+"' htmlEscape='false'/>";
 
     		Common.alert(message, function(){
 				searchList();
@@ -163,7 +163,7 @@ function setTargetInfo(){
 		}
 	}
 
-	$("#newAmt").val(totalAmt);    
+	$("#newAmt").val(totalAmt); 
 }
 
 

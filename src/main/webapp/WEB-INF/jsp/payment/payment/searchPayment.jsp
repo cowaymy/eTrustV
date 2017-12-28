@@ -513,7 +513,7 @@ function fn_openWinPop(val){
             	}
             }
 		}else{
-			Common.alert("No payment selected.");
+			Common.alert("<spring:message code='pay.alert.noPay'/>");
 			return;
 		}        
     }
@@ -775,7 +775,7 @@ function fn_officialReceiptReport(){
         Common.report("reportPDFForm");
         
     }else{
-        Common.alert('No payment selected.');
+        Common.alert("<spring:message code='pay.alert.noPay'/>");
    }
 }
 
@@ -855,14 +855,11 @@ function fn_clear(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Payment</li>
-        <li>Search Payment</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Search Payment</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">

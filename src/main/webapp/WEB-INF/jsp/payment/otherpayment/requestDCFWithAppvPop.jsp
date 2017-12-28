@@ -83,28 +83,28 @@ function fn_request(){
 
 	//Merchant Bank 체크
     if(FormUtil.checkReqValue($("#reason option:selected"))){
-        Common.alert('* No Reason Selected');
+    	Common.alert("<spring:message code='pay.alert.noReason'/>");
         return;
     }
 	
 	if( Number($("#totalAmt").val()) <= 0 ){
-    	Common.alert('* Total amount is less than zero');
+		Common.alert("<spring:message code='pay.alert.amtThanZero'/>");
     	return;
     }	
 
 	if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to process Reverse ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.wantToPrcReverse'/>",function (){
 
 	    
 	    Common.ajax("POST", "/payment/requestDCFWithAppv.do", $("#_dcfSearchForm").serializeJSON(), function(result) {
-			var message = "<b>DCF has successfully completed<br></b>";
-			message += "<b>DRN No : " + result.returnKey + "</b><br>";
-
+		    
+			var message = "<spring:message code='pay.alert.dcfSuccessComplete' arguments='"+result.returnKey+"' htmlEscape='false'/>";
+			
     		Common.alert(message, function(){
 				fn_searchAdvMatchList();
 				$('#_requestDCFWithAppvPop').remove();    	      

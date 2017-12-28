@@ -59,7 +59,6 @@ $("#close_btn2").click(fn_closePop2);
 
 function fn_closePop2() {
     $("#refundInfoKeyInPop").remove();
-    //$("#ref_popup_wrap").hide();
 }
 
 function fn_setAccNo() {

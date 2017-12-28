@@ -80,14 +80,11 @@ var columnLayout = [
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Reconciliation</li>
-        <li>Reconciliation Search</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Reconciliation Search</h2>       
     </aside>
     <!-- title_line end -->

@@ -28,21 +28,21 @@ function searchFTList(){
 function fn_approval(){
 
 	if($("#ftStusId").val() != 1 ){
-        Common.alert("<b>Only [Active] Request is allowed to Approval.</b>");   
+        Common.alert("<spring:message code='pay.alert.onlyActiveReqApproval'/>");   
         return;
 	}
 
 	if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to confirm Fund Transfer ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.wantToReqFundTransfer'/>",function (){
 
 	    
 	    Common.ajax("POST", "/payment/approvalFT.do", $("#_ftSearchForm").serializeJSON(), function(result) {
-			var message = "<b>Fund Transfer has successfully approval<br></b>";
+			var message = "<spring:message code='pay.alert.fundTransSuccess'/>";
 
     		Common.alert(message, function(){
 				searchList();
@@ -55,24 +55,24 @@ function fn_approval(){
 //반려처리
 function fn_reject(){
 	if($("#ftStusId").val() != 1 ){
-        Common.alert("<b>Only [Active] Request is allowed to Reject.</b>");   
+        Common.alert("<spring:message code='pay.alert.onlyActiveReqReject'/>");   
         return;
 	}
 
     if(FormUtil.checkReqValue($("#appvRemark"))){
-        Common.alert('* Please input the Remark');
+    	Common.alert("<spring:message code='pay.alert.inputRemark'/>");
         return;
     }
 
 	if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
-    	Common.alert('* Please input the Remark below or less than 3000 bytes.');
+		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
     }
 
 	//저장처리
-	Common.confirm('<b>Are you sure want to reject Fund Transfer ?</b>',function (){
+	Common.confirm("<spring:message code='pay.alert.wanstToRejectFundTrans'/>",function (){
 	    Common.ajax("POST", "/payment/rejectFT.do", $("#_ftSearchForm").serializeJSON(), function(result) {
-			var message = "<b>Fund Transfer has successfully reject<br></b>";
+			var message = "<spring:message code='pay.alert.fundTransSuccessReject'/>";
 
     		Common.alert(message, function(){
 				searchList();

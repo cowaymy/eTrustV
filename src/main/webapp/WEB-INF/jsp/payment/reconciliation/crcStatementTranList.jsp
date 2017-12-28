@@ -92,7 +92,7 @@ function fn_saveGridMap(){
         } catch (e) {
             console.log(e);
         }
-        alert("Fail : " + jqXHR.responseJSON.message);
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
         
         fn_getCRCStatementListAjax();
     });
@@ -110,14 +110,11 @@ function resetUpdatedItems() {
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Reconciliation</li>
-        <li>Credit Card Statement</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Credit Card Statement</h2>
         <ul class="right_opt">
             <li><p class="btn_blue"><a href="javascript:fn_saveGridMap();"><spring:message code='pay.btn.save'/></a></p></li>

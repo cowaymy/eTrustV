@@ -293,7 +293,7 @@ var maintenancePopLayout = [
             });
     		
     	}else{
-    		Common.alert('No Reconciliation No. selected. ');
+    		Common.alert('<spring:message code="pay.alert.noReconciliation"/> ');
     	}
     }
     
@@ -311,7 +311,7 @@ var maintenancePopLayout = [
     	
     	if(remark != undefined){
     		
-    		Common.confirm('Are you sure you want to exclude this transaction?',function (){
+    		Common.confirm('<spring:message code="pay.alert.save.transaction"/>',function (){
                 
                 Common.ajax("GET","/payment/saveExcludeDepositItem.do", 
                         {"fDepItmId" : fDepItmId, "fDepostId" : fDepostId, "remark":remark}, function(result){
@@ -322,7 +322,7 @@ var maintenancePopLayout = [
             });
     		
     	}else{
-    		Common.alert("* Deposit Remark cannot be empty.");
+    		Common.alert('<spring:message code="pay.alert.depositRemarkEmpty"/>');
     	}
     }
     
@@ -354,11 +354,9 @@ var maintenancePopLayout = [
 <section id="content"><!-- content start -->
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	    <li>Payment</li>
-	    <li>Payment Reconciliation</li>
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 		<h2>Payment Reconciliation</h2>
 		<ul class="right_opt">
 		    <c:if test="${PAGE_AUTH.funcView == 'Y'}">

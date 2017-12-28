@@ -1048,7 +1048,7 @@ var columnLayout = [
 	    }
 	    
 	    if(addedCount == 0){
-	        Common.alert("There is no billing data and can not be selected.");
+	        Common.alert("<spring:message code='pay.alert.noBillingData'/>");
 	    }
 	    
 	    recalculatePaymentTotalAmt();
@@ -1102,7 +1102,7 @@ var columnLayout = [
 	    } 
 	    
 	    if(addedCount == 0){
-	        Common.alert("There is no billing data and can not be selected.");
+	        Common.alert("<spring:message code='pay.alert.noBillingData'/>");
 	    }
 	    
 	    recalculatePaymentTotalAmt();
@@ -1274,7 +1274,7 @@ var columnLayout = [
 	    }
 	    
 	    if(addedCount == 0){
-	        Common.alert("There is no billing data and can not be selected.");
+	        Common.alert("<spring:message code='pay.alert.noBillingData'/>");
 	    }
 	    
 	    recalculatePaymentTotalAmt();  
@@ -1286,7 +1286,7 @@ var columnLayout = [
 	    var checkArray = AUIGrid.getItemsByValue(targetBillMstGridID,"btnCheck","1");
 
 	    if(checkArray.length > 1){
-	        Common.alert("Bill Payment is allowed for only one bill. Exclude other bills excepting target one bill.");
+	        Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
 	        return;     
 	    }else{      
 	        var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);      
@@ -1335,7 +1335,7 @@ var columnLayout = [
 	        }
 	        
 	        if(addedCount == 0){
-	            Common.alert("There is no billing data and can not be selected.");
+	            Common.alert("<spring:message code='pay.alert.noBillingData'/>");
 	        }
 	        
 	        recalculatePaymentTotalAmt();
@@ -1360,7 +1360,7 @@ var columnLayout = [
         if($("#rentalOrdId").val() != ''){
             Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#rentalOrdId").val()});
         }else{
-            Common.alert('<b>Please Select a Order Info first</b>');
+            Common.alert("<spring:message code='pay.alert.selectOrderInfoFirst'/>");
             return;
         }
             
@@ -1370,7 +1370,7 @@ var columnLayout = [
         if($("#srvcOrdId").val() != ''){
             Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#srvcOrdId").val()});
         }else{
-            Common.alert('<b>Please Select a Order Info first</b>');
+            Common.alert("<spring:message code='pay.alert.selectOrderInfoFirst'/>");
             return;
         }
             
@@ -1387,24 +1387,24 @@ var columnLayout = [
     	if($("#bankDateFr").val() != '' && $("#bankDateTo").val() != ''){
     		var selBank = $("#searchBankType").val();
     		if(selBank == ''){
-    			  Common.alert("select Bank Type.");
+    			  Common.alert("<spring:message code='pay.alert.selectBankType'/>");
     			  return;
     		}
     		
     		if(selBank != ''){
 	    		if(selBank == '2730'){
 	    			if($("#searchVa").val() == ''){
-	    				Common.alert("key in VA Account.");
+	    				Common.alert("<spring:message code='pay.alert.vaAccount'/>");
 	    				return;
 	    			}
 	    		}else{
 	    			if($("#searchBankAcc").val() == ''){
-	    				Common.alert("select Bank Account.");
+	    				Common.alert("<spring:message code='pay.alert.selectBankAccount'/>");
 	    				return;
 	    			}
 	    		}
 	    	}else{
-	    		Common.alert("select Bank Type first.");
+	    		Common.alert("<spring:message code='pay.alert.selectBankType'/>");
 	    	}
 	    	Common.ajax("GET","/payment/selectBankStatementList.do",$("#searchForm").serializeJSON(), function(result){         
 	            AUIGrid.setGridData(bankGridID, result);
@@ -1462,14 +1462,14 @@ var columnLayout = [
 	             }
 	        });
 	    }else{
-	        Common.alert("select Bank In Date.");
+	        Common.alert("<spring:message code='pay.alert.selectBankDate'/>");
 	    }
     }
     
     function fn_mapping(){
     	
     	if(isMapped == 'Mapped'){
-    		Common.alert("This item has already been confirmed payment.");
+    		Common.alert("<spring:message code='pay.alert.confirmedPayment'/>");
     	}else{
 
     		var item = new Object();
@@ -1490,12 +1490,12 @@ var columnLayout = [
     			
     			//Transaction Date 체크
                 if(FormUtil.checkReqValue($("#trDateCash"))){
-                    Common.alert('* Transaction Date is empty');
+                    Common.alert("<spring:message code='pay.alert.transDateEmpty'/>");
                     return;
                 }
     			
                 if(FormUtil.checkReqValue($("#cash").find("#amount")) ||$("#cash").find("#amount").val() <= 0 ){
-                    Common.alert('* No Amount ');
+                    Common.alert("<spring:message code='pay.alert.noAmount'/>");
                     return;
                 }
     			
@@ -1503,18 +1503,18 @@ var columnLayout = [
                 if(selBankType != '' ){
 	                if(selBankType == '2730'){
 	                	if(FormUtil.checkReqValue($("#cash").find("#va"))){
-	                        Common.alert('* VA Account is empty');
+	                        Common.alert("<spring:message code='pay.alert.vaAccountEmpty'/>");
 	                        return;
 	                    }
 	                }else{
 	                	$("#cash").find("#bankAcc").prop("disabled", false);
 	                	if(FormUtil.checkReqValue($("#bankAccCash option:selected"))){
-	                        Common.alert('* No Bank Account Selected');
+	                        Common.alert("<spring:message code='pay.alert.noBankAccount'/>");
 	                        return;
 	                    }
 	                }
                 }else{
-                    Common.alert("Select Bank Type");
+                    Common.alert("<spring:message code='pay.alert.selectBankType'/>");
                     return;
                 }
                 
@@ -1523,12 +1523,12 @@ var columnLayout = [
     			
     			//Transaction Date 체크
                 if(FormUtil.checkReqValue($("#trDateCheque"))){
-                    Common.alert('* Transaction Date is empty');
+                    Common.alert("<spring:message code='pay.alert.transDateEmpty'/>");
                     return;
                 }
     			
                 if(FormUtil.checkReqValue($("#cheque").find("#amount")) ||$("#cheque").find("#amount").val() <= 0 ){
-                    Common.alert('* No Amount ');
+                    Common.alert("<spring:message code='pay.alert.noAmount'/>");
                     return;
                 }
                 
@@ -1536,18 +1536,18 @@ var columnLayout = [
                 if(selBankType != '' ){
                     if(selBankType == '2730'){
                         if(FormUtil.checkReqValue($("#cheque").find("#va"))){
-                            Common.alert('* VA Account is empty');
+                            Common.alert("<spring:message code='pay.alert.vaAccountEmpty'/>");
                             return;
                         }
                     }else{
                     	console.log("mapping bankAccount");
                         if(FormUtil.checkReqValue($("#bankAccCheque option:selected"))){
-                             Common.alert('* Bank Account is empty');
+                             Common.alert("<spring:message code='pay.alert.noBankAccount'/>");
                              return;
                         }
                     }
                 }else{
-                	Common.alert("Select Bank Type");
+                	Common.alert("<spring:message code='pay.alert.selectBankType'/>");
                 	return;
                 }
                 
@@ -1566,12 +1566,12 @@ var columnLayout = [
     			
     			//Transaction Date 체크
                 if(FormUtil.checkReqValue($("#trDateOnline"))){
-                    Common.alert('* Transaction Date is empty');
+                    Common.alert("<spring:message code='pay.alert.transDateEmpty'/>");
                     return;
                 }
     			
                 if(FormUtil.checkReqValue($("#online").find("#amount")) ||$("#online").find("#amount").val() <= 0 ){
-                    Common.alert('* No Amount ');
+                    Common.alert("<spring:message code='pay.alert.noAmount'/>");
                     return;
                 }
                 
@@ -1579,17 +1579,17 @@ var columnLayout = [
                 if(selBankType != '' ){
                     if(selBankType == '2730'){
                         if(FormUtil.checkReqValue($("#online").find("#va"))){
-                            Common.alert('* VA Account is empty');
+                            Common.alert("<spring:message code='pay.alert.vaAccountEmpty'/>");
                             return;
                         }
                     }else{
                         if(FormUtil.checkReqValue($("#bankAccOnline option:selected"))){
-                             Common.alert('* Bank Account is empty');
+                             Common.alert("<spring:message code='pay.alert.noBankAccount'/>");
                              return;
                         }
                     }
                 }else{
-                    Common.alert("Select Bank Type");
+                    Common.alert("<spring:message code='pay.alert.selectBankType'/>");
                     return;
                 }
             }
@@ -1910,7 +1910,7 @@ var columnLayout = [
   function fn_billOrderSearch(){
 	    
 	    if(FormUtil.checkReqValue($("#billSearchTxt"))){
-	        Common.alert("Please Key-In Search Keywords");
+	        Common.alert("<spring:message code='pay.alert.searchKeywords'/>");
 	        return;
 	    }
 	    
@@ -1997,7 +1997,7 @@ var columnLayout = [
 	    if(gridList.length > 0) {
 	        data.all = gridList;
 	    }  else {
-	        Common.alert("There is no Payment Key-In Row Data");
+	        Common.alert("<spring:message code='pay.alert.noRowData'/>");
 	        return;
 	    }
 	        
@@ -2010,7 +2010,7 @@ var columnLayout = [
 	    //Bill Payment : Order 정보 조회
 	    Common.ajax("POST", "/payment/common/saveNormalPayment.do", data, function(result) {
 	        
-	    	var message = "<b>Success Payment Process<br><br></b>";
+	    	var message = "<spring:message code='pay.alert.successProc'/>";
 	        
 	        if(result != null && result.length > 0){
 	            for(i=0 ; i < result.length ; i++){
@@ -2030,7 +2030,7 @@ var columnLayout = [
   function removeFromFinal(){
       
       if (selectedGridValue  > -1){
-          Common.confirm('Are you sure you want to remove the Selected Row?'
+          Common.confirm("<spring:message code='pay.alert.selectedRow'/>"
           ,function (){
               //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
               AUIGrid.removeRow(targetFinalBillGridID,selectedGridValue);
@@ -2038,7 +2038,7 @@ var columnLayout = [
               recalculatePaymentTotalAmt();
           });
       }else{
-          Common.alert('<b>Please Select a ROW to remove from the Payment Key-In Grid</b>');
+          Common.alert("<spring:message code='pay.alert.removeRow'/>");
       }
   }
 //Collector 조회 팝업
@@ -2229,7 +2229,7 @@ function addOutSrvcToFinal(){
     
 
     if(addedCount == 0){
-    	Common.alert("There is no billing data and can not be selected.");
+    	Common.alert("<spring:message code='pay.alert.noBillingData'/>");
     }
     
     recalculatePaymentTotalAmt();
@@ -2257,13 +2257,11 @@ function fn_setSearchPayType() {
 <section id="content">
 <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Manual Key-In</li>
     </ul>
 <div id="page1">
     <!-- title_line start -->
     <aside class="title_line">
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 		<h2>Manual Key-In</h2>
 		<ul class="right_btns">
 		 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">

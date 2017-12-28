@@ -268,7 +268,7 @@ var batchInfoLayout = [
             });
             
         }else{
-            Common.alert('No batch selected. ');
+            Common.alert("<spring:message code='pay.alert.noBatchSelected'/>");
         }
     }
     
@@ -371,11 +371,11 @@ var batchInfoLayout = [
                 });
                 
             }else{
-                Common.alert("Batch [" + batchId + "] is not active. Batch confirm is disallowed.");
+                Common.alert("<spring:message code='pay.alert.batchConfirmDisallowed' arguments='"+batchId+"' htmlEscape='false'/>");
             }
             
         }else{
-            Common.alert('No batch selected. ');
+            Common.alert("<spring:message code='pay.alert.noBatchSelected'/>");
         }
     }
     
@@ -388,13 +388,13 @@ var batchInfoLayout = [
     
     function fn_confirmBatch(){
         
-        Common.confirm('Are you sure want to confirm this payment batch ?',function (){
+        Common.confirm("<spring:message code='pay.alert.wantToConfirmPayBatch'/>",function (){
             var totalInvalid = $('#totalInvalid_conf').text();
             var totalValid = $('#totalValid_conf').text();
             var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             
             if(totalInvalid > 0){
-                Common.alert("There is some invalid item exist.<br />Batch confirm is disallowed.");
+                Common.alert("<spring:message code='pay.alert.invalidItemExist'/>");
                 return;
             }else{
                 if(totalValid > 0){
@@ -408,7 +408,7 @@ var batchInfoLayout = [
                     });
                     
                 }else{
-                    Common.alert("No valid item found.<br />Batch confirm is disallowed.");
+                    Common.alert("<spring:message code='pay.alert.noValidItemFound'/>");
                     return;
                 }
             }
@@ -416,7 +416,7 @@ var batchInfoLayout = [
     }
     
     function fn_deactivateBatch(){
-        Common.confirm('Are you sure want to deactivate this payment batch ?',function (){
+        Common.confirm("<spring:message code='pay.alert.deactivatePayBatch'/>",function (){
             var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
             Common.ajax("GET","/payment/saveDeactivateBatch.do", {"batchId" : batchId}, function(result){
                 console.log(result);
@@ -438,7 +438,7 @@ var batchInfoLayout = [
         var payModeId = $("#paymentMode option:selected").val();
         
         if(payModeId == ""){
-            Common.alert("Please select the payment mode.");
+            Common.alert("<spring:message code='pay.alert.selectPayMode'/>");
             return;
         }
         
@@ -511,18 +511,16 @@ var batchInfoLayout = [
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Internal Staff Payment</li>
     </ul>
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Internal Staff Payment</h2>
         <ul class="right_btns">
              <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-                <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span>Search</a></p></li>
+                <li><p class="btn_blue"><a href="#" onclick="searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </c:if>
-            <li><p class="btn_blue"><a href="#" onclick="fn_clear();"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a href="#" onclick="fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside><!-- title_line end -->
     <!-- search_table start -->

@@ -134,12 +134,12 @@
                       //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                       AUIGrid.removeRow(myUploadGridID,0);
                   } else {
-                      alert('No data to import!');
+                	  Common.alert("<spring:message code='pay.alert.noData'/>");
                   }
               };
 
               reader.onerror = function() {
-                  alert('Unable to read ' + file.fileName);
+            	  Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
               };
           }
 
@@ -156,19 +156,19 @@
         		FormUtil.checkReqValue($("#uploadDateFr")) &&
         		FormUtil.checkReqValue($("#uploadDateTo")) &&
         		FormUtil.checkReqValue($("#uploadUserNm")) ){
-            Common.alert('* Please input search condition <br />');
+            Common.alert("<spring:message code='pay.alert.searchCondition'/>");
             return;
         }
         
         if((!FormUtil.checkReqValue($("#tranDateFr")) && FormUtil.checkReqValue($("#tranDateTo"))) ||
                 (FormUtil.checkReqValue($("#tranDateFr")) && !FormUtil.checkReqValue($("#tranDateTo"))) ){
-            Common.alert('* Please input Transaction Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
             return;
         }
         
         if((!FormUtil.checkReqValue($("#uploadDateFr")) && FormUtil.checkReqValue($("#uploadDateTo"))) ||
                 (FormUtil.checkReqValue($("#uploadDateFr")) && !FormUtil.checkReqValue($("#uploadDateTo"))) ){
-            Common.alert('* Please input Upload Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputUploadDate'/>");
             return;
         }
     	
@@ -224,35 +224,35 @@ function upload(){
     data.form = $("#uploadForm").serializeJSON();
     
     if(FormUtil.checkReqValue($("#uploadTranDt")) ){
-        Common.alert('* Please select the Transaction Date.<br />');
+        Common.alert("<spring:message code='pay.alert.selectTransDate'/>");
         return;
     }
 
     if(FormUtil.checkReqValue($("#uploadIssueBank option:selected")) ){
-        Common.alert('* Please select the Bank Code.<br />');
+        Common.alert("<spring:message code='pay.alert.selectBankCode'/>");
         return;
     }
 
     if(FormUtil.checkReqValue($("#uploadBankAccount option:selected")) ){    
-        Common.alert('* Please select the Bank Account.<br />');
+        Common.alert("<spring:message code='pay.alert.selectBankAccount'/>");
         return;
     }
 
     if(FormUtil.checkReqValue($("#uploadRemark")) ){    
-        Common.alert('* Please insert the Remark<br />');
+        Common.alert("<spring:message code='pay.alert.insertRemark'/>");
         return;
     }
     
     if(data.all.length < 1){
-        Common.alert('* Select the CSV file on the loca PC<br />');
+        Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
         return;
     }
 
     //Ajax 호출
-    Common.confirm('<b>Are you sure want to upload this Bank Statement items?</b>',function (){
+    Common.confirm("<spring:message code='pay.alert.uploadBankStateItems'/>",function (){
     	Common.ajax("POST", "/payment/uploadBankStatement.do", data, 
                 function(result) {
-                    var returnMsg = "This Bank Statement form has successfully been uploaded.";
+                    var returnMsg = "<spring:message code='pay.alert.bankStateFormSuccess'/>";
         
                     Common.alert(returnMsg, function (){
                         hideViewPopup('#upload_wrap');
@@ -269,7 +269,7 @@ function upload(){
                         console.log(e);
                     }
                     
-                    alert("Fail : " + jqXHR.responseJSON.message);        
+                    Common.alert("Fail : " + jqXHR.responseJSON.message);        
                 });
     });    
 	   
@@ -320,7 +320,7 @@ function commitFormSubmit() {
             }
         },
         error : function(e) {
-            alert("ajaxSubmit Error : " + e);
+        	Common.alert("ajaxSubmit Error : " + e);
         }
     });
 
@@ -332,14 +332,11 @@ function commitFormSubmit() {
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Other Payment</li>        
-        <li>Upload Bank Statement</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Upload Bank Statement</h2>
         <ul class="right_btns">
              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">

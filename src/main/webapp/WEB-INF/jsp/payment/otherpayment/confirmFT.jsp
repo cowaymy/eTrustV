@@ -64,7 +64,7 @@
 		if(FormUtil.checkReqValue($("#reqNo"))){			
 			if(FormUtil.checkReqValue($("#reqDateFr")) ||
 				FormUtil.checkReqValue($("#reqDateTo"))){
-	            Common.alert('* Please input Request Date <br />');
+	            Common.alert("<spring:message code='pay.alert.inputReqDate'/>");
 		        return;
 			}	
 		}        
@@ -96,7 +96,7 @@
 			Common.popupDiv('/payment/initConfirmFTPop.do', {"ftReqId" : ftReqId, "ftStusId" : ftStusId}, null , true ,'_confirmFTPop');
 			
 		}else{
-             Common.alert('No Fund Transfer List selected.');
+             Common.alert("<spring:message code='pay.alert.transListSelected'/>");
         }	
 	}
 
@@ -105,14 +105,11 @@
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Other Payment</li>        
-        <li>Confirm Fund Transfer</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Confirm Fund Transfer</h2>
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     

@@ -157,7 +157,6 @@ function fn_createConfirmAUIGrid() {
     // 실제로 #grid_wrap 에 그리드 생성
     confirmGridID = AUIGrid.create("#refund_confirm_grid_wrap", confirmColumnLayout, confirmGridPros);
     // AUIGrid 에 데이터 삽입합니다.
-    //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
     
     fn_setConfirmGridEvent();
 }
@@ -196,12 +195,12 @@ function fn_isEmptyRefundInfo(data) {
     for(var i = 0; i < data.length; i++) {
         if(FormUtil.isEmpty(data[i].refModeName)) {
             result = false;
-            Common.alert('Please enter Refund Mode of line ' + (i+1));
+            Common.alert("<spring:message code='pay.alert.enterRefundMode' arguments='"+(i+1)+"' htmlEscape='false'/>");
             break;
         }
         if(FormUtil.isEmpty(data[i].bankAccName)) {
             result = false;
-            Common.alert('Please enter Bank Account of line ' + (i+1));
+            Common.alert("<spring:message code='pay.alert.enterBankAccount' arguments='"+(i+1)+"' htmlEscape='false'/>");
             break;
         }
     }
@@ -391,7 +390,7 @@ function fn_validStusIdCheckForConfirm() {
     for(var i = 0; i < gridDataList.length; i++) {
         if(FormUtil.isEmpty(gridDataList[i].validStusId)) {
             result = false;
-            Common.alert('Please check the validation first.');
+            Common.alert("<spring:message code='pay.alert.validFirst'/>");
             break;
         }
     }
@@ -429,7 +428,6 @@ function fn_refundConfirm() {
             }
         });
     }
-    console.log("fn_confirm Action end");
 }
 
 function fn_refundItemDisab() {
@@ -437,14 +435,9 @@ function fn_refundItemDisab() {
     if(fn_validStusIdCheckForConfirm()) {
         if(detId > 0) {
             Common.ajax("POST", "/payment/refundItemDisab.do", {detId:detId,batchIdList:batchIdList}, function(result) {
-                console.log(result);
-                
-                //$('#btnConf').hide();
-                //$('#btnDeactivate').hide();
                 
                 Common.alert(result.message);
                 
-                //fn_setConfirmRefund(result.data);
                 AUIGrid.removeRow(confirmGridID, AUIGrid.getRowIndexesByValue(confirmGridID, "detId", detId));
                 
                 fn_setConfirmRefundHeader(result.data);

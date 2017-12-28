@@ -308,7 +308,7 @@ var journalPopLayout = [
             
             });
         }else{
-        	Common.alert('No Statement selected.');
+        	Common.alert("<spring:message code='pay.alert.noStatement'/>");
         }
     }
     
@@ -348,7 +348,7 @@ var journalPopLayout = [
             
             });
         }else{
-            Common.alert('No Statement selected.');
+            Common.alert("<spring:message code='pay.alert.noStatement'/>");
         }
     }
     
@@ -371,11 +371,11 @@ var journalPopLayout = [
                 });
     			
     		}else{
-    			Common.alert('* Debtor Account are composulary field .');
+    			Common.alert("<spring:message code='pay.alert.debtorAccountComposulary'/>");
     		}
     		
     	}else{
-    		Common.alert('* Remark are composulary field .');
+    		Common.alert("<spring:message code='pay.alert.remarkComposulary'/>");
     	}
     }
     
@@ -390,7 +390,7 @@ var journalPopLayout = [
             });
             
         }else{
-            Common.alert('* Remark are composulary field .');
+            Common.alert("<spring:message code='pay.alert.remarkComposulary'/>");
         }
         
     }
@@ -444,11 +444,9 @@ var journalPopLayout = [
 <section id="content"><!-- content start -->
 	<ul class="path">
 	    <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	    <li>reconciliation</li>
-	    <li>Bank Account Reconciliation</li>
 	</ul>
 	<aside class="title_line"><!-- title_line start -->
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 		<h2>Bank Account Reconciliation</h2>
 		<ul class="right_btns">
 		    <c:if test="${PAGE_AUTH.funcView == 'Y'}">

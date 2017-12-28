@@ -65,13 +65,13 @@
     function searchList(){
     	
     	if(FormUtil.checkReqValue($("#ordNo"))){
-            Common.alert('* Please search order number first. <br />');
+            Common.alert("<spring:message code='pay.alert.orderNumberFirst'/>");
             return;
         }
         
         if(FormUtil.checkReqValue($("#tranDateFr")) ||
 			FormUtil.checkReqValue($("#tranDateTo"))){
-            Common.alert('* Please input Transaction Date <br />');
+            Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
             return;
         }
     	
@@ -112,9 +112,9 @@
 			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
 
 			if (revStusId == 1) {
-				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been Requested. </b>");   
+				Common.alert("<spring:message code='pay.alert.groupNumberRequested' arguments='"+groupSeq+"' htmlEscape='false'/>");
 			} else if (revStusId == 5) {
-				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been Approved. </b>");   
+				Common.alert("<spring:message code='pay.alert.groupNumberApproved' arguments='"+groupSeq+"' htmlEscape='false'/>");
 			} else {
 				Common.popupDiv('/payment/initRequestDCFPop.do', {"groupSeq" : groupSeq}, null , true ,'_requestDCFPop');
 			}
@@ -170,14 +170,11 @@
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Other Payment</li>        
-        <li>Payment List</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Payment List</h2>
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcView == 'Y'}">

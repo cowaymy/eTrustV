@@ -65,7 +65,7 @@
 		if(FormUtil.checkReqValue($("#reqNo"))){			
 			if(FormUtil.checkReqValue($("#reqDateFr")) ||
 				FormUtil.checkReqValue($("#reqDateTo"))){
-	            Common.alert('* Please input Request Date <br />');
+	            Common.alert("<spring:message code='pay.alert.reqDate'/>");
 		        return;
 			}	
 		}        
@@ -97,7 +97,7 @@
 			Common.popupDiv('/payment/initConfirmDCFPop.do', {"groupSeq" : groupSeq, "reqNo" : dcfReqId, "dcfStusId" : dcfStusId}, null , true ,'_confirmDCFPop');
 			
 		}else{
-             Common.alert('No DCF List selected.');
+             Common.alert("<spring:message code='pay.alert.noDcf'/>");
         }	
 	}
 
@@ -106,14 +106,11 @@
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Other Payment</li>        
-        <li>Confirm DCF</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Confirm DCF</h2>
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcView == 'Y'}">

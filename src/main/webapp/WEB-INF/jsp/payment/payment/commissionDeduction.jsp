@@ -157,7 +157,7 @@ function fn_clickArea2(){
         });
         
     }else{
-        Common.alert("Select a file.");
+        Common.alert("<spring:message code='pay.alert.selectFile'/>");
     }
 }
 </script>
@@ -165,12 +165,10 @@ function fn_clickArea2(){
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Commission Deduction</li>
     </ul>
 
     <aside class="title_line"><!-- title_line start -->
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Commission Deduction</h2>
     </aside><!-- title_line end -->
 

@@ -69,11 +69,11 @@ $(document).ready(function(){
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(myGridID, event.target.result, false);
                 } else {
-                    alert('No data to import!');
+                	Common.alert("<spring:message code='pay.alert.noData'/>");
                 }
             };
             reader.onerror = function() {
-                alert('Unable to read ' + file.fileName);
+            	Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
             };
         }
     });
@@ -102,7 +102,7 @@ function createAUIGrid(columnLayout) {
         
         displayTreeOpen : true,
         
-        noDataMessage : "Select the CSV file on the local PC.",
+        noDataMessage : "<spring:message code='pay.alert.claimSelectCsvFile'/>",
         
     };
 
@@ -144,7 +144,7 @@ function commitFormSubmit() {
          }
      },
      error : function(e) {
-         alert("ajaxSubmit Error : " + e);
+    	 Common.alert("ajaxSubmit Error : " + e);
      }
  });
 };
@@ -155,17 +155,17 @@ function fn_saveGridMap(){
 	
 	//필수항목 입력여부	
 	if($("#crcStateRefDt").val() == ''){
-		alert("* Reference Date are composulary field . ");
+		Common.alert("<spring:message code='pay.alert.refDateComposulary'/>");
 		return;
 	}
 	
 	if($("#crcStateCardAccount").val() == ''){
-	     alert("* CRC Bank Account Code are composulary field . ");
+		Common.alert("<spring:message code='pay.alert.crcBankAccComposulary'/>");
 	     return;
 	 }
 	
 	 if($("#crcStateAccId").val() == ''){
-	     alert("* Account Code are composulary field . ");
+		 Common.alert("<spring:message code='pay.alert.accCodeComposulary'/>");
 	     return;
 	 }
 	 
@@ -179,7 +179,7 @@ function fn_saveGridMap(){
     if(gridList.length > 0) {
     	data.all = gridList;
     }  else {
-    	alert('Select the CSV file on the loca PC');
+    	Common.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
     	return;
     	//data.all = [];
     }
@@ -204,7 +204,7 @@ function fn_saveGridMap(){
         } catch (e) {
             console.log(e);
         }
-        alert("Fail : " + jqXHR.responseJSON.message);        
+        Common.alert("Fail : " + jqXHR.responseJSON.message);        
     });
 }
 
@@ -238,7 +238,7 @@ function fn_testCallStoredProcedure(){
       } catch (e) {
           console.log(e);
       }
-      alert("Fail : " + jqXHR.responseJSON.message);        
+      Common.alert("Fail : " + jqXHR.responseJSON.message);        
   });
 }
 </script>
@@ -246,14 +246,11 @@ function fn_testCallStoredProcedure(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/image/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Reconciliation</li>
-        <li>CRC Statement Upload</li>
     </ul>
 
 	<!-- title_line start -->
 	<aside class="title_line">
-		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+		<p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
 		<h2>CRC Statement Upload</h2>
 		<ul class="right_opt">
 			<li><p class="btn_blue multy"><a href="${pageContext.request.contextPath}/resources/download/CRC_Statement.csv"><spring:message code='pay.btn.download'/><br /><spring:message code='pay.btn.csvFileFormat'/></a></p></li>

@@ -12,7 +12,7 @@ $(document).ready(function(){
 function fn_genDocument(){
 	
 	if(FormUtil.checkReqValue($('#V_PAYDATEFROM')) || FormUtil.checkReqValue($('#V_PAYDATETO'))){
-		Common.alert('* Please key in the payment date (From & To).');
+		Common.alert("<spring:message code='pay.alert.payDateFromTo'/>");
 		return;
 	}
    
@@ -33,14 +33,11 @@ function fn_clear(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Payment</li>
-        <li>Daily Collection Raw</li>
     </ul>
 
     <!-- title_line start -->
     <aside class="title_line">
-        <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+        <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Daily Collection Raw</h2>
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">

@@ -10,7 +10,7 @@
     function fn_searchOutStandView(){
     	
     	if($('#orderNo').val() == ""){
-    		Common.alert("Please key in the order number.");
+    		Common.alert("<spring:message code='pay.alert.orderNumber.'/>");
     		return;
     	}
     	
@@ -120,7 +120,7 @@
                 $('#srvContractTotalOutstanding').val($.number(result.orderOutstandingView[0].srvcontracttotalamount, 2));
                 
             }else{
-            	Common.alert("* Please enter an valid order no.");
+            	Common.alert("<spring:message code='pay.alert.enterValidOrderNo'/>");
             }
             
         });
@@ -130,7 +130,7 @@
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         }else{
-            Common.alert('* Please enter an order no.');
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
             return;
         }
     }
@@ -139,7 +139,7 @@
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         }else{
-            Common.alert('* Please enter an order no.');
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
             return;
         }
     }
@@ -148,7 +148,7 @@
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/payment/initOrderPaymentListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
         }else{
-            Common.alert('* Please enter an order no.');
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
             return;
         }
     }
@@ -157,7 +157,7 @@
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
         }else{
-            Common.alert('* Please enter an order no.');
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
             return;
         }
     }
