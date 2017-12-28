@@ -146,6 +146,7 @@ $(function(){
     $("#clear").click(function(){
         $('#searchMatCode').val('');
         $('#searchMatName').val('');
+        $('#speriod').val('');
         doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
         doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
         doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
@@ -210,10 +211,8 @@ $(function(){
           //  dat.form = $("#headForm").serializeJSON();
           console.log(dat);
             Common.ajax("POST", "/logistics/replenishment/relenishmentSaveRdc.do", dat, function(result) {
-                //Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
-                //Common.alert(result.message , locationList);
+                Common.alert(result.message);
                 AUIGrid.resetUpdatedItems(listGrid, "all");
-                //location.href = '/logistics/stockMovement/StockMovementList.do'; 
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {
