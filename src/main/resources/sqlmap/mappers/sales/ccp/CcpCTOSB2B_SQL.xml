@@ -26,7 +26,7 @@
 				                            FROM(   SELECT        
 				                                        T1.BATCH_ID,
 				                                        <![CDATA[      
-				                                        CASE WHEN(T2.PRCSS = 1) THEN 1 ELSE 0 END COMPL,   
+				                                        CASE WHEN(T2.PRCSS = 1 OR T2.PRCSS = 2) THEN 1 ELSE 0 END COMPL,   
 				                                        CASE WHEN(T2.PRCSS = 0) THEN 1 ELSE 0 END ACT,     
 				                                        CASE WHEN(T2.FICO_SCRE = 0) THEN 1 ELSE 0 END ZERO,       
 				                                        CASE WHEN(T2.FICO_SCRE > 500) THEN 1 ELSE 0 END GT501,     
