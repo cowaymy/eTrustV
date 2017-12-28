@@ -3,6 +3,76 @@
 <mapper namespace="com.coway.trust.biz.sales.mambership.impl.MembershipMapper">
 
     <select id="selectMembershipList" parameterType="Map" resultType="egovMap">
+	    SELECT A.MBRSH_ID  ,
+		           A.MBRSH_NO  ,
+		           A.ORD_ID  ,
+		           A.ORD_NO  ,
+		           CASE WHEN ( A.MBRSH_STUS_ID IS NOT NULL ) THEN A.MBRSH_STUS_ID ELSE 0 END MBRSH_STUS_ID, 
+		           A.MBRSH_STUS_CODE  ,
+		           A.MBRSH_CRT_USER_ID  ,
+		           A.MBRSH_CRT_DT  ,
+		           CASE WHEN ( A.MBRSH_START_DT IS NOT NULL )  THEN A.MBRSH_START_DT ELSE ''END MBRSH_START_DT  ,
+		           CASE WHEN ( A.MBRSH_EXPR_DT IS NOT NULL ) THEN A.MBRSH_EXPR_DT ELSE '' END MBRSH_EXPR_DT  ,
+		           A.PAC_NAME  ,
+		           A.MBRSH_DUR  ,
+		           A.MBRSH_OTSTND  ,
+		           A.CUST_NAME  ,
+		           A.CUST_IC  
+		   FROM SAL1004V A
+		   <if test="orgCode != null and orgCode != '' ">
+		           JOIN SYS0047M USR ON A.SRV_MEM_SALES_MEM_ID = USR.USER_ID
+		           JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
+                                        <if test="memCode != null and memCode != '' ">
+                                            AND B.MEM_CODE = #{memCode}
+                                        </if>
+		           JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
+	                                      AND C.LAST_ORG_CODE = #{orgCode}
+	                                      <if test="grpCode != null and grpCode != '' ">
+	                                      AND C.LAST_GRP_CODE = #{grpCode}
+	                                      </if>
+	                                      <if test="deptCode != null and deptCode != '' ">
+	                                      AND C.LAST_GRP_CODE = #{deptCode}
+	                                      </if>
+            </if>			                                      
+	    WHERE  1=1
+	    <if test="MBRSH_STUS_ID != null and MBRSH_STUS_ID != ''">
+	        AND A.MBRSH_STUS_ID IN
+	        <foreach item="item" collection="MBRSH_STUS_ID" index="index" open="(" separator="," close=")">
+	            #{item}
+	        </foreach>
+	    </if>
+	              
+	    <if test="MBRSH_NO != null and MBRSH_NO != ''">
+	        AND A.MBRSH_NO = #{MBRSH_NO}
+	    </if>
+	         
+	    <if test="ORD_NO != null and ORD_NO != ''">
+	        AND A.ORD_NO = #{ORD_NO}
+	    </if>
+	                    
+	    <if test="MBRSH_CRT_USER_ID != null and MBRSH_CRT_USER_ID != ''">
+	        AND A.MBRSH_CRT_USER_ID = #{MBRSH_CRT_USER_ID}
+	    </if>
+	                    
+	    <if test="MBRSH_OTSTND  ==1 ">
+	        AND (A.MBRSH_OTSTND <![CDATA[ > ]]>   0)
+	    </if>
+	                    
+	    <if test="MBRSH_OTSTND  == 2 ">
+	        AND (A.MBRSH_OTSTND = 0)
+	    </if>
+	                    
+	    <if test="MBRSH_OTSTND  ==3 ">
+	        AND (A.MBRSH_OTSTND <![CDATA[ <  ]]> 0 )
+	    </if>
+	                  
+	    <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">   
+	        AND to_char(A.MBRSH_CRT_DT,'yyyymmdd') =  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd') 
+	    </if>
+	    ORDER BY ORD_ID  ASC
+  
+    </select>
+<!--     <select id="selectMembershipList" parameterType="Map" resultType="egovMap">
 			   SELECT 
 			      MBRSH_ID  ,
 			      MBRSH_NO  ,
@@ -93,7 +163,7 @@
 			  ORDER BY ORD_ID  ASC
 			  
   
-    </select>
+    </select> -->
     
     
     

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -41,9 +42,25 @@ public class MembershipController {
 
 	@Resource(name = "membershipService")
 	private MembershipService membershipService;
+	
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 	@RequestMapping(value = "/membershipList.do")
-	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String main(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		logger.debug("sessionVO ============>> " + sessionVO.getUserTypeId());
+		
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+			
+			model.put("orgCode", result.get("lastOrgCode"));
+			model.put("grpCode", result.get("lastGrpCode"));
+			model.put("deptCode", result.get("lastDeptCode"));
+		}
+		
 		return "sales/membership/membershipList";
 	} 
 
@@ -595,7 +612,9 @@ public class MembershipController {
 	}
 	
 	@RequestMapping(value="/membershipOutrightExpireListPop.do")
-	public String membershipOutrightExpireListPop(){
+	public String membershipOutrightExpireListPop(ModelMap model, SessionVO sessionVO) {
+
+		model.put("userTypeId", sessionVO.getUserTypeId());
 		
 		return "sales/membership/membershipOutrightExpireListPop";
 	}

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipQuotationService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -49,16 +50,29 @@ public class  MembershipQuotationController {
 	@Resource(name = "membershipQuotationService")
 	private MembershipQuotationService membershipQuotationService;      
 	
-
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 	
 	@RequestMapping(value = "/membershipQuotationList.do")
-	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String main(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		logger.debug("in  membershipQuotation.do ");  
 
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
+		
+		logger.debug("sessionVO ============>> " + sessionVO.getUserTypeId());
+		
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+			
+			model.put("orgCode", result.get("lastOrgCode"));
+			model.put("grpCode", result.get("lastGrpCode"));
+			model.put("deptCode", result.get("lastDeptCode"));
+		}
 		
 		return "sales/membership/membershipQuotationList";
 	}

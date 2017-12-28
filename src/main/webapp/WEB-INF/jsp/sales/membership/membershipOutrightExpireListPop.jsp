@@ -5,6 +5,10 @@
 
 $(document).ready(function() {
     
+	if("${SESSION_INFO.userTypeId}" == "1" ){
+        $("#cmbCodyStatus").prop("disabled", true);
+	}
+	
     $("#reportInvoiceForm").empty();
     
     /* 멀티셀렉트 플러그인 start */

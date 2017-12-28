@@ -5,6 +5,108 @@
     
     <select id="quotationList" parameterType="Map" resultType="egovMap">
 			      
+		SELECT A.QUOT_ID   ,
+			       A.QTY_FILTER_CHRG   ,
+			       A.QUOT_NO   ,
+			       A.PAC_ID   ,
+			       A.PAC_CODE   ,
+			       A.PAC_DESC   ,
+			       A.ORD_ID   ,
+			       A.ORD_NO   ,
+			       A.PAC_AMT   ,
+			       A.FILTER_AMT   ,
+			       A.TOT_AMT   ,
+			       A.DUR DUR  ,
+			       A.REM REM  ,
+			       A.VALID_DT   ,
+			       A.CRT_DT   ,
+			       A.CRT_USER_ID   ,
+			       A.QUOT_STUS_ID   ,
+			       A.QUOT_STUS_CODE   ,
+			       A.UPD_DT   ,
+			       A.UPD_USER_ID   ,
+			       A.CNT_ID   ,
+			       A.CNT_NAME   ,
+			       A.CNT_NRIC   ,
+			       A.CNT_TEL_MOB   ,
+			       A.CNT_TEL_OFF   ,
+			       A.CNT_TEL_FAX   ,
+			       A.CNT_TEL_RES   ,
+			       A.CNT_EMAIL   ,
+			       A.CNT_GENDER   ,
+			       A.CNT_RACE   ,
+			       A.PAC_PROMO_ID   ,
+			       A.PAC_PROMO_CODE   ,
+			       A.PAC_PROMO_DESC   ,
+			       A.PROMO_ID   ,
+			       A.PROMO_CODE   ,
+			       A.PROMO_DESC   ,
+			       A.BS_FREQ   ,
+			       A.MEM_ID   ,
+			       A.MEM_CODE   ,
+			       A.MEM_NAME   ,
+			       A.VALID_STUS   ,
+			       A.VALID_STUS_ID   ,
+			       A.CNVR_MEM_ID   ,
+			       A.CNVR_MEM_NO   ,
+			       A.STK_ID   ,
+			       A.STK_CODE   ,
+			       A.STK_DESC   ,
+			       A.CUST_NAME   ,
+			       A.CUST_IC   ,
+			       A.TOT_CNT   ,
+			       A.REF_NO REF_NO  ,
+			       DECODE( (SELECT COUNT(SRV_MEM_QOTAT_ID) FROM   PAY0024D P   WHERE   P.SRV_MEM_QOTAT_ID = QUOT_ID ) ,'0' ,'0','1' ) HASBILL
+           FROM SAL1005V A
+            		<if test="orgCode != null and orgCode != '' ">
+		                   JOIN SYS0047M USR ON A.SRV_SALES_MEM_ID = USR.USER_ID
+		                   JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
+		                                        <if test="memCode != null and memCode != '' ">
+		                                            AND B.MEM_CODE = #{memCode}
+		                                        </if>
+		                   JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
+		                                          AND C.LAST_ORG_CODE = #{orgCode}
+		                                          <if test="grpCode != null and grpCode != '' ">
+		                                          AND C.LAST_GRP_CODE = #{grpCode}
+		                                          </if>
+		                                          <if test="deptCode != null and deptCode != '' ">
+		                                          AND C.LAST_GRP_CODE = #{deptCode}
+		                                          </if>
+		            </if>           
+        WHERE  1=1
+      
+        <if test="QUOT_NO != null and QUOT_NO != ''">
+            AND  A.QUOT_NO = #{QUOT_NO}
+        </if>
+              
+        <if test="L_ORD_NO != null and L_ORD_NO != ''">
+            AND A.ORD_NO   = #{L_ORD_NO}
+        </if>
+        
+        <if test="CRT_SDT != null and CRT_SDT != ''">
+            AND TO_CHAR(A.CRT_DT, 'yyyymmdd') <![CDATA[>=]]>  TO_CHAR(TO_DATE(#{CRT_SDT}, 'dd/mm/yyyy'),'yyyymmdd')
+        </if>
+         
+        <if test="CRT_EDT != null and CRT_EDT != ''">
+            AND TO_CHAR(A.CRT_DT, 'yyyymmdd') <![CDATA[<=]]>  TO_CHAR(TO_DATE(#{CRT_EDT}, 'dd/mm/yyyy'),'yyyymmdd') 
+        </if>
+                             
+        <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
+            AND A.CRT_USER_ID = #{CRT_USER_ID}
+        </if>
+                             
+        <if test="VALID_STUS_ID != null and VALID_STUS_ID != ''">
+            AND  A.VALID_STUS_ID IN
+            <foreach item="item" collection="VALID_STUS_ID" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        ORDER BY A.QUOT_ID ASC
+											
+		      
+		 </select>
+<!--     <select id="quotationList" parameterType="Map" resultType="egovMap">
+			      
 					SELECT R.QUOT_ID   ,
 						       R.QTY_FILTER_CHRG   ,
 						       R.QUOT_NO   ,
@@ -193,7 +295,7 @@
 						  ORDER BY R.QUOT_ID ASC
 											
 		      
-		 </select>
+		 </select> -->
 		 
 		 
 		  <select id="newOListuotationList" parameterType="Map" resultType="egovMap">

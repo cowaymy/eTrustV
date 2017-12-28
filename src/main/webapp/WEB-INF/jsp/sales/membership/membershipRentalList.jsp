@@ -9,6 +9,18 @@ var  gridID;
 
 
 $(document).ready(function(){
+	
+	$("#table1").hide();
+	    
+    if("${SESSION_INFO.userTypeId}" == "1" ){
+        $("#table1").show();
+    }else if("${SESSION_INFO.userTypeId}" == "2"){
+        $("#table1").show();
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+    }
+	
     
 	 var optionUnit = {  
              id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
@@ -308,9 +320,40 @@ function fn_goSVMDetails(){
 <tr>
     <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Sales date</span>  </th>
 </tr>
+</tbody>
+</table><!-- table end -->
 
-
-
+<table class="type1"  id="table1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+    <col style="width:140px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Org Code</th>
+    <td>
+       <input type="text" title="" id="orgCode" name="orgCode" class="w100p readonly" readonly="readonly"  value="${orgCode}" }/>
+    </td>
+    <th scope="row">Grp Code</th>
+    <td>
+    <input type="text" title=""  id="grpCode"  name="grpCode" class="w100p" />
+    </td>
+    <th scope="row">Dep Code</th>
+    <td>
+    <input type="text" title=""   id="deptCode" name="deptCode" class="w100p" />
+    </td>
+    <th scope="row">Member Code</th>
+    <td>
+    <input type="text" title=""   id="memCode" name="memCode" class="w100p" />
+    </td>
+</tr>
 </tbody>
 </table><!-- table end -->
 

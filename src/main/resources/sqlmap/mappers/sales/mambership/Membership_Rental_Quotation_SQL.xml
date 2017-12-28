@@ -4,6 +4,84 @@
 
     
     <select id="quotationList" parameterType="Map" resultType="egovMap">
+         SELECT E1.QOTAT_ID   ,
+	                E1.QOTAT_REF_NO   ,
+	                E1.QOTAT_ORD_ID,
+	                E1.QOTAT_CNTRCT_DUR   ,
+	                E1.QOTAT_VAL_ID_DT   ,
+	                E1.QOTAT_CRT_DT   ,
+	                E2.SRV_CNTRCT_PAC_DESC   ,
+	                E3.SALES_ORD_NO   ,
+	                E4.NAME   ,
+	                E5.USER_NAME   ,
+	                CASE     WHEN ( to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' )) THEN 82
+	                            WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 81
+	                            ELSE E1.QOTAT_STUS_ID
+	                END C1  ,
+	                CASE 
+		                     WHEN (  to_date(E1.QOTAT_VAL_ID_DT ,'yyyy/mm/dd')<![CDATA[<]]>  to_date( SYSDATE ,'yyyy/mm/dd' ) ) THEN 'EXP'
+		                     WHEN ( 4 = E1.QOTAT_STUS_ID ) THEN 'CON'
+		                     WHEN ( 1 = E1.QOTAT_STUS_ID ) THEN 'ACT'
+		                     WHEN ( 8 = E1.QOTAT_STUS_ID ) THEN 'DEA'
+		                     ELSE ''
+	                END C2  
+	         FROM SAL0083D E1
+	                JOIN SAL0081D E2   ON E2.SRV_CNTRCT_PAC_ID = E1.QOTAT_PCKG_ID
+	                JOIN SAL0001D E3   ON E3.SALES_ORD_ID = E1.QOTAT_ORD_ID
+	                JOIN SAL0029D E4   ON E4.CUST_ID = E3.CUST_ID
+	                JOIN SYS0047M E5   ON E5.USER_ID = E1.QOTAT_CRT_USER_ID
+	          <if test="orgCode != null and orgCode != '' ">
+                   JOIN SYS0047M USR ON E1.QOTAT_SALESMAN_ID = USR.USER_ID   
+                   JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
+                                        <if test="memCode != null and memCode != '' ">
+                                            AND B.MEM_CODE = #{memCode}
+                                        </if>
+                   JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
+                                          AND C.LAST_ORG_CODE = #{orgCode}
+                                          <if test="grpCode != null and grpCode != '' ">
+                                          AND C.LAST_GRP_CODE = #{grpCode}
+                                          </if>
+                                          <if test="deptCode != null and deptCode != '' ">
+                                          AND C.LAST_GRP_CODE = #{deptCode}
+                                          </if>
+            </if>        
+	          WHERE 1=1
+	          
+	            <if test="QUOT_NO != null and QUOT_NO != ''">
+                           AND ( E1.QOTAT_REF_NO = #{QUOT_NO} )
+                 </if>
+                 
+                 <if test="ORD_NO != null and ORD_NO != ''">
+                            AND ( E3.SALES_ORD_NO = #{ORD_NO } )
+                 </if>    
+                 
+                 <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
+                               AND ( E5.USER_NAME = #{CRT_USER_ID} )
+                 </if>       
+	              
+	            
+	            <if test="CRT_SDT != null and CRT_SDT != ''">
+                              AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[>=]]>  TO_CHAR(TO_DATE(#{CRT_SDT}, 'dd/mm/yyyy'),'yyyymmdd')
+                 </if>   
+                 
+                 <if test="CRT_EDT != null and CRT_EDT != ''">
+                              AND TO_CHAR(E1.QOTAT_CRT_DT, 'ddmmyyyy') <![CDATA[<=]]>   TO_CHAR(TO_DATE(#{CRT_EDT}, 'dd/mm/yyyy'),'yyyymmdd') 
+                 </if>   
+                 
+                 
+                 <if test="STUS_ID != null and  STUS_ID != ''">
+                                     AND  E1.QOTAT_VAL_ID_DT<![CDATA[<]]>  SYSDATE
+                                     AND  E1.QOTAT_STUS_ID IN
+                                 <foreach item="item" collection="STUS_ID" index="index" open="(" separator="," close=")">
+                                    #{item}
+                                 </foreach>
+                 </if>
+                                    
+				  ORDER BY E1.QOTAT_ID  DESC
+		      
+		 </select>
+		 
+<!--     <select id="quotationList" parameterType="Map" resultType="egovMap">
 			      
 					SELECT S.QOTAT_ID   ,
 						       S.QOTAT_REF_NO   ,
@@ -77,14 +155,9 @@
 						              
 						        ) S
 						  ORDER BY S.QOTAT_ID  DESC
-
-
-
-
-					
 											
 		      
-		 </select>
+		 </select> -->
 		 
 		 <select id="newConfirm" parameterType="Map" resultType="egovMap">
 					 SELECT S.SALES_ORD_ID   ,
