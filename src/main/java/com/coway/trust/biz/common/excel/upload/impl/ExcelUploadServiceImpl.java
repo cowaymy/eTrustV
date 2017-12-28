@@ -54,7 +54,7 @@ public class ExcelUploadServiceImpl implements ExcelUploadService {
 
 		excelUploadVo.setType("updateDCPMasterByExcel");
 		excelUploadVo.setStartRow(startRow);
-		excelUploadVo.setBatchCount(10000);
+		excelUploadVo.setBatchCount(5000);
 
 		Map<String, ExcelUploadColumnVo> excelUploadColumns = new HashMap<>();
 		excelUploadVo.setExcelHeader(excelUploadColumns);
