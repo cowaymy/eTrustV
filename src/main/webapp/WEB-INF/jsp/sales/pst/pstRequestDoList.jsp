@@ -165,6 +165,7 @@ type : 'S'
     
     function fn_pstReport(){
         Common.alert('The program is under development.');
+        //Common.popupDiv("/sales/pst/reportPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
     }
     
     $.fn.clearForm = function() {
@@ -206,9 +207,15 @@ type : 'S'
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>PST Request Do List</h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()">NEW PST Request</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDORet()">NEW PST Return</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -294,7 +301,9 @@ type : 'S'
     <dt>Link</dt>
     <dd>
     <ul class="btns">
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="link_btn"><a href="#" onClick="fn_pstReport()">PST Report</a></p></li>
+        </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
