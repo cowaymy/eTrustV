@@ -600,7 +600,8 @@
     
     <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
       SELECT 
-               PLAN_MASTER_ID
+             CHECK_FLAG
+             , PLAN_MASTER_ID
              , team 
              , STK_TYPE_ID  
              , category 
@@ -608,16 +609,16 @@
              , name       
              , M3_AVG_Issue_Order
              , M1_ISSUE_ORDER
-             , M0_PLAN_ORDER 
-             , M1   
+             , M0_PLAN ||'/'|| M0_ORD M0_PLAN_ORDER 
+             , M1
              , M2   
              , M3   
-             , M4                  
+             , M4                 
                                         
-             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.code,SCM39V.team,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -4) ) BEF_4_WEEK_TH
-             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.code,SCM39V.team,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -3) ) BEF_3_WEEK_TH
-             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.code,SCM39V.team,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -2) ) BEF_2_WEEK_TH
-             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.code,SCM39V.team,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -1) ) BEF_1_WEEK_TH
+             , BEF_4_WEEK_TH
+             , BEF_3_WEEK_TH
+             , BEF_2_WEEK_TH
+             , BEF_1_WEEK_TH
              
              , W00  
              , W01  
@@ -659,7 +660,13 @@
              , SCM39V.category   
     FROM
     (
-      SELECT  PLAN_DTL_ID      
+      SELECT (SELECT DECODE(PLAN_STUS_ID,'4',0,1) 
+                FROM SCM0001M
+               WHERE PLAN_YEAR = '2016'
+                 AND PLAN_WEEK = '4'
+                 AND TEAM      = 'DST'  
+             ) CHECK_FLAG
+             , PLAN_DTL_ID      
              , PLAN_MASTER_ID   
              , TEAM team
              , STK_TYPE_ID        
@@ -668,19 +675,25 @@
              , PRE_M3_AVG_ISSU  
              , ROUND(PRE_M3_AVG_ISSU)  ||'/'|| ROUND(PRE_M3_AVG_ORDED)  M3_AVG_Issue_Order
              , ROUND(M_1)  ||'/'|| ROUND(M1_ORD)  M1_ISSUE_ORDER
-             , ROUND(FN_GET_COMPNT_QTY_PLAN_SUM(#{scmYearCbBox},#{scmPeriodCbBox},STOCK_CODE))  ||'/'|| ROUND(FN_GET_COMPNT_QTY_ORD_SUM(#{scmYearCbBox},#{scmPeriodCbBox},STOCK_CODE))  M0_PLAN_ORDER
              , M1_ORD   
              , M2_ORD   
              , M3_ORD   
-             , M_3 M_3  
-             , M_2 M_2  
-             , M_1 M_1  
+             , M_3   
+             , M_2   
+             , M_1   
              , ROUND(FN_GET_COMPNT_QTY_PLAN_SUM(#{scmYearCbBox},#{scmPeriodCbBox},STOCK_CODE)) M0_PLAN  
-             , ROUND(FN_GET_COMPNT_QTY_ORD_SUM(#{scmYearCbBox},#{scmPeriodCbBox},STOCK_CODE)) M0_ORD   
-             , M1   
-             , M2   
-             , M3   
-             , M4   
+             , ROUND(FN_GET_COMPNT_QTY_ORD_SUM(#{scmYearCbBox},#{scmPeriodCbBox},STOCK_CODE)) M0_ORD  
+              
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 1 )  M1
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 2 )  M2   
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 3 )  M3   
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 4 )  M4 
+               
+             , FN_GET_COUNT_SCM_WEEK_TH(STOCK_CODE,TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -4) ) BEF_4_WEEK_TH
+             , FN_GET_COUNT_SCM_WEEK_TH(STOCK_CODE,TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -3) ) BEF_3_WEEK_TH
+             , FN_GET_COUNT_SCM_WEEK_TH(STOCK_CODE,TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -2) ) BEF_2_WEEK_TH
+             , FN_GET_COUNT_SCM_WEEK_TH(STOCK_CODE,TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -1) ) BEF_1_WEEK_TH  
+             
              , W00  
              , W01  
              , W02  
@@ -1261,6 +1274,36 @@ SELECT STK_ID
 				           , #{crtUserId}
 				          )
 </insert> 
+
+<delete id="deleteStockCode" parameterType="Map">
+         
+    DELETE 
+      FROM SCM0002D 
+     WHERE PLAN_MASTER_ID = #{planMasterId}  
+       AND TEAM = #{team} 
+       AND STOCK_CODE = #{code} 
+       AND (SELECT PLAN_STUS_ID 
+             FROM SCM0001M  
+            WHERE PLAN_ID = #{planMasterId}
+           ) <![CDATA[ <> ]]>  4 
+           
+</delete> 
+
+<update id="updateSalesPlanUnConfirm" parameterType="Map">
+  UPDATE SCM0001M 
+     SET PLAN_STUS_ID = 1   
+   WHERE PLAN_YEAR = #{scmYearCbBox}
+     AND PLAN_WEEK = #{scmPeriodCbBox}
+     AND TEAM      = #{scmTeamCbBox}
+</update> 
+
+<update id="updateSalesPlanConfirm" parameterType="Map">
+  UPDATE SCM0001M 
+     SET PLAN_STUS_ID = 4  
+   WHERE PLAN_YEAR = #{scmYearCbBox}
+     AND PLAN_WEEK = #{scmPeriodCbBox}
+     AND TEAM      = #{scmTeamCbBox}
+</update> 
 
 <select id="selectAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
   SELECT * 
