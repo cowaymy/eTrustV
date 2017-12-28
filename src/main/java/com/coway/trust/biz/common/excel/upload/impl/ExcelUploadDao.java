@@ -12,14 +12,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ExcelUploadDao implements ExcelUploadDBHandler {
-	@Autowired
+
 	@Resource(name = "sqlSessionTemplateBatch")
 	private SqlSessionTemplate sqlSessionTemplateBatch;
 
 	@Override
 	public void processDB(String queryId, List<Map<String, Object>> dataMapList) {
 		for (Map<String, Object> data : dataMapList) {
-			sqlSessionTemplateBatch.insert(queryId, data);
+			sqlSessionTemplateBatch.update(queryId, data);
 		}
 	}
 }

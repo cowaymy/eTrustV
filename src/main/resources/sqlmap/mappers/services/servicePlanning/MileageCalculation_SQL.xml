@@ -46,8 +46,10 @@
 <update id="updatetDCPMaster" parameterType="Map">
     MERGE INTO SVC0034M A
     USING DUAL
-    ON (A.DCP_FROM_ID = #{dcpFromId}
-        AND A.DCP_TO_ID = #{dcpToId})
+    ON (A.MEM_TYPE = #{memType}
+        AND A.BRNCH_CODE = #{brnchCode}
+        AND A.DCP_FROM = #{dcpFrom}
+        AND A.DCP_TO = #{dcpTo})
     WHEN MATCHED THEN
         UPDATE SET
           <!-- A.MEM_TYPE = #{memType},
@@ -67,8 +69,10 @@
 <update id="updatetDCPMasterLinked" parameterType="Map">
     MERGE INTO SVC0034M A
     USING DUAL
-    ON (A.DCP_FROM_ID = #{dcpToId}
-        AND A.DCP_TO_ID = #{dcpFromId})
+    ON ( A.MEM_TYPE = #{memType}
+        AND A.BRNCH_CODE = #{brnchCode}
+        AND A.DCP_FROM = #{dcpTo}
+        AND A.DCP_TO = #{dcpFrom})
     WHEN MATCHED THEN
         UPDATE SET
           <!-- A.MEM_TYPE = #{memType},

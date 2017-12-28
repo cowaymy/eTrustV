@@ -60,7 +60,7 @@ public class ExcelUploadServiceImpl implements ExcelUploadService {
 		excelUploadVo.setExcelHeader(excelUploadColumns);
 		excelUploadVo.setDBHandler("excelUploadDao");
 
-		ExcelUploadColumnVo excelUploadHeaderVo = new ExcelUploadColumnVo();
+		ExcelUploadColumnVo excelUploadHeaderVo;
 
 		int i = 0;
 		for (String column : columns) {
@@ -127,7 +127,7 @@ public class ExcelUploadServiceImpl implements ExcelUploadService {
 		ExcelUploadVo excelUploadVo = new ExcelUploadVo();
 
 		excelUploadVo.setStartRow(startRow);
-		excelUploadVo.setBatchCount(10000);
+		excelUploadVo.setBatchCount(5000);
 
 		Map<String, ExcelUploadColumnVo> excelUploadColumns = new HashMap<>();
 		excelUploadVo.setExcelHeader(excelUploadColumns);
