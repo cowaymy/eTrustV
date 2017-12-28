@@ -319,9 +319,16 @@
 					t1.EMPLY_BIZ_TYPE_ID,
 					(TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as A_OUTPLS_AMT,
 					NVL(FN_GET_CMM_RULE('CDN-I19',t1.WORKING_MONTH),'0') as A_CODY_REGISTRATION_FEES,
-					(t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
-				        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
-				        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) A_AMOUNT  
+					(CASE 
+                             WHEN t0.TASK_ID < 12 THEN 
+                               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10 + 
+                               t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+                               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99)
+                             ELSE 
+                               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + 
+                               t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+                               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + NVL(t0.R29, 0) + t0.R99 + t0.R34 + t0.R35- NVL(t0.R54,0))
+                       END) A_AMOUNT  
 	        ]]>
 				from CMM0029D t0 join CMM0006T t1 
 				        on t0.EMPLY_ID  = t1.EMPLY_ID  
@@ -398,9 +405,16 @@
                         t1.EMPLY_BIZ_TYPE_ID,
                         (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as S_OUTPLS_AMT,
                         NVL(FN_GET_CMM_RULE_S('CDN-I19',t1.WORKING_MONTH),'0') as S_CODY_REGISTRATION_FEES,
-                        (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
-                        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
-                        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) S_AMOUNT  
+                        (CASE 
+				             WHEN t0.TASK_ID < 12 THEN 
+				               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10 + 
+				               t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+				               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99)
+				             ELSE 
+				               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + 
+				               t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+				               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + NVL(t0.R29, 0) + t0.R99 + t0.R34 + t0.R35- NVL(t0.R54,0))
+				       END) S_AMOUNT  
 		        ]]>
 		            from CMM0029T t0 join CMM0006T t1 
 		                  on t0.EMPLY_ID  = t1.EMPLY_ID  
@@ -551,9 +565,16 @@
 	                    t0.R34 as A_RENTALMEMBERSHIP_AMT,
 	                    t0.R54 as A_POS_DEDUCTION,
 	                    (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as A_OUTPLS_AMT,
-	                    (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
-	                        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
-	                        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) A_AMOUNT  
+	                    (CASE 
+                             WHEN t0.TASK_ID < 12 THEN 
+                               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10 + 
+                               t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+                               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99)
+                             ELSE 
+                               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + 
+                               t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+                               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + NVL(t0.R29, 0) + t0.R99 + t0.R34 + t0.R35- NVL(t0.R54,0))
+                       END) A_AMOUNT  
         ]]>
                 FROM CMM0029D t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID and t0.task_id=#{taskId}
@@ -607,9 +628,16 @@
                         t0.R34 as S_RENTALMEMBERSHIP_AMT,
                         t0.R54 as S_POS_DEDUCTION,
                         (TRUNC(t0.R39,2)+TRUNC(t0.R40,2)+TRUNC(t0.R41,2)+TRUNC(t0.R42,2)) as S_OUTPLS_AMT,
-                        (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10
-	                        + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23
-	                        + NVL(t0.R24, 0) + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34 - NVL(t0.R54,0)) S_AMOUNT  
+                        (CASE 
+                             WHEN t0.TASK_ID < 12 THEN 
+                               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10 + 
+                               t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+                               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99)
+                             ELSE 
+                               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + 
+                               t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 + 
+                               t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + NVL(t0.R29, 0) + t0.R99 + t0.R34 + t0.R35- NVL(t0.R54,0))
+                       END) S_AMOUNT  
         ]]>
                 FROM CMM0029T t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID and t0.task_id=#{taskId}
@@ -714,10 +742,16 @@
 	                  else t0.R50 end) as A_WS_AWARD,
 	                t0.R52 as A_MEETING_ALLOWANCES,
 			        t0.TASK_ID,
-			        (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 
-				        + t0.R8 + t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 
-				        + t0.R20 + t0.R21 + t0.R22 + t0.R25 + NVL(t0.R26, 0) 
-				        + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34+NVL(t0.R52, 0)) A_AMOUNT
+			        (CASE 
+			             WHEN t0.TASK_ID < 12 THEN 
+			               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10 
+			                + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 
+			                + t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99)
+			             ELSE (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 
+			                   + t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 
+			                   + t0.R22 + t0.R23 + t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) 
+			                   + NVL(t0.R28, 0) + NVL(t0.R29, 0) + t0.R99 + t0.R34 + t0.R35+NVL(t0.R52, 0))
+			       END) A_AMOUNT
                 from CMM0029D t0 join CMM0006T t1 
 		            on t0.EMPLY_ID  = t1.EMPLY_ID 
 		                and t1.COMM_TASK_ID=t0.TASK_ID
@@ -764,10 +798,16 @@
                   else t0.R50 end) as S_WS_AWARD,
                 t0.R52 as S_MEETING_ALLOWANCES,
                 t0.TASK_ID,
-                (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 
-                        + t0.R8 + t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 
-                        + t0.R20 + t0.R21 + t0.R22 + t0.R25 + NVL(t0.R26, 0) 
-                        + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99 + t0.R34+NVL(t0.R52, 0)) S_AMOUNT
+                (CASE 
+		             WHEN t0.TASK_ID < 12 THEN 
+		               (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 + t0.R10 
+		                + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 + t0.R22 + t0.R23 
+		                + t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) + NVL(t0.R28, 0) + t0.R99)
+		             ELSE (t0.R1 + t0.R2 + t0.R3 + t0.R4 + t0.R5 + t0.R6 + t0.R7 + t0.R8 
+		                   + t0.R10 + t0.R11 + t0.R13 + t0.R18 + t0.R19 + t0.R20 + t0.R21 
+		                   + t0.R22 + t0.R23 + t0.R24 + t0.R25 + NVL(t0.R26, 0) + NVL(t0.R27, 0) 
+		                   + NVL(t0.R28, 0) + NVL(t0.R29, 0) + t0.R99 + t0.R34 + t0.R35+NVL(t0.R52, 0))
+		       END) S_AMOUNT
 		    from CMM0029T t0 join CMM0006T t1 
 		            on t0.EMPLY_ID  = t1.EMPLY_ID 
 		                and t1.COMM_TASK_ID=t0.TASK_ID
