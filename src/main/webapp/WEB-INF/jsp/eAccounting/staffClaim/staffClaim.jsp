@@ -132,7 +132,7 @@ function fn_clearData() {
         $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
     }
     
-    clmSeq = 0;
+    //clmSeq = 0;
 }
 
 function fn_setEvent() {
@@ -440,20 +440,26 @@ function fn_removeMyGridRow() {
 }
 
 function fn_addRow() {
+	console.log("fn_addRow Action");
     // 파일 업로드 전에 필수 값 체크
     // 파일 업로드 후 그룹 아이디 값을 받아서 Add
+    console.log(fn_checkEmpty());
     if(fn_checkEmpty()) {
         // Expense Type Name == Car Mileage Expense
         //$("#expTypeName").val() == "Car Mileage Expense"
         // WebInvoice Test는 Test
+        console.log($(":input:radio[name=expGrp]:checked").val());
         if($(":input:radio[name=expGrp]:checked").val() == "1") {
+        	console.log("Car Mileage Expense")
         	// jQuery Ajax Form 사용
             var formData = new FormData();
             $.each(myFileCaches, function(n, v) {
             	console.log("n : " + n + " v.file : " + v.file);
                 formData.append(n, v.file);
             });
+            console.log(clmSeq);
         	if(clmSeq == 0) {
+        		console.log("Car Mileage Expense Add")
         		Common.ajaxFile("/eAccounting/staffClaim/attachFileUpload.do", formData, function(result) {
                     console.log(result);
                     
@@ -500,6 +506,7 @@ function fn_addRow() {
                     fn_createMileageAUIGrid();
                 });
         	} else {
+        		console.log("Car Mileage Expense Update")
         		formData.append("atchFileGrpId", atchFileGrpId);
                 formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
                 console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -544,7 +551,7 @@ function fn_addRow() {
                         if(FormUtil.isEmpty(gridDataList[i].clmSeq)) {
                         	AUIGrid.addRow(newGridID, data, "last");
                         } else {
-                        	AUIGrid.updateRow(newGridID, data, selectRowIdx);
+                        	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
                         }
                     }
                     
@@ -560,8 +567,11 @@ function fn_addRow() {
                 });
         	}
         } else {
+        	console.log("Normal Expense")
         	var formData = Common.getFormData("form_newStaffClaim");
+        	console.log(clmSeq);
         	if(clmSeq == 0) {
+        		console.log("Normal Expense Add")
                 var data = {
                         costCentr : $("#newCostCenter").val()
                         ,costCentrName : $("#newCostCenterText").val()
@@ -612,6 +622,7 @@ function fn_addRow() {
                     fn_getAllTotAmt();
                 });
             } else {
+            	console.log("Normal Expense Update")
                 var data = {
                         costCentr : $("#newCostCenter").val()
                         ,costCentrName : $("#newCostCenterText").val()
