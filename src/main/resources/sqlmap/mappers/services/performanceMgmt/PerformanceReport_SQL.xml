@@ -16,9 +16,32 @@
 			left join SAL0001D som on som.SALES_ORD_ID = sch.SALES_ORD_ID and (som.BINDING_NO IS NOT NULL OR som.BINDING_NO <> ' ') AND SALES_ORD_ID_OLD > 0
 			where sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
 			AND sch.YEAR =    to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
+            ]]>
+			<if test="cmdBranchCode != null and cmdBranchCode != ''">
+			 and memOrg.BRNCH_ID =  #{cmdBranchCode}
+			</if> 
+			 <if test="cmdCdManager != null and cmdCdManager != ''">
+			 and memOrg.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_ID = #{cmdCdManager}
+									             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+									             and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+									             </if>
+                                                                                            )
+			 </if>
+			 <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+			 and memOrg.LAST_DEPT_CODE = #{txtAssigncodyCode}
+			 </if>
 			GROUP BY memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
-			
-			]]>
+
 
     </select>
 
@@ -37,9 +60,33 @@
 		left join PAY0064D PM on PM.SALES_ORD_ID = accDept.ACC_DEBT_ORD_ID
 		left join PAY0065D PD on PD.PAY_ID = PM.PAY_ID AND PD.PAY_ITM_MODE_ID IN (106,107,108)
 		left join PAY0065D PD1 ON PD1.PAY_ID = PM.PAY_ID 
-		WHERE sch.MONTH = to_char(to_date('12/2017','mm/yyyy'),'mm')
-          AND sch.YEAR = to_char(to_date('12/2017','mm/yyyy'),'yyyy')
-		group by memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE]]>
+		WHERE sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
+          AND sch.YEAR = to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
+           ]]>
+           <if test="cmdBranchCode != null and cmdBranchCode != ''">
+             and memOrg.BRNCH_ID =  #{cmdBranchCode}
+            </if> 
+             <if test="cmdCdManager != null and cmdCdManager != ''">
+             and memOrg.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_ID = #{cmdCdManager}
+		                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+		                                          and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+		                                         </if>
+                                                                                            )
+             </if>
+             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+              and memOrg.LAST_DEPT_CODE = #{txtAssigncodyCode}
+             </if>
+		group by memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
     </select>
     
     
@@ -69,7 +116,31 @@
 			join org0001D f on f.mem_id = e.mem_up_ID
 			where a.year = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
 			and a.month = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-			group by b.mem_lvl,c.mem_code,d.mem_code, f.mem_code]]>
+			 ]]>
+			 <if test="cmdBranchCode != null and cmdBranchCode != ''">
+             and b.BRNCH_ID =  #{cmdBranchCode}
+            </if> 
+             <if test="cmdCdManager != null and cmdCdManager != ''">
+             and b.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_UP_ID = #{cmdCdManager}
+		                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+		                                         and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+		                                         </if>
+                                                                                            )
+             </if>
+             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+             and b.LAST_DEPT_CODE = #{txtAssigncodyCode}
+             </if>
+			group by b.mem_lvl,c.mem_code,d.mem_code, f.mem_code
     </select>
     
     
@@ -109,12 +180,36 @@
 			and q.pv_year = 0 
 			where q.mem_id='590')t on a.sales_ord_id = t.sales_ord_id
 			where TO_CHAR(a.sales_dt, 'yyyy') = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
-			and to_char(a.sales_dt,'mm') = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+			and to_char(a.sales_dt,'mm') = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')        ]]>
 			AND a.stus_code_id=4 
 			and c.code_id = 2
+
+             <if test="cmdBranchCode != null and cmdBranchCode != ''">
+             and f.BRNCH_ID =  #{cmdBranchCode}
+            </if> 
+             <if test="cmdCdManager != null and cmdCdManager != ''">
+             and f.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+                                            FROM ORG0005D A,
+                                                 ORG0001D B,
+                                                 SYS0005M C
+                                           WHERE A.MEM_ID = B.MEM_ID
+                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+                                                 AND A.DEPT_CODE  IS NOT NULL
+                                                 AND B.STUS IN (1, 8)
+                                                 AND B.MEM_TYPE = 2
+                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+                                                 and a.MEM_UP_ID = #{cmdCdManager}
+		                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+		                                         and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+		                                         </if>
+                                                                                            )
+             </if>		
+             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+             and f.LAST_DEPT_CODE = #{txtAssigncodyCode}
+             </if>	
 			group by b.mem_code, a.mem_id, g.mem_code, e.mem_code ,a.mem_id
 			order by b.mem_code
-        ]]>
+
     </select>        
 
 
