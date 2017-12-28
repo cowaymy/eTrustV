@@ -99,14 +99,18 @@ $(document).ready(function() {
 			fn_detailComplete();
 		}
 		if(this.value == 3){
-			fn_scoreZero();
+			fn_detailPrev();
 		}
 		if(this.value == 4){
-			fn_scoreGT(); 
+			fn_scoreZero(); 
 		}
 		if(this.value == 5){
-			fn_scoreLT();
+			fn_scoreGT();
 		}
+		if(this.value == 6){
+            fn_scoreLT();
+        }
+		
 	});
 	
 	// Search Not Found Binding Event
@@ -172,7 +176,7 @@ function createCtosDetailGrid(){
                          {dataField : "ordNo", headerText : "Order No", width : "9%" , editable : false},
                          {dataField : "custIc", headerText : "Customer IC", width : "10%" , editable : false},
                          {dataField : "custName", headerText : "Customer Name", width : "9%" , editable : false},
-                         {dataField : "prcss", headerText : "Status", width : "9%" , editable : false},
+                         {dataField : "prcName", headerText : "Status", width : "9%" , editable : false},
                          {dataField : "ficoScre", headerText : "Score", width : "9%" , editable : false},
                          {dataField : "codeName", headerText : "Bankrupt", width : "9%" , editable : false},
                          {dataField : "ctosDt", headerText : "Update Time", width : "9%" , editable : false},
@@ -204,7 +208,9 @@ function createCtosDetailGrid(){
                                           
                                     }
                              }
-                         }]
+                         },
+                         {dataField : "prcss", visible: false}
+                         ]
 	
 	//그리드 속성 설정
     var gridPros = {
@@ -265,7 +271,7 @@ function fn_scoreLT() {
 //Active
 function fn_detailAct() { 
     AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
-        if(item.prcss  == 'FALSE'){
+        if(item.prcss  == '0'){
             return true;
         }
         return false;
@@ -275,7 +281,17 @@ function fn_detailAct() {
 //Complete
 function fn_detailComplete() {
     AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
-        if(item.prcss  == 'TRUE'){
+        if(item.prcss  == '1'){
+            return true;
+        }
+        return false;
+    });
+};
+
+//Previous Score
+function fn_detailPrev() {
+    AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
+        if(item.prcss  == '2'){
             return true;
         }
         return false;
@@ -353,9 +369,10 @@ function fn_detailComplete() {
             <option value="0" selected="selected">All</option>
             <option value="1">Active</option>
             <option value="2">Complete</option>
-            <option value="3">No Score(0)</option>
-            <option value="4"> <= 500</option>
-            <option value="5"> > 500</option>
+            <option value="3">Previos Score</option>
+            <option value="4">No Score(0)</option>
+            <option value="5"> <= 500</option>
+            <option value="6"> > 500</option>
         </select>
     </li>
     

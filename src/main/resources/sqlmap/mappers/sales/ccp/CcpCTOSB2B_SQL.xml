@@ -56,20 +56,23 @@
 
 <select id="getCTOSDetailList"  parameterType="Map" resultType="egovMap">
 		 SELECT 
-            T1.BATCH_ID,
-            T1.ORD_NO,
-            T1.CUST_IC,
-            T1.CUST_NAME,
-            CASE WHEN (T1.PRCSS = 1) THEN 'TRUE' ELSE 'FALSE' END PRCSS,
-            T1.FICO_SCRE,
-            TO_CHAR(T1.CTOS_DT , 'DD/MM/YYYY') CTOS_DT,
-            T1.UPD_USER_ID,
-            T1.CTOS_BANKRUPT,
-            NVL(T2.CODE_NAME , ' ') CODE_NAME
-            
-         FROM 
-            SAL0107D T1 LEFT JOIN SYS0013M T2 ON T2.CODE = T1.CTOS_BANKRUPT AND T2.CODE_MASTER_ID = '380'
-         WHERE 1 = 1		 
+                T1.BATCH_ID,
+                T1.ORD_NO, 
+                T1.CUST_IC,
+                T1.CUST_NAME,                
+                T1.PRCSS,
+                T4.CODE_NAME PRC_NAME,
+                CASE WHEN (T1.PRCSS = 2) THEN T3.FICO_SCRE ELSE T1.FICO_SCRE END FICO_SCRE,
+                TO_CHAR(T1.CTOS_DT , 'DD/MM/YYYY') CTOS_DT,
+                T1.UPD_USER_ID, 
+                T1.CTOS_BANKRUPT, 
+                NVL(T2.CODE_NAME , ' ') CODE_NAME 
+           FROM 
+            SAL0107D T1 
+            JOIN SYS0013M T2 ON T2.CODE = T1.CTOS_BANKRUPT AND T2.CODE_MASTER_ID = '380'            
+            JOIN SAL0029D T3 ON T3.NRIC = T1.CUST_IC
+            JOIN SYS0013M T4 ON T4.CODE = T1.PRCSS AND T4.CODE_MASTER_ID = '397'            
+            WHERE 1 = 1	 
 		 AND BATCH_ID = #{batchId} 
 		  <if test=" null != ordNo and '' != ordNo">
 		      AND ORD_NO = #{ordNo}
