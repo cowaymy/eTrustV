@@ -552,7 +552,7 @@ function fn_close(){
 <h3><spring:message code='service.title.InstallationResultReversal'/></h3>
 </aside><!-- title_line end -->
 <form action="" id="editForm" method="post">
-<input type="text" id="callTypeId" name = "callTypeId">
+<input type="hidden" id="callTypeId" name = "callTypeId">
 <input type="hidden"  id="einstallEntryNo" name="einstallEntryNo"/>
 <input type="hidden"  id="esalesOrdNo" name="esalesOrdNo"/>
 <input type="hidden"  id="einstallEntryId" name="einstallEntryId"/>
