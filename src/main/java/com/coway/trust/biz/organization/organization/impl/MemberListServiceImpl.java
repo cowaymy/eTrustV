@@ -1601,4 +1601,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap>  selectCoureCode(Map<String, Object> params) {
 		return memberListMapper.selectCoureCode(params); 
 	}	
+
+	public String selectTypeGroupCode(Map<String,Object> params){
+		return memberListMapper.selectTypeGroupCode(params);
+	}	
 }

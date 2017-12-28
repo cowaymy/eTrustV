@@ -64,6 +64,24 @@ public class MemberListController {
 		List<EgovMap> nationality = memberListService.nationality();
 		params.put("groupCode",1);
 		params.put("userTypeId", sessionVO.getUserTypeId());
+		
+		String type="";
+		if (params.get("userTypeId" ) == "4" ) {
+			type = memberListService.selectTypeGroupCode(params);        
+		}
+		
+		logger.debug("type : {}", type);
+
+		if ( type == "42") {
+			params.put("userTypeId", "2");
+		} else if ( type == "42") {
+			params.put("userTypeId", "3");
+		} else if ( type == "45") {
+			params.put("userTypeId", "1");			
+		} else {
+			params.put("userTypeId", "");
+		}  
+		
 		List<EgovMap> memberType = commonService.selectCodeList(params);
 		params.put("mstCdId",2);
 		params.put("dtailDisabled",0);
