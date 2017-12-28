@@ -835,9 +835,9 @@
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
                                        AND ( '''' <> Extent1.DEPT_CODE )
                                        AND ( 1 = Extent2.STUS )
-                                       AND ( Extent2.MEM_TYPE = #{memType})
-                                       AND ( Extent1.MEM_LVL = #{memLvl} )]]>   
                                        AND ( Extent2.STUS IN ( 1,8 )
+]]>                                        
+                                  
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
                                       </if>    
@@ -854,10 +854,11 @@
 									        <when test="memberLevel == 4">
 									            AND Extent2.MEM_CODE = #{userName}
 									        </when>
-									</choose>                                                                            
+									</choose>     
+        <![CDATA[     								                                                                       
                                       ) ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
-                               
+                ]]>               
         </select>        
         
         
