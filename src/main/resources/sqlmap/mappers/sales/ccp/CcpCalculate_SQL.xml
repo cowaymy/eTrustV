@@ -1137,4 +1137,16 @@ INSERT INTO SAL0009D
 	           SYSDATE )
 </insert>
 
+<select id="chkECash" parameterType="Map" resultType="egovMap">
+    SELECT
+         ECASH
+    FROM 
+        SAL0001D
+    WHERE 
+        SALES_ORD_ID = #{saveOrdId}
+    AND
+        <![CDATA[
+        ROWNUM <= 1
+        ]]>    
+</select>
 </mapper>

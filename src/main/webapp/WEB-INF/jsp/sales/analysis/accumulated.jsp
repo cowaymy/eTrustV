@@ -5,6 +5,11 @@
 
 function fn_report(type) {
 	
+	if($("#yyyymmDate").val() == null || $("#yyyymmDate").val() == ''){
+		Common.alert("Please key in date.");
+		return;
+	}
+	
 	$("#V_INPUTDATE").val("01/"+$("#yyyymmDate").val());
 	
 	if(type == "PDF"){

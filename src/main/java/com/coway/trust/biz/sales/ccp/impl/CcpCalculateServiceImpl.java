@@ -789,42 +789,46 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		 //Approve Selected
 		 if( ("5").equals(params.get("statusEdit")) || ("13").equals(params.get("statusEdit"))  || ("14").equals(params.get("statusEdit"))){ 
  			
-			 //TODO Temp Disable Logic By Lee(2017/12/22) -- Logic Block by eCash Process
-			 /**
-			 //Call Entry Insert
-			 callSeq = ccpCalculateMapper.crtSeqCCR0006D();
-             params.put("callEntrySeq", callSeq); //Seq
-             params.put("callEntryTypeId", SalesConstants.CALL_ENTRY_TYPE_ID_APPROVED); // 257
-             params.put("callEntryStusCodeId", SalesConstants.CALL_ENTRY_MASTER_STUS_CODE_ID_APPROVED); // 1
-             params.put("callEntryMasterResultId", SalesConstants.CALL_ENTRY_MASTER_RESULT_ID); //0
-             params.put("callEntryDocId", params.get("saveOrdId"));
-             params.put("callEntryMasterIsWaitForCancel", SalesConstants.CALL_ENTRY_MASTER_IS_WAIT_FOR_CANCEL); // CallEntryMaster.IsWaitForCancel = false;
-             params.put("callEntryMasterHappyCallerId", SalesConstants.CALL_ENTRY_MASTER_HAPPY_CALL_ID);  //CallEntryMaster.HappyCallerID = 0;
-			
-             LOGGER.info("_________________________________________________________________________________________");
- 			LOGGER.info("_______________ // 4 - 1 //Approve Selected    Data.SalesOrderM  Start _________________________");
- 			LOGGER.info("_________________________________________________________________________________________");
-             ccpCalculateMapper.insertCallEntry(params); //Ins Entry
-             LOGGER.info("_________________________________________________________________________________________");
-  			LOGGER.info("_______________ // 4 - 1 //Approve Selected    Data.SalesOrderM  End _________________________");
-  			LOGGER.info("_________________________________________________________________________________________");
+			 //TODO  Logic Change by eCash Process
 			 
-			 //log Select Aprove
-			 logseq = ccpCalculateMapper.crtSeqSAL0009D();
-		 	 params.put("logSeq", logseq);
-			 params.put("logProgId", SalesConstants.SALES_ORDER_LOG_PRGID_APPROVED); // 2
-			 params.put("logRefId", SalesConstants.SALES_ORDER_REF_ID); // 0
-			 params.put("logIsLock", SalesConstants.SALES_ORDER_IS_LOCK_APPROVED); // 1
+			 EgovMap eCashMap = null;
+			 
+			 eCashMap = ccpCalculateMapper.chkECash(params);
+			 
+			 if(eCashMap != null && Integer.parseInt(String.valueOf(eCashMap.get("ecash"))) == 0){
+				//Call Entry Insert
+				 callSeq = ccpCalculateMapper.crtSeqCCR0006D();
+	             params.put("callEntrySeq", callSeq); //Seq
+	             params.put("callEntryTypeId", SalesConstants.CALL_ENTRY_TYPE_ID_APPROVED); // 257
+	             params.put("callEntryStusCodeId", SalesConstants.CALL_ENTRY_MASTER_STUS_CODE_ID_APPROVED); // 1
+	             params.put("callEntryMasterResultId", SalesConstants.CALL_ENTRY_MASTER_RESULT_ID); //0
+	             params.put("callEntryDocId", params.get("saveOrdId"));
+	             params.put("callEntryMasterIsWaitForCancel", SalesConstants.CALL_ENTRY_MASTER_IS_WAIT_FOR_CANCEL); // CallEntryMaster.IsWaitForCancel = false;
+	             params.put("callEntryMasterHappyCallerId", SalesConstants.CALL_ENTRY_MASTER_HAPPY_CALL_ID);  //CallEntryMaster.HappyCallerID = 0;
+				
+	             LOGGER.info("_________________________________________________________________________________________");
+	 			 LOGGER.info("_______________ // 4 - 1 //Approve Selected    Data.SalesOrderM  Start _________________________");
+	 			 LOGGER.info("_________________________________________________________________________________________");
+	             ccpCalculateMapper.insertCallEntry(params); //Ins Entry
+	             LOGGER.info("_________________________________________________________________________________________");
+	  			 LOGGER.info("_______________ // 4 - 1 //Approve Selected    Data.SalesOrderM  End _________________________");
+	  			 LOGGER.info("_________________________________________________________________________________________");
+				 
+				 //log Select Aprove
+				 logseq = ccpCalculateMapper.crtSeqSAL0009D();
+			 	 params.put("logSeq", logseq);
+				 params.put("logProgId", SalesConstants.SALES_ORDER_LOG_PRGID_APPROVED); // 2
+				 params.put("logRefId", SalesConstants.SALES_ORDER_REF_ID); // 0
+				 params.put("logIsLock", SalesConstants.SALES_ORDER_IS_LOCK_APPROVED); // 1
 
-			 LOGGER.info("_________________________________________________________________________________________");
-	 			LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  Start _________________________");
-	 			LOGGER.info("_________________________________________________________________________________________");
-			 ccpCalculateMapper.insertLog(params);
-			 LOGGER.info("_________________________________________________________________________________________");
-	 			LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  End _________________________");
-	 			LOGGER.info("_________________________________________________________________________________________");
-	 			**/
- 			
+				 LOGGER.info("_________________________________________________________________________________________");
+		 		 LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  Start _________________________");
+		 		 LOGGER.info("_________________________________________________________________________________________");
+				 ccpCalculateMapper.insertLog(params);
+				 LOGGER.info("_________________________________________________________________________________________");
+		 		 LOGGER.info("_______________ // 4 - 2 //Approve Selected    Data.SalesOrderM  End _________________________");
+		 		 LOGGER.info("_________________________________________________________________________________________");
+			 }
  		}
 		
 	}//Impl End
