@@ -33,6 +33,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/organization/allocation")
 
+
 public class AllocationController {
 	private static final Logger logger = LoggerFactory.getLogger(AllocationController.class);
 	

@@ -42,7 +42,7 @@
                                     AND B.ADD_ID = E.CUST_ADD_ID
                                     AND E.AREA_ID = F.AREA_ID
                            )
-                      )C ,(  SELECT   TO_CHAR( (SYSDATE -1) +level ,'yyyy-mm-dd') INS_DATE    FROM DUAL connect by level <= 5) TB  
+                      )C ,(  SELECT   TO_CHAR( (SYSDATE -1) +level ,'yyyy-mm-dd') INS_DATE    FROM DUAL connect by level <= 14) TB  
                 ORDER BY MEM_ID  ,INS_DATE ASC
                 )                                           
                 
@@ -75,7 +75,7 @@
 				                                     AND E.AREA_ID = F.AREA_ID)) C,
 				           (    SELECT   TO_CHAR ( (SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE
 				                  FROM   DUAL
-				            CONNECT BY   LEVEL <= 5) TB
+				            CONNECT BY   LEVEL <= 14) TB
 				ORDER BY   MEM_ID, INS_DATE ASC
         ]]>
         

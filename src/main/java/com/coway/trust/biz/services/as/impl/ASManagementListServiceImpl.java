@@ -379,10 +379,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		    this.insertSVC0005D(addItemList ,  AS_RESULT_ID , String.valueOf(params.get("updator"))); 
 			
 			
-		  //물류 호출   add by hgham
+		
 			/////////////////////////물류 호출//////////////////////
-	        Map<String, Object>  logPram = null ;
-            logPram.put("ORD_ID",    AS_NO);
+	        Map<String, Object>  logPram = new    HashMap<String, Object>()  ;
+            logPram.put("ORD_ID",    String.valueOf( eMap.get("asno")).trim());
             logPram.put("RETYPE", "COMPLET");  
             logPram.put("P_TYPE", "OD03");  
             logPram.put("P_PRGNM", "ASCOM_IN2");  

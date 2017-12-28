@@ -23,12 +23,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.InHouseRepairService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -51,6 +54,9 @@ public class ASManagementListController {
 
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
+
+	@Autowired
+	private AdaptorService adaptorService;	
 
 	
 	
@@ -1202,5 +1208,32 @@ public class ASManagementListController {
 		return ResponseEntity.ok(getDEFECT_TYPE_List);
 	}
 	
+	
+	
+	
+
+	@RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
+	public ResponseEntity<String> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
+		logger.debug("params {}", params);
+		
+		/*
+		//send SMS
+		SmsVO sms = new SmsVO(session.getUserId(), 975);
+		sms.setMessage("Do you really want to cancel for the current month Heart Service?\n" + "HS Order Number :"+ params.get("salesOrderNo")
+		+ "\nCancel Request Number :"+ cancReqNo );
+
+		logger.debug(" params1111 : {}" , canCelSmsForm.getReceiverTelNo());
+		
+		sms.setMobiles((String)canCelSmsForm.getReceiverTelNo());  
+		
+		SmsResult smsResult = adaptorService.sendSMS(sms);
+		
+		logger.debug(" smsResult : {}" , smsResult.toString());
+		*/
+		return ResponseEntity.ok("OK");
+	}
+	
+	
+	 
 	
 }

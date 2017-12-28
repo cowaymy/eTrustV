@@ -20,13 +20,14 @@
 }
 
 
+/*    핑크 불가능색 */
 .my-row-style {
     background:#FFB2D9;
     font-weight:bold;
     color:#22741C;
 }
 
-
+/*    퍼런색  가능색 */
 .my-row-style-Available{
     background:#86E57F;
     font-weight:bold;
@@ -154,6 +155,7 @@ function changeRowStyleFunction() {
     AUIGrid.setProp(mAgrid, "rowStyleFunction", function(rowIndex, item) {
         
         
+    	
         if(item.dDate == '${S_DATE}')  {
            
             if('AS'== '${TYPE}'){
@@ -161,8 +163,12 @@ function changeRowStyleFunction() {
                   var valArray  =new Array();
                   valArray = item.ascnt.split("-");
                   
-                  if(valArray[0] == valArray[1]   ||  valArray[0]  >=  valArray[1]  ) {
+                  console.log(valArray);
+                  
+                  if( Number(valArray[0]) ==  Number(valArray[1])   ||  Number(valArray[0])  >=  Number(valArray[1])  ) {
+                      console.log("in========>");
                 	  return "my-row-style";
+                	  
                   }else {
                 	  return "my-row-style-Available";
                   }
@@ -175,7 +181,7 @@ function changeRowStyleFunction() {
                   console.log(valArray);
                   
                
-                  if(valArray[0] == valArray[1]  ||  valArray[0]  >=  valArray[1]  ) {
+                  if(Number(valArray[0]) == Number(valArray[1])  ||  Number(valArray[0])  >=  Number(valArray[1])  ) {
                 	   console.log("my-row-style======>");
                 	   
                       return "my-row-style";
@@ -190,7 +196,7 @@ function changeRowStyleFunction() {
               }else if('RTN'== '${TYPE}'){
             	  var valArray  =new Array();
                   valArray = item.rtncnt.split("-");
-                  if(valArray[0] == valArray[1]  ||  valArray[0]  >=  valArray[1]   ) {
+                  if(Number(valArray[0]) == Number(valArray[1])  ||  Number(valArray[0])  >=  Number(valArray[1])   ) {
                       return "my-row-style";
                   }else {  
                       return "my-row-style-Available";
@@ -309,7 +315,7 @@ function createDetailAllactionAUIGrid() {
                                                          valArray = value.split("-");
                                                          
                                                     
-                                                    	 if(valArray[0] > valArray[1]) {
+                                                    	 if(Number(valArray[0]) > Number(valArray[1])) {
                                                              return "my-cell-style";
                                                          }
                                                     	 
@@ -325,11 +331,11 @@ function createDetailAllactionAUIGrid() {
 	                                                        var valArray  =new Array();
 	                                                        valArray = value.split("-");
 	                                                    
-	                                                        if(valArray[0] > valArray[1]) {
+	                                                        if(Number(valArray[0]) > Number(valArray[1])) {
 	                                                            return "my-cell-style";
 	                                                        }
 	                                                        
-	                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+	                                                        if(Number(valArray[0]) == 0  &&  Number(valArray[1]) ==0) {
                                                                 return "my-cell-style";
                                                             }
 	                                                        
@@ -346,12 +352,12 @@ function createDetailAllactionAUIGrid() {
                                                         valArray = value.split("-");
                                                    
                                                         
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) > Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -374,12 +380,12 @@ function createDetailAllactionAUIGrid() {
                                                          valArray = value.split("-");
                                                    
                                                          
-                                                         if(valArray[0] > valArray[1]) {
+                                                         if( Number(valArray[0]) > Number(valArray[1])) {
                                                              return "my-cell-style";
                                                          }
                                                          
                                                          
-                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                         if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                              return "my-cell-style";
                                                          }
                                                          
@@ -400,11 +406,11 @@ function createDetailAllactionAUIGrid() {
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
                                                  
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) > Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -426,12 +432,12 @@ function createDetailAllactionAUIGrid() {
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
                                                    
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) > Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1] )==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -457,10 +463,10 @@ function createDetailAllactionAUIGrid() {
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
                                                  
-                                                         if(valArray[0] > valArray[1]) {
+                                                         if(Number(valArray[0]) > Number(valArray[1])) {
                                                              return "my-cell-style";
                                                          }   
-                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                         if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                              return "my-cell-style";
                                                          }
                                                          
@@ -485,12 +491,12 @@ function createDetailAllactionAUIGrid() {
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
                                               
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) > Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -512,11 +518,11 @@ function createDetailAllactionAUIGrid() {
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
                                                    
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) >  Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -543,11 +549,11 @@ function createDetailAllactionAUIGrid() {
                                                          valArray = value.split("-");
                                                 
                                                          
-                                                         if(valArray[0] > valArray[1]) {
+                                                         if(Number(valArray[0]) >  Number(valArray[1])) {
                                                              return "my-cell-style";
                                                          }
                                                          
-                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                         if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                              return "my-cell-style";
                                                          }
                                                          
@@ -570,7 +576,7 @@ function createDetailAllactionAUIGrid() {
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
                                                    
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) > Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -578,7 +584,7 @@ function createDetailAllactionAUIGrid() {
                                                             return "my-cell-style-sel";
                                                         }
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -594,11 +600,11 @@ function createDetailAllactionAUIGrid() {
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
                                                  
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(Number(valArray[0]) >  Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                         
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
                                                         
@@ -619,20 +625,20 @@ function createDetailAllactionAUIGrid() {
                                                      headerText : "AS",
                                                      width : 80,
                                                      styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-
+                                                         /*
                                                          var valArray  =new Array();
                                                          valArray = value.split("-");
                                                     
                                                          
-                                                         if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                         if(Number(valArray[0]) == 0 &&  Number(valArray[1]) ==0) {
                                                              return "my-cell-style";
                                                          }
                                                          
-                                                         if(valArray[0] > valArray[1]) {
+                                                         if(Number(valArray[0]) > Number( valArray[1] )) {
                                                              return "my-cell-style";
                                                          }
                                                    
-                                                         /*
+                                                 
                                                
                                                         
                                                          if('AS'== '${TYPE}'){
@@ -647,17 +653,17 @@ function createDetailAllactionAUIGrid() {
                                                     headerText : "INS",
                                                     width : 80,
                                                     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-
+                                                    	 /*
                                                         var valArray  =new Array();
                                                         valArray = value.split("-");
-                                                        if(valArray[0] == 0 &&  valArray[1] ==0) {
+                                                        if(Number(valArray[0]) == 0 &&   Number(valArray[1]) ==0) {
                                                             return "my-cell-style";
                                                         }
-                                                        if(valArray[0] > valArray[1]) {
+                                                        if(  Number(valArray[0])  >  Number(valArray[1])) {
                                                             return "my-cell-style";
                                                         }
                                                  
-                                                        /*
+                                                       
                                                       
                                                         
                                                         
@@ -675,18 +681,18 @@ function createDetailAllactionAUIGrid() {
 	                                                    headerText : "RTN",
 	                                                    width : 80,
 	                                                    styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
-	
+	                                                        /*
 		                                                        var valArray  =new Array();
 		                                                        valArray = value.split("-");
 		                                                        
-		                                                        if(valArray[0] == 0  &&  valArray[1] ==0) {
+		                                                        if(Number( valArray[0] )== 0  &&  Number(valArray[1]) ==0) {
                                                                     return "my-cell-style";
                                                                 }
-		                                                        if(valArray[0] > valArray[1]) {
+		                                                        if( Number( valArray[0]  )>  Number(valArray[1] )) {
                                                                     return "my-cell-style";
                                                                 }
 		                                                     
-		                                                        /*
+		                                                    
 		                                                   
 		                                                        
 		                                                      
@@ -736,23 +742,24 @@ function fn_AllocationConfirm(){
         valArray = rowInfoObj.value.split("-");
     
         if(rowInfoObj.dataField =="sumascnt" ||  rowInfoObj.dataField =="suminscnt" ||  rowInfoObj.dataField =="sumrtncnt"   ){
-        	Common.alert("Summary 는 선택할 수 없습니다.");
-        	
+        	Common.alert("Summary can not be selected.);
             return ;
         }
         
         
-        if(valArray[1] == "0" ){
-            Common.alert("선택하신 세션에 CAPA가 등록 되지 않았습니다.");
-            return ;
+        
+        if(rowInfoObj.dataField  !="othascnt"  &&   rowInfoObj.dataField !="othinscnt"  &&   rowInfoObj.dataField  !="othrtncnt"  ){
+	            if(Number(valArray[1]) == "0" ){
+	                Common.alert("CAPA is not registered in the selected session.");
+	                return ;
+	            }
+	            
+	            
+	           if(Number(valArray[0] )>  Number(valArray[1] )){
+	                Common.alert("The selected session has already been completed. Please select another session ");
+	                return ;
+	           }
         }
-        
-        
-       if(valArray[0] > valArray[1] ){
-            Common.alert("선택된 세션는 이미 완료 되었습니다. 다른 세션을 선택하세요 ");
-            return ;
-       }
-        
 
     }
     

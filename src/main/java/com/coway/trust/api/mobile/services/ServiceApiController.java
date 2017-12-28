@@ -1355,7 +1355,7 @@ public class ServiceApiController {
 		}else if(hour >= 14 && hour <= 19){
 			params.put("sesionCode","E");
 		}else {
-			params.put("sesionCode","O");
+			params.put("sesionCode","E");
 		}
 		
 		
