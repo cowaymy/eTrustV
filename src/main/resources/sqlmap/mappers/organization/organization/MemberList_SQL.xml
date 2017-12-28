@@ -148,7 +148,7 @@
 
 
 			Project1.C1 C1,
-			project1.TRAINEE_CODE
+			project1.TRAINEE_TYPE
 
 			FROM ( SELECT Project1.C1 C1,
 			         Project1.MEM_ID MEM_ID,
@@ -165,7 +165,7 @@
 			         Project1.position_name,
 			         Project1.brnch_id,
                     Project1.ct_sub_grp,
-                    project1.TRAINEE_CODE,
+                    project1.TRAINEE_TYPE,
 
 			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
@@ -182,7 +182,7 @@
 			        Extent3.NAME as status_name,
 			        Extent1.brnch as brnch_id,
 			        Extent5.ct_sub_grp,
-                    extent1.TRAINEE_CODE,
+                    extent1.TRAINEE_TYPE,
 			        /*By KV*/
 			        Extend6.MEM_ORG_DESC position_name
 

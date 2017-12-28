@@ -82,9 +82,9 @@ function fn_requestVacationPop(){
     };
     //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
     
-    console.log(memberid + " :: " + memberType + " :: " + traineeCode)
+    console.log(memberid + " :: " + memberType + " :: " + traineeType)
     
-    if ( memberType == 5 && (traineeCode == 2 || traineeCode == 3)) {
+    if ( memberType == 5 && (traineeType == 2 || traineeType == 3)) {
     
      Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType }, function(result) {
          console.log("성공.");
@@ -92,11 +92,11 @@ function fn_requestVacationPop(){
 
          if(result !="" ){
              //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
-                 if ( traineeCode == 2) {
+                 if ( traineeType == 2) {
 			        Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.message);
 			    }
 			    
-			    if ( traineeCode == 3) {
+			    if ( traineeType == 3) {
 			        Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.message);
 			    } 
         	  fn_memberListSearch();
@@ -158,7 +158,7 @@ $(document).ready(function() {
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
         membercode = AUIGrid.getCellValue(myGridID, event.rowIndex, "membercode");
         statusName = AUIGrid.getCellValue(myGridID, event.rowIndex, "statusName");
-        traineeCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "traineeCode");
+        traineeType = AUIGrid.getCellValue(myGridID, event.rowIndex, "traineeType");
         
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
@@ -223,8 +223,8 @@ function createAUIGrid() {
             width : 0
 		},
 		{
-            dataField : "traineeCode",
-            headerText : "Trainee Code",
+            dataField : "traineeType",
+            headerText : "Trainee Type",
             width : 0
         }		
 		/* this is for put EDIT button in grid ,
