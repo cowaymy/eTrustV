@@ -282,31 +282,16 @@ public class SalesPlanManagementController {
 	public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
 	{
 		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-		//List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		//List<Object> delList = params.get(AppConstants.AUIGRID_REMOVE); // Get grid DeleteList
 		// 콘솔로 찍어보기
 		LOGGER.info("salesPlanMngementService_수정 : {}", udtList.toString());
-		//LOGGER.info("salesPlanMngementService_추가 : {}", addList.toString());
-		//LOGGER.info("salesPlanMngementService_삭제 : {}", delList.toString());
-		
 		
 		int tmpCnt = 0;
 		int totCnt = 0;
-	
-/*		if (addList.size() > 0) {
-			tmpCnt = salesPlanMngementService.insertSalesPlanDetail(addList, sessionVO.getUserId()); 
-			totCnt = totCnt + tmpCnt;
-		}*/
 
 		if (udtList.size() > 0) {
 			tmpCnt = salesPlanMngementService.updateSCMPlanMaster(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
-		/*
-		if (delList.size() > 0) {
-			tmpCnt = salesPlanMngementService.deleteGSTExportation(delList, sessionVO.getUserId());
-			totCnt = totCnt + tmpCnt;
-		}*/
 		
 		LOGGER.info("salesPlan Saves카운트 : {}", totCnt);
 
@@ -391,7 +376,80 @@ public class SalesPlanManagementController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
-	}		
+	}
+	
+	@RequestMapping(value = "/updateSalesPlanUnConfirm.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSalesPlanUnConfirm(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("updateSalesPlanUnConfirm_params : {}", params);
+		
+		
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		tmpCnt = salesPlanMngementService.updateSalesPlanUnConfirm(params, sessionVO);
+		totCnt = totCnt + tmpCnt;
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateSalesPlanConfirm.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSalesPlanConfirm(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("updateSalesPlanConfirm_params : {}", params);
+		
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		tmpCnt = salesPlanMngementService.updateSalesPlanConfirm(params, sessionVO);
+		totCnt = totCnt + tmpCnt;
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+		
+	
+	@RequestMapping(value = "/deleteStockCodeList.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteStockCodeList(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO)
+	{
+		List<Object> checkList = params.get(AppConstants.AUIGRID_CHECK);
+		
+		LOGGER.info("deleteStockCodeList : {}", checkList.toString());
+		
+		int tmpCnt = 0;
+		int totCnt = 0;
+		
+		if (checkList.size() > 0) {
+			tmpCnt = salesPlanMngementService.deleteStockCode(checkList, sessionVO.getUserId());
+			
+			totCnt = totCnt + tmpCnt;
+		}
+		
+		// 콘솔로 찍어보기
+		LOGGER.info("deleteStockCodeList_카운트 : {}", totCnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}	
 	
 	
 	// SALES PLAN ACCURACY	

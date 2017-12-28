@@ -45,8 +45,12 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectPlanMasterId(Map<String, Object> params);
 	List<EgovMap> selectStockIdByStCode(Map<String, Object> params);
 	
+	int updateSalesPlanUnConfirm(Map<String, Object> params);
+	int updateSalesPlanConfirm(Map<String, Object> params);
 	void updateScmPlanMaster(Map<String, Object> params);
 	void insertSalesPlanDetail(Map<String, Object> params);
+	
+	int deleteStockCode(Map<String, Object> params);
 	
 	void insertSalesPlanMaster(Map<String, Object> params);
 	void insertSalesCdcDetail(Map<String, Object> params);

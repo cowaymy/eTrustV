@@ -231,6 +231,57 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	}
 	
 	@Override
+	public int deleteStockCode(List<Object> delList, Integer crtUserId) 
+	{
+		int saveCnt = 0;
+		
+		for (Object obj : delList) 
+		{
+			LOGGER.debug(" delList : {} ", delList.toString() );
+			
+			salesPlanMngementMapper.deleteStockCode((Map<String, Object>) obj);
+			
+			saveCnt++;
+			
+			LOGGER.debug(" saveCnt : {} ", saveCnt);
+
+		}
+		
+		return saveCnt;
+	}
+	
+	@Override
+	public int updateSalesPlanUnConfirm(Map<String, Object> params, SessionVO sessionVO)
+	{
+        int saveCnt = 0;		
+        int totCnt = 0;	
+        
+		params.put("updateSalesPlanUnConfirm_Params", params.toString() );
+		
+		saveCnt = salesPlanMngementMapper.updateSalesPlanUnConfirm(params);
+  
+		totCnt = totCnt + saveCnt;
+		
+		return totCnt;
+	}
+	
+	@Override
+	public int updateSalesPlanConfirm(Map<String, Object> params, SessionVO sessionVO)
+	{
+		int saveCnt = 0;		
+		int totCnt = 0;	
+		
+		params.put("updateSalesPlanConfirm_Params", params.toString() );
+		
+		saveCnt = salesPlanMngementMapper.updateSalesPlanConfirm(params);
+		
+		totCnt = totCnt + saveCnt;
+		
+		return totCnt;
+	}
+	
+	
+	@Override
 	public List<EgovMap> selectSalesPlanMngmentPeriod(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSalesPlanMngmentPeriod(params);
 	}
