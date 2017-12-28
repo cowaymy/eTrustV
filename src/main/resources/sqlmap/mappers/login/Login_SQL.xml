@@ -13,6 +13,10 @@
 	       ,USR.USER_STUS_ID AS userStatusId
 	       ,USR.USER_TYPE_ID AS userTypeId
 	       ,ROLET.ROLE_ID AS roleId
+	       , (SELECT A.MEM_LVL
+           FROM ORG0005D A, ORG0001D B
+          WHERE A.MEM_ID = B.MEM_ID
+            AND B.MEM_CODE = #{userId}) AS memberLevel
 	       ,CASE
 	          WHEN (USR.USER_BRNCH_ID IS NOT NULL)
 	             THEN USR.USER_BRNCH_ID
