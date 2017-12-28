@@ -74,8 +74,8 @@
        Extent3.sales_ord_no                           SALES_ORD_NO, 
        Extent3.ref_no                                 REF_NO, 
        Extent3.cust_po_no                             CUST_PO_NO, 
-       TO_CHAR(TO_DATE(Extent3.sales_dt,'YYYY-MM-DD'))           SALES_DT, 
-       TO_CHAR(TO_DATE(Extent1.install_dt,'YYYY-MM-DD')) C1, 
+       TO_CHAR(Extent3.sales_dt,'yy/mm/dd')           SALES_DT, 
+       TO_CHAR(Extent1.install_dt,'yy/mm/dd') C1, 
        Extent1.install_stk_id                         INSTALL_STK_ID, 
        Extent9.stk_code                               STK_CODE, 
        Extent9.stk_desc                               STK_DESC, 
@@ -101,7 +101,7 @@
        Extent11.user_name                             USER_NAME, 
        Extent9.is_sirim                               IS_SIRIM, 
        Extent9.stk_grad                               STK_GRAD, 
-       TO_CHAR(TO_DATE(Extent2.crt_dt,'YYYY-MM-DD'))     C3, 
+       TO_CHAR(Extent2.crt_dt,'yy/mm/dd')     C3, 
        Extent9.stk_ctgry_id                           STK_CTGRY_ID, 
        Extent2.doc_ref_no1                            DOC_REF_NO1, 
        Extent2.doc_ref_no2                            DOC_REF_NO2, 
@@ -112,7 +112,7 @@
          WHEN ( Extent12.user_id IS NOT NULL ) THEN Extent12.user_name 
          ELSE 'N' 
        END                                            C4, 
-       TO_CHAR(TO_DATE(Extent2.crt_dt,'YYYY-MM-DD'))     C5, 
+       TO_CHAR(Extent2.crt_dt,'yy/mm/dd')     C5, 
        CASE 
          WHEN ( Extent2.result_id IS NOT NULL ) THEN Extent2.ct_id 
          ELSE 0 
@@ -130,7 +130,7 @@
        END                                            C7, 
        Extent6.code_name                              CODENAME2,
        TO_CHAR(sysdate,'MM') c8,
-       TO_CHAR(TO_DATE(Extent2.crt_dt,'YYYY-MM-dd'),'MM')     C39
+       TO_CHAR(Extent2.crt_dt,'MM')     C39
 FROM   sal0046d Extent1 
        left join sal0047d Extent2 
               ON Extent1.install_entry_id = Extent2.entry_id 
@@ -177,7 +177,7 @@ WHERE  Extent1.install_entry_id = #{installEntryId}
          WHEN ( Extent4.ref_no IS NOT NULL ) THEN Extent4.ref_no 
          ELSE 'N' 
        END                       C1, 
-       TO_CHAR(TO_DATE(Extent4.sales_dt,'YYYY-MM-DD'))          SALES_DT, 
+       TO_CHAR(Extent4.sales_dt,'yy/mm/dd')          SALES_DT, 
        CASE 
          WHEN ( Extent4.upd_dt IS NOT NULL ) THEN Extent4.upd_dt 
          ELSE Extent4.sales_dt 
