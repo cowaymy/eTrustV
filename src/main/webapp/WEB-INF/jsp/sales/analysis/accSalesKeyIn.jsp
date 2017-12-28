@@ -20,6 +20,7 @@ var cnt =  -1;
                     $("#viewType").val("WINDOW");
                     loader();	
     			}else{
+    				$("#reportType").val('');
     				Common.alert("access deny.");
     			}
 			}else if($(this).val() == '1'){
@@ -29,6 +30,7 @@ var cnt =  -1;
 	                $("#viewType").val("WINDOW");
 	                loader();   
 				}else{
+					$("#reportType").val('');
 					Common.alert("access deny.");
 				} 
             }else{
@@ -39,22 +41,17 @@ var cnt =  -1;
     	
     	//DownLoad Report to PDF
     	$("#_pdfDownBtn").click(function() {
-			
-    		if($("#reportType").val() == null || $("#reportType").val() == ''){
-    			Common.alert("Please select Report Type");
-    			return;
-    		}
     		
     		if($("#reportType").val() == '0'){
 				$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
                 $("#viewType").val("PDF");
                 fn_downloadReport(0);
-			}
-			
-			if($("#reportType").val() == '1'){
+			}else if($("#reportType").val() == '1'){
 				$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
                 $("#viewType").val("PDF");
                 fn_downloadReport(1);
+			}else{
+				Common.alert("Please select Report Type");
 			}
 			
 		});
