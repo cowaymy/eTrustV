@@ -79,12 +79,9 @@ function fn_hpMemRegisPop(){
              MemberID :memberid,
             MemberType : memberType
     };
-    //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
-
-    //alert(  memberType  + "  <>  " + statusName );
     
     if (memberType == "2803" ) {
-    	if ( statusName != "Approved" ) {
+    	if ( statusName == "Pending" ) {
     
 	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType }, function(result) {
 	         console.log("성공.");
@@ -95,7 +92,9 @@ function fn_hpMemRegisPop(){
 	              fn_memberListSearch();
 	         }
 	     });
-	     
+        } else {
+	        Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
+	    }     
     } else {
     	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
     }
