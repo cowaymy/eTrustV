@@ -801,7 +801,9 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns mt20">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
+    </c:if>
 </ul>
 </div>
 </section><!-- pop_body end -->
