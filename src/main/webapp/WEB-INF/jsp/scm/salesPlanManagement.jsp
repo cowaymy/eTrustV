@@ -196,6 +196,155 @@ function fnSelectPeriodReset()
        periodCheckBox.options[0] = new Option("Select a YEAR","");  
 }
 
+function fnConfirm(flag)
+{
+	  if ($("#scmYearCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+	    return false;
+	  } 
+
+	  if ($("#scmPeriodCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
+	    return false;
+	  }
+
+	  if ($("#scmTeamCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
+	    return false;
+	  }
+    
+	  Common.ajax("POST"
+			        , "/scm/updateSalesPlanConfirm.do"
+	            , $("#MainForm").serializeJSON()    
+	            , function(result) 
+	              {
+	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                fnSearchBtnList();
+	                console.log("성공." + JSON.stringify(result));
+	                console.log("data : " + result.data);
+	              } 
+	            , function(jqXHR, textStatus, errorThrown) 
+	              {
+		              try 
+		              {
+		                console.log("Fail Status : " + jqXHR.status);
+		                console.log("code : "        + jqXHR.responseJSON.code);
+		                console.log("message : "     + jqXHR.responseJSON.message);
+		                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+		              } 
+		              catch (e) 
+		              {
+		                console.log(e);
+		              }
+	
+		              Common.alert("Fail : " + jqXHR.responseJSON.message);
+		              
+	              }); 
+} 
+
+function fnUnConfirm(obj)
+{
+	  if ($("#scmYearCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+	    return false;
+	  } 
+
+	  if ($("#scmPeriodCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
+	    return false;
+	  }
+
+	  if ($("#scmTeamCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
+	    return false;
+	  }
+	    
+	  Common.ajax("POST"
+			        , "/scm/updateSalesPlanUnConfirm.do"
+	            , $("#MainForm").serializeJSON()    
+	            , function(result) 
+	              {
+	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                fnSearchBtnList();
+	                console.log("성공." + JSON.stringify(result));
+	                console.log("data : " + result.data);
+	              } 
+	            , function(jqXHR, textStatus, errorThrown) 
+	              {
+		              try 
+		              {
+		                console.log("Fail Status : " + jqXHR.status);
+		                console.log("code : "        + jqXHR.responseJSON.code);
+		                console.log("message : "     + jqXHR.responseJSON.message);
+		                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+		              } 
+		              catch (e) 
+		              {
+		                console.log(e);
+		              }
+	
+		              Common.alert("Fail : " + jqXHR.responseJSON.message);
+		              
+	              }); 
+} 
+
+
+function fnDelete(obj)
+{
+	  var data = {};
+	  var checkedItemsList = AUIGrid.getCheckedRowItemsAll(myGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
+
+	  console.log("chkList: " + checkedItemsList.length);
+
+	  if(checkedItemsList.length <= 0) 
+	  {
+	    Common.alert("<spring:message code='expense.msg.NoData' htmlEscape='false'/>");
+	    return false;
+	  }
+
+	  if (checkedItemsList.length > 0)
+	  {
+	    for (var icnt = 0; icnt < checkedItemsList.length; icnt++)
+	      console.log("code: " + checkedItemsList[icnt].code + " /team: "+ checkedItemsList[icnt].team+ " /PLAN_MASTER_ID: "+ checkedItemsList[icnt].planMasterId );
+
+	    data.checked = checkedItemsList;
+
+	    Common.ajax("POST"
+	               ,"/scm/deleteStockCodeList.do"
+	               , data
+	               , function(result) 
+	                 {
+	                   Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                   fnSearchBtnList() ;
+	                     
+	                   console.log("성공." + JSON.stringify(result));
+	                   console.log("data : " + result.data);
+	                 } 
+	              ,  function(jqXHR, textStatus, errorThrown) 
+	                 {
+	                   try 
+	                   {
+	                     console.log("Fail Status : " + jqXHR.status);
+	                     console.log("code : "        + jqXHR.responseJSON.code);
+	                     console.log("message : "     + jqXHR.responseJSON.message);
+	                     console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	                   } 
+	                   catch (e) 
+	                   {
+	                     console.log(e);
+	                   }
+	                   
+	                   Common.alert("Fail : " + jqXHR.responseJSON.message);
+	                })
+	  }
+}  
+
 function fnCreate(obj)
 {
   if ($("#scmYearCbBox").val().length < 1) 
@@ -926,9 +1075,20 @@ function fnSettiingHeader()
 	                  showEditedCellMarker : true, // 셀 병합 실행
 	                  enableCellMerge : true,
 	                  // 고정칼럼 카운트 지정
-	                  fixedColumnCount : 7,
+	                  fixedColumnCount : 8,
 	                  enableRestore : true,
-	                  softRemovePolicy : "exceptNew" //사용자추가한 행은 바로 삭제               
+	                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
+	                  // 체크박스 표시 설정
+	                  showRowCheckColumn : true,              
+	                  // 전체 선택 체크박스가 독립적인 역할을 할지 여부
+	                  independentAllCheckBox : false,  
+	                  rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+	                  {
+	                    if(item.checkFlag == "0") { // 이름이 Anna 인 경우 사용자 체크 못하게 함.
+	                       return false; // false 반환하면 disabled 처리됨
+	                     }
+	                     return true;
+	                  }                
 		              };
 
   console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /team: " + $('#scmTeamCbBox').val());
@@ -984,6 +1144,13 @@ function fnSettiingHeader()
 																													   ,visible : true
 																													   ,width : 0
 																													  } 
+																													, { 
+																													    dataField : result.header[0].checkFlag 
+																													   ,headerText : "chk"
+																													   ,editable : true
+																													   ,visible : false
+	                                                           
+																													  }
 																													, { 
 																													    dataField : result.header[0].teamH1
 																													   ,headerText : "<spring:message code='sys.scm.salesplan.Team' />"
@@ -2081,20 +2248,19 @@ $(document).ready(function()
 	</li>
 	<li>
 	 <p class="btn_grid">
-	  <a href="javascript:void(0);">Delete</a>
-	  <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> 
+	  <a onclick="fnDelete(this);">Delete</a>
 	 </p>
 	</li>
 	
 	<li>
-	 <p class="btn_grid btn_disabled">
-	 <a href="javascript:void(0);">Confirm</a>
+	 <p class="btn_grid">
+	 <a onclick="fnConfirm(this);">Confirm</a>
 	 </p>
 	</li>
 	
 	<li>
-	 <p class="btn_grid btn_disabled">
-	   <a href="javascript:void(0);">UnConfirm</a> 
+	 <p class="btn_grid">
+	   <a onclick="fnUnConfirm(this);">UnConfirm</a> 
 	 </p>
 	</li>
 	
