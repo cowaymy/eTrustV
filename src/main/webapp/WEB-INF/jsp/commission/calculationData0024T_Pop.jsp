@@ -45,49 +45,49 @@
     }
     
    function createAUIGrid() {
-	    var columnLayout3 = [ {
+	    var columnLayout3 = [{
+            dataField : "taskId",
+            headerText : "<spring:message code='commissiom.text.excel.taskId'/>",
+            style : "my-column",
+            editable : false
+        },{
 	        dataField : "emplyId",
-	        headerText : "EMPLY ID",
+	        headerText : "<spring:message code='commissiom.text.excel.emplyId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "EMPLY CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.emplyCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "prfomPrcnt",
-	        headerText : "PRFOM PRCNT",
+	        headerText : "<spring:message code='commissiom.text.excel.prfomPrcnt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "prfomncRank",
-	        headerText : "PRFOMNC RANK",
+	        headerText : "<spring:message code='commissiom.text.excel.prfomncRank'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "totEmply",
-	        headerText : "TOT EMPLY",
+	        headerText : "<spring:message code='commissiom.text.excel.toTemply'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "cumltDstrib",
-	        headerText : "CUMLT DSTRIB",
+	        headerText : "<spring:message code='commissiom.text.excel.cumltDstrib'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "payoutPrcnt",
-	        headerText : "PAYOUT PRCNT",
+	        headerText : "<spring:message code='commissiom.text.excel.payoutPrcnt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "payoutAmt",
-	        headerText : "PAYOUT AMT",
-	        style : "my-column",
-	        editable : false
-	    },{
-	        dataField : "taskId",
-	        headerText : "TASK ID",
+	        headerText : "<spring:message code='commissiom.text.excel.payoutAmt'/>",
 	        style : "my-column",
 	        editable : false
 	    }];

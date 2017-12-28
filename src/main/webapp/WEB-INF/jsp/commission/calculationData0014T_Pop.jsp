@@ -93,7 +93,7 @@
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
         width: 65,
         renderer : {
             type : "CheckBoxEditRenderer",
@@ -104,33 +104,31 @@
         }
     },{
         dataField : "emplyId",
-        headerText : "EMPLY ID",
+        headerText : "<spring:message code='commissiom.text.excel.emplyId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : "EMPLY CODE",
+        headerText : "<spring:message code='commissiom.text.excel.emplyCd'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "sponsId",
-        headerText : "SPONS_ID",
+        headerText : "<spring:message code='commissiom.text.excel.sponsId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "instlmt",
-        headerText : "INSTLMT",
+        headerText : "<spring:message code='commissiom.text.excel.instlmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         visible : false,
         editable : false
     },{
         dataField : "taskId",
-        headerText : "TASK ID",
         style : "my-column",
         visible : false,
         editable : false

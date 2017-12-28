@@ -80,7 +80,7 @@
    function createAUIGrid() {
 		var columnLayout3 = [ {
 	        dataField : "isExclude",
-	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	        width: 65,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",
@@ -91,48 +91,46 @@
 	        }
 	    }, {
 	        dataField : "ordId",
-	        headerText : "ORD ID",
+	        headerText : "<spring:message code='commissiom.text.excel.ordId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "bsrId",
-	        headerText : "BSR ID",
+	        headerText : "<spring:message code='commission.text.grid.bsrId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "BSR CODE",
+	        headerText : "<spring:message code='commission.text.grid.bsrCode'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "stockId",
-	        headerText : "STOCK ID",
+	        headerText : "<spring:message code='commissiom.text.excel.stkId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "appTypeId",
-	        headerText : "APP TYPE ID",
+	        headerText : "<spring:message code='commissiom.text.excel.appTypeId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "bsPersonId",
-	        headerText : "BS PERSON ID",
+	        headerText : "<spring:message code='commissiom.text.excel.bsPersonId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "prc",
-	        headerText : "PRC",
+	        headerText : "<spring:message code='commissiom.text.excel.prc'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

@@ -79,7 +79,7 @@
    function createAUIGrid() {
 	    var columnLayout3 = [{
 	        dataField : "isExclude",
-	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	        width: 65,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",
@@ -90,73 +90,71 @@
 	        }
 	    }, {
 	        dataField : "ordId",
-	        headerText : "ORD ID",
+	        headerText : "<spring:message code='commissiom.text.excel.ordId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
             dataField : "ordNo",
-            headerText : "ORD NO",
+            headerText : "<spring:message code='commission.text.search.ordNo'/>",
             style : "my-column",
             editable : false
         },{
 	        dataField : "asEntryId",
-	        headerText : " AS ENTRY ID",
+	        headerText : "<spring:message code='commissiom.text.excel.asEntryId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "AS ENTRY CODE",
+	        headerText : "<spring:message code='commission.text.asEntryCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
             dataField : "asrId",
-            headerText : "ASR ID",
+            headerText : "<spring:message code='commissiom.text.excel.asrId'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "asNo",
-            headerText : "ASR NO",
+            headerText : "<spring:message code='commissiom.text.excel.asrNo'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "stockId",
-            headerText : "STOCK ID",
+            headerText : "<spring:message code='commissiom.text.excel.stkId'/>",
             style : "my-column",
             editable : false
         },{
             dataField : "stockDesc",
-            headerText : "STOCK DESC",
+            headerText : "<spring:message code='commissiom.text.excel.stxDesc'/>",
             style : "my-column",
             editable : false
         },{
 	        dataField : "appTypeId",
-	        headerText : "APP TYPE ID",
+	        headerText : "<spring:message code='commissiom.text.excel.appTypeId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
             dataField : "appDesc",
-            headerText : "APP TYPE DESC",
+            headerText : "<spring:message code='commissiom.text.excel.appTypeDesc'/>",
             style : "my-column",
             editable : false
         },{
 	        dataField : "asPersonId",
-	        headerText : "AS PERSON ID",
+	        headerText : "<spring:message code='commissiom.text.excel.asPersonId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "prc",
-	        headerText : "PRC",
+	        headerText : "<spring:message code='commissiom.text.excel.prc'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

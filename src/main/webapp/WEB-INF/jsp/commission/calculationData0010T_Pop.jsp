@@ -97,7 +97,7 @@
    function createAUIGrid() {
 	    var columnLayout3 = [ {
 	        dataField : "isExclude",
-	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	        width: 65,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",
@@ -108,38 +108,36 @@
 	        }
 	    }, {
 	        dataField : "mbrshId",
-	        headerText : "MBRSH ID",
+	        headerText : "<spring:message code='commissiom.text.excel.memsId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "ordId",
-	        headerText : "ORD ID",
+	        headerText : "<spring:message code='commissiom.text.excel.ordId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "salesPersonId",
-	        headerText : "SALES PERSON ID",
+	        headerText : "<spring:message code='commissiom.text.excel.salesPersonId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : " SALES PERSON CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.salesPersonCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "mbrshAmt",
-	        headerText : "MBRSH AMT",
+	        headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

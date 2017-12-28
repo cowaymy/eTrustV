@@ -47,48 +47,46 @@
    function createAUIGrid() {
 	    var columnLayout3 = [ {
 	        dataField : "emplyId",
-	        headerText : "EMPLY ID",
+	        headerText : "<spring:message code='commissiom.text.excel.emplyId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "EMPLY CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.emplyCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "ordId",
-	        headerText : "ORD ID",
+	        headerText : "<spring:message code='commissiom.text.excel.ordId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "stockId",
-	        headerText : "STOCK ID",
+	        headerText : "<spring:message code='commissiom.text.excel.stkId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "promtId",
-	        headerText : "PROMT ID",
+	        headerText : "<spring:message code='commissiom.text.excel.promtId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "paidMonth",
-	        headerText : "PAID MONTH",
+	        headerText : "<spring:message code='commissiom.text.excel.paidMonth'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "paidAmt",
-	        headerText : "PAID AMT",
+	        headerText : "<spring:message code='commissiom.text.excel.paidAmt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

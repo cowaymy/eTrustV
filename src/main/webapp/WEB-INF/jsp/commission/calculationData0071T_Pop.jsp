@@ -78,7 +78,7 @@
    function createAUIGrid() {
 	   var columnLayout3 = [ {
 	       dataField : "isExclude",
-	       headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	       headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	       width: 65,
 	       renderer : {
 	           type : "CheckBoxEditRenderer",
@@ -89,88 +89,87 @@
 	       }
 	   }, {
            dataField : "taskId",
-           headerText : "TASK ID",
+           headerText : "<spring:message code='commissiom.text.excel.taskId'/>",
            style : "my-column",
            editable : false
        }, {
            dataField : "grpName",
-           headerText : "GRP NAME",
+           headerText : "<spring:message code='commission.text.grid.grpName'/>",
            style : "my-column",
            editable : false
        }, {
            dataField : "emplyCode",
-           headerText : "EMPLY CODE",
+           headerText : "<spring:message code='commissiom.text.excel.emplyCd'/>",
            style : "my-column",
            editable : false
        }, {
 	       dataField : "emplyId",
-	       headerText : "EMPLY ID",
+	       headerText : "<spring:message code='commissiom.text.excel.emplyId'/>",
 	       style : "my-column",
 	       editable : false
 	   }, {
            dataField : "docentry",
-           headerText : "DOCENTRY",
+           headerText : "<spring:message code='commissiom.text.excel.docntry'/>",
            style : "my-column",
            editable : false
        },{
            dataField : "reqdate",
-           headerText : "REQDATE",
+           headerText : "<spring:message code='commissiom.text.excel.reqdate'/>",
            style : "my-column",
            editable : false
        },{
 	       dataField : "reqpernm",
-	       headerText : "REQPERNM",       
+	       headerText : "<spring:message code='commissiom.text.excel.reqpernm'/>",
 	       editable : false
 	   },{
 	       dataField : "reqdeptnm",
-	       headerText : "REQDEPTNM",      
+	       headerText : "<spring:message code='commissiom.text.excel.reqdeptnm'/>",
 	       editable : false
 	   },{
 	       dataField : "docdate",
-	       headerText : "DOCDATE",      
+	       headerText : "<spring:message code='commissiom.text.excel.docdate'/>",
 	       editable : false
 	   },{
 	       dataField : "acctcode",
-	       headerText : "ACCTCODE",      
+	       headerText : "<spring:message code='commissiom.text.excel.acctcode'/>",
 	       editable : false
 	   },{
 	       dataField : "acctname",
-	       headerText : "ACCTNAME",
+	       headerText : "<spring:message code='commissiom.text.excel.acctname'/>",
 	       style : "my-column",
 	       editable : false
 	   },{
            dataField : "amt",
-           headerText : "AMT",
+           headerText : "<spring:message code='commissiom.text.excel.amt'/>",
            style : "my-column",
            editable : false
        },{
            dataField : "vatamt",
-           headerText : "VATAMT",
+           headerText : "<spring:message code='commissiom.text.excel.vatamt'/>",
            style : "my-column",
            editable : false
        },{
            dataField : "vatNon",
-           headerText : "VAT NON",
+           headerText : "<spring:message code='commissiom.text.excel.vatNon'/>",
            style : "my-column",
            editable : false
        },{
            dataField : "tamt",
-           headerText : "TAMT",
+           headerText : "<spring:message code='commissiom.text.excel.tamt'/>",
            style : "my-column",
            editable : false
        },{
            dataField : "vatcode",
-           headerText : "VATCODE",
+           headerText : "<spring:message code='commissiom.text.excel.vatcode'/>",
            style : "my-column",
            editable : false
        },{
            dataField : "dimension1",
-           headerText : "DIMENSION1",
+           headerText : "<spring:message code='commissiom.text.excel.dimension1'/>",
            style : "my-column",
            editable : false
        },{
 	       dataField : "runId",
-	       headerText : "RUN ID",
 	       style : "my-column",
 	       visible : false,
 	       editable : false

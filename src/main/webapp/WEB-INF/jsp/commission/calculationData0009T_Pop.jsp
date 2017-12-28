@@ -98,7 +98,7 @@
    function createAUIGrid() {
 	    var columnLayout3 = [{
 	        dataField : "isExclude",
-	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	        width: 65,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",
@@ -109,12 +109,12 @@
 	        }
 	    },{
 	        dataField : "emplyCode",
-	        headerText : " SVC PERSON CODE",
+	        headerText : "<spring:message code='commission.text.svcPersonCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "svcPersonId",
-	        headerText : "SVC PERSON ID",
+	        headerText : "<spring:message code='commissiom.text.excel.svcPersonId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
@@ -124,43 +124,41 @@
 	        editable : false
 	    },{
 	        dataField : "ordId",
-	        headerText : "ORD ID",
+	        headerText : "<spring:message code='commissiom.text.excel.ordId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "custRespnsId",
-	        headerText : "CUST RESPNS ID",
+	        headerText : "<spring:message code='commissiom.text.excel.custRespnsId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "appran",
-	        headerText : "APPRAN",
+	        headerText : "<spring:message code='commissiom.text.excel.appran'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "xplnt",
-	        headerText : "XPLNT",
+	        headerText : "<spring:message code='commissiom.text.excel.xplnt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "qly",
-	        headerText : "QLY",
+	        headerText : "<spring:message code='commissiom.text.excel.qly'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "overal",
-	        headerText : "OVERAL",
+	        headerText : "<spring:message code='commissiom.text.excel.overal'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

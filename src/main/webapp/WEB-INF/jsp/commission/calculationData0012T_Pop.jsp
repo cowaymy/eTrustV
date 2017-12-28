@@ -93,7 +93,7 @@
    function createAUIGrid() {
 	    var columnLayout3 = [ {
 	        dataField : "isExclude",
-	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	        width: 65,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",
@@ -104,53 +104,51 @@
 	        }
 	    }, {
 	        dataField : "clctrId",
-	        headerText : "CLCTR ID",
+	        headerText : "<spring:message code='commissiom.text.excel.clctrId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "CLCTR CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.clctrId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "ordId",
-	        headerText : "ORD ID",
+	        headerText : "<spring:message code='commission.text.grid.clctrCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "trgetAmt",
-	        headerText : "TRGET AMT",
+	        headerText : "<spring:message code='commissiom.text.excel.trgetAmt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "colctAmt",
-	        headerText : "COLCT AMT",
+	        headerText : "<spring:message code='commissiom.text.excel.colctAmt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "custRaceId",
-	        headerText : "CUST RACE ID",
+	        headerText : "<spring:message code='commissiom.text.excel.custRaceId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "rentPayModeId",
-	        headerText : "RENT PAY MODE ID",
+	        headerText : "<spring:message code='commissiom.text.excel.renPayModeId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "custId",
-	        headerText : "CUST ID",
+	        headerText : "<spring:message code='commission.text.grid.custId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

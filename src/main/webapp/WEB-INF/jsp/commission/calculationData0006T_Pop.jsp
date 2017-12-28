@@ -94,7 +94,7 @@
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
         width: 65,
         renderer : {
             type : "CheckBoxEditRenderer",
@@ -105,83 +105,81 @@
         }
     }, {
         dataField : "deptCode",
-        headerText : "DEPT CODE",
+        headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "mangrid",
-        headerText : " MANGR ID",
+        headerText : "<spring:message code='commissiom.text.excel.mangrId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "memId",
-        headerText : "MEM ID",
+        headerText : "<spring:message code='commissiom.text.excel.memId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplycode",
-        headerText : "MEM CODE",
+        headerText : "<spring:message code='commissiom.text.excel.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyTypeCode",
-        headerText : "EMPLY TYPE CODE",
+        headerText : "<spring:message code='commissiom.text.excel.memType'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "joindt",
-        headerText : "JOIN DT",
+        headerText : "<spring:message code='commissiom.text.excel.joinDt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyLev",
-        headerText : "EMPLY LEV",
+        headerText : "<spring:message code='commissiom.text.excel.emplLev'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyLevAge",
-        headerText : "EMPLY LEV AGE",
+        headerText : "<spring:message code='commissiom.text.excel.emplyLevAge'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "workingMonth",
-        headerText : "WORKING MONTH",
+        headerText : "<spring:message code='commissiom.text.excel.workingMonyh'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyStusId",
-        headerText : "EMPLY STUS ID",
+        headerText : "<spring:message code='commissiom.text.excel.emplyStusId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyStusCode",
-        headerText : "EMPLY STUS CODE",
+        headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyLevRank",
-        headerText : "EMPLY LEV RANK",
+        headerText : "<spring:message code='commissiom.text.excel.emplyLevRank'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyveh",
-        headerText : "EMPLY VEH",
+        headerText : "<spring:message code='commissiom.text.excel.emplyVeh'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyBizTypeId",
-        headerText : "EMPLY BIZ TYPE ID",
+        headerText : "<spring:message code='commissiom.text.excel.emplyBizTypeId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         visible : false,
         editable : false
     },{
         dataField : "taskId",
-        headerText : "TASK ID",
         style : "my-column",
         visible : false,
         editable : false

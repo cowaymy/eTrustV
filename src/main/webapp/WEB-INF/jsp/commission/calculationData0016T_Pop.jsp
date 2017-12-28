@@ -36,68 +36,66 @@
    function createAUIGrid() {
 	    var columnLayout3 = [ {
 	        dataField : "cmmsDt",
-	        headerText : "CMMS DT",
+	        headerText : "<spring:message code='commissiom.text.excel.cmmsDt'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "cMemId",
-	        headerText : "C MEM ID",
+	        headerText : "<spring:message code='commissiom.text.excel.cMemId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "cMemLev",
-	        headerText : "C MEM LEV",
+	        headerText : "<spring:message code='commissiom.text.excel.cMemLev'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "pMemId",
-	        headerText : "P MEM ID",
+	        headerText : "<spring:message code='commissiom.text.excel.pMemId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "P MEM CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.pMemCode'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "pMemLev",
-	        headerText : "P MEM LEV",
+	        headerText : "<spring:message code='commissiom.text.excel.pMemLev'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "tbbLev",
-	        headerText : "TBB LEV",
+	        headerText : "<spring:message code='commissiom.text.excel.tbbLev'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "cnsUnit",
-	        headerText : "CNS UNIT",
+	        headerText : "<spring:message code='commissiom.text.excel.cnsUnit'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "cnspvTot",
-	        headerText : "CNSPV TOT",
+	        headerText : "<spring:message code='commissiom.text.excel.cnspvTot'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "pnsUnit",
-	        headerText : "PNS UNIT",
+	        headerText : "<spring:message code='commissiom.text.excel.pnsUnit'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "tbbTot",
-	        headerText : "TBB TOT",
+	        headerText : "<spring:message code='commissiom.text.excel.tbbTot'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

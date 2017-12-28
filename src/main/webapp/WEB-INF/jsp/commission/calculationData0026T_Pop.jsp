@@ -78,7 +78,7 @@
    function createAUIGrid() {
 	    var columnLayout3 = [ {
 	        dataField : "isExclude",
-	        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+	        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
 	        width: 65,
 	        renderer : {
 	            type : "CheckBoxEditRenderer",
@@ -89,89 +89,87 @@
 	        }
 	    }, {
 	        dataField : "emplyTypeCode",
-	        headerText : "GROUP</BR> CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",
 	        style : "my-column",
 	        width: 65,
 	        editable : false
 	    }, {
 	        dataField : "grpName",
-	        headerText : "ORG NAME",
+	        headerText : "<spring:message code='commissiom.text.excel.orgNm'/>",
 	        style : "my-column",
 	        width: 170,
 	        editable : false
 	    }, {
 	        dataField : "emplyId",
-	        headerText : "EMPLY ID",
+	        headerText : "<spring:message code='commissiom.text.excel.emplyId'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "emplyCode",
-	        headerText : "EMPLY</BR>CODE",
+	        headerText : "<spring:message code='commissiom.text.excel.emplyCd'/>",
 	        style : "my-column",
 	        editable : false
 	    },{
 	        dataField : "week1",
-	        headerText : "WEEK1",       
+	        headerText : "<spring:message code='commissiom.text.excel.week1'/>",  
 	        width: 60,
 	        editable : false
 	    },{
 	        dataField : "week2",
-	        headerText : "WEEK2",      
+	        headerText : "<spring:message code='commissiom.text.excel.week2'/>",    
 	        width: 60,
 	        editable : false
 	    },{
 	        dataField : "week3",
-	        headerText : "WEEK3",      
+	        headerText : "<spring:message code='commissiom.text.excel.week3'/>",     
 	        width: 60,
 	        editable : false
 	    },{
 	        dataField : "week4",
-	        headerText : "WEEK4",       
+	        headerText : "<spring:message code='commissiom.text.excel.week4'/>",   
 	        width: 60,
 	        editable : false
 	    },{
 	        dataField : "tot",
-	        headerText : "TOTAL",      
+	        headerText : "<spring:message code='commissiom.text.excel.total'/>",
 	        width: 60,
 	        editable : false
 	    },{
 	        dataField : "totLv",
-	        headerText : "TOTAL</BR> COMPLETE",    
+	        headerText : "<spring:message code='commissiom.text.excel.totComplete'/>",
 	        width: 80,
 	        editable : false
 	    },{
 	        dataField : "cAward",
-	        headerText : "AWARD",
+	        headerText : "<spring:message code='commissiom.text.excel.award'/>",
 	        style : "my-column",
 	        width: 100,
 	        editable : false
 	    },{
 	        dataField : "lAward",
-	        headerText : "AWARD</BR>(Last Month)",
+	        headerText : "<spring:message code='commissiom.text.excel.awardLastMonth'/>",
 	        style : "my-column",
 	        width: 100,
 	        editable : false
 	    },{
 	        dataField : "cCriteria",
-	        headerText : "CRITERIA",
+	        headerText : "<spring:message code='commissiom.text.excel.criteria'/>",
 	        style : "my-column",
 	        width: 100,
 	        editable : false
 	    },{
 	        dataField : "lCriteria",
-	        headerText : "CRITERIA</BR>(Last Month)",
+	        headerText : "<spring:message code='commissiom.text.excel.ariteriaLastMonth'/>",
 	        style : "my-column",
 	        width: 100,
 	        editable : false
 	    },{
 	        dataField : "runId",
-	        headerText : "RUN ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false
 	    },{
 	        dataField : "taskId",
-	        headerText : "TASK ID",
 	        style : "my-column",
 	        visible : false,
 	        editable : false

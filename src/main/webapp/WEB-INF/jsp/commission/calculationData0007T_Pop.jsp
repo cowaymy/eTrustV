@@ -96,7 +96,7 @@
    function createAUIGrid() {
     var columnLayout3 = [ {
         dataField : "isExclude",
-        headerText : 'exclude<br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
+        headerText : '<spring:message code="commission.text.grid.exclude"/><br/><input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
         width: 65,
         renderer : {
             type : "CheckBoxEditRenderer",
@@ -107,78 +107,70 @@
         }
     },{
         dataField : "ordId",
-        headerText : "ORD ID",
+        headerText : "<spring:message code='commissiom.text.excel.ordId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "salesOrdNo",
-        headerText : "SALES ORD NO",
+        headerText : "<spring:message code='commission.text.grid.selesOrdNo'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "stkDesc",
-        headerText : "STK DESC",
+        headerText : "<spring:message code='commission.text.grid.stkDesc'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "memId",
-        headerText : " MEM ID",
+        headerText : " <spring:message code='commissiom.text.excel.memId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "memCode",
-        headerText : " MEM CODE",
+        headerText : "<spring:message code='commissiom.text.excel.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "code",
-        headerText : " CODE",
+        headerText : " <spring:message code='commissiom.text.excel.cd'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "ordTypeId",
-        headerText : "ORD TYPE ID",
+        headerText : "<spring:message code='commissiom.text.excel.ordTypeId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "productId",
-        headerText : "PRODUCT ID",
+        headerText : "<spring:message code='commissiom.text.excel.producId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "unitValu",
-        headerText : "UNIT VALU",
+        headerText : "<spring:message code='commissiom.text.excel.unitValu'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "prc",
-        headerText : "PRC",
+        headerText : "<spring:message code='commissiom.text.excel.prc'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "pvValu",
-        headerText : "PV VALU",
+        headerText : "<spring:message code='commissiom.text.excel.pvValu'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         visible : false,
         editable : false
     },{
         dataField : "taskId",
-        headerText : "TASK ID",
         style : "my-column",
         visible : false,
         editable : false
-    }/* ,{
-        dataField : "isExclude",
-        headerText : "IS EXCLUDE",
-        style : "my-column",
-        visible : false,
-        editable : false
-    } */];
+    }];
     // 그리드 속성 설정
     var gridPros = {
         // 페이징 사용       
