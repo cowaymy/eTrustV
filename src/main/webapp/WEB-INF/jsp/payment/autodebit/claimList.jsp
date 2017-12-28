@@ -463,11 +463,10 @@ function fn_uploadFile(){
 			resetUpdatedItems(); // 초기화
 
 			var message = "";        
-			message += "Batch ID : " + result.data.ctrlId + "<br />";
-			message += "Total Result Item : " + result.data.totalItem + "<br />";
-			message += "Total Success : " + result.data.totalSuccess + "<br />";
-			message += "Total Failed : " + result.data.totalFail + "<br />";
-			message += "<br />Are you sure want to confirm this result ?<br />";
+			message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+            result.data.totalItem+" ; "+
+            result.data.totalSuccess+" ; "+
+            result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
 
 			Common.confirm(message,
 				function (){
