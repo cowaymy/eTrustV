@@ -1186,6 +1186,7 @@
         
         var userid = fn_getLoginInfo();
         var todayDD = Number(TODAY_DD.substr(0, 2));
+        var todayYY = Number(TODAY_DD.substr(6, 4));
 
         if(tabNm == 'CANC') {
 
@@ -1197,11 +1198,12 @@
                     Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
                     return false;
                 }
-
-                if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) {
-                    var msg = "Request for order cancellation is restricted on 26, 27, 1, 2 of every month";                            
-                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
-                    return false;
+                if(todayYY >= 2018) {
+                    if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) {
+                        var msg = "Request for order cancellation is restricted on 26, 27, 1, 2 of every month";                            
+                        Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                        return false;
+                    }
                 }
             }
             else {
@@ -1295,10 +1297,12 @@
 
                 console.log('todayDD:'+todayDD);
                 
-                if(todayDD >= 26 || todayDD == 1) {
-                    var msg = "Ownership transfer is not allowed from 26 until 1 next month.";                            
-                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
-                    return false;
+                if(todayYY >= 2018) {
+                    if(todayDD >= 26 || todayDD == 1) {
+                        var msg = "Ownership transfer is not allowed from 26 until 1 next month.";                            
+                        Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
+                        return false;
+                    }
                 }
             }
             else {
@@ -1837,8 +1841,9 @@
         var msg = "";
         
         var todayDD = Number(TODAY_DD.substr(0, 2));
+        var todayYY = Number(TODAY_DD.substr(6, 4));
         
-        if(todayDD >= 26 || todayDD == 1) {
+        if(todayYY >= 2018 && (todayDD >= 26 || todayDD == 1)) {
             msg = "Ownership transfer is not allowed from 26 until 1 next month.";                            
             Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);                    
             return false;
