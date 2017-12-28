@@ -17,4 +17,10 @@ public interface TerritoryManagementService {
 	List<EgovMap> selectMagicAddress(Map<String, Object> params); 
 	
 	boolean updateMagicAddressCode(Map<String, Object> params);
+
+	List<EgovMap> selectCodyBranch(Map<String, Object> params);
+
+	List<EgovMap> selectCTBranch(Map<String, Object> params);
+
+	List<EgovMap> selectCurrentTerritory(Map<String, Object> params);
 }

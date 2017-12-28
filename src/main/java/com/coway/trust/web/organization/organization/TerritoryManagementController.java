@@ -184,5 +184,64 @@ public class TerritoryManagementController {
 		return ResponseEntity.ok(message);
 	}
 	
+	/**
+	 * organization territoryList > Current Territory Search page  
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/territorySearchPop.do")
+	public String territorySearchPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("memType", params.get("memType"));
+		// 호출될 화면
+		return "organization/organization/territorySearchPop";
+	}
+	
+	/**
+	 * Search Cody Branch list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCodyBranch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodyBranch( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> codyBranchList = territoryManagementService.selectCodyBranch(params);
+		logger.debug("codyBranchList {}", codyBranchList);
+		return ResponseEntity.ok(codyBranchList);
+	}
+	
+	/**
+	 * Search CT Branch list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCTBranch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCTBranch( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> ctBranchList = territoryManagementService.selectCTBranch(params);
+		logger.debug("ctBranchList {}", ctBranchList);
+		return ResponseEntity.ok(ctBranchList);
+	}
+	
+	/**
+	 * Search CT Branch list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCurrentTerritory.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCurrentTerritory( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> currentTerritoryList = territoryManagementService.selectCurrentTerritory(params);
+		//logger.debug("currentTerritoryList {}", currentTerritoryList);
+		return ResponseEntity.ok(currentTerritoryList);
+	}
 	
 }

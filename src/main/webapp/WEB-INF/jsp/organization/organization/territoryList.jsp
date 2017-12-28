@@ -146,7 +146,14 @@ function fn_Clear(){
     $("#requestDt").val("");
 }
 
+function fn_CurrentSearch(){
 
+    /* if($("#comBranchType").val() == '11'){
+        Common.alert("Please Select Branch Type");
+        return false;
+    } */
+    Common.popupDiv("/organization/territory/territorySearchPop.do?memType="+$("#comBranchType").val() ,null, null , true , '_NewAddDiv1');
+}
 
 function fn_New(){
 
@@ -183,20 +190,23 @@ function fn_Cancel(){
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
+<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 <h2>Territory Management</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_CurrentSearch()">Current Territory Search</a></p></li>
+</c:if> 
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Update Request</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Update Request</a></p></li>
 </c:if>    
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">    
-    <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Comfirm()"><span class="Comfirm"></span>Comfirm</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_Comfirm()"><span class="Comfirm"></span>Confirm</a></p></li>
 </c:if>    
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <!-- <li><p class="btn_blue"><a href="#" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li> -->
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
+    <!-- <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li> -->
+	<li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
 </c:if>	
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 
 </ul>
 </aside><!-- title_line end -->
@@ -251,14 +261,14 @@ function fn_Cancel(){
 <form action="#" method="post">
 
 <%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<p class="show_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
-		<li><p class="link_btn type2"><a href="#">Magic Address Download</a></p></li>
+		<li><p class="link_btn type2"><a href="javascript:void(0);">Magic Address Download</a></p></li>
 	</ul>
-	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+	<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
 </dl>
 </aside><!-- link_btns_wrap end --> --%>

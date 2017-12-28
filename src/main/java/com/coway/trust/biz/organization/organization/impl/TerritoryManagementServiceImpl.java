@@ -234,4 +234,19 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
+
+	@Override
+	public List<EgovMap> selectCodyBranch(Map<String, Object> params) {
+		return territoryManagementMapper.selectCodyBranch(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCTBranch(Map<String, Object> params) {
+		return territoryManagementMapper.selectCTBranch(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCurrentTerritory(Map<String, Object> params) {
+		return territoryManagementMapper.selectCurrentTerritory(params);
+	}
 }

@@ -35,4 +35,10 @@ public interface TerritoryManagementMapper {
 	void insertDreamServiceCenter(Map<String, Object> params);
 
 	void updateSYS0064MDream(EgovMap params);
+
+	List<EgovMap> selectCodyBranch(Map<String, Object> params);
+
+	List<EgovMap> selectCTBranch(Map<String, Object> params);
+
+	List<EgovMap> selectCurrentTerritory(Map<String, Object> params);
 }
