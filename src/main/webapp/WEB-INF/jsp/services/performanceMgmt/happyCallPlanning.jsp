@@ -145,7 +145,7 @@ function happyCallGrid() {
                 dataField : "hcId",
                 headerText : 'HC ID',
                 editable : false, 
-                visible : false
+                visible : true
             } ];
 	
 	//그리드 속성 설정
@@ -154,7 +154,7 @@ function happyCallGrid() {
         pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
         showStateColumn     : false,             
         displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
+        selectionMode       : "multipleCells",  //"singleRow",            
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
@@ -217,12 +217,78 @@ function fn_removeRow(){
     AUIGrid.removeSoftRows(myGridID);
 }
 
+function fn_ValidationCheck() {
+	var result = true;
+    var addList = AUIGrid.getAddedRowItems(myGridID);
+    var udtList = AUIGrid.getEditedRowItems(myGridID);
+    var delList = AUIGrid.getRemovedItems(myGridID);
+    
+    if (addList.length == 0  && udtList.length == 0 && delList.length == 0) {
+    	Common.alert("No Change");
+    	return false;
+    }
+
+    for (var i = 0; i < addList.length; i++) {
+        var questionNumber = addList[i].questionNumber;
+        var periodFrom = AUIGrid.formatDate(addList[i].periodFrom, "yyyy-mm-dd");
+        var periodTo = AUIGrid.formatDate(addList[i].periodTo, "yyyy-mm-dd");
+        var status = addList[i].status;
+        var hcId = addList[i].hcId;
+        
+        var sameQN = AUIGrid.getItemsByValue(myGridID, "questionNumber", questionNumber);
+        
+        for (var i = 0; i < sameQN.length; i++) {
+        	if (sameQN[i].status == "Active") {
+	        	if (sameQN[i].periodFrom < periodFrom) {
+	        		if (sameQN[i].periodTo >= periodFrom) {
+	        			//Common.alert("<spring:message code='sys.msg.necessary' arguments='Holiday' htmlEscape='false'/>");
+	        			Common.alert("하나의 문항 번호 중 기간이 겹치는 것은 존재할 수 없습니다?");
+	        			return false;
+	        		}
+	        	} else if (sameQN[i].periodFrom >= periodFrom && sameQN[i].periodFrom <= periodTo) {
+	        		Common.alert("하나의 문항 번호 중 기간이 겹치는 것은 존재할 수 없습니다?");
+	        		return false;
+	        	}
+        	}
+        }
+        
+    }
+        
+    for (var i = 0; i < udtList.length; i++) {
+    	var questionNumber = addList[i].questionNumber;
+        var periodFrom = AUIGrid.formatDate(addList[i].periodFrom, "yyyy-mm-dd");
+        var periodTo = AUIGrid.formatDate(addList[i].periodTo, "yyyy-mm-dd");
+        var status = addList[i].status;
+        var hcId = addList[i].hcId;
+        
+        var sameQN = AUIGrid.getItemsByValue(myGridID, "questionNumber", questionNumber);
+        
+        for (var i = 0; i < sameQN.length; i++) {
+        	if (sameQN[i].status == "Active") {
+	            if (sameQN[i].periodFrom < periodFrom) {
+	                if (sameQN[i].periodTo >= periodFrom) {
+	                	Common.alert("하나의 문항 번호 중 기간이 겹치는 것은 존재할 수 없습니다?");
+	                    return false;
+	                }
+	            } else if (sameQN[i].periodFrom >= periodFrom && sameQN[i].periodFrom <= periodTo) {
+	            	Common.alert("하나의 문항 번호 중 기간이 겹치는 것은 존재할 수 없습니다?");
+	                return false;
+	            }
+        	}
+        }
+    }
+    	
+    return result;
+}
+
 function fn_save(){
     if(GridCommon.getEditData(myGridID) != null){
-        Common.ajax("POST", "/services/performanceMgmt/saveHappyCallList.do", GridCommon.getEditData(myGridID), function(result) {
-            console.log("Save 성공.");
-            console.log("data : " + result);
-        });
+    	if(fn_ValidationCheck()) {
+	        Common.ajax("POST", "/services/performanceMgmt/saveHappyCallList.do", GridCommon.getEditData(myGridID), function(result) {
+	            console.log("Save 성공.");
+	            console.log("data : " + result);
+	        });
+    	}
     } else {
     	alert("null");
     }
