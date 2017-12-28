@@ -60,8 +60,8 @@ $(document).ready(function() {
 AUIGrid.bind(agentGridID, "cellEditEndBefore", function( event ) {
 	
 	if(event.dataField == 'agentName'){
-		if(event.value.length > 15){
-			Common.alert("Please key in agent name under 16 digit(s).");
+		if(event.value.length > 41){
+			Common.alert("Please key in agent name under 41 digit(s).");
 			
 			if(event.oldValue == null || event.oldValue == ''){
 				return '';
