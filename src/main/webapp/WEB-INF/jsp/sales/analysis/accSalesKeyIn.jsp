@@ -15,30 +15,22 @@ var cnt =  -1;
     	$("#reportType").change(function() {
     		if($(this).val() == '0'){
     			
-    			$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
-                $("#viewType").val("WINDOW");
-                loader();
-    			
-    			/* if(sessionAuth == '1'){ //auth HP
+    			 if(sessionAuth == '1'){ //auth HP
     				$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
                     $("#viewType").val("WINDOW");
                     loader();	
     			}else{
     				Common.alert("access deny.");
-    			} */
+    			}
 			}else if($(this).val() == '1'){
-		    	
-				$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
-                $("#viewType").val("WINDOW");
-                loader();
 				
-				/* if(sessionAuth == '2'){//auth Cody
+				 if(sessionAuth == '2'){//auth Cody
 					$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
 	                $("#viewType").val("WINDOW");
 	                loader();   
 				}else{
 					Common.alert("access deny.");
-				} */
+				} 
             }else{
             	$("#reportFileName").val('');
                 $("#viewType").val("");
