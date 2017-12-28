@@ -29,8 +29,8 @@ var norKeyInLayout = [
 	{dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
 	{dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : 120 , editable : false},
 	{dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : 120 , editable : false},
-	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" },
-	{dataField : "bankChgAmt",headerText : "Bank<br>Charge",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" }];
+	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
+	{dataField : "bankChgAmt",headerText : "Bank<br>Charge",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" }];
 
 var bankStmtLayout = [
 	{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.id'/>",width : 150 , editable : false, visible : false},
@@ -38,7 +38,7 @@ var bankStmtLayout = [
 	{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.refCheqNo'/>",width : 120 , editable : false},
 	{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.description'/>" , editable : false},
 	{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>",width : 100 , editable : false},
-	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "#,##0.00" },
+	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
 	{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : 100 , editable : false},
 	{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>",width : 100 , editable : false},
 	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNo'/>",width : 100 , editable : false}];
