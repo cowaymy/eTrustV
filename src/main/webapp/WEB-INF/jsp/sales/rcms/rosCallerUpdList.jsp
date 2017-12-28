@@ -190,7 +190,7 @@ function createRosCallerGrid(){
 <section class="search_result"><!-- search_result start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="caller_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+<div id="caller_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="caller_det_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>

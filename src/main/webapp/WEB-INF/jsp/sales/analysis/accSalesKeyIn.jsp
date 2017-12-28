@@ -3,19 +3,42 @@
 
 <script type="text/javascript">
 
+var sessionAuth = '${SESSION_INFO.userTypeId}';
+//On Load 
+var cnt =  -1;
+
     $(document).ready(function() {
+    	 
+    	//console.log("sessionAuth : " + sessionAuth);
     	
     	//View Report
     	$("#reportType").change(function() {
     		if($(this).val() == '0'){
     			
     			$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
-				$("#viewType").val("WINDOW");
-				loader(0);
+                $("#viewType").val("WINDOW");
+                loader();
+    			
+    			/* if(sessionAuth == '1'){ //auth HP
+    				$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
+                    $("#viewType").val("WINDOW");
+                    loader();	
+    			}else{
+    				Common.alert("access deny.");
+    			} */
 			}else if($(this).val() == '1'){
-		    	$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
-		    	$("#viewType").val("WINDOW");
-		    	loader(1);
+		    	
+				$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
+                $("#viewType").val("WINDOW");
+                loader();
+				
+				/* if(sessionAuth == '2'){//auth Cody
+					$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
+	                $("#viewType").val("WINDOW");
+	                loader();   
+				}else{
+					Common.alert("access deny.");
+				} */
             }else{
             	$("#reportFileName").val('');
                 $("#viewType").val("");
@@ -24,7 +47,13 @@
     	
     	//DownLoad Report to PDF
     	$("#_pdfDownBtn").click(function() {
-			if($("#reportType").val() == '0'){
+			
+    		if($("#reportType").val() == null || $("#reportType").val() == ''){
+    			Common.alert("Please select Report Type");
+    			return;
+    		}
+    		
+    		if($("#reportType").val() == '0'){
 				$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
                 $("#viewType").val("PDF");
                 fn_downloadReport(0);
@@ -37,7 +66,7 @@
 			}
 			
 		});
-    });
+    });// Document Ready Func End
     
     function fn_downloadReport(inputVal){
     	var option
@@ -53,15 +82,14 @@
     	
     	//download Report
     	Common.report("dataForm", option);
-    	
     }
     
-    //On Load 
-    var cnt = 0;
     
-    function fn_procedureReport(inputVal){
+    
+    function fn_procedureReport(){
     	
     	var option
+    	var inputVal = $("#reportType").val();
     	if(inputVal == '0'){
     		option = {
                     isProcedure: true,
@@ -80,21 +108,31 @@
     }
 
     function fn_onLoad(inputVal) {
-        setTimeout("loader("+inputVal+");", 100);
+        setTimeout("loader();", 500);
     }
 
-    function loader(inputVal){
-        if(cnt == 0){
+    function loader(){
+        
+    	//console.log("cnt : " + cnt);
+    	
+    	if(cnt == 0){
             try {
-                Common.showLoader();
-                fn_procedureReport(inputVal);
+            	//console.log("로더 생성...");
+            	Common.showLoader();
+                fn_procedureReport();
                 cnt++;
             } catch (e) {
-                Common.removeLoader();
+            	//console.log("실패 로더 리무브....");
+            	Common.removeLoader();
                 cnt = 0;
             }
+        }else if(cnt == -1){ //first Load
+        	//console.log("first Load....");
+        	cnt++;
+        	return;	
         }else{
-            Common.removeLoader();
+            //console.log("로더 리무브....");
+        	Common.removeLoader();
             cnt = 0;
         }
     }
@@ -102,7 +140,7 @@
 
 
 <form id="dataForm"> <!-- CowayDailySalesStatusHP_Adv.rpt --> <!--CowayDailySalesStatusCody.rpt  -->
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/CowayDailySalesStatusHP_Adv.rpt"/>
+    <input type="hidden" id="reportFileName" name="reportFileName"/>
     <!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="WINDOW"/><!-- View Type  -->
     <input type="hidden" id="V_PARAM" name="V_PARAM" value="TEMP" /><br />
@@ -129,7 +167,7 @@
     <th scope="row">Report Type</th>
     <td>
     <select class="w100p" id="reportType" name="reportType">
-        <option>choose one</option>
+        <option selected="selected">choose one</option>
         <option value="0">HP Analysis</option>
         <option value="1">Cody Analysis</option>
     </select>
@@ -138,7 +176,7 @@
 </tbody>
 </table><!-- table end -->
 
-    <iframe  name="reportIframe"  width="950px" height="600px" src="" scrolling="auto" frameborder="0"></iframe>
+    <iframe onload="javascript: fn_onLoad()" name="reportIframe"  width="950px" height="600px" src="" scrolling="auto" frameborder="0"></iframe>
 
 </section>
 <!-- content end -->

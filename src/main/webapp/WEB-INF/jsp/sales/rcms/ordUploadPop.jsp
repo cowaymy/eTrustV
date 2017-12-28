@@ -28,7 +28,6 @@ $(document).ready(function() {
 			Common.alert("<b>Please check your file contents.<br />It might has some invalid data in your file.</b>");
 			console.log("jqXHR : " + jqXHR + " , textStatus : " + textStatus + " ,errorThrown " + errorThrown);
 		});
-		
 	});
 	
 	//file Delete

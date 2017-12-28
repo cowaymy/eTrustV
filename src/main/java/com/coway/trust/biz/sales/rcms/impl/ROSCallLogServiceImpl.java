@@ -946,7 +946,7 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 			final int seq  = rosCallLogMapper.getSeqSAL0055D();
 			map.put("uploadDetId", seq);
 			map.put("uploadMId", ordRemSeq);
-			map.put("ordNo", r.getOrderNo());
+			map.put("ordNo", 	String.format("%07d", Integer.parseInt(r.getOrderNo())));
 			map.put("rem", r.getRemark());
 			map.put("statusId", SalesConstants.ROS_ORD_REM_UPLOAD_STATUS);
 			map.put("orderId", 0);
@@ -1149,7 +1149,7 @@ public class ROSCallLogServiceImpl extends EgovAbstractServiceImpl implements RO
 			map.put("batchId", batchId);
 			map.put("stusCodeId", SalesConstants.ROS_CALLER_UPD_DETAIL_STATUS_CODE_ID);
 			map.put("itmMsg", "");  // det.ItemMessage = "";
-			map.put("ordNo", r.getOrderNo()); 
+			map.put("ordNo", 	String.format("%07d", Integer.parseInt(r.getOrderNo()))); 
 			map.put("sysOrdId", SalesConstants.ROS_CALLER_SYS_ORD_ID); //  det.SysOrderID = 0;
 			map.put("userName", r.getCaller());
 			map.put("sysUserId", SalesConstants.RSO_CALLER_SYS_USER_ID);

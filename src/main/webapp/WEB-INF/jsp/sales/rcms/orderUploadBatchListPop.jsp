@@ -46,9 +46,11 @@ $(document).ready(function() {
 	//Confirm
     $("#_confirmUpload").click(function() {
     	
-        //Validation
+        
         //selected
         var selectedItem = AUIGrid.getSelectedItems(ordRemGridID);
+        
+        //Validation
         if(selectedItem.length <= 0){
             Common.alert(" No result selected. ");
             return;
