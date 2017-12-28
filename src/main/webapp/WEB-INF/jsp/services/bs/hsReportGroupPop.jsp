@@ -8,7 +8,6 @@ $(document).ready(function(){
     var month1 = today.getMonth()+1;
     $("#dayMonth").val(month1);
     $("#dayYear").val(today.getFullYear());
-    
 });
 
 var myGridID_Hsgroup;
@@ -18,7 +17,7 @@ function createHSGroupListAUIGrid() {
         dataField : "",
         headerText : "",
         editable : false,
-        width : 200,
+        width : 300,
         renderer : {
             type : "ButtonRenderer",
             labelText : "Download",
@@ -26,29 +25,35 @@ function createHSGroupListAUIGrid() {
                 var deptCode = AUIGrid.getCellValue(myGridID_Hsgroup, rowIndex, "c3");
                 var fileName = AUIGrid.getCellValue(myGridID_Hsgroup, rowIndex, "c2");
                 
-                $("#searchHsGroupReport #V_CODYDEPTCODE").val(deptCode);
-                $("#searchHsGroupReport #reportFileName").val('/services/BSReport_ByBSNo.rpt');
-                $("#searchHsGroupReport #viewType").val("PDF");
-                $("#searchHsGroupReport #reportDownFileName").val(fileName);
+                console.log("deptCode =    " + deptCode +"     fileName =   " + fileName);
                 
-                var option = {
-                        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-                };
+                if(deptCode == '' && deptCode == null){
+                	Common.alert("No Selected DepartmentCode");
+                }else{
                 
-                Common.report("searchHsGroupReport", option);
-                
+	                $("#searchHsGroupReport #V_CODYDEPTCODE").val(deptCode);
+	                $("#searchHsGroupReport #reportFileName").val('/services/BSReport_ByBSNo.rpt');
+	                $("#searchHsGroupReport #viewType").val("PDF");
+	                $("#searchHsGroupReport #reportDownFileName").val(fileName);
+	                
+	                var option = {
+	                        isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
+	                };
+	                
+	                Common.report("searchHsGroupReport", option);
+                }
           }
       }
     }, {
         dataField : "c3",
         headerText : "Department Cdoe",
         editable : false,
-        width : 200
+        width : 300
     }, {
         dataField : "c2",
         headerText : "File Name",
         editable : false,
-        width : 200
+        width : 300
     }];
   
     
