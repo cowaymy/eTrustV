@@ -15,35 +15,44 @@
 var columnLayout = [ 
 	{
 	    dataField : "area",
-	    headerText : "Area"
+	    headerText : "Area",
+	    width: 150
 	}, {
 	    dataField : "areaId",
 	    headerText : "Area ID",
-	    //style : "aui-grid-user-custom-left"
+        width: 100
 	}, {
         dataField : "city",
         headerText : "City",
+        width: 100
     }, {
         dataField : "state",
         headerText : "State",
+        width: 100
     }, {
         dataField : "postcode",
         headerText : "Postcode",
+        width: 100
     }, {
         dataField : "codyBrnchCode", 
         headerText : "Cody Branch",
-    }, {
-        dataField : "ctBrnchCode",
-        headerText : "CT Branch",
+        width: 100
     }, {
         dataField : "codyMangrUserId",
         headerText : "Cody Manager",
+        width: 120
+    }, {
+        dataField : "ctBrnchCode",
+        headerText : "CT Branch",
+        width: 100
     }, {
         dataField : "ctSubGrp",
         headerText : "CT Sub Group",
+        width: 120
     }, {
         dataField : "status",
         headerText : "Status",
+        width: 100
     }
 ];
 
@@ -60,16 +69,22 @@ var gridPros = {
 var myGridID;
 
 $(document).ready(function () {
-    myGridID = AUIGrid.create("#currentTerritory_grid_wrap", columnLayout, gridPros);
+    myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
     
-   	doGetCombo('/organization/territory/selectCodyBranch.do', '', '','codyBranch', 'S' , '');
-   	doGetCombo('/organization/territory/selectCTBranch.do', '', '','ctBranch', 'S' , '');
+    doGetCombo('/organization/territory/selectState.do', '', '','state', 'S' , '');
+   	doGetCombo('/organization/territory/selectBranchCode.do', '42', '','codyBranch', 'S' , '');
+   	doGetCombo('/organization/territory/selectBranchCode.do', '43', '','ctBranch', 'S' , '');
 });
 
 function fn_searchCurrentTerritory() {
     Common.ajax("GET", "/organization/territory/selectCurrentTerritory.do", $("#form_currentTerritory").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
+}
+
+function fn_excelDown(){
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    GridCommon.exportTo("grid_wrap", "xlsx", "Current Territory Search");
 }
 </script>
 
@@ -78,14 +93,14 @@ function fn_searchCurrentTerritory() {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Current Territory Search</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="javascript:void(0);">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_searchCurrentTerritory()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_searchCurrentTerritory()"><span class="search"></span>Search</a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -114,23 +129,22 @@ function fn_searchCurrentTerritory() {
     <th scope="row">City</th>
     <td><input type="text" title="" placeholder="" class="w100p" id="city" name="city" /></td>
     <th scope="row">State</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="state" name="state" /></td>
+    <td>
+        <select class="w100p"  id="state" name="state">
+        </select>
+    </td>
     <th scope="row"></th>
     <td></td>
 </tr>
 <tr>
     <th scope="row">Cody Branch</th>
     <td>
-        <!-- <input type="text" title="" placeholder="" class="w100p" id="codyBranch" name="codyBranch" /> -->
         <select class="w100p"  id="codyBranch" name="codyBranch">
-           <!-- <option value="" selected>Choose One</option> -->
         </select>
     </td>
     <th scope="row">CT Branch</th>
     <td>
-        <!-- <input type="text" title="" placeholder="" class="w100p" id="ctBranch" name="ctBranch" /> -->
         <select class="w100p"  id="ctBranch" name="ctBranch">
-           <!-- <option value="" selected>Choose One</option> -->
         </select>
     </td>
     <th scope="row">Status</th>
@@ -149,8 +163,11 @@ function fn_searchCurrentTerritory() {
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="javascript:void(0);" onclick="fn_excelDown()">Excel Download</a></p></li>
+</ul>
 
-<article class="grid_wrap" id="currentTerritory_grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap" id="grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

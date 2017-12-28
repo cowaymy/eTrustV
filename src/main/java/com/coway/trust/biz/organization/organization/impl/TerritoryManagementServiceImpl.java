@@ -236,13 +236,13 @@ public class TerritoryManagementServiceImpl extends EgovAbstractServiceImpl impl
 	}
 
 	@Override
-	public List<EgovMap> selectCodyBranch(Map<String, Object> params) {
-		return territoryManagementMapper.selectCodyBranch(params);
+	public List<EgovMap> selectBranchCode(Map<String, Object> params) {
+		return territoryManagementMapper.selectBranchCode(params);
 	}
-
+	
 	@Override
-	public List<EgovMap> selectCTBranch(Map<String, Object> params) {
-		return territoryManagementMapper.selectCTBranch(params);
+	public List<EgovMap> selectState(Map<String, Object> params) {
+		return territoryManagementMapper.selectState(params);
 	}
 
 	@Override

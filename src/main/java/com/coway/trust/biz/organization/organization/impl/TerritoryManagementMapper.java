@@ -36,9 +36,9 @@ public interface TerritoryManagementMapper {
 
 	void updateSYS0064MDream(EgovMap params);
 
-	List<EgovMap> selectCodyBranch(Map<String, Object> params);
-
-	List<EgovMap> selectCTBranch(Map<String, Object> params);
+	List<EgovMap> selectBranchCode(Map<String, Object> params);
+	
+	List<EgovMap> selectState(Map<String, Object> params);
 
 	List<EgovMap> selectCurrentTerritory(Map<String, Object> params);
 }

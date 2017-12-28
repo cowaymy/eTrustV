@@ -200,37 +200,37 @@ public class TerritoryManagementController {
 	}
 	
 	/**
-	 * Search Cody Branch list
+	 * Search Branch Code list
 	 *
 	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/selectCodyBranch.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCodyBranch( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		List<EgovMap> codyBranchList = territoryManagementService.selectCodyBranch(params);
-		logger.debug("codyBranchList {}", codyBranchList);
-		return ResponseEntity.ok(codyBranchList);
+	@RequestMapping(value = "/selectBranchCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranchCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> branchCodeList = territoryManagementService.selectBranchCode(params);
+		logger.debug("branchCodeList {}", branchCodeList);
+		return ResponseEntity.ok(branchCodeList);
 	}
 	
 	/**
-	 * Search CT Branch list
+	 * Search State list
 	 *
 	 * @param request
 	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/selectCTBranch.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCTBranch( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		List<EgovMap> ctBranchList = territoryManagementService.selectCTBranch(params);
-		logger.debug("ctBranchList {}", ctBranchList);
-		return ResponseEntity.ok(ctBranchList);
+	@RequestMapping(value = "/selectState.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectState( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		List<EgovMap> stateList = territoryManagementService.selectState(params);
+		logger.debug("stateList {}", stateList);
+		return ResponseEntity.ok(stateList);
 	}
 	
 	/**
-	 * Search CT Branch list
+	 * Search Current Territory list
 	 *
 	 * @param request
 	 * @param model

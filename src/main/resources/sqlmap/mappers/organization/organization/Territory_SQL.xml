@@ -208,18 +208,17 @@
        WHERE AREA_ID=#{areaId}
     </update>
     
-    <select id="selectCodyBranch"  parameterType="Map" resultType="egovMap">
-	    SELECT DISTINCT CODY_BRNCH_CODE CODE_ID, CODY_BRNCH_CODE CODE_NAME
-		FROM SYS0064M
-		WHERE CODY_BRNCH_CODE IS NOT NULL
-		ORDER BY CODY_BRNCH_CODE ASC
+    <select id="selectBranchCode"  parameterType="Map" resultType="egovMap">
+		SELECT CODE CODE_ID, CODE CODE_NAME
+		FROM SYS0005M
+		WHERE TYPE_ID = #{groupCode}
+		ORDER BY CODE
     </select>
     
-    <select id="selectCTBranch"  parameterType="Map" resultType="egovMap">
-        SELECT DISTINCT CT_BRNCH_CODE CODE_ID, CT_BRNCH_CODE CODE_NAME
+    <select id="selectState"  parameterType="Map" resultType="egovMap">
+        SELECT DISTINCT STATE CODE_ID, STATE CODE_NAME
 		FROM SYS0064M
-		WHERE CT_BRNCH_CODE IS NOT NULL
-		ORDER BY CT_BRNCH_CODE ASC
+		ORDER BY STATE
     </select>
     
     <select id="selectCurrentTerritory"  parameterType="Map" resultType="egovMap">
@@ -242,7 +241,7 @@
 			AND UPPER(A.CITY) LIKE UPPER('%'||#{city}||'%')
 		</if>
         <if test="state != null and state != ''">
-			AND UPPER(A.STATE) LIKE UPPER('%'||#{state}||'%')
+			AND A.STATE = #{state}
 		</if>
         <if test="postcode != null and postcode != ''">
 			AND A.POSTCODE = #{postcode}
