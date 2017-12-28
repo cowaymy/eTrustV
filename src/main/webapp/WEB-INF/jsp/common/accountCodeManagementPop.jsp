@@ -171,10 +171,9 @@ function fnSaveAccount()
   </td>
 </tr>
 <tr>
-  <th scope="row">Account Description<span class="must">*</span></th>
+  <th scope="row">Account Description<span class="must"></span></th>
   <td colspan="3">
-  <input type="text" id="popUpAccDesc" name="popUpAccDesc" title="" value='${inputParams.paramAccDesc}' class="w100p" placeholder='Account description' maxlength="70"
-         <c:if test="${inputParams.parmAddEditFlag eq 'EDIT' }"> disabled </c:if>  />
+  <input type="text" id="popUpAccDesc" name="popUpAccDesc" title="" value='${inputParams.paramAccDesc}' class="w100p" placeholder='Account description' maxlength="70" />
   </td>
 </tr>
 <tr>
