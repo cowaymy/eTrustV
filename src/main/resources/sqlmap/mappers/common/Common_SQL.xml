@@ -823,7 +823,9 @@
                #{item}
                </foreach>
            </if>
-
+        <if test="userTypeId != null and userTypeId !=''">
+           AND CODE_ID = #{userTypeId}
+        </if>
 
         <if test='codeIn !=null and codeIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
             AND CODE IN (SELECT     REGEXP_SUBSTR (#{codeIn}, '[^,]+', 1, LEVEL)

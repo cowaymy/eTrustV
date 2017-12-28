@@ -160,11 +160,26 @@
 					                   AND ( 1 = Extent2.STUS )
 					                   AND ( Extent2.MEM_TYPE = #{memType} )
 					                   AND ( Extent1.MEM_LVL = #{memLvl} )
-					                   AND ( Extent1.MEM_UP_ID = #{groupCode} )
+]]> 					                   
+                                    <choose>
+                                            <when test="memberLevel == 1">
+                                                AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+                                            </when>
+                                            <when test="memberLevel == 2">
+                                                AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
+                                            </when>
+                                            <when test="memberLevel == 3">
+                                                AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                            </when>
+                                            <when test="memberLevel == 4">
+                                                AND Extent2.MEM_CODE = #{userName}
+                                            </when>
+                                    </choose>
+<![CDATA[                                      					                   
 					                   AND ( Extent2.STUS IN ( 1,8 )
 					                  ) ) Project1
 					  ORDER BY Project1.DEPT_CODE ASC
-                             ]]>     
+]]> 
         </select>
         
         
@@ -823,13 +838,24 @@
                                        AND ( 1 = Extent2.STUS )
                                        AND ( Extent2.MEM_TYPE = #{memType})
                                        AND ( Extent1.MEM_LVL = #{memLvl} )]]>   
-                                      <if test="groupCode != null and groupCode != ''">
-                                            AND ( Extent1.MEM_UP_ID = #{groupCode} )
-                                      </if>  
                                        AND ( Extent2.STUS IN ( 1,8 )
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
-                                      </if>                                       
+                                      </if>    
+									<choose>
+									        <when test="memberLevel == 1">
+									            AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+									        </when>
+									        <when test="memberLevel == 2">
+									            AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
+									        </when>
+									        <when test="memberLevel == 3">
+									            AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+									        </when>
+									        <when test="memberLevel == 4">
+									            AND Extent2.MEM_CODE = #{userName}
+									        </when>
+									</choose>                                                                            
                                       ) ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
                                
@@ -913,6 +939,21 @@
                                                                              AND Extent1.MEM_LVL = 3                                                                                    
                                                                              and   mem_id  = #{deptCode})  
                                </if>
+                               
+                               <choose>
+                                       <when test="memberLevel == 1">
+                                           AND Extent2.ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+                                       </when>
+                                       <when test="memberLevel == 2">
+                                           AND Extent2.GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
+                                       </when>
+                                       <when test="memberLevel == 3">
+                                           AND Extent2.DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                       </when>
+                                       <when test="memberLevel == 4">
+                                           AND Extent2.MEM_CODE = #{userName}
+                                       </when>
+                               </choose>                                 
 			                  ) Project1
 				  ORDER BY Project1.C1 ASC,
 				           Project1.ORG_CODE ASC,

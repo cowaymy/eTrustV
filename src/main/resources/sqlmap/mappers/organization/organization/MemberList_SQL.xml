@@ -251,9 +251,10 @@
 
 			            )  GroupBy1
 			            WHERE 1=1
-			            <if test="memTypeCom != null and memTypeCom != ''">
+			            
+                        <if test="memTypeCom != null and memTypeCom != ''">
                           AND   Extent1.MEM_TYPE =  #{memTypeCom}
-                         </if>
+                         </if>			 
                          <if test="code != null and code != ''">
                            AND  UPPER(Extent1.MEM_CODE) LIKE  UPPER('%' ||  #{code} || '%')
                          </if>
@@ -299,6 +300,20 @@
                             AND Extent5.MEM_LVL= #{position}
                          </if>
 
+						<choose>
+						        <when test="memberLevel == 1">
+                                    AND Extent5.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+						        </when>
+                                <when test="memberLevel == 2">
+                                    AND Extent5.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
+                                </when>
+                                <when test="memberLevel == 3">
+                                    AND Extent5.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                </when>
+                                <when test="memberLevel == 4">
+                                    AND Extent1.MEM_CODE = #{userName}
+                                </when>
+                        </choose>                                                                                                
                   <![CDATA[
 			    )   Project1
 			)  Project1

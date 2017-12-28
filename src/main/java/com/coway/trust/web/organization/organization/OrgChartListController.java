@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.organization.organization.OrgChartListService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -36,9 +37,20 @@ public class OrgChartListController {
 
 	
 	@RequestMapping(value = "/selectOrgChartHpList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgChartHpList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectOrgChartHpList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
 		
 		List<EgovMap> orgChartHpList = null;
+		
+		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
+		logger.debug("userName : {}", sessionVO.getUserName());
+		
+		params.put("memberLevel", sessionVO.getMemberLevel());
+		params.put("userName", sessionVO.getUserName());
+		
+		params.put("memType", sessionVO.getUserTypeId());
+		params.put("memLvl",  sessionVO.getMemberLevel());
+		//params.put("groupCode","");
+		
 		
         // 조회.
 		orgChartHpList = orgChartListService.selectOrgChartHpList(params);        
@@ -94,7 +106,17 @@ public class OrgChartListController {
 	
 	
 	@RequestMapping(value = "/selectOrgChartCdList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCdChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectCdChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
+		
+		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
+		logger.debug("userName : {}", sessionVO.getUserName());
+		
+		params.put("memberLevel", sessionVO.getMemberLevel());
+		params.put("userName", sessionVO.getUserName());
+		
+		params.put("memType", sessionVO.getUserTypeId());
+		params.put("memLvl",  sessionVO.getMemberLevel());
+		//params.put("groupCode","");
 		
         // 조회.
 		List<EgovMap> orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
@@ -125,9 +147,12 @@ public class OrgChartListController {
 	
 	
 	@RequestMapping(value = "/selectOrgChartDetList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgChartDetList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectOrgChartDetList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
 		
 		logger.debug(" :::: "+params.toString());
+		
+		params.put("memberLevel", sessionVO.getMemberLevel());
+		params.put("userName", sessionVO.getUserName());
 		
 		String str1 = params.get("memLvl").toString();
 		String[] codeList = str1.split(",");

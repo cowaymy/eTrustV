@@ -355,9 +355,9 @@ function fn_searchPosition(selectedData){
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberListNew();">New</a></p></li>
 </c:if>
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
     <li><p class="btn_blue"><a href="javascript:fn_memberListSearch();"><span class="search"></span>Search</a></p></li>
-</c:if>    
+<%-- </c:if>    --%> 
 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
 </c:if>    

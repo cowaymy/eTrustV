@@ -56,10 +56,14 @@ public class MemberListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/memberList.do")
-	public String memberList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String memberList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		
+		logger.debug("sessionVO  getUserTypeId  {} " , sessionVO.getUserTypeId());
+		
 		//화면에 공통코드값....가져와........
 		List<EgovMap> nationality = memberListService.nationality();
 		params.put("groupCode",1);
+		params.put("userTypeId", sessionVO.getUserTypeId());
 		List<EgovMap> memberType = commonService.selectCodeList(params);
 		params.put("mstCdId",2);
 		params.put("dtailDisabled",0);
@@ -113,7 +117,7 @@ public class MemberListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/memberListSearch", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectmemberListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectmemberListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
 		logger.debug("memTypeCom : {}", params.get("memTypeCom"));
 		logger.debug("code : {}", params.get("code"));
@@ -134,6 +138,12 @@ public class MemberListController {
 		logger.debug("createDate : {}", params.get("createDate"));
 		logger.debug("endDate : {}", params.get("endDate"));
 
+		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
+		logger.debug("userName : {}", sessionVO.getUserName());
+		
+		params.put("memberLevel", sessionVO.getMemberLevel());
+		params.put("userName", sessionVO.getUserName());
+		
 		List<EgovMap> memberList = null;
 
 		String MemType = params.get("memTypeCom").toString();

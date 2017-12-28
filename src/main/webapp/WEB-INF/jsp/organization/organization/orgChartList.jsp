@@ -252,7 +252,7 @@
            
         //hp
            var paramHpdata;
-           paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
+           //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
         
             Common.ajax("GET", "/organization/selectOrgChartHpList.do", paramHpdata, function(result) {
                 
@@ -323,7 +323,7 @@
             
             //ct
            var paramCddata;
-           paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
+           //paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
            
                 //cd
            Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
@@ -392,7 +392,7 @@
            
             //cd
            var paramCddata;
-           paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
+           //paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
            
                 //cd
            Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
