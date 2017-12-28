@@ -17,7 +17,7 @@ $(document).ready(function(){
 		        isShowChoose: false 
 		      });
     //orderStatus
-    CommonCombo.make('orderStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 27} , '', 
+    CommonCombo.make('orderStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 27} , '4', 
     		{
 		    	id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
 		        name: "codeName",  // 콤보박스 text 에 지정할 필드명.    
@@ -121,8 +121,8 @@ function creatGrid(){
 	                  valueField : "codeName" // value 에 해당되는 필드명
 	              }  
               },
-              {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false     },
-              {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false    },
+              {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : "Open Aging<br/>Month", width : 95  , editable       : false      } ,            
               {dataField : "suggestAgent", headerText : "Suggest<br/>Agent", width : 90    , editable       : false     
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 

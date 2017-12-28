@@ -153,6 +153,15 @@ public class RCMSAgentManageController {
 		String openMonth[] = request.getParameterValues("openMonth");
 		String rosCaller[] = request.getParameterValues("rosCaller");
 		
+		for (String str : openMonth){
+			
+			if("7".equals(str)){
+
+				params.put("month", "8");
+			}
+			
+		}
+		
 
 		params.put("rentalStatus", rentalStatus);
 		params.put("companyType", companyType);

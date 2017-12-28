@@ -123,6 +123,7 @@
 	    JOIN SYS0013M B ON A.AGENT_TYPE = B.CODE_ID 
 	                             AND B.CODE_MASTER_ID = 329  
 	                             AND DISAB = 0
+     WHERE A.STUS_ID = 1	                             
 </select>
 
 <select id="selectAssignAgentList" parameterType="Map" resultType="egovMap">
@@ -130,7 +131,7 @@
 		        ,A.SALES_ORD_ID
 		        ,A.CUST_ID
 		        ,B.NAME 
-		        ,B.CORP_TYPE_ID
+		        ,CASE WHEN B.CORP_TYPE_ID = 0 THEN null ELSE B.CORP_TYPE_ID  END  CORP_TYPE_ID  
 		        ,A.COLCT_TRGET
 		         <choose>
                   <when test="appType == 66">                   
@@ -159,55 +160,73 @@
 		 FROM SAL0149D A JOIN SAL0029D B  ON A.CUST_ID = B.CUST_ID
 		    JOIN SAL0001D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
 		WHERE 1=1 
-		  <if test="appType != null and appType !='' ">
-		    AND C.APP_TYPE_ID = #{appType} 
-		  </if>
-		  <if test="orderStatus != null and orderStatus !='' ">
-		    AND C.STUS_CODE_ID = #{orderStatus} 
-		  </if>
-		  
-		  <if test="rentalStatus != null and rentalStatus != ''">
-	          AND A.OPEN_RENTAL_STUS IN
-	        <foreach item="item" collection="rentalStatus" index="index" open="(" separator="," close=")">
-	          #{item}
-	        </foreach>
-	      </if>
-		    
-	      <if test="customerType != null and customerType !='' ">
-		    AND B.TYPE_ID = #{customerType} 
-		  </if>
-		    	 
-		  <if test='customerType== "965" '>  	 
-			  <if test="companyType != null and companyType != ''">
-		          AND B.CORP_TYPE_ID IN
-		        <foreach item="item" collection="companyType" index="index" open="(" separator="," close=")">
-		          #{item}
-		        </foreach>
-		      </if>
-		    </if>
-	     <if test="openMonth != null and openMonth != ''">
-	          AND A.OPEN_MTH_AGING IN
-	        <foreach item="item" collection="openMonth" index="index" open="(" separator="," close=")">
-	          #{item}
-	        </foreach>
-	      </if>
-	      
-	      <if test="rosCaller != null and rosCaller != ''">
-	          AND A.AGENT_ID IN
-	        <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
-	          #{item}
-	        </foreach>
-	      </if>
-	
-	      <if test="orderNo != null and orderNo !='' ">
+		
+		<choose>
+            <when test="orderNo != null and orderNo !=''">   
+                AND C.SALES_ORD_NO = #{orderNo}
+	            <if test="customerId != null and customerId !='' ">
+	                AND A.CUST_ID = #{customerId}
+	            </if>
+            </when>
+            <when test="customerId != null and customerId !='' "> 
+                AND A.CUST_ID = #{customerId}
+            </when>
+            <otherwise>
+				  <if test="appType != null and appType !='' ">
+				    AND C.APP_TYPE_ID = #{appType} 
+				  </if>
+				  <if test="orderStatus != null and orderStatus !='' ">
+				    AND C.STUS_CODE_ID = #{orderStatus} 
+				  </if>
+				  
+				  <if test="rentalStatus != null and rentalStatus != ''">
+			          AND A.OPEN_RENTAL_STUS IN
+			        <foreach item="item" collection="rentalStatus" index="index" open="(" separator="," close=")">
+			          #{item}
+			        </foreach>
+			      </if>
+				    
+			      <if test="customerType != null and customerType !='' ">
+				    AND B.TYPE_ID = #{customerType} 
+				  </if>
+				    	 
+				  <if test='customerType== "965" '>  	 
+					  <if test="companyType != null and companyType != ''">
+				          AND B.CORP_TYPE_ID IN
+				        <foreach item="item" collection="companyType" index="index" open="(" separator="," close=")">
+				          #{item}
+				        </foreach>
+				      </if>
+				    </if>
+			     <if test="openMonth != null and openMonth != ''">
+			          AND ( A.OPEN_MTH_AGING IN
+			        <foreach item="item" collection="openMonth" index="index" open="(" separator="," close=")">
+			          #{item}
+			        </foreach>             
+	                  <if test="month != null and month !='' ">
+	                  OR A.OPEN_MTH_AGING <![CDATA[>=]]> #{month}
+	                  </if>
+	                  )
+			      </if>	
+			      
+			      <if test="rosCaller != null and rosCaller != ''">
+			          AND A.AGENT_ID IN
+			        <foreach item="item" collection="rosCaller" index="index" open="(" separator="," close=")">
+			          #{item}
+			        </foreach>
+			      </if>
+			      	
+		          <if test="assignYn != null and assignYn !='' ">
+		            AND A.AGENT_ID <![CDATA[<>]]> 0
+		            </if>
+	            </otherwise>
+	            </choose>
+	      <!-- <if test="orderNo != null and orderNo !='' ">
 		    AND C.SALES_ORD_NO = #{orderNo}
 		    </if>	    
 	      <if test="customerId != null and customerId !='' ">
 		    AND A.CUST_ID = #{customerId}
-		    </if>
-	      <if test="assignYn != null and assignYn !='' ">
-		    AND A.AGENT_ID <![CDATA[<>]]> 0
-		    </if>
+		    </if> -->
 		    ORDER BY SALES_ORD_NO
 </select>
 
