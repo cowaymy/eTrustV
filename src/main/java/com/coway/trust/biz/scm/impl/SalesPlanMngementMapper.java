@@ -48,8 +48,7 @@ public interface SalesPlanMngementMapper {
 	int updateSalesPlanUnConfirm(Map<String, Object> params);
 	int updateSalesPlanConfirm(Map<String, Object> params);
 	void updateScmPlanMaster(Map<String, Object> params);
-	void insertSalesPlanDetail(Map<String, Object> params);
-	
+	void insertSalesPlanDetail(Map<String, Object> params);	
 	int deleteStockCode(Map<String, Object> params);
 	
 	void insertSalesPlanMaster(Map<String, Object> params);

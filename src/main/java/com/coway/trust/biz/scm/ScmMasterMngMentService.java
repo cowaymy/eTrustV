@@ -22,8 +22,7 @@ public interface ScmMasterMngMentService
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
 	List<EgovMap> selectWhLocationMapping(Map<String, Object> params);
 	int insetCdcWhMapping(List<Object> addList, Integer crtUserId); 
-	int deleteCdcWhMapping(List<Object> addList, Integer crtUserId); 
-	
+	int deleteCdcWhMapping(List<Object> addList, Integer crtUserId); 	
 	
 	// Business Plan Manager
 	List<EgovMap> selectVersionCbList(Map<String, Object> params);
