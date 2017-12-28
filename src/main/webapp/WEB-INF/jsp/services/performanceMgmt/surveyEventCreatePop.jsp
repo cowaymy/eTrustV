@@ -556,7 +556,7 @@ function createAUIGrid(jsonData) {
     var firstRow = jsonData[0];
 
     if(typeof firstRow == "undefined") {
-        alert("AUIGrid 로 변환할 수 없는 엑셀 파일입니다.");
+        //alert("AUIGrid 로 변환할 수 없는 엑셀 파일입니다.");
         return;
     }
 
