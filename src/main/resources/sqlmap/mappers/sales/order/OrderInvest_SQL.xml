@@ -24,7 +24,12 @@
 			       Filter1.INV_REQ_STUS_NAME ,
 			       Filter1.CODE3 CODE1  ,
 			       Filter1.INV_REQ_PARTY_NAME ,
-			       Filter1.INV_REQ_CRT_USER_NAME 
+			       Filter1.INV_REQ_CRT_USER_NAME
+			       <if test="orgCode != null and orgCode != ''">
+                   , Filter1.LAST_ORG_CODE
+                   , Filter1.LAST_GRP_CODE
+                   , Filter1.LAST_DEPT_CODE
+                   </if> 
 		   FROM ( SELECT Extent1.INV_REQ_ID ,
 				                Extent1.INV_REQ_NO ,
 				                Extent1.SO_ID ,
@@ -43,10 +48,24 @@
 				                Extent3.CODE CODE3  ,
 				                Extent3.CODE_DESC INV_REQ_PARTY_NAME,
 				                Extent4.USER_NAME INV_REQ_CRT_USER_NAME
+				                <if test="orgCode != null and orgCode != ''">
+				                , Extent5.LAST_ORG_CODE
+                                , Extent5.LAST_GRP_CODE
+                                , Extent5.LAST_DEPT_CODE
+				                </if>
 				         FROM SAL0050D Extent1
 				                LEFT JOIN SYS0038M Extent2   ON Extent1.INV_REQ_STUS_ID = Extent2.STUS_CODE_ID
 				                LEFT JOIN SYS0013M Extent3   ON Extent1.INV_REQ_PARTY_ID = Extent3.CODE_ID
 				                LEFT JOIN SYS0047M Extent4   ON Extent1.INV_REQ_CRT_USER_ID = Extent4.USER_ID
+				                <if test="orgCode != null and orgCode != ''">
+				                LEFT JOIN (SELECT usr.USER_ID, A.LAST_ORG_CODE, A.LAST_GRP_CODE, A.LAST_DEPT_CODE
+                                              FROM SYS0047M usr, ORG0005D A, ORG0001D B
+                                            WHERE usr.USER_NAME = B.MEM_CODE 
+                                               AND B.MEM_ID = A.MEM_ID
+                                               AND usr.USER_STUS_ID = 1
+                                               AND B.STUS = 1
+                                               AND A.ORG_STUS_CODE_ID = 1) Extent5 ON Extent1.INV_REQ_CRT_USER_ID = Extent5.USER_ID
+                                </if> 
                  <![CDATA[
 				     WHERE  0 <> Extent1.INV_REQ_ID 
 				 ]]>
@@ -84,6 +103,15 @@
 			        <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
 			             AND Filter1.INV_REQ_CRT_USER_NAME LIKE '%' || #{invReqCrtUserName} || '%'
 			        </if>
+			        <if test="orgCode != null and orgCode != ''">
+                         AND Filter1.LAST_ORG_CODE = #{orgCode}
+                    </if>
+                    <if test="grpCode != null and grpCode != ''">
+                         AND Filter1.LAST_GRP_CODE = #{grpCode}
+                    </if>
+                    <if test="deptCode != null and deptCode != ''">
+                         AND Filter1.LAST_DEPT_CODE = #{deptCode}
+                    </if>
 			     
     </select>
     
