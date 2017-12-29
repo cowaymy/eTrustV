@@ -177,8 +177,10 @@ public class TrainingController {
 	public String attendeePop(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
-		model.addAttribute("coursId", params.get("coursId"));
-		model.addAttribute("pType", params.get("pType"));
+
+		model.addAttribute("memTypeYN", params.get("memTypeYN"));
+		model.addAttribute("btnFlag", params.get("btnFlag"));
+		
 		return "organization/training/trainingAttendeeRegistrationPop";
 	}
 	
@@ -256,6 +258,16 @@ public class TrainingController {
 		
 		model.addAttribute("courseStatusList", new Gson().toJson(courseStatusList));
 		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String getUserName = sessionVO.getUserName();
+		params.put("userId", getUserName);
+		
+		EgovMap memInfo = trainingService.selectMemInfo(params);
+		if(memInfo != null){
+			model.addAttribute("coursMemCode", memInfo.get("memCode"));
+		}
+		
+		
 		return "organization/training/trainingCourseRequest";
 	}
 	
@@ -325,13 +337,13 @@ public class TrainingController {
 	}
 	
 	
-	@RequestMapping(value = "/chkNewAttendList", method = RequestMethod.POST)
+	@RequestMapping(value = "/chkNewAttendList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> chkNewAttendList (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{
 		
 		LOGGER.debug("in  chkNewAttendList ");
 		
 		LOGGER.debug("params =====================================>>  " + params.toString());
-		LOGGER.debug("coursId =====================================>>  " + params.get("coursId"));
+		LOGGER.debug("coursId =====================================>>  " + params.get("memTypeYN"));
 		params.put("userId", sessionVO.getUserId());
 		
 		List<EgovMap> chkList = trainingService.chkNewAttendList(params);
@@ -350,6 +362,11 @@ public class TrainingController {
 	public ResponseEntity<List<EgovMap>> selectCourseRequestList(@RequestParam Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
+        if(params.get("memberCode") != null && params.get("memberCode") != ""){
+        	params.put("userId", params.get("memberCode"));
+        	EgovMap memInfo = trainingService.selectMemInfo(params);
+        	params.put("memberId", memInfo.get("memId"));
+        }
 		
 		List<EgovMap> requestList = trainingService.selectCourseRequestList(params);
 		
@@ -362,11 +379,15 @@ public class TrainingController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String getUserId = Integer.toString(sessionVO.getUserId());
-		params.put("userId", getUserId);
+		String getUserName = sessionVO.getUserName();
+		params.put("userId", getUserName);
 		
 		EgovMap memInfo = trainingService.selectMemInfo(params);
-		params.put("coursMemId", memInfo.get("memId"));
+		if(memInfo != null){
+			params.put("coursMemId", memInfo.get("memId"));
+		}else{
+			params.put("coursMemId", 0);
+		}
 		
 		List<EgovMap> attendeeList = trainingService.selectMyAttendeeList(params);
 		
@@ -401,7 +422,7 @@ public class TrainingController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		String userNric = trainingService.selectLoginUserNric(sessionVO.getUserId());
+//		String userNric = trainingService.selectLoginUserNric(sessionVO.getUserId());
 		
 		params.put("coursId", params.get("coursId"));
 		params.put("userId", sessionVO.getUserId());
