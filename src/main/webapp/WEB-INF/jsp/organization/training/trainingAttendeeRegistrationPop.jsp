@@ -34,6 +34,14 @@ $(document).ready(function() {
     
 	setInputFile();
     
+	if($("#memTypeYN").val() == 2318){
+		$("#memTemp").show();
+		$("#applTemp").hide();
+	}else{
+		$("#memTemp").hide();
+        $("#applTemp").show();
+	}
+	
 	$("#uploadGrid").hide();
     // 최초 그리드 생성함.
     createInitGrid();
@@ -227,7 +235,7 @@ function setAUIGrid(jsonData) {
     $.each(firstRow, function(key , value) {
     	var keyValue = {};
       $.each(value, function(k, v) {
-            //console.log("key : " + k)
+            console.log("key : " + k)
             if(k.trim() == "Member Name"){  //Template
             	keyValue.coursDMemName = v;
             }
@@ -237,12 +245,12 @@ function setAUIGrid(jsonData) {
             if(k.trim() == "Shirt Size"){  //Template
             	keyValue.coursMemShirtSize = v;
             }
-            if(k.trim() == "PUP"){  //Template
-            	keyValue.coursItmMemPup = v;
-            }
-            if(k.trim() == "IS VEG?"){  //Template
-            	keyValue.coursItmMemIsVege = v;
-            }
+//            if(k.trim() == "PUP"){  //Template
+//            	keyValue.coursItmMemPup = v;
+//            }
+//            if(k.trim() == "IS VEG?"){  //Template
+//            	keyValue.coursItmMemIsVege = v;
+//            }
       });
       gridArray.push(keyValue);
     });
@@ -271,12 +279,20 @@ function createInitGrid() {
         width : 100
     }];
 	
+	var atteMemRgistColumnLayout = [
+                        {dataField : "memCode" , headerText : "Member Code", width : "33%",  editable : false },
+                        {dataField : "coursDMemNric" , headerText : "NRIC", width : "33%",  editable : false },
+                        {dataField : "coursMemShirtSize" , headerText : "Shirt Size", width : "33%",  editable : false },
+                       // {dataField : "coursItmMemPup" , headerText : "PUP", width : "20%",  editable : false },
+                       // {dataField : "coursItmMemIsVege" , headerText : "IS VEG?", width : "20%",  editable : false },
+                        {dataField : "chkFlag" , visible : false },
+                      ];
 	var atteRgistColumnLayout = [
-                        {dataField : "coursDMemName" , headerText : "Member Name", width : "20%",  editable : false },
-                        {dataField : "coursDMemNric" , headerText : "NRIC", width : "20%",  editable : false },
-                        {dataField : "coursMemShirtSize" , headerText : "Shirt Size", width : "20%",  editable : false },
-                        {dataField : "coursItmMemPup" , headerText : "PUP", width : "20%",  editable : false },
-                        {dataField : "coursItmMemIsVege" , headerText : "IS VEG?", width : "20%",  editable : false },
+                        {dataField : "coursDMemName" , headerText : "Member Name", width : "33%",  editable : false },
+                        {dataField : "coursDMemNric" , headerText : "NRIC", width : "33%",  editable : false },
+                        {dataField : "coursMemShirtSize" , headerText : "Shirt Size", width : "33%",  editable : false },
+                       // {dataField : "coursItmMemPup" , headerText : "PUP", width : "20%",  editable : false },
+                       // {dataField : "coursItmMemIsVege" , headerText : "IS VEG?", width : "20%",  editable : false },
                         {dataField : "chkFlag" , visible : false },
                       ];
 	var atteRgistGridPros = {
@@ -288,7 +304,7 @@ function createInitGrid() {
             showRowNumColumn    : true,
             usePaging : false,
             editable : false,
-            softRemoveRowMode:true
+            softRemoveRowMode:false
       };
 	
 	// 푸터 설정
@@ -314,7 +330,12 @@ function createInitGrid() {
          }
     }];
     uploadGrid = GridCommon.createAUIGrid("#uploadGrid", upColLayout, "", upOptions);
-	atteRgistGridID = AUIGrid.create("#atteRgistGridID", atteRgistColumnLayout, atteRgistGridPros);
+    if($("#memTypeYN").val() == 2318){
+    	atteRgistGridID = AUIGrid.create("#atteRgistGridID", atteMemRgistColumnLayout, atteRgistGridPros);
+    }else{
+    	atteRgistGridID = AUIGrid.create("#atteRgistGridID", atteRgistColumnLayout, atteRgistGridPros);
+    }
+	
 	// 푸터 객체 세팅
     AUIGrid.setFooter(atteRgistGridID, footerObject);
 }
@@ -372,7 +393,7 @@ function fn_setGridDataByUploadData(pType) {
     $.each(atteRgistGridData, function(key , value) {
         var keyValue = {};
         $.each(value, function(k, v) {
-          //console.log("key : " + k)
+          console.log("keyssss : " + k)
         	if(k.trim() == "coursDMemNric"){  //Template
                 nricArray.push(v);
             }
@@ -396,6 +417,7 @@ function fn_setGridDataByUploadData(pType) {
         });
         gridArray.push(keyValue);
     });
+
     console.log(gridArray);
 	
     var jsonParam = { nricArray : nricArray};
@@ -412,21 +434,19 @@ function fn_setGridDataByUploadData(pType) {
        $.each(result, function(key , value) {
     	   var resultMap = {};
            $.each(value, function(k, v) {
-             //console.log("key : " + k)
+             console.log("key..... : " + k)
              if(k.trim() == "coursDMemNric") {
-            	 if(value[k] == gridArray[key][k]) {  //Template
+//            	 if(value[k] == gridArray[key][k]) {  //Template
             		 resultMap[k] = v;
                      resultMap.coursMemShirtSize = gridArray[key].coursMemShirtSize;
-                     resultMap.coursItmMemPup = gridArray[key].coursItmMemPup;
-                     resultMap.coursItmMemIsVege = gridArray[key].coursItmMemIsVege;
-                 }
+//                 }
              } else {
             	 resultMap[k] = v;
              }
            });
            resultArray.push(resultMap);
        });
-       console.log(resultArray);
+       console.log("shirt : "+JSON.stringify(resultArray));
        console.log(pType);
        if(pType == "new") {
     	   var newAttendeeGridData = AUIGrid.getGridData(newAttendeeGridID);
@@ -443,7 +463,7 @@ function fn_setGridDataByUploadData(pType) {
             $.each(resultArray, function(i , o) {
                 var data = null;
                 $.each(o, function(k, v) {
-                  //console.log("key : " + k)
+                  //console.log("keyoooooo : " + k)
                   if(k.trim() == "coursDMemNric") {
                       if(strArr.indexOf(v) == -1){
                           //console.log("el : " + el);
@@ -477,11 +497,11 @@ function fn_setGridDataByUploadData(pType) {
             
     	   $("#attendeePop").remove();
        } else {
-    	   var atteRgistGridData = AUIGrid.getGridData(attendeeGridID);
-    	    console.log(attendeeGrid);
+    	   var atteRgistGridData = AUIGrid.getGridData(atteRgistGridID);
+    	    console.log("data: "+atteRgistGridData);
     	    var addArray = [];
             var updateArray = [];
-            
+
           //Params Setting
             var strArr = [];
             for (var idx = 0; idx < atteRgistGridData.length; idx++) {
@@ -491,8 +511,8 @@ function fn_setGridDataByUploadData(pType) {
             $.each(resultArray, function(i , o) {
                 var data = null;
                 $.each(o, function(k, v) {
-                  //console.log("key : " + k)
-                  if(k.trim() == "coursDMemNric") {
+                  //console.log("keyeeeeeeeeee : " + k)
+//                  if(k.trim() == "coursDMemNric") {
                       if(strArr.indexOf(v) == -1){
                           //console.log("el : " + el);
                           data = o;
@@ -501,14 +521,14 @@ function fn_setGridDataByUploadData(pType) {
                           data = o;
                           updateArray.push(data);
                       }
-                  }
+  //                }
                 });
             });
             
             if(addArray.length > 0) {
             	console.log("add");
                 console.log(addArray);
-            	//AUIGrid.addRow(attendeeGridID, resultArray, "last");
+            	AUIGrid.addRow(newAttendeeGridID, resultArray, "last");
             }
             if(updateArray.length > 0) {
             	console.log("update");
@@ -539,8 +559,10 @@ function fn_setGridDataByUploadData(pType) {
 </aside>title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_atteRgist">
+<form action="#" method="post" id="form_atteRgist" name="form_atteRgist">
 <input type="hidden" id="coursId" name="coursId" value="${coursId}">
+<input type="hidden" id="memTypeYN" name="memTypeYN" value="${memTypeYN}">
+<input type="hidden" id="btnFlag" name="btnFlag" value="${btnFlag}">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -552,9 +574,10 @@ function fn_setGridDataByUploadData(pType) {
 	<th scope="row">File<span class="must">*</span></th>
 	<td>
 		<div class="auto_file"><!-- auto_file start -->
-		<input type="file" id="fileSelector" title="file add" accept=".xlsx"/>
+		<input type="file" id="fileSelector" title="file add" accept=".csv"/>
 		</div><!-- auto_file end -->
-		<p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/organization/training/AttendeeUploadTemplate.xlsx">Download Format</a></p>
+		<p class="btn_sky" id="applTemp"><a href="${pageContext.request.contextPath}/resources/download/organization/training/AttendeeUploadTemplate_Applicant.csv">Download Format</a></p>
+		<p class="btn_sky" id="memTemp"><a href="${pageContext.request.contextPath}/resources/download/organization/training/AttendeeUploadTemplate_Member.csv">Download Format</a></p>
 	</td>
 </tr>
 </tbody>

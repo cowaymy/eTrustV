@@ -264,7 +264,7 @@ $(document).ready(function () {
     // Member Type
     CommonCombo.make("memType", "/common/selectCodeList.do", {groupCode : '1'}, "", {
         id: "codeId",
-        name: "code",
+        name: "codeName",
         type:"S"
     });
     
@@ -471,7 +471,7 @@ function fn_attendeePop(pType) {
 }
 
 function fn_addRow(gridID) {
-    AUIGrid.addRow(gridID, {}, "last");
+    AUIGrid.addRow(gridID, {}, "first");
 }
 
 function fn_delRow(gridID) {

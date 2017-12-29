@@ -93,7 +93,6 @@ var courseColumnLayout = [ {
               $("#memName").val(item.coursDMemName);
               $("#memNric").val(item.coursDMemNric);
               fn_courseRequest();
-              Common.popupDiv("/organization/training/registerCourseReq.do", $("#form_course").serializeJSON(), null , true , '_editDiv1');
           }
    }
 },{
@@ -107,7 +106,7 @@ var courseColumnLayout = [ {
                //pupupWin
               $("#coursId").val(item.coursId);
               $("#memId").val(item.coursMemId);
-              Common.popupDiv("/organization/training/cancelCourseReq.do", $("#form_course").serializeJSON(), null , true , '_editDiv1');
+              fn_courseCancel();
           }
    }
 }];
@@ -143,9 +142,6 @@ var attendeeColumnLayout = [ {
     dataField : "coursDMemName",
     headerText : 'Member Name',
     style : "aui-grid-user-custom-left",
-}, {
-    dataField : "coursDMemNric",
-    headerText : 'NRIC',
 }, {
     dataField : "brnchId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
@@ -313,7 +309,7 @@ function fn_selectAttendeeList(coursId) {
 	var data = {
             coursId : coursId
     };
-	Common.ajax("GET", "/organization/training/selectMyAttendeeList.do?_cacheId=" + Math.random(), data, function(result) {
+	Common.ajax("GET", "/organization/training/selectAttendeeList.do?_cacheId=" + Math.random(), data, function(result) {
         console.log(result);
         AUIGrid.setGridData(attendeeGridID, result);
     });
@@ -504,9 +500,9 @@ function fn_courseCancel() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Member ID</th>
+	<th scope="row">Member CODE</th>
 	<td>
-	<input type="text" title="Member ID" placeholder="" class="w100p" id="memberId" name="memberId"/>
+	<input type="text" title="Member CODE" placeholder="" class="w100p" id="memberCode" name="memberCode" />
 	</td>
 	<th scope="row">Start Date</th>
 	<td>

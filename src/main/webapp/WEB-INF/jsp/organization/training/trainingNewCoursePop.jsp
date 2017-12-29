@@ -90,25 +90,25 @@ var newAttendeeColumnLayout = [ {
         keyField : "coursMemShirtSize", // key 에 해당되는 필드명
         valueField : "name" // value 에 해당되는 필드명
     }
-}, {
-    dataField : "coursItmMemPup",
-    headerText : 'PUP',
-    renderer : {
-        type : "DropDownListRenderer",
-        list : [{"coursItmMemPup":"344","name":"Central"},{"coursItmMemPup":"345","name":"Northen"},{"coursItmMemPup":"346","name":"Southern"}], //key-value Object 로 구성된 리스트
-        keyField : "coursItmMemPup", // key 에 해당되는 필드명
-        valueField : "name" // value 에 해당되는 필드명
-    }
-}, {
-    dataField : "coursItmMemIsVege",
-    headerText : 'IS VEG?',
-    renderer : {
-        type : "DropDownListRenderer",
-        list : [{"coursItmMemIsVege":"1","name":"Yes"},{"coursItmMemIsVege":"0","name":"No"}], //key-value Object 로 구성된 리스트
-        keyField : "coursItmMemIsVege", // key 에 해당되는 필드명
-        valueField : "name" // value 에 해당되는 필드명
-    }
-}
+}//, {
+//    dataField : "coursItmMemPup",
+//    headerText : 'PUP',
+//    renderer : {
+//        type : "DropDownListRenderer",
+//        list : [{"coursItmMemPup":"344","name":"Central"},{"coursItmMemPup":"345","name":"Northen"},{"coursItmMemPup":"346","name":"Southern"}], //key-value Object 로 구성된 리스트
+//        keyField : "coursItmMemPup", // key 에 해당되는 필드명
+//        valueField : "name" // value 에 해당되는 필드명
+//    }
+//}, {
+//    dataField : "coursItmMemIsVege",
+//    headerText : 'IS VEG?',
+//    renderer : {
+//        type : "DropDownListRenderer",
+//        list : [{"coursItmMemIsVege":"1","name":"Yes"},{"coursItmMemIsVege":"0","name":"No"}], //key-value Object 로 구성된 리스트
+//        keyField : "coursItmMemIsVege", // key 에 해당되는 필드명
+//        valueField : "name" // value 에 해당되는 필드명
+//    }
+//}
 ];
 
 //그리드 속성 설정
@@ -161,7 +161,7 @@ $(document).ready(function () {
     });
     
     $("#newAttendee_btn").click(function() {
-    	fn_attendeePop("new");
+    	fn_attendeePopNew();
     });
     $("#newAddRow_btn").click(function() {
     	fn_addRow(newAttendeeGridID);
@@ -170,7 +170,17 @@ $(document).ready(function () {
     	fn_delRow(newAttendeeGridID);
     });
     $("#new_save_btn").click(fn_insertCourseAttendee);
+    
+    $("#coursLimit").val("9999");
 });
+
+function fn_attendeePopNew() {
+    var data = {
+            memTypeYN : $("#generalCodeNew").val(), btnFlag : "NEW"
+    };
+
+    Common.popupDiv("/organization/training/attendeePop.do", data, null, true, "attendeePop");
+}
 
 function fn_checkMemberTypeNew(){
     var val = $("#generalCodeNew").val();
@@ -237,7 +247,7 @@ CommonCombo.make("generalCodeNew", "/common/selectCodeList.do", {groupCode : '32
 // Member Type
 CommonCombo.make("memTypeNew", "/common/selectCodeList.do", {groupCode : '1'}, "${courseInfo.coursMemTypeId}", {
     id: "codeId",
-    name: "code",
+    name: "codeName",
     type:"S"
 });
 
@@ -302,7 +312,7 @@ function fn_insertCourseAttendee() {
 	</td>
 	<th scope="row">Member(Y/N)/Type<span class="must">*</span></th>
 	<td>
-		<select class="wAuto" id="generalCodeNew" onchange="javascript:fn_checkMemberTypeNew()">
+		<select class="wAuto" id="generalCodeNew" name="generalCode" onchange="javascript:fn_checkMemberTypeNew()">
 		</select>
 		<select class="ml5"  style="width: 60%" id="memTypeNew" name="memType">
 		</select>
