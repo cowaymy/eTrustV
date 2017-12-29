@@ -48,7 +48,7 @@
 		     , (select * from sys0013m where code_master_id = 309) reqs
 		     , sys0028m s28c
 		     , sys0028m s28q
-		     , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d group by reqst_no , itm_code )l55
+		     , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d WHERE NVL(DEL_FLAG,'N') <![CDATA[<>]]> 'Y'  group by reqst_no , itm_code )l55
 		 where 1 =1 
 		   and l47.reqst_no       = l48.reqst_no
 		   and l47.trnsc_type     = tran.code(+)
@@ -183,7 +183,8 @@
 		 WHERE l48.ITM_CODE = s26.STK_CODE
 		   AND l48.ITM_CODE = l55.ITM_CODE(+)
 		   AND l48.REQST_NO = l55.REQST_NO(+)
-		   AND l48.REQST_NO = #{param}           
+		   AND l48.REQST_NO = #{param}
+		   AND NVL(L55.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'
 		 ORDER BY l48.REQST_NO_ITM 
     </select>
     
@@ -233,7 +234,7 @@
     </select>
     
     <select id="selectDeliveryNobyReqsNo" parameterType="Map" resultType="String">
-        select decode(count(1) , 0 , '0' ,max( DELVRY_NO)) dno from log0054m where reqst_no = #{reqno}
+        select decode(count(1) , 0 , '0' ,max( DELVRY_NO)) dno from log0054m where reqst_no = #{reqno} AND nvl(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'
     </select>
     
     <select id="selectDeliveryStockTransferSeq" resultType="String">
@@ -274,7 +275,7 @@
     <insert id="deliveryStockTransferDetailIns" parameterType="Map">
         MERGE INTO LOG0055D A
              USING DUAL
-               ON (DELVRY_NO = #{delno} and ITM_CODE = #{itmcd} and REQST_NO = #{reqstno})
+               ON (DELVRY_NO = #{delno} and ITM_CODE = #{itmcd} and REQST_NO = #{reqstno} AND NVL(DEL_FLAG , 'N')<![CDATA[<>]]> 'Y')
                WHEN MATCHED THEN
                      UPDATE SET
                                 A.DELVRY_QTY  = #{delyqty}
@@ -349,7 +350,8 @@
 		   and l54.delvry_no = l55.delvry_no
 		   and l48.reqst_no  = l55.reqst_no
 		   and l47.reqst_no  = l48.reqst_no
-		   AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y'
+		   and nvl(l54.del_flag , 'N') <![CDATA[<>]]> 'Y'
+		   /*AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y'*/
 		   <if test="reqstno != null and reqstno != ''">
 		      and l47.reqst_no  LIKE #{reqstno}||'%'
 		   </if>
@@ -493,16 +495,17 @@
                                     #{userId}
                                     FROM LOG0055D
                                     WHERE 1=1
-                                              AND DELVRY_NO= #{delno}
-                                              AND ITM_CODE =#{itmcd}
-                                              AND REQST_NO =#{reqstno}                                      
+                                      AND DELVRY_NO= #{delno}
+                                      AND ITM_CODE =#{itmcd}
+                                      AND REQST_NO =#{reqstno}
+                                      AND nvl(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'
                                                        
      </insert>
      <delete id="deliveryDelete54" parameterType="Map">
-        delete from LOG0054M WHERE DELVRY_NO = #{delyno}
+        UPDATE LOG0054M SET DEL_FLAG = 'Y' WHERE DELVRY_NO = #{delyno}
      </delete>
      <delete id="deliveryDelete55" parameterType="Map">
-        delete from LOG0055D WHERE DELVRY_NO = #{delyno}
+        UPDATE LOG0055D SET DEL_FLAG = 'Y' WHERE DELVRY_NO = #{delyno}
      </delete>
      <delete id="deliveryDelete61" parameterType="Map">
         delete from LOG0061D WHERE DELVRY_NO = #{delyno}

@@ -56,7 +56,7 @@ select ROWNUM rnum , l47.REQST_STUS     status
              , sys0028m s28c
              , sys0028m s28q
              , SYS0026M S26
-             , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d group by reqst_no , itm_code )l55
+             , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55
          where 1 =1 
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)

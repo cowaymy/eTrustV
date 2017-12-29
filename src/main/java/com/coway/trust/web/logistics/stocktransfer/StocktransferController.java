@@ -427,6 +427,10 @@ public class StocktransferController {
 			throws Exception {
 
 		List<EgovMap> list = stock.selectStockTransferDeliveryList(params);
+		
+		for (int i = 0 ; i < list.size(); i++){
+			logger.debug(" ::: {}" , list.get(i));
+		}
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);

@@ -225,9 +225,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
         {
         	taxcodeid = 32;//TaxCodeID = 32; //SR
         	taxrate   = 6;//TaxRate = 6;
-            
         }
-		
 		
 		ordMap.put("userid", userId);
 		
@@ -310,6 +308,11 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 		}else{
 			logger.debug("2222");
 		}
+	}
+	@Override
+	public List<EgovMap> PstMaterialDocViewList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return pst.PstMaterialDocViewList(map);
 	}
 
 	

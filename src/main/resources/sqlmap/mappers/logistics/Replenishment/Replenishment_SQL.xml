@@ -180,6 +180,7 @@
 		                        FROM LOG0054M L54, LOG0055D L55
 		                       WHERE L54.DELVRY_NO = L55.DELVRY_NO
 		                         AND L54.DELVRY_GR_CMPLT = 'Y'
+		                         AND NVL (L54.DEL_FLAG, 'N') <> 'Y'
 		                    GROUP BY L55.REQST_NO, L55.ITM_CODE) BB
 		                 ,SYS0028M S28
 		            WHERE AA.REQST_NO = BB.REQST_NO
@@ -324,6 +325,7 @@
 		                        FROM LOG0054M L54, LOG0055D L55
 		                       WHERE L54.DELVRY_NO = L55.DELVRY_NO
 		                         AND L54.DELVRY_GR_CMPLT = 'Y'
+		                         AND NVL (L54.DEL_FLAG, 'N') <> 'Y'
 		                    GROUP BY L55.REQST_NO, L55.ITM_CODE) BB
 		                 ,SYS0028M S28
 		            WHERE AA.REQST_NO = BB.REQST_NO

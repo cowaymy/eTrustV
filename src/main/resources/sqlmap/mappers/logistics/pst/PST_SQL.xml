@@ -297,4 +297,7 @@
 	 WHERE A.AREA_ID = B.AREA_ID
 	   AND A.DEALER_ID = #{dealerid}
  </select>
+ 
+ <select id="PstMaterialDocViewList" parameterType="Map" resultType="egovMap">
+ </select>
 </mapper>

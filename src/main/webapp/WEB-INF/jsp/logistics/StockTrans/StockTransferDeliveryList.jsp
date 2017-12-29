@@ -363,12 +363,18 @@ $(function(){
                     return false;
                     break;
                 }
+                if(checkedItems[i].gicmplt != 'Y'){
+                    Common.alert('Before Good issue processed.');
+                    return false;
+                    break;
+                }
             }
         	document.giForm.gtype.value="RC";
             $("#dataTitle").text("Issue Cancel Posting Data");
             doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
             $("#giopenwindow").show();
+            $("#serial_grid_wrap").hide();
         }
     });
     $("#tlocationnm").keypress(function(event) {

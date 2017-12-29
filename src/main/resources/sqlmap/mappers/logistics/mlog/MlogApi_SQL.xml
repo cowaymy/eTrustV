@@ -27,7 +27,7 @@
         L47.REQST_NO,
         L47.REF_DOC_NO
         FROM LOG0061D L61, LOG0055D L55, LOG0047M L47
-        WHERE L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO) T1,
+        WHERE NVL (L55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y' AND L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO) T1,
         ( SELECT l75.loc_id,
         l75.itm_code,
         SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
@@ -389,6 +389,7 @@
 	         from log0048d l48 , log0055d l55
 	         where L48.REQST_NO = l55.reqst_no 
 	           and l48.itm_code= l55.itm_code
+	           AND NVL (l55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
 	        ) rd
 	 where 1 = 1
 	   and l47.reqst_no   =  rd.reqst_no
@@ -399,6 +400,7 @@
 <!-- 	   AND L54.DELVRY_DT >= TO_CHAR (TO_DATE ('20171130', 'YYYY/MM/DD'), 'yyyymmdd') -->
 <!-- 	   AND L54.DELVRY_DT <= TO_CHAR (TO_DATE ('20171202', 'YYYY/MM/DD'), 'yyyymmdd') -->
 	   AND l47.trnsc_type = 'UM'
+	   AND NVL (L54.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
 	   and s28q.wh_loc_code = #{userId}  
 	    <if test="searchType == 1 ">
             and l47.pridic_frqncy = 'A'
@@ -689,6 +691,7 @@
 		AND l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM(+)
 		AND l55d.ITM_CODE=s26m.STK_CODE
 		AND l55d.DELVRY_NO =  #{smoNo} 
+		AND NVL (l55d.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
 		<!-- AND l61d.DELVRY_NO in ('DVR20170925151548077305','DVR20170928143958079780','DVR20170928163735999750') -->
 		ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO 
 	</select>
@@ -718,7 +721,7 @@
 		L47.REQST_NO,
 		L47.REF_DOC_NO
 		FROM LOG0061D L61, LOG0055D L55, LOG0047M L47
-		WHERE L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO) T1,
+		WHERE L61.DELVRY_NO = L55.DELVRY_NO AND L55.REQST_NO = L47.REQST_NO AND NVL (L55.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y') T1,
 		( SELECT l75.loc_id,
 		l75.itm_code,
 		SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
@@ -880,10 +883,12 @@
 		          rdc_code
 		  FROM LOG0047M LG47M,
 		       SYS0028M SY28M,
-		       LOG0054M LG54M
+		       (SELECT DISTINCT L55.REQST_NO , L54.DELVRY_GI_DT , L54.DELVRY_GR_DT
+				  FROM LOG0054M L54 , LOG0055D L55
+				 WHERE L54.DELVRY_NO = L55.DELVRY_NO
+				   AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) LG54M
 		 WHERE     1 = 1
 		       AND LG47M.REQST_NO = LG54M.REQST_NO(+)
-		       AND LG47M.TRNSC_TYPE = LG54M.TRNSC_TYPE(+)
 		       AND LG47M.TRNSC_TYPE = 'UM'
 		       AND  NVL(LG47M.REQST_DEL , 'N')  <![CDATA[<> ]]> 'Y' 
 		       <if test="reqStatus eq 'MRRL'.toString() ">
@@ -937,7 +942,7 @@
 	LG61D.SERIAL_NO SERIAL_NO,
 	SY26M.STK_TYPE_ID parts_Type
 	FROM
-	LOG0048D LG48D, LOG0055D LG55D, SYS0026M SY26M,LOG0061D LG61D
+	LOG0048D LG48D, (SELECT * FROM LOG0055D WHERE NVL(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) LG55D, SYS0026M SY26M,LOG0061D LG61D
 	WHERE 1=1
 	AND LG48D.REQST_NO = LG55D.REQST_NO (+)
 	AND LG55D.DELVRY_NO = LG61D.DELVRY_NO(+)
@@ -1036,7 +1041,7 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
      </if>
   FROM LOG0048D L48, SYS0026M S26
   <if test="searchStatus == 2 "> 
-     , (SELECT L55.* , L61.SERIAL_NO FROM LOG0055D L55 , LOG0061D L61 WHERE L55.DELVRY_NO = L61.DELVRY_NO(+) AND L55.DELVRY_NO_ITM = L61.PDELVRY_NO_ITM(+)) L55
+     , (SELECT L55.* , L61.SERIAL_NO FROM LOG0055D L55 , LOG0061D L61 WHERE L55.DELVRY_NO = L61.DELVRY_NO(+) AND L55.DELVRY_NO_ITM = L61.PDELVRY_NO_ITM(+) AND NVL(L55.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' ) L55
   </if>
  WHERE 1 =1 
    AND L48.ITM_CODE  = S26.STK_CODE(+)
@@ -1309,7 +1314,8 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
              WHERE 1=1
                        AND DELVRY_NO= #{delno}
                        AND ITM_CODE =#{itmcd}
-                       AND REQST_NO =#{reqstno}                                      
+                       AND REQST_NO =#{reqstno}
+                       AND NVL(DEL_FLAG , 'N') <![CDATA[<>]]> 'Y'                                       
                                             
      </insert>
      
@@ -1438,6 +1444,7 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	      FROM LOG0054M L54, LOG0055D L55
 	     WHERE L54.DELVRY_NO = L55.DELVRY_NO
 	       AND L55.REQST_NO = #{smoNo}
+	       AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' 
 	  GROUP BY L54.DELVRY_NO 
     </select>
 	
@@ -1452,6 +1459,7 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
           FROM LOG0054M L54, LOG0055D L55
          WHERE L54.DELVRY_NO = L55.DELVRY_NO
            AND L55.REQST_NO = #{smoNo}
+           AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' 
       GROUP BY L54.DELVRY_NO 
     </select>
 	

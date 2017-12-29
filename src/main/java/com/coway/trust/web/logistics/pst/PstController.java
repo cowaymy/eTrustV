@@ -150,5 +150,18 @@ public class PstController {
 		*/
 		return "";
 	}
+	
+	@RequestMapping(value = "PstMaterialDocView.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> PstMaterialDocViewList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) throws Exception {
+		
+		
+		logger.debug(" ::::: {}" , params);
+		List<EgovMap> list = pst.PstMaterialDocViewList(params);
+
+		Map<String, Object> rmap = new HashMap();
+		rmap.put("data", list);
+
+		return ResponseEntity.ok(rmap);
+	}
 
 }

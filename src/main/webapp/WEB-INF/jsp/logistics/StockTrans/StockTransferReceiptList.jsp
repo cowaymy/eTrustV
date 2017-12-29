@@ -267,6 +267,7 @@ $(function(){
             return false;
         }else{
         	for (var i = 0 ; i < checkedItems.length ; i++){
+        		console.log(checkedItems[i]);
                 if(checkedItems[i].grcmplt == 'N'){
                     Common.alert('Can not cancel before wearing.');
                     return false;
@@ -343,6 +344,7 @@ function SearchListAjax() {
     var param = $('#searchForm').serializeJSON();
     
     Common.ajax("POST" , url , param , function(data){
+    	console.log(data.data);
         AUIGrid.setGridData(listGrid, data.data);
     });
 }

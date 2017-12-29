@@ -61,6 +61,20 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
         	}
         });
         
+        AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
+            console.log(event);
+            if (event.dataField == "psono"){
+            	var param = "psono="+AUIGrid.getCellValue(listGrid, event.rowIndex, "psono");
+            	Common.ajax("GET", "/logistics/pst/PstMaterialDocView.do", param , function(result) {
+                    
+                    AUIGrid.setGridData(listGrid, result.data);
+                });
+            }
+            /*$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
+            document.searchForm.action = '/logistics/pos/PosView.do';
+            document.searchForm.submit();*/
+        });
+        
         AUIGrid.bind(serialGrid, "cellEditBegin", function(event) {
             
             if (event.item.scanno != ""){
@@ -246,8 +260,8 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                 var rowItem;
                 for(var i=0, len = checkedItems.length; i<len; i++) {
                     rowItem = checkedItems[i];
-                    if(rowItem.item.indelyqty==0){
-                        str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
+                    if(rowItem.item.reqqty==0){
+                        str += "Please Check Delivery Qty of  " + rowItem.item.psono   + ", " + rowItem.item.itmname + "<br />";
                         checkDelqty= true;
                     }
                     if (rowItem.item.serialchk =='Y'){

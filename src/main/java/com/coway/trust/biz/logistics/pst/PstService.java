@@ -12,4 +12,6 @@ public interface PstService {
 	void pstMovementReqDelivery(Map<String, Object> map);
 	
 	void testsample();
+	
+	List<EgovMap> PstMaterialDocViewList(Map<String, Object> map);
 }

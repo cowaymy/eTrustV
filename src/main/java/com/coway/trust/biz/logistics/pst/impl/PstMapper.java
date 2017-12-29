@@ -62,5 +62,7 @@ public interface PstMapper {
 	void insertStockCardList(Map<String, Object> params);
 	
 	Map<String , Object> selectDealerAddressMasic(int dealerid);
+	
+	List<EgovMap> PstMaterialDocViewList(Map<String, Object> params);
 
 }

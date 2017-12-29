@@ -51,7 +51,7 @@
              , (select * from sys0013m where code_master_id = 309) reqs
              , sys0028m s28c
              , sys0028m s28q
-             , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d group by reqst_no , itm_code )l55
+             , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d where nvl(del_flag , 'N' ) <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55
              , sys0026m s26
          where 1 =1 
            and l47.reqst_no       = l48.reqst_no
@@ -202,6 +202,7 @@
            AND l48.ITM_CODE = l55.ITM_CODE(+)
            AND l48.REQST_NO = l55.REQST_NO(+)
            AND NVL(l48.REQST_DEL , 'N') = 'N'
+		   and nvl(l55.del_falg , 'N')<![CDATA[<>]]>'Y'
            AND l48.REQST_NO = #{param}           
          ORDER BY l48.REQST_NO_ITM 
     </select>
@@ -364,6 +365,7 @@
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
+		   and nvl(l54.del_falg , 'N')<![CDATA[<>]]>'Y'
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  = #{reqstno}
            </if>
@@ -497,6 +499,7 @@
                                     AND ITM_CODE = #{itmcd}
                                     AND DELVRY_NO_ITM = (select max(DELVRY_NO_ITM) from log0055d where DELVRY_NO = #{delno})
                                     AND REQST_NO = #{reqstno}
+                                    AND NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
                                      AND (SELECT serial_no
 							                FROM LOG0061D
 							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serial})
@@ -511,6 +514,7 @@
                 REQST_NO
             FROM LOG0055D
             WHERE 1=1
+              AND NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
                         AND DELVRY_NO = #{delno}
                         <if test="itmcd != null and itmcd != ''">
                         AND ITM_CODE  =  #{itmcd}
@@ -535,6 +539,7 @@
             FROM LOG0055D l55d, LOG0061D l61d
                         WHERE l55d.DELVRY_NO = l61d.DELVRY_NO
                                 AND  l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM
+								and nvl(l55d.del_falg , 'N')<![CDATA[<>]]>'Y'
                                 AND  l61d.DELVRY_NO = #{delno}
                                 ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
      </select>
