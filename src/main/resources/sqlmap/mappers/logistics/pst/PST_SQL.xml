@@ -299,5 +299,42 @@
  </select>
  
  <select id="PstMaterialDocViewList" parameterType="Map" resultType="egovMap">
+    select
+        rownum rnum
+        , l59.matrl_doc_no 
+        , l59.matrl_doc_year
+        , l59.trnsc_type_code
+        , l60.MATRL_DOC_ITM
+        , l60.delvry_no
+        , tt.code_name trantype
+        , l60.INVNTRY_MOV_TYPE
+        , mt.code_name movtype
+        , l60.DEBT_CRDIT_INDICT
+        , l60.AUTO_CRT_ITM
+        , l60.matrl_no
+        , s26.stk_desc
+        , l60.qty
+        , l60.measure_bas_unit
+        , ut.code_name
+        , l60.storg_loc
+        , (select wh_loc_desc from sys0028m where wh_loc_id = l60.storg_loc) req_storg_nm
+        , l60.rciv_issu_storg_loc
+        , (select wh_loc_desc from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
+        , to_char(to_date(l59.USNAM , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
+        ,l59.CRT_DT
+        from log0059m l59
+        , log0060d l60
+        , sys0026m s26
+        , (select * from sys0013m where code_master_id = 306) tt
+        , (select * from sys0013m where code_master_id = 308) mt
+        , (select * from sys0013m where code_master_id = 42) ut
+        where 1 = 1
+        and l60.matrl_no = s26.STK_CODE(+)
+        and l60.measure_bas_unit = ut.code_id(+)
+        and l59.trnsc_type_code = tt.code
+        and l60.INVNTRY_MOV_TYPE = mt.code 
+        and l59.REF_DOC_NO = #{psono}
+        and l59.matrl_doc_no = l60.matrl_doc_no
+        order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
  </select>
 </mapper>

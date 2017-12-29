@@ -21,8 +21,10 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
     var listGrid;
     var serialGrid;
     var serialchk = false;
-    
+    var mdcGrid;
     var gridValue;
+    
+    var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
     
     $(document).ready(function(){
     
@@ -59,6 +61,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
         	}else{
         		AUIGrid.addCheckedRowsByIds(listGrid, event.item.rnum);
         	}
+        	if(event.value == ''){
+        		AUIGrid.setCellValue(listGrid, event.rowIndex, event.columnIndex, 0);
+        	}
         });
         
         AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
@@ -67,7 +72,8 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
             	var param = "psono="+AUIGrid.getCellValue(listGrid, event.rowIndex, "psono");
             	Common.ajax("GET", "/logistics/pst/PstMaterialDocView.do", param , function(result) {
                     
-                    AUIGrid.setGridData(listGrid, result.data);
+                    AUIGrid.setGridData(mdcGrid, result.data);
+                    $("#mdc_grid").show();
                 });
             }
             /*$("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
@@ -189,6 +195,44 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                             {dataField:"scanno"       , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false }
                            ];
         
+        var mtrcolumnLayout = [
+                               {dataField:  "matrlDocNo",headerText :"<spring:message code='log.head.matrl_doc_no'/>"    ,width:200    ,height:30},                         
+                               {dataField: "matrlDocItm",headerText :"<spring:message code='log.head.matrldocitm'/>"    ,width:100    ,height:30},                         
+                               {dataField: "invntryMovType",headerText :"<spring:message code='log.head.move_type'/>"   ,width:100    ,height:30},                                             
+                               {dataField: "movtype",headerText :"<spring:message code='log.head.move_text'/>"  ,width:120    ,height:30},                                                     
+                               {dataField: "reqStorgNm",headerText :"<spring:message code='log.head.reqloc'/>"  ,width:150    ,height:30},                         
+                               {dataField: "matrlNo",headerText :"<spring:message code='log.head.matrl_code'/>"     ,width:120    ,height:30},                         
+                               {dataField: "stkDesc",headerText :"<spring:message code='log.head.matrlname'/>"  ,width:300    ,height:30},                         
+                               {dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"   ,width:120    ,height:30
+                             ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
+                                   
+                                   var retStr = "";
+ 
+                                   for(var i=0,len=decedata.length; i<len; i++) {
+
+                                       if(decedata[i]["code"] == value) {
+                                           retStr = decedata[i]["codeName"];
+                                           break;
+                                       }
+                                   }
+                                   return retStr == "" ? value : retStr;
+                               },editRenderer : 
+                               {
+                                  type : "ComboBoxRenderer",
+                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+                                  list : decedata,
+                                  keyField : "code",
+                                  valueField : "code"
+                               }   
+                         
+                           },
+                           {dataField:    "autoCrtItm" ,headerText:    ""   ,width:100    ,height:30},                         
+                           {dataField:    "qty",headerText :"<spring:message code='log.head.qty'/>"    ,width:120    ,height:30},                         
+                           {dataField:    "trantype",headerText :"<spring:message code='log.head.tran_type'/>"     ,width:120    ,height:30},                         
+                           {dataField:    "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"    ,width:120    ,height:30},                                                     
+                           {dataField:    "codeName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120    ,height:30}          
+              ];   
+        
         // 그리드 속성 설정
         var gridPros = {rowIdField : "rnum",usePaging : true,pageRowCount : 20,editable : true,fixedColumnCount : 16,showStateColumn : false,
         		        selectionMode : "multipleCells",headerHeight : 30,useGroupingPanel : false,skipReadonlyColumns : true,wrapSelectionMove : true,
@@ -197,10 +241,21 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
         
         var serialop = {editable : true};
         
+        var options = {
+                usePaging : false,
+                editable : false,
+                useGroupingPanel : false,
+                showStateColumn : false 
+                };
+        
         //listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         listGrid = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
         
         serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
+        
+        mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", options);
+        
+        $("#mdc_grid").hide();
     }
     
     // 리스트 조회.
@@ -637,4 +692,19 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
      
      </section>
  </div>
+ <section class="tap_wrap"><!-- tap_wrap start -->
+        <ul class="tap_type1">
+            <li><a href="#" class="on">Compliance Remark</a></li>
+        </ul>
+        
+        <article class="tap_area"><!-- tap_area start -->
+        
+            <article class="grid_wrap"><!-- grid_wrap start -->
+                  <div id="mdc_grid" class="mt10" style="height:150px"></div>
+            </article><!-- grid_wrap end -->
+        
+        </article><!-- tap_area end -->
+            
+        
+    </section>
 </section><!-- content end -->
