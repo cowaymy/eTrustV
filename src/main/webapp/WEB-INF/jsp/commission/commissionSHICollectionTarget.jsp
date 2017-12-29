@@ -232,7 +232,7 @@ var today = "${today}";
 						</td>
 						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
 						<td>
-						  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+						  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}">
 						      <input type="text" title="" placeholder="" id="memCode" name="memCode" value="${loginId }" readonly/>
 						  </c:if>
 						  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
