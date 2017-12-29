@@ -103,7 +103,15 @@ function fn_sendEInvoice(){
       $("#reportPDFForm #viewType").val("MAIL_PDF");
       
       var message = "";
-      message += "<spring:message code='pay.alert.emailMsg1'/>" +"<spring:message code='pay.alert.emailMsg2'/>"+"<spring:message code='pay.alert.emailMsg3'/>"
+      message += "Dear customer,\n\n" +
+	      "Please refer to the attachment of the re-send invoice as per requested.\n" +
+	      "By making the simple switch to e-invoice, you help to save trees, which is great news for the environment." +
+	      "\n\n" +
+	      "NOTE :Please do not reply this email as this is computer generated e-mail." +
+	      "\n\n\n" +
+	      "Thank you and have a wonderful day.\n\n" +
+	      "Regards\n" +
+	      "Management Team of Coway Malaysia Sdn. Bhd.";
           
       //E-mail 제목
       var emailTitle = "Outright Invoice " + AUIGrid.getCellValue(myGridID, selectedGridValue, "salesOrdId");
