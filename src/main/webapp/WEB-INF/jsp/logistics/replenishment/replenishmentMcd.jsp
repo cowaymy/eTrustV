@@ -37,29 +37,29 @@ var rescolumnLayout=[
                      
                      
                     {dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-                    {dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false, visible:false},                         
-                    {dataField: "cdc",headerText :"<spring:message code='log.head.cdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
-                    {dataField: "cdcname",headerText :"<spring:message code='log.head.cdc'/>"   ,width:240 ,height:30, editable:false, visible:false},
+                    {dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false},                         
+//                    {dataField: "rdc",headerText :"<spring:message code='log.head.rdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
+//                    {dataField: "rdcname",headerText :"<spring:message code='log.head.rdc'/>"   ,width:240 ,height:30, editable:false, visible:false},                         
                     {dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"    ,width:120 ,height:30, editable:false},                         
-                    {dataField: "ctName",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
-                    {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
-                    {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
-                    {dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
-                    {dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "locnm",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
+                    {dataField: "stkCode",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
+//                    {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
+//                    {dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
+//                    {dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+//                    {dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+//                    {dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "maxQty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "sftyQty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "plannedQty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
+                    {dataField: "reordQty",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:true, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "reordQty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+/*     
+{dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
                         ,dataType : "date",
                         formatString : "dd/mm/yyyy",
                         editRenderer : {
                             type : "CalendarRenderer",
-                            defaultFormat : "dd/mm/yyyy",
                             openDirectly : true, // 에디팅 진입 시 바로 달력 열기
                             onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
                             showExtraDays : true // 지난 달, 다음 달 여분의 날짜(days) 출력
@@ -70,12 +70,12 @@ var rescolumnLayout=[
                     {dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false},                         
                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
                     {dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false},                          
-                    {dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false, visible:false},                         
                     {dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-                    {dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false}  
-
-                     
-                     ];
+                    {dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false},  
+  */                  
+                    {dataField: "avgqty",headerText :"<spring:message code='log.head.averageqty'/>"                  ,width:120    ,height:30 , editable:false,style:"aui-grid-user-custom-right"},
+                    {dataField: "diffqty",headerText :"<spring:message code='log.head.diffqty'/>"                  ,width:120    ,height:30 , editable:false,style:"aui-grid-user-custom-right"}
+                    ];
                      
 // AUIGrid.showColumnByDataField(myGridID, "sftyqty"); 
 // hideColumnByDataField
@@ -126,8 +126,7 @@ $(document).ready(function(){
         for (var i = 0 ; i < rowCnt ; i++){
             if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'maxqty')){
             var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -(AUIGrid.getCellValue(listGrid, i, 'availqty')+AUIGrid.getCellValue(listGrid, i, 'remainqty'));
-               console.log(qty);
-              if(qty>=0){
+                if(qty>=0){
                     AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
                 }else{
                      AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
@@ -137,19 +136,7 @@ $(document).ready(function(){
         AUIGrid.resetUpdatedItems(listGrid, "all");
     });
 
-    AUIGrid.bind(listGrid, "cellEditEnd", function (event){
-    	 
-    	 
-        var checkqty = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqqty");
-        var max        = AUIGrid.getCellValue(listGrid, event.rowIndex, "maxqty") -(AUIGrid.getCellValue(listGrid, event.rowIndex, "availqty")+AUIGrid.getCellValue(listGrid, event.rowIndex, "remainqty"));
-      //  var min          = AUIGrid.getCellValue(listGrid, event.rowIndex, "remainqty");
-        //if (min >=checkqty || checkqty >max ){
-        if (1 >checkqty || checkqty >=max ){
-                Common.alert("Please Check <spring:message code='log.head.requestqty'/>.");
-                AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-   
-        }
-   });
+    
 });
 
 //btn clickevent
@@ -164,7 +151,6 @@ $(function(){
     $("#clear").click(function(){
         $('#searchMatCode').val('');
         $('#searchMatName').val('');
-        $('#speriod').val('');
         doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
         doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
         doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
@@ -202,10 +188,11 @@ $(function(){
     });
     $('#save').click(function(){
         var dat = GridCommon.getEditData(listGrid);
-        Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
+        console.log(dat);
+        Common.ajax("POST", "/logistics/replenishment/relenishmentSaveMsCt.do", dat, function(result) {
             //Common.alert(result.message , SearchListAjax2);
             Common.alert(result.message);
-            SearchListAjax2("M");
+            SearchListAjax();
         },  function(jqXHR, textStatus, errorThrown) {
             try {
             } catch (e) {
@@ -214,30 +201,6 @@ $(function(){
             Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
     });
-    $('#insert').click(function() {
-        var addedItems = AUIGrid.getColumnValues(listGrid,"reqqty");
-        if (addedItems.length > 0){
-            for (var i = 0 ; i < addedItems.length ; i++){
-                if(""==addedItems[i] || 0==addedItems[i]){
-                    Common.alert("Plese Check "+"<spring:message code='log.head.requestqty'/>" +".");
-                    return false;
-                }       
-            }
-        }
-       // if (f_validatation('save')){
-            var dat = GridCommon.getGridData(listGrid);
-          //  dat.form = $("#headForm").serializeJSON();
-            Common.ajax("POST", "/logistics/replenishment/relenishmentSaveRdc.do", dat, function(result) {
-                Common.alert(result.message);
-                AUIGrid.resetUpdatedItems(listGrid, "all");
-            },  function(jqXHR, textStatus, errorThrown) {
-                try {
-                } catch (e) {
-                }
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-            });
-       // }
-    });
     $('#popsave').click(function(){
 
         var param = $('#popForm').serializeJSON();
@@ -245,9 +208,10 @@ $(function(){
         if (validationchk()){
             var valChck=true;
             var str="";
-          //  $.extend(param,{'chckLoc':'CTCODY'});//강제세팅함 
+            $.extend(param,{'chckLoc':'CTCODY'});//강제세팅함 
              Common.ajax("POST", "/logistics/replenishment/PopCheck.do", param, function(result) {
                  //Common.alert(result.message , SearchListAjax2);
+                 console.log(result);
                  var data = result.data;
                  if(0==data[0].itmchck & 0==data[0].locchck){
                      valChck=false;
@@ -546,9 +510,11 @@ function fn_detail(data){
 
 function SearchListAjax() {
        
-    var url = "/logistics/replenishment/searchListRdc.do";
+    var url = "/logistics/replenishment/searchListMaster.do";
     var param = $('#searchForm').serializeJSON();
+    console.log(param);
     Common.ajax("POST" , url , param , function(data){
+        console.log(data);
         AUIGrid.setGridData(listGrid, data.data);
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
@@ -573,7 +539,7 @@ function SearchListAjax2(str) {
         $("#speriod").val($("#period").val());
     } 
     
-    var url = "/logistics/replenishment/searchListRdc.do";
+    var url = "/logistics/replenishment/searchListMaster.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
@@ -584,6 +550,7 @@ function SearchListAjax2(str) {
 function f_multiCombo() {
     $(function() {
         $('#searchlocgb').change(function() {
+            console.log('1');
             if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
                  var searchlocgb = $('#searchlocgb').val();
                     
@@ -620,12 +587,12 @@ function f_multiCombos() {
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>logistics</li>
     <li>Replenishment</li>
-    <li>R.Mgmt RDC Data</li>
+    <li>R.Mgmt Data</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>R.Mgmt RDC Data</h2>
+<h2>R.Mgmt Data MASTER(CT)</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -640,6 +607,7 @@ function f_multiCombos() {
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+        <input type="hidden" id="isctcody" name="isctcody" value="ct"/>
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -724,13 +692,12 @@ function f_multiCombos() {
     <section class="search_result"><!-- search_result start -->
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
-<!--             <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
-            <li><p class="btn_grid"><a id="add">Add</a></p></li>
-            <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
-            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li> -->
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_grid"><a id="insert">New</a></p></li>
-</c:if>
+            <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
+         <!--    <li><p class="btn_grid"><a id="add">Add</a></p></li> -->
+            <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
+           <!--  <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li> -->
+</c:if>        
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
@@ -739,7 +706,7 @@ function f_multiCombos() {
     </section><!-- search_result end -->
    <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
-            <h1 id="dataTitle">New R.Mgmt RDC Data</h1>
+            <h1 id="dataTitle">New R.Mgmt  Data</h1>
             <ul class="right_opt">
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
@@ -793,8 +760,7 @@ function f_multiCombos() {
             <ul class="center_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a id="popsave">SAVE</a></p></li> 
-</c:if>
-            
+</c:if>            
             </ul>
             </form>
         

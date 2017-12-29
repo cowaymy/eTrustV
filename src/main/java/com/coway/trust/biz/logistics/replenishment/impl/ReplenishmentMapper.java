@@ -25,4 +25,10 @@ public interface ReplenishmentMapper {
 	void insStockMovementDetail(Map<String, Object> map);
 
 	void insStockMovementHead(Map<String, Object> map);
+
+	List<EgovMap> searchListMaster(Map<String, Object> params);
+
+	void relenishmentSaveMsCt(Map<String, Object> updMap);
+
+	List<EgovMap> searchListMasterDsc(Map<String, Object> params);
 }

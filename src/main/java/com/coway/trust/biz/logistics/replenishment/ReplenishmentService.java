@@ -32,4 +32,10 @@ public interface ReplenishmentService {
 
 	void relenishmentSaveRdc(Map<String, Object> param);
 
+	List<EgovMap> searchListMaster(Map<String, Object> params);
+
+	void relenishmentSaveMsCt(Map<String, Object> params, int userId);
+
+	List<EgovMap> searchListMasterDsc(Map<String, Object> params);
+
 }

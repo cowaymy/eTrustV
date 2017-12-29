@@ -37,24 +37,25 @@ var rescolumnLayout=[
                      
                      
                     {dataField: "rnum",headerText :"<spring:message code='log.head.rownum'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
-                    {dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false, visible:false},                         
-                    {dataField: "rdc",headerText :"<spring:message code='log.head.rdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
-                    {dataField: "rdcname",headerText :"<spring:message code='log.head.rdc'/>"   ,width:240 ,height:30, editable:false, visible:false},                         
+                    {dataField: "period",headerText :"<spring:message code='log.head.period'/>" ,width:100 ,height:30, editable:false},                         
+//                    {dataField: "rdc",headerText :"<spring:message code='log.head.rdc'/>"   ,width:120 ,height:30, editable:false  , visible:false},                        
+//                    {dataField: "rdcname",headerText :"<spring:message code='log.head.rdc'/>"   ,width:240 ,height:30, editable:false, visible:false},                         
                     {dataField: "loccd",headerText :"<spring:message code='log.head.location'/>"    ,width:120 ,height:30, editable:false},                         
-                    {dataField: "ctName",headerText :"<spring:message code='log.head.locationname'/>"   ,width:140 ,height:30, editable:false},                         
-                    {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
-                    {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
-                    {dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
-                    {dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "reordqty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
-                    {dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
+                    {dataField: "locnm",headerText :"<spring:message code='log.head.locationname'/>"   ,width:240 ,height:30, editable:false},                         
+                    {dataField: "stkCode",headerText :"<spring:message code='log.head.materialcode'/>"    ,width:120 ,height:30, editable:false},                         
+//                    {dataField: "itmnm",headerText :"<spring:message code='log.head.materialcodetext'/>"    ,width:240 ,height:30, editable:false},                         
+//                    {dataField: "userName",headerText :"<spring:message code='log.head.username'/>" ,width:120 ,height:30, editable:false, visible:false},                         
+//                    {dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+//                    {dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+//                    {dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "maxQty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
+                    {dataField: "sftyQty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "plannedQty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                   {dataField: "reqqty",headerText :"<spring:message code='log.head.requestqty'/>"  ,width:120 ,height:30, editable:true,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+                    {dataField: "reordQty",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:true, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "reordQty",headerText :"<spring:message code='log.head.reorderpointqty'/>"  ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+/*     
+{dataField: "reqdt",headerText :"<spring:message code='log.head.requireddate'/>"  ,width:120 ,height:30, editable:true
                         ,dataType : "date",
                         formatString : "dd/mm/yyyy",
                         editRenderer : {
@@ -69,12 +70,11 @@ var rescolumnLayout=[
                     {dataField: "stkCtgryName",headerText :"<spring:message code='log.head.catagoryname'/>" ,width:120 ,height:30, editable:false},                         
                     {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false, visible:false},                          
                     {dataField: "uomName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120 ,height:30, editable:false},                          
-                    {dataField: "avgQty",headerText :"<spring:message code='log.head.averageqty'/>" ,width:120 ,height:30, editable:false, visible:false},                         
                     {dataField: "crtDt",headerText :"<spring:message code='log.head.crtdt'/>"   ,width:120 ,height:30, editable:false , visible:false},                         
                     {dataField: "crtUser",headerText :"<spring:message code='log.head.crtuser'/>"   ,width:120 ,height:30, editable:false , visible:false},  
-                    
-                    {dataField: "avrqty",headerText :"<spring:message code='log.head.averageqty'/>"                  ,width:120    ,height:30 , editable:false},
-                    {dataField: "diffqty",headerText :"<spring:message code='log.head.diffqty'/>"                  ,width:120    ,height:30 , editable:false}
+  */                  
+                    {dataField: "avgqty",headerText :"<spring:message code='log.head.averageqty'/>"                  ,width:120    ,height:30 , editable:false,style:"aui-grid-user-custom-right"},
+                    {dataField: "diffqty",headerText :"<spring:message code='log.head.diffqty'/>"                  ,width:120    ,height:30 , editable:false,style:"aui-grid-user-custom-right"}
                     ];
                      
 // AUIGrid.showColumnByDataField(myGridID, "sftyqty"); 
@@ -124,16 +124,17 @@ $(document).ready(function(){
         
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
-            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
-            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -AUIGrid.getCellValue(listGrid , i , 'availqty');
-            AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'maxqty')){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -(AUIGrid.getCellValue(listGrid, i, 'availqty')+AUIGrid.getCellValue(listGrid, i, 'remainqty'));
+                if(qty>=0){
+                    AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+                }else{
+                     AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
+                }
             }
         }
         AUIGrid.resetUpdatedItems(listGrid, "all");
     });
-    
-});
-
 //btn clickevent
 $(function(){
     $('#search').click(function() {
@@ -183,10 +184,11 @@ $(function(){
     });
     $('#save').click(function(){
         var dat = GridCommon.getEditData(listGrid);
-        Common.ajax("POST", "/logistics/replenishment/relenishmentSave.do", dat, function(result) {
+        console.log(dat);
+        Common.ajax("POST", "/logistics/replenishment/relenishmentSaveMsCt.do", dat, function(result) {
             //Common.alert(result.message , SearchListAjax2);
             Common.alert(result.message);
-            SearchListAjax2("M");
+            SearchListAjax();
         },  function(jqXHR, textStatus, errorThrown) {
             try {
             } catch (e) {
@@ -216,13 +218,15 @@ $(function(){
                  }else if(0==data[0].itmchck & 1==data[0].locchck){
                      str +=" filter or spare-part in Meterial. ";
                      valChck=false;
+                 }else if(1==data[0].l77chck){
+                     str +="Input values. A New is existing.  ";
+                     valChck=false;
                  }
                  
                  if(valChck){
                     Common.ajax("POST", "/logistics/replenishment/relenishmentPopSave.do", param, function(result) {
-                        //Common.alert(result.message , SearchListAjax2);
                         Common.alert(result.message);
-                        SearchListAjax2("P");
+                        SearchListAjax();
                         $("#giopenwindow").hide();
                     },  function(jqXHR, textStatus, errorThrown) {
                         try {
@@ -233,7 +237,7 @@ $(function(){
                     });  
                      
                  }else{
-                     Common.alert("Please Input "+str);
+                     Common.alert("Please Check  "+str);
                  }
              },  function(jqXHR, textStatus, errorThrown) {
                  try {
@@ -357,10 +361,12 @@ function validationchk(){
         Common.alert('Please enter a Safety Stock Qty.');
         return false;
     }
+    /*
     if ($("#planqty").val() == ''){
         Common.alert('Please enter a Planned Qty.');
         return false;
     }
+    */
     return true;
 }
 
@@ -504,7 +510,7 @@ function fn_detail(data){
 
 function SearchListAjax() {
        
-    var url = "/logistics/replenishment/searchListRdc.do";
+    var url = "/logistics/replenishment/searchListMaster.do";
     var param = $('#searchForm').serializeJSON();
     console.log(param);
     Common.ajax("POST" , url , param , function(data){
@@ -512,13 +518,19 @@ function SearchListAjax() {
         AUIGrid.setGridData(listGrid, data.data);
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
-            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
-            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -AUIGrid.getCellValue(listGrid , i , 'availqty');
-            AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'maxqty')){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -(AUIGrid.getCellValue(listGrid, i, 'availqty')+AUIGrid.getCellValue(listGrid, i, 'remainqty'));
+            console.log(qty);   
+            if(qty>0){
+                    AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+                }else{
+                     AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
+                }
+            }else{
+                     AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
             }
         }
         AUIGrid.resetUpdatedItems(listGrid, "all");
-        
     });
 }
 function SearchListAjax2(str) {
@@ -527,9 +539,8 @@ function SearchListAjax2(str) {
         $("#speriod").val($("#period").val());
     } 
     
-    var url = "/logistics/replenishment/searchListRdc.do";
+    var url = "/logistics/replenishment/searchListMaster.do";
     var param = $('#searchForm').serializeJSON();
-    console.log(param);
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
         
@@ -581,7 +592,7 @@ function f_multiCombos() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>R.Mgmt Data</h2>
+<h2>R.Mgmt Data MASTER(CT)</h2>
 </aside><!-- title_line end -->
 
 <aside class="title_line"><!-- title_line start -->
@@ -596,6 +607,7 @@ function f_multiCombos() {
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
+        <input type="hidden" id="isctcody" name="isctcody" value="ct"/>
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -681,11 +693,11 @@ function f_multiCombos() {
         <div id='filediv' style="display:none;"><input type="file" id="fileSelector" name="files" accept=".xlsx"></div>
         <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_grid"><a id="re">Recalculate</a></p></li>
-            <li><p class="btn_grid"><a id="add">Add</a></p></li>
+           <!--  <li><p class="btn_grid"><a id="re">Recalculate</a></p></li> -->
+            <li><p class="btn_grid"><a id="add">Add</a></p></li> 
             <li><p class="btn_grid"><a id="save">SAVE</a></p></li>
-            <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li>
 </c:if>        
+           <!--  <li><p class="btn_grid"><a id="upload">ExcelUpload</a></p></li> -->
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:430px"></div>
@@ -734,14 +746,14 @@ function f_multiCombos() {
                     <th scope="row">Safty Stock</th>
                     <td ><input id="sftyqty"   name="sftyqty" type="text"   title="Safty Stock"  class="w100p numberAmt" /></td>    
                 </tr>
+ <!--                <tr>
                     <th scope="row">Planned Qty</th>
                     <td ><input id="planqty"   name="planqty" type="text"     title="Planned Qty"  class="w100p numberAmt" /></td>    
                     <th></th>
                     <td></td>
                     <th></th>
                     <td></td>
-                <tr>
-                </tr>
+                </tr> -->
             </tbody>
             </table>
         

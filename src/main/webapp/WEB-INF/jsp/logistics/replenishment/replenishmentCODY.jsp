@@ -48,7 +48,7 @@ var rescolumnLayout=[
                     {dataField: "availqty",headerText :"<spring:message code='log.head.availableqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
                     {dataField: "remainqty",headerText :"<spring:message code='log.head.remainqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
                     {dataField: "suplqty",headerText :"<spring:message code='log.head.supplyqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
-                    {dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
+//                    {dataField: "planqty",headerText :"<spring:message code='log.head.plannedqty'/>"    ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "sftyqty",headerText :"<spring:message code='log.head.safetystock'/>"   ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                          
                     {dataField: "maxqty",headerText :"<spring:message code='log.head.maximumqty'/>" ,width:120 ,height:30, editable:false,style:"aui-grid-user-custom-right",dataType : "numeric"},                         
 //                    {dataField: "reordqtypoint",headerText :"<spring:message code='log.head.reorderpoint'/>"   ,width:120 ,height:30, editable:false, postfix :  "%",style:"aui-grid-user-custom-right",dataType : "numeric"},                          
@@ -126,13 +126,31 @@ $(document).ready(function(){
         
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
-            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
-            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -AUIGrid.getCellValue(listGrid , i , 'availqty');
-            AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'maxqty')){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -(AUIGrid.getCellValue(listGrid, i, "availqty")+AUIGrid.getCellValue(listGrid, i, "remainqty"));
+                if(qty>=0){
+                    AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+                }else{
+                     AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
+                }
             }
         }
         AUIGrid.resetUpdatedItems(listGrid, "all");
     });
+
+    AUIGrid.bind(listGrid, "cellEditEnd", function (event){
+    	 
+    	 
+        var checkqty = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqqty");
+        var max        = AUIGrid.getCellValue(listGrid, event.rowIndex, "maxqty") -(AUIGrid.getCellValue(listGrid, event.rowIndex, "availqty")+AUIGrid.getCellValue(listGrid, event.rowIndex, "remainqty"));
+      //  var min          = AUIGrid.getCellValue(listGrid, event.rowIndex, "remainqty");
+        //if (min >=checkqty || checkqty >max ){
+        if (1 >checkqty || checkqty >=max ){
+                Common.alert("Please Check <spring:message code='log.head.requestqty'/>.");
+                AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
+   
+        }
+   }); 
     
 });
 
@@ -541,13 +559,19 @@ function SearchListAjax() {
         AUIGrid.setGridData(listGrid, data.data);
         var rowCnt = AUIGrid.getRowCount(listGrid);
         for (var i = 0 ; i < rowCnt ; i++){
-            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'reordqty')){
-            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -AUIGrid.getCellValue(listGrid , i , 'availqty');
-            AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+            if(AUIGrid.getCellValue(listGrid , i , 'availqty') < AUIGrid.getCellValue(listGrid , i , 'maxqty')){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'maxqty') -(AUIGrid.getCellValue(listGrid, i, 'availqty')+AUIGrid.getCellValue(listGrid, i, 'remainqty'));
+            console.log(qty);   
+            if(qty>0){
+                    AUIGrid.setCellValue(listGrid, i, 'reqqty', qty);
+                }else{
+                     AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
+                }
+            }else{
+                     AUIGrid.setCellValue(listGrid, i, 'reqqty', 0);
             }
         }
         AUIGrid.resetUpdatedItems(listGrid, "all");
-        
     });
 }
 function SearchListAjax2(str) {

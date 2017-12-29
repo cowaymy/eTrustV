@@ -241,4 +241,35 @@ public class ReplenishmentServiceImpl extends EgovAbstractServiceImpl implements
 		}
 
 	}
+
+	@Override
+	public List<EgovMap> searchListMaster(Map<String, Object> params) {
+		return replenishment.searchListMaster(params);
+	}
+
+	@Override
+	public void relenishmentSaveMsCt(Map<String, Object> params, int userId) {
+		List<Object> insList = (List<Object>) params.get("add");
+		List<Object> updList = (List<Object>) params.get("update");
+		if (insList.size() > 0) {
+			for (int i = 0; i < insList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+				insMap.put("userid", userId);
+				replenishment.relenishmentSaveMsCt(insMap);
+			}
+		}
+
+		if (updList.size() > 0) {
+			for (int i = 0; i < updList.size(); i++) {
+				Map<String, Object> updMap = (Map<String, Object>) updList.get(i);
+				updMap.put("userid", userId);
+				replenishment.relenishmentSaveMsCt(updMap);
+			}
+		}
+	}
+
+	@Override
+	public List<EgovMap> searchListMasterDsc(Map<String, Object> params) {
+		return replenishment.searchListMasterDsc(params);
+	}
 }
