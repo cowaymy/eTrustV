@@ -1,6 +1,10 @@
 package com.coway.trust.web.sales.order;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -31,6 +35,7 @@ import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.OrderRequestService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -48,6 +53,9 @@ public class OrderRegisterController {
 	
 	@Resource(name = "orderRegisterService")
 	private OrderRegisterService orderRegisterService;
+	
+	@Resource(name = "orderRequestService")
+	private OrderRequestService orderRequestService;
 	
 	@Resource(name = "customerService")
 	private CustomerService customerService;
@@ -319,6 +327,38 @@ public class OrderRegisterController {
 		orderRegisterService.registerOrder(orderVO, sessionVO, fileDto);
 		*/
 		orderRegisterService.registerOrder(orderVO, sessionVO);
+		
+		//Ex-Trade : 1
+		if(orderVO.getSalesOrderMVO().getExTrade() == 1 && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getBindingNo())) {
+			logger.debug("@#### Order Cancel START");
+			String nowDate = "";
+
+			Date date = new Date();
+			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault(Locale.Category.FORMAT));
+			nowDate = df.format(date);
+			
+			logger.debug("@#### nowDate:"+nowDate);
+			
+			Map<String, Object> cParam = new HashMap<String, Object>();
+			
+			cParam.put("salesOrdNo", orderVO.getSalesOrderMVO().getBindingNo());
+			
+			EgovMap rMap = orderRegisterService.selectOldOrderId(cParam);
+			
+			cParam.put("salesOrdId", String.valueOf(rMap.get("salesOrdId")));
+			cParam.put("cmbRequestor", "527");
+			cParam.put("dpCallLogDate", nowDate);
+			cParam.put("cmbReason", "1993");
+			cParam.put("txtRemark", "Auto Cancellation for Ex-Trade");
+			cParam.put("txtTotalAmount", "0");
+			cParam.put("txtPenaltyCharge", "0");
+			cParam.put("txtObPeriod", "0");
+			cParam.put("txtCurrentOutstanding", "0");
+			cParam.put("txtTotalUseMth", "0");
+			cParam.put("txtPenaltyAdj", "0");
+			
+			orderRequestService.requestCancelOrder(cParam, sessionVO);
+		}
 
 		String msg = "", appTypeName = "";
 		

@@ -1766,10 +1766,12 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         if(appTypeId == 66) {
         	EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
         	
-        	stsMap.put("stusCodeId", "RET");
-        	stsMap.put("isSync", SalesConstants.IS_FALSE);
-        	
-        	orderRequestMapper.updateRentalScheme(stsMap);
+        	if(stsMap != null) {
+            	stsMap.put("stusCodeId", "RET");
+            	stsMap.put("isSync", SalesConstants.IS_FALSE);
+            	
+            	orderRequestMapper.updateRentalScheme(stsMap);
+        	}
         }
         
         //INSERT ORDER LOG >> CANCELLATION CALL LOG

@@ -197,6 +197,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
+	public EgovMap selectOldOrderId(Map<String, Object> params) {
+		return orderRegisterMapper.selectOldOrderId((String)params.get("salesOrdNo"));
+	}
+	
+	@Override
 	public EgovMap checkOldOrderId(Map<String, Object> params) {
 				
 		int getOldOrderID = 0;
@@ -814,7 +819,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         int statusCodeId = 1;
         //DateTime CallDate = ((DateTime)dpPreferInstDate.SelectedDate).AddDays(-1);
         String callDate = installDate;
-        
+        logger.debug("@#### callDate:"+callDate);
         //APP TYPE = SERVICES
         if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
         	statusCodeId = 20;
@@ -822,6 +827,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         else {
         	callDate = CommonUtils.getAddDay(callDate, -1, SalesConstants.DEFAULT_DATE_FORMAT1);
         }
+        
+        logger.debug("@#### callDate2:"+callDate);
         
 //      callDate = CommonUtils.changeFormat(callDate, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2);
         
