@@ -1348,7 +1348,7 @@ function fn_productGroup_SelectedIndexChanged(){
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
-        <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
+        <input type="text" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
         <input type="text" title="" placeholder="" class=""  id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
    
         </td>
