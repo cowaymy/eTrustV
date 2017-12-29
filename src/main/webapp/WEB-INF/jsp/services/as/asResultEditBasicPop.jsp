@@ -123,10 +123,11 @@ function  fn_setSVC0004dInfo(result){
         $("#ddlErrorDesc option").remove();
         doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
     }
-   
     
-    $("#ddlCTCode").val( result[0].c12); 
+    
+    $("#ddlCTCodeText").val( result[0].c12); 
     $("#CTID").val( result[0].c11); 
+    $("#ddlCTCode").val( result[0].c11);
     
     $("#ddlWarehouse").val( result[0].asWhId); 
     $("#txtRemark").val( result[0].asResultRem); 
@@ -1093,8 +1094,8 @@ function fn_chSeriaNo(){
         <td>
         
         
-         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
-         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' />
+         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  />
          
          <!--   <select   id='ddlCTCode' name='ddlCTCode' class="readonly"  disabled="disabled" > -->
          <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>

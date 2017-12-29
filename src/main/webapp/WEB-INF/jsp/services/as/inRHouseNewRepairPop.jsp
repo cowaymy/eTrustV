@@ -1357,7 +1357,7 @@ function fn_productGroup_SelectedIndexChanged(){
         <th scope="row">Error Description <span class="must">*</span> </th>
         <td>
         <select id='ddlErrorDesc' name='ddlErrorDesc'> </select>
-
+   
         </td>
         <th scope="row">Warehouse</th>  
         <td>

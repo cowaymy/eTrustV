@@ -149,8 +149,8 @@ function  fn_setSVC0004dInfo(result){
     
     
     
-   // $("#ddlCTCode").val( result[0].c12); 
-    //$("#CTID").val( result[0].c11);
+    $("#ddlCTCodeText").val( result[0].c12); 
+    $("#ddlCTCode").val( result[0].c11);
     
     $("#ddlWarehouse").val( result[0].asWhId); 
     $("#txtRemark").val( result[0].asResultRem); 
@@ -962,12 +962,14 @@ function  fn_setSaveFormData(){
 	        <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
 	         </select> 
          -->
+         <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' />
+         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText' />
         
+        <!-- 
          <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
          <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+         -->
          
-         
-   
         </td>
     </tr>
     <tr>
