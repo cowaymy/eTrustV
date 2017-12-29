@@ -286,7 +286,7 @@
     
    <select id="selectSurveyEventDisplayInfoList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        SELECT (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=2718)AS EVT_TYPE_ID, A.EVT_TYPE_DESC, B.MEM_CODE, A.EVT_DT, A.EVT_COMP_RQST_DATE, A.EVT_COMP_RATE, A.EVT_ID
+        SELECT (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=2718)AS EVT_TYPE_ID, A.EVT_TYPE_DESC, B.MEM_CODE, A.EVT_DT, TO_CHAR(A.EVT_COMP_RQST_DATE, 'YYYY/MM/DD') AS EVT_COMP_RQST_DATE, A.EVT_COMP_RATE, A.EVT_ID
         FROM CCR0012M A, ORG0001D B, SYS0013M C
         WHERE A.EVT_TYPE_ID = 2718
         AND A.EVT_MEM_ID = B.MEM_ID
@@ -317,6 +317,35 @@
     </select>
     
     
+    <update id="udtSurveyEventInfo" parameterType="Map">
+        <selectKey keyProperty="evtId" resultType="Integer" order="BEFORE">
+            SELECT EVT_ID FROM CCR0012M WHERE EVT_ID = #{evtId}
+        </selectKey>
+		UPDATE CCR0012M
+		SET 
+		    EVT_COMP_RQST_DATE = TO_DATE(#{evtCompRqstDate}, 'YYYY/MM/DD')
+            , EVT_COMP_RATE = #{evtCompRate}
+		WHERE EVT_ID = #{evtId}
+	</update>
+	
+ 	<update id="udtSurveyEventQuestion" parameterType="Map">
+        UPDATE CCR0003M
+        SET 
+            HC_DEF_DESC = #{hcDefDesc}
+        WHERE HC_DEF_ID = #{hcDefId}
+    </update>
+    
+    <delete id="deleteSurveyEventTarget" parameterType="Map">
+	   DELETE FROM CCR0013M WHERE EVT_CONT_ID = #{evtContId}
+	</delete>
+	
+	<delete id="deleteSurveyEventQuestion" parameterType="Map">
+       DELETE FROM CCR0003M WHERE HC_DEF_ID = #{hcDefId}
+    </delete>
+    
+    <delete id="deleteSurveyEventAns" parameterType="Map">
+       DELETE FROM CCR0004M WHERE HC_DEF_ID = #{hcDefId}
+    </delete>
 
    
 </mapper>

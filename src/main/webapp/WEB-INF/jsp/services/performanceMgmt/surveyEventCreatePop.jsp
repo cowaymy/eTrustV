@@ -103,7 +103,7 @@ $(document).ready(function(){
   // 파일 선택하기
      $('#fileSelector').on('change', function(evt) {
          if (!checkHTML5Brower()) {
-             alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
+             //alert("브라우저가 HTML5 를 지원하지 않습니다.\r\n서버로 업로드해서 해결하십시오.");
              return;
          } else {
              var data = null;
@@ -287,6 +287,7 @@ function fn_saveGridData_create(){
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             $("#search").trigger("click");
             Common.alert("<spring:message code='sys.msg.success'/>");
+            $("#popClose").click(); 
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -306,6 +307,7 @@ function fn_saveGridData_create(){
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             $("#search").trigger("click");
             Common.alert("<spring:message code='sys.msg.success'/>");
+            $("#popClose").click(); 
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -590,7 +592,7 @@ function createAUIGrid(jsonData) {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Survey Event Create</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

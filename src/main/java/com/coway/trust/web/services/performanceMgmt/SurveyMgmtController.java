@@ -224,5 +224,29 @@ public class SurveyMgmtController {
 		return "services/performanceMgmt/surveyEventEditPop";
 	}
 	
+	@RequestMapping(value = "/saveEditedSurveyEventTarget.do", method = RequestMethod.POST)
+	public  ResponseEntity<ReturnMessage> saveEditedSurveyEventTarget(@RequestBody Map<String, Map<String, ArrayList<Object>>> params, Model model) {
+
+		String dt = CommonUtils.getNowDate();	
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = "";
+		if(sessionVO==null){
+			loginId="1000000000";			
+		}else{
+			loginId=String.valueOf(sessionVO.getUserId());
+		}
+		
+		LOGGER.debug("Edited params ======================================================={}", params);
+		
+		surveyMgmtService.addEditedSurveyEventTarget(params, loginId);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		return ResponseEntity.ok(message);
+	}
+	
 
 }

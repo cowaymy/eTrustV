@@ -39,6 +39,17 @@ public interface SurveyMgmtMapper {
 	
 	List<EgovMap> selectSurveyEventDisplayTargetList(Map<String, Object> params) throws Exception;
 	
+	
+	
+	int udtSurveyEventInfo(Map<String, Object> params);
+	
+	int udtSurveyEventQuestion(Map<String, Object> params);
+	
+	int deleteSurveyEventTarget(Map<String, Object> params);
+	
+	int deleteSurveyEventQuestion(Map<String, Object> params);
+	
+	int deleteSurveyEventAns(Map<String, Object> params);
 
 
 }

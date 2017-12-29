@@ -6,6 +6,7 @@ var myGridID_InfoEdit;
 var myGridID_QEdit;
 var myGridID_TargetEdit;
 
+
 var columnLayout_infoEdit=[             
  {dataField:"evtTypeId", headerText:'Event Type', width: 130, editable : false},
  {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : false},
@@ -107,6 +108,7 @@ $(document).ready(function(){
     	console.log("성공.");
     	console.log("data : "+ result);
     	AUIGrid.setGridData(myGridID_InfoEdit,result);
+
     });  
     
      Common.ajax("GET","/services/performanceMgmt/selectSurveyEventDisplayQList",$("#listEditForm").serialize(),function(result) {
@@ -121,6 +123,7 @@ $(document).ready(function(){
         AUIGrid.setGridData(myGridID_TargetEdit,result);
     });   
     
+
     
     fn_getCodeSearch('');
     
@@ -136,23 +139,20 @@ $(document).ready(function(){
        var item_targetEdit = { "salesOrdNo" :  "", "name" : "", "contNo" : "", "callMem" : ""}; //row 추가
        AUIGrid.addRow(myGridID_TargetEdit, item_targetEdit, "last");
        
-       //var rowCount22 = AUIGrid.getRowCount(myGridID_Target);
-       //alert("rowCount"+rowCount22);
    });
+    
     
     
     //save
     $("#save_edit").click(function() {
+    	
         if (validation_infoEdit()) {
             var rowCount_t = AUIGrid.getRowCount(myGridID_TargetEdit);
             
             if(rowCount_t > 0) {
                 
-                var salesOrdNo= AUIGrid.getColumnValues(myGridID_TargetEdit, "salesOrdNo");
-                //alert("salesOrdNo"+salesOrdNo);
-                var addList_t = AUIGrid.getColumnValues(myGridID_TargetEdit, "salesOrdNo");
-                //alert("addList_t"+addList_t);
-                salesOrderListLength = addList_t.length;
+            	var salesOrdNo = AUIGrid.getColumnValues(myGridID_TargetEdit, "salesOrdNo");
+                salesOrderListLength = rowCount_t;
                 nullCount = 0;
                 notNullCount = 0;
                 duplicatedCount = 0;
@@ -160,16 +160,17 @@ $(document).ready(function(){
                 var i = 0;
                 var j = 0;
                 
-                for ( i; i < addList_t.length; i++) {
-                    var v_salesOrdNo = addList_t[i].salesOrdNo;
-                    if(v_salesOrdNo != ""){
+                //for ( i; i < addList_t.length; i++) {
+                for (i; i < salesOrderListLength; i++){
+                    //var v_salesOrdNo = addList_t[i].salesOrdNo;
+                    var v_salesOrdNo = salesOrdNo[i];
+                    if(v_salesOrdNo != "" && typeof v_salesOrdNo != 'undefined'){
                         notNullCount ++;
                         if (i == 0){
                             duplicationChkList[0] = v_salesOrdNo;
                         }
                         //duplication Check
                         for(j; j < i; j++){
-
                             if(duplicationChkList[j] != v_salesOrdNo){
                                 duplicationChkList[i] = v_salesOrdNo;
                             }else{
@@ -177,16 +178,15 @@ $(document).ready(function(){
                                 break;
                             }
                         }
-                    }else if(v_salesOrdNo == ""){
+                    }else if(v_salesOrdNo == "" || typeof v_salesOrdNo == 'undefined'){
                         nullCount ++;
                     }
                 } 
                 Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
                     if((nullCount == 0 && notNullCount != (result.length+duplicatedCount)) || (nullCount == 0 && result.length == 0)){
-                        result = false;
+                    	result = false;
                         Common.alert("'Sales Order' is a wrong Order Number.");
                     } else if(notNullCount != salesOrderListLength && nullCount != salesOrderListLength){
-
                         result = false;
                         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Sales Order' htmlEscape='false'/>");
                     } else {
@@ -212,7 +212,7 @@ function removeRow_qEdit(){
         return;
     }
     AUIGrid.removeRow(myGridID_QEdit, "selectedIndex");
-    AUIGrid.removeSoftRows(myGridID_QEdit);
+    //AUIGrid.removeSoftRows(myGridID_QEdit);
 }
 
 function removeRow_targetEdit(){
@@ -222,7 +222,7 @@ function removeRow_targetEdit(){
         return;
     }
     AUIGrid.removeRow(myGridID_TargetEdit, "selectedIndex");
-    AUIGrid.removeSoftRows(myGridID_TargetEdit);
+    //AUIGrid.removeSoftRows(myGridID_TargetEdit);
 }
 
 /* function auiRemoveRowHandler(){
@@ -246,19 +246,20 @@ function fn_saveGridData_edit(){
     
     
     var params = {
-            aGrid : GridCommon.getEditData(myGridID_InfoEdit),
+            aGrid : GridCommon.getGridData(myGridID_InfoEdit),
             bGrid : GridCommon.getEditData(myGridID_TargetEdit),
             cGrid : GridCommon.getEditData(myGridID_QEdit)
     };
     
     
     //if(rowCount_target > 0 || rowCount_q > 0) {
-/*         Common.ajax("POST", "/services/performanceMgmt/saveEditedSurveyEventTarget.do", params, 
+        Common.ajax("POST", "/services/performanceMgmt/saveEditedSurveyEventTarget.do", params, 
         function(result) {
             // 공통 메세지 영역에 메세지 표시.
             Common.setMsg("<spring:message code='sys.msg.success'/>");
             $("#search").trigger("click");
             Common.alert("<spring:message code='sys.msg.success'/>");
+            $("#popClose").click(); 
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -269,27 +270,9 @@ function fn_saveGridData_edit(){
                 console.log(e);
             }
             Common.alert("Fail : " + jqXHR.responseJSON.message);             
-        }); */
+        }); 
         
-    //}/*Info grid 값만 저장하고 싶다면 saveSurveyEventCreate.do를 실행*/
-/*     else{
-        Common.ajax("POST", "/services/performanceMgmt/saveEditedSurveyEventCreate.do", GridCommon.getEditData(myGridID_InfoEdit), function(result) {
-            // 공통 메세지 영역에 메세지 표시.
-            Common.setMsg("<spring:message code='sys.msg.success'/>");
-            $("#search").trigger("click");
-            Common.alert("<spring:message code='sys.msg.success'/>");
-        }, function(jqXHR, textStatus, errorThrown) {
-            try {
-                console.log("status : " + jqXHR.status);
-                console.log("code : " + jqXHR.responseJSON.code);
-                console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-            } catch (e) {
-                console.log(e);
-            }
-            Common.alert("Fail : " + jqXHR.responseJSON.message);             
-        });
-    } */
+    //}
     
 } 
 
@@ -306,11 +289,7 @@ function validation_infoEdit() {
     var validation_target = AUIGrid.getRowCount(myGridID_TargetEdit);
     
     
-/*     if (addList_q.length == 0 && addList_target.length == 0 ) {
-    	Common.alert("<spring:message code='sys.common.alert.noChange'/>");
-    	return false;
-    }
-     */
+
     //Questionnaires validation 
     if(validation_q > 0) {
          if(!validationCom_qEdit(addList_q)){
@@ -431,7 +410,7 @@ function validationCom_targetEdit(list){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Survey Event Edit</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -442,6 +421,7 @@ function validationCom_targetEdit(list){
     <input type="hidden" id="popMemCodeVeiw" name="popMemCodeVeiw" /> 
     <input type="hidden" id="popEvtDtView" name="popEvtDtView" /> 
     <input type="hidden" id="popEvtIdView" name="popEvtIdView" /> 
+    <input type="hidden" id="popEvtCompRqstDate" name="popEvtCompRqstDate"/>
     
     <input type="hidden" id="popHcDefIdView" name="popHcDefIdView" /> 
     <input type="hidden" id="popEvtContIdView" name="popEvtContIdView" /> 
