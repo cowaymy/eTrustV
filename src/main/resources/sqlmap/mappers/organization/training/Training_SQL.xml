@@ -300,6 +300,7 @@ VALUES      ( #{coursId},
               SYSDATE, 
               #{coursLimit}, 
               SYSDATE, 
+              #{userId},
               #{generalCode},
               #{memType},
               #{attendance} ) 
@@ -539,17 +540,18 @@ SELECT A.COURS_CODE,
         <if test="coursStart != null and coursStart != ''">
         AND A.COURS_START <![CDATA[ > ]]> TO_DATE(#{coursStart}, 'dd/mm/yyyy') 
         </if>
-        <if test="memberId != null and memberId != ''">
+        <if test="memberCode != null and memberCode != ''">
         AND E.COURS_MEM_ID = #{memberId}
         </if>
 </select>
 
 <select id="selectMemInfo" parameterType="Map" resultType="egovMap">
-/* trainingMapper.selectCourseRequestList */
+/* trainingMapper.selectMemInfo */
     SELECT MEM_ID 
 	         , MEM_TYPE
 	         , NAME
 	         , NRIC
+	         , MEM_CODE
       FROM ORG0001D 
     WHERE MEM_CODE = #{userId}
 </select>
