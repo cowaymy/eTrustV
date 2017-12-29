@@ -1704,7 +1704,7 @@ public class ServiceApiController {
 		String smsString = ("Do you really want to cancel for the current month Heart Service? " + "\n" + " HS Order Number :" + params.get("serviceNo")
 		+  "\n" + " Cancel Request Number :" + cancReqNo );
 
-		sms.setMessage(URLEncoder.encode(smsString , StandardCharsets.UTF_8.name()));
+		sms.setMessage(smsString);
 		sms.setMobiles((String)canCelSmsForm.getReceiverTelNo());  
 
 		LOGGER.debug("  : {}" , smsString);
