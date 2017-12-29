@@ -45,7 +45,7 @@ var gPlanId = "";
 var gWeekThValue ="";
 var gplanDtlId = "";  // seq
 var gplanMasterId = "";
-var insertVisibleFields = ["scmGrYear","scmGrWeek","preM3AvgOrded","preM3AvgIssu","newStockCode","m1Ord", "m2Ord"  ,"m3Ord" ,"m33" ,"m22",  "m11" ,"m0Plan"  ,"m0Ord" ] ;
+var insertVisibleFields = ["scmGrYear","scmGrWeek","preM3AvgOrded","preM3AvgIssu","newStockTypeId","newStockCode","m1Ord", "m2Ord"  ,"m3Ord" ,"m33" ,"m22",  "m11" ,"m0Plan"  ,"m0Ord" ] ;
 var gAddrowCnt = 0;
 
 $(function() 
@@ -701,6 +701,7 @@ function fnInsertAddRow(Obj)
   
   item.preM3AvgOrded   ="" ;
   item.preM3AvgIssu    ="" ;
+  item.newStockTypeId  = "";
   item.newStockCode    = "";
   
   item.m1Ord          ="0" ;   /* default 0 */
@@ -1084,7 +1085,7 @@ function fnSettiingHeader()
 	                  independentAllCheckBox : false,  
 	                  rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
 	                  {
-	                    if(item.checkFlag == "0") { // 이름이 Anna 인 경우 사용자 체크 못하게 함.
+	                    if(item.checkFlag == 4) { //Confirm
 	                       return false; // false 반환하면 disabled 처리됨
 	                     }
 	                     return true;
@@ -1218,6 +1219,14 @@ function fnSettiingHeader()
 		                                                    , {                            
 		                                                        dataField : "preM3AvgIssu"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.preM3AvgIssu' />"
+		                                                        ,editable : true
+		                                                        ,width : "13%"
+		                                                        ,visible: false
+		                                                        ,style : "my-editable" 
+		                                                      }  
+		                                                    , {                            
+		                                                        dataField : "newStockTypeId"
+		                                                        ,headerText : "NEW_STOCK_TYPE_ID"
 		                                                        ,editable : true
 		                                                        ,width : "13%"
 		                                                        ,visible: false
@@ -1864,6 +1873,7 @@ function fnValidationCheck(params)
 	   {  
 	      var newStockCode      = addList[i].newStockCode;  
 	      var team              = addList[i].team;
+	      var newStkTypeId      = addList[i].newStockTypeId;
 
 	      if (newStockCode == "" || newStockCode.length == 0) 
 	      {
@@ -1873,11 +1883,20 @@ function fnValidationCheck(params)
 	        break;
 	      }
 
-	      if (fnSelectStockIdByStCode(newStockCode).length == 0 )
+	      if (newStkTypeId == "" || newStkTypeId.length == 0) 
+	      {
+	        result = false;
+	        // {0} is required.
+	        Common.alert("<spring:message code='sys.msg.necessary' arguments='NEW_STOCK_TYPE_ID' htmlEscape='false'/>");
+	        break;
+	      }
+	      //여기
+
+	      if (fnSelectStockIdByStCode(newStockCode, newStkTypeId).length == 0 )
 	      {
 	          result = false;
 	          // {0} is required.
-	          Common.alert("<spring:message code='sys.msg.necessary' arguments='Corrected STOCK_CODE' htmlEscape='false'/>");
+	          Common.alert("<spring:message code='sys.msg.necessary' arguments='Corrected STOCK_CODE or STOCK_TYPE_ID' htmlEscape='false'/>");
 	          break;
 	      }
 	      
@@ -1943,12 +1962,14 @@ String.prototype.fnTrim = function()
     return this.replace(/(^\s*)|(\s*$)/gi, "");
 }
 
-function fnSelectStockIdByStCode(paramStockCode)
+function fnSelectStockIdByStCode(paramStockCode, paramStockTypeId)
 {
 	var stkId = "";
 	
    Common.ajaxSync("GET", "/scm/selectStockIdByStCode.do"
-           , {newStockCode : paramStockCode}
+           , {  newStockCode   : paramStockCode
+              , newStockTypeId : paramStockTypeId
+             }
            , function(result) 
            {
               console.log("fnSelectStockIdByStCode_Length : " + result.selectStockIdByStCode.length);
