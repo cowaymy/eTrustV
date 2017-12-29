@@ -317,7 +317,9 @@
                                     AND Extent5.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
                                 </when>
                                 <when test="memberLevel == 4">
+                                    <if test="code == null or code == ''">
                                     AND Extent1.MEM_CODE = #{userName}
+                                    </if>
                                 </when>
                         </choose>                                                                                                
                   <![CDATA[
