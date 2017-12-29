@@ -281,6 +281,14 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 
 		orderModifyMapper.updatePaymentChannel(rentPaySetVO);
+		
+		SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
+		
+		salesOrderMVO.setSalesOrdId(Long.parseLong((String)params.get("salesOrdId")));		
+		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+		salesOrderMVO.setEcash(rentPaySetVO.getModeId() == 131 ? 1 : 0);
+		
+		orderModifyMapper.updateECashInfo(salesOrderMVO);
 	}
 	
 	private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO) throws ParseException {

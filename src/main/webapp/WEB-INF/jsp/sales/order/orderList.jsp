@@ -159,7 +159,7 @@
             
             if(selIdx > -1) {
                 $('#_ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
-                Common.popupWin("frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+                Common.popupWin("_frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
             }
             else {
                 Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
@@ -170,7 +170,7 @@
 
             if(selIdx > -1) {
                 $('#_ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
-                Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+                Common.popupWin("_frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
             }
             else {
                 Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
@@ -452,7 +452,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <!-- Ledger Form -->
-<form id="frmLedger" name="frmLedger" action="#" method="post">
+<form id="_frmLedger" name="frmLedger" action="#" method="post">
     <input id="_ordId" name="ordId" type="hidden" value="" />
 </form>
 <!-- report Form -->

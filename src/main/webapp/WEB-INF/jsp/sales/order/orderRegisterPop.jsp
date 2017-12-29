@@ -1331,16 +1331,16 @@
         // accClaimAdtVO
         //----------------------------------------------------------------------
         var vAccNo = "", vAccName = "", vIssueBankID = 0, vAdtPayMode = "REG";
-        var vECash = 1;
+        var vECash = 0;
         
         if($('#rentPayMode').val() == '130') {
             vAdtPayMode = "REG";
-            vECash = 0;
         }
         else if($('#rentPayMode').val() == '131') {
             vAccNo = $('#hiddenRentPayCRCId').val().trim();
             vAccName = $('#rentPayCRCName').val().trim();
             vAdtPayMode = "CRC";
+            vECash = 1;
         }
         else if($('#rentPayMode').val() == '132') {
             vAccNo = $('#hiddenRentPayBankAccID').val().trim();

@@ -541,5 +541,13 @@
 		     , ATCH_FILE_GRP_ID       = #{atchFileGrpId}
 		 WHERE EURC_ID                = #{eurcId}
     </update>
-    
+
+    <update id="updateECashInfo" parameterType="salesOrderMVO">
+		UPDATE SAL0001D
+		   SET UPD_DT       = SYSDATE
+		     , UPD_USER_ID  = #{updUserId}
+		     , ECASH        = #{ecash}
+		 WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
 </mapper>
