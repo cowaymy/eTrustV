@@ -51,11 +51,11 @@ public interface PosService {
 	
 	List<EgovMap> getPurchMemList(Map<String, Object> params)throws Exception;
 	
-	void  updatePosMStatus (PosGridVO pgvo) throws Exception;
+	void  updatePosMStatus (PosGridVO pgvo, int userId) throws Exception;
 	
-	void  updatePosDStatus (PosGridVO pgvo) throws Exception;
+	void  updatePosDStatus (PosGridVO pgvo, int userId) throws Exception;
 	
-	void updatePosMemStatus(PosGridVO pgvo) throws Exception;
+	void updatePosMemStatus(PosGridVO pgvo, int userId) throws Exception;
 	
 	/*EgovMap chkPosType(Map<String, Object> params) throws Exception;*/
 	
@@ -72,4 +72,6 @@ public interface PosService {
 	EgovMap posReversalPayDetail(Map<String, Object> params)throws Exception;
 	
 	List<EgovMap> getPayDetailList(Map<String, Object> params) throws Exception;
+	
+	void insertTransactionLog(Map<String, Object> params)throws Exception;
 }

@@ -183,19 +183,18 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			
 		}
 		
-/*		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
-			
-			LOGGER.info("########################### deducSize : " + deducSize);
-			
-			tempTotalAmt = tempTotalAmt.multiply(deducSize);
-			tempTotalTax = tempTotalTax.multiply(deducSize);
-			tempTotalCharge = tempTotalCharge.multiply(deducSize);
-		}*/
-		
 
 		double rtnAmt = tempTotalAmt.doubleValue();
 		double rtnTax = tempTotalTax.doubleValue();
 		double rtnCharge = tempTotalCharge.doubleValue();
+		
+		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
+			
+			rtnAmt = rtnAmt *memGird.size();
+			rtnTax = rtnTax*memGird.size();
+			rtnCharge = rtnCharge*memGird.size();
+			
+		}
 		
 		
 		LOGGER.info("_____________________________________________________________________________________");
@@ -833,20 +832,21 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           	//10.  ********************************************************************************************************* BOOKING 
 
         
-    		/*Map<String, Object>  logPram = new HashMap<String, Object>();
+    		Map<String, Object>  logPram = new HashMap<String, Object>();
     		
     		logPram.put("psno", docNoPsn);
-    		logPram.put("retype", "POS");  
+    		logPram.put("retype", "REQ");  
     		logPram.put("pType", "PS01");   // PS02 - cancel
-    		logPram.put("pPrgNm", "PSR");  
+    		//logPram.put("pPrgNm", "PSR");  
     		logPram.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));   
     		
     		LOGGER.info("############### 10. POS BOOKING  START  ################");
     		LOGGER.info("#########  call Procedure Params : " + logPram.toString());
-    		posMapper.posBookingCallSP_LOGISTIC_REQUEST(logPram);
-    		LOGGER.debug("############ Procedure Result  ");
-    		LOGGER.info("############### 10. POS BOOKING  END  ################");*/
-            
+    		posMapper.posBookingCallSP_LOGISTIC_POS(logPram);
+    		String reqResult  = 	String.valueOf(logPram.get("p1"));
+    		LOGGER.debug("############ Procedure Result :  " + reqResult);
+    		LOGGER.info("############### 10. POS BOOKING  END  ################");
+            //
             
             LOGGER.info("################################## return value(docNoPsn): "  + docNoPsn);
             
@@ -912,6 +912,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			int ordVoidSubSeq = 0;
 			int stkSeq = 0;
 			
+			String giResult = "";
+			String reqResult = "";
 			
 			/*################################### Get Doc No #############################*/
 					
@@ -1498,12 +1500,63 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       			}
       		}// Pay Reverse
       		
+      	    //18.  ********************************************************************************************************* GI Reverse
       		
-      	EgovMap rtnMap = new EgovMap();
-      	rtnMap.put("posRefNo", posRefNo);
-      	rtnMap.put("posWorNo", rorNo);
+      		//Request
+      		Map<String, Object> bookMap = new HashMap<String, Object>();
+    		
+      		bookMap.put("psno", posRefNo);
+      		bookMap.put("retype", "REQ");  
+      		bookMap.put("pType", "PS02");   // PS02 - cancel
+    		//logPram.put("pPrgNm", "PSR");  
+      		bookMap.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));   
+    		
+    		LOGGER.info("############### 18. POS Booking Reverse  START  ################");
+    		LOGGER.info("#########  call Procedure Params : " + bookMap.toString());
+    		posMapper.posBookingCallSP_LOGISTIC_POS(bookMap);
+    		reqResult = String.valueOf(bookMap.get("p1"));
+    		LOGGER.debug("############ Procedure Result :  " + reqResult);
+    		LOGGER.info("############### 18. POS Booking Reverse  END  ################");
+      		
+    		if(!"000".equals(reqResult)){  //Err
+    			return null;
+    		}
+    		  
+      			
+			//GetDetailList
+			List<EgovMap> revDetList = null;
+			bookMap.put("rcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE);
+			revDetList = posMapper.getPosItmIdListByPosNo(bookMap);
+			
+			for (int idx = 0; idx < revDetList.size(); idx++) {
+        		
+				//GI Call Procedure
+				Map<String, Object> giMap = new HashMap<String, Object>();
+				
+				giMap.put("psno", posRefNo);
+				giMap.put("retype", "COM");
+				giMap.put("pType", "PS01");
+				giMap.put("posItmId", revDetList.get(idx).get("posItmId"));
+				giMap.put("userId", params.get("userId"));
+				
+				LOGGER.info("############### 19. POS GI Reverse  START  ################");
+				LOGGER.info("#########  call Procedure Params : " + giMap.toString());
+				posMapper.posGICallSP_LOGISTIC_POS(giMap);
+				giResult = 	String.valueOf(giMap.get("p1"));
+				LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + giResult);
+				LOGGER.info("############### 19. POS GI Reverse  END  ################");
+				
+				if(!"000".equals(giResult)){  //Err
+					return null;
+				}
+			}
+    		
+			//Success
+    		EgovMap rtnMap = new EgovMap();
+  	      	rtnMap.put("posRefNo", posRefNo);
+  	      	rtnMap.put("posWorNo", rorNo);
+  			return rtnMap;
       	
-		return rtnMap;
 	}
 
 	@Override
@@ -1514,7 +1567,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
 	@Override
 	@Transactional
-	public void updatePosMStatus(PosGridVO pgvo) throws Exception {
+	public void updatePosMStatus(PosGridVO pgvo, int userId) throws Exception {
 		
 		GridDataSet<PosMasterVO> posMGridDataSetList = pgvo.getPosStatusDataSetList();
 		
@@ -1525,19 +1578,50 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			
 			//Update Pos Master
 			posMapper.updatePosMStatus(pvo);
-		
+			
+			//Get Pos Detail List
+			List<EgovMap> detInfoList = null;
+			Map<String, Object> detMap = new HashMap<String, Object>();
+			detMap.put("posId", pvo.getPosId());
+			detMap.put("rcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE);
+			
+			detInfoList = posMapper.getDetailInfoList(detMap);
+			if(detInfoList != null && detInfoList.size() > 0){
+				
+				//GI Call Procedure
+				for (int idx = 0; idx < detInfoList.size(); idx++) {
+					
+					Map<String, Object> giMap = new HashMap<String, Object>();
+					
+					giMap.put("psno", pvo.getPosNo());
+					giMap.put("retype", "COM");
+					giMap.put("pType", "PS01");
+					giMap.put("posItmId", detInfoList.get(idx).get("posItmId"));
+					giMap.put("userId", userId);
+					
+					LOGGER.info("##################################### Header Save Call Procedure (Status Change) : " + giMap.toString());
+					
+					posMapper.posGICallSP_LOGISTIC_POS(giMap);
+					
+					String rtnResult = 	String.valueOf(giMap.get("p1"));
+					
+					LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + rtnResult);
+					
+				}
+				
 			//Complete to Update Pos Detail  
 			if(pvo.getStusId() == SalesConstants.POS_SALES_STATUS_COMPLETE){  // to 4
 				pvo.setChangeStatus(SalesConstants.POS_DETAIL_RECEIVE); //to Detail Status  85
 				posMapper.updatePosDStatus(pvo);
 			}
-		}
+			}//Detail Condition
+		}//Main Loop
 	}
 	
 	
 	@Override
 	@Transactional
-	public void updatePosDStatus(PosGridVO pgvo) throws Exception {
+	public void updatePosDStatus(PosGridVO pgvo, int userId) throws Exception {
 		
 		GridDataSet<PosDetailVO> posDGridDataSetList = pgvo.getPosDetailStatusDataSetList();
 		
@@ -1547,6 +1631,25 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		for(PosDetailVO pdvo : updateList){
 			
 			posMapper.updatePosDStatusByPosItmId(pdvo);
+			
+			//GI Call Procedure
+			Map<String, Object> giMap = new HashMap<String, Object>();
+			EgovMap posNoMap = new EgovMap();
+			posNoMap = posMapper.getPosNobyPosId(pdvo);
+			
+			giMap.put("psno", posNoMap.get("posNo"));
+			giMap.put("retype", "COM");
+			giMap.put("pType", "PS01");
+			giMap.put("posItmId", pdvo.getPosItmId());
+			giMap.put("userId", userId);
+			
+			LOGGER.info("##################################### Detail Save Call Procedure (Status Change) : " + giMap.toString());
+			
+			posMapper.posGICallSP_LOGISTIC_POS(giMap);
+			
+			String rtnResult = 	String.valueOf(giMap.get("p1"));
+			
+			LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + rtnResult);
 			
 		}
 		
@@ -1587,7 +1690,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	}
 
 	@Override
-	public void updatePosMemStatus(PosGridVO pgvo) throws Exception {
+	public void updatePosMemStatus(PosGridVO pgvo, int userId) throws Exception {
 		
 		GridDataSet<PosMemberVO> posMemGridDataSetList = pgvo.getPosMemberStatusDataSetList();
 		
@@ -1597,6 +1700,32 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		for(PosMemberVO pdvo : updateList){
 			
 			posMapper.updatePosMemStatus(pdvo); //posId memId
+			
+			List<EgovMap> memDetList = null;
+			memDetList = posMapper.getPosItmIdListByPosIdAndMemId(pdvo);
+			
+			for (int idx = 0; idx < memDetList.size(); idx++) {
+				
+				//GI Call Procedure
+				Map<String, Object> giMap = new HashMap<String, Object>();
+				EgovMap posNoMap = new EgovMap();
+				posNoMap = posMapper.getPosNobyPosIdForMember(pdvo);
+				
+				giMap.put("psno", posNoMap.get("posNo"));
+				giMap.put("retype", "COM");
+				giMap.put("pType", "PS01");
+				giMap.put("posItmId", memDetList.get(idx).get("posItmId"));
+				giMap.put("userId", userId);
+				
+				LOGGER.info("##################################### Member Save Call Procedure (Status Change) : " + giMap.toString());
+				
+				posMapper.posGICallSP_LOGISTIC_POS(giMap);
+				
+				String rtnResult = 	String.valueOf(giMap.get("p1"));
+				
+				LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + rtnResult);
+				
+			}
 			
 		}
 		
@@ -1690,5 +1819,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		
 		return posMapper.getPayDetailList(params);
 	}
-	
+
+	@Override
+	public void insertTransactionLog(Map<String, Object> params) throws Exception {
+		
+		posMapper.insertTransactionLog(params);
+	}
 }

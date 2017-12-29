@@ -15,7 +15,10 @@ var optionSystem = {
         type: "M",                  
         isShowChoose: false  
 };
-
+var optionModuleChoose = {
+        type: "S",                  
+        isShowChoose: true  
+};
 //Grid in SelectBox  - Selcet value
 var arrPosStusCode; //POS GRID
 var arrItmStusCode;  //ITEM GRID
@@ -777,9 +780,89 @@ function fn_getPosListAjax(){
       
 }
 
+/*************   Repoort *************/
+
+function fn_posReceipt(){
+	
+	var clickChk = AUIGrid.getSelectedItems(posGridID);
+    //Validation
+    if(clickChk == null || clickChk.length <= 0 ){
+        Common.alert("* No Order Selected. ");
+        return;
+    }
+    
+    console.log("clickChk[0].item.posModuleTypeId : " + clickChk[0].item.posModuleTypeId);
+    
+    if(clickChk[0].item.posModuleTypeId == 2390){  //Pos Sales
+        
+    	fn_report(clickChk[0].item.posNo, clickChk[0].item.posTypeId);
+        
+    }else{
+    	Common.alert("<b>This POS No. is disallowed to print receipt.</b>");
+    	return;
+    }
+	
+}
+
+
+function fn_report(posNo, posTypeId){
+	
+	//insert Log
+	fn_insTransactionLog(posNo, posTypeId);
+	
+	var option = {
+            isProcedure : true 
+    };
+    
+	
+	//params Setting
+	$("#reportFileName").val("/sales/POSReceipt_New.rpt");
+	$("#viewType").val("PDF");
+	$("#V_POSREFNO").val(posNo);
+	$("#V_POSMODULETYPEID").val(posTypeId);
+	
+	Common.report("rptForm", option);
+}
+
+function fn_insTransactionLog(posNo, posTypeId){
+    var transacMap = {};
+    transacMap.rptChkPoint = "http://etrust.my.coway.com/sales/pos/selectPosList.do";
+    transacMap.rptModule = "POS";
+    transacMap.rptName = "POS Receipt";
+    transacMap.rptSubName = "POS Receipt - PDF";
+    transacMap.rptEtType = "pdf";
+    transacMap.rptPath = getContextPath()+"/sales/POSReceipt_New.rpt";
+    transacMap.rptParamtrValu = "@PosRefNo," + posNo + ";@POSModuleTypeID," + posTypeId;
+    transacMap.rptRem = "";
+    
+    Common.ajax("GET", "/sales/pos//insertTransactionLog", transacMap, function(result){
+    	if(result == null){
+    		Common.alert("<b>Failed to save into log file.</b>");
+    	}else{
+    		console.log("insert log : " + result.message);
+    	}
+    })
+		
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 </script>
+
+<form id="rptForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType"  /><!-- View Type  -->
+    <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+    
+    <!-- Receipt params -->
+    <input type="hidden" id="V_POSREFNO" name="V_POSREFNO" />
+    <input type="hidden" id="V_POSMODULETYPEID" name="V_POSMODULETYPEID" />
+    
+    <!--Raw Data  -->
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"/>
+    
+    <!--  -->
+</form>
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -884,7 +967,7 @@ function fn_getPosListAjax(){
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="link_btn"><a href="#" onclick="javascript : fn_underDevelop()">POS Receipt</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : fn_posReceipt()">POS Receipt</a></p></li>
         </c:if>
     </ul>
     <ul class="btns">
@@ -920,8 +1003,8 @@ function fn_getPosListAjax(){
 
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue2 big"><a id="_headerSaveBtn">Save</a></p></li>
     </c:if>
+    <li><p class="btn_blue2 big"><a id="_headerSaveBtn">Save</a></p></li>
 </ul>
 <!-- deduction Grid -->
 <div id="_deducGridDiv"> 
@@ -933,8 +1016,8 @@ function fn_getPosListAjax(){
 </article><!-- grid_wrap end -->
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue2 big"><a id="_deducSaveBtn">Save</a></p></li>
     </c:if>
+    <li><p class="btn_blue2 big"><a id="_deducSaveBtn">Save</a></p></li>
 </ul>
 </div>
 <!--item Grid  -->
@@ -948,8 +1031,8 @@ function fn_getPosListAjax(){
 
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue2 big"><a id="_itemSaveBtn">Save</a></p></li>
     </c:if>
+    <li><p class="btn_blue2 big"><a id="_itemSaveBtn">Save</a></p></li>
 </ul>
 </div>
 </section><!-- search_result end -->

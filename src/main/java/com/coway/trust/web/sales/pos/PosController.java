@@ -427,11 +427,11 @@ public class PosController {
 	
 	
 	@RequestMapping(value= "/updatePosMStatus" , method = RequestMethod.POST)				 
-	public ResponseEntity<ReturnMessage> updatePosMStatus (@RequestBody PosGridVO pgvo) throws Exception{
+	public ResponseEntity<ReturnMessage> updatePosMStatus (@RequestBody PosGridVO pgvo, SessionVO session) throws Exception{
 		
 		LOGGER.info("############################# pgvo : " + pgvo.toString());
 		
-		posService.updatePosMStatus(pgvo);
+		posService.updatePosMStatus(pgvo , Integer.parseInt(String.valueOf(session.getUserId())));
 		
 		//Return MSG
     	ReturnMessage message = new ReturnMessage();
@@ -444,11 +444,12 @@ public class PosController {
 	
 	
 	@RequestMapping(value= "/updatePosDStatus" , method = RequestMethod.POST)				 
-	public ResponseEntity<ReturnMessage> updatePosDStatus (@RequestBody PosGridVO pgvo) throws Exception{
+	public ResponseEntity<ReturnMessage> updatePosDStatus (@RequestBody PosGridVO pgvo, SessionVO session) throws Exception{
 		
 		LOGGER.info("############################# pgvo : " + pgvo.toString());
 		
-		posService.updatePosDStatus(pgvo);
+		int userId = session.getUserId();
+		posService.updatePosDStatus(pgvo, userId);
 		
 		//Return MSG
     	ReturnMessage message = new ReturnMessage();
@@ -461,11 +462,11 @@ public class PosController {
 	
 	
 	@RequestMapping(value= "/updatePosMemStatus" , method = RequestMethod.POST)				 
-	public ResponseEntity<ReturnMessage> updatePosMemStatus (@RequestBody PosGridVO pgvo) throws Exception{
+	public ResponseEntity<ReturnMessage> updatePosMemStatus (@RequestBody PosGridVO pgvo, SessionVO session) throws Exception{
 		
 		LOGGER.info("############################# pgvo : " + pgvo.toString());
-		
-		posService.updatePosMemStatus(pgvo);
+		int userId = session.getUserId();
+		posService.updatePosMemStatus(pgvo, userId);
 		
 		//Return MSG
     	ReturnMessage message = new ReturnMessage();
@@ -560,8 +561,31 @@ public class PosController {
 	
 	
 	@RequestMapping(value = "/posRawDataPop.do")
-	public String posRawDataPop (@RequestParam Map<String, Object> params) throws Exception{
+	public String posRawDataPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-7), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
+		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
+		
+		model.put("bfDay", bfDay);
+		model.put("toDay", toDay);
 		
 		return "sales/pos/posRawDataPop";
+	}
+	
+	
+	@RequestMapping(value = "/insertTransactionLog")
+	public ResponseEntity<ReturnMessage> insertTransactionLog(@RequestParam Map<String, Object> params, SessionVO session) throws Exception{
+		
+		params.put("userId", session.getUserId());
+		
+		posService.insertTransactionLog(params);
+		
+		//Return MSG
+    	ReturnMessage message = new ReturnMessage();
+    	
+        message.setCode(AppConstants.SUCCESS);
+    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	
+    	return ResponseEntity.ok(message);
 	}
 }

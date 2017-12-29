@@ -321,8 +321,16 @@ $(document).ready(function() {
 				    	var tempLength = 0;
 				    	tempLength = idxObj.inputQty - serialCnt;
 				    	for (var j = 0; j < tempLength; j++) {
-                            
-                            var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : '999999999999999', stkId : idxObj.stkId};
+				    		var result = Math.floor(Math.random() * 100) + 1;
+				    		if(result < 100 && result > 9){
+				    			result = 'abc000'+result + '0000000';
+				    		}else if(result > 99){
+				    			result = '000abc000'+result+'000';
+				    		}else{
+				    			result = '000000abc00000'+result;
+				    		}
+				    		console.log("random serial no : " + result);
+                            var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : result , stkId : idxObj.stkId};
 				    		
 				    		AUIGrid.addRow(serialConfirmGridID, addObj, 'first');
 						}
@@ -410,7 +418,8 @@ $(document).ready(function() {
 			
 			console.log("inputQty : " + inputQty);
 			console.log("times : " + times);
-			return inputQty*times;
+			//return inputQty*times;
+			return inputQty;
 		}
 	});
 	

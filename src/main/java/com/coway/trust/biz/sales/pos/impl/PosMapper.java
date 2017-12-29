@@ -154,7 +154,10 @@ public interface PosMapper {
 	
 	/**** call procedure ****/
 	
-	 Map<String, Object> posBookingCallSP_LOGISTIC_REQUEST(Map<String, Object> param);
+	 Map<String, Object> posBookingCallSP_LOGISTIC_POS(Map<String, Object> param);
+	 
+	 Map<String, Object> posGICallSP_LOGISTIC_POS(Map<String, Object> params);
+	 
 	
 	/***** payment ****/
 	 
@@ -203,4 +206,16 @@ public interface PosMapper {
 	void insertReAccGlRoute(Map<String, Object> params);
 	
 	List<EgovMap> getPayDetailList(Map<String, Object> params);
+	
+	void insertTransactionLog(Map<String, Object> params);
+	
+	List<EgovMap> getDetailInfoList(Map<String, Object> params);
+	
+	EgovMap getPosNobyPosId(PosDetailVO pdvo);
+	
+	List<EgovMap> getPosItmIdListByPosIdAndMemId(PosMemberVO pmvo);
+	
+	EgovMap getPosNobyPosIdForMember(PosMemberVO pmvo);
+	
+	List<EgovMap> getPosItmIdListByPosNo(Map<String, Object> params);
 }

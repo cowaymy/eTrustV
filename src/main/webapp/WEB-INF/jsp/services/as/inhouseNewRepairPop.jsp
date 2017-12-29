@@ -370,7 +370,7 @@ $.fn.clearForm = function() {
       
       
 <!-- asResultInfo info tab  start...-->
-<jsp:include page ='/services/as/asResultInfo.do'/>  
+<%-- <jsp:include page ='/services/as/asResultInfo.do'/>  --%> 
 <!-- asResultInfo info tab  end...-->  
       
   
