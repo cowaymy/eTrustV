@@ -1079,21 +1079,53 @@ function fn_myGridSetEvent() {
             var taxNonClmAmt = 0;
             if($("#invcType").val() == "S") {
                 if(event.dataField == "gstBeforAmt") {
-                    if(event.item.oriTaxAmt > 30) {
-                        taxAmt = 30;
-                        taxNonClmAmt = event.item.oriTaxAmt - 30;
-                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
-                        AUIGrid.setCellValue(myGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                	var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                    if(taxAmtCnt >= 30) {
+                        taxNonClmAmt = event.item.oriTaxAmt;
                     } else {
-                        taxAmt = event.item.oriTaxAmt;
-                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
-                        AUIGrid.setCellValue(myGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                        if(taxAmtCnt == 0) {
+                            if(event.item.oriTaxAmt > 30) {
+                                taxAmt = 30;
+                                taxNonClmAmt = event.item.oriTaxAmt - 30;
+                            } else {
+                                taxAmt = event.item.oriTaxAmt;
+                            }
+                        } else {
+                            if((taxAmtCnt + event.item.oriTaxAmt) > 30) {
+                                taxAmt = 30 - taxAmtCnt;
+                                if(event.item.oriTaxAmt > taxAmt) {
+                                    taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
+                                } else {
+                                    taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
+                                }
+                            } else {
+                                taxAmt = event.item.oriTaxAmt;
+                                taxNonClmAmt = 0;
+                            }
+                        }
                     }
+                    AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
+                    AUIGrid.setCellValue(myGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
                 }
                 if(event.dataField == "gstAmt") {
-                    if(event.value > 30) {
+                	if(event.value > 30) {
                         Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
-                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", 30);
+                        AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", event.oldValue);
+                    } else {
+                        var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                        if((taxAmtCnt + event.value) > 30) {
+                            Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+                            AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", event.oldValue);
+                        } else {
+                            taxAmt = event.value;
+                            if(event.item.oriTaxAmt > taxAmt) {
+                                taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
+                            } else {
+                                taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
+                            }
+                            AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
+                            AUIGrid.setCellValue(myGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                        }
                     }
                 }
             } else {
@@ -1117,6 +1149,23 @@ function fn_myGridSetEvent() {
             });
         }
   });
+}
+
+function fn_getTotTaxAmt(rowIndex) {
+    var taxAmtCnt = 0;
+    // 필터링이 된 경우 필터링 된 상태의 값만 원한다면 false 지정
+    var amtArr = AUIGrid.getColumnValues(myGridID, "gstAmt", true);
+    console.log(amtArr);
+    for(var i = 0; i < amtArr.length; i++) {
+        taxAmtCnt += amtArr[i];
+    }
+    // 0번째 행의 name 칼럼의 값 얻기
+    var value = AUIGrid.getCellValue(myGridID, rowIndex, "gstAmt");
+    console.log(taxAmtCnt);
+    console.log(value);
+    taxAmtCnt -= value;
+    console.log("taxAmtCnt : " + taxAmtCnt);
+    return taxAmtCnt;
 }
 </script>
 
