@@ -192,6 +192,7 @@ public class AdaptorServiceImpl implements AdaptorService {
 								.replaceAll("%7E", "~").replaceAll("%24", "$").replaceAll("%5E", "^")
 								.replaceAll("%5F", "_").replaceAll("%7B", "{").replaceAll("%7D", "}")
 								.replaceAll("%7C", "|").replaceAll("%5B", "[").replaceAll("%5D", "]")
+								.replaceAll("%3F", "?").replaceAll("%0A", "\n")
 						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&MsgID="
 						+ msgId;
 			} catch (UnsupportedEncodingException e) {
