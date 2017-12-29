@@ -257,15 +257,8 @@
             Common.ajax("GET", "/organization/selectOrgChartHpList.do", paramHpdata, function(result) {
                 
                 console.log("성공.");
-                console.log("myHpGridID selectOrgChartHpList data : " + JSON.stringify(result));
-                
-                if (result != null  ) {
-                    if ( result[0].memType == "1") {
-                    	AUIGrid.setGridData(myHpGridID, result);        
-                    }
-                }
-                
-                
+                console.log("data : " + result);
+                AUIGrid.setGridData(myHpGridID, result);
             });
     }            
             
@@ -336,14 +329,8 @@
            Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
                 
                 console.log("성공.");
-                console.log("myCtGridID selectOrgChartCdList data : " + JSON.stringify(result));
-                
-                if (result != null  ) {
-                    if ( result[0].memType == "3") {
-                    	AUIGrid.setGridData(myCtGridID, result);        
-                    }
-                }
-                
+                console.log("data : " + result);
+                AUIGrid.setGridData(myCtGridID, result);
             });        
         
         }
@@ -411,14 +398,8 @@
            Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
                 
                 console.log("성공.");
-                console.log("myCdGridID selectOrgChartCdList data : " + JSON.stringify(result));
-                
-                if (result != null  ) {
-                	if ( result[0].memType == "2") {
-                		AUIGrid.setGridData(myCdGridID, result);		
-                	}
-                }
-                
+                console.log("data : " + result);
+                AUIGrid.setGridData(myCdGridID, result);
             });        
         
         }
