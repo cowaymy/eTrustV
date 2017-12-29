@@ -291,7 +291,7 @@
 						<td>
 						      <input type="text" id="ordId_19T" name="ordId" style="width: 100px;" maxlength="10" onkeydown="onlyNumber(this)">
 						</td>
-						<th scope="row"><spring:message code='commission.text.bstPersonCd'/></th>
+						<th scope="row"><spring:message code='commission.text.bsPersonCd'/></th>
                         <td>
                               <input type="text" id="bsPersonCd_19T" name="bsPersonCd" style="width: 100px;" maxlength="10" >
                               <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>

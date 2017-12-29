@@ -104,7 +104,7 @@
 	       editable : false
 	   }, {
 	       dataField : "neoCnt",
-	       headerText : "<spring:message code='commission.text.grid.neoCnt'/>",
+	       headerText : "<spring:message code='commissiom.text.excel.neoCnt'/>",
 	       style : "my-column",
 	       editable : false
 	   },{

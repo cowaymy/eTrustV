@@ -109,7 +109,7 @@
             editable : false
         },{
 	        dataField : "emplyCode",
-	        headerText : "<spring:message code='commissiom.text.excel.instCode'/>",
+	        headerText : "<spring:message code='commission.text.grid.instCode'/>",
 	        style : "my-column",
 	        editable : false
 	    },{

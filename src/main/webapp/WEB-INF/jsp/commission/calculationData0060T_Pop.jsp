@@ -94,7 +94,7 @@
 	       editable : false
 	   }, {
 	       dataField : "orgTypeCode",
-	       headerText : "<spring:message code='commissiom.text.grid.orgType'/>",
+	       headerText : "<spring:message code='commission.text.grid.orgType'/>",
 	       style : "my-column",
 	       editable : false
 	   }, {

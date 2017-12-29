@@ -141,7 +141,7 @@
 	        editable : false
 	    },{
 	        dataField : "cAward",
-	        headerText : "<spring:message code='commissiom.text.excel.award'/>",
+	        headerText : "<spring:message code='commission.text.grid.award'/>",
 	        style : "my-column",
 	        width: 100,
 	        editable : false
@@ -153,7 +153,7 @@
 	        editable : false
 	    },{
 	        dataField : "cCriteria",
-	        headerText : "<spring:message code='commissiom.text.excel.criteria'/>",
+	        headerText : "<spring:message code='commission.text.grid.criteria'/>",
 	        style : "my-column",
 	        width: 100,
 	        editable : false
