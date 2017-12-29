@@ -612,6 +612,12 @@ function fn_ledger(){
 }
 function fn_invoice(){
       var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+      
+      if(selectedItems.length  <= 0) {
+          Common.alert("<b>No AS selected.</b>");
+          return ;
+      }
+      
        var AS_ID =    selectedItems[0].item.asId;
        var AS_NO =    selectedItems[0].item.asNo;
        var asStusId =    selectedItems[0].item.code1;
