@@ -2,8 +2,8 @@
          updateCheck="true" monitoring="autodetect" dynamicConfig="true">
     <diskStore path="${ehcache.diskStore}"/>
     <cache name="menu_cache"
-           maxEntriesLocalHeap="100"
-           maxEntriesLocalDisk="50"
+           maxEntriesLocalHeap="70"
+           maxEntriesLocalDisk="80"
            diskExpiryThreadIntervalSeconds="300"
            timeToIdleSeconds="180"
            timeToLiveSeconds="0"
@@ -12,8 +12,8 @@
     </cache>
 
     <cache name="my_menu_cache"
-           maxEntriesLocalHeap="100"
-           maxEntriesLocalDisk="50"
+           maxEntriesLocalHeap="70"
+           maxEntriesLocalDisk="80"
            diskExpiryThreadIntervalSeconds="300"
            timeToIdleSeconds="180"
            timeToLiveSeconds="0"
@@ -23,7 +23,7 @@
 
     <cache name="periodical_cache"
            maxEntriesLocalHeap="10"
-           maxEntriesLocalDisk="10"
+           maxEntriesLocalDisk="15"
            diskExpiryThreadIntervalSeconds="600"
            timeToLiveSeconds="0"
            overflowToDisk="true"
