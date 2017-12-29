@@ -291,8 +291,8 @@ public class TrainingServiceImpl implements TrainingService {
 
 		Map<String, Object> map = new HashMap();
 		
-		
-		
+		String chkFlag = "N";
+		int yn = Integer.parseInt((String)formData.get("memTypeYN"));
 		List checkList = new ArrayList();
 		
 		for (Object obj : list) 
@@ -308,15 +308,23 @@ public class TrainingServiceImpl implements TrainingService {
 			if(!StringUtils.isEmpty(params.get("nric"))){
 				((Map<String, Object>) obj).put("nric",  ((Map<String, Object>) obj).get("0"));
 				
-				int info = trainingMapper.courseNricDup(params);
-				String chkFlag = "N";
-				if(info < 1){
-					chkFlag = "N";
-				}else{
-					chkFlag = "Y";
+				if("VIEW".equals(params.get("btnFlag"))){
+					int info = trainingMapper.courseNricDup(params);
+					if(info < 1){
+						chkFlag = "N";
+					}else{
+						chkFlag = "Y";
+					}
 				}
+				
 				((Map<String, Object>) obj).put("chkFlag", chkFlag);
-				((Map<String, Object>) obj).put("coursDMemNric", ((Map<String, Object>) obj).get("0"));
+				if( yn == 2318){
+					((Map<String, Object>) obj).put("memCode", ((Map<String, Object>) obj).get("0"));
+				}else{
+					((Map<String, Object>) obj).put("coursDMemName", ((Map<String, Object>) obj).get("0"));
+				}
+				((Map<String, Object>) obj).put("coursDMemNric", ((Map<String, Object>) obj).get("1"));
+				((Map<String, Object>) obj).put("coursMemShirtSize", ((Map<String, Object>) obj).get("2"));
 //				((Map<String, Object>) obj).put("appTypeCode", info.get("appTypeCode"));
 //				((Map<String, Object>) obj).put("rentalStus", info.get("rentalStus"));
 //				Logger.debug("info ================>>  " + info.get("ordNo"));
