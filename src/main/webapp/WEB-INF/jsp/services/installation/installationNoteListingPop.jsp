@@ -502,7 +502,6 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
     <th scope="row"><spring:message code='service.title.OrderNumber'/></th>    
     <td>
 
