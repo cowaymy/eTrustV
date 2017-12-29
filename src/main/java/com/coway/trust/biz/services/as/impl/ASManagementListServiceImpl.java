@@ -924,6 +924,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     	   pay31dMap.put("taxInvcCrtDt",new Date()); 
     	   pay31dMap.put("taxInvcCrtUserId",params.get("updator"));
     	   
+    	   pay31dMap.put("AS_SO_ID", params.get("AS_SO_ID"));   
+    	   
     		int a=  ASManagementListMapper.insert_Pay0031d(pay31dMap);
     	   
 		   LOGGER.debug(" pay31dMap {}",pay31dMap.toString());
@@ -949,7 +951,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		    		   pay32dMap.put("invcItmType",vo.getAsChargesTypeId()); 
 		    		   pay32dMap.put("invcItmOrdNo",params.get("AS_SO_ID") ); 
 		    		   pay32dMap.put("invcItmPoNo",""  ); 
-		    		   pay32dMap.put("invcItmCode", vo.getSparePartCode()); 
+		    		   pay32dMap.put("invcItmCode",  vo.getSparePartCode()); 
 		    		   pay32dMap.put("invcItmDesc1", vo.getSparePartName()); 
 		    		   pay32dMap.put("invcItmDesc2", ""); 
 		    		   pay32dMap.put("invcItmSerialNo", ""); 

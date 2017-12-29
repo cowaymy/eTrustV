@@ -748,7 +748,6 @@ function fn_AllocationConfirm(){
         
         
         if(rowInfoObj.dataField !="othascnt"  &&   rowInfoObj.dataField !="othinscnt" && rowInfoObj.dataField !="othrtncnt"  ){
-         
 
             if(Number(valArray[1]) == "0" ){
                 Common.alert("CAPA is not registered in the selected session.");

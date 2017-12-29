@@ -2180,11 +2180,11 @@
 			   TAX_INVC_ADDR3, TAX_INVC_ADDR4, TAX_INVC_POST_CODE, 
 			   TAX_INVC_STATE_NAME, TAX_INVC_CNTY, TAX_INVC_TASK_ID, 
 			   TAX_INVC_REM, TAX_INVC_CHRG, TAX_INVC_TXS, 
-			   TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, TAX_INVC_CRT_USER_ID) 
+			   TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, TAX_INVC_CRT_USER_ID, AREA_ID ,ADDR_DTL,  STREET) 
 			VALUES (
 			   #{taxInvcId}, 
 			   #{taxInvcRefNo}, 
-			   #{taxInvcRefDt}, 
+			    SYSDATE, 
 			   #{taxInvcSvcNo}, 
 			   #{taxInvcType}, 
 			   #{taxInvcCustName}, 
@@ -2202,7 +2202,10 @@
 			   #{taxInvcTxs}, 
 			   #{taxInvcAmtDue}, 
 			   #{taxInvcCrtDt}, 
-			   #{taxInvcCrtUserId}
+			   #{taxInvcCrtUserId},
+			   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'AREA_ID'),
+			   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'ADDR1'),
+			   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'ADDR2')
 			 )
 		 </insert>	 
 		 
@@ -2217,12 +2220,12 @@
 				   INVC_ITM_ADD1, INVC_ITM_ADD2, INVC_ITM_ADD3, 
 				   INVC_ITM_ADD4, INVC_ITM_POST_CODE, INVC_ITM_AREA_NAME, 
 				   INVC_ITM_STATE_NAME, INVC_ITM_CNTY, INVC_ITM_INSTALL_DT, 
-				   INVC_ITM_RETN_DT, INVC_ITM_BILL_REF_NO) 
+				   INVC_ITM_RETN_DT, INVC_ITM_BILL_REF_NO ,AREA_ID ,ADDR_DTL,  STREET) 
 				VALUES (   
 				           PAY0032D_SEQ.NEXTVAL, 
 				           #{taxInvcId}, 
 				           #{invcItmType}, 
-				           #{invcItmOrdNo}, 
+				           (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}), 
 				           #{invcItmPoNo}, 
 				           #{invcItmCode}, 
 				           #{invcItmDesc1}, 
@@ -2244,8 +2247,12 @@
 				           #{invcItmCnty}, 
 				           #{invcItmInstallDt}, 
 				           #{invcItmRetnDt}, 
-				           #{invcItmBillRefNo}
-				        )
+				           #{invcItmBillRefNo},
+						   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'AREA_ID'),
+			               FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'ADDR1'),
+			               FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'ADDR2')
+			            )           
+				        
       </insert>
       
       
