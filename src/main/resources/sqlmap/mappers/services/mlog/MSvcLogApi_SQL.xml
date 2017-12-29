@@ -894,71 +894,71 @@ LEFT OUTER JOIN (
 
     <select id="getInstallationJobList_b" parameterType="Map" resultType="egovMap">
              SELECT
-				     SALES_ORD_NO                        AS         sales_Order_No
-				    ,SVC_NO                              AS         service_No
-				    ,CUST_NAME                           AS         cust_Name
-				    ,JOB_TYPE                            AS         job_Type
-				    ,JOB_STUS                            AS         job_Status
-				    ,APPNT_DT                            AS         appointment_Date
-				    ,APPNT_TM                            AS         appointment_Time
-				    ,JOB_SESION                          AS         job_Session
-				    ,CHECKIN_DT                          AS         check_In_Date
-				    ,CHECKIN_TM                          AS         check_In_Time
-				    ,CHECKIN_GPS                         AS         check_In_Gps
-				    ,CUST_TYPE                           AS         customer_Type
-				    ,CUST_ID                             AS         customer_Id
-				    ,SVC_STATE                           AS         service_State
-				    ,PLAN_YEAR                           AS         plan_Year
-				    ,PLAN_MONTH                          AS         plan_Month
-				    ,INSTALL_ADDR                        AS         install_Address
-				    ,POST_CODE                           AS         postcode
-				    ,HANDPHONE_TEL                       AS         handphone_Tel
-				    ,HOME_TEL                            AS         home_Tel
-				    ,OFFICE_TEL                          AS         office_Tel
-				    ,MAIL_ADDR                           AS         mail_Address
-				    ,CUST_VA_NO                          AS         customer_Va_No
-				    ,CUST_JOM_PAY_REF_NO                 AS         customer_Jom_Pay_Ref_No
-				    ,PRODUCT_NAME                        AS         product_Name
-				    ,PRODUCT_CODE                        AS         product_Code
-				    ,APP_TYPE                            AS         app_Type
-				    ,INSTCT                              AS         instruction
-				    ,SALES_PROMT                         AS         sales_Promotion
-				    ,CNTRCT_DUR                          AS         contract_Duration
-				    ,MONTH_RENTAL_FEES                   AS         monthly_Rental_Fees
-				    ,RGIST_FEES                          AS         registration_Fees
-				    ,PAY_MODE                            AS         payment_Mode
-				    ,BANK_CODE                           AS         bank_Code
-				    ,BANK_NAME                           AS         bank_Name
-				    ,CARD_ACC_NO                         AS         card_AccountNo
-				    ,OTSTND                              AS         outstanding
-				    ,EXPR_DT                             AS         expiry_Date
-				    ,DSC_CODE                            AS         dsc_Code
-				    ,SIRIM_NO                            AS         sirim_No
-				    ,SERIAL_NO                           AS         serial_No
-				    ,HP_NAME                             AS         hp_Name
-				    ,HP_TEL                              AS         hp_Tel
-				    ,HM_NAME                             AS         hm_Name
-				    ,HM_TEL                              AS         hm_Tel
-				    ,BILL_AMT                            AS         bill_Amount
-				    ,PAID_AMT                            AS         paid_Amount
-				    ,ADJ_AMT                             AS         adjustment_Amount
-				    ,RESULT_REM                          AS         result_Remark
-				    ,OWNER_CODE                          AS         owner_Code
-				    ,OWNER_CODE_NM                       AS         owner_Code_Nm
-				    ,RESULT_CUST_NAME                    AS         result_Cust_Name
-				    ,RESULT_ICMOBILE_NO                  AS         result_Ic_Mobile_No
-				    ,RESULT_RPT_EMAIL_NO                 AS         result_Report_Email_No
-				    ,RESULT_ACEPT_NAME                   AS         result_Acceptance_Name
-				    ,FAIL_RESN_CODE                      AS         fail_Reason_Code
-				    ,FAIL_RESN_NAME                      AS         fail_Reason_Name
-				    ,LAST_PAY_DT                         AS         last_Payment_Date
-				    ,NEXT_CALL_DT                        AS         next_Call_Date
-				    ,NEXT_CALL_TM                        AS         next_Call_Time
-				    ,AS_EXCHN_YN                         AS         as_Exchange_YN
-				    ,BEFORE_PRODUCT_CODE                 AS         before_Product_Code
-				    ,BEFORE_PRODUCT_SERIAL_NO            AS         before_Product_Serial_No
-				    ,CRT_USER_ID                         AS         Create_User_ID
-				    ,CRT_DT                              AS         Create_Date
+				         to_char(SALES_ORD_NO             )           AS         sales_Order_No
+					    ,to_char(SVC_NO                   )           AS         service_No
+					    ,to_char(CUST_NAME                )           AS         cust_Name
+					    ,to_char(JOB_TYPE                 )           AS         job_Type
+					    ,to_char(JOB_STUS                 )           AS         job_Status
+					    ,to_char(APPNT_DT                 )           AS         appointment_Date
+					    ,to_char(APPNT_TM                 )           AS         appointment_Time
+					    ,to_char(JOB_SESION               )           AS         job_Session
+					    ,to_char(CHECKIN_DT               )           AS         check_In_Date
+					    ,to_char(CHECKIN_TM               )           AS         check_In_Time
+					    ,to_char(CHECKIN_GPS              )           AS         check_In_Gps
+					    ,to_char(CUST_TYPE                )           AS         customer_Type
+					    ,to_char(CUST_ID                  )           AS         customer_Id
+					    ,to_char(SVC_STATE                )           AS         service_State
+					    ,to_char(PLAN_YEAR                )           AS         plan_Year
+					    ,to_char(PLAN_MONTH               )           AS         plan_Month
+					    ,to_char(INSTALL_ADDR             )           AS         install_Address
+					    ,to_char(POST_CODE                )           AS         postcode
+					    ,to_char(HANDPHONE_TEL            )           AS         handphone_Tel
+					    ,to_char(HOME_TEL                 )           AS         home_Tel
+					    ,to_char(OFFICE_TEL               )           AS         office_Tel
+					    ,to_char(MAIL_ADDR                )           AS         mail_Address
+					    ,to_char(CUST_VA_NO               )           AS         customer_Va_No
+					    ,to_char(CUST_JOM_PAY_REF_NO      )           AS         customer_Jom_Pay_Ref_No
+					    ,to_char(PRODUCT_NAME             )           AS         product_Name
+					    ,to_char(PRODUCT_CODE             )           AS         product_Code
+					    ,to_char(APP_TYPE                 )           AS         app_Type
+					    ,to_char(INSTCT                   )           AS         instruction
+					    ,to_char(SALES_PROMT              )           AS         sales_Promotion
+					    ,to_char(CNTRCT_DUR               )           AS         contract_Duration
+					    ,to_char(MONTH_RENTAL_FEES        )           AS         monthly_Rental_Fees
+					    ,to_char(RGIST_FEES               )           AS         registration_Fees
+					    ,to_char(PAY_MODE                 )           AS         payment_Mode
+					    ,to_char(BANK_CODE                )           AS         bank_Code
+					    ,to_char(BANK_NAME                )           AS         bank_Name
+					    ,to_char(CARD_ACC_NO              )           AS         card_AccountNo
+					    ,to_char(OTSTND                   )           AS         outstanding
+					    ,to_char(EXPR_DT                  )           AS         expiry_Date
+					    ,to_char(DSC_CODE                 )           AS         dsc_Code
+					    ,to_char(SIRIM_NO                 )           AS         sirim_No
+					    ,to_char(SERIAL_NO                )           AS         serial_No
+					    ,to_char(HP_NAME                  )           AS         hp_Name
+					    ,to_char(HP_TEL                   )           AS         hp_Tel
+					    ,to_char(HM_NAME                  )           AS         hm_Name
+					    ,to_char(HM_TEL                   )           AS         hm_Tel
+					    ,to_char(BILL_AMT                 )           AS         bill_Amount
+					    ,to_char(PAID_AMT                 )           AS         paid_Amount
+					    ,to_char(ADJ_AMT                  )           AS         adjustment_Amount
+					    ,to_char(RESULT_REM               )           AS         result_Remark
+					    ,to_char(OWNER_CODE               )           AS         owner_Code
+					    ,to_char(OWNER_CODE_NM            )           AS         owner_Code_Nm
+					    ,to_char(RESULT_CUST_NAME         )           AS         result_Cust_Name
+					    ,to_char(RESULT_ICMOBILE_NO       )           AS         result_Ic_Mobile_No
+					    ,to_char(RESULT_RPT_EMAIL_NO      )           AS         result_Report_Email_No
+					    ,to_char(RESULT_ACEPT_NAME        )           AS         result_Acceptance_Name
+					    ,to_char(FAIL_RESN_CODE           )           AS         fail_Reason_Code
+					    ,to_char(FAIL_RESN_NAME           )           AS         fail_Reason_Name
+					    ,to_char(LAST_PAY_DT              )           AS         last_Payment_Date
+					    ,to_char(NEXT_CALL_DT             )           AS         next_Call_Date
+					    ,to_char(NEXT_CALL_TM             )           AS         next_Call_Time
+					    ,to_char(AS_EXCHN_YN              )           AS         as_Exchange_YN
+					    ,to_char(BEFORE_PRODUCT_CODE      )           AS         before_Product_Code
+					    ,to_char(BEFORE_PRODUCT_SERIAL_NO )           AS         before_Product_Serial_No
+					    ,to_char(CRT_USER_ID              )           AS         Create_User_ID
+					    ,to_char(CRT_DT                   )           AS         Create_Date
 				FROM SVC0103T
 				WHERE MEM_CODE = #{userId}
     
@@ -1094,65 +1094,65 @@ LEFT OUTER JOIN (
 
 		 <select id="getProductRetrunJobList_b" parameterType="Map" resultType="egovMap">
 		               SELECT
-						     SALES_ORD_NO                 AS        sales_Order_No
-						    ,SVC_NO                       AS        service_No
-						    ,CUST_NAME                    AS        cust_Name
-						    ,JOB_TYPE                     AS        job_Type
-						    ,JOB_STUS                     AS        job_Status
-						    ,APPNT_DT                     AS        appointment_Date
-						    ,APPNT_TM                     AS        appointment_Time
-						    ,JOB_SESION                   AS        job_Session
-						    ,CHECKIN_DT                   AS        check_In_Date
-						    ,CHECKIN_TM                   AS        check_In_Time
-						    ,CHECKIN_GPS                  AS        check_In_Gps
-						    ,CUST_TYPE                    AS        customer_Type
-						    ,CUST_ID                      AS        customer_Id
-						    ,SVC_STATE                    AS        service_State
-						    ,PLAN_YEAR                    AS        plan_Year
-						    ,PLAN_MONTH                   AS        plan_Month
-						    ,INSTALL_ADDR                 AS        install_Address
-						    ,POST_CODE                    AS        postcode
-						    ,HANDPHONE_TEL                AS        handphone_Tel
-						    ,HOME_TEL                     AS        home_Tel
-						    ,OFFICE_TEL                   AS        office_Tel
-						    ,MAIL_ADDR                    AS        mail_Address
-						    ,CUST_VA_NO                   AS        customer_Va_No
-						    ,CUST_JOM_PAY_REF_NO          AS        customer_Jom_Pay_Ref_No
-						    ,PRODUCT_NAME                 AS        product_Name
-						    ,PRODUCT_CODE                 AS        product_Code
-						    ,APP_TYPE                     AS        app_Type
-						    ,INSTCT                       AS        instruction
-						    ,INSTALL_DT                   AS        installation_Date
-						    ,INSTALL                      AS        installed_By
-						    ,PREV_OTSTND                  AS        prev_Outstanding
-						    ,PNALTY_CHRG                  AS        penalty_Charges
-						    ,UNBILLED_AMT                 AS        unbilled_Amount
-						    ,OTSTND                       AS        outstanding
-						    ,DSC_CODE                     AS        dsc_Code
-						    ,SIRIM_NO                     AS        sirim_No
-						    ,SERIAL_NO                    AS        serial_No
-						    ,HP_NAME                      AS        hp_Name
-						    ,HP_TEL                       AS        hp_Tel
-						    ,HM_NAME                      AS        hm_Name
-						    ,HM_TEL                       AS        hm_Tel
-						    ,CC_CODE                      AS        cc_Code
-						    ,RESULT_CODE                  AS        result_Code
-						    ,RESULT_REM                   AS        result_Remark
-						    ,OWNER_CODE                   AS        owner_Code
-						    ,OWNER_CODE_NM                AS        owner_Code_Nm
-						    ,RESULT_CUST_NAME             AS        result_Cust_Name
-						    ,RESULT_ICMOBILE_NO           AS        result_Ic_Mobile_No
-						    ,RESULT_RPT_EMAIL_NO          AS        result_Report_Email_No
-						    ,RESULT_ACEPT_NAME            AS        result_Acceptance_Name
-						    ,FAIL_RESN_CODE               AS        fail_Reason_Code
-						    ,FAIL_RESN_NAME               AS        fail_Reason_Name
-						    ,CMPLT_RET_DT                 AS        complete_Ret_Date
-						    ,CMPLT_RET_TM                 AS        complete_Ret_Time
-						    ,LAST_PAY_DT                  AS        last_Payment_Date
-						    ,NEXT_CALL_DT                 AS        next_Call_Date
-						    ,NEXT_CALL_TM                 AS        next_Call_Time
-						    ,CRT_USER_ID                  AS        Create_User_ID
-						    ,CRT_DT                       AS        Create_Date
+				             to_char(SALES_ORD_NO        )         AS        sales_Order_No
+						    ,to_char(SVC_NO              )         AS        service_No
+						    ,to_char(CUST_NAME           )         AS        cust_Name
+						    ,to_char(JOB_TYPE            )         AS        job_Type
+						    ,to_char(JOB_STUS            )         AS        job_Status
+						    ,to_char(APPNT_DT            )         AS        appointment_Date
+						    ,to_char(APPNT_TM            )         AS        appointment_Time
+						    ,to_char(JOB_SESION          )         AS        job_Session
+						    ,to_char(CHECKIN_DT          )         AS        check_In_Date
+						    ,to_char(CHECKIN_TM          )         AS        check_In_Time
+						    ,to_char(CHECKIN_GPS         )         AS        check_In_Gps
+						    ,to_char(CUST_TYPE           )         AS        customer_Type
+						    ,to_char(CUST_ID             )         AS        customer_Id
+						    ,to_char(SVC_STATE           )         AS        service_State
+						    ,to_char(PLAN_YEAR           )         AS        plan_Year
+						    ,to_char(PLAN_MONTH          )         AS        plan_Month
+						    ,to_char(INSTALL_ADDR        )         AS        install_Address
+						    ,to_char(POST_CODE           )         AS        postcode
+						    ,to_char(HANDPHONE_TEL       )         AS        handphone_Tel
+						    ,to_char(HOME_TEL            )         AS        home_Tel
+						    ,to_char(OFFICE_TEL          )         AS        office_Tel
+						    ,to_char(MAIL_ADDR           )         AS        mail_Address
+						    ,to_char(CUST_VA_NO          )         AS        customer_Va_No
+						    ,to_char(CUST_JOM_PAY_REF_NO )         AS        customer_Jom_Pay_Ref_No
+						    ,to_char(PRODUCT_NAME        )         AS        product_Name
+						    ,to_char(PRODUCT_CODE        )         AS        product_Code
+						    ,to_char(APP_TYPE            )         AS        app_Type
+						    ,to_char(INSTCT              )         AS        instruction
+						    ,to_char(INSTALL_DT          )         AS        installation_Date
+						    ,to_char(INSTALL             )         AS        installed_By
+						    ,to_char(PREV_OTSTND         )         AS        prev_Outstanding
+						    ,to_char(PNALTY_CHRG         )         AS        penalty_Charges
+						    ,to_char(UNBILLED_AMT        )         AS        unbilled_Amount
+						    ,to_char(OTSTND              )         AS        outstanding
+						    ,to_char(DSC_CODE            )         AS        dsc_Code
+						    ,to_char(SIRIM_NO            )         AS        sirim_No
+						    ,to_char(SERIAL_NO           )         AS        serial_No
+						    ,to_char(HP_NAME             )         AS        hp_Name
+						    ,to_char(HP_TEL              )         AS        hp_Tel
+						    ,to_char(HM_NAME             )         AS        hm_Name
+						    ,to_char(HM_TEL              )         AS        hm_Tel
+						    ,to_char(CC_CODE             )         AS        cc_Code
+						    ,to_char(RESULT_CODE         )         AS        result_Code
+						    ,to_char(RESULT_REM          )         AS        result_Remark
+						    ,to_char(OWNER_CODE          )         AS        owner_Code
+						    ,to_char(OWNER_CODE_NM       )         AS        owner_Code_Nm
+						    ,to_char(RESULT_CUST_NAME    )         AS        result_Cust_Name
+						    ,to_char(RESULT_ICMOBILE_NO  )         AS        result_Ic_Mobile_No
+						    ,to_char(RESULT_RPT_EMAIL_NO )         AS        result_Report_Email_No
+						    ,to_char(RESULT_ACEPT_NAME   )         AS        result_Acceptance_Name
+						    ,to_char(FAIL_RESN_CODE      )         AS        fail_Reason_Code
+						    ,to_char(FAIL_RESN_NAME      )         AS        fail_Reason_Name
+						    ,to_char(CMPLT_RET_DT        )         AS        complete_Ret_Date
+						    ,to_char(CMPLT_RET_TM        )         AS        complete_Ret_Time
+						    ,to_char(LAST_PAY_DT         )         AS        last_Payment_Date
+						    ,to_char(NEXT_CALL_DT        )         AS        next_Call_Date
+						    ,to_char(NEXT_CALL_TM        )         AS        next_Call_Time
+						    ,to_char(CRT_USER_ID         )         AS        Create_User_ID
+						    ,to_char(CRT_DT              )         AS        Create_Date
 						FROM SVC0104T
 						WHERE MEM_CODE =  #{userId}
 		 
