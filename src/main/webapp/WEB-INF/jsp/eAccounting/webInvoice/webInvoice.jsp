@@ -365,6 +365,23 @@ function fn_glAccountSearchPop(rowIndex){
     	Common.alert('<spring:message code="webInvoice.budgetCode.msg" />');
     }
 }
+
+function fn_getTotTaxAmt(rowIndex) {
+    var taxAmtCnt = 0;
+    // 필터링이 된 경우 필터링 된 상태의 값만 원한다면 false 지정
+    var amtArr = AUIGrid.getColumnValues(newGridID, "taxAmt", true);
+    console.log(amtArr);
+    for(var i = 0; i < amtArr.length; i++) {
+        taxAmtCnt += amtArr[i];
+    }
+    // 0번째 행의 name 칼럼의 값 얻기
+    var value = AUIGrid.getCellValue(newGridID, rowIndex, "taxAmt");
+    console.log(taxAmtCnt);
+    console.log(value);
+    taxAmtCnt -= value;
+    console.log("taxAmtCnt : " + taxAmtCnt);
+    return taxAmtCnt;
+}
 </script>
 
 <section id="content"><!-- content start -->

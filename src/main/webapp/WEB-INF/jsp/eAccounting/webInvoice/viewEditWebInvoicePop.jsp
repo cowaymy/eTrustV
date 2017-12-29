@@ -342,21 +342,53 @@ $(document).ready(function () {
             var taxNonClmAmt = 0;
             if($("#invcType").val() == "S") {
                 if(event.dataField == "netAmt") {
-                    if(event.item.oriTaxAmt > 30) {
-                        taxAmt = 30;
-                        taxNonClmAmt = event.item.oriTaxAmt - 30;
-                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
-                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                	var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                    if(taxAmtCnt >= 30) {
+                        taxNonClmAmt = event.item.oriTaxAmt;
                     } else {
-                        taxAmt = event.item.oriTaxAmt;
-                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
-                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                        if(taxAmtCnt == 0) {
+                            if(event.item.oriTaxAmt > 30) {
+                                taxAmt = 30;
+                                taxNonClmAmt = event.item.oriTaxAmt - 30;
+                            } else {
+                                taxAmt = event.item.oriTaxAmt;
+                            }
+                        } else {
+                            if((taxAmtCnt + event.item.oriTaxAmt) > 30) {
+                                taxAmt = 30 - taxAmtCnt;
+                                if(event.item.oriTaxAmt > taxAmt) {
+                                    taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
+                                } else {
+                                    taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
+                                }
+                            } else {
+                                taxAmt = event.item.oriTaxAmt;
+                                taxNonClmAmt = 0;
+                            }
+                        }
                     }
+                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
                 }
                 if(event.dataField == "taxAmt") {
-                    if(event.value > 30) {
+                	if(event.value > 30) {
                         Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
-                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", 30);
+                        AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
+                    } else {
+                        var taxAmtCnt = fn_getTotTaxAmt(event.rowIndex);
+                        if((taxAmtCnt + event.value) > 30) {
+                            Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", event.oldValue);
+                        } else {
+                            taxAmt = event.value;
+                            if(event.item.oriTaxAmt > taxAmt) {
+                                taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
+                            } else {
+                                taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
+                            }
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxAmt", taxAmt);
+                            AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
+                        }
                     }
                 }
             } else {
