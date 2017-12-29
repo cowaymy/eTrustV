@@ -125,6 +125,9 @@
                    #{item}
             </foreach>
         </if>
+        <if test="movetype ==null or movetype ==''">
+            and l60.INVNTRY_MOV_TYPE not in ('US05', 'US06' , 'US95' , 'US96', 'UM05', 'UM06' , 'UM95' , 'UM96')
+        </if>
 		<if test="posdatefr != null and posdateto != null and posdatefr != '' and posdateto != ''" > 
            AND L60.DOC_POSTNG_DT   between TO_CHAR(TO_DATE(#{posdatefr},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{posdateto},'DD/MM/YYYY'),'YYYYMMDD')
         </if> 
