@@ -536,6 +536,6 @@
 
          <select id="selectDeptCode"  parameterType="int" resultType="egovMap">
 			select  LAST_DEPT_CODE, LAST_GRP_CODE, LAST_ORG_CODE, BRNCH_ID, DEPT_CODE, MEM_ID
-            from org0005d where MEM_ID = #{memId} AND MEM_LVL = '3'
+            from org0005d where MEM_ID = #{memId} 
 			</select>
 </mapper>

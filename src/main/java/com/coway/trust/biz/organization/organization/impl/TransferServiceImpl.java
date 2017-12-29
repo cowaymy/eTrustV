@@ -62,6 +62,8 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			Map<String, Object> memberPromoEntry = new HashMap<String, Object>();
 			EgovMap runningNo = getDocNo("66");
 
+			int level =  Integer.parseInt(memberModel.get("memberlvl1").toString());
+			
 			//BranchId value
 			EgovMap deptCode = transferMapper.selectDeptCode(toMemberId);
 			logger.debug("deptCode : {}", deptCode);
