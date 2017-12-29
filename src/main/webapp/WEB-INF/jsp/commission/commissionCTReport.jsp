@@ -269,7 +269,7 @@
                         <th scope="row"><spring:message code='commission.text.search.reportType'/></th>
                         <td colspan="3"><select id="reportType" name="reportType" style="width:300px;">
                                 <option value="">Report/Raw Data Type</option>
-                                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' || PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' }">
                                     <option value="1">Coway Technician Commission</option>
                                 </c:if>
                                 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
@@ -286,8 +286,8 @@
                     </tr>
                     <tr id="mConfirm" name="mConfirm" style="display: none;">
                         <th scope="row"><spring:message code='commission.text.search.memCode'/></th>
-                        <td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> value="${loginId }" readonly</c:if>  /> 
-                            <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}"><a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if>
+                        <td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly</c:if>  /> 
+                            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}"><a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if>
                             <p class="btn_sky">
                                 <a href="#" id="confirm" name="confirm"><spring:message code='commission.button.confirm'/></a>
                             </p>
