@@ -49,6 +49,7 @@
                 S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05')
+            ORDER BY   S5.CODE      
    </select>
    
    <select id="selectWarehouse"  parameterType="Map" resultType="egovMap">
@@ -322,7 +323,7 @@
                                 (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
                                 Extent2.MOV_QTY,
                                 <!-- NVL(Extent3.AMT, 0) AMT, -->
-                                 NVL(Extent3.AMT, 0) AMT,
+                                100 AMT,
                                 Extent1.SERIAL_CHK
                             FROM                     
                                 SYS0026M Extent1 
@@ -2015,14 +2016,23 @@
     
     <resultMap type="egovMap" id="bookMap"/>
     
-    <select id="posBookingCallSP_LOGISTIC_REQUEST" parameterType="Map"  statementType="CALLABLE" >
+    <select id="posBookingCallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
        <![CDATA[  
             {
-                  call SP_LOGISTIC_REQUEST ( #{psno}, #{retype} ,#{pType} ,#{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=bookMap})
+                  call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,'','', #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=bookMap})
             }
          ]]>
       </select>
-
+        
+        
+       <resultMap type="egovMap" id="giMap"/>    
+       <select id="posGICallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
+       <![CDATA[  
+            {
+                  call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,#{posItmId},'', #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=giMap})
+            }
+         ]]>
+      </select> 
 
     <!-- PAYMENT START -->
     
@@ -2877,5 +2887,122 @@
 				 WHERE  Extent1.PAY_ID = #{rePayId}   
      </select>
      
+     <insert id="insertTransactionLog" parameterType="Map">
+     <selectKey keyProperty="logId" resultType="Integer" order="BEFORE">
+        SELECT SYS0049D_LOG_ID_SEQ.NEXTVAL  FROM DUAL
+      </selectKey>
+        INSERT INTO  SYS0049D
+								(
+										LOG_ID,
+										LOG_RPT_CHK_POINT,
+										LOG_RPT_MODULE,
+										LOG_RPT_NAME,
+										LOG_RPT_SUB_NAME,
+										LOG_RPT_ET_TYPE,
+										LOG_RPT_PATH,
+										LOG_RPT_PARAMTR_VALU,
+										LOG_RPT_REM,
+										LOG_CRT_USER_ID,
+										LOG_CRT_DT
+								)
+								VALUES(
+										#{logId},
+										#{rptChkPoint},
+										#{rptModule},
+										#{rptName},
+										#{rptSubName},
+										#{rptEtType},
+										#{rptPath},
+										#{rptParamtrValu},
+										#{rptRem},
+										#{userId},
+										SYSDATE
+								)
+     </insert>
+     
+     <select id="getDetailInfoList" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    POS_ITM_ID,
+			    POS_ID,
+			    POS_ITM_STOCK_ID ,
+			    POS_ITM_QTY ,
+			    POS_ITM_UNIT_PRC,
+			    POS_ITM_TOT ,
+			    POS_ITM_CHRG ,
+			    POS_ITM_TXS,
+			    POS_ITM_TAX_CODE_ID,
+			    MEM_ID,
+			    MEM_CODE,
+			    MEM_TYPE,
+			    NAME,
+			    FULL_NAME,
+			    NRIC,
+			    MEM_STUS_ID,
+			    RCV_STUS_ID ,
+			    CRT_DT ,
+			    CRT_USER_ID,
+			    UPD_DT ,
+			    UPD_USER_ID
+			FROM 
+			    SAL0058D
+			WHERE
+			    POS_ID = #{posId}
+			AND
+			    RCV_STUS_ID = #{rcvStusId}     
+     </select>
+     
+     <select id="getPosNobyPosId" parameterType="posDetailVO" resultType="egovMap">
+        SELECT
+            POS_NO
+        FROM
+            SAL0057D
+        WHERE
+            1 = 1 
+        <if test=" null != posId and '' != posId">
+            AND POS_ID = #{posId}
+        </if>
+         <![CDATA[
+           AND   ROWNUM <= 1
+         ]]>
+     </select>
+     
+     <select id="getPosItmIdListByPosIdAndMemId" parameterType="posMemberVO" resultType="egovMap">
+       SELECT 
+            POS_ITM_ID
+       FROM
+            SAL0058D
+       WHERE 
+            POS_ID = #{posId}
+       AND
+            MEM_ID = #{memId}
+     </select>
+     
+     
+     <select id="getPosNobyPosIdForMember" parameterType="posMemberVO" resultType="egovMap">
+        SELECT
+            POS_NO
+        FROM
+            SAL0057D
+        WHERE
+            1 = 1 
+        <if test=" null != posId and '' != posId">
+            AND POS_ID = #{posId}
+        </if>
+         <![CDATA[
+           AND   ROWNUM <= 1
+         ]]>
+     </select>
+     
+     <select id="getPosItmIdListByPosNo" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    T2.POS_ITM_ID
+			FROM
+			    SAL0057D T1
+			    JOIN SAL0058D T2 ON T1.POS_ID = T2.POS_ID
+			WHERE
+			    T1.POS_NO = #{psno}
+			AND
+			    T2.RCV_STUS_ID = #{rcvStusId}       
+     </select>
      
 </mapper>
