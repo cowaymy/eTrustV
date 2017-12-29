@@ -104,6 +104,7 @@
 		  FROM SYS0064M
 		 WHERE CT_BRNCH_CODE = #{branchCode}
 		  and CT_SUB_GRP is not null
+		  ORDER BY CT_SUB_GRP ASC
 </select>
 <select id="selectCTM" parameterType="Map" resultType="egovMap">
         SELECT 
@@ -157,8 +158,9 @@
     <if test="groupCode != null and groupCode !='' ">
            AND    CT_BRNCH_CODE = #{groupCode}
     </if>
-
+    and CT_SUB_GRP is not null
 </select>
+
 <select id="selectCTSubGroupMajor" parameterType="Map" resultType="egovMap">
 select B.CT_SUB_GRP, A.ASIGN_FLAG, A.MAJOR_GRP
 from
@@ -173,6 +175,7 @@ from
         and ct_brnch_code=#{branch}
                ) B
 where a.CT_Sub_GRp(+) = b.ct_sub_Grp
+ORDER BY CT_SUB_GRP ASC
 </select>
 
 

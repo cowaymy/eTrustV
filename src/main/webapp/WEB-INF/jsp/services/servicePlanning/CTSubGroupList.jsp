@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.aui-grid-user-custom-left {
+    text-align:left;
+}
+</style>
+
 <script type="text/javaScript">
 var memId;
 var myGridID;
@@ -38,12 +45,13 @@ function CTSubgGroupGrid() {
         dataField : "name",
         headerText : "CTM",
         editable : false,
-        width : 230
+        width : 300
     }, {
         dataField : "memCode",
         headerText : "CT",
         editable : false,
-        width : 280
+        width : 350, 
+        style : "aui-grid-user-custom-left"
     }, {
         dataField : "memId",
         headerText : "memId",

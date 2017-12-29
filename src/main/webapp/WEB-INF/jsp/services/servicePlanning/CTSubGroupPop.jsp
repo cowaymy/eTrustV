@@ -1,10 +1,10 @@
-
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
 <script type="text/javaScript">
 var gridCtSubgrpID;
+var saveSuccess;
+
 function tagRespondGrid() {
         
         var columnCtSubgrpLayout =[
@@ -71,7 +71,7 @@ function fn_CTAssignSave(){
 	var mainGroupItems = AUIGrid.getItemsByValue(gridCtSubgrpID, "radioFlag", "1");
 	
     if(mainGroupItems.length > 1){
-    	Common.alert("too many choose main Group, Please choose one");
+    	Common.alert("Only can select a single CT Sub Group as a Major Colum.");
         return
     }
     var jsonObj;
@@ -89,13 +89,31 @@ function fn_CTAssignSave(){
 	console.log(jsonObj);
 	Common.ajax("POST", "/services/serviceGroup/CTSubGroupSave.do",  jsonObj,  function(result) {
         console.log(result);
-        Common.alert(result.message);
- 
+        Common.alert("Success!");
+        
+        //console.log("remove");
+        //$("#openAreaMainPop").remove();
+        saveSuccess = result.message;
+        
+        try {
+        	// 부모 함수 호출
+        	fn_CTSubGroupSearch();
+        } catch(e) {
+        	console.log("failure");
+        }
+        
+        fn_closeNetSalesCharPop();
 
      });
 	
 }
 
+function fn_closeNetSalesCharPop(){
+	console.log("saveSuccess : " + saveSuccess);
+    if (saveSuccess == 'success') {
+    	$("#_NewAddDiv1").remove();
+    }
+}
 
     $(document).ready(function(){
         
