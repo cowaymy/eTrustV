@@ -51,9 +51,9 @@ function fn_doBack(){
 
 </section><!-- tap_wrap end -->
 
-<ul class="center_btns mt20">
+<!-- <ul class="center_btns mt20">
     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doBack()">Back</a></p></li>
-</ul>
+</ul> -->
 
 </section><!-- pop_body end -->
 
