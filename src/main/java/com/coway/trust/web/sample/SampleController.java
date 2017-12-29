@@ -258,6 +258,10 @@ public class SampleController {
 			mobileNo = (String) params.get("phone");
 		}
 
+		if (CommonUtils.isNotEmpty(params.get("message"))) {
+			message = (String) params.get("message");
+		}
+
 		params.put("userId", sessionVO.getUserId());
 		params.put("mobileNo", mobileNo);
 		params.put("smsMessage", message);
