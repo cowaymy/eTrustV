@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
+import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.payment.otherpayment.service.BankStatementService;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -16,6 +17,8 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
 	@Resource(name = "bankStatementMapper")
 	private BankStatementMapper bankStatementMapper;
 	
+	@Resource(name = "commonMapper")
+	private CommonMapper commonMapper;
 	
 	/**
 	 * Bank Statement Master List  조회
@@ -54,14 +57,18 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
 		
 		//Detail Data 등록
     	if (detailParamList.size() > 0) {    		
-    		HashMap<String, Object> hm = null;    		
+    		HashMap<String, Object> hm = null;
+    		EgovMap codeMap = null;
+    		masterParamMap.put("accId", masterParamMap.get("uploadIssueBank"));
+    		List<EgovMap> accountCodeList = commonMapper.getAccountCodeList(masterParamMap);//Account code 조회
+    		codeMap = (EgovMap ) accountCodeList.get(0);
     		for (Object map : detailParamList) {
     			hm = (HashMap<String, Object>) map;      			
     			hm.put("fBankJrnlId", masterParamMap.get("fBankJrnlId"));	//Master 정보 등록시 생성된 key값    			
     			bankStatementMapper.insertBankStatementDetail(hm);   
     			
     			hm.put("uploadIssueBank", masterParamMap.get("uploadIssueBank"));	//Interface 정보 Bank Code
-    			hm.put("uploadBankAccount", masterParamMap.get("uploadBankAccount"));	//Interface 정보 Bank Account Code
+    			hm.put("uploadBankAccount", codeMap.get("accCode"));	//Interface 정보 Bank Account Code
     			
     			//Interface Table Insert
     			bankStatementMapper.insertBankStatementITF(hm);
