@@ -883,6 +883,23 @@ public class HsManualController {
 		return ResponseEntity.ok(message);
 	}
 	
+	/**
+	 * Services - HS  - Result EDIT - Fail Reason 콤보박스 리스트
+	 *
+	 * @param params
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectFailReason.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectFailReason(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
+		model.addAttribute("failReasonList", failReasonList);
+
+		return ResponseEntity.ok(failReasonList);
+	}
+	
 }
 	
 

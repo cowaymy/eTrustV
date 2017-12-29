@@ -1,7 +1,12 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-
+<style type="text/css">
+/* 커스텀 datepicker 스타일 정의 */
+$( ".settleDt" ).datepicker({
+  dateFormat: "yyyymmdd"
+});
+</style>
 
 <script type="text/javaScript">
 
@@ -280,11 +285,26 @@ var myDetailGridData = null;
                 $("#stitle").text("HS - Result EDIT")  ;
                 
                 if($("#stusCode").val()==4) {
-                    $("#addHsForm").find("input, textarea, button, select").attr("disabled",true);
+                    $("#addHsForm").find("input, textarea, button, select").attr("disabled",false);
                     $('#cmbCollectType').removeAttr('disabled'); 
                 }
                 
             }
+            
+            // HS Result Information > HS Status 값 변경 시 Fail Reason 콤보박스 불러오기
+            $("#cmbStatusType2").change(function(){
+            	
+            	if ($("#cmbStatusType2").val() == 4) {    // Completed
+            		$("select[name='failReason'] option").remove();
+            	} else if ($("#cmbStatusType2").val() == 21) {    // Failed
+                    doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
+                } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+                    doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
+                } else {
+            		$("select[name='failReason'] option").remove();
+            	}
+            	
+            });
     
     });
 
@@ -331,6 +351,18 @@ var myDetailGridData = null;
 
     
      function fn_UpdateHsResult(){
+    	 
+    	 if ($("#cmbStatusType2").val() == 21) {    // Failed
+        	 if ($("#failReason").val() == '') {
+        		 Common.alert("Please Select 'Fail Reason'.");
+                 return false;
+             }
+         } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+        	 if ($("#failReason").val() == '') {
+        		 Common.alert("Please Select 'Fail Reason'.");
+                 return false;
+             }
+         }
      
     	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
@@ -456,12 +488,12 @@ var myDetailGridData = null;
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>HS Result Information</h2>
 </aside><!-- title_line end -->
-<table class="type1" style="width: 1040px; "><!-- table start -->
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
-    <col style="width:*" />
-    <col style="width:160px" />
+    <col style="width:350px;" />
+    <col style="width:170px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -471,7 +503,10 @@ var myDetailGridData = null;
     <select class="w100p"  id ="cmbStatusType2" name = "cmbStatusType2"></select>
     </td>
     <th scope="row" style="width: 186px; ">Settle Date</th>
-    <td><span><c:out value="${basicinfo.setlDt}"/></span> </td>
+    <td>
+        <%-- <span><c:out value="${basicinfo.setlDt}"/></span> --%>
+        <input type="text" title="Settle Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="settleDt" name="settleDt" value="${basicinfo.setlDt}"/>
+    </td>
 </tr>
 <tr>
     <th scope="row">Fail Reason</th>
@@ -509,9 +544,15 @@ var myDetailGridData = null;
 </tr> --%>
 <tr>
     <th scope="row" style="width: 176px; ">Remark</th>
-    <td><span>${basicinfo.resultRem}</span></td>
+    <td>
+        <input id="txtRemark" name="txtRemark"  type="text" title="" placeholder="Remark" class="w100p" value="${basicinfo.resultRem}"/>
+        <%-- <span>${basicinfo.resultRem}</span> --%>
+    </td>
     <th scope="row" style="width: 59px; ">Instruction</th>
-    <td><span>${settleInfo.configBsRem}</span></td>
+    <td>
+        <input id="txtInstruction" name="txtInstruction"  type="text" title="" placeholder="Instruction" class="w100p" value="${settleInfo.configBsRem}"/>
+        <%-- <span>${settleInfo.configBsRem}</span> --%>
+    </td>
 </tr>
 <tr>
     <th scope="row">Prefer Service Week</th>
@@ -526,7 +567,8 @@ var myDetailGridData = null;
     </td> 
         <th scope="row" style="width: 186px; ">Cancel Request Number</th>
     <td>
-        <span><c:out value="${basicinfo.cancReqNo}"/></span> 
+        <input id="txtCancelRN" name="txtCancelRN"  type="text" title="" placeholder="N/A" class="w100p" value="${basicinfo.cancReqNo}"  readonly />
+        <%-- <span><c:out value="${basicinfo.cancReqNo}"/></span>  --%>
     </td>
 </tr>
 </tbody>
