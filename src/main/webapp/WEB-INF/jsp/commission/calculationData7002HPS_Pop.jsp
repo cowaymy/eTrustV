@@ -46,38 +46,37 @@
    function createAUIGrid() {
 	var columnLayout_7002HP = [ {
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : " <spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : " <spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r2",
-        headerText : "sales Cmm",
+        headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r33",
-        headerText : "Rental before",
+        headerText : "<spring:message code='commissiom.text.excel.renBefore'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r99",
-        headerText : "Adjust_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.adj'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r50",
-        headerText : "W/S",
+        headerText : "<spring:message code='commissiom.text.excel.ws'/>",
         style : "my-column",
         editable : false
     }];

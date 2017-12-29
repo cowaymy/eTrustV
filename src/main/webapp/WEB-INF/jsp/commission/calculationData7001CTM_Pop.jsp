@@ -52,87 +52,87 @@
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : " <spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : " <spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v1",
-        headerText : "AS Count",
+        headerText : "<spring:message code='commissiom.text.excel.asCount'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v2",
-        headerText : "AS Sum CP",
+        headerText : "<spring:message code='commissiom.text.excel.asSumCp'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v3",
-        headerText : "BS Count",
+        headerText : "<spring:message code='commissiom.text.excel.bsCount'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v4",
-        headerText : "BS Sum CP",
+        headerText : "<spring:message code='commissiom.text.excel.bsSumCp'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v5",
-        headerText : "Ins Count",
+        headerText : "<spring:message code='commissiom.text.excel.insCount'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v6",
-        headerText : "Ins Sum CP",
+        headerText : "<spring:message code='commissiom.text.excel.insSumCp'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v7",
-        headerText : "PR Count",
+        headerText : "<spring:message code='commissiom.text.excel.prCount'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v8",
-        headerText : "PR Sum CP",
+        headerText : "<spring:message code='commissiom.text.excel.prSumCp'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "totalJob",
-        headerText : "Total Job",
+        headerText : "<spring:message code='commissiom.text.excel.totalJob'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v9",
-        headerText : "Total Point",
+        headerText : "<spring:message code='commissiom.text.excel.totalPoint'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v10",
-        headerText : "Pro Percent",
+        headerText : "<spring:message code='commissiom.text.excel.proPercent'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v11",
-        headerText : "Per Percent",
+        headerText : "<spring:message code='commissiom.text.excel.perPercent'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v12",
-        headerText : "Pro Facto<br>(30%)",
+        headerText : "<spring:message code='commissiom.text.excel.proFactor30'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v13",
-        headerText : "Per Factor<br>(70%)",
+        headerText : "<spring:message code='commissiom.text.excel.proFactor70'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v14",
-        headerText : "Sum Factor",
+        headerText : "<spring:message code='commissiom.text.excel.sumFacto'/>",
         style : "my-column",
         editable : false
     }];

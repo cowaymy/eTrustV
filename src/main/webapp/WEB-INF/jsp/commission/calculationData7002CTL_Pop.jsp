@@ -52,52 +52,52 @@
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : " <spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : " <spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r1",
-        headerText : "Gross Comm",
+        headerText : "<spring:message code='commissiom.text.excel.grossCmm'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r2",
-        headerText : "Rental Comm",
+        headerText : "<spring:message code='commissiom.text.excel.renCmm'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r3",
-        headerText : "Srv Mem Comm",
+        headerText : "<spring:message code='commissiom.text.excel.srvMemCmm'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r4",
-        headerText : "Basic and<br>Allowance",
+        headerText : "<spring:message code='commissiom.text.excel.basicAllowance'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r5",
-        headerText : "Performance<br>Incentive",
+        headerText : "<spring:message code='commissiom.text.excel.performIncentive'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r6",
-        headerText : "Adjustment",
+        headerText : "<spring:message code='commissiom.text.excel.adj'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r7",
-        headerText : "CFF + Reward",
+        headerText : "<spring:message code='commissiom.text.excel.cffReward'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r8",
-        headerText : "Seniority",
+        headerText : "<spring:message code='commissiom.text.excel.seniority'/>",
         style : "my-column",
         editable : false
     }];

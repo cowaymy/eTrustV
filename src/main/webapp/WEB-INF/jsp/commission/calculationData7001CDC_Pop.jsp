@@ -46,148 +46,147 @@
    function createAUIGrid() {
 	var columnLayout_7001CD = [ {
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : "<spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : "<spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v1",
-        headerText : "Credit Point",
+        headerText : "<spring:message code='commissiom.text.excel.crdPoint'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v2",
-        headerText : "HappyCall<br>Performance",
+        headerText : "<spring:message code='commissiom.text.excel.happyCallPerformance'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v3",
-        headerText : "HappyCall Marks",
+        headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v4",
-        headerText : "B/S Success Rate",
+        headerText : "<spring:message code='commissiom.text.excel.hsSuccessRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v5",
-        headerText : "B/S Marks",
+        headerText : "<spring:message code='commissiom.text.excel.hsMarks'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v6",
-        headerText : "Rental Collection Rate",
+        headerText : "<spring:message code='commissiom.text.excel.renCollecRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v7",
-        headerText : "Rental Collection Marks",
+        headerText : "<spring:message code='commissiom.text.excel.renCollecMarks'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v8",
-        headerText : "Net Sales Unit",
+        headerText : "<spring:message code='commissiom.text.excel.netUnit'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v9",
-        headerText : "Net Sales Marks",
+        headerText : "<spring:message code='commissiom.text.excel.netMarks'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v10",
-        headerText : "Rental Collection Amount",
+        headerText : "<spring:message code='commissiom.text.excel.rcAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v12",
-        headerText : "Dropped Rate",
+        headerText : "<spring:message code='commissiom.text.excel.droppedRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v13",
-        headerText : "Dropped Rate <br>Penalty Marks",
+        headerText : "<spring:message code='commissiom.text.excel.droppedMarks'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v14",
-        headerText : "Net Sales <br>Pv Total",
+        headerText : "<spring:message code='commissiom.text.excel.netPvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v15",
-        headerText : "App Rate <br>By Total Pv",
+        headerText : "<spring:message code='commissiom.text.excel.appPvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v16",
-        headerText : "sales price total",
+        headerText : "<spring:message code='commissiom.text.excel.salesPriceTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v17",
-        headerText : "Mem amount",
+        headerText : "<spring:message code='commissiom.text.excel.memAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v18",
-        headerText : "completed BS count",
+        headerText : "<spring:message code='commissiom.text.excel.completBsCnt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v19",
-        headerText : "pv total",
+        headerText : "<spring:message code='commissiom.text.excel.pvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v20",
-        headerText : "price total",
+        headerText : "<spring:message code='commissiom.text.excel.priceTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v21",
-        headerText : "collection Cmm <br>applicable rate",
+        headerText : "<spring:message code='commissiom.text.excel.collecCmmAppRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v24",
-        headerText : "SHI rental Cmm rate",
+        headerText : "<spring:message code='commissiom.text.excel.shiRenCmmRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v25",
-        headerText : "SHI Index",
+        headerText : "<spring:message code='commissiom.text.excel.shiIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v26",
-        headerText : "SHI rental Mem<br> collection rate",
+        headerText : "<spring:message code='commissiom.text.excel.shiRenMemCollecRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v27",
-        headerText : "SHI rental Mem Index",
+        headerText : "<spring:message code='commissiom.text.excel.shiRenMemIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v32",
-        headerText : "CFF CFFCompliment",
+        headerText : "<spring:message code='commissiom.text.excel.cffCompliment'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v33",
-        headerText : "CFF S.CFFMark",
+        headerText : "<spring:message code='commissiom.text.excel.cffMark'/>",
         style : "my-column",
         editable : false
     }];

@@ -46,18 +46,17 @@
    function createAUIGrid() {
 	var columnLayout_7002HP = [ {
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : " <spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : " <spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
@@ -77,17 +76,17 @@
         editable : false
     },{
         dataField : "r4",
-        headerText : "Bonus",
+        headerText : "<spring:message code='commissiom.text.excel.bonus'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r5",
-        headerText : "PA",
+        headerText : "<spring:message code='commissiom.text.excel.pa'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r13",
-        headerText : "Membership_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",
         style : "my-column",
         editable : false
     },{
@@ -117,17 +116,17 @@
         editable : false
     },{
         dataField : "r25",
-        headerText : "TBB_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.tbbAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r28",
-        headerText : "Incentive",
+        headerText : "<spring:message code='commissiom.text.excel.incentive'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r29",
-        headerText : "SHI_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",
         style : "my-column",
         editable : false
     },{
@@ -152,12 +151,12 @@
         editable : false
     },{
         dataField : "r34",
-        headerText : "RentalMembership_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.RenMemAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "r35",
-        headerText : "RentalMembership_SHI_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.renMemSHIAmt'/>",
         style : "my-column",
         editable : false
     },{
@@ -187,7 +186,7 @@
         editable : false
     },{
         dataField : "r99",
-        headerText : "Adjust_Amt",
+        headerText : "<spring:message code='commissiom.text.excel.adj'/>",
         style : "my-column",
         editable : false
     }];

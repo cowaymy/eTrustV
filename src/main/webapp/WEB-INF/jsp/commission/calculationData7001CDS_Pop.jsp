@@ -46,53 +46,52 @@
    function createAUIGrid() {
 	var columnLayout_7001CD = [ {
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : " <spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : " <spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v1",
-        headerText : "performance index",
+        headerText : "<spring:message code='commissiom.text.excel.performIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v2",
-        headerText : "HappyCall Rate",
+        headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v3",
-        headerText : "HappyCall Mark",
+        headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v4",
-        headerText : "HS Rate",
+        headerText : "<spring:message code='commissiom.text.excel.hsRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v5",
-        headerText : "HS Mark",
+        headerText : "<spring:message code='commissiom.text.excel.hsMark'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v6",
-        headerText : "RC Rate",
+        headerText : "<spring:message code='commissiom.text.excel.rcRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v7",
-        headerText : "RC Mark",
+        headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",
         style : "my-column",
         editable : false
     },{
@@ -103,23 +102,23 @@
         visible : false
     },{
         dataField : "v9",
-        headerText : "net sales marks",
+        headerText : "<spring:message code='commissiom.text.excel.netMarks'/>",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "v10",
-        headerText : "group sales productivity",
+        headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v11",
-        headerText : "Grp Sales Product Mark",
+        headerText : "<spring:message code='commissiom.text.excel.grpSalesProMark'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v12",
-        headerText : "Drop Rate PenaltyMark",
+        headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",
         style : "my-column",
         editable : false
     },{
@@ -136,12 +135,12 @@
         visible : false
     },{
         dataField : "v16",
-        headerText : "CollectionAmt",
+        headerText : "<spring:message code='commissiom.text.excel.collectionAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v17",
-        headerText : "Membership Sales Amount total",
+        headerText : "<spring:message code='commissiom.text.excel.memSalesAmtTotal'/>",
         style : "my-column",
         editable : false
     },{
@@ -182,32 +181,32 @@
         visible : false
     },{
         dataField : "v24",
-        headerText : "SHI rental collection rate",
+        headerText : "<spring:message code='commissiom.text.excel.shiRcRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v25",
-        headerText : "SHI Index",
+        headerText : "<spring:message code='commissiom.text.excel.shiIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v26",
-        headerText : "SHI rental membership<BR>collection rate",
+        headerText : "<spring:message code='commissiom.text.excel.shiRenMemCollecRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v27",
-        headerText : "SHI RentMembership Index",
+        headerText : "<spring:message code='commissiom.text.excel.shiRenMemIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v29",
-        headerText : "HS Productivity",
+        headerText : "<spring:message code='commissiom.text.excel.shiRenMemIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v30",
-        headerText : "HS Productivity Mark",
+        headerText : "<spring:message code='commissiom.text.excel.hsProductivityMark'/>",
         style : "my-column",
         editable : false
     },{

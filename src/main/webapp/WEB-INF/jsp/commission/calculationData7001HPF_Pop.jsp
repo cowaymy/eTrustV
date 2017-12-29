@@ -46,73 +46,72 @@
    function createAUIGrid() {
 	var columnLayout_7001HP = [ {
         dataField : "runId",
-        headerText : "RUN ID",
         style : "my-column",
         editable : false,
         visible : false
     },{
         dataField : "emplyId",
-        headerText : " MEMBER ID",
+        headerText : " <spring:message code='commission.text.grid.memberId'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "emplyCode",
-        headerText : " MEMBER CODE",
+        headerText : " <spring:message code='commission.text.search.memCode'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v1",
-        headerText : "membership amount",
+        headerText : "<spring:message code='commissiom.text.excel.mamAmt'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v8",
-        headerText : "net sales unit<br>pv total",
+        headerText : "<spring:message code='commissiom.text.excel.netSalesUnitPvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v14",
-        headerText : "net sales unit<br>pv total",
+        headerText : "<spring:message code='commissiom.text.excel.netSalesUnitPvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v15",
-        headerText : "applicable rate by totalpv",
+        headerText : "<spring:message code='commissiom.text.excel.AppRateByTotalPv'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v19",
-        headerText : "pv total",
+        headerText : "<spring:message code='commissiom.text.excel.pvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v20",
-        headerText : "price total",
+        headerText : "<spring:message code='commissiom.text.excel.priceTotal'/>l",
         style : "my-column",
         editable : false
     },{
         dataField : "v21",
-        headerText : "net sales pv total",
+        headerText : "<spring:message code='commissiom.text.excel.netSalesPvTotal'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v24",
-        headerText : "SHI rental collection rate",
+        headerText : "<spring:message code='commissiom.text.excel.shiRcRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v25",
-        headerText : "SHI Index",
+        headerText : "<spring:message code='commissiom.text.excel.shiIndex'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v26",
-        headerText : "SHI rental collection rate",
+        headerText : "<spring:message code='commissiom.text.excel.shiRcRate'/>",
         style : "my-column",
         editable : false
     },{
         dataField : "v27",
-        headerText : "SHI Index",
+        headerText : "<spring:message code='commissiom.text.excel.shiIndex'/>",
         style : "my-column",
         editable : false
     }];
