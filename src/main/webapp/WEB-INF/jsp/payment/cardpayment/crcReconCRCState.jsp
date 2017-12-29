@@ -49,7 +49,7 @@ $(document).ready(function(){
 var mappingLayout = [ 
                        {
                            dataField : "crditCard",
-                           headerText : "<spring:message code='pay.head.creditCard'/>",
+                           headerText : "<spring:message code='pay.head.crc.credit'/>",
                            editable : false
                        }, {
                            dataField : "crcMcName",
@@ -61,7 +61,7 @@ var mappingLayout = [
                            editable : false
                        },{
                            dataField : "crcTrnscNo",
-                           headerText : "<spring:message code='pay.head.cardNo'/>",
+                           headerText : "<spring:message code='pay.head.crc.cardNo'/>",
                            editable : false
                        }, {
                            dataField : "cardModeName",
@@ -101,9 +101,9 @@ var mappingLayout = [
                            dataField : "crcTrnscMid",
                            headerText : "<spring:message code='pay.head.crcTrnscMid'/>",
                            visible : false
-                       }, {
-                           dataField : "codeId",
-                           headerText : "<spring:message code='pay.head.codeId'/>",
+                       },{
+                           dataField : "crcStateAccCode",
+                           headerText : "",
                            visible : false
                        }];
 
@@ -120,7 +120,7 @@ var crcKeyInLayout = [
                            formatString : "dd/mm/yyyy"
                        }, {
                            dataField : "payItmCcNo",
-                           headerText : "<spring:message code='pay.head.cardNo'/>",
+                           headerText : "<spring:message code='pay.head.crc.cardNo'/>",
                            editable : false,
                        }, {
                            dataField : "cardModeName",
@@ -165,7 +165,7 @@ var crcStateLayout = [
                           editable : false
                       }, {
                           dataField : "crcTrnscNo",
-                          headerText : "<spring:message code='pay.head.cardNo'/>",
+                          headerText : "<spring:message code='pay.head.crc.cardNo'/>",
                           editable : false
                       }, {
                           dataField : "crcTrnscAppv",
@@ -189,9 +189,9 @@ var crcStateLayout = [
                           dataField : "crcTrnscMid",
                           headerText : "<spring:message code='pay.head.crcTrnscMid'/>",
                           visible : false
-                      }, {
-                          dataField : "codeId",
-                          headerText : "<spring:message code='pay.head.codeId'/>",
+                      } , {
+                          dataField : "crcStateAccCode",
+                          headerText : "",
                           visible : false
                       }];
 
@@ -239,7 +239,7 @@ var crcStateLayout = [
                 item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
                 item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
                 item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
-                item.codeId = stateRowItem.item.codeId;//hidden field
+                item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
                 
                 console.log(item);
                 AUIGrid.addRow(mappingGridId, item, "last");
