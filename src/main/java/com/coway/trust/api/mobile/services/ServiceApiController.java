@@ -149,6 +149,29 @@ public class ServiceApiController {
 	
 	
 	
+	@ApiOperation(value = "Heart Service Job List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/heartServiceJobList_b", method = RequestMethod.GET)
+	public ResponseEntity<List<HeartServiceJobDto>> getHeartServiceJob_b(
+			@ModelAttribute HeartServiceJobForm HeartServiceJobForm) throws Exception {
+
+		Map<String, Object> params = HeartServiceJobForm.createMap(HeartServiceJobForm);
+
+		List<EgovMap> HeartServiceJobList = MSvcLogApiService.getHeartServiceJobList_b(params);
+
+		for (int i = 0; i < HeartServiceJobList.size(); i++) {
+			LOGGER.debug("HeartServiceJobList    값 : {}", HeartServiceJobList.get(i));
+
+		}
+		
+		List<HeartServiceJobDto> list = HeartServiceJobList.stream().map(r -> HeartServiceJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}	
+	
+	
+	
+	
 	@ApiOperation(value = "AfterServiceJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob(
@@ -168,6 +191,31 @@ public class ServiceApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+
+	
+	
+	
+	@ApiOperation(value = "AfterServiceJob List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/afterServiceJobList_b", method = RequestMethod.GET)
+	public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob_b(
+			@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
+
+		Map<String, Object> params = AfterServiceJobForm.createMap(AfterServiceJobForm);
+
+		List<EgovMap> AfterServiceJobList = MSvcLogApiService.getAfterServiceJobList_b(params);
+
+		for (int i = 0; i < AfterServiceJobList.size(); i++) {
+			LOGGER.debug("AfterServiceJobList    값 : {}", AfterServiceJobList.get(i));
+
+		}
+		
+		List<AfterServiceJobDto> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
 	
 	
 	
@@ -196,6 +244,30 @@ public class ServiceApiController {
 	
 	
 	
+	@ApiOperation(value = "InstallationJob List batch조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/installationJobList_b", method = RequestMethod.GET)
+	public ResponseEntity<List<InstallationJobDto>> getInstallationJobList_b(
+			@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
+
+		Map<String, Object> params = InstallationJobForm.createMap(InstallationJobForm);
+
+		List<EgovMap> InstallationJobList = MSvcLogApiService.getInstallationJobList_b(params);
+
+		for (int i = 0; i < InstallationJobList.size(); i++) {
+			LOGGER.debug("InstallationJobList    값 : {}", InstallationJobList.get(i));
+
+		}
+		
+		List<InstallationJobDto> list = InstallationJobList.stream().map(r -> InstallationJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	
 	@ApiOperation(value = "ProductRetrunJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/productRetrunJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(
@@ -215,6 +287,30 @@ public class ServiceApiController {
 
 		return ResponseEntity.ok(list);
 	}
+	
+	
+	
+	
+	@ApiOperation(value = "ProductRetrunJob List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/productRetrunJobList_b", method = RequestMethod.GET)
+	public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList_b(
+			@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
+
+		Map<String, Object> params = ProductRetrunJobForm.createMap(ProductRetrunJobForm);
+
+		List<EgovMap> ProductRetrunJobList = MSvcLogApiService.getProductRetrunJobList_b(params);
+
+		for (int i = 0; i < ProductRetrunJobList.size(); i++) {
+			LOGGER.debug("ProductRetrunJobList    값 : {}", ProductRetrunJobList.get(i));
+
+		}
+		
+		List<ProductRetrunJobDto> list = ProductRetrunJobList.stream().map(r -> ProductRetrunJobDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
 	
 	
 	
@@ -242,6 +338,30 @@ public class ServiceApiController {
 	
 	
 	
+	
+	@ApiOperation(value = "Heart Service Parts List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/heartServiceParts_b", method = RequestMethod.GET)
+	public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts_b(
+			@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
+
+		Map<String, Object> params = HeartServicePartsForm.createMap(heartServicePartsForm); 
+
+		List<EgovMap> HeartServiceParts = MSvcLogApiService.heartServiceParts_b(params);
+
+		for (int i = 0; i < HeartServiceParts.size(); i++) {
+			LOGGER.debug("HeartServiceParts    값 : {}", HeartServiceParts.get(i));
+
+		}
+		
+		List<HeartServicePartsDto> list = HeartServiceParts.stream().map(r -> HeartServicePartsDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
 	@ApiOperation(value = "After Service Parts List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceParts", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServicePartsDto>> afterServiceParts(
@@ -250,6 +370,29 @@ public class ServiceApiController {
 		Map<String, Object> params = AfterServicePartsForm.createMap(afterServicePartsForm);
 
 		List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts(params);
+
+		for (int i = 0; i < AfterServiceParts.size(); i++) {
+			LOGGER.debug("AfterServiceParts    값 : {}", AfterServiceParts.get(i));
+
+		}
+		
+		List<AfterServicePartsDto> list = AfterServiceParts.stream().map(r -> AfterServicePartsDto.create(r))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	
+	@ApiOperation(value = "After Service Parts List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/afterServiceParts_b", method = RequestMethod.GET)
+	public ResponseEntity<List<AfterServicePartsDto>> afterServiceParts_b(
+			@ModelAttribute AfterServicePartsForm afterServicePartsForm) throws Exception {
+
+		Map<String, Object> params = AfterServicePartsForm.createMap(afterServicePartsForm);
+
+		List<EgovMap> AfterServiceParts = MSvcLogApiService.afterServiceParts_b(params);
 
 		for (int i = 0; i < AfterServiceParts.size(); i++) {
 			LOGGER.debug("AfterServiceParts    값 : {}", AfterServiceParts.get(i));

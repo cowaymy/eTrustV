@@ -154,5 +154,17 @@ public interface MSvcLogApiMapper {
 
 	void insertCancelSMS(Map<String, Object> params);
 	String getcancReqNo(Map<String, Object> params);
+
+	List<EgovMap> getHeartServiceJobList_b(Map<String, Object> params);
+
+	List<EgovMap> getAfterServiceJobList_b(Map<String, Object> params);
+
+	List<EgovMap> heartServiceParts_b(Map<String, Object> params);
+
+	List<EgovMap> afterServiceParts_b(Map<String, Object> params);
+
+	List<EgovMap> getInstallationJobList_b(Map<String, Object> params);
+
+	List<EgovMap> getProductRetrunJobList_b(Map<String, Object> params);
 	
 }

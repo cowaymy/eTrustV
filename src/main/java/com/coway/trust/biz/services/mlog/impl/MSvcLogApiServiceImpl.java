@@ -61,11 +61,26 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.getHeartServiceJobList(params);
 	}
+	
+	
+	@Override
+	public List<EgovMap> getHeartServiceJobList_b(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getHeartServiceJobList_b(params);
+	}
+	
 
 	@Override
 	public List<EgovMap> getAfterServiceJobList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.getAfterServiceJobList(params);
+	}
+	
+	
+	@Override
+	public List<EgovMap> getAfterServiceJobList_b(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getAfterServiceJobList_b(params);
 	}
 	
 	
@@ -90,12 +105,33 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.heartServiceParts(params);
 	}
+	
+	
+	
+	@Override
+	public List<EgovMap> heartServiceParts_b(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.heartServiceParts_b(params);
+	}
+	
+	
 
 	@Override
 	public List<EgovMap> afterServiceParts(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.afterServiceParts(params);
 	}
+	
+	
+	
+	
+	@Override
+	public List<EgovMap> afterServiceParts_b(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.afterServiceParts_b(params);
+	}
+	
+	
 
 	@Override
 	public void resultRegistration(List<Map<String, Object>> heartLogs) {
@@ -284,6 +320,14 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.getInstallationJobList(params);
 	}
+	
+	
+	@Override
+	public List<EgovMap> getInstallationJobList_b(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getInstallationJobList_b(params);
+	}
+	
 
 	@Override
 	public List<EgovMap> getProductRetrunJobList(Map<String, Object> params) {
@@ -291,6 +335,15 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		return MSvcLogApiMapper.getProductRetrunJobList(params);
 	}
 
+	
+	
+	@Override
+	public List<EgovMap> getProductRetrunJobList_b(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getProductRetrunJobList_b(params);
+	}
+	
+	
 	@Override
 	public void saveAfterServiceLogs(List<Map<String, Object>> asTransLogs) {
 		// TODO Auto-generated method stub
@@ -656,6 +709,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		// TODO Auto-generated method stub
 		return MSvcLogApiMapper.getcancReqNo(params);
 	}
+
+
+
 	   
 /*	@Override
 	public void aSresultRegistration(List<Map<String, Object>> asTransLogs) {
