@@ -251,7 +251,7 @@
                                 }, function(jqXHR, textStatus, errorThrown) {
                                       console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);                    
                              
-                                      if(jqXHR.status==503){
+                                      if (textStatus=="timeout" ||jqXHR.status == 503) {
                                           Common.alert("<spring:message code='commission.alert.calculation.wait503error'/>");
                                            //Common.alert("Running... Please wait about 20 minutes ");
                                            $("#search").trigger("click");
