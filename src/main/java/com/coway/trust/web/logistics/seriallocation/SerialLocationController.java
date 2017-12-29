@@ -3,6 +3,7 @@
  **/
 package com.coway.trust.web.logistics.seriallocation;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,8 +33,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
 @RequestMapping(value = "/logistics/SerialLocation")
-public class SerialLocationController {
-
+public class SerialLocationController
+{
 	private static final Logger logger = LoggerFactory.getLogger(SerialLocationController.class);
 
 	@Value("${app.name}")
@@ -52,36 +53,52 @@ public class SerialLocationController {
 	private SerialLocationService serialLocationService;
 
 	@RequestMapping(value = "/serialLocation.do")
-	public String SerialLocation(@RequestParam Map<String, Object> params) {
+	public String SerialLocation(@RequestParam Map<String, Object> params)
+	{
 		return "logistics/SerialLocation/serialLocationList";
 	}
 
 	@RequestMapping(value = "/searchSerialLocationList.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> searchSerialLocationList(@RequestBody Map<String, Object> params, Model model,
-			SessionVO sessionVO) throws Exception {
-
-		if (!"".equals(params.get("srchcatagorytype")) || null != params.get("srchcatagorytype")) {
-			logger.debug("srchcatagorytype : {}", params.get("srchcatagorytype"));
+	public ResponseEntity<ReturnMessage> searchSerialLocationList(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO)
+    throws Exception
+	{
+		if (!"".equals(params.get("srchcatagorytype")) || null != params.get("srchcatagorytype"))
+		{
 			List<Object> tmp = (List<Object>) params.get("srchcatagorytype");
 			params.put("cateList", tmp);
 		}
-		if (!"".equals(params.get("materialtype")) || null != params.get("materialtype")) {
-			logger.debug("materialtype : {}", params.get("materialtype"));
+
+		if (!"".equals(params.get("materialtype")) || null != params.get("materialtype"))
+		{
 			List<Object> tmp = (List<Object>) params.get("materialtype");
 			params.put("typeList", tmp);
 		}
 
 		List<EgovMap> list = serialLocationService.searchSerialLocationList(params);
 
-		for (int i = 0; i < list.size(); i++) {
-			logger.debug("list ??  : {}", list.get(i));
-		}
-
-		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setDataList(list);
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/updateItemGrade.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateItemGrade(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO)
+    throws Exception
+	{
+
+		List<Object> itemGrades = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+
+		Map<String, Object> paramArray = new HashMap();
+
+		paramArray.put("itemGrades", itemGrades);
+
+		serialLocationService.updateItemGrade(paramArray);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
 }
