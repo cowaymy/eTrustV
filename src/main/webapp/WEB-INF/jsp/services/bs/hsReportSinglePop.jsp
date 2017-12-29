@@ -87,6 +87,14 @@ function fn_HSReportList(){
 }
 
 function fn_Generate(){
+	
+	 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+	
+	    if(selectedItems.length  <= 0) {
+	        Common.alert("<b>No HS selected.</b>");
+	        return ;
+	    }
+	    
 	var date = new Date();
     var month = date.getMonth()+1;
     var day = date.getDate();
