@@ -81,7 +81,13 @@ $(document).ready(function(){
 	
 	   $("#inputMainDept").change(function(){
          
-         doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#inputMainDept").val(), '','inputSubDept', 'S' ,  ''); 
+         
+         if($("#inputMainDept").val() == ''){
+             $("#inputSubDept").val('');
+             $("#inputSubDept").find("option").remove();
+         }else{
+        	 doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#inputMainDept").val(), '','inputSubDept', 'S' ,  ''); 
+         }
          
      });
 	   

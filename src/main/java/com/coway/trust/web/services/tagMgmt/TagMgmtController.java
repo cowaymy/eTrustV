@@ -108,7 +108,7 @@ public class TagMgmtController {
 	
 	@RequestMapping(value = "/selectSubDept.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubDept( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		logger.debug("params {}", params);
+		logger.debug("params =================={}", params);
 		List<EgovMap> subDeptList = tagMgmtService.getSubDeptList(params) ;
 		
 		return ResponseEntity.ok( subDeptList);

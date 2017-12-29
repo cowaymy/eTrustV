@@ -107,9 +107,12 @@ $(document).ready(function(){
          
          
          $("#main_department").change(function(){
-           
-           doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  ''); 
-           
+           if($("#main_department").val() == ''){
+        	   $("#sub_department").val('');
+        	   $("#sub_department").find("option").remove();
+           }else{
+        	    doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  ''); 
+           }
        });
          
          

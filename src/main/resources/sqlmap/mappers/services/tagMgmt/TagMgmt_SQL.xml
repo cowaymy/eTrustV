@@ -251,7 +251,7 @@
 					 WHERE CODE_MASTER_ID = 360
 					
                           <if test = "groupCode != null and groupCode != '' ">
-						           AND  CODE LIKE #{groupCode} || '%'
+						           AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{groupCode})
 				         </if>
 				         
 				          ORDER BY CODE
