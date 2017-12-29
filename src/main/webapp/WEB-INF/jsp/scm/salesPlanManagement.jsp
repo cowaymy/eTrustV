@@ -1082,13 +1082,22 @@ function fnSettiingHeader()
 	                  // 체크박스 표시 설정
 	                  showRowCheckColumn : true,              
 	                  // 전체 선택 체크박스가 독립적인 역할을 할지 여부
-	                  independentAllCheckBox : false,  
-	                  rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+	                  independentAllCheckBox : true,
+	                  rowCheckableFunction : function(rowIndex, isChecked, item) 
+	                  {
+	                    if(item.checkFlag == 4) { //Confirm인 경우 사용자 체크 못하게 함.
+	                      return false;
+	                    }
+
+	                    return true;
+	                  }
+                  , rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
 	                  {
 	                    if(item.checkFlag == 4) { //Confirm
 	                       return false; // false 반환하면 disabled 처리됨
-	                     }
-	                     return true;
+	                    }
+	                    
+	                    return true;
 	                  }                
 		              };
 
@@ -1690,7 +1699,19 @@ function fnSettiingHeader()
 		         	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 		         	    {
 		         	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-		         	    });   
+		         	    }); 
+
+		         	   // 전체 체크박스 클릭 이벤트 바인딩
+		         	   AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
+		         	     if(event.checked) {
+		         	       // name 의 값들 얻기
+		         	       var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "checkFlag");
+		         	       // Anna 제거하기
+		         	       AUIGrid.setCheckedRowsByValue(event.pid, "checkFlag", 1);
+		         	     } else {
+		         	       AUIGrid.setCheckedRowsByValue(event.pid, "checkFlag", 0);
+		         	     }
+		         	   });  
 		
 			            fnSearchBtnList();
 		              // summaryHead Setting.

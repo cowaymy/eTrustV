@@ -820,15 +820,26 @@ function fnMainGridCreate()
             // 체크박스 표시 설정
             showRowCheckColumn : true,              
             // 전체 선택 체크박스가 독립적인 역할을 할지 여부
-            independentAllCheckBox : false,   
+            independentAllCheckBox : true,   
 
             // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
-            rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+            rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+            {
               if(item.poItmAppvStus == "Approved") { // 이름이 Anna 인 경우 사용자 체크 못하게 함.
                 return false; // false 반환하면 disabled 처리됨
               }
+              
               return true;
             }
+
+					 ,rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+					  {
+					    if(item.poItmAppvStus == "Approved") { //Confirm
+					       return false; // false 반환하면 disabled 처리됨
+					    }
+					    
+					    return true;
+					  }  
             
     };
 
@@ -860,18 +871,18 @@ function fnMainGridCreate()
   // 전체 체크박스 클릭 이벤트 바인딩
   AUIGrid.bind(MainGridID, "rowAllChkClick", function( event ) 
   {
-	  /*
+
     if(event.checked ) {  // name 의 값들 얻기  Active(1)/Approved(5)
       var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "poItmAppvStus");
       // Anna 제거하기
-      uniqueValues.splice(uniqueValues.indexOf("Approved"),1);   
+      //uniqueValues.splice(uniqueValues.indexOf("Approved"),1);   
 
       console.log("uniqueValues: " + uniqueValues + " /length: " + uniqueValues.length );  
-      AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", uniqueValues);
+      AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", 1);
     } else {
-      AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", []);
+      AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus",0);
     }
-	  */
+
   });
   
   
