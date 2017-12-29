@@ -158,6 +158,7 @@ function fn_goConvertSale(){
    var v_stus = selectedItems[0].item.c2;
    var v_quotId = selectedItems[0].item.qotatId;
    
+   
    if(v_stus !="ACT"){
 	   Common.alert("["+v_quotId + "] Convert this quotation to sales is disallowed.");
 	   return false;
@@ -215,8 +216,8 @@ function fn_doPrint(){
     }
     
     
-    if("1" != selectedItems[0].item.validStusId ){
-          Common.alert("cat not print["+selectedItems[0].item.validStusId+"]");
+    if("ACT" != selectedItems[0].item.c2 ){
+          Common.alert("cat not print["+selectedItems[0].item.c2+"]");
         return ;
     }
       
@@ -227,7 +228,7 @@ function fn_doPrint(){
     };
   
   
-    $("#QUOTID").val(selectedItems[0].item.quotId);
+    $("#V_QUOTATIONID").val(selectedItems[0].item.qotatId);
     Common.report("reportInvoiceForm", option);
     
     }
@@ -247,6 +248,12 @@ function fn_updateStus(){
      
 }
  </script>
+ 
+ <form id="reportInvoiceForm" method="post">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/ServiceContract_Quotation_PDF.rpt" />
+    <input type="hidden" id="viewType" name="viewType" value="PDF" />
+    <input type="hidden" id="V_QUOTATIONID" name="V_QUOTATIONID"  value=""/>
+</form>
  
 
 <section id="content"><!-- content start -->
