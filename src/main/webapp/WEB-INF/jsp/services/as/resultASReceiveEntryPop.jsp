@@ -416,7 +416,7 @@ function fn_doUpDate(){
 }
 
 
-function fn_sendSms(telNo, _msg){
+function fn_sendSms(_telNo, _msg){
 	
 	var smsMag =_msg;
 	var rTelNo    = _telNo;
