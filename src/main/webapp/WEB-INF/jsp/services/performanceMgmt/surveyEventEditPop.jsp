@@ -6,6 +6,8 @@ var myGridID_InfoEdit;
 var myGridID_QEdit;
 var myGridID_TargetEdit;
 
+var undefCount = 0;
+
 
 var columnLayout_infoEdit=[             
  {dataField:"evtTypeId", headerText:'Event Type', width: 130, editable : false},
@@ -156,6 +158,7 @@ $(document).ready(function(){
                 nullCount = 0;
                 notNullCount = 0;
                 duplicatedCount = 0;
+                undefCount = 0;
                 var duplicationChkList = new Array();
                 var i = 0;
                 var j = 0;
@@ -180,19 +183,28 @@ $(document).ready(function(){
                         }
                     }else if(v_salesOrdNo == "" || typeof v_salesOrdNo == 'undefined'){
                         nullCount ++;
+                        if(typeof v_salesOrdNo == 'undefined'){
+                        	undefCount ++;
+                        }
                     }
+                    
                 } 
-                Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
-                    if((nullCount == 0 && notNullCount != (result.length+duplicatedCount)) || (nullCount == 0 && result.length == 0)){
-                    	result = false;
-                        Common.alert("'Sales Order' is a wrong Order Number.");
-                    } else if(notNullCount != salesOrderListLength && nullCount != salesOrderListLength){
-                        result = false;
-                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Sales Order' htmlEscape='false'/>");
-                    } else {
-                        Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_edit);
-                    }
-                });
+                
+                if( salesOrderListLength == undefCount ){
+                	Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_edit);
+                }else{
+	                Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
+	                    if((nullCount == 0 && notNullCount != (result.length+duplicatedCount)) || (nullCount == 0 && result.length == 0)){
+	                    	result = false;
+	                        Common.alert("'Sales Order' is a wrong Order Number.");
+	                    } else if(notNullCount != salesOrderListLength && nullCount != salesOrderListLength){
+	                        result = false;
+	                        Common.alert("<spring:message code='sys.common.alert.validation' arguments='Sales Order' htmlEscape='false'/>");
+	                    } else {
+	                        Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_edit);
+	                    }
+	                });
+                }
                 
             }else{
                 Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_edit);
