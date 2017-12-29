@@ -70,6 +70,8 @@ public interface MlogApiMapper {
 	List<EgovMap> getUserFilterList(Map<String, Object> params);
 	
 	List<EgovMap> getInventoryOnHandStock(Map<String, Object> params);
+	
+	List<EgovMap> getInventoryOnHandStockNoSerial(Map<String, Object> params);
 
 	/**
 	 * 현창배 추가

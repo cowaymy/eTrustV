@@ -823,8 +823,18 @@ public class LogisticsApiController {
 			throws Exception {
 
 		Map<String, Object> params = InventoryOnHandStockForm.createMap(inventoryOnHandStockForm);
-
-		List<EgovMap> getInventoryOnHandStock = MlogApiService.getInventoryOnHandStock(params);
+		
+		String type = params.get("searchType").toString();
+		
+		LOGGER.debug("type    값 : {}", type);
+		
+		List<EgovMap> getInventoryOnHandStock =null;
+		
+		if("4".equals(type)){
+			getInventoryOnHandStock = MlogApiService.getInventoryOnHandStockNoSerial(params);
+		}else{
+		    getInventoryOnHandStock = MlogApiService.getInventoryOnHandStock(params);
+		}
 
 		for (int i = 0; i < getInventoryOnHandStock.size(); i++) {
 			LOGGER.debug("MyStockList    값 : {}", getInventoryOnHandStock.get(i));

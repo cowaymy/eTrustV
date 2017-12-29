@@ -12,7 +12,7 @@ public class InventoryOnHandStockForm {
 	@ApiModelProperty(value = "사용자 ID [default : '' 전체] 예) CT100561", example = "CT100561")
 	private String userId;
 
-	@ApiModelProperty(value = "searchType [default : '' 전체] 예) PartsCode=1,PartsName=2,All=3 ", example = " 1,2, 3")
+	@ApiModelProperty(value = "searchType [default : '' 전체] 예) PartsCode=1,PartsName=2,All=3, NoSerial=4 ", example = " 1,2,3,4")
 	private int searchType;
 
 	@ApiModelProperty(value = "Input Keyword [default : '' 전체] 예) AN,DO,AP/3300513,3300514,3302950", example = "AP")

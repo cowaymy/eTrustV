@@ -219,6 +219,12 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		return MlogApiMapper.getInventoryOnHandStock(params);
 	}
 	
+	@Override
+	public List<EgovMap> getInventoryOnHandStockNoSerial(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.getInventoryOnHandStockNoSerial(params);
+	}
+	
 	/**
 	 * 현창배 추가
 	 */
