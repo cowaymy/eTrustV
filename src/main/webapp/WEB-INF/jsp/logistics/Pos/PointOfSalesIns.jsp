@@ -296,7 +296,7 @@ $(function(){
     
     $('#insReqType').change(function() {
         searchReqType = $('#insReqType').val();
-        if (searchReqType == 'OG53'){
+        if ('OG53' == searchReqType || 'OG51' == searchReqType || 'OG71' == searchReqType || 'OG72' == searchReqType ){
             $('#lirightBtn').hide();
             $('#reqadd').show();
             AUIGrid.setGridData(resGrid, []);

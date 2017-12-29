@@ -399,6 +399,7 @@ $(function(){
         $("#reqsdt").val('');
         $("#reqedt").val('');
         $("#searchReqType").val('');
+        $("#searchTransType").val('');
     });
     
 //     $("#flocationnm").keypress(function(event) {
