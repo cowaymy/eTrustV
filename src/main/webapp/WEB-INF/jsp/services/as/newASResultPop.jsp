@@ -785,6 +785,7 @@ function  fn_setSaveFormData(){
                    AS_NO:                       $("#AS_NO").val(),
                    AS_ENTRY_ID:              $("#AS_ID").val(),
                    AS_SO_ID:                   $("#ORD_ID").val(),
+                   AS_ORD_NO:                $("#ORD_NO").val(),
                    AS_CT_ID:                   $('#ddlCTCode').val(),
                    AS_SETL_DT:               $('#dpSettleDate').val() , 
                    AS_SETL_TM:               $('#tpSettleTime').val(),   

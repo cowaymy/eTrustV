@@ -489,7 +489,9 @@ function asManagementGrid() {
         dataField : "asResultId",
         headerText : "asResultId",
         width : 100,  visible : false
-    }, {
+    }
+    /*
+    , {
         dataField : "undefined",
         headerText : "Edit",
         width : 170,
@@ -513,6 +515,7 @@ function asManagementGrid() {
                   }
         }                            
 	}
+    */
     
     ];
      // 그리드 속성 설정

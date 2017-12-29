@@ -32,6 +32,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -1215,21 +1216,14 @@ public class ASManagementListController {
 	@RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
 	public ResponseEntity<String> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
 		logger.debug("params {}", params);
-		
-		/*
+
 		//send SMS
 		SmsVO sms = new SmsVO(session.getUserId(), 975);
-		sms.setMessage("Do you really want to cancel for the current month Heart Service?\n" + "HS Order Number :"+ params.get("salesOrderNo")
-		+ "\nCancel Request Number :"+ cancReqNo );
-
-		logger.debug(" params1111 : {}" , canCelSmsForm.getReceiverTelNo());
-		
-		sms.setMobiles((String)canCelSmsForm.getReceiverTelNo());  
-		
+		sms.setMessage( CommonUtils.nvl(params.get("msg")));
+		sms.setMobiles(CommonUtils.nvl(params.get("rTelNo")));  
 		SmsResult smsResult = adaptorService.sendSMS(sms);
-		
 		logger.debug(" smsResult : {}" , smsResult.toString());
-		*/
+
 		return ResponseEntity.ok("OK");
 	}
 	

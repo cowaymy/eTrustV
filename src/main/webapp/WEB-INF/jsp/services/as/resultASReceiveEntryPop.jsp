@@ -415,6 +415,19 @@ function fn_doUpDate(){
     }
 }
 
+
+function fn_sendSms(telNo, _msg){
+	
+	var smsMag =_msg;
+	var rTelNo    = _telNo;
+	
+    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :smsMag} , function(result) {
+        console.log("sms.");
+        console.log( result);
+    });
+    
+}
+
 function  fn_doNewSave(){
 	
 	
@@ -486,17 +499,16 @@ function  fn_doNewSave(){
 	                	Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +"<b>New AS successfully saved.<br />AS number : [" + result.asNo  + "]</b>" );
 	                	   
 	                	if($("#checkSms").prop("checked")){
-	                        Common.alert("SMS" +DEFAULT_DELIMITER +"SMS 발송 팝업 화면 호출 차후 개발 " );
-	                		/*
-	                		     string ASID = asEntryData.ASID.ToString();
-	                            string ASNo = asEntryData.ASNo.ToString();
-	                            string CTMemID = ddlCTCode.SelectedValue.ToString();
-	                            string Message = this.GetSMSMessage(asEntryData,li);
-
-	                            Message = Message.Replace("&", "$%$");
-	                            Window_PopUp.NavigateUrl = "~/Services/AS/ASEntrySMS.aspx?ASID=" + ASID + "&ASNo=" + ASNo + "&CTMemID=" + CTMemID + "&Message=" + Message;
-	                            Window_PopUp.VisibleOnPageLoad = true;    
-	                          */
+	                     //   Common.alert("SMS" +DEFAULT_DELIMITER +"SMS 발송 팝업 화면 호출 차후 개발 " );
+	                        
+	                       var  sMSMessage = "";
+	                       var  appDate =$("#appDate").val();
+	                       var branchDSC =$("#branchDSC option:selected").text();
+	                       
+	                       sMSMessage="Order="+ '${as_ord_basicInfo.ordNo}'+"   AS="+result.asNo+"  Appt Date="+appDate+"  DSC="+branchDSC+" TQ "; 
+	                       
+	                       var t = $("#mobileNo").val();
+	                       fn_sendSms(t ,sMSMessage);  
 	                	}
 	                	
 	                	if($("#checkSms1").prop("checked")){

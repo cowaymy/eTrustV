@@ -1222,8 +1222,8 @@
     <select id="getASStockPrice" parameterType="Map" resultType="egovMap">
     		select   NVL(AMT ,0) AMT 
 				from SAL0016M A where 1=1
-				AND PRC_ID   =#{PRC_ID}
-				AND MEM_PAC_ID = 0
+				AND STK_ID   =#{PRC_ID}
+				AND MEM_PAC_ID = 0  AND APP_TYPE_ID =67
     </select>
     
     
