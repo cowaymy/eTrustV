@@ -11,7 +11,7 @@ public interface RCMSAgentManageMapper {
 
 	List<EgovMap> selectAgentTypeList(Map<String, Object> params);
 	
-	List<EgovMap> selectRosCaller();
+	List<EgovMap> selectRosCaller(Map<String, Object> params);
 
 	List<EgovMap> selectAssignAgentList(Map<String, Object> params);
 

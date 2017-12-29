@@ -10,7 +10,7 @@ public interface RCMSAgentManageService {
 	
 	List<EgovMap> selectAgentTypeList(Map<String, Object> params)throws Exception;
 
-	List<EgovMap> selectRosCaller();
+	List<EgovMap> selectRosCaller(Map<String, Object> params);
 
 	List<EgovMap> selectAssignAgentList(Map<String, Object> params);
 

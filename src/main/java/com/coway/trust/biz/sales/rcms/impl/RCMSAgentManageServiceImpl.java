@@ -161,8 +161,8 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 	
 	
 	@Override
-	public List<EgovMap> selectRosCaller() {
-		return rcmsAgentManageMapper.selectRosCaller();
+	public List<EgovMap> selectRosCaller(Map<String, Object> params) {
+		return rcmsAgentManageMapper.selectRosCaller(params);
 	}
 
 	@Override

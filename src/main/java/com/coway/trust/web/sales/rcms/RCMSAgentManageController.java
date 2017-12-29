@@ -138,10 +138,11 @@ public class RCMSAgentManageController {
 	
 	@RequestMapping(value = "/selectRosCaller")
 	public ResponseEntity<List<EgovMap>> selectRosCaller (@RequestParam Map<String, Object> params) throws Exception{
-		
+
+		LOGGER.debug("param ===================>>  " + params);
 		List<EgovMap> rosCallertList = null;
 		
-		rosCallertList = rcmsAgentService.selectRosCaller();
+		rosCallertList = rcmsAgentService.selectRosCaller(params);
 		
 		return ResponseEntity.ok(rosCallertList);
 		

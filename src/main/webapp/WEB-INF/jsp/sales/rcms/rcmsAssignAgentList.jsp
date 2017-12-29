@@ -1,11 +1,24 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<style type="text/css">
+/* 커스텀 칼럼 스타일 정의 */
+.my-right-style {
+    text-align:right;
+}
+.my-left-style {
+    text-align:left;
+}
+.aui-grid-drop-list-ul {
+   text-align:left;
+}
+</style>
 <script type="text/javaScript">
 var assignGrid;
+var excelGrid;
 
 var companyList = [];
 var agentList = [];
+var suggestList = [];
 
 $(document).ready(function(){
 
@@ -46,11 +59,12 @@ $(document).ready(function(){
                 type: "M"
              });
     //RosCaller
-    CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", '', '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: false , type: "M"});
-
+    CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {stus:'1'}, '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: false , type: "M"});
+    
     $("#companyType").multipleSelect("disable");
     fn_companyList();
     fn_agentList();
+    fn_suggestList();
     
     creatGrid();
     
@@ -68,7 +82,7 @@ $(document).ready(function(){
     
     //엑셀 다운
     $('#excelDown').click(function() {        
-       GridCommon.exportTo("assignGrid", 'xlsx', "RCMS Assign List");
+       GridCommon.exportTo("excelGrid", 'xlsx', "RCMS Assign List");
     });
     
    // fn_selectListAjax();
@@ -84,12 +98,21 @@ function fn_companyList(){
 }
 
 
-
+//Ros caller
 function fn_agentList(){
     
-    Common.ajax("GET", "/sales/rcms/selectRosCaller", '', function(result) {
+    Common.ajax("GET", "/sales/rcms/selectRosCaller", {stus:'1'}, function(result) {
     	agentList = result;
         console.log(agentList);
+    }, null, {async : false});
+}
+
+//suggest Caller
+function fn_suggestList(){
+    
+    Common.ajax("GET", "/sales/rcms/selectRosCaller", '', function(result) {
+    	suggestList = result;
+        console.log(suggestList);
     }, null, {async : false});
 }
 
@@ -124,28 +147,28 @@ function creatGrid(){
               {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
               {dataField : "openMthAging", headerText : "Open Aging<br/>Month", width : 95  , editable       : false      } ,            
-              {dataField : "suggestAgent", headerText : "Suggest<br/>Agent", width : 90    , editable       : false     
+              {dataField : "suggestAgent", headerText : "Suggest<br/>Caller", width : 90    , editable       : false     , style:"aui-grid-drop-list-ul" 
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                   var retStr = value;
-                  for(var i=0,len=agentList.length; i<len; i++) {
-                      if(agentList[i]["agentId"] == value) {
-                          retStr = agentList[i]["agentName"];
+                  for(var i=0,len=suggestList.length; i<len; i++) {
+                      if(suggestList[i]["agentId"] == value) {
+                          retStr = suggestList[i]["agentName"];
                           break;
                       }
                   }
 	                              return retStr;
 	              }
-	            , editRenderer : {
+	          /*   , editRenderer : {
 	                  type       : "DropDownListRenderer",
 	                  list       : agentList, //key-value Object 로 구성된 리스트
 	                  keyField   : "agentId", // key 에 해당되는 필드명
 	                  valueField : "agentName" // value 에 해당되는 필드명
-	              }  
+	              }   */
 	            } ,  
-	          {dataField : "prevAgentId", headerText : "", width : 90    ,     visible:false, editable       : false},
-              {dataField : "agentId", headerText : "ROS Caller", width : 90    ,     editable       : true
+	          {dataField : "prevAgentId", headerText : "", width : 90    ,   visible:false ,   editable       : false},
+              {dataField : "agentId", headerText : "ROS Caller", width : 90    ,     editable       : true ,  style:"aui-grid-drop-list-ul" 
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
-                      var retStr = value;
+                      var retStr = '';
                       for(var i=0,len=agentList.length; i<len; i++) {
                           if(agentList[i]["agentId"] == value) {
                               retStr = agentList[i]["agentName"];
@@ -165,6 +188,86 @@ function creatGrid(){
               {dataField : "sensitiveFg", headerText : "Sensitive", width : 70   ,editable       : false    }             
               ];
         
+        var excelColLayout = [ 
+              {dataField : "salesOrdNo", headerText : "Order No.", width : 80 , editable       : false   },
+              {dataField : "custId", headerText : "Customer<br/>ID", width : 80 , editable       : false       },
+              {dataField : "name", headerText : "Customer Name", width : 150 , editable       : false   ,style :"my-left-style"     },
+              {dataField : "corpTypeId", headerText : "Company<br/>Type", width : 100, 	  editable       : true
+                  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                      var retStr = value;
+                      for(var i=0,len=companyList.length; i<len; i++) {
+                          if(companyList[i]["codeId"] == value) {
+                              retStr = companyList[i]["codeName"];
+                              break;
+                          }
+                      }
+                                  return retStr;
+	              }
+	            , editRenderer : {
+	                  type       : "DropDownListRenderer",
+	                  list       : companyList, //key-value Object 로 구성된 리스트
+	                  keyField   : "codeId", // key 에 해당되는 필드명
+	                  valueField : "codeName" // value 에 해당되는 필드명
+	              }  
+              },
+              {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "openMthAging", headerText : "Open Aging<br/>Month", width : 95  , editable       : false      } ,            
+              {dataField : "oriPrevAgentId", headerText : "Prev Caller", width : 150    ,    editable       : false,  style:"aui-grid-drop-list-ul" 
+            	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                      var retStr = value;
+                      for(var i=0,len=suggestList.length; i<len; i++) {
+                          if(suggestList[i]["agentId"] == value) {
+                              retStr = suggestList[i]["agentName"];
+                              break;
+                          }
+                      }
+                                      return retStr;
+                  }
+              },
+              {dataField : "suggestAgent", headerText : "Suggest Caller", width : 150    , editable       : false     ,  style:"aui-grid-drop-list-ul" 
+            	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                  var retStr = value;
+                  for(var i=0,len=suggestList.length; i<len; i++) {
+                      if(suggestList[i]["agentId"] == value) {
+                          retStr = suggestList[i]["agentName"];
+                          break;
+                      }
+                  }
+	                              return retStr;
+	              }
+	          /*   , editRenderer : {
+	                  type       : "DropDownListRenderer",
+	                  list       : agentList, //key-value Object 로 구성된 리스트
+	                  keyField   : "agentId", // key 에 해당되는 필드명
+	                  valueField : "agentName" // value 에 해당되는 필드명
+	              }   */
+	            } ,  
+	          {dataField : "prevAgentId", headerText : "Caller ID", width : 90    ,      editable       : false},
+              {dataField : "agentId", headerText : "ROS Caller", width : 150    ,     editable       : true ,  style:"aui-grid-drop-list-ul" 
+                  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                      var retStr = '';
+                      for(var i=0,len=agentList.length; i<len; i++) {
+                          if(agentList[i]["agentId"] == value) {
+                              retStr = agentList[i]["agentName"];
+                              break;
+                          }
+                      }
+                                  return retStr;
+	              }
+	            , editRenderer : {
+	                  type       : "DropDownListRenderer",
+	                  list       : agentList, //key-value Object 로 구성된 리스트
+	                  keyField   : "agentId", // key 에 해당되는 필드명
+	                  valueField : "agentName" // value 에 해당되는 필드명
+	              }  
+	           } ,            
+              {dataField : "updAgentDt", headerText : "Assigned DT", width : 100  , editable       : false     } ,            
+              {dataField : "assigned", headerText : "Assigned", width : 70  , editable       : false     } ,            
+              {dataField : "sensitiveFg", headerText : "Sensitive", width : 70   ,editable       : false    },             
+              {dataField : "rem", headerText : "Remark", width : 200   ,editable       : false  ,style :"my-left-style"  }             
+              ];
+        
 
         var assignOptions = {
                    showStateColumn:false,
@@ -175,6 +278,7 @@ function creatGrid(){
              }; 
         
         assignGrid = GridCommon.createAUIGrid("#assignGrid", assignColLayout, "", assignOptions);
+        excelGrid = GridCommon.createAUIGrid("#excelGrid", excelColLayout, "", assignOptions);
         
       /*   // 셀 더블클릭 이벤트 바인딩
          AUIGrid.bind(assignGrid, "cellDoubleClick", function(event){
@@ -238,6 +342,7 @@ function fn_selectListAjax() {
        console.log( result);
        
       AUIGrid.setGridData(assignGrid, result);
+      AUIGrid.setGridData(excelGrid, result);
       
       $("#orderNo").val("");              
       $("#salesOrdId").val("");  
@@ -418,6 +523,7 @@ function fn_edit(){
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="assignGrid" style="width:100%; height:300px; margin:0 auto;"></div>
+    <div id="excelGrid" style="width:100%; height:300px; margin:0 auto; display: none" ></div>
 </article><!-- grid_wrap end -->
 </section><!-- search_result end -->
 </section><!-- content end -->
