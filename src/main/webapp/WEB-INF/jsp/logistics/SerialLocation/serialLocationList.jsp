@@ -22,24 +22,51 @@
 <script type="text/javaScript" language="javascript">
 
     var myGridID;
+    var gradeList = new Array();
 
     var columnLayout = [
-                                    {dataField:"serialNo" ,headerText:"Serial Number",width:250 ,height:30},
-                                    {dataField:"whLocCode" ,headerText:"Location Code",width:120 ,height:30},
-                                    {dataField:"whLocDesc" ,headerText:"Location Description",width:350 ,height:30},
-                                    {dataField:"whLocType" ,headerText:"Location Type",width:120 ,height:30},
-                                    {dataField:"matnr" ,headerText:"Material Code",width:120 ,height:30},
-                                    {dataField:"stkDesc" ,headerText:"Material Name",width:200 ,height:30},
-                                    {dataField:"stkType" ,headerText:"Material Type",width:150 ,height:30},
-                                    {dataField:"stkCtgry" ,headerText:"Material Category",width:150 ,height:30},
-                                    {dataField:"gltri" ,headerText:"Prod Date",width:150 ,height:30},
-                                    {dataField:"lwedt" ,headerText:"GR Date",width:150 ,height:30},
-                                    {dataField:"swaok" ,headerText:"Final Issue",width:150 ,height:30},
-                                    {dataField:"crtDt" ,headerText:"Create Date",width:120 ,height:30}
+                                    {dataField:"serialno" ,headerText:"Serial No.",width:200 ,height:30},
+                                    {dataField: "grade", headerText :"<spring:message code='log.head.grade'/>", width:100, height:30,
+                                      labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+
+                                    	                          var retStr = "";
+
+                                                                  for (var i = 0, len = gradeList.length; i < len; i++)
+                                                                  {
+                                                                      if (gradeList[i]["code"] == value)
+                                                                      {
+                                                                          retStr = gradeList[i]["codeName"];
+                                                                          break;
+                                                                      }
+                                                                  }
+
+                                                                  return retStr == "" ? value : retStr;
+                                      },
+                                      editRenderer : {
+                                             type : "DropDownListRenderer",
+                                             showEditorBtnOver : true,
+                                             listFunction : function(rowIndex, columnIndex, item, dataField) {return gradeList ;},
+                                             keyField : "code",
+                                             valueField : "codeName"
+                                      }
+                                     },
+                                    {dataField:"loccode", headerText:"Loc. Code",width:120 ,height:30},
+                                    {dataField:"locdesc", headerText:"Loc. Description",width:350 ,height:30},
+                                    {dataField:"loctype", headerText:"Loc. Type",width:100 ,height:30},
+                                    {dataField:"brnch", headerText:"Branch",width:300 ,height:30},
+                                    {dataField:"itmcode", headerText:"Mat. Code",width:120 ,height:30},
+                                    {dataField:"itmdesc", headerText:"Mat. Name",width:250 ,height:30},
+                                    {dataField:"itmtype", headerText:"Mat. Type",width:100 ,height:30},
+                                    {dataField:"itmctgry", headerText:"Mat. Category",width:150 ,height:30},
+                                    {dataField:"gltri", headerText:"Prod Date",width:120 ,height:30},
+                                    {dataField:"lwedt", headerText:"GR Date",width:120 ,height:30},
+                                    {dataField:"swaok", headerText:"Final Issue",width:95 ,height:30},
+                                    {dataField:"cust", headerText:"Customer",width:300 ,height:30},
+                                    {dataField:"crtdt", headerText:"Create Date",width:120 ,height:30}
                                     ];
 
     var gridPros = {
-                                editable : false,
+                                editable : true,
                                 displayTreeOpen : true,
                                 showRowCheckColumn : false,
                                 showStateColumn : false,
@@ -55,6 +82,8 @@
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) { });
         AUIGrid.bind(myGridID, "ready", function(event) { });
 
+        fn_gradComb();
+
     });
 
     $(function() {
@@ -68,8 +97,10 @@
         });
 
         $("#download").click(function() {
+
             GridCommon.exportTo("main_grid_wrap", 'xlsx', "Serial Location List");
         });
+
         $("#srchmaterial").keypress(function(event) {
 
             if (event.which == '13')
@@ -79,6 +110,36 @@
                 $("#searchtype").val("search");
 
                 Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
+            }
+        });
+
+        $("#save").click(function() {
+
+            var EditedGridData = AUIGrid.getEditedRowItems(myGridID);
+
+            if(EditedGridData.length > 0)
+            {
+	            var data = {};
+
+	            data.add = EditedGridData;
+
+	            var url = "/logistics/SerialLocation/updateItemGrade.do";
+
+	            Common.ajax("POST", url, data, function(result) {
+
+	                Common.alert("Grades Successfully Saved.");
+
+	            },  function(jqXHR, textStatus, errorThrown) {
+
+	                    try { }
+	                    catch (e) { }
+
+	                    Common.alert("Fail : " + jqXHR.responseJSON.message);
+	            });
+            }
+            else
+            {
+            	Common.alert("No Grades Altered to be Saved.");
             }
         });
 
@@ -111,10 +172,26 @@
         Common.ajax("POST" , url , param , function(data) {
 
             AUIGrid.setGridData(myGridID, data.dataList);
+
         });
     }
 
+    function fn_gradComb() {
 
+        var paramdata = { groupCode : '390', orderValue : 'CODE_ID'};
+
+        Common.ajaxSync("GET", "/common/selectCodeList.do", paramdata, function(result) {
+            for (var i = 0; i < result.length; i++)
+            {
+                var list = new Object();
+                list.code = result[i].code;
+                list.codeId = result[i].codeId;
+                list.codeName = result[i].codeName;
+                list.description = result[i].description;
+                gradeList.push(list);
+            }
+        });
+    }
 
     function fn_itempopList(data) {
 
@@ -177,7 +254,7 @@
          <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
              <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-</c:if>         
+</c:if>
         </ul>
     </aside><!-- title_line end -->
 
@@ -246,17 +323,32 @@
                             </div><!-- date_set end -->
                         </td>
                     </tr>
+                    <tr>
+                        <th scope="row">Prod. Date</th>
+                        <td colspan="5">
+                            <div class="date_set"><!-- date_set start -->
+                                <p>
+                                  <input id="prodfrm" name="prodfrm" type="text" title="Prod. start Date" placeholder="DD/MM/YYYY" class="j_date">
+                                </p>
+                                    <span>To</span>
+                                <p>
+                                   <input id="prodto" name="prodto" type="text" title="Prod. start Date" placeholder="DD/MM/YYYY" class="j_date">
+                                </p>
+                            </div><!-- date_set end -->
+                        </td>
+                    </tr>
                 </tbody>
             </table><!-- table end -->
         </form>
     </section><!-- search_table end -->
 
     <section class="search_result"><!-- search_result start -->
-    
+
     <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>    
+            <li><p class="btn_grid"><a id="save">Save Grade</a></p></li>
+</c:if>
     </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
