@@ -600,7 +600,7 @@
     
     <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
       SELECT 
-             (SELECT DECODE(PLAN_STUS_ID,4,0,1) 
+             (SELECT PLAN_STUS_ID
                 FROM SCM0001M
                WHERE PLAN_ID = PLAN_MASTER_ID
              ) CHECK_FLAG
@@ -893,8 +893,9 @@ SELECT PLAN_ID PLAN_MASTER_ID
 <select id="selectStockIdByStCode" parameterType="Map" resultType="egovMap">
 SELECT STK_ID  
   FROM SYS0026M  
- WHERE STK_CODE = #{newStockCode}
-   AND ROWNUM   =1 
+ WHERE STK_CODE    = #{newStockCode}
+   AND STK_TYPE_ID = #{newStockTypeId}
+   AND ROWNUM = 1 
 </select>
 
 <insert id="insertSalesPlanDetail" parameterType="Map">
