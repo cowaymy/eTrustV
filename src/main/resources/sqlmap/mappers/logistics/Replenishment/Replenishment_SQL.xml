@@ -13,11 +13,11 @@
     
     <select id="excelDataSearch" parameterType="Map" resultType="Map">
         SELECT #{period} as PERIOD , WH_LOC_ID as LOCID, WH_LOC_CODE as LOCCD , WH_LOC_DESC as LOCNM,
-		       #{materialcode} as ITMCD , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{materialcode}) as ITMNM,
-		       #{maximumqty} as MAXQTY, #{reorderqty} as REORDQTY
-		       ,nvl(#{safetyqty} , 0) as SFTYQTY
-		       ,#{plannedqty} AS PlANNEDQTY <!-- RDC 용 세팅  -->
-		  FROM SYS0028M WHERE WH_LOC_CODE = #{locationcode}
+               #{materialcode} as ITMCD , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{materialcode}) as ITMNM,
+               #{maximumqty} as MAXQTY, #{reorderqty} as REORDQTY
+               ,nvl(#{safetyqty} , 0) as SFTYQTY
+               ,#{plannedqty} AS PlANNEDQTY <!-- RDC 용 세팅  -->
+          FROM SYS0028M WHERE WH_LOC_CODE = #{locationcode}
     </select>
     
     <insert id="relenishmentSave" parameterType="Map">
@@ -37,32 +37,47 @@
                 VALUES ( to_char(to_date(#{period},'mm/yyyy') , 'yyyymm') , 
                          #{loccd} , #{itmcd} , #{maxqty}, #{reordqty} ,#{sftyqty} , SYSDATE , #{userid},#{planqty})
     </insert>
+    <insert id="relenishmentSaveMsCt" parameterType="Map">
+        MERGE INTO LOG0077M A
+             USING DUAL
+                ON (A.PERIOD = to_char(to_date(#{period},'mm/yyyy') , 'yyyymm') AND LOC_CODE = #{loccd} AND STK_CODE = #{stkCode})
+            WHEN MATCHED THEN
+                UPDATE SET 
+                       A.SFTY_QTY   = #{sftyQty}
+                      ,A.REORD_QTY = #{reordQty}
+                      ,A.CRT_DT    = SYSDATE
+                      ,A.CRT_USER  = #{userid}
+            WHEN NOT MATCHED THEN 
+                INSERT ( PERIOD, LOC_CODE, STK_CODE, MAX_QTY, REORD_QTY, SFTY_QTY, CRT_DT, CRT_USER)
+                VALUES ( to_char(to_date(#{period},'mm/yyyy') , 'yyyymm') , 
+                         #{loccd} , #{stkCode} , #{maxQty}, #{reordQty} ,#{sftyQty} , SYSDATE , #{userid})
+    </insert>
     
     <select id="selectSearchList" parameterType="Map" resultType="egovMap">
         select ROWNUM          AS rnum
              , to_char(to_date(L77.PERIOD , 'yyyymm') , 'mm/yyyy')      AS period  
-		     , S28.WH_LOC_ID      AS locid
-		     , L77.LOC_CODE    AS loccd
-		     , S28.WH_LOC_DESC AS locnm
-		     , L77.STK_CODE    AS itmcd
-		     , S26.STK_DESC    AS itmnm
-		     , S13.CODE        AS locgb
-		     , L77.MAX_QTY     AS maxqty
-		     , L77.REORD_QTY   AS reordqty
-		     , L77.SFTY_QTY    AS sftyqty
-		  from LOG0077M L77 ,
-		       SYS0028M S28 , 
-		       SYS0026M S26 ,
-		       (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 339) S13
-		 WHERE 1 = 1
-		   AND S28.WH_LOC_GB = S13.CODE
-		   AND L77.LOC_CODE = S28.WH_LOC_CODE
-		   AND L77.STK_CODE = S26.STK_CODE
-		   <if test="slocgb != null and slocgb !=''">
-		      AND S28.WH_LOC_GB = #{slocgb}
-		   </if>
-		   <if test="sloccode != null and sloccode !=''">
-		      AND L77.LOC_CODE = #{sloccode}
+             , S28.WH_LOC_ID      AS locid
+             , L77.LOC_CODE    AS loccd
+             , S28.WH_LOC_DESC AS locnm
+             , L77.STK_CODE    AS itmcd
+             , S26.STK_DESC    AS itmnm
+             , S13.CODE        AS locgb
+             , L77.MAX_QTY     AS maxqty
+             , L77.REORD_QTY   AS reordqty
+             , L77.SFTY_QTY    AS sftyqty
+          from LOG0077M L77 ,
+               SYS0028M S28 , 
+               SYS0026M S26 ,
+               (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 339) S13
+         WHERE 1 = 1
+           AND S28.WH_LOC_GB = S13.CODE
+           AND L77.LOC_CODE = S28.WH_LOC_CODE
+           AND L77.STK_CODE = S26.STK_CODE
+           <if test="slocgb != null and slocgb !=''">
+              AND S28.WH_LOC_GB = #{slocgb}
+           </if>
+           <if test="sloccode != null and sloccode !=''">
+              AND L77.LOC_CODE = #{sloccode}
            </if>
            <if test="speriod != null and speriod !=''">
               AND L77.PERIOD = to_char(to_date(#{speriod},'mm/yyyy') , 'yyyymm')
@@ -76,139 +91,125 @@
     </select>
     <select id="searchListRdc" parameterType="Map" resultType="EgovMap">
     <![CDATA[ 
-		SELECT   ROWNUM AS RNUM
-		        ,TO_CHAR (TO_DATE (LG77.PERIOD, 'YYYYMM'), 'MM/YYYY') AS PERIOD
-		        ,SY28.CDC_CODE CDC
-		        , (SELECT WH_LOC_DESC
-		             FROM SYS0028M
-		            WHERE WH_LOC_CODE = SY28.CDC_CODE) CDCNAME
-		        ,LG77.LOC_CODE AS LOCCD
-		        ,SY28.WH_LOC_DESC CT_NAME
-		        ,LG77.STK_CODE AS ITMCD
-		        ,SY26.STK_DESC AS ITMNM
-		        ,SY26.STK_CTGRY_ID
-		        , (SELECT CODE_NAME
-		             FROM SYS0013M
-		            WHERE CODE_ID = SY26.STK_CTGRY_ID) STK_CTGRY_NAME
-		        ,SY26.STK_TYPE_ID
-		        , (SELECT CODE_NAME
-		             FROM SYS0013M
-		            WHERE CODE_ID = SY26.STK_TYPE_ID) STK_TYPE_NAME
-		        ,SY26.UOM
-		        , (SELECT CODE_NAME
-		             FROM SYS0013M
-		            WHERE CODE_ID = SY26.UOM) UOM_NAME
-		        ,NVL (L75A.BOOKQTY, 0) AS AVAILQTY
-		        ,NVL (L75R.BOOKQTY, 0) AS REMAINQTY
-		        ,NVL (L75A.BOOKQTY, 0)+NVL (L75R.BOOKQTY, 0) AS SUPLQTY
-		        ,NVL (LG77.PLANNED_QTY, 0) AS PLANQTY
-		        ,NVL (LG77.SFTY_QTY, 0) AS SFTYQTY
-		        ,NVL (LG77.MAX_QTY, 0) AS MAXQTY
-		        ,NVL (LG77.REORD_QTY, 0) AS REORDQTYPOINT
-		        ,ROUND(NVL (LG77.MAX_QTY, 0) *(NVL (LG77.REORD_QTY, 0)/100)) AS REORDQTY
-		        ,TO_CHAR (SYSDATE+1, 'DD/MM/YYYY')  AS REQDT
-		        ,TO_CHAR (LG77.CRT_DT, 'DD/MM/YYYY') CRT_DT
-		        ,LG77.CRT_USER
-		        ,NVL ( (SELECT USER_NAME
-		                  FROM SYS0047M
-		                 WHERE USER_ID = LG77.CRT_USER), LG77.CRT_USER) USER_NAME
-		        ,NVL (AV.AVG_QTY, 0) AVG_QTY
-		    FROM LOG0077M LG77
-		        ,SYS0028M SY28
-		        ,SYS0026M SY26
-		        , (SELECT A.STORG_LOC
-		                 ,A.MATRL_NO
-     	                 ,ROUND (DECODE((A.H + A.S),0,0,NULL,0,A.H /(A.H + A.S))) AVG_QTY
-		             FROM (SELECT   STORG_LOC
-		                           ,MATRL_NO
-		                           ,DEBT_CRDIT_INDICT
-		                           ,NVL (DECODE (DEBT_CRDIT_INDICT, 'H', SUM (QTY) * -1), 0) H
-		                           ,NVL (DECODE (DEBT_CRDIT_INDICT, 'S', SUM (QTY) ), 0) S
-		                       FROM LOG0059M LG59, LOG0060D LG60
-		                      WHERE LG59.MATRL_DOC_NO = LG60.MATRL_DOC_NO
-		                        AND SUBSTR (LG60.INVNTRY_MOV_TYPE, 0, 2) = 'OD'
-		                        AND LG59.CRT_DT BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
-		                                                                  ,'MM'
-		                                                                  )
-		                                                           ,-3
-		                                                           )
-		                                            AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
-		                                                                                     ,'MM/YYYY'
-		                                                                                     )
-		                                                                            ,'MM'
-		                                                                            )
-		                                                                     ,-1
-		                                                                     )
-		                                                         )
-		                   GROUP BY STORG_LOC, MATRL_NO, DEBT_CRDIT_INDICT
-		                   ORDER BY STORG_LOC, MATRL_NO) A) AV
-		        , (SELECT L75.WH_LOC_CODE
-		                 ,L75.ITM_CODE
-		                 ,NVL(L56.QTY,0)-NVL(L75.BOOKQTY,0) AS BOOKQTY
-		             FROM LOG0056M L56
-		                 , (SELECT   L75.LOC_ID
-		                            ,S28.WH_LOC_CODE
-		                            ,L75.ITM_CODE
-		                            , SUM (NVL (L75.REQST_QTY, 0) ) - SUM (NVL (L75.MOV_QTY, 0) )
-		                                                                                         AS BOOKQTY
-		                        FROM LOG0075M L75, SYS0028M S28
-		                       WHERE L75.LOC_ID = S28.WH_LOC_ID
-		                         AND NVL (L75.FINAL_CMPLT, 'N') <> 'Y'
-		                         AND L75.REQST_NO IN (SELECT REQST_NO
-		                                                FROM LOG0047M
-		                                               WHERE NVL (REQST_DEL, 'N') <> 'Y')
-		                    GROUP BY L75.LOC_ID, S28.WH_LOC_CODE, L75.ITM_CODE) L75
-		            WHERE L56.LOC_ID = L75.LOC_ID
-		              AND L56.STK_CODE = L75.ITM_CODE) L75A
-		        , (SELECT AA.REQST_CDC_RDC
-		                 ,S28.WH_LOC_CODE
-		                 ,AA.REQST_NO
-		                 ,AA.ITM_CODE
-		                 , (AA.REQQTY - BB.DELQTY) AS BOOKQTY
-		             FROM (SELECT   L47.REQST_CDC_RDC
-		                           ,L48.REQST_NO
-		                           ,L48.ITM_CODE
-		                           ,SUM (L48.REQST_QTY) REQQTY
-		                       FROM LOG0047M L47, LOG0048D L48
-		                      WHERE L47.REQST_NO = L48.REQST_NO
-		                        AND L47.REQST_STUS <> 'C'
-		                   GROUP BY L47.REQST_CDC_RDC, L48.REQST_NO, L48.ITM_CODE) AA
-		                 , (SELECT   L55.REQST_NO
-		                            ,L55.ITM_CODE
-		                            ,SUM (L55.DELVRY_QTY) DELQTY
-		                            ,SUM (L55.RCIPT_QTY) RCIPQTY
-		                        FROM LOG0054M L54, LOG0055D L55
-		                       WHERE L54.DELVRY_NO = L55.DELVRY_NO
-		                         AND L54.DELVRY_GR_CMPLT = 'Y'
-		                         AND NVL (L54.DEL_FLAG, 'N') <> 'Y'
-		                    GROUP BY L55.REQST_NO, L55.ITM_CODE) BB
-		                 ,SYS0028M S28
-		            WHERE AA.REQST_NO = BB.REQST_NO
-		              AND AA.ITM_CODE = BB.ITM_CODE
-		              AND AA.REQST_CDC_RDC = S28.WH_LOC_ID) L75R
-		   WHERE LG77.LOC_CODE = SY28.WH_LOC_CODE
-		     AND LG77.STK_CODE = SY26.STK_CODE
-		     AND LG77.LOC_CODE = AV.STORG_LOC(+)
-		     AND LG77.STK_CODE = AV.MATRL_NO(+)
-		     AND LG77.STK_CODE = L75A.ITM_CODE(+)
-		     AND LG77.LOC_CODE = L75A.WH_LOC_CODE(+)
-		     AND LG77.STK_CODE = L75R.ITM_CODE(+)
-		     AND LG77.LOC_CODE = L75R.WH_LOC_CODE(+)
-		     AND SY28.WH_LOC_GB IN ('02', '05')
-			    ]]>
-			    <!-- 데이터 안나와서 아우터 함 -->
-		    <if test="speriod != null and speriod !=''">
+        SELECT   ROWNUM AS RNUM
+                ,TO_CHAR (TO_DATE (LG77.PERIOD, 'YYYYMM'), 'MM/YYYY') AS PERIOD
+                ,SY28.CDC_CODE CDC
+                , (SELECT WH_LOC_DESC
+                     FROM SYS0028M
+                    WHERE WH_LOC_CODE = SY28.CDC_CODE) CDCNAME
+                ,LG77.LOC_CODE AS LOCCD
+                ,SY28.WH_LOC_DESC CT_NAME
+                ,LG77.STK_CODE AS ITMCD
+                ,SY26.STK_DESC AS ITMNM
+                ,SY26.STK_CTGRY_ID
+                , (SELECT CODE_NAME
+                     FROM SYS0013M
+                    WHERE CODE_ID = SY26.STK_CTGRY_ID) STK_CTGRY_NAME
+                ,SY26.STK_TYPE_ID
+                , (SELECT CODE_NAME
+                     FROM SYS0013M
+                    WHERE CODE_ID = SY26.STK_TYPE_ID) STK_TYPE_NAME
+                ,SY26.UOM
+                , (SELECT CODE_NAME
+                     FROM SYS0013M
+                    WHERE CODE_ID = SY26.UOM) UOM_NAME
+                ,NVL (L75A.BOOKQTY, 0) AS AVAILQTY
+                ,NVL (L75R.BOOKQTY, 0) AS REMAINQTY
+                ,NVL (L75A.BOOKQTY, 0)+NVL (L75R.BOOKQTY, 0) AS SUPLQTY
+                ,NVL (LG77.PLANNED_QTY, 0) AS PLANQTY
+                ,NVL (LG77.SFTY_QTY, 0) AS SFTYQTY
+                ,NVL (LG77.MAX_QTY, 0) AS MAXQTY
+                ,NVL (LG77.REORD_QTY, 0) AS REORDQTYPOINT
+                ,ROUND(NVL (LG77.MAX_QTY, 0) *(NVL (LG77.REORD_QTY, 0)/100)) AS REORDQTY
+                ,TO_CHAR (SYSDATE+1, 'DD/MM/YYYY')  AS REQDT
+                ,TO_CHAR (LG77.CRT_DT, 'DD/MM/YYYY') CRT_DT
+                ,LG77.CRT_USER
+                ,NVL ( (SELECT USER_NAME
+                          FROM SYS0047M
+                         WHERE USER_ID = LG77.CRT_USER), LG77.CRT_USER) USER_NAME
+                ,NVL (AV.AVG_QTY, 0) AVG_QTY
+            FROM LOG0077M LG77
+                ,SYS0028M SY28
+                ,SYS0026M SY26
+                , (SELECT A.STORG_LOC
+                         ,A.MATRL_NO
+                         ,ROUND (DECODE((A.H + A.S),0,0,NULL,0,A.H /(A.H + A.S))) AVG_QTY
+                     FROM (SELECT   STORG_LOC
+                                   ,MATRL_NO
+                                   ,DEBT_CRDIT_INDICT
+                                   ,NVL (DECODE (DEBT_CRDIT_INDICT, 'H', SUM (QTY) * -1), 0) H
+                                   ,NVL (DECODE (DEBT_CRDIT_INDICT, 'S', SUM (QTY) ), 0) S
+                               FROM LOG0059M LG59, LOG0060D LG60
+                              WHERE LG59.MATRL_DOC_NO = LG60.MATRL_DOC_NO
+                                AND SUBSTR (LG60.INVNTRY_MOV_TYPE, 0, 2) = 'OD'
+                                AND LG59.CRT_DT BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                          ,'MM'
+                                                                          )
+                                                                   ,-3
+                                                                   )
+                                                    AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                             ,'MM/YYYY'
+                                                                                             )
+                                                                                    ,'MM'
+                                                                                    )
+                                                                             ,-1
+                                                                             )
+                                                                 )
+                           GROUP BY STORG_LOC, MATRL_NO, DEBT_CRDIT_INDICT
+                           ORDER BY STORG_LOC, MATRL_NO) A) AV
+                , (SELECT
+                               L56.LOC_ID 
+                              ,S28.WH_LOC_CODE
+                              ,L56.STK_CODE
+                              , NVL (L56.QTY, 0) - NVL (L75.BOOKQTY, 0) AS BOOKQTY
+                          FROM LOG0056M L56
+                              , (SELECT   L75.LOC_ID
+                                         ,L75.ITM_CODE
+                                         , SUM (NVL (L75.REQST_QTY, 0) ) - SUM (NVL (L75.MOV_QTY, 0) ) AS BOOKQTY
+                                     FROM LOG0075M L75
+                                    WHERE 
+                                       NVL (L75.FINAL_CMPLT, 'N') <> 'Y'
+                                      AND L75.REQST_NO IN (SELECT REQST_NO
+                                                             FROM LOG0047M
+                                                            WHERE NVL (REQST_DEL, 'N') <> 'Y')
+                                GROUP BY L75.LOC_ID, L75.ITM_CODE) L75
+                                , SYS0028M S28
+                         WHERE  L56.LOC_ID=S28.WH_LOC_ID
+                           AND L56.LOC_ID = L75.LOC_ID(+)
+                           AND L56.STK_CODE = L75.ITM_CODE(+)) L75A
+                , (SELECT   L47.REQST_CDC_RDC
+                                ,S28.WH_LOC_CODE
+                                ,L48.ITM_CODE
+                                , NVL(SUM (L48.REQST_QTY),0) - NVL(SUM (L55.DELVRY_QTY),0) BOOKQTY
+                            FROM LOG0047M L47, LOG0048D L48, LOG0055D L55, SYS0028M S28
+                           WHERE L47.REQST_NO = L48.REQST_NO
+                             AND L47.REQST_CDC_RDC = S28.WH_LOC_ID
+                             AND L48.REQST_NO = L55.REQST_NO(+)
+                             AND L48.ITM_CODE = L55.ITM_CODE(+)
+                        GROUP BY L47.REQST_CDC_RDC,S28.WH_LOC_CODE, L48.ITM_CODE) L75R
+           WHERE LG77.LOC_CODE = SY28.WH_LOC_CODE
+             AND LG77.STK_CODE = SY26.STK_CODE
+             AND LG77.LOC_CODE = AV.STORG_LOC(+)
+             AND LG77.STK_CODE = AV.MATRL_NO(+)
+             AND LG77.STK_CODE = L75A.STK_CODE(+)
+             AND LG77.LOC_CODE = L75A.WH_LOC_CODE(+)
+             AND LG77.STK_CODE = L75R.ITM_CODE(+)
+             AND LG77.LOC_CODE = L75R.WH_LOC_CODE(+)
+             AND SY28.WH_LOC_GB IN ('02', '05')
+                ]]>
+                <!-- 데이터 안나와서 아우터 함 -->
+            <if test="speriod != null and speriod !=''">
               AND LG77.PERIOD = TO_CHAR(TO_DATE(#{speriod},'MM/YYYY') , 'YYYYMM')
             </if>
-			<choose>
-			     <when test="sttype != null and sttype !=''">
-			      AND SY26.STK_TYPE_ID = #{sttype}
-			     </when>
-			     <otherwise>
-			     AND SY26.STK_TYPE_ID IN (62,63)
-			     </otherwise>
-			</choose>
-		   <if test="slocgb != null and slocgb !=''">
+            <choose>
+                 <when test="sttype != null and sttype !=''">
+                  AND SY26.STK_TYPE_ID = #{sttype}
+                 </when>
+                 <otherwise>
+                 AND SY26.STK_TYPE_ID IN (62,63,64)
+                 </otherwise>
+            </choose>
+           <if test="slocgb != null and slocgb !=''">
               AND SY28.WH_LOC_GB = #{slocgb}
            </if>
            <if test="sloccode != null and sloccode !=''">
@@ -217,131 +218,117 @@
            <if test="scate != null and scate !=''">
               AND SY26.STK_CTGRY_ID = #{scate}
            </if>
-			   ORDER BY SY28.RDC_CODE,LG77.LOC_CODE,LG77.STK_CODE
+               ORDER BY SY28.RDC_CODE,LG77.LOC_CODE,LG77.STK_CODE
     </select>
     <select id="searchAutoCTList" parameterType="Map" resultType="EgovMap">
     <![CDATA[ 
-		SELECT   ROWNUM AS RNUM
-		        ,TO_CHAR (TO_DATE (LG77.PERIOD, 'YYYYMM'), 'MM/YYYY') AS PERIOD
-		        ,SY28.RDC_CODE RDC
-		        , (SELECT WH_LOC_DESC
-		             FROM SYS0028M
-		            WHERE WH_LOC_CODE = SY28.RDC_CODE) RDCNAME
-		        ,LG77.LOC_CODE AS LOCCD
-		        ,SY28.WH_LOC_DESC CT_NAME
-		        ,LG77.STK_CODE AS ITMCD
-		        ,SY26.STK_DESC AS ITMNM
-		        ,SY26.STK_CTGRY_ID
-		        , (SELECT CODE_NAME
-		             FROM SYS0013M
-		            WHERE CODE_ID = SY26.STK_CTGRY_ID) STK_CTGRY_NAME
-		        ,SY26.STK_TYPE_ID
-		        , (SELECT CODE_NAME
-		             FROM SYS0013M
-		            WHERE CODE_ID = SY26.STK_TYPE_ID) STK_TYPE_NAME
-		        ,SY26.UOM
-		        , (SELECT CODE_NAME
-		             FROM SYS0013M
-		            WHERE CODE_ID = SY26.UOM) UOM_NAME
-		        ,NVL (L75A.BOOKQTY, 0) AS AVAILQTY
-		        ,NVL (L75R.BOOKQTY, 0) AS REMAINQTY
-		        ,NVL (L75A.BOOKQTY, 0)+NVL (L75R.BOOKQTY, 0) AS SUPLQTY
-		        ,NVL (LG77.PLANNED_QTY, 0) AS PLANQTY
-		        ,NVL (LG77.SFTY_QTY, 0) AS SFTYQTY
-		        ,NVL (LG77.MAX_QTY, 0) AS MAXQTY
-		        ,NVL (LG77.REORD_QTY, 0) AS REORDQTYPOINT
-		        ,ROUND(NVL (LG77.MAX_QTY, 0) *(NVL (LG77.REORD_QTY, 0)/100)) AS REORDQTY
-		       ,TO_CHAR (SYSDATE+1, 'DD/MM/YYYY')  AS REQDT
-		        ,TO_CHAR (LG77.CRT_DT, 'DD/MM/YYYY') CRT_DT
-		        ,LG77.CRT_USER
-		        ,NVL ( (SELECT USER_NAME
-		                  FROM SYS0047M
-		                 WHERE USER_ID = LG77.CRT_USER), LG77.CRT_USER) USER_NAME
-		        ,NVL (AV.AVG_QTY, 0) AVG_QTY
-		    FROM LOG0077M LG77
-		        ,SYS0028M SY28
-		        ,SYS0026M SY26
-		        , (SELECT A.STORG_LOC
-		                 ,A.MATRL_NO
-		                 ,ROUND (DECODE((A.H + A.S),0,0,NULL,0,A.H /(A.H + A.S))) AVG_QTY
-		             FROM (SELECT   STORG_LOC
-		                           ,MATRL_NO
-		                           ,DEBT_CRDIT_INDICT
-		                           ,NVL (DECODE (DEBT_CRDIT_INDICT, 'H', SUM (QTY) * -1), 0) H
-		                           ,NVL (DECODE (DEBT_CRDIT_INDICT, 'S', SUM (QTY) ), 0) S
-		                       FROM LOG0059M LG59, LOG0060D LG60
-		                      WHERE LG59.MATRL_DOC_NO = LG60.MATRL_DOC_NO
-		                        AND SUBSTR (LG60.INVNTRY_MOV_TYPE, 0, 2) = 'OD'
-		                        AND LG59.CRT_DT BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
-		                                                                  ,'MM'
-		                                                                  )
-		                                                           ,-3
-		                                                           )
-		                                            AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
-		                                                                                     ,'MM/YYYY'
-		                                                                                     )
-		                                                                            ,'MM'
-		                                                                            )
-		                                                                     ,-1
-		                                                                     )
-		                                                         )
-		                   GROUP BY STORG_LOC, MATRL_NO, DEBT_CRDIT_INDICT
-		                   ORDER BY STORG_LOC, MATRL_NO) A) AV
-		        , (SELECT L75.WH_LOC_CODE
-		                 ,L75.ITM_CODE
-		                 ,NVL(L56.QTY,0)-NVL(L75.BOOKQTY,0) AS BOOKQTY
-		             FROM LOG0056M L56
-		                 , (SELECT   L75.LOC_ID
-		                            ,S28.WH_LOC_CODE
-		                            ,L75.ITM_CODE
-		                            , SUM (NVL (L75.REQST_QTY, 0) ) - SUM (NVL (L75.MOV_QTY, 0) )
-		                                                                                         AS BOOKQTY
-		                        FROM LOG0075M L75, SYS0028M S28
-		                       WHERE L75.LOC_ID = S28.WH_LOC_ID
-		                         AND NVL (L75.FINAL_CMPLT, 'N') <> 'Y'
-		                         AND L75.REQST_NO IN (SELECT REQST_NO
-		                                                FROM LOG0047M
-		                                               WHERE NVL (REQST_DEL, 'N') <> 'Y')
-		                    GROUP BY L75.LOC_ID, S28.WH_LOC_CODE, L75.ITM_CODE) L75
-		            WHERE L56.LOC_ID = L75.LOC_ID
-		              AND L56.STK_CODE = L75.ITM_CODE) L75A
-		        , (SELECT AA.REQST_CDC_RDC
-		                 ,S28.WH_LOC_CODE
-		                 ,AA.REQST_NO
-		                 ,AA.ITM_CODE
-		                 , (AA.REQQTY - BB.DELQTY) AS BOOKQTY
-		             FROM (SELECT   L47.REQST_CDC_RDC
-		                           ,L48.REQST_NO
-		                           ,L48.ITM_CODE
-		                           ,SUM (L48.REQST_QTY) REQQTY
-		                       FROM LOG0047M L47, LOG0048D L48
-		                      WHERE L47.REQST_NO = L48.REQST_NO
-		                        AND L47.REQST_STUS <> 'C'
-		                   GROUP BY L47.REQST_CDC_RDC, L48.REQST_NO, L48.ITM_CODE) AA
-		                 , (SELECT   L55.REQST_NO
-		                            ,L55.ITM_CODE
-		                            ,SUM (L55.DELVRY_QTY) DELQTY
-		                            ,SUM (L55.RCIPT_QTY) RCIPQTY
-		                        FROM LOG0054M L54, LOG0055D L55
-		                       WHERE L54.DELVRY_NO = L55.DELVRY_NO
-		                         AND L54.DELVRY_GR_CMPLT = 'Y'
-		                         AND NVL (L54.DEL_FLAG, 'N') <> 'Y'
-		                    GROUP BY L55.REQST_NO, L55.ITM_CODE) BB
-		                 ,SYS0028M S28
-		            WHERE AA.REQST_NO = BB.REQST_NO
-		              AND AA.ITM_CODE = BB.ITM_CODE
-		              AND AA.REQST_CDC_RDC = S28.WH_LOC_ID) L75R
-		   WHERE LG77.LOC_CODE = SY28.WH_LOC_CODE
-		     AND LG77.STK_CODE = SY26.STK_CODE
-		     AND LG77.LOC_CODE = AV.STORG_LOC(+)
-		     AND LG77.STK_CODE = AV.MATRL_NO(+)
-		     AND LG77.STK_CODE = L75A.ITM_CODE(+)
-		     AND LG77.LOC_CODE = L75A.WH_LOC_CODE(+)
-		     AND LG77.STK_CODE = L75R.ITM_CODE(+)
-		     AND LG77.LOC_CODE = L75R.WH_LOC_CODE(+)
-			    ]]>
-		      AND SY28.WH_LOC_GB=
-			    <choose>
+        SELECT   ROWNUM AS RNUM
+                ,TO_CHAR (TO_DATE (LG77.PERIOD, 'YYYYMM'), 'MM/YYYY') AS PERIOD
+                ,SY28.RDC_CODE RDC
+                , (SELECT WH_LOC_DESC
+                     FROM SYS0028M
+                    WHERE WH_LOC_CODE = SY28.RDC_CODE) RDCNAME
+                ,LG77.LOC_CODE AS LOCCD
+                ,SY28.WH_LOC_DESC CT_NAME
+                ,LG77.STK_CODE AS ITMCD
+                ,SY26.STK_DESC AS ITMNM
+                ,SY26.STK_CTGRY_ID
+                , (SELECT CODE_NAME
+                     FROM SYS0013M
+                    WHERE CODE_ID = SY26.STK_CTGRY_ID) STK_CTGRY_NAME
+                ,SY26.STK_TYPE_ID
+                , (SELECT CODE_NAME
+                     FROM SYS0013M
+                    WHERE CODE_ID = SY26.STK_TYPE_ID) STK_TYPE_NAME
+                ,SY26.UOM
+                , (SELECT CODE_NAME
+                     FROM SYS0013M
+                    WHERE CODE_ID = SY26.UOM) UOM_NAME
+                ,NVL (L75A.BOOKQTY, 0) AS AVAILQTY
+                ,NVL (L75R.BOOKQTY, 0) AS REMAINQTY
+                ,NVL (L75A.BOOKQTY, 0)+NVL (L75R.BOOKQTY, 0) AS SUPLQTY
+                ,NVL (LG77.PLANNED_QTY, 0) AS PLANQTY
+                ,NVL (LG77.SFTY_QTY, 0) AS SFTYQTY
+                ,NVL (LG77.MAX_QTY, 0) AS MAXQTY
+                ,NVL (LG77.REORD_QTY, 0) AS REORDQTYPOINT
+                ,ROUND(NVL (LG77.MAX_QTY, 0) *(NVL (LG77.REORD_QTY, 0)/100)) AS REORDQTY
+               ,TO_CHAR (SYSDATE+1, 'DD/MM/YYYY')  AS REQDT
+                ,TO_CHAR (LG77.CRT_DT, 'DD/MM/YYYY') CRT_DT
+                ,LG77.CRT_USER
+                ,NVL ( (SELECT USER_NAME
+                          FROM SYS0047M
+                         WHERE USER_ID = LG77.CRT_USER), LG77.CRT_USER) USER_NAME
+                ,NVL (AV.AVG_QTY, 0) AVG_QTY
+            FROM LOG0077M LG77
+                ,SYS0028M SY28
+                ,SYS0026M SY26
+                , (SELECT A.STORG_LOC
+                         ,A.MATRL_NO
+                         ,ROUND (DECODE((A.H + A.S),0,0,NULL,0,A.H /(A.H + A.S))) AVG_QTY
+                     FROM (SELECT   STORG_LOC
+                                   ,MATRL_NO
+                                   ,DEBT_CRDIT_INDICT
+                                   ,NVL (DECODE (DEBT_CRDIT_INDICT, 'H', SUM (QTY) * -1), 0) H
+                                   ,NVL (DECODE (DEBT_CRDIT_INDICT, 'S', SUM (QTY) ), 0) S
+                               FROM LOG0059M LG59, LOG0060D LG60
+                              WHERE LG59.MATRL_DOC_NO = LG60.MATRL_DOC_NO
+                                AND SUBSTR (LG60.INVNTRY_MOV_TYPE, 0, 2) = 'OD'
+                                AND LG59.CRT_DT BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                          ,'MM'
+                                                                          )
+                                                                   ,-3
+                                                                   )
+                                                    AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                             ,'MM/YYYY'
+                                                                                             )
+                                                                                    ,'MM'
+                                                                                    )
+                                                                             ,-1
+                                                                             )
+                                                                 )
+                           GROUP BY STORG_LOC, MATRL_NO, DEBT_CRDIT_INDICT
+                           ORDER BY STORG_LOC, MATRL_NO) A) AV
+                , (SELECT
+						       L56.LOC_ID 
+						      ,S28.WH_LOC_CODE
+						      ,L56.STK_CODE
+						      , NVL (L56.QTY, 0) - NVL (L75.BOOKQTY, 0) AS BOOKQTY
+						  FROM LOG0056M L56
+						      , (SELECT   L75.LOC_ID
+						                 ,L75.ITM_CODE
+						                 , SUM (NVL (L75.REQST_QTY, 0) ) - SUM (NVL (L75.MOV_QTY, 0) ) AS BOOKQTY
+						             FROM LOG0075M L75
+						            WHERE 
+						               NVL (L75.FINAL_CMPLT, 'N') <> 'Y'
+						              AND L75.REQST_NO IN (SELECT REQST_NO
+						                                     FROM LOG0047M
+						                                    WHERE NVL (REQST_DEL, 'N') <> 'Y')
+						        GROUP BY L75.LOC_ID, L75.ITM_CODE) L75
+						        , SYS0028M S28
+						 WHERE  L56.LOC_ID=S28.WH_LOC_ID
+						   AND L56.LOC_ID = L75.LOC_ID(+)
+						   AND L56.STK_CODE = L75.ITM_CODE(+)) L75A
+                , (SELECT   L47.REQST_CDC_RDC
+                                ,S28.WH_LOC_CODE
+                                ,L48.ITM_CODE
+                                , NVL(SUM (L48.REQST_QTY),0) - NVL(SUM (L55.DELVRY_QTY),0) BOOKQTY
+                            FROM LOG0047M L47, LOG0048D L48, LOG0055D L55, SYS0028M S28
+                           WHERE L47.REQST_NO = L48.REQST_NO
+                             AND L47.REQST_CDC_RDC = S28.WH_LOC_ID
+                             AND L48.REQST_NO = L55.REQST_NO(+)
+                             AND L48.ITM_CODE = L55.ITM_CODE(+)
+                        GROUP BY L47.REQST_CDC_RDC,S28.WH_LOC_CODE, L48.ITM_CODE) L75R
+           WHERE LG77.LOC_CODE = SY28.WH_LOC_CODE
+             AND LG77.STK_CODE = SY26.STK_CODE
+             AND LG77.LOC_CODE = AV.STORG_LOC(+)
+             AND LG77.STK_CODE = AV.MATRL_NO(+)
+             AND LG77.STK_CODE = L75A.STK_CODE(+)
+             AND LG77.LOC_CODE = L75A.WH_LOC_CODE(+)
+             AND LG77.STK_CODE = L75R.ITM_CODE(+)
+             AND LG77.LOC_CODE = L75R.WH_LOC_CODE(+)
+                ]]>
+              AND SY28.WH_LOC_GB=
+                <choose>
                          <when test="isctcody  eq 'ct'.toString()">
                           '03'
                          </when>
@@ -349,19 +336,19 @@
                           '04'
                          </otherwise>
                     </choose>
-			    <!-- 데이터 안나와서 아우터 함 -->
-		    <if test="speriod != null and speriod !=''">
+                <!-- 데이터 안나와서 아우터 함 -->
+            <if test="speriod != null and speriod !=''">
               AND LG77.PERIOD = TO_CHAR(TO_DATE(#{speriod},'MM/YYYY') , 'YYYYMM')
             </if>
-			<choose>
-			     <when test="sttype != null and sttype !=''">
-			      AND SY26.STK_TYPE_ID = #{sttype}
-			     </when>
-			     <otherwise>
-			     AND SY26.STK_TYPE_ID IN (62,63)
-			     </otherwise>
-			</choose>
-		   <if test="slocgb != null and slocgb !=''">
+            <choose>
+                 <when test="sttype != null and sttype !=''">
+                  AND SY26.STK_TYPE_ID = #{sttype}
+                 </when>
+                 <otherwise>
+                 AND SY26.STK_TYPE_ID IN (62,63,64)
+                 </otherwise>
+            </choose>
+           <if test="slocgb != null and slocgb !=''">
               AND SY28.WH_LOC_GB = #{slocgb}
            </if>
            <if test="sloccode != null and sloccode !=''">
@@ -370,94 +357,470 @@
            <if test="scate != null and scate !=''">
               AND SY26.STK_CTGRY_ID = #{scate}
            </if>
-			   ORDER BY SY28.RDC_CODE,LG77.LOC_CODE,LG77.STK_CODE
+               ORDER BY SY28.RDC_CODE,LG77.LOC_CODE,LG77.STK_CODE
     </select>
- <!--    
-    <select id="searchAutoCTList" parameterType="Map" resultType="egovMap">
-                select ROWNUM          AS rnum
-                 , to_char(to_date(L77.PERIOD , 'yyyymm') , 'mm/yyyy')      AS period  
-                 , S28.WH_LOC_ID      AS locid
-                 , L77.LOC_CODE    AS loccd
-                 , S28.WH_LOC_DESC AS locnm
-                 , L77.STK_CODE    AS itmcd
-                 , S26.STK_DESC    AS itmnm
-                 , S13.CODE        AS locgb
-                 , L77.MAX_QTY     AS maxqty
-                 , L77.REORD_QTY   AS reordqty
-                 , L77.SFTY_QTY    AS sftyqty
-                 ,nvl(T1.AverageQty,0) AS avgqty
-                ,O01.MEM_CODE AS ct_No
-                ,O01.NAME AS ct_Name
-                , (SELECT CODE_NAME
-                           FROM SYS0013M
-                          WHERE CODE_ID = S26.STK_TYPE_ID) STK_TYPE_NAME
-                ,TO_CHAR(L77.CRT_DT,'DD/MM/YYYY') CRT_DT
-              from LOG0077M L77 ,
-                   SYS0028M S28 , 
-                   SYS0026M S26 ,
-                   ORG0001D O01,
-                   (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 339) S13,
-                   (SELECT STORG_LOC , MATRL_NO ,  MAX(BB) + MAX(AA) AS AverageQty
-                      FROM (
-                        SELECT L60.STORG_LOC , L60.MATRL_NO ,  L60.DEBT_CRDIT_INDICT  , SUM(L60.QTY) QTY,
-                               NVL(DECODE( L60.DEBT_CRDIT_INDICT , 'H' , NVL(SUM(L60.QTY) , 0)*-1),0) AA , NVL(DECODE( L60.DEBT_CRDIT_INDICT , 'S' , NVL(SUM(L60.QTY),0)*1),0) BB
-                          FROM LOG0059M L59 , LOG0060D L60 
-                         WHERE TO_DATE(L59.DOC_DT,'YYYYMMDD') BETWEEN ADD_MONTHS(TO_DATE(to_char(to_date(#{searchperiod},'mm/yyyy') , 'yyyymm'),'YYYYMM') , -3) AND (TO_DATE(to_char(to_date(#{searchperiod},'mm/yyyy') , 'yyyymm'),'YYYYMM') -1)
-                           AND L59.MATRL_DOC_NO = L60.MATRL_DOC_NO
-                           AND L59.TRNSC_TYPE_CODE = 'OD'
-                        GROUP BY L60.STORG_LOC , L60.MATRL_NO , L60.DEBT_CRDIT_INDICT
-                    )
-                 GROUP BY STORG_LOC , MATRL_NO
-                ORDER BY STORG_LOC , MATRL_NO)T1              
-             WHERE 1 = 1
-               AND S28.WH_LOC_GB = S13.CODE
-               AND L77.LOC_CODE = S28.WH_LOC_CODE
-               AND L77.STK_CODE = S26.STK_CODE
-               AND L77.STK_CODE = T1.MATRL_NO(+)
-               AND L77.LOC_CODE=T1.STORG_LOC(+) 
-              AND S28.WH_LOC_CODE =O01.MEM_CODE
-           <if test="searchCtNo != null and searchCtNo !=''">
-              AND L77.LOC_CODE = #{searchCtNo}
-           </if>
-           <if test="searchMatCode != null and searchMatCode !=''">
-              AND L77.STK_CODE = #{searchMatCode}
-           </if>
-           <if test="searchperiod != null and searchperiod !=''">
-              AND L77.PERIOD = to_char(to_date(#{searchperiod},'mm/yyyy') , 'yyyymm')
-           </if>
+    <select id="searchListMaster" parameterType="Map" resultType="EgovMap">
+                WITH TMP AS
+                     (SELECT   AA.LOC
+                              ,AA.STK
+                              ,AA.YYYYMM
+                              ,NVL (SUM (AA.H), 0) TT
+                          FROM (SELECT   L60.STORG_LOC AS LOC
+                                        ,L60.MATRL_NO AS STK
+                                        ,SUBSTR (L60.DOC_POSTNG_DT, 0, 6) AS YYYYMM
+                                        ,NVL (DECODE (L60.DEBT_CRDIT_INDICT, 'H', SUM (QTY) ), 0) AS H
+                                FROM     LOG0059M L59, LOG0060D L60, SYS0026M S26
+                                   WHERE L59.MATRL_DOC_NO = L60.MATRL_DOC_NO
+                                     AND L60.MATRL_NO = S26.STK_CODE(+)
+                                     AND L59.TRNSC_TYPE_CODE IN ('OD', 'OH')
+                                     AND S26.STK_TYPE_ID IN (62, 63, 64)
+                                     AND TO_DATE (L60.DOC_POSTNG_DT, 'YYYYMMDD')
+                                            BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY'), 'MM'), -3)
+                                                AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                                ,'MM'
+                                                                                )
+                                                                         ,-1
+                                                                         )
+                                                             )
+                                GROUP BY L60.STORG_LOC
+                                        ,L60.MATRL_NO
+                                        ,SUBSTR (L60.DOC_POSTNG_DT, 0, 6)
+                                        ,L60.DEBT_CRDIT_INDICT
+                                ORDER BY L60.STORG_LOC, L60.MATRL_NO, YYYYMM) AA
+                      GROUP BY AA.LOC, AA.STK, AA.YYYYMM)
+                SELECT 
+                        ROWNUM RNUM
+                     ,TO_CHAR (TO_DATE (L77.PERIOD, 'YYYYMM'), 'MM/YYYY')  PERIOD
+                      ,L77.LOC_CODE LOCCD
+                      , (SELECT WH_LOC_DESC
+                           FROM SYS0028M
+                          WHERE WH_LOC_CODE = L77.LOC_CODE) LOCNM
+                      ,L77.STK_CODE
+                      ,L77.MAX_QTY
+                      ,L77.REORD_QTY
+                      ,L77.SFTY_QTY
+                      ,L77.CRT_DT
+                      ,L77.CRT_USER
+                      ,NVL(L77.PLANNED_QTY,0) AS PLANNED_QTY
+                      ,NVL(ZZ.AVGCNT,0)          AS AVGQTY
+                  FROM LOG0077M L77
+                      , (SELECT Z.LOC
+                               ,S.WH_LOC_CODE
+                               ,Z.STK
+                               , NVL (Z.M3, 0) + NVL (Z.M2, 0) + NVL (Z.M1, 0) AS T1
+                               , M33 + M22 + M11 AS T2
+                               ,ROUND (DECODE ( (M33 + M22 + M11)
+                                              ,0, 0
+                                              ,NULL, 0
+                                              , (NVL (Z.M3, 0) + NVL (Z.M2, 0) + NVL (Z.M1, 0) )
+                                                / (M33 + M22 + M11)
+                                              )
+                                      ) AVGCNT
+                           FROM (SELECT X.LOC
+                                       ,X.STK
+                                       , (SELECT Y.TT
+                                            FROM TMP Y
+                                           WHERE Y.LOC = X.LOC
+                                             AND Y.STK = X.STK
+                                             AND Y.YYYYMM = X.YYYYMM
+                                             AND Y.YYYYMM =
+                                                    TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-3
+                                                                        )
+                                                            ,'YYYYMM'
+                                                            ) ) AS M3
+                                       ,DECODE ( (SELECT Y.TT
+                                                    FROM TMP Y
+                                                   WHERE Y.LOC = X.LOC
+                                                     AND Y.STK = X.STK
+                                                     AND Y.YYYYMM = X.YYYYMM
+                                                     AND Y.YYYYMM =
+                                                            TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                ,'MM/YYYY'
+                                                                                                )
+                                                                                       ,'MM'
+                                                                                       )
+                                                                                ,-3
+                                                                                )
+                                                                    ,'YYYYMM'
+                                                                    ) )
+                                               ,NULL, 0
+                                               ,0, 0
+                                               ,1
+                                               ) AS M33
+                                       , (SELECT Y.TT
+                                            FROM TMP Y
+                                           WHERE Y.LOC = X.LOC
+                                             AND Y.STK = X.STK
+                                             AND Y.YYYYMM = X.YYYYMM
+                                             AND Y.YYYYMM =
+                                                    TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-2
+                                                                        )
+                                                            ,'YYYYMM'
+                                                            ) ) AS M2
+                                       ,DECODE ( (SELECT Y.TT
+                                                    FROM TMP Y
+                                                   WHERE Y.LOC = X.LOC
+                                                     AND Y.STK = X.STK
+                                                     AND Y.YYYYMM = X.YYYYMM
+                                                     AND Y.YYYYMM =
+                                                            TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                ,'MM/YYYY'
+                                                                                                )
+                                                                                       ,'MM'
+                                                                                       )
+                                                                                ,-2
+                                                                                )
+                                                                    ,'YYYYMM'
+                                                                    ) )
+                                               ,NULL, 0
+                                               ,0, 0
+                                               ,1
+                                               ) AS M22
+                                       , (SELECT Y.TT
+                                            FROM TMP Y
+                                           WHERE Y.LOC = X.LOC
+                                             AND Y.STK = X.STK
+                                             AND Y.YYYYMM = X.YYYYMM
+                                             AND Y.YYYYMM =
+                                                    TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-1
+                                                                        )
+                                                            ,'YYYYMM'
+                                                            ) ) AS M1
+                                       ,DECODE ( (SELECT Y.TT
+                                                    FROM TMP Y
+                                                   WHERE Y.LOC = X.LOC
+                                                     AND Y.STK = X.STK
+                                                     AND Y.YYYYMM = X.YYYYMM
+                                                     AND Y.YYYYMM =
+                                                            TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                ,'MM/YYYY'
+                                                                                                )
+                                                                                       ,'MM'
+                                                                                       )
+                                                                                ,-1
+                                                                                )
+                                                                    ,'YYYYMM'
+                                                                    ) )
+                                               ,NULL, 0
+                                               ,0, 0
+                                               ,1
+                                               ) AS M11
+                                   FROM (SELECT   L60.STORG_LOC AS LOC
+                                                 ,L60.MATRL_NO AS STK
+                                                 ,SUBSTR (L60.DOC_POSTNG_DT, 0, 6) AS YYYYMM
+                                             FROM LOG0059M L59, LOG0060D L60, SYS0026M S26
+                                            WHERE L59.MATRL_DOC_NO = L60.MATRL_DOC_NO
+                                              AND L60.MATRL_NO = S26.STK_CODE(+)
+                                              AND L59.TRNSC_TYPE_CODE IN ('OD', 'OH')
+                                              AND S26.STK_TYPE_ID IN (62, 63, 64)
+                                              AND TO_DATE (L60.DOC_POSTNG_DT, 'YYYYMMDD')
+                                                     BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-3
+                                                                        )
+                                                         AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                  ,'MM/YYYY'
+                                                                                                  )
+                                                                                         ,'MM'
+                                                                                         )
+                                                                                  ,-1
+                                                                                  )
+                                                                      )
+                                         GROUP BY L60.STORG_LOC, L60.MATRL_NO, SUBSTR (L60.DOC_POSTNG_DT, 0, 6)
+                                         ORDER BY L60.STORG_LOC, L60.MATRL_NO, YYYYMM) X) Z
+                               ,SYS0028M S
+                          WHERE Z.LOC = S.WH_LOC_ID) ZZ
+                            ,SYS0028M SY28
+                            ,SYS0026M SY26
+                 WHERE L77.LOC_CODE = ZZ.WH_LOC_CODE(+)
+                   AND L77.STK_CODE = ZZ.STK(+)
+                   AND L77.LOC_CODE = SY28.WH_LOC_CODE
+                   AND L77.STK_CODE = SY26.STK_CODE 
+                   AND SY28.WH_LOC_GB=
+                <choose>
+                         <when test="isctcody  eq 'ct'.toString()">
+                          '03'
+                         </when>
+                         <otherwise>
+                          '04'
+                         </otherwise>
+                    </choose>
+            <if test="speriod != null and speriod !=''">
+              AND L77.PERIOD = TO_CHAR(TO_DATE(#{speriod},'MM/YYYY') , 'YYYYMM')
+            </if>
             <choose>
-                 <when test="searchType != null and searchType !=''">
-                  AND S26.STK_TYPE_ID = #{searchType}
+                 <when test="sttype != null and sttype !=''">
+                  AND SY26.STK_TYPE_ID = #{sttype}
                  </when>
                  <otherwise>
-                 AND S26.STK_TYPE_ID IN(62,63)
+                 AND SY26.STK_TYPE_ID IN (62,63,64)
                  </otherwise>
             </choose>
+           <if test="slocgb != null and slocgb !=''">
+              AND SY28.WH_LOC_GB = #{slocgb}
+           </if>
+           <if test="sloccode != null and sloccode !=''">
+              AND L77.LOC_CODE = #{sloccode}
+           </if>
+           <if test="scate != null and scate !=''">
+              AND SY26.STK_CTGRY_ID = #{scate}
+           </if>
+               ORDER BY L77.PERIOD,L77.LOC_CODE,L77.STK_CODE 
     </select>
-     -->
+    <select id="searchListMasterDsc" parameterType="Map" resultType="EgovMap">
+                WITH TMP AS
+                     (SELECT   AA.LOC
+                              ,AA.STK
+                              ,AA.YYYYMM
+                              ,NVL (SUM (AA.H), 0) TT
+                          FROM (SELECT   L60.STORG_LOC AS LOC
+                                        ,L60.MATRL_NO AS STK
+                                        ,SUBSTR (L60.DOC_POSTNG_DT, 0, 6) AS YYYYMM
+                                        ,NVL (DECODE (L60.DEBT_CRDIT_INDICT, 'H', SUM (QTY) ), 0) AS H
+                                FROM     LOG0059M L59, LOG0060D L60, SYS0026M S26
+                                   WHERE L59.MATRL_DOC_NO = L60.MATRL_DOC_NO
+                                     AND L60.MATRL_NO = S26.STK_CODE(+)
+                                     AND L59.TRNSC_TYPE_CODE IN ('OD', 'OH')
+                                     AND S26.STK_TYPE_ID IN (61,62, 63, 64)
+                                     AND TO_DATE (L60.DOC_POSTNG_DT, 'YYYYMMDD')
+                                            BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY'), 'MM'), -3)
+                                                AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                                ,'MM'
+                                                                                )
+                                                                         ,-1
+                                                                         )
+                                                             )
+                                GROUP BY L60.STORG_LOC
+                                        ,L60.MATRL_NO
+                                        ,SUBSTR (L60.DOC_POSTNG_DT, 0, 6)
+                                        ,L60.DEBT_CRDIT_INDICT
+                                ORDER BY L60.STORG_LOC, L60.MATRL_NO, YYYYMM) AA
+                      GROUP BY AA.LOC, AA.STK, AA.YYYYMM)
+                SELECT 
+                        ROWNUM RNUM
+                     ,TO_CHAR (TO_DATE (L77.PERIOD, 'YYYYMM'), 'MM/YYYY')  PERIOD
+                      ,L77.LOC_CODE LOCCD
+                      , (SELECT WH_LOC_DESC
+                           FROM SYS0028M
+                          WHERE WH_LOC_CODE = L77.LOC_CODE) LOCNM
+                      ,L77.STK_CODE
+                      ,L77.MAX_QTY
+                      ,L77.REORD_QTY
+                      ,L77.SFTY_QTY
+                      ,L77.CRT_DT
+                      ,L77.CRT_USER
+                      ,NVL(L77.PLANNED_QTY,0) AS PLANNED_QTY
+                      ,NVL(ZZ.AVGCNT,0)          AS AVGQTY
+                  FROM LOG0077M L77
+                      , (SELECT Z.LOC
+                               ,S.WH_LOC_CODE
+                               ,Z.STK
+                               , NVL (Z.M3, 0) + NVL (Z.M2, 0) + NVL (Z.M1, 0) AS T1
+                               , M33 + M22 + M11 AS T2
+                               ,ROUND (DECODE ( (M33 + M22 + M11)
+                                              ,0, 0
+                                              ,NULL, 0
+                                              , (NVL (Z.M3, 0) + NVL (Z.M2, 0) + NVL (Z.M1, 0) )
+                                                / (M33 + M22 + M11)
+                                              )
+                                      ) AVGCNT
+                           FROM (SELECT X.LOC
+                                       ,X.STK
+                                       , (SELECT Y.TT
+                                            FROM TMP Y
+                                           WHERE Y.LOC = X.LOC
+                                             AND Y.STK = X.STK
+                                             AND Y.YYYYMM = X.YYYYMM
+                                             AND Y.YYYYMM =
+                                                    TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-3
+                                                                        )
+                                                            ,'YYYYMM'
+                                                            ) ) AS M3
+                                       ,DECODE ( (SELECT Y.TT
+                                                    FROM TMP Y
+                                                   WHERE Y.LOC = X.LOC
+                                                     AND Y.STK = X.STK
+                                                     AND Y.YYYYMM = X.YYYYMM
+                                                     AND Y.YYYYMM =
+                                                            TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                ,'MM/YYYY'
+                                                                                                )
+                                                                                       ,'MM'
+                                                                                       )
+                                                                                ,-3
+                                                                                )
+                                                                    ,'YYYYMM'
+                                                                    ) )
+                                               ,NULL, 0
+                                               ,0, 0
+                                               ,1
+                                               ) AS M33
+                                       , (SELECT Y.TT
+                                            FROM TMP Y
+                                           WHERE Y.LOC = X.LOC
+                                             AND Y.STK = X.STK
+                                             AND Y.YYYYMM = X.YYYYMM
+                                             AND Y.YYYYMM =
+                                                    TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-2
+                                                                        )
+                                                            ,'YYYYMM'
+                                                            ) ) AS M2
+                                       ,DECODE ( (SELECT Y.TT
+                                                    FROM TMP Y
+                                                   WHERE Y.LOC = X.LOC
+                                                     AND Y.STK = X.STK
+                                                     AND Y.YYYYMM = X.YYYYMM
+                                                     AND Y.YYYYMM =
+                                                            TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                ,'MM/YYYY'
+                                                                                                )
+                                                                                       ,'MM'
+                                                                                       )
+                                                                                ,-2
+                                                                                )
+                                                                    ,'YYYYMM'
+                                                                    ) )
+                                               ,NULL, 0
+                                               ,0, 0
+                                               ,1
+                                               ) AS M22
+                                       , (SELECT Y.TT
+                                            FROM TMP Y
+                                           WHERE Y.LOC = X.LOC
+                                             AND Y.STK = X.STK
+                                             AND Y.YYYYMM = X.YYYYMM
+                                             AND Y.YYYYMM =
+                                                    TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-1
+                                                                        )
+                                                            ,'YYYYMM'
+                                                            ) ) AS M1
+                                       ,DECODE ( (SELECT Y.TT
+                                                    FROM TMP Y
+                                                   WHERE Y.LOC = X.LOC
+                                                     AND Y.STK = X.STK
+                                                     AND Y.YYYYMM = X.YYYYMM
+                                                     AND Y.YYYYMM =
+                                                            TO_CHAR (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                ,'MM/YYYY'
+                                                                                                )
+                                                                                       ,'MM'
+                                                                                       )
+                                                                                ,-1
+                                                                                )
+                                                                    ,'YYYYMM'
+                                                                    ) )
+                                               ,NULL, 0
+                                               ,0, 0
+                                               ,1
+                                               ) AS M11
+                                   FROM (SELECT   L60.STORG_LOC AS LOC
+                                                 ,L60.MATRL_NO AS STK
+                                                 ,SUBSTR (L60.DOC_POSTNG_DT, 0, 6) AS YYYYMM
+                                             FROM LOG0059M L59, LOG0060D L60, SYS0026M S26
+                                            WHERE L59.MATRL_DOC_NO = L60.MATRL_DOC_NO
+                                              AND L60.MATRL_NO = S26.STK_CODE(+)
+                                              AND L59.TRNSC_TYPE_CODE IN ('OD', 'OH')
+                                              AND S26.STK_TYPE_ID IN (61,62, 63, 64)
+                                              AND TO_DATE (L60.DOC_POSTNG_DT, 'YYYYMMDD')
+                                                     BETWEEN ADD_MONTHS (TRUNC (TO_DATE (#{speriod}, 'MM/YYYY')
+                                                                               ,'MM')
+                                                                        ,-3
+                                                                        )
+                                                         AND LAST_DAY (ADD_MONTHS (TRUNC (TO_DATE (#{speriod}
+                                                                                                  ,'MM/YYYY'
+                                                                                                  )
+                                                                                         ,'MM'
+                                                                                         )
+                                                                                  ,-1
+                                                                                  )
+                                                                      )
+                                         GROUP BY L60.STORG_LOC, L60.MATRL_NO, SUBSTR (L60.DOC_POSTNG_DT, 0, 6)
+                                         ORDER BY L60.STORG_LOC, L60.MATRL_NO, YYYYMM) X) Z
+                               ,SYS0028M S
+                          WHERE Z.LOC = S.WH_LOC_ID) ZZ
+                            ,SYS0028M SY28
+                            ,SYS0026M SY26
+                 WHERE L77.LOC_CODE = ZZ.WH_LOC_CODE(+)
+                   AND L77.STK_CODE = ZZ.STK(+)
+                   AND L77.LOC_CODE = SY28.WH_LOC_CODE
+                   AND L77.STK_CODE = SY26.STK_CODE 
+                    AND SY28.WH_LOC_GB IN ('02','05')
+            <if test="speriod != null and speriod !=''">
+              AND L77.PERIOD = TO_CHAR(TO_DATE(#{speriod},'MM/YYYY') , 'YYYYMM')
+            </if>
+            <choose>
+                 <when test="sttype != null and sttype !=''">
+                  AND SY26.STK_TYPE_ID = #{sttype}
+                 </when>
+                 <otherwise>
+                 AND SY26.STK_TYPE_ID IN (61,62,63,64)
+                 </otherwise>
+            </choose>
+           <if test="slocgb != null and slocgb !=''">
+              AND SY28.WH_LOC_GB = #{slocgb}
+           </if>
+           <if test="sloccode != null and sloccode !=''">
+              AND L77.LOC_CODE = #{sloccode}
+           </if>
+           <if test="scate != null and scate !=''">
+              AND SY26.STK_CTGRY_ID = #{scate}
+           </if>
+               ORDER BY L77.PERIOD,L77.LOC_CODE,L77.STK_CODE 
+    </select>
     <select id="PopCheck" parameterType="Map" resultType="EgovMap">
     SELECT MAX (CNT1) LOCCHCK
               ,MAX (CNT2) ITMCHCK
+              ,MAX (L77CNT) L77CHCK
       FROM (SELECT COUNT (WH_LOC_CODE) CNT1
                           ,0 CNT2
+                          ,0 L77CNT
                   FROM SYS0028M
                 WHERE WH_LOC_CODE = #{loccd}
                     AND WH_LOC_GB IN
                     <choose>
-		                 <when test="chckLoc  eq 'RDC'.toString()">
-		                  ('02', '05')
-		                 </when>
-		                 <otherwise>
-		                  ('03', '04')
-		                 </otherwise>
-		            </choose>
+                         <when test="chckLoc  eq 'RDC'.toString()">
+                          ('02', '05')
+                         </when>
+                         <otherwise>
+                          ('03', '04')
+                         </otherwise>
+                    </choose>
                UNION
                SELECT 0 CNT1
                            ,COUNT (STK_CODE) CNT2
+                           ,0 L77CNT
                  FROM SYS0026M
                WHERE STK_CODE = #{itmcd}
-                   AND STK_TYPE_ID IN (62, 63) 
-                   )
+                   AND STK_TYPE_ID IN  
+                    <choose>
+                         <when test="chckLoc  eq 'RDC'.toString()">
+                         (61, 62, 63, 64)
+                         </when>
+                         <otherwise>
+                          (62, 63, 64)
+                         </otherwise>
+                    </choose>
+               UNION
+                SELECT 0 CNT1 
+                          ,0 CNT2       
+                           ,COUNT(*) L77CNT
+                 FROM LOG0077M
+                 WHERE  PERIOD  = TO_CHAR(TO_DATE(#{period},'MM/YYYY'),'YYYYMM')
+                   AND LOC_CODE = #{loccd}
+                   AND STK_CODE = #{itmcd}                   
+                   ) 
     </select>
     <insert id="insStockMovementDetail" parameterType="Map">
         MERGE INTO LOG0048D A
