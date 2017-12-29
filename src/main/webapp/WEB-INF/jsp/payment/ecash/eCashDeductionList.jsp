@@ -221,6 +221,7 @@ function fn_openDivPop(val){
 			//팝업 헤더 TEXT 및 버튼 설정
 			if(val == "VIEW"){
 			    $('#pop_header h1').text('VIEW E-DEDUCTION');
+			    $('#pop_header h3').text('ALL TRANSACTION');
 			    $('#center_btns1').hide();
 			    $('#center_btns2').hide();
 			    $('#center_btns3').hide();
@@ -228,6 +229,7 @@ function fn_openDivPop(val){
 
 			}else if(val == "RESULT"){
 				$('#pop_header h1').text('E-DEDUCTION BATCH DETAILS');
+				$('#pop_header h3').text('ALL TRANSACTION');
 				$('#center_btns1').show();
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
@@ -235,6 +237,7 @@ function fn_openDivPop(val){
 
 			}else if (val == "FILE"){
                 $('#pop_header h1').text('E-DEDUCTION FILE GENERATOR');
+                $('#pop_header h3').text('ALL TRANSACTION');
                 $('#center_btns1').hide();
                 $('#center_btns2').hide();
                 $('#center_btns3').show();
@@ -417,6 +420,17 @@ function fn_clear(){
     $("#searchForm")[0].reset();
 }
 
+function fn_getItmStatus(val){
+	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
+
+	if(val == "4"){$('#pop_header h3').text('APPROVED TRANSACTION');}
+	else if(val == "6"){$('#pop_header h3').text('FAILED TRANSACTIONS');}
+	else{$('#pop_header h3').text('ALL TRANSACTIONS');}
+
+	Common.ajax("GET", "/payment/selectECashSubDeductionById.do", {"batchId":fileBatchId,"status":val}, function(result) {
+        AUIGrid.setGridData(batchDeductionItemId, result);
+    });
+}
 </script>
 
 <!-- content start -->
@@ -637,15 +651,20 @@ function fn_clear(){
 				<!-- tap_area start -->
 				<!-- table start -->
 					<!-- grid_wrap start -->
+					<aside class="title_line"><!-- title_line start -->
+					<header class="pop_header" id="pop_header">
+                    <h3></h3>
+                        <ul class="right_btns">
+                            <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus('')">All Transactions</a></p></li>
+                            <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(4)">Approved Transactions</a></p></li>
+                            <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(6)">Rejected Transactions</a></p></li>
+                        </ul>
+                     </header>
+                    </aside><!-- title_line end -->
+
 					<table class="type1">
 						<caption>table</caption>
 						<tbody>
-						  <!-- <tr>
-                                <td>All Transactions</td>
-                                <td>Approved Transactions</td>
-                                <td>Rejected Transactions</td>
-                                <td colspan='2'></td>
-                            </tr> -->
 							<tr>
 								<td colspan='5'>
 									<div id="batchDeductionItem_grid_wrap" style="width: 100%; height: 480px; margin: 0 auto;"></div>

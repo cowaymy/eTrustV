@@ -144,7 +144,7 @@
             AND Extent1.FILE_BATCH_ID = #{batchId}
             </if>
            <if test="status != null and status != ''">
-                AND Extent1.FILE_BATCH_STUS_ID = #{status}
+                AND Extent1.FILE_ITM_STUS_ID = #{status}
             </if>
          ORDER BY Extent1.FILE_ITM_ID
     </select>
