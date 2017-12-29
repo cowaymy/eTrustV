@@ -489,9 +489,7 @@ function asManagementGrid() {
         dataField : "asResultId",
         headerText : "asResultId",
         width : 100,  visible : false
-    }
-    /*
-    , {
+    }, {
         dataField : "undefined",
         headerText : "Edit",
         width : 170,
@@ -501,7 +499,7 @@ function asManagementGrid() {
               onclick : function(rowIndex, columnIndex, value, item) {
                    
                   var AS_ID =    AUIGrid.getCellValue(myGridID, rowIndex, "asId");
-                  var AS_NO =    AUIGrid.getCellValue(myGridID, rowIndex, "asNo");
+                  var AS_NO =    AUIGrid.getCellValue(myGridID, rowIndex, "asNo");  
                   var asStusId     = AUIGrid.getCellValue(myGridID, rowIndex, "code1");
                   var ordno  = AUIGrid.getCellValue(myGridID, rowIndex, "salesOrdNo");
                   var ordId  = AUIGrid.getCellValue(myGridID, rowIndex, "asSoId");
@@ -515,7 +513,6 @@ function asManagementGrid() {
                   }
         }                            
 	}
-    */
     
     ];
      // 그리드 속성 설정
