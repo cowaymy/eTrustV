@@ -107,7 +107,24 @@
                         }
                     }); // end of ajax
                  });
+                
+                 // 트리그리드 lazyLoading 요청 이벤트 핸들러 CD
+                 AUIGrid.bind(myCtGridID, "treeLazyRequest", function(event) {
+                 var item = event.item;
+                 var vMemLvl = item.memLvl +1 ;             
+                 var memType = item.memType;
                  
+                 console.log("data : " + event.item);                       
+
+                    $.ajax({
+                        url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType ,
+                        success: function(data) {
+                            // 성공 시 완전한 배열 객체로 삽입하십시오.
+                            event.response(data);
+                            
+                        }
+                    }); // end of ajax
+                 });                 
     
     }
 
@@ -248,17 +265,29 @@
            console.log("parentId fin : " + parentId); 
            console.log("deptLeve finl : " + deptLevel);       
            console.log("deptId fin: " + deptId);        
-           console.log("deptId fin: " + cmbMemberTp);                   
+           console.log("deptId fin: " + cmbMemberTp);    
+           
+           
+           var memType = $('#memType').val();
+           var memLvl = $('#memLvl').val();
+           
+           
+           if (memType == "" ) {
+        	   memType = "1";
+           }
            
         //hp
            var paramHpdata;
            //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
+           paramHpdata = { memType : memType , memLvl : memLvl};
         
             Common.ajax("GET", "/organization/selectOrgChartHpList.do", paramHpdata, function(result) {
                 
                 console.log("성공.");
                 console.log("data : " + result);
-                AUIGrid.setGridData(myHpGridID, result);
+                if ( memType == "1" ) {
+                    AUIGrid.setGridData(myHpGridID, result);
+                }
             });
     }            
             
@@ -321,8 +350,21 @@
             var parentIdCd = "";
             var deptIdCd = "";
             
+            var memType = $('#memType').val();
+            var memLvl = $('#memLvl').val();
+            
+            
+            if (memType == "" ) {
+                memType = "3";
+            }
+            
+         //hp
+            var paramCddata;
+            //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
+            paramCddata = { memType : memType , memLvl : memLvl};
+            
             //ct
-           var paramCddata;
+           //var paramCddata;
            //paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
            
                 //cd
@@ -330,7 +372,11 @@
                 
                 console.log("성공.");
                 console.log("data : " + result);
-                AUIGrid.setGridData(myCtGridID, result);
+                //AUIGrid.setGridData(myCtGridID, result);
+                
+                if ( memType == "3" ) {
+                    AUIGrid.setGridData(myCtGridID, result);
+                }                
             });        
         
         }
@@ -390,16 +436,37 @@
                  parentIdCd ="0";
            }
            
-            //cd
+           
+           var memType = $('#memType').val();
+           var memLvl = $('#memLvl').val();
+           
+           
+           if (memType == "" ) {
+               memType = "2";
+           }
+           
+        //CD
            var paramCddata;
+           //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
+           paramCddata = { memType : memType , memLvl : memLvl, groupCode : ""};
+           
+           
+            //cd
+           //var paramCddata;
            //paramCddata = { groupCode : parentIdCd , memType : cmbMemberTp , memLvl : deptLevelCd, deptIdCd : deptIdCd};
            
                 //cd
            Common.ajax("GET", "/organization/selectOrgChartCdList.do", paramCddata, function(result) {
                 
                 console.log("성공.");
-                console.log("data : " + result);
-                AUIGrid.setGridData(myCdGridID, result);
+                console.log("fn_getOrgChartCdListAjax ata : " +  JSON.stringify(result));
+                
+                console.log(  JSON.stringify(result));
+                //AUIGrid.setGridData(myCdGridID, result);
+                
+                if ( memType == "2" ) {
+                    AUIGrid.setGridData(myCdGridID, result);
+                }                 
             });        
         
         }
@@ -434,9 +501,9 @@
     
 <form id='cForm' name='cForm'>
 
-    <input type='hidden' id ='groupCode' name='groupCode'>
-    <input type='hidden' id ='memType' name='memType'>
-    <input type='hidden' id ='memLvl' name='memLvl'>
+    <input type='hidden' id ='groupCode' name='groupCode' >
+    <input type='hidden' id ='memType' name='memType' value='${memType}'>
+    <input type='hidden' id ='memLvl' name='memLvl'  value='${memLvl}'>
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">

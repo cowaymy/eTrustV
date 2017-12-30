@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.organization.organization.OrgChartListService;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -30,48 +31,59 @@ public class OrgChartListController {
 	@Resource(name = "orgChartListService")
 	private OrgChartListService orgChartListService;
 	
+	@Resource(name = "memberListService")
+	private MemberListService memberListService;
+	
 	@RequestMapping(value = "/initOrgChartList.do")
-	public String initOrgChartList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initOrgChartList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
+		
+		
+		params.put("userTypeId", sessionVO.getUserTypeId());
+		
+		String type="";
+		String userTypeId="";
+		if (params.get("userTypeId" ) == "4" ) {
+			type = memberListService.selectTypeGroupCode(params);        
+		} else {
+			userTypeId = String.valueOf(sessionVO.getUserTypeId());
+		}
+		
+		logger.debug("type : {}", type);
+
+		if ( params.get("userTypeId" ) == "4"  && type == "42") {
+			userTypeId =  "2";
+		} else if ( params.get("userTypeId" ) == "4"  && type == "43") {
+			userTypeId =  "3";
+		} else if ( params.get("userTypeId" ) == "4"  && type == "45") {
+			userTypeId =  "1";			
+		} else if ( params.get("userTypeId" ) == "4"  && type.equals("")){
+			userTypeId =  "";
+		} 
+		
+		model.put("memLvl",  sessionVO.getMemberLevel());
+		model.put("memType",  userTypeId);
+		//model.put("userName", sessionVO.getUserName());
+		
 		return "organization/organization/orgChartList";
 	}
 
 	
 	@RequestMapping(value = "/selectOrgChartHpList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgChartHpList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> selectOrgChartHpList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
+		
+		params.put("userName", sessionVO.getUserName());
+		
+		logger.debug("selectOrgChartHpList params : {}", params);
+		
+		if ( params.get("memType").equals("")) {
+			params.put("memType", "1");
+		}
 		
 		List<EgovMap> orgChartHpList = null;
 		
-		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
-		logger.debug("userName : {}", sessionVO.getUserName());
-		
-		params.put("memberLevel", sessionVO.getMemberLevel());
-		params.put("userName", sessionVO.getUserName());
-		
-		params.put("memType", sessionVO.getUserTypeId());
-		params.put("memLvl",  sessionVO.getMemberLevel());
-		//params.put("groupCode","");
-		
-		String type="";
-		if (params.get("memType" ) == "4" ) {
-			type = orgChartListService.selectLastGroupCode(params);        
-		}
-		
-		logger.debug("type : {}", type);
-
-		if ( type == "42") {
-			params.put("memType", "2");
-		} else if ( type == "42") {
-			params.put("memType", "3");
-		} else if ( type == "45") {
-			params.put("memType", "1");			
-		} else {
-			params.put("memType", "");
-		}
-		
-		if ( params.get("memType").equals("") || params.get("memType").equals("1")) {
         // 조회.
-			orgChartHpList = orgChartListService.selectOrgChartHpList(params);        
-		}
+		orgChartHpList = orgChartListService.selectOrgChartHpList(params);        
+
 		return ResponseEntity.ok(orgChartHpList);
 	}
 	
@@ -123,41 +135,17 @@ public class OrgChartListController {
 	
 	
 	@RequestMapping(value = "/selectOrgChartCdList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectCdChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> selectCdChildList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model  ,SessionVO sessionVO) {
 		
-		List<EgovMap> orgChartCdList = null;
-		
-		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
-		logger.debug("userName : {}", sessionVO.getUserName());
-		
-		params.put("memberLevel", sessionVO.getMemberLevel());
+		//params.put("memLvl",  sessionVO.getMemberLevel());
+		//params.put("memType",  sessionVO.getUserTypeId());
 		params.put("userName", sessionVO.getUserName());
 		
-		params.put("memType", sessionVO.getUserTypeId());
-		params.put("memLvl",  sessionVO.getMemberLevel());
-		//params.put("groupCode","");
+		logger.debug("selectOrgChartCdList params : {}", params);
 		
-		String type="";
-		if (params.get("memType" ) == "4" ) {
-			type = orgChartListService.selectLastGroupCode(params);        
-		}
+        // 조회.
+		List<EgovMap> orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
 		
-		logger.debug("type : {}", type);
-
-		if ( type == "42") {
-			params.put("memType", "2");
-		} else if ( type == "42") {
-			params.put("memType", "3");
-		} else if ( type == "45") {
-			params.put("memType", "1");			
-		} else {
-			params.put("memType", "");
-		}
-		
-		if ( params.get("memType").equals("") || params.get("memType").equals("2") || params.get("memType").equals("3")) {
-			// 조회.
-			orgChartCdList = orgChartListService.selectOrgChartCdList(params);        
-		}
 		return ResponseEntity.ok(orgChartCdList);
 	}
 	
@@ -184,12 +172,9 @@ public class OrgChartListController {
 	
 	
 	@RequestMapping(value = "/selectOrgChartDetList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOrgChartDetList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> selectOrgChartDetList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		
 		logger.debug(" :::: "+params.toString());
-		
-		params.put("memberLevel", sessionVO.getMemberLevel());
-		params.put("userName", sessionVO.getUserName());
 		
 		String str1 = params.get("memLvl").toString();
 		String[] codeList = str1.split(",");

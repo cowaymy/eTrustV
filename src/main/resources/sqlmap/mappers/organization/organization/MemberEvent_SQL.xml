@@ -751,7 +751,7 @@
         </select>
         
         <select id="selectMemUpId" parameterType="String" resultType="int">
-                SELECT MEM_ID FROM ORG0005D WHERE DEPT_CODE = #{lastDeptCode} AND MEM_LVL = '3' 
+                SELECT MEM_ID FROM ORG0005D WHERE DEPT_CODE = #{lastDeptCode} 
         </select>
         
         <update id="updateMemberBranch" parameterType="Map">

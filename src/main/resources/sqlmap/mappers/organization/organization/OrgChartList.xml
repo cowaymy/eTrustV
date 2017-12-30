@@ -14,171 +14,171 @@
     
         <select id="selectOrgChartHpList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-					SELECT Project1.MEM_ID MEM_ID  ,
-					       Project1.MEM_UP_ID MEM_UP_ID  ,
-					       Project1.MEM_LVL MEM_LVL  ,
-					       Project1.DEPT_CODE DEPT_CODE  ,
-					       Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
-					       Project1.ORG_UPD_DT ORG_UPD_DT  ,
-					       Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
-					       Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
-					       Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
-					       Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
-					       Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
-					       Project1.PR_CODE PR_CODE  ,
-					       Project1.PR_MEM_ID PR_MEM_ID  ,
-					       Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
-					       Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
-					       Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
-					       Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
-					       Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
-					       Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
-					       Project1.BRNCH_ID BRNCH_ID  ,
-					       Project1.MEMBERID1 MEMBERID1  ,
-					       Project1.MEM_CODE MEM_CODE  ,
-					       Project1.MEM_TYPE MEM_TYPE  ,
-					       Project1.NAME NAME  ,
-					       Project1.FULL_NAME FULL_NAME  ,
-					       Project1.PASSWD PASSWD  ,
-					       Project1.NRIC NRIC  ,
-					       Project1.DOB DOB  ,
-					       Project1.GENDER GENDER  ,
-					       Project1.RACE RACE  ,
-					       Project1.MARTL MARTL  ,
-					       Project1.NATION NATION  ,
-					       Project1.TEL_OFFICE TEL_OFFICE  ,
-					       Project1.TEL_HUSE TEL_HUSE  ,
-					       Project1.TEL_MOBILE TEL_MOBILE  ,
-					       Project1.EMAIL EMAIL  ,
-					       Project1.SPUSE_CODE SPUSE_CODE  ,
-					       Project1.SPOUSE_NAME SPOUSE_NAME  ,
-					       Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
-					       Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
-					       Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
-					       Project1.SPOUSE_DOB SPOUSE_DOB  ,
-					       Project1.EDC_LEV EDC_LEV  ,
-					       Project1.LANG LANG  ,
-					       Project1.BANK BANK  ,
-					       Project1.BANK_ACC_NO BANK_ACC_NO  ,
-					       Project1.SPONS_CODE SPONS_CODE  ,
-					       Project1.JOIN_DT JOIN_DT  ,
-					       Project1.RESIGN_DT RESIGN_DT  ,
-					       Project1.TRM_DT TRM_DT  ,
-					       Project1.RENEW_DT RENEW_DT  ,
-					       Project1.AGRMNT_NO AGRMNT_NO  ,
-					       Project1.BRNCH BRNCH  ,
-					       Project1.STUS STUS  ,
-					       Project1.SYNC_CHK SYNC_CHK  ,
-					       Project1.RANK RANK  ,
-					       Project1.TRNSPRT TRNSPRT  ,
-					       Project1.PROMO_DT PROMO_DT  ,
-					       Project1.TR_NO TR_NO  ,
-					       Project1.CRT_DT CRT_DT  ,
-					       Project1.CRT_USER_ID CRT_USER_ID  ,
-					       Project1.UPD_DT UPD_DT  ,
-					       Project1.UPD_USER_ID UPD_USER_ID  ,
-					       Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
-					       Project1.APLICNT_ID APLICNT_ID  ,
-					       Project1.BIZ_TYPE BIZ_TYPE  ,
-					       Project1.HSPTLZ HSPTLZ  ,
-					       Project1.C1 C1  
-					  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
-					                Extent1.MEM_UP_ID MEM_UP_ID  ,
-					                Extent1.MEM_LVL MEM_LVL  ,
-					                Extent1.DEPT_CODE DEPT_CODE  ,
-					                Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
-					                Extent1.ORG_UPD_DT ORG_UPD_DT  ,
-					                Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
-					                Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
-					                Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
-					                Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
-					                Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
-					                Extent1.PR_CODE PR_CODE  ,
-					                Extent1.PR_MEM_ID PR_MEM_ID  ,
-					                Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
-					                Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
-					                Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
-					                Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
-					                Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
-					                Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
-					                Extent1.BRNCH_ID BRNCH_ID  ,
-					                Extent2.MEM_ID MEMBERID1  ,
-					                Extent2.MEM_CODE MEM_CODE  ,
-					                Extent2.MEM_TYPE MEM_TYPE  ,
-					                Extent2.NAME NAME  ,
-					                Extent2.FULL_NAME FULL_NAME  ,
-					                Extent2.PASSWD PASSWD  ,
-					                Extent2.NRIC NRIC  ,
-					                Extent2.DOB DOB  ,
-					                Extent2.GENDER GENDER  ,
-					                Extent2.RACE RACE  ,
-					                Extent2.MARTL MARTL  ,
-					                Extent2.NATION NATION  ,
-					                Extent2.TEL_OFFICE TEL_OFFICE  ,
-					                Extent2.TEL_HUSE TEL_HUSE  ,
-					                Extent2.TEL_MOBILE TEL_MOBILE  ,
-					                Extent2.EMAIL EMAIL  ,
-					                Extent2.SPUSE_CODE SPUSE_CODE  ,
-					                Extent2.SPOUSE_NAME SPOUSE_NAME  ,
-					                Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
-					                Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
-					                Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
-					                Extent2.SPOUSE_DOB SPOUSE_DOB  ,
-					                Extent2.EDC_LEV EDC_LEV  ,
-					                Extent2.LANG LANG  ,
-					                Extent2.BANK BANK  ,
-					                Extent2.BANK_ACC_NO BANK_ACC_NO  ,
-					                Extent2.SPONS_CODE SPONS_CODE  ,
-					                Extent2.JOIN_DT JOIN_DT  ,
-					                Extent2.RESIGN_DT RESIGN_DT  ,
-					                Extent2.TRM_DT TRM_DT  ,
-					                Extent2.RENEW_DT RENEW_DT  ,
-					                Extent2.AGRMNT_NO AGRMNT_NO  ,
-					                Extent2.BRNCH BRNCH  ,
-					                Extent2.STUS STUS  ,
-					                Extent2.SYNC_CHK SYNC_CHK  ,
-					                Extent2.RANK RANK  ,
-					                Extent2.TRNSPRT TRNSPRT  ,
-					                Extent2.PROMO_DT PROMO_DT  ,
-					                Extent2.TR_NO TR_NO  ,
-					                Extent2.CRT_DT CRT_DT  ,
-					                Extent2.CRT_USER_ID CRT_USER_ID  ,
-					                Extent2.UPD_DT UPD_DT  ,
-					                Extent2.UPD_USER_ID UPD_USER_ID  ,
-					                Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
-					                Extent2.APLICNT_ID APLICNT_ID  ,
-					                Extent2.BIZ_TYPE BIZ_TYPE  ,
-					                Extent2.HSPTLZ HSPTLZ  ,
-					                CASE 
-					                     WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
-					                ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-					                   END C1  
-					         FROM ORG0005D Extent1
-					                JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
-					          WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
-					                   AND ( '''' <> Extent1.DEPT_CODE )
-					                   AND ( 1 = Extent2.STUS )
-
-]]> 					                   
-                                    <choose>
-                                            <when test="memberLevel == 1">
-                                                AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
-                                            </when>
-                                            <when test="memberLevel == 2">
-                                                AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
-                                            </when>
-                                            <when test="memberLevel == 3">
-                                                AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-                                            </when>
-                                            <when test="memberLevel == 4">
-                                                AND Extent2.MEM_CODE = #{userName}
-                                            </when>
-                                    </choose>
-<![CDATA[                                      					                   
-					                   AND ( Extent2.STUS IN ( 1,8 )
-					                  ) ) Project1
-					  ORDER BY Project1.DEPT_CODE ASC
-]]> 
+                    SELECT Project1.MEM_ID MEM_ID  ,
+                           Project1.MEM_UP_ID MEM_UP_ID  ,
+                           Project1.MEM_LVL MEM_LVL  ,
+                           Project1.DEPT_CODE DEPT_CODE  ,
+                           Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                           Project1.ORG_UPD_DT ORG_UPD_DT  ,
+                           Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                           Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                           Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                           Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                           Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                           Project1.PR_CODE PR_CODE  ,
+                           Project1.PR_MEM_ID PR_MEM_ID  ,
+                           Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                           Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                           Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                           Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                           Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                           Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                           Project1.BRNCH_ID BRNCH_ID  ,
+                           Project1.MEMBERID1 MEMBERID1  ,
+                           Project1.MEM_CODE MEM_CODE  ,
+                           Project1.MEM_TYPE MEM_TYPE  ,
+                           Project1.NAME NAME  ,
+                           Project1.FULL_NAME FULL_NAME  ,
+                           Project1.PASSWD PASSWD  ,
+                           Project1.NRIC NRIC  ,
+                           Project1.DOB DOB  ,
+                           Project1.GENDER GENDER  ,
+                           Project1.RACE RACE  ,
+                           Project1.MARTL MARTL  ,
+                           Project1.NATION NATION  ,
+                           Project1.TEL_OFFICE TEL_OFFICE  ,
+                           Project1.TEL_HUSE TEL_HUSE  ,
+                           Project1.TEL_MOBILE TEL_MOBILE  ,
+                           Project1.EMAIL EMAIL  ,
+                           Project1.SPUSE_CODE SPUSE_CODE  ,
+                           Project1.SPOUSE_NAME SPOUSE_NAME  ,
+                           Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
+                           Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                           Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                           Project1.SPOUSE_DOB SPOUSE_DOB  ,
+                           Project1.EDC_LEV EDC_LEV  ,
+                           Project1.LANG LANG  ,
+                           Project1.BANK BANK  ,
+                           Project1.BANK_ACC_NO BANK_ACC_NO  ,
+                           Project1.SPONS_CODE SPONS_CODE  ,
+                           Project1.JOIN_DT JOIN_DT  ,
+                           Project1.RESIGN_DT RESIGN_DT  ,
+                           Project1.TRM_DT TRM_DT  ,
+                           Project1.RENEW_DT RENEW_DT  ,
+                           Project1.AGRMNT_NO AGRMNT_NO  ,
+                           Project1.BRNCH BRNCH  ,
+                           Project1.STUS STUS  ,
+                           Project1.SYNC_CHK SYNC_CHK  ,
+                           Project1.RANK RANK  ,
+                           Project1.TRNSPRT TRNSPRT  ,
+                           Project1.PROMO_DT PROMO_DT  ,
+                           Project1.TR_NO TR_NO  ,
+                           Project1.CRT_DT CRT_DT  ,
+                           Project1.CRT_USER_ID CRT_USER_ID  ,
+                           Project1.UPD_DT UPD_DT  ,
+                           Project1.UPD_USER_ID UPD_USER_ID  ,
+                           Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                           Project1.APLICNT_ID APLICNT_ID  ,
+                           Project1.BIZ_TYPE BIZ_TYPE  ,
+                           Project1.HSPTLZ HSPTLZ  ,
+                           Project1.C1 C1  
+                      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                    Extent1.MEM_UP_ID MEM_UP_ID  ,
+                                    Extent1.MEM_LVL MEM_LVL  ,
+                                    Extent1.DEPT_CODE DEPT_CODE  ,
+                                    Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                                    Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+                                    Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                                    Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                                    Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                                    Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                                    Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                                    Extent1.PR_CODE PR_CODE  ,
+                                    Extent1.PR_MEM_ID PR_MEM_ID  ,
+                                    Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                                    Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                                    Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                                    Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                                    Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                                    Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                                    Extent1.BRNCH_ID BRNCH_ID  ,
+                                    Extent2.MEM_ID MEMBERID1  ,
+                                    Extent2.MEM_CODE MEM_CODE  ,
+                                    Extent2.MEM_TYPE MEM_TYPE  ,
+                                    Extent2.NAME NAME  ,
+                                    Extent2.FULL_NAME FULL_NAME  ,
+                                    Extent2.PASSWD PASSWD  ,
+                                    Extent2.NRIC NRIC  ,
+                                    Extent2.DOB DOB  ,
+                                    Extent2.GENDER GENDER  ,
+                                    Extent2.RACE RACE  ,
+                                    Extent2.MARTL MARTL  ,
+                                    Extent2.NATION NATION  ,
+                                    Extent2.TEL_OFFICE TEL_OFFICE  ,
+                                    Extent2.TEL_HUSE TEL_HUSE  ,
+                                    Extent2.TEL_MOBILE TEL_MOBILE  ,
+                                    Extent2.EMAIL EMAIL  ,
+                                    Extent2.SPUSE_CODE SPUSE_CODE  ,
+                                    Extent2.SPOUSE_NAME SPOUSE_NAME  ,
+                                    Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
+                                    Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                                    Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                                    Extent2.SPOUSE_DOB SPOUSE_DOB  ,
+                                    Extent2.EDC_LEV EDC_LEV  ,
+                                    Extent2.LANG LANG  ,
+                                    Extent2.BANK BANK  ,
+                                    Extent2.BANK_ACC_NO BANK_ACC_NO  ,
+                                    Extent2.SPONS_CODE SPONS_CODE  ,
+                                    Extent2.JOIN_DT JOIN_DT  ,
+                                    Extent2.RESIGN_DT RESIGN_DT  ,
+                                    Extent2.TRM_DT TRM_DT  ,
+                                    Extent2.RENEW_DT RENEW_DT  ,
+                                    Extent2.AGRMNT_NO AGRMNT_NO  ,
+                                    Extent2.BRNCH BRNCH  ,
+                                    Extent2.STUS STUS  ,
+                                    Extent2.SYNC_CHK SYNC_CHK  ,
+                                    Extent2.RANK RANK  ,
+                                    Extent2.TRNSPRT TRNSPRT  ,
+                                    Extent2.PROMO_DT PROMO_DT  ,
+                                    Extent2.TR_NO TR_NO  ,
+                                    Extent2.CRT_DT CRT_DT  ,
+                                    Extent2.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.UPD_DT UPD_DT  ,
+                                    Extent2.UPD_USER_ID UPD_USER_ID  ,
+                                    Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                                    Extent2.APLICNT_ID APLICNT_ID  ,
+                                    Extent2.BIZ_TYPE BIZ_TYPE  ,
+                                    Extent2.HSPTLZ HSPTLZ  ,
+                                    CASE 
+                                         WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
+                                    ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
+                                       END C1  
+                             FROM ORG0005D Extent1
+                                    JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+                                       AND ( '''' <> Extent1.DEPT_CODE )
+                                       AND ( 1 = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = #{memType} )
+                                       AND ( Extent1.MEM_LVL = #{memLvl} )
+                             ]]>                                           
+                            <choose>
+                                    <when test="memLvl == 1">
+                                        AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+                                    </when>
+                                    <when test="memLvl == 2">
+                                        AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+                                    </when>
+                                    <when test="memLvl == 3">
+                                        AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+                                    </when>
+                                    <when test="memLvl == 4">
+                                        AND Extent1.MEM_UP_ID = #{userName}
+                                    </when>
+                            </choose>                                        
+                                       AND ( Extent2.STUS IN ( 1,8 )
+                                      ) ) Project1
+                      ORDER BY Project1.DEPT_CODE ASC
+ 
         </select>
         
         
@@ -352,155 +352,155 @@
         <select id="getDeptTreeList" parameterType="Map" resultType="egovMap">
              <![CDATA[
             SELECT Project1.MEM_ID CODE_ID  ,
-					       Project1.MEM_UP_ID MEM_UP_ID  ,
-					       Project1.MEM_LVL MEM_LVL  ,
-					       Project1.DEPT_CODE DEPT_CODE  ,
-					       Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
-					       Project1.ORG_UPD_DT ORG_UPD_DT  ,
-					       Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
-					       Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
-					       Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
-					       Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
-					       Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
-					       Project1.PR_CODE PR_CODE  ,
-					       Project1.PR_MEM_ID PR_MEM_ID  ,
-					       Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
-					       Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
-					       Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
-					       Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
-					       Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
-					       Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
-					       Project1.BRNCH_ID BRNCH_ID  ,
-					       Project1.MEMBERID1 MEMBERID1  ,
-					       Project1.MEM_CODE MEM_CODE  ,
-					       Project1.MEM_TYPE MEM_TYPE  ,
-					       Project1.NAME NAME  ,
-					       Project1.FULL_NAME FULL_NAME  ,
-					       Project1.PASSWD PASSWD  ,
-					       Project1.NRIC NRIC  ,
-					       Project1.DOB DOB  ,
-					       Project1.GENDER GENDER  ,
-					       Project1.RACE RACE  ,
-					       Project1.MARTL MARTL  ,
-					       Project1.NATION NATION  ,
-					       Project1.TEL_OFFICE TEL_OFFICE  ,
-					       Project1.TEL_HUSE TEL_HUSE  ,
-					       Project1.TEL_MOBILE TEL_MOBILE  ,
-					       Project1.EMAIL EMAIL  ,
-					       Project1.SPUSE_CODE SPUSE_CODE  ,
-					       Project1.SPOUSE_NAME SPOUSE_NAME  ,
-					       Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
-					       Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
-					       Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
-					       Project1.SPOUSE_DOB SPOUSE_DOB  ,
-					       Project1.EDC_LEV EDC_LEV  ,
-					       Project1.LANG LANG  ,
-					       Project1.BANK BANK  ,
-					       Project1.BANK_ACC_NO BANK_ACC_NO  ,
-					       Project1.SPONS_CODE SPONS_CODE  ,
-					       Project1.JOIN_DT JOIN_DT  ,
-					       Project1.RESIGN_DT RESIGN_DT  ,
-					       Project1.TRM_DT TRM_DT  ,
-					       Project1.RENEW_DT RENEW_DT  ,
-					       Project1.AGRMNT_NO AGRMNT_NO  ,
-					       Project1.BRNCH BRNCH  ,
-					       Project1.STUS STUS  ,
-					       Project1.SYNC_CHK SYNC_CHK  ,
-					       Project1.RANK RANK  ,
-					       Project1.TRNSPRT TRNSPRT  ,
-					       Project1.PROMO_DT PROMO_DT  ,
-					       Project1.TR_NO TR_NO  ,
-					       Project1.CRT_DT CRT_DT  ,
-					       Project1.CRT_USER_ID CRT_USER_ID  ,
-					       Project1.UPD_DT UPD_DT  ,
-					       Project1.UPD_USER_ID UPD_USER_ID  ,
-					       Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
-					       Project1.APLICNT_ID APLICNT_ID  ,
-					       Project1.BIZ_TYPE BIZ_TYPE  ,
-					       Project1.HSPTLZ HSPTLZ  ,
-					       Project1.C1 CODE_NAME     
-					  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
-					                Extent1.MEM_UP_ID MEM_UP_ID  ,
-					                Extent1.MEM_LVL MEM_LVL  ,
-					                Extent1.DEPT_CODE DEPT_CODE  ,
-					                Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
-					                Extent1.ORG_UPD_DT ORG_UPD_DT  ,
-					                Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
-					                Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
-					                Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
-					                Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
-					                Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
-					                Extent1.PR_CODE PR_CODE  ,
-					                Extent1.PR_MEM_ID PR_MEM_ID  ,
-					                Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
-					                Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
-					                Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
-					                Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
-					                Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
-					                Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
-					                Extent1.BRNCH_ID BRNCH_ID  ,
-					                Extent2.MEM_ID MEMBERID1  ,
-					                Extent2.MEM_CODE MEM_CODE  ,
-					                Extent2.MEM_TYPE MEM_TYPE  ,
-					                Extent2.NAME NAME  ,
-					                Extent2.FULL_NAME FULL_NAME  ,
-					                Extent2.PASSWD PASSWD  ,
-					                Extent2.NRIC NRIC  ,
-					                Extent2.DOB DOB  ,
-					                Extent2.GENDER GENDER  ,
-					                Extent2.RACE RACE  ,
-					                Extent2.MARTL MARTL  ,
-					                Extent2.NATION NATION  ,
-					                Extent2.TEL_OFFICE TEL_OFFICE  ,
-					                Extent2.TEL_HUSE TEL_HUSE  ,
-					                Extent2.TEL_MOBILE TEL_MOBILE  ,
-					                Extent2.EMAIL EMAIL  ,
-					                Extent2.SPUSE_CODE SPUSE_CODE  ,
-					                Extent2.SPOUSE_NAME SPOUSE_NAME  ,
-					                Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
-					                Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
-					                Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
-					                Extent2.SPOUSE_DOB SPOUSE_DOB  ,
-					                Extent2.EDC_LEV EDC_LEV  ,
-					                Extent2.LANG LANG  ,
-					                Extent2.BANK BANK  ,
-					                Extent2.BANK_ACC_NO BANK_ACC_NO  ,
-					                Extent2.SPONS_CODE SPONS_CODE  ,
-					                Extent2.JOIN_DT JOIN_DT  ,
-					                Extent2.RESIGN_DT RESIGN_DT  ,
-					                Extent2.TRM_DT TRM_DT  ,
-					                Extent2.RENEW_DT RENEW_DT  ,
-					                Extent2.AGRMNT_NO AGRMNT_NO  ,
-					                Extent2.BRNCH BRNCH  ,
-					                Extent2.STUS STUS  ,
-					                Extent2.SYNC_CHK SYNC_CHK  ,
-					                Extent2.RANK RANK  ,
-					                Extent2.TRNSPRT TRNSPRT  ,
-					                Extent2.PROMO_DT PROMO_DT  ,
-					                Extent2.TR_NO TR_NO  ,
-					                Extent2.CRT_DT CRT_DT  ,
-					                Extent2.CRT_USER_ID CRT_USER_ID  ,
-					                Extent2.UPD_DT UPD_DT  ,
-					                Extent2.UPD_USER_ID UPD_USER_ID  ,
-					                Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
-					                Extent2.APLICNT_ID APLICNT_ID  ,
-					                Extent2.BIZ_TYPE BIZ_TYPE  ,
-					                Extent2.HSPTLZ HSPTLZ  ,
-					                CASE 
-					                     WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
-					                ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-					                   END C1  
-					         FROM ORG0005D Extent1
-					                JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
-					          WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
-					                   AND ( '''' <> Extent1.DEPT_CODE )
-					                   AND ( '1' = Extent2.STUS )
-					                   AND ( Extent2.MEM_TYPE = #{groupCode} )
-					                   AND ( Extent1.MEM_LVL = 1 )
-					                   AND ( Extent1.MEM_UP_ID = #{memUpId} )
-					                   AND ( Extent2.STUS IN ( 1,8 )
-					                  ) ) Project1
-					  ORDER BY Project1.DEPT_CODE ASC
+                           Project1.MEM_UP_ID MEM_UP_ID  ,
+                           Project1.MEM_LVL MEM_LVL  ,
+                           Project1.DEPT_CODE DEPT_CODE  ,
+                           Project1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                           Project1.ORG_UPD_DT ORG_UPD_DT  ,
+                           Project1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                           Project1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                           Project1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                           Project1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                           Project1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                           Project1.PR_CODE PR_CODE  ,
+                           Project1.PR_MEM_ID PR_MEM_ID  ,
+                           Project1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                           Project1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                           Project1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                           Project1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                           Project1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                           Project1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                           Project1.BRNCH_ID BRNCH_ID  ,
+                           Project1.MEMBERID1 MEMBERID1  ,
+                           Project1.MEM_CODE MEM_CODE  ,
+                           Project1.MEM_TYPE MEM_TYPE  ,
+                           Project1.NAME NAME  ,
+                           Project1.FULL_NAME FULL_NAME  ,
+                           Project1.PASSWD PASSWD  ,
+                           Project1.NRIC NRIC  ,
+                           Project1.DOB DOB  ,
+                           Project1.GENDER GENDER  ,
+                           Project1.RACE RACE  ,
+                           Project1.MARTL MARTL  ,
+                           Project1.NATION NATION  ,
+                           Project1.TEL_OFFICE TEL_OFFICE  ,
+                           Project1.TEL_HUSE TEL_HUSE  ,
+                           Project1.TEL_MOBILE TEL_MOBILE  ,
+                           Project1.EMAIL EMAIL  ,
+                           Project1.SPUSE_CODE SPUSE_CODE  ,
+                           Project1.SPOUSE_NAME SPOUSE_NAME  ,
+                           Project1.SPOUSE_NRIC SPOUSE_NRIC  ,
+                           Project1.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                           Project1.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                           Project1.SPOUSE_DOB SPOUSE_DOB  ,
+                           Project1.EDC_LEV EDC_LEV  ,
+                           Project1.LANG LANG  ,
+                           Project1.BANK BANK  ,
+                           Project1.BANK_ACC_NO BANK_ACC_NO  ,
+                           Project1.SPONS_CODE SPONS_CODE  ,
+                           Project1.JOIN_DT JOIN_DT  ,
+                           Project1.RESIGN_DT RESIGN_DT  ,
+                           Project1.TRM_DT TRM_DT  ,
+                           Project1.RENEW_DT RENEW_DT  ,
+                           Project1.AGRMNT_NO AGRMNT_NO  ,
+                           Project1.BRNCH BRNCH  ,
+                           Project1.STUS STUS  ,
+                           Project1.SYNC_CHK SYNC_CHK  ,
+                           Project1.RANK RANK  ,
+                           Project1.TRNSPRT TRNSPRT  ,
+                           Project1.PROMO_DT PROMO_DT  ,
+                           Project1.TR_NO TR_NO  ,
+                           Project1.CRT_DT CRT_DT  ,
+                           Project1.CRT_USER_ID CRT_USER_ID  ,
+                           Project1.UPD_DT UPD_DT  ,
+                           Project1.UPD_USER_ID UPD_USER_ID  ,
+                           Project1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                           Project1.APLICNT_ID APLICNT_ID  ,
+                           Project1.BIZ_TYPE BIZ_TYPE  ,
+                           Project1.HSPTLZ HSPTLZ  ,
+                           Project1.C1 CODE_NAME     
+                      FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                    Extent1.MEM_UP_ID MEM_UP_ID  ,
+                                    Extent1.MEM_LVL MEM_LVL  ,
+                                    Extent1.DEPT_CODE DEPT_CODE  ,
+                                    Extent1.ORG_UPD_USER_ID ORG_UPD_USER_ID  ,
+                                    Extent1.ORG_UPD_DT ORG_UPD_DT  ,
+                                    Extent1.PREV_DEPT_CODE PREV_DEPT_CODE  ,
+                                    Extent1.PREV_GRP_CODE PREV_GRP_CODE  ,
+                                    Extent1.PREV_MEM_ID_ID PREV_MEM_ID_ID  ,
+                                    Extent1.PREV_MEM_LVL PREV_MEM_LVL  ,
+                                    Extent1.ORG_STUS_CODE_ID ORG_STUS_CODE_ID  ,
+                                    Extent1.PR_CODE PR_CODE  ,
+                                    Extent1.PR_MEM_ID PR_MEM_ID  ,
+                                    Extent1.GRAND_PR_CODE GRAND_PR_CODE  ,
+                                    Extent1.GRAND_PR_MEM_ID GRAND_PR_MEM_ID  ,
+                                    Extent1.LAST_DEPT_CODE LAST_DEPT_CODE  ,
+                                    Extent1.LAST_GRP_CODE LAST_GRP_CODE  ,
+                                    Extent1.LAST_ORG_CODE LAST_ORG_CODE  ,
+                                    Extent1.LAST_TOP_ORG_CODE LAST_TOP_ORG_CODE  ,
+                                    Extent1.BRNCH_ID BRNCH_ID  ,
+                                    Extent2.MEM_ID MEMBERID1  ,
+                                    Extent2.MEM_CODE MEM_CODE  ,
+                                    Extent2.MEM_TYPE MEM_TYPE  ,
+                                    Extent2.NAME NAME  ,
+                                    Extent2.FULL_NAME FULL_NAME  ,
+                                    Extent2.PASSWD PASSWD  ,
+                                    Extent2.NRIC NRIC  ,
+                                    Extent2.DOB DOB  ,
+                                    Extent2.GENDER GENDER  ,
+                                    Extent2.RACE RACE  ,
+                                    Extent2.MARTL MARTL  ,
+                                    Extent2.NATION NATION  ,
+                                    Extent2.TEL_OFFICE TEL_OFFICE  ,
+                                    Extent2.TEL_HUSE TEL_HUSE  ,
+                                    Extent2.TEL_MOBILE TEL_MOBILE  ,
+                                    Extent2.EMAIL EMAIL  ,
+                                    Extent2.SPUSE_CODE SPUSE_CODE  ,
+                                    Extent2.SPOUSE_NAME SPOUSE_NAME  ,
+                                    Extent2.SPOUSE_NRIC SPOUSE_NRIC  ,
+                                    Extent2.SPOUSE_OCPAT SPOUSE_OCPAT  ,
+                                    Extent2.SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
+                                    Extent2.SPOUSE_DOB SPOUSE_DOB  ,
+                                    Extent2.EDC_LEV EDC_LEV  ,
+                                    Extent2.LANG LANG  ,
+                                    Extent2.BANK BANK  ,
+                                    Extent2.BANK_ACC_NO BANK_ACC_NO  ,
+                                    Extent2.SPONS_CODE SPONS_CODE  ,
+                                    Extent2.JOIN_DT JOIN_DT  ,
+                                    Extent2.RESIGN_DT RESIGN_DT  ,
+                                    Extent2.TRM_DT TRM_DT  ,
+                                    Extent2.RENEW_DT RENEW_DT  ,
+                                    Extent2.AGRMNT_NO AGRMNT_NO  ,
+                                    Extent2.BRNCH BRNCH  ,
+                                    Extent2.STUS STUS  ,
+                                    Extent2.SYNC_CHK SYNC_CHK  ,
+                                    Extent2.RANK RANK  ,
+                                    Extent2.TRNSPRT TRNSPRT  ,
+                                    Extent2.PROMO_DT PROMO_DT  ,
+                                    Extent2.TR_NO TR_NO  ,
+                                    Extent2.CRT_DT CRT_DT  ,
+                                    Extent2.CRT_USER_ID CRT_USER_ID  ,
+                                    Extent2.UPD_DT UPD_DT  ,
+                                    Extent2.UPD_USER_ID UPD_USER_ID  ,
+                                    Extent2.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
+                                    Extent2.APLICNT_ID APLICNT_ID  ,
+                                    Extent2.BIZ_TYPE BIZ_TYPE  ,
+                                    Extent2.HSPTLZ HSPTLZ  ,
+                                    CASE 
+                                         WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
+                                    ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
+                                       END C1  
+                             FROM ORG0005D Extent1
+                                    JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+                                       AND ( '''' <> Extent1.DEPT_CODE )
+                                       AND ( '1' = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = #{groupCode} )
+                                       AND ( Extent1.MEM_LVL = 1 )
+                                       AND ( Extent1.MEM_UP_ID = #{memUpId} )
+                                       AND ( Extent2.STUS IN ( 1,8 )
+                                      ) ) Project1
+                      ORDER BY Project1.DEPT_CODE ASC
            ]]>     
         </select>
         
@@ -835,85 +835,89 @@
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
                                        AND ( '''' <> Extent1.DEPT_CODE )
                                        AND ( 1 = Extent2.STUS )
+                                       AND ( Extent2.MEM_TYPE = #{memType})
+                                       AND ( Extent1.MEM_LVL = #{memLvl} )]]>   
                                        AND ( Extent2.STUS IN ( 1,8 )
-]]>                                        
-                                  
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
                                       </if>    
-									<choose>
-									        <when test="memberLevel == 1">
-									            AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
-									        </when>
-									        <when test="memberLevel == 2">
-									            AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
-									        </when>
-									        <when test="memberLevel == 3">
-									            AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-									        </when>
-									        <when test="memberLevel == 4">
-									            AND Extent2.MEM_CODE = #{userName}
-									        </when>
-									</choose>     
-        <![CDATA[     								                                                                       
+                                      <if test="groupCode != null and groupCode != ''">
+                                            AND ( Extent1.MEM_UP_ID = #{groupCode} )
+                                      </if>     
+                                      <if test="groupCode == null or groupCode == ''">                                   
+			                            <choose>
+			                                    <when test="memLvl == 1">
+			                                        AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+			                                    </when>
+			                                    <when test="memLvl == 2">
+			                                        AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+			                                    </when>
+			                                    <when test="memLvl == 3">
+			                                        AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+			                                    </when>
+			                                    <when test="memLvl == 4">
+			                                        AND Extent1.MEM_UP_ID = #{userName}
+			                                    </when>
+			                            </choose>                                                         
+			                            </if>                     
                                       ) ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
-                ]]>               
+                               
         </select>        
         
         
         
         <select id="selectOrgChartDetList" parameterType="Map" resultType="egovMap">
         
-	        SELECT Project1.MEM_ID MEM_ID  ,
-			       Project1.C1 C1  ,
-			       Project1.MEM_CODE MEM_CODE  ,
-			       Project1.NRIC NRIC  ,
-			       Project1.NAME NAME  ,
-			       Project1.DEPT_CODE DEPT_CODE  ,
-			       Project1.GRP_CODE GRP_CODE  ,
-			       Project1.ORG_CODE ORG_CODE  ,
-			       Project1.MEM_LVL MEM_LVL  ,
-			       Project1.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  
-			  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
-			                Extent1.MEM_CODE MEM_CODE  ,
-			                Extent1.NAME NAME  ,
-			                Extent1.NRIC NRIC  ,
-			                Extent2.MEM_LVL MEM_LVL  ,
-			                Extent2.DEPT_CODE DEPT_CODE  ,
-			                Extent2.GRP_CODE GRP_CODE  ,
-			                Extent2.ORG_CODE ORG_CODE  ,
-			                Extent3.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  ,
-			                CASE 
-			                     WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
-			                ELSE 0
-			                   END C1  
-			         FROM ORG0001D Extent1
-			                JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
-			                              vMemberOrg.MEM_CODE MEM_CODE  ,
-			                              vMemberOrg.MEM_LVL MEM_LVL  ,
-			                              vMemberOrg.DEPT_CODE DEPT_CODE  ,
-			                              vMemberOrg.GRP_CODE GRP_CODE  ,
-			                              vMemberOrg.ORG_CODE ORG_CODE  ,
-			                              vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
-			                              vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
-			                              vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
-			                              vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
-			                              vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
-			                              vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
-			                       FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
-			                JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
-			                AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
-			          WHERE   1 = Extent1.STUS
-			                   AND  Extent1.MEM_TYPE IN ( 1,2,3 )
+            SELECT Project1.MEM_ID MEM_ID  ,
+                   Project1.C1 C1  ,
+                   Project1.MEM_CODE MEM_CODE  ,
+                   Project1.NRIC NRIC  ,
+                   Project1.NAME NAME  ,
+                   Project1.DEPT_CODE DEPT_CODE  ,
+                   Project1.GRP_CODE GRP_CODE  ,
+                   Project1.ORG_CODE ORG_CODE  ,
+                   Project1.MEM_LVL MEM_LVL  ,
+                   Project1.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  
+              FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                            Extent1.MEM_CODE MEM_CODE  ,
+                            Extent1.NAME NAME  ,
+                            Extent1.NRIC NRIC  ,
+                            Extent2.MEM_LVL MEM_LVL  ,
+                            Extent2.DEPT_CODE DEPT_CODE  ,
+                            Extent2.GRP_CODE GRP_CODE  ,
+                            Extent2.ORG_CODE ORG_CODE  ,
+                            Extent3.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  ,
+                            CASE 
+                                 WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
+                            ELSE 0
+                               END C1  
+                     FROM ORG0001D Extent1
+                            JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                          vMemberOrg.MEM_CODE MEM_CODE  ,
+                                          vMemberOrg.MEM_LVL MEM_LVL  ,
+                                          vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                          vMemberOrg.GRP_CODE GRP_CODE  ,
+                                          vMemberOrg.ORG_CODE ORG_CODE  ,
+                                          vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                          vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                          vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                          vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                          vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                          vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+                                   FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
+                            JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
+                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
+                      WHERE   1 = Extent1.STUS
+                               AND  Extent1.MEM_TYPE IN ( 1,2,3 )
                               <if test="codeList != null and codeList != '' ">
                                      AND  Extent2.MEM_LVL IN
                                        <foreach item="item" collection="codeList" index="index" open="(" separator="," close=")">
                                             #{item}
                                       </foreach>
                                </if>
-			                   <if test="memType != null and memType != ''">
-			                   AND  CASE 
+                               <if test="memType != null and memType != ''">
+                               AND  CASE 
                                     WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
                                     ELSE 0 END = #{memType}
                                 </if>
@@ -939,36 +943,16 @@
                                                                              AND Extent1.MEM_LVL = 3                                                                                    
                                                                              and   mem_id  = #{deptCode})  
                                </if>
-                               
-                               <choose>
-                                       <when test="memberLevel == 1">
-                                           AND Extent2.ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
-                                       </when>
-                                       <when test="memberLevel == 2">
-                                           AND Extent2.GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
-                                       </when>
-                                       <when test="memberLevel == 3">
-                                           AND Extent2.DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-                                       </when>
-                                       <when test="memberLevel == 4">
-                                           AND Extent2.MEM_CODE = #{userName}
-                                       </when>
-                               </choose>                                 
-			                  ) Project1
-				  ORDER BY Project1.C1 ASC,
-				           Project1.ORG_CODE ASC,
-				           Project1.GRP_CODE ASC,
-				           Project1.DEPT_CODE ASC,
-				           Project1.MEM_LVL ASC,
-				           Project1.MEM_CODE ASC
+                              ) Project1
+                  ORDER BY Project1.C1 ASC,
+                           Project1.ORG_CODE ASC,
+                           Project1.GRP_CODE ASC,
+                           Project1.DEPT_CODE ASC,
+                           Project1.MEM_LVL ASC,
+                           Project1.MEM_CODE ASC
         
         </select>
         
-        
-        
-     <select id="selectLastGroupCode" parameterType="Map" resultType="String">
-       SELECT B.TYPE_ID  FROM ORG0001D A, SYS0005M B WHERE   A.BRNCH = B.BRNCH_ID AND A.MEM_CODE = #{userName}
-    </select>        
         
         
         

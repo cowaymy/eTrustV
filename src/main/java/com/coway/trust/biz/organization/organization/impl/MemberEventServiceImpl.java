@@ -167,7 +167,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			//화면에서 memId가져와서 넣어줘야함
 			EgovMap deptCode = memberEventMapper.selectDeptCode(Integer.parseInt(params.get("promoId").toString()));
 			int memberUpId = 0;
-			memberUpId = memberEventMapper.selectMemUpId(deptCode.get("lastDeptCode").toString());
+			memberUpId = memberEventMapper.selectMemUpId(mQryMemUpOrg.get("deptCode").toString());
 			logger.debug("deptCode : {}", deptCode);
 			Map<String, Object> mMemOrg = new HashMap<String, Object>();
 			mQryMemOrg.put("prevDeptCode", prevDeptCode);
