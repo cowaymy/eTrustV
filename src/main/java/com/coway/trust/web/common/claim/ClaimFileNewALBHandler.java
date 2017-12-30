@@ -1,6 +1,7 @@
 package com.coway.trust.web.common.claim;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +38,8 @@ public class ClaimFileNewALBHandler extends BasicTextDownloadHandler implements 
 	
 	//footer를 위한 변수
 	private long hashTotal = 0;
-	private double totalCollection = 0.0D;
+	//private double totalCollection = 0.0D;
+	private BigDecimal totalCollection = new BigDecimal(0); 
 	private int totalCount = 0;
 	
 
@@ -70,7 +72,7 @@ public class ClaimFileNewALBHandler extends BasicTextDownloadHandler implements 
 		String inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
 		
 		String hRecordType = "H";
-		String hCreditAccNo = "140550010078613";
+		String hCreditAccNo = "140550010179955";
 		String hCompanyName = "Coway (M) Sdn Bhd";
 		String hFileBatchRefNo = String.valueOf(params.get("ctrlId"));
 		String hCollectionDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy");
@@ -98,7 +100,11 @@ public class ClaimFileNewALBHandler extends BasicTextDownloadHandler implements 
 		dDebtiAccNo = accNo.length() > 17 ? accNo.substring(0, 17) : accNo;
 		dDebitAccName = ((String) dataRow.get("bankDtlDrName")).length() > 40 ? 
 									((String) dataRow.get("bankDtlDrName")).substring(0, 40) : (String) dataRow.get("bankDtlDrName");
+		
+									
 		dCollAmt = CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00");
+		
+		
 		dOrderNo = (String) dataRow.get("cntrctNOrdNo");
 		dSellerInternalRefNo = String.valueOf(dataRow.get("bankDtlId")).length() > 40 ? 
 							(String.valueOf(dataRow.get("bankDtlId"))).substring(0, 40) : String.valueOf(dataRow.get("bankDtlId"));
@@ -121,18 +127,18 @@ public class ClaimFileNewALBHandler extends BasicTextDownloadHandler implements 
 		out.newLine();
 		out.flush();
 		
-		totalCollection += ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();
+		//totalCollection += ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();
+		totalCollection = totalCollection.add((java.math.BigDecimal) dataRow.get("bankDtlAmt"));
+		
 		hashTotal += Long.parseLong(CommonUtils.right(dDebtiAccNo, 10));
 		totalCount ++;
-		
-		
 			
 	}
 
 	public void writeFooter() throws IOException {
 		String tRecordType = "T";
 		String tTotalRecord = String.valueOf(totalCount);
-		String tTotalCollectionAmt = CommonUtils.getNumberFormat(totalCollection, "0.00");
+		String tTotalCollectionAmt = CommonUtils.getNumberFormat(String.valueOf(totalCollection), "0.00");
 		String tmpHashTotal = (CommonUtils.getNumberFormat(hashTotal, "0000000000"));
 		String tHashTotal = CommonUtils.right(tmpHashTotal, 10);
 

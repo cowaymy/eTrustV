@@ -28,7 +28,8 @@ public class ClaimFileHLBBHandler extends BasicTextDownloadHandler implements Re
 	String sdraccno = "";
 	String samt = "";
 	String sdocno = "";
-	double fTotAmt = 0.0D;
+	//double fTotAmt = 0.0D;
+	private BigDecimal fTotAmt = new BigDecimal(0);
 	
 	// footer 작성을 위한 변수
 	String stext = "";
@@ -67,49 +68,54 @@ public class ClaimFileHLBBHandler extends BasicTextDownloadHandler implements Re
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 		
-		
-		sdrname = (String.valueOf(dataRow.get("bankDtlDrName"))).length() > 40 ? 
-							(String.valueOf(dataRow.get("bankDtlDrName"))).substring(0, 40) : StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrName")), 40, " ");
-
-		// ISSUE : 암호화 RULE 규정
-		// sdraccno = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
-		sdraccno = String.valueOf(dataRow.get("bankDtlDrAccNo")).trim();
-		samt = StringUtils.leftPad(CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00"),12, "0");        
-        sdocno = (String.valueOf(dataRow.get("cntrctNOrdNo"))).trim();
-        try {
-			stextDetails = StringUtils.leftPad(String.valueOf(counter), 3, "0") + ",EPY1000991,HLBB," + sdrname + "," + sdraccno + "," + samt + ",DR," + sdocno + "," + 
-					CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "dd/MM/yyyy");
+		try {
+    		sdrname = (String.valueOf(dataRow.get("bankDtlDrName"))).length() > 40 ? 
+    							(String.valueOf(dataRow.get("bankDtlDrName"))).substring(0, 40) : StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrName")), 40, " ");
+    
+    		// ISSUE : 암호화 RULE 규정
+    		// sdraccno = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
+    		sdraccno = String.valueOf(dataRow.get("bankDtlDrAccNo")).trim();
+    		samt = StringUtils.leftPad(CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00"),12, "0");        
+            sdocno = (String.valueOf(dataRow.get("cntrctNOrdNo"))).trim();
+            
+    			stextDetails = StringUtils.leftPad(String.valueOf(counter), 3, "0") + ",EPY1000991,HLBB," + sdrname + "," + sdraccno + "," + samt + ",DR," + sdocno + "," + 
+    					CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "dd/MM/yyyy");
+    		
+            
+            //fTotAmt = fTotAmt + ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();        
+            fTotAmt = fTotAmt.add((java.math.BigDecimal) dataRow.get("bankDtlAmt"));
+            
+            out.write(stextDetails);
+            out.newLine();
+            out.flush();
+            
+            counter = counter + 1;
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        fTotAmt = fTotAmt + ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();
-        
-        out.write(stextDetails);
-        out.newLine();
-        out.flush();
-        
-        counter = counter + 1;
 			
 	}
 
 	public void writeFooter() throws IOException {
 		stext = "";
-		sbatchtot = StringUtils.leftPad(CommonUtils.getNumberFormat(String.valueOf(fTotAmt), "0.00"), 12, "0");
-		sbatchno = (CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01").trim();
-
+		
 		try {
+			sbatchtot = StringUtils.leftPad(CommonUtils.getNumberFormat(String.valueOf(fTotAmt), "0.00"), 12, "0");
+			sbatchno = (CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01").trim();
+		
 			stext = StringUtils.leftPad(String.valueOf(counter), 3, "0") + ",EPY1000991,HLBB,"
 					+ StringUtils.rightPad("WOONGJIN COWAY", 40, " ") + ",00100321782," + sbatchtot + ",CR," + sbatchno
 					+ ","
-					+ CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "ddMMyyyy");
+					+ CommonUtils.changeFormat(CommonUtils.getAddDay(inputDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "dd/MM/yyyy");
+		
+
+    		out.write(stext);
+    		out.newLine();
+    		out.flush();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		out.write(stext);
-		out.newLine();
-		out.flush();
 	}
 }

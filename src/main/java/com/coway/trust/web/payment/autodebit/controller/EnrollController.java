@@ -3,6 +3,7 @@ package com.coway.trust.web.payment.autodebit.controller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -287,7 +288,7 @@ public class EnrollController {
 		************************************************/
 		//헤더 작성
 		String hRecordType = "H"; 
-		String hCreditAccNo = "140550010078613";
+		String hCreditAccNo = "140550010179955";
 		String hCompanyName = "Coway (M) Sdn Bhd";
 		String hFileBatchRefNo = String.valueOf(enrollMap.get("enrlId"));
 		String hSellerID = "AD10000101";
@@ -402,6 +403,9 @@ public class EnrollController {
 		String sReserve = StringUtils.rightPad("", 85, " ");
 		String stextDetails = "";
 		
+		BigDecimal amount = null;
+		BigDecimal hunred = new BigDecimal(100);
+		
 		if (enrollDetailList.size() > 0) {
 			for(int i = 0 ; i < enrollDetailList.size() ; i++){
 				Map<String, Object> map = (Map<String, Object>)enrollDetailList.get(i);
@@ -410,7 +414,13 @@ public class EnrollController {
 				sDrName =  (String.valueOf(map.get("accName"))).trim().length() > 20 ?
                 					(String.valueOf(map.get("accName"))).trim().substring(0,20) :
                 						StringUtils.rightPad((String.valueOf(map.get("accName"))).trim(),20," ");
-                sLimit = String.valueOf(((java.math.BigDecimal) map.get("billAmt")).longValue()  * 100);
+                
+                					
+                //sLimit = String.valueOf(((java.math.BigDecimal) map.get("billAmt")).longValue()  * 100);
+            	//금액 계산
+        		amount = (BigDecimal)map.get("billAmt");
+        		sLimit = String.valueOf(amount.multiply(hunred).longValue());
+                
                 sDocno = (String.valueOf(map.get("cntrctNOrdNo"))).trim().length() > 30 ?
                 					(String.valueOf(map.get("cntrctNOrdNo"))).trim().substring(0,30) :
                 						StringUtils.rightPad((String.valueOf(map.get("cntrctNOrdNo"))).trim(),30," ");
@@ -478,7 +488,7 @@ public class EnrollController {
         String strHeaderOriginatorID = "02172";
         String strHeaderOriginatorName = StringUtils.rightPad("WJIN COWAY", 13, " ");
         
-        String strHeaderEnrollDate = CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "yyyyMMdd");
+        String strHeaderEnrollDate = CommonUtils.changeFormat(String.valueOf(enrollMap.get("debtDtFrom")), "yyyy-MM-dd" , "ddMMyyyy");
         String strHeaderFiller = StringUtils.rightPad("", 117, " ");
         
         strHeader = strHeaderFix + strHeaderBankCode + strHeaderOriginatorID +
@@ -604,6 +614,10 @@ public class EnrollController {
         String sMinComm =StringUtils.rightPad("", 9, "0");
         String sMaxComm = StringUtils.rightPad("", 9, "0");
         String sReserve = StringUtils.rightPad("", 266, " ");
+        
+        BigDecimal amount = null;
+    	BigDecimal hunred = new BigDecimal(100);
+
 		
         if (enrollDetailList.size() > 0) {
         	for(int i = 0 ; i < enrollDetailList.size() ; i++){
@@ -613,7 +627,12 @@ public class EnrollController {
                 sDocno = (String.valueOf(map.get("cntrctNOrdNo"))).trim().length() > 20 ?
                 				(String.valueOf(map.get("cntrctNOrdNo"))).trim().substring(0,20) : 
                 					StringUtils.rightPad((String.valueOf(map.get("cntrctNOrdNo"))).trim(),20," ");
-                sLimit = CommonUtils.getNumberFormat( String.valueOf((((java.math.BigDecimal)map.get("billAmt")).intValue() * 100)), "000000000000000");
+                //sLimit = CommonUtils.getNumberFormat( String.valueOf((((java.math.BigDecimal)map.get("billAmt")).intValue() * 100)), "000000000000000");
+                				
+                //금액 계산
+        		amount = (BigDecimal)map.get("billAmt");
+        		sLimit = CommonUtils.getNumberFormat( String.valueOf(amount.multiply(hunred).longValue()), "000000000000000");
+                
                 sDrName = (String.valueOf(map.get("accName"))).trim().length() > 35 ?
                 		(String.valueOf(map.get("accName"))).trim().substring(0,35) : 
                 			StringUtils.rightPad((String.valueOf(map.get("accName"))).trim(),35," ");

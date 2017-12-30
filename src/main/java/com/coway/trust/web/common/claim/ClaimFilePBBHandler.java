@@ -31,10 +31,13 @@ public class ClaimFilePBBHandler extends BasicTextDownloadHandler implements Res
 	String sNRIC = "";
 	String sLimit = "";
 	String sAmt = "";
-	double iTotalAmt = 0;
+	long iTotalAmt = 0;
 	String sFiller = "";
 	String sHashEntry = "";
 	long iHashTot = 0;
+	
+	BigDecimal amount = null;
+	BigDecimal hunred = new BigDecimal(100);
 
 	String trimAccNo = "";
 	int startIdx = 0;
@@ -95,10 +98,15 @@ public class ClaimFilePBBHandler extends BasicTextDownloadHandler implements Res
 		tmpSDrName = (String.valueOf(dataRow.get("bankDtlDrName"))).trim(); sDrName = tmpSDrName.length() > 40 
 								? tmpSDrName.substring(0, 40) : StringUtils.rightPad(tmpSDrName, 40, " ");
 		sNRIC = StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrNric")), 20, " ");		
-		sLimit = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 12, "0");
+		
+		//금액 계산
+		amount = (BigDecimal)dataRow.get("bankDtlAmt");
+		sLimit = StringUtils.leftPad(String.valueOf(amount.multiply(hunred).longValue()), 12, "0");
 		sAmt = StringUtils.leftPad(sLimit, 16, "0");
 		
-		iTotalAmt = iTotalAmt + Double.parseDouble(sLimit);		
+		//iTotalAmt = iTotalAmt + Double.parseDouble(sLimit);		
+		iTotalAmt = iTotalAmt + amount.multiply(hunred).longValue();
+		
 		sFiller = StringUtils.rightPad("", 87, " ");
 		
 		// substring을 위한 세팅 시작

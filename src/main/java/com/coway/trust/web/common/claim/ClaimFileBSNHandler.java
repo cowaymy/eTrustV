@@ -21,7 +21,7 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 	// 헤더 작성을 위한 변수
 	String sText = "";
 	String sorigid = "";
-	String senrdate = "";
+	String todayDate = "";
 	String sorgacc = "";	
 	
 	// 본문 작성을 위한 변수
@@ -33,8 +33,11 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 	String sDocno = "";
 	String sNRIC = "";
 	String sMNric = "";
-	double iTotalAmt = 0;
+	long iTotalAmt = 0;
 	int iTotalCnt = 0;
+	
+	BigDecimal amount = null;
+	BigDecimal hunred = new BigDecimal(100);
 	
 	// footer 작성을 위한 변수
 	String fText = "";
@@ -67,69 +70,90 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 
 	private void writeHeader() throws IOException {
 		// 헤더 작성
-		
-		sorigid = "M4743600";
-		senrdate = CommonUtils.getNowDate();;
-		sorgacc = "1410029000510851";
-		sText = sorigid + senrdate + "29755" + "0000000" + sorgacc + StringUtils.leftPad("", 76, " ");
-
-		out.write(sText);
-		out.newLine();
-		out.flush();
-				
-		LOGGER.debug("write Header complete.....");
+		try {
+    		sorigid = "M4743600";
+    		todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyyy-MM-dd");
+    		//senrdate = CommonUtils.getNowDate();;
+    		sorgacc = "1410029000510851";
+    		sText = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + "0000000" + sorgacc + StringUtils.leftPad("", 76, " ");
+    
+    		out.write(sText);
+    		out.newLine();
+    		out.flush();
+    				
+    		LOGGER.debug("write Header complete.....");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 		
 		// 본문 작성
-		sLimit = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 15, "0");
+		try {
 
-		// 암호화는 나중에 하자
-		// ISSUE : 암호화 RULE 규정
-		// sDrAccNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).PadRight(16,' ');
-		sDrAccNo = StringUtils.leftPad(String.valueOf(dataRow.get("bankDtlDrAccNo")).trim(), 16, " ");
-		
-		sDocno = StringUtils.rightPad(String.valueOf(dataRow.get("cntrctNOrdNo")), 20, " ");
-		sNRIC = StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrNric")), 12, " ");
-
-		if (sNRIC.trim().length() != 12) {
-			sMNric = (String.valueOf(dataRow.get("bankDtlDrNric"))).trim().length() > 8 ? 
-								(String.valueOf(dataRow.get("bankDtlDrNric"))).trim().substring(0, 8) : StringUtils.rightPad((String.valueOf(dataRow.get("bankDtlDrNric"))).trim(), 8, " ");
+    		// 암호화는 나중에 하자
+    		// ISSUE : 암호화 RULE 규정
+    		// sDrAccNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).PadRight(16,' ');
+    		sDrAccNo = StringUtils.leftPad(String.valueOf(dataRow.get("bankDtlDrAccNo")).trim(), 16, " ");
+    		
+    		sDocno = StringUtils.rightPad(String.valueOf(dataRow.get("cntrctNOrdNo")), 20, " ");
+    		sNRIC = StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrNric")), 12, " ");
+    
+    		if (sNRIC.trim().length() != 12) {
+    			sMNric = (String.valueOf(dataRow.get("bankDtlDrNric"))).trim().length() > 8 ? 
+    								(String.valueOf(dataRow.get("bankDtlDrNric"))).trim().substring(0, 8) : StringUtils.rightPad((String.valueOf(dataRow.get("bankDtlDrNric"))).trim(), 8, " ");
+    		}
+    
+    		//금액 계산
+    		amount = (BigDecimal)dataRow.get("bankDtlAmt");		
+    		sLimit = StringUtils.leftPad(String.valueOf(amount.multiply(hunred).longValue()), 15, "0");
+    		
+    		//sLimit = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 15, "0");		
+    		iTotalAmt = iTotalAmt + amount.multiply(hunred).longValue();
+    		
+    		
+    
+    		if ((String.valueOf(dataRow.get("bankDtlDrNric"))).trim().length() == 12) {
+    			stextDetails = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
+    									+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
+    									+ StringUtils.rightPad("", 12, " ") + sNRIC + StringUtils.rightPad("", 8, " ") + " ";
+    		} else {
+    			stextDetails = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
+    					+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
+    					+ StringUtils.rightPad("", 12, " ") + StringUtils.rightPad("", 12, " ") + sMNric + " ";
+    		}
+    
+    		iHashTot = iHashTot + Long.parseLong(CommonUtils.right(sDrAccNo.trim(), 4));
+    
+    		out.write(stextDetails);
+    		out.newLine();
+    		out.flush();
+    
+    		counter = counter + 1;
+    		iTotalCnt++;
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
-		iTotalAmt = iTotalAmt + ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();
-
-		if ((String.valueOf(dataRow.get("bankDtlDrNric"))).trim().length() == 12) {
-			stextDetails = sorigid + senrdate + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
-									+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
-									+ StringUtils.rightPad("", 12, " ") + sNRIC + StringUtils.rightPad("", 8, " ") + " ";
-		} else {
-			stextDetails = sorigid + senrdate + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
-					+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
-					+ StringUtils.rightPad("", 12, " ") + StringUtils.rightPad("", 12, " ") + sMNric + " ";
-		}
-
-		iHashTot = iHashTot + Long.parseLong(CommonUtils.right(sDrAccNo.trim(), 4));
-
-		out.write(stextDetails);
-		out.newLine();
-		out.flush();
-
-		counter = counter + 1;
-		iTotalCnt++;
 	}
 
 	public void writeFooter() throws IOException {
-		
-		fText = sorigid + senrdate + "29755" + "9999999" + StringUtils.leftPad(String.valueOf(iTotalAmt * 100), 15, "0")
-					+ StringUtils.leftPad(String.valueOf(iTotalCnt + 2), 9, "0")
-					+ StringUtils.leftPad(String.valueOf(iHashTot % 10000), 4, "0") + StringUtils.rightPad("", 64, " ");
-
-		out.write(fText);
-		out.newLine();
-		out.flush();
+		try {
+    		fText = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd")
+    					+ "29755" + "9999999" + StringUtils.leftPad(String.valueOf(iTotalAmt), 15, "0")
+    					+ StringUtils.leftPad(String.valueOf(iTotalCnt + 2), 9, "0")
+    					+ StringUtils.leftPad(String.valueOf(iHashTot % 10000), 4, "0") + StringUtils.rightPad("", 64, " ");
+    
+    		out.write(fText);
+    		out.newLine();
+    		out.flush();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

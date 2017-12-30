@@ -44,7 +44,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 	String strRecordBankUse3 = "";
 	
 	long iHashTot = 0;
-	double iTotalAmt = 0.0D;
+	long iTotalAmt = 0;
 	int iTotalCnt = 0;
 	
 	// footer 작성을 위한 변수
@@ -54,6 +54,10 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 	String strTrailerTotalAmount = "";
 	String strTrailerTotalHash = "";
 	String strTrailerBankUse = "";
+	
+	BigDecimal amount = null;
+	BigDecimal hunred = new BigDecimal(100);
+
 
 	public ClaimFileMBBHandler(FileInfoVO fileInfoVO, Map<String, Object> params) {
 		super(fileInfoVO, params);
@@ -111,11 +115,16 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 		// 암호화는 나중에 하자
 		// String strRecord_Acc = EncryptionProvider.Decrypt(det.AccNo.Trim()).PadLeft(12, '0');
 		strRecordAcc = StringUtils.leftPad(String.valueOf(dataRow.get("bankDtlDrAccNo")) , 12, "0");
-		strRecordBillAmt = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 12, "0");
+		
+		//금액 계산		
+		amount = (BigDecimal)dataRow.get("bankDtlAmt");
+		//strRecordBillAmt = StringUtils.leftPad(String.valueOf(((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100), 12, "0");		
+		strRecordBillAmt = StringUtils.leftPad(String.valueOf(amount.multiply(hunred).longValue()), 12, "0");
+		
 		tmpStrRecordNRIC = (String.valueOf(dataRow.get("bankDtlDrNric"))).trim();
 		strRecordNRIC = tmpStrRecordNRIC.length() > 8 ? CommonUtils.right(tmpStrRecordNRIC, 8) : StringUtils.leftPad(tmpStrRecordNRIC, 8, " ");
 		strRecordBankUse1 = StringUtils.leftPad("", 1, " ");
-		strRecordBillNo = StringUtils.leftPad(String.valueOf(dataRow.get("cntrctNOrdNo")), 14, " ");
+		strRecordBillNo = StringUtils.rightPad(String.valueOf(dataRow.get("cntrctNOrdNo")), 14, " ");
 		strRecordBankUse2 = StringUtils.leftPad("", 1, " ");
 
 		tmpStrRecordPayer = (String.valueOf(dataRow.get("bankDtlDrName"))).trim();
@@ -127,7 +136,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 
 		
 		iHashTot = iHashTot + Long.parseLong(CommonUtils.right(String.valueOf(dataRow.get("bankDtlDrAccNo")).trim(), 4));
-		iTotalAmt = iTotalAmt + ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();
+		iTotalAmt = iTotalAmt + amount.multiply(hunred).longValue();
 		iTotalCnt++;
 
 		out.write(strRecord);
@@ -140,7 +149,7 @@ public class ClaimFileMBBHandler extends BasicTextDownloadHandler implements Res
 		strTrailer = "";
 		strTrailerFix = "FF";
 		strTrailerTotalRecord = StringUtils.leftPad(String.valueOf(iTotalCnt), 12, "0");
-		strTrailerTotalAmount = StringUtils.leftPad(String.valueOf(iTotalAmt * 100), 12, "0");
+		strTrailerTotalAmount = StringUtils.leftPad(String.valueOf(iTotalAmt), 12, "0");
 		strTrailerTotalHash = StringUtils.leftPad(String.valueOf(iHashTot), 12, "0");
 		strTrailerBankUse = StringUtils.rightPad("", 42, " ");
 

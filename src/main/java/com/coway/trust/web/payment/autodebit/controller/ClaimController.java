@@ -670,7 +670,7 @@ public class ClaimController {
 		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			// ALB
 			if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-				this.createClaimFileALB(claimMap);
+				//this.createClaimFileALB(claimMap);
 				this.createClaimFileNewALB(claimMap);
 			}
 

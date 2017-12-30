@@ -45,7 +45,8 @@ public class ClaimFileMyClearHandler extends BasicTextDownloadHandler implements
 	String strRecordPaymentRef3 = "";
 	String strRecordUnusedSpaces = "";
 	String strRecord = "";
-	double iTotalAmt = 0.0D;
+	//double iTotalAmt = 0.0D;
+	private BigDecimal iTotalAmt = new BigDecimal(0);
 	int iTotalCnt = 0;	
 	
 	// footer 작성을 위한 변수
@@ -84,7 +85,8 @@ public class ClaimFileMyClearHandler extends BasicTextDownloadHandler implements
 		strHeader = "";
 		strHeaderCountryCode = "MY";
 		strHeaderBranchCode = StringUtils.rightPad("950", 5, " ");
-		strHeaderBranchDivision = StringUtils.rightPad(String.valueOf(params.get("ctrlId")), 10, " ");
+		//strHeaderBranchDivision = StringUtils.rightPad(String.valueOf(params.get("ctrlId")), 10, " ");
+		strHeaderBranchDivision = StringUtils.rightPad("0", 10, " ");
 		strHeaderAccount = StringUtils.rightPad("117192008", 30, " ");
 		strHeaderUnusedrSpaces = StringUtils.rightPad("", 30, " ");
 
@@ -115,7 +117,9 @@ public class ClaimFileMyClearHandler extends BasicTextDownloadHandler implements
 					(String.valueOf(dataRow.get("bankDtlDrName"))).trim().substring(0, 70) : StringUtils.rightPad((String.valueOf(dataRow.get("bankDtlDrName"))).trim(), 70, " ");
 		strRecordPayerCode = (String.valueOf(dataRow.get("bankDtlDrNric"))).trim().length() > 20 ? 
 					(String.valueOf(dataRow.get("bankDtlDrNric"))).trim().substring(0, 20) : StringUtils.rightPad((String.valueOf(dataRow.get("bankDtlDrNric"))).trim(), 20, " ");
-		strRecordBillAmt = StringUtils.leftPad(CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00"), 16, "0");
+		
+					strRecordBillAmt = StringUtils.leftPad(CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00"), 16, "0");
+		
 		strRecordBillDate = CommonUtils.changeFormat(String.valueOf(dataRow.get("bankDtlDrDt")),"yyyy-MM-dd", "ddMMyyyy");
 		strRecordPayerEmail = StringUtils.rightPad("", 50, " ");
 		strRecordPayerPhone = StringUtils.rightPad("", 15, " ");
@@ -131,7 +135,9 @@ public class ClaimFileMyClearHandler extends BasicTextDownloadHandler implements
 				+ strRecordPayerFax + strRecordPaymentRef1 + strRecordPaymentRef2 + strRecordPaymentRef3
 				+ strRecordUnusedSpaces;
 
-		iTotalAmt = iTotalAmt + ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();
+		//iTotalAmt = iTotalAmt + ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).doubleValue();		
+		iTotalAmt = iTotalAmt.add((java.math.BigDecimal) dataRow.get("bankDtlAmt"));
+		
 		iTotalCnt++;
 
 		out.write(strRecord);
