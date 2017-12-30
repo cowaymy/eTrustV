@@ -68,17 +68,19 @@ public class MemberListController {
 		String type="";
 		if (params.get("userTypeId" ) == "4" ) {
 			type = memberListService.selectTypeGroupCode(params);        
+		} else {
+			params.put("userTypeId", sessionVO.getUserTypeId());
 		}
 		
 		logger.debug("type : {}", type);
 
-		if ( type == "42") {
+		if ( params.get("userTypeId" ) == "4"  && type == "42") {
 			params.put("userTypeId", "2");
-		} else if ( type == "42") {
+		} else if ( params.get("userTypeId" ) == "4"  && type == "43") {
 			params.put("userTypeId", "3");
-		} else if ( type == "45") {
+		} else if ( params.get("userTypeId" ) == "4"  && type == "45") {
 			params.put("userTypeId", "1");			
-		} else {
+		} else if ( params.get("userTypeId" ) == "4"  && type.equals("")){
 			params.put("userTypeId", "");
 		}  
 		

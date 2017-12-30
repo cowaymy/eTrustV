@@ -249,7 +249,20 @@
                             AND Extent7.MEM_LVL= #{position}
                          </if>
                          <if test="code == null or code == ''">
-                           AND  UPPER(Extent4.MEM_CODE) LIKE  UPPER('%' ||  #{userName} || '%')
+	                        <choose>
+	                                <when test="memberLevel == 1">
+	                                    AND Extent7.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+	                                </when>
+	                                <when test="memberLevel == 2">
+	                                    AND Extent7.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
+	                                </when>
+	                                <when test="memberLevel == 3">
+	                                    AND Extent7.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+	                                </when>
+	                                <when test="memberLevel == 4">
+	                                    AND Extent4.MEM_CODE = #{userName}
+	                                </when>
+	                        </choose>    
                          </if>
 			            )  GroupBy1
 			            WHERE 1=1
@@ -300,10 +313,6 @@
                            /*By KV - Position*/
                           <if test="position != null and position != ''">
                             AND Extent5.MEM_LVL= #{position}
-                         </if>
-
-                         <if test="code == null or code == ''">
-                           AND  UPPER(Extent1.MEM_CODE) LIKE  UPPER('%' ||  #{userName} || '%')
                          </if>
 
 						<choose>
