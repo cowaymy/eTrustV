@@ -172,7 +172,7 @@
                                         AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
                                     </when>
                                     <when test="memLvl == 4">
-                                        AND Extent1.MEM_UP_ID = #{userName}
+                                        AND Extent2.MEM_CODE = #{userName}
                                     </when>
                             </choose>                                        
                                        AND ( Extent2.STUS IN ( 1,8 )
@@ -856,7 +856,8 @@
 			                                        AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
 			                                    </when>
 			                                    <when test="memLvl == 4">
-			                                        AND Extent1.MEM_UP_ID = #{userName}
+			                                        AND Extent2.MEM_CODE  = #{userName}
+			                                        
 			                                    </when>
 			                            </choose>                                                         
 			                            </if>                     
