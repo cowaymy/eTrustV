@@ -10,6 +10,8 @@ $(document).ready(function () {
 function fn_closePop() {
     $("#rejectComplePop").remove();
     
+    $("#webInvoiceAppvViewPop").remove();
+    
     fn_selectApproveList();
 }
 </script>
