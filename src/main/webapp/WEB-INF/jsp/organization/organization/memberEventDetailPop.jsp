@@ -85,6 +85,7 @@
         
     	//if(isAv ==false)       Common.alert("Need to make a transfer request confirmation for Cody under the CM before promote confirmation");
     	
+    	isAv =true;
     	return isAv;
     }
 
