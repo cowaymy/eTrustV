@@ -261,4 +261,241 @@
 					           FROM DUAL  ) Project1
 					  ORDER BY Project1.BRNCH_ID ASC
 		</select>
+		
+		
+        <select id="selectDeptCodeList" parameterType="Map" resultType="egovMap">
+              
+            SELECT Distinct1.C1 C1, 
+                   Distinct1.DEPT_CODE CODE_ID,
+                   Distinct1.C2 CODE_NAME
+              FROM ( SELECT DISTINCT Extent1.DEPT_CODE DEPT_CODE  ,
+                                     1 C1  ,
+                                     Extent1.DEPT_CODE || ' - ' || Extent2.NAME C2  
+                     FROM ORG0005D Extent1
+                            JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                      WHERE  1=1
+                               <if test="groupCode != null and groupCode != ''">
+                               and ( Extent1.MEM_LVL = #{groupCode} )
+                               </if>
+                               AND ( Extent1.DEPT_CODE LIKE '%CCS%'ESCAPE '~' )
+                               AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1
+              order by  Distinct1.DEPT_CODE
+                    
+        </select>
+        
+        
+        
+        <select id="selectDscCodeList" parameterType="Map" resultType="egovMap">
+            SELECT Project1.BRNCH_ID CODE_ID  ,
+                   Project1.C1 CODE_NAME  
+                  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                                Extent1.CODE || '-' || Extent1.NAME C1  
+                         FROM SYS0005M Extent1
+                          WHERE  ( 1 = Extent1.STUS_ID )
+                                   AND ( Extent1.TYPE_ID IN ( 40,43 )
+                                  ) ) Project1
+                  ORDER BY Project1.C1 ASC
+        
+        </select>
+        
+        
+        <select id="selectInsStatusList" parameterType="Map" resultType="egovMap">
+            SELECT Project1.STATE_ID CODE_ID  ,
+                   Project1.CODE CODE  ,
+                   Project1.NAME CODE_NAME  ,
+                   Project1.CNTY_ID CNTY_ID  ,
+                   Project1.STUS_CODE_ID STUS_CODE_ID  ,
+                   Project1.CRT_DT CRT_DT  ,
+                   Project1.CRT_USER_ID CRT_USER_ID  ,
+                   Project1.UPD_DT UPD_DT  ,
+                   Project1.UPD_USER_ID UPD_USER_ID  
+              FROM ( SELECT Extent1.STATE_ID STATE_ID  ,
+                            Extent1.CODE CODE  ,
+                            Extent1.NAME NAME  ,
+                            Extent1.CNTY_ID CNTY_ID  ,
+                            Extent1.STUS_CODE_ID STUS_CODE_ID  ,
+                            Extent1.CRT_DT CRT_DT  ,
+                            Extent1.CRT_USER_ID CRT_USER_ID  ,
+                            Extent1.UPD_DT UPD_DT  ,
+                            Extent1.UPD_USER_ID UPD_USER_ID  
+                     FROM SYS0035M Extent1
+                     <if test="groupCode != null and groupCode != ''">
+                      WHERE  ( Extent1.CNTY_ID = #{groupCode} )
+                     </if> 
+                               AND ( 1 = Extent1.STUS_CODE_ID ) ) Project1
+              ORDER BY Project1.NAME ASC
+        
+        </select>
+        
+        
+        <select id="selectCodyCodeList" parameterType="Map" resultType="egovMap">
+                SELECT Project1.MEM_ID CODE_ID  ,
+                        Project1.MEM_CODE   || '-' || Project1.NAME  as CODE_NAME,                     Project1.NAME NAME  ,
+                       Project1.NRIC NRIC  ,
+                       Project1.MEM_TYPE MEM_TYPE  ,
+                       Project1.CODE_NAME CODE_NAME  ,
+                       Project1.C1 C1  ,
+                       Project1.C2 C2  ,
+                       Project1.C3 C3  ,
+                       Project1.C4 C4  ,
+                       Project1.C5 C5  ,
+                       Project1.C6 C6  ,
+                       Project1.C7 C7  ,
+                       Project1.C8 C8  
+                  FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+                                Extent1.MEM_CODE MEM_CODE  ,
+                                Extent1.MEM_TYPE MEM_TYPE  ,
+                                Extent1.NAME NAME  ,
+                                Extent1.NRIC NRIC  ,
+                                Extent2.CODE_NAME CODE_NAME  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.DEPT_CODE
+                                ELSE ''
+                                   END C1  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.GRP_CODE
+                                ELSE ''
+                                   END C2  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.ORG_CODE
+                                ELSE ''
+                                   END C3  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.MEM_LVL
+                                ELSE 0
+                                   END C4  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.LVL3_UP_ID
+                                ELSE 0
+                                   END C5  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.LVL2_UP_ID
+                                ELSE 0
+                                   END C6  ,
+                                CASE 
+                                     WHEN ( NOT ( ( Extent3.MEM_ID IS NULL )
+                                       AND ( Extent3.MEM_CODE IS NULL )
+                                       AND ( Extent3.MEM_LVL IS NULL )
+                                       AND ( Extent3.DEPT_CODE IS NULL )
+                                       AND ( Extent3.GRP_CODE IS NULL )
+                                       AND ( Extent3.ORG_CODE IS NULL )
+                                       AND ( Extent3.TOP_ORG_CODE IS NULL )
+                                       AND ( Extent3.MEM_UP_ID IS NULL )
+                                       AND ( Extent3.LVL3_UP_ID IS NULL )
+                                       AND ( Extent3.LVL2_UP_ID IS NULL )
+                                       AND ( Extent3.LVL1_UP_ID IS NULL )
+                                       AND ( Extent3.LVL0_UP_ID IS NULL ) ) ) THEN Extent3.LVL1_UP_ID
+                                ELSE 0
+                                   END C7  ,
+                                CASE 
+                                     WHEN ( Extent4.WH_LOC_ID IS NOT NULL ) THEN Extent4.WH_LOC_ID
+                                ELSE 0
+                                   END C8  
+                         FROM ORG0001D Extent1
+                                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.MEM_TYPE
+                                LEFT JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+                                                   vMemberOrg.MEM_CODE MEM_CODE  ,
+                                                   vMemberOrg.MEM_LVL MEM_LVL  ,
+                                                   vMemberOrg.DEPT_CODE DEPT_CODE  ,
+                                                   vMemberOrg.GRP_CODE GRP_CODE  ,
+                                                   vMemberOrg.ORG_CODE ORG_CODE  ,
+                                                   vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+                                                   vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+                                                   vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+                                                   vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+                                                   vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+                                                   vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+                                            FROM ORG1001V vMemberOrg ) Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
+                                LEFT JOIN SYS0028M Extent4   ON Extent4.WH_LOC_CODE = Extent1.MEM_CODE
+                          WHERE  ( 1 = Extent1.STUS )
+                                   AND ( Extent1.MEM_TYPE IN ( 2,3 )
+                                  ) ) Project1
+                  ORDER BY Project1.MEM_CODE ASC
+        
+        </select>
+        
+
+        
+        
+        <select id="selectAreaCodeList" parameterType="Map" resultType="egovMap">
+        
+                  SELECT Extent1.AREA_ID CODE_ID  ,
+                       Extent1.AREA_NAME CODE_NAME  ,
+                       Extent1.AREA_STATE_ID AREA_STATE_ID  ,
+                       Extent1.AREA_IDCM AREA_IDCM  ,
+                       Extent1.AREA_STUS_ID AREA_STUS_ID  ,
+                       Extent1.CRT_DT CRT_DT  ,
+                       Extent1.CRT_DT CRT_DT  ,
+                       Extent1.UPD_DT UPD_DT  ,
+                       Extent1.UPD_USER_ID UPD_USER_ID  
+                  FROM SYS0039M Extent1
+                 WHERE  1 = Extent1.AREA_STUS_ID
+                  ORDER BY Extent1.AREA_NAME ASC
+        </select>		
      </mapper>

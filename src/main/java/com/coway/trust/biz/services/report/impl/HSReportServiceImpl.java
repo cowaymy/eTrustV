@@ -42,5 +42,36 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
 	public List<EgovMap> selectReportBranchCodeList(Map<String, Object> params) {
 		return HSReportMapper.selectReportBranchCodeList(params);
 	}
+
 	
+	@Override
+	public List<EgovMap> selectDeptCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return HSReportMapper.selectDeptCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectDscCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return HSReportMapper.selectDscCodeList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectInsStatusList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return HSReportMapper.selectInsStatusList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCodyCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return HSReportMapper.selectCodyCodeList(params);
+	}
+
+
+	@Override
+	public List<EgovMap> selectAreaCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return HSReportMapper.selectAreaCodeList(params);
+	}
 }

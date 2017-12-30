@@ -16,4 +16,15 @@ public interface HSReportService {
 	List<EgovMap> selectCodyList(Map<String, Object> params);
 	
 	List<EgovMap> selectReportBranchCodeList(Map<String, Object> params);
+	
+	
+	List<EgovMap> selectDeptCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectDscCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectInsStatusList(Map<String, Object> params);
+
+	List<EgovMap> selectCodyCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectAreaCodeList(Map<String, Object> params);
 }
