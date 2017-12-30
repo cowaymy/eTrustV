@@ -779,6 +779,9 @@
             Common.popupDiv("/services/bs/report/bSSummaryList.do"  , null, null , true , '');
         }
         
+        function fn_filterForecastList(){
+            Common.popupDiv("/services/bs/report/filterForecastListingPop.do"  , null, null , true , '');
+        }
         
 
     </script>
@@ -914,6 +917,7 @@
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS History</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportGroup()">HS Report(Group)</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsSummary()">HS Summary Listing</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_filterForecastList()">HS Filter Forecast Listring</a></p></li>
                     </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
