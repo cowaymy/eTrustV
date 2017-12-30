@@ -28,4 +28,19 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
 		return HSReportMapper.selectHSReportGroup(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectCMGroupList(Map<String, Object> params) {
+		return HSReportMapper.selectCMGroupList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCodyList(Map<String, Object> params) {
+		return HSReportMapper.selectCodyList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectReportBranchCodeList(Map<String, Object> params) {
+		return HSReportMapper.selectReportBranchCodeList(params);
+	}
+	
 }
