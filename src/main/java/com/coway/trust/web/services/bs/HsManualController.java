@@ -514,7 +514,7 @@ public class HsManualController {
 		
 		
 
-		resultValue = hsManualService.UpdateHsResult2(formMap, updList, sessionVO);
+		resultValue = hsManualService.UpdateHsResult2(formMap, insList, sessionVO);
 
 		message.setMessage("Complete to Update a HS Result : " + formMap.get("hidHsno") );
 

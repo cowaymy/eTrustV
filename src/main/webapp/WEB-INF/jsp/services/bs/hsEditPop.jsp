@@ -363,9 +363,22 @@ var myDetailGridData = null;
                  return false;
              }
          }
-     
+    	  var resultList = new Array();
     	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
+              var gridDataList = AUIGrid.getGridData(myDetailGridID);
+              //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
+              //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
+              console.log(gridDataList);
+              for(var i = 0; i < gridDataList.length; i++) {
+                  var item = gridDataList[i];
+                  if(item.name > 0) {
+                      resultList.push(gridDataList[i]);
+                  }
+              }
+              jsonObj.add = resultList;      
+              
+              
            // add by jgkim
               var cmbStatusType2 = $("#cmbStatusType2").val();
               var form = $("#editHSResultForm").serializeJSON();

@@ -740,6 +740,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	@Override
 	public List<EgovMap> selectHsViewfilterInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		params.put("selSchdulId2" , params.get("selSchdulId"));
+		logger.debug("jinmu{}" , params);
 		return hsManualMapper.selectHsViewfilterInfo(params);
 	}
 
@@ -1409,23 +1411,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		
     		hsManualMapper.updateQry_CurBS(qry_CurBS); // 업데이트 svc0006d
     
-    		
-    	    EgovMap getResultId =	hsManualMapper.selectResultId(qry_CurBS);
-    		
-    		//물류 프로시져 호출
-    	    Map<String, Object>  logPram = null ;
-    	      logPram =new HashMap<String, Object>();
-    	         logPram.put("ORD_ID", getResultId.get("resultId").toString());   
-    	         logPram.put("RETYPE", "RETYPE");  
-    	         logPram.put("P_TYPE", "OD06");  
-    	         logPram.put("P_PRGNM", "HSCEN");  
-    	         logPram.put("USERID", String.valueOf(sessionVO.getUserId()));   
-    	         
-
-    	         Map   SRMap=new HashMap(); 
-    	    logger.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
-    	   servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
-    	    logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
+    	
     		
     		String ResultNo_New  = null;
     		BS_RESULT=11;
@@ -1472,6 +1458,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		
     		Map<String, Object> qrySchedule = new HashMap<String, Object>();
     		qrySchedule = hsManualMapper.selectQrySchedule(bsResultMas);
+    		
+    		
+    		// 물류 호출 로직  시작 
+    	    EgovMap getResultId =	hsManualMapper.selectResultId(qry_CurBS);
+    		
+    		//물류 프로시져 호출
+    	    Map<String, Object>  logPram = null ;
+    	      logPram =new HashMap<String, Object>();
+    	         logPram.put("ORD_ID", getResultId.get("resultId").toString());   
+    	         logPram.put("RETYPE", "RETYPE");  
+    	         logPram.put("P_TYPE", "OD06");  
+    	         logPram.put("P_PRGNM", "HSCEN");  
+    	         logPram.put("USERID", String.valueOf(sessionVO.getUserId()));   
+    	         
+
+    	    Map   SRMap=new HashMap(); 
+    	    logger.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
+    	   servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
+    	    logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
+    		
+    		
+    		
     		//////////////////////물류호출/////////////////////
     		Map<String, Object> logPram2 =new HashMap<String, Object>();
             logPram2.put("ORD_ID",  qrySchedule.get("no"));

@@ -1088,30 +1088,37 @@
 					LEFT OUTER JOIN SVC0007D F ON B.RESULT_ID = F.BS_RESULT_ID AND D.SRV_FILTER_ID = F.BS_RESULT_PART_ID
 					WHERE A.SCHDUL_ID = #{selSchdulId}
                 ]]> -->
+               
                 <![CDATA[
-                SELECT SRV_FILTER_STK_ID AS STK_ID,
-                           STK_CODE,
-                           STK_DESC,
-                           BS_RESULT_ITM_ID,
-                           CASE WHEN SRV_FILTER_STK_ID = BS_RESULT_PART_ID 
+                    
+            select  distinct1.SRV_FILTER_STK_ID AS STK_ID,
+                           distinct1.STK_CODE,
+                           distinct1.STK_DESC,
+                           c.BS_RESULT_ITM_ID,
+                           CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID 
                                    THEN C.BS_RESULT_PART_QTY
                                    ELSE 0
                                    END AS NAME
-                FROM SVC0008D A,
-                        (SELECT Z.SCHDUL_ID ,
-                                    MAX(Z.RESULT_ID) AS RESULT_ID
-                         FROM SVC0006D Z
-                         GROUP BY Z.SCHDUL_ID) B,
-                        SVC0007D C,
-                        SAL0090D D,
-                        SAL0087D E,
-                        SYS0026M F
-                WHERE A.SCHDUL_ID = B.SCHDUL_ID
-                AND B.RESULT_ID = C.BS_RESULT_ID
-                AND A.SALES_ORD_ID = D.SRV_SO_ID
-                AND D.SRV_CONFIG_ID = E.SRV_CONFIG_ID
-                AND E.SRV_FILTER_STK_ID = F.STK_ID
-                AND A.SCHDUL_ID = #{selSchdulId} 
+               FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
+                           f.STK_CODE,
+                           f.STK_DESC,
+                           e.SRV_FILTER_STK_ID              
+                     FROM SVC0008D A,
+                              SAL0090D D,
+                              SAL0087D E,
+                              SYS0026M F
+                      where A.SALES_ORD_ID = D.SRV_SO_ID
+                      AND D.SRV_CONFIG_ID = E.SRV_CONFIG_ID
+                      AND E.SRV_FILTER_STK_ID = F.STK_ID
+                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY
+		                                                                  from SVC0007D Y ,(SELECT SCHDUL_ID,
+		                                                                                   MAX(X.RESULT_ID) AS RESULT_ID
+		                                                                                   FROM SVC0006D X 
+		                                                                                   GROUP BY X.SCHDUL_ID) Z
+		                                                                  where  z.RESULT_ID = y.BS_RESULT_ID
+		                                                                  and z.SCHDUL_ID =#{selSchdulId2}
+                                                                   ) C
+                where distinct1.STK_ID = C.BS_RESULT_PART_ID(+)
                 ]]>
          </select>
 
