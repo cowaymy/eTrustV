@@ -5,28 +5,28 @@
     //AUIGrid 생성 후 반환 ID
     var cancelLogGridID;       // Cancellation Log Transaction list
     var prodReturnGridID;      // Product Return Transaction list
-    
+
     $(document).ready(function(){
     	if($("#callStusId").val() == '1'){
     		$("#addDiv").css("display" , "none");
     		$("#callStusId").val('');
     	}
-        //AUIGrid 그리드를 생성합니다. 
-        cancelLogGrid();  
+        //AUIGrid 그리드를 생성합니다.
+        cancelLogGrid();
         prodReturnGrid();
-        
+
        /*  AUIGrid.setSelectionMode(addrGridID, "singleRow"); */
         //Call Ajax
-        fn_cancelLogTransList(); 
+        fn_cancelLogTransList();
         fn_productReturnTransList();
-        
+
         //j_date
         var pickerOpts={
                 changeMonth:true,
                 changeYear:true,
                 dateFormat: "dd/mm/yy"
         };
-        
+
         $(".j_date").datepicker(pickerOpts);
 
         var monthOptions = {
@@ -42,29 +42,29 @@
 //            $("#addDiv").css("display" , "none");
 //          $("#addDiv").hide();
 //        }
-        
+
     });
-    
+
     function cancelLogGrid(){
         // Cancellation Log Transaction Column
-        var cancelLogColumnLayout = [ 
-             {dataField : "code1", headerText : "Type", width : '10%'}, 
+        var cancelLogColumnLayout = [
+             {dataField : "code1", headerText : "Type", width : '10%'},
              {dataField : "code", headerText : "Status", width : '10%'},
-             {dataField : "crtDt", headerText : "Create Date", width : '20%'}, 
+             {dataField : "crtDt", headerText : "Create Date", width : '20%'},
              {dataField : "callentryUserName", headerText : "Creator", width : '20%'},
-             {dataField : "updDt", headerText : "Update Date", width : '20%'}, 
+             {dataField : "updDt", headerText : "Update Date", width : '20%'},
              {dataField : "userName", headerText : "Updator", width : '20%'}
          ];
-        
+
         //그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 10(기본값:10)
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, //true 
+            showStateColumn : false, //true
             displayTreeOpen : false, //true
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -78,31 +78,31 @@
             showRowNumColumn : true,
             groupingMessage : "Here groupping"
         };
-        
+
         cancelLogGridID = GridCommon.createAUIGrid("#cancelLog", cancelLogColumnLayout,'', gridPros);
     }
-    
+
     function prodReturnGrid(){
         // Product Return Transaction Column
-        var prodReturnColumnLayout = [ 
-             {dataField : "retnNo", headerText : "Return No", width : '15%'}, 
+        var prodReturnColumnLayout = [
+             {dataField : "retnNo", headerText : "Return No", width : '15%'},
              {dataField : "code", headerText : "Status", width : '10%'},
-             {dataField : "created1", headerText : "Create Date", width : '11%'}, 
+             {dataField : "created1", headerText : "Create Date", width : '11%'},
              {dataField : "username1", headerText : "Creator", width : '11%'},
-             {dataField : "memCodeName2", headerText : "Assign CT"}, 
+             {dataField : "memCodeName2", headerText : "Assign CT"},
              {dataField : "ctGrp", headerText : "Group", width : '8%'},
              {dataField : "whLocCodeDesc", headerText : "Return Warehouse", width : '25%'}
          ];
-        
+
         //그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 10(기본값:10)
             pageRowCount : 10,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, //true 
+            showStateColumn : false, //true
             displayTreeOpen : false, //true
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -116,66 +116,66 @@
             showRowNumColumn : true,
             groupingMessage : "Here groupping"
         };
-        
+
         prodReturnGridID = GridCommon.createAUIGrid("#productReturn", prodReturnColumnLayout,'',gridPros);
     }
-    
-    
-    
+
+
+
     // 리스트 조회. (Cancellation Log Transaction list)
     function fn_cancelLogTransList() {
         Common.ajax("GET", "/sales/order/cancelLogTransList.do", $("#tabForm").serialize(), function(result) {
             AUIGrid.setGridData(cancelLogGridID, result);
         });
     }
-    
+
     // 리스트 조회. (Product Return Transaction list)
-    function fn_productReturnTransList() { 
+    function fn_productReturnTransList() {
         Common.ajax("GET", "/sales/order/productReturnTransList.do", $("#tabForm").serialize(), function(result) {
             AUIGrid.setGridData(prodReturnGridID, result);
         });
     }
-    
+
     //resize func (tab click)
-    function fn_resizefunc(gridName){ // 
+    function fn_resizefunc(gridName){ //
         AUIGrid.resize(gridName, 950, 300);
    }
-    
-    
-    
-	
-	//add by hgham 
+
+
+
+
+	//add by hgham
 	function fn_doAllaction(){
-	    
+
 	    var ord_id ='${cancelReqInfo.ordId}'   ;// '143486';
 	    var  vdte   =$("#requestDate").val();
-	    
+
 	    var options ={
 	            ORD_ID: ord_id,
 	            S_DATE: vdte,
 	            CallBackFun:'fn_allactionFun'
 	    }
-	    
+
 	    Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'RTN'}, null , true , '_doAllactionDiv');
 	}
-	
-	
-	
+
+
+
 	function fn_allactionFun(obj){
-		
+
 		   console.log(obj);
 		   $("#addAppRetnDt").val(obj.dDate);
 	       $("#ctId").val(obj.ct);
            $("select[name=cmbAssignCt]").val(obj.ct);
            $("select[name=cmbAssignCt]").addClass("w100p disabled");
            $("select[name=cmbAssignCt]").attr('disabled','disabled');
-           
+
            $("#CTGroup").val(obj.ctSubGrp);
            $("#brnchId").val(obj.brnchId);
            $("#CTSSessionCode").val(obj.sessionCode);
    }
 
-    
+
     function onChangeStatusType(){
     	if($("#addStatus").val() == '19'){     // Recall
     		$("select[name=cmbAssignCt]").removeAttr("disabled");
@@ -213,7 +213,7 @@
                 //$("#addAppRetnDt").removeAttr("disabled");
                 $("#requestDate").removeAttr("disabled");
             }
-            
+
         }
     	if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
             $("select[name=cmbAssignCt]").removeAttr("disabled");
@@ -235,7 +235,7 @@
             }
         }
     }
-    
+
     function fn_saveCancel(){
     	if(addCallForm.addStatus.value == ""){
     		Common.alert("Please select the Status");
@@ -321,7 +321,7 @@
           }
     	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
             Common.alert(result.msg, fn_success);
-            
+
         }, function(jqXHR, textStatus, errorThrown) {
                 try {
                     console.log("status : " + jqXHR.status);
@@ -336,53 +336,53 @@
                     alert("Saving data prepration failed.");
                 }
                 alert("Fail : " + jqXHR.responseJSON.message);
-        }); 
+        });
     }
-    
+
 //    function fn_reloadPage(){
         //Parent Window Method Call
 //        fn_orderCancelListAjax();
 //        Common.popupDiv('/sales/order/cancelReqInfoPop.do', $('#detailForm').serializeJSON(), null , true, '_editDiv2');
 //        $("#_close").click();
 //    }
-    
+
     function fn_cancelReload(){
     	fn_orderCancelListAjax();
     	if($("#addStatus").val() == '32' ||$("#addStatus").val() == '31'){
     		$("#callStusId").val(1);
     	}
-    	
+
     	$("#_close").click();
     	Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
-    	
-    	
-    	
+
+
+
     }
-    
+
     function fn_success(){
 //    	fn_cancelReload();
         fn_orderCancelListAjax();
     	$("#_close").click();
     }
-    
+
   //그리드 속성 설정
     var gridPros = {
         usePaging           : true,         //페이징 사용
-        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-        editable            : false,            
-        fixedColumnCount    : 0,            
-        showStateColumn     : true,             
-        displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
-        headerHeight        : 30,       
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+        editable            : false,
+        fixedColumnCount    : 0,
+        showStateColumn     : true,
+        displayTreeOpen     : false,
+        selectionMode       : "singleRow",  //"multipleCells",
+        headerHeight        : 30,
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
         noDataMessage       : "No order found.",
         groupingMessage     : "Here groupping"
     };
-  
+
     function chgGridTab(tabNm) {
         switch(tabNm) {
             case 'custInfo' :
@@ -436,7 +436,7 @@
 <header class="pop_header">
 <h1>Order Cancellation - View</h1>
 <ul class="right_opt">
-<!-- 
+<!--
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
@@ -541,7 +541,7 @@
         <td>${cancelReqInfo.actualCanclDt}
         </td>
     </tr>
-<!--     
+<!--
     <tr>
         <th scope="row">Bank Account</th>
         <td>
@@ -571,7 +571,7 @@
     </dd>
     <dt class="click_add_on"><a href="#">Order Full Details</a></dt>
     <dd>
-    
+
     <section class="tap_wrap mt0"><!-- tap_wrap start -->
     <ul class="tap_type1 num4">
         <li><a href="#" class="on">Basic Info</a></li>
@@ -595,7 +595,7 @@
         <li><a href="#">Relief Certificate</a></li>
         <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
     </ul>
-    
+
 <!------------------------------------------------------------------------------
     Basic Info
 ------------------------------------------------------------------------------->
@@ -703,10 +703,10 @@
     <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
     <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
     <input id="callStusId" name="callStusId" type="hidden" >
-    
+
     <!--  add by hgham  -->
     <input id="ctId" name="ctId" type="hidden" >
-    
+
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -746,10 +746,10 @@
                     </c:forEach>
 			    </select>
 			    </td>
-			    
+
 			    <th scope="row">DSC Branch</th>
-				    <td>  
-				            <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly "    readonly="readonly"  />                    
+				    <td>
+				            <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly "    readonly="readonly"  />
 				            <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly"    readonly="readonly" />
 				          <div  style="display:none">
 						   <select id="cmbCtGroup" name="cmbCtGroup" class="disabled" disabled="disabled">
@@ -761,15 +761,15 @@
 		                </div>
 				</td>
 			</tr>
-			
-    
+
+
            <tr>
 	                <th scope="row">Request Date<span class="must">*</span></th>
 				    <td>
 				    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
 				    </td>
-			    
-	    
+
+
 	                <th scope="row">Appointment Date</th>
 	                <td>
 	                  <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
@@ -780,14 +780,14 @@
 				    <td>
 				      <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
 				    </td>
-				    
+
 				      <th scope="row">Appointment <br> Sessione </th>
                     <td>
-                          <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"    readonly="readonly"  />                    
+                          <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly"    readonly="readonly"  />
                     </td>
-               
+
 			</tr>
-			
+
 			<tr>
 			    <th scope="row">Remark<span class="must">*</span></th>
 			    <td colspan="3">
@@ -801,9 +801,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns mt20">
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
-    </c:if>
 </ul>
 </div>
 </section><!-- pop_body end -->
