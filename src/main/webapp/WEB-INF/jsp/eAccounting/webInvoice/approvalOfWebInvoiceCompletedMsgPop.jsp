@@ -10,11 +10,6 @@ $(document).ready(function () {
 function fn_closePop() {
     $("#approveComplePop").remove();
     
-    // $("#webInvoiceAppvViewPop").length return 1 -> $("#webInvoiceAppvViewPop") exist
-    if($("#webInvoiceAppvViewPop") > 0) {
-        $("#webInvoiceAppvViewPop").remove();
-    }
-    
     fn_selectApproveList();
 }
 </script>
