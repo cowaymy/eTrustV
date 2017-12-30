@@ -697,6 +697,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		// TODO Auto-generated method stub
 		return hsManualMapper.cmbCollectTypeComboList();
 	}
+	
+	@Override
+	public List<EgovMap> cmbCollectTypeComboList2(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.cmbCollectTypeComboList2();
+	}
 
 
 	@Override

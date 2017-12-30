@@ -89,19 +89,42 @@
     
     
     $(document).ready(function() {
+    	
 
-    	   doDefCombo(StatusTypeData1, '' ,'cmbStatusType1', 'S', '');
-            //order detail
-           fn_getOrderDetailListAjax();
+   	   doDefCombo(StatusTypeData1, '' ,'cmbStatusType1', 'S', '');
+        //order detail
+       fn_getOrderDetailListAjax();
 
-           createAUIGrid();
-           fn_getHsFilterListAjax();
+       createAUIGrid();
+       fn_getHsFilterListAjax();
            
 //           AUIGrid.setGridData(myGridID, "hsFilterList");                       
         //createAUIGridCust();
         //fn_getselectPopUpListAjax();
 		
-		
+        // HS Result Information > HS Status 값 변경 시 다른 정보 입력 가능 여부 설정
+       $("#cmbStatusType1").change(function(){
+           
+           if ($("#cmbStatusType1").val() == 4) {    // Completed
+        	   $("input[name='settleDate']").attr('disabled', false);
+               $("select[name='failReason'] option").remove();
+               doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+               $("select[name=cmbCollectType]").attr('disabled', false);
+           } else if ($("#cmbStatusType1").val() == 21) {    // Failed
+               doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+               $('#settleDate').val('');
+               $("input[name='settleDate']").attr('disabled', true);
+               $("select[name='cmbCollectType'] option").remove();
+               $("select[name=cmbCollectType]").attr('disabled', true);
+           } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
+               doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
+               $('#settleDate').val('');
+               $("input[name='settleDate']").attr('disabled', true);
+               $("select[name='cmbCollectType'] option").remove();
+               $("select[name=cmbCollectType]").attr('disabled', true);
+           }
+           
+       });
 		
     });
 
@@ -140,11 +163,27 @@
 
 //111
 
+        if ($("#cmbStatusType1").val() == 4) {    // Completed
+             if ($("#settleDate").val() == '' || $("#settleDate").val() == null) {
+            	 Common.alert("<spring:message code='sys.common.alert.validation' arguments='settleDate Type'/>");
+                 return false;
+             }
+             if ($("#cmbCollectType").val() == '' || $("#cmbCollectType").val() == null) {
+                 Common.alert("Please Select 'Collection Code'");
+                 return false;
+             }
+         } else if ($("#cmbStatusType1").val() == 21) {    // Failed
+             if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+                 Common.alert("Please Select 'Fail Reason'.");
+                 return false;
+             }
+         } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
+             if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+                 Common.alert("Please Select 'Fail Reason'.");
+                 return false;
+             }
+         }
             
-           if("" == $("#settleDate").val() || null == $("#settleDate").val()){
-                Common.alert("<spring:message code='sys.common.alert.validation' arguments='settleDate Type'/>");
-                return false;
-            }
             
             if("" == $("#remark").val() || null == $("#remark").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='remark Type'/>");
@@ -195,7 +234,7 @@
         
     function fn_close(){
         $("#popup_wrap").remove();
-         fn_parentReload();
+         //fn_parentReload();
     }
     
     function fn_parentReload() {
@@ -302,12 +341,12 @@
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>HS Result Information</h2>
 </aside><!-- title_line end -->
-<table class="type1" style="width: 994px; "><!-- table start -->
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:180px" />
-    <col style="width:*" />
     <col style="width:160px" />
+    <col style="width:380px" />
+    <col style="width:170px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -317,7 +356,7 @@
     <select class="w100p"  id ="cmbStatusType1" name = "cmbStatusType"  onchange="onChangeStatusType(this.value)"" >
     </select>
     </td>
-    <th scope="row" style="width: 119px; ">Settle Date<span class="must">*</span></th>
+    <th scope="row" style="width: 119px; ">Settle Date</th>
     <td><input type="text" id ="settleDate" name = "settleDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
@@ -330,7 +369,7 @@
             </c:forEach>
     </select>
     </td>
-    <th scope="row">Collection Code<span class="must">*</span></th>
+    <th scope="row">Collection Code</th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
         <option value="" selected>Choose One</option>

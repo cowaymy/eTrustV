@@ -36,6 +36,8 @@ public interface HsManualService {
 	EgovMap selectHsInitDetailPop(Map<String, Object> params);
 
 	List<EgovMap> cmbCollectTypeComboList(Map<String, Object> params);
+	
+	List<EgovMap> cmbCollectTypeComboList2(Map<String, Object> params);
 
 	List<EgovMap> cmbServiceMemList(Map<String, Object> params);
 
@@ -112,5 +114,6 @@ public interface HsManualService {
 
 	//add by hgham  mobile 중복 처리 
 	int isHsAlreadyResult (Map<String, Object> params);
+
 
 }

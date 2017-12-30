@@ -52,6 +52,8 @@ public interface HsManualMapper {
 
 	List<EgovMap> cmbCollectTypeComboList();
 
+	List<EgovMap> cmbCollectTypeComboList2();
+
 	void updateDocNo(Map<String, Object> params);
 
 	EgovMap selectHSDocNoList(Map<String, Object> params);
@@ -218,6 +220,7 @@ public interface HsManualMapper {
 	void updateQry_CurBSZero(Map<String, Object> qry_CurBS);
 
 	EgovMap selectResultId(Map<String, Object> qry_CurBS);
+
 		
 
 }

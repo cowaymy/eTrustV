@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.api.mobile.services.RegistrationConstants;
 import com.coway.trust.biz.sales.order.OrderDetailService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -458,8 +457,11 @@ public class HsManualController {
 		
 		resultValue = hsManualService.addIHsResult(formMap, insList, sessionVO);
 		
+		int status = 0;
+		status = Integer.parseInt((String) formMap.get("cmbStatusType"));
+		logger.debug(">>>>>>>>>>>>status : " + status);
 		  
-		if( null !=resultValue){
+		if( null !=resultValue && status == 4 ){
 			
 			HashMap   spMap =(HashMap)resultValue.get("spMap");
 			
@@ -475,6 +477,10 @@ public class HsManualController {
 			}
 			
 			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		} else if ( null !=resultValue && (status == 21 || status == 10) ) {
+			
+			message.setMessage("Complete to Add a HS Order : " + resultValue.get("resultId") );
+			
 		}
 		
 		
@@ -898,6 +904,23 @@ public class HsManualController {
 		model.addAttribute("failReasonList", failReasonList);
 
 		return ResponseEntity.ok(failReasonList);
+	}
+	
+	/**
+	 * Services - HS  - New HS Result - Collection Code 콤보박스 리스트
+	 *
+	 * @param params
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCollectType.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCollectType(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList2(params);
+		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+
+		return ResponseEntity.ok(cmbCollectTypeComboList);
 	}
 	
 }

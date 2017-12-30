@@ -1404,6 +1404,17 @@
               ORDER BY Extent1.CODE ASC
             ) a
         </select>
+        
+        <select id="cmbCollectTypeComboList2"  parameterType="Map" resultType="egovMap">
+        select a.CODE CODE_ID, a.c1 CODE_NAME
+        from (
+             SELECT Extent1.CODE CODE1 , Extent1.CODE || '-' || Extent1.RESN_DESC c1,resn_id as code
+              FROM SYS0032M Extent1
+             WHERE  ( 174 = Extent1.resn_type_id )
+                      AND ( 1 = Extent1.STUS_CODE_ID )
+              ORDER BY Extent1.CODE ASC
+            ) a
+        </select>
 
 
 
