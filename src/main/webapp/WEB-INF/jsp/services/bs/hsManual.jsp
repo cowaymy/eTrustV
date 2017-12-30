@@ -775,6 +775,11 @@
         function fn_hsReportGroup(){
             Common.popupDiv("/services/bs/report/hsReportGroupPop.do"  , null, null , true , '');
         }
+        function fn_hsSummary(){
+            Common.popupDiv("/services/bs/report/bSSummaryList.do"  , null, null , true , '');
+        }
+        
+        
 
     </script>
 
@@ -906,8 +911,9 @@
                 <dd>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS History</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportGroup()">HS Report(Group)</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsSummary()">HS Summary Listing</a></p></li>
                     </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
