@@ -41,7 +41,13 @@
 		 </if>
 		 <if test="searchVa != null and searchVa != '' ">
 		        AND A.F_TRNSC_REF_VA_NO = #{searchVa}
-		 </if> 
+		 </if>
+		 <if test="searchCreditAmtFr != null and searchCreditAmtFr != '' ">
+                AND TO_NUMBER(A.F_TRNSC_CRDIT_AMT) <![CDATA[>= ]]> #{searchCreditAmtFr}
+         </if>
+         <if test="searchCreditAmtTo != null and searchCreditAmtTo != '' ">
+                AND TO_NUMBER(A.F_TRNSC_CRDIT_AMT) <![CDATA[<= ]]> #{searchCreditAmtTo}
+         </if>    
     </select>
 
 </mapper>
