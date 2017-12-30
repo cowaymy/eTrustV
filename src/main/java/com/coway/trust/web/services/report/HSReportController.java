@@ -78,4 +78,58 @@ public class HSReportController {
 		return ResponseEntity.ok(HSReportGroup);
 	}
 	
+	@RequestMapping(value = "/filterForecastListingPop.do")
+	public String filterForecastPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/bs/filterForecastListingPop";
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCMGroupList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCMGroupList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap>  selectCMGroupList = HSReportService.selectCMGroupList(params);
+		logger.debug("HSReportGroup {}", selectCMGroupList);
+		return ResponseEntity.ok(selectCMGroupList);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCodyList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodyList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap>  selectCodyList = HSReportService.selectCodyList(params);
+		logger.debug("selectCodyList {}", selectCodyList);
+		return ResponseEntity.ok(selectCodyList);
+	}
+	
+	/**
+	 * Search rule book management list
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/reportBranchCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectReportBranchCodeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap>  selectBranchList = HSReportService.selectReportBranchCodeList(params);
+		logger.debug("selectBranchList {}", selectBranchList);
+		return ResponseEntity.ok(selectBranchList);
+	}
+	
 }
