@@ -234,7 +234,7 @@
         
     function fn_close(){
         $("#popup_wrap").remove();
-         //fn_parentReload();
+         fn_parentReload();
     }
     
     function fn_parentReload() {
