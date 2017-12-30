@@ -10,4 +10,10 @@ public interface HSReportService {
 	List<EgovMap> selectHSReportSingle(Map<String, Object> params);
 	
 	List<EgovMap> selectHSReportGroup(Map<String, Object> params);
+	
+	List<EgovMap> selectCMGroupList(Map<String, Object> params);
+	
+	List<EgovMap> selectCodyList(Map<String, Object> params);
+	
+	List<EgovMap> selectReportBranchCodeList(Map<String, Object> params);
 }
