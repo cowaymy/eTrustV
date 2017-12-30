@@ -3476,7 +3476,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			        GROUP BY COURS_ID) MS9
 			 WHERE 1 = 1
 			   AND MS8.COURS_ID = MS9.COURS_ID
-			   AND COURS_TYPE_CODE_ID IN ('1022', '1023', '1024')
+			   AND COURS_TYPE_CODE_ID IN ('1027')
 			   AND COURS_STUS_ID = '1'
 			   AND COURS_LIMIT > MS9.CNT
 			   AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
