@@ -506,18 +506,18 @@ function fn_changeCrcMode(){
 }
 
 //Merchant Bank 변경시 Tenure 다시 세팅한다. 
-function fn_changeIsseBank(){
-	var keyInIssueBank = $("#keyInIssueBank").val();
+function fn_changeMerchantBank(){ 
+	var keyInMerBank = $("#keyInMerchantBank").val();
 	
-	if(keyInIssueBank == 17 || keyInIssueBank == 28 || keyInIssueBank == 3 || keyInIssueBank == 36){        //HSBC OR CIMB
+	if(keyInMerBank == 102 || keyInMerBank == 104){        //HSBC OR CIMB
 		doDefCombo(tenureTypeData1, '' ,'keyInTenure', 'S', '');  
-	}else if(keyInIssueBank == 21 || keyInIssueBank == 30 || keyInIssueBank == 23 || keyInIssueBank == 38 || keyInIssueBank == 20){        // MBB OR AMB OR UOB
+	}else if(keyInMerBank == 100 || keyInMerBank == 106 || keyInMerBank == 553){        // MBB OR AMB OR UOB
         doDefCombo(tenureTypeData2, '' ,'keyInTenure', 'S', '');  
-    }else if(keyInIssueBank == 5 || keyInIssueBank == 29){        //HLB
+    }else if(keyInMerBank == 105){        //HLB
         doDefCombo(tenureTypeData3, '' ,'keyInTenure', 'S', '');  
-    }else if(keyInIssueBank == 6 || keyInIssueBank == 32 ){        //PBB
+    }else if(keyInMerBank == 107 ){        //PBB
         doDefCombo(tenureTypeData4, '' ,'keyInTenure', 'S', '');  
-    }else if(keyInIssueBank == 19 || keyInIssueBank == 34){        //SCB
+    }else if(keyInMerBank == 563){        //SCB
         doDefCombo(tenureTypeData5, '' ,'keyInTenure', 'S', '');  
     }else {        //OTHER
         doDefCombo(tenureTypeData, '' ,'keyInTenure', 'S', '');  
@@ -536,14 +536,16 @@ function savePayment(){
 	//카드번호 체크
 	if(FormUtil.checkReqValue($("#keyInCardNo1")) || 
 			FormUtil.checkReqValue($("#keyInCardNo2")) ||
-			FormUtil.checkReqValue($("#keyInCardNo3"))){
+			FormUtil.checkReqValue($("#keyInCardNo3"))	||
+			FormUtil.checkReqValue($("#keyInCardNo4"))){
         Common.alert("<spring:message code='pay.head.noCrcNo'/>");
         return;
     }else{
     	var cardNo1Size = $("#keyInCardNo1").val().length;
     	var cardNo2Size = $("#keyInCardNo2").val().length;
     	var cardNo3Size = $("#keyInCardNo3").val().length;
-    	var cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size;
+    	var cardNo4Size = $("#keyInCardNo4").val().length;
+    	var cardNoAllSize = cardNo1Size  + cardNo2Size + cardNo3Size + cardNo4Size;
     	
     	if(cardNoAllSize != 16){
     		Common.alert("<spring:message code='pay.head.ivalidCrcNo'/>");
@@ -723,7 +725,7 @@ function fn_changeCardNo1(){
 	
 	var cardNo1Size = $("#keyInCardNo1").val().length;
 	
-	if(cardNo1Size > 4){
+	if(cardNo1Size >= 4){
 		var cardNo1st1Val = $("#keyInCardNo1").val().substr(0,1);
         var cardNo1st2Val = $("#keyInCardNo1").val().substr(0,2);
         var cardNo1st4Val = $("#keyInCardNo1").val().substr(0,4);
@@ -2488,21 +2490,29 @@ function addOutSrvcToFinal(){
 				                <option value="107">Credit Card</option>
 				            </select>
 				        </td>
+						<th scope="row">Amount<span class="must">*</span></th>
+				        <td>
+				            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+				        </td>
+						<!--
 				        <th scope="row">Ref No</th>
 				        <td>
 				            <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
 				        </td>
+						-->
 				    </tr>                    
-				    <tr>
-				        <th scope="row">Amount<span class="must">*</span></th>
+					<!--
+					<tr>
+				        <th scope="row">Ref No</th>
 				        <td>
-				            <input type="text" id="keyInAmount" name="keyInAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
+				            <input type="text" id="keyInRefNo" name="keyInRefNo" class="w100p" maxlength="30" />
 				        </td>
 				        <th scope="row">Bank Charge Amount</th>
 				        <td>
 				            <input type="text" id="keyInBankChrgAmount" name="keyInBankChrgAmount" class="w100p" maxlength="10" onkeydown='return FormUtil.onlyNumber(event)' />
-				        </td>
+				        </td>					
 				    </tr>
+					-->
 				    <tr>
 				        <th scope="row">Card Type<span class="must">*</span></th>
 				        <td>
@@ -2530,11 +2540,13 @@ function addOutSrvcToFinal(){
 				    <tr>
 				        <th scope="row">Card No<span class="must">*</span></th>
 				        <td>
-				            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
+				            <p class="short"><input type="text" id="keyInCardNo1" name="keyInCardNo1" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' onChange="javascript:fn_changeCardNo1();"/></p>
 				            <span>-</span>
-				            <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="6" maxlength="6" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+				            <p class="short"><input type="text" id="keyInCardNo2" name="keyInCardNo2" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				            <span>-</span>
 				            <p class="short"><input type="text" id="keyInCardNo3" name="keyInCardNo3" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+							<span>-</span>
+				            <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				        </td>
 				        <th scope="row">Credit Card Holder Name<span class="must">*</span></th>
 				        <td>
@@ -2544,11 +2556,11 @@ function addOutSrvcToFinal(){
 				    <tr>
                         <th scope="row">Issue Bank<span class="must">*</span></th>
                         <td>
-                            <select id="keyInIssueBank" name="keyInIssueBank" class="w100p" onChange="javascript:fn_changeIsseBank();"></select>
+                            <select id="keyInIssueBank" name="keyInIssueBank" class="w100p" ></select>
                         </td>
                         <th scope="row">Merchant Bank<span class="must">*</span></th>
                         <td>
-                            <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" ></select>
+                            <select id="keyInMerchantBank" name="keyInMerchantBank" class="w100p" onChange="javascript:fn_changeMerchantBank();"></select>
                         </td>                       
                     </tr>                  
 				    <tr>
@@ -2564,14 +2576,19 @@ function addOutSrvcToFinal(){
                             </select>
 				        </td>
 				    </tr>
-				    <tr>
+				    <tr>						
+				        <th scope="row">Transaction Date<span class="must">*</span></th>
+				        <td>
+				            <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+				        </td>
+						<!--
 				        <th scope="row">Running Number</th>
 				        <td>
 				            <input id="keyInRunNo" name="keyInRunNo" type="text" title="" placeholder="" class="w100p" maxlength="50" />
 				        </td>
-				        <th scope="row">Transaction Date<span class="must">*</span></th>
+						-->
+						<th scope="row"></th>
 				        <td>
-				            <input id="keyInTrDate" name="keyInTrDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
 				        </td>
 				    </tr>
 				    

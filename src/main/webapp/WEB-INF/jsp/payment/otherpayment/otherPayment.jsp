@@ -2349,6 +2349,20 @@ function fn_setSearchPayType() {
                             <input type="text" id="searchVa" name="searchVa" class="w100p"/>
                         </td>
                     </tr>
+					<tr>
+                        <th>Credit Amount</th> 
+                        <td>
+                            <!-- date_set start -->
+							<div class="date_set">
+								<p><input type="text" id="searchCreditAmtFr" name="searchCreditAmtFr" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+								<span>To</span>
+								<p><input type="text" id="searchCreditAmtTo" name="searchCreditAmtTo" class="w100p" onkeydown='return FormUtil.onlyNumber(event)' /></p>
+							</div>
+							<!-- date_set end -->
+                        </td> 
+                        <th></th>
+                        <td></td>
+                    </tr>
 				</tbody>
 			</table>
 			<!-- table end -->

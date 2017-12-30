@@ -2623,7 +2623,7 @@ function addOutSrvcToFinal(){
                             </td>
                             <th scope="row">VA Account<span class="must">*</span></th>
                             <td>
-                                <input type="text" id="cashVAAccount" name="cashVAAccount" size="22" maxlength="16" class="w100p readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="cashVAAccount" name="cashVAAccount" size="22" maxlength="16" class="w100p readonly" readonly="readonly" />
                             </td>
                         </tr>
                         <tr>
@@ -2735,7 +2735,7 @@ function addOutSrvcToFinal(){
                             </td>
                             <th scope="row">VA Account<span class="must">*</span></th>
                             <td>
-                                <input type="text" id="chequeVAAccount" name="chequeVAAccount" maxlength="16"  class="w100p readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="chequeVAAccount" name="chequeVAAccount" maxlength="16"  class="w100p readonly" readonly="readonly"  />
                             </td>
                         </tr>
                         <tr>
@@ -2873,7 +2873,7 @@ function addOutSrvcToFinal(){
                         <tr>
                             <th scope="row">VA Account<span class="must">*</span></th>
                             <td >
-                                <input type="text" id="onlineVAAccount" name="onlineVAAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" onkeydown='return FormUtil.onlyNumber(event)' />
+                                <input type="text" id="onlineVAAccount" name="onlineVAAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" />
                             </td>
                             <th scope="row"></th>
                             <td>
