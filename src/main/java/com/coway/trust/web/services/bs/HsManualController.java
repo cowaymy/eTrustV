@@ -459,7 +459,6 @@ public class HsManualController {
 		
 		int status = 0;
 		status = Integer.parseInt(formMap.get("cmbStatusType").toString());
-		logger.debug(">>>>>>>>>>>>status : " + status);
 		  
 		if( null !=resultValue && status == 4 ){
 			
@@ -931,6 +930,18 @@ public class HsManualController {
 		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
 
 		return ResponseEntity.ok(cmbCollectTypeComboList);
+	}
+	
+	@RequestMapping(value = "/saveValidation.do",method = RequestMethod.POST)
+	public ResponseEntity<Integer> saveValidation(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+		
+		logger.debug("saveValidation params : {}", params);
+		
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		int resultValue = hsManualService.saveValidation(formMap);//hidSalesOrdCd
+		
+		return ResponseEntity.ok(resultValue);
 	}
 	
 }

@@ -232,7 +232,6 @@
             }  */
                         
             
-            
              //var jsonObj =  GridCommon.getEditData(myDetailGridID);
             // add by jgkim
             var jsonObj = {};
@@ -251,13 +250,23 @@
             jsonObj.add = resultList;        
             jsonObj.form = $("#addHsForm").serializeJSON();
             console.log(jsonObj);
-              Common.ajax("POST", "/services/bs/addIHsResult.do", jsonObj, function(result) {
-              //Common.alert(result.message.message);
-                console.log("message : " + result.message );
+            
+            Common.ajax("POST", "/services/bs/saveValidation.do", jsonObj, function(result) {
+                console.log("save validation : " + result );
                 
-                Common.alert(result.message,fn_parentReload);
-
+                // result가 0일 때만 저장
+                if (result == 0) {
+                    Common.ajax("POST", "/services/bs/addIHsResult.do", jsonObj, function(result) {
+                        //Common.alert(result.message.message);
+                        console.log("message : " + result.message );
+                        Common.alert(result.message,fn_parentReload);
+                    });
+                } else {
+                    Common.alert("There is already Result Number for the HS Order : ${hsDefaultInfo.no}");
+                    return false;
+                }
             });
+            
         }
         
         

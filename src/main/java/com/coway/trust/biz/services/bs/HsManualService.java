@@ -117,5 +117,8 @@ public interface HsManualService {
 	//add by hgham  mobile 중복 처리 
 	int isHsAlreadyResult (Map<String, Object> params);
 
+	// Add HS Result - Save Validation
+	int saveValidation(Map<String, Object> params);
+
 
 }

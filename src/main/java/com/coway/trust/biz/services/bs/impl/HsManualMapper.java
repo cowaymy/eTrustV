@@ -222,6 +222,9 @@ public interface HsManualMapper {
 	void updateQry_CurBSZero(Map<String, Object> qry_CurBS);
 
 	EgovMap selectResultId(Map<String, Object> qry_CurBS);
+
+	// Add HS Result - Save Validation
+	int saveValidation(Map<String, Object> params);
 		
 
 }

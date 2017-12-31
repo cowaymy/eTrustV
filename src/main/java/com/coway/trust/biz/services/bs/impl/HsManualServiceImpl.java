@@ -1614,7 +1614,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return hsManualMapper.isHsAlreadyResult(params);
 	}
 	
-	
+	@Override
+	public int  saveValidation(Map<String, Object> params) {
+		return hsManualMapper.saveValidation(params);
+	}
 	
 	
 }

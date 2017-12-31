@@ -3289,6 +3289,14 @@
                 ,#{BSResultFilterClaim}
                 )
           </insert>
+          
+          <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
+				SELECT COUNT(*) CNT
+				FROM SVC0008D A,
+				     SVC0006D B
+				WHERE A.SCHDUL_ID = B.SCHDUL_ID
+				AND A.NO = #{hidSalesOrdCd}
+           </select>
 
 
 </mapper>
