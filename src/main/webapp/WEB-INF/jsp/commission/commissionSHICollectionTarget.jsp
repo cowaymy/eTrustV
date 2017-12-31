@@ -13,6 +13,8 @@
 var myGridID;
 var memCode;
 var today = "${today}";
+var userDefine1 = "${PAGE_AUTH.funcUserDefine1}";
+var userDefine2 = "${PAGE_AUTH.funcUserDefine2}";
 	$(document).ready(function() {
 		createAUIGrid();
 		AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -38,9 +40,11 @@ var today = "${today}";
 					}else{
 						//Common.alert("No member record found");
 						Common.setMsg("<spring:message code='commission.alert.SHIIndex.member.noFound'/>");
-						$("#memCode").val("");
-						$("#teamCode").val("");
-						$("#level").val("");
+						if(userDefine2=="Y"){
+							$("#memCode").val("");
+							$("#teamCode").val("");
+							$("#level").val("");
+						}
 					}
 				});
 			}
