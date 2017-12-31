@@ -155,7 +155,7 @@
     
     function viewASListing(){
         if($("#ordId").val() != ''){
-            Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
+            //Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
         }else{
             Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
             return;
