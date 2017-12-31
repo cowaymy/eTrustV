@@ -293,7 +293,7 @@
                 isValid = false;
                 msg += "<spring:message code='sales.promo.msg6'/><br />";
             }
-            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val(0)) {
+            if(!$('#promoSrvMemPacId').is(":disabled") && FormUtil.isEmpty($('#promoSrvMemPacId').val())) {
                 isValid = false;
                 msg += "<spring:message code='sales.promo.msg7'/><br />";
             }
