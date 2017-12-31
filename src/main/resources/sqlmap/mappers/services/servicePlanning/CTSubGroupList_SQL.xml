@@ -159,6 +159,7 @@
            AND    CT_BRNCH_CODE = #{groupCode}
     </if>
     and CT_SUB_GRP is not null
+    order by CT_SUB_GRP
 </select>
 
 <select id="selectCTSubGroupMajor" parameterType="Map" resultType="egovMap">
