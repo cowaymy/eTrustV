@@ -326,8 +326,13 @@ function fn_getASEvntsInfo(){
         $("#txtASStatus").text(result[0].code);
         $("#txtRequestDate").text(result[0].asReqstDt);
         $("#txtRequestTime").text(result[0].asReqstTm);
-        $("#txtMalfunctionCode").text('에러코드 정의값');
-        $("#txtMalfunctionReason").text('에러코드 desc');
+        //$("#txtMalfunctionCode").text('에러코드 정의값');
+        //$("#txtMalfunctionReason").text('에러코드 desc');
+
+        $("#txtMalfunctionCode").text(result[0].asMalfuncId);
+        $("#txtMalfunctionReason").text(result[0].asMalfuncResnId);
+        
+        
         $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 );
         $("#txtInchargeCT").text(result[0].c10 +"-" +result[0].c11 );
         

@@ -274,9 +274,17 @@
 
     <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
     
-    SELECT MST1.*, TO_CHAR (SUB1.SRV_PRD_EXPR_DT, 'YYYYMMDD') AS warranty
+    SELECT  MST1.*
+               ,TO_CHAR (SUB1.SRV_PRD_EXPR_DT, 'YYYYMMDD') AS warranty
+               , FN_GET_SVC_MADDRESS(sales_Order_No , 'POST')  postcode
+               , FN_GET_SVC_MADDRESS(sales_Order_No , 'STATE')  service_State
+               , FN_GET_SVC_MADDRESS(sales_Order_No , 'FULL_ADDR')  install_Address
   FROM (
-    SELECT * FROM
+    SELECT
+              A.*
+            , B.* 
+            , DECODE (B.AS_NO ,NULL ,'N' ,'Y') inhouserepairyn
+    FROM
 (
     SELECT * FROM
     (
@@ -294,9 +302,6 @@
                        bank_Code,
                        (SELECT NAME FROM SYS0004M WHERE BANK_ID =bank_Code )bank_Name,
                        card_Account_No,
-                       FN_GET_SVC_MADDRESS(sales_Order_No , 'POST')  postcode,
-                       FN_GET_SVC_MADDRESS(sales_Order_No , 'STATE')  service_State,
-                       FN_GET_SVC_MADDRESS(sales_Order_No , 'FULL_ADDR')  install_Address,
                        customer_Jom_Pay_Ref_No,
                        handphone_Tel,
                        home_Tel,
@@ -346,7 +351,6 @@
                        product_Name,
                        product_Code,
                        dsc_Code,
-                       case when (solution_reason_id =454 OR solution_reason_id =452 ) then 'Y' else 'N'  end inhouserepairyn,
                        reqRefNo,
                        as_type_id,
                        customer_Type,
@@ -561,7 +565,7 @@ LEFT OUTER JOIN (
 
 
 
-
+   
 
              <select id="getHsBasic" parameterType="Map" resultType="egovMap">
 
@@ -3421,5 +3425,17 @@ LEFT OUTER JOIN (
                             and NO =   #{serviceNo}                           ) -->
        </insert>    
        
+       
+       
+       <insert id="updateReApointResult" parameterType="Map">
+            UPDATE  SVC0001D
+                SET    AS_APPNT_DT             =  to_DATE(#{AS_APPNT_DT} ,'ddmmyyyy'),
+                         AS_APPNT_TM             = #{AS_APPNT_TM},
+                         AS_UPD_USER_ID         =  nvl((select mem_id from org0001d where mem_code=#{AS_UPD_USER_ID}),0),
+                         AS_UPD_DT                 =  SYSDATE,
+                        AS_SESION_CODE         = #{AS_SESION_CODE}
+                       WHERE  AS_NO              = #{AS_NO}
+       
+       </insert> 
                 
 </mapper>

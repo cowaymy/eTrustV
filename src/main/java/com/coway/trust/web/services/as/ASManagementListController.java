@@ -100,14 +100,14 @@ public class ASManagementListController {
 		logger.debug("===================>"+params.toString());
 		
 		
-		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
 		model.put("ORD_NO", params.get("ord_No"));
 		
-		
+		 
 		
 		return "services/as/inc_asResultEditPop";
 	}
@@ -411,7 +411,7 @@ public class ASManagementListController {
 		model.put("IS_AUTO", (String)params.get("isAuto"));     
 		
 
-		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
@@ -437,7 +437,7 @@ public class ASManagementListController {
 		
 		
 
-		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
@@ -463,7 +463,7 @@ public class ASManagementListController {
 		
 		
 
-		model.put("USER_ID", sessionVO.getUserId());
+		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
@@ -959,7 +959,15 @@ public class ASManagementListController {
 	
 	@RequestMapping(value = "/addASRemarkPop.do")
 	public String addASRemarkPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.put("AS_ID", (String)params.get("asId"));   
+		
+		
+		logger.debug("in  addASRemarkPop ");
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");  
+		
+		
+		model.put("AS_ID", (String)params.get("AS_ID"));   
 		
 		// 호출될 화면
 		return "services/as/addASRemarkPop";
@@ -1214,7 +1222,7 @@ public class ASManagementListController {
 	
 
 	@RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
-	public ResponseEntity<String> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
+	public ResponseEntity<EgovMap> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
 		logger.debug("params {}", params);
 
 		//send SMS
@@ -1224,10 +1232,71 @@ public class ASManagementListController {
 		SmsResult smsResult = adaptorService.sendSMS(sms);
 		logger.debug(" smsResult : {}" , smsResult.toString());
 
-		return ResponseEntity.ok("OK");
+		
+		EgovMap mp = new EgovMap();
+		mp.put("isOky","OK");
+		
+		return ResponseEntity.ok(mp);
 	}
 	
 	
-	 
+
+	@RequestMapping(value = "/sendSMSPop.do")
+	public String sendSMSPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+				
+		return "services/as/sendNewSMSPop";
+	}
+	
+	
+
+	@RequestMapping(value = "/getCustAddressInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getCustAddressInfo( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		String  address   = ASManagementListService.getCustAddressInfo(params);
+		EgovMap rtnm = new EgovMap();
+		logger.debug("address {}", address);
+		
+		rtnm.put("fulladdr", address);
+		
+		return ResponseEntity.ok(rtnm);
+	}
+	
+	
+
+	@RequestMapping(value = "/getSmsCTMemberById.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> getSmsCTMemberById( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+	    EgovMap  CT= ASManagementListService.getSmsCTMemberById(params);
+		logger.debug("CT {}", CT);
+		return ResponseEntity.ok(CT);
+	}
+
+	@RequestMapping(value = "/getSmsCTMMemberById.do", method = RequestMethod.GET)
+	public ResponseEntity <EgovMap> getSmsCTMMemberById( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		EgovMap  CTM= ASManagementListService.getSmsCTMMemberById(params);
+		logger.debug("CTM {}", CTM);
+		return ResponseEntity.ok(CTM);
+	}
+	
+	
+	
+
+	@RequestMapping(value = "/getMemberByMemberIdCode.do", method = RequestMethod.GET)
+	public ResponseEntity <EgovMap> getMemberByMemberIdCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		EgovMap  MEMup= ASManagementListService.getMemberByMemberIdCode(params);
+		logger.debug("MEMup {}", MEMup);
+		return ResponseEntity.ok(MEMup);
+	}
+	
+	
+	
+
 	
 }

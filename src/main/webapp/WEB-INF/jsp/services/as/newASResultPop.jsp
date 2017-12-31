@@ -64,6 +64,10 @@ $(document).ready(function(){
 
 function fn_inHouseAutoClose(){
 	if('${IS_AUTO}' == "true"){
+		
+	    $("#ddlStatus").attr("disabled", false); 
+		$('#ddlStatus').val("4");
+		fn_doSave();
 		setTimeout(function(){ $("#_newASResultDiv1").remove();  }, 2000);
     }
 }
@@ -115,9 +119,6 @@ function fn_getASRulstEditFilterInfo(){
            }
        } 
        
-       
-       fn_inHouseAutoClose();
-       
     });  
 }
 
@@ -163,8 +164,8 @@ function  fn_setSVC0004dInfo(result){
     
     fn_errMst_SelectedIndexChanged(result[0].asMalfuncResnId);
     
-    
-    $("#ddlCTCode").val( result[0].c12); 
+    $("#ddlCTCodeText").val( result[0].c12); 
+    $("#ddlCTCode").val( result[0].c11); 
     $("#CTID").val( result[0].c11); 
     
     $("#ddlWarehouse").val( result[0].asWhId); 
@@ -228,6 +229,10 @@ function  fn_setSVC0004dInfo(result){
     $('#txtLabourCharge').val(result[0].asWorkmnsh);
     $('#txtFilterCharge').val(result[0].asFilterAmt);
     $('#txtTotalCharge').val(result[0].asTotAmt);
+    
+    
+    setTimeout(function(){ fn_inHouseAutoClose();  }, 2000);
+    
     
 }
 
@@ -352,8 +357,8 @@ function fn_getASEvntsInfo(){
         $("#txtASStatus").text(result[0].code);
         $("#txtRequestDate").text(result[0].asReqstDt);
         $("#txtRequestTime").text(result[0].asReqstTm);
-        $("#txtMalfunctionCode").text('에러코드 정의값');
-        $("#txtMalfunctionReason").text('에러코드 desc');
+        $("#txtMalfunctionCode").text(result[0].asMalfuncId);
+        $("#txtMalfunctionReason").text(result[0].asMalfuncResnId);
         $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 );
         $("#txtInchargeCT").text(result[0].c10 +"-" +result[0].c11 );
         
@@ -782,8 +787,8 @@ function  fn_setSaveFormData(){
         
     
     var asResultM ={
-                   AS_NO:                       $("#AS_NO").val(),
-                   AS_ENTRY_ID:              $("#AS_ID").val(),
+                   AS_NO:                      "${AS_NO}",
+                   AS_ENTRY_ID:              "${AS_ID}",
                    AS_SO_ID:                   $("#ORD_ID").val(),
                    AS_ORD_NO:                $("#ORD_NO").val(),
                    AS_CT_ID:                   $('#ddlCTCode').val(),

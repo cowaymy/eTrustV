@@ -90,8 +90,13 @@ function fn_getASEvntsInfo(){
         $("#txtASStatus").text(result[0].code);
         $("#txtRequestDate").text(result[0].asReqstDt);
         $("#txtRequestTime").text(result[0].asReqstTm);
-        $("#txtMalfunctionCode").text('에러코드 정의값');
-        $("#txtMalfunctionReason").text('에러코드 desc');
+
+        $("#txtMalfunctionCode").text(result[0].asMalfuncId);
+        $("#txtMalfunctionReason").text(result[0].asMalfuncResnId);
+        
+        //$("#txtMalfunctionCode").text('에러코드 정의값');
+        //$("#txtMalfunctionReason").text('에러코드 desc');
+        
         $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 );
         $("#txtInchargeCT").text(result[0].c10 +"-" +result[0].c11 );
         
@@ -131,9 +136,28 @@ function fn_selectASDataInfo(){
 
 
 
-</script>
+function setPopData(){
+  
+    var options ={  
+            AS_ID : '${AS_ID}',  
+            AS_SO_ID:'${ORD_ID}', 
+            AS_RESULT_ID: '${AS_RESULT_ID}',
+            AS_RESULT_NO:'${AS_RESULT_NO}',
+            MOD:   '${MOD}',  
+            ORD_NO :'${ORD_NO}'  
+   };
+   
+   fn_setASDataInit(options);
+   fn_asResult_editPageContral("RESULTEDIT");
+   
+   if( '${MOD}' =="RESULTVIEW"){
+       $("#btnSaveDiv").attr("style","display:none");
+   }
+};
+    
+</script> 
 
-
+  
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <section id="content"><!-- content start -->
@@ -153,7 +177,10 @@ function fn_selectASDataInfo(){
 </form>
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Edit  AS Result Entry</h1>
+<h1>    <spain id='title_spain'> 
+    <c:if test="${MOD eq  'RESULTVIEW' }">   View AS Result Entry </c:if>
+    <c:if test="${MOD eq  'RESULTEDIT' }"> Edit  AS Result Entry </c:if>
+</spain>  </h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -357,18 +384,11 @@ function fn_selectASDataInfo(){
       
 
 <script>
-        var options ={  
-                 AS_ID : '${AS_ID}',  
-                 AS_SO_ID:'${ORD_ID}', 
-                 AS_RESULT_ID: '${AS_RESULT_ID}',
-                 AS_RESULT_NO:'${AS_RESULT_NO}',
-                 MOD: "EDIT",
-                 ORD_NO :'${ORD_NO}'  
-        };
-        
-        fn_setASDataInit(options);
-        fn_asResult_editPageContral("RESULTEDIT");
-</script>
+
+
+
+       
+</script>   
 
 
 </article><!-- acodi_wrap end -->

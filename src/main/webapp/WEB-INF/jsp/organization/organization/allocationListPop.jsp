@@ -765,6 +765,7 @@ function fn_AllocationConfirm(){
     
     
     var sessionText;
+    var sessionCode;
     if(rowInfoObj.dataField =="morascnt" ||  rowInfoObj.dataField =="morinscnt" ||  rowInfoObj.dataField =="morrtncnt"     ){
     	sessionCode ="M";
     }

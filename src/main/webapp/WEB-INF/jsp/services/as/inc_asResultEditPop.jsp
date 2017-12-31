@@ -20,7 +20,6 @@ $(document).ready(function(){
    
       
    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');    
-   
    fn_getErrMstList('${ORD_NO}') ;
    
 });
@@ -185,9 +184,9 @@ function  fn_setSVC0004dInfo(result){
     
     var  toamt =""+result[0].asTotAmt;
     var  tWork =""+result[0].asWorkmnsh;
-    var  tFilterAmt =""+result[0].asFilterAmt;
+    var  tFilterAmt =""+result[0].asFilterAmt; 
     
-    
+      
     
     if(regexp.test(toamt)){
          $('#txtTotalCharge').val (toamt);
@@ -798,7 +797,7 @@ function  fn_setSaveFormData(){
                 }
             });
               
-        }else if($("#requestMod").val()=="EDIT"){
+        }else if($("#requestMod").val()=="RESULTEDIT"){
             
               saveForm ={
                       "asResultM": asResultM ,
@@ -818,19 +817,20 @@ function  fn_setSaveFormData(){
                      fn_asResult_viewPageContral();
                      $("#btnSaveDiv").attr("style","display:none");
                  }
+                 
+                 try{
+                     fn_searchASManagement();
+                     $("#_newASResultDiv1").remove();
+                     
+                 }catch(e){}
+                 
+                 
              });
         }
   }      
   
   
     //reroad 
-    
-    try{
-    	fn_searchASManagement();
-    	$("#_newASResultDiv1").remove();
-    	
-    }catch(e){}
-    
     
     
 }
@@ -1318,12 +1318,26 @@ function fn_setASDataInit(ops){
    // fn_setCTcodeValue();
     
     
+    
     //as result edit
     if(ops.MOD =="RESULTEDIT"){
           fn_getErrMstList('${ORD_NO}' , 'fn_errCallbackFun') ;
           fn_HasFilterUnclaim();
+          
+    }else if(ops.MOD =="RESULTVIEW"){
+        fn_getErrMstList('${ORD_NO}' , 'fn_errCallbackFun') ;
+
+        $("#asResultForm").find("input, textarea, button, select").attr("disabled",true);
+        $("#btnSaveDiv").attr("style","display:none");
+        
+       // fn_HasFilterUnclaim();
+       //	fn_asResult_viewPageContral();
+
+    	
     }
+    
 }
+
 
 
 
@@ -1331,5 +1345,5 @@ function fn_errCallbackFun(){
 	fn_getASRulstSVC0004DInfo(); 
 }
 
-
+setPopData();
 </script>

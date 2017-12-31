@@ -207,6 +207,33 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		return ASManagementListMapper.isAsAlreadyResult(params);
 	} 
 	
+
+	@Override
+	public String   getCustAddressInfo(Map<String, Object> params) {
+		return ASManagementListMapper.getCustAddressInfo(params);
+	} 
+	
+
+	@Override
+	public EgovMap getSmsCTMemberById(Map<String, Object> params) {
+		return ASManagementListMapper.getSmsCTMemberById(params);
+	}
+	
+	@Override
+	public EgovMap  getSmsCTMMemberById(Map<String, Object> params) {
+		return ASManagementListMapper.getSmsCTMMemberById(params);
+	}
+	
+	@Override
+	public EgovMap  getMemberByMemberIdCode(Map<String, Object> params) {
+		return ASManagementListMapper.getMemberByMemberIdCode(params);
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	@Override
@@ -265,7 +292,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		int  a = ASManagementListMapper.insertSVC0001D(params);
 		int  b =0;
 
-		//콜로그생성 
+		//콜로그생성     
 		int  c6d  =ASManagementListMapper.insertCCR0006D(setCCR000Data(params));
 		int  c7d  =ASManagementListMapper.insertCCR0007D(setCCR000Data(params));
 		
@@ -307,9 +334,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		/////////////////////////물류 호출 END //////////////////////   
 		*/
 		EgovMap em = new EgovMap();
-		em.put("AS_NO", String.valueOf( eMap.get("asno")).trim());
-		//em.put("SP_MAP", logPram);
 		
+		em.put("AS_NO", String.valueOf( params.get("AS_NO")));
+		em.put("AS_ID",String.valueOf( seqMap.get("seq")).trim() );
+		
+		LOGGER.debug("===================================");
+		LOGGER.debug(em.toString());
+		LOGGER.debug("===================================");
 		return em;
 	} 
 	
@@ -1260,41 +1291,60 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	
+	
+	/**
+	 * 
+	 * 1.인하우스 3단계 AUTOINSERT  false
+	 * 
+	 * 2.인하우스 1단계 B8   요청인경우에는  FALSE
+	 *                    B8   재고 확인후 요청인 경우 TRUE 
+	 *                    
+	 * 3.
+	 * 
+	 * @param svc0004dmap
+	 * @return
+	 */
 	public boolean  chkInHouseOpenComp(Map<String, Object>  svc0004dmap ){
 		
 		boolean chkInHouseOpenComp =false;
 		
 		
-		//as update 시 발생코드 
+		 //as update 시 발생코드 
 		 if(CommonUtils.nvl(svc0004dmap.get("AUTOINSERT")).toString().equals("TRUE")){
 			 return chkInHouseOpenComp;
 		 }
 		
-		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")  &&  !  "WEB".equals(svc0004dmap.get("CHANGBN"))){
-			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  != 0  ){
-				  
-				    svc0004dmap.put("AS_RESULT_STUS_ID", "4");
-				    
-				    this.updateStateSVC0001D(svc0004dmap);
-				    this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
-				    
-				 
-		            chkInHouseOpenComp = true;
-		             
+		 
+		  //모바일 api B8
+		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("454")    &&  !  "WEB".equals(svc0004dmap.get("CHANGBN"))){
+			  //업데이트 확인 
+			 //boolean isInHouseB8Update  =  ASManagementListMapper.isInHouseB8Update(svc0004dmap)  == 0 ? false :true; 
+			  
+			 if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  != 0  ){
+				   //모바일에서  결과에 시리얼 업데이트  
+				// if(isInHouseB8Update){
+					    svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+					    this.updateStateSVC0001D(svc0004dmap);
+					    this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
+					    
+					    chkInHouseOpenComp = true;
+				 //}else{
+					 
+					//   //모바일에서  결과에 시리얼을 넣어준 경우 
+					   //chkInHouseOpenComp = false;
+				 //}   
 			  }
 		  }
 		  
-		  //모바일 api 
+		  
+		  //모바일 api B6
 		  if(svc0004dmap.get("AS_SLUTN_RESN_ID").equals("452") &&  !  "WEB".equals(svc0004dmap.get("CHANGBN"))){
 			  if( svc0004dmap.get("IN_HUSE_REPAIR_SERIAL_NO").toString().trim().length()  != 0  ){
-				  
 				    svc0004dmap.put("AS_RESULT_STUS_ID", "4");
-				    
 				    this.updateStateSVC0001D(svc0004dmap);
 				    //this.updateState_SERIAL_NO_SVC0004D(svc0004dmap);
 				  
 		            chkInHouseOpenComp = true;
-		            
 			  }
 		  }
 		  
@@ -1376,8 +1426,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		svc0004dmap.put("AS_RESULT_NO", String.valueOf(eMap.get("asno")));
 		  
 
-		//HappyCallM
+		///////////////////////////HappyCallM/////////////////////
 		this.setCCR0001DData(svc0004dmap);
+		///////////////////////////HappyCallM/////////////////////
+		
+		
 		
 		double AS_TOT_AMT =0;
 		AS_TOT_AMT = Double.parseDouble( String.valueOf(svc0004dmap.get("AS_TOT_AMT")));

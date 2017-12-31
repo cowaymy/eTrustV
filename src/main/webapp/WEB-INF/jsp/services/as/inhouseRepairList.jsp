@@ -114,6 +114,12 @@ function fn_asInhouseAddOrderPop(){
             Common.alert("<b>No Item selected.</b>");
          return ;
     }
+
+    console.log("==>"+selectedItems[0].item.onAsNo);
+    if(selectedItems[0].item.onAsNo  !=""  && selectedItems[0].item.onAsNo  !="undefined"  && selectedItems[0].item.onAsNo  !=undefined ){
+    	 Common.alert("</br> The In House Order already exists. </b>");
+          return ;
+    }
     console.log(selectedItems);
     
     var pram = "?salesOrderId="+selectedItems[0].item.salesOrdId+"&ordNo="+selectedItems[0].item.salesOrdNo+"&AS_ID="+selectedItems[0].item.asId+"&asResultId="+selectedItems[0].item.inAsResultId;

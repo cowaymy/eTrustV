@@ -58,21 +58,45 @@
               <![CDATA[ 
               
 				  SELECT   MEM_ID CT, INS_DATE C_DATE , CT_SUB_GRP , BRNCH_ID
-				    FROM   (SELECT    DISTINCT T.MEM_ID ,T.CT_SUB_GRP ,  TT.BRNCH AS BRNCH_ID 
-				              FROM   ORG0005D T ,  ORG0001D TT 
-				             WHERE  1=1
-				             AND T.MEM_ID =TT.MEM_ID
-				             AND CT_SUB_GRP IN
-				                           (SELECT   F.CT_SUB_GRP
-				                              FROM   SAL0001D A,
-				                                     SAL0045D B,
-				                                     SAL0023D E,
-				                                     SYS0064M F
-				                             WHERE       1 = 1
-				                                     AND A.SALES_ORD_ID = #{ORD_ID}
-				                                     AND A.SALES_ORD_ID = B.SALES_ORD_ID
-				                                     AND B.ADD_ID = E.CUST_ADD_ID
-				                                     AND E.AREA_ID = F.AREA_ID)) C,
+				    FROM(
+					            SELECT DISTINCT T.MEM_ID ,T.CT_SUB_GRP ,  TT.BRNCH AS BRNCH_ID 
+	                                        FROM   SVC0054M T ,  ORG0001D TT 
+	                                     WHERE  1=1
+	                                        AND T.MEM_ID =TT.MEM_ID
+	                                        AND CT_SUB_GRP IN
+	                                                   (SELECT   F.CT_SUB_GRP
+	                                                      FROM   SAL0001D A,
+	                                                             SAL0045D B,
+	                                                             SAL0023D E,
+	                                                             SYS0064M F
+	                                                     WHERE       1 = 1
+	                                                             AND A.SALES_ORD_ID = #{ORD_ID}
+	                                                             AND A.SALES_ORD_ID = B.SALES_ORD_ID
+	                                                             AND B.ADD_ID = E.CUST_ADD_ID
+	                                                             AND E.AREA_ID = F.AREA_ID
+	                                                    )
+	                            UNION 
+	                            SELECT B.MEM_ID  
+	                                  ,C.CT_SUB_GRP
+	                                  ,C.BRNCH_ID   
+	                              FROM SYS0005M A, ORG0001D B, ORG0005D C , SYS0064M M
+	                                WHERE A.BRNCH_ID = B.BRNCH 
+	                                    AND B.MEM_ID = C.MEM_ID 
+	                                    AND C.MEM_LVL = '2' 
+	                                    AND B.STUS = '1' 
+	                                    AND A.CODE = (
+	                                             SELECT   F.CT_BRNCH_CODE
+	                                                      FROM   SAL0001D A,
+	                                                             SAL0045D B,
+	                                                             SAL0023D E,
+	                                                             SYS0064M F
+	                                                     WHERE       1 = 1
+	                                                             AND A.SALES_ORD_ID = #{ORD_ID}
+	                                                             AND A.SALES_ORD_ID = B.SALES_ORD_ID
+	                                                             AND B.ADD_ID = E.CUST_ADD_ID
+	                                                             AND E.AREA_ID = F.AREA_ID
+	                                     )
+				           ) C,
 				           (    SELECT   TO_CHAR ( (SYSDATE - 1) + LEVEL, 'YYYY-MM-DD') INS_DATE
 				                  FROM   DUAL
 				            CONNECT BY   LEVEL <= 14) TB

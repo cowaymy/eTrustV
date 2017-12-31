@@ -201,7 +201,7 @@ function fn_asResultViewPop(){
         return ;
   }
   
-  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=view&as_Result_No="+asResultNo;
+  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=RESULTVIEW&as_Result_No="+asResultNo;
  
   Common.popupDiv("/services/as/asResultEditViewPop.do"+param ,null, null , true , '_newASResultDiv1');
   
@@ -304,7 +304,7 @@ function fn_asResultEditPop(){
         return ;
   }
   
-  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=edit&as_Result_No="+asResultNo+"&as_Result_Id="+asResultId;
+  var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=RESULTEDIT&as_Result_No="+asResultNo+"&as_Result_Id="+asResultId;
   Common.popupDiv("/services/as/asResultEditViewPop.do"+param ,null, null , true , '_newASResultDiv1');
     
 }
@@ -703,8 +703,12 @@ function fn_invoice(){
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newASResultPop()">ADD AS Result</a></p></li>
 </c:if>    
 <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">    
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT AS Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditBasicPop()">EDIT(Basic) AS Result</a></p></li>
 </c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">    
+      <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultEditPop()"> EDIT AS Result </a></p></li>
+</c:if>      
+
 <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">  
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_asResultViewPop()"> VIEW AS Result</a></p></li>
 </c:if>    
@@ -806,9 +810,7 @@ function fn_invoice(){
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">    
-      <li><p class="link_btn"><a href="#" onclick="javascript:fn_asResultEditPop()"> AS Result  Edit </a></p></li>
-</c:if>      
+
       
         <!-- <li><p class="link_btn"><a href="#" ondblclick="javascript:fn_asAppViewPop()"> AS Application View</a></p></li> -->
         <!-- <li><p class="link_btn"><a href="#" onclick="javascript:fn_viewASResultPop()"> AS Application Edit</a></p></li> -->

@@ -98,9 +98,15 @@ public interface ASManagementListService {
 
 	//add by hgham  mobile 중복 처리 
 	int isAsAlreadyResult (Map<String, Object> params);
+	
+	
+	String  getCustAddressInfo (Map<String, Object> params);
+
 		
 
-	
+	EgovMap   getSmsCTMemberById(Map<String, Object> params);
+	EgovMap   getSmsCTMMemberById(Map<String, Object> params);
+	EgovMap   getMemberByMemberIdCode(Map<String, Object> params);
 	
 	
 	

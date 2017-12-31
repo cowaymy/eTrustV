@@ -1954,14 +1954,25 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		salesReqCancelVO.setSoReqCurPv(BigDecimal.ZERO);
 		salesReqCancelVO.setSoReqCurrAmt(BigDecimal.ZERO);
 		salesReqCancelVO.setSoReqActualCanclDt(SalesConstants.DEFAULT_DATE);
-		salesReqCancelVO.setSoReqCanclTotOtstnd(new BigDecimal((String)params.get("txtTotalAmount")));
-		salesReqCancelVO.setSoReqCanclPnaltyAmt(new BigDecimal((String)params.get("txtPenaltyCharge")));
+		
+		//salesReqCancelVO.setSoReqCanclTotOtstnd(new BigDecimal( (String)params.get("txtTotalAmount")));
+		//salesReqCancelVO.setSoReqCanclPnaltyAmt(new BigDecimal((String)params.get("txtPenaltyCharge")));
+		//salesReqCancelVO.setSoReqCanclAdjAmt(new BigDecimal((String)params.get("txtPenaltyAdj")));
+		//salesReqCancelVO.setSoReqCanclRentalOtstnd(new BigDecimal((String)params.get("txtCurrentOutstanding")));
+
+	 
+		//edit by hgham 2017-12-30
+		 salesReqCancelVO.setSoReqCanclTotOtstnd( new BigDecimal(CommonUtils.intNvl((params.get("txtTotalAmount")))));
+		 salesReqCancelVO.setSoReqCanclPnaltyAmt(new BigDecimal(CommonUtils.intNvl(params.get("txtPenaltyCharge"))));
+	     salesReqCancelVO.setSoReqCanclAdjAmt(new BigDecimal(CommonUtils.intNvl(params.get("txtPenaltyAdj"))));
+	     salesReqCancelVO.setSoReqCanclRentalOtstnd(new BigDecimal(CommonUtils.intNvl(params.get("txtCurrentOutstanding"))));
+
+
+		
 		salesReqCancelVO.setSoReqCanclObPriod(CommonUtils.intNvl((String)params.get("txtObPeriod")));
 		salesReqCancelVO.setSoReqCanclUnderCoolPriod(SalesConstants.IS_FALSE);
-		salesReqCancelVO.setSoReqCanclRentalOtstnd(new BigDecimal((String)params.get("txtCurrentOutstanding")));
 		salesReqCancelVO.setSoReqCanclTotUsedPriod(CommonUtils.intNvl((String)params.get("txtTotalUseMth")));
 		salesReqCancelVO.setSoReqNo("");
-		salesReqCancelVO.setSoReqCanclAdjAmt(new BigDecimal((String)params.get("txtPenaltyAdj")));
 		salesReqCancelVO.setSoReqster(CommonUtils.intNvl((String)params.get("cmbRequestor")));
 		salesReqCancelVO.setSoReqPreRetnDt((int)params.get("stusCodeId") == 4 ? (String)params.get("dpReturnDate") : SalesConstants.DEFAULT_DATE);
 		salesReqCancelVO.setSoReqRem((String)params.get("txtRemark"));

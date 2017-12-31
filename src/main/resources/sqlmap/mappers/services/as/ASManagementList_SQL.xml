@@ -3693,6 +3693,16 @@
         ]]>
     </select>
     
+       
+     <select id="getCustAddressInfo" parameterType="Map" resultType="java.lang.String">
+        <![CDATA[     
+                 select  fn_get_svc_maddress( #{SALES_ORD_NO},'FULL_ADDR') from  dual
+        ]]>
+    </select>
+    
+    
+    
+    
     
     
      <select id="getDTAIL_DEFECT_List" parameterType="Map" resultType="egovMap">
@@ -3737,5 +3747,24 @@
         ]]>
     </select>
     
+      <select id="isInHouseB8Update" parameterType="Map" resultType="java.lang.Integer">
+			SELECT COUNT(AS_NO) FROM SVC0001D A,  SVC0004D B
+			WHERE A.AS_ID = B.AS_ENTRY_ID
+			 AND  A.AS_STUS_ID = 1
+			 AND  A.AS_NO = #{AS_NO}
+      </select>
+    
+      <select id="getSmsCTMemberById" parameterType="Map" resultType="egovMap">
+      
+                       select * from org0001d where mem_id =#{MEM_ID}
+      </select>
+      
+      <select id="getMemberByMemberIdCode" parameterType="Map" resultType="egovMap">
+                      select * from  org0001d A , sys0013m B ,org1001v C
+                      where B.CODE_ID = A.MEM_TYPE
+                      and  C.MEM_ID = A.MEM_ID
+                      and  A.MEM_ID =  #{MEM_ID}
+      </select>
+      
    
 </mapper>
