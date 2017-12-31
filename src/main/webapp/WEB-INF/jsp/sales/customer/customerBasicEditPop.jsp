@@ -123,6 +123,13 @@ $(document).ready(function(){
         
     });
    
+ 
+    //Btn Auth
+    if(basicAuth == true){
+    	$("#_basicUpdBtn").css("display" , "");
+    }else{
+    	$("#_basicUpdBtn").css("display" , "none");
+    }
 }); // document ready end
 
     //update
@@ -456,10 +463,10 @@ $(document).ready(function(){
 </tbody>
 </table><!-- table end -->
 </form><!-- form end -->
+<div id="_basicUpdBtn">
 <ul class="center_btns">
-    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#none" id="_updBtn">Update</a></p></li>
-    </c:if> 
 </ul>
+</div>
 </section><!-- pop_body end -->
 </div>

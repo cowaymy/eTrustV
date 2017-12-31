@@ -12,6 +12,9 @@
             height : "500px"    // 창 세로 크기
     };
     
+    var basicAuth = false;
+    
+    
     $(document).ready(function(){
         
         // AUIGrid 그리드를 생성합니다.
@@ -63,6 +66,11 @@
             fn_selectPstRequestDOListAjax();
         });
         
+        
+        //Basic Auth (update Btn)
+        if('${PAGE_AUTH.funcUserDefine2}' == 'Y'){
+        	basicAuth = true;
+        }
     });
     
     function createAUIGrid() {
