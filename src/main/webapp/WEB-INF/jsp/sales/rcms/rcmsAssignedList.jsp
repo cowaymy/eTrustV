@@ -66,12 +66,12 @@ $(document).ready(function(){
                 type: "M"
              });
     //RosCaller
-    CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}'}, '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: false });
+    CommonCombo.make("rosCaller", "/sales/rcms/selectRosCaller", {userId : '${SESSION_INFO.userName}'}, '',  {id:"agentId", name:"agentName", isCheckAll : false, isShowChoose: true });
 
     CommonCombo.make("rosStatus", "/common/selectCodeList.do", {groupCode : '391'}, '',  {isShowChoose: true});  //Reason Code
     
-    $("#rosCaller").prop("disabled", true);
-    $("#rosCaller").attr("class", "w100p disabled");
+    //$("#rosCaller").prop("disabled", true);
+    //$("#rosCaller").attr("class", "w100p disabled");
     $("#companyType").multipleSelect("disable");
     fn_companyList();
     fn_agentList();
@@ -199,7 +199,7 @@ function fn_selectListAjax() {
           $("#companyType").val("");   
     }
 	 
-	$("#rosCaller").prop("disabled", false);
+	//$("#rosCaller").prop("disabled", false);
 	$("#appType").prop("disabled", false);
 		
 	
@@ -212,7 +212,7 @@ function fn_selectListAjax() {
       
       $("#orderNo").val("");              
       $("#salesOrdId").val("");  
-      $("#rosCaller").prop("disabled", true);
+      //$("#rosCaller").prop("disabled", true);
       $("#appType").prop("disabled", true);
       $("#rosCallGrid").hide();
 
