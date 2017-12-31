@@ -193,8 +193,9 @@ function fn_saveViewCustodian() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" enctype="multipart/form-data" id="form_newCustdn">
+<input type="hidden" id="newCrtUserId" name="crtUserId" value="${custodianInfo.crtUserId}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${custodianInfo.atchFileGrpId}">
-<input type="hidden" id="newCostCenter" name="costCentr" value="${custodianInfo.costCentr}">
+<input type="hidden" id="newCostCenterText" name="costCentrName" value="${custodianInfo.costCentrName}">
 <input type="hidden" id="newMemAccId" name="memAccId" value="${custodianInfo.memAccId}">
 <input type="hidden" id="bankCode" name="bankCode" value="${custodianInfo.bankCode}">
 
@@ -209,9 +210,9 @@ function fn_saveViewCustodian() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:150px;" id="newCostCenterText" name="costCentrName" value="${custodianInfo.costCentrName}" /><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y" disabled="disabled" <c:if test="${custodianInfo.headDeptFlag eq 'Y'}">checked</c:if>/><span>HQ Petty Cash</span></label></td>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" style="width:150px;" id="newCostCenter" name="costCentr" value="${custodianInfo.costCentr}" /><label><input type="checkbox" id="headDeptFlag" name="headDeptFlag" value="Y" disabled="disabled" <c:if test="${custodianInfo.headDeptFlag eq 'Y'}">checked</c:if>/><span>HQ Petty Cash</span></label></td>
 	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${custodianInfo.crtUserId}" /></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserName" name="crtUserName" value="${custodianInfo.userName}" /></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
