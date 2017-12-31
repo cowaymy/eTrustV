@@ -71,7 +71,9 @@ function fn_selectGlListAjax() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="glSForm" name="glSForm" method="post">
+<input type="hidden" name="costCentrName" value="${costCentrName}">
 <input type="hidden" name="costCentr" value="${costCentr}">
+<input type="hidden" name="budgetCodeName" value="${budgetCodeName}">
 <input type="hidden" name="budgetCode" value="${budgetCode}">
 
 <table class="type1"><!-- table start -->
@@ -85,9 +87,9 @@ function fn_selectGlListAjax() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td><input type="text" placeholder="" class="readonly w100p" readonly="readonly" value="${costCentrName}"/></td>
+    <td><input type="text" placeholder="" class="readonly w100p" readonly="readonly" value="${costCentr}"/></td>
 	<th scope="row"><spring:message code="expense.Activity" /></th>
-    <td><input type="text" placeholder="" class="readonly w100p" readonly="readonly" value="${budgetCodeName}"/></td>
+    <td><input type="text" placeholder="" class="readonly w100p" readonly="readonly" value="${budgetCode}"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
