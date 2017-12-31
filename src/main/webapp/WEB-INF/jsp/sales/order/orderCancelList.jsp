@@ -6,6 +6,7 @@
 
     //AUIGrid 생성 후 반환 ID
     var myGridID;
+    var basicAuth = false;
     
     $(document).ready(function(){
         
@@ -26,6 +27,10 @@
 
             Common.popupDiv("/sales/order/cancelReqInfoPop.do", $("#detailForm").serializeJSON());
             
+            //Basic Auth (update Btn)
+            if('${PAGE_AUTH.funcUserDefine2}' == 'Y'){
+                basicAuth = true;
+            }
         });
         
         // 셀 클릭 이벤트 바인딩
