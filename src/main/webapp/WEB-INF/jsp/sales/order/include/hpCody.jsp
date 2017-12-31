@@ -74,27 +74,27 @@
 </tr>
 <tr>
     <th scope="row">Cody Code</th>
-    <td><span>${orderDetail.salesmanInfo.memCode}</span></td>
+    <td><span>${orderDetail.codyInfo.memCode}</span></td>
 </tr>
 <tr>
     <th scope="row">Cody Name</th>
-    <td><span>${orderDetail.salesmanInfo.name}</span></td>
+    <td><span>${orderDetail.codyInfo.name}</span></td>
 </tr>
 <tr>
     <th scope="row">Cody NRIC</th>
-    <td><span>${orderDetail.salesmanInfo.nric}</span></td>
+    <td><span>${orderDetail.codyInfo.nric}</span></td>
 </tr>
 <tr>
     <th scope="row">Mobile No</th>
-    <td><span>${orderDetail.salesmanInfo.telMobile}</span></td>
+    <td><span>${orderDetail.codyInfo.telMobile}</span></td>
 </tr>
 <tr>
     <th scope="row">Office No</th>
-    <td><span>${orderDetail.salesmanInfo.telOffice}</span></td>
+    <td><span>${orderDetail.codyInfo.telOffice}</span></td>
 </tr>
 <tr>
     <th scope="row">House No</th>
-    <td><span>${orderDetail.salesmanInfo.telHuse}</span></td>
+    <td><span>${orderDetail.codyInfo.telHuse}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
