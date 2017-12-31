@@ -67,8 +67,17 @@
 			Common.report("reportForm", option);
 			  
 		});
+		
+		  // search member code popup
+	      $('#memBtn').click(function() {
+	        Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
+	      });
 
 	});
+	
+	 function fn_loadOrderSalesman(memId, memCode) {
+	      $("#memCode").val(memCode);	  
+	  }	  
 
 </script>
 
@@ -106,8 +115,14 @@
 				<tbody>					
 					<tr>
 						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
-						<td colspan="3"><input type="text" id="memCode" name="memCode" title="" class="readonly w100p" readonly="readonly" value="${loginId }" />
-						</td>
+						<%-- <td colspan="3"><input type="text" id="memCode" name="memCode" title="" class="readonly w100p" readonly="readonly" value="${loginId }" />
+						</td> --%>
+						  <td colspan="3" >
+                <input type="text" title="" placeholder="" id="memCode" name="memCode" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly </c:if> />
+              <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+              </c:if>
+            </td>
 					</tr>
 					<tr>
 						<th scope="row"><spring:message code='commission.text.search.statementYear'/></th>
