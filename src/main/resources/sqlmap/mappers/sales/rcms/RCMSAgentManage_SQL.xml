@@ -423,7 +423,7 @@
      
     <select id="selectRosCallDetailList" parameterType="map" resultType="egovMap">
      SELECT ROS_YEAR || '/' || ROS_MONTH ROS_DT
-	          ,  , CASE WHEN ROS_CALLER_USER_ID = 0 THEN null ELSE ROS_CALLER_USER_ID END ROS_CALLER_USER_ID
+	           , CASE WHEN ROS_CALLER_USER_ID = 0 THEN null ELSE ROS_CALLER_USER_ID END ROS_CALLER_USER_ID
 	  FROM MSC0013D
 	 WHERE SALES_ORD_ID = #{salesOrdId}
 	     
