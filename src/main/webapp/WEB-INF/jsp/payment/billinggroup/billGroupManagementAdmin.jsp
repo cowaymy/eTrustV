@@ -396,12 +396,12 @@ var addOrderLayout = [
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
                 
-        if(currentDay >= 32 || currentDay == 1){
+        /* if(currentDay >= 32 || currentDay == 1){
             
             Common.alert("<spring:message code='pay.alert.unable26And1'/>");
             return;
             
-        }else{
+        }else{ */
             
             if(orderNo == ""){
                 valid = false;
@@ -495,7 +495,7 @@ var addOrderLayout = [
                 Common.alert(message);
                 $("#displayVisible").hide();
             }
-        }
+        //}
     }
     
     function fn_billGrpHistory(){
