@@ -1332,7 +1332,41 @@ function fn_setASDataInit(ops){
         
        // fn_HasFilterUnclaim();
        //	fn_asResult_viewPageContral();
+       
+       
 
+        $("#btnSaveDiv").attr("style","display:none");
+        $("#addDiv").attr("style","display:none");
+        
+        $('#dpSettleDate').attr("disabled", true); 
+        $('#ddlFailReason').attr("disabled", true); 
+        $('#tpSettleTime').attr("disabled", true); 
+        $('#ddlDSCCode').attr("disabled", true); 
+
+        $('#ddlErrorCode').attr("disabled", true); 
+        $('#ddlCTCode').attr("disabled", true);   
+        $('#ddlErrorDesc').attr("disabled", true);
+        $('#ddlWarehouse').attr("disabled", true); 
+        $('#txtRemark').attr("disabled", true); 
+        $("#iscommission").attr("disabled", true); 
+        $("#ddlFilterCode").attr("disabled", true); 
+        $("#ddlFilterQty").attr("disabled", true); 
+        $("#ddlFilterPayType").attr("disabled", true); 
+        $("#ddlFilterExchangeCode").attr("disabled", true); 
+        $("#txtFilterRemark").attr("disabled", true); 
+        $("#txtLabourCharge").attr("disabled", true); 
+        $("#txtFilterCharge").attr("disabled", true); 
+
+        $('#def_type').attr("disabled", true) ;
+        $('#def_code').attr("disabled", true); 
+        $('#def_part').attr("disabled", true); 
+        $('#def_def').attr("disabled", true); 
+        
+        $('#def_type_text').attr("disabled", true); 
+        $('#def_code_text').attr("disabled", true);
+        $('#def_part_text').attr("disabled", true); 
+        $('#def_def_text').attr("disabled", true); 
+        
     	
     }
     
