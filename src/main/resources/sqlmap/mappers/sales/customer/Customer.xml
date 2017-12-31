@@ -2164,7 +2164,7 @@
     <if test="null != postcode and '' != postcode"> <!-- area  -->
         AND POSTCODE = #{postcode} 
     </if>
-    
+    AND AREA_ID NOT LIKE 'DM%'
     <!-- Sorting  -->
     <if test=" null != colState and '' != colState">
         ORDER BY STATE
