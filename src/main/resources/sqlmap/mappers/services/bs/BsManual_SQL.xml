@@ -1262,7 +1262,7 @@
                       ,RESULT_RPT_EMAIL_NO,RESULT_ACEPT_NAME,SGN_DT
                        )
                 VALUES ( #{resultId}, #{docNo} , #{typeId},#{schdulId} ,#{salesOrdId} ,#{codyId}
-                            ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},NVL(#{failResnId},0),NVL(#{renColctId},0),#{whId}
+                              ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},NVL(#{failResnId},0),NVL(#{renColctId},0),#{whId}
                             ,#{resultRem} ,SYSDATE,#{resultCrtUserId},SYSDATE ,#{resultUpdUserId}
                             ,#{resultIsSync},#{resultIsEdit},#{resultStockUse},#{resultIsCurr},#{resultMtchId}
                             ,#{resultIsAdj}
@@ -2831,7 +2831,7 @@
                 (
                    #{ResultID},
                 #{No}
-                ,#{TypeId}
+                ,#{TypeID}
                 ,#{ScheduleID}
                 ,#{SalesOrderId}
                 ,#{CodyID}

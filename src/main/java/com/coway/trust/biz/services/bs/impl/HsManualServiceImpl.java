@@ -1581,7 +1581,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     				ItemNo = ItemNo + 1;
     			}
     		}else{
-    			Map<String, Object> bsResultDet_NoFilter = new HashMap<String, Object>();
+    		/*	Map<String, Object> bsResultDet_NoFilter = new HashMap<String, Object>();
     			bsResultDet_NoFilter.put("BSResultItemID", String.valueOf(0));
     			bsResultDet_NoFilter.put("BSResultID", BSResultM_resultID);
     			bsResultDet_NoFilter.put("BSResultPartID", String.valueOf(0));
@@ -1592,7 +1592,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			bsResultDet_NoFilter.put("BSResultCreateBy", String.valueOf(sessionVO.getUserId()));
     			bsResultDet_NoFilter.put("BSResultFilterClaim", 1);
     			
-    			hsManualMapper.addBsResultDet_NoFilter(bsResultDet_NoFilter);
+    			hsManualMapper.addBsResultDet_NoFilter(bsResultDet_NoFilter); 이거때문에 */ 
     		}
 		
 		

@@ -19,7 +19,7 @@
 						 )      
 		  SELECT T1.CODE, T1.NAME, T1.MEM_CODE, T1.MEM_ID, T2.CT_SUB_GRP, T1.LAST_GRP_CODE
 		  FROM TEMP T1, TEMP2 T2
-		  WHERE  T1.MEMCODE = T2.MEM_ID(+)
+		  WHERE  T1.MEM_ID = T2.MEM_ID(+)
         <if test="dscCode != null and dscCode != ''">
           AND LOWER(T1.CODE) = LOWER(#{dscCode})
         </if>
