@@ -365,7 +365,7 @@
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
-		   and nvl(l54.del_falg , 'N')<![CDATA[<>]]>'Y'
+		   and nvl(l54.del_flag , 'N')<![CDATA[<>]]>'Y'
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  = #{reqstno}
            </if>
