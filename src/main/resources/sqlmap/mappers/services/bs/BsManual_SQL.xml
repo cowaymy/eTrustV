@@ -581,7 +581,7 @@
                                               </if>
                         )Project2
 			        ) Project3
-                    <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM < 500 ]]>
+                    <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>
 			
 
 

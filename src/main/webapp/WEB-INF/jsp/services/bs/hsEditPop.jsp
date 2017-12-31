@@ -268,7 +268,12 @@ var myDetailGridData = null;
            $("#cmbServiceMem option[value='"+codyIdCd +"']").attr("selected", true);
 
            var renColctCd = "${basicinfo.renColctId}";
-           $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
+           if(renColctCd != "0" ){
+        	   $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
+           }else{
+               $("#cmbCollectType").find("option").remove();
+           }
+           /* $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true); */
 
              if($("#_openGb").val() == "view"){
                     $("#btnSave").hide();
@@ -533,7 +538,7 @@ var myDetailGridData = null;
     <th scope="row" style="width: 244px; ">Collection Code<span class="must">*</span></th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
-            <c:forEach var="list" items="${ cmbCollectTypeComboList}" varStatus="status">
+            <c:forEach var="list" items="${cmbCollectTypeComboList}" varStatus="status">
                  <option value="${list.code}">${list.c1 } </option>
             </c:forEach>
     </select>

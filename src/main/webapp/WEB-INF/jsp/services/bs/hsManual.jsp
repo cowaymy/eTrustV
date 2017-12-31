@@ -279,16 +279,21 @@
          // 리스트 조회.
         function fn_getBSListAjax() {
 
-
                 var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
                 if (radioVal == 1 ){ //hs_no  Create before
-                        Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
+                	
+                    if ($("#cmdBranchCode").val() == '' || $("#cmdBranchCode").val() == null) {
+                    	Common.alert("Please Select 'Cody Branch'");
+                        return false;
+                    }
+                	
+                    Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
 
-                            console.log("성공.");
-                            console.log("data : " + result);
-                            AUIGrid.setGridData(myGridID, result);
-                         });
+                        console.log("성공.");
+                        console.log("data : " + result);
+                        AUIGrid.setGridData(myGridID, result);
+                     });
                 }else {//hs_no  Create after
 
                     $("#brnchId1").val($("#cmdBranchCode1 option:selected").text());
@@ -319,13 +324,17 @@
 
 
             function fn_getHSAddListAjax(){
+            	
 //             Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
                 var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
                 if(checkedItems.length <= 0) {
                     Common.alert('No data selected.');
                     return;
-                }else{
+                } else if (checkedItems.length >= 2) {
+                	Common.alert('Only availbale to entry a result with single HS order');
+                    return;
+                } else{
                     var str = "";
                     var custStr = "";
                     var rowItem;
@@ -840,14 +849,18 @@
             <table class="type1"><!-- table start -->
             <caption>table</caption>
             <colgroup>
-                <col style="width:100px" />
+                <col style="width:110px" />
+                <col style="width:*" />
+                <col style="width:110px" />
                 <col style="width:*" />
                 <col style="width:100px" />
+                <col style="width:*" />
+                <col style="width:120px" />
                 <col style="width:*" />
             </colgroup>
             <tbody>
             <tr>
-                <th scope="row">Cody Branch</th>
+                <th scope="row">Cody Branch<span class="must">*</span></th>
                 <td>
                 <select id="cmdBranchCode" name="cmdBranchCode" class="w100p">
                        <option value="">Choose One</option>
