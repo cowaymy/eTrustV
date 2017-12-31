@@ -9,7 +9,7 @@
 </style>
 
 <script type="text/javaScript">
-var memId;
+var memId1;
 var myGridID;
 var myGridID2;//AREA
 var subList = new Array();
@@ -275,8 +275,9 @@ $(document).ready(function() {
 	 AUIGrid.bind(myGridID, "cellClick", function(event) {
 	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 	        branchCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
-	        var memIdName = AUIGrid.getCellValue(myGridID, event.rowIndex, "memCode");
-	        memId = memIdName.split('-');
+	        memId1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "memId");
+	        alert(memId1);
+	       
 	        Common.ajax("GET", "/services/serviceGroup/selectCTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
 	            console.log("성공.");
 	            console.log("data : " + result);
@@ -427,9 +428,11 @@ function fn_CTSubAssign(){
       }
 	
 	
-	memId = memId[0];
-	var jsonObj=  { "memId" : memId, 
-			             "branchCode" :branchCode};
+
+	var jsonObj=  { 
+		                    "memId" : memId1, 
+			                "branchCode" :branchCode
+			             };
     Common.popupDiv("/services/serviceGroup/ctSubGroupPop.do" ,  jsonObj , null , true , '_NewAddDiv1');
 }
 
