@@ -50,7 +50,7 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public void uploadBankStatement(Map<String, Object> masterParamMap, List<Object> detailParamList){
+	public Map<String, Object>  uploadBankStatement(Map<String, Object> masterParamMap, List<Object> detailParamList){
 		
 		//Master Data 등록
 		bankStatementMapper.insertBankStatementMaster(masterParamMap);		
@@ -74,7 +74,9 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
     			bankStatementMapper.insertBankStatementITF(hm);
     			
     		}
-    	}    	
+    	}  
+    	
+    	return masterParamMap;
 	}
 	
 }

@@ -141,28 +141,30 @@
 
     // ajax list 조회.
     function searchList(){
-       
-        if(FormUtil.checkReqValue($("#bankAccount option:selected")) &&
-                FormUtil.checkReqValue($("#tranDateFr")) &&
-                FormUtil.checkReqValue($("#tranDateTo")) &&
-                FormUtil.checkReqValue($("#uploadDateFr")) &&
-                FormUtil.checkReqValue($("#uploadDateTo")) &&
-                FormUtil.checkReqValue($("#uploadUserNm")) ){
-            Common.alert("<spring:message code='pay.alert.searchCondition'/>");
-            return;
-        }
-        
-        if((!FormUtil.checkReqValue($("#tranDateFr")) && FormUtil.checkReqValue($("#tranDateTo"))) ||
-                (FormUtil.checkReqValue($("#tranDateFr")) && !FormUtil.checkReqValue($("#tranDateTo"))) ){
-            Common.alert("<spring:message code='pay.alert.inputTransaction Date'/>");
-            return;
-        }
-        
-        if((!FormUtil.checkReqValue($("#uploadDateFr")) && FormUtil.checkReqValue($("#uploadDateTo"))) ||
-                (FormUtil.checkReqValue($("#uploadDateFr")) && !FormUtil.checkReqValue($("#uploadDateTo"))) ){
-            Common.alert("<spring:message code='pay.alert.inputUploadDate'/>");
-            return;
-        }
+
+   		if(FormUtil.checkReqValue($("#crcNo"))){
+			if(FormUtil.checkReqValue($("#bankAccount option:selected")) &&
+					FormUtil.checkReqValue($("#tranDateFr")) &&
+					FormUtil.checkReqValue($("#tranDateTo")) &&
+					FormUtil.checkReqValue($("#uploadDateFr")) &&
+					FormUtil.checkReqValue($("#uploadDateTo")) &&
+					FormUtil.checkReqValue($("#uploadUserNm")) ){
+				Common.alert("<spring:message code='pay.alert.searchCondition'/>");
+				return;
+			}
+			
+			if((!FormUtil.checkReqValue($("#tranDateFr")) && FormUtil.checkReqValue($("#tranDateTo"))) ||
+					(FormUtil.checkReqValue($("#tranDateFr")) && !FormUtil.checkReqValue($("#tranDateTo"))) ){
+				Common.alert("<spring:message code='pay.alert.inputTransaction Date'/>");
+				return;
+			}
+			
+			if((!FormUtil.checkReqValue($("#uploadDateFr")) && FormUtil.checkReqValue($("#uploadDateTo"))) ||
+					(FormUtil.checkReqValue($("#uploadDateFr")) && !FormUtil.checkReqValue($("#uploadDateTo"))) ){
+				Common.alert("<spring:message code='pay.alert.inputUploadDate'/>");
+				return;
+			}
+		}
         
         Common.ajax("POST","/payment/selectCardStatementMasterList.do",$("#searchForm").serializeJSON(), function(result){          
             AUIGrid.setGridData(myGridID, result);
@@ -237,7 +239,8 @@ function upload(){
         Common.ajax("POST", "/payment/uploadCardStatement.do", data, 
                 function(result) {
                     var returnMsg = "<spring:message code='pay.alert.crcSuccessForm'/>";
-        
+   					returnMsg +=  "<br><b> CRC No : " + result.crcStateId + "</b>";
+
                     Common.alert(returnMsg, function (){
                         hideViewPopup('#upload_wrap');
                     });
@@ -350,6 +353,14 @@ function commitFormSubmit() {
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
+					<tr>
+                        <th scope="row">CRC No.</th>
+                        <td>
+                            <input type="text" id="crcNo" name="crcNo" title="" placeholder="" class="w100p" />
+                        </td>
+                        <th scope="row"></th>
+                        <td></td>
+                    </tr>
                     <tr>
                         <th scope="row">Transaction Date</th>
                         <td>

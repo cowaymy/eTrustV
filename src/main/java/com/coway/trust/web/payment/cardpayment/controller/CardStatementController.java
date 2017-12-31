@@ -92,7 +92,7 @@ public class CardStatementController {
 	* @return
 	*/
 	@RequestMapping(value = "/uploadCardStatement.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> uploadCardStatement(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
+	public ResponseEntity<Map<String, Object>> uploadCardStatement(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
 		
 		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
@@ -137,13 +137,14 @@ public class CardStatementController {
 		formData.put("userId", sessionVO.getUserId());		
 		
 		//저장처리
-		cardStatementService.uploadCardStatement(formData,itemList);				
+		Map<String, Object> returnMap = cardStatementService.uploadCardStatement(formData,itemList);				
 
+				
 		// 결과 만들기.
-    	ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
-		
-    	return ResponseEntity.ok(message);
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage("");
+        return ResponseEntity.ok(returnMap);
 	}
 	
 	/******************************************************

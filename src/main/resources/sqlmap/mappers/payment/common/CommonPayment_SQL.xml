@@ -1384,8 +1384,13 @@
         {call SP_INST_PAYMENT(#{seq},#{userid},#{keyInPayRoute}, #{keyInScrn} )}
     </update>
     
+    <resultMap id="normalPayResultStus" type="egovMap"></resultMap>
+    <resultMap id="normalPayResultMsg" type="egovMap"></resultMap>    
+    
     <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key}, #{keyInPayRoute}, #{keyInScrn})}
+        {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key}, #{keyInPayRoute}, #{keyInScrn},
+                                        #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=normalPayResultStus},
+                                        #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=normalPayResultMsg})}
     </update>
     
     <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">

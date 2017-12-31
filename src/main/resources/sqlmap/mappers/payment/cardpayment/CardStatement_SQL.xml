@@ -23,6 +23,9 @@
             LEFT JOIN SYS0038M E ON A.CRC_BC_STUS_ID = E.STUS_CODE_ID
         WHERE    
             1=1
+            <if test="crcNo != null and crcNo != '' ">
+            AND A.CRC_STATE_ID = #{crcNo}
+            </if>
             <if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
             AND A.CRC_STATE_REF_DT BETWEEN TO_DATE(#{tranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{tranDateTo} ,'DD/MM/YYYY')
             </if>

@@ -277,8 +277,7 @@ public class CommonPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/saveNormalPayment", method = RequestMethod.POST)
-	public ResponseEntity<List<EgovMap>> saveNormalPayment(
-			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
+	public ResponseEntity<Map<String, Object>> saveNormalPayment( @RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		String message = "";
 		
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
@@ -314,7 +313,7 @@ public class CommonPaymentController {
 		formInfo.put("payItemCardTypeId", 0);
 		
 		// 저장
-    	List<EgovMap> resultList = commonPaymentService.saveNormalPayment(formInfo, gridList, key);
+		Map<String, Object> resultList = commonPaymentService.saveNormalPayment(formInfo, gridList, key);
 		
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
@@ -322,4 +321,22 @@ public class CommonPaymentController {
     	msg.setMessage(message);
         return ResponseEntity.ok(resultList);
 	}
+	
+	/**
+	 * Payment - Order Info Rental Payment 조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectProcessPaymentResult.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectProcessPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		// 조회.
+		List<EgovMap> resultList = commonPaymentService.selectProcessPaymentResult(params);		
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+	
 }

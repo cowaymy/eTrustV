@@ -32,7 +32,7 @@ public interface CardStatementService
 	 * @param params
 	 * @return
 	 */
-    void uploadCardStatement(Map<String, Object> masterParamMap, List<Object> detailParamList);
+    Map<String, Object>  uploadCardStatement(Map<String, Object> masterParamMap, List<Object> detailParamList);
     
     /**
 	 * Credit Statement Confirm Master List  조회

@@ -32,7 +32,7 @@ public interface BankStatementService
 	 * @param params
 	 * @return
 	 */
-    void uploadBankStatement(Map<String, Object> masterParamMap, List<Object> detailParamList);
+    Map<String, Object> uploadBankStatement(Map<String, Object> masterParamMap, List<Object> detailParamList);
     
    
     

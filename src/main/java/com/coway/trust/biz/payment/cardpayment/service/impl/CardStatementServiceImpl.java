@@ -47,7 +47,7 @@ public class CardStatementServiceImpl extends EgovAbstractServiceImpl implements
 	 * @return
 	 */
 	@Override
-	public void uploadCardStatement(Map<String, Object> masterParamMap, List<Object> detailParamList){
+	public Map<String, Object> uploadCardStatement(Map<String, Object> masterParamMap, List<Object> detailParamList){
 		
 		//Running No 세팅하기		
 		masterParamMap.put("crcRunningNo", cardStatementMapper.getCRCStatementRunningNo(masterParamMap));
@@ -64,7 +64,9 @@ public class CardStatementServiceImpl extends EgovAbstractServiceImpl implements
     			cardStatementMapper.insertCardStatementDetail(hm);
     			
     		}
-    	}    	
+    	}
+    	
+    	return masterParamMap;
 	}
 	
 	/**

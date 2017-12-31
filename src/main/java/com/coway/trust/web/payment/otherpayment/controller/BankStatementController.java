@@ -90,7 +90,7 @@ public class BankStatementController {
 	* @return
 	*/
 	@RequestMapping(value = "/uploadBankStatement.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> uploadBankStatement(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
+	public ResponseEntity<Map<String, Object>> uploadBankStatement(@RequestBody Map<String, Object> params, ModelMap model , SessionVO sessionVO) {	
 		
 		List<Object> gridList = (List<Object>) params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		Map<String, Object> formData = (Map<String, Object>)params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
@@ -137,13 +137,14 @@ public class BankStatementController {
 		formData.put("userId", sessionVO.getUserId());		
 		
 		//저장처리
-		bankStatementService.uploadBankStatement(formData,itemList);				
+		Map<String, Object> returnMap = bankStatementService.uploadBankStatement(formData,itemList);				
 
-		// 결과 만들기.
-    	ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);
 		
-    	return ResponseEntity.ok(message);
+		// 결과 만들기.
+    	ReturnMessage msg = new ReturnMessage();
+    	msg.setCode(AppConstants.SUCCESS);
+    	msg.setMessage("");
+        return ResponseEntity.ok(returnMap);
 	}
 	
 }

@@ -104,6 +104,15 @@ public interface CommonPaymentService{
    	 * @return
    	 * 
    	 */
-    List<EgovMap> saveNormalPayment(Map<String, Object> paramMap, List<Object> paramList, int key );
+    Map<String, Object> saveNormalPayment(Map<String, Object> paramMap, List<Object> paramList, int key );
+    
+    /**
+   	 * Payment - 등록 처리 
+   	 * @param params
+   	 * @param model
+   	 * @return
+   	 * 
+   	 */
+    List<EgovMap> selectProcessPaymentResult(Map<String, Object> paramMap);
     
 }

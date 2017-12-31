@@ -708,12 +708,10 @@ var columnLayout = [
 	      }
 	  }
 
-	  console.log(totalAmt);
 	  $("#paymentTotalAmtTxt").text("RM " + $.number(totalAmt,2)); 
 	  var tempPendingAmt = Number(AUIGrid.getCellValue(pendingGridID,0,"amount"));
-	  console.log(tempPendingAmt);
 	  var tempTot = tempPendingAmt - totalAmt;
-	  console.log(tempTot);
+
 	  AUIGrid.updateRow(pendingGridID, { "pendingAmount" : tempTot }, 0);
 	}
 
@@ -1356,24 +1354,26 @@ var columnLayout = [
         $("#outTotalAmtTxt").text("RM " + $.number(totalAmt,2));    
     }
   
-    function viewRentalLedger(){
-        if($("#rentalOrdId").val() != ''){
-            Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#rentalOrdId").val()});
-        }else{
-            Common.alert("<spring:message code='pay.alert.selectOrderInfoFirst'/>");
-            return;
-        }
+    function viewRentalLedger(){       
+
+		if($("#rentalOrdId").val() != ''){
+    		$("#ledgerForm #ordId").val($("#rentalOrdId").val());
+			Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+	    }else{
+		    Common.alert("<spring:message code='pay.alert.selectOrder'/>");
+		    return;
+		}
             
     }
   
     function viewSrvcLedger(){
-        if($("#srvcOrdId").val() != ''){
-            Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : $("#srvcOrdId").val()});
-        }else{
-            Common.alert("<spring:message code='pay.alert.selectOrderInfoFirst'/>");
-            return;
-        }
-            
+		if($("#srvcOrdId").val() != ''){
+    		$("#ledgerForm #ordId").val($("#srvcOrdId").val());
+			Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
+	    }else{
+		    Common.alert("<spring:message code='pay.alert.selectOrder'/>");
+			return;
+	    }            
     }
     
     function fn_clear(){
@@ -1409,7 +1409,6 @@ var columnLayout = [
 	    	Common.ajax("GET","/payment/selectBankStatementList.do",$("#searchForm").serializeJSON(), function(result){         
 	            AUIGrid.setGridData(bankGridID, result);
 	            var selectedMode = $("#payMode").val();
-	            console.log(selectedMode);
 	           
 	            if(selectedMode == '105'){//cash
 	            	 doGetCombo('/common/getAccountList.do', 'CASH',$("#searchBankAcc").val(), 'bankAccCash', 'S', '' );
@@ -1481,10 +1480,8 @@ var columnLayout = [
             item.refChequeNo = AUIGrid.getCellValue(bankGridID,rowId,"chqNo");
             item.mode = AUIGrid.getCellValue(bankGridID,rowId,"type");
             item.trId = AUIGrid.getCellValue(bankGridID,rowId,"ref3");
-            item.amount = AUIGrid.getCellValue(bankGridID,rowId,"crdit");
-            
-            console.log(item);
-    		
+            item.amount = AUIGrid.getCellValue(bankGridID,rowId,"crdit");            
+   		
     		if($('#payMode').val() == '105'){
     			item.pendingAmount = $("#cash").find("#amount").val();
     			
@@ -1540,7 +1537,6 @@ var columnLayout = [
                             return;
                         }
                     }else{
-                    	console.log("mapping bankAccount");
                         if(FormUtil.checkReqValue($("#bankAccCheque option:selected"))){
                              Common.alert("<spring:message code='pay.alert.noBankAccount'/>");
                              return;
@@ -1558,10 +1554,7 @@ var columnLayout = [
     			if(!FormUtil.isEmpty($("#online").find("#chargeAmount").val())) {
     				chgAmt = Number($("#online").find("#chargeAmount").val());
     			}
-    			console.log(amt);
-    			console.log(chgAmt);
     			var tot = amt+chgAmt;
-    			console.log(tot);
     			item.pendingAmount = tot;
     			
     			//Transaction Date 체크
@@ -1733,6 +1726,28 @@ var columnLayout = [
         }
     }
     
+	//Search Order confirm
+function fn_outConfirm(){
+    //Outright Grid Clear 처리
+    resetOutGrid();
+    
+    var ordNo = $("#outOrdNo").val();
+    
+    if(ordNo != ''){
+        //Order Basic 정보 조회
+        Common.ajax("GET", "/payment/common/selectOrdIdByNo.do", {"ordNo" : ordNo}, function(result) {        
+            if(result != null && result.salesOrdId != ''){
+                $("#outOrdId").val(result.salesOrdId);
+                $("#outOrdNo").val(result.salesOrdNo);
+                                
+                //Order Info 및 Payment Info 조회
+                fn_outOrderInfo();
+            }            
+        });
+    }
+}
+
+
   //Search Order 팝업
     function fn_outOrderSearchPop(){
         resetOutGrid();
@@ -2009,20 +2024,26 @@ var columnLayout = [
 	    
 	    //Bill Payment : Order 정보 조회
 	    Common.ajax("POST", "/payment/common/saveNormalPayment.do", data, function(result) {
+
+			if(result.p1 == 99){
+				Common.alert("<spring:message code='pay.alert.bankstmt.mapped'/>", function(){
+				  	document.location.href = '/payment/initOtherPayment.do';	            
+				});
+			}else{
+				Common.ajax("GET", "/payment/common/selectProcessPaymentResult.do", {seq : result.seq}, function(resultInfo) {
+					var message = "<spring:message code='pay.alert.successProc'/>";
 	        
-	    	var message = "<spring:message code='pay.alert.successProc'/>";
-	        
-	        if(result != null && result.length > 0){
-	            for(i=0 ; i < result.length ; i++){
-	                message += "<font color='red'>" + result[i].orNo + "</font><br>";
-	            }
-	        }
-	        
-	    	Common.alert(message, function(){
-	        	document.location.href = '/payment/initOtherPayment.do';
-	            
-	        });
-	        
+			        if(resultInfo != null && resultInfo.length > 0){
+				        for(i=0 ; i < resultInfo.length ; i++){
+						    message += "<font color='red'>" + resultInfo[i].orNo + "</font><br>";
+				        }
+			        }
+
+					Common.alert(message, function(){
+				    	document.location.href = '/payment/initOtherPayment.do';	            
+			        });
+				});
+			}
 	    });
 	}
   
@@ -2044,7 +2065,6 @@ var columnLayout = [
 //Collector 조회 팝업
   function fn_searchUserIdPop(param) {
       Common.popupDiv("/common/memberPop.do", { callPrgm : "PAYMENT_PROCESS" }, null, true);
-      console.log(param);
       payTypeIndicator = param;
   }
 
@@ -2242,7 +2262,7 @@ function fn_pageBack() {
 
 function fn_setSearchPayType() {
 	var payMode = $("#payMode").val();
-	console.log(payMode);
+
 	if(payMode == "105") {
 		$("#searchPayType").val("CSH");
 	} else if(payMode == "106") {
@@ -3076,5 +3096,6 @@ function fn_setSearchPayType() {
 
 </div>
 </section>
-
-
+<form id="ledgerForm" action="#" method="post">
+    <input type="hidden" id="ordId" name="ordId" />
+</form>
