@@ -128,6 +128,7 @@
         // HS Result Information > HS Status 값 변경 시 다른 정보 입력 가능 여부 설정
        $("#cmbStatusType1").change(function(){
     	   
+    	   AUIGrid.forceEditingComplete(myDetailGridID, null, false);
     	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
     	   AUIGrid.updateAllToValue(myDetailGridID, "SerialNo", '');
     	   
