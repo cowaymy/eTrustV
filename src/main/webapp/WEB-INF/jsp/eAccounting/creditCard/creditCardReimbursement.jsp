@@ -60,7 +60,10 @@ var reimbursementColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
-},{
+}, {
+    dataField : "appvPrcssNo",
+    visible : false
+}, {
     dataField : "appvPrcssStusCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -105,8 +108,15 @@ $(document).ready(function () {
             {
                 console.log("cellDoubleClick rowIndex : " + event.rowIndex + ", cellDoubleClick : " + event.columnIndex + " cellDoubleClick");
                 console.log("cellDoubleClick clmNo : " + event.item.clmNo);
+                console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+                console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
                 clmNo = event.item.clmNo;
-                fn_viewReimbursementPop();
+                // TODO detail popup open
+                if(event.item.appvPrcssStusCode == "T") {
+                    fn_viewReimbursementPop();
+                } else {
+                	fn_webInvoiceRequestPop(event.item.appvPrcssNo);
+                }
             });
     
     $("#appvPrcssStus").multipleSelect("checkAll");
@@ -884,6 +894,13 @@ function fn_getTotTaxAmt(rowIndex) {
     taxAmtCnt -= value;
     console.log("taxAmtCnt : " + taxAmtCnt);
     return taxAmtCnt;
+}
+
+function fn_webInvoiceRequestPop(appvPrcssNo) {
+    var data = {
+            appvPrcssNo : appvPrcssNo
+    };
+    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
 </script>
 

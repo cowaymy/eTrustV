@@ -46,6 +46,9 @@ var staffClaimColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00"
 }, {
+    dataField : "appvPrcssNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "appvPrcssStusCode",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -84,8 +87,14 @@ $(document).ready(function () {
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
-                
-                fn_viewStaffClaimPop(event.item.clmNo);
+                console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+                console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
+                // TODO detail popup open
+                if(event.item.appvPrcssStusCode == "T") {
+                	fn_viewStaffClaimPop(event.item.clmNo);
+                } else {
+                	fn_webInvoiceRequestPop(event.item.appvPrcssNo);
+                }
                 
             });
     
@@ -1167,6 +1176,13 @@ function fn_getTotTaxAmt(rowIndex) {
     taxAmtCnt -= value;
     console.log("taxAmtCnt : " + taxAmtCnt);
     return taxAmtCnt;
+}
+
+function fn_webInvoiceRequestPop(appvPrcssNo) {
+    var data = {
+            appvPrcssNo : appvPrcssNo
+    };
+    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
 </script>
 
