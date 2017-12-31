@@ -43,6 +43,8 @@
              , nvl(l55.RCIPT_QTY , 0) as rciptqty
              , l48.uom
              , uomt.code_name uomnm
+             , l47.reqst_type reqsttype 
+             , l47.reqst_type_dtl reqsttypedtl
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran

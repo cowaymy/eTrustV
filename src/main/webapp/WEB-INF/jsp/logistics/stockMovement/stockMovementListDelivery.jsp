@@ -63,18 +63,20 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                              allowPoint : false // onlyNumeric 인 경우 소수점(.) 도 허용
                        }
                      },
-                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>"                 ,width:120    ,height:30 , visible:false},                          
-                     {dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipted'/>"                    ,width:120    ,height:30              },                        
+                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>"          ,width:120    ,height:30 , visible:false},                          
+                     {dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipted'/>"         ,width:120    ,height:30              },                        
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },                         
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },                         
-                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
-                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },                       
-                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },                       
-                     {dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30                },                       
-                     {dataField: "crtdt",headerText :"<spring:message code='log.head.requestcreatedate'/>"            ,width:120    ,height:30                },                         
-                     {dataField: "reqdate",headerText :"<spring:message code='log.head.requestrequireddate'/>"          ,width:120    ,height:30                }
+                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"            ,width:120    ,height:30                },                         
+                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"          ,width:120    ,height:30 , visible:false},                          
+                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"      ,width:120    ,height:30                },                       
+                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"             ,width:120    ,height:30 , visible:false},                       
+                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"             ,width:120    ,height:30                },                       
+                     {dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"             ,width:120    ,height:30                },                       
+                     {dataField: "crtdt",headerText :"<spring:message code='log.head.requestcreatedate'/>"        ,width:120    ,height:30                },                         
+                     {dataField: "reqsttype",headerText :"<spring:message code='log.head.requestcreatedate'/>"    ,width:120    ,height:30 , visible:false},                         
+                     {dataField: "reqsttypedtl",headerText :"<spring:message code='log.head.requestcreatedate'/>" ,width:120    ,height:30 , visible:false},                         
+                     {dataField: "reqdate",headerText :"<spring:message code='log.head.requestrequireddate'/>"    ,width:120    ,height:30                }
                      ];
 var reqcolumnLayout;
 var serialcolumnLayout =[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},                         
@@ -406,9 +408,17 @@ $(function(){
                     str += "Please Check Delivery Qty of  " + rowItem.item.reqstno   + ", " + rowItem.item.itmname + "<br />";
                     checkDelqty= true;
                 }
-                if (rowItem.item.serialchk =='Y'){
+                
+                console.log(rowItem.item);
+                
+                if (rowItem.item.docno !='' && rowItem.item.reqsttype =='OD' && rowItem.item.reqsttypedtl =='OD03'){
                     serialchk = true;
-                }/*else{
+                }
+                
+                
+                /*if (rowItem.item.serialchk =='Y'){
+                    serialchk = true;
+                }*//*else{
                     serialchk = false;
                 }*/
                 
@@ -491,6 +501,9 @@ $(function(){
             Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
     	
+    });
+    $('#serialclose').click(function(){
+    	serialchk = false;
     });
     
 });
@@ -870,7 +883,7 @@ function fn_serialChck(rowindex , rowitem , str){
         <header class="pop_header"><!-- pop_header start -->
             <h1>Serial Check</h1>
             <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+                <li><p class="btn_blue2"><a id="serialclose">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
         

@@ -53,42 +53,42 @@
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
      var columnLayout = [
 								//{dataField:   "bom",headerText :"<spring:message code='log.head.materialcdoe'/>"  ,width: "10%"   , cellMerge : true,visible:true},               
-								{dataField: "bom",headerText :"<spring:message code='log.head.materialcode'/>"  ,width:100,style:   my-min-style    ,visible:false},                
-								{dataField: "altrtivBom" ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-								//{dataField:   "plant",headerText :"<spring:message code='log.head.materialcodename'/>"    ,width: "10%"   ,visible:true,style :   aui-grid-user-custom-left           
-								{dataField: "matrlNo",headerText :"<spring:message code='log.head.materialcode'/>"  ,width: "10%"   ,style:     my-min-style    ,visible:true, cellMerge : true},       
-								{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"  ,width: "10%"   ,style:     my-min-style    ,visible:true, cellMerge : true},       
+								{dataField: "bom",headerText :"<spring:message code='log.head.materialcode'/>"  ,width:100,style:"my-min-style"    ,visible:false},                
+								{dataField: "altrtivBom" ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+								//{dataField:   "plant",headerText :"<spring:message code='log.head.materialcodename'/>"    ,width: "10%"   ,visible:true,style :"aui-grid-user-custom-left"           
+								{dataField: "matrlNo",headerText :"<spring:message code='log.head.materialcode'/>"  ,width: "10%"   ,style:"my-min-style"    ,visible:true, cellMerge : true},       
+								{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"  ,width: "10%"   ,style:"my-min-style"    ,visible:true, cellMerge : true},       
 								{dataField: "matrlNm",headerText :"<spring:message code='log.head.materialcategory'/>"  ,width: "10%"   ,visible:true,      
 								    style :"aui-grid-user-custom-left",
 		                            cellMerge : true,
 		                            mergeRef : "matrlNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
 		                            mergePolicy : "restrict"},
-	                            {dataField: "",headerText :"<spring:message code='log.head.baseqty'/>"  ,width: "5%"    ,style:     my-min-style    ,visible:false},        
-	                            {dataField: "bomUse" ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "bomItmNodeNo",headerText :"<spring:message code='log.head.componentno'/>"  ,width: "3%"    ,visible:true,style :   aui-grid-user-custom-right  },          
-	                            {dataField: "bomCtgry"   ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "intnlCntr"  ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "itmCtgry"   ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "bomItmNo"   ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "sortString" ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "bomCompnt",headerText :"<spring:message code='log.head.component'/>"   ,width: "10%"   ,style:     my-min-style    ,visible:true},         
-	                            {dataField: "stkDesc",headerText :"<spring:message code='log.head.componentname'/>" ,width: "28%"   ,visible:true,style :   aui-grid-user-custom-left   },          
-	                            {dataField: "categoryid" ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "category",headerText :"<spring:message code='log.head.category'/>" ,width: "7%"    ,visible:true,style :   aui-grid-user-custom-left   },          
-	                            {dataField: "compntQty",headerText :"<spring:message code='log.head.qty'/>" ,width: "5%"    ,visible:true,style :   aui-grid-user-custom-right  },          
-	                            {dataField: "compntUnitOfMeasure"    ,headerText:    ""    ,width:100 ,style:    my-min-style    ,visible:false},                
-	                            {dataField: "validFromDt",headerText :"<spring:message code='log.head.validfrom'/>" ,width: "8%"    ,style:     my-min-style    ,visible:true},         
-	                            {dataField: "validToDt",headerText :"<spring:message code='log.head.validto'/>" ,width: "8%"    ,style:     my-min-style    ,visible:true},         
-	                            {dataField: "leadTmOffset"   ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:true},                 
-	                            {dataField: "alterItmGrp",headerText :"<spring:message code='log.head.alternativeitembygroup'/>"    ,width:100,style:   my-min-style    ,visible:true},                 
-	                            {dataField: "alterItmRankOrd",headerText :"<spring:message code='log.head.priorityofalternativeitem'/>" ,width:100,style:   my-min-style    ,visible:true},                 
-	                            {dataField: "useProbabiltiy",headerText :"<spring:message code='log.head.useprobabiltiy'/>" ,width:100,style:   my-min-style    ,visible:true},                 
-	                            {dataField: "chngNo" ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "delIndict"  ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "dtRcordCrtOn"   ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "userWhoCrtRcord"    ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "chngOn" ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false},                
-	                            {dataField: "namePersonWhoChgObj"    ,headerText:    ""  ,width:100,style:   my-min-style    ,visible:false} 
+	                            {dataField: "",headerText :"<spring:message code='log.head.baseqty'/>"  ,width: "5%"    ,style:"my-min-style"    ,visible:false},        
+	                            {dataField: "bomUse" ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "bomItmNodeNo",headerText :"<spring:message code='log.head.componentno'/>"  ,width: "3%"    ,visible:true,style :"aui-grid-user-custom-right"  },          
+	                            {dataField: "bomCtgry"   ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "intnlCntr"  ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "itmCtgry"   ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "bomItmNo"   ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "sortString" ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "bomCompnt",headerText :"<spring:message code='log.head.component'/>"   ,width: "10%"   ,style:"my-min-style"    ,visible:true},         
+	                            {dataField: "stkDesc",headerText :"<spring:message code='log.head.componentname'/>" ,width: "28%"   ,visible:true,style :"aui-grid-user-custom-left"   },          
+	                            {dataField: "categoryid" ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "category",headerText :"<spring:message code='log.head.category'/>" ,width: "7%"    ,visible:true,style :"aui-grid-user-custom-left"   },          
+	                            {dataField: "compntQty",headerText :"<spring:message code='log.head.qty'/>" ,width: "5%"    ,visible:true,style :"aui-grid-user-custom-right"  },          
+	                            {dataField: "compntUnitOfMeasure"    ,headerText:    ""    ,width:100 ,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "validFromDt",headerText :"<spring:message code='log.head.validfrom'/>" ,width: "8%"    ,style:"my-min-style"    ,visible:true},         
+	                            {dataField: "validToDt",headerText :"<spring:message code='log.head.validto'/>" ,width: "8%"    ,style:"my-min-style"    ,visible:true},         
+	                            {dataField: "leadTmOffset"   ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:true},                 
+	                            {dataField: "alterItmGrp",headerText :"<spring:message code='log.head.alternativeitembygroup'/>"    ,width:100,style:"my-min-style"    ,visible:true},                 
+	                            {dataField: "alterItmRankOrd",headerText :"<spring:message code='log.head.priorityofalternativeitem'/>" ,width:100,style:"my-min-style"    ,visible:true},                 
+	                            {dataField: "useProbabiltiy",headerText :"<spring:message code='log.head.useprobabiltiy'/>" ,width:100,style:"my-min-style"    ,visible:true},                 
+	                            {dataField: "chngNo" ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "delIndict"  ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "dtRcordCrtOn"   ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "userWhoCrtRcord"    ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "chngOn" ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false},                
+	                            {dataField: "namePersonWhoChgObj"    ,headerText:    ""  ,width:100,style:"my-min-style"    ,visible:false} 
                          ];
     
     
@@ -226,6 +226,20 @@
                Common.alert("Fail : " + jqXHR.responseJSON.message);
            });
        });
+       $("#print").click(function(){
+//            $("#srchmtrcd").val('');
+//            doGetCombo('/logistics/bom/selectCodeList', '15', '','srchcatagorytype', 'A' , '');
+//            $("#srchValid").val('');
+    	   var selected = AUIGrid.getSelectedItems(myGridID);
+    	   console.log(selected[0].item);
+    	   var itm = selected[0].item;
+    	   console.log(itm);
+    	   $("#V_BOM").val(itm.bom);
+    	   
+    	   Common.report("printForm");
+    	   
+       });
+       
         
     });
     
@@ -391,6 +405,10 @@
 						<a id="clear"><span class="clear"></span>
 						<spring:message code='sys.btn.clear' /></a>
 					</p></li>
+				<li><p class="btn_blue">
+                        <a id="print"><span class="clear"></span>
+                        <spring:message code='sys.progmanagement.grid1.PRINT' /></a>
+                    </p></li>
 			</ul>
 		</aside>
 		<!-- title_line end -->
@@ -537,4 +555,9 @@
 			<!-- grid_wrap end -->
 		</section>
 	</section>
+	<form id="printForm" name="printForm">
+	   <input type="text" id="viewType" name="viewType" value="WINDOW" />
+	   <input type="text" id="V_BOM" name="V_BOM" value="" />
+	   <input type="text" id="reportFileName" name="reportFileName" value="/logistics/STOCK_BOM_LISTING.rpt" /><br />
+	</form>
 </div>
