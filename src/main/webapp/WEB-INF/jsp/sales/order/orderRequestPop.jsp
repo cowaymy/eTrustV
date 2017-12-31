@@ -2348,7 +2348,7 @@
     <td colspan="4"></td>
     <th scope="row">Total Amount (RM)</th>
     <td class="bg-black"><span id="spTotalAmount"></span>
-    <input id="txtTotalAmount" name="txtTotalAmount" type="hidden" />
+    <input id="txtTotalAmount" name="txtTotalAmount" type="hidden" value="0"/>
     </td>
 </tr>
 <tr>
@@ -2357,15 +2357,15 @@
     <th scope="row">Obligation Period</th>
     <td><input id="txtObPeriod" name="txtObPeriod" type="text" class="w100p readonly" value="24" readonly></td>
     <th scope="row">Rental Fees</th>
-    <td><input id="txtRentalFees" name="txtRentalFees" type="text" class="w100p readonly" readonly></td>
+    <td><input id="txtRentalFees" name="txtRentalFees" type="text" value="0" class="w100p readonly" readonly></td>
 </tr>
 <tr>
     <th scope="row">Penalty Charge</th>
-    <td><input id="txtPenaltyCharge" name="txtPenaltyCharge" type="text" class="w100p readonly" readonly></td>
+    <td><input id="txtPenaltyCharge" name="txtPenaltyCharge" type="text" class="w100p readonly" value="0" readonly></td>
     <th scope="row">Penalty Adjustment<span class="must">*</span></th>
-    <td><input id="txtPenaltyAdj" name="txtPenaltyAdj" type="text" title="" placeholder="Penalty Adjustment" class="w100p" value="0" /></td>
+    <td><input id="txtPenaltyAdj" name="txtPenaltyAdj" type="text" value="0" title="" placeholder="Penalty Adjustment" class="w100p" /></td>
     <th scope="row">Current Outstanding</th>
-    <td><input id="txtCurrentOutstanding" name="txtCurrentOutstanding" type="text" class="w100p readonly" readonly></td>
+    <td><input id="txtCurrentOutstanding" name="txtCurrentOutstanding" type="text" value="0" class="w100p readonly" readonly></td>
 </tr>
 </tbody>
 </table><!-- table end -->

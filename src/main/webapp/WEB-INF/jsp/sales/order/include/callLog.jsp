@@ -10,7 +10,7 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "No",          dataField : "rownum",            width : 60  }
+            { headerText : "No",          dataField : "rownum",            visible  : false }
           , { headerText : "Type",        dataField : "codeName",          width : 150 }
           , { headerText : "Feedback",    dataField : "resnDesc",          width : 120 }
           , { headerText : "Action",      dataField : "stusName",          width : 120 }

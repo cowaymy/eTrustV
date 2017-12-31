@@ -110,6 +110,19 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     			else {
     				rentPaySetInf.put("is3Party", "No");
     			}
+    			
+    			if("01/01/1900".equals(rentPaySetInf.get("rentPayApplyDt"))) {
+    				rentPaySetInf.put("rentPayApplyDt", "-");
+    			}
+    			if("01/01/1900".equals(rentPaySetInf.get("rentPaySubmitDt"))) {
+    				rentPaySetInf.put("rentPaySubmitDt", "-");
+    			}
+    			if("01/01/1900".equals(rentPaySetInf.get("rentPayStartDt"))) {
+    				rentPaySetInf.put("rentPayStartDt", "-");
+    			}
+    			if("01/01/1900".equals(rentPaySetInf.get("rentPayRejctDt"))) {
+    				rentPaySetInf.put("rentPayRejctDt", "-");
+    			}
     		}
 			
 			if (Integer.toString(SalesConstants.SALES_CCP_CODEID).equals(((BigDecimal)basicInfo.get("rentChkId")).toString())) {
@@ -350,11 +363,11 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     		}
 		}
 		
-		if(CommonUtils.isEmpty(basicInfo.get("custPassportExpr")) || SalesConstants.DEFAULT_DATE2.equals(basicInfo.get("custPassportExpr"))) {
+		if(CommonUtils.isEmpty(basicInfo.get("custPassportExpr")) || SalesConstants.DEFAULT_DATE.equals(basicInfo.get("custPassportExpr"))) {
 			basicInfo.put("custPassportExpr", "-");
 		}
 		
-		if(CommonUtils.isEmpty(basicInfo.get("custVisaExpr")) || SalesConstants.DEFAULT_DATE2.equals(basicInfo.get("custVisaExpr"))) {
+		if(CommonUtils.isEmpty(basicInfo.get("custVisaExpr")) || SalesConstants.DEFAULT_DATE.equals(basicInfo.get("custVisaExpr"))) {
 			basicInfo.put("custVisaExpr", "-");
 		}
 	}
