@@ -52,8 +52,8 @@
          editable                : false,        
          showStateColumn     : false,         
          showRowNumColumn    : false,  
-         headerHeight : 30,
-         selectionMode       : "singleRow"  //"multipleCells",   
+         headerHeight : 30
+       //selectionMode       : "singleRow"  //"multipleCells",   
      };
      
      ordLedgerGridID = GridCommon.createAUIGrid("ord_ledger_grid", ordLedgerLayout, "", ordLedgerGridPros);
