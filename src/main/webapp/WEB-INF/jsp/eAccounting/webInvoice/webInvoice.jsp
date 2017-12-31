@@ -26,7 +26,7 @@ var webInvoiceColumnLayout = [ {
 }, {
     dataField : "clmNo",
     visible : false
-},{
+}, {
     dataField : "invcNo",
     headerText : '<spring:message code="webInvoice.invoiceNo" />',
     width : 140
@@ -55,6 +55,12 @@ var webInvoiceColumnLayout = [ {
     headerText : '<spring:message code="webInvoice.requestDate" />',
     dataType : "date",
     formatString : "dd/mm/yyyy"
+}, {
+    dataField : "appvPrcssNo",
+    visible : false
+}, {
+    dataField : "appvPrcssStusCode",
+    visible : false
 }, {
     dataField : "appvPrcssStus",
     headerText : '<spring:message code="webInvoice.status" />',
@@ -88,8 +94,15 @@ $(document).ready(function () {
 		    {
 		        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
 		        console.log("CellDoubleClick clmNo : " + event.item.clmNo);
+		        console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+		        console.log("CellDoubleClick appvPrcssStusCode : " + event.item.appvPrcssStusCode);
 		        // TODO detail popup open
-		        fn_viewEditWebInvoicePop(event.item.clmNo);
+		        if(event.item.appvPrcssStusCode == "T") {
+		        	fn_viewEditWebInvoicePop(event.item.clmNo);
+		        } else {
+		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo);
+		        }
+		        
 		    });
 	
 	$("#appvPrcssStus").multipleSelect("checkAll");
@@ -166,6 +179,13 @@ function fn_viewEditWebInvoicePop(clmNo) {
             callType : 'view'
     };
 	Common.popupDiv("/eAccounting/webInvoice/viewEditWebInvoicePop.do", data, null, true, "viewEditWebInvoicePop");
+}
+
+function fn_webInvoiceRequestPop(appvPrcssNo) {
+    var data = {
+    		appvPrcssNo : appvPrcssNo
+    };
+    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
 
 function fn_popCostCenterSearchPop() {
@@ -265,6 +285,14 @@ function fn_getTotalAmount() {
 }
 
 function fn_addRow() {
+	if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+        Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:$("#newCostCenter").val()}, function(result) {
+            console.log(result);
+            var row = result[0];
+            console.log(row);
+            $("#newCostCenterText").val(row.costCenterText);
+        });
+    }
 	if(AUIGrid.getRowCount(newGridID) > 0) {
 		console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
 		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
@@ -486,6 +514,22 @@ function fn_getTotTaxAmt(rowIndex) {
     taxAmtCnt -= value;
     console.log("taxAmtCnt : " + taxAmtCnt);
     return taxAmtCnt;
+}
+
+function fn_sameVenderCheck() {
+    var data = {
+            memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
+    }
+    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+        console.log(result);
+        if(result.data) {
+            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+            return false;
+        } else {
+            return true;
+        }
+    });
 }
 </script>
 

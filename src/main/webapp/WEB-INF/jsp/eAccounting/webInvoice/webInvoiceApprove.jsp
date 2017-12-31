@@ -104,6 +104,7 @@ var invoAprveGridColLayout = [ {
     dataField : "atchFileName",
     headerText : '<spring:message code="newWebInvoice.attachment" />',
     width : 200,
+    visible : false,
     labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
         var myString = value;
         // 로직 처리
@@ -116,10 +117,13 @@ var invoAprveGridColLayout = [ {
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
+        	console.log("view_btn click item.appvPrcssNo : " + item.appvPrcssNo);
         	console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
+        	console.log("view_btn click item.fileCnt : " + item.fileCnt);
         	if(item.fileCnt > 1) {
-        		atchFileGrpId = item.atchFileGrpId;
-        		fn_fileListPop();
+        		//atchFileGrpId = item.atchFileGrpId;
+        		appvPrcssNo = item.appvPrcssNo;
+        		fn_fileListOfAppvPrcssNoPop();
         	} else {
         		if(item.fileCnt == 1) {
         			var data = {
@@ -339,6 +343,13 @@ function fn_selectApproveList() {
     });
 }
 
+function fn_fileListOfAppvPrcssNoPop() {
+    var data = {
+            appvPrcssNo : appvPrcssNo
+    };
+    Common.popupDiv("/eAccounting/webInvoice/fileListOfAppvPrcssNoPop.do", data, null, true, "fileListPop");
+}
+
 function fn_fileListPop() {
     var data = {
     		atchFileGrpId : atchFileGrpId
@@ -403,7 +414,11 @@ function fn_appvRejctSubmit(type, rejctResn) {
         });
     }
     
-    fn_closePop();
+    // $("#webInvoiceAppvViewPop").length return 1 -> $("#webInvoiceAppvViewPop") exist
+    if($("#webInvoiceAppvViewPop") > 0) {
+        $("#webInvoiceAppvViewPop").remove();
+    }
+    //fn_closePop();
 }
 </script>
 
@@ -453,7 +468,7 @@ function fn_appvRejctSubmit(type, rejctResn) {
 	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCenterText" /><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.postingDate" /></th>
+	<th scope="row"><spring:message code="invoiceApprove.reqstDt" /></th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
 	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>

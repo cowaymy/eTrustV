@@ -215,51 +215,45 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_approveLinePop() {
-	var data = {
-			memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
+	var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
     }
-    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-        console.log(result);
-        if(result.data) {
-        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-        } else {
-            var checkResult = fn_checkEmpty();
-            
-            if(!checkResult){
-                return false;
-            }
-            
-            // tempSave를 하지 않고 바로 submit인 경우
-            if(FormUtil.isEmpty($("#clmNo").val())) {
-                // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
-                fn_attachmentUpload("");
-            } else {
-                fn_updateWebInvoiceInfo("");
-            }
-            
-            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+        checkResult = fn_sameVenderCheck();
+        if(!checkResult) {
+            return false;
         }
-    });
+    }
+    
+    // tempSave를 하지 않고 바로 submit인 경우
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
+        fn_attachmentUpload("");
+    } else {
+        fn_updateWebInvoiceInfo("");
+    }
+    
+    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
 function fn_tempSave() {
-	var data = {
-            memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
+	var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
     }
-    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-        console.log(result);
-        if(result.data) {
-        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-        } else {
-        	var checkResult = fn_checkEmpty();
-            
-            if(checkResult){
-                fn_attachmentUpload(callType);
-            }
+    
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+    	checkResult = fn_sameVenderCheck();
+        if(!checkResult) {
+            return false;
         }
-    });
+    }
+    
+    fn_attachmentUpload(callType);
 }
 
 function fn_attachmentUpload(st) {

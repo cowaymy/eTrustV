@@ -14,7 +14,17 @@
 <script type="text/javascript">
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
+var attachList = null;
 var myColumnLayout = [ {
+    dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "appvItmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "glAccCode",
     headerText : '<spring:message code="expense.GLAccount" />'
 }, {
@@ -87,8 +97,262 @@ var myGridPros = {
     selectionMode : "multipleCells"
 };
 
+var mGridColumnLayout = [ {
+    dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expType",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expTypeName",
+    headerText : '<spring:message code="pettyCashNewExp.expTypeBrName" />',
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "glAccCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "glAccCodeName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCode",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "budgetCodeName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxCode",
+    headerText : '<spring:message code="newWebInvoice.taxCode" />'
+}, {
+    dataField : "taxName",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "taxRate",
+    dataType: "numeric",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+    editable : false
+}, {
+    dataField : "gstBeforAmt",
+    headerText : '<spring:message code="newWebInvoice.netAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "oriTaxAmt",
+    dataType: "numeric",
+    visible : false, // Color 칼럼은 숨긴채 출력시킴
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.gstBeforAmt * (item.taxRate / 100));
+    }
+}, {
+    dataField : "gstAmt",
+    headerText : '<spring:message code="newWebInvoice.taxAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "taxNonClmAmt",
+    headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "totAmt",
+    headerText : '<spring:message code="newWebInvoice.totalAmount" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+        // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+        return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
+    }
+}, {
+    dataField : "atchFileGrpId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}
+];
+
+//그리드 속성 설정
+var mGridPros = {
+    rowIdField : "clmSeq",
+    headerHeight : 40,
+    height : 160,
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
+};
+
+var mGridID;
+
+var mileageGridColumnLayout = [ {
+    dataField : "clamUn",
+    headerText : '<spring:message code="newWebInvoice.seq" />'
+}, {
+    dataField : "expGrp",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "carMilagDt",
+    headerText : '<spring:message code="pettyCashNewExp.date" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
+}, {
+
+    headerText : '<spring:message code="newStaffClaim.location" />',
+    children : [
+        {
+                dataField: "locFrom",
+                headerText: '<spring:message code="newStaffClaim.from" />',
+                style : "aui-grid-user-custom-left"
+        }, {
+                dataField: "locTo",
+                headerText: '<spring:message code="newStaffClaim.to" />',
+                style : "aui-grid-user-custom-left"
+        }
+    ]
+}, {
+    dataField : "cur",
+    headerText : '<spring:message code="newWebInvoice.cur" />',
+}, {
+    dataField : "carMilag",
+    headerText : '<spring:message code="newStaffClaim.mileageBrKm" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "carMilagAmt",
+    headerText : '<spring:message code="newStaffClaim.mileageBrAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "tollAmt",
+    headerText : '<spring:message code="newStaffClaim.tollsBrRm" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "parkingAmt",
+    headerText : '<spring:message code="newStaffClaim.parkingBrRm" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00"
+}, {
+    dataField : "purpose",
+    headerText : '<spring:message code="newStaffClaim.purpose" />',
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "expDesc",
+    headerText : '<spring:message code="newWebInvoice.remark" />',
+    style : "aui-grid-user-custom-left",
+    width : 150
+}, {
+    dataField : "atchFileGrpId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "atchFileId",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "atchFileName",
+    headerText : '<spring:message code="newWebInvoice.attachment" />',
+    width : 200,
+    labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+        var myString = value;
+        // 로직 처리
+        // 여기서 value 를 원하는 형태로 재가공 또는 포매팅하여 반환하십시오.
+        if(FormUtil.isEmpty(myString)) {
+            myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
+        }
+        return myString;
+     }, 
+    renderer : {
+        type : "ButtonRenderer",
+        onclick : function(rowIndex, columnIndex, value, item) {
+            console.log("view_btn click atchFileGrpId : " + item.atchFileGrpId + " atchFileId : " + item.atchFileId);
+            if(item.fileCnt == 1) {
+                var data = {
+                        atchFileGrpId : item.atchFileGrpId,
+                        atchFileId : item.atchFileId
+                };
+                if(item.fileExtsn == "jpg" || item.fileExtsn == "png") {
+                    // TODO View
+                    console.log(data);
+                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                        console.log(result);
+                        var fileSubPath = result.fileSubPath;
+                        fileSubPath = fileSubPath.replace('\', '/'');
+                        console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                        window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+                    });
+                } else {
+                    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+                        console.log(result);
+                        var fileSubPath = result.fileSubPath;
+                        fileSubPath = fileSubPath.replace('\', '/'');
+                        console.log("/file/fileDown.do?subPath=" + fileSubPath
+                                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                        window.open("/file/fileDown.do?subPath=" + fileSubPath
+                            + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+                    });
+                }
+            } else {
+                Common.alert('<spring:message code="invoiceApprove.notFoundAtch.msg" />');
+            }
+        }
+    }
+}, {
+    dataField : "fileExtsn",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "fileCnt",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}
+];
+
+//그리드 속성 설정
+var mileageGridPros = {
+    // 헤더 높이 지정
+    headerHeight : 20,
+    // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
+    height : 175,
+    showStateColumn : true,
+    softRemoveRowMode : false,
+    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
+    enableRestore : true,
+    rowIdField : "id",
+    // 셀 선택모드 (기본값: singleCell)
+    selectionMode : "multipleCells"
+};
+
+var mileageGridID;
+
 $(document).ready(function () {
     myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
+    
+    AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) 
+            {
+                console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+                console.log("CellDoubleClick clmNo : " + $("#viewClmNo").text());
+                console.log("CellDoubleClick clamUn : " + event.item.clamUn);
+                console.log("CellDoubleClick appvItmSeq : " + event.item.appvItmSeq);
+                console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
+                console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId);
+                // TODO detail popup open
+                //appvPrcssNo = event.item.appvPrcssNo;
+                //atchFileGrpId = event.item.atchFileGrpId;
+                
+                fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.appvItmSeq, event.item.clamUn);
+            });
     
     $("#fileListPop_btn").click(fn_fileListPop);
     
@@ -103,8 +367,173 @@ $(document).ready(function () {
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
     $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
     
+    $("#pApprove_btn").click(fn_approvalSubmit);
+    $("#pReject_btn").click(fn_RejectSubmit);
+    
     fn_setGridData(myGridID, myGridData);
-})
+});
+
+function fn_approvalSubmit() {
+    var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
+    // isActive
+    AUIGrid.setCellValue(invoAprveGridID, rows, "isActive", "Active");
+    fn_approveRegistPop();
+}
+
+function fn_RejectSubmit() {
+    var rows = AUIGrid.getRowIndexesByValue(invoAprveGridID, "clmNo", [$("#viewClmNo").text()]);
+    AUIGrid.setCellValue(invoAprveGridID, rows, "isActive", "Active");
+    fn_rejectRegistPop();
+}
+
+function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
+	var url = "";
+	var obj = {
+            clmNo : clmNo
+            ,clmSeq : appvItmSeq
+            ,clamUn : clamUn
+    };
+	var clmType = clmNo.substr(0, 2);
+	if(clmType == "J1") {
+		url = "/eAccounting/webInvoice/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+	} else if(clmType == "J2") {
+		url = "/eAccounting/pettyCash/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+	} else if(clmType == "J3") {
+		url = "/eAccounting/creditCard/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+    } else {
+    	// same table, same query
+    	url = "/eAccounting/staffClaim/getAppvItemOfClmUn.do?_cacheId=" + Math.random();
+    }
+    Common.ajax("POST", url, obj, function(result) {
+    	console.log(result);
+    	console.log(result.data);
+    	
+    	console.log("expGrp : " + result.data.expGrp);
+    	if(result.data.expGrp == "0") {
+    		fn_destroyMileageGrid();
+    		fn_createMGrid(result.data.itemGrp);
+    		
+    		// TODO attachFile
+            attachList = result.data.attachList;
+            console.log(attachList);
+            console.log(attachList.length);
+            if(attachList.length > 0) {
+            	$("#attachTr").show();
+                $("#attachTd").html("");
+                for(var i = 0; i < attachList.length; i++) {
+                	$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                }
+                
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            fileGrpId = attachList[i].atchFileGrpId;
+                            fileId = attachList[i].atchFileId;
+                        }
+                    }
+                    fn_atchViewDown(fileGrpId, fileId);
+                });
+            }
+    	} else {
+    		fn_destroyMGrid();
+    		fn_createMileageAUIGrid(result.data.itemGrp);
+    		
+    		$("#attachTr").hide();
+    		
+    		// TODO attachFile
+            attachList = result.data.attachList;
+            console.log(attachList);
+            console.log(attachList.length);
+            if(attachList.length > 0) {
+                for(var i = 0; i < attachList.length; i++) {
+                    result.data.itemGrp[i].atchFileId = attachList[i].atchFileId;
+                    result.data.itemGrp[i].atchFileName = attachList[i].atchFileName;
+                    var str = attachList[i].atchFileName.split(".");
+                    result.data.itemGrp[i].fileExtsn = str[1];
+                    result.data.itemGrp[i].fileCnt = 1;
+                }
+            }
+    	}
+    	
+    	//fn_setGridData(mGridID, result.itemGrp);
+    });
+}
+
+//AUIGrid 를 생성합니다.
+function fn_createMileageAUIGrid(gridData) {
+    // 이미 생성되어 있는 경우
+    console.log("isCreated : " + AUIGrid.isCreated("#mileage_grid_wrap"));
+    if(AUIGrid.isCreated("#mileage_grid_wrap")) {
+        fn_destroyMileageGrid();
+    }
+    
+    $("#mileage_grid_wrap").show();
+
+    // 실제로 #grid_wrap 에 그리드 생성
+    mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
+    // AUIGrid 에 데이터 삽입합니다.
+    AUIGrid.setGridData("#mileage_grid_wrap", gridData);
+}
+
+// 그리드를 제거합니다.
+function fn_destroyMileageGrid() {
+	$("#mileage_grid_wrap").hide();
+    AUIGrid.destroy("#mileage_grid_wrap");
+    mileageGridID = null;
+}
+
+//AUIGrid 를 생성합니다.
+function fn_createMGrid(gridData) {
+    // 이미 생성되어 있는 경우
+    console.log("isCreated : " + AUIGrid.isCreated("#mGrid_wrap"));
+    if(AUIGrid.isCreated("#mGrid_wrap")) {
+        fn_destroyMGrid();
+    }
+    
+    $("#mGrid_wrap").show();
+
+    // 실제로 #grid_wrap 에 그리드 생성
+    mGridID = AUIGrid.create("#mGrid_wrap", mGridColumnLayout, mGridPros);
+    // AUIGrid 에 데이터 삽입합니다.
+    AUIGrid.setGridData("#mGrid_wrap", gridData);
+    
+    //fn_myGridSetEvent();
+}
+
+// 그리드를 제거합니다.
+function fn_destroyMGrid() {
+	$("#mGrid_wrap").hide();
+    AUIGrid.destroy("#mGrid_wrap");
+    mGridID = null;
+}
+
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result);
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -156,12 +585,12 @@ $(document).ready(function () {
 	<td id="viewPayDueDt"></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-	<td colspan="3"><p class="btn_grid"><a href="#" id="fileListPop_btn"><spring:message code="approveView.viewAttachFile" /></a></p></td>
-</tr>
-<tr>
 	<th scope="row"><spring:message code="approveView.approveStatus" /></th>
 	<td colspan="3" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
+</tr>
+<tr id="attachTr" style="display: none;">
+    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+    <td colspan="3" id="attachTd"></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -169,12 +598,27 @@ $(document).ready(function () {
 </form>
 </section><!-- search_table end -->
 
+<article class="grid_wrap" id="mGrid_wrap" style="display: none;"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
+
+<article class="grid_wrap" id="mileage_grid_wrap" style="display: none;"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
+
 <aside class="title_line"><!-- title_line start -->
 <h2 class="total_text"><spring:message code="newWebInvoice.total" /><span id="viewAppvAmt"></span></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <c:if test="${appvPrcssResult eq 'R'}">
+    <li><p class="btn_blue2"><a href="#" id="pApprove_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
+    </c:if>
+    </c:if>
+</ul>
 
 </section><!-- pop_body end -->
 

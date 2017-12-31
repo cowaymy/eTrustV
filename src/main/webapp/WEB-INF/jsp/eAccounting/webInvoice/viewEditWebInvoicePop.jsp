@@ -372,33 +372,29 @@ function setInputFile2(){//인풋파일 세팅하기
 }
 
 function fn_approveLinePop() {
-	var data = {
-			memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
+	var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
     }
-    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-        console.log(result);
-        if(result.data) {
-        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-        } else {
-        	var checkResult = fn_checkEmpty();
-            
-            if(!checkResult){
-                return false;
-            }
-            
-            // 수정 후 temp save가 아닌 바로 submit
-            // 고려하여 update 후 approve
-            // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
-            if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
-                fn_attachmentUpload("");
-            } else {
-                fn_attachmentUpdate("");
-            }
-            
-            Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+        checkResult = fn_sameVenderCheck();
+        if(!checkResult) {
+            return false;
         }
-    });
+    }
+    
+    // 수정 후 temp save가 아닌 바로 submit
+    // 고려하여 update 후 approve
+    // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
+    if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+        fn_attachmentUpload("");
+    } else {
+        fn_attachmentUpdate("");
+    }
+    
+    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
 function fn_atchViewDown(fileGrpId, fileId) {
@@ -426,26 +422,24 @@ function fn_atchViewDown(fileGrpId, fileId) {
 }
 
 function fn_tempSave() {
-	var data = {
-			memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
+	var checkResult = fn_checkEmpty();
+    
+    if(!checkResult){
+        return false;
     }
-    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
-        console.log(result);
-        if(result.data) {
-        	Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-        } else {
-        	var checkResult = fn_checkEmpty();
-            
-            if(checkResult){
-                if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
-                    fn_attachmentUpload(callType);
-                } else {
-                    fn_attachmentUpdate(callType);
-                }
-            }
+    
+    if(FormUtil.isEmpty($("#clmNo").val())) {
+        checkResult = fn_sameVenderCheck();
+        if(!checkResult) {
+            return false;
         }
-    });
+    }
+    
+    if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+        fn_attachmentUpload(callType);
+    } else {
+        fn_attachmentUpdate(callType);
+    }
 }
 
 function fn_attachmentUpload(st) {
