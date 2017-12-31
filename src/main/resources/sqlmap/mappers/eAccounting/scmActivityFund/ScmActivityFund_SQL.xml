@@ -12,6 +12,7 @@ SELECT T.CLM_NO,
        T.REQST_DT, 
        'MYR' AS CUR, 
        T.TOT_AMT, 
+       T.APPV_PRCSS_NO,
        T.APPV_PRCSS_STUS_CODE, 
        T.APPV_PRCSS_STUS, 
        T.APPV_PRCSS_DT 

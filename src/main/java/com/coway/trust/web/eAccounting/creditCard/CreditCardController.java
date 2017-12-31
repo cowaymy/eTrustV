@@ -488,5 +488,32 @@ public class CreditCardController {
 		
 		return ResponseEntity.ok(creditCardNoList);
 	}
+	
+	@RequestMapping(value = "/getAppvItemOfClmUn.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> getAppvItemOfClmUn(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		EgovMap info = creditCardService.selectReimburesementInfo(params);
+		List<EgovMap> itemGrp = creditCardService.selectReimbursementItemGrp(params);
+		
+		info.put("itemGrp", itemGrp);
+		
+		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
+		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+		if(atchFileGrpId != "null") {
+			List<EgovMap> attachList = creditCardService.selectAttachList(atchFileGrpId);
+			info.put("attachList", attachList);
+		}
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(info);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 
 }

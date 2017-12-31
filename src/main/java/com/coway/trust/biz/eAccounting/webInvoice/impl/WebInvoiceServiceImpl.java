@@ -57,6 +57,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
+	public List<EgovMap> selectWebInvoiceItemsForAppv(String clmNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectWebInvoiceItemsForAppv(clmNo);
+	}
+
+	@Override
 	public List<EgovMap> selectApproveList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectApproveList(params);
@@ -69,11 +75,23 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
+	public String selectRejectOfAppvPrcssNo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectRejectOfAppvPrcssNo(params);
+	}
+
+	@Override
 	public List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
 	}
-	
+
+	@Override
+	public List<EgovMap> selectAttachListOfAppvPrcssNo(String appvPrcssNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAttachListOfAppvPrcssNo(appvPrcssNo);
+	}
+
 	@Override
 	public List<EgovMap> selectAttachList(String atchFileGrpId) {
 		// TODO Auto-generated method stub

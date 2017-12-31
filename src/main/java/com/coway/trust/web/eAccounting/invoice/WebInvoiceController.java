@@ -141,9 +141,50 @@ public class WebInvoiceController {
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 		
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
+		model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
 		
 		return "eAccounting/webInvoice/webInvoiceApproveViewPop";
+	}
+	
+	@RequestMapping(value = "/webInvoiceRqstViewPop.do")
+	public String webInvoiceRqstViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String appvPrcssNo = (String)params.get("appvPrcssNo");
+		
+		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(appvPrcssNo);
+		for(int i = 0; i < appvLineInfo.size(); i++) {
+			EgovMap info = appvLineInfo.get(i);
+			if("J".equals(info.get("appvStus"))) {
+				String rejctResn = webInvoiceService.selectRejectOfAppvPrcssNo(info);
+				model.addAttribute("rejctResn", rejctResn);
+			}
+		}
+		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(appvPrcssNo);
+		
+		// TODO appvPrcssStus 생성
+		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
+		
+		model.addAttribute("appvPrcssStus", appvPrcssStus);
+		model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
+		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
+		
+		return "eAccounting/webInvoice/webInvoiceRequestViewPop";
+	}
+	
+	@RequestMapping(value = "/fileListOfAppvPrcssNoPop.do")
+	public String fileListOfAppvPrcssNoPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String appvPrcssNo = (String) params.get("appvPrcssNo");
+		List<EgovMap> attachList = webInvoiceService.selectAttachListOfAppvPrcssNo(appvPrcssNo);
+		
+		model.addAttribute("attachList", attachList);
+		
+		return "eAccounting/webInvoice/attachmentFileViewPop";
 	}
 	
 	@RequestMapping(value = "/fileListPop.do")
@@ -524,5 +565,34 @@ public class WebInvoiceController {
 		
 		return ResponseEntity.ok(message);
 		
+	}
+	
+	@RequestMapping(value = "/getAppvItemOfClmUn.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> getAppvItemOfClmUn(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String clmNo = (String)params.get("clmNo");
+		EgovMap webInvoiceInfo = webInvoiceService.selectWebInvoiceInfo(clmNo);
+		List<EgovMap> webInvoiceItems = webInvoiceService.selectWebInvoiceItemsForAppv(clmNo);
+		LOGGER.debug("webInvoiceItems =====================================>>  " + webInvoiceItems);
+		String atchFileGrpId = String.valueOf(webInvoiceInfo.get("atchFileGrpId"));
+		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+		if(atchFileGrpId != "null") {
+			List<EgovMap> webInvoiceAttachList = webInvoiceService.selectAttachList(atchFileGrpId);
+			webInvoiceInfo.put("attachList", webInvoiceAttachList);
+		}
+		
+		webInvoiceInfo.put("itemGrp", webInvoiceItems);
+		webInvoiceInfo.put("expGrp", "0");
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(webInvoiceInfo);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 }

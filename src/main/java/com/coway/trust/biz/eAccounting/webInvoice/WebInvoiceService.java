@@ -23,6 +23,10 @@ public interface WebInvoiceService {
 	
 	List<EgovMap> selectWebInvoiceItems(String clmNo);
 	
+	List<EgovMap> selectWebInvoiceItemsForAppv(String clmNo);
+	
+	List<EgovMap> selectAttachListOfAppvPrcssNo(String appvPrcssNo);
+	
 	List<EgovMap> selectAttachList(String atchFileGrpId);
 	
 	EgovMap selectAttachmentInfo(Map<String, Object> params);
@@ -38,6 +42,8 @@ public interface WebInvoiceService {
 	List<EgovMap> selectApproveList(Map<String, Object> params);
 	
 	List<EgovMap> selectAppvLineInfo(String appvPrcssNo);
+	
+	String selectRejectOfAppvPrcssNo(Map<String, Object> params);
 	
 	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
 	

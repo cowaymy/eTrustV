@@ -424,6 +424,7 @@ SELECT T.CLM_NO,
        T.REQST_DT,  
        'MYR' AS CUR,
        T.TOT_AMT,
+       T.APPV_PRCSS_NO,
        T.APPV_PRCSS_STUS_CODE, 
        T.APPV_PRCSS_STUS, 
        T.APPV_PRCSS_DT 
@@ -435,6 +436,7 @@ FROM   (SELECT T1.CLM_NO,
                TO_CHAR(TO_DATE(T1.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
                T3.REQST_DT,
                T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
                Nvl (T3.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
                Nvl (( CASE T3.APPV_PRCSS_STUS 
                         WHEN 'R' THEN 'Request' 

@@ -16,6 +16,7 @@ SELECT   T.CLM_NO
         ,'MYR' AS CUR
         ,T.TOT_AMT
         ,T.REQST_DT
+        ,T.APPV_PRCSS_NO
         ,T.APPV_PRCSS_STUS_CODE
         ,T.APPV_PRCSS_STUS
         ,T.APPV_PRCSS_DT
@@ -35,6 +36,7 @@ SELECT   T.CLM_NO
                 ,T2.MEM_ACC_NAME
                 ,NVL(T1.TOT_AMT, 0) AS TOT_AMT
                 ,T3.REQST_DT
+                ,T1.APPV_PRCSS_NO
                 ,NVL (T3.APPV_PRCSS_STUS, 'T') AS APPV_PRCSS_STUS_CODE
                 ,NVL ( (CASE T3.APPV_PRCSS_STUS
                            WHEN 'R'
@@ -68,7 +70,7 @@ SELECT   T.CLM_NO
              AND T.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
         </if>          
         <if test="costCenter != null and costCenter != ''">
-             AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+             AND UPPER(T.COST_CENTR LIKE) '%' || UPPER(#{costCenter}) || '%'
         </if>     
         <if test="appvPrcssStus != null and appvPrcssStus != ''">
              AND T.APPV_PRCSS_STUS_CODE IN
@@ -302,6 +304,48 @@ SELECT   T.CLM_NO
           ON T.TAX_CODE = TT.TAX_CODE
           WHERE CLM_NO = #{clmNo}
           ORDER BY CLM_SEQ
+</select>
+
+<select id="selectWebInvoiceItemsForAppv" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceItemsForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+            SELECT T.CLM_SEQ
+                   ,T.EXP_TYPE
+                   ,T.EXP_TYPE_NAME
+                   ,T.GL_ACC_CODE
+                   ,T.GL_ACC_CODE_NAME
+                   ,T.BUDGET_CODE
+                   ,T.BUDGET_CODE_NAME
+                   ,T.TAX_CODE
+                   ,TT.INDUSTRY_CODE||' '||'('||TT.TAX_NAME||')' AS TAX_NAME
+                   ,TT.TAX_RATE
+                   ,'MYR' AS CUR
+                   ,T.NET_AMT AS GST_BEFOR_AMT
+                   ,T.TAX_AMT AS GST_AMT
+                   ,T.TAX_NON_CLM_AMT
+                   ,T.TOT_AMT
+                   ,T.EXP_DESC
+                   ,T.CLAM_UN
+          FROM FCM0003D T LEFT JOIN FCM0007C TT
+          ON T.TAX_CODE = TT.TAX_CODE
+          WHERE CLM_NO = #{clmNo}
+          ORDER BY CLM_SEQ
+</select>
+
+<select id="selectAttachListOfAppvPrcssNo" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectAttachListOfAppvPrcssNo */
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID IN (SELECT ATCH_FILE_GRP_ID FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo})
+          ORDER BY T1.ATCH_FILE_ID         
 </select>
 
 <select id="selectAttachList" parameterType="String" resultType="egovMap">
@@ -620,19 +664,48 @@ SELECT T.APPV_PRCSS_NO
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
                  LEFT JOIN FCM0006M T5 ON T3.MEM_ACC_ID = T5.MEM_ACC_ID
                  LEFT JOIN
-                 (SELECT *
-                    FROM (SELECT ROW_NUMBER () OVER (PARTITION BY F1.ATCH_FILE_GRP_ID ORDER BY F1.ATCH_FILE_GRP_ID
-                                 ,F2.ATCH_FILE_ID) AS RNUM
-                                ,F1.ATCH_FILE_GRP_ID
-                                ,F2.ATCH_FILE_ID
-                                ,F2.ATCH_FILE_NAME
-                                ,F2.FILE_EXTSN
-                                ,COUNT (F1.ATCH_FILE_ID) OVER (PARTITION BY F1.ATCH_FILE_GRP_ID)
-                                                                                           FILE_CNT
-                            FROM SYS0070M F1 LEFT JOIN SYS0071D F2 ON F1.ATCH_FILE_ID =
-                                                                                     F2.ATCH_FILE_ID
-                                 ) F
-                   WHERE F.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
+                 (SELECT Q.ATCH_FILE_GRP_ID, 
+                                 Q.ATCH_FILE_ID, 
+                                 Q.ATCH_FILE_NAME, 
+                                 Q.FILE_EXTSN, 
+                                 Q.FILE_CNT 
+                          FROM   (SELECT ROW_NUMBER () 
+                                           OVER ( 
+                                             PARTITION BY R.APPV_PRCSS_NO 
+                                             ORDER BY R.ATCH_FILE_GRP_ID) AS 
+                                         RNUM, 
+                                         R.ATCH_FILE_GRP_ID, 
+                                         R.ATCH_FILE_ID, 
+                                         R.ATCH_FILE_NAME, 
+                                         R.FILE_EXTSN, 
+                                         R.FILE_CNT 
+                                  FROM   (SELECT ROW_NUMBER () 
+                                                   OVER ( 
+                                                     PARTITION BY 
+                                                   X.ATCH_FILE_GRP_ID 
+                                                     ORDER BY 
+                                                   X.ATCH_FILE_GRP_ID, 
+                                                   Y.ATCH_FILE_ID) AS RNUM 
+                                                 , 
+                                                 Z.APPV_PRCSS_NO, 
+                                                 X.ATCH_FILE_GRP_ID, 
+                                                 X.ATCH_FILE_ID, 
+                                                 Y.ATCH_FILE_NAME, 
+                                                 Y.FILE_EXTSN, 
+                                                 Count (X.ATCH_FILE_ID) 
+                                                   OVER ( 
+                                                     PARTITION BY 
+                                                   X.ATCH_FILE_GRP_ID) 
+                                                 FILE_CNT 
+                                          FROM   SYS0070M X 
+                                                 LEFT JOIN SYS0071D Y 
+                                                        ON X.ATCH_FILE_ID = 
+                                                           Y.ATCH_FILE_ID 
+                                                 LEFT JOIN FCM0015D Z 
+                                                        ON Z.ATCH_FILE_GRP_ID = 
+                                                           X.ATCH_FILE_GRP_ID) R 
+                                  WHERE  R.RNUM = 1) Q 
+                          WHERE  Q.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
            <!-- WHERE     T2.APPV_LINE_USER_ID = #{userName} -->
            WHERE 1=1
                  AND T1.APPV_PRCSS_STUS = 'R'
@@ -698,7 +771,8 @@ SELECT T.APPV_PRCSS_NO
 
 <select id="selectAppvLineInfo" parameterType="String" resultType="egovMap">
 /* webInvoiceMapper.selectAppvLineInfo */
-SELECT T1.APPV_LINE_SEQ, 
+SELECT T1.APPV_PRCSS_NO, 
+       T1.APPV_LINE_SEQ,
        T1.APPV_LINE_USER_ID, 
        T2.NAME AS APPV_LINE_USER_NAME, 
        TO_CHAR(T1.APPV_DT, 'DD/MM/YYYY') AS APPV_DT, 
@@ -708,6 +782,13 @@ FROM   FCM0005D T1
               ON T1.APPV_LINE_USER_ID = T2.MEM_CODE 
 WHERE  T1.APPV_PRCSS_NO = #{appvPrcssNo} 
 ORDER  BY T1.APPV_LINE_SEQ 
+</select>
+
+<select id="selectRejectOfAppvPrcssNo" parameterType="Map" resultType="String">
+/* webInvoiceMapper.selectRejectOfAppvPrcssNo */
+SELECT REJCT_RESN
+FROM   FCM0005D 
+WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 </select>
 
 <select id="selectAppvInfoAndItems" parameterType="String" resultType="egovMap">
