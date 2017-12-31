@@ -25,7 +25,6 @@ public class BillingGroupController {
 	@Resource(name = "billingGroupService")
 	private BillingGroupService billGroupService;
 	
-	
 	/**
 	 * BillGroupManagement 초기 화면 
 	 * @param params
@@ -33,9 +32,21 @@ public class BillingGroupController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initBillGroupManagement.do")
-	public String initEnrollmentList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initBillGroupManagement(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("ord_No", params.get("ord_No"));
 		return "payment/billinggroup/billGroupManagement";
+	}
+	
+	/**
+	 * BillGroupManagementAdmin 초기 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initBillGroupManagementAdmin.do")
+	public String initBillGroupManagementAdmin(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("ord_No", params.get("ord_No"));
+		return "payment/billinggroup/billGroupManagementAdmin";
 	}
 	
 	/**
@@ -57,8 +68,8 @@ public class BillingGroupController {
 	 */
 	@RequestMapping(value = "/initChangeBillingTypePop.do")
 	public String initChangeBillingTypePop(@RequestParam Map<String, Object> params, ModelMap model) {
-		model.put("callPrgm", params.get("callPrgm"));
-		model.put("custBillId", params.get("custBillId"));
+		model.addAttribute("callPrgm", params.get("callPrgm"));
+		model.addAttribute("custBillId", params.get("custBillId"));
 		return "payment/billinggroup/changeBillingTypePop";
 	}
 	
@@ -572,7 +583,7 @@ public class BillingGroupController {
 	public ResponseEntity<ReturnMessage> saveNewReq(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		 ReturnMessage message = new ReturnMessage();
-		 
+
 		 boolean saveResult = billGroupService.saveNewReq(params, sessionVO);
 		 
 		 if(saveResult){

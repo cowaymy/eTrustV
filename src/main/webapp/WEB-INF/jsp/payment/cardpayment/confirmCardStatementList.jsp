@@ -144,7 +144,7 @@
 	                    function(){
 	                        Common.ajax("GET","/payment/postCardStatement.do", {"crcStateId" : crcStateId}, 
 	                            function(result){
-	                                Common.alert("<spring:message code='pay.alert.formSuccessSaved.'/>", 
+	                                Common.alert("<spring:message code='pay.alert.formSuccessSaved'/>", 
 	                                    function (){
 	                                        searchList();  
 	                                    }

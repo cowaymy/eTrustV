@@ -47,16 +47,16 @@ var estmHisPopColumnLayout = [
 }];
 
 $(document).ready(function(){
-
 	changeBillingInfo(custBillId);
 	$('#changeTypeForm #custBillId').val(custBillId);//hidden
-  
 });
 
 $(function(){
     $('#changeBillPopCloseBtn').click(function() {
         if(callPrgm == 'BILLING_GROUP'){
             searchList();
+        }else if(callPrgm == 'BILLING_GROUP_ADMIN'){
+        	searchList();
         }
     });
 });
@@ -177,7 +177,7 @@ function fn_newReqSave(){
     }else{
         if(FormUtil.checkEmail($.trim(reqEmail)) == true){
             valid = false;
-            message += "<spring:message code='pay.alert.invalidEmail.'/>"; 
+            message += "<spring:message code='pay.alert.invalidEmail'/>"; 
          }
     }
     
@@ -213,7 +213,7 @@ function fn_newReqSave(){
 }
 
 function fn_estmReqPopClose(){
-	Common.popupDiv('/payment/initChangeBillingTypePop.do', {"custBillId":custBillId, "callPrgm" : "BILLING_GROUP"}, null , true);
+	Common.popupDiv('/payment/initChangeBillingTypePop.do', {"custBillId":custBillId, "callPrgm" : "BILLING_GROUP_ADMIN"}, null , true);
 }
 
 </script>

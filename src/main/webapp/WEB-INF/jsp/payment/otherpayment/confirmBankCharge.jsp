@@ -141,7 +141,7 @@ function fn_mapping(){
 		fTrnscId = stateRowItem.item.fTrnscId;
 
 		if(keyInAmount != stmtAmount){
-           	Common.alert("<spring:message code='pay.alert.amountNotSame.'/>",
+           	Common.alert("<spring:message code='pay.alert.amountNotSame'/>",
 				function (){
 					
 					$("#journal_entry_wrap").show();   					

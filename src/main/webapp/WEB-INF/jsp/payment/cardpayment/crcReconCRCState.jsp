@@ -128,7 +128,7 @@ var crcKeyInLayout = [
                            editable : false,
                        }, {
                            dataField : "payItmAppvNo",
-                           headerText : "<spring:message code='pay.head.Approval No'/>",
+                           headerText : "<spring:message code='pay.head.approvalNo'/>",
                            editable : false
                        }, {
                            dataField : "amount",

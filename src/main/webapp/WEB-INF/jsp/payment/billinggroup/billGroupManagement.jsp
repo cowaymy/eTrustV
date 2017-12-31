@@ -94,7 +94,7 @@ var columnLayout = [
         editable : false
     }, {
         dataField : "salesOrdNo",
-        headerText : "<spring:message code='pay.head.order No'/>",
+        headerText : "<spring:message code='pay.head.orderNo'/>",
         editable : false,
     },{
         dataField : "salesDt",
@@ -1001,6 +1001,8 @@ var addOrderLayout = [
         $("#reSelect").hide();
         $("#orderNo").val("");
         $("#orderNo").removeClass('readonly');
+        $("#orderNo").prop('readonly', false);
+        $("#basciInfo").trigger("click");
     }
     
     function showDetailEstmHistory(val, gubun){
