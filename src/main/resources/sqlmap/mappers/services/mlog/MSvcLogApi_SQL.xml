@@ -283,7 +283,7 @@
     SELECT
               A.*
             , B.* 
-            , DECODE (B.AS_NO ,NULL ,'N' ,'Y') inhouserepairyn
+            , CASE  WHEN B.AS_SLUTN_RESN_ID IN('454' ,'452') THEN   'Y' ELSE  'N'  END  inhouserepairyn 
     FROM
 (
     SELECT * FROM
@@ -514,12 +514,13 @@ LEFT OUTER JOIN (
             , B.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
             , B.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code
             , B.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No
+            , B.AS_SLUTN_RESN_ID         AS  AS_SLUTN_RESN_ID
         FROM
         SVC0001D A  /* 3rd AS Order - Reference No*/
         INNER JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID   /*3rd AS Order*/
         WHERE A.REF_REQST IS NULL
         UNION ALL
-        SELECT
+        SELECT 
             A.AS_NO AS AS_NO
             , E.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark
             , DECODE(E.IN_HUSE_REPAIR_REPLACE_YN,'1','Y','N' )AS inhouserepairreplacementyn
@@ -527,6 +528,7 @@ LEFT OUTER JOIN (
             , E.IN_HUSE_REPAIR_GRP_CODE AS inhouserepairproductgroupcode
             , E.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code
             , E.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No
+            , B.AS_SLUTN_RESN_ID         AS  AS_SLUTN_RESN_ID
         FROM
         SVC0001D A  /* 3rd AS Order - Reference No*/
         INNER JOIN SVC0004D B ON A.REF_REQST = B.AS_RESULT_ID   /*3rd AS Order*/
