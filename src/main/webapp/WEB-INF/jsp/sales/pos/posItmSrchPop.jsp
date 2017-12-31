@@ -294,13 +294,13 @@ $(document).ready(function() {
 				return;
 			}
 			//6 - 2. 필터인데 해당 시리얼 번호를 입력한 수량에 맞는 개수를 가져왔는지 체크
-			var itemCodeArr = AUIGrid.getColumnValues(basketGridID, 'stkCode'); //Stock Code List
+		//	var itemCodeArr = AUIGrid.getColumnValues(basketGridID, 'stkCode'); //Stock Code List
 			var idxObj;
 			var serialCodeArr = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
 			
 			for (var idx = 0; idx < nullChkNo; idx++) {
 				idxObj = AUIGrid.getItemByRowIndex(basketGridID, idx); //해당 index행  가져오기 // item // basket
-				if(idxObj.stkTypeId == 62){// filter
+				if(idxObj.stkTypeId == 62 && idxObj.serialChk == 'Y'){// filter
 					//idxObj.stkCode(String) 를  가지고 있는 serialGrid 와 매칭  serialCodeArr(Array)
 					var serialCnt = 0;
 					for (var i = 0; i < serialCodeArr.length; i++) {
@@ -310,13 +310,13 @@ $(document).ready(function() {
 					}//loop end
 					// cnt 와 qty 매칭  // serialCnt == idxObj.inputQty
 ////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제					
-				  /*  if(serialCnt != idxObj.inputQty){
+				    if(serialCnt != idxObj.inputQty){
 						Common.alert(" Please check the Serial No. for Filters.<br> Contact the LOG team for Serial.");
 						return;
-					} */
+					} 
 ////////////////////////////////////////Serial Number Check ///////////////////////////////////////////////////
 
-				    //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
+				   /*  //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
 				    if(serialCnt < idxObj.inputQty){
 				    	var tempLength = 0;
 				    	tempLength = idxObj.inputQty - serialCnt;
@@ -337,7 +337,7 @@ $(document).ready(function() {
 				    }else if(serialCnt > idxObj.inputQty){
 				    	Common.alert("Serial number quantities can not be more than the quantity entered.");
 				    	return;
-				    }  
+				    } */  
 				}else{
 					console.log("not Filter");
 				}// Temp Logic
@@ -562,6 +562,7 @@ function fn_createBasketGrid(){
 	                                }
 	                            },
 	                            {dataField : "stkTypeId" , visible :false},
+	                            {dataField : "serialChk" , visible :false}, ////SERIAL_CHK
 	                            {dataField : "stkId" , visible :false}//STK_ID
 	                           ];
 	    
