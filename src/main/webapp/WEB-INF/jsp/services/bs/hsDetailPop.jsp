@@ -57,7 +57,7 @@
 			        //editable : false
                 }, {                        
                     dataField : "SerialNo",
-                    headerText : "SerialNo",
+                    headerText : "Serial No",
                     width : 240	                            
             }];
             // 그리드 속성 설정
@@ -82,7 +82,10 @@
                 wrapSelectionMove : true,
                 
                 // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
+                showRowNumColumn : true,
+                
+                // 수정한 셀에 수정된 표시(마크)를 출력할 지 여부
+                showEditedCellMarker : false
         
             };
             
@@ -90,7 +93,7 @@
             myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
             
             AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
-                if (event.columnIndex == 3){
+                if (event.columnIndex == 3 || event.columnIndex == 4){
                 	if ($("#cmbStatusType1").val() == 4) {    // Completed
                 		return true;
                     } else if ($("#cmbStatusType1").val() == 21) {    // Failed
@@ -125,20 +128,23 @@
         // HS Result Information > HS Status 값 변경 시 다른 정보 입력 가능 여부 설정
        $("#cmbStatusType1").change(function(){
     	   
+    	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+    	   AUIGrid.updateAllToValue(myDetailGridID, "SerialNo", '');
+    	   
            if ($("#cmbStatusType1").val() == 4) {    // Completed
         	   $("input[name='settleDate']").attr('disabled', false);
                $("select[name='failReason'] option").remove();
                doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
                $("select[name=cmbCollectType]").attr('disabled', false);
            } else if ($("#cmbStatusType1").val() == 21) {    // Failed
-        	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+        	   //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
                $("select[name='cmbCollectType'] option").remove();
                $("select[name=cmbCollectType]").attr('disabled', true);
            } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
-        	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+        	   //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
@@ -207,7 +213,7 @@
          }
             
             
-            if("" == $("#remark").val() || null == $("#remark").val()){
+            /* if("" == $("#remark").val() || null == $("#remark").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='remark Type'/>");
                 return false;
             }            
@@ -216,7 +222,7 @@
             if("" == $("#instruction").val() || null == $("#instruction").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='instruction Type'/>");
                 return false;
-            }  
+            } */
             
             
 /*             if("" == $("#srvBsWeek").val() || null == $("#srvBsWeek").val()){
@@ -419,9 +425,9 @@
     </td>
 </tr>
 <tr> --%>
-    <th scope="row" style="width: 68px; ">Remark<span class="must">*</span></th>
+    <th scope="row" style="width: 68px; ">Remark</th>
     <td style="width: 468px; "><textarea cols="20" rows="5" id ="remark" name = "remark"></textarea></td>
-    <th scope="row" style="width: 94px; ">Instruction<span class="must">*</span></th>
+    <th scope="row" style="width: 94px; ">Instruction</th>
     <td style="width: 216px; "><textarea cols="20" rows="5"id ="instruction" name = "instruction"></textarea></td>
 </tr>
 <tr>
