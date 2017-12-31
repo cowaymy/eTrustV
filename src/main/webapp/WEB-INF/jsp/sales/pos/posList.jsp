@@ -15,8 +15,8 @@ var optionSystem = {
         type: "M",                  
         isShowChoose: false  
 };
-var optionModuleChoose = {
-        type: "S",                  
+var optionReasonChoose = {
+        type: "M",                  
         isShowChoose: true  
 };
 //Grid in SelectBox  - Selcet value
