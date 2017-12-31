@@ -276,7 +276,7 @@ $(document).ready(function() {
 	        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
 	        branchCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
 	        memId1 = AUIGrid.getCellValue(myGridID, event.rowIndex, "memId");
-	        alert(memId1);
+	       
 	       
 	        Common.ajax("GET", "/services/serviceGroup/selectCTSubGroupDscList.do", {branchCode:branchCode}, function(result) {
 	            console.log("성공.");
