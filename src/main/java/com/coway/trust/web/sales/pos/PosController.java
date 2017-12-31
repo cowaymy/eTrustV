@@ -588,4 +588,9 @@ public class PosController {
     	
     	return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/posPaymentListingPop.do")
+	public String posPaymentListingPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/pos/posPaymentListingPop";
+	}
 }

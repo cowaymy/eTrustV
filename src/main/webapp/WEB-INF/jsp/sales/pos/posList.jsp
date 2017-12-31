@@ -417,6 +417,9 @@ $(document).ready(function() { //***********************************************
     	 Common.popupDiv("/sales/pos/posRawDataPop.do", '', null, null, true);
 	});
      
+     $("#_posPayListing").click(function() {
+    	 Common.popupDiv("/sales/pos/posPaymentListingPop.do", '', null, null, true);
+	});
 });//Doc ready Func End ****************************************************************************************************************************************
 
 
@@ -972,7 +975,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     </ul>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : fn_underDevelop()">POS Payment Listing</a></p></li>
+        <li><p class="link_btn type2"><a id="_posPayListing">POS Payment Listing</a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
         <li><p class="link_btn type2"><a id="_posRawDataBtn">POS Raw Data</a></p></li>

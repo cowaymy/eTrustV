@@ -323,7 +323,7 @@
                                 (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
                                 Extent2.MOV_QTY,
                                 <!-- NVL(Extent3.AMT, 0) AMT, -->
-                                100 AMT,
+                                NVL(Extent3.AMT, 0) AMT,
                                 Extent1.SERIAL_CHK
                             FROM                     
                                 SYS0026M Extent1 
