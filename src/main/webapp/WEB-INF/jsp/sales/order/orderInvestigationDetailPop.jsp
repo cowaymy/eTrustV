@@ -26,6 +26,13 @@
         if(gridParam.invReqStusParam.value == '1' || gridParam.invReqStusParam.value == '44'){
         	$("#pendingDiv").show();
         }
+        
+      //Btn Auth
+        if(basicAuth == true){
+            $("#_basicUpdBtn").css("display" , "");
+        }else{
+            $("#_basicUpdBtn").css("display" , "none");
+        }
     });
     
     function createAUIGrid() {
@@ -550,11 +557,11 @@
 </tbody>
 </table><!-- table end -->
 </form>
+<div id="_basicUpdBtn">
 <ul class="center_btns">
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveInvest();">SAVE</a></p></li>
-    </c:if> 
 </ul>
+</div>
 </div>
 
 </section><!-- pop_body end -->

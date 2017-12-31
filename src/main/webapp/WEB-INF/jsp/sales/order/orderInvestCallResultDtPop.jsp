@@ -26,6 +26,13 @@
 	    }else{
 	    	$("#saveSuspendDiv").hide();
 	    }
+	    
+	  //Btn Auth
+	    if(basicAuth == true){
+	        $("#_basicUpdBtn").css("display" , "");
+	    }else{
+	        $("#_basicUpdBtn").css("display" , "none");
+	    }
 	   
 	});
 	
@@ -576,12 +583,11 @@
 </tbody>
 </table><!-- table end -->
 </form>
-
+<div id="_basicUpdBtn">
 <ul class="center_btns">
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue2"><a href="#" onclick="fn_callResultSave()">SAVE</a></p></li>
-    </c:if>
 </ul>
+</div>
 </div>
 
 </section><!-- pop_body end -->

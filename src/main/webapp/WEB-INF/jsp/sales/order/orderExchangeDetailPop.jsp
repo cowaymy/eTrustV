@@ -20,6 +20,13 @@
             $("#applicationDiv").hide();
             $("#OwnerShipDiv").show();
         }
+        
+      //Btn Auth
+        if(basicAuth == true){
+            $("#_basicUpdBtn").css("display" , "");
+        }else{
+            $("#_basicUpdBtn").css("display" , "none");
+        }
     });
     
     function fn_cancelReq(){
@@ -132,11 +139,11 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>Exchange Information</h2>
 <c:if test="${exchgStus eq 1}">
+<div id="_basicUpdBtn">
 <ul class="right_btns">
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="btnCancel" onclick="fn_cancelReq()">Cancel Request</a></p></li>
-    </c:if>
 </ul>
+</div>
 </c:if>
 </aside><!-- title_line end -->
 

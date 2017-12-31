@@ -43,6 +43,12 @@
 //          $("#addDiv").hide();
 //        }
 
+        //Btn Auth
+        if(basicAuth == true){
+            $("#_basicUpdBtn").css("display" , "");
+        }else{
+            $("#_basicUpdBtn").css("display" , "none");
+        }
     });
 
     function cancelLogGrid(){
@@ -800,9 +806,11 @@
 </form>
 </section><!-- search_table end -->
 
+<div id="_basicUpdBtn">
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
 </ul>
+</div>
 </div>
 </section><!-- pop_body end -->
 </div>

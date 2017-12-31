@@ -28,7 +28,7 @@
             Common.popupDiv("/sales/order/cancelReqInfoPop.do", $("#detailForm").serializeJSON());
             
             //Basic Auth (update Btn)
-            if('${PAGE_AUTH.funcUserDefine2}' == 'Y'){
+            if('${PAGE_AUTH.funcChange}' == 'Y'){
                 basicAuth = true;
             }
         });

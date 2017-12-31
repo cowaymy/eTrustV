@@ -31,6 +31,10 @@
         	$("#grpCode").val($("#initGrpCode").val());
         }
 
+		//Basic Auth (update Btn)
+        if('${PAGE_AUTH.funcChange}' == 'Y'){
+            basicAuth = true;
+        }
 	});
 
 	function createAUIGrid() {

@@ -5,6 +5,7 @@
 
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
+	var basicAuth = false;
 	
     $(document).ready(function(){
         
@@ -25,6 +26,10 @@
         });
         // 셀 클릭 이벤트 바인딩
     
+      //Basic Auth (update Btn)
+        if('${PAGE_AUTH.funcChange}' == 'Y'){
+            basicAuth = true;
+        }
     });
     
     function createAUIGrid() {

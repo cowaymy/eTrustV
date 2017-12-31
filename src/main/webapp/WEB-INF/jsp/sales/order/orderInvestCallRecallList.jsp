@@ -4,6 +4,7 @@
 <script type="text/javaScript">
     //AUIGrid 생성 후 반환 ID
 	var myGridID;
+	var basicAuth = false;
 	
 	$(document).ready(function(){
 	    
@@ -17,6 +18,12 @@
 	        $("#invId").val(event.item.invId);
 	        Common.popupDiv("/sales/order/orderInvestCallResultDtPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
 	    });
+	    
+
+	  //Basic Auth (update Btn)
+        if('${PAGE_AUTH.funcChange}' == 'Y'){
+            basicAuth = true;
+        }
 
 	});
 	
