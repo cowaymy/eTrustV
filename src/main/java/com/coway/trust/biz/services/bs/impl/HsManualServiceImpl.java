@@ -1004,6 +1004,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 		return hsManualMapper.selectSerMember(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectHSCodyList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.selectHSCodyList(params);
+	}
 
 	@Override
 	public String getSrvCodyIdbyMemcode(Map<String, Object> params) {

@@ -555,7 +555,7 @@ public class HsManualController {
 	@RequestMapping(value = "/hsConfigBasicPop.do	" )
 	public String hsConfigBasicPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception  {
 
-		logger.debug("params : {}", params.toString());
+		logger.debug("params(pop)================= : {}", params.toString());
 		params.put("orderNo", params.get("salesOrdId"));
 
 		//List<EgovMap>  cmbServiceMemList = hsManualService.cmbServiceMemList(params);
@@ -572,7 +572,9 @@ public class HsManualController {
 //		model.put("as_ord_basicInfo", as_ord_basicInfo);
 //		model.put("AS_NO", (String)params.get("AS_NO"));
 		model.put("BRNCH_ID",(String) params.get("brnchId"));
+		model.put("CODY_MANGR_USER_ID", (String) params.get("codyMangrUserId"));
 		
+		//logger.debug("configBasicInfo(pop)================= : {}", configBasicInfo);
 		//
 		
 
@@ -613,6 +615,14 @@ public class HsManualController {
 
 
 		return ResponseEntity.ok(serMember);
+	}
+	
+	@RequestMapping(value = "/selectHSCodyList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectHSCodyList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params(selectHSCodyList)============== {}", params);
+		List<EgovMap> hsCodyList = hsManualService.selectHSCodyList(params) ;
+		logger.debug("hsCodyList(selectHSCodyList)============== {}", hsCodyList);
+		return ResponseEntity.ok( hsCodyList);
 	}
 
 

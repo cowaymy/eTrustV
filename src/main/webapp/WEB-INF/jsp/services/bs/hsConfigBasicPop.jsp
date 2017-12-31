@@ -6,15 +6,19 @@
 
 //doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');   
 	    $(document).ready(function() {
-	    	Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {
+	    	//alert($("#codyMangrUserId").val());
+
+	    	doGetCombo('/services/bs/selectHSCodyList.do', $("#codyMangrUserId").val() , '', 'entry_cmbServiceMem' , 'S', '');
+	        
+	    	/* Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {
 	              
 	    		if(result != null && result.length != 0 ){
 	              var serMember =result.memCode;
-	              console.log(serMember);
+	              console.log("serMember:"+serMember);
 	           
 	              $('#entry_cmbServiceMem').val(serMember);
 	    		}
-	          }); 
+	          });  */
 
 
            
@@ -24,8 +28,8 @@
                var configBsGen = ${configBasicInfo.configBsGen}
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);	    
 	    
-	           var srvMemId =  ${configBasicInfo.configBsMemId}
-	           $("#entry_cmbServiceMem option[value="+ srvMemId +"]").attr("selected", true);     
+	           //var srvMemId =  ${configBasicInfo.configBsMemId}
+	           //$("#entry_cmbServiceMem option[value="+ srvMemId +"]").attr("selected", true);     
 	          
 	           
 	    });
@@ -114,7 +118,8 @@
                    salesOrderId:                        $('#salesOrderId').val(),
                    configId:                             $('#configId').val(),
                    hscodyId:                             $('#entry_cmbServiceMem').val(),
-                   srvSoId:                                 $('#entry_orderNo').val()
+                   srvSoId:                                 $('#entry_orderNo').val(),
+                   entry_cmbServiceMem:           $('#entry_cmbServiceMem').val()
         }
     
     
@@ -193,6 +198,7 @@
 <input type="hidden" name="brnchId"  id="brnchId" value="${BRNCH_ID}"/>
 <input type="hidden" name="hscodyId"  id="hscodyId" value="${configBasicInfo.configBsMemId}"/>
 <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
+<input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -248,7 +254,8 @@
 <tr>
     <th scope="row" ><spring:message code='service.title.HSCodyCode'/></th>    
     <td>
-        <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" />
+        <!-- <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" /> -->
+        <select class="w100p" id="entry_cmbServiceMem" name="entry_cmbServiceMem"></select>
     </td>
     <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>    
     <td>

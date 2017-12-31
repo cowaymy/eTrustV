@@ -127,6 +127,8 @@ public interface HsManualMapper {
 	EgovMap selectCheckMemCode(Map<String, Object> params);
 
 	EgovMap selectSerMember(Map<String, Object> params);
+	
+	public List<EgovMap> selectHSCodyList(Map<String, Object> params);
 
 	String selectMemberId(Map<String, Object> params);
 
@@ -220,7 +222,6 @@ public interface HsManualMapper {
 	void updateQry_CurBSZero(Map<String, Object> qry_CurBS);
 
 	EgovMap selectResultId(Map<String, Object> qry_CurBS);
-
 		
 
 }

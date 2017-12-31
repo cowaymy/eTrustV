@@ -82,6 +82,8 @@ public interface HsManualService {
 	EgovMap selectCheckMemCode(Map<String, Object> params);
 
 	EgovMap serMember(Map<String, Object> params);
+	
+	List<EgovMap> selectHSCodyList(Map<String, Object> params);
 
 	String getSrvCodyIdbyMemcode(Map<String, Object> params);
 

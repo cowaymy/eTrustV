@@ -2652,6 +2652,12 @@
                                 AND B.SALES_ORD_NO =#{SRV_SO_ID}
                                  ORDER BY MEM_CODE ASC
                     </select>
+                    <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
+                            SELECT A.MEM_CODE CODE_ID, A.MEM_CODE || '-' ||  A.NAME CODE_NAME
+                            FROM  ORG0001D A, ORG0005D B 
+                            WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{groupCode} AND B.MEM_LVL = '4' 
+                    </select>
+                    
                       <select id="selectMemberId" parameterType="Map" resultType="string">
                        select mem_id
                          from ORG0001D
