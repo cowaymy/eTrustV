@@ -13,8 +13,34 @@
      
      $('#hsMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 
+
+
+		$("#cmbContent").change(function() {
+
+		  if($(this).val() ==3) {
+		    $('#cmbDSC').attr("disabled",true);
+		    $('#cmbStatus').attr("disabled",true);
+		    $('#cmbInsStatus').attr("disabled",true);
+		    $('#cmbArea').attr("disabled",true);
+		    
+		    
+		  }else if($(this).val() ==1 || $(this).val() ==2) {
+             $('#cmbDSC').attr("disabled",false);  
+            $('#cmbStatus').attr("disabled",false);
+            $('#cmbInsStatus').attr("disabled",false);
+            $('#cmbArea').attr("disabled",false); 
+		  }
+		});
+
     });
 
+
+
+    
+    
+    
+    
+    
 
 function fn_validation(){
      if($("#cmbContent option:selected").length < 1)
