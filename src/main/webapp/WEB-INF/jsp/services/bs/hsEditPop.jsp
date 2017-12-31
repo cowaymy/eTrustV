@@ -392,7 +392,7 @@ var myDetailGridData = null;
               console.log(jsonObj);
               Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
             	  Common.alert(result.message, fn_parentReload);
-            	  
+            	  $("#popClose").click();
             });
         }
     
@@ -429,7 +429,7 @@ var myDetailGridData = null;
 <h1>  <spin id='stitle'>  </spin></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"  id="btnSave" name="btnSave" onclick="fn_UpdateHsResult()">SAVE</a></p></li>
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
