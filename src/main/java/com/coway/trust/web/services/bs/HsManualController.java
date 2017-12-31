@@ -458,7 +458,7 @@ public class HsManualController {
 		resultValue = hsManualService.addIHsResult(formMap, insList, sessionVO);
 		
 		int status = 0;
-		status = Integer.parseInt((String) formMap.get("cmbStatusType"));
+		status = Integer.parseInt(formMap.get("cmbStatusType").toString());
 		logger.debug(">>>>>>>>>>>>status : " + status);
 		  
 		if( null !=resultValue && status == 4 ){

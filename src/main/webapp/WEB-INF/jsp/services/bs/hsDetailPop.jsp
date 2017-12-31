@@ -46,13 +46,15 @@
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
-			        renderer : {
+			        editRenderer : {
 			        	type : "NumberStepRenderer",
+			        	showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
 			            min : 0,
 			            max : 50,
 			            step : 1,
-			            textEditable : true
+			            textEditable : false
 			        }
+			        //editable : false
                 }, {                        
                     dataField : "SerialNo",
                     headerText : "SerialNo",
@@ -83,8 +85,26 @@
                 showRowNumColumn : true
         
             };
-                //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
+            
+            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+            myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
+            
+            AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
+                if (event.columnIndex == 3){
+                	if ($("#cmbStatusType1").val() == 4) {    // Completed
+                		return true;
+                    } else if ($("#cmbStatusType1").val() == 21) {    // Failed
+                    	return false;
+                    } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
+                    	return false;
+                    } else {
+                    	return false;
+                    }
+                }
+            });
+            
+            // 에디팅 정상 종료 이벤트 바인딩
+            //AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); 
     }
     
     
@@ -104,19 +124,21 @@
 		
         // HS Result Information > HS Status 값 변경 시 다른 정보 입력 가능 여부 설정
        $("#cmbStatusType1").change(function(){
-           
+    	   
            if ($("#cmbStatusType1").val() == 4) {    // Completed
         	   $("input[name='settleDate']").attr('disabled', false);
                $("select[name='failReason'] option").remove();
                doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
                $("select[name=cmbCollectType]").attr('disabled', false);
            } else if ($("#cmbStatusType1").val() == 21) {    // Failed
+        	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
                $("select[name='cmbCollectType'] option").remove();
                $("select[name=cmbCollectType]").attr('disabled', true);
            } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
+        	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
@@ -226,7 +248,7 @@
               //Common.alert(result.message.message);
                 console.log("message : " + result.message );
                 
-                Common.alert(result.message,fn_close);
+                Common.alert(result.message,fn_parentReload);
 
             });
         }
@@ -234,10 +256,10 @@
         
     function fn_close(){
         $("#popup_wrap").remove();
-         fn_parentReload();
     }
     
     function fn_parentReload() {
+        fn_close();
         fn_getBSListAjax(); //parent Method (Reload)
     }    
     

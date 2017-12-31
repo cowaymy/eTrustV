@@ -409,6 +409,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			logger.debug("nextSeq : {}",nextSeq);
 			logger.debug("nextSeq : {}",params);
+			
+			int status = 0;
+			status = Integer.parseInt(params.get("cmbStatusType").toString());
 
 			//BSResultM
 			insertHsResultfinal.put("resultId", nextSeq);
@@ -421,9 +424,22 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			insertHsResultfinal.put("setlDt", params.get("settleDate"));
 			insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
-//			insertHsResultfinal.put("failResnId", params.get("failReason"));
-			insertHsResultfinal.put("failResnId", 0);
-			insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+			
+			insertHsResultfinal.put("failResnId", params.get("failReason"));
+//			insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+			
+			/*if (status == 4) {	// Completed
+				insertHsResultfinal.put("failResnId", 0);
+			} else if (status == 21 || status == 10) {	// Fail & Cancelled
+				insertHsResultfinal.put("failResnId", params.get("failReason"));
+			}*/
+			
+			if (status == 4) {	// Completed
+				insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
+			} else if (status == 21 || status == 10) {	// Fail & Cancelled
+				insertHsResultfinal.put("renColctId", null);
+			}
+			
 			insertHsResultfinal.put("whId", params.get("wareHouse"));
 
 			insertHsResultfinal.put("resultRem", params.get("remark"));
@@ -601,7 +617,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		//물류 호출   add by hgham
         Map<String, Object>  logPram = null ;
-		if(Integer.parseInt(params.get("cmbStatusType").toString()) == 4 ){
+		if(Integer.parseInt(params.get("cmbStatusType").toString()) == 4 ){	// Completed
 
 			/////////////////////////물류 호출//////////////////////
 			logPram =new HashMap<String, Object>();
@@ -619,7 +635,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		
             /////////////////////////물류 호출 END //////////////////////
 
-      }else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){
+      } /*else if(Integer.parseInt(params.get("cmbStatusType").toString()) == 21){	// Failed
 
     	  /////////////////////////물류 호출//////////////////////
     		logPram =new HashMap<String, Object>();
@@ -635,7 +651,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
      		logPram.put("P_RESULT_MSG", logPram.get("p1"));
             logger.debug("HSCOMCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
-      } 
+      }*/ 
 
 		
 
