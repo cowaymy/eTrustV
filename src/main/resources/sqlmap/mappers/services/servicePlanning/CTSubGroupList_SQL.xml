@@ -30,7 +30,7 @@
           AND LOWER(T1.MEM_CODE)  = LOWER(#{CTMemId})
         </if>
         <if test="ctSubGrp != null and ctSubGrp != ''">
-          AND LOWER(T1.CT_SUB_GRP)  = LOWER(#{ctSubGrp})
+          AND LOWER(T2.CT_SUB_GRP)  = LOWER(#{ctSubGrp})
         </if>
         ORDER BY T1.CODE
 </select>
