@@ -1110,6 +1110,7 @@
                       where A.SALES_ORD_ID = D.SRV_SO_ID
                       AND D.SRV_CONFIG_ID = E.SRV_CONFIG_ID
                       AND E.SRV_FILTER_STK_ID = F.STK_ID
+                      AND E.SRV_FILTER_STUS_ID = '1'
                       AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY
 		                                                                  from SVC0007D Y ,(SELECT SCHDUL_ID,
 		                                                                                   MAX(X.RESULT_ID) AS RESULT_ID
