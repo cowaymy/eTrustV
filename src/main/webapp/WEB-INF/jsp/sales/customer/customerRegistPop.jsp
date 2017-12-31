@@ -47,7 +47,7 @@
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        AUIGrid.setSelectionMode(myGridID, "singleRow");
+  //      AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
         

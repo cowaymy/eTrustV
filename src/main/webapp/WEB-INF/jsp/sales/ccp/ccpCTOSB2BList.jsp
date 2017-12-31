@@ -154,7 +154,7 @@ function createCtosGrid(){
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells",            
+     //       selectionMode       : "singleRow",  //"multipleCells",            
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -190,7 +190,9 @@ function createCtosDetailGrid(){
                                       labelText : "View", 
                                       onclick : function(rowIndex, columnIndex, value, item) {
                                           
-                                    	  alert("Fico View");
+                                    	  console.log("item.batchId : " + item.batchId);
+                                    	//  alert("Fico View  batchId : " + item.batchId + " , ordNo : " + item.ordNo );
+                                    	  fn_displayReport("FICO_VIEW" , item.batchId , item.ordNo);
                                           
                                     }
                              }
@@ -220,7 +222,7 @@ function createCtosDetailGrid(){
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells",            
+   //         selectionMode       : "multipleCells",  //"multipleCells",            
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -297,6 +299,35 @@ function fn_detailPrev() {
         return false;
     });
 };
+
+
+/*****************************Display Report View**********************************************/
+
+function fn_displayReport(viewType, batchId, ordNo){
+	
+	var rtnMap;
+	
+	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {batchId : batchId , ordNo : ordNo}, function(result){
+		
+		console.log("result : " + result);
+		console.log("content  :  " + JSON.stringify(result));
+		
+		if(result != null){
+			if(result.resultRaw != null){
+				rtnMap = result;	
+			}
+		}
+	});
+	
+	if(rtnMap == null){
+		Common.alert("No result from CTOS");
+		return;
+	}
+	
+	//TODO Display CTSO View
+	
+}
+
 
 </script>
 

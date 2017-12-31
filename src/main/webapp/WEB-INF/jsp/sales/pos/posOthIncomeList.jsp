@@ -360,7 +360,7 @@ function createPosItmDetailGrid(){
             fixedColumnCount    : 1,            
             showStateColumn     : true,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells",            
+ //           selectionMode       : "singleRow",  //"multipleCells",            
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
@@ -566,7 +566,7 @@ function createAUIGrid(){
             fixedColumnCount    : 1,            
             showStateColumn     : true,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells",            
+   //         selectionMode       : "singleRow",  //"multipleCells",            
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부

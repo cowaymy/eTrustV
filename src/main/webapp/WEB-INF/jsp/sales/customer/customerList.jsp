@@ -20,7 +20,7 @@
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        AUIGrid.setSelectionMode(custGridID, "singleRow");
+   //     AUIGrid.setSelectionMode(custGridID, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(custGridID, "cellDoubleClick", function(event){
@@ -142,7 +142,7 @@
             
             displayTreeOpen : true,
             
-            selectionMode : "multipleCells",
+       //     selectionMode : "multipleCells",
             
             headerHeight : 30,
             

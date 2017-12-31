@@ -323,7 +323,7 @@ function createAgentGrid(){
             fixedColumnCount    : 1,            
             showStateColumn     : true,             
             displayTreeOpen     : false,            
-            selectionMode       : "singleRow",  //"multipleCells",  
+     //       selectionMode       : "singleRow",  //"multipleCells",  
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
             headerHeight        : 30,       
             useGroupingPanel    : false,        //그룹핑 패널 사용

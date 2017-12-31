@@ -150,7 +150,7 @@ $(function() {
                                fixedColumnCount    : 0,            
                                showStateColumn     : false,             
                                displayTreeOpen     : true,            
-                               selectionMode       : "singleRow",  //"multipleCells",            
+          //                     selectionMode       : "singleRow",  //"multipleCells",            
                                headerHeight        : 30,       
                                rowHeight           : 150,   
                                wordWrap            : true, 

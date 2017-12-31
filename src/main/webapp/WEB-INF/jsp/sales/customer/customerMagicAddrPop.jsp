@@ -81,7 +81,7 @@
             
             displayTreeOpen : true,
             
-            selectionMode : "multipleCells",
+      //      selectionMode : "multipleCells",
             
             headerHeight : 30,
             
