@@ -285,7 +285,7 @@ function fn_setPopExpType() {
 
 function fn_checkForCustdnNric() {
     var checkResult = true;
-    /* if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+    /* if(FormUtil.isEmpty($("#newCostCenter").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
@@ -300,7 +300,7 @@ function fn_checkForCustdnNric() {
 
 function fn_checkEmpty() {
     var checkResult = true;
-    if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+    if(FormUtil.isEmpty($("#newCostCenter").val())) {
     	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
@@ -608,6 +608,8 @@ function fn_selectExpenseInfo() {
         $("#gstRgistNo").val(result.gstRgistNo);
         $("#expDesc").val(result.expDesc);
         $("#utilNo").val(result.utilNo);
+        $("#newCrtUserId").val(result.crtUserId);
+        $("#newCrtUserName").val(result.userName);
         
         AUIGrid.setGridData(myGridID, result.itemGrp);
         

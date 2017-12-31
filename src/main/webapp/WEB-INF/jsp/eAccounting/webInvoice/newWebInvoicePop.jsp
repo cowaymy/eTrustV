@@ -207,6 +207,7 @@ $(document).ready(function () {
     
     fn_setKeyInDate();
     fn_setPayDueDtEvent();
+    fn_setCostCenterEvent();
 });
 
 /* 인풋 파일(멀티) */

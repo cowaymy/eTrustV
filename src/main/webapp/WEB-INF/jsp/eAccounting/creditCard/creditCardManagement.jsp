@@ -284,7 +284,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+    if(FormUtil.isEmpty($("#newCostCenter").val())) {
         Common.alert('<spring:message code="crditCardMgmt.chargeDepart.msg" />');
         checkResult = false;
         return checkResult;
@@ -319,6 +319,21 @@ function fn_removeRegistMsgPop() {
     		Common.popupDiv("/eAccounting/creditCard/removeRegistMsgPop.do", null, null, true, "registMsgPop");
     	}
     }
+}
+
+function fn_setCostCenterEvent() {
+    $("#newCostCenter").change(function(){
+        var costCenter = $(this).val();
+        console.log(costCenter);
+        if(!FormUtil.isEmpty(costCenter)){
+        	Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
+                console.log(result);
+                var row = result[0];
+                console.log(row);
+                $("#newCostCenterText").val(row.costCenterText);
+            });
+        }
+   }); 
 }
 </script>
 

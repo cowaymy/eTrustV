@@ -317,6 +317,7 @@ $(document).ready(function () {
     
     fn_setKeyInDate();
     fn_setPayDueDtEvent();
+    fn_setCostCenterEvent();
     
     if(gridDataList.length > 0) {
         fn_setGridData(gridDataList);

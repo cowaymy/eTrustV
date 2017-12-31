@@ -322,7 +322,7 @@ function fn_newCustodianPop() {
 
 function fn_checkEmpty() {
     var checkResult = true;
-    if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+    if(FormUtil.isEmpty($("#newCostCenter").val())) {
     	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;

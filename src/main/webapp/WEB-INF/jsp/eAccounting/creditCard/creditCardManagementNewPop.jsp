@@ -77,6 +77,8 @@ $(document).ready(function () {
         name: "name",
         type:"S"
     });
+    
+    fn_setCostCenterEvent();
 });
 
 /* 인풋 파일(멀티) */
@@ -107,7 +109,7 @@ function fn_saveNewMgmt() {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newMgmt">
 <input type="hidden" id="newCrditCardUserId" name="crditCardUserId">
 <input type="hidden" id="newChrgUserId" name="chrgUserId">
-<input type="hidden" id="newCostCenter" name="costCentr">
+<input type="hidden" id="newCostCenterText" name="costCentrName">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -128,7 +130,7 @@ function fn_saveNewMgmt() {
 	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newChrgUserName" name="chrgUserName"/><a href="#" class="search_btn" id="charge_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="crditCardNewMgmt.issueBank" /></th>

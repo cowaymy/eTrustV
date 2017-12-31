@@ -416,7 +416,7 @@ function fn_tempSave() {
 <input type="hidden" id="newCrditCardUserId" name="crditCardUserId">
 <input type="hidden" id="newChrgUserId" name="chrgUserId">
 <input type="hidden" id="newSupply" name="supply">
-<input type="hidden" id="newCostCenter" name="costCentr">
+<input type="hidden" id="newCostCenterText" name="costCentrName">
 <input type="hidden" id="sCostCentrName" name="sCostCentrName">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="expType" name="expType">
@@ -457,7 +457,7 @@ function fn_tempSave() {
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
     <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="clmMonth" name="clmMonth"/></td>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenterText" name="costCentrName"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCostCenter" name="costCentr"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

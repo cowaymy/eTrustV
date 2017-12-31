@@ -161,6 +161,21 @@ function fn_setPayDueDtEvent() {
    }); 
 }
 
+function fn_setCostCenterEvent() {
+    $("#newCostCenter").change(function(){
+        var costCenter = $(this).val();
+        console.log(costCenter);
+        if(!FormUtil.isEmpty(costCenter)){
+        	Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
+                console.log(result);
+                var row = result[0];
+                console.log(row);
+                $("#newCostCenterText").val(row.costCenterText);
+            });
+        }
+   }); 
+}
+
 function fn_supplierSearchPop() {
     Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM01"}, null, true, "supplierSearchPop");
 }
@@ -285,14 +300,6 @@ function fn_getTotalAmount() {
 }
 
 function fn_addRow() {
-	if(FormUtil.isEmpty($("#newCostCenterText").val())) {
-        Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:$("#newCostCenter").val()}, function(result) {
-            console.log(result);
-            var row = result[0];
-            console.log(row);
-            $("#newCostCenterText").val(row.costCenterText);
-        });
-    }
 	if(AUIGrid.getRowCount(newGridID) > 0) {
 		console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
 		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
@@ -365,11 +372,11 @@ function fn_selectWebInvoiceItemList(clmNo) {
 function fn_budgetCodePop(rowIndex){
     if(!FormUtil.isEmpty($("#newCostCenter").val())){
     	var data = {
-    			rowIndex : rowIndex
-    			,costCentr : $("#newCostCenter").val()
-    			,costCentrName : $("#newCostCenterText").val()
-    	};
-           Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do", data, null, true, "budgetCodeSearchPop");
+                rowIndex : rowIndex
+                ,costCentr : $("#newCostCenter").val()
+                ,costCentrName : $("#newCostCenterText").val()
+        };
+    	Common.popupDiv("/eAccounting/webInvoice/budgetCodeSearchPop.do", data, null, true, "budgetCodeSearchPop");
     } else {
     	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
     }

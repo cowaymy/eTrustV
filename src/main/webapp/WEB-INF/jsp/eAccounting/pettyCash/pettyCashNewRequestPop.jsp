@@ -170,9 +170,10 @@ function fn_reqstApproveLinePop() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" enctype="multipart/form-data" id="form_newReqst">
+<input type="hidden" id="newCrtUserId" name="crtUserId" value="${userId}">
 <input type="hidden" id="clmNo" name="clmNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
-<input type="hidden" id="newCostCenter" name="costCentr">
+<input type="hidden" id="newCostCenterText" name="costCentrName">
 <input type="hidden" id="newMemAccId" name="memAccId">
 <input type="hidden" id="bankCode" name="bankCode">
 
@@ -187,9 +188,9 @@ function fn_reqstApproveLinePop() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" /><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" /><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserId" name="crtUserId" value="${userId}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserName" name="crtUserName" value="${userName}"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>

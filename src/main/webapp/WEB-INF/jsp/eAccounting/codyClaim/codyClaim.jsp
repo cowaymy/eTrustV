@@ -171,6 +171,15 @@ function fn_setEvent() {
                 Common.alert('<spring:message code="pettyCashExp.onlyPastDt.msg" />');
                 $(this).val(mm + "/" + yyyy);
             }
+        } else if(id == "newCostCenter") {
+            if(!FormUtil.isEmpty($("#newCostCenter").val())){
+                Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:$("#newCostCenter").val()}, function(result) {
+                    console.log(result);
+                    var row = result[0];
+                    console.log(row);
+                    $("#newCostCenterText").val(row.costCenterText);
+                });
+            }
         }
    });
 	    

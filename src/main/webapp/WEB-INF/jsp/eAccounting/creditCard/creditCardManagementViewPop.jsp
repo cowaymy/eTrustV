@@ -132,6 +132,8 @@ $(document).ready(function () {
         type:"S"
     });
     
+    fn_setCostCenterEvent();
+    
     fn_setValues();
 });
 
@@ -206,7 +208,7 @@ function fn_saveViewMgmt() {
 <input type="hidden" id="newAtchFileGrpId" name="atchFileGrpId" value="${crditCardInfo.atchFileGrpId}">
 <input type="hidden" id="newCrditCardUserId" name="crditCardUserId" value="${crditCardInfo.crditCardUserId}">
 <input type="hidden" id="newChrgUserId" name="chrgUserId" value="${crditCardInfo.chrgUserId}">
-<input type="hidden" id="newCostCenter" name="costCentr" value="${crditCardInfo.costCentr}">
+<input type="hidden" id="newCostCenterText" name="costCentrName" value="${crditCardInfo.costCentrName}">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -227,7 +229,7 @@ function fn_saveViewMgmt() {
 	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newChrgUserName" name="chrgUserName" value="${crditCardInfo.chrgUserName}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/><c:if test="${crditCardInfo.crditCardStus eq 'A'}"><a href="#" class="search_btn" id="charge_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenterText" name="costCentrName" value="${crditCardInfo.costCentrName}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/><c:if test="${crditCardInfo.crditCardStus eq 'A'}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${crditCardInfo.costCentr}" <c:if test="${crditCardInfo.crditCardStus ne 'A'}">readonly</c:if>/><c:if test="${crditCardInfo.crditCardStus eq 'A'}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="crditCardNewMgmt.issueBank" /></th>
