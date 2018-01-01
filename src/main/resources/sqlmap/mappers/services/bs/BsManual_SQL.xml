@@ -70,6 +70,10 @@
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.STUS IN (1,8)
                 AND B.MEM_TYPE = 2
+            <if test="memLevl == '1'.toString()">
+                AND A.MEM_LVL  = '3'
+                AND A.BRNCH_ID = #{groupCode}
+             </if>
             <if test="memLevl == '2'.toString()">
                 AND (A.DEPT_CODE || B.NAME) IN ( SELECT C.DEPT_CODE || D.NAME
                                                   FROM ORG0001D A,
@@ -108,6 +112,10 @@
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.STUS IN (1,8)
                 AND B.MEM_TYPE = 2
+            <if test="memLevl == '1'.toString()">
+                AND A.MEM_LVL  = '3'
+                AND A.BRNCH_ID = #{groupCode}
+             </if>                
             <if test="memLevl == '2'.toString()">
                 AND (A.DEPT_CODE || B.NAME) IN ( SELECT C.DEPT_CODE || D.NAME
                                                   FROM ORG0001D A,
