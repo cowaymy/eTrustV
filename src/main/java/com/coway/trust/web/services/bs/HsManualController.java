@@ -66,6 +66,7 @@ public class HsManualController {
     		model.addAttribute("userName",  sessionVO.getUserName());
     		
     		model.addAttribute("memberLevel", sessionVO.getMemberLevel());
+    		model.addAttribute("userType",sessionVO.getUserTypeId());
 
 		return "services/bs/hsManual";
     	}
@@ -280,6 +281,7 @@ public class HsManualController {
 		
 		params.put("memLevl",sessionVO.getMemberLevel());
 		params.put("userName",sessionVO.getUserName());
+		params.put("userType",sessionVO.getUserTypeId());
 		
 		logger.debug("=======================================================================================");
 		logger.debug("============== getCdDeptList params{} ", params );

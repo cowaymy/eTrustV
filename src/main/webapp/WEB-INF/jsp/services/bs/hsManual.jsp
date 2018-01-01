@@ -288,13 +288,14 @@
                         return false;
                     }
                     
-                    if ( $("#memberLevel").val()  != "1" ||  $("#memberLevel").val()  != "2") {
-	                    if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == null) {
-	                        Common.alert("Please Select 'Cody Manager'");
-	                        return false;
-	                    } 
-                    }
-                	
+                    if ( $("#userType").val() == "2") {
+	                    if ( $("#memberLevel").val()  == "3" ||  $("#memberLevel").val()  == "4") {
+		                    if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == null) {
+		                        Common.alert("Please Select 'Cody Manager'");
+		                        return false;
+		                    } 
+	                    }
+                	}
                     Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
 
                         console.log("성공.");
@@ -319,19 +320,21 @@
                         Common.alert("Please Select 'Branch'");
                         return false;
                     }
-                    
-                    if ( $("#memberLevel").val()  != "1" ||  $("#memberLevel").val()  != "2") {
-                        if ($("#cmdCdManager1").val() == '' || $("#cmdCdManager1").val() == null) {
-                            Common.alert("Please Select 'Cody Manager'");
-                            return false;
-                        } 
-                    }
+                    if ( $("#userType").val() == "2") {
+	                    if ( $("#memberLevel").val()  == "3" ||  $("#memberLevel").val()  == "4") {
+	                        if ($("#cmdCdManager1").val() == '' || $("#cmdCdManager1").val() == null) {
+	                            Common.alert("Please Select 'Cody Manager'");
+	                            return false;
+	                        } 
+	                    }
+                   } 
+                   
                        // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
-                        Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
-                            console.log("성공.");
-                            console.log("data : " + result);
-                            AUIGrid.setGridData(myGridID, result);
-                        });
+                   Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
+                       console.log("성공.");
+                       console.log("data : " + result);
+                       AUIGrid.setGridData(myGridID, result);
+                   });
                 }
 
           }
@@ -886,6 +889,8 @@
      <input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}"> <!-- Manual branch -->
      
      <input type="hidden" id="userName" name="userName" value="${userName}"> 
+     <input type="hidden" id="userType" name="userType" value="${userType}">
+     
 </form>
 
 <%-- <form id="popEditViewForm" method="post">
