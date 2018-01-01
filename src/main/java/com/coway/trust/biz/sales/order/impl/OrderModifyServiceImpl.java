@@ -119,13 +119,17 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		
 		List<EgovMap> billGrpOrd  = orderModifyMapper.selectBillGroupOrder(params);
 
-		billGrpInfo.put("totOrder", billGrpOrd.size());
+		if(billGrpOrd != null && billGrpOrd.size() > 0) {
+    		billGrpInfo.put("totOrder", billGrpOrd.size());
+		}
 		
-		params.put("custAddId", billGrpInfo.get("custBillAddId"));
-
-		EgovMap mailAddrInfo = customerMapper.selectCustomerViewMainAddress(params);
-		
-		billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
+		if(billGrpInfo != null) {
+    		params.put("custAddId", billGrpInfo.get("custBillAddId"));
+    
+    		EgovMap mailAddrInfo = customerMapper.selectCustomerViewMainAddress(params);
+    		
+    		billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
+		}
 		
 		return billGrpInfo;
 	}
@@ -169,9 +173,10 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		//logger.info("!@###### billGrpOrd.size():"+billGrpOrd.size());
 		if(billGrpOrd != null && billGrpOrd.size() > 0) {
 			billGrpInfo.put("totOrder", billGrpOrd.size());
+		}
+		
+		if(billGrpInfo != null) {
 			params.put("custCntcId", billGrpInfo.get("custBillCntId"));
-
-			logger.info("!@###### custBillCustId:"+billGrpInfo.get("custBillCustId"));
 
 			EgovMap custAddInfo = customerMapper.selectCustomerViewMainContact(params);
 			
