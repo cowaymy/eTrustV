@@ -406,6 +406,12 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		}
 		
 		
+		params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
+		params.put("P_USER_ID",   params.get("stkRetnCrtUserId"));
+		params.put("P_RETN_NO",  params.get("serviceNo") );
+		MSvcLogApiMapper.SP_RETURN_BILLING_EARLY_TERMI(params);
+		
+		
 		   //물류 호출   add by hgham
         Map<String, Object>  logPram = null ;
 		/////////////////////////물류 호출/////////////////////////
@@ -702,6 +708,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 	
 	
+	@Override
+	public  void  SP_RETURN_BILLING_EARLY_TERMI(Map<String, Object> params) {
+		MSvcLogApiMapper.SP_RETURN_BILLING_EARLY_TERMI(params);
+	}  
+	 
 	
 
 	@Override

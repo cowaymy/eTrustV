@@ -1441,10 +1441,9 @@ function fn_productGroup_SelectedIndexChanged(){
         <!--  <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' > -->  
         
         
-         <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
+         <input type="hiiden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
          <input type="text" title=""    placeholder="" class="readonly"   id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}''/>
-        
-    </select>
+         
         </td>
     </tr>
     <tr>

@@ -40,8 +40,6 @@ public class  ServicesLogisticsPFCServiceImpl  extends EgovAbstractServiceImpl i
 		 servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(params);
 	}  
 	 
-	
-	
 } 
 
 

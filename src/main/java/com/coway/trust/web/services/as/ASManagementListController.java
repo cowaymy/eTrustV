@@ -256,6 +256,14 @@ public class ASManagementListController {
 		model.put("mafuncResnId", (String)params.get("mafuncResnId"));   
         
 		
+
+		model.put("USER_ID", sessionVO.getMemId());
+		model.put("USER_NAME", sessionVO.getUserName());
+		model.put("BRANCH_NAME", sessionVO.getBranchName());
+		model.put("BRANCH_ID", sessionVO.getUserBranchId());
+		
+		
+		
 		/*
 		if("VIEW".equals(params.get("mod"))){
 			asentryInfo = ASManagementListService.selASEntryView(params);

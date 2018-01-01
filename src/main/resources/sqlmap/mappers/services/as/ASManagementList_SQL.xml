@@ -2203,9 +2203,9 @@
 			   #{taxInvcAmtDue}, 
 			   #{taxInvcCrtDt}, 
 			   #{taxInvcCrtUserId},
-			   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'AREA_ID'),
-			   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'ADDR1'),
-			   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'ADDR2')
+			   FN_GET_SVC_BILL_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'AREA_ID'),
+			   FN_GET_SVC_BILL_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'ADDR1'),
+			   FN_GET_SVC_BILL_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{AS_SO_ID}) ,'ADDR2')
 			 )
 		 </insert>	 
 		 
@@ -2248,9 +2248,9 @@
 				           #{invcItmInstallDt}, 
 				           #{invcItmRetnDt}, 
 				           #{invcItmBillRefNo},
-						   FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'AREA_ID'),
-			               FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'ADDR1'),
-			               FN_GET_SVC_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'ADDR2')
+						   FN_GET_SVC_BILL_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'AREA_ID'),
+			               FN_GET_SVC_BILL_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'ADDR1'),
+			               FN_GET_SVC_BILL_MADDRESS(  (select sales_ord_no from sal0001d where  sales_ord_id =#{invcItmOrdNo}) ,'ADDR2')
 			            )           
 				        
       </insert>
@@ -3696,7 +3696,7 @@
        
      <select id="getCustAddressInfo" parameterType="Map" resultType="java.lang.String">
         <![CDATA[     
-                 select  fn_get_svc_maddress( #{SALES_ORD_NO},'FULL_ADDR') from  dual
+                 select  FN_GET_SVC_BILL_MADDRESS( #{SALES_ORD_NO},'FULL_ADDR') from  dual
         ]]>
     </select>
     

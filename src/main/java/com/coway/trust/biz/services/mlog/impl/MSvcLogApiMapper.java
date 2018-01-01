@@ -166,5 +166,8 @@ public interface MSvcLogApiMapper {
 	List<EgovMap> getInstallationJobList_b(Map<String, Object> params);
 
 	List<EgovMap> getProductRetrunJobList_b(Map<String, Object> params);
+	  
+	// call SP_RETURN_BILLING_EARLY_TERMI( #{ORD_ID},#{USER_ID},#{SERVICE_NO} )
+	void SP_RETURN_BILLING_EARLY_TERMI ( Map<String, Object> params);
 	
 }

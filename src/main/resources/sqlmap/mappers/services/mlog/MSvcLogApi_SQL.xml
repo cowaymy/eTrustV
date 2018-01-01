@@ -1389,7 +1389,7 @@
         
                    SELECT
                         MST.*
-                        , TO_CHAR(SUB.PRC_CHRG) AS sales_Price
+                        , TO_CHAR(SUB.AMT) AS sales_Price
                     FROM
                     (
                         SELECT
@@ -1442,7 +1442,7 @@
                             ) E ON D.STK_CODE = E.MATRL_NO
                             INNER JOIN SYS0026M F ON E.BOM_COMPNT = F.STK_CODE
                             LEFT OUTER JOIN SVC0004D G ON A.AS_ID = G.AS_ENTRY_ID AND A.AS_SO_ID = G.AS_SO_ID
-                            LEFT OUTER JOIN SVC0005D S5D  ON S5D.AS_RESULT_ID = G.AS_RESULT_ID  
+                            LEFT OUTER JOIN SVC0005D S5D  ON S5D.AS_RESULT_ID = G.AS_RESULT_ID    AND  S5D.ASR_ITM_PART_ID=    F.STK_ID
                             LEFT OUTER JOIN (
                                 SELECT 
                                    S26.STK_CODE,
@@ -1465,10 +1465,10 @@
                         ORDER BY MST.sales_Orderid
                     ) MST
                     LEFT OUTER JOIN (
-                        SELECT STK_ID, PRC_CHRG FROM SAL0016M
+                        SELECT STK_ID, AMT  FROM SAL0016M
                         WHERE APP_TYPE_ID = '67'
                         AND STUS_CODE_ID = 1
-                        AND PRC_CHRG > 0
+                        AND AMT > 0
                     ) SUB ON MST.part_Id = SUB.STK_ID
 
          </select>  
@@ -3335,7 +3335,6 @@
       
       
        <insert id="insertCancelSMS" parameterType="Map">
-       
            update svc0008d
                set CANC_REQ_NO =  #{cancReqNo}
               where SALES_ORD_ID = (select sales_ord_id
@@ -3343,58 +3342,6 @@
                                         where 1=1
                                         and SALES_ORD_NO = #{salesOrderNo}  )
                 and NO =   #{serviceNo}                                 
-                                                
-                                                
-                                                
-<!--                  INSERT INTO svc0008d ( SCHDUL_ID
-                                        ,NO
-                                        ,SALES_ORD_ID
-                                        ,MONTH
-                                        ,YEAR
-                                        ,TYPE_ID
-                                        ,CODY_ID
-                                        ,STUS_CODE_ID
-                                        ,LAST_SVC
-                                        ,CRT_DT
-                                        ,CRT_USER_ID
-                                        ,LOK
-                                        ,PREV_CODY_ID
-                                        ,CANC_REQ_NO) 
-                           SELECT  SVC0008D_SCHDUL_ID_SEQ.NEXTVAL 
-                                        ,(select GBSLCVD.FN_GET_DOCNO('10')
-                                            from dual) no 
-                                        ,SALES_ORD_ID
-                                        ,MONTH
-                                        ,YEAR
-                                        ,TYPE_ID
-                                        ,CODY_ID
-                                        ,STUS_CODE_ID
-                                        ,LAST_SVC
-                                        ,CRT_DT
-                                        ,CRT_USER_ID
-                                        ,LOK
-                                        ,PREV_CODY_ID
-                                        ,(select GBSLCVD.FN_GET_CANC_REQ_NO
-                                            from dual )  CANC_REQ_NO
-                            FROM (SELECT SALES_ORD_ID
-                                        ,NO
-                                        ,MONTH
-                                        ,YEAR
-                                        ,TYPE_ID
-                                        ,CODY_ID
-                                        ,STUS_CODE_ID
-                                        ,LAST_SVC
-                                        ,CRT_DT
-                                        ,CRT_USER_ID
-                                        ,LOK
-                                        ,PREV_CODY_ID
-                                        ,CANC_REQ_NO
-                      FROM svc0008d 
-                       where SALES_ORD_ID = (select sales_ord_id
-                                                            from sal0001d
-                                                            where 1=1
-                                                            and SALES_ORD_NO = #{salesOrderNo}  )
-                            and NO =   #{serviceNo}                           ) -->
        </insert>      
        
        
@@ -3410,4 +3357,13 @@
        
        </insert> 
                 
+                
+      <resultMap id="bliingRtnCode" type="egovMap" />     
+      
+      <select id="SP_RETURN_BILLING_EARLY_TERMI" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_RETURN_BILLING_EARLY_TERMI( #{P_SALES_ORD_NO},#{P_USER_ID},#{P_RETN_NO})
+      }
+     </select>     
+                    
 </mapper>
