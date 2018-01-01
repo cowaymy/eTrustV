@@ -305,7 +305,7 @@ public class StaffClaimController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		EgovMap info = staffClaimService.selectStaffClaimInfo(params);
+		EgovMap info = staffClaimService.selectStaffClaimInfoForAppv(params);
 		List<EgovMap> itemGrp = staffClaimService.selectStaffClaimItemGrp(params);
 		
 		info.put("itemGrp", itemGrp);

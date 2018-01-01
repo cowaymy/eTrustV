@@ -573,7 +573,7 @@ public class WebInvoiceController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		String clmNo = (String)params.get("clmNo");
-		EgovMap webInvoiceInfo = webInvoiceService.selectWebInvoiceInfo(clmNo);
+		EgovMap webInvoiceInfo = webInvoiceService.selectWebInvoiceInfoForAppv(clmNo);
 		List<EgovMap> webInvoiceItems = webInvoiceService.selectWebInvoiceItemsForAppv(clmNo);
 		LOGGER.debug("webInvoiceItems =====================================>>  " + webInvoiceItems);
 		String atchFileGrpId = String.valueOf(webInvoiceInfo.get("atchFileGrpId"));

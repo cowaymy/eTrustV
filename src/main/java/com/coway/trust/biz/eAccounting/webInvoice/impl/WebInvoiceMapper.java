@@ -27,6 +27,8 @@ public interface WebInvoiceMapper {
 	
 	EgovMap selectWebInvoiceInfo(String clmNo);
 	
+	EgovMap selectWebInvoiceInfoForAppv(String clmNo);
+	
 	List<EgovMap> selectWebInvoiceItems(String clmNo);
 	
 	List<EgovMap> selectWebInvoiceItemsForAppv(String clmNo);

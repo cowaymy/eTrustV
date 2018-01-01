@@ -27,6 +27,8 @@ public interface StaffClaimMapper {
 	
 	EgovMap selectStaffClaimInfo(Map<String, Object> params);
 	
+	EgovMap selectStaffClaimInfoForAppv(Map<String, Object> params);
+	
 	List<EgovMap> selectAttachList(String atchFileGrpId);
 	
 	void updateStaffClaimExp(Map<String, Object> params);

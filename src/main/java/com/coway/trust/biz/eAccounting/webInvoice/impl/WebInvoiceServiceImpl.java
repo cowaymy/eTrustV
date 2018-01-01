@@ -51,6 +51,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
+	public EgovMap selectWebInvoiceInfoForAppv(String clmNo) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectWebInvoiceInfoForAppv(clmNo);
+	}
+
+	@Override
 	public List<EgovMap> selectWebInvoiceItems(String clmNo) {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectWebInvoiceItems(clmNo);

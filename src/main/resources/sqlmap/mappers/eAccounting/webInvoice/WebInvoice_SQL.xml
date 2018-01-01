@@ -280,6 +280,44 @@ SELECT   T.CLM_NO
           WHERE T1.CLM_NO = #{clmNo}
 </select>
 
+<select id="selectWebInvoiceInfoForAppv" parameterType="String" resultType="egovMap">
+/* webInvoiceMapper.selectWebInvoiceInfoForAppv */
+            SELECT T1.CLM_NO
+                   ,T1.INVC_NO
+                   ,TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT
+                   ,T1.COST_CENTR
+                   ,T1.COST_CENTR_NAME
+                   ,(CASE T1.INVC_TYPE
+                      WHEN 'F'
+                         THEN 'Full Tax invoice'
+                      WHEN 'S'
+                         THEN 'Simplified Tax invoice'
+                   END
+                   ) AS INVC_TYPE
+                   ,T1.MEM_ACC_ID
+                   ,T2.MEM_ACC_NAME
+                   ,T1.GST_RGIST_NO
+                   ,T1.BANK_CODE
+                   ,T2.BANK_NAME
+                   ,T1.BANK_ACC_NO
+                   ,TO_CHAR(T1.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
+                   ,T1.ATCH_FILE_GRP_ID
+                   ,T1.INVC_REM
+                   ,NVL(T1.TOT_AMT, 0) TOT_AMT
+                   ,T1.APPV_PRCSS_NO
+                   ,T1.UTIL_NO
+                   ,T1.CRT_DT
+                   ,T1.CRT_USER_ID
+                   ,T3.USER_NAME AS CRT_USER_NAME
+                   ,T1.TOT_AMT
+          FROM FCM0002M T1
+          LEFT JOIN FCM0006M T2
+          ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+          LEFT JOIN SYS0047M T3
+          ON T1.CRT_USER_ID = T3.USER_ID
+          WHERE T1.CLM_NO = #{clmNo}
+</select>
+
 <select id="selectWebInvoiceItems" parameterType="String" resultType="egovMap">
 /* webInvoiceMapper.selectWebInvoiceItems */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->

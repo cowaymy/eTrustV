@@ -47,6 +47,8 @@ public interface PettyCashService {
 	
 	EgovMap selectExpenseInfo(Map<String, Object> params);
 	
+	EgovMap selectExpenseInfoForAppv(Map<String, Object> params);
+	
 	List<EgovMap> selectAttachList(String atchFileGrpId);
 	
 	void updatePettyCashExp(Map<String, Object> params);

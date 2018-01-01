@@ -101,6 +101,12 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 	}
 
 	@Override
+	public EgovMap selectStaffClaimInfoForAppv(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return staffClaimMapper.selectStaffClaimInfoForAppv(params);
+	}
+
+	@Override
 	public List<EgovMap> selectAttachList(String atchFileGrpId) {
 		// TODO Auto-generated method stub
 		return staffClaimMapper.selectAttachList(atchFileGrpId);

@@ -410,15 +410,22 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
     	
     	console.log("expGrp : " + result.data.expGrp);
     	if(result.data.expGrp == "0") {
+    		$("#noMileage").show();
+    		
     		fn_destroyMileageGrid();
     		fn_createMGrid(result.data.itemGrp);
+    		
+            $("#supplirName").text(result.supplirName);
+            $("#invcType").text(result.invcType);
+            $("#invcNo").text(result.invcNo);
+            $("#gstRgistNo").text(result.gstRgistNo);
+            $("#expDesc").text(result.expDesc);
     		
     		// TODO attachFile
             attachList = result.data.attachList;
             console.log(attachList);
             console.log(attachList.length);
             if(attachList.length > 0) {
-            	$("#attachTr").show();
                 $("#attachTd").html("");
                 for(var i = 0; i < attachList.length; i++) {
                 	$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
@@ -439,10 +446,10 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 });
             }
     	} else {
+    		$("#noMileage").hide();
+    		
     		fn_destroyMGrid();
     		fn_createMileageAUIGrid(result.data.itemGrp);
-    		
-    		$("#attachTr").hide();
     		
     		// TODO attachFile
             attachList = result.data.attachList;
@@ -588,15 +595,47 @@ function fn_atchViewDown(fileGrpId, fileId) {
 	<th scope="row"><spring:message code="approveView.approveStatus" /></th>
 	<td colspan="3" style="height:60px" id="viewAppvStus">${appvPrcssStus}</td>
 </tr>
-<tr id="attachTr" style="display: none;">
-    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-    <td colspan="3" id="attachTd"></td>
-</tr>
 </tbody>
 </table><!-- table end -->
 
 </form>
 </section><!-- search_table end -->
+
+<table class="type1 mt10" id="noMileage" style="display: none;"><!-- table start -->
+<caption><spring:message code="webInvoice.table" /></caption>
+<colgroup>
+    <col style="width:190px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
+    <td id="supplirName"></td>
+    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
+    <td id="gstRgistNo"></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
+    <td id="invcType"></td>
+    <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
+    <td id="invcNo"></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
+    <td colspan="3" id="attachTd">
+    <div class="auto_file2 auto_file3"><!-- auto_file start -->
+    <input type="file" title="file add" />
+    </div><!-- auto_file end -->
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="newWebInvoice.remark" /></th>
+    <td colspan="3" id="expDesc"></td>
+</tr>
+</tbody>
+</table><!-- table end -->
 
 <article class="grid_wrap" id="mGrid_wrap" style="display: none;"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->

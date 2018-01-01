@@ -161,6 +161,12 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}
 
 	@Override
+	public EgovMap selectReimburesementInfoForAppv(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return creditCardMapper.selectReimburesementInfoForAppv(params);
+	}
+
+	@Override
 	public List<EgovMap> selectAttachList(String atchFileGrpId) {
 		// TODO Auto-generated method stub
 		return creditCardMapper.selectAttachList(atchFileGrpId);

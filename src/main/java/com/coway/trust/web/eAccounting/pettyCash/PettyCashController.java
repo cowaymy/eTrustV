@@ -608,7 +608,7 @@ public class PettyCashController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		EgovMap info = pettyCashService.selectExpenseInfo(params);
+		EgovMap info = pettyCashService.selectExpenseInfoForAppv(params);
 		List<EgovMap> itemGrp = pettyCashService.selectExpenseItemGrp(params);
 		
 		info.put("itemGrp", itemGrp);

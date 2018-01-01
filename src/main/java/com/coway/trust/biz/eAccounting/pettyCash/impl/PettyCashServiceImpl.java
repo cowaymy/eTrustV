@@ -221,6 +221,12 @@ public class PettyCashServiceImpl implements PettyCashService {
 	}
 
 	@Override
+	public EgovMap selectExpenseInfoForAppv(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return pettyCashMapper.selectExpenseInfoForAppv(params);
+	}
+
+	@Override
 	public List<EgovMap> selectAttachList(String atchFileGrpId) {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectAttachList(atchFileGrpId);

@@ -694,6 +694,62 @@ FROM   FCM0014D T1
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
 
+<select id="selectExpenseInfoForAppv" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseInfoForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T2.COST_CENTR, 
+       T2.COST_CENTR_NAME, 
+       T2.MEM_ACC_ID, 
+       T3.MEM_ACC_NAME,
+       T2.CUSTDN_NRIC, 
+       T2.BANK_CODE, 
+       T3.BANK_NAME, 
+       T2.BANK_ACC_NO, 
+       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
+       T2.TOT_AMT  AS ALL_TOT_AMT,
+       T2.APPV_PRCSS_NO,
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.SUPPLIER AS S_MEM_ACC_NAME, 
+       T4.MEM_ACC_ID AS S_MEM_ACC_ID, 
+       (CASE T1.INVC_TYPE
+            WHEN 'F'
+               THEN 'Full Tax invoice'
+            WHEN 'S'
+               THEN 'Simplified Tax invoice'
+         END
+        ) AS INVC_TYPE,
+       T1.INVC_NO, 
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
+       T1.GST_RGIST_NO, 
+       T1.TAX_CODE,
+       'MYR'       AS CUR, 
+       T1.GST_BEFOR_AMT, 
+       T1.GST_AMT,
+       T1.NON_CLM_GST_AMT, 
+       T1.TOT_AMT, 
+       T1.ATCH_FILE_GRP_ID, 
+       T1.EXP_DESC,
+       T1.UTIL_NO,
+       T2.CRT_USER_ID,
+       T5.USER_NAME 
+FROM   FCM0014D T1
+       LEFT JOIN FCM0013M T2 
+              ON T1.CLM_NO = T2.CLM_NO 
+       LEFT JOIN FCM0006M T3 
+              ON T2.MEM_ACC_ID = T3.MEM_ACC_ID 
+       LEFT JOIN FCM0006M T4 
+              ON T1.SUPPLIER = T4.MEM_ACC_NAME 
+       LEFT JOIN SYS0047M T5 
+              ON T2.CRT_USER_ID = T5.USER_ID
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
 <select id="selectExpenseItemGrp" parameterType="Map" resultType="egovMap">
 /* pettyCashMapper.selectExpenseItemGrp */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->

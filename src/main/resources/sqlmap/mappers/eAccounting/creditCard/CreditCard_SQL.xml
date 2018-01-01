@@ -571,6 +571,56 @@ FROM   FCM0018D T1
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
 
+<select id="selectReimburesementInfoForAppv" parameterType="Map" resultType="egovMap">
+/* creditCardMapper.selectReimburesementInfoForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T2.CRDIT_CARD_NO,
+       T2.CRDIT_CARD_USER_ID,
+       T2.CRDIT_CARD_USER_NAME,
+       T2.CHRG_USER_ID,
+       T3.NAME  AS CHRG_USER_NAME,
+       T2.COST_CENTR, 
+       T2.COST_CENTR_NAME, 
+       T1.COST_CENTR AS S_COST_CENTR,
+       T1.COST_CENTR_NAME AS S_COST_CENTR_NAME,
+       T1.GST_RGIST_NO,
+       T2.BANK_CODE, 
+       T2.BANK_NAME, 
+       TO_CHAR(TO_DATE(T2.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
+       T2.APPV_PRCSS_NO,
+       (CASE T1.INVC_TYPE
+           WHEN 'F'
+              THEN 'Full Tax invoice'
+           WHEN 'S'
+              THEN 'Simplified Tax invoice'
+        END
+        ) AS INVC_TYPE,
+       T1.INVC_NO, 
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
+       T1.SUPPLY_NAME,
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.TAX_CODE,
+       'MYR'       AS CUR, 
+       T1.NET_AMT, 
+       T1.TAX_AMT, 
+       T1.TAX_NON_CLM_AMT, 
+       T1.TOT_AMT, 
+       T1.ATCH_FILE_GRP_ID, 
+       T1.EXP_DESC 
+FROM   FCM0018D T1
+       LEFT JOIN FCM0017M T2 
+              ON T1.CLM_NO = T2.CLM_NO 
+       LEFT JOIN ORG0001D T3 
+              ON T2.CHRG_USER_ID = T3.MEM_CODE
+WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
+</select>
+
 <select id="selectReimbursementItemGrp" parameterType="Map" resultType="egovMap">
 /* creditCardMapper.selectReimbursementItemGrp */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
