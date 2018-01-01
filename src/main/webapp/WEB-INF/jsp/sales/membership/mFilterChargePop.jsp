@@ -68,7 +68,7 @@
 	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)           
 	        editable                : false,            
 	        fixedColumnCount    : 1,      
-	        selectionMode       : "singleRow",  //"multipleCells",    
+	        //selectionMode       : "singleRow",  //"multipleCells",    
 	        showRowNumColumn    : true  ,
 	        showFooter : true  ,
 	        showStateColumn :false

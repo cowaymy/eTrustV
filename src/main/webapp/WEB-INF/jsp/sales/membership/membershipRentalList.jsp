@@ -163,7 +163,7 @@ function createAUIGrid() {
                                
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  headerHeight        : 30, showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,  headerHeight        : 30, showRowNumColumn : true};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
     }

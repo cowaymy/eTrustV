@@ -53,7 +53,7 @@ function createMRLedgerGrid(){
     		usePaging : false,  
     		pageRowCount: 10, 
     		editable: false, 
-    		selectionMode : "singleRow",
+    		//selectionMode : "singleRow",
     		headerHeight : 30,  
     		showRowNumColumn : false,    	       
             showStateColumn     : false, 

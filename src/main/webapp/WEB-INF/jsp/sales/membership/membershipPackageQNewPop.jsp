@@ -234,7 +234,7 @@ function createAUIGrid() {
                             { dataField : "srvRemark",     headerText  : "Remark",  width          :300,    editable       : true}
        ];
 
-        var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true, softRemovePolicy : "exceptNew" };  
+        var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, fixedColumnCount : 1,  showRowNumColumn : true, softRemovePolicy : "exceptNew" };  
         
         newGridID = GridCommon.createAUIGrid("new_list_grid_wrap", columnLayout  ,"rowId" ,gridPros);
         
@@ -335,7 +335,7 @@ function createFilterAUIGrid() {
         { dataField : "changePreiod", headerText  : "Change Period",  width : 110,  editable : true}
    ];
   
-    var gridPros = { usePaging : false,  editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
+    var gridPros = { usePaging : false,  editable: true,  showRowNumColumn : true};  
     
     filterNewGridID = GridCommon.createAUIGrid("filterNew_list_grid_wrap", columnLayout  ,"" ,gridPros);
     filterHiddenGridID = GridCommon.createAUIGrid("filterHidden_list_grid_wrap", columnLayout  ,"" ,gridPros);

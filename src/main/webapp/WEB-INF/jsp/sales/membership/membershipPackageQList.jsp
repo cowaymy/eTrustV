@@ -154,7 +154,7 @@ function createAUIGrid() {
                           
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, headerHeight : 30,editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, headerHeight : 30,editable: true,  showRowNumColumn : true};  
         
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
         
@@ -226,7 +226,7 @@ function createDetailAUIGrid() {
                             { dataField : "srvMemItmRem",         headerText  : "Remark",   width          : 300,     editable       : false , style:"my-left-style"  }
        ];
         
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,selectionMode : "singleRow",  showRowNumColumn : true};  
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount : 1,  showRowNumColumn : true};  
         
         detailGridID = GridCommon.createAUIGrid("detail_list_grid_wrap", columnLayout  ,"" ,gridPros);
         
@@ -265,7 +265,7 @@ function createFilterAUIGrid() {
         { dataField : "changePreiod", headerText  : "Change Period",  width : 120,  editable : true}
    ];
 
-    var gridPros = { usePaging : false,  editable: true, selectionMode : "singleRow",  showRowNumColumn : true};  
+    var gridPros = { usePaging : false,  editable: true,  showRowNumColumn : true};  
     
     filterGridID = GridCommon.createAUIGrid("filter_list_grid_wrap", columnLayout  ,"" ,gridPros);
 }
