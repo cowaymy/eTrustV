@@ -55,6 +55,20 @@
             
         }, 200);  // 현재 200ms 민감도....환경에 맞게 조절하세요.
     };
+    
+    function fn_calcPvVal(num1) {
+        var num2 = parseFloat(num1/10);
+        var num3 = Math.floor(num2);
+        var num4;
+        if((num2 - num3) > 0) {
+            num4 = num3 + 1;
+        }
+        else {
+            num4 = num3;
+        }
+        
+        return (num4*10);
+    }
 
     function fn_delApptype() {
         $("#promoAppTypeId").find("option").each(function() {

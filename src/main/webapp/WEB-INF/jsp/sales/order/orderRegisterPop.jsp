@@ -1049,12 +1049,31 @@
             var oldRental    = $('#orgOrdRentalFees').val();
             var newRental    = $('#ordRentalFees').val();
             var oldPv        = $('#ordPv').val();
+            
+            console.log('oldPrice:'+oldPrice);
+            console.log('newPrice:'+newPrice);
+            console.log('oldRental:'+oldRental);
+            console.log('newRental:'+newRental);
+            
             //Amount of GST applied
             var oldPriceGST  = fn_calcGst(oldPrice);
             var newPriceGST  = fn_calcGst(newPrice);
             var oldRentalGST = fn_calcGst(oldRental);
             var newRentalGST = fn_calcGst(newRental);
             var newPv        = $('#ordPvGST').val();
+
+            console.log('oldPriceGST:'+oldPriceGST);
+            console.log('newPriceGST:'+newPriceGST);
+            console.log('oldRentalGST:'+oldRentalGST);
+            console.log('newRentalGST:'+newRentalGST);
+            
+            if($('#appType').val() != '66') {
+                oldPriceGST = Math.floor(oldPriceGST/10) * 10;
+                newPriceGST = Math.floor(newPriceGST/10) * 10;
+            }
+
+            console.log('oldPriceGST:'+oldPriceGST);
+            console.log('newPriceGST:'+newPriceGST);
             
             var msg = '';
             
@@ -1221,6 +1240,11 @@
         var newRentalGST = fn_calcGst(newRental);
         var newPv        = $('#ordPvGST').val();
         
+        if($('#appType').val() != '66') {
+            oldPriceGST = Math.floor(oldPriceGST/10) * 10;
+            newPriceGST = Math.floor(newPriceGST/10) * 10;
+        }
+            
         $('#orgOrdPrice').val(oldPriceGST);
         $('#ordPrice').val(newPriceGST);
         $('#orgOrdRentalFees').val(oldRentalGST);

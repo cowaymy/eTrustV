@@ -513,6 +513,11 @@
             var newRentalGST = fn_calcGst(newRental);
             var newPv        = $('#ordPvGST').val();
             
+            if(APP_TYPE_ID != '66') {
+                oldPriceGST = Math.floor(oldPriceGST/10) * 10;
+                newPriceGST = Math.floor(newPriceGST/10) * 10;
+            }
+        
             var msg = '';
             
             msg += 'Application Type : '+appTypeName +'<br>';
@@ -542,6 +547,11 @@
         var newRentalGST = fn_calcGst(newRental);
         var newPv        = $('#ordPvGST').val();
         
+        if(APP_TYPE_ID != '66') {
+            oldPriceGST = Math.floor(oldPriceGST/10) * 10;
+            newPriceGST = Math.floor(newPriceGST/10) * 10;
+        }
+            
         $('#orgOrdPrice').val(oldPriceGST);
         $('#ordPrice').val(newPriceGST);
         $('#orgOrdRentalFees').val(oldRentalGST);

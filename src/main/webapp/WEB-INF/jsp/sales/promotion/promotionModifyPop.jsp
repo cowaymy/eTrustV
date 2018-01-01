@@ -225,24 +225,38 @@
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
 
             orgPvVal = AUIGrid.getCellValue(stckGridID, i, "prcPv");
-            
+/*
             if($('#exTrade').val() == '1' && $('#promoAppTypeId').val() == '2284') {
                 orgPvVal = orgPvVal * (70/100);
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf") - (FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim());
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "prcRpf") - (FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim());
+                dscPvVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val());
             }
             else if($('#exTrade').val() == '1' && ($('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
                 orgPvVal = orgPvVal * (70/100);
-//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
             }
             else if($('#exTrade').val() == '0' && ($('#promoAppTypeId').val() == '2284' || $('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287')) {
-//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
-                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+//              dscPvVal = AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+            }
+*/
+            if($('#exTrade').val() == '1') {
+                orgPvVal = orgPvVal * (70/100);
             }
             
-            newPvVal = Math.round(orgPvVal - dscPvVal - addPvVal);
+            if($('#promoAppTypeId').val() == '2284') {
+                dscPvVal = FormUtil.isEmpty($('#promoRpfDiscAmt').val()) ? 0 : $('#promoRpfDiscAmt').val().trim();
+            }
+            else if($('#promoAppTypeId').val() == '2285' || $('#promoAppTypeId').val() == '2287'){
+                dscPvVal = AUIGrid.getCellValue(stckGridID, i, "amt") - AUIGrid.getCellValue(stckGridID, i, "promoAmt");
+            }
+
+            newPvVal = fn_calcPvVal(orgPvVal - dscPvVal - addPvVal);            
+            gstPvVal = fn_calcPvVal(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
             
-            gstPvVal = Math.round(orgPvVal - Math.floor(dscPvVal*(1/1.06)) - addPvVal);
+            console.log('dscPvVal   :'+dscPvVal);
+            console.log('dscPvValGST:'+Math.floor(dscPvVal*(1/1.06)));
             
             if(newPvVal < 0) newPvVal = 0;
             if(gstPvVal < 0) gstPvVal = 0;
