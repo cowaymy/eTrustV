@@ -184,8 +184,8 @@
                         headerText : "Assign Cody",
                         width : 120
                     },{
-                        dataField : "codyMangrUserId",
-                        headerText : "Cody Mangr User ID",
+                        dataField : "deptCode",
+                        headerText : "Department",
                         width : 120
                     },{
                         dataField : "actnMemId",
