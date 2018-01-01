@@ -1254,7 +1254,7 @@
                                FROM SYS0026M S26
                                WHERE 1 = 1
                                AND S26.STUS_CODE_ID = 1
-                            ) H ON F.STK_CODE = H.STK_CODE
+                            ) H ON S26B.STK_CODE = H.STK_CODE
                      WHERE     S08A.YEAR =
                                   TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                            AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
