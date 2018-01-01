@@ -371,6 +371,22 @@ $(function(){
         }
     });
     
+    $("#print").click(function(){
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        console.log(checkedItems)
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }else if(checkedItems.length > 1) {
+            Common.alert('Please One data selected.');
+            return false;
+        }else{
+            var itm = checkedItems[0];
+            $("#V_REQST_NO").val(itm.delyno);
+            Common.report("printForm");
+         }
+     });
+    
 });
 
     function fn_itempopList(data){
@@ -692,6 +708,7 @@ function fn_gradComb(){
 </c:if>        
             <li><p class="btn_grid"><a id="gissue">Goods Receipt</a></p></li>
             <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li>
+            <li><p class="btn_grid"><a id="print"><spring:message code='sys.progmanagement.grid1.PRINT' /></a></p></li>
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
@@ -766,5 +783,10 @@ function fn_gradComb(){
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
 </form>
+<form id="printForm" name="printForm">
+       <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
+       <input type="hidden" id="V_REQST_NO" name="V_REQST_NO" value="" />
+       <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/Delivery_Note_for_GR.rpt" /><br />
+    </form>
 </section>
 
