@@ -6,7 +6,7 @@
        SELECT 
             Extent1.SALES_ORD_ID SALES_ORD_ID  
         FROM SAL0001D Extent1
-        WHERE  Extent1.SALES_ORD_NO = #{orderNo} 
+        WHERE  Extent1.SALES_ORD_NO = #{ordNo} 
         AND ROWNUM <![CDATA[<= ]]> 1
     </select>
     
@@ -315,7 +315,37 @@
     </select>
     
     <select id="selectASInfoList" parameterType="Map" resultType="egovMap">
-    
+        SELECT 
+                DISTINCT 
+                A.AS_ID AS AS_ID  ,
+                A.AS_NO AS AS_NO  ,
+                A.AS_SO_ID AS AS_SO_ID  ,
+                A.AS_REQST_DT AS AS_REQST_DT ,
+                A.AS_STUS_ID AS AS_STUS_ID  ,
+                A.AS_TYPE_ID AS AS_TYPE_ID  ,                
+                B.CODE AS AS_TYPE_CODE  ,
+                C.CODE AS AS_STUS_CODE  ,
+                D.SALES_ORD_NO AS SALES_ORD_NO  ,
+                E.CODE AS APP_TYPE_CODE  ,
+                F.NAME AS CUST_NAME  ,
+                F.NRIC AS CUST_NRIC  ,                
+                (CASE WHEN G.AS_RESULT_ID IS NOT NULL THEN G.AS_RESULT_ID ELSE 0 END) AS AS_RESULT_ID  ,
+                (CASE WHEN G.AS_RESULT_ID IS NOT NULL THEN G.AS_RESULT_NO ELSE '-' END) AS AS_RESULT_NO  ,
+                (CASE WHEN H.USER_ID IS NOT NULL THEN H.USER_NAME ELSE '-' END) AS USER_NAME  ,
+                (CASE WHEN G.AS_RESULT_ID IS NOT NULL THEN G.AS_TOT_AMT ELSE 0 END) AS AS_TOT_AMT  
+            FROM 
+                SVC0001D A
+                JOIN SYS0013M B   ON A.AS_TYPE_ID = B.CODE_ID
+                JOIN SYS0038M C   ON A.AS_STUS_ID = C.STUS_CODE_ID
+                JOIN SAL0001D D   ON A.AS_SO_ID = D.SALES_ORD_ID
+                JOIN SYS0013M E   ON D.APP_TYPE_ID = E.CODE_ID
+                JOIN SAL0029D F   ON D.CUST_ID = F.CUST_ID
+                LEFT JOIN SVC0004D G   ON A.AS_ID = G.AS_ENTRY_ID AND G.AS_RESULT_TYPE_ID = 457 AND G.AS_RESULT_IS_CURR = 1
+                LEFT JOIN SYS0047M H   ON A.AS_CRT_USER_ID = H.USER_ID
+            WHERE  
+        A.AS_STUS_ID <![CDATA[<>]]>  8
+                AND A.AS_SO_ID = #{orderId}
+        ORDER BY AS_ID
     </select>
 
 </mapper>

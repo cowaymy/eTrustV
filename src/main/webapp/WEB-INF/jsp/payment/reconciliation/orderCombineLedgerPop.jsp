@@ -9,7 +9,7 @@
     
     function fn_searchOutStandView(){
     	
-    	if($('#orderNo').val() == ""){
+    	if($('#ordNo').val() == ""){
     		Common.alert("<spring:message code='pay.alert.orderNumber.'/>");
     		return;
     	}
@@ -155,7 +155,43 @@
     
     function viewASListing(){
         if($("#ordId").val() != ''){
-            //Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
+            Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
+        }else{
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
+            return;
+        }
+    }
+    
+    function viewQuotationListing(){
+        if($("#ordNo").val() != ''){
+            Common.popupDiv('/sales/payPop/quotationListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
+        }else{
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
+            return;
+        }
+    }
+    
+    function viewOutrightMrsh(){
+        if($("#ordNo").val() != ''){
+        	Common.popupDiv('/sales/payPop/membershipListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
+        }else{
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
+            return;
+        }
+    }
+    
+    function viewRentalMrsh(){
+        if($("#ordNo").val() != ''){
+        	Common.popupDiv('/sales/payPop/rentalMembershipListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
+        }else{
+            Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
+            return;
+        }
+    }
+    
+    function viewTransferHistory(){
+        if($("#ordNo").val() != ''){
+        	Common.popupDiv('/sales/payPop/transferHistoryListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
         }else{
             Common.alert("<spring:message code='pay.alert.enterOrderNo'/>");
             return;
@@ -194,7 +230,7 @@
 					<tr>
 					    <th scope="row">ORDER NUMBER</th>
 					    <td colspan="3">
-						    <input type="text" title="" placeholder="" class="" id="orderNo" name="orderNo"/>
+						    <input type="text" title="" placeholder="Order Number" class="" id="ordNo" name="ordNo"/>
 						    <p class="btn_sky"><a href="javascript:fn_searchOutStandView();"><spring:message code='sys.btn.search'/></a></p>
 						    <p class="btn_sky"><a href="javascript:fn_clear();"><spring:message code='sys.btn.clear'/></a></p>
 					    </td>
@@ -213,11 +249,11 @@
 						    <p class="btn_sky"><a href="javascript:viewRentalLedger();"><spring:message code='pay.btn.viewLedger1'/></a></p>
 						    <p class="btn_sky"><a href="javascript:viewRentalLedger2();"><spring:message code='pay.btn.viewLedger2'/></a></p>
 						    <p class="btn_sky"><a href="javascript:viewOrderPaymentListing();"><spring:message code='pay.btn.paymentListing'/></a></p>
-						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.quotationListing'/></a></p>
-						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.outrightMembership'/></a></p>
-						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.rentalMembership'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewQuotationListing();"><spring:message code='pay.btn.quotationListing'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewOutrightMrsh();"><spring:message code='pay.btn.outrightMembership'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewRentalMrsh();"><spring:message code='pay.btn.rentalMembership'/></a></p>
 						    <p class="btn_sky"><a href="javascript:viewASListing();"><spring:message code='pay.btn.asListing'/></a></p>
-						    <p class="btn_sky"><a href="#"><spring:message code='pay.btn.transferHistory'/></a></p>
+						    <p class="btn_sky"><a href="javascript:viewTransferHistory();"><spring:message code='pay.btn.transferHistory'/></a></p>
 					    </td>
 					</tr>
 					<tr>

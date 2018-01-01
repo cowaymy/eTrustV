@@ -19,20 +19,20 @@
     
     // AUIGrid 칼럼 설정
     var columnLayout = [
-        { dataField:"payDt" ,headerText:"<spring:message code='pay.head.type'/>",editable : false},
-        { dataField:"payTypeId" ,headerText:"<spring:message code='pay.head.asNo'/>",editable : false},
-        {dataField:"rnum", headerText:"<spring:message code='pay.head.requesDate'/>", width : 80,editable : false, dataType : "date", formatString : "dd-mm-yyyy"},
-        { dataField:"trxId" ,headerText:"<spring:message code='pay.head.satatus'/>",editable : false },
-        { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.resultNo'/>",editable : false},
-        { dataField:"AdvMonth" ,headerText:"<spring:message code='pay.head.keyBy'/>" ,editable : false },
-        { dataField:"trNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
-        { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
-        { dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.custName'/>" ,editable : false },
-        { dataField:"productDesc" ,headerText:"<spring:message code='pay.head.nricCompNo'/>" ,editable : false }
+        { dataField:"asTypeCode" ,headerText:"<spring:message code='pay.head.type'/>",editable : false},
+        { dataField:"asNo" ,headerText:"<spring:message code='pay.head.asNo'/>",editable : false},
+        {dataField:"asReqstDt", headerText:"<spring:message code='pay.head.requesDate'/>", width : 80,editable : false, dataType : "date", formatString : "dd-mm-yyyy"},
+        { dataField:"asStusCode" ,headerText:"<spring:message code='pay.head.satatus'/>",editable : false },
+        { dataField:"asResultNo" ,headerText:"<spring:message code='pay.head.resultNo'/>",editable : false},
+        { dataField:"userName" ,headerText:"<spring:message code='pay.head.keyBy'/>" ,editable : false },
+        { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
+        { dataField:"appTypeCode" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
+        { dataField:"custName" ,headerText:"<spring:message code='pay.head.custName'/>" ,editable : false },
+        { dataField:"custNric" ,headerText:"<spring:message code='pay.head.nricCompNo'/>" ,editable : false }
         ];
 
     function fn_getOrderASListAjax(){
-        Common.ajax("GET", "/payment/selectOrderASList.do", $("#search").serialize(), function(result) {
+        Common.ajax("GET", "/payment/selectOrderASList.do", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
     }
