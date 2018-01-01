@@ -45,28 +45,28 @@ function fn_openReport(){
             day = "0"+date.getDate();
         }
         var forecastDt2 = $("#forecastMonth").val().substring(3,7)+"-"+$("#forecastMonth").val().substring(0,2);
+        
         if($("#branchCmb").val() != '0'){
         	var cmid = $("#CMGroup").val();
         	var codyId = $("#codyList").val();
         	var branchId = $("#branchCmb").val();
         	var forecastDt = $("#forecastMonth").val().substring(3,7)+"-"+$("#forecastMonth").val().substring(0,2)+"-01";
-        	
-        	if(cmid == '' && codyId == ''){
+        	if(cmid == '' && codyId == null || cmid == '' && codyId == '' ){
+        		cmid = 0;
         		console.log("BSFilterForecastByBranch");
         		$("#hsFilterForm #reportFileName").val('/services/BSFilterForecastByBranch.rpt');    
         		$("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month+date.getFullYear());
         		$("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
         		$("#hsFilterForm #V_BRANCHID").val(branchId);
-        		$("#hsFilterForm #V_MEMBERID").val(cmid);
+        		$("#hsFilterForm #V_CMID").val(cmid);
         		
         	}else if(cmid > 0 && codyId == 0){
         		console.log("BSFilterForecast_CM");
-        		$("#hsFilterForm #reportFileName").val('/services/BSFilterForecast_CM.rpt');    
+        		$("#hsFilterForm #reportFileName").val('/services/BSFilterForecastByCMGroup.rpt');    
                 $("#hsFilterForm #reportDownFileName").val("BSFilterForecast_" + month+date.getFullYear());
                 $("#hsFilterForm #V_FORECASTDATE").val(forecastDt);
                 $("#hsFilterForm #V_BRANCHID").val(branchId);
-                $("#hsFilterForm #V_MEMBERID").val(cmid);
-                $("#hsFilterForm #V_MEMBERLVL").val(3);
+                $("#hsFilterForm #V_CMID").val(cmid);
         	}else if(cmid > 0 && codyId > 0){
         		console.log("BSFilterForecast_Cody");
                 $("#hsFilterForm #reportFileName").val('/services/BSFilterForecast_Cody.rpt');    
@@ -158,6 +158,7 @@ $.fn.clearForm = function() {
 <input type="hidden" id="V_BRANCHID" name="V_BRANCHID" />
 <input type="hidden" id="V_MEMBERID" name="V_MEMBERID" />
 <input type="hidden" id="V_MEMBERLVL" name="V_MEMBERLVL" />
+<input type="hidden" id="V_CMID" name="V_CMID" />
 <!--reportFileName,  viewType 모든 레포트 필수값 -->
 <input type="hidden" id="reportFileName" name="reportFileName" />
 <input type="hidden" id="viewType" name="viewType" />
