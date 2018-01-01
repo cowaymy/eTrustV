@@ -60,7 +60,7 @@
                                           ,SYS0054M D
                                      WHERE TBL.ROLE_ID = D.ROLE_ID
                                        AND D.AUTH_CODE = 'MGR') > 0 THEN 'Y' ELSE 'N' END AS mgrYn
-             , ORG.MEM_ID
+             , ORG.memId
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
 	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
 	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
