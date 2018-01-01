@@ -582,6 +582,7 @@ public class HsManualController {
 //		model.put("AS_NO", (String)params.get("AS_NO"));
 		model.put("BRNCH_ID",(String) params.get("brnchId"));
 		model.put("CODY_MANGR_USER_ID", (String) params.get("codyMangrUserId"));
+		model.put("CUST_ID", (String) params.get("custId"));
 		
 		//logger.debug("configBasicInfo(pop)================= : {}", configBasicInfo);
 		//
@@ -628,6 +629,8 @@ public class HsManualController {
 	
 	@RequestMapping(value = "/selectHSCodyList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHSCodyList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		//params.put("codyMangrUserId", params.get("groupCode[codyMangrUserId]"));
+		//params.put("custId", params.get("groupCode[custId]"));
 		logger.debug("params(selectHSCodyList)============== {}", params);
 		List<EgovMap> hsCodyList = hsManualService.selectHSCodyList(params) ;
 		logger.debug("hsCodyList(selectHSCodyList)============== {}", hsCodyList);

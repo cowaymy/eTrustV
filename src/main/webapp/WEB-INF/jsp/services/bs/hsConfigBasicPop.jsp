@@ -6,10 +6,12 @@
 
 //doGetCombo('/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', '', '','entry_cmbServiceMem', 'S' , '');   
 	    $(document).ready(function() {
-	    	//alert($("#codyMangrUserId").val());
 
-	    	doGetCombo('/services/bs/selectHSCodyList.do', $("#codyMangrUserId").val() , '', 'entry_cmbServiceMem' , 'S', '');
-	        
+	    	//doGetCombo('/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), custId : $("#custId").val()} , '', 'entry_cmbServiceMem' , 'S', '');
+
+	    	CommonCombo.make("entry_cmbServiceMem", '/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), custId : $("#custId").val()}, '', {isShowChoose: false});
+
+	        //{ salesOrdNo :  $("#salesOrdNo").val() }
 	    	/* Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {
 	              
 	    		if(result != null && result.length != 0 ){
@@ -26,12 +28,21 @@
 	    
 	    
                var configBsGen = ${configBasicInfo.configBsGen}
+
                $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);	    
 	    
 	           //var srvMemId =  ${configBasicInfo.configBsMemId}
 	           //$("#entry_cmbServiceMem option[value="+ srvMemId +"]").attr("selected", true);     
-	          
-	           
+             //$("#entry_cmbServiceMem").val($("entry_cmbServiceMem option:first").val());
+
+             //$("#entry_cmbServiceMem option:eq(0)").remove();
+             
+             //var index = $("entry_cmbServiceMem").index($("entry_cmbServiceMem option:selected"));
+             //alert("index"+index);
+             //$("#entry_cmbServiceMem option").removeAttr('selected').find(':first').attr('selected','selected');
+             //alert($("entry_cmbServiceMem option").size());
+	         
+             //$("#orgGrCombo option:eq(1)").attr("selected", "selected");
 	    });
     
     
@@ -117,7 +128,7 @@
                    srvBsWeek:                          $(':input[name=entry_srvBsWeek]:radio:checked').val(),
                    salesOrderId:                        $('#salesOrderId').val(),
                    configId:                             $('#configId').val(),
-                   hscodyId:                             $('#entry_cmbServiceMem').val(),
+                   hscodyId:                             $('#hscodyId').val(),
                    srvSoId:                                 $('#entry_orderNo').val(),
                    entry_cmbServiceMem:           $('#entry_cmbServiceMem').val()
         }
@@ -199,6 +210,7 @@
 <input type="hidden" name="hscodyId"  id="hscodyId" value="${configBasicInfo.configBsMemId}"/>
 <input type="hidden" name="configBsRem"  id="configBsRem" value="${configBasicInfo.configBsRem}"/>
 <input type="hidden" name="codyMangrUserId" id="codyMangrUserId" value="${CODY_MANGR_USER_ID}"/>
+<input type="hidden" name="custId" id="custId" value="${CUST_ID}"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -255,7 +267,9 @@
     <th scope="row" ><spring:message code='service.title.HSCodyCode'/></th>    
     <td>
         <!-- <input type="text" id="entry_cmbServiceMem" name="entry_cmbServiceMem" title="Member Code"  class="w100p" /> -->
-        <select class="w100p" id="entry_cmbServiceMem" name="entry_cmbServiceMem"></select>
+        <select class="w100p" id="entry_cmbServiceMem" name="entry_cmbServiceMem">
+        <!-- <option value="" selected="selected">dd</option>-->
+        </select>
     </td>
     <th scope="row" ><spring:message code='service.title.LastHSDate'/></th>    
     <td>

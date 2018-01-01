@@ -30,6 +30,8 @@ public interface UserManagementService {
 	List<EgovMap> selectUserRoleList(Map<String, Object> params);
 
 	void saveUserRoleList(Map<String, Object> params, SessionVO sessionVO);
+	
+	List<EgovMap> selectUserNameInfoList(Map<String, Object> params);
 
 
 }

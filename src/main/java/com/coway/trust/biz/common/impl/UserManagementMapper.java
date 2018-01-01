@@ -29,6 +29,10 @@ public interface UserManagementMapper {
 	List<EgovMap> selectUserRoleList(Map<String, Object> params);
 
 	void saveUserRoleList(Map<String, Object> params);
+	
+	void saveHistoryUserRoleList(Map<String, Object> params);
+	
+	List<EgovMap> selectUserNameInfoList(Map<String, Object> params);
 }
 
 

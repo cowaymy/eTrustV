@@ -195,6 +195,7 @@ MERGE INTO SYS0047M a
 				, #{userDeptId1} AS user_dept_id1
 				, #{userIsPartTm} AS user_is_part_tm
 				, #{userIsExtrnl} AS user_is_extrnl
+				, #{userIsCallCenter} AS callcenter_use_yn
           FROM dual
   ) b
      ON ( a.user_id = b.user_id )
@@ -276,6 +277,9 @@ MERGE INTO SYS0047M a
 	          <if test="userIsExtrnl != null and userIsExtrnl !=''">
 	          , a.user_is_extrnl          = b.user_is_extrnl
 	          </if>
+	          <if test="userIsCallCenter != null and userIsCallCenter !=''">
+              , a.callcenter_use_yn    = b.callcenter_use_yn
+              </if>
    WHEN NOT MATCHED THEN
         INSERT
         (
@@ -306,6 +310,7 @@ MERGE INTO SYS0047M a
 		  , a.user_dept_id1
 		  , a.user_is_part_tm
 		  , a.user_is_extrnl
+		  , a.callcenter_use_yn
         )
         VALUES
         (
@@ -336,6 +341,7 @@ MERGE INTO SYS0047M a
           , b.user_dept_id1
           , b.user_is_part_tm
           , b.user_is_extrnl
+          , b.callcenter_use_yn
         )
 </update>
 
@@ -379,4 +385,36 @@ MERGE INTO SYS0047M a
 	        , b.upd_user_id
         )
 </insert>
+
+<insert id="saveHistoryUserRoleList" parameterType="Map">
+INSERT INTO SYS0045H
+	(
+	    SEQ
+	    ,ROLE_ID
+	    ,USER_ID
+	    ,STUS_ID
+	    ,CRT_DT
+	    ,CRT_USER_ID
+	    ,UPD_DT
+	    ,UPD_USER_ID
+	)
+VALUES
+	(
+	    SYS0045H_SEQ.NEXTVAL,
+	    #{orgRoleId},
+	    #{userId},
+	    8,
+	    SYSDATE,
+	    #{crtUserId},
+	    SYSDATE,
+	    #{updUserId}
+	)
+</insert>
+
+ <select id="selectUserNameInfoList" parameterType="Map" resultType="egovMap">
+    SELECT B.CODE AS BRANCH
+    FROM ORG0001D A, SYS0005M B
+	WHERE A.BRNCH = B.BRNCH_ID
+	    AND A.MEM_CODE = #{userName}
+ </select>              
 </mapper>

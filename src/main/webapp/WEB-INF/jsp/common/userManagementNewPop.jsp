@@ -67,7 +67,7 @@ function fn_userTypeCodesearch(){
     )
 };
 
-function fn_brnchCodesearch(){
+/* function fn_brnchCodesearch(){
     Common.ajax(
             "GET",
             "/common/userManagement/selectBranchList.do",
@@ -81,9 +81,9 @@ function fn_brnchCodesearch(){
                 alert("Fail : " + jqXHR.responseJSON.message);
             }
     )
-};
+}; */
 
-function fn_departmentCodesearch(divCd){
+/* function fn_departmentCodesearch(divCd){
     Common.ajax(
             "GET",
             "/common/userManagement/selectDeptList.do",
@@ -104,7 +104,7 @@ function fn_departmentCodesearch(divCd){
                 alert("Fail : " + jqXHR.responseJSON.message);
             }
     )
-};
+}; */
 
 function fn_roleCodesearch(roleLev,parentRole){
     if(roleLev == "2" && parentRole == ""){
@@ -264,15 +264,17 @@ function fn_save(){
 
     var userIsExtrnl = 0;
     var userIsPartTm = 0;
+    var userIsCallCenter = N;
 
     if($("#saveForm input[id=userIsPartTm]").is(":checked")) userIsPartTm = 1;
     if($("#saveForm input[id=userIsExtrnl]").is(":checked")) userIsExtrnl = 1;
+    if($("#saveForm input[id=userIsCallCenter]").is(":checked")) userIsCallCenter = Y;
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
                 "GET",
                 "/common/userManagement/saveUserManagementList.do",
-                $("#saveForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl+"&userStusId=1"+"&roleId="+$("#saveForm #roleId3").val(), //Init status is 1
+                $("#saveForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl+"&userIsCallCenter="+userIsCallCenter+"&userStusId=1"+"&roleId="+$("#saveForm #roleId3").val(), //Init status is 1
                 function(data, textStatus, jqXHR){ // Success
                     Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
                 },
@@ -292,10 +294,25 @@ function onClickSelectMyMenuPop(){
 $(document).ready(function(){
     // AUIGrid 그리드를 생성
 	fn_userTypeCodesearch();
-	fn_brnchCodesearch("1");
-	fn_departmentCodesearch("1");
-	fn_departmentCodesearch("2");
+	//fn_brnchCodesearch("1");
+	//fn_departmentCodesearch("1");
+	//fn_departmentCodesearch("2");
+	   $("#userName_add").focusout(function(){
+        Common.ajax("GET", "/common/userManagement/selectUserNameInfoList.do",   { userName :  $("#userName_add").val() }  , function(result) {
+           console.log("selectUserNameInfoList >>> .");
+           console.log(  JSON.stringify(result));
+           
+           if(result.length>0){
+                $("#userBrnchId_add").val(result[0].branch)
+                //$("#Installation").val(result[0].department)
+           }
+         
+       }); 
+        
+    }); 
+	   
 	fn_roleCodesearch("1","");
+	
 });
 /****************************Program Init End********************************/
 </script>
@@ -331,12 +348,13 @@ $(document).ready(function(){
     </select>
     <label><input id="userIsPartTm" type="checkbox" name="userExtType" value=""/><span>Part-Timer</span></label>
     <label><input id="userIsExtrnl" type="checkbox" name="userExtType" value="" /><span>External User</span></label>
+    <label><input id="userIsCallCenter" type="checkbox" name="userExtType" value="" /><span>Call Center User</span></label>
     </td>
 </tr>
 <tr>
     <th scope="row">User Name<span class="must">*</span></th>
     <td>
-    <input id="userName" type="text" name="userName" title="" placeholder="User Name" class="w100p" maxlength="15" />
+    <input id="userName_add" type="text" name="userName_add" title="" placeholder="User Name" class="w100p" maxlength="15" />
     </td>
     <th scope="row">Full Name<span class="must">*</span></th>
     <td>
@@ -354,17 +372,19 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch<span class="must">*</span></th>
+    <th scope="row">Branch</th>
     <td>
-    <select id="userBrnchId" name="userBrnchId" class="w100p">
+    <!-- <select id="userBrnchId" name="userBrnchId" class="readonly">
         <option value="">- Select -</option>
-    </select>
+    </select>-->
+        <input type="text" title="" id="userBrnchId_add" name="userBrnchId_add" placeholder="" class="readonly" style="width: 157px; "/>
     </td>
-    <th scope="row">Department<span class="must">*</span></th>
+    <th scope="row">Department</th>
     <td>
-    <select id="userDeptId"  name="userDeptId" class="w100p">
+    <!-- <select id="userDeptId"  name="userDeptId" class="readonly">
         <option value="">- Select -</option>
-    </select>
+    </select> -->
+        <input type="text" title="" id="userDeptId" name="userDeptId" placeholder="" class="readonly" style="width: 157px; "/>
     </td>
 </tr>
 <tr>

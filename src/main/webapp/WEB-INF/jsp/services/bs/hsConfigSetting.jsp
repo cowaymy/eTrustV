@@ -151,6 +151,7 @@
 			      salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
 			      brnchId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "brnchId");
 			      codyMangrUserId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "codyMangrUserId");
+			      custId = AUIGrid.getCellValue(myGridID, event.rowIndex, "custId");
 			  });
 
 
@@ -178,7 +179,7 @@
 
 
 
-               Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId, null, null , true , '_ConfigBasicPop');
+               Common.popupDiv("/services/bs/hsConfigBasicPop.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId +"&codyMangrUserId="+codyMangrUserId+"&custId="+custId, null, null , true , '_ConfigBasicPop');
 
         }
 

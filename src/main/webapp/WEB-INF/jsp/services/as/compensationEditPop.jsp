@@ -24,10 +24,14 @@
                     Common.ajax("GET", "/services/compensation/selectSalesOrdNoInfo.do",   { salesOrdNo :  $("#salesOrdNo").val() }  , function(result) {
 						console.log("selectSalesOrdNoInfo >>> .");
 						console.log(  JSON.stringify(result));
-						if ( result != null ) {
+						 if(result.length>0){
 							$("#product").val(result[0].stkDesc)
 							$("#Installation").val(result[0].installDt)
 							$("#Serial").val(result[0].serialNo)
+                        }else{
+                        	$("#product").val('')
+                            $("#Installation").val('')
+                            $("#Serial").val('')
                         }	              
                     }); 
 	            

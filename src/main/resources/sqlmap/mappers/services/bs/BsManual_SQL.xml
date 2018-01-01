@@ -2679,10 +2679,22 @@
                                 AND B.SALES_ORD_NO =#{SRV_SO_ID}
                                  ORDER BY MEM_CODE ASC
                     </select>
-                    <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
+                    <!-- <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
                             SELECT A.MEM_CODE CODE_ID, A.MEM_CODE || '-' ||  A.NAME CODE_NAME
                             FROM  ORG0001D A, ORG0005D B 
-                            WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{groupCode} AND B.MEM_LVL = '4' 
+                            WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4' 
+                    </select> -->
+                    
+                    <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
+	                    SELECT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
+						FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
+						      FROM ORG0001D
+						      WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = #{custId})
+						       union
+						      SELECT A.MEM_CODE, A.NAME , 2 AS QUERYNO
+						      FROM  ORG0001D A, ORG0005D B 
+						      WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4') D
+						ORDER BY QUERYNO
                     </select>
                     
                       <select id="selectMemberId" parameterType="Map" resultType="string">
@@ -3315,14 +3327,6 @@
                 ,#{BSResultFilterClaim}
                 )
           </insert>
-          
-          <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
-				SELECT COUNT(*) CNT
-				FROM SVC0008D A,
-				     SVC0006D B
-				WHERE A.SCHDUL_ID = B.SCHDUL_ID
-				AND A.NO = #{hidSalesOrdCd}
-           </select>
 
 
 </mapper>
