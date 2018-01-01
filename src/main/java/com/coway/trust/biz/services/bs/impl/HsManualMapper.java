@@ -199,6 +199,8 @@ public interface HsManualMapper {
 	
 	void addbsResultMas(Map<String, Object> params);
 	
+	void updatebsResultMas(Map<String, Object> params);
+	
 	void updateQrySchedule(Map<String, Object> params);
 	
 	void updateQryConfig(Map<String, Object> params);

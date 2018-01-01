@@ -1747,7 +1747,7 @@
                            Limit1.fail_resn_id fail_resn_id  ,
                            Limit1.ren_colct_id ren_colct_id  ,
                            Limit1.result_rem result_rem  ,
-                           to_char (Limit1.setl_dt,'YYYYMMDD') AS setl_dt,
+                           to_char (Limit1.setl_dt,'DD/MM/YYYY') AS setl_dt,
                            Limit1.prev_svc_area prev_svc_area,
                            Limit1.next_svc_area next_svc_area,
                            Limit1.distance distance,
@@ -3203,7 +3203,7 @@
             ,#{ScheduleID}
             ,#{SalesOrderId}
             ,#{CodyID}
-            ,TO_DATE(#{SettleDate},'YYYY-MM-DD')
+            ,TO_DATE(#{SettleDate},'DD/MM/YYYY')
             ,#{ResultStatusCodeID}
             ,#{FailReasonID}
             ,#{RenCollectionID}
@@ -3221,6 +3221,17 @@
             ,#{ResultIsAdjust}
             )
           </insert>
+          
+          <update id="updatebsResultMas" parameterType="Map">
+            UPDATE SVC0006D
+			SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'), 
+			    RESULT_STUS_CODE_ID = #{ResultStatusCodeID},
+			    FAIL_RESN_ID = #{FailReasonID},
+			    REN_COLCT_ID = #{RenCollectionID},
+			    RESULT_REM = #{ResultRemark}
+			WHERE SCHDUL_ID = #{ScheduleID}
+			AND RESULT_IS_CURR = 1
+          </update>
           
           <update id="updateQrySchedule" parameterType="Map">
           update SVC0008D
@@ -3240,7 +3251,7 @@
           <update id="updateQryConfig4" parameterType="Map">
           update SAL0090D
            set SRV_REM = #{ResultRemark}
-              ,SRV_PREV_DT = TO_DATE(#{SettleDate}, 'YYYYMMDD')
+              ,SRV_PREV_DT = TO_DATE(#{SettleDate}, 'DD/MM/YYYY')
               ,SRV_BS_WEEK = #{bsPreferWeek}
         where SRV_STUS_ID = 1     
           and SRV_SO_ID =#{SalesOrderId}
@@ -3329,7 +3340,7 @@
           
           <update id="updateQryFilter" parameterType="Map">
           update SAL0087D
-            set SRV_FILTER_PRV_CHG_DT =  to_date(#{SettleDate},'yyyymmdd')
+            set SRV_FILTER_PRV_CHG_DT =  to_date(#{SettleDate},'DD/MM/YYYY')
                ,SRV_FILTER_UPD_DT = sysdate
                ,SRV_FILTER_UPD_USER_ID = #{ResultCreator}
             where SRV_CONFIG_ID = #{SrvConfigID}

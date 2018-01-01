@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
-<style type="text/css">
-/* 커스텀 datepicker 스타일 정의 */
-$( ".settleDt" ).datepicker({
-  dateFormat: "yyyymmdd"
-});
-</style>
-
 <script type="text/javaScript">
 
 // add by jgkim
@@ -60,7 +53,7 @@ var myDetailGridData = null;
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
-                    renderer : {
+                    editRenderer : {
                         type : "NumberStepRenderer",
                         min : 0,
                         max : 50,
@@ -93,8 +86,24 @@ var myDetailGridData = null;
                 showRowNumColumn : true
         
             };
+            
                 //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
                 myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
+                
+                AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
+                    if (event.columnIndex == 4){
+                        if ($("#cmbStatusType2").val() == 4) {    // Completed
+                            return true;
+                        } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+                            return false;
+                        } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+                            return false;
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+                
     }
     
     
@@ -238,8 +247,6 @@ var myDetailGridData = null;
 
     	   doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
             
-            
-            
            selSchdulId = $("#hidschdulId").val(); // TypeId 
            selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId 
            openGb = $("#openGb").val(); // TypeId 
@@ -251,15 +258,17 @@ var myDetailGridData = null;
            createAUIGrid();
            createAUIGrid2();
            createAUIGrid3();
-          
+           
            fn_getHsViewfilterInfoAjax();
            
            var statusCd = "${basicinfo.stusCodeId}";
            $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
 
             var failResnCd = "${basicinfo.failResnId}";
+            //alert("fail reason : " + failResnCd);
             if(failResnCd != "0" ){
-                $("#failReason option[value='"+failResnCd +"']").attr("selected", true);
+                $("#failReason option[value='"+ failResnCd +"']").attr("selected", true);
+                //$("#failReason option[value='60']").attr("selected", true);
             }else{
             	$("#failReason").find("option").remove();
             }
@@ -283,32 +292,68 @@ var myDetailGridData = null;
              
             if('${MOD}' =="VIEW"){
                $("#stitle").text("HS - Result View")	;
-               $("#addHsForm").find("input, textarea, button, select").attr("disabled",true);
+               $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",true);
                
                
             }else {
                 $("#stitle").text("HS - Result EDIT")  ;
                 
                 if($("#stusCode").val()==4) {
-                    $("#addHsForm").find("input, textarea, button, select").attr("disabled",false);
+                    $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",false);
                     $('#cmbCollectType').removeAttr('disabled'); 
                 }
                 
             }
             
-            // HS Result Information > HS Status 값 변경 시 Fail Reason 콤보박스 불러오기
-            $("#cmbStatusType2").change(function(){
-            	
-            	if ($("#cmbStatusType2").val() == 4) {    // Completed
-            		$("select[name='failReason'] option").remove();
-            	} else if ($("#cmbStatusType2").val() == 21) {    // Failed
-                    doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
+            
+            // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
+            if ($("#cmbStatusType2").val() == 4) {    // Completed
+                    $("input[name='settleDt']").attr('disabled', false);
+                    $("select[name='failReason'] option").remove();
+                    //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+                    $("select[name=cmbCollectType]").attr('disabled', false);
+                } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+                    //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+                    $('#settleDt').val('');
+                    $("input[name='settleDt']").attr('disabled', true);
+                    $("select[name='cmbCollectType'] option").remove();
+                    $("select[name=cmbCollectType]").attr('disabled', true);
                 } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+                    //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
+                    $('#settleDt').val('');
+                    $("input[name='settleDt']").attr('disabled', true);
+                    $("select[name='cmbCollectType'] option").remove();
+                    $("select[name=cmbCollectType]").attr('disabled', true);
+                }
+            
+            $("#cmbStatusType2").change(function(){
+                
+                AUIGrid.forceEditingComplete(myDetailGridID, null, false);
+                AUIGrid.updateAllToValue(myDetailGridID, "name", '0');
+                
+                if ($("#cmbStatusType2").val() == 4) {    // Completed
+                    $("input[name='settleDt']").attr('disabled', false);
+                    $("select[name='failReason'] option").remove();
+                    doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+                    $("select[name=cmbCollectType]").attr('disabled', false);
+                } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+                    doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+                    $('#settleDt').val('');
+                    $("input[name='settleDt']").attr('disabled', true);
+                    $("select[name='cmbCollectType'] option").remove();
+                    $("select[name=cmbCollectType]").attr('disabled', true);
+                } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                     doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
-                } else {
-            		$("select[name='failReason'] option").remove();
-            	}
-            	
+                    $('#settleDt').val('');
+                    $("input[name='settleDt']").attr('disabled', true);
+                    $("select[name='cmbCollectType'] option").remove();
+                    $("select[name=cmbCollectType]").attr('disabled', true);
+                }
+                
             });
     
     });
@@ -318,12 +363,22 @@ var myDetailGridData = null;
     	 Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{selSchdulId : selSchdulId}, function(result) {
              console.log("성공 fn_getHsViewfilterInfoAjax.");
              console.log("data : " + result);
+             
              AUIGrid.setGridData(myDetailGridID, result);   
+             
+             // Grid 안의 값이 음수인 경우 0으로 출력
+             var cnt = result.length;
+             for (var i=0; i<cnt; i++) {
+                 var minusCheck = AUIGrid.getCellValue(myDetailGridID, i, "name");
+                 if (minusCheck < 0) {
+                     AUIGrid.updateRow(myDetailGridID, { name : "0" }, i, false);
+                 }
+             }
+             
              myDetailGridData = result;
          }); 
+    	 
         
-
-
           Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{hrResultId : hrResultId}, function(result) {
             console.log("성공 selectHistoryHSResult.");
             console.log("data : " + result);
@@ -357,7 +412,28 @@ var myDetailGridData = null;
     
      function fn_UpdateHsResult(){
     	 
-    	 if ($("#cmbStatusType2").val() == 21) {    // Failed
+    	 if ($("#cmbStatusType2").val() == 4) {    // Completed
+             if ($("#settleDt").val() == '' || $("#settleDt").val() == null) {
+                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='settleDate Type'/>");
+                 return false;
+             }
+             if ($("#cmbCollectType").val() == '' || $("#cmbCollectType").val() == null) {
+                 Common.alert("Please Select 'Collection Code'");
+                 return false;
+             }
+         } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+             if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+                 Common.alert("Please Select 'Fail Reason'.");
+                 return false;
+             }
+         } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+             if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+                 Common.alert("Please Select 'Fail Reason'.");
+                 return false;
+             }
+         }
+    	 
+    	 /* if ($("#cmbStatusType2").val() == 21) {    // Failed
         	 if ($("#failReason").val() == '') {
         		 Common.alert("Please Select 'Fail Reason'.");
                  return false;
@@ -367,9 +443,10 @@ var myDetailGridData = null;
         		 Common.alert("Please Select 'Fail Reason'.");
                  return false;
              }
-         }
+         } */
+    	 
     	  var resultList = new Array();
-    	     $("#cmbCollectType1").val(addHsForm.cmbCollectType.value);
+    	     $("#cmbCollectType1").val(editHSResultForm.cmbCollectType.value);
               var jsonObj =  GridCommon.getEditData(myDetailGridID);
               var gridDataList = AUIGrid.getGridData(myDetailGridID);
               //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
@@ -386,7 +463,11 @@ var myDetailGridData = null;
               
            // add by jgkim
               var cmbStatusType2 = $("#cmbStatusType2").val();
+              $("input[name='settleDt']").removeAttr('disabled');
+              //$("select[name=cmbCollectType]").removeAttr('disabled');
               var form = $("#editHSResultForm").serializeJSON();
+              //$("input[name='settleDt']").attr('disabled', true);
+              //$("select[name=cmbCollectType]").attr('disabled', true);
               form.cmbStatusType2 = cmbStatusType2;
               jsonObj.form = form;
               console.log(jsonObj);
@@ -434,7 +515,7 @@ var myDetailGridData = null;
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" id="addHsForm" method="post">   
+<form action="#" id="editHSResultForm" method="post">  
  
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Information</h2>
@@ -603,8 +684,6 @@ var myDetailGridData = null;
 <!--     <li><p class="btn_blue2 big"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">Close</a></p></li> -->
 <!--     <li><p class="btn_blue2 big"><a href="#">Close</a></p></li> -->
 </ul>
-</form>
-<form id="editHSResultForm" method="post" action="#">
 
 
  <div  style="display:none">
@@ -619,12 +698,12 @@ var myDetailGridData = null;
    
  <input type="text" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
  <input type="text" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
- <input type="text" value="<c:out value="${basicinfo.renColctid}"/> "  id="renColct" name="renColct"/>
+ <input type="text" value="<c:out value="${basicinfo.renColctId}"/> "  id="renColct" name="renColct"/>
  <input type="text" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
  <input type="text" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt"/>
  <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem"/>
  <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction"/>
- <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType"/>
+ <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType1"/>
  
  </div>
  

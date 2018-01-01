@@ -154,7 +154,7 @@
            }
            
        });
-		
+        
     });
 
 
@@ -248,7 +248,11 @@
             }
             console.log(resultList);
             jsonObj.add = resultList;        
+            $("input[name='settleDate']").removeAttr('disabled');
+            //$("select[name=cmbCollectType]").removeAttr('disabled');
             jsonObj.form = $("#addHsForm").serializeJSON();
+            //$("input[name='settleDate']").attr('disabled', true);
+            //$("select[name=cmbCollectType]").attr('disabled', true);
             console.log(jsonObj);
             
             Common.ajax("POST", "/services/bs/saveValidation.do", jsonObj, function(result) {

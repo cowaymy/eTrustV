@@ -422,7 +422,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			insertHsResultfinal.put("salesOrdId", params.get("hidSalesOrdId"));
 			insertHsResultfinal.put("codyId", params.get("hidCodyId"));
 
-			insertHsResultfinal.put("setlDt", params.get("settleDate"));
+			//insertHsResultfinal.put("setlDt", params.get("settleDate"));
+			if(params.get("settleDate")!=null||params.get("settleDate")!=""){
+				insertHsResultfinal.put("setlDt", String.valueOf(params.get("settleDate")));
+			}else{
+				insertHsResultfinal.put("setlDt", "01/01/1900");
+			}
+			
 			insertHsResultfinal.put("resultStusCodeId", params.get("cmbStatusType"));
 			
 			insertHsResultfinal.put("failResnId", params.get("failReason"));
@@ -1178,9 +1184,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		
 		
 		//bsResultMas.put("SettleDate", params.get("setlDt"));
-		
-		if(params.get("setlDt")!=null||params.get("setlDt")!=""){
-			bsResultMas.put("SettleDate", String.valueOf(params.get("setlDt")));
+		logger.debug(">>>>>>settleDt isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get("settleDt")).trim()));
+		if(params.get("settleDt")!=null||params.get("settleDt")!=""){
+			bsResultMas.put("SettleDate", String.valueOf(params.get("settleDt")));
 		}else{
 			bsResultMas.put("SettleDate", "01/01/1900");
 		}
@@ -1198,7 +1204,12 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			bsResultMas.put("FailReasonID", String.valueOf(params.get("failReason")));
 		}
 		
-		bsResultMas.put("RenCollectionID", String.valueOf(params.get("cmbCollectType")));
+		if(params.get("cmbCollectType")==null || params.get("cmbCollectType")==""){
+			bsResultMas.put("RenCollectionID", String.valueOf("0"));
+		}else{
+			bsResultMas.put("RenCollectionID", String.valueOf(params.get("cmbCollectType")));
+		}
+		//bsResultMas.put("RenCollectionID", String.valueOf(params.get("cmbCollectType")));
 		
 		if(params.get("wareHouse")==null || params.get("wareHouse")==""){
 			bsResultMas.put("WarehouseID", String.valueOf("0"));
@@ -1206,13 +1217,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			bsResultMas.put("WarehouseID",String.valueOf(params.get("wareHouse")));
 		}
 		
+		//logger.debug("txtRemark isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get(""txtRemark"")).trim()));
+		bsResultMas.put("ResultRemark", String.valueOf(params.get("txtRemark")));
 		
-		logger.debug("configBsRem isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim()));
+		/*logger.debug("configBsRem isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim()));
 		if(StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim())){
 			bsResultMas.put("ResultRemark", String.valueOf(0));
 		}else{
 			bsResultMas.put("ResultRemark", String.valueOf(params.get("configBsRem")));
-		}
+		}*/
 		
 		//bsResultMas.put("ResultCreated", sysdate);
 		bsResultMas.put("ResultCreator", String.valueOf(sessionVO.getUserId()));
@@ -1475,9 +1488,17 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     				cnt++;
     			}
     		}
-    		//0인건 업데이트 하지말기 
-    		if(cnt != 0){
+    		
+    		if(cnt != 0){	// 0이 아닐 경우 인서트 
     			hsManualMapper.addbsResultMas(bsResultMas); // insert 1건 svc0006d
+    		} else if(cnt == 0){ // 0일 경우 업데이트 
+    			if(bsResultMas.get("SettleDate")!=null||bsResultMas.get("SettleDate")!=""){
+    				bsResultMas.put("SettleDate", String.valueOf(bsResultMas.get("SettleDate")));
+    			}else{
+    				bsResultMas.put("SettleDate", "01/01/1900");
+    			}
+    			logger.debug(">>>>>>>>>>bsResultMas : {}", bsResultMas);
+    			hsManualMapper.updatebsResultMas(bsResultMas); // UPDATE 1건 svc0006d
     		}
     		
     		hsManualMapper.updateQry_CurBSZero(qry_CurBS);// 최신거 업데이트
