@@ -52,10 +52,14 @@ public class HsManualController {
 	private MessageSourceAccessor messageAccessor;
 
 
-
     	@RequestMapping(value = "/initHsManualList.do")
-    	public String initBsManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
+    	public String initBsManagementList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 
+    		logger.debug("getUserBranchId : {}", sessionVO.getUserBranchId());
+
+    		params.put("memberLevel",  sessionVO.getMemberLevel());
+    		params.put("userName",  sessionVO.getUserName());
+    		
     		List<EgovMap> branchList = hsManualService.selectBranchList(params);
     		model.addAttribute("branchList", branchList);
 
@@ -250,7 +254,10 @@ public class HsManualController {
 
 
 	@RequestMapping(value = "/getCdUpMemList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getCdUpMemList(@RequestParam Map<String, Object>params) {
+	public ResponseEntity<List<EgovMap>> getCdUpMemList(@RequestParam Map<String, Object>params,SessionVO sessionVO) {
+		
+		params.put("memLevl",sessionVO.getMemberLevel());
+		
         // Member Type 에 따른 Organization 조회.
 		List<EgovMap> resultList = hsManualService.getCdUpMemList(params);
 
@@ -258,7 +265,10 @@ public class HsManualController {
 	}
 	//HS manual
 	@RequestMapping(value = "/getCdDeptList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> getCdDeptList(@RequestParam Map<String, Object>params) {
+	public ResponseEntity<List<EgovMap>> getCdDeptList(@RequestParam Map<String, Object>params,SessionVO sessionVO) {
+		
+		params.put("memLevl",sessionVO.getMemberLevel());
+		
         // Member Type 에 따른 Organization 조회.
 		List<EgovMap> resultList = hsManualService.getCdDeptList(params);
 

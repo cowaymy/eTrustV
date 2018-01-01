@@ -308,6 +308,11 @@
                         memId = "";
                     }
 
+                    if ($("#cmdBranchCode1").val() == '' || $("#cmdBranchCode1").val() == null) {
+                        Common.alert("Please Select 'Branch'");
+                        return false;
+                    }
+
                        // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
                         Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
                             console.log("성공.");
@@ -990,7 +995,7 @@
 
             </tr>
             <tr>
-            <th scope="row">Branch</th>
+            <th scope="row">Branch<span class="must">*</span></th>
             <td>
             <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p">
                        <option value="">Choose One</option>

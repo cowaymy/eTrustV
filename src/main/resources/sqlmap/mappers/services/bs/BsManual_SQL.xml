@@ -27,6 +27,32 @@
                     ,SYS0013M s0013m
             where s005m.type_id = s0013m.code_id
             and s005m.type_id in ( 42)
+		     AND S005M.BRNCH_ID IN (
+		            SELECT DISTINCT BRNCH_ID
+		                       FROM ORG0001D A, ORG0005D B
+		                      WHERE 1 = 1
+		                        AND A.MEM_ID = B.MEM_ID
+		                        AND B.LAST_DEPT_CODE IN (
+		                               SELECT B.DEPT_CODE
+		                                 FROM ORG0001D A, ORG0005D B
+		                                WHERE A.MEM_ID = B.MEM_ID
+			                            <choose>
+			                                    <when test="memberLevel == 1">
+			                                        AND B.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+			                                    </when>
+			                                    <when test="memberLevel == 2">
+			                                        AND B.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
+			                                    </when>
+			                                    <when test="memberLevel == 3">
+			                                        AND B.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
+			                                    </when>
+			                                    <when test="memberLevel == 4">
+			                                        AND A.MEM_CODE = #{userName}
+			                                    </when>
+			                            </choose>  		                                  
+		                                  )
+		                        AND BRNCH_ID != '0'
+		                   GROUP BY BRNCH_ID)            
             order by s005m.CODE ASC
 
           </select>
@@ -47,7 +73,7 @@
                 AND B.STUS IN (1,8)
                 AND B.MEM_TYPE = 2
             <if test="memLvl == '3'.toString()">
-                AND A.MEM_LVL = #{memLvl}
+                AND A.MEM_LVL > #{memLevl}
                 AND A.BRNCH_ID = #{groupCode}
             </if>
             <if test="memLvl == '4'.toString()">
@@ -71,7 +97,7 @@
                 AND B.STUS IN (1,8)
                 AND B.MEM_TYPE = 2
             <if test="memLvl == '3'.toString()">
-                AND A.MEM_LVL = #{memLvl}
+                AND A.MEM_LVL > #{memLevl}
                 AND A.BRNCH_ID = #{groupCode}
             </if>
             <if test="memLvl == '4'.toString()">
