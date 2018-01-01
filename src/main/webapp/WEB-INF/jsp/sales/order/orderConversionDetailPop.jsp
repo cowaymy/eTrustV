@@ -246,7 +246,18 @@
        </span>
     </td>
     <th scope="row">Comfirm At</th>
-    <td><span>${cnvrInfo.rsCnvrCnfmDt }</span></td>
+    <td>
+        <span>
+            <c:choose >
+                <c:when test="${cnvrInfo.rsCnvrCnfmDt eq '01-01-1900'}">
+                -
+                </c:when>
+                <c:otherwise>
+                ${cnvrInfo.rsCnvrCnfmDt }
+                </c:otherwise>
+            </c:choose>
+        </span>
+    </td>
     <th scope="row">Confirm By</th>
     <td><span>${cnvrInfo.rsCnvrCnfmUserName }</span></td>
 </tr>
@@ -254,7 +265,18 @@
     <th scope="row">Convert Status</th>
     <td><span>${cnvrInfo.name }</span></td>
     <th scope="row">Convert At</th>
-    <td><span>${cnvrInfo.rsCnvrDt }</span></td>
+    <td>
+        <span>
+            <c:choose >
+                <c:when test="${cnvrInfo.rsCnvrDt eq '01-01-1900'}">
+                -
+                </c:when>
+                <c:otherwise>
+                ${cnvrInfo.rsCnvrDt }
+                </c:otherwise>
+            </c:choose>
+        </span>
+    </td>
     <th scope="row">Convert By</th>
     <td><span>${cnvrInfo.rsCnvrUserName }</span></td>
 </tr>
