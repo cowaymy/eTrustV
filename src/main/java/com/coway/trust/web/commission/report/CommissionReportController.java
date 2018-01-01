@@ -583,11 +583,8 @@ public class CommissionReportController {
 		params.put("mstId", CommissionConstants.COMIS_CD_CD);
 		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
 
-		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
-		if(dt.length()<7){
-			dt = "0"+dt;
-		}
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
 
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
@@ -661,11 +658,8 @@ public class CommissionReportController {
 		params.put("mstId", CommissionConstants.COMIS_HP_CD);
 		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
 
-		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
-		if(dt.length()<7){
-			dt = "0"+dt;
-		}
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
 
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
@@ -731,11 +725,8 @@ public class CommissionReportController {
 		params.put("mstId", CommissionConstants.COMIS_CT_CD);
 		List<EgovMap> orgList = commissionReportService.selectOrgList(params);
 
-		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
-		if(dt.length()<7){
-			dt = "0"+dt;
-		}
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
 
 		model.addAttribute("searchDt", dt);
 		model.addAttribute("orgGrList", orgGrList);
