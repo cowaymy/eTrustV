@@ -98,11 +98,8 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/runCommissionBasicProMng.do")
 	public String runCommissionBasicProMng(@RequestParam Map<String, Object> params, ModelMap model) {
-		String dt = CommonUtils.getNowDate().substring(0, 6);
-		dt = (Integer.parseInt(dt.substring(4))-1) + "/" + dt.substring(0, 4);
-		if(dt.length()<7){
-			dt = "0"+dt;
-		}
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
 
 		model.addAttribute("searchDt", dt);
 		// 호출될 화면
@@ -1869,9 +1866,11 @@ public class CommissionCalculationController {
 		params.put("ordId",ordId);
 		
 		int sTaskID = 0;
-		String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
 		
-		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
+		
+		int pvMonth = Integer.parseInt(dt.substring(0,2));
 		int pvYear = Integer.parseInt(dt.substring(3));
 		
 		sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
