@@ -65,6 +65,8 @@ public class StockListController {
 		String[] status = request.getParameterValues("cmbStatus");
 		String stkNm = request.getParameter("stkNm");
 		String stkCd = request.getParameter("stkCd");
+		
+		String oldstkcd = request.getParameter("oldstkcd");
 
 		Map<String, Object> smap = new HashMap();
 		smap.put("cateList", cate);
@@ -72,6 +74,7 @@ public class StockListController {
 		smap.put("statList", status);
 		smap.put("stkNm", stkNm);
 		smap.put("stkCd", stkCd);
+		smap.put("oldstkcd", oldstkcd);
 
 		List<EgovMap> list = stock.selectStockList(smap);
 

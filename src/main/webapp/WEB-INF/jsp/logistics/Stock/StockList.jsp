@@ -53,7 +53,8 @@
 							{dataField: "c8",headerText :"<spring:message code='log.head.stk_comm_bs'/>"            ,width:100 ,height:30},                         
 							{dataField: "c9",headerText :"<spring:message code='log.head.stk_comm_os_bs'/>"         ,width:100 ,height:30},                         
 							{dataField: "c10",headerText :"<spring:message code='log.head.stk_comm_ins'/>"          ,width:100 ,height:30},                         
-							{dataField: "c11",headerText :"<spring:message code='log.head.stk_comm_os_ins'/>"           ,width:100 ,height:30} 
+							{dataField: "c11",headerText :"<spring:message code='log.head.stk_comm_os_ins'/>"           ,width:100 ,height:30},
+							{dataField: "stkoldcd",headerText :"<spring:message code='log.head.stk_old_cd'/>"           ,width:100 ,height:30}
 
                        ];
 
@@ -754,6 +755,7 @@
      var param = $('#searchForm').serialize();
         console.log(param);
         Common.ajax("GET" , "/stock/StockList.do" , param , function(data){
+        	console.log(data);
         	var gridData = data;
         	AUIGrid.setGridData(myGridID, gridData.data);
         });
@@ -785,6 +787,7 @@
             $("#txtStockType").empty();
             $("#txtStockCode").empty();
             $("#txtUOM").empty();
+            $("#txtoldmat").empty();
 
             $("#txtStockName").empty();
             $("#txtCategory").empty();
@@ -796,6 +799,7 @@
             $("#txtStatus").text(data[0].statusname);
             $("#txtStockCode").text(data[0].stockcode);
             $("#txtUOM").text(data[0].uomname);
+            $("#txtoldmat").text(data[0].oldstkcd);
             $("#txtStockName").text(data[0].stockname);
             $("#txtCategory").text(data[0].categotynm);
 
@@ -843,6 +847,8 @@
                     "<select id='stock_uom' name='stock_uom'></select>");
             doGetCombo('/common/selectCodeList.do', '42', data[0].uomname,
                     'stock_uom', 'S'); //청구처 리스트 조회
+            $("#txtoldmat").html("<input type='text' name='old_stock_code' id='old_stock_code' class='w100p' value='' disabled=true/>");
+            $("#old_stock_code").val(data[0].oldstkcd);
             $("#txtStockName")
                     .html(
                             "<input type='text' name='stock_name' id='stock_name' class='w100' value=''/>");
@@ -1376,8 +1382,12 @@
                         <input type=text name="stkCd" id="stkCd" class="w100p" value=""/>
                     </td>
                     <th scope="row">Material Name</th>
-                    <td colspan='3'>
+                    <td>
                         <input type=text name="stkNm" id="stkNm" class="w100p" value=""/>
+                    </td>
+                    <th scope="row">Old Mat</th>
+                    <td>
+                        <input type=text name="oldstkcd" id="oldstkcd" class="w100p" value=""/>
                     </td>                
                 </tr>
             </tbody>
@@ -1451,7 +1461,9 @@
                         <th scope="row">Material Code</th>
                         <td ID="txtStockCode"></td>
                         <th scope="row">UOM</th>
-                        <td colspan="3" id="txtUOM"></td>
+                        <td id="txtUOM"></td>
+                        <th scope="row">Old Mat.</th>
+                        <td id="txtoldmat"></td>
                     </tr>
                     <tr>
                         <th scope="row">Material Name</th>

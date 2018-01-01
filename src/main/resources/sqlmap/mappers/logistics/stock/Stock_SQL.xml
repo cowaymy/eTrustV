@@ -31,7 +31,8 @@
 			    Project1.StkGrade AS StkGrade, 
 			    Project1.BSPoint AS BSPoint, 
 			    Project1.UnitValue AS UnitValue, 
-			    Project1.C2 AS C2, 
+			    Project1.StkOldCd as StkOldCd ,
+                Project1.C2 AS C2, 
 			    Project1.C3 AS C3, 
 			    Project1.C4 AS C4, 
 			    Project1.C5 AS C5, 
@@ -60,7 +61,8 @@
 			       stk.STK_GRAD AS StkGrade,
 			       stk.BS_POINT AS BSPoint,
 			       stk.UNIT_VALU AS UnitValue,
-			       (SELECT CODE_NAME
+			       stk.STK_OLD_CODE AS StkOldCd,
+                   (SELECT CODE_NAME
 			          FROM SYS0013M
 			         WHERE CODE_ID = stk.STK_CTGRY_ID)
 			          CodeName,
@@ -166,6 +168,9 @@
 			<if test="stkCd !=null and stkCd != ''">
 			AND StkCode like #{stkCd} || '%'
 			</if>
+			<if test="oldstkcd !=null and oldstkcd !=''">
+			AND StkOldCd = #{oldstkcd}
+			</if>
 		ORDER BY StkCode    			
 	</select>
 	<select id="selectStockInfo" parameterType="Map" resultType="egovMap">
@@ -217,7 +222,8 @@
 		       INV.NET_WT netweight,
 		       INV.GROS_WT grossweight,
 		       inv.MEASURE_CBM mcbm,
-		       inv.STK_TYPE_ID typeid
+		       inv.STK_TYPE_ID typeid,
+		       inv.STK_OLD_CODE oldstkcd
 		  FROM SYS0026M inv
 		 WHERE inv.STK_ID = #{stockId}   
 	 
