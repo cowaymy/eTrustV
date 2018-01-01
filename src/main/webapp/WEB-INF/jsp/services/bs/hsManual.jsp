@@ -659,6 +659,12 @@
                 $('#cmdBranchCode').trigger('click');
                 $('#cmdBranchCode1').trigger('click');
                 
+                $('#cmdBranchCode', '#searchForm').attr("readonly", true );
+                $('#cmdBranchCode1', '#searchForm').attr("readonly",  true );
+                
+                $('#cmdBranchCode', '#searchForm').attr('class','w100p readonly ');
+                $('#cmdBranchCode1', '#searchForm').attr('class','w100p readonly ');
+                
                 /*$('#cmdCdManager', '#searchForm').attr("readonly", true );
                 $('#cmdCdManager1', '#searchForm').attr("readonly",  true );
                 
@@ -911,7 +917,7 @@
             <tr>
                 <th scope="row">Cody Branch<span class="must">*</span></th>
                 <td>
-                <select id="cmdBranchCode" name="cmdBranchCode" class="w100p" disabled="disabled">
+                <select id="cmdBranchCode" name="cmdBranchCode" class="w100p readOnly ">
                        <option value="">Choose One</option>
                        <c:forEach var="list" items="${branchList }" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
@@ -1041,7 +1047,7 @@
             <tr>
             <th scope="row">Branch<span class="must">*</span></th>
             <td>
-            <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p"  disabled="disabled">
+            <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p">
                        <option value="">Choose One</option>
                        <c:forEach var="list" items="${branchList }" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
