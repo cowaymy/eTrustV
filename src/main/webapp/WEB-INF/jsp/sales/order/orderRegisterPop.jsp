@@ -12,6 +12,7 @@
     var docGridID;
     var docDefaultChk = false;
     var GST_CHK = '';
+    var GST_MANNUAL = 'N';
     
     $(document).ready(function(){
 
@@ -724,6 +725,7 @@
             if($("#gstChk").val() == '1') {
                 $('#pBtnCal').removeClass("blind");
                 fn_tabOnOffSet('REL_CER', 'SHOW');
+                GST_MANNUAL = 'Y';
             }
             else {
                 $('#pBtnCal').addClass("blind");
@@ -737,6 +739,7 @@
                 if(FormUtil.isNotEmpty(promoIdVal)) {
                     fn_loadPromotionPrice(promoIdVal, stkIdVal);
                 }
+                GST_MANNUAL = 'N';
             }
         });
         $('#salesmanCd').keydown(function (event) {  
@@ -1851,8 +1854,13 @@
 
         console.log('certRefFile'+ $('#certRefFile').val())
 
-        if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
+//      if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
+        if(!$('#tabRC').hasClass("blind") && GST_MANNUAL == 'Y') {
 
+            if(FormUtil.checkReqValue($('#certRefFile'))) {
+                isValid = false;
+                msg += "* Please upload a relief cert file<br>";
+            }
             if(FormUtil.checkReqValue($('#certRefNo'))) {
                 isValid = false;
                 msg += "* Please key in the cert reference no.<br>";
@@ -2143,6 +2151,7 @@
                 } else if(opt == 'HIDE') {
                     if(!$('#tabRC').hasClass("blind")) $('#tabRC').addClass("blind");
                     if(!$('#atcRC').hasClass("blind")) $('#atcRC').addClass("blind");
+                    $('#fileUploadForm').clearForm();
                 }
                 break;
             default :

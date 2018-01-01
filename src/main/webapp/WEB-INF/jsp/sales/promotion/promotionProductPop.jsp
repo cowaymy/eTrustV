@@ -15,7 +15,8 @@
             doGetComboCodeId('/sales/promotion/selectProductCategoryList.do', '', '', 'stkCtgryId', 'S'); //Category
         }
         else {
-            doGetCombo('/common/selectCodeList.do', '63', '', 'stkCtgryId', 'S'); //Category
+//          doGetCombo('/common/selectCodeList.do', '63', '', 'stkCtgryId', 'S'); //Category
+            doGetComboCodeId('/sales/promotion/selectProductCategoryList.do', '', '', 'stkCtgryId', 'S'); //Category
         }
         
         //doGetCombo('/common/selectCodeList.do', '15', '', 'stkTypeId',  'S'); //Type
@@ -61,7 +62,8 @@
             groupingMessage     : "Here groupping"
         };
         
-        var columnLayout = '${gubun}' == 'stocklist' ? columnLayout1 : columnLayout2;
+//      var columnLayout = '${gubun}' == 'stocklist' ? columnLayout1 : columnLayout2;
+        var columnLayout = columnLayout1;
         
         myGridID = GridCommon.createAUIGrid("pop_grid_wrap", columnLayout, "", gridPros);
     }
@@ -75,7 +77,8 @@
         	fn_addItems(selectedItems, '${gubun}');
         });
     });
-	    // 리스트 조회.
+	
+	// 리스트 조회.
     function fn_selectPrdListAjax() {
         if('${gubun}' == 'stocklist') {
             Common.ajax("POST", "/sales/promotion/selectProductCodeList.do", $("#popSearchForm").serializeJSON(), function(result) {
@@ -83,8 +86,8 @@
             });
         }
         else {
-            Common.ajax("POST", "/logistics/material/materialcdsearch.do", $("#popSearchForm").serializeJSON(), function(result) {
-                AUIGrid.setGridData(myGridID, result.data);
+            Common.ajax("POST", "/sales/promotion/selectFreeGiftCodeList.do", $("#popSearchForm").serializeJSON(), function(result) {
+                AUIGrid.setGridData(myGridID, result);
             });
         }
     }

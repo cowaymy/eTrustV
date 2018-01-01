@@ -402,7 +402,7 @@
             if (tag === 'form'){
                 return $(':input',this).clearForm();
             }
-            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            if (type === 'text' || type === 'password' || type === 'hidden' || type === 'file' || tag === 'textarea'){
                 this.value = '';
             }else if (type === 'checkbox' || type === 'radio'){
                 this.checked = false;

@@ -213,6 +213,13 @@ public class PromotionController {
     	return ResponseEntity.ok(resultList);
     }
     
+    @RequestMapping(value = "/selectFreeGiftCodeList.do", method = RequestMethod.POST)
+    public ResponseEntity<List<EgovMap>> selectFreeGiftCodeList(@RequestBody Map<String, Object> params)
+    {
+    	List<EgovMap> resultList = promotionService.selectFreeGiftCodeList(params);
+    	return ResponseEntity.ok(resultList);
+    }
+    
 	@RequestMapping(value = "/selectPriceInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<List<SalesPromoDVO>> selectPriceInfo(@RequestBody PromotionVO promotionVO) {
 		

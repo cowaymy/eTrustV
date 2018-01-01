@@ -649,10 +649,12 @@
             $('#promoDiscPeriodTp').val('2293');
             $('#promoDiscPeriod').val('').prop("disabled", true);
         }
+        /*
         else {
             $('#promoDiscPeriodTp').val('');
             $('#promoDiscPeriod').removeAttr("disabled");
         }
+        */
     }
 </script>
 

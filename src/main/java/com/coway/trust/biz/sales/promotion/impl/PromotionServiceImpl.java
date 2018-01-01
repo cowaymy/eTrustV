@@ -286,6 +286,11 @@ public class PromotionServiceImpl extends EgovAbstractServiceImpl implements Pro
 	}
 	
 	@Override
+	public List<EgovMap> selectFreeGiftCodeList(Map<String, Object> params) {
+		return promotionMapper.selectFreeGiftCodeList(params);
+	}
+	
+	@Override
 	public List<SalesPromoDVO> selectPriceInfo(PromotionVO promotionVO) {
 		
 		GridDataSet<SalesPromoDVO> salesPromoDDataSetList  = promotionVO.getSalesPromoDGridDataSetList();

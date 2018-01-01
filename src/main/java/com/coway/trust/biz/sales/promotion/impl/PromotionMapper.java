@@ -55,6 +55,8 @@ public interface PromotionMapper {
 
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
+	List<EgovMap> selectFreeGiftCodeList(Map<String, Object> params);
+
 	List<EgovMap> selectProductCategoryList();
 
 }

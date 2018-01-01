@@ -558,8 +558,8 @@
         SELECT T1.PROMO_FREE_GIFT_ID
              , T1.PROMO_FREE_GIFT_PROMO_ID
              , T1.PROMO_FREE_GIFT_STK_ID
-             , T2.ITM_CODE AS ITMCD
-             , T2.ITM_NAME AS ITMNAME
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
              , T1.PROMO_FREE_GIFT_STUS_ID
              , T1.PROMO_FREE_GIFT_START_DT
              , T1.PROMO_FREE_GIFT_EXPR_DT
@@ -568,8 +568,8 @@
              , T1.PROMO_FREE_GIFT_QTY
           FROM SAL0019D T1
           LEFT OUTER
-          JOIN MSC0039D T2
-            ON T1.PROMO_FREE_GIFT_STK_ID = T2.ITM_ID
+          JOIN SYS0026M T2
+            ON T1.PROMO_FREE_GIFT_STK_ID = T2.STK_ID
          WHERE T1.PROMO_FREE_GIFT_PROMO_ID = #{promoId}
            AND T1.PROMO_FREE_GIFT_STUS_ID = 1
     </select>
@@ -627,22 +627,22 @@
           FROM
              (
             <if test='stkType != null and stkType == "1"'>
-		       SELECT T1.STK_ID       itemid
-		            , T1.STK_CODE     itemcode
-		            , T1.STK_DESC     itemname
-		            , T1.STK_CTGRY_ID cateid
-		            , T1.STK_TYPE_ID  typeid
-		            , T1.STUS_CODE_ID stateid
-		            , (SELECT CODE_NAME
-		                 FROM SYS0013M
-		                WHERE CODE_ID = T1.STK_CTGRY_ID) catename
-		            , (SELECT CODE_NAME
-		                 FROM SYS0013M
-		                WHERE CODE_ID = T1.STK_TYPE_ID)
-		                 typename
-		            , (SELECT SYS0038M.NAME
-		                 FROM SYS0038M
-		                WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+               SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
                  FROM SYS0026M T1
                     , SAL0082D T2
                     , SYS0013M T3
@@ -701,6 +701,53 @@
                   AND T1.STK_TYPE_ID = 62
                   AND T1.STUS_CODE_ID = 1
             </if>
+             )
+         WHERE 1 = 1
+       <if test="scode != null and scode !=''">
+           AND itemcode LIKE  #{scode}||'%'
+       </if>
+       <if test="sname != null and sname !=''">
+           AND itemname LIKE '%'|| #{sname} ||'%'
+       </if>                
+       <if test="cateid != null and cateid !=''">
+           AND cateid =  #{cateid}
+       </if>
+       <if test="typeid != null and typeid !=''">
+           AND typeid =  #{typeid}
+       </if>
+         ORDER BY itemname ASC
+    </select>
+    
+    <!--Free Gift 정보 조회 -->
+    <select id="selectFreeGiftCodeList" parameterType="Map" resultType="egovMap">
+        SELECT itemid
+             , itemcode
+             , itemname
+             , cateid
+             , typeid
+             , stateid
+             , catename
+             , statusname
+          FROM
+             ( SELECT T1.STK_ID       itemid
+                    , T1.STK_CODE     itemcode
+                    , T1.STK_DESC     itemname
+                    , T1.STK_CTGRY_ID cateid
+                    , T1.STK_TYPE_ID  typeid
+                    , T1.STUS_CODE_ID stateid
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_CTGRY_ID) catename
+                    , (SELECT CODE_NAME
+                         FROM SYS0013M
+                        WHERE CODE_ID = T1.STK_TYPE_ID)
+                         typename
+                    , (SELECT SYS0038M.NAME
+                         FROM SYS0038M
+                        WHERE SYS0038M.STUS_CODE_ID = T1.STUS_CODE_ID) statusname
+                 FROM SYS0026M T1
+                WHERE STK_TYPE_ID = '61'
+                  AND T1.STUS_CODE_ID = 1
              )
          WHERE 1 = 1
        <if test="scode != null and scode !=''">

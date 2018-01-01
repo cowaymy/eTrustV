@@ -40,4 +40,6 @@ public interface PromotionService {
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectProductCategoryList();
+
+	List<EgovMap> selectFreeGiftCodeList(Map<String, Object> params);
 }
