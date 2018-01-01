@@ -166,20 +166,20 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		
 		List<EgovMap> billGrpOrd  = orderModifyMapper.selectBillGroupOrder(params);
 		
-		logger.info("!@###### billGrpOrd.size():"+billGrpOrd.size());
+		//logger.info("!@###### billGrpOrd.size():"+billGrpOrd.size());
+		if(billGrpOrd != null && billGrpOrd.size() > 0) {
+			billGrpInfo.put("totOrder", billGrpOrd.size());
+			params.put("custCntcId", billGrpInfo.get("custBillCntId"));
 
-		billGrpInfo.put("totOrder", billGrpOrd.size());
-		
-		params.put("custCntcId", billGrpInfo.get("custBillCntId"));
-		
-		logger.info("!@###### custBillCustId:"+billGrpInfo.get("custBillCustId"));
-		
-		EgovMap custAddInfo = customerMapper.selectCustomerViewMainContact(params);
-		
-		custAddInfo.put("code",	CommonUtils.isEmpty(custAddInfo.get("code")) ? "" : custAddInfo.get("code"));
-		custAddInfo.put("name1",	CommonUtils.isEmpty(custAddInfo.get("name1")) ? "" : custAddInfo.get("name1"));
-		
-		billGrpInfo.put("custAddInfo", custAddInfo);
+			logger.info("!@###### custBillCustId:"+billGrpInfo.get("custBillCustId"));
+
+			EgovMap custAddInfo = customerMapper.selectCustomerViewMainContact(params);
+			
+			custAddInfo.put("code",	CommonUtils.isEmpty(custAddInfo.get("code")) ? "" : custAddInfo.get("code"));
+			custAddInfo.put("name1",	CommonUtils.isEmpty(custAddInfo.get("name1")) ? "" : custAddInfo.get("name1"));
+			
+			billGrpInfo.put("custAddInfo", custAddInfo);
+		}
 		
 		return billGrpInfo;
 	}
