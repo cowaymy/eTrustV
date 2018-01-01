@@ -579,7 +579,8 @@
                                         Project2.SALES_ORD_ID,
                                         Project2.branch_cd,
                                         Project2.CODY_MANGR_USER_ID,
-                                        Project2.Result as Result
+                                        Project2.Result as Result,
+                                        project2.dept_code
                          from(        SELECT distinct
             hs.no AS no,
             hs.stus_code_id AS stus_code_id,
@@ -605,6 +606,7 @@
             so.sales_ord_id,
             br.code AS branch_cd,
             mg.cody_mangr_user_id
+            ,og.dept_code 
         FROM
             svc0008d hs
             INNER JOIN sal0001d so ON so.sales_ord_id = hs.sales_ord_id
@@ -617,9 +619,9 @@
             INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
             INNER JOIN org0001d cd ON cd.mem_id = hs.cody_id
             INNER JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
-            LEFT JOIN org0001d ac ON ac.mem_id = hs.actn_mem_id
-            LEFT JOIN sys0005m br ON br.code = mg.cody_brnch_code
-            LEFT JOIN org0005d og ON og.dept_code = mg.cody_mangr_user_id
+            LEFT JOIN org0001d ac ON ac.mem_id = hs.CODY_ID
+            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch 
+            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID            
                                              WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
                                                  AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
                                            <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
@@ -653,6 +655,10 @@
                                               <if test="cmdCdManager != null and cmdCdManager != ''">
                                                      AND CD.MEM_ID = #{cmdCdManager}
                                               </if>
+                                              <if test="deptCode != null and deptCode != ''">
+                                                     AND OG.DEPT_CODE = #{deptCode}
+                                              </if>
+                                              
                         )Project2
 			        ) Project3
                     <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>

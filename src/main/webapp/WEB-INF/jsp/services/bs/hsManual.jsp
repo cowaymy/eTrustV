@@ -183,7 +183,11 @@
                         dataField : "c5",
                         headerText : "Assign Cody",
                         width : 120
-                    }, {
+                    },{
+                        dataField : "codyMangrUserId",
+                        headerText : "Cody Mangr User ID",
+                        width : 120
+                    },{
                         dataField : "actnMemId",
                         headerText : "Complete Cody",
                         width : 120
@@ -999,6 +1003,14 @@
                 <td>
                     <input id="myInstallMonth" name="myInstallMonth" type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p"  />
                 </td>
+                <th scope="row">Dept Code</th>
+                <td>
+                    <input id="deptCode" name="deptCode" type="text" title=""  placeholder="DEPT CODE" class="w100p" />
+                </td>        
+                <th scope="row"></th>
+                <td>
+                    
+                </td>   
             </tr>
 
             </tbody>
