@@ -653,7 +653,7 @@
                                                      AND ( br.BRNCH_id = #{cmdBranchCode})
                                               </if>
                                               <if test="cmdCdManager != null and cmdCdManager != ''">
-                                                     AND CD.MEM_ID = #{cmdCdManager}
+                                                     AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
                                               </if>
                                               <if test="deptCode != null and deptCode != ''">
                                                      AND OG.DEPT_CODE = #{deptCode}
