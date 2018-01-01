@@ -26,7 +26,7 @@ type : 'S'
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-      //AUIGrid.setSelectionMode(myGridID, "singleRow");
+//        AUIGrid.setSelectionMode(myGridID, "singleRow");
         
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -44,9 +44,9 @@ type : 'S'
         $('#pstStusId').multipleSelect("checkAll");
         
      // 셀 더블클릭 이벤트 바인딩
-//        AUIGrid.bind(myGridID, "cellClick", function(event) {
-//            gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, "pstSalesOrdId");
-//        });
+        AUIGrid.bind(myGridID, "cellClick", function(event) {
+            $("#pstSalesOrdIdParam").val(event.item.pstSalesOrdId);
+        });
     
     });
     
@@ -164,8 +164,12 @@ type : 'S'
     }
     
     function fn_pstReport(){
-        Common.alert('The program is under development.');
-        //Common.popupDiv("/sales/pst/reportPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
+        //Common.alert('The program is under development.');
+        if($("#pstSalesOrdIdParam").val() == ''){
+        	Common.alert("No record selected.");
+        	return false;
+        }
+        Common.popupDiv("/sales/pst/reportPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
     }
     
     $.fn.clearForm = function() {
