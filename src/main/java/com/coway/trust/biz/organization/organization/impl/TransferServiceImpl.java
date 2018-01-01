@@ -87,7 +87,7 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("parentDeptCodeFrom", parentFrom.get("deptCode"));
 			memberPromoEntry.put("parentIDFrom", parentFrom.get("memId"));
 			memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
-			memberPromoEntry.put("parentIDTo", parentTo.get("memId"));
+			memberPromoEntry.put("parentIDTo", deptCode.get("memId"));
 			memberPromoEntry.put("statusIDFrom", 1);
 			memberPromoEntry.put("statusIDTo", 1);
 			memberPromoEntry.put("PRCode", parentFrom.get("deptCode"));
