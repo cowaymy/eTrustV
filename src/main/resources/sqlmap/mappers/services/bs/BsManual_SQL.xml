@@ -604,7 +604,7 @@
             br.brnch_id AS brnch_id,
             hs.schdul_id schdul_id,
             so.sales_ord_id,
-            br.code AS branch_cd,
+            mg.CODY_BRNCH_CODE AS branch_cd,
             mg.cody_mangr_user_id
             ,og.dept_code 
         FROM
