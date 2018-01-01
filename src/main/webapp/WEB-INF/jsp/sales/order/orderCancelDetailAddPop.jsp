@@ -541,10 +541,26 @@
         <span></span>
         </td>
         <th scope="row">Appointment Date</th>
-        <td>${cancelReqInfo.appRetnDg}
+        <td>
+            <c:choose >
+                <c:when test="${cancelReqInfo.appRetnDg eq '01-01-1900'}">
+                -
+                </c:when>
+                <c:otherwise>
+                ${cancelReqInfo.appRetnDg}
+                </c:otherwise>
+            </c:choose>
         </td>
         <th scope="row">Actual Cancel Date</th>
-        <td>${cancelReqInfo.actualCanclDt}
+        <td>
+            <c:choose >
+                <c:when test="${cancelReqInfo.actualCanclDt eq '01-01-1900'}">
+                -
+                </c:when>
+                <c:otherwise>
+                ${cancelReqInfo.actualCanclDt}
+                </c:otherwise>
+            </c:choose>
         </td>
     </tr>
 <!--
