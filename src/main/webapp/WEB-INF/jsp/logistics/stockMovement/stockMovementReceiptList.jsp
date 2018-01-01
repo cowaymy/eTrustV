@@ -382,7 +382,7 @@ $(function(){
             return false;
         }else{
             var itm = checkedItems[0];
-            $("#V_REQST_NO").val(itm.delyno);
+            $("#V_DELVRYNO").val(itm.delyno);
             Common.report("printForm");
          }
      });
@@ -785,7 +785,7 @@ function fn_gradComb(){
 </form>
 <form id="printForm" name="printForm">
        <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
-       <input type="hidden" id="V_REQST_NO" name="V_REQST_NO" value="" />
+       <input type="hidden" id="V_DELVRYNO" name="V_DELVRYNO" value="" />
        <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/Delivery_Note_for_GR.rpt" /><br />
     </form>
 </section>
