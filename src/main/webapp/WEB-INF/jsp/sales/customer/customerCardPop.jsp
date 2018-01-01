@@ -22,13 +22,27 @@
     <th scope="row">Credit Card Type</th>
     <td><span>${detailcard.code }</span></td>
     <th scope="row">Create By</th>
-    <td><span>${detailcard.userName}<c:if test="${not empty detailcard.custCrcCrtDt }">(${detailcard.custCrcCrtDt})</c:if></span></td>
+    <td><span>${detailcard.userName}
+        <c:if test="${not empty detailcard.custCrcCrtDt }">
+            <c:if test="${detailcard.custCrcCrtDt ne '01-01-1900'}">
+                (${detailcard.custCrcCrtDt})
+            </c:if>
+        </c:if>
+        </span>
+    </td>
 </tr>
 <tr>
     <th scope="row">Credit No</th>
     <td><span>${detailcard.custOriCrcNo }</span></td>
     <th scope="row">Update By</th>
-    <td><span>${detailcard.userName1}<c:if test="${not empty detailcard.custCrcUpdDt}">(${detailcard.custCrcUpdDt})</c:if></span></td>
+    <td><span>${detailcard.userName1}
+        <c:if test="${not empty detailcard.custCrcUpdDt}">
+            <c:if test="${detailcard.custCrcUpdDt ne '01-01-1900'}">
+                (${detailcard.custCrcUpdDt})
+            </c:if>
+        </c:if>
+        </span>
+    </td>
 </tr>
 <tr>
     <th scope="row">Name On Card</th>

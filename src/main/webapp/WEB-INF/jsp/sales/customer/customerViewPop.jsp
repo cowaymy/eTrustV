@@ -233,8 +233,8 @@
                        type : "ButtonRenderer",
                        labelText : "Ledger",
                        onclick : function(rowIndex, columnIndex, value, item) {
-                       /* value 에 해당 키값 가져가야함 */
-                    	   fn_underDevelop();
+                           $("#_ordId").val(item.salesOrdId);
+                    	   Common.popupWin('legderParam', "/sales/order/orderLedgerViewPop.do", option);
                        }
                     }
                },
@@ -246,8 +246,8 @@
                        type : "ButtonRenderer",
                        labelText : "Order",
                        onclick : function(rowIndex, columnIndex, value, item) {
-                       /* value 에 해당 키값 가져가야함 */
-                       fn_underDevelop();
+                    	   $("#_ordId").val(item.salesOrdId);
+                    	    Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
                    }
             }
         }];
@@ -292,8 +292,8 @@
                      type : "ButtonRenderer",
                      labelText : "Ledger",
                      onclick : function(rowIndex, columnIndex, value, item) {
-                         /* value 에 해당 키값 가져가야함 */
-                         fn_underDevelop();
+	                    	 $("#_ordId").val(item.salesOrdId);
+	                         Common.popupWin('legderParam', "/sales/order/orderLedgerViewPop.do", option);
                          }
                  }
              },{
@@ -304,8 +304,8 @@
                      type : "ButtonRenderer",
                      labelText : "Order",
                      onclick : function(rowIndex, columnIndex, value, item) {
-                       /* value 에 해당 키값 가져가야함 */
-                       fn_underDevelop();
+                    	 $("#_ordId").val(item.salesOrdId);
+                         Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
                    }
             }
         }];
@@ -395,12 +395,12 @@
            var left = sw / 2 - cw / 2;
            window.moveTo(left, top);
     } */
-
-  //TODO 미개발
-    function fn_underDevelop(){
-        Common.alert('The program is under development.');
-    }
 </script>
+
+<form id="legderParam" name="legderParam" method="POST">
+    <input type="hidden" id="_ordId" name="ordId" >
+</form>
+
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- Pop up Form -->
 <form id="detailForm">
@@ -501,9 +501,17 @@
     </tr>
     <tr>
         <th scope="row">Passport Expire</th>
-        <td>${result.pasSportExpr}</td> 
+        <td>
+            <c:if test="${result.pasSportExpr ne '01-01-1900'}">
+                ${result.pasSportExpr}
+            </c:if>
+        </td> 
         <th scope="row">Visa Expire</th>
-        <td>${result.visaExpr}</td>
+        <td>
+           <c:if test="${result.visaExpr ne '01-01-1900'}">
+                ${result.visaExpr}
+            </c:if>
+         </td>
         <th scope="row">VA Number</th>
         <td>${result.custVaNo}</td>
     </tr>

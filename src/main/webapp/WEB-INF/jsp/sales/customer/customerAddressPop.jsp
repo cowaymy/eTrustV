@@ -21,13 +21,26 @@
         <th scope="row">Status</th>
         <td><span>${detailaddr.name}</span></td>
         <th scope="row">Create By</th>
-        <td><span>${detailaddr.userName}<c:if test="${not empty detailaddr.crtDt}">(${detailaddr.crtDt})</c:if></span></td>
+        <td><span>${detailaddr.userName}
+            <c:if test="${not empty detailaddr.crtDt}">
+                <c:if test="${detailaddr.crtDt ne '01-01-1900' }">
+                    (${detailaddr.crtDt})
+                </c:if>
+            </c:if>
+            </span>
+        </td>
     </tr>
     <tr>
         <th scope="row"></th>
         <td></td>
         <th scope="row">Update by</th>
-        <td>${detailaddr.userName1}<c:if test="${not empty detailaddr.updDt}">(${detailaddr.updDt})</c:if></td>
+        <td>${detailaddr.userName1}
+            <c:if test="${not empty detailaddr.updDt}">
+                <c:if test="${detailaddr.updDt ne '01-01-1900'}">
+                    (${detailaddr.updDt})
+                </c:if>
+            </c:if>
+        </td>
     </tr>
     <tr>
         <th scope="row">Address</th>

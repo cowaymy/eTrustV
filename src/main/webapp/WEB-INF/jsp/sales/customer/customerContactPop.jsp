@@ -22,13 +22,26 @@
         <th scope="row">Status</th>
         <td><span>${detailcontact.name}</span></td>
         <th scope="row">Create By</th>
-        <td><span>${detailcontact.userName}<c:if test="${not empty detailcontact.crtDt}">(${detailcontact.crtDt})</c:if></span></td>
+        <td><span>${detailcontact.userName}
+            <c:if test="${not empty detailcontact.crtDt}">
+                <c:if test="${detailcontact.crtDt ne '01-01-1900'}">
+                    (${detailcontact.crtDt})
+                </c:if>
+            </c:if>
+            </span>
+         </td>
     </tr>
     <tr>
         <th scope="row">Initial</th>
         <td><c:if test="${not empty detailcontact.code}">${detailcontact.code}</c:if></td>
         <th scope="row">Update By</th>
-        <td>${detailcontact.userName1}<c:if test="${not empty detailcontact.updDt}">(${detailcontact.updDt})</c:if></td>
+        <td>${detailcontact.userName1}
+            <c:if test="${not empty detailcontact.updDt}">
+                <c:if test="${detailcontact.updDt ne '01-01-1900'}">
+                    (${detailcontact.updDt})
+                </c:if>
+            </c:if>
+       </td>
     </tr>
     <tr>
         <th scope="row">Name</th>

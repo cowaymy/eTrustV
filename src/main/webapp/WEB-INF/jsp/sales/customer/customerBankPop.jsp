@@ -21,13 +21,27 @@
     <th scope="row">Account</th>
     <td><span>${detailbank.codeName}</span></td>
     <th scope="row">Create By</th>
-    <td><span>${detailbank.userName}<c:if test="${not empty detailbank.custAccCrtDt}">(${detailbank.custAccCrtDt})</c:if></span></td>
+    <td><span>${detailbank.userName}
+        <c:if test="${not empty detailbank.custAccCrtDt}">
+            <c:if test="${detailbank.custAccCrtDt ne '01-01-1900'}">
+            (${detailbank.custAccCrtDt})
+            </c:if>
+        </c:if>
+        </span>
+    </td>
 </tr>
 <tr>
     <th scope="row">Account No</th>
     <td><span>${detailbank.custAccNo}</span></td>
     <th scope="row">Update By</th>
-    <td><span>${detailbank.userName1}<c:if test="${not empty detailbank.custAccUpdDt}">(${detailbank.custAccUpdDt})</c:if></span></td>
+    <td><span>${detailbank.userName1}
+        <c:if test="${not empty detailbank.custAccUpdDt}">
+            <c:if test="${detailbank.custAccUpdDt ne '01-01-1900'}">
+                (${detailbank.custAccUpdDt})
+            </c:if>
+        </c:if>
+        </span>
+    </td>
 </tr>
 <tr>
     <th scope="row">Account Holder</th>
