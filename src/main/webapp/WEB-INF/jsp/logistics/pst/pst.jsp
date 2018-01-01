@@ -536,7 +536,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>PST Request Do List</h2>
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:SearchListAjax()"><span class="search"></span>Search</a></p></li>
+</c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
@@ -629,7 +631,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 </ul>
 -->
 <ul class="right_btns">
+<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
+</c:if>
     <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>                        
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -686,7 +690,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
          <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
          </article><!-- grid_wrap end -->
          <ul class="center_btns">
+         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
              <li><p class="btn_blue2 big"><a onclick="javascript:giFunc();">SAVE</a></p></li>
+         </c:if>
          </ul>
          </form>
      
