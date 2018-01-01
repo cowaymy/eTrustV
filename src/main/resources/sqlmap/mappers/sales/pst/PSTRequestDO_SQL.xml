@@ -968,4 +968,26 @@
               ORDER BY CODE
     </select>
     
+    <select id="reportGrid" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.PST_TRNSIT_ID   ,
+			       Extent1.PST_SALES_ORD_ID   ,
+			       Extent2.PST_REF_NO PST_REF_NO  ,
+			       Extent1.PST_STOCK_ID   ,
+			       Extent4.STK_CODE || ' - ' || Extent4.STK_DESC AS STK_CODE_DESC  ,
+			       Extent1.PST_STOCK_REM   ,
+			       Extent1.PST_QTY   ,
+			       Extent1.PST_TYPE_ID   ,
+			       Extent3.CODE   ,
+			       Extent1.PST_REF_NO PSTREFNO1  ,
+			       Extent1.CRT_DT   ,
+			       Extent1.CRT_USER_ID   ,
+			       Extent5.USER_NAME   
+		  FROM SAL0061D Extent1
+	         LEFT JOIN SAL0062D Extent2   ON Extent2.PST_SALES_ORD_ID = Extent1.PST_SALES_ORD_ID
+	         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PST_TYPE_ID
+	         LEFT JOIN SYS0026M Extent4   ON Extent4.STK_ID = Extent1.PST_STOCK_ID
+	         LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CRT_USER_ID
+		WHERE  Extent1.PST_SALES_ORD_ID = #{pstSalesOrdId}
+    </select>
+    
 </mapper>
