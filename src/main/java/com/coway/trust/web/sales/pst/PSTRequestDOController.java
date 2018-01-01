@@ -872,5 +872,36 @@ public class PSTRequestDOController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(dealerCmbList);
 	}
+	
+	
+	/**
+	 * 화면 호출. -report pst (팝업화면)
+	 */
+	@RequestMapping(value = "/reportPstRequestDOPop.do")
+	public String reportPstRequestDOPop(@RequestParam Map<String, Object>params, ModelMap model) {
+		
+		logger.info("@@@@@@@@@@@@@@@ " + params.toString());
+
+		EgovMap pstInfo = pstRequestDOService.pstRequestDOInfo(params);
+		model.addAttribute("pstInfo", pstInfo);
+		
+		return "sales/pst/pstRequestDoReportPop";
+	}
+	
+	
+	/**
+	 * Report Grid
+	 */
+	@RequestMapping(value = "/reportGrid.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> reportGrid(@RequestParam Map<String, Object>params, ModelMap model) {
+
+//		int dealerType = Integer.parseInt((String)params.get("groupCode"));	// recall, calcel, reversal cancel
+		
+		logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + params.toString());
+		List<EgovMap> reportGrid = pstRequestDOService.reportGrid(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(reportGrid);
+	}
 
 }

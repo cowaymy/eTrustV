@@ -255,4 +255,6 @@ public interface PSTRequestDOService {
 	List<EgovMap> pstTypeCmbList(Map<String, Object> params);
 	
 	List<EgovMap> pstNewDealerInfo(Map<String, Object> params);
+	
+	List<EgovMap> reportGrid(Map<String, Object> params);
 }

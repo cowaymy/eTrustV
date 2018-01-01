@@ -581,5 +581,10 @@ public class PSTRequestDOServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		return pstRequestDOMapper.pstNewDealerInfo(params);
 	}
+	
+	@Override
+	public List<EgovMap> reportGrid(Map<String, Object> params){
+		return pstRequestDOMapper.reportGrid(params);
+	}
     
 }
