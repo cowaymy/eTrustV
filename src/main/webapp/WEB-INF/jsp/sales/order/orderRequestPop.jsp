@@ -1893,7 +1893,7 @@
     function fn_validReqOwntBillGroup() {
         var isValid = true, msg = "";
         
-        if(APP_TYPE_ID == '66') {
+        if(APP_TYPE_ID == '66' || IS_NEW_VER == 'Y') {
             if(!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) {
                 isValid = false;
                 msg += "* Please select the group option.<br>";
@@ -1936,7 +1936,7 @@
                 });
             }
             else {
-                if($("#cmbRentPaymodeOwnt").val() <= '131') { //CRC
+                if($("#cmbRentPaymodeOwnt").val() == '131') { //CRC
                     if(FormUtil.checkReqValue($('#txtHiddenRentPayCRCIDOwnt'))) {
                         isValid = false;
                         msg += "* Please select a credit card.<br>";
@@ -1948,7 +1948,7 @@
                         }
                     }
                 }
-                else if($("#cmbRentPaymodeOwnt").val() <= '132') { //DD
+                else if($("#cmbRentPaymodeOwnt").val() == '132') { //DD
                     if(FormUtil.checkReqValue($('#txtHiddenRentPayBankAccIDOwnt'))) {
                         isValid = false;
                         msg += "* Please select a bank account.<br>";
@@ -2629,6 +2629,7 @@
 <input id="hiddenAppTypeIDOwnt"        name="hiddenAppTypeID"        type="hidden"/>
 <input id="txtHiddenInstAddressIDOwnt" name="txtHiddenInstAddressID" type="hidden"/>
 <input id="txtHiddenInstContactIDOwnt" name="txtHiddenInstContactID" type="hidden"/>
+<input id="isNewVer"                   name="isNewVer"               type="hidden" value="${orderDetail.isNewVer}"/>
 
 <aside class="title_line"><!-- title_line start -->
 <h3>Ownership Transfer Information</h3>

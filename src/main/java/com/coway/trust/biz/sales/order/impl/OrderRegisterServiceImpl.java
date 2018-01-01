@@ -1489,7 +1489,21 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         //INSTALLATION
         installationVO.setSalesOrdId(salesOrdId);
         orderRegisterMapper.insertInstallation(installationVO);
-        
+    	
+    	//CUSTOMER BILL MASTER
+    	if(custBillMasterVO != null && custBillMasterVO.getCustBillCustId() > 0) {
+    		String billGroupNo = orderRegisterMapper.selectDocNo(DocTypeConstants.BILLGROUP_NO);
+    		
+    		custBillMasterVO.setCustBillGrpNo(billGroupNo);
+    		custBillMasterVO.setCustBillSoId(salesOrdId);
+    		orderRegisterMapper.insertCustBillMaster(custBillMasterVO);
+    		
+    		logger.info("!@#### GET NEW CUST_BILL_ID  :"+custBillMasterVO.getCustBillId());
+    		
+    		salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
+    		orderRegisterMapper.updateCustBillId(salesOrderMVO);
+    	}
+    	
         //APP TYPE = RENTAL
         if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
         	
@@ -1498,21 +1512,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		rentPaySetVO.setSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertRentPaySet(rentPaySetVO);
         	}
-        	
-        	//CUSTOMER BILL MASTER
-        	if(custBillMasterVO != null && custBillMasterVO.getCustBillCustId() > 0) {
-        		String billGroupNo = orderRegisterMapper.selectDocNo(DocTypeConstants.BILLGROUP_NO);
-        		
-        		custBillMasterVO.setCustBillGrpNo(billGroupNo);
-        		custBillMasterVO.setCustBillSoId(salesOrdId);
-        		orderRegisterMapper.insertCustBillMaster(custBillMasterVO);
-        		
-        		logger.info("!@#### GET NEW CUST_BILL_ID  :"+custBillMasterVO.getCustBillId());
-        		
-        		salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
-        		orderRegisterMapper.updateCustBillId(salesOrderMVO);
-        	}
-        	
+
         	if(eStatementReqVO != null && eStatementReqVO.getStusCodeId() > 0) {
         		String eStatementReqNo = orderRegisterMapper.selectDocNo(DocTypeConstants.ESTATEMENT_REQ);
         		

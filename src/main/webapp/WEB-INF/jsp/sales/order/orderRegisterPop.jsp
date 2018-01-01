@@ -31,7 +31,7 @@
 
         //Payment Channel, Billing Detail TAB Visible False처리
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
-        fn_tabOnOffSet('BIL_DTL', 'HIDE');
+      //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
         fn_tabOnOffSet('REL_CER', 'HIDE');
         
         //Attach File
@@ -149,7 +149,7 @@
 
             if(result != null && result.length == 1) {
                 
-                fn_tabOnOffSet('BIL_DTL', 'SHOW');
+              //fn_tabOnOffSet('BIL_DTL', 'SHOW'); //2018.01.01
 
                 var custInfo = result[0];
 
@@ -1245,7 +1245,7 @@
 
         //CLEAR SALES
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
-        fn_tabOnOffSet('BIL_DTL', 'HIDE');
+      //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
 
         $('#appType').val('');
 
@@ -1719,7 +1719,7 @@
         var grpOptSelYN = (!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) ? false : true;
         var grpOptVal   = $(':radio[name="grpOpt"]:checked').val(); //new, exist
 
-        if(appTypeIdx > 0 && appTypeVal == '66') {
+      //if(appTypeIdx > 0 && appTypeVal == '66') {  //2018.01.01
 
             if(!grpOptSelYN) {
                 isValid = false;
@@ -1769,7 +1769,7 @@
                     }
                 }
             }
-        }
+      //}
 
         if(!isValid) Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 

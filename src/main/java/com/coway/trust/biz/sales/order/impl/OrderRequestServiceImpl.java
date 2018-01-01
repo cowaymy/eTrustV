@@ -852,10 +852,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		
 		if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
 			this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
-			
-			if("new".equals((String)params.get("btnBillGroup"))) {
-				this.preprocCustBillMaster(custBillMasterVO, params, sessionVO);
-			}
+		}
+		
+		//2018.01.01
+		if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL || "Y".equals(params.get("isNewVer"))) {
+    		if("new".equals((String)params.get("btnBillGroup"))) {
+    			this.preprocCustBillMaster(custBillMasterVO, params, sessionVO);
+    		}
 		}
 		
 		//ORDER EXCHANGE
@@ -878,8 +881,13 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         if(appTypeId == 66) {
         	//UPDATE RENTAL PAYMENT SETTING
         	orderRequestMapper.updateRentPaySetOtran(rentPaySetVO);
-        	
+        }
+
+        //2018.01.01
+        if(appTypeId == 66 || "Y".equals(params.get("isNewVer"))) {
         	//INSERT CUSTOMER BILL MASTER (NEW*)
+        	logger.debug("@#### isNewVer:"+params.get("isNewVer"));
+        	
         	String nextDocNo_BillGroup = orderRegisterMapper.selectDocNo(DocTypeConstants.BILLGROUP_NO);
         	
         	custBillMasterVO.setCustBillGrpNo(nextDocNo_BillGroup);
