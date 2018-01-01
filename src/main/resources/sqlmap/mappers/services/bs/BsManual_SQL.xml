@@ -84,8 +84,8 @@
                 AND B.MEM_CODE  =#{userName}
             </if>
             <if test="memLevl == '4'.toString()">
-                AND A.MEM_LVL = #{memLvl}
-                AND A.MEM_UP_ID = #{groupCode}
+                AND A.BRNCH_ID = #{groupCode}
+			    AND B.MEM_CODE  = #{userName}       
             </if>
             ORDER BY b.MEM_CODE
        </select>
@@ -117,8 +117,8 @@
                 AND B.MEM_CODE  =#{userName}
             </if>
             <if test="memLevl == '4'.toString()">
-                AND A.MEM_LVL = #{memLvl}
-                AND A.MEM_UP_ID = #{groupCode}
+                AND A.BRNCH_ID = #{groupCode}
+                AND B.MEM_CODE  = #{userName}      
             </if>
             ORDER BY b.MEM_CODE
        </select>
