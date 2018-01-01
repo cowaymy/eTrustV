@@ -476,7 +476,7 @@ function asManagementGrid() {
     },{
         dataField : "asIfFlag",
         headerText : "AS_IF_FLAG",  
-        width : 150 
+        width : 80 
     } , {
         dataField : "asBrnchId",
         headerText : "as asBrnc",

@@ -1025,8 +1025,8 @@ function  fn_setSaveFormData(){
         <th scope="row">Defect Type <span class="must">*</span> </th>
         <td>
            <input type="text" title=""  id='def_type' disabled="disabled" name ='def_type' placeholder="ex) DT3" class=""  onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
-          <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
-                     <input type="text" title="" placeholder=""id='def_type_text' name ='def_type_text'   class="w100p" />
+           <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
+           <input type="text" title="" placeholder=""id='def_type_text' name ='def_type_text'   />
           
           
         </td>
