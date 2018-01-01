@@ -1276,6 +1276,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		regOrderVO.setInstallationVO(installationVO);
 		
 //		this.preprocCustomerBillMaster(custBillMasterVO, sessionVO);
+				
+		if("new".equals(billGrp)) {			
+			this.preprocCustomerBillMaster(custBillMasterVO, sessionVO);
+			regOrderVO.setCustBillMasterVO(custBillMasterVO);
+			
+			this.preprocEStatementRequest(eStatementReqVO, sessionVO);					
+			regOrderVO.seteStatementReqVO(eStatementReqVO);
+		}
 		
 		if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
 			
@@ -1283,16 +1291,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			regOrderVO.setRentPaySetVO(rentPaySetVO);
 			
 			if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
-				
-				if("new".equals(billGrp)) {
-					
-					this.preprocCustomerBillMaster(custBillMasterVO, sessionVO);
-					regOrderVO.setCustBillMasterVO(custBillMasterVO);
-					
-					this.preprocEStatementRequest(eStatementReqVO, sessionVO);					
-					regOrderVO.seteStatementReqVO(eStatementReqVO);
-				}
-				
 				this.preprocRentalSchemeMaster(rentalSchemeVO, sessionVO);				
 				regOrderVO.setRentalSchemeVO(rentalSchemeVO);
 			}
@@ -1503,6 +1501,14 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
     		orderRegisterMapper.updateCustBillId(salesOrderMVO);
     	}
+
+    	if(eStatementReqVO != null && eStatementReqVO.getStusCodeId() > 0) {
+    		String eStatementReqNo = orderRegisterMapper.selectDocNo(DocTypeConstants.ESTATEMENT_REQ);
+    		
+    		eStatementReqVO.setRefNo(eStatementReqNo);
+    		eStatementReqVO.setCustBillId(salesOrderMVO.getCustBillId());
+    		orderRegisterMapper.insertEStatementReq(eStatementReqVO);
+    	}
     	
         //APP TYPE = RENTAL
         if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
@@ -1513,14 +1519,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		orderRegisterMapper.insertRentPaySet(rentPaySetVO);
         	}
 
-        	if(eStatementReqVO != null && eStatementReqVO.getStusCodeId() > 0) {
-        		String eStatementReqNo = orderRegisterMapper.selectDocNo(DocTypeConstants.ESTATEMENT_REQ);
-        		
-        		eStatementReqVO.setRefNo(eStatementReqNo);
-        		eStatementReqVO.setCustBillId(salesOrderMVO.getCustBillId());
-        		orderRegisterMapper.insertEStatementReq(eStatementReqVO);
-        	}
-        	
         	//CLAIM ADT
         	if(accClaimAdtVO != null && accClaimAdtVO.getAccClPayModeId() > 0) {
         		accClaimAdtVO.setAccClSoId(salesOrdId);
