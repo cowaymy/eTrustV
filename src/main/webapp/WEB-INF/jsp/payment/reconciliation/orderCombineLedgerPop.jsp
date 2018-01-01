@@ -3,7 +3,6 @@
 <script type="text/javaScript" language="javascript">
     
     $(document).ready(function(){
-       	
         
     });
     
@@ -15,7 +14,6 @@
     	}
     	
         Common.ajax("GET","/payment/selectOrderOutstandingView.do", $("#orderForm").serialize(), function(result){
-            console.log(result);
             
             if(result.orderOutstandingView.length > 0){
             	$("#ledgerForm #ordId").val(result.orderOutstandingView[0].orderid);
@@ -126,6 +124,7 @@
         });
     }
     
+    //Ledger 1
     function viewRentalLedger(){
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
@@ -135,6 +134,7 @@
         }
     }
     
+    //Ledger 2
     function viewRentalLedger2(){
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
@@ -144,6 +144,7 @@
         }
     }
     
+    //PaymentListing
     function viewOrderPaymentListing(){
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/payment/initOrderPaymentListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
@@ -153,6 +154,7 @@
         }
     }
     
+    //ASListing
     function viewASListing(){
         if($("#ordId").val() != ''){
             Common.popupWin("ledgerForm", "/payment/initOrderASListingPop.do", {width : "1200px", height : "720", resizable: "no", scrollbars: "no"});
@@ -162,6 +164,7 @@
         }
     }
     
+    //QuotationListing
     function viewQuotationListing(){
         if($("#ordNo").val() != ''){
             Common.popupDiv('/sales/payPop/quotationListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
@@ -171,6 +174,7 @@
         }
     }
     
+    //Outright Membership
     function viewOutrightMrsh(){
         if($("#ordNo").val() != ''){
         	Common.popupDiv('/sales/payPop/membershipListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
@@ -180,6 +184,7 @@
         }
     }
     
+    //Rental Membership
     function viewRentalMrsh(){
         if($("#ordNo").val() != ''){
         	Common.popupDiv('/sales/payPop/rentalMembershipListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
@@ -189,6 +194,7 @@
         }
     }
     
+    //Transfer History
     function viewTransferHistory(){
         if($("#ordNo").val() != ''){
         	Common.popupDiv('/sales/payPop/transferHistoryListPop.do', {"ordNo": $("#ordNo").val()}, null , true , null);
