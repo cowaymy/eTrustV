@@ -265,6 +265,50 @@ function fn_setPopSupplier() {
     }
 }
 
+function fn_setSupplierEvent() {
+    $("#newMemAccId").change(function(){
+        var memAccId = $(this).val();
+        console.log(memAccId);
+        if(!FormUtil.isEmpty(memAccId)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do?_cacheId=" + Math.random(), {memAccId:memAccId}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newMemAccName").val(row.memAccName);
+                    $("#bankCode").val(row.bankCode);
+                    $("#bankName").val(row.bankName);
+                    $("#bankAccNo").val(row.bankAccNo);
+                }
+                
+                if(fn_checkForCustdnNric()){
+                    // Approved Cash Amount GET and CUSTDN_NRIC GET
+                    var data = {
+                            memAccId : $("#newMemAccId").val(),
+                            //costCentr : $("#newCostCenter").val()
+                    };
+                    console.log(data);
+                    Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+                        console.log("fn_setPopSupplier Action");
+                        console.log(result);
+                        console.log(FormUtil.isEmpty(result.data));
+                        if(FormUtil.isEmpty(result.data)) {
+                            Common.alert('<spring:message code="pettyCashRqst.custdnNric.msg" />');
+                        } else {
+                            $("#newCostCenter").val(result.data.costCentr);
+                            $("#newCostCenterText").val(result.data.costCentrName);
+                            if(!FormUtil.isEmpty(result.data.custdnNric)) {
+                                var custdnNric = result.data.custdnNric;
+                                $("#custdnNric").val(custdnNric.replace(/(\d{6})(\d{2})(\d{4})/, '$1-$2-$3'));
+                            }
+                        }
+                    });
+                }
+            });
+        }
+   }); 
+}
+
 function fn_setPopSubSupplier() {
     $("#sMemAccId").val($("#search_memAccId").val());
     $("#sMemAccName").val($("#search_memAccName").val());
@@ -290,7 +334,7 @@ function fn_checkForCustdnNric() {
         checkResult = false;
         return checkResult;
     } */
-    if(FormUtil.isEmpty($("#newMemAccName").val())) {
+    if(FormUtil.isEmpty($("#newMemAccId").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
@@ -305,7 +349,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if(FormUtil.isEmpty($("#newMemAccName").val())) {
+    if(FormUtil.isEmpty($("#newMemAccId").val())) {
     	Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
@@ -914,8 +958,8 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_pettyCashExp">
-<input type="hidden" id="memAccId" name="memAccId">
-<input type="hidden" id="costCenter" name="costCentr">
+<input type="hidden" id="memAccName" name="memAccName">
+<input type="hidden" id="costCenterText" name="costCenterText">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -928,9 +972,9 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" id="memAccId" name="memAccId"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>

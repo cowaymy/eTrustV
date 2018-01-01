@@ -471,6 +471,8 @@ $(document).ready(function () {
                 atchFileGrpId = event.item.atchFileGrpId;
             });
     
+    fn_setSupplierEvent();
+    
     fn_myGridSetEvent();
     
     fn_setEvent();
@@ -502,7 +504,7 @@ function fn_tempSave() {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newExpense">
 <input type="hidden" id="newCrtUserId" name="crtUserId">
 <input type="hidden" id="newCostCenterText" name="costCentrName">
-<input type="hidden" id="newMemAccId" name="memAccId">
+<input type="hidden" id="newMemAccName" name="memAccName">
 <input type="hidden" id="sMemAccId" name="sMemAccId">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="expType" name="expType">
@@ -528,7 +530,7 @@ function fn_tempSave() {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+    <td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
     <th scope="row"><spring:message code="pettyCashCustdn.creator" /></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newCrtUserName" name="crtUserName" /></td>
 </tr>

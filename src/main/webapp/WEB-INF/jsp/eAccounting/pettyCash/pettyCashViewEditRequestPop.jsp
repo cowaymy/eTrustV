@@ -112,6 +112,8 @@ $(document).ready(function () {
        $("#reqstAmt").val(str);
    }); 
     
+    fn_setCostCenterEvent();
+    
     fn_setAppvCashAmt();
     fn_setReqstAmt();
     fn_setCustdnNric();
@@ -231,7 +233,7 @@ function fn_reqstApproveLinePop() {
 <input type="hidden" id="clmNo" name="clmNo" value="${requestInfo.clmNo}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${requestInfo.atchFileGrpId}">
 <input type="hidden" id="newCostCenterText" name="costCentrName" value="${requestInfo.costCentrName}">
-<input type="hidden" id="newMemAccId" name="memAccId" value="${requestInfo.memAccId}">
+<input type="hidden" id="newMemAccName" name="memAccName" value="${requestInfo.memAccName}">
 <input type="hidden" id="bankCode" name="bankCode" value="${requestInfo.bankCode}">
 
 <table class="type1"><!-- table start -->
@@ -251,7 +253,7 @@ function fn_reqstApproveLinePop() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newMemAccName" name="memAccName" value="${requestInfo.memAccName}"/></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newMemAccId" name="memAccId" value="${requestInfo.memAccId}"/></td>
 	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric" value="${requestInfo.custdnNric}"/></td>
 </tr>

@@ -43,7 +43,7 @@ AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
 ]]>
 </if>       
 <if test="memAccId != null and memAccId != ''">
-AND T.MEM_ACC_ID LIKE '%' || #{memAccId} || '%'
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
 </if>
 <if test="appvPrcssStus != null and appvPrcssStus != ''">
 AND T.APPV_PRCSS_STUS_CODE IN
@@ -95,9 +95,9 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
     (
         #{clmNo}
        ,'J7'
-       ,#{costCentr}
+       ,UPPER(#{costCentr})
        ,#{costCentrName}
-       ,#{memAccId}
+       ,UPPER(#{memAccId})
        ,#{bankCode}
        ,#{bankAccNo}
        ,TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
@@ -364,9 +364,9 @@ WHERE  T1.CLM_NO = #{clmNo}
 <update id="updateCodyClaimExp" parameterType="Map">
 /* codyClaimMapper.updateCodyClaimExp */
    UPDATE FCM0019M
-   SET COST_CENTR = #{costCentr}
+   SET COST_CENTR = UPPER(#{costCentr})
        ,COST_CENTR_NAME = #{costCentrName}
-       ,MEM_ACC_ID = #{memAccId}
+       ,MEM_ACC_ID = UPPER(#{memAccId})
        ,BANK_CODE = #{bankCode}
        ,BANK_ACC_NO = #{bankAccNo}
        ,CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')

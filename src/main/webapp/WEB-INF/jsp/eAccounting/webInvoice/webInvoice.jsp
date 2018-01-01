@@ -168,9 +168,32 @@ function fn_setCostCenterEvent() {
         if(!FormUtil.isEmpty(costCenter)){
         	Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
                 console.log(result);
-                var row = result[0];
-                console.log(row);
-                $("#newCostCenterText").val(row.costCenterText);
+                if(result.length > 0) {
+                	var row = result[0];
+                    console.log(row);
+                    $("#newCostCenterText").val(row.costCenterText);
+                }
+            });
+        }
+   }); 
+}
+
+function fn_setSupplierEvent() {
+    $("#newMemAccId").change(function(){
+        var memAccId = $(this).val();
+        console.log(memAccId);
+        if(!FormUtil.isEmpty(memAccId)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do?_cacheId=" + Math.random(), {memAccId:memAccId}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newMemAccName").val(row.memAccName);
+                    $("#gstRgistNo").val(row.gstRgistNo);
+                    $("#bankCode").val(row.bankCode);
+                    $("#bankName").val(row.bankName);
+                    $("#bankAccNo").val(row.bankAccNo);
+                }
             });
         }
    }); 
@@ -329,7 +352,7 @@ function fn_checkEmpty() {
         return checkResult;
     }
 	if($("#invcType").val() == "F") {
-	    if(FormUtil.isEmpty($("#newMemAccName").val())) {
+	    if(FormUtil.isEmpty($("#newMemAccId").val())) {
 	        Common.alert('<spring:message code="webInvoice.supplier.msg" />');
 	        checkResult = false;
 	        return checkResult;
@@ -558,8 +581,8 @@ function fn_sameVenderCheck() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_webInvoice">
-<input type="hidden" id="memAccId" name="memAccId">
-<input type="hidden" id="costCenter" name="costCenter">
+<input type="hidden" id="memAccName" name="memAccName">
+<input type="hidden" id="costCenterText" name="costCenterText">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -572,9 +595,9 @@ function fn_sameVenderCheck() {
 <tbody>
 <tr>
     <th scope="row"><spring:message code="webInvoice.supplier" /></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="memAccName" name="memAccName"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="memAccId" name="memAccId"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="costCenterText" name="costCenterText"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <td><input type="text" title="" placeholder="" class="" style="width:200px" id="costCenter" name="costCenter"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>

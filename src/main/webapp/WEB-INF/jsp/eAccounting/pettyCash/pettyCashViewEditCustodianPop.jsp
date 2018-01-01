@@ -107,6 +107,9 @@ $(document).ready(function () {
        $("#appvCashAmt").val(str);
     });
     
+    fn_setCostCenterEvent();
+    fn_setSupplierEvent();
+    
     fn_setAppvCashAmt();
     fn_setCustdnNric();
 });
@@ -196,7 +199,7 @@ function fn_saveViewCustodian() {
 <input type="hidden" id="newCrtUserId" name="crtUserId" value="${custodianInfo.crtUserId}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${custodianInfo.atchFileGrpId}">
 <input type="hidden" id="newCostCenterText" name="costCentrName" value="${custodianInfo.costCentrName}">
-<input type="hidden" id="newMemAccId" name="memAccId" value="${custodianInfo.memAccId}">
+<input type="hidden" id="newMemAccName" name="memAccName" value="${custodianInfo.memAccName}">
 <input type="hidden" id="bankCode" name="bankCode" value="${custodianInfo.bankCode}">
 
 <table class="type1"><!-- table start -->
@@ -216,7 +219,7 @@ function fn_saveViewCustodian() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newMemAccName" name="memAccName" value="${custodianInfo.memAccName}" /></td>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="newMemAccId" name="memAccId" value="${custodianInfo.memAccId}" /></td>
 	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric" /></td>
 </tr>

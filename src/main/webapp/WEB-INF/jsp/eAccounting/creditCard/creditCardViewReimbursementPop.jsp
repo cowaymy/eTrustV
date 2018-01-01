@@ -487,6 +487,8 @@ $(document).ready(function () {
         type:"S"
     });
     
+    fn_setCostCenterEvent()
+    
     fn_myGridSetEvent();
     
     fn_setEvent();

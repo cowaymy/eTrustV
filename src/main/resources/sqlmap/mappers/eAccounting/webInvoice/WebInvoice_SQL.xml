@@ -67,10 +67,10 @@ SELECT   T.CLM_NO
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
-             AND T.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccID})
         </if>          
         <if test="costCenter != null and costCenter != ''">
-             AND UPPER(T.COST_CENTR LIKE) '%' || UPPER(#{costCenter}) || '%'
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
         </if>     
         <if test="appvPrcssStus != null and appvPrcssStus != ''">
              AND T.APPV_PRCSS_STUS_CODE IN
@@ -94,18 +94,18 @@ SELECT   T.CLM_NO
     FROM FCM0006M
     WHERE 1=1
     <if test="memAccId != null and memAccId != ''">
-    AND MEM_ACC_ID LIKE '%' || #{memAccId} || '%'
+    AND UPPER(MEM_ACC_ID) = UPPER(#{memAccId})
     </if>
     <if test="accGrp != null and accGrp != ''">
     AND ACC_GRP = #{accGrp}
     </if>
     <if test="memAccName != null and memAccName != ''">
     <![CDATA[
-    AND MEM_ACC_NAME LIKE '%' || #{memAccName} || '%'
+    AND UPPER(MEM_ACC_NAME) LIKE '%' || UPPER(#{memAccName}) || '%'
     ]]>
     </if>
     <if test="gstRgistNo != null and gstRgistNo != ''">
-    AND GST_RGIST_NO LIKE '%' || #{gstRgistNo} || '%'
+    AND GST_RGIST_NO = #{gstRgistNo}
     </if>
 </select>
 
@@ -116,10 +116,10 @@ SELECT   T.CLM_NO
     FROM FCM0008M
     WHERE 1=1
     <if test="costCenter != null and costCenter != ''">
-    AND COST_CENTER LIKE '%' || #{costCenter} || '%'
+    AND UPPER(COST_CENTER LIKE) = UPPER(#{costCenter})
     </if>
     <if test="costCenterText != null and costCenterText != ''">
-    AND COST_CENTER_TEXT LIKE '%' || #{costCenterText} || '%'
+    AND UPPER(COST_CENTER_TEXT) LIKE '%' || UPPER(#{costCenterText}) || '%'
     </if>
 </select>
 
@@ -170,9 +170,9 @@ SELECT   T.CLM_NO
     (
         #{clmNo}
        ,'J1'
-       ,#{costCentr}
+       ,UPPER(#{costCentr})
        ,#{costCentrName}
-       ,#{memAccId}
+       ,UPPER(#{memAccId})
        ,#{gstRgistNo}
        ,#{bankCode}
        ,#{bankAccNo}
@@ -383,9 +383,9 @@ SELECT   T.CLM_NO
 <update id="updateWebInvoiceInfo" parameterType="Map">
 /* webInvoiceMapper.updateWebInvoiceInfo */
    UPDATE FCM0002M
-   SET COST_CENTR = #{costCentr}
+   SET COST_CENTR = UPPER(#{costCentr})
        ,COST_CENTR_NAME = #{costCentrName}
-       ,MEM_ACC_ID = #{memAccId}
+       ,MEM_ACC_ID = UPPER(#{memAccId})
        ,GST_RGIST_NO = #{gstRgistNo}
        ,BANK_CODE = #{bankCode}
        ,BANK_ACC_NO = #{bankAccNo}
@@ -746,13 +746,13 @@ SELECT T.APPV_PRCSS_NO
         ]]>
         </if>          
         <if test="memAccID != null and memAccID != ''">
-             AND T.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccID})
         </if>          
         <if test="createUser != null and createUser != ''">
-             AND T.REQST_USER_ID LIKE '%' || #{createUser} || '%'
+             AND UPPER(T.REQST_USER_ID) = UPPER(#{createUser})
         </if>          
         <if test="costCenter != null and costCenter != ''">
-             AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
         </if>     
         <if test="appvPrcssStus != null and appvPrcssStus != ''">
              AND T.APPV_PRCSS_STUS_CODE IN
@@ -884,12 +884,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 
 <select id="selectNextAppvIfKey" resultType="String">
 /* webInvoiceMapper.selectNextAppvIfKey */
-    SELECT    700
-       || TO_CHAR (SYSDATE, 'yymmdd')
-       || '_'
-       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
-  FROM ITF0700M
- WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
+    SELECT FN_CRT_IFKEY('700') FROM DUAL
 </select>
 
 <select id="selectNextAppvSeq" parameterType="String" resultType="int">
@@ -970,12 +965,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 
 <select id="selectNextReqstIfKey" resultType="String">
 /* webInvoiceMapper.selectNextReqstIfKey */
-    SELECT    961
-       || TO_CHAR (SYSDATE, 'yymmdd')
-       || '_'
-       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
-  FROM ITF0961M
- WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
+    SELECT FN_CRT_IFKEY('961') FROM DUAL
 </select>
 
 <select id="selectNextReqstSeq" parameterType="String" resultType="int">
@@ -1037,7 +1027,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
              AND START_DT <= SYSDATE
              AND END_DT  >= SYSDATE
         ]]> -->
-        AND T1.COST_CENTR = #{costCentr}
+        AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
         <if test="budgetCodeText != null and budgetCodeText != ''">
            AND T2.BUDGET_CODE_TEXT LIKE '%'|| #{budgetCodeText} || '%'
         </if>
@@ -1075,7 +1065,7 @@ WHERE  CLM_TYPE = #{clmType}
 /* webInvoiceMapper.selectSameVender */
 SELECT CLM_NO 
 FROM   FCM0002M 
-WHERE  MEM_ACC_ID = #{memAccId} AND INVC_NO = #{invcNo}
+WHERE  UPPER(MEM_ACC_ID) = UPPER(#{memAccId}) AND INVC_NO = #{invcNo}
 </select>
 
 </mapper>

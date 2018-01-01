@@ -175,9 +175,11 @@ function fn_setEvent() {
             if(!FormUtil.isEmpty($("#newCostCenter").val())){
                 Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:$("#newCostCenter").val()}, function(result) {
                     console.log(result);
-                    var row = result[0];
-                    console.log(row);
-                    $("#newCostCenterText").val(row.costCenterText);
+                    if(result.length > 0) {
+                        var row = result[0];
+                        console.log(row);
+                        $("#newCostCenterText").val(row.costCenterText);
+                    }
                 });
             }
         }
@@ -260,6 +262,43 @@ function fn_setPopSupplier() {
     $("#bankAccNo").val($("#search_bankAccNo").val());
 }
 
+function fn_setCostCenterEvent() {
+    $("#newCostCenter").change(function(){
+        var costCenter = $(this).val();
+        console.log(costCenter);
+        if(!FormUtil.isEmpty(costCenter)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newCostCenterText").val(row.costCenterText);
+                }
+            });
+        }
+   }); 
+}
+
+function fn_setSupplierEvent() {
+    $("#newMemAccId").change(function(){
+        var memAccId = $(this).val();
+        console.log(memAccId);
+        if(!FormUtil.isEmpty(memAccId)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do?_cacheId=" + Math.random(), {memAccId:memAccId}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newMemAccName").val(row.memAccName);
+                    $("#bankCode").val(row.bankCode);
+                    $("#bankName").val(row.bankName);
+                    $("#bankAccNo").val(row.bankAccNo);
+                }
+            });
+        }
+   }); 
+}
+
 function fn_PopExpenseTypeSearchPop() {
     Common.popupDiv("/eAccounting/expense/expenseTypeSearchPop.do", {popClaimType:'J7'}, null, true, "expenseTypeSearchPop");
 }
@@ -330,12 +369,12 @@ function fn_newStaffClaimPop() {
 
 function fn_checkEmpty() {
     var checkResult = true;
-    if(FormUtil.isEmpty($("#newCostCenterText").val())) {
+    if(FormUtil.isEmpty($("#newCostCenter").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
         checkResult = false;
         return checkResult;
     }
-    if(FormUtil.isEmpty($("#newMemAccName").val())) {
+    if(FormUtil.isEmpty($("#newMemAccId").val())) {
         Common.alert('<spring:message code="codyClaim.codyCode.msg" />');
         checkResult = false;
         return checkResult;
@@ -1213,7 +1252,7 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_staffClaim">
-<input type="hidden" id="memAccId" name="memAccId">
+<input type="hidden" id="memAccName" name="memAccName">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -1228,7 +1267,7 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
     <td><input type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" id="clmMonth" name="clmMonth"/></td>
 	<th scope="row"><spring:message code="codyClaim.codyId" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="memAccId" name="memAccId"/><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
 	<th scope="row" ><spring:message code="webInvoice.status" /></th>

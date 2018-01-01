@@ -83,7 +83,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
              AND T.CRDIT_CARD_USER_ID LIKE '%' || #{crditCardUserId} || '%'
         </if>          
         <if test="costCenter != null and costCenter != ''">
-             AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
         </if>     
         <if test="chrgUserId != null and chrgUserId != ''">
              AND T.CHRG_USER_ID LIKE '%' || #{chrgUserId} || '%'
@@ -141,7 +141,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
        ,#{crditCardUserName}
        ,#{crditCardNo}
        ,#{chrgUserId}
-       ,#{costCentr}
+       ,UPPER(#{costCentr})
        ,#{costCentrName}
        ,#{bankCode}
        ,#{bankName}
@@ -160,12 +160,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
 
 <select id="selectNextIfKey" resultType="String">
 /* creditCardMapper.selectNextIfKey */
-    SELECT    120
-       || TO_CHAR (SYSDATE, 'yymmdd')
-       || '_'
-       || NVL (TO_CHAR (MAX (SUBSTR (IF_KEY, 11, 7) + 1), 'FM0000000'), '0000001') AS IF_KEY
-  FROM ITF0120M
- WHERE SUBSTR (IF_KEY, 4, 6) = TO_CHAR (SYSDATE, 'yymmdd')
+    SELECT FN_CRT_IFKEY('120') FROM DUAL
 </select>
 
 <select id="selectNextSeq" parameterType="String" resultType="int">
@@ -240,7 +235,7 @@ WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
        ,CRDIT_CARD_USER_NAME = #{crditCardUserName}
        ,CRDIT_CARD_NO = #{crditCardNo}
        ,CHRG_USER_ID = #{chrgUserId}
-       ,COST_CENTR = #{costCentr}
+       ,COST_CENTR = UPPER(#{costCentr})
        ,COST_CENTR_NAME = #{costCentrName}
        ,BANK_CODE = #{bankCode}
        ,BANK_NAME = #{bankName}
@@ -326,7 +321,7 @@ ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T
              AND T.CRDIT_CARD_USER_ID LIKE '%' || #{crditCardUserId} || '%'
         </if>          
         <if test="costCenter != null and costCenter != ''">
-             AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
         </if>     
         <if test="chrgUserId != null and chrgUserId != ''">
              AND T.CHRG_USER_ID LIKE '%' || #{chrgUserId} || '%'
@@ -477,7 +472,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{atchFileGrpId}
        ,#{expDesc}
        ,#{clamUn}
-       ,#{sCostCentr}
+       ,UPPER(#{sCostCentr})
        ,#{sCostCentrName}
        ,#{gstRgistNo}
        ,SYSDATE
@@ -652,7 +647,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
-       ,COST_CENTR = #{sCostCentr}
+       ,COST_CENTR = UPPER(#{sCostCentr})
        ,COST_CENTR_NAME = #{sCostCentrName}
        ,GST_RGIST_NO = #{gstRgistNo}
        ,UPD_DT = SYSDATE

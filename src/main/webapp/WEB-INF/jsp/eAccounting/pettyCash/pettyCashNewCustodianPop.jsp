@@ -52,6 +52,9 @@ $(document).ready(function () {
        
        $("#appvCashAmt").val(str);
    }); 
+    
+    fn_setCostCenterEvent();
+    fn_setSupplierEvent();
 });
 
 /* 인풋 파일(멀티) */
@@ -87,7 +90,7 @@ function fn_clearData() {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newCustdn">
 <input type="hidden" id="newCrtUserId" name="crtUserId" value="${userId}">
 <input type="hidden" id="newCostCenterText" name="costCentrName">
-<input type="hidden" id="newMemAccId" name="memAccId">
+<input type="hidden" id="newMemAccName" name="memAccName">
 <input type="hidden" id="bankCode" name="bankCode">
 
 <table class="type1"><!-- table start -->
@@ -107,7 +110,7 @@ function fn_clearData() {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" /><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="pettyCashNewCustdn.icNoPassNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="custdnNric" name="custdnNric"/></td>
 </tr>

@@ -47,13 +47,13 @@ SELECT T1.COST_CENTR
         ]]>
         </if>          
         <if test="memAccId != null and memAccId != ''">
-             AND T1.CUSTDN LIKE '%' || #{memAccId} || '%'
+             AND UPPER(T1.CUSTDN) = UPPER(#{memAccId})
         </if>          
         <if test="costCentr != null and costCentr != ''">
-             AND T1.COST_CENTR LIKE '%' || #{costCentr} || '%'
+             AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
         </if>     
         <if test="crtUserId != null and crtUserId != ''">
-             AND T5.USER_NAME LIKE '%' || #{crtUserId} || '%'
+             AND UPPER(T5.USER_NAME) = UPPER(#{crtUserId})
         </if>   
         ORDER BY T1.CRT_DT, T1.UPD_DT         
 </select>
@@ -61,7 +61,7 @@ SELECT T1.COST_CENTR
 <select id="selectUserNric" parameterType="String" resultType="String">
 /* pettyCashMapper.selectUserNric */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT USER_NRIC FROM SYS0047M WHERE USER_NAME = #{memAccId}
+SELECT USER_NRIC FROM SYS0047M WHERE UPPER(USER_NAME) = UPPER(#{memAccId})
 </select>
 
 <insert id="insertCustodian" parameterType="Map">
@@ -84,8 +84,8 @@ SELECT USER_NRIC FROM SYS0047M WHERE USER_NAME = #{memAccId}
     )
     values
     (
-        #{costCentr}
-       ,#{memAccId}
+        UPPER(#{costCentr})
+       ,UPPER(#{memAccId})
        ,#{headDeptFlag}
        ,#{bankCode}
        ,#{bankAccNo}
@@ -122,10 +122,10 @@ SELECT T1.COST_CENTR
        LEFT JOIN SYS0047M T4 ON T1.CRT_USER_ID = T4.USER_ID
   WHERE 1=1
         <if test="memAccId != null and memAccId != ''">
-             AND T1.CUSTDN = #{memAccId}
+             AND UPPER(T1.CUSTDN) = UPPER(#{memAccId})
         </if>          
         <if test="costCentr != null and costCentr != ''">
-             AND T1.COST_CENTR = #{costCentr}
+             AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
         </if>             
 </select>
 
@@ -228,10 +228,10 @@ AND T.CRT_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
 ]]>
 </if>          
 <if test="memAccID != null and memAccID != ''">
-AND T.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccID})
 </if>          
 <if test="costCenter != null and costCenter != ''">
-AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
 </if>
 <if test="appvPrcssStus != null and appvPrcssStus != ''">
 AND T.APPV_PRCSS_STUS_CODE IN
@@ -278,9 +278,9 @@ ORDER BY T.CLM_NO, T.REQST_DT
     (
         #{clmNo}
        ,'R1'
-       ,#{costCentr}
+       ,UPPER(#{costCentr})
        ,#{costCentrName}
-       ,#{memAccId}
+       ,UPPER(#{memAccId})
        ,#{bankCode}
        ,#{bankAccNo}
        ,#{custdnNric}
@@ -328,9 +328,9 @@ WHERE T1.CLM_NO = #{clmNo}
 <update id="updatePettyCashReqst" parameterType="Map">
 /* pettyCashMapper.updatePettyCashReqst */
    UPDATE FCM0012D
-   SET COST_CENTR = #{costCentr}
+   SET COST_CENTR = UPPER(#{costCentr})
        ,COST_CENTR_NAME = #{costCentrName}
-       ,MEM_ACC_ID = #{memAccId}
+       ,MEM_ACC_ID = UPPER(#{memAccId})
        ,BANK_CODE = #{bankCode}
        ,BANK_ACC_NO = #{bankAccNo}
        ,CUSTDN_NRIC = #{custdnNric}
@@ -457,10 +457,10 @@ AND T.CLM_MONTH = #{clmMonth}
 ]]>
 </if>       
 <if test="memAccID != null and memAccID != ''">
-AND T.MEM_ACC_ID LIKE '%' || #{memAccID} || '%'
+AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccID})
 </if>          
 <if test="costCenter != null and costCenter != ''">
-AND T.COST_CENTR LIKE '%' || #{costCenter} || '%'
+AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
 </if>
 <if test="appvPrcssStus != null and appvPrcssStus != ''">
 AND T.APPV_PRCSS_STUS_CODE IN
@@ -513,9 +513,9 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
     (
         #{clmNo}
        ,'J2'
-       ,#{costCentr}
+       ,UPPER(#{costCentr})
        ,#{costCentrName}
-       ,#{memAccId}
+       ,UPPER(#{memAccId})
        ,#{custdnNric}
        ,#{bankCode}
        ,#{bankAccNo}
@@ -736,9 +736,9 @@ WHERE  T1.CLM_NO = #{clmNo}
 <update id="updatePettyCashExp" parameterType="Map">
 /* pettyCashMapper.updatePettyCashExp */
    UPDATE FCM0013M
-   SET COST_CENTR = #{costCentr}
+   SET COST_CENTR = UPPER(#{costCentr})
        ,COST_CENTR_NAME = #{costCentrName}
-       ,MEM_ACC_ID = #{memAccId}
+       ,MEM_ACC_ID = UPPER(#{memAccId})
        ,CUSTDN_NRIC = #{custdnNric}
        ,BANK_CODE = #{bankCode}
        ,BANK_ACC_NO = #{bankAccNo}

@@ -328,9 +328,11 @@ function fn_setCostCenterEvent() {
         if(!FormUtil.isEmpty(costCenter)){
         	Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
                 console.log(result);
-                var row = result[0];
-                console.log(row);
-                $("#newCostCenterText").val(row.costCenterText);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newCostCenterText").val(row.costCenterText);
+                }
             });
         }
    }); 
@@ -358,7 +360,7 @@ function fn_setCostCenterEvent() {
 <form action="#" method="post" id="form_mgmt">
 <input type="hidden" id="crditCardUserId" name="crditCardUserId">
 <input type="hidden" id="chrgUserId" name="chrgUserId">
-<input type="hidden" id="costCenter" name="costCentr">
+<input type="hidden" id="costCenterText" name="costCentrName">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -371,15 +373,15 @@ function fn_setCostCenterEvent() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="crditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="search_holder_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" id="crditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="search_holder_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="crditCardMgmt.crditCardNo" /></th>
 	<td><input type="text" title="" placeholder="Credit card No" class="" id="crditCardNo" name="crditCardNo" autocomplete=off/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="chrgUserName" name="chrgUserName" /><a href="#" class="search_btn" id="search_charge_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" id="chrgUserName" name="chrgUserName" /><a href="#" class="search_btn" id="search_charge_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_depart_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCentr"/><a href="#" class="search_btn" id="search_depart_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 	<th scope="row"><spring:message code="crditCardMgmt.lastUpdateDt" /></th>
 	<td>

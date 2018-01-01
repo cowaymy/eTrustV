@@ -440,8 +440,8 @@ function fn_appvRejctSubmit(type, rejctResn) {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_approve">
-<input type="hidden" id="memAccId" name="memAccId">
-<input type="hidden" id="costCenter" name="costCenter">
+<input type="hidden" id="memAccName" name="memAccName">
+<input type="hidden" id="costCenterText" name="costCenterText">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -463,9 +463,9 @@ function fn_appvRejctSubmit(type, rejctResn) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="invoiceApprove.member" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="memAccId" name="memAccId" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCenterText" /><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCenter" /><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="invoiceApprove.reqstDt" /></th>

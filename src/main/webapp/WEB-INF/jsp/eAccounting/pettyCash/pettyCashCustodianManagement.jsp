@@ -289,6 +289,99 @@ function fn_setPopSupplier() {
     }
 }
 
+function fn_setCostCenterEvent() {
+    $("#newCostCenter").change(function(){
+        var costCenter = $(this).val();
+        console.log(costCenter);
+        if(!FormUtil.isEmpty(costCenter)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newCostCenterText").val(row.costCenterText);
+                }
+                
+                if(fn_checkEmpty()){
+                    var data = {
+                            memAccId : $("#newMemAccId").val(),
+                            costCentr : $("#newCostCenter").val()
+                    };
+                    Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+                        console.log(result);
+                        console.log(FormUtil.isEmpty(result.data));
+                        if(!FormUtil.isEmpty(result.data)) {
+                            Common.alert('<spring:message code="pettyCashCustdn.alreadyRgist.msg" />');
+                            $("#newCostCenter").val("");
+                            $("#newCostCenterText").val("");
+                            $("#newMemAccId").val("");
+                            $("#newMemAccName").val("");
+                            $("#custdnNric").val("");
+                            $("#bankCode").val("");
+                            $("#bankName").val("");
+                            $("#bankAccNo").val("");
+                        } else {
+                            // USER_NRIC GET
+                            Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
+                                console.log(result);
+                                $("#custdnNric").val(result.data.userNric);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+   }); 
+}
+
+function fn_setSupplierEvent() {
+    $("#newMemAccId").change(function(){
+        var memAccId = $(this).val();
+        console.log(memAccId);
+        if(!FormUtil.isEmpty(memAccId)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do?_cacheId=" + Math.random(), {memAccId:memAccId}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newMemAccName").val(row.memAccName);
+                    $("#bankCode").val(row.bankCode);
+                    $("#bankName").val(row.bankName);
+                    $("#bankAccNo").val(row.bankAccNo);
+                }
+                
+                if(fn_checkEmpty()){
+                    var data = {
+                            memAccId : $("#newMemAccId").val(),
+                            costCentr : $("#newCostCenter").val()
+                    };
+                    Common.ajax("POST", "/eAccounting/pettyCash/selectCustodianInfo.do", data, function(result) {
+                        console.log(result);
+                        console.log(FormUtil.isEmpty(result.data));
+                        if(!FormUtil.isEmpty(result.data)) {
+                            Common.alert('<spring:message code="pettyCashCustdn.alreadyRgist.msg" />');
+                            $("#newCostCenter").val("");
+                            $("#newCostCenterText").val("");
+                            $("#newMemAccId").val("");
+                            $("#newMemAccName").val("");
+                            $("#custdnNric").val("");
+                            $("#bankCode").val("");
+                            $("#bankName").val("");
+                            $("#bankAccNo").val("");
+                        } else {
+                            // USER_NRIC GET
+                            Common.ajax("POST", "/eAccounting/pettyCash/selectUserNric.do", {memAccId:$("#search_memAccId").val()}, function(result) {
+                                console.log(result);
+                                $("#custdnNric").val(result.data.userNric);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+   }); 
+}
+
 function fn_searchUserIdPop() {
     Common.popupDiv("/common/memberPop.do", null, null, true);
 }
@@ -327,7 +420,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if(FormUtil.isEmpty($("#newMemAccName").val())) {
+    if(FormUtil.isEmpty($("#newMemAccId").val())) {
         Common.alert('<spring:message code="pettyCashCustdn.custdn.msg" />');
         checkResult = false;
         return checkResult;
@@ -366,8 +459,8 @@ function fn_deleteCustodianPop() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_pettyCashCustdn">
-<input type="hidden" id="costCenter" name="costCentr">
-<input type="hidden" id="memAccId" name="memAccId">
+<input type="hidden" id="costCenterText" name="costCentrName">
+<input type="hidden" id="memAccName" name="memAccName">
 
 <table class="type1"><!-- table start -->
 <caption><spring:message code="webInvoice.table" /></caption>
@@ -380,13 +473,13 @@ function fn_deleteCustodianPop() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="costCenterText" name="costCentrName"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="costCenter" name="costCentr"/><a href="#" class="search_btn" id="search_costCenter_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="pettyCashCustdn.lastUpdUser" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="createUser" name="crtUserId"/><a href="#" class="search_btn" id="search_createUser_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="pettyCashCustdn.custdn" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="memAccName" name="memAccName" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="memAccId" name="memAccId" /><a href="#" class="search_btn" id="search_supplier_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="pettyCashCustdn.lastUpdate" /></th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->

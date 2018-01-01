@@ -122,13 +122,13 @@ function fn_saveNewMgmt() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="crditCardMgmt.cardholderName" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCrditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="holder_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" id="newCrditCardUserName" name="crditCardUserName"/><a href="#" class="search_btn" id="holder_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="crditCardMgmt.crditCardNo" /></th>
 	<td id="crditCardNoTd"><input type="text" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo1" name="crditCardNo1"/> <input type="password" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo2" name="crditCardNo2"/> <input type="password" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo3" name="crditCardNo3"/> <input type="text" title="" placeholder="" class="w23_5p" maxlength="4" id="crditCardNo4" name="crditCardNo4"/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeName" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newChrgUserName" name="chrgUserName"/><a href="#" class="search_btn" id="charge_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="readonly" readonly="readonly" id="newChrgUserName" name="chrgUserName"/><a href="#" class="search_btn" id="charge_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="crditCardMgmt.chargeDepart" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>

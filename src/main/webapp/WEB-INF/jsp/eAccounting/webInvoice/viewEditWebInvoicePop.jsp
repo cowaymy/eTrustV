@@ -318,6 +318,7 @@ $(document).ready(function () {
     fn_setKeyInDate();
     fn_setPayDueDtEvent();
     fn_setCostCenterEvent();
+    fn_setSupplierEvent();
     
     if(gridDataList.length > 0) {
         fn_setGridData(gridDataList);
@@ -515,7 +516,7 @@ function fn_setGridData(data) {
 <form action="#" method="post" enctype="multipart/form-data" id=form_newWebInvoice>
 <input type="hidden" id="clmNo" name="clmNo" value="${webInvoiceInfo.clmNo}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${webInvoiceInfo.atchFileGrpId}">
-<input type="hidden" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}">
+<input type="hidden" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}">
 <input type="hidden" id="newCostCenterText" name="costCentrName" value="${webInvoiceInfo.costCentrName}">
 <input type="hidden" id="bankCode" name="bankCode" value="${webInvoiceInfo.bankCode}">
 <input type="hidden" id="totAmt" name="totAmt" value="${webInvoiceInfo.totAmt}">
@@ -544,7 +545,7 @@ function fn_setGridData(data) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
 	<select class="w100p" id="invcType" name="invcType" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>>

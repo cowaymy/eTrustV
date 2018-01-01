@@ -658,6 +658,9 @@ $(document).ready(function () {
         expTypeName = event.item.expTypeName;
     });
     
+    fn_setCostCenterEvent();
+    fn_setSupplierEvent();
+    
     fn_myGridSetEvent();
     
     fn_setEvent();
@@ -716,8 +719,7 @@ function fn_tempSave() {
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="form_newStaffClaim">
 <input type="hidden" id="newCostCenterText" name="costCentrName">
-<input type="hidden" id="newCostCenter" name="costCentr">
-<input type="hidden" id="newMemAccId" name="memAccId">
+<input type="hidden" id="newMemAccName" name="memAccName">
 <input type="hidden" id="supplir" name="supplir">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="expType" name="expType">
@@ -747,7 +749,7 @@ function fn_tempSave() {
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 	<th scope="row"><spring:message code="codyClaim.codyCode" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>

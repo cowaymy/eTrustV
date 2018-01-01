@@ -208,6 +208,7 @@ $(document).ready(function () {
     fn_setKeyInDate();
     fn_setPayDueDtEvent();
     fn_setCostCenterEvent();
+    fn_setSupplierEvent();
 });
 
 /* 인풋 파일(멀티) */
@@ -329,7 +330,7 @@ function fn_updateWebInvoiceInfo(st) {
 <input type="hidden" id="clmNo" name="clmNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
 <input type="hidden" id="newCostCenterText" name="costCentrName">
-<input type="hidden" id="newMemAccId" name="memAccId">
+<input type="hidden" id="newMemAccName" name="memAccName">
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="totAmt" name="totAmt">
 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
@@ -357,7 +358,7 @@ function fn_updateWebInvoiceInfo(st) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newMemAccName" name="memAccName"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
 	<select class="w100p" id="invcType" name="invcType">
