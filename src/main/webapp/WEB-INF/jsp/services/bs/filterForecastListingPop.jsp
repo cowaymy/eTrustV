@@ -5,8 +5,6 @@
 $(document).ready(function() {
 	doGetCombo("/services/bs/report/reportBranchCodeList.do",'' ,''   , 'branchCmb' , 'S', '');
 	
-    //$("#branch").append("<option value='0'>All Cody Branches(NationWide)</option>");
-    //$("#selBox option:last").append("<option value='0'>All Cody Branches(NationWide)</option>");
     $("#branchCmb").change(function(){
         doGetCombo("/services/bs/report/selectCMGroupList.do",$("#branchCmb").val() ,''   , 'CMGroup' , 'S', '');
     });
@@ -22,12 +20,12 @@ function fn_validation(){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='forecast month' htmlEscape='false'/>");
             return false;
     }
-    if($("#branchCmb").val() == '' && $("#branchCmb").val() == null){
+    if($("#branchCmb").val() == '' || $("#branchCmb").val() == null){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Branch' htmlEscape='false'/>");
             return false;
     }
-    if($("#CMGroup").val() == '' && $("#CMGroup").val() == null){
-    	if($("#brnch").val() != "0"){
+    if($("#CMGroup").text() == 'choose one'){
+    	if($("#branchCmb").val() != '0'){
     		Common.alert("<spring:message code='sys.common.alert.validation' arguments='CM Group' htmlEscape='false'/>");
             return false;
     	}
