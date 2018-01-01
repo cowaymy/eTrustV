@@ -38,7 +38,7 @@
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        AUIGrid.setSelectionMode(myBulkdGridID, "singleRow");
+//        AUIGrid.setSelectionMode(myBulkdGridID, "singleRow");
         
         // 에디팅 시작 이벤트 바인딩
         AUIGrid.bind(myBulkdGridID, "cellEditBegin", auiCellEditignHandler);

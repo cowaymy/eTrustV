@@ -17,7 +17,7 @@
 	    // AUIGrid 그리드를 생성합니다.
 	    createLogAUIGrid();
 	    
-	    AUIGrid.setSelectionMode(myGridID, "singleRow");
+//	    AUIGrid.setSelectionMode(myGridID, "singleRow");
 	    
 	    orderInvestCallLogDetailGridAjax();
 

@@ -18,7 +18,7 @@
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         
-        AUIGrid.setSelectionMode(detailGridID, "singleRow");
+//        AUIGrid.setSelectionMode(detailGridID, "singleRow");
         
         //Call Ajax
         orderInvestDetailGridAjax();
