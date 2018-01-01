@@ -30,6 +30,7 @@
         }else if($("#memType").val() == 2){
         	$("#grpCode").attr("readonly");
         	$("#grpCode").val($("#initGrpCode").val());
+        	$("#grpCode").attr("class", "w100p readonly");
         }
 
 		//Basic Auth (update Btn)
@@ -291,7 +292,7 @@
                 <tbody>
                     <tr>
                         <th scope="row">Org Code</th>
-                        <td><input type="text" title="" id="orgCode" name="orgCode" value="${lastOrgCode }" placeholder="" class="w100p" readonly/></td>
+                        <td><input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="" class="w100p readonly" readonly/></td>
                         <th scope="row">Grp Code</th>
                         <td><input type="text" title="" id="grpCode" name="grpCode" placeholder="" class="w100p" /></td>
                         <th scope="row">Dept Code</th>

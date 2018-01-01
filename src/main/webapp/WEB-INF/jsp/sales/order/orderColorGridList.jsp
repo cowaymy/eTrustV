@@ -38,18 +38,13 @@
             Common.popupDiv("/sales/order/orderDetailPop.do", $("#searchForm").serializeJSON(), null, true, 'dtPop');
         });
         // 셀 클릭 이벤트 바인딩
-
-        if($("#memType").val() == 1 || $("#memType").val() == 2){
-            $("#orgTable").show();
-        }else{
-          $("#orgTable").hide();
-        }
         
         if($("#memType").val() == 1){
             $("#grpCode").removeAttr("readonly");
         }else if($("#memType").val() == 2){
             $("#grpCode").attr("readonly");
             $("#grpCode").val($("#initGrpCode").val());
+            $("#grpCode").attr("class", "w100p readonly");
         }
         
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
@@ -257,6 +252,8 @@
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="post">
     <input type="hidden" id="salesOrderId" name="salesOrderId">
+    <input type="hidden" name="memType" id="memType" value="${memType }"/>
+    <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -271,7 +268,7 @@
 <tr>
     <th scope="row">Organization Code</th>
     <td>
-    <input type="text" title="" id="orgCode" name="orgCode" placeholder="Organization Code" class="w100p" />
+    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p readonly" />
     </td>
     <th scope="row">Group Code</th>
     <td>
@@ -353,28 +350,6 @@
 </tr>
 </tbody>
 </table><!-- table end -->
-<table class="type1" id="orgTable">
-                <!-- table start -->
-                <caption>table</caption>
-                <colgroup>
-                    <col style="width: 170px" />
-                    <col style="width: *" />
-                    <col style="width: 160px" />
-                    <col style="width: *" />
-                    <col style="width: 170px" />
-                    <col style="width: *" />
-                </colgroup>
-                <tbody>
-                    <tr>
-                        <th scope="row">Org Code</th>
-                        <td><input type="text" title="" id="orgCode" name="orgCode" value="${lastOrgCode }" placeholder="" class="w100p" readonly/></td>
-                        <th scope="row">Grp Code</th>
-                        <td><input type="text" title="" id="grpCode" name="grpCode" placeholder="" class="w100p" /></td>
-                        <th scope="row">Dept Code</th>
-                        <td><input type="text" title="" id="deptCode" name="deptCode" placeholder="" class="w100p" /></td>
-                    </tr>
-                </tbody>
-            </table>
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start --
 <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
