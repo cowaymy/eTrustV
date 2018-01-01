@@ -2849,6 +2849,14 @@
                WHERE NO =#{serviceNo}  AND STUS_CODE_ID <> '1'
         ]]>
     </select>
+    
+            <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
+		        SELECT COUNT(*) CNT
+				FROM SVC0008D A,
+				     SVC0006D B
+				WHERE A.SCHDUL_ID = B.SCHDUL_ID
+				AND A.NO = #{serviceNo}
+		    </select>
             
             <select id="GetDocNo"  parameterType="Map" resultType="java.lang.String">
                         select doc_no_prefix||doc_no as doc_no from SYS0022C
