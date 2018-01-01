@@ -35,8 +35,8 @@ function creatTrTranGrid(){
                showStateColumn:false,
                showRowNumColumn    : false,
                usePaging : true,
-               editable : false,
-               selectionMode : "singleRow"
+               editable : false//,
+               //selectionMode : "singleRow"
          }; 
     
     trTranGrid = GridCommon.createAUIGrid("#trTranGrid", trTranColLayout, "", trTranOptions);
@@ -67,8 +67,8 @@ function creatInfoGrid(){
                showStateColumn:false,
                showRowNumColumn    : false,
                usePaging : false,
-               editable : false,
-               selectionMode : "singleRow"
+               editable : false//,
+               //selectionMode : "singleRow"
          }; 
     
     infoGrid = GridCommon.createAUIGrid("#infoGrid", infoColLayout, "", infoOptions);
@@ -109,7 +109,7 @@ function fn_selectTransitInfoList() {
 <header class="pop_header"><!-- pop_header start -->
 <h1>TR Book Transaction</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
