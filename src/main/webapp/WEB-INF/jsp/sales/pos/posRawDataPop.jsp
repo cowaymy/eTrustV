@@ -29,6 +29,8 @@ $(document).ready(function() {
 
 function fn_posRawData(){
 	
+	//Validation
+	
 	var option = {
             isProcedure : true 
     };

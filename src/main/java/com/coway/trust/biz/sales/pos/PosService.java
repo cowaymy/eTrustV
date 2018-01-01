@@ -74,4 +74,8 @@ public interface PosService {
 	List<EgovMap> getPayDetailList(Map<String, Object> params) throws Exception;
 	
 	void insertTransactionLog(Map<String, Object> params)throws Exception;
+	
+	EgovMap chkMemIdByMemCode(Map<String, Object> params)throws Exception;
+	
+	EgovMap chkUserIdByUserName(Map<String, Object> params)throws Exception;
 }

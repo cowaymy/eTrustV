@@ -18,69 +18,159 @@ $(document).ready(function() {
     
 });
 
-function fn_posRawData(){
+function fn_posPaymentListing(){
     
+	//Validation Check
+	var rtnVal = fn_chkPayListingValidation(); 
+	if(rtnVal == false){
+		return;
+	}
+	
     var option = {
             isProcedure : true 
     };
     
     var whereSql = '';
+    var showPaymentDate = "";
+    var showKeyInBranch = "";
+    var showReceiptNo = "";
+    var showTrNo = "";
+    var showKeyInUser = "";
+    var showPosNo = "";
+    var showMemberCode = "";
     
-    if($("#_cmbPosTypeId").val() != null && $("#_cmbPosTypeId").val() != '' ){
-        whereSql += " AND M.POS_MODULE_TYPE_ID = " + $("#_cmbPosTypeId").val();
+    if($("#_frPosNo").val() != null && $("#_frPosNo").val() != '' && $("#_toPosNo").val() != null && $("#_toPosNo").val() != '' ){
+    	whereSql += " AND  posM.POS_NO BETWEEN '" + $("#_frPosNo").val().trim() + "'  AND '" + $("#_toPosNo").val().trim() + "' "; 
+    	showPosNo += $("#_frPosNo").val().trim() + " To " + 	$("#_toPosNo").val().trim();
     }
     
-    if($("#_cmbSalesTypeId").val() != null && $("#_cmbSalesTypeId").val() != '' ){
-        whereSql += " AND M.POS_TYPE_ID = " + $("#_cmbSalesTypeId").val();
+    if($("#_cmbPosTypeId").val() != null && $("#_cmbPosTypeId").val() != ''){
+    	whereSql += " AND posM.POS_MODULE_TYPE_ID = " + $("#_cmbPosTypeId").val(); 
     }
     
-    if($("#_frPosNo").val() != null && $("#_frPosNo").val() != '' && $("#_toPosNo").val() != null && $("#_toPosNo").val() != ''){
-        whereSql += " AND M.POS_NO BETWEEN " + $("#_frPosNo").val()+ " AND " + $("#_toPosNo").val();
+    if($("#_sttDate").val() != null && $("#_sttDate").val() != '' && $("#_eddDate").val() != null && $("#_eddDate").val() != ''){
+    	whereSql += " AND pm.CRT_DT BETWEEN TO_DATE('"+$("#_sttDate").val()+"' , 'DD/MM/YYYY')  AND TO_DATE('"+$("#_eddDate").val()+"' , 'DD/MM/YYYY') ";
+    	showPaymentDate += $("#_sttDate").val() + " To " + $("#_eddDate").val();
     }
     
-    if($("#_sttDate").val() != null && $("#_sttDate").val() != '' && $("#_eddDate").val() != null && $("#_eddDate").val() != '' ){
-        whereSql += " AND M.POS_CRT_DT BETWEEN TO_DATE('" + $("#_sttDate").val()+ "', 'DD/MM/YYYY') AND TO_DATE('"+ $("#_eddDate").val() +"', 'DD/MM/YYYY')";
+    if($("#_frReceiptNo").val() != null && $("#_frReceiptNo").val() != '' && $("#_toReceiptNo").val() != null && $("#_toReceiptNo").val() != '' ){
+    	whereSql += " AND pm.OR_NO BETWEEN '" + $("#_frReceiptNo").val().trim() + "' AND '" + $("#_toReceiptNo").val().trim() + "'";
+    	showReceiptNo += $("#_frReceiptNo").val().trim() + " To " + $("#_toReceiptNo").val().trim();
     }
     
-    if($("#_cmbWhBrnchId").val() != null && $("#_cmbWhBrnchId").val() != '' ){
-        whereSql += " AND M.BRNCH_ID  = " + $("#_cmbWhBrnchId").val();  
+    if($("#_cmbWhBrnchId").val() != null && $("#_cmbWhBrnchId").val() != ''){
+    	whereSql += " AND pm.BRNCH_ID = " + $("#_cmbWhBrnchId").val();
+    	showKeyInBranch += $("#_cmbWhBrnchId").text();
     }
     
-    var runReason = 0;
-    var resnStr = '';
-    if($('#_purcReason :selected').length > 0){
-        $('#_purcReason :selected').each(function(idx, el){ 
-            if(runReason > 0){
-                resnStr += ',' + $(el).val();
-            }else{
-                resnStr += $(el).val();
-            }
-            runReason += 1;
-        });
+    if($("#_frTrtNo").val() != null && $("#_frTrtNo").val() != '' && $("#_toTrNo").val() != null && $("#_toTrNo").val() != ''){
+    	whereSql += " AND pm.TR_NO BETWEEN '" + $("#_frTrtNo").val() + "' AND '" + $("#_toTrNo").val() + "'";
+    	showTrNo += $("#_frTrtNo").val() + " To " + $("#_toTrNo").val();
     }
-    
-    if(resnStr != null && resnStr != ''){
-        whereSql += " AND M.POS_RESN_ID  IN (  "+resnStr+ ") ";   
-    }
-    
+    console.log("salesAgnetId Check : " + $("#_hidSalesAgentId").val());
     if($("#_hidSalesAgentId").val() != null && $("#_hidSalesAgentId").val() != '' ){
-        whereSql += " AND M.POS_CRT_USER_ID = " + $("#_hidSalesAgentId").val() + " ";  //hidden Sales Man ID
+    	whereSql += " AND pm.CRT_USER_ID = " + $("#_hidSalesAgentId").val();
+    	showKeyInUser += $("#_salesAgent").text().trim();
     }
-    
+    console.log("memberCode Check : " + $("#_hidMemberCode").val());
     if($("#_hidMemberCode").val() != null && $("#_hidMemberCode").val() != ''){
-        whereSql += " AND M.POS_MEM_ID = " + $("#_hidMemberCode").val() + " ";  //hidden Member ID
+    	whereSql += " AND posM.POS_MEM_ID = " + $("#_hidMemberCode").val();
+    	showMemberCode += $("#_memberCode").text();
     }
-    
+
     console.log("whereSql : " + whereSql);
     
     //params Setting
-    $("#reportFileName").val("/sales/POSRawData_Filter.rpt");
-    $("#viewType").val("EXCEL");
-    //
+    $("#reportFileName").val("/sales/POSPaymentListing_PDF_New.rpt");
+    $("#viewType").val("PDF");
+   
     $("#V_WHERESQL").val(whereSql);
+    $("#V_SHOWPAYMENTDATE").val(showPaymentDate);
+    $("#V_SHOWKEYINBRANCH").val(showKeyInBranch);
+    $("#V_SHOWRECEIPTNO").val(showReceiptNo);
+    $("#V_SHOWTRNO").val(showTrNo);
+    $("#V_SHOWKEYINUSER").val(showKeyInUser);
+    $("#V_SHOWPOSNO").val(showPosNo);
+    $("#V_SHOWMEMBERCODE").val(showMemberCode);
     
     Common.report("rptForm", option);
     
+}
+
+function fn_chkPayListingValidation(){
+	
+	var isFalseChk = true;
+	
+	if(($("#_sttDate").val() != null && $("#_sttDate").val() != '') || ($("#eDate").val() != null && $("#eDate").val() != '')){ //choice at least one
+		if($("#_sttDate").val() == null || $("#_sttDate").val() == '' || $("#eDate").val() == null && $("#eDate").val() == ''){
+			Common.alert("* Please key in the payment date (From & To).<br />");
+			return false;
+		}
+	}
+	
+	if(($("#_frReceiptNo").val() != null && $("#_frReceiptNo").val() != '') || ($("#_toReceiptNo").val() != null && $("#_toReceiptNo").val() != '')){ //choice at least one
+        if($("#_frReceiptNo").val() == null || $("#_frReceiptNo").val() == '' || $("#_toReceiptNo").val() == null && $("#_toReceiptNo").val() == ''){
+            Common.alert("* Please key in the payment date (From & To).<br />");
+            return false;
+        }
+    }
+	
+	if(($("#_frPosNo").val() != null && $("#_frPosNo").val() != '') || ($("#_toPosNo").val() != null && $("#_toPosNo").val() != '')){ //choice at least one
+        if($("#_frPosNo").val() == null || $("#_frPosNo").val() == '' || $("#_toPosNo").val() == null && $("#_toPosNo").val() == ''){
+            Common.alert("* Please key in the payment date (From & To).<br />");
+            return false;
+        }
+    }
+	
+	if(($("#_frTrtNo").val() != null && $("#_frTrtNo").val() != '') || ($("#_toTrNo").val() != null && $("#_toTrNo").val() != '')){ //choice at least one
+        if($("#_frTrtNo").val() == null || $("#_frTrtNo").val() == '' || $("#_toTrNo").val() == null && $("#_toTrNo").val() == ''){
+            Common.alert("* Please key in the payment date (From & To).<br />");
+            return false;
+        }
+    }
+	
+	if($("#_salesAgent").val() != null && $("#_salesAgent").val() != '' ){
+		Common.ajax("GET", "/sales/pos/chkUserIdByUserName", {userName : $("#_salesAgent").val()}, function(result){
+			if(result == null){
+				Common.alert("* Invalid username.<br />");
+				$("#_salesAgent").val('');
+				$("#_hidSalesAgentId").val('');
+				$("#_salesAgent").focus();
+				isFalseChk = false;
+			}else{
+			    
+				$("#_hidSalesAgentId").val(result.userId);
+			}
+		},'',{async : false});
+	}
+	
+	if(isFalseChk == false){
+		return false;
+	}
+	
+	if($("#_memberCode").val() != null && $("#_memberCode").val() != ''){
+		Common.ajax("GET", "/sales/pos/chkMemIdByMemCode", {memCode : $("#_memberCode").val()},function(result){
+		
+			if(result == null){
+                Common.alert("* Invalid member code.<br />");  
+                $("#_memberCode").val('');
+                $("#_hidMemberCode").val('');
+                $("#_memberCode").focus();
+                isFalseChk = false;
+            }else{
+            	
+            	$("#_hidMemberCode").val(result.memId);
+            }
+		}, '' , {async : false});
+	}
+	
+	if(isFalseChk == false){
+        return false;
+    }
+	
+	
+	//validaion Pass
+	return true;
 }
 
 </script>
@@ -88,7 +178,7 @@ function fn_posRawData(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>POS Raw Data</h1>
+<h1>POS Payment Listing</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a id="_itmSrchPopClose">CLOSE</a></p></li>
 </ul>
@@ -158,7 +248,7 @@ function fn_posRawData(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript: fn_posRawData()" >Generate</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript: fn_posPaymentListing()" >Generate</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" >Clear</a></p></li>
 </ul>
 </form>

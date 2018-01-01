@@ -218,4 +218,8 @@ public interface PosMapper {
 	EgovMap getPosNobyPosIdForMember(PosMemberVO pmvo);
 	
 	List<EgovMap> getPosItmIdListByPosNo(Map<String, Object> params);
+	
+	EgovMap chkMemIdByMemCode(Map<String, Object> params);
+	
+	EgovMap chkUserIdByUserName(Map<String, Object> params);
 }

@@ -837,7 +837,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		logPram.put("psno", docNoPsn);
     		logPram.put("retype", "REQ");  
     		logPram.put("pType", "PS01");   // PS02 - cancel
-    		//logPram.put("pPrgNm", "PSR");  
+    		logPram.put("pPrgNm", "PointOfSales");  
     		logPram.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));   
     		
     		LOGGER.info("############### 10. POS BOOKING  START  ################");
@@ -1508,7 +1508,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       		bookMap.put("psno", posRefNo);
       		bookMap.put("retype", "REQ");  
       		bookMap.put("pType", "PS02");   // PS02 - cancel
-    		//logPram.put("pPrgNm", "PSR");  
+      		bookMap.put("pPrgNm", "PointOfSales");  
       		bookMap.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));   
     		
     		LOGGER.info("############### 18. POS Booking Reverse  START  ################");
@@ -1537,6 +1537,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 				giMap.put("retype", "COM");
 				giMap.put("pType", "PS01");
 				giMap.put("posItmId", revDetList.get(idx).get("posItmId"));
+				giMap.put("pPrgNm", "PointOfSales");
 				giMap.put("userId", params.get("userId"));
 				
 				LOGGER.info("############### 19. POS GI Reverse  START  ################");
@@ -1597,6 +1598,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					giMap.put("retype", "COM");
 					giMap.put("pType", "PS01");
 					giMap.put("posItmId", detInfoList.get(idx).get("posItmId"));
+					giMap.put("pPrgNm", "PointOfSales");
 					giMap.put("userId", userId);
 					
 					LOGGER.info("##################################### Header Save Call Procedure (Status Change) : " + giMap.toString());
@@ -1641,6 +1643,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			giMap.put("retype", "COM");
 			giMap.put("pType", "PS01");
 			giMap.put("posItmId", pdvo.getPosItmId());
+			giMap.put("pPrgNm", "PointOfSales");
 			giMap.put("userId", userId);
 			
 			LOGGER.info("##################################### Detail Save Call Procedure (Status Change) : " + giMap.toString());
@@ -1715,6 +1718,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 				giMap.put("retype", "COM");
 				giMap.put("pType", "PS01");
 				giMap.put("posItmId", memDetList.get(idx).get("posItmId"));
+				giMap.put("pPrgNm", "PointOfSales");
 				giMap.put("userId", userId);
 				
 				LOGGER.info("##################################### Member Save Call Procedure (Status Change) : " + giMap.toString());
@@ -1824,5 +1828,17 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	public void insertTransactionLog(Map<String, Object> params) throws Exception {
 		
 		posMapper.insertTransactionLog(params);
+	}
+
+	@Override
+	public EgovMap chkMemIdByMemCode(Map<String, Object> params) throws Exception {
+		
+		return posMapper.chkMemIdByMemCode(params);
+	}
+
+	@Override
+	public EgovMap chkUserIdByUserName(Map<String, Object> params) throws Exception {
+		
+		return posMapper.chkUserIdByUserName(params);
 	}
 }

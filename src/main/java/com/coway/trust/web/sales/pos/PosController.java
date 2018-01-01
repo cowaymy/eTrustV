@@ -593,4 +593,22 @@ public class PosController {
 	public String posPaymentListingPop(@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/pos/posPaymentListingPop";
 	}
+	
+	
+	@RequestMapping(value = "/chkMemIdByMemCode")
+	public ResponseEntity<EgovMap> chkMemIdByMemCode(@RequestParam Map<String, Object> params) throws Exception{
+		
+		EgovMap memMap = null;
+		memMap = posService.chkMemIdByMemCode(params);
+		
+		return ResponseEntity.ok(memMap);
+	}
+	
+	
+	@RequestMapping(value = "/chkUserIdByUserName")
+	public ResponseEntity<EgovMap> chkUserIdByUserName(@RequestParam Map<String, Object> params) throws Exception{
+		EgovMap idMap = null;
+		idMap = posService.chkUserIdByUserName(params);
+		return ResponseEntity.ok(idMap);
+	}
 }

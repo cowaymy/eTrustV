@@ -310,24 +310,24 @@ $(document).ready(function() {
 					}//loop end
 					// cnt 와 qty 매칭  // serialCnt == idxObj.inputQty
 ////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제					
-				    if(serialCnt != idxObj.inputQty){
+				    /* if(serialCnt != idxObj.inputQty){
 						Common.alert(" Please check the Serial No. for Filters.<br> Contact the LOG team for Serial.");
 						return;
-					} 
+					}  */
 ////////////////////////////////////////Serial Number Check ///////////////////////////////////////////////////
 
-				   /*  //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
+				     //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
 				    if(serialCnt < idxObj.inputQty){
 				    	var tempLength = 0;
 				    	tempLength = idxObj.inputQty - serialCnt;
 				    	for (var j = 0; j < tempLength; j++) {
 				    		var result = Math.floor(Math.random() * 100) + 1;
 				    		if(result < 100 && result > 9){
-				    			result = 'abc000'+result + '0000000';
+				    			result = 'efg000'+result + '0000000';
 				    		}else if(result > 99){
-				    			result = '000abc000'+result+'000';
+				    			result = '000efg000'+result+'000';
 				    		}else{
-				    			result = '000000abc00000'+result;
+				    			result = '000000efg00000'+result;
 				    		}
 				    		console.log("random serial no : " + result);
                             var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : result , stkId : idxObj.stkId};
@@ -337,7 +337,7 @@ $(document).ready(function() {
 				    }else if(serialCnt > idxObj.inputQty){
 				    	Common.alert("Serial number quantities can not be more than the quantity entered.");
 				    	return;
-				    } */  
+				    }  
 				}else{
 					console.log("not Filter");
 				}// Temp Logic

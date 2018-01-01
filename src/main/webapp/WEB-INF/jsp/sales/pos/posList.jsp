@@ -692,7 +692,7 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                 $('#salesmanPopCd').val(memInfo.memCode);
                 $('#salesmanPopCd').removeClass("readonly");
                  
-              /*   Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
+                 Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
                 	
                 	if(result != null){
                 		$("#_cmbWhBrnchIdPop").val(result.brnch);
@@ -702,7 +702,7 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                 		Common.alert("This member has no Brahch.");
                 		return;
                 	}
-                }); */
+                });
                 
         	}else{
         	//	console.log("리스트임");
@@ -864,7 +864,15 @@ function fn_insTransactionLog(posNo, posTypeId){
     <!--Raw Data  -->
     <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"/>
     
-    <!--  -->
+    <!--Payment Listing  -->
+    <input type="hidden" id="V_SHOWPAYMENTDATE" name="V_SHOWPAYMENTDATE">
+    <input type="hidden" id="V_SHOWKEYINBRANCH" name="V_SHOWKEYINBRANCH">
+    <input type="hidden" id="V_SHOWRECEIPTNO" name="V_SHOWRECEIPTNO">
+    <input type="hidden" id="V_SHOWTRNO" name="V_SHOWTRNO">
+    <input type="hidden" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER">
+    <input type="hidden" id="V_SHOWPOSNO" name="V_SHOWPOSNO">
+    <input type="hidden" id="V_SHOWMEMBERCODE" name="V_SHOWMEMBERCODE">
+    
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">
