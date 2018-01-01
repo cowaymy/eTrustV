@@ -38,6 +38,7 @@ public class LoginVO {
 	private String userWorkNo;
 	private String mgrYn;
 	private String memId;
+	private String costCentr;
 
 	public String getUserNric() {
 		return userNric;
@@ -306,5 +307,13 @@ public class LoginVO {
 
 	public void setMemId(String memId) {
 		this.memId = memId;
+	}
+
+	public String getCostCentr() {
+		return costCentr;
+	}
+
+	public void setCostCentr(String costCentr) {
+		this.costCentr = costCentr;
 	}
 }

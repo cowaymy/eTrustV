@@ -17,15 +17,15 @@
            FROM ORG0005D A, ORG0001D B
           WHERE A.MEM_ID = B.MEM_ID
             AND B.MEM_CODE = #{userId}) AS memberLevel
-	       ,CASE
-	          WHEN (USR.USER_BRNCH_ID IS NOT NULL)
-	             THEN USR.USER_BRNCH_ID
-	          ELSE 0
-	       END AS userBranchId
-	       ,CASE
-	          WHEN (USR.USER_DEPT_ID IS NOT NULL)
-	             THEN USR.USER_DEPT_ID
-	          ELSE 0
+           ,CASE
+              WHEN (ORG.BRNCH IS NOT NULL)
+                 THEN ORG.BRNCH
+              ELSE 0
+           END AS userBranchId
+           ,CASE
+              WHEN (ORG.SUB_DEPT IS NOT NULL)
+                 THEN ORG.SUB_DEPT
+              ELSE ORG.MAIN_DEPT
 	       END AS userDeptId
 	       ,USR.USER_UPD_DT AS userUpdateAt
 	       ,USR.USER_PASSWD AS userPassWord
@@ -40,7 +40,9 @@
 	       ,BRANCH.ADDR1 ||' '|| BRANCH.ADDR2 ||' '|| BRANCH.ADDR3 ||' '|| BRANCH.ADDR4 AS branchAddr
 	       ,BRANCH.TEL1 AS branchTel1
 	       ,BRANCH.TEL2 AS branchTel2
-	       ,SUPDEPT.DEPT_NAME AS deptName
+           ,CASE WHEN ORG.SUB_DEPT IS NULL
+                 THEN (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '359' AND ORG.MAIN_DEPT = Z.CODE)
+                 ELSE (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = '360' AND ORG.SUB_DEPT = Z.CODE) END AS deptName
 	       ,(TRUNC(SYSDATE,'dd') - TRUNC(USR.USER_PASSWD_LAST_UPD_DT,'dd')) diffDay
 	       ,  CASE WHEN (SELECT COUNT (1) CNT
                                       FROM (SELECT     A.ROLE_ID
@@ -61,12 +63,15 @@
                                      WHERE TBL.ROLE_ID = D.ROLE_ID
                                        AND D.AUTH_CODE = 'MGR') > 0 THEN 'Y' ELSE 'N' END AS mgrYn
              , ORG.MEM_ID AS memId
+             , CASE WHEN ORG.SUB_DEPT IS NULL
+                    THEN (SELECT MIN(COST_CENTR) FROM SVC0063C WHERE MAIN_DEPT_CODE = ORG.MAIN_DEPT)
+                    ELSE (SELECT COST_CENTR FROM SVC0063C WHERE MAIN_DEPT_CODE = ORG.MAIN_DEPT AND SUB_DEPT_CODE = ORG.SUB_DEPT) END AS costCentr
 	  FROM SYS0047M USR INNER JOIN SYS0038M STATUS ON STATUS.STUS_CODE_ID = USR.USER_STUS_ID
-	       LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = USR.USER_BRNCH_ID
-	       LEFT OUTER JOIN SYS0040M SUPDEPT ON SUPDEPT.DEPT_ID = USR.USER_DEPT_ID
-	       LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
+           LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
+           LEFT JOIN SYS0045M ROLET ON ROLET.USER_ID = USR.USER_ID
                               AND ROLET.STUS_ID = 1
-           LEFT OUTER JOIN ORG0001D ORG ON USR.USER_NAME = ORG.MEM_CODE
+           LEFT OUTER JOIN ORG0001D ORG ON USR.HR_CODE = ORG.MEM_CODE
+           LEFT OUTER JOIN SYS0005M BRANCH ON BRNCH_ID = ORG.BRNCH
 	 WHERE 1 = 1
 	   AND USR.USER_NAME = #{userId} /* userId => user_name 임.*/
 	   AND USR.USER_PASSWD = #{password}

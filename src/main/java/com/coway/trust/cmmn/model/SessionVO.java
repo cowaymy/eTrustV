@@ -34,7 +34,9 @@ public class SessionVO implements Serializable {
 							 // (AuthenticInterceptor.java 에서 등록)
 
 	private String memId;
-	
+
+	private String costCentr;
+
 
 	private List<LoginSubAuthVO> loginSubAuthVOList;
 
@@ -252,6 +254,8 @@ public class SessionVO implements Serializable {
 			sessionVO.setUserPassWord(loginVO.getUserPassWord());
 			sessionVO.setMgrYn(loginVO.getMgrYn());
 			sessionVO.setMemId(loginVO.getMemId());
+			sessionVO.setCostCentr(loginVO.getCostCentr());
+
 			sessionVO.setLoginSubAuthVOList(loginVO.getLoginSubAuthVOList());
 		}
 
@@ -265,7 +269,7 @@ public class SessionVO implements Serializable {
 	public void setMenuCode(String menuCode) {
 		this.menuCode = menuCode;
 	}
-	
+
 
 	public String getMemId() {
 		return memId;
@@ -273,5 +277,13 @@ public class SessionVO implements Serializable {
 
 	public void setMemId(String memId) {
 		this.memId = memId;
+	}
+
+	public String getCostCentr() {
+		return costCentr;
+	}
+
+	public void setCostCentr(String costCentr) {
+		this.costCentr = costCentr;
 	}
 }
