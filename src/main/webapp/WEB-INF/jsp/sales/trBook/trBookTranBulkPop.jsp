@@ -86,7 +86,7 @@ function creatTranGrid(){
                usePaging : false,
                editable : false,
                fixedColumnCount    : 2,
-               selectionMode : "multiRow",
+               //selectionMode : "multiRow",
                softRemoveRowMode:false
          }; 
     
@@ -223,7 +223,7 @@ function fn_tranBulkSave(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>TR Book Management - Transfer Bulk</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
