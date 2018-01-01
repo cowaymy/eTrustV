@@ -578,7 +578,7 @@
             if ($(this).val().trim() == "") {
                 return;
             }
-            doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', '');
+            doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', 'fn_cmdBranchCode');
         });
 
 
@@ -594,7 +594,7 @@
              if ($(this).val().trim() == "") {
                  return;
              }
-             doGetCombo('/services/bs/getCdDeptList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', '');
+             doGetCombo('/services/bs/getCdDeptList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', 'fn_cmdBranchCode1');
          });
 
 
@@ -651,17 +651,24 @@
                 
                 $("#cmdBranchCode option:eq(1)", '#searchForm').attr("selected", true);
                 $("#cmdBranchCode1 option:eq(1)", '#searchForm').attr("selected", true);
+                
+
+                //$("#cmdCdManager1 option:eq(1)", '#searchForm').attr("selected", true); 
+                
 
                 $('#cmdBranchCode').trigger('click');
                 $('#cmdBranchCode1').trigger('click');
+                
+                /*$('#cmdCdManager', '#searchForm').attr("readonly", true );
+                $('#cmdCdManager1', '#searchForm').attr("readonly",  true );
                 
 		        $('#cmdBranchCode', '#searchForm').attr("readonly", true );
 		        $('#cmdBranchCode1', '#searchForm').attr("readonly",  true );
 		        
 		        $('#cmdBranchCode', '#searchForm').attr('class','w100p readonly ');
 		        $('#cmdBranchCode1', '#searchForm').attr('class','w100p readonly ');
-
-            }
+                */
+            } 
         });
 
         function fn_checkRadioButton(objName){
@@ -813,6 +820,26 @@
         }
         
 
+
+
+
+        function fn_cmdBranchCode() {
+            if ( $("#memberLevel").val() == "3") {
+	            $("#cmdCdManager option:eq(1)", '#searchForm').attr("selected", true);
+	            $('#cmdCdManager', '#searchForm').attr("readonly", true );
+	            $('#cmdCdManager', '#searchForm').attr('class','w100p readonly ');
+            }
+            
+        }
+        
+        function fn_cmdBranchCode1() {
+	        if ( $("#memberLevel").val() == "3") {
+	        
+	            $("#cmdCdManager1 option:eq(1)", '#searchForm').attr("selected", true);
+	            $('#cmdCdManager1', '#searchForm').attr("readonly", true );
+	            $('#cmdCdManager1', '#searchForm').attr('class','w100p readonly ');
+	        }            
+        }        
     </script>
 
 
@@ -1023,7 +1050,7 @@
             </td>
             <th scope="row">Cody Manager</th>
             <td colspan="3">
-            <select id="cmdCdManager1" name="cmdCdManager1" class="">
+            <select id="cmdCdManager1" name="cmdCdManager1" class="" >
             </td>
             </tr>
             </tbody>

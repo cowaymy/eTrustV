@@ -70,11 +70,20 @@
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.STUS IN (1,8)
                 AND B.MEM_TYPE = 2
-            <if test="memLvl == '3'.toString()">
+            <if test="memLevl == '1'.toString()">
                 AND A.MEM_LVL > #{memLevl}
+                AND A.BRNCH_ID = #{groupCode}                
+            </if>                     
+            <if test="memLevl == '2'.toString()">
+                AND A.MEM_LVL > #{memLevl}
+                AND A.BRNCH_ID = #{groupCode}                
+            </if>             
+            <if test="memLevl == '3'.toString()">
+                AND A.MEM_LVL = #{memLevl}
                 AND A.BRNCH_ID = #{groupCode}
+                AND B.MEM_CODE  =#{userName}
             </if>
-            <if test="memLvl == '4'.toString()">
+            <if test="memLevl == '4'.toString()">
                 AND A.MEM_LVL = #{memLvl}
                 AND A.MEM_UP_ID = #{groupCode}
             </if>
@@ -94,11 +103,20 @@
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.STUS IN (1,8)
                 AND B.MEM_TYPE = 2
-            <if test="memLvl == '3'.toString()">
+            <if test="memLevl == '1'.toString()">
                 AND A.MEM_LVL > #{memLevl}
+                AND A.BRNCH_ID = #{groupCode}                
+            </if>                     
+            <if test="memLevl == '2'.toString()">
+                AND A.MEM_LVL > #{memLevl}
+                AND A.BRNCH_ID = #{groupCode}                
+            </if>                  
+            <if test="memLevl == '3'.toString()">
+                AND A.MEM_LVL = #{memLevl}
                 AND A.BRNCH_ID = #{groupCode}
+                AND B.MEM_CODE  =#{userName}
             </if>
-            <if test="memLvl == '4'.toString()">
+            <if test="memLevl == '4'.toString()">
                 AND A.MEM_LVL = #{memLvl}
                 AND A.MEM_UP_ID = #{groupCode}
             </if>
