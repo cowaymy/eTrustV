@@ -1247,48 +1247,14 @@
                            LEFT JOIN SVC0006D S06A ON S06A.SCHDUL_ID = S08A.SCHDUL_ID
                            LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
                            INNER JOIN ORG0001D O1DA ON O1DA.MEM_ID = S08A.CODY_ID
-                           LEFT OUTER JOIN
-                           (SELECT S26.STK_CODE,
-                                   S28.WH_LOC_CODE,
-                                   CASE
-                                      WHEN S26.STK_TYPE_ID = 61
-                                      THEN
-                                         CASE
-                                            WHEN     S26.SERIAL_CHK = 'Y'
-                                                 AND S28.SERIAL_PD_CHK = 'Y'
-                                            THEN
-                                               'Y'
-                                            ELSE
-                                               'N'
-                                         END
-                                      WHEN S26.STK_TYPE_ID = 62
-                                      THEN
-                                         CASE
-                                            WHEN     S26.SERIAL_CHK = 'Y'
-                                                 AND S28.SERIAL_FT_CHK = 'Y'
-                                            THEN
-                                               'Y'
-                                            ELSE
-                                               'N'
-                                         END
-                                      WHEN S26.STK_TYPE_ID = 63
-                                      THEN
-                                         CASE
-                                            WHEN     S26.SERIAL_CHK = 'Y'
-                                                 AND S28.SERIAL_PT_CHK = 'Y'
-                                            THEN
-                                               'Y'
-                                            ELSE
-                                               'N'
-                                         END
-                                      ELSE
-                                         'N'
-                                   END
-                                      AS SERIALCHK
-                              FROM SYS0028M S28, SYS0026M S26
-                             WHERE 1 = 1) H
-                              ON     S26B.STK_CODE = H.STK_CODE
-                                 AND H.WH_LOC_CODE = #{userId}
+                           LEFT OUTER JOIN (
+                               SELECT 
+                                  S26.STK_CODE,
+                                  NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+                               FROM SYS0026M S26
+                               WHERE 1 = 1
+                               AND S26.STUS_CODE_ID = 1
+                            ) H ON F.STK_CODE = H.STK_CODE
                      WHERE     S08A.YEAR =
                                   TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
                            AND S08A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
@@ -1480,22 +1446,11 @@
                             LEFT OUTER JOIN (
                                 SELECT 
                                    S26.STK_CODE,
-                                   S28.WH_LOC_CODE,
-                                   CASE 
-                                      WHEN S26.STK_TYPE_ID = 61 THEN
-                                         CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PD_CHK = 'Y' THEN 'Y' ELSE 'N'
-                                         END
-                                      WHEN S26.STK_TYPE_ID = 62 THEN
-                                         CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_FT_CHK = 'Y' THEN 'Y' ELSE 'N'
-                                         END
-                                      WHEN S26.STK_TYPE_ID = 63 THEN
-                                         CASE WHEN S26.SERIAL_CHK = 'Y' AND S28.SERIAL_PT_CHK = 'Y' THEN 'Y' ELSE 'N'
-                                         END
-                                      ELSE 'N'
-                                   END AS SERIALCHK
-                                FROM SYS0028M S28, SYS0026M S26
+                                   NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
+                                FROM SYS0026M S26
                                 WHERE 1 = 1
-                             ) H ON F.STK_CODE = H.STK_CODE AND H.WH_LOC_CODE = #{userId}
+                                AND S26.STUS_CODE_ID = 1
+                             ) H ON F.STK_CODE = H.STK_CODE
                         ) MST
                         LEFT OUTER JOIN (
                             SELECT
