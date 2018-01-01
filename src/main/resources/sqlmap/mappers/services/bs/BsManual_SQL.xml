@@ -75,8 +75,17 @@
                 AND A.BRNCH_ID = #{groupCode}                
             </if>                     
             <if test="memLevl == '2'.toString()">
-                AND A.MEM_LVL > #{memLevl}
-                AND A.BRNCH_ID = #{groupCode}                
+                AND (A.DEPT_CODE || B.NAME) IN ( SELECT C.DEPT_CODE || D.NAME
+                                                  FROM ORG0001D A,
+                                                       ORG0005D B,
+                                                       ORG0005D C,
+                                                       ORG0001D D
+                                                 WHERE A.MEM_ID = B.MEM_ID
+                                                   AND B.DEPT_CODE = C.LAST_GRP_CODE
+                                                   AND A.MEM_CODE = #{userName}       
+                                                   AND C.MEM_LVL = '3'
+                                                   AND C.MEM_ID = D.MEM_ID
+                                                   )           
             </if>             
             <if test="memLevl == '3'.toString()">
                 AND A.MEM_LVL = #{memLevl}
@@ -108,8 +117,17 @@
                 AND A.BRNCH_ID = #{groupCode}                
             </if>                     
             <if test="memLevl == '2'.toString()">
-                AND A.MEM_LVL > #{memLevl}
-                AND A.BRNCH_ID = #{groupCode}                
+                AND (A.DEPT_CODE || B.NAME) IN ( SELECT C.DEPT_CODE || D.NAME
+                                                  FROM ORG0001D A,
+                                                       ORG0005D B,
+                                                       ORG0005D C,
+                                                       ORG0001D D
+                                                 WHERE A.MEM_ID = B.MEM_ID
+                                                   AND B.DEPT_CODE = C.LAST_GRP_CODE
+                                                   AND A.MEM_CODE = #{userName}       
+                                                   AND C.MEM_LVL = '3'
+                                                   AND C.MEM_ID = D.MEM_ID
+                                                   )                   
             </if>                  
             <if test="memLevl == '3'.toString()">
                 AND A.MEM_LVL = #{memLevl}
