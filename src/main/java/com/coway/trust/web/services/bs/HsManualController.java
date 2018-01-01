@@ -262,6 +262,8 @@ public class HsManualController {
 		params.put("memLevl",sessionVO.getMemberLevel());
 		params.put("userName",sessionVO.getUserName());
 		
+		params.put("userType",sessionVO.getUserTypeId());
+		
 		
 		logger.debug("=======================================================================================");
 		logger.debug("============== getCdUpMemList params{} ", params );

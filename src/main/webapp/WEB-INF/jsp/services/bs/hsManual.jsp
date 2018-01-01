@@ -288,7 +288,7 @@
                         return false;
                     }
                     
-                    if ( $("#memberLevel").val()  != "1" ) {
+                    if ( $("#memberLevel").val()  != "1" ||  $("#memberLevel").val()  != "2") {
 	                    if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == null) {
 	                        Common.alert("Please Select 'Cody Manager'");
 	                        return false;
@@ -320,7 +320,7 @@
                         return false;
                     }
                     
-                    if ( $("#memberLevel").val()  != "1" ) {
+                    if ( $("#memberLevel").val()  != "1" ||  $("#memberLevel").val()  != "2") {
                         if ($("#cmdCdManager1").val() == '' || $("#cmdCdManager1").val() == null) {
                             Common.alert("Please Select 'Cody Manager'");
                             return false;
