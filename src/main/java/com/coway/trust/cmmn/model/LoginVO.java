@@ -12,7 +12,7 @@ public class LoginVO {
 	private String userEmail;
 	private int userStatusId;
 	private int userTypeId;
-	private int userDeptId;
+	private String userDeptId;
 	private int roleId;
 	private Integer memberLevel;
 	private Date userUpdateAt;
@@ -114,11 +114,11 @@ public class LoginVO {
 		this.userTypeId = userTypeId;
 	}
 
-	public int getUserDeptId() {
+	public String getUserDeptId() {
 		return userDeptId;
 	}
 
-	public void setUserDeptId(int userDeptId) {
+	public void setUserDeptId(String userDeptId) {
 		this.userDeptId = userDeptId;
 	}
 
