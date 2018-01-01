@@ -1559,7 +1559,7 @@ function fn_productGroup_SelectedIndexChanged(){
     <tr>
         <th scope="row">Labour Charge</th>
         <td>
-        <label><input type="checkbox"   id='txtLabourch' name='txtLabourch''  onChange="fn_LabourCharge_CheckedChanged(this)"/></label>
+        <label><input type="checkbox"   id='txtLabourch' name='txtLabourch'  onChange="fn_LabourCharge_CheckedChanged(this)"/></label>
         
         </td>
         <th scope="row">Labour Charge</th>
