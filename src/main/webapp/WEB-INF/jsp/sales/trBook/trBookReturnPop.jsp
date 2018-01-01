@@ -129,8 +129,8 @@ function creatTrReBookGrid(){
                showStateColumn:false,
                showRowNumColumn    : true,
                usePaging : true,
-               editable : true,
-               selectionMode : "singleRow"
+               editable : true
+               //selectionMode : "singleRow"
          }; 
     
     trReBookGridID = GridCommon.createAUIGrid("#trReBookGridID", trReBookColLayout, "", trReBookOptions);
@@ -354,7 +354,7 @@ function fn_validRequiredField(rowIndex)
 <header class="pop_header"><!-- pop_header start -->
 <h1>TR Book Management - Return</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
