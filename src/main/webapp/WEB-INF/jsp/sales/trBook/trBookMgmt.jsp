@@ -37,8 +37,8 @@ function creatGrid(){
 	               showStateColumn:false,
 	               showRowNumColumn    : true,
 	               usePaging : true,
-	               editable : false,
-	               selectionMode : "singleRow"
+	               editable : false
+	               //selectionMode : "singleRow"
 	         }; 
 	    
 	    trBookGridID = GridCommon.createAUIGrid("#trBookGridID", trBookColLayout, "", trBookOptions);
