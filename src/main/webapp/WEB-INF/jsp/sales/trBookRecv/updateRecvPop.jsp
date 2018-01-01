@@ -41,7 +41,7 @@ function creatTranGrid(){
                  usePaging : false,
                  editable : false,
                  fixedColumnCount    : 3,
-                 selectionMode : "multiRow",
+                 //selectionMode : "multiRow",
                  headerHeight : 30,
                  softRemoveRowMode:false
            }; 

@@ -50,8 +50,8 @@ function creatTransitGrid(){
                showStateColumn:false,
                showRowNumColumn    : true,
                usePaging : true,
-               editable : false,
-               selectionMode : "singleRow"
+               editable : false//,
+               //selectionMode : "singleRow"
          }; 
     
     transitGridID = GridCommon.createAUIGrid("#transitGridID", transitColLayout, "", transitOptions);

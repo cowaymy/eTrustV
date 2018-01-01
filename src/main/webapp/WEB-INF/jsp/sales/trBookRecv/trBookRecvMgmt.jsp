@@ -28,8 +28,8 @@ function creatGrid(){
                    showStateColumn:false,
                    showRowNumColumn    : false,
                    usePaging : true,
-                   editable : false,
-                   selectionMode : "singleRow"
+                   editable : false//,
+                   //selectionMode : "singleRow"
              }; 
         
         recvGridID = GridCommon.createAUIGrid("#recvGridID", recvColLayout, "", recvOptions);
