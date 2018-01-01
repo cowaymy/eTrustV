@@ -637,7 +637,7 @@
                                                      AND ( br.BRNCH_id = #{cmdBranchCode})
                                               </if>
                                               <if test="cmdCdManager != null and cmdCdManager != ''">
-                                                     AND OG.MEM_ID = #{cmdCdManager}
+                                                     AND CD.MEM_ID = #{cmdCdManager}
                                               </if>
                         )Project2
 			        ) Project3

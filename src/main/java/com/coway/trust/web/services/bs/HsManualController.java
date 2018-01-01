@@ -63,6 +63,8 @@ public class HsManualController {
     		List<EgovMap> branchList = hsManualService.selectBranchList(params);
     		model.addAttribute("branchList", branchList);
     		
+    		model.addAttribute("userName",  sessionVO.getUserName());
+    		
     		model.addAttribute("memberLevel", sessionVO.getMemberLevel());
 
 		return "services/bs/hsManual";

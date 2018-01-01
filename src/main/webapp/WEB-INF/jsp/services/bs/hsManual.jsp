@@ -287,6 +287,13 @@
                     	Common.alert("Please Select 'Cody Branch'");
                         return false;
                     }
+                    
+                    if ( $("#memberLevel").val()  != "1" ) {
+	                    if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == null) {
+	                        Common.alert("Please Select 'Cody Manager'");
+	                        return false;
+	                    } 
+                    }
                 	
                     Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
 
@@ -312,7 +319,13 @@
                         Common.alert("Please Select 'Branch'");
                         return false;
                     }
-
+                    
+                    if ( $("#memberLevel").val()  != "1" ) {
+                        if ($("#cmdCdManager1").val() == '' || $("#cmdCdManager1").val() == null) {
+                            Common.alert("Please Select 'Cody Manager'");
+                            return false;
+                        } 
+                    }
                        // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
                         Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
                             console.log("성공.");
@@ -648,6 +661,16 @@
                 });
 
             if ( $("#memberLevel").val() != "") {
+            
+                if ( $("#memberLevel").val()  == "4" ) {
+                
+                    $("#txtAssigncodyCode").val($("#userName").val()); 
+                    $("#txtAssigncodyCode").attr("readOnly", true)
+                
+                }
+                
+                
+            
                 
                 $("#cmdBranchCode option:eq(1)", '#searchForm').attr("selected", true);
                 $("#cmdBranchCode1 option:eq(1)", '#searchForm').attr("selected", true);
@@ -861,6 +884,8 @@
      <input type="hidden" id="memId1" name="memId1"> <!-- Manual branch -->
      
      <input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}"> <!-- Manual branch -->
+     
+     <input type="hidden" id="userName" name="userName" value="${userName}"> 
 </form>
 
 <%-- <form id="popEditViewForm" method="post">

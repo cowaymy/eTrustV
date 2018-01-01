@@ -1041,12 +1041,23 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("selectOrganization_new : {}",selectOrganization_new);
 				promoEntry.put("requestNo", eventCode.get("docNo").toString());
 				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
+				if (params.get("lvlTo") .equals("3") ) {
+					promoEntry.put("deptCodeTo", selectMemberOrgs.get("deptCode"));
+    			} else if (params.get("lvlTo") .equals("2") ) {
+    				promoEntry.put("deptCodeTo", selectMemberOrgs.get("grpCode"));
+    			} else if (params.get("lvlTo") .equals("1") ) {
+    				promoEntry.put("deptCodeTo", selectMemberOrgs.get("orgCode"));
+    			}
 				promoEntry.put("parentIdFrom", selectMemberOrgs.get("memUpId") != null ? Integer.parseInt(selectMemberOrgs.get("memUpId").toString()) : 0);
 				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode").toString() != null ? selectOrganization.get("deptCode").toString() : "");
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
 				promoEntry.put("PRCode", promoEntry.get("promoTypeId").toString().equals("747") ? selectOrganization.get("deptCode") != null? selectOrganization.get("deptCode").toString() : "" : "");
-				promoEntry.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
-				promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
+				if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
+					promoEntry.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
+				}
+				if ( !params.get("lvlTo") .equals("1") ) {
+					promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
+				}
 				promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
 				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
 				logger.debug("promoEntry : {}",promoEntry);
