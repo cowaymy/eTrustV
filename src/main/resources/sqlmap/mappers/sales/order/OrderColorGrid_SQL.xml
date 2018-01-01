@@ -41,7 +41,7 @@
 			       D1.C6 ,
 			       D1.C7 ,
 			       D1.C8 ,
-			       D1.C9, D1.MEM_ID, D1.LAST_ORG_CODE, D1.LAST_GRP_CODE, D1.LAST_DEPT_CODE 
+			       D1.C9 
 	       FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID  ,
 	                   F1.ORD_NO ,
 	                   F1.APP_TYPE_CODE ,
@@ -84,9 +84,7 @@
 	                   ELSE 0 END C6  ,
 	                   F1.PV_MONTH C7 ,
 	                   F1.PV_YEAR C8 ,
-	                   F1.TOT_OTSTND C9,
-	                   F1.MEM_ID,
-                       F1.LAST_ORG_CODE, F1.LAST_GRP_CODE, F1.LAST_DEPT_CODE
+	                   F1.TOT_OTSTND C9
 		       FROM ( SELECT E1.ORD_ID  OrderID1 ,
 					                 E1.ORD_NO  ,
 					                 E1.ORD_DT  ,
@@ -215,13 +213,6 @@
 											                vI.INST_CNT_POST ,
 											                vI.VRIFY_REM
 										            FROM SAL1010V vI ) E3   ON E3.ORD_ID = E1.ORD_ID
-										 JOIN (SELECT usr.USER_ID, A.LAST_ORG_CODE, A.LAST_GRP_CODE, A.LAST_DEPT_CODE
-										              FROM SYS0047M usr, ORG0005D A, ORG0001D B
-										            WHERE usr.USER_NAME = B.MEM_CODE 
-										               AND B.MEM_ID = A.MEM_ID
-										               AND usr.USER_STUS_ID = 1
-										               AND B.STUS = 1
-										               AND A.ORG_STUS_CODE_ID = 1) Extent5 ON E1.MEM_ID = Extent5.USER_ID        
 		                               WHERE  1=1
 		                               <if test="cmbAppTypeList != null and cmbAppTypeList != ''">
 						                   AND E1.APP_TYPE_ID IN
@@ -371,15 +362,6 @@
 	          <if test="promoCode != null and promoCode != ''">
 	              AND F1.PROMO_CODE = #{promoCode}
 	          </if>
-	          <if test="orgCode != null and orgCode != ''">
-                   AND F1.LAST_ORG_CODE = #{orgCode}
-              </if>
-              <if test="grpCode != null and grpCode != ''">
-                   AND F1.LAST_GRP_CODE = #{grpCode}
-              </if>
-              <if test="deptCode != null and deptCode != ''">
-                   AND F1.LAST_DEPT_CODE = #{deptCode}
-              </if>
                ) D1
         ORDER BY D1.ORD_ID DESC
               
