@@ -153,8 +153,16 @@ public class ReplenishmentServiceImpl extends EgovAbstractServiceImpl implements
 					String loccd2 = String.valueOf(setmap.get("loccd"));
 					String reqdt2 = String.valueOf(setmap.get("reqdt"));
 					String all2 = rdc2 + loccd2 + reqdt2;
+					int availqty = (Integer) setmap.get("availqty");
+					int remainqty = (Integer) setmap.get("remainqty");
+					int reordqty = (Integer) setmap.get("reordqty");
+					// availqty
+					// remainqty
+					// reqqty
+					int tt = availqty + remainqty;
 					logger.debug("all : all2 {} : {}", keyChck, all2);
-					if (keyChck.equals(all2)) {
+					logger.debug("tt : reqqty {} : {}", tt, reordqty);
+					if (keyChck.equals(all2) && reordqty > tt) {
 						logger.debug("all2 {}", all2);
 
 						// detail
@@ -227,8 +235,16 @@ public class ReplenishmentServiceImpl extends EgovAbstractServiceImpl implements
 					String loccd2 = String.valueOf(setmap.get("loccd"));
 					String reqdt2 = String.valueOf(setmap.get("reqdt"));
 					String all2 = rdc2 + loccd2 + reqdt2;
+					int availqty = (Integer) setmap.get("availqty");
+					int remainqty = (Integer) setmap.get("remainqty");
+					int reordqty = (Integer) setmap.get("reordqty");
+					// availqty
+					// remainqty
+					// reqqty
+					int tt = availqty + remainqty;
 					logger.debug("all : all2 {} : {}", keyChck, all2);
-					if (keyChck.equals(all2)) {
+					logger.debug("tt : reqqty {} : {}", tt, reordqty);
+					if (keyChck.equals(all2) && reordqty > tt) {
 						logger.debug("all2 {}", all2);
 
 						// detail
