@@ -48,7 +48,7 @@
                          AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
                      </when>
                      <when test="memberLevel == 4">
-                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
+                         AND S005M.CODE = (SELECT C.CODE FROM ORG0001D A, ORG0005D B, SYS0005M C WHERE A.MEM_ID = B.MEM_ID AND A.BRNCH = C.BRNCH_ID AND A.MEM_CODE = #{userName})
                      </when>
              </choose>              
             order by s005m.CODE ASC
