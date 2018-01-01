@@ -47,14 +47,13 @@ public class OrderColorGridController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
 		
-		EgovMap getUserInfo = salesCommonService.getUserInfo(params);
-		if(getUserInfo != null){
-			if("1".equals(getUserInfo.get("memType")) || "2".equals(getUserInfo.get("memType"))){
-				model.put("memType", getUserInfo.get("memType"));
-				model.put("orgCode", getUserInfo.get("lastOrgCode"));
-				model.put("grpCode", getUserInfo.get("lastGrpCode"));
-				model.put("deptCode", getUserInfo.get("lastDeptCode"));
-			}
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
+			model.put("memType", getUserInfo.get("memType"));
+			model.put("orgCode", getUserInfo.get("lastOrgCode"));
+			model.put("grpCode", getUserInfo.get("lastGrpCode"));
+			model.put("deptCode", getUserInfo.get("lastDeptCode"));
+			logger.info("memType ##### " + getUserInfo.get("memType"));
 		}
 		
 		return "sales/order/orderColorGridList";
