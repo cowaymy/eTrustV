@@ -571,13 +571,13 @@ function fn_courseReporPdf() {
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
-
+    
     if(coursId > 0) {
-    	//Common.report("courseReportPdf", option);
-    	Common.alert('Please select a course.');
-    } else {
-    	Common.alert('Please select a course.');
-    }
+    $("#PDF_COURSEID").val(coursId);
+    Common.report("courseReportPdf", option);
+} else {
+    Common.alert('Please select a course.');
+}
 	
 }
 
@@ -586,10 +586,10 @@ function fn_courseReporExcel() {
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
-	
+    
 	if(coursId > 0) {
-		//Common.report("courseReportExcel", option);
-		Common.alert('Please select a course.');
+		$("#EXCEL_COURSEID").val(coursId);
+		Common.report("courseReportExcel", option);
     } else {
     	Common.alert('Please select a course.');
     }
@@ -776,8 +776,23 @@ $.fn.clearForm = function() {
 
 </section><!-- content end -->
 <form id="courseReportPdf">
-<input type="hidden" id="reportFileName" name="reportFileName" value="/organization/training/HPTrainingReport_PDF.rpt" />
+<input type="hidden" id="PDF_reportFileName" name="reportFileName" value="/organization/training/HPTrainingReport_PDF.rpt" />
+<input type="hidden" id="viewType" name="viewType" value="PDF" />
+<input type="hidden" id="PDF_COURSEID" name="V_COURSEID" />
+<input type="hidden" id="PDF_SELECTSQL" name="V_SELECTSQL" value="" />
+<input type="hidden" id="PDF_WHERESQL" name="V_WHERESQL" value="" />
+<input type="hidden" id="PDF_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
+<input type="hidden" id="PDF_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
+<input type="hidden" id="PDF_FULLSQL" name="V_FULLSQL" value="" />
 </form>
 <form id="courseReportExcel">
-<input type="hidden" id="reportFileName" name="reportFileName" value="/organization/training/HPTrainingReport_Excel.rpt" />
+<input type="hidden" id="EXCEL_reportFileName" name="reportFileName" value="/organization/training/HPTrainingReport_Excel.rpt" />
+<!-- <input type="hidden" id="viewType" name="viewType" value="EXCEL_FULL" /> -->
+<input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+<input type="hidden" id="EXCEL_COURSEID" name="V_COURSEID" />
+<input type="hidden" id="EXCEL_SELECTSQL" name="V_SELECTSQL" value="" />
+<input type="hidden" id="EXCEL_WHERESQL" name="V_WHERESQL" value="" />
+<input type="hidden" id="EXCEL_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
+<input type="hidden" id="EXCEL_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
+<input type="hidden" id="EXCEL_FULLSQL" name="V_FULLSQL" value="" />
 </form>
