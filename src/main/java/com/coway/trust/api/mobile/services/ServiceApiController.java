@@ -729,7 +729,6 @@ public class ServiceApiController {
                      					map.put("filterRemark", "");
                      					map.put("filterTotal",totPrc);
                      					
-                     					
                      					paramsDetailCvt.add(map);
                      					 
                      				} 
@@ -831,7 +830,16 @@ public class ServiceApiController {
                      			
                      				
                      				params.put("AS_FILTER_AMT",totPrc);
-                     				params.put("AS_TOT_AMT", totPrc);
+                     				
+                     				
+                     				long totamt =0;
+                     			    try{
+                         				totamt  =Long.parseLong(String.valueOf(asTransLogs1.get(i).get("labourCharge")));
+                     			    }catch(Exception e){
+                     			    	totamt =0;
+                     			    }		
+                     						
+                     				params.put("AS_TOT_AMT", totPrc +totamt);   
                      				
                      				params.put("AS_RESULT_IS_SYNCH", 0);
                      				params.put("AS_RCALL", 0);

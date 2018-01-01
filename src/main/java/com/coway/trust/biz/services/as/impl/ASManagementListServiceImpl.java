@@ -1498,7 +1498,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			
 			 boolean isTaxCode_0 =this.geGST_CHK(svc0004dmap) ; //1   0 구분 
-			 
+			 isTaxCode_0 =false;
 		
 			 
 			 //isTaxCode  0
