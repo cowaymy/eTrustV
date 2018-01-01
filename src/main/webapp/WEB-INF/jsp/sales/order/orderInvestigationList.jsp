@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
+	var basicAuth = false;
 
 	$(document).ready(function() {
 
