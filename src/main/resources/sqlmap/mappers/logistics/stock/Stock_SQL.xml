@@ -261,8 +261,8 @@
 	             </if>
 	         where 1 = 1
 	           <if test="typeId !=null and typeId == '61'">
-	               and inv.STK_ID = sp.STK_ID
-	               and inv.STK_ID = op.STK_ID
+	               and inv.STK_ID = sp.STK_ID(+)
+	               and inv.STK_ID = op.STK_ID(+)
 	               and inv.STK_ID = #{stockId}
 	           </if>
 	           <if test="typeId !=null and typeId != '61'">
