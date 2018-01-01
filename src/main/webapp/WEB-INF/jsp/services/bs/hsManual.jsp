@@ -187,11 +187,13 @@
                         dataField : "deptCode",
                         headerText : "Department",
                         width : 120
-                    },{
+                    }
+                    /*,{
                         dataField : "actnMemId",
                         headerText : "Complete Cody",
                         width : 120
-                    }, {
+                    }*/
+                    , {
                         dataField : "codyStatusNm",
                         headerText : "Cody Status",
                         width : 120
