@@ -959,7 +959,7 @@
                         ,to_char(LAST_PAY_DT              )           AS         last_Payment_Date
                         ,to_char(NEXT_CALL_DT             )           AS         next_Call_Date
                         ,to_char(NEXT_CALL_TM             )           AS         next_Call_Time
-                        ,to_char(AS_EXCHN_YN              )           AS         as_Exchange_YN
+                        ,to_char(AS_EXCHN_YN              )           AS         as_Exchange_Y_N
                         ,to_char(BEFORE_PRODUCT_CODE      )           AS         before_Product_Code
                         ,to_char(BEFORE_PRODUCT_SERIAL_NO )           AS         before_Product_Serial_No
                         ,to_char(CRT_USER_ID              )           AS         Create_User_ID
@@ -1273,16 +1273,16 @@
                     ,to_char(QTY                   )    AS     quanity
                     ,to_char(EXCHG_ID              )    AS     ex_Chg_id
                     ,to_char(CHG_QTY               )    AS     chg_Qty
-                    ,to_char(CHG_YN                )    AS     chg_YN
+                    ,to_char(CHG_YN                )    AS     chg_Y_N
                     ,to_char(LAST_CHG_DT           )    AS     last_Chg_Date
                     ,to_char(LAST_CHG_TM           )    AS     last_Chg_Time
                     ,to_char(PART_PRIOD            )    AS     parts_Period
-                    ,to_char(ALTRTIV_YN            )    AS     alternative_YN
-                    ,to_char(ALTRTIV_USED_YN       )    AS     alternative_Used_YN
+                    ,to_char(ALTRTIV_YN            )    AS     alternative_Y_N
+                    ,to_char(ALTRTIV_USED_YN       )    AS     alternative_Used_Y_N
                     ,to_char(ALTRTIV_FILTER_CODE   )    AS     alternative_Filter_Code
                     ,to_char(ALTRTIV_FILTER_ID     )    AS     alternative_Filter_Id
                     ,to_char(ALTRTIV_FILTER_NAME   )    AS     alternative_Filter_Name
-                    ,to_char(FILTER_BARCD_CHK_YN   )    AS     filter_Barcd_Chk_YN
+                    ,to_char(FILTER_BARCD_CHK_YN   )    AS     filter_Barcd_Chk_Y_N
                     ,to_char(FILTER_BARCD_SERIAL_NO)    AS     filter_Barcd_Serial_No
                     ,to_char(CRT_USER_ID           )    AS     Create_User_ID
                     ,to_char(CRT_DT                )    AS     Create_Date
@@ -1362,12 +1362,12 @@
                     ,FAIL_RESN_CODE                    AS         fail_Reason_Code
                     ,FAIL_RESN_NAME                    AS         fail_Reason_Name
                     ,REPAIR_REM                        AS         in_House_Repair_Remark
-                    ,REPAIR_REPLACE_YN                 AS         in_House_Repair_Replacement_YN
+                    ,REPAIR_REPLACE_YN                 AS         inhouserepairreplacementyn
                     ,REPAIR_PROMIS_DT                  AS         in_House_Repair_Promised_Date
                     ,REPAIR_PRODUCT_GRP_CODE           AS         in_House_Repair_Product_Group
                     ,REPAIR_PRODUCT_CODE               AS         in_House_Repair_Product_Code
                     ,REPAIR_SERIAL_NO                  AS         in_House_Repair_Serial_No
-                    ,REPAIR_YN                         AS         in_House_Repair_YN
+                    ,REPAIR_YN                         AS         inhouserepairyn
                     ,REN_COLCT_ID                      AS         ren_Collection_Id
                     ,LAST_PAY_DT                       AS         last_Payment_Date
                     ,AS_RESULT_NO                      AS         asr_No
@@ -1497,7 +1497,7 @@
                         ,to_char(PART_PRIOD            )   AS        parts_Period
                         ,to_char(FILTER_BARCD_CHK_YN   )   AS        filter_Barcd_Chk_YN
                         ,to_char(FILTER_BARCD_SERIAL_NO)   AS        filter_Barcd_Serial_No
-                        ,to_char(CHRG_YN               )   AS        charge_YN
+                        ,to_char(CHRG_YN               )   AS        chg_Y_N
                         ,to_char(CRT_USER_ID           )   AS        Create_User_ID
                         ,to_char(CRT_DT                )   AS        Create_Date
                     FROM SVC0106T
