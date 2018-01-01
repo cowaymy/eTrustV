@@ -298,7 +298,7 @@ $(function(){
               
          for (var i = 0 ; i < checkedItems.length ; i++){
               
-	           if (checkedItems[i].item.serialChk == 'Y'){
+	          if (checkedItems[i].item.serialChk == 'Y'){
 	        	   serialChkfalg="Y";
 	               break;
 	          }else{
@@ -306,6 +306,10 @@ $(function(){
 	          } 
   
           } 
+         
+         // 2018.01.01 김덕호 요청사항
+         // serial check 강제 처리
+         serialChkfalg ="N";
               
          
          if(serialChkfalg =="Y"){

@@ -204,7 +204,7 @@
            AND l48.ITM_CODE = l55.ITM_CODE(+)
            AND l48.REQST_NO = l55.REQST_NO(+)
            AND NVL(l48.REQST_DEL , 'N') = 'N'
-		   and nvl(l55.del_falg , 'N')<![CDATA[<>]]>'Y'
+		   and nvl(l55.del_flag , 'N')<![CDATA[<>]]>'Y'
            AND l48.REQST_NO = #{param}           
          ORDER BY l48.REQST_NO_ITM 
     </select>
@@ -216,8 +216,11 @@
              , l56.stk_ctgry_id cateid , s11.code_name catenm
              , (l56.qty - nvl(l75.bookqty , 0)) as qty , s26.stk_id stkid
              , (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=s26.UOM) uom
-             , s26.SERIAL_CHK 
-          from log0056m l56 , sys0026m s26
+             , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' then 'Y' else 'N' end
+               when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+               when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
+               else 'N' end SERIAL_CHK 
+          from log0056m l56 , sys0026m s26 , sys0028m s28
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
                 group by loc_id , itm_code ) l75
              , (select * from sys0013m where code_master_id = 15) s15
@@ -225,6 +228,7 @@
          where 1 = 1
            and l56.stk_code = l75.itm_code(+)
            and l56.loc_id = l75.loc_id(+)
+           and l56.loc_id = s28.wh_loc_id
            and l56.stk_type_id = s15.code_id
            and l56.stk_ctgry_id = s11.code_id
            and l56.stk_code = s26.stk_code
@@ -541,7 +545,7 @@
             FROM LOG0055D l55d, LOG0061D l61d
                         WHERE l55d.DELVRY_NO = l61d.DELVRY_NO
                                 AND  l55d.DELVRY_NO_ITM = l61d.PDELVRY_NO_ITM
-								and nvl(l55d.del_falg , 'N')<![CDATA[<>]]>'Y'
+								and nvl(l55d.del_flag , 'N')<![CDATA[<>]]>'Y'
                                 AND  l61d.DELVRY_NO = #{delno}
                                 ORDER BY l61d.PDELVRY_NO_ITM, l61d.SERIAL_NO
      </select>

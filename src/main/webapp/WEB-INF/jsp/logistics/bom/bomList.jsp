@@ -231,13 +231,16 @@
 //            doGetCombo('/logistics/bom/selectCodeList', '15', '','srchcatagorytype', 'A' , '');
 //            $("#srchValid").val('');
     	   var selected = AUIGrid.getSelectedItems(myGridID);
-    	   console.log(selected[0].item);
-    	   var itm = selected[0].item;
-    	   console.log(itm);
-    	   $("#V_BOM").val(itm.bom);
-    	   
-    	   Common.report("printForm");
-    	   
+    	   if (selected.length){
+    		   Common.alert('Please selected Data');
+    	   }else{
+	    	   console.log(selected[0].item);
+	    	   var itm = selected[0].item;
+	    	   console.log(itm);
+	    	   $("#V_BOM").val(itm.bom);
+	    	   
+	    	   Common.report("printForm");
+    	   }
        });
        
         
@@ -556,8 +559,8 @@
 		</section>
 	</section>
 	<form id="printForm" name="printForm">
-	   <input type="text" id="viewType" name="viewType" value="WINDOW" />
-	   <input type="text" id="V_BOM" name="V_BOM" value="" />
-	   <input type="text" id="reportFileName" name="reportFileName" value="/logistics/STOCK_BOM_LISTING.rpt" /><br />
+	   <input type="hidden" id="viewType" name="viewType" value="WINDOW" />
+	   <input type="hidden" id="V_BOM" name="V_BOM" value="" />
+	   <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/STOCK_BOM_LISTING.rpt" /><br />
 	</form>
 </div>

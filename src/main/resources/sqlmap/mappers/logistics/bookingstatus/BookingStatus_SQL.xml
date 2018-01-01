@@ -49,7 +49,7 @@
 	    </if>
 
 	    <if test="status != null and status !=''">
-	        AND l75.final_cmplt = #{status}
+	        AND nvl(l75.final_cmplt , 'N') = #{status}
 	    </if>
 
 	    <if test="flocation !=null and flocation !=''">

@@ -212,16 +212,21 @@ WHERE 1 = 1
                L56.STK_DESC AS STK_DESC, 
                <!-- L56.QTY AS QTY,  -->
                (L56.QTY - NVL(L75.BOOKQTY , 0)) AS QTY , S26.STK_ID STKID, 
-               S26.SERIAL_CHK AS SERIAL_CHK
+               case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' then 'Y' else 'N' end
+               when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
+               when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
+               else 'N' end AS SERIAL_CHK
                 ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM)  uom         
     FROM  LOG0056M L56, 
               SYS0026M S26, 
+              sys0028m s28 ,
              (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'  GROUP BY LOC_ID , ITM_CODE ) L75,  
              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) S15,
              (select * from sys0013m where code_master_id = 11) s11 
     WHERE 1=1
         AND L56.STK_CODE = L75.ITM_CODE(+)
         AND L56.LOC_ID = L75.LOC_ID(+)
+        and l56.loc_id = s28.wh_loc_id
         AND S26.STK_TYPE_ID = S15.CODE_ID(+)
         AND L56.STK_CTGRY_ID = S11.CODE_ID
         AND L56.STK_CODE = S26.STK_CODE

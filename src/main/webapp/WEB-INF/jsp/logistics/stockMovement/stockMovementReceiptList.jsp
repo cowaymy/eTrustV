@@ -342,6 +342,8 @@ $(function(){
                     break;
                 }
             }
+        	doSysdate(0 , 'giptdate');
+            doSysdate(0 , 'gipfdate');
         	$('#grForm #gtype').val("RC");
         	$("#dataTitle").text("Receipt Cancel Posting Data");
             $("#gropenwindow").show();

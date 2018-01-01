@@ -44,11 +44,15 @@
 						   };
 
     var paramdataMovement;
+    
+    var sstatus = [{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}];
 
     $(document).ready(function() {
 
         paramdataMovement = { groupCode : '308', orderValue : 'CODE_NAME', likeValue : '' };
         doGetComboData('/common/selectCodeList.do', paramdataMovement, '', 'smtype', 'M', 'f_multiCombo');
+        
+        doDefCombo(sstatus, '' ,'status', 'A', '');
 
         myGridID = AUIGrid.create("#main_grid_wrap", columnLayout, gridPros);
 
@@ -255,9 +259,7 @@
 					<tr>
                         <th scope="row">Status</th>
                         <td>
-                            <select  id="status" name="status" class="w100p" >
-                            <option id="Y" selected>Y</option>
-                            <option id="N"> N </option></select>
+                            <select  id="status" name="status" class="w100p" ></select>
                         </td>
                         <th scope="row">Request Date</th>
                         <td colspan="2">

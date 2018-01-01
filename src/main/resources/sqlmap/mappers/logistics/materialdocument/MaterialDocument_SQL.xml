@@ -39,7 +39,10 @@
           AUTO_CRT_ITM    
 		, l60.matrl_no
 		, s26.stk_desc
-		, l60.qty
+		, DECODE (l60.DEBT_CRDIT_INDICT,
+                 'H', l60.qty*-1,
+                 'S', l60.qty*1,
+                 l60.qty) qty
 		, l60.measure_bas_unit
 		, ut.code_name
 		, l60.storg_loc

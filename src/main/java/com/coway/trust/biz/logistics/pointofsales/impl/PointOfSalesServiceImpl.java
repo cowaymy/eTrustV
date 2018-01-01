@@ -159,7 +159,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		String[] delvcd = delyCd.split("∈");
 		GiMap.put("parray", delvcd);
 		GiMap.put("gtype", ttype);
-		// GiMap.put("prgnm", "POS PROGRAM");
+		GiMap.put("prgnm", "Other GI/GR");
 		GiMap.put("refdocno", docno);
 		GiMap.put("salesorder", "");
 		GiMap.put("userId", params.get("userId"));
