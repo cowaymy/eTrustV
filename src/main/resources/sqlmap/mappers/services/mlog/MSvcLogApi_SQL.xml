@@ -249,7 +249,8 @@
 
 
     <select id="getAfterServiceJobList" parameterType="Map" resultType="egovMap">
-        SELECT MST1.*,
+        SELECT  /*+ use_nl(A, MST1, SUB1  ) */ 
+               MST1.*,
                TO_CHAR (SUB1.SRV_PRD_EXPR_DT, 'YYYYMMDD') AS warranty,
                /* FN_GET_SVC_MADDRESS (sales_Order_No, 'POST') postcode, */
                /* FN_GET_SVC_MADDRESS (sales_Order_No, 'STATE') service_State, */
@@ -342,7 +343,8 @@
                                                area_id AS area_id,
                                                addr_dtl AS addr_dtl,
                                                street AS street
-                                          FROM (SELECT ROW_NUMBER ()
+                                          FROM (SELECT  /*+ leading(SVC0001D) index( SVC0001D , SVC0001D_IDX12) */
+                                                        ROW_NUMBER ()
                                                        OVER (
                                                           PARTITION BY sal0001d.sales_ord_no,
                                                                        svc0001d.as_no
@@ -507,7 +509,7 @@
                                                                                               'YYYYMM')))
                                          WHERE 1 = 1 AND rn = 1)
                                  WHERE RNN = 1)
-                         WHERE as_type_id <![CDATA[ <> ]]> '2173' ) A
+                         WHERE as_type_id  <![CDATA[ <> ]]> '2173' ) A
                        LEFT OUTER JOIN
                        (SELECT DISTINCT *
                           FROM (SELECT A.AS_NO AS AS_NO,
@@ -568,10 +570,8 @@
                                           ON Extent6.USER_ID = Extent1.SRV_CNTRCT_CRT_USER_ID
                                        JOIN SAL0088D Extent7
                                           ON     Extent7.SRV_PRD_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
-                                             AND TO_CHAR (Extent7.SRV_PRD_EXPR_DT, 'MM') =
-                                                    TO_CHAR (SYSDATE, 'MM')
-                                             AND TO_CHAR (Extent7.SRV_PRD_EXPR_DT, 'YYYY') =
-                                                    TO_CHAR (SYSDATE, 'YYYY')
+                                             AND Extent7.SRV_PRD_EXPR_DT <![CDATA[ >= ]]> to_date(to_char(sysdate , 'YYYY') || '/' || to_char(sysdate , 'MM') || '/01 00:00:00', 'YYYY/MM/DD HH24:MI:SS' ) 
+                                             AND Extent7.SRV_PRD_EXPR_DT <![CDATA[ < ]]> add_months(to_date(to_char(sysdate , 'YYYY') || '/' || to_char(sysdate , 'MM') || '/01 00:00:00', 'YYYY/MM/DD HH24:MI:SS' ),1) 
                                        JOIN SYS0038M Extent8
                                           ON Extent8.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
                                  WHERE 1 = 1) Project1)
