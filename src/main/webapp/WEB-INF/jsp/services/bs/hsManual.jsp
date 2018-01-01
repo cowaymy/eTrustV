@@ -830,7 +830,7 @@
 
 
         function fn_cmdBranchCode() {
-            if ( $("#memberLevel").val() == "3") {
+            if ( $("#memberLevel").val() == "3" ||  $("#memberLevel").val() == "4" ) {
 	            $("#cmdCdManager option:eq(1)", '#searchForm').attr("selected", true);
 	            $('#cmdCdManager', '#searchForm').attr("readonly", true );
 	            $('#cmdCdManager', '#searchForm').attr('class','w100p readonly ');
@@ -839,7 +839,7 @@
         }
         
         function fn_cmdBranchCode1() {
-	        if ( $("#memberLevel").val() == "3") {
+	        if ( $("#memberLevel").val() == "3" ||  $("#memberLevel").val() == "4" ) {
 	        
 	            $("#cmdCdManager1 option:eq(1)", '#searchForm').attr("selected", true);
 	            $('#cmdCdManager1', '#searchForm').attr("readonly", true );
