@@ -27,32 +27,30 @@
                     ,SYS0013M s0013m
             where s005m.type_id = s0013m.code_id
             and s005m.type_id in ( 42)
-		     AND S005M.BRNCH_ID IN (
-		            SELECT DISTINCT BRNCH_ID
-		                       FROM ORG0001D A, ORG0005D B
-		                      WHERE 1 = 1
-		                        AND A.MEM_ID = B.MEM_ID
-		                        AND B.LAST_DEPT_CODE IN (
-		                               SELECT B.DEPT_CODE
-		                                 FROM ORG0001D A, ORG0005D B
-		                                WHERE A.MEM_ID = B.MEM_ID
-			                            <choose>
-			                                    <when test="memberLevel == 1">
-			                                        AND B.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
-			                                    </when>
-			                                    <when test="memberLevel == 2">
-			                                        AND B.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE =#{userName} )        
-			                                    </when>
-			                                    <when test="memberLevel == 3">
-			                                        AND B.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
-			                                    </when>
-			                                    <when test="memberLevel == 4">
-			                                        AND A.MEM_CODE = #{userName}
-			                                    </when>
-			                            </choose>  		                                  
-		                                  )
-		                        AND BRNCH_ID != '0'
-		                   GROUP BY BRNCH_ID)            
+             <choose>
+                     <when test="memberLevel == 1">
+                         AND S005M.CODE IN (
+														SELECT DISTINCT C.CODE
+														FROM SYS0047M A, ORG0001D B, SYS0005M C, ORG0005D D, ORG0005D E, ORG0001D F
+														WHERE 1=1 AND A.USER_NAME = B.MEM_CODE
+														AND B.MEM_ID = D.MEM_ID
+														AND D.DEPT_CODE = E.LAST_ORG_CODE
+														AND E.MEM_LVL ='2'
+														AND E.MEM_ID = F.MEM_ID
+														AND F.BRNCH = C.BRNCH_ID
+														AND A.USER_NAME  = #{userName}                         
+                                                     )        
+                     </when>
+                     <when test="memberLevel == 2">
+                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )        
+                     </when>
+                     <when test="memberLevel == 3">
+                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
+                     </when>
+                     <when test="memberLevel == 4">
+                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
+                     </when>
+             </choose>              
             order by s005m.CODE ASC
 
           </select>

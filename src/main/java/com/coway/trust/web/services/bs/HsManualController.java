@@ -62,7 +62,8 @@ public class HsManualController {
     		
     		List<EgovMap> branchList = hsManualService.selectBranchList(params);
     		model.addAttribute("branchList", branchList);
-
+    		
+    		model.addAttribute("memberLevel", sessionVO.getMemberLevel());
 
 		return "services/bs/hsManual";
     	}
@@ -268,6 +269,11 @@ public class HsManualController {
 	public ResponseEntity<List<EgovMap>> getCdDeptList(@RequestParam Map<String, Object>params,SessionVO sessionVO) {
 		
 		params.put("memLevl",sessionVO.getMemberLevel());
+		params.put("deptName",sessionVO.getUserDeptId());
+		
+		logger.debug("=======================================================================================");
+		logger.debug("============== getCdDeptList params{} ", params );
+		logger.debug("=======================================================================================");
 		
         // Member Type 에 따른 Organization 조회.
 		List<EgovMap> resultList = hsManualService.getCdDeptList(params);

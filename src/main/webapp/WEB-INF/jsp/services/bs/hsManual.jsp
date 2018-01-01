@@ -565,7 +565,7 @@
 //                createAUIGrid();
 //                AUIGrid.setSelectionMode(myGridID, "singleRow");
 
-         $("#cmdBranchCode").change(function() {
+         $("#cmdBranchCode").click(function() {
             $("#cmdCdManager").find('option').each(function() {
                 $(this).remove();
             });
@@ -582,7 +582,7 @@
         });
 
 
-         $("#cmdBranchCode1").change(function() {
+         $("#cmdBranchCode1").click(function() {
              $("#cmdCdManager1").find('option').each(function() {
                  $(this).remove();
              });
@@ -647,6 +647,21 @@
                     }
                 });
 
+            if ( $("#memberLevel").val() != "") {
+                
+                $("#cmdBranchCode option:eq(1)", '#searchForm').attr("selected", true);
+                $("#cmdBranchCode1 option:eq(1)", '#searchForm').attr("selected", true);
+
+                $('#cmdBranchCode').trigger('click');
+                $('#cmdBranchCode1').trigger('click');
+                
+		        $('#cmdBranchCode', '#searchForm').attr("readonly", true );
+		        $('#cmdBranchCode1', '#searchForm').attr("readonly",  true );
+		        
+		        $('#cmdBranchCode', '#searchForm').attr('class','w100p readonly ');
+		        $('#cmdBranchCode1', '#searchForm').attr('class','w100p readonly ');
+
+            }
         });
 
         function fn_checkRadioButton(objName){
@@ -811,6 +826,8 @@
     <input type="hidden" name="manuaMyBSMonth"  id="_manuaMyBSMonth"/>  <!-- salesOrdId  -->
     <input type="hidden" id="brnchId1" name="brnchId1"> <!-- Manual branch -->
      <input type="hidden" id="memId1" name="memId1"> <!-- Manual branch -->
+     
+     <input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}"> <!-- Manual branch -->
 </form>
 
 <%-- <form id="popEditViewForm" method="post">
@@ -867,7 +884,7 @@
             <tr>
                 <th scope="row">Cody Branch<span class="must">*</span></th>
                 <td>
-                <select id="cmdBranchCode" name="cmdBranchCode" class="w100p">
+                <select id="cmdBranchCode" name="cmdBranchCode" class="w100p" disabled="disabled">
                        <option value="">Choose One</option>
                        <c:forEach var="list" items="${branchList }" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
@@ -997,7 +1014,7 @@
             <tr>
             <th scope="row">Branch<span class="must">*</span></th>
             <td>
-            <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p">
+            <select id="cmdBranchCode1" name="cmdBranchCode1" class="w100p"  disabled="disabled">
                        <option value="">Choose One</option>
                        <c:forEach var="list" items="${branchList }" varStatus="status">
                        <option value="${list.codeId}">${list.codeName}</option>
@@ -1062,94 +1079,94 @@
 </section><!-- content end -->
 </form>
 
+<!-- 
 
-
-    <div class="popup_wrap" id="confiopenwindow" style="display:none"><!-- popup_wrap start -->
-        <header class="pop_header"><!-- pop_header start -->
-            <section id="content"><!-- content start -->
+    <div class="popup_wrap" id="confiopenwindow" style="display:none">popup_wrap start
+        <header class="pop_header">pop_header start
+            <section id="content">content start
             <ul class="path">
                 <li><img src="../images/common/path_home.gif" alt="Home" /></li>
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
-         </header><!-- pop_header end -->
-        <aside class="title_line"><!-- title_line start -->
+         </header>pop_header end
+        <aside class="title_line">title_line start
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>BS Management</h2>
-        </aside><!-- title_line end -->
+        </aside>title_line end
 
-        <div class="divine_auto"><!-- divine_auto start -->
+        <div class="divine_auto">divine_auto start
 
         <div style="width:20%;">
 
-        <aside class="title_line"><!-- title_line start -->
+        <aside class="title_line">title_line start
         <h3>Cody List</h3>
-        </aside><!-- title_line end -->
+        </aside>title_line end
 
-        <div class="border_box" style="height:400px"><!-- border_box start -->
+        <div class="border_box" style="height:400px">border_box start
 
         <ul class="right_btns">
-<!--             <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-            <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
+            <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#">NEW</a></p></li>
         </ul>
 
-        <article class="grid_wrap"><!-- grid_wrap start -->
-        </article><!-- grid_wrap end -->
+        <article class="grid_wrap">grid_wrap start
+        </article>grid_wrap end
 
-        </div><!-- border_box end -->
+        </div>border_box end
 
         </div>
 
         <div style="width:50%;">
 
-        <aside class="title_line"><!-- title_line start -->
+        <aside class="title_line">title_line start
         <h3>HS Order List</h3>
-        </aside><!-- title_line end -->
+        </aside>title_line end
 
-        <div class="border_box" style="height:400px"><!-- border_box start -->
+        <div class="border_box" style="height:400px">border_box start
 
         <ul class="right_btns">
-<!--             <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-            <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
+            <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#">NEW</a></p></li>
         </ul>
 
-        <article class="grid_wrap"><!-- grid_wrap start -->
-        </article><!-- grid_wrap end -->
-
+        <article class="grid_wrap">grid_wrap start
+        </article>grid_wrap end
+-
         <ul class="center_btns">
-<!--             <li><p class="btn_blue2"><a href="#">Assign Cody Change</a></p></li>
+            <li><p class="btn_blue2"><a href="#">Assign Cody Change</a></p></li>
             <li><p class="btn_blue2"><a href="#">Cody Assign</a></p></li>
-            <li><p class="btn_blue2"><a href="#">HS Transfer</a></p></li> -->
+            <li><p class="btn_blue2"><a href="#">HS Transfer</a></p></li>
         </ul>
 
-        </div><!-- border_box end -->
+        </div>border_box end
 
         </div>
 
         <div style="width:30%;">
 
-        <aside class="title_line"><!-- title_line start -->
+        <aside class="title_line">title_line start
         <h3>Cody – HS Order</h3>
-        </aside><!-- title_line end -->
+        </aside>title_line end
 
-        <div class="border_box" style="height:400px"><!-- border_box start -->
+        <div class="border_box" style="height:400px">border_box start
 
         <ul class="right_btns">
-<!--             <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
-            <li><p class="btn_grid"><a href="#">NEW</a></p></li> -->
+            <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
+            <li><p class="btn_grid"><a href="#">NEW</a></p></li>
         </ul>
 
-        <article class="grid_wrap"><!-- grid_wrap start -->
-        </article><!-- grid_wrap end -->
+        <article class="grid_wrap">grid_wrap start
+        </article>grid_wrap end
 
         <ul class="center_btns">
             <li><p class="btn_blue2"><a href="#">Confirm</a></p></li>
         </ul>
 
-        </div><!-- border_box end -->
+        </div>border_box end
 
         </div>
 
-        </div><!-- divine_auto end -->
+        </div>divine_auto end
 
-        </section><!-- content end -->
-    </div>
+        </section>content end
+    </div> -->
