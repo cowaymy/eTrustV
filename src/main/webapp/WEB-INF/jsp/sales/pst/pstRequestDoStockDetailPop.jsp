@@ -26,7 +26,7 @@
 
     $(document).ready(function(){
 
-    	AUIGrid.setSelectionMode(myGridID, "singleRow");
+//    	AUIGrid.setSelectionMode(myGridID, "singleRow");
     	
         // AUIGrid 그리드를 생성합니다.
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout);

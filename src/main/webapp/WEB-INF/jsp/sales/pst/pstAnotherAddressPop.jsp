@@ -11,7 +11,7 @@
 	    //Call Ajax
 	    fn_getAddrListAjax();
 	    
-	    AUIGrid.setSelectionMode(anotherGridID, "singleRow");
+//	    AUIGrid.setSelectionMode(anotherGridID, "singleRow");
 	    
 	    // 셀 더블클릭 이벤트 바인딩 - 주소수정
 	    AUIGrid.bind(anotherGridID, "cellDoubleClick", function(event){
