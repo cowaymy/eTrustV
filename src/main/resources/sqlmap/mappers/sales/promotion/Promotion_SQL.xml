@@ -80,24 +80,64 @@
 		     ( SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
 		            , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
 		         FROM SAL0081D T1
+                    , SYS0013M T2
 		        WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
-		          AND T1.PAC_TYPE IN ('0', '2')
+		          AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '367'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_CNTRCT_PAC_ID
 		          AND '1' = #{selType}
 		        UNION ALL
+		       SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
+                    , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
+                 FROM SAL0081D T1
+                WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('2')
+                  AND '1' = #{selType}
+                UNION ALL
 		       SELECT T1.SRV_CNTRCT_PAC_ID AS CODE_ID
 		            , T1.SRV_CNTRCT_PAC_DESC AS CODE_NAME
 		         FROM SAL0081D T1
 		        WHERE T1.SRV_CNTRCT_PAC_STUS_ID = 1
 		          AND T1.PAC_TYPE = '1'
 		          AND '2' = #{selType}
-		        UNION ALL
-		       SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
-		            , T1.SRV_MEM_DESC AS CODE_NAME
-		         FROM SAL0091M T1
-		        WHERE T1.SRV_MEM_STUS_ID = 1
-		          AND T1.PAC_TYPE IN ('0', '2')
-		          AND '3' = #{selType}
-		        UNION ALL
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                    , SYS0013M T2
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '368'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_MEM_PAC_ID
+                  AND '3' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('2')
+                  AND '3' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                    , SYS0013M T2
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('0')
+                  AND T2.CODE_MASTER_ID = '370'
+                  AND T2.DISAB = 0
+                  AND T2.CODE = T1.SRV_MEM_PAC_ID
+                  AND '5' = #{selType}
+                UNION ALL
+               SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
+                    , T1.SRV_MEM_DESC AS CODE_NAME
+                 FROM SAL0091M T1
+                WHERE T1.SRV_MEM_STUS_ID = 1
+                  AND T1.PAC_TYPE IN ('2')
+                  AND '5' = #{selType}
+                UNION ALL
 		       SELECT T1.SRV_MEM_PAC_ID AS CODE_ID
 		            , T1.SRV_MEM_DESC AS CODE_NAME
 		         FROM SAL0091M T1
