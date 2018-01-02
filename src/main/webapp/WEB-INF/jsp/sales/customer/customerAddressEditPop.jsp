@@ -43,10 +43,14 @@ $(document).ready(function(){
 	        dataField : "name",
 	        headerText : "Status",
 	        width : '10%'
-	    }, {
+	    },{
+            dataField : "areaChk",
+            headerText : "Is New",
+            width : '10%'
+        }, {
 	        dataField : "addr",
 	        headerText : "Address",
-	        width : '80%'
+	        width : '70%'
 	    }, {
 	        dataField : "custAddId",
 	        visible : false
@@ -54,6 +58,9 @@ $(document).ready(function(){
 	        dataField : 'custId',
 	        visible : false
 	    },{
+            dataField : 'areaId',
+            visible : false
+        },{
 	        dataField : 'stusCodeId',
 	        visible : false
 	    },{ 
