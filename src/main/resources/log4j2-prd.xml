@@ -21,26 +21,33 @@
 
 	<Loggers>
 		<Logger name="java.sql" level="DEBUG" additivity="false">
-			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
 		</Logger>
 		<Logger name="egovframework" level="INFO" additivity="false">
-			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
 		</Logger>
 		<!-- log SQL with timing information, post execution -->
 		<Logger name="jdbc.sqltiming" level="INFO" additivity="false">
-			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
 		</Logger>
 		<Logger name="org.springframework" level="INFO" additivity="false">
-			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
+		</Logger>
+
+		<Logger name="com.crystaldecisions12" level="ERROR" additivity="false">
+			<AppenderRef ref="rollingFile" />
+		</Logger>
+
+		<Logger name="com.crystaldecisions" level="ERROR" additivity="false">
+			<AppenderRef ref="rollingFile" />
 		</Logger>
 
 		<Logger name="com.coway.trust" level="DEBUG" additivity="false">
-			<AppenderRef ref="console" />
 			<AppenderRef ref="rollingFile" />
 		</Logger>
 
 		<Root level="WARN">
-			<AppenderRef ref="console" />
+			<AppenderRef ref="rollingFile" />
 		</Root>
 	</Loggers>
 </Configuration>
