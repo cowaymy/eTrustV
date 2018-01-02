@@ -555,10 +555,10 @@ function savePayment(){
 	
 	//Card Holder 체크
 	//금액 체크
-    if(FormUtil.checkReqValue($("#keyInHolderNm"))){
-        Common.alert("<spring:message code='pay.head.noCrcHolderName'/>");
-        return;
-    }
+    //if(FormUtil.checkReqValue($("#keyInHolderNm"))){
+    //    Common.alert("<spring:message code='pay.head.noCrcHolderName'/>");
+    //    return;
+    //}
 	
 	//카드 유효일자 체크
     if(FormUtil.checkReqValue($("#keyInExpiryMonth")) || FormUtil.checkReqValue($("#keyInExpiryYear"))){
@@ -2548,7 +2548,7 @@ function addOutSrvcToFinal(){
 							<span>-</span>
 				            <p class="short"><input type="text" id="keyInCardNo4" name="keyInCardNo4" size="4" maxlength="4" class="wAuto" onkeydown='return FormUtil.onlyNumber(event)' /></p>
 				        </td>
-				        <th scope="row">Credit Card Holder Name<span class="must">*</span></th>
+				        <th scope="row">Credit Card Holder Name</th>
 				        <td>
 				            <input type="text" id="keyInHolderNm" name="keyInHolderNm" class="w100p"  />
 				        </td>                        

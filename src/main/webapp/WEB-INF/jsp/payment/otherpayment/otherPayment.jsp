@@ -1383,8 +1383,19 @@ var columnLayout = [
     }
     
     function fn_searchList(){
+
     	
     	if($("#bankDateFr").val() != '' && $("#bankDateTo").val() != ''){
+
+			//2018년 이전 데이터 불가
+			var bankDtFrArray = $("#bankDateFr").val().split('/');
+			var bankDtToArray = $("#bankDateTo").val().split('/');
+
+			if(Number(bankDtFrArray[2]) < 2018 ||  Number(bankDtFrArray[2]) < 2018){
+				Common.alert("<spring:message code='pay.alert.select.after2018'/>");
+				return;
+			}
+
     		var selBank = $("#searchBankType").val();
     		if(selBank == ''){
     			  Common.alert("<spring:message code='pay.alert.selectBankType'/>");

@@ -33,9 +33,10 @@
         {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 100 , editable : false},
         {dataField : "appType",headerText : "<spring:message code='pay.head.appType'/>",width : 130 , editable : false},
         {dataField : "payItmModeId",headerText : "<spring:message code='pay.head.payTypeId'/>",width : 240 , editable : false, visible : false},
-        {dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.payType'/>",width : 120 , editable : false},
+		{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.mode'/>",width : 120 , editable : false},
         {dataField : "custId",headerText : "<spring:message code='pay.head.customerId'/>",width : 100 , editable : false},
 		{dataField : "salesOrdNo",headerText : "<spring:message code='pay.head.salesOrder'/>", editable : false},
+		{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>", editable : false, dataType:"numeric", formatString : "#,##0.00" },
 		{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transDate'/>",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 		{dataField : "orNo",headerText : "<spring:message code='pay.head.worNo'/>",width : 120,editable : false},
 		{dataField : "brnchId",headerText : "<spring:message code='pay.head.keyInBranch'/>",width : 100,editable : false},
@@ -69,11 +70,11 @@
             return;
         }
         
-        if(FormUtil.checkReqValue($("#tranDateFr")) ||
-			FormUtil.checkReqValue($("#tranDateTo"))){
-            Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
-            return;
-        }
+        //if(FormUtil.checkReqValue($("#tranDateFr")) ||
+		//	FormUtil.checkReqValue($("#tranDateTo"))){
+        //   Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
+        //    return;
+        //}
     	
     	Common.ajax("POST","/payment/selectGroupPaymentList.do",$("#searchForm").serializeJSON(), function(result){    		
     		AUIGrid.setGridData(myGridID, result);
@@ -207,13 +208,28 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
-                        <th scope="row">Transaction Date</th>
+                        <th scope="row"></th>
+                        <td>
+                        </td>
+                    </tr>
+					<tr>
+						<th scope="row">Transaction Date</th>
                         <td>
                             <!-- date_set start -->
                             <div class="date_set w100p">
                             <p><input type="text" id="tranDateFr" name="tranDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             <span>To</span>
                             <p><input type="text" id="tranDateTo" name="tranDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
+                        <th scope="row">Key-in Date</th>
+                        <td>
+                            <!-- date_set start -->
+                            <div class="date_set w100p">
+                            <p><input type="text" id="payDtFr" name="payDtFr" title="Key In Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="payDtTo" name="payDtTo" title="Key In End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             </div>
                             <!-- date_set end -->
                         </td>

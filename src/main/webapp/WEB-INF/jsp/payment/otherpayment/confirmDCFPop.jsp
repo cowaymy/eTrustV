@@ -25,7 +25,7 @@ var requestDcfColumnLayout = [
 	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.payType'/>",width : 110 , editable : false},
 	{dataField : "custId",headerText : "<spring:message code='pay.head.customerId'/>",width : 140 , editable : false},
 	{dataField : "salesOrdNo",headerText : "<spring:message code='pay.head.salesOrder'/>", editable : false},
-	{dataField : "payItmAmt",headerText : "<spring:message code='pay.head.amount'/>", width : 120 ,editable : false, dataType:"numeric", formatString : "#,##0.00" },
+	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>", width : 120 ,editable : false, dataType:"numeric", formatString : "#,##0.00" },
 	{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 120 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 	{dataField : "orNo",headerText : "<spring:message code='pay.head.worNo'/>",width : 150,editable : false},
 	{dataField : "brnchId",headerText : "<spring:message code='pay.head.keyInBranch'/>",width : 100,editable : false, visible : false},
@@ -72,7 +72,7 @@ function recalculateTotalAmt(){
 
     if(rowCnt > 0){
         for(var i = 0; i < rowCnt; i++){
-            totalAmt += AUIGrid.getCellValue(myRequestDCFGridID, i ,"payItmAmt");
+            totalAmt += AUIGrid.getCellValue(myRequestDCFGridID, i ,"totAmt");
         }
     }
 
