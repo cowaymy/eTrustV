@@ -1818,17 +1818,17 @@ public class ServiceApiController {
 
 		//headSet
 		if(rmap != null){
-			orv.setSumRpf(Integer.parseInt(String.valueOf(rmap.get("sumRpf"))));
-			orv.setSumRpt(Integer.parseInt(String.valueOf(rmap.get("sumRpt"))));
-			orv.setSumRhf(Integer.parseInt(String.valueOf(rmap.get("sumRhf"))));
-			orv.setSumRental(Integer.parseInt(String.valueOf(rmap.get("sumRental"))));
-			orv.setSumAdjust(Integer.parseInt(String.valueOf(rmap.get("sumAdjust"))));
+			orv.setSumRpf(String.valueOf(rmap.get("sumRpf")));
+			orv.setSumRpt(String.valueOf(rmap.get("sumRpt")));
+			orv.setSumRhf(String.valueOf(rmap.get("sumRhf")));
+			orv.setSumRental(String.valueOf(rmap.get("sumRental")));
+			orv.setSumAdjust(String.valueOf(rmap.get("sumAdjust")));
 		}else {
-			orv.setSumRpf(0);
-			orv.setSumRpt(0);
-			orv.setSumRhf(0);
-			orv.setSumRental(0);
-			orv.setSumAdjust(0);
+			orv.setSumRpf("0");
+			orv.setSumRpt("0");
+			orv.setSumRhf("0");
+			orv.setSumRental("0");
+			orv.setSumAdjust("0");
 		}
 		
 
