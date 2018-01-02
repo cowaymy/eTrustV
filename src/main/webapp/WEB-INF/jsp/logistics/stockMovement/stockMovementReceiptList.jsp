@@ -377,13 +377,30 @@ $(function(){
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
-        }else if(checkedItems.length > 1) {
-            Common.alert('Please One data selected.');
-            return false;
-        }else{
+        }else if(checkedItems.length == 1 ) {
             var itm = checkedItems[0];
             $("#V_DELVRYNO").val(itm.delyno);
             Common.report("printForm");
+        }else{
+            var tmpno = checkedItems[0].delyno;
+            var delbool = true;
+            for (var i = 0 ; i < checkedItems.length ; i++ ){
+                var itm = checkedItems[i];
+                console.log(itm);
+                console.log(tmpno  + ' :::: ' + itm.delyno);
+                if (tmpno != itm.delyno){
+                    delbool = false;
+                    break;
+                }               
+            }
+            console.log(delbool);
+            
+            if (delbool){
+                $("#V_DELVRYNO").val(tmpno);
+                Common.report("printForm");
+            }else{
+                Common.alert('Only the same [Delivery No] is possible.');
+            }
          }
      });
     
