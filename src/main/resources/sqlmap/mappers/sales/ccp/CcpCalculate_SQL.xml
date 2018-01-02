@@ -56,7 +56,7 @@ ORDER BY Project1.CODE_NAME ASC
 			       Filter1.CCP_REM   ,
 			       Filter1.CCP_RJ_STUS_ID   ,
 			       Filter1.CCP_UPD_DT   ,
-			       TO_CHAR(Filter1.CCP_UPD_DT, 'DD-MM-YYYY AM HH:MI:SS ') ||'(' ||Filter1.USERNAME3 ||')' UPD_AT,
+			       TO_CHAR(Filter1.CCP_UPD_DT, 'DD-MM-YYYY HH24:MI:SS ') ||'(' ||Filter1.USERNAME3 ||')' UPD_AT,
 			       Filter1.SALESORDERID1 SALES_ORD_ID  ,
 			       Filter1.SALES_ORD_NO   ,
 			       Filter1.REF_NO   ,
