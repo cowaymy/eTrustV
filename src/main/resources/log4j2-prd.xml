@@ -23,22 +23,11 @@
 		<Logger name="java.sql" level="INFO" additivity="false">
 			<AppenderRef ref="rollingFile" />
 		</Logger>
-		<Logger name="egovframework" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-		<!-- log SQL with timing information, post execution -->
-		<Logger name="jdbc.sqltiming" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-		<Logger name="org.springframework" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-
 		<Logger name="com.coway.trust" level="INFO" additivity="false">
 			<AppenderRef ref="rollingFile" />
 		</Logger>
 
-		<Root level="INFO">
+		<Root level="ERROR">
 			<AppenderRef ref="rollingFile" />
 		</Root>
 	</Loggers>
