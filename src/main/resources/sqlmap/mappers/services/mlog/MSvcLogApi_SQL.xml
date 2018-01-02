@@ -2481,7 +2481,7 @@
                    <if test="searchKeyword != null and searchKeyword != ''">
                     <choose>
                         <when test="searchType == 2">
-                             AND A.NAME = LIKE  '%'||#{searchKeyword}||'%'
+                             AND A.NAME  LIKE  '%'||#{searchKeyword}||'%'
                         </when>
                         <when test="searchType == 1">
                             AND SOM.SALES_ORD_NO like '%'|| #{searchKeyword} ||'%'
