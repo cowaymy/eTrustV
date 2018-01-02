@@ -34,14 +34,6 @@
 			<AppenderRef ref="rollingFile" />
 		</Logger>
 
-		<Logger name="com.crystaldecisions12" level="ERROR" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-
-		<Logger name="com.crystaldecisions" level="ERROR" additivity="false">
-			<AppenderRef ref="rollingFile" />
-		</Logger>
-
 		<Logger name="com.coway.trust" level="DEBUG" additivity="false">
 			<AppenderRef ref="rollingFile" />
 		</Logger>
