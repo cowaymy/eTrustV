@@ -169,6 +169,10 @@ function fn_doAllaction(){
         <td>
         <span><c:out value="${orderCall.crtDt}"/> </span>
         </td>
+        <th scope="row"></th>
+        <td>
+        
+        </td>
     </tr>
     <tr>
         <th scope="row">Wait For Cancel</th>
@@ -188,6 +192,10 @@ function fn_doAllaction(){
         <td>
         <span><c:out value="${orderCall.crtUserId}"/></span>
         </td>
+        <th scope="row"></th>
+        <td>
+        
+        </td>
     </tr>
     <tr>
         <th scope="row">Product To Install </th>
@@ -197,6 +205,24 @@ function fn_doAllaction(){
         <th scope="row">Call Log Status</th>
         <td>
            <span><c:out value="${orderCall.callStusCode}"/></span>
+        </td>
+        <th scope="row"></th>
+        <td>
+        
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">RDC Available Qty</th>
+        <td>
+            <span><c:out value="${orderRdcInCdc.raqty}"/></span>
+        </td>
+        <th scope="row">In Transit Qty</th>
+        <td>
+           <span><c:out value="${orderRdcInCdc.rinqty}"/></span>
+        </td>
+        <th scope="row">CDC Available Qty</th>
+        <td>
+            <span><c:out value="${orderRdcInCdc.caqty}"/></span>
         </td>
     </tr>
     </tbody>

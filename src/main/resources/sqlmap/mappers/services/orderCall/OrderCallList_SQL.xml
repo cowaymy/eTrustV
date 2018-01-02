@@ -629,5 +629,35 @@
        </select>
 
 
+        <select id="getRdcInCdc" parameterType="Map" resultType="egovMap">
+      <![CDATA[
+      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB = '02' AND WH_LOC_STK_GRAD = 'A')
+        SELECT MAX(STK_CODE) stk_code , MAX(STK_DESC) stk_desc, MAX(RDC ) rdc , MAX(RAQTY) raqty, MAX(RINQTY) rinqty, MAX(CDC) cdc, MAX(CAQTY) caqty FROM (
+        SELECT STK_CODE , STK_DESC ,  L.RDC , (QTY - NVL(BOOKQTY , 0) ) RAQTY , NVL(B.MOV_QTY,0) RINQTY  ,  0 CDC  , 0 CAQTY  
+          FROM LOG0056M  B,L , (  SELECT LOC_ID,
+                                     ITM_CODE,
+                                     SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
+                                FROM LOG0075M
+                               WHERE NVL (FINAL_CMPLT, 'N') <> 'Y'
+                            GROUP BY LOC_ID, ITM_CODE)  C
+        WHERE B.LOC_ID = L.RDC 
+          AND B.LOC_ID = C.LOC_ID(+)
+           AND B.STK_CODE = C.ITM_CODE(+)
+           AND STK_CODE = #{productCode}
+         UNION ALL
+         SELECT  STK_CODE , STK_DESC , 0 RDC , 0 RAQTY , 0 RINQTY  , L.CDC , (QTY - NVL(BOOKQTY,0) )  CAQTY  
+          FROM LOG0056M  B,L ,(  SELECT LOC_ID,
+                                     ITM_CODE,
+                                     SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
+                                FROM LOG0075M
+                               WHERE NVL (FINAL_CMPLT, 'N') <> 'Y'
+                            GROUP BY LOC_ID, ITM_CODE) C
+        WHERE B.LOC_ID = L.CDC
+           AND B.LOC_ID = C.LOC_ID(+)
+           AND B.STK_CODE = C.ITM_CODE(+)
+           AND B.STK_CODE = #{productCode}
+         )
+      ]]>
+      </select>
 
  </mapper>

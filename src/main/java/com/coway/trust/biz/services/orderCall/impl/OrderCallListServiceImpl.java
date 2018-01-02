@@ -335,7 +335,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 
-
+	@Override
+	public EgovMap getRdcInCdc(Map<String, Object> params) {
+		return orderCallListMapper.getRdcInCdc(params);
+	}
 
 
 }
