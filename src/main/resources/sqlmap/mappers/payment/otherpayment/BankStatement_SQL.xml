@@ -42,6 +42,7 @@
     
     <select id="selectBankStatementDetailList" parameterType="Map" resultType="egovMap">
         SELECT
+            B.F_TRNSC_ID AS F_TRNSC_ID,
             A.BANK_ID AS BANK_ID,
             C.NAME AS BANK_NAME,
             A.F_BANK_JRNL_ACC_ID AS BANK_ACC,

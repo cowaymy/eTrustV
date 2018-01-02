@@ -41,14 +41,14 @@
 	var detailColumnLayout = [
 	    {dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
 	    {dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
-	    
+	    {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},     
 	    {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},                    
 	    {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},                    
 	    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-	    {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.tellerId'/>", editable : false},
-	    {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.transCode'/>",editable : false},
-	    {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
-	    {dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.description'/>", editable : false},
+	    {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
+	    {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
+	    {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
+	    {dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : false},
 	    {dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : false},
         {dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},                    
         {dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : false},
@@ -61,10 +61,10 @@
 
     //AUIGrid 칼럼 설정
 	var uploadGridLayout = [
-		{dataField : "0", headerText : "<spring:message code='pay.head.tellerId'/>", editable : true},
-		{dataField : "1", headerText : "<spring:message code='pay.head.transCode'/>", editable : true},
-		{dataField : "2", headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : true},
-		{dataField : "3", headerText : "<spring:message code='pay.head.description'/>", editable : true},
+		{dataField : "0", headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : true},
+		{dataField : "1", headerText : "<spring:message code='pay.head.description1'/>", editable : true},
+		{dataField : "2", headerText : "<spring:message code='pay.head.description2'/>", editable : true},
+		{dataField : "3", headerText : "<spring:message code='pay.head.ref5'/>", editable : true},
 		{dataField : "4", headerText : "<spring:message code='pay.head.ref6'/>", editable : true},
         {dataField : "5", headerText : "<spring:message code='pay.head.ref7'/>", editable : true},
         {dataField : "6", headerText : "<spring:message code='pay.head.mode'/>", editable : true},

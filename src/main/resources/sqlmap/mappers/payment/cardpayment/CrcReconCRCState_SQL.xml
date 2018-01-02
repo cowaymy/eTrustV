@@ -154,14 +154,15 @@
                     G.ORD_NO) TB1
                 
                     WHERE 1=1
-                    AND (TB1.PAY_ITM_CC_NO,
+                    AND (
+                    SUBSTR(TB1.PAY_ITM_CC_NO, 1, 6) || SUBSTR(TB1.PAY_ITM_CC_NO, -4) ,
                     TB1.PAY_ITM_REF_DT, 
                     TB1.PAY_ITM_APPV_NO, 
                     TB1.AMOUNT,
                     TB1.PAY_ITM_BANK_ACC_ID ) 
                     NOT IN (
-                        SELECT  
-                            B.CRC_TRNSC_NO,
+                        SELECT 
+                            SUBSTR(B.CRC_TRNSC_NO, 1, 6) || SUBSTR(B.CRC_TRNSC_NO, -4) ,
                             B.CRC_TRNSC_DT,
                             B.CRC_TRNSC_APPV,
                             NVL(SUM(B.CRC_GROS_AMT),0) AS GROS_AMT,
@@ -238,14 +239,15 @@
                         C.ACC_CODE
                     ) TB1
                 WHERE 1=1
-                AND (TB1.CRC_TRNSC_NO,
+                AND (
+                    SUBSTR(TB1.CRC_TRNSC_NO, 1, 6) || SUBSTR(TB1.CRC_TRNSC_NO, -4),
                     TB1.CRC_TRNSC_DT,
                     TB1.CRC_TRNSC_APPV,
                     TB1.GROS_AMT,
                     TB1.CRC_STATE_ACC_ID) 
                 NOT IN (
                         SELECT
-                            B.PAY_ITM_CC_NO,
+                            SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4) ,
                             B.PAY_ITM_REF_DT,
                             B.PAY_ITM_APPV_NO,
                             NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
@@ -267,7 +269,8 @@
                             B.PAY_ITM_REF_DT,
                             B.PAY_ITM_APPV_NO,
                             B.PAY_ITM_CARD_MODE_ID,
-                            B.PAY_ITM_BANK_ACC_ID
+                            B.PAY_ITM_BANK_ACC_ID,
+                            SUBSTR(B.PAY_ITM_CC_NO, 1, 6) || SUBSTR(B.PAY_ITM_CC_NO, -4)
                 )
                 ORDER BY CRC_TRNSC_DT DESC
     </select>

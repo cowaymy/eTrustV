@@ -147,7 +147,7 @@
             #{crcStateId},
             TO_DATE(#{crcTrnscDt},'DD/MM/YYYY'),
             #{crcTrnscNo},
-            #{crcTrnscAppv},
+            LPAD(#{crcTrnscAppv}, 6,'0') ,
             #{crcTrnscMid},
             '',
             0,
