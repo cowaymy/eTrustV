@@ -100,6 +100,8 @@ $(document).ready(function(){
                           }
                       },
                       {dataField:  "itmserial",headerText :"<spring:message code='log.head.serial'/>"      ,width:120    ,height:30,editable:false}    
+                      ,
+                      {dataField:  "itmtype",headerText :"<spring:message code='log.head.serial'/>"      ,width:120    ,height:30,editable:true}
                      ];
     
     resGrid = GridCommon.createAUIGrid("res_grid_wrap", rescolumnLayout,"", resop);
@@ -163,19 +165,37 @@ $(function(){
         document.location.href = '/logistics/stockMovement/StockMovementList.do';
     });
     $('#save').click(function() {
-    	var addedItems = AUIGrid.getColumnValues(reqGrid,"rqty");
-    	if (addedItems.length <= 0){
-    		Common.alert("Plese Check Request Item Grid Request Qty.");
-    		return false;
-        }else{
-            for (var i = 0 ; i < addedItems.length ; i++){
-                if(""==addedItems[i] || 0==addedItems[i]){
-                    Common.alert("Plese Check Request Item Grid Request Qty.");
-                    return false;
-                }       
+    	var items = GridCommon.getEditData(reqGrid);
+    	var bool = true; 
+    	//alert("items.length :   "+ items.add.length);
+    	for (var i = 0 ; i < items.add.length ; i++){
+    		//console.log(items.add[i].typeid);
+    		//alert(items.add[i].rqty);
+    		if (items.add[i].typeid == '61'){
+    			Common.alert('Stock is not Request.');
+    			bool = false;
+    			break;
+    		}
+    		
+    		if (items.add[i].rqty == 0){
+                Common.alert('Request Qty is not [0].');
+                bool = false;
+                break;
             }
-        }
-        if (f_validatation('save')){
+    	}
+//     	if (addedItems.length <= 0){
+//     		Common.alert("Plese Check Request Item Grid Request Qty.");
+//     		return false;
+//        }else{
+//             for (var i = 0 ; i < addedItems.length ; i++){
+//             	alert("sadas??????"+addedItems[i]);
+//                 if(""==addedItems[i] || 0==addedItems[i] || null == addedItems[i] || "undefined"== addedItems[i]){
+//                     Common.alert("Plese Check Request Item Grid Request Qty.");
+//                     return false;
+//                 }       
+//             }
+//         }
+        if (bool && f_validatation('save')){
             var dat = GridCommon.getEditData(reqGrid);
             dat.form = $("#headForm").serializeJSON();
             Common.ajax("POST", "/logistics/stockMovement/StockMovementAdd.do", dat, function(result) {
@@ -236,8 +256,10 @@ $(function(){
                             itmcd : checkedItems[i].stkcd,
                             itmname : checkedItems[i].stknm,
                             aqty : checkedItems[i].qty,
+                            rqty : 0,
                             uom : checkedItems[i].uom,
-                            itmserial : checkedItems[i].serialChk
+                            itmserial : checkedItems[i].serialChk,
+                            itmtype:checkedItems[i].typeid
                         }
                 
                 AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
