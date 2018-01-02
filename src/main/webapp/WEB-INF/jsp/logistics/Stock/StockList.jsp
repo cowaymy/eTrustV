@@ -771,7 +771,11 @@
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(_data) {
-                f_info(_data, v);
+	
+            	if( 0 < _data.data.length){
+            		f_info(_data, v);
+            	}
+            	
             },
             error : function(jqXHR, textStatus, errorThrown) {
                 alert("실패하였습니다.");
@@ -822,7 +826,6 @@
 
             $("#typeid").val(data[0].typeid);
         } else if (v == 'ES') {
-        	
         	
             $("#cbNCV").prop("disabled", false);
             $("#cbSirim").prop("disabled", false);
@@ -882,6 +885,7 @@
             }
             $("#typeid").val(data[0].typeid);
             $("#stock_info_edit").text("SAVE");
+            
         } else if (v == 'P') {
             $("#txtCost").empty();
             $("#txtNormalPrice").empty();
@@ -891,17 +895,28 @@
             $("#txtPenaltyCharge").empty();
             $("#txtTradeInPV").empty();
 
-            $("#txtCost").text(data[0].pricecost);
-            $("#txtNormalPrice").text(data[0].amt);
-            $("#txtPV").text(data[0].pricepv);
-            $("#txtMonthlyRental").text(data[0].mrental);
-            $("#txtRentalDeposit").text(data[0].pricerpf);
-            $("#txtPenaltyCharge").text(data[0].penalty);
-            $("#txtTradeInPV").text(data[0].tradeinpv);
-            
-                destory(priceHistoryGrid);
-                priceHistoryAUIGrid(pricehiscolumn);
-                AUIGrid.setGridData(priceHistoryGrid, data2); 
+            if(0== data.length ){
+                $("#txtCost").text("");
+                $("#txtNormalPrice").text("");
+                $("#txtPV").text("");
+                $("#txtMonthlyRental").text("");
+                $("#txtRentalDeposit").text("");
+                $("#txtPenaltyCharge").text("");
+                $("#txtTradeInPV").text("");
+            }else{
+                $("#txtCost").text(data[0].pricecost);
+                $("#txtNormalPrice").text(data[0].amt);
+                $("#txtPV").text(data[0].pricepv);
+                $("#txtMonthlyRental").text(data[0].mrental);
+                $("#txtRentalDeposit").text(data[0].pricerpf);
+                $("#txtPenaltyCharge").text(data[0].penalty);
+                $("#txtTradeInPV").text(data[0].tradeinpv);
+   	
+            }
+            destory(priceHistoryGrid);
+            priceHistoryAUIGrid(pricehiscolumn);
+            AUIGrid.setGridData(priceHistoryGrid, data2); 
+            	
         } else if (v == 'EP') {
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             var typeid = "";
@@ -938,6 +953,7 @@
                 $("#txtPV")
                         .html(
                                 "<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
+                
                 $("#dPV").val(data[0].pricepv);
                 $("#txtMonthlyRental")
                         .html(
@@ -960,7 +976,6 @@
                     .html(
                             "<input type='text' name='dNormalPrice' id='dNormalPrice' value='' class='w100p numberAmt'/>"); // amt
             $("#dNormalPrice").val(data[0].amt);
-
             $("#price_info_edit").text("SAVE");
 
             destory(priceHistoryGrid);
