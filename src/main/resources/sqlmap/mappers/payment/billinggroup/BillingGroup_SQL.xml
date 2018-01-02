@@ -76,7 +76,6 @@
                NVL(Limit1.POSTCODE, '') POSTCODE,
                NVL(Limit1.CITY, '') CITY,
                NVL(Limit1.AREA, '') AREA,
-               <!-- Limit1.AREA ||' '|| Limit1.POSTCODE ||' '|| Limit1.CITY ||' '|| Limit1.REGION2 ||' '|| Limit1.STATE ||' '|| Limit1.COUNTRY AS ADDR, -->
                Limit1.REM REM  ,
                Limit1.STUS_CODE_ID STUS_CODE_ID  ,
                Limit1.CUST_ID CUST_ID  ,
@@ -86,7 +85,7 @@
                Limit1.UPD_DT UPD_DT  ,
                Limit1.UPD_USER_ID UPD_USER_ID  ,
                Limit1.USER_NAME2 USER_NAME2 ,
-               NVL(Limit1.STREET, '') ||' '|| Limit1.AREA ||' '|| Limit1.POSTCODE ||' '|| Limit1.CITY ||' '|| Limit1.STATE ||' '|| Limit1.COUNTRY AS ADDR
+               LIMIT1.ADDR
 		  FROM ( SELECT 
                         Extent1.CUST_ADD_ID CUST_ADD_ID  ,
                         Extent1.CUST_ID CUST_ID  ,
@@ -130,7 +129,8 @@
 		                CASE 
 		                     WHEN ( Extent8.USER_ID IS NOT NULL ) THEN Extent8.USER_NAME
 		                ELSE ''
-		                   END USER_NAME2  
+		                   END USER_NAME2  ,
+		                Extent1.ADDR_DTL ||' '||Extent1.STREET||' '||Extent9.AREA||' '||' '||Extent9.POSTCODE||' '||Extent9.CITY||' '||Extent9.STATE||' '||Extent9.COUNTRY AS ADDR
 		         FROM SAL0023D Extent1
 		                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
 		                LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.CRT_USER_ID
