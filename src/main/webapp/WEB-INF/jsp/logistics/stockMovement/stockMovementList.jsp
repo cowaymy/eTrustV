@@ -56,8 +56,8 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },                       
                      {dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30                },                       
                      {dataField: "crtdt",headerText :"<spring:message code='log.head.requestcreatedate'/>"            ,width:120    ,height:30                },                         
-                     {dataField: "reqdate",headerText :"<spring:message code='log.head.requestrequireddate'/>"          ,width:120    ,height:30                }];
-                     
+                     {dataField: "reqdt",headerText :"<spring:message code='log.head.requestrequireddate'/>"          ,width:120    ,height:30                }];
+
 var reqcolumnLayout = [{dataField:  "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                    ,width:120    ,height:30                },                       
                        {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
                        {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },                       
