@@ -1293,89 +1293,89 @@
 
 
     <select id="getAfterServiceJobList_b" parameterType="Map" resultType="egovMap">
-             SELECT
-                     SALES_ORD_NO                      AS         sales_Order_No
-                    ,SVC_NO                            AS         service_No
-                    ,CUST_NAME                         AS         cust_Name
-                    ,JOB_TYPE                          AS         job_Type
-                    ,JOB_STUS                          AS         job_Status
-                    ,APPNT_DT                          AS         appointment_Date
-                    ,APPNT_TM                          AS         appointment_Time
-                    ,JOB_SESION                        AS         job_Session
-                    ,CHECKIN_DT                        AS         check_In_Date
-                    ,CHECKIN_TM                        AS         check_In_Time
-                    ,CHECKIN_GPS                       AS         check_In_Gps
-                    ,CUST_TYPE                         AS         customer_Type
-                    ,CUST_ID                           AS         customer_Id
-                    ,SVC_STATE                         AS         service_State
-                    ,PLAN_YEAR                         AS         plan_Year
-                    ,PLAN_MONTH                        AS         plan_Month
-                    ,INSTALL_ADDR                      AS         install_Address
-                    ,POST_CODE                         AS         postcode
-                    ,HANDPHONE_TEL                     AS         handphone_Tel
-                    ,HOME_TEL                          AS         home_Tel
-                    ,OFFICE_TEL                        AS         office_Tel
-                    ,MAIL_ADDR                         AS         mail_Address
-                    ,CUST_VA_NO                        AS         customer_Va_No
-                    ,CUST_JOM_PAY_REF_NO               AS         customer_Jom_Pay_Ref_No
-                    ,PRODUCT_NAME                      AS         product_Name
-                    ,PRODUCT_CODE                      AS         product_Code
-                    ,APP_TYPE                          AS         app_Type
-                    ,INSTCT                            AS         instruction
-                    ,SALES_PROMT                       AS         sales_Promotion
-                    ,REQSTER                           AS         requestor
-                    ,REQSTER_CNTC                      AS         requestor_Contact
-                    ,CNTRCT_DUR                        AS         contract_Duration
-                    ,MONTH_RENTAL_FEES                 AS         monthly_Rental_Fees
-                    ,RGIST_FEES                        AS         registration_Fees
-                    ,PAY_MODE                          AS         payment_Mode
-                    ,BANK_CODE                         AS         bank_Code
-                    ,BANK_NAME                         AS         bank_Name
-                    ,CARD_ACC_NO                       AS         card_AccountNo
-                    ,OTSTND                            AS         outstanding
-                    ,SIRIM_NO                          AS         sirim_No
-                    ,SERIAL_NO                         AS         serial_No
-                    ,WRANTY                            AS         warranty
-                    ,MBRSH_CNTRCT_EXPR                 AS         Membership_Contract_Expiry
-                    ,RENTAL_STUS                       AS         rental_Status
-                    ,DSC_CODE                          AS         dsc_Code
-                    ,INSTALL_DT                        AS         installation_Date
-                    ,LABOUR_CHRG                       AS         labour_Charge
-                    ,DEFECT_TYPE_ID                    AS         defect_Type_Id
-                    ,DEFECT_GRP_ID                     AS         defect_Group_Id
-                    ,DEFECT_ID                         AS         defect_Id
-                    ,DEFECT_PART_GRP_ID                AS         defect_Part_Group_Id
-                    ,DEFECT_PART_ID                    AS         defect_Part_Id
-                    ,DEFECT_DTL_RESN_ID                AS         defect_Detail_Reason_Id
-                    ,SLUTN_RESN_ID                     AS         solution_Reason_Id
-                    ,RESULT_REM                        AS         result_Remark
-                    ,OWNER_CODE                        AS         owner_Code
-                    ,OWNER_CODE_NM                     AS         owner_Code_Nm
-                    ,RESULT_CUST_NAME                  AS         result_Cust_Name
-                    ,RESULT_ICMOBILE_NO                AS         result_Ic_Mobile_No
-                    ,RESULT_RPT_EMAIL_NO               AS         result_Report_Email_No
-                    ,RESULT_ACEPT_NAME                 AS         result_Acceptance_Name
-                    ,MALFUNC_CODE                      AS         malfunction_Code
-                    ,MALFUNC_NAME                      AS         malfunction_Name
-                    ,MALFUNC_RESN_CODE                 AS         malfunction_Reason_Code
-                    ,MALFUNC_RESN_NAME                 AS         malfunction_Reason_Name
-                    ,FAIL_RESN_CODE                    AS         fail_Reason_Code
-                    ,FAIL_RESN_NAME                    AS         fail_Reason_Name
-                    ,REPAIR_REM                        AS         in_House_Repair_Remark
-                    ,REPAIR_REPLACE_YN                 AS         inhouserepairreplacementyn
-                    ,REPAIR_PROMIS_DT                  AS         in_House_Repair_Promised_Date
-                    ,REPAIR_PRODUCT_GRP_CODE           AS         in_House_Repair_Product_Group
-                    ,REPAIR_PRODUCT_CODE               AS         in_House_Repair_Product_Code
-                    ,REPAIR_SERIAL_NO                  AS         in_House_Repair_Serial_No
-                    ,REPAIR_YN                         AS         inhouserepairyn
-                    ,REN_COLCT_ID                      AS         ren_Collection_Id
-                    ,LAST_PAY_DT                       AS         last_Payment_Date
-                    ,AS_RESULT_NO                      AS         asr_No
-                    ,FILTER_AMT                        AS         filter_Amount
-                    ,ACSRS_AMT                         AS         accessories_Amount
-                    ,TOT_AMT                           AS         total_Amount
-                    ,CRT_USER_ID                       AS         Create_User_ID
-                    ,CRT_DT                            AS         Create_Date
+            SELECT
+                     to_char(SALES_ORD_NO               )       AS         sales_Order_No
+                    ,to_char(SVC_NO                     )       AS         service_No
+                    ,to_char(CUST_NAME                  )       AS         cust_Name
+                    ,to_char(JOB_TYPE                   )       AS         job_Type
+                    ,to_char(JOB_STUS                   )       AS         job_Status
+                    ,to_char(APPNT_DT                   )       AS         appointment_Date
+                    ,to_char(APPNT_TM                   )       AS         appointment_Time
+                    ,to_char(JOB_SESION                 )       AS         job_Session
+                    ,to_char(CHECKIN_DT                 )       AS         check_In_Date
+                    ,to_char(CHECKIN_TM                 )       AS         check_In_Time
+                    ,to_char(CHECKIN_GPS                )       AS         check_In_Gps
+                    ,to_char(CUST_TYPE                  )       AS         customer_Type
+                    ,to_char(CUST_ID                    )       AS         customer_Id
+                    ,to_char(SVC_STATE                  )       AS         service_State
+                    ,to_char(PLAN_YEAR                  )       AS         plan_Year
+                    ,to_char(PLAN_MONTH                 )       AS         plan_Month
+                    ,to_char(INSTALL_ADDR               )       AS         install_Address
+                    ,to_char(POST_CODE                  )       AS         postcode
+                    ,to_char(HANDPHONE_TEL              )       AS         handphone_Tel
+                    ,to_char(HOME_TEL                   )       AS         home_Tel
+                    ,to_char(OFFICE_TEL                 )       AS         office_Tel
+                    ,to_char(MAIL_ADDR                  )       AS         mail_Address
+                    ,to_char(CUST_VA_NO                 )       AS         customer_Va_No
+                    ,to_char(CUST_JOM_PAY_REF_NO        )       AS         customer_Jom_Pay_Ref_No
+                    ,to_char(PRODUCT_NAME               )       AS         product_Name
+                    ,to_char(PRODUCT_CODE               )       AS         product_Code
+                    ,to_char(APP_TYPE                   )       AS         app_Type
+                    ,to_char(INSTCT                     )       AS         instruction
+                    ,to_char(SALES_PROMT                )       AS         sales_Promotion
+                    ,to_char(REQSTER                    )       AS         requestor
+                    ,to_char(REQSTER_CNTC               )       AS         requestor_Contact
+                    ,to_char(CNTRCT_DUR                 )       AS         contract_Duration
+                    ,to_char(MONTH_RENTAL_FEES          )       AS         monthly_Rental_Fees
+                    ,to_char(RGIST_FEES                 )       AS         registration_Fees
+                    ,to_char(PAY_MODE                   )       AS         payment_Mode
+                    ,to_char(BANK_CODE                  )       AS         bank_Code
+                    ,to_char(BANK_NAME                  )       AS         bank_Name
+                    ,to_char(CARD_ACC_NO                )       AS         card_AccountNo
+                    ,to_char(OTSTND                     )       AS         outstanding
+                    ,to_char(SIRIM_NO                   )       AS         sirim_No
+                    ,to_char(SERIAL_NO                  )       AS         serial_No
+                    ,to_char(WRANTY                     )       AS         warranty
+                    ,to_char(MBRSH_CNTRCT_EXPR          )       AS         Membership_Contract_Expiry
+                    ,to_char(RENTAL_STUS                )       AS         rental_Status
+                    ,to_char(DSC_CODE                   )       AS         dsc_Code
+                    ,to_char(INSTALL_DT                 )       AS         installation_Date
+                    ,to_char(LABOUR_CHRG                )       AS         labour_Charge
+                    ,to_char(DEFECT_TYPE_ID             )       AS         defect_Type_Id
+                    ,to_char(DEFECT_GRP_ID              )       AS         defect_Group_Id
+                    ,to_char(DEFECT_ID                  )       AS         defect_Id
+                    ,to_char(DEFECT_PART_GRP_ID         )       AS         defect_Part_Group_Id
+                    ,to_char(DEFECT_PART_ID             )       AS         defect_Part_Id
+                    ,to_char(DEFECT_DTL_RESN_ID         )       AS         defect_Detail_Reason_Id
+                    ,to_char(SLUTN_RESN_ID              )       AS         solution_Reason_Id
+                    ,to_char(RESULT_REM                 )       AS         result_Remark
+                    ,to_char(OWNER_CODE                 )       AS         owner_Code
+                    ,to_char(OWNER_CODE_NM              )       AS         owner_Code_Nm
+                    ,to_char(RESULT_CUST_NAME           )       AS         result_Cust_Name
+                    ,to_char(RESULT_ICMOBILE_NO         )       AS         result_Ic_Mobile_No
+                    ,to_char(RESULT_RPT_EMAIL_NO        )       AS         result_Report_Email_No
+                    ,to_char(RESULT_ACEPT_NAME          )       AS         result_Acceptance_Name
+                    ,to_char(MALFUNC_CODE               )       AS         malfunction_Code
+                    ,to_char(MALFUNC_NAME               )       AS         malfunction_Name
+                    ,to_char(MALFUNC_RESN_CODE          )       AS         malfunction_Reason_Code
+                    ,to_char(MALFUNC_RESN_NAME          )       AS         malfunction_Reason_Name
+                    ,to_char(FAIL_RESN_CODE             )       AS         fail_Reason_Code
+                    ,to_char(FAIL_RESN_NAME             )       AS         fail_Reason_Name
+                    ,to_char(REPAIR_REM                 )       AS         in_House_Repair_Remark
+                    ,to_char(REPAIR_REPLACE_YN          )       AS         inhouserepairreplacementyn
+                    ,to_char(REPAIR_PROMIS_DT           )       AS         in_House_Repair_Promised_Date
+                    ,to_char(REPAIR_PRODUCT_GRP_CODE    )       AS         in_House_Repair_Product_Group
+                    ,to_char(REPAIR_PRODUCT_CODE        )       AS         in_House_Repair_Product_Code
+                    ,to_char(REPAIR_SERIAL_NO           )       AS         in_House_Repair_Serial_No
+                    ,to_char(REPAIR_YN                  )       AS         inhouserepairyn
+                    ,to_char(REN_COLCT_ID               )       AS         ren_Collection_Id
+                    ,to_char(LAST_PAY_DT                )       AS         last_Payment_Date
+                    ,to_char(AS_RESULT_NO               )       AS         asr_No
+                    ,to_char(FILTER_AMT                 )       AS         filter_Amount
+                    ,to_char(ACSRS_AMT                  )       AS         accessories_Amount
+                    ,to_char(TOT_AMT                    )       AS         total_Amount
+                    ,to_char(CRT_USER_ID                )       AS         Create_User_ID
+                    ,to_char(CRT_DT                     )       AS         Create_Date
                 FROM SVC0102T
                 WHERE MEM_CODE = #{userId}
     
