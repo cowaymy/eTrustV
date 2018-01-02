@@ -20,22 +20,24 @@
 	var myGridID;
 
     var columnLayout = [
-	                            {dataField:"reqstno" ,headerText:"Request No.",width:240 ,height:30},
-	                            {dataField:"seq" ,headerText:"Item No.",width:90 ,height:30},
-	                            {dataField:"itmcode", headerText:"Material Code", width:120, height:30},
-                                {dataField:"itmname", headerText:"Material Name", width:220, height:30},
-                                {dataField:"reqstqty", headerText:"Request Qty", width:100, height:30},
-                                {dataField:"status" ,headerText:"Status",width:90 ,height:30},
-	                            {dataField:"stkactivity" ,headerText:"Move Type",width:180 ,height:30},
-	                            {dataField:"reqstdate" ,headerText:"Request Date",width:130 ,height:30},
-	                            {dataField:"frmloccode", headerText:"From Location Code", width:180, height:30},
-	                            {dataField:"frmloc", headerText:"From Location", width:230, height:30},
-                                {dataField:"toloccode", headerText:"To Location Code", width:130, height:30},
-                                {dataField:"toloc", headerText:"To Location", width:230, height:30}                                
-	                            ];
+		                            {dataField:"reqstno" ,headerText:"Request No.",width:190 ,height:30},
+		                            {dataField:"seq" ,headerText:"Seq No.",width:70 ,height:30},
+		                            {dataField:"itmcode", headerText:"Mat. Code", width:130, height:30},
+	                                {dataField:"itmname", headerText:"Mat. Name", width:260, height:30},
+	                                {dataField:"itmtype", headerText:"Mat. Type", width:120, height:30},
+	                                {dataField:"itmctgry", headerText:"Mat. Category", width:110, height:30},
+	                                {dataField:"reqstqty", headerText:"Reqst. Qty", width:90, height:30},
+	                                {dataField:"frmloc", headerText:"From Location", width:250, height:30},
+	                                {dataField:"toloc", headerText:"To Location", width:290, height:30},
+	                                {dataField:"stktrans" ,headerText:"Trans. Type",width:120 ,height:30},
+		                            {dataField:"stkmove" ,headerText:"Move. Type",width:180 ,height:30},
+		                            {dataField:"reqstdate" ,headerText:"Request Date",width:120 ,height:30},
+		                            {dataField:"status" ,headerText:"Status",width:70 ,height:30}
+		                            ];
 
     var gridPros =
                            {
+    		                   fixedColumnCount : 2,
 							   editable : false,
 							   displayTreeOpen : true,
 							   showRowCheckColumn : false,
@@ -44,15 +46,12 @@
 						   };
 
     var paramdataMovement;
-    
-    var sstatus = [{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}];
+    var paramdataTrans;
 
     $(document).ready(function() {
 
-        paramdataMovement = { groupCode : '308', orderValue : 'CODE_NAME', likeValue : '' };
-        doGetComboData('/common/selectCodeList.do', paramdataMovement, '', 'smtype', 'M', 'f_multiCombo');
-        
-        doDefCombo(sstatus, '' ,'status', 'A', '');
+    	doGetComboData('/common/selectCodeList.do', { groupCode : '306' , orderValue : 'CODE_ID' , likeValue:''}, '', 'searchTransType', 'M', 'f_multiComboType');
+    	doGetComboData('/common/selectCodeList.do', { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:''}, '', 'searchMoveType', 'M', 'f_multiComboType');
 
         myGridID = AUIGrid.create("#main_grid_wrap", columnLayout, gridPros);
 
@@ -64,13 +63,12 @@
 
     $(function() {
 
-        //doDefCombo([{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}], '' ,'status', 'S', '');
         $("#search").click(function() {
 
             searchAjax();
 
         });
-        
+
         $("#download").click(function() {
             GridCommon.exportTo("main_grid_wrap", 'xlsx', "Booking Status List");
         });
@@ -118,6 +116,30 @@
         });
 
     });
+
+    function f_multiComboType() {
+
+        $(function() {
+
+            $('#searchTransType').change(function() {
+
+            }).multipleSelect( {
+
+                selectAll : true
+            });
+        });
+
+        $(function() {
+
+            $('#searchMoveType').change(function() {
+
+            }).multipleSelect( {
+
+                selectAll : true
+            });
+        });
+    }
+
 
     function fn_itempopList(data) {
 
@@ -175,19 +197,10 @@
 	    var param = $('#searchForm').serializeJSON();
 
 	    Common.ajax("POST", url, param, function(data) {
+
 	        AUIGrid.setGridData(myGridID, data.dataList);
 	    });
 	}
-
-    function f_multiCombo() {
-        $(function() {
-            $('#smtype').change(function() {
-            }).multipleSelect({
-                selectAll : true,
-                width : '80%'
-            });
-        });
-    }
 
 </script>
 
@@ -201,11 +214,11 @@
 
 	<aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Booking Status</h2>
+		<h2>Booked Request No.</h2>
 		<ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-</c:if>		
+        </c:if>
         </ul>
 	</aside><!-- title_line end -->
 
@@ -222,57 +235,74 @@
 				<caption>table</caption>
 
 				<colgroup>
-				    <col style="width:120px" />
-				    <col style="width:*" />
 				    <col style="width:140px" />
-				    <col style="width:*" />
+				    <col style="width:240px" />
+				    <col style="width:110px" />
+				    <col style="width:160px" />
 				    <col style="width:140px" />
-				    <col style="width:*" />
+				    <col style="width:240px" />
 				</colgroup>
 
 				<tbody>
 					<tr>
-					    <th scope="row">Material Code</th>
-					    <td colspan="3">
-					        <input type="hidden"  id="itmCode" name="itmCode">
-					        <input type="text" placeholder="Press 'Enter' to Search" id="srchmaterial" name="srchmaterial"  class="w100p" />
-					    </td>
-
-                        <th scope="row">Stock Request No.</th>
-                        <td colspan="3">
+                        <th scope="row">Request No.</th>
+                        <td colspan="1">
                             <input type="text" id="stkreqstno" name="stkreqstno"  class="w100p" />
                         </td>
-					</tr>
-                    <tr>
-                        <th scope="row">From Location</th>
-                        <td colspan="3">
-                            <input type="hidden"  id="flocation" name="flocation">
-                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="flocationnm" name="flocationnm" />
-                        </td>
-
-                        <th scope="row">To Location</th>
-                        <td colspan="3">
-                            <input type="hidden"  id="tlocation" name="tlocation">
-                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="tlocationnm" name="tlocationnm" />
-                        </td>
-                    </tr>
-					<tr>
                         <th scope="row">Status</th>
                         <td>
-                            <select  id="status" name="status" class="w100p" ></select>
+                            <select  id="status" name="status" class="w100p" >
+                                <option value ="" selected>All</option>
+                                <option value = "Y">Y</option>
+                                <option value="N"> N </option>
+                            </select>
                         </td>
                         <th scope="row">Request Date</th>
-                        <td colspan="2">
+                        <td colspan="1">
                             <div class="date_set w100p"><!-- date_set start -->
                                 <p><input id="srchcrtdtfrom" name="srchcrtdtfrom" type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                                 <span>To</span>
                                 <p><input id="srchcrtdtto" name="srchcrtdtto" type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                             </div><!-- date_set end -->
                         </td>
-                         <th scope="row">Move Type</th>
-                        <td colspan="2">
-                            <select class="multy_select" multiple="multiple" id="smtype" name="smtype[]" class="w100p" /></select>
+					</tr>
+                    <tr>
+                        <th scope="row">Material Code</th>
+                        <td colspan="1">
+                            <input type="hidden"  id="itmCode" name="itmCode">
+                            <input type="text" placeholder="Press 'Enter' to Search" id="srchmaterial" name="srchmaterial"  class="w100p" />
                         </td>
+                        <th scope="row">Type</th>
+                        <td>
+                           <select class="w100p" id="searchType" name="searchType"></select>
+                        </td>
+                        <th scope="row">Category</th>
+                        <td>
+                           <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
+                        </td>
+                    </tr>
+					<tr>
+                        <th scope="row">From Location</th>
+                        <td colspan="2">
+                            <input type="hidden"  id="flocation" name="flocation">
+                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="flocationnm" name="flocationnm" />
+                        </td>
+
+                        <th scope="row">To Location</th>
+                        <td colspan="2">
+                            <input type="hidden"  id="tlocation" name="tlocation">
+                            <input type="text" placeholder="Press 'Enter' to Search" class="w100p" id="tlocationnm" name="tlocationnm" />
+                        </td>
+				    </tr>
+				    <tr>
+					    <th scope="row">Transaction Type</th>
+	                    <td colspan="2">
+	                        <select id="searchTransType" name="searchTransType[]" class="multy_select" multiple="multiple"></select>
+	                    </td>
+	                    <th scope="row">Movement Type</th>
+	                    <td colspan="2">
+	                        <select id="searchMoveType" name="searchMoveType[]" class="multy_select" multiple="multiple"></select>
+	                    </td>
 				    </tr>
 			    </tbody>
 
@@ -285,9 +315,9 @@
 	<section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
+        </c:if>
         </ul>
 	    <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
