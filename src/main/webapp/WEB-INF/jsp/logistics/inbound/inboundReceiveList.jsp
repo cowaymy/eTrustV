@@ -35,59 +35,57 @@
 var listGrid;
 var serialGrid;
 var serialchk = false;
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},                         
-                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },                         
-                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
-                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },                       
-                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },                       
-                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },                       
-                     {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },                         
-                     {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },                          
-                     {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },                        
-                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30},                       
-                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },                       
-                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },                         
-                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"              ,width:120    ,height:30 , editable:true},                         
-                     {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },                         
-                     {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30},                        
-                     //{dataField:   "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 , visible:false}                         
-                     {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 },                       
-                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialy/n'/>"                     ,width:120    ,height:30 }    
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
+                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },
+                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
+                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
+                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
+                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
+                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
+                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
+                     {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},
+                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },
+                     {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
+                     {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30},
+                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },
+                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"              ,width:120    ,height:30 , editable:true},
+                     {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
+                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },
+                     {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30},
+                     //{dataField:   "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 , visible:false}
+                     {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 },
+                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialy/n'/>"                     ,width:120    ,height:30 }
                      ];
-                     
-                     
+
+
 var serialcolumnLayout =[
-						{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"         ,width:   "20%"       ,height:30   ,cellMerge : true            },                
-						{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"        ,width:   "15%"       ,height:30   ,cellMerge : true            },                
-						{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"        ,width:   "30%"       ,height:30   ,cellMerge : true            },                
-						{dataField: "pdelvryNoItm",headerText :"<spring:message code='log.head.deliverynoitem'/>"         ,width:120    ,height:30   , visible:false           },                       
-						{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"       ,width:120    ,height:30   , visible:false           },                       
-						{dataField: "serialNo",headerText :"<spring:message code='log.head.serialno'/>"       ,width:   "20%"       ,height:30              },                  
-						{dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30              },                  
+						{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"         ,width:   "20%"       ,height:30   ,cellMerge : true            },
+						{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"        ,width:   "15%"       ,height:30   ,cellMerge : true            },
+						{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"        ,width:   "30%"       ,height:30   ,cellMerge : true            },
+						{dataField: "pdelvryNoItm",headerText :"<spring:message code='log.head.deliverynoitem'/>"         ,width:120    ,height:30   , visible:false           },
+						{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"       ,width:120    ,height:30   , visible:false           },
+						{dataField: "serialNo",headerText :"<spring:message code='log.head.serialno'/>"       ,width:   "20%"       ,height:30              },
+						{dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30              },
 						{dataField: "crtUserId",headerText :"<spring:message code='log.head.createuser'/>"        ,width:120   ,height:30   , visible:false          }
-                         
+
                         ];
-                     
-var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
-                         {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
-                         {dataField: "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
-                         {dataField: "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField: "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField: "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-                         {dataField: "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }          
-                        ];                         
-                     
+
+var serialcolumn       =[{dataField:    "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },
+                         {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },
+                         {dataField: "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },
+                         {dataField: "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },
+                         {dataField: "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },
+                         {dataField: "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },
+                         {dataField: "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }
+                        ];
+
 var resop = {
-        rowIdField : "rnum",            
-        editable : true,
-        groupingFields : ["delyno"],
-        displayTreeOpen : true,
+        rowIdField : "rnum",
+        editable : false,
         showRowCheckColumn : true ,
         enableCellMerge : true,
         showStateColumn : false,
@@ -95,7 +93,7 @@ var resop = {
         };
 
 var serialop = {
-        //rowIdField : "rnum",          
+        //rowIdField : "rnum",
         editable : true
         //displayTreeOpen : true,
         //showRowCheckColumn : true ,
@@ -113,40 +111,40 @@ $(document).ready(function(){
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , notlike:'US'};
     //doGetComboData('/common/selectCodeList.do', paramdata, '','sttype', 'S' , 'f_change');
    //doGetCombo('/logistics/stockMovement/selectStockMovementNo.do', '{groupCode:delivery}' , '','seldelno', 'S' , '');
-     doGetCombo('/logistics/inbound/InboundLocation', 'port', '','flocation', 'A' , ''); 
-     doGetCombo('/logistics/inbound/InboundLocation', '', '','tlocation', 'A' , ''); 
+     doGetCombo('/logistics/inbound/InboundLocation', 'port', '','flocation', 'A' , '');
+     doGetCombo('/logistics/inbound/InboundLocation', '', '','tlocation', 'A' , '');
     /**********************************
      * Header Setting End
      ***********************************/
-    
+
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
 //    serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumnLayout, serialop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
-    
-    
+
+
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
         AUIGrid.clearGridData(serialGrid);
-        AUIGrid.resize(serialGrid,980,380); 
+        AUIGrid.resize(serialGrid,980,380);
         //fn_ViewSerial(delno);
-        
+
     });
-    
+
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
     });
-    
+
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
     });
-    
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
+
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
          var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
-        
+
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
         	 var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
         	 var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
@@ -160,9 +158,9 @@ $(document).ready(function(){
             AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
         }else{
             AUIGrid.setCheckedRowsByValue(listGrid,  "delyno", []);
-        }  
+        }
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function( event ) {
     });
     AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
@@ -181,7 +179,7 @@ $(document).ready(function(){
                    }
                }
            }
-           
+
            if (tvalue){
                fn_serialChck(event.rowIndex ,event.item , serial)
            }else{
@@ -193,14 +191,14 @@ $(document).ready(function(){
                });
                AUIGrid.update(serialGrid);
            }
-          
-          
+
+
           if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-             f_addrow();      
+             f_addrow();
           }
-          
+
        }
-    });    
+    });
 });
 
 
@@ -223,11 +221,11 @@ $(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
     });
-    
+
     $("#download").click(function() {
         GridCommon.exportTo("main_grid_wrap", 'xlsx', "InBound SMO Receipt List");
     });
-    
+
     $("#gissue").click(function(){
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
         if(checkedItems.length <= 0) {
@@ -244,7 +242,7 @@ $(function(){
             var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
             var str = "";
             var rowItem;
-            var serialchk=false; 
+            var serialchk=false;
             for(var i=0, len = checkedItems.length; i<len; i++) {
                 rowItem = checkedItems[i];
                 if (rowItem.item.serialchk =='Y'){
@@ -258,7 +256,7 @@ $(function(){
                 $('#grForm #gtype').val("GR");
                 $("#dataTitle").text("InBound's Good Receipt Serials");
                 AUIGrid.clearGridData(serialGrid);
-                AUIGrid.resize(serialGrid,980,380); 
+                AUIGrid.resize(serialGrid,980,380);
                 if (serialchk){
                     //fn_itempopListSerial(checkedItems);
                     $("#serial_grid_wrap").show();
@@ -266,10 +264,10 @@ $(function(){
                 }else{
                     $("#serial_grid_wrap").hide();
                 }
-                
-            }        	
+
+            }
     });
-    
+
 });
 
 
@@ -277,7 +275,7 @@ function SearchListAjax() {
 
     var url = "/logistics/inbound/ReceiptList.do";
     var param = $('#searchForm').serializeJSON();
-    
+
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.dataList);
     });
@@ -288,20 +286,20 @@ function grFunc(){
     var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
     var check     = AUIGrid.getCheckedRowItems(listGrid);
     var serials   = AUIGrid.getAddedRowItems(serialGrid);
-    
+
     if (serialchk){
         for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
             if (AUIGrid.getCellValue(serialGrid , i , "statustype") == 'N'){
                 Common.alert("Please check the serial.")
                 return false;
             }
-            
+
             if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
                 Common.alert("Please check the serial.")
                 return false;
             }
         }
-        
+
         if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
             Common.alert("Please check the serial.")
             return false;
@@ -311,9 +309,9 @@ function grFunc(){
     data.checked = check;
     data.add = serials;
     data.form    = $("#grForm").serializeJSON();
-    
+
     Common.ajax("POST", "/logistics/inbound/receipt.do", data, function(result) {
-       
+
         Common.alert(result.message);
         $("#gropenwindow").hide();
         SearchListAjax()
@@ -341,26 +339,26 @@ function fn_serialChck(rowindex , rowitem , str){
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
-            
+
             schk = false;
             ichk = false;
-            
+
         }else{
              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
-             
+
              //if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){
              if (result.data[0].L62CNT == 0 || result.data[0].L63CNT > 0){ // 이동중인 serial 제외
                  schk = false;
              }else{
                  schk = true;
              }
-             
+
              var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-             
+
              for (var i = 0 ; i < checkedItems.length ; i++){
                  if (result.data[0].STKCODE == checkedItems[i].itmcd){
                      //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
@@ -371,28 +369,28 @@ function fn_serialChck(rowindex , rowitem , str){
                  }
              }
         }
-         
+
          if (schk && ichk){
              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
          }else{
              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
          }
-          
+
           //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-              
+
               if (item.statustype  == 'N'){
                   return "my-row-style";
               }
           });
           AUIGrid.update(serialGrid);
-             
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
         }
         Common.alert("Fail : " + jqXHR.responseJSON.message);
-       
+
     });
 }
 function f_addrow(){
@@ -402,22 +400,22 @@ function f_addrow(){
     return false;
 }
 function fn_itempopList_T(data){
-    
+
     var itm_temp = "";
     var itm_qty  = 0;
     var itmdata = [];
-    
+
     for (var i = 0 ; i < data.length ; i++){
-    	
+
     	if("Y"==data[i].item.serialchk){
            itm_qty = itm_qty + Number(data[i].item.rciptqty);
     	}
-    	
+
         $("#reqstno").val(data[i].item.reqstno)
     }
     $("#serialqty").val(itm_qty);
-    
-    
+
+
     f_addrow();
 }
 
@@ -440,15 +438,15 @@ function fn_itempopList_T(data){
     <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-</c:if>    
-            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
+</c:if>
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
         </ul>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" name="gtype"   id="gtype"  value="receipt" /> 
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="gtype"   id="gtype"  value="receipt" />
+        <input type="hidden" name="rStcode" id="rStcode" />
         <input type="hidden" id="svalue" name="svalue"/>
         <input type="hidden" id="sUrl"   name="sUrl"  />
         <input type="hidden" id="stype"  name="stype" />
@@ -467,7 +465,7 @@ function fn_itempopList_T(data){
                     <th scope="row">Delivery Number</th>
                     <td>
                         <!-- <select class="w100p" id="seldelno" name="seldelno"></select> -->
-                         <input type="text" class="w100p" id="seldelno" name="seldelno"> 
+                         <input type="text" class="w100p" id="seldelno" name="seldelno">
                     </td>
 <!--                     <th scope="row">Transfer Type</th>
                     <td>
@@ -481,7 +479,7 @@ function fn_itempopList_T(data){
                 <tr> -->
                     <th scope="row">From Location</th>
                     <td>
-                         <select class="w100p" id="flocation" name="flocation"></select> 
+                         <select class="w100p" id="flocation" name="flocation"></select>
                        <!--  <input type="hidden"  id="tlocation" name="tlocation">
                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm"> -->
                     </td>
@@ -492,31 +490,31 @@ function fn_itempopList_T(data){
                         <input type="text" class="w100p" id="flocationnm" name="flocationnm"> -->
                  <!--    </td>
                     <td colspan="2">
-                    </td>  -->               
+                    </td>  -->
                 </tr>
-    <!--             
+    <!--
                 <tr>
                     <th scope="row">Delivery Date</th>
                     <td>
                         <div class="date_set">date_set start
-                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> ~ </span>
                         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div>date_set end                        
+                        </div>date_set end
                     </td>
                     <th scope="row">Required Date</th>
                     <td >
                         <div class="date_set">date_set start
-                        <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> ~ </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div>date_set end
                     </td>
-                    <td colspan="2">&nbsp;</td>                
+                    <td colspan="2">&nbsp;</td>
                 </tr>                 -->
-               
+
             </tbody>
-        </table><!-- table end -->        
+        </table><!-- table end -->
     </form>
 
     </section><!-- search_table end -->
@@ -526,7 +524,7 @@ function fn_itempopList_T(data){
         <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
+</c:if>
             <li><p class="btn_grid"><a id="gissue">Receipt</a></p></li>
             <!-- <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li> -->
         </ul>
@@ -534,7 +532,7 @@ function fn_itempopList_T(data){
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
     </section><!-- search_result end -->
-    
+
     <div class="popup_wrap" id="gropenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
             <h1 id="dataTitle">Good Receipt Posting Data</h1>
@@ -542,13 +540,13 @@ function fn_itempopList_T(data){
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
-        
+
         <section class="pop_body"><!-- pop_body start -->
             <form id="grForm" name="grForm" method="POST">
             <input type="hidden" name="gtype" id="gtype" value="GR">
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="reqstno" id="reqstno"/>
-            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
+            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
             <table class="type1">
             <caption>search table</caption>
             <colgroup>
@@ -560,11 +558,11 @@ function fn_itempopList_T(data){
             <tbody>
                 <tr>
                     <th scope="row">GR Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                     <th scope="row">GR Doc Date</th>
-                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                 </tr>
-<!--                 <tr>    
+<!--                 <tr>
                     <th scope="row">Header Text</th>
                     <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
                 </tr> -->
@@ -575,11 +573,11 @@ function fn_itempopList_T(data){
             </article><!-- grid_wrap end -->
             <ul class="center_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li> 
-</c:if>            
+                <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li>
+</c:if>
             </ul>
             </form>
-        
+
         </section>
     </div>
         <!-- Pop up: View Serial Of Delivery Number -->
@@ -596,7 +594,7 @@ function fn_itempopList_T(data){
             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article>grid_wrap end
         </section>
-          </form>  
+          </form>
     </div>
      -->
 <form id='popupForm'>
