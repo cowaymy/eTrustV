@@ -171,7 +171,7 @@ $(function(){
     });
     
     $("#download").click(function() {
-    	GridCommmon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
+    	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
     });
 });
 
