@@ -188,7 +188,7 @@ var popEditColumnLayout = [
     { dataField:"payItmAppvNo" ,headerText:"<spring:message code='pay.head.apprNo'/>" ,editable : false },
     { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false },
     { dataField:"c4" ,headerText:"<spring:message code='pay.head.eft'/>" ,editable : false },
-    { dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.runningNo'/>" ,editable : false },
+    { dataField:"payItmRunngNo" ,headerText:"<spring:message code='pay.head.runningNo'/>" ,editable : false },
     { dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false },
     { dataField:"payItmId" ,headerText:"<spring:message code='pay.head.payItemId'/>" ,editable : false, visible:false }
     ];
