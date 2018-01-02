@@ -42,6 +42,9 @@ var courseColumnLayout = [ {
 }, {
     dataField : "coursDMemNric",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "coursAttendOwner",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 },{
     dataField : "codeName",
     headerText : 'Course Type',
@@ -92,6 +95,10 @@ var courseColumnLayout = [ {
               $("#memId").val(item.coursMemId);
               $("#memName").val(item.coursDMemName);
               $("#memNric").val(item.coursDMemNric);
+              $("#coursAttendOwner").val(item.coursAttendOwner);
+              $("#coursMemStusId").val(item.coursMemStusId);
+              $("#courseJoinCnt").val(item.courseJoinCnt);
+              $("#coursLimit").val(item.coursLimit);
               fn_courseRequest();
           }
    }
@@ -106,6 +113,8 @@ var courseColumnLayout = [ {
                //pupupWin
               $("#coursId").val(item.coursId);
               $("#memId").val(item.coursMemId);
+              $("#coursAttendOwner").val(item.coursAttendOwner);
+              $("#coursMemStusId").val(item.coursMemStusId);
               fn_courseCancel();
           }
    }
@@ -445,6 +454,28 @@ function fn_courseResultPop() {
 }
 
 function fn_courseRequest() {
+
+	if($("#coursAttendOwner").val() == 2361){  //멤버
+//		if($("#coursMemStusId").val() == 8){
+//			등록가능
+//		}else 
+	   if($("#coursMemStusId").val() == 1){
+		   Common.alert("Can not register");  //취소가능
+		   return false;
+		}
+	}else if($("#coursAttendOwner").val() == 2315){    //교육팀
+	    if($("#coursMemStusId").val() == 8){
+	    	Common.alert("Can not register");
+	    	return false;
+        }
+//	    else if($("#coursMemStusId").val() == 1){
+//            취소불가
+//        }
+	}
+	
+	if($("#courseJoinCnt").val() >= $("#coursLimit").val()){
+		Common.alert("Can not register");
+	}
 	
     Common.ajax("POST", "/organization/training/registerCourseReq.do", $("#form_course").serializeJSON(), function(result) {
         console.log(result);
@@ -458,6 +489,24 @@ function fn_courseRequest() {
 
 function fn_courseCancel() {
 
+	if($("#coursAttendOwner").val() == 2361){  //멤버
+        if($("#coursMemStusId").val() == 8){
+        	Common.alert("Can not Cancel");    //등록가능
+        	return false;
+        }
+//        else if($("#coursMemStusId").val() == 1){
+//            취소가능
+//        }
+    }else if($("#coursAttendOwner").val() == 2315){    //교육팀
+//        if($("#coursMemStusId").val() == 8){
+//            등록불가
+//        }else 
+        	if($("#coursMemStusId").val() == 1){
+            Common.alert("Can not Cancel");
+            return false;
+        }
+    }
+    
     Common.ajax("POST", "/organization/training/cancelCourseReq.do", $("#form_course").serializeJSON(), function(result) {
         console.log(result);
         
@@ -489,6 +538,10 @@ function fn_courseCancel() {
 <input type="hidden" id="memId" name="memId">
 <input type="hidden" id="memName" name="memName">
 <input type="hidden" id="memNric" name="memNric">
+<input type="hidden" id="coursAttendOwner" name="coursAttendOwner">
+<input type="hidden" id="coursMemStusId" name="coursMemStusId">
+<input type="hidden" id="courseJoinCnt" name="courseJoinCnt">
+<input type="hidden" id="coursLimit" name="coursLimit">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
