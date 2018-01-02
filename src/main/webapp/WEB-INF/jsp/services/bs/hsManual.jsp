@@ -596,11 +596,13 @@
       $("#cmdcodyCode").find('option').each(function() {
                 $(this).remove();
             }); */
-
+            
             if ($(this).val().trim() == "") {
                 return;
             }
-            doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', 'fn_cmdBranchCode');
+            if( $("#userType").val() != "3") {
+                doGetCombo('/services/bs/getCdUpMemList.do', $(this).val() , ''   , 'cmdCdManager' , 'S', 'fn_cmdBranchCode');
+            }
         });
 
 
@@ -616,7 +618,9 @@
              if ($(this).val().trim() == "") {
                  return;
              }
-             doGetCombo('/services/bs/getCdDeptList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', 'fn_cmdBranchCode1');
+             if( $("#userType").val() != "3") {
+                doGetCombo('/services/bs/getCdDeptList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', 'fn_cmdBranchCode1');
+             }   
          });
 
 

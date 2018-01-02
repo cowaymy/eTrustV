@@ -59,6 +59,14 @@ public class HsManualController {
 
     		params.put("memberLevel",  sessionVO.getMemberLevel());
     		params.put("userName",  sessionVO.getUserName());
+    		params.put("userType",  sessionVO.getUserTypeId());
+    		
+    		//params.put("userType",  "3");
+    		
+    		logger.debug("=======================================================================================");
+    		logger.debug("============== initHsManualList params{} ", params );
+    		logger.debug("=======================================================================================");
+    		
     		
     		List<EgovMap> branchList = hsManualService.selectBranchList(params);
     		model.addAttribute("branchList", branchList);
@@ -67,6 +75,7 @@ public class HsManualController {
     		
     		model.addAttribute("memberLevel", sessionVO.getMemberLevel());
     		model.addAttribute("userType",sessionVO.getUserTypeId());
+    		//model.addAttribute("userType","3");
 
 		return "services/bs/hsManual";
     	}
@@ -190,7 +199,10 @@ public class HsManualController {
 	public ResponseEntity<List<EgovMap>> selectHsManualList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
 
 		params.put("user_id", sessionVO.getUserId());
-
+		params.put("userType",  sessionVO.getUserTypeId());
+		
+		//params.put("userType",  "3");
+		
         // 조회.
 		List<EgovMap> bsManagementList = hsManualService.selectHsManualList(params);
 
@@ -249,7 +261,8 @@ public class HsManualController {
 	public ResponseEntity<List<EgovMap>> selectHsAssiinlList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
 
 		params.put("user_id", sessionVO.getUserId());
-
+		params.put("userType",  sessionVO.getUserTypeId());
+		
         // 조회.
 		List<EgovMap> hsAssiintList = hsManualService.selectHsAssiinlList(params);
 

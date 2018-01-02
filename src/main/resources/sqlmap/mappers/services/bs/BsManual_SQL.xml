@@ -20,39 +20,59 @@
 
 
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
-
-        SELECT s005m.brnch_id AS CODE_ID
-                , s005m.code || '-' || s005m.name AS CODE_NAME
-            from SYS0005M s005m
-                    ,SYS0013M s0013m
-            where s005m.type_id = s0013m.code_id
-            and s005m.type_id in ( 42)
-             <choose>
-                     <when test="memberLevel == 1">
-                         AND S005M.CODE IN (
-														SELECT DISTINCT C.CODE
-														FROM SYS0047M A, ORG0001D B, SYS0005M C, ORG0005D D, ORG0005D E, ORG0001D F
-														WHERE 1=1 AND A.USER_NAME = B.MEM_CODE
-														AND B.MEM_ID = D.MEM_ID
-														AND D.DEPT_CODE = E.LAST_ORG_CODE
-														AND E.MEM_LVL ='2'
-														AND E.MEM_ID = F.MEM_ID
-														AND F.BRNCH = C.BRNCH_ID
-														AND A.USER_NAME  = #{userName}                         
-                                                     )        
-                     </when>
-                     <when test="memberLevel == 2">
-                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )        
-                     </when>
-                     <when test="memberLevel == 3">
-                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
-                     </when>
-                     <when test="memberLevel == 4">
-                         AND S005M.CODE = (SELECT C.CODE FROM ORG0001D A, ORG0005D B, SYS0005M C WHERE A.MEM_ID = B.MEM_ID AND A.BRNCH = C.BRNCH_ID AND A.MEM_CODE = #{userName})
-                     </when>
-             </choose>              
-            order by s005m.CODE ASC
-
+    <choose>
+        <when test="userType == 2">
+	        SELECT s005m.brnch_id AS CODE_ID
+	                , s005m.code || '-' || s005m.name AS CODE_NAME
+	            from SYS0005M s005m
+	                    ,SYS0013M s0013m
+	            where s005m.type_id = s0013m.code_id                    
+	               and s005m.type_id in ( 42)
+	             <choose>
+	                     <when test="memberLevel == 1">
+	                         AND S005M.CODE IN (
+	                                                        SELECT DISTINCT C.CODE
+	                                                        FROM SYS0047M A, ORG0001D B, SYS0005M C, ORG0005D D, ORG0005D E, ORG0001D F
+	                                                        WHERE 1=1 AND A.USER_NAME = B.MEM_CODE
+	                                                        AND B.MEM_ID = D.MEM_ID
+	                                                        AND D.DEPT_CODE = E.LAST_ORG_CODE
+	                                                        AND E.MEM_LVL ='2'
+	                                                        AND E.MEM_ID = F.MEM_ID
+	                                                        AND F.BRNCH = C.BRNCH_ID
+	                                                        AND A.USER_NAME  = #{userName}                         
+	                                                     )        
+	                     </when>
+	                     <when test="memberLevel == 2">
+	                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )        
+	                     </when>
+	                     <when test="memberLevel == 3">
+	                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
+	                     </when>
+	                     <when test="memberLevel == 4">
+	                         AND S005M.CODE = (SELECT C.CODE FROM ORG0001D A, ORG0005D B, SYS0005M C WHERE A.MEM_ID = B.MEM_ID AND A.BRNCH = C.BRNCH_ID AND A.MEM_CODE = #{userName})
+	                     </when>
+	             </choose>    
+	                         order by s005m.CODE ASC          
+        </when>
+        <when test="userType == 4">
+                SELECT s005m.brnch_id AS code_id,
+                       s005m.code || '-' || s005m.NAME AS code_name
+                  FROM sys0005m s005m, sys0013m s0013m
+                 WHERE s005m.type_id = s0013m.code_id AND s005m.type_id IN (42)
+                UNION ALL
+                SELECT s005m.brnch_id AS code_id,
+                       s005m.code || '-' || s005m.NAME AS code_name
+                  FROM sys0005m s005m, sys0013m s0013m
+                 WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-22'            
+        </when>
+        <when test="userType == 3">
+				SELECT S005M.BRNCH_ID AS CODE_ID,
+				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME
+				  FROM SYS0005M S005M, SYS0013M S0013M
+				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-22'        
+        </when>
+    </choose>        
+         
           </select>
 
 
@@ -355,7 +375,9 @@
                                 <if test="cmdCdManager1 != null and cmdCdManager1 != ''">
                                      AND sys064.CODY_MANGR_USER_ID = SUBSTR(#{cmdCdManager1},1,7)
                                </if>
-
+								<if test="userType == '3'.toString()">
+								        AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')  
+								</if>    
 
           </select>
 
@@ -660,6 +682,9 @@
 								                                              <if test="deptCode != null and deptCode != ''">
 								                                                     AND OG.DEPT_CODE = #{deptCode}
 								                                              </if>
+								                                              <if test="userType == '3'.toString()">
+																                     AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')  
+																             </if>    
                                               
                         )Project2
 			        ) Project3
