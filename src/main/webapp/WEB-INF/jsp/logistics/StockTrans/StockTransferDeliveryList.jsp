@@ -464,6 +464,7 @@ $(function(){
                 Common.report("printForm");
             }else{
                 Common.alert('Only the same [Delivery No] is possible.');
+                return false;
             }
          }
 	 });
