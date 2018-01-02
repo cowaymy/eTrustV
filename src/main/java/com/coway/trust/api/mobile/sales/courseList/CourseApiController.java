@@ -83,7 +83,7 @@ public class CourseApiController {
 				}
 			}
 			
-			if(Integer.parseInt(obj.get("courseJoinCnt").toString()) < Integer.parseInt(obj.get("courseLimit").toString())){
+			if(Integer.parseInt(obj.get("courseJoinCnt").toString()) >= Integer.parseInt(obj.get("courseLimit").toString())){
 				obj.put("courseStatus", "4");
 			}
 		
