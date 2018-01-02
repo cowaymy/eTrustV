@@ -293,7 +293,7 @@
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-        }else{
+        }else if($("#_cmbTypeId_").val() == '964'){
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
@@ -308,7 +308,24 @@
 //            $("select[name=dob]").removeAttr("readonly");
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
+            $('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+        }else{
+        	$("#_oldNric_").val('');
+        	$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        	$("#_gstRgistNo_").val('');
+            $("#_gstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_cmbNation_").val('');
+            $("select[name=cmbNation]").addClass("w100p disabled");
+            $("select[name=cmbNation]").attr('disabled', 'disabled');
+            $("#genderForm").attr('disabled',true);
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+            $("input:radio[name='gender']").attr("disabled" , "disabled");
+            $("#_cmbRace_").val('');
+            $("#_cmbRace_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_dob_").val('');
+            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
         }
         
     }
@@ -733,6 +750,10 @@
     
     function fn_nricChkAndSuggDob(inputVal){
         
+    	if($("#_cmbTypeId_").val() != '964'){
+    		return;
+    	}
+    	
     	//Dup Check
     	//Init Field
     	var nricObj = {cmbTypeId : $("#_cmbTypeId_").val() , nric : $("#_nric_").val()};

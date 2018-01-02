@@ -133,10 +133,20 @@
                                                     LEFT OUTER 
                                                     JOIN SYS0013M T5 
                                                       ON T5.CODE_ID =  T1.RACE_ID
-                                                    LEFT OUTER 
-                                                    JOIN SAL0023D T6 
-                                                      ON T6.CUST_ID = T1.CUST_ID 
-                                                     AND (9 =   T6.STUS_CODE_ID)
+                                                    LEFT OUTER JOIN (SELECT
+			                                                                        ADD1.CUST_ADD_ID,
+			                                                                        ADD1.CUST_ID
+			                                                                    FROM( SELECT 
+				                                                                            CUST_ADD_ID,
+				                                                                            CUST_ID
+				                                                                          FROM 
+				                                                                            SAL0023D
+				                                                                          WHERE 
+				                                                                            (9 = STUS_CODE_ID) 
+				                                                                          ORDER BY
+				                                                                            UPD_DT DESC )ADD1
+			                                                                      WHERE ROWNUM <= 1
+			                                                                    ) T6 ON T6.CUST_ID = T1.CUST_ID
                                                     LEFT OUTER 
                                                     JOIN SAL0027D T7 
                                                       ON T7.CUST_ID = T1.CUST_ID 
