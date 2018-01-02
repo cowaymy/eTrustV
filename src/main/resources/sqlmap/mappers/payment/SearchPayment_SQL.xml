@@ -544,7 +544,7 @@
 		       CASE 
 		            WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO
 		       ELSE ' '
-		          END C5  ,
+		          END PAY_ITM_RUNNG_NO  ,
 		       CASE 
 		            WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID
 		       ELSE 0
