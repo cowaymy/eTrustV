@@ -49,7 +49,7 @@ $(document).ready(function() {
      
  
  doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
- doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDSCCode', 'M', 'fn_multiCombo'); //Branch Code
+ doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDSCCode', 'S', ''); //Branch Code
  doGetProductCombo('/common/selectProductCodeList.do', '', '', 'product', 'S'); //Product Code
  
  
@@ -57,7 +57,6 @@ $(document).ready(function() {
      
  
      $("#ordStatus").change(function() {
-        alert(11111111);
         
         $("#ordArea").find('option').each(function() {
             $(this).remove();
@@ -79,20 +78,27 @@ $(document).ready(function() {
              selectAll: true, // 전체선택 
              width: '100%'
          });
-    	 $('#listDSCCode').change(function() {
-             //console.log($(this).val());
-         }).multipleSelect({
-             selectAll: true, // 전체선택 
-             width: '100%'
-         });
     }
 	function fn_orderCallList(){
+		  
+		
+		  if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ){
+	            
+	             Common.alert('Branch and Order Date are compulsory option to search');
+	             return ;
+	         }
+	         
+		
+		
 		Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
 	        console.log("성공.");
 	        console.log("data : " + result);
 	        AUIGrid.setGridData(myGridID, result);
 	    });
 	}
+	
+	
+	
 	function fn_openAddCall(){
 		if(callStusId == "1" || callStusId == "19" || callStusId == "30"  ){ //1 10 19 20 30)
 		  //Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
@@ -342,7 +348,7 @@ function fn_excelDown(){
     <td>
 
     <div class="date_set"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="callStrDate" name="callStrDate"/></p>
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="callStrDate" name="callStrDate"/></p>  
     <span>To</span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  id="callEndDate" name="callEndDate"/></p>
     </div><!-- date_set end -->
@@ -370,8 +376,7 @@ function fn_excelDown(){
     </td>
     <th scope="row"><spring:message code='service.title.DSCCode'/></th>  
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="listDSCCode" name="DSCCode">
-    </select>
+    <select class="select w100p"  id="listDSCCode" name="DSCCode">   </select>
     </td>
     <th scope="row"><spring:message code='service.title.PONumber'/></th>      
     <td>

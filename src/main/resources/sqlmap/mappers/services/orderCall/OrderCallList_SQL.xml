@@ -5,7 +5,7 @@
 
      <select id="selectOrderCall" parameterType="Map" resultType="egovMap">
     <![CDATA[
-    SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
+     SELECT Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
                 Extent1.CALL_TYPE_ID CALL_TYPE_ID  ,
                 Extent1.CALL_TYPE_CODE CALL_TYPE_CODE  ,
                 Extent1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -48,9 +48,7 @@
                 CASE
                      WHEN ( Extent1.PRODUCT_ID IS NOT NULL ) THEN Extent1.PRODUCT_ID
                 ELSE 0
-                   END C4   ,
-                STATE,
-                area
+                   END C4 
          FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID  ,
                        vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID  ,
                        vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE  ,
@@ -85,21 +83,10 @@
                        vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME  ,
                        vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID  ,
                        vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE  ,
-                       vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC  ,
-                       E.CODE,
-	                   C.CT_BRNCH_CODE,
-	                   C.AREA_ID,
-	                   E.BRNCH_ID,
-	                   C.STATE,
-	                   C.area
-	   FROM  SAL0045D A, SAL0023D B, SYS0064M C, SYS0005M E, CCR1002V vCallLogOrderCall
-	WHERE A.ADD_ID       = B.CUST_ADD_ID
-		AND   B.AREA_ID    = C.AREA_ID
-		AND   E.CODE        = C.CT_BRNCH_CODE
-		AND   B.CUST_ID    = vCallLogOrderCall.CUST_ID
-		AND   A.SALES_ORD_ID = vCallLogOrderCall.SALES_ORD_ID) Extent1
+                       vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC 
+       FROM    CCR1002V vCallLogOrderCall) Extent1
           WHERE  1=1
-            ]]>
+        ]]>
                  <if test="orderNo != null and orderNo != '' ">
                      AND (Extent1.SALES_ORD_NO=#{orderNo} )
                   </if>
@@ -144,7 +131,7 @@
                             </foreach>
                    </if>
                    <if test="DSCCodeList != null and DSCCodeList != '' ">
-                            and Extent1.BRNCH_ID IN
+                            and Extent1.DSC_BRNCH_ID IN
                             <foreach item="item" collection="DSCCodeList" index="index" open="(" separator="," close=")">
                             #{item}
                             </foreach>
@@ -181,6 +168,8 @@
                   </if>
 
     </select>
+    
+    
      <select id="getOrderCall" parameterType="Map" resultType="egovMap">
       <![CDATA[
             SELECT Limit1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
