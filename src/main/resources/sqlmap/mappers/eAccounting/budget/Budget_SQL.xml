@@ -315,7 +315,7 @@ SELECT BUDGET_PLAN_YEAR ,
                                        )   A                
          WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
          <if test="costCentr != null and costCentr != '' " >
-            AND A.COST_CENTR = ${costCentr}
+            AND A.COST_CENTR = #{costCentr}
          </if>
          <if test="stCostCentr != null and stCostCentr != '' " >
             <if test="edCostCentr != null and edCostCentr != '' ">
