@@ -610,7 +610,7 @@ function fn_sameVenderCheck() {
     </td>
     <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
+    <select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
         <option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
         <option value="P"><spring:message code="webInvoice.select.progress" /></option>
@@ -618,6 +618,12 @@ function fn_sameVenderCheck() {
         <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
     </select>
     </td>
+</tr>
+<tr>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

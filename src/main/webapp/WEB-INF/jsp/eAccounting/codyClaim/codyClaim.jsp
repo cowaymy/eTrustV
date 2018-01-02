@@ -1271,7 +1271,7 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
 </tr>
 <tr>
 	<th scope="row" ><spring:message code="webInvoice.status" /></th>
-	<td colspan="3">
+	<td>
 	<select class="multy_select" multiple="multiple" id="appvPrcssStus" name="appvPrcssStus">
 		<option value="T"><spring:message code="webInvoice.select.tempSave" /></option>
         <option value="R"><spring:message code="webInvoice.select.request" /></option>
@@ -1280,6 +1280,8 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
         <option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
 	</select>
 	</td>
+	<th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -45,6 +45,9 @@ AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
 <if test="memAccId != null and memAccId != ''">
 AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
 </if>
+<if test="clmNo != null and clmNo != ''">
+AND UPPER(T.CLM_NO) = UPPER(#{clmNo})
+</if>
 <if test="appvPrcssStus != null and appvPrcssStus != ''">
 AND T.APPV_PRCSS_STUS_CODE IN
 <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">

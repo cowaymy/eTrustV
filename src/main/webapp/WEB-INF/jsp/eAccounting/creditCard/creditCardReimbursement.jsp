@@ -997,6 +997,12 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
 	</select>
 	</td>
 </tr>
+<tr>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/></td>
+</tr>
 </tbody>
 </table><!-- table end -->
 
