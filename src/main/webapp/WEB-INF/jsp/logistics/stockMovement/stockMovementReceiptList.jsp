@@ -33,52 +33,53 @@ var gradeGrid;
 
 var gradeList = new Array();
 
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},                         
-                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },                         
-                     {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 },                       
-                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },                       
-                     {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },                         
-                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },                       
-                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
-                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},                       
-                     {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },                          
-                     {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },                        
-                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },                         
-                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"              ,width:120    ,height:30 , editalble:true},                        
-                     {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },                         
-                     {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
-                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },                         
-                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },                       
-                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },                       
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
+                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },
+                     {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplete'/>"                   ,width:120    ,height:30 },
+                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
+                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
+                     {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
+                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},
+                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30 , visible:false},
+                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },
+                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
+                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
+                     {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
+                     {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
+                     {dataField: "grdt",headerText :"<spring:message code='log.head.grdate'/>"                        ,width:120    ,height:30 },
+                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"              ,width:120    ,height:30 , editalble:true},
+                     {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },
+                     {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
+                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },
+                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
+                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
                      {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30}
                      ];
 
-                     
+
 var serialcolumnLayout =[
-						{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"         ,width:   "20%"       ,height:30   ,cellMerge : true            },                
-						{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"        ,width:   "15%"       ,height:30   ,cellMerge : true            },                
-						{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"        ,width:   "30%"       ,height:30   ,cellMerge : true            },                
-						{dataField: "pdelvryNoItm",headerText :"<spring:message code='log.head.deliverynoitem'/>"         ,width:120    ,height:30   , visible:false           },                       
-						{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"       ,width:120    ,height:30   , visible:false           },                       
-						{dataField: "serialNo",headerText :"<spring:message code='log.head.serialno'/>"       ,width:   "20%"       ,height:30              },                  
-						{dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30              },                  
+						{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"         ,width:   "20%"       ,height:30   ,cellMerge : true            },
+						{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"        ,width:   "15%"       ,height:30   ,cellMerge : true            },
+						{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"        ,width:   "30%"       ,height:30   ,cellMerge : true            },
+						{dataField: "pdelvryNoItm",headerText :"<spring:message code='log.head.deliverynoitem'/>"         ,width:120    ,height:30   , visible:false           },
+						{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"       ,width:120    ,height:30   , visible:false           },
+						{dataField: "serialNo",headerText :"<spring:message code='log.head.serialno'/>"       ,width:   "20%"       ,height:30              },
+						{dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30              },
 						{dataField: "crtUserId",headerText :"<spring:message code='log.head.createuser'/>"        ,width:120   ,height:30   , visible:false          }
-                         
+
                         ];
-                     
+
 var serialcolumnLayout2 =[
-						{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"         ,width:   "15%"       ,height:30   ,cellMerge : true    ,editable : false         },                  
-						{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"        ,width:   "15%"       ,height:30   ,cellMerge : true    ,editable : false         },                  
-						{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"        ,width:   "25%"       ,height:30   ,cellMerge : true  ,editable : false          },               
-						{dataField: "pdelvryNoItm",headerText :"<spring:message code='log.head.deliverynoitem'/>"         ,width:120    ,height:30   , visible:false     ,editable : false       },                         
-						{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"       ,width:120    ,height:30   , visible:false    ,editable : false       },                          
-						{dataField: "serialNo",headerText :"<spring:message code='log.head.serialno'/>"       ,width:   "20%"       ,height:30             ,editable : false  },                
-						{dataField: "grade",headerText :"<spring:message code='log.head.grade'/>"         ,width:   "12%"       ,height:30 
+						{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"         ,width:   "15%"       ,height:30   ,cellMerge : true    ,editable : false         },
+						{dataField: "itmCode",headerText :"<spring:message code='log.head.materialcode'/>"        ,width:   "15%"       ,height:30   ,cellMerge : true    ,editable : false         },
+						{dataField: "itmName",headerText :"<spring:message code='log.head.materialname'/>"        ,width:   "25%"       ,height:30   ,cellMerge : true  ,editable : false          },
+						{dataField: "pdelvryNoItm",headerText :"<spring:message code='log.head.deliverynoitem'/>"         ,width:120    ,height:30   , visible:false     ,editable : false       },
+						{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"       ,width:120    ,height:30   , visible:false    ,editable : false       },
+						{dataField: "serialNo",headerText :"<spring:message code='log.head.serialno'/>"       ,width:   "20%"       ,height:30             ,editable : false  },
+						{dataField: "grade",headerText :"<spring:message code='log.head.grade'/>"         ,width:   "12%"       ,height:30
                         	,   labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
                                 var retStr = "";
                                 for (var i = 0, len = gradeList.length; i < len; i++) {
@@ -88,27 +89,27 @@ var serialcolumnLayout2 =[
                                     }
                                 }
                                 return retStr == "" ? value : retStr;
-                            }, 
+                            },
                         	editRenderer : {
                                  type : "DropDownListRenderer",
                                  showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                listFunction : function(rowIndex, columnIndex, item, dataField) {
                                      return gradeList ;
-                                 },  
+                                 },
                                //  list : gradeList,
                                  keyField : "code",
                                  valueField : "codeName"
-                                             }	    
+                                             }
                          },
-                         {dataField:    "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30    ,editable : false           },                
+                         {dataField:    "crtDt",headerText :"<spring:message code='log.head.createdate'/>"        ,width:   "13%"       ,height:30    ,editable : false           },
                          {dataField:    "crtUserId",headerText :"<spring:message code='log.head.createuser'/>"        ,width:120   ,height:30   , visible:false      ,editable : false     }
-                         
+
                         ];
-                     
-                     
-                     
+
+
+
 var resop = {
-		rowIdField : "rnum",			
+		rowIdField : "rnum",
 		editable : true,
 		//groupingFields : ["delyno"],
         displayTreeOpen : false,
@@ -118,7 +119,7 @@ var resop = {
         };
 
 var serialop = {
-        //rowIdField : "rnum",            
+        //rowIdField : "rnum",
         editable : true,
         displayTreeOpen : true,
         //showRowCheckColumn : true ,
@@ -139,7 +140,7 @@ var getdate = date.getDate();
 var datemonth = date.getMonth() + 1;
 if(getdate < 10) {
     getdate = '0'+date.getDate();
-} 
+}
 if(datemonth < 10) {
     datemonth = '0' + datemonth;
 }
@@ -166,35 +167,35 @@ $(document).ready(function(){
 //     doGetCombo('/common/selectStockLocationList.do', '', '','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','flocation', 'S' , 'SearchListAjax');
     doDefCombo(amdata, '' ,'sam', 'S', '');
-    
+
     /**********************************
      * Header Setting End
      ***********************************/
-    
+
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumnLayout, serialop);
     gradeGrid = AUIGrid.create("#receipt_grid", serialcolumnLayout2, serialop);
-    
-    
+
+
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
     	var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
         AUIGrid.clearGridData(serialGrid);
     	fn_ViewSerial(delno);
-    	
+
     });
-    
+
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
     });
-    
+
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
     });
-    
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
+
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
     	var checklist = AUIGrid.getCheckedRowItemsAll(listGrid);
     	var checked = AUIGrid.getCheckedRowItems(listGrid);
@@ -220,7 +221,7 @@ $(document).ready(function(){
 		                return false;
 		        	 }
 	        }
-		        
+
 		        if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
 		        	AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
 		        }else{
@@ -229,12 +230,12 @@ $(document).ready(function(){
 		        		AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
 		        	}
 		        }
-	        }       
+	        }
     	}else{
     		  var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
 
     		  if(event.item.mtype== "UM93"){
-    			  for(var i = 0 ; i < checked.length ; i++){ 
+    			  for(var i = 0 ; i < checked.length ; i++){
     			  if(checked[i].item.delyno !=event.item.delyno){
                 Common.alert("Please Check Movement Type.2");
                 //AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
@@ -246,7 +247,7 @@ $(document).ready(function(){
     			  }
 		     }
     		  }
-              
+
               if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
                   AUIGrid.addCheckedRowsByValue(listGrid, "delyno" , delno);
               }else{
@@ -255,13 +256,13 @@ $(document).ready(function(){
                       AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
                   }
               }
-    		
+
     	}
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function( event ) {
         var delno = AUIGrid.getCellValue(listGrid, event.rowIndex, "delyno");
-        
+
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
         	var rown = AUIGrid.getRowIndexesByValue(listGrid, "delyno" , delno);
             for (var i = 0 ; i < rown.length ; i++){
@@ -274,9 +275,9 @@ $(document).ready(function(){
     $("#crtsdt").val(today);
     $("#crtedt").val(nextdate);
     //SearchListAjax();
-    
+
 });
-function f_change(){  
+function f_change(){
     paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(),codeIn:'UM03,UM93'};
     doGetComboData('/common/selectCodeList.do', paramdata, '${searchVal.smtype}','smtype', 'S' , '');
 }
@@ -284,7 +285,7 @@ function f_change(){
 $(function(){
     $('#search').click(function() {
     	if(validation()) {
-    	    SearchListAjax();		
+    	    SearchListAjax();
     	}
     });
     $("#clear").click(function(){
@@ -294,7 +295,7 @@ $(function(){
         paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#sttype").val()};
         doGetComboData('/common/selectCodeList.do', paramdata, '','smtype', 'S' , '');
     });
-    
+
     $("#download").click(function() {
         GridCommon.exportTo("main_grid_wrap", "xlsx", "Movement In");
     });
@@ -316,13 +317,13 @@ $(function(){
         	$('#grForm #gtype').val("GR");
         	$("#dataTitle").text("Good Receipt Posting Data");
         	$("#gropenwindow").show();
-        	
+
         	if(checkedItems[0].mtype=="UM93"){
         		fn_gradeSerial(checkedItems[0].delyno);
         		$("#receipt_body").show();
-        	    //fn_gradComb();    
-        		AUIGrid.resize(gradeGrid); 
-        	        
+        	    //fn_gradComb();
+        		AUIGrid.resize(gradeGrid);
+
         	}else{
         		$("#receipt_body").hide();
         		   AUIGrid.clearGridData(gradeGrid);
@@ -349,7 +350,7 @@ $(function(){
             $("#gropenwindow").show();
         }
     });
-    
+
     $("#tlocationnm").keypress(function(event) {
         $('#tlocation').val('');
         if (event.which == '13') {
@@ -370,10 +371,10 @@ $(function(){
             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
         }
     });
-    
+
     $("#print").click(function(){
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        
+
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -386,14 +387,14 @@ $(function(){
             var delbool = true;
             for (var i = 0 ; i < checkedItems.length ; i++ ){
                 var itm = checkedItems[i];
-                
+
                 if (tmpno != itm.delyno){
                     delbool = false;
                     break;
-                }               
+                }
             }
-            
-            
+
+
             if (delbool){
                 $("#V_DELVRYNO").val(tmpno);
                 Common.report("printForm");
@@ -403,13 +404,13 @@ $(function(){
             }
          }
      });
-    
+
 });
 
     function fn_itempopList(data){
-    
+
     var rtnVal = data[0].item;
-   
+
     if ($("#stype").val() == "flocation" ){
         $("#flocation").val(rtnVal.locid);
         $("#flocationnm").val(rtnVal.locdesc);
@@ -417,9 +418,9 @@ $(function(){
         $("#tlocation").val(rtnVal.locid);
         $("#tlocationnm").val(rtnVal.locdesc);
     }
-    
+
     $("#svalue").val();
-} 
+}
 
 function validation() {
     if($("#crtsdt").val() == "" || ($("#crtedt").val() == "")) {
@@ -430,14 +431,14 @@ function validation() {
     }
 }
 function SearchListAjax() {
-	
+
 	   if ($("#flocationnm").val() == ""){
 	        $("#flocation").val('');
 	    }
 	    if ($("#tlocationnm").val() == ""){
 	        $("#tlocation").val('');
 	    }
-	    
+
 	    if ($("#flocation").val() == ""){
 	        $("#flocation").val($("#flocationnm").val());
 	    }
@@ -447,7 +448,7 @@ function SearchListAjax() {
 
     var url = "/logistics/stockMovement/StockMoveSearchDeliveryList.do";
     var param = $('#searchForm').serializeJSON();
-    
+
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
     });
@@ -477,7 +478,7 @@ function f_getTtype(g , v){
            complete: function(){
            }
        });
-    
+
     return rData;
 }
 function grFunc(){
@@ -486,8 +487,8 @@ function grFunc(){
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
 	var addedItems = AUIGrid.getColumnValues(gradeGrid,"grade");
 	var getRow = AUIGrid.getRowCount(gradeGrid);
-	
-	
+
+
 	var gradchk=false;
 	for(var i = 0 ; i < check.length ; i++){
         if(check[i].item.mtype =="UM93"){
@@ -501,7 +502,7 @@ function grFunc(){
                     return false;
 		}else{
 			for(var i =0; i < getRow ; i++){
-					
+
 				if(""==addedItems[i] || null==addedItems[i]){
 	                    Common.alert("Please select Grade.");
 	                    return false;
@@ -510,20 +511,20 @@ function grFunc(){
 		}
 	graddata=GridCommon.getEditData(gradeGrid);
 	}
-	
+
 	data.check   = check;
 	data.checked = check;
 	data.grade    = graddata;
-	
+
 	data.form    = $("#grForm").serializeJSON();
-	
-	
-	
+
+
+
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
 		var reparam = (result.rdata).split("∈");
-		
+
 		//if (result.rdata == '000'){
-		
+
 		if(reparam[0].trim() == '000'){
 			if ($('#grForm #gtype').val() == "RC"){
 				Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
@@ -538,7 +539,7 @@ function grFunc(){
 				//Common.alert(result.message.message);
 				Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
 			}
-	        
+
 		}else{
 			if ($('#grForm #gtype').val() == "RC"){
 				Common.alert('GoodRecipt Cancel Fail.');
@@ -546,12 +547,12 @@ function grFunc(){
 				Common.alert('GoodRecipt Fail.');
 			}
 		}
-        
+
        	$("#giptdate").val("");
         $("#gipfdate").val("");
         $("#doctext" ).val("");
         $("#gropenwindow").hide();
-        
+
         $('#search').click();
     },  function(jqXHR, textStatus, errorThrown) {
         try {
@@ -562,17 +563,17 @@ function grFunc(){
 }
 
 function fn_ViewSerial(str){
-	
+
     var data = { delno : str };
-    
+
     Common.ajax("GET", "/logistics/stockMovement/StockMovementDeliverySerialView.do",
     		data,
     		function(result) {
 		        AUIGrid.setGridData(serialGrid, result.data);
-			    
+
 		        $("#serialopenwindow").show();
 		        AUIGrid.resize(serialGrid);
-		  
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
@@ -581,15 +582,15 @@ function fn_ViewSerial(str){
     });
 }
 function fn_gradeSerial(str){
-	
+
     var data = { delno : str };
-    
+
     Common.ajax("GET", "/logistics/stockMovement/StockMovementDeliverySerialView.do",
     		data,
     		function(result) {
 		        AUIGrid.setGridData(gradeGrid, result.data);
 		        fn_gradComb();
-		  
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
@@ -609,7 +610,7 @@ function fn_gradComb(){
                     list.codeName = result[i].codeName;
                     list.description = result[i].description;
                     gradeList.push(list);
-                }                
+                }
             });
 }
 
@@ -639,8 +640,8 @@ function fn_gradComb(){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" name="gtype"   id="gtype"  value="receipt" /> 
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="gtype"   id="gtype"  value="receipt" />
+        <input type="hidden" name="rStcode" id="rStcode" />
         <input type="hidden" id="svalue" name="svalue"/>
         <input type="hidden" id="sUrl"   name="sUrl"  />
         <input type="hidden" id="stype"  name="stype" />
@@ -670,48 +671,69 @@ function fn_gradComb(){
                         <select class="w100p" id="smtype" name="smtype"><option value=''>Choose One</option></select>
                     </td>
                 </tr>
+
+                <tr>
+                    <th scope="row">Auto / Manual</th>
+                    <td>
+                        <select class="w100p" id="sam" name="sam"></select>
+                    </td>
+                    <th scope="row">Status</th>
+                    <td>
+                        <select  id="status" name="status" class="w100p" >
+                            <option value ="" selected>All</option>
+                            <option value = "Y">Complete</option>
+                            <option value="N"> Open</option>
+                        </select>
+                    </td>
+                    <th scope="row">Ref Doc.No</th>
+                     <td >
+                         <input type="text" class="w100p" id="sdocno" name="sdocno">
+                     </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Dvld.Req.Date</th>
+                    <td>
+                        <div class="date_set w100p"><!-- date_set start -->
+					    <p><input id="crtsdt" name="crtsdt" type="text" title="Delivery Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+					    <span> To </span>
+					    <p><input id="crtedt" name="crtedt" type="text" title="Delivery End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+					    </div><!-- date_set end -->
+                    </td>
+                    <th scope="row">GI Date</th>
+                    <td >
+                        <div class="date_set w100p"><!-- date_set start -->
+                        <p><input id="reqsdt" name="reqsdt" type="text" title="GI Start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <span> To </span>
+                        <p><input id="reqedt" name="reqedt" type="text" title="GI End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div><!-- date_set end -->
+                    </td>
+                    <th scope="row">GR Date</th>
+                    <td >
+                        <div class="date_set w100p"><!-- date_set start -->
+                        <p><input id="rcivsdt" name="rcivsdt" type="text" title="GR Start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <span> To </span>
+                        <p><input id="rcivedt" name="rcivedt" type="text" title="GR End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div><!-- date_set end -->
+                    </td>
+                </tr>
+
                 <tr>
                     <th scope="row">From Location</th>
-                    <td>
+                    <td colspan="2">
                         <!-- <select class="w100p" id="tlocation" name="tlocation"></select> -->
                         <input type="hidden"  id="flocation" name="flocation">
                         <input type="text" class="w100p" id="flocationnm" name="flocationnm">
                     </td>
                     <th scope="row">To Location</th>
-                    <td >
+                    <td colspan="2">
                         <!-- <select class="w100p" id="flocation" name="flocation"></select> -->
                         <input type="hidden"  id="tlocation" name="tlocation">
                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
-                    <th scope="row">Auto / Manual</th>
-                    <td>
-                        <select class="w100p" id="sam" name="sam"></select>
-                    </td>                
                 </tr>
-                
-                <tr>
-                    <th scope="row">Dvld.Req.Date</th>
-                    <td>
-                        <div class="date_set w100p"><!-- date_set start -->
-					    <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-					    <span> To </span>
-					    <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-					    </div><!-- date_set end -->                        
-                    </td>
-                    <th scope="row">GI Date</th>
-                    <td >
-                        <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> To </span>
-                        <p><input id="reqedt" name="reqedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->
-                    </td>
-                    <th scope="row">Ref Doc.No</th>
-                     <td ><input type="text" class="w100p" id="sdocno" name="sdocno"></td>                    
-                </tr>                
-               
             </tbody>
-        </table><!-- table end -->        
+        </table><!-- table end -->
     </form>
 
     </section><!-- search_table end -->
@@ -721,7 +743,7 @@ function fn_gradComb(){
         <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
+</c:if>
             <li><p class="btn_grid"><a id="gissue">Goods Receipt</a></p></li>
             <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li>
             <li><p class="btn_grid"><a id="print"><spring:message code='sys.progmanagement.grid1.PRINT' /></a></p></li>
@@ -730,7 +752,7 @@ function fn_gradComb(){
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
 
     </section><!-- search_result end -->
-    
+
     <div class="popup_wrap" id="gropenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
 		    <h1 id="dataTitle">Good Receipt Posting Data</h1>
@@ -738,12 +760,12 @@ function fn_gradComb(){
 		        <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 		    </ul>
 		</header><!-- pop_header end -->
-		
+
 		<section class="pop_body"><!-- pop_body start -->
 		    <form id="grForm" name="grForm" method="POST">
 		    <input type="hidden" name="gtype" id="gtype" value="GR">
 		    <!-- <input type="text" name="gtype" id="gtype" value="GR">  -->
-		    <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>  
+		    <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
 		    <table class="type1">
 		    <caption>search table</caption>
 		    <colgroup>
@@ -755,11 +777,11 @@ function fn_gradComb(){
 		    <tbody>
 		        <tr>
 		            <th scope="row">GR Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                     <th scope="row">GR Doc Date</th>
-                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                 </tr>
-                <tr>    
+                <tr>
                     <th scope="row">Header Text</th>
 		            <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
 		        </tr>
@@ -770,12 +792,12 @@ function fn_gradComb(){
             </article><!-- grid_wrap end -->
 		    <ul class="center_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-		        <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li> 
+		        <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li>
 </c:if>
-		    
+
 		    </ul>
 		    </form>
-		
+
 		</section>
     </div>
         <!-- Pop up: View Serial Of Delivery Number -->
@@ -792,9 +814,9 @@ function fn_gradComb(){
             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->
         </section>
-          </form>  
+          </form>
     </div>
-    
+
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
