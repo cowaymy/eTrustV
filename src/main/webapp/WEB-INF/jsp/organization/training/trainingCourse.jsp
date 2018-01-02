@@ -576,8 +576,14 @@ function fn_generate(method){
 	}
 	//CURRENT DATE
     var date = new Date().getDate();
+	var mon = new Date().getMonth()+1;
+	
     if(date.toString().length == 1){
         date = "0" + date;
+    }
+    
+    if(mon.toString().length == 1){
+        mon = "0" + mon;
     }
     
 	//VIEW
@@ -590,7 +596,7 @@ function fn_generate(method){
         $("#reportFileName").val('/organization/training/HPTrainingReport_Excel.rpt'); //File Name
     }
     
-    $("#reportDownFileName").val($("#coursCodeR").val() +'_'+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
+    $("#reportDownFileName").val($("#coursCodeR").val() +'_'+date+mon+new Date().getFullYear()); ////DOWNLOAD FILE NAME
     
     //params
     $("#V_COURSEID").val($("#coursId").val());
