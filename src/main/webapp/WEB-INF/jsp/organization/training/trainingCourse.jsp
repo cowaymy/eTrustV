@@ -314,11 +314,14 @@ function auiGridSelectionChangeHandler(event) {
         
         var rowItem = selectedItems[0].item; // 행 아이템들
         var corId = rowItem.coursId; // 선택한 행의 고객 ID 값
-        
+        var corCode = rowItem.coursCode;
+        $("#coursId").val(corId);
+        $("#coursCodeR").val(corCode);
 //        if(event.dataField != "coursLimit" && event.dataField != "stusCodeId") {
 
             fn_selectAttendeeList(corId);
             coursId = corId;
+            
 //        }
     }, 200);
 }
@@ -566,34 +569,43 @@ function fn_courseResultPop() {
     }
 }
 
-function fn_courseReporPdf() {
-	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
-    var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-    };
-    
-    if(coursId > 0) {
-    $("#PDF_COURSEID").val(coursId);
-    Common.report("courseReportPdf", option);
-} else {
-    Common.alert('Please select a course.');
-}
+function fn_generate(method){
 	
-}
-
-function fn_courseReporExcel() {
-	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
-    var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-    };
-    
-	if(coursId > 0) {
-		$("#EXCEL_COURSEID").val(coursId);
-		Common.report("courseReportExcel", option);
-    } else {
-    	Common.alert('Please select a course.');
+	if($("#coursId").val() == ""){
+		Common.alert("Please select the item to print.");
+	}
+	//CURRENT DATE
+    var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
     }
-	
+    
+	//VIEW
+    if(method == "PDF"){
+        $("#viewType").val('PDF');     //method
+        $("#reportFileName").val('/organization/training/HPTrainingReport_PDF.rpt'); //File Name
+    }
+    if(method == "EXCEL"){
+        $("#viewType").val('EXCEL');//method
+        $("#reportFileName").val('/organization/training/HPTrainingReport_Excel.rpt'); //File Name
+    }
+    
+    $("#reportDownFileName").val($("#coursCodeR").val() +'_'+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
+    
+    //params
+    $("#V_COURSEID").val($("#coursId").val());
+    $("#V_SELECTSQL").val("");
+    $("#V_WHERESQL").val("");
+    $("#V_EXTRAWHERESQL").val("");
+    $("#V_ORDERBYSQL").val("");
+    $("#V_FULLSQL").val("");
+    
+    var option = {
+        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+    };
+
+    Common.report("dataForm", option);
+
 }
 
 $.fn.clearForm = function() {
@@ -632,8 +644,21 @@ $.fn.clearForm = function() {
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_course">
-
+<form id="dataForm" name="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" />
+    <input type="hidden" id="viewType" name="viewType" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
+    <!--param  -->
+    <input type="hidden" id="V_COURSEID" name="V_COURSEID"  />
+    <input type="hidden" id="V_SELECTSQL" name="V_SELECTSQL"  />
+    <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"  />
+    <input type="hidden" id="V_EXTRAWHERESQL" name="V_EXTRAWHERESQL"  />
+    <input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL"  />
+    <input type="hidden" id="V_FULLSQL" name="V_FULLSQL"  />
+</form>
+<form action="#" method="post" id="form_course" name="form_course">
+<input type="hidden" id="coursId" name="coursId"  />
+<input type="hidden" id="coursCodeR" name="coursCodeR"  />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -725,8 +750,8 @@ $.fn.clearForm = function() {
 	<dt>Link</dt>
 	<dd>
 	<ul class="btns">
-		<li><p class="link_btn"><a href="#" id="courseReport_pdf_btn">Course Report (PDF)</a></p></li>
-		<li><p class="link_btn"><a href="#" id="courseReport_excel_btn">Course Report (Excel)</a></p></li>
+		<li><p class="link_btn"><a href="#" onclick="javascript:fn_generate('PDF');">Course Report (PDF)</a></p></li>
+		<li><p class="link_btn"><a href="#" onclick="javascript:fn_generate('EXCEL');">Course Report (Excel)</a></p></li>
  	    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
 </dl>
@@ -775,24 +800,3 @@ $.fn.clearForm = function() {
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-<form id="courseReportPdf">
-<input type="hidden" id="PDF_reportFileName" name="reportFileName" value="/organization/training/HPTrainingReport_PDF.rpt" />
-<input type="hidden" id="viewType" name="viewType" value="PDF" />
-<input type="hidden" id="PDF_COURSEID" name="V_COURSEID" />
-<input type="hidden" id="PDF_SELECTSQL" name="V_SELECTSQL" value="" />
-<input type="hidden" id="PDF_WHERESQL" name="V_WHERESQL" value="" />
-<input type="hidden" id="PDF_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
-<input type="hidden" id="PDF_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
-<input type="hidden" id="PDF_FULLSQL" name="V_FULLSQL" value="" />
-</form>
-<form id="courseReportExcel">
-<input type="hidden" id="EXCEL_reportFileName" name="reportFileName" value="/organization/training/HPTrainingReport_Excel.rpt" />
-<!-- <input type="hidden" id="viewType" name="viewType" value="EXCEL_FULL" /> -->
-<input type="hidden" id="viewType" name="viewType" value="EXCEL" />
-<input type="hidden" id="EXCEL_COURSEID" name="V_COURSEID" />
-<input type="hidden" id="EXCEL_SELECTSQL" name="V_SELECTSQL" value="" />
-<input type="hidden" id="EXCEL_WHERESQL" name="V_WHERESQL" value="" />
-<input type="hidden" id="EXCEL_EXTRAWHERESQL" name="V_EXTRAWHERESQL" value="" />
-<input type="hidden" id="EXCEL_ORDERBYSQL" name="V_ORDERBYSQL" value="" />
-<input type="hidden" id="EXCEL_FULLSQL" name="V_FULLSQL" value="" />
-</form>
