@@ -170,8 +170,8 @@ $(function(){
     	//alert("items.length :   "+ items.add.length);
     	for (var i = 0 ; i < items.add.length ; i++){
     		//console.log(items.add[i].typeid);
-    		//alert(items.add[i].rqty);
-    		if (items.add[i].typeid == '61'){
+    		//alert(items.add[i].itmtype);
+    		if (items.add[i].itmtype == '61'){
     			Common.alert('Stock is not Request.');
     			bool = false;
     			break;
