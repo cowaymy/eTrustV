@@ -781,10 +781,10 @@
         console.log("inputVal : " + inputVal);
         var rtnVal = "";
         //1.number check
-        if(FormUtil.checkNum($("#_nric_")) == true){
+        /* if(FormUtil.checkNum($("#_nric_")) == true){
             console.log("Not Numberic.");
             return;
-        }
+        } */
         //2. Digit
         if(inputVal.length != 12){
             console.log("Length is : " + inputVal.length);
