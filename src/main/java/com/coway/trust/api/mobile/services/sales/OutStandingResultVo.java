@@ -9,60 +9,60 @@ public class OutStandingResultVo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@ApiModelProperty(value = "RPF 총 금액")
-	private int sumRpf = 0;
+	private String sumRpf;
 	
 	@ApiModelProperty(value = "RPT 총 금액")
-	private int sumRpt = 0;
+	private String sumRpt;
 	
 	@ApiModelProperty(value = "RHF 총 금액")
-	private int sumRhf = 0;
+	private String sumRhf;
 	
 	@ApiModelProperty(value = "RENTAL 총 금액")
-	private int sumRental = 0;
+	private String sumRental;
 	
 	@ApiModelProperty(value = "ADJUST 총 금액")
-	private int sumAdjust = 0;
+	private String sumAdjust;
 	
 	@ApiModelProperty(value = "Outstanding Result Detail")
 	private List<OutStandignResultDetail> osrd;
 
-	public int getSumRpf() {
+	public String getSumRpf() {
 		return sumRpf;
 	}
 
-	public void setSumRpf(int sumRpf) {
+	public void setSumRpf(String sumRpf) {
 		this.sumRpf = sumRpf;
 	}
 
-	public int getSumRpt() {
+	public String getSumRpt() {
 		return sumRpt;
 	}
 
-	public void setSumRpt(int sumRpt) {
+	public void setSumRpt(String sumRpt) {
 		this.sumRpt = sumRpt;
 	}
 
-	public int getSumRhf() {
+	public String getSumRhf() {
 		return sumRhf;
 	}
 
-	public void setSumRhf(int sumRhf) {
+	public void setSumRhf(String sumRhf) {
 		this.sumRhf = sumRhf;
 	}
 
-	public int getSumRental() {
+	public String getSumRental() {
 		return sumRental;
 	}
 
-	public void setSumRental(int sumRental) {
+	public void setSumRental(String sumRental) {
 		this.sumRental = sumRental;
 	}
 
-	public int getSumAdjust() {
+	public String getSumAdjust() {
 		return sumAdjust;
 	}
 
-	public void setSumAdjust(int sumAdjust) {
+	public void setSumAdjust(String sumAdjust) {
 		this.sumAdjust = sumAdjust;
 	}
 
