@@ -143,10 +143,19 @@ public class BudgetController {
 	}
 	
 	@RequestMapping(value = "/selectMonthlyBudgetList", method = RequestMethod.GET) 
-	public ResponseEntity<List<EgovMap>> selectMonthlyBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
+	public ResponseEntity<List<EgovMap>> selectMonthlyBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{	
 		
-		List<EgovMap> budgetList = null; 
-
+		List<EgovMap> budgetList = null;
+		
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		List<Object> roleIdList = new ArrayList<Object>();
+		for(int i = 0; i < roleIds.length; i++) {
+			roleIdList.add(roleIds[i]);
+		}
+		
+		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+			params.put("costCentr", sessionVO.getCostCentr());
+		}
 		
 		LOGGER.debug("groupCd =====================================>>  " + params);
 		

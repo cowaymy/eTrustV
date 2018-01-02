@@ -313,7 +313,10 @@ SELECT BUDGET_PLAN_YEAR ,
                                                AND             A.BUDGET_CODE = C.BUDGET_CODE 
                                                AND             A.GL_ACC_CODE = C.GL_ACC_CODE
                                        )   A                
-         WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear} 
+         WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
+         <if test="costCentr != null and costCentr != '' " >
+            AND A.COST_CENTR = ${costCentr}
+         </if>
          <if test="stCostCentr != null and stCostCentr != '' " >
             <if test="edCostCentr != null and edCostCentr != '' ">
            AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
