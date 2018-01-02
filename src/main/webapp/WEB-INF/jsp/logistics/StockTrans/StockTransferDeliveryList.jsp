@@ -437,7 +437,7 @@ $(function(){
     });
     $("#print").click(function(){
     	var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-    	console.log(checkedItems)
+    	
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -449,15 +449,14 @@ $(function(){
             var tmpno = checkedItems[0].delyno;
             var delbool = true;
             for (var i = 0 ; i < checkedItems.length ; i++ ){
-                console.log(checkedItems);
+        
                 var itm = checkedItems[i];
-                console.log(tmpno  + ' :::: ' + itm.delyno);
+        
                 if (tmpno != itm.delyno){
                     delbool = false;
                     break;
                 }               
             }
-            console.log(delbool);
             
             if (delbool){
                 $("#V_DELVRYNO").val(tmpno);

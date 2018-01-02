@@ -373,7 +373,7 @@ $(function(){
     
     $("#print").click(function(){
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        console.log(checkedItems)
+        
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -386,14 +386,13 @@ $(function(){
             var delbool = true;
             for (var i = 0 ; i < checkedItems.length ; i++ ){
                 var itm = checkedItems[i];
-                console.log(itm);
-                console.log(tmpno  + ' :::: ' + itm.delyno);
+                
                 if (tmpno != itm.delyno){
                     delbool = false;
                     break;
                 }               
             }
-            console.log(delbool);
+            
             
             if (delbool){
                 $("#V_DELVRYNO").val(tmpno);
@@ -487,8 +486,8 @@ function grFunc(){
 	var check     = AUIGrid.getCheckedRowItems(listGrid);
 	var addedItems = AUIGrid.getColumnValues(gradeGrid,"grade");
 	var getRow = AUIGrid.getRowCount(gradeGrid);
-	console.log(addedItems);
-	console.log(getRow);
+	
+	
 	var gradchk=false;
 	for(var i = 0 ; i < check.length ; i++){
         if(check[i].item.mtype =="UM93"){
@@ -502,7 +501,7 @@ function grFunc(){
                     return false;
 		}else{
 			for(var i =0; i < getRow ; i++){
-					console.log(addedItems[i]);
+					
 				if(""==addedItems[i] || null==addedItems[i]){
 	                    Common.alert("Please select Grade.");
 	                    return false;
@@ -518,14 +517,13 @@ function grFunc(){
 	
 	data.form    = $("#grForm").serializeJSON();
 	
-	console.log(data);
+	
 	
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
 		var reparam = (result.rdata).split("∈");
-		console.log(reparam.length);
-		console.log(result.rdata);
+		
 		//if (result.rdata == '000'){
-		console.log(reparam[0]);
+		
 		if(reparam[0].trim() == '000'){
 			if ($('#grForm #gtype').val() == "RC"){
 				Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {

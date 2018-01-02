@@ -267,7 +267,7 @@ $(function(){
             return false;
         }else{
         	for (var i = 0 ; i < checkedItems.length ; i++){
-        		console.log(checkedItems[i]);
+        		
                 if(checkedItems[i].grcmplt == 'N'){
                     Common.alert('Can not cancel before wearing.');
                     return false;
@@ -303,7 +303,7 @@ $(function(){
     });
     $("#print").click(function(){
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        console.log(checkedItems)
+        
         if(checkedItems.length <= 0) {
             Common.alert('No data selected.');
             return false;
@@ -318,15 +318,15 @@ $(function(){
             var tmpno = checkedItems[0].delyno;
             var delbool = true;
             for (var i = 0 ; i < checkedItems.length ; i++ ){
-                console.log(checkedItems);
+                
                 var itm = checkedItems[i];
-                console.log(tmpno  + ' :::: ' + itm.delyno);
+                
                 if (tmpno != itm.delyno){
                     delbool = false;
                     break;
                 }               
             }
-            console.log(delbool);
+            
             
             if (delbool){
                 $("#V_DELVRYNO").val(tmpno);
@@ -382,7 +382,7 @@ function SearchListAjax() {
     var param = $('#searchForm').serializeJSON();
     
     Common.ajax("POST" , url , param , function(data){
-    	console.log(data.data);
+    	
         AUIGrid.setGridData(listGrid, data.data);
     });
 }
@@ -424,7 +424,7 @@ function grFunc(){
 	
 	data.form    = $("#grForm").serializeJSON();
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
-		console.log(result);
+		
         Common.alert(result.message + "<br/>MDN NO : " + result.data );
 //         AUIGrid.setGridData(listGrid, result.data);
         
