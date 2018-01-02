@@ -55,6 +55,12 @@ public class OrderRequestController {
 	@RequestMapping(value = "/orderRequestPop.do")
 	public String orderRequestPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
+		String callCenterYn = "N";
+		
+		if(CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))){
+			callCenterYn = "Y";
+		}
+		
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//APP_TYPE_ID CUST_ID
 
 		model.put("orderDetail", orderDetail);
@@ -64,6 +70,7 @@ public class OrderRequestController {
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
 		model.put("toDay", toDay);
+		model.put("callCenterYn", callCenterYn);
 		
 		return "sales/order/orderRequestPop";
 	}

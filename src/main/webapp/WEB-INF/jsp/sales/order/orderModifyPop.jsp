@@ -31,7 +31,7 @@
     
     $(document).ready(function(){
 
-        if(MEM_TYPE == '2') {
+        if("${memType}" == "2") {
             TAB_NM = 'CNT';
             $("#ordEditType").prop("disabled", true);
         }
@@ -47,9 +47,9 @@
         fn_statusCodeSearch();
 
         if(FormUtil.isNotEmpty(TAB_NM)) {
-            
+<c:if test="${callCenterYn != 'Y'}">
             if(!fn_checkAccessModify(TAB_NM)) return false;
-            
+</c:if>
             fn_changeTab(TAB_NM);
         }
         

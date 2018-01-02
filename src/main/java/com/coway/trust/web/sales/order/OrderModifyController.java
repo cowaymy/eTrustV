@@ -78,6 +78,12 @@ public class OrderModifyController {
 	@RequestMapping(value = "/orderModifyPop.do")
 	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
 		
+		String callCenterYn = "N";
+		
+		if(CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))){
+			callCenterYn = "Y";
+		}
+		
 		//[Tap]Basic Info
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//APP_TYPE_ID CUST_ID
 		EgovMap basicInfo = (EgovMap) orderDetail.get("basicInfo");
@@ -95,6 +101,8 @@ public class OrderModifyController {
 		model.put("promoCode",    basicInfo.get("ordPromoCode"));
 		model.put("promoDesc",    basicInfo.get("ordPromoDesc"));
 		model.put("srvPacId",     basicInfo.get("srvPacId"));
+		model.put("callCenterYn", callCenterYn);
+		model.put("memType",      sessionVO.getUserTypeId());
 		 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
