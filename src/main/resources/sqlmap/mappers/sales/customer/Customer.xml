@@ -147,10 +147,22 @@
 				                                                                            UPD_DT DESC )ADD1
 			                                                                      WHERE ROWNUM <= 1
 			                                                                    ) T6 ON T6.CUST_ID = T1.CUST_ID
-                                                    LEFT OUTER 
-                                                    JOIN SAL0027D T7 
-                                                      ON T7.CUST_ID = T1.CUST_ID 
-                                                     AND (9 =   T7.STUS_CODE_ID)
+                                                    LEFT OUTER JOIN (SELECT 
+			                                                                        CNTC.CUST_CNTC_ID,
+			                                                                        CNTC.CUST_ID
+		                                                                     FROM(
+		                                                                             SELECT
+		                                                                                CUST_CNTC_ID,
+		                                                                                CUST_ID
+		                                                                             FROM 
+		                                                                                SAL0027D
+		                                                                             WHERE 
+		                                                                                (9 = STUS_CODE_ID)
+		                                                                             ORDER BY
+		                                                                                UPD_DT DESC )CNTC
+		                                                                      WHERE ROWNUM <= 1      
+                                                                       ) T7 
+                                                      ON T7.CUST_ID = T1.CUST_ID
                                                     LEFT OUTER 
                                                     JOIN SAL0026D T8 
                                                       ON T8.CUST_ID = T1.CUST_ID AND (9 =   T8.STUS_CODE_ID)
@@ -164,10 +176,7 @@
                                               ON T10.CODE_ID = S1.CORP_TYPE_ID 
                                              AND S1.CORP_TYPE_ID IS NOT NULL
                                          WHERE 1=1
-				                          
 				                            ]]>
-
-				                                
 				                            <if test="typeIdList != null and typeIdList != ''">
 								                AND S1.TYPE_ID in 
 									            <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
