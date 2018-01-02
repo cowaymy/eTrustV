@@ -97,7 +97,6 @@
         	
         	var bsNo = AUIGrid.getCellValue(myGridID , event.rowIndex , "bsNo");	
             Common.ajax("GET","/payment/selectBankStatementDetailList.do", {"bsNo" : bsNo}, function(result){
-            	console.log(result);
             	$("#detail_wrap").show();
             	$("#pop_bsNo").text(bsNo);
                 AUIGrid.setGridData(myDetailGridID, result);
