@@ -581,83 +581,85 @@
                                         Project2.CODY_MANGR_USER_ID,
                                         Project2.Result as Result,
                                         project2.dept_code
-                         from(        SELECT distinct
-            hs.no AS no,
-            hs.stus_code_id AS stus_code_id,
-            hs.month
-             || '/'
-             || hs.year AS hs_date,
-            hs.month,
-            hs.year,
-            st.code,
-            hr.no AS result,
-            so.sales_ord_no,
-            ap.code AS apptype,
-            cu.name,
-            cd.mem_code AS assign_cody,
-            cd.mem_id,
-            ac.mem_code AS action_cody,
-            mg.state,
-            mg.area,
-            cu.cust_id AS cust_id,
-            STUS.CODE AS cody_status_nm,
-            br.brnch_id AS brnch_id,
-            hs.schdul_id schdul_id,
-            so.sales_ord_id,
-            mg.CODY_BRNCH_CODE AS branch_cd,
-            mg.cody_mangr_user_id
-            ,og.dept_code 
-        FROM
-            svc0008d hs
-            INNER JOIN sal0001d so ON so.sales_ord_id = hs.sales_ord_id
-            INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id  
-            inner JOIN sal0023d ad ON ad.cust_add_id = ins.add_id  
-            inner JOIN sys0064m mg ON mg.area_id = ad.area_id  
-            LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
-            LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
-            INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
-            INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
-            INNER JOIN org0001d cd ON cd.mem_id = hs.cody_id
-            INNER JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
-            LEFT JOIN org0001d ac ON ac.mem_id = hs.CODY_ID
-            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch 
-            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID            
-                                             WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
-                                                 AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
-                                           <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
-                                              AND CD.MEM_CODE = #{txtAssigncodyCode}
-                                          </if>
-                                             <if test="txtComcodyCode != null and txtComcodyCode != ''">
-                                            AND   AC.MEM_CODE = #{txtComcodyCode}
-                                          </if>
-
-                                           <if test="myInstallMonth != null and myInstallMonth != ''">
-                                              AND  SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
-                                           </if>
-                                           <if test="myInstallMonth != null and myInstallMonth != ''">
-                                             AND   SO.PV_YEAR  =  TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
-                                           </if>
-                                            <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
-                                                   AND HS.NO  = #{txtHsOrderNo}
-                                            </if>
-                                             <if test="txtSalesOrder != null and txtSalesOrder != ''">
-                                                    AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
-                                             </if>
-                                             <if test="cmbStatusType != null and cmbStatusType != ''">
-                                                    AND HS.STUS_CODE_ID  = #{cmbStatusType}
-                                             </if>
-                                             <if test="txtCustomer != null and txtCustomer != ''">
-                                                    AND SO.CUST_ID  = #{txtCustomer}
-                                             </if>
-                                              <if test="cmdBranchCode != null and cmdBranchCode != ''">
-                                                     AND ( br.BRNCH_id = #{cmdBranchCode})
-                                              </if>
-                                              <if test="cmdCdManager != null and cmdCdManager != ''">
-                                                     AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
-                                              </if>
-                                              <if test="deptCode != null and deptCode != ''">
-                                                     AND OG.DEPT_CODE = #{deptCode}
-                                              </if>
+                         FROM (SELECT /*+ USE_HASH (so hr ins ad ) */
+                                             /*+ NO_INDEX (INS SAL0045D_IDX5) */
+                                            distinct
+								            hs.no AS no,
+								            hs.stus_code_id AS stus_code_id,
+								            hs.month
+								             || '/'
+								             || hs.year AS hs_date,
+								            hs.month,
+								            hs.year,
+								            st.code,
+								            hr.no AS result,
+								            so.sales_ord_no,
+								            ap.code AS apptype,
+								            cu.name,
+								            cd.mem_code AS assign_cody,
+								            cd.mem_id,
+								            ac.mem_code AS action_cody,
+								            mg.state,
+								            mg.area,
+								            cu.cust_id AS cust_id,
+								            STUS.CODE AS cody_status_nm,
+								            br.brnch_id AS brnch_id,
+								            hs.schdul_id schdul_id,
+								            so.sales_ord_id,
+								            mg.CODY_BRNCH_CODE AS branch_cd,
+								            mg.cody_mangr_user_id
+								            ,og.dept_code 
+								        FROM
+								            svc0008d hs
+								            INNER JOIN sal0001d so ON so.sales_ord_id = hs.sales_ord_id
+								            INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id  
+								            inner JOIN sal0023d ad ON ad.cust_add_id = ins.add_id  
+								            inner JOIN sys0064m mg ON mg.area_id = ad.area_id  
+								            LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
+								            LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
+								            INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
+								            INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
+								            INNER JOIN org0001d cd ON cd.mem_id = hs.cody_id
+								            INNER JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
+								            LEFT JOIN org0001d ac ON ac.mem_id = hs.CODY_ID
+								            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch 
+								            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID            
+								                                             WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
+								                                                 AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
+								                                           <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+								                                              AND CD.MEM_CODE = #{txtAssigncodyCode}
+								                                          </if>
+								                                             <if test="txtComcodyCode != null and txtComcodyCode != ''">
+								                                            AND   AC.MEM_CODE = #{txtComcodyCode}
+								                                          </if>
+								
+								                                           <if test="myInstallMonth != null and myInstallMonth != ''">
+								                                              AND  SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
+								                                           </if>
+								                                           <if test="myInstallMonth != null and myInstallMonth != ''">
+								                                             AND   SO.PV_YEAR  =  TO_CHAR(to_date(#{myInstallMonth} ,'MM/YYYY'),'YYYY')
+								                                           </if>
+								                                            <if test="txtHsOrderNo != null and txtHsOrderNo != ''">
+								                                                   AND HS.NO  = #{txtHsOrderNo}
+								                                            </if>
+								                                             <if test="txtSalesOrder != null and txtSalesOrder != ''">
+								                                                    AND ( SO.SALES_ORD_NO = #{txtSalesOrder})
+								                                             </if>
+								                                             <if test="cmbStatusType != null and cmbStatusType != ''">
+								                                                    AND HS.STUS_CODE_ID  = #{cmbStatusType}
+								                                             </if>
+								                                             <if test="txtCustomer != null and txtCustomer != ''">
+								                                                    AND SO.CUST_ID  = #{txtCustomer}
+								                                             </if>
+								                                              <if test="cmdBranchCode != null and cmdBranchCode != ''">
+								                                                     AND ( br.BRNCH_id = #{cmdBranchCode})
+								                                              </if>
+								                                              <if test="cmdCdManager != null and cmdCdManager != ''">
+								                                                     AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
+								                                              </if>
+								                                              <if test="deptCode != null and deptCode != ''">
+								                                                     AND OG.DEPT_CODE = #{deptCode}
+								                                              </if>
                                               
                         )Project2
 			        ) Project3
