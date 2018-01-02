@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper">
-   
+
     <select id="selectStockMovementSeq" resultType="String">
         SELECT
-               'SMO' 
+               'SMO'
                ||TO_CHAR (SYSDATE, 'YYMMDD')
                || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
           FROM LOG0047M
-          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') 
+          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD')
     </select>
     <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
@@ -43,7 +43,7 @@
              , nvl(l55.RCIPT_QTY , 0) as rciptqty
              , l48.uom
              , uomt.code_name uomnm
-             , l47.reqst_type reqsttype 
+             , l47.reqst_type reqsttype
              , l47.reqst_type_dtl reqsttypedtl
           from log0047m l47
              , log0048d l48
@@ -55,14 +55,14 @@
              , sys0028m s28q
              , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d where nvl(del_flag , 'N' ) <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55
              , sys0026m s26
-         where 1 =1 
+         where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
            and l47.trnsc_type_dtl = trand.code(+)
            and l47.rciv_cdc_rdc   = s28c.wh_loc_id(+)
            and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
            and l48.uom            = uomt.code_id
-            and l48.itm_code = s26.stk_code 
+            and l48.itm_code = s26.stk_code
            AND l48.reqst_no       = l55.reqst_no(+)
            AND l48.itm_code       = l55.itm_code(+)
            and l47.reqst_stus     = reqs.code(+)
@@ -116,35 +116,35 @@
               and l47.ref_doc_no = #{sdocno}
            </if>
            ORDER by l47.CRT_DT desc
-    </select> 
-  
+    </select>
+
     <insert id="insStockMovement" parameterType="Map">
         MERGE INTO LOG0048D A
              USING DUAL
                 ON (A.REQST_NO = #{reqno} and REQST_NO_ITM = #{resnoitm})
             WHEN MATCHED THEN
-                UPDATE SET 
+                UPDATE SET
                        A.REQST_QTY = #{rqty}
                      , A.UOM       = #{uom}
                      , A.CRT_USER_ID = #{userId}
                      , A.CRT_DT      = SYSDATE
-            WHEN NOT MATCHED THEN 
+            WHEN NOT MATCHED THEN
                 INSERT ( REQST_NO, REQST_NO_ITM
                         ,ITM_CODE, ITM_NAME, REQST_QTY, UOM, CRT_USER_ID, CRT_DT)
                 VALUES ( #{reqno} , (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno})
                         ,#{itmcd} , #{itmname}, #{rqty} ,#{uom} , #{userId}       , SYSDATE)
-    </insert> 
-    
+    </insert>
+
     <update id="insStockMovementHead" parameterType="Map">
         MERGE INTO LOG0047M  a
              USING dual
-                on (a.REQST_NO=#{reqno}) 
+                on (a.REQST_NO=#{reqno})
               WHEN MATCHED THEN
                    UPDATE SET
-                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss') 
-                       ,  a.DOC_HDER_TXT    =   #{dochdertxt}                                                                 
-                       ,  a.CRT_USER_ID     =   #{userId}                                                                     
-                       ,  a.CRT_DT          =   SYSDATE 
+                          a.REQST_CRT_DT    =   to_date(#{reqcrtdate}|| to_char(sysdate , 'hh24miss') , 'dd/mm/yyyyhh24miss')
+                       ,  a.DOC_HDER_TXT    =   #{dochdertxt}
+                       ,  a.CRT_USER_ID     =   #{userId}
+                       ,  a.CRT_DT          =   SYSDATE
               WHEN NOT MATCHED THEN
                        INSERT (REQST_NO,
                               TRNSC_TYPE,
@@ -177,15 +177,15 @@
                                     , #{smtype}
                                     )
     </update>
-    
+
     <select id="selectStockMovementNoList" parameterType="Map" resultType="egovMap">
         SELECT REQST_NO CODE_ID , REQST_NO CODE_NAME FROM log0047m where reqst_no in (select reqst_no from log0048d) AND SUBSTR(REQST_NO , 0,3) <![CDATA[<>]]> 'STO' AND NVL(REQST_DEL , 'N') = 'N'  ORDER BY CRT_DT DESC
     </select>
-    
+
     <select id="selectDeliveryNoList" parameterType="Map" resultType="egovMap">
         SELECT DELVRY_NO CODE_ID , DELVRY_NO CODE_NAME FROM log0054m  where nvl(DELVRY_GR_CMPLT , 'N') <![CDATA[<>]]> 'Y' ORDER BY CRT_DT DESC
     </select>
-    
+
     <select id="selectStockMovementHead" parameterType="String" resultType="egovMap">
         SELECT REQST_NO REQNO , TRNSC_TYPE TRNTYPE , TRNSC_TYPE_DTL TRNDTL , PRIDIC_FRQNCY PRIFR , TO_CHAR(REQST_CRT_DT , 'DD/MM/YYYY') REQCRTDT
              , DOC_HDER_TXT DOCTXT , RCIV_CDC_RDC RCIVCR , REQST_CDC_RDC REQCR, REQST_STUS REQST
@@ -193,22 +193,22 @@
          WHERE REQST_NO = #{param}
     </select>
     <select id="selectStockMovementItem" parameterType="String" resultType="egovMap">
-        SELECT l48.REQST_NO_ITM resnoitm ,s26.STK_ID itmid, l48.ITM_CODE itmcd, l48.ITM_NAME itmname 
-             , l48.REQST_QTY rqty 
+        SELECT l48.REQST_NO_ITM resnoitm ,s26.STK_ID itmid, l48.ITM_CODE itmcd, l48.ITM_NAME itmname
+             , l48.REQST_QTY rqty
              , l48.UOM uom
-             , l55.delvry_no delyno 
+             , l55.delvry_no delyno
              , l55.delvry_qty delyqty
-          FROM LOG0048D l48, sys0026m s26 , 
-               log0055d l55             
+          FROM LOG0048D l48, sys0026m s26 ,
+               log0055d l55
          WHERE l48.ITM_CODE = s26.STK_CODE
            AND l48.ITM_CODE = l55.ITM_CODE(+)
            AND l48.REQST_NO = l55.REQST_NO(+)
            AND NVL(l48.REQST_DEL , 'N') = 'N'
 		   and nvl(l55.del_flag , 'N')<![CDATA[<>]]>'Y'
-           AND l48.REQST_NO = #{param}           
-         ORDER BY l48.REQST_NO_ITM 
+           AND l48.REQST_NO = #{param}
+         ORDER BY l48.REQST_NO_ITM
     </select>
-    
+
     <select id="selectStockMovementToItem" parameterType="Map" resultType="egovMap">
        select rownum rnum
              , l56.loc_id locid, l56.stk_code stkcd, dbms_lob.substr (l56.stk_desc, 4000) stknm
@@ -219,12 +219,12 @@
              , case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' then 'Y' else 'N' end
                when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
                when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
-               else 'N' end SERIAL_CHK 
+               else 'N' end SERIAL_CHK
           from log0056m l56 , sys0026m s26 , sys0028m s28
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
                 group by loc_id , itm_code ) l75
              , (select * from sys0013m where code_master_id = 15) s15
-             , (select * from sys0013m where code_master_id = 11) s11 
+             , (select * from sys0013m where code_master_id = 11) s11
          where 1 = 1
            and l56.stk_code = l75.itm_code(+)
            and l56.loc_id = l75.loc_id(+)
@@ -249,24 +249,24 @@
            and l56.stk_code = #{mcode}
            </if>
     </select>
-    
+
   <select id="selectStockMovementItemDeliveryQty" parameterType="Map" resultType="egovMap">
-        select qty 
-          from log0056m l56 
+        select qty
+          from log0056m l56
          where 1 = 1
            and l56.loc_id = #{toloc}
            and l56.stk_code = #{itmcd}
     </select>
     <select id="selectDeliveryStockMovementSeq" resultType="String">
         SELECT
-               'DVR' 
+               'DVR'
                ||TO_CHAR (SYSDATE, 'YYMMDD')
                || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
           FROM LOG0054M
          WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
     </select>
 
-<!--       
+<!--
     <select id="selectDeliveryNobyReqsNo" parameterType="Map" resultType="String">
         select decode(count(1) , 0 , '0' ,max( DELVRY_NO)) dno from log0054m where reqst_no = #{reqno}
     </select>
@@ -274,13 +274,13 @@
     <insert id="insertDeliveryStockMovement" parameterType="Map">
         MERGE INTO LOG0054M A
              USING DUAL
-                ON (DELVRY_NO = #{delno}) 
+                ON (DELVRY_NO = #{delno})
               WHEN MATCHED THEN
                      UPDATE SET
                                 A.DOC_HDER_TXT= #{headtxt}
                               , A.UPD_USER_ID = #{userId}
                               , A.UPD_DT      = SYSDATE
-              WHEN NOT MATCHED THEN              
+              WHEN NOT MATCHED THEN
                      INSERT (
                                 DELVRY_NO
                               , TRNSC_TYPE
@@ -309,7 +309,7 @@
                               , A.REQST_NO_ITM = #{reqitmno}
                               , A.UPD_USER_ID = #{userId}
                               , A.UPD_DT      = SYSDATE
-               WHEN NOT MATCHED THEN    
+               WHEN NOT MATCHED THEN
                      INSERT (  DELVRY_NO, DELVRY_NO_ITM
                              , ITM_CODE, ITM_NAME, DELVRY_QTY, REQST_NO, CRT_USER_ID, CRT_DT , REQST_NO_ITM)
                      VALUES (  #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = #{delno})
@@ -321,21 +321,21 @@
     <delete id="deleteStockMovementItm" parameterType="Map">
         delete from LOG0048D where REQST_NO = #{reqno} and REQST_NO_ITM = #{resnoitm}
     </delete>
-    
+
     <select id="selectStockMovementDeliveryList" parameterType="Map" resultType="egovMap">
         SELECT Rownum rnum , T.* FROM (
-        select 
+        select
                l47.reqst_no reqstno
              , l55.delvry_no delyno
-             , l55.delvry_no_itm 
+             , l55.delvry_no_itm
              , l47.trnsc_type ttype
              , tran.code_name     ttext
              , l47.trnsc_type_dtl mtype
              , trand.code_name    mtext
              , l47.ref_doc_no docno
-             , l54.delvry_dt delydt
-             , l54.delvry_gi_dt gidt
-             , l54.delvry_gr_dt grdt
+             , TO_CHAR(TO_DATE(l54.delvry_dt, 'YYYY/MM/DD'), 'DD/MM/YYYY') delydt
+             , TO_CHAR(TO_DATE(l54.delvry_gi_dt, 'YYYY/MM/DD'), 'DD/MM/YYYY') gidt
+             , TO_CHAR(TO_DATE(l54.delvry_gr_dt, 'YYYY/MM/DD'), 'DD/MM/YYYY') grdt
              , l48.itm_code itmcd
              , l48.itm_name itmname
              , l55.delvry_qty delyqty
@@ -371,7 +371,6 @@
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
-		   and nvl(l54.del_flag , 'N')<![CDATA[<>]]>'Y'
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  = #{reqstno}
            </if>
@@ -411,6 +410,12 @@
            <if test="reqedt !=null and reqedt !=''">
               and l54.DELVRY_GI_DT <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
+           <if test="rcivsdt !=null and rcivsdt !=''">
+              and l54.DELVRY_GR_DT <![CDATA[>=]]> to_char(to_date(#{rcivsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="rcivedt !=null and rcivedt !=''">
+              and l54.DELVRY_GR_DT <![CDATA[<=]]> to_char(to_date(#{rcivedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
            <if test="gtype !=null and gtype =='receipt'">
               and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
            </if>
@@ -420,42 +425,46 @@
             <if test="sdocno !=null and sdocno !=''">
               and l47.ref_doc_no = #{sdocno}
            </if>
+            <if test="status !=null and status !=''">
+              and L54.DELVRY_GR_CMPLT = #{status}
+           </if>
+
            ORDER BY l54.delvry_no desc
            ) T
     </select>
     <resultMap id="MOVEDATA" type="egovMap" />
-    <select id="StockMovementIssue"  statementType="CALLABLE" parameterType="Map"> 
+    <select id="StockMovementIssue"  statementType="CALLABLE" parameterType="Map">
              { call SP_LOGISTIC_DELIVERY
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MOVEDATA} )
-             } 
+             }
      </select>
           <resultMap id="MoveCANCLEDATA" type="egovMap" />
-     <select id="StockMovementCancelIssue"  statementType="CALLABLE" parameterType="Map"> 
+     <select id="StockMovementCancelIssue"  statementType="CALLABLE" parameterType="Map">
              { call SP_LOGISTIC_DELIVERY_CANCEL
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=MoveCANCLEDATA} )
-             } 
+             }
      </select>
      <select id="selectStockMovementSerial" parameterType="Map" resultType="Map">
          select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
-          from (  
+          from (
             SELECT serial_no , matnr , stk_desc stkdesc , count(1) l62cnt , 0 l61cnt , 0 l63cnt
-              FROM LOG0062M l62 , 
-                   sys0026m s26 
+              FROM LOG0062M l62 ,
+                   sys0026m s26
              WHERE l62.matnr = s26.stk_code
                 and l62.SERIAL_NO =  #{serial}
               group by serial_no , matnr , stk_desc
-             union 
-            select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
+             union
+            select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt
               from log0061d l61 , (SELECT * FROM LOG0054M WHERE NVL(DELVRY_CMPLT , 'N') <![CDATA[<>]]> 'Y') L54
               WHERE l61.SERIAL_NO =  #{serial}
                 AND L61.DELVRY_NO = L54.DELVRY_NO
               group by l61.serial_no
-             union 
-            select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
-              from log0063d l63 
+             union
+            select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt
+              from log0063d l63
               WHERE l63.SERIAL_NO =  #{serial}
               <if test='locid != null and locid !=""'>
-               and l63.loc_id <![CDATA[<>]]> #{locid} 
+               and l63.loc_id <![CDATA[<>]]> #{locid}
               </if>
              group by l63.serial_no
          )
@@ -481,7 +490,7 @@
 <!--                                     AND DELVRY_NO= #{delno} -->
 <!--                                     AND ITM_CODE =#{itmcd} -->
 <!--                                     AND REQST_NO =#{reqstno}                                       -->
-                                                       
+
 <!--      </insert> -->
      <insert id="insertMovementSerial" parameterType="Map">
      INSERT INTO LOG0061D (
@@ -509,8 +518,8 @@
                                      AND (SELECT serial_no
 							                FROM LOG0061D
 							               WHERE DELVRY_NO = #{delno} AND serial_no = #{serial})
-							                 IS NULL                                   
-                                                       
+							                 IS NULL
+
      </insert>
      <select id="selectNewDeliveryNoITM" parameterType="Map" resultType="egovMap">
             SELECT
@@ -529,9 +538,9 @@
                         AND REQST_NO  =  #{reqstno}
                         </if>
      </select>
-     
+
      <select id="selectStockMovementDeliverySerial" parameterType="Map" resultType="egovMap">
-             SELECT 
+             SELECT
                         l55d.DELVRY_NO,
                         l55d.DELVRY_NO_ITM,
                         l55d.ITM_CODE,
@@ -577,11 +586,11 @@
                     sy28rc.WH_LOC_ID rclocid,
                     sy28rc.WH_LOC_DESC rclocnm
             FROM LOG0059M lg59m JOIN LOG0060D lg60d
-                    ON (lg59m.MATRL_DOC_NO = lg60d.MATRL_DOC_NO) 
+                    ON (lg59m.MATRL_DOC_NO = lg60d.MATRL_DOC_NO)
                 JOIN LOG0047M lg47m
                     ON (LG60D.STOCK_TRNSFR_REQST = lg47m.REQST_NO)
-                JOIN LOG0048D lg48d 
-                    ON (LG60D.STOCK_TRNSFR_REQST = lg48d.REQST_NO 
+                JOIN LOG0048D lg48d
+                    ON (LG60D.STOCK_TRNSFR_REQST = lg48d.REQST_NO
                           AND LG60D.DELVRY_ITM_NO = lg48d.REQST_NO_ITM
                           AND lg60d.MATRL_NO = lg48d.ITM_CODE)
                 JOIN (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 306) tran
@@ -594,12 +603,12 @@
                     ON (lg47m.REQST_CDC_RDC = sy28rq.WH_LOC_ID)
                 JOIN SYS0028M sy28rc
                     ON (lg47m.RCIV_CDC_RDC = sy28rc.WH_LOC_ID)
-            WHERE lg60d.STOCK_TRNSFR_REQST= #{reqstno}              
+            WHERE lg60d.STOCK_TRNSFR_REQST= #{reqstno}
             ORDER BY lg59m.MATRL_DOC_NO, lg60d.MATRL_DOC_ITM
      </select>
-     
+
      <update id="updateRequestMovement" parameterType="String">
-        UPDATE LOG0047M 
+        UPDATE LOG0047M
            SET REQST_STUS = 'P'
          WHERE REQST_NO = #{param}
      </update>
@@ -607,60 +616,60 @@
         INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
                     SELECT L47.REQST_NO
                          , L48.REQST_NO_ITM
-                         , L47.RCIV_CDC_RDC 
-                         , L47.TRNSC_TYPE_DTL 
-                         , L48.ITM_CODE 
-                         , L48.REQST_QTY 
-                         , REQST_CRT_DT 
+                         , L47.RCIV_CDC_RDC
+                         , L47.TRNSC_TYPE_DTL
+                         , L48.ITM_CODE
+                         , L48.REQST_QTY
+                         , REQST_CRT_DT
                          , SYSDATE
                       FROM LOG0047M L47 , LOG0048D L48
                      WHERE 1 = 1
                        AND L47.REQST_NO = L48.REQST_NO
                        AND L47.REQST_NO = #{reqno}
      </insert>
-     
+
        <insert id="insertReturnGrade" parameterType="Map">
         MERGE INTO LOG0061D A
              USING DUAL
                 ON (A.DELVRY_NO = #{delvryNo} and A.SERIAL_NO = #{serialNo})
             WHEN MATCHED THEN
-                UPDATE SET 
+                UPDATE SET
                        A.SERGRAD = #{grade}
                      , A.CRT_USER_ID = #{userId}
                      , A.CRT_DT      = SYSDATE
-            WHEN NOT MATCHED THEN 
+            WHEN NOT MATCHED THEN
                 INSERT ( SERIAL_NO,
                              DELVRY_NO,
-                             CRT_USER_ID, 
+                             CRT_USER_ID,
                              CRT_DT,
                              SERGRAD
                              )
-                VALUES ( 
-                            #{serialNo} , 
+                VALUES (
+                            #{serialNo} ,
                             #{delvryNo} ,
-                             #{userId}, 
+                             #{userId},
                              SYSDATE,
                              #{grade}
                            )
-    </insert> 
-    
+    </insert>
+
     <select id="selectGetSerialDataCall" parameterType="Map" resultType="egovMap">
-        SELECT SCAN_NO SCANNO , SEQ SEQ , SERIAL_SCAN SERIALSCAN , SERIAL_NO SERIAL 
+        SELECT SCAN_NO SCANNO , SEQ SEQ , SERIAL_SCAN SERIALSCAN , SERIAL_NO SERIAL
              , BOX_NO BOXNO, MATNR ITMCD , FROM_LOC_ID FROMLOC , TO_LOC_ID TOLOC , STK_DESC ITMNAME
-		  FROM LOG0087D L87 , SYS0026M S26 
-		 WHERE 1 = 1 
-		   AND L87.MATNR = S26.STK_CODE 
+		  FROM LOG0087D L87 , SYS0026M S26
+		 WHERE 1 = 1
+		   AND L87.MATNR = S26.STK_CODE
 		   AND FROM_LOC_ID = #{from}
 		   AND TO_LOC_ID   = #{to}
 		   AND SCAN_TYPE = '30'
 		   AND NVL(SCANINFO_STUS , 'N') = 'N'
 		 ORDER BY MATNR , SEQ
      </select>
-     
+
      <update id="updateMovementSerialScan" parameterType="String">
         UPDATE LOG0087D
            SET SCANINFO_STUS = 'Y'
          WHERE SCAN_NO = #{scanno}
      </update>
-  
+
 </mapper>
