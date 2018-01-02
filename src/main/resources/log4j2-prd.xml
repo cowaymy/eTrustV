@@ -20,15 +20,27 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="java.sql" level="INFO" additivity="false">
-			<AppenderRef ref="rollingFile" />
+		<Logger name="java.sql" level="DEBUG" additivity="false">
+			<AppenderRef ref="console" />
 		</Logger>
-		<Logger name="com.coway.trust" level="INFO" additivity="false">
+		<Logger name="egovframework" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<!-- log SQL with timing information, post execution -->
+		<Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+		<Logger name="org.springframework" level="INFO" additivity="false">
+			<AppenderRef ref="console" />
+		</Logger>
+
+		<Logger name="com.coway.trust" level="DEBUG" additivity="false">
+			<AppenderRef ref="console" />
 			<AppenderRef ref="rollingFile" />
 		</Logger>
 
-		<Root level="ERROR">
-			<AppenderRef ref="rollingFile" />
+		<Root level="WARN">
+			<AppenderRef ref="console" />
 		</Root>
 	</Loggers>
 </Configuration>
