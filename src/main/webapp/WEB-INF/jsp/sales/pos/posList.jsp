@@ -838,13 +838,13 @@ function fn_insTransactionLog(posNo, posTypeId){
     transacMap.rptParamtrValu = "@PosRefNo," + posNo + ";@POSModuleTypeID," + posTypeId;
     transacMap.rptRem = "";
     
-    Common.ajax("GET", "/sales/pos//insertTransactionLog", transacMap, function(result){
+    Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
     	if(result == null){
     		Common.alert("<b>Failed to save into log file.</b>");
     	}else{
     		console.log("insert log : " + result.message);
     	}
-    })
+    });
 		
 }
 

@@ -26,6 +26,10 @@ function fn_posPaymentListing(){
 		return;
 	}
 	
+	//Ins Log
+	
+	
+	
     var option = {
             isProcedure : true 
     };
@@ -93,6 +97,7 @@ function fn_posPaymentListing(){
     $("#V_SHOWPOSNO").val(showPosNo);
     $("#V_SHOWMEMBERCODE").val(showMemberCode);
     
+    fn_insTransactionLogPay(whereSql, showPaymentDate, showKeyInBranch, showReceiptNo, showTrNo, showKeyInUser, showPosNo, showMemberCode);
     Common.report("rptForm", option);
     
 }
@@ -101,8 +106,8 @@ function fn_chkPayListingValidation(){
 	
 	var isFalseChk = true;
 	
-	if(($("#_sttDate").val() != null && $("#_sttDate").val() != '') || ($("#eDate").val() != null && $("#eDate").val() != '')){ //choice at least one
-		if($("#_sttDate").val() == null || $("#_sttDate").val() == '' || $("#eDate").val() == null && $("#eDate").val() == ''){
+	if(($("#_sttDate").val() != null && $("#_sttDate").val() != '') || ($("#_eddDate").val() != null && $("#_eddDate").val() != '')){ //choice at least one
+		if($("#_sttDate").val() == null || $("#_sttDate").val() == '' || $("#_eddDate").val() == null && $("#_eddDate").val() == ''){
 			Common.alert("* Please key in the payment date (From & To).<br />");
 			return false;
 		}
@@ -171,6 +176,47 @@ function fn_chkPayListingValidation(){
 	
 	//validaion Pass
 	return true;
+}
+
+//Clear Btn
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
+
+function fn_insTransactionLogPay(whereSql, showPaymentDate, showKeyInBranch, showReceiptNo, showTrNo, showKeyInUser, showPosNo, showMemberCode){
+    
+	var transacMap = {};
+    transacMap.rptChkPoint = "http://etrust.my.coway.com/sales/pos/posPaymentListingPop.do";
+    transacMap.rptModule = "POS";
+    transacMap.rptName = "POS Listing";
+    transacMap.rptSubName = "POS Payment Listing - PDF";
+    transacMap.rptEtType = "pdf";
+    transacMap.rptPath = getContextPath()+"/sales/POSPaymentListing_PDF_New.rpt";
+    transacMap.rptParamtrValu = "@WhereSQL," + whereSql + ";@ShowPaymentDate," + showPaymentDate + 
+										    ";@ShowKeyInBranch," + showKeyInBranch +";@ShowReceiptNo," + showReceiptNo + 
+										    ";@ShowTRNo," + showTrNo + ";@ShowKeyInUser," + showKeyInUser +
+										    ";@ShowPOSNo," + showPosNo + ";@ShowMemberCode," + showMemberCode + ";@WhereSQL," + whereSql;
+    transacMap.rptRem = "";
+    
+    Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
+        if(result == null){
+            Common.alert("<b>Failed to save into log file.</b>");
+        }else{
+            console.log("insert log : " + result.message);
+        }
+    });
 }
 
 </script>
@@ -249,7 +295,7 @@ function fn_chkPayListingValidation(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a onclick="javascript: fn_posPaymentListing()" >Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" >Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:$('#searchForm').clearForm();">Clear</a></p></li>
 </ul>
 </form>
 </section>

@@ -30,6 +30,10 @@ $(document).ready(function() {
 function fn_posRawData(){
 	
 	//Validation
+	var rtnVal = fn_chkRawData();
+	if(rtnVal == false){
+		return;
+	}
 	
 	var option = {
             isProcedure : true 
@@ -75,11 +79,11 @@ function fn_posRawData(){
     }
     
     if($("#_hidSalesAgentId").val() != null && $("#_hidSalesAgentId").val() != '' ){
-    	whereSql += " AND M.POS_CRT_USER_ID = " + $("#_hidSalesAgentId").val() + " ";  //hidden Sales Man ID
+    	whereSql += " AND M.POS_CRT_USER_ID = " + $("#_salesAgent").text() + " ";  
     }
     
     if($("#_hidMemberCode").val() != null && $("#_hidMemberCode").val() != ''){
-    	whereSql += " AND M.POS_MEM_ID = " + $("#_hidMemberCode").val() + " ";  //hidden Member ID
+    	whereSql += " AND M.POS_MEM_ID = " + $("#_memberCode").text() + " ";  
     }
     
     console.log("whereSql : " + whereSql);
@@ -90,7 +94,118 @@ function fn_posRawData(){
     //
     $("#V_WHERESQL").val(whereSql);
     
+   //Ins Log
+    fn_insTransactionLogRaw(whereSql);
     Common.report("rptForm", option);
+	
+}
+
+function fn_chkRawData(){
+    
+	var isFalseChk = true;
+	
+	if(($("#_sttDate").val() != null && $("#_sttDate").val() != '') || ($("#_eddDate").val() != null && $("#_eddDate").val() != '')){ //choice at least one
+        if($("#_sttDate").val() == null || $("#_sttDate").val() == '' || $("#_eddDate").val() == null && $("#_eddDate").val() == ''){
+            Common.alert("* Please key in the payment date (From & To).<br />");
+            return false;
+        }
+    }
+	
+	if(($("#_frPosNo").val() != null && $("#_frPosNo").val() != '') || ($("#_toPosNo").val() != null && $("#_toPosNo").val() != '')){ //choice at least one
+        if($("#_frPosNo").val() == null || $("#_frPosNo").val() == '' || $("#_toPosNo").val() == null && $("#_toPosNo").val() == ''){
+            Common.alert("* Please select the key-in the POS number (From & To).<br />");
+            return false;
+        }
+    }
+	
+	if(($("#_frPosNo").val() != null && $("#_frPosNo").val() != '') || ($("#_toPosNo").val() != null && $("#_toPosNo").val() != '')){ //choice at least one
+        if($("#_frPosNo").val() == null || $("#_frPosNo").val() == '' || $("#_toPosNo").val() == null && $("#_toPosNo").val() == ''){
+            Common.alert("* Please select the key-in the POS number (From & To).<br />");
+            return false;
+        }
+    }
+	
+	if($("#_salesAgent").val() != null && $("#_salesAgent").val() != '' ){
+        Common.ajax("GET", "/sales/pos/chkUserIdByUserName", {userName : $("#_salesAgent").val()}, function(result){
+            if(result == null){
+                Common.alert("* Invalid username.<br />");
+                $("#_salesAgent").val('');
+                $("#_hidSalesAgentId").val('');
+                $("#_salesAgent").focus();
+                isFalseChk = false;
+            }else{
+                
+                $("#_hidSalesAgentId").val(result.userId);
+            }
+        },'',{async : false});
+    }
+    
+    if(isFalseChk == false){
+        return false;
+    }
+    
+    if($("#_memberCode").val() != null && $("#_memberCode").val() != ''){
+        Common.ajax("GET", "/sales/pos/chkMemIdByMemCode", {memCode : $("#_memberCode").val()},function(result){
+        
+            if(result == null){
+                Common.alert("* Invalid member code.<br />");  
+                $("#_memberCode").val('');
+                $("#_hidMemberCode").val('');
+                $("#_memberCode").focus();
+                isFalseChk = false;
+            }else{
+                
+                $("#_hidMemberCode").val(result.memId);
+            }
+        }, '' , {async : false});
+    }
+    
+    if(isFalseChk == false){
+        return false;
+    }
+    
+    
+    //validaion Pass
+    return true;
+}
+
+//Clear Btn
+$.fn.clearForm = function() {
+    return this.each(function() {
+        var type = this.type, tag = this.tagName.toLowerCase();
+        if (tag === 'form'){
+            return $(':input',this).clearForm();
+        }
+        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+            this.value = '';
+        }else if (type === 'checkbox' || type === 'radio'){
+            this.checked = false;
+        }else if (tag === 'select'){
+            this.selectedIndex = -1;
+        }
+    });
+};
+
+function fn_insTransactionLogRaw(whereSql){
+	
+	var transacMap = {};
+    transacMap.rptChkPoint = "http://etrust.my.coway.com/sales/pos/posRawDataPop.do";
+    transacMap.rptModule = "POS";
+    transacMap.rptName = "POS Listing";
+    transacMap.rptSubName = "POS Listing - Excel";
+    transacMap.rptEtType = "xlsx";
+    transacMap.rptPath = getContextPath()+"/sales/POSRawData_Filter.rpt";
+    transacMap.rptParamtrValu = "@WhereSQL,"+whereSql;
+    transacMap.rptRem = "";
+    
+    Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
+        if(result == null){
+            Common.alert("<b>Failed to save into log file.</b>");
+        }else{
+            console.log("insert log : " + result.message);
+        }
+    });
+	
 	
 }
 
@@ -167,7 +282,7 @@ function fn_posRawData(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a onclick="javascript: fn_posRawData()" >Generate</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" >Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:$('#searchForm').clearForm();" >Clear</a></p></li>
 </ul>
 </form>
 </section>

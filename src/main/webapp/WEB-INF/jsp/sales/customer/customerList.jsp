@@ -56,11 +56,13 @@
             
             //Validation
             //custId ,  nric , name
-            if((null == $("#custId").val() || '' == $("#custId").val()) && 
-               (null == $("#_nric").val() || '' == $("#_nric").val())  && 
-               (null == $("#name").val() || '' == $("#name").val())){
-                Common.alert("* Please Key in at least one of the 'Customer ID' , 'NRIC/Company No' , 'Customer Name'. ");
-                return;
+            if((null == $("#custId").val() || '' == $("#custId").val()) && (null == $("#_nric").val() || '' == $("#_nric").val())  && (null == $("#name").val() || '' == $("#name").val())){
+            	
+            	//VA number
+            	if($("#custVaNo").val() == null || $("#custVaNo").val() == ''){
+            		Common.alert("* Please Key in at least one of the<br/> 'Customer ID' , 'NRIC/Company No' , 'Customer Name'.<br/> OR Key in 'VA number' ");
+                    return;                    	
+                }
             }
             
             fn_selectPstRequestDOListAjax();
