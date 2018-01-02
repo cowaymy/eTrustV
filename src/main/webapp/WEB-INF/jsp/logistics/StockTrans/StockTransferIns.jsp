@@ -167,22 +167,36 @@ $(function(){
         document.searchForm.submit();
     });
     $('#save').click(function() {
-    	if (f_validatation('save')){
-	    	var dat = GridCommon.getEditData(reqGrid);
-	    	dat.form = $("#headForm").serializeJSON();
-
-	    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
-// 	    		Common.alert(result.message,locationList);
-	    		Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
-	            AUIGrid.resetUpdatedItems(reqGrid, "all");
-	        },  function(jqXHR, textStatus, errorThrown) {
-	            try {
-	            } catch (e) {
-	            }
-
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	        });
-    	}
+    	var rowCount = AUIGrid.getRowCount(reqGrid);
+    	 if (rowCount > 0){
+    	 for (var i = 0 ; i < rowCount ; i++){
+    		var reqty =AUIGrid.getCellValue(reqGrid , i , 'rqty');
+    		 if(""==reqty || null == reqty || 0>= reqty){
+    		  Common.alert("Please Check Request Qty.");
+    		 return false;
+    		 }
+    	 }
+		    	if (f_validatation('save')){
+			    	var dat = GridCommon.getEditData(reqGrid);
+			    	dat.form = $("#headForm").serializeJSON();
+		
+			    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
+		// 	    		Common.alert(result.message,locationList);
+			    		Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
+			            AUIGrid.resetUpdatedItems(reqGrid, "all");
+			        },  function(jqXHR, textStatus, errorThrown) {
+			            try {
+			            } catch (e) {
+			            }
+		
+			            Common.alert("Fail : " + jqXHR.responseJSON.message);
+			        });
+		    	}
+    	 }else{
+    		 Common.alert("Please Check Request Material.");
+    		 return false;
+    	 }
+    	
     });
     $("#sttype").change(function(){
     	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
