@@ -154,6 +154,15 @@
                 <if test='contactNo != null and contactNo != ""'>
                   AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
                 </if>
+                <if test='vaNo != null and vaNo != ""'>
+                  AND V1.CUST_VA_NO = #{vaNo}
+                </if>
+                <if test='serialNo != null and serialNo != ""'>
+                  AND V1.SERIAL_NO = #{serialNo}
+                </if>
+                <if test='sirimNo != null and sirimNo != ""'>
+                  AND V1.SIRIM_NO = #{sirimNo}
+                </if>
                 <if test='crtUserId != null and crtUserId != ""'>
                   AND V1.CRT_USER_ID = #{crtUserId}
                 </if>

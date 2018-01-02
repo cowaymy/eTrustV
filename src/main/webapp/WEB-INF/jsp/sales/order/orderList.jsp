@@ -194,7 +194,8 @@
         if(FormUtil.isEmpty($('#listOrdNo').val())
         && FormUtil.isEmpty($('#listCustId').val())
         && FormUtil.isEmpty($('#listCustName').val())
-        && FormUtil.isEmpty($('#listCustIc').val())) {
+        && FormUtil.isEmpty($('#listCustIc').val())
+        && FormUtil.isEmpty($('#listVaNo').val())) {
             
             if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
                 isValid = false;
@@ -566,15 +567,15 @@
 <tr>
 	<th scope="row"><spring:message code='sales.vaNum'/></th>
 	<td>
-	<input type="text" title="VA Number" placeholder="<spring:message code='sales.vaNum'/>" class="w100p" />
+	<input id="listVaNo" name="vaNo" type="text" title="VA Number" placeholder="<spring:message code='sales.vaNum'/>" class="w100p" />
 	</td>
 	<th scope="row"><spring:message code='sales.SeriacNo'/></th>
 	<td>
-	<input type="text" title="Serial Number" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
+	<input id="listSerialNo" name="serialNo" type="text" title="Serial Number" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
 	</td>
 	<th scope="row"><spring:message code='sales.SirimNo'/></th>
 	<td>
-	<input type="text" title="Sirim Number" placeholder="<spring:message code='sales.SirimNo'/>" class="w100p" />
+	<input id="listSirimNo" name="sirimNo" type="text" title="Sirim Number" placeholder="<spring:message code='sales.SirimNo'/>" class="w100p" />
 	</td>
 </tr>
 <tr>
