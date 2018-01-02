@@ -89,7 +89,7 @@ $(document).ready(function() {
 	         }
 	         
 		
-		
+		   
 		Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
 	        console.log("성공.");
 	        console.log("data : " + result);
