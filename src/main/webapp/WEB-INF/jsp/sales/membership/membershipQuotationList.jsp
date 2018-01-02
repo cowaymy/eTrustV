@@ -114,7 +114,7 @@
                      {dataField :"pacDesc", headerText : "Package", width: 140, editable : false },
                      {dataField :"dur", headerText : "Duration</br>(Mth)",width: 75, editable : false },
                      {dataField :"crtDt", headerText : "Create Date", width: 90,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
-                     {dataField :"crtUserId", headerText : "Package" , width: 120, editable : false }
+                     {dataField :"crtUserId", headerText : "Creator" , width: 120, editable : false }
                     
           ];
 

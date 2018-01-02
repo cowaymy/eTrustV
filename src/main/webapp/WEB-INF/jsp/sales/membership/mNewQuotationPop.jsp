@@ -69,20 +69,12 @@ function fn_doConfirm (){
              if(fn_isActiveMembershipQuotationInfoByOrderNo()){
                  return ;
              }
-             
+
              $("#ORD_ID").val( result[0].ordId);
              $("#ORD_NO_RESULT").val( result[0].ordNo);
              
-             $("#cbt").attr("style","display:none");
-             $("#ORD_NO").attr("style","display:none");
-             $("#sbt").attr("style","display:none");
-
-             $("#rbt").attr("style","display:inline");
-             $("#ORD_NO_RESULT").attr("style","display:inline");
-             $("#resultcontens").attr("style","display:inline");
-             
-             
              fn_getDataInfo();
+             
              fn_outspro();
              
          }
@@ -109,8 +101,30 @@ function  fn_isActiveMembershipQuotationInfoByOrderNo(){
 function fn_getDataInfo (){
     Common.ajax("GET", "/sales/membership/selectMembershipFreeDataInfo", $("#getDataForm").serialize(), function(result) {
          console.log( result);
-         setText(result);
-         setPackgCombo();
+         
+         if(FormUtil.isNotEmpty(result.installation.areaId)){
+        	 
+        	 if("DM" == result.installation.areaId.substring(0,2)){        		 
+        		 
+        		 Common.alert("The customer address of Order is the old address.<br/>Change to the new address in the Customer Management.");
+        		 
+        		 return;
+        		 
+        	 }else{
+                 
+                 $("#cbt").attr("style","display:none");
+                 $("#ORD_NO").attr("style","display:none");
+                 $("#sbt").attr("style","display:none");
+
+                 $("#rbt").attr("style","display:inline");
+                 $("#ORD_NO_RESULT").attr("style","display:inline");
+                 $("#resultcontens").attr("style","display:inline");
+        		 
+                 setText(result);
+                 setPackgCombo();
+        	 }        	 
+         }
+         
     });
  }
 
@@ -158,13 +172,13 @@ function setText(result){
     
    
     
-    var address  =  result.installation.instAddr1 +" "+  
-                            result.installation.instAddr2 +" "+
-                            result.installation.instAddr3 +" "+
-                            result.installation.instPostCode +" "+
+    var address  =  result.installation.instAddrDtl +" "+  
+                            result.installation.instStreet +" "+
                             result.installation.instArea+" "+ 
+                            result.installation.instPostcode +" "+
+                            result.installation.instCity +" " +                            
                             result.installation.instState +" "+ 
-                            result.installation. instCnty;
+                            result.installation.instCountry;
                         
     //$("#address").html();
     

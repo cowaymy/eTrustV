@@ -70,13 +70,8 @@ function fn_doConfirm (){
              }
              
              $("#ORD_NO_RESULT").val( result[0].salesOrdNo);
-             $("#cbt").attr("style","display:none");
-             $("#ORD_NO_P").attr("style","display:none");
-             $("#sbt").attr("style","display:none");
-             $("#rbt").attr("style","display:inline");
-             $("#ORD_NO_RESULT").attr("style","display:inline");
-             $("#resultcontens").attr("style","display:inline");
              $("#ORD_ID").val( result[0].salesOrdId);
+             
 
              fn_getDataInfo(result[0].salesOrdId);
              fn_outspro(result[0].salesOrdId);
@@ -107,8 +102,27 @@ function fn_getDataInfo (_ordid){
         console.log( "fn_getDataInfo===>"+result); 
         console.log( result);
         
-         setText(result);
-         setPackgCombo();
+        if(FormUtil.isNotEmpty(result.installation.areaId)){
+            
+            if("DM" == result.installation.areaId.substring(0,2)){              
+                
+                Common.alert("The customer address of Order is the old address.<br/>Change to the new address in the Customer Management.");
+                
+                return;
+                
+            }else{
+
+		        $("#cbt").attr("style","display:none");
+		        $("#ORD_NO_P").attr("style","display:none");
+		        $("#sbt").attr("style","display:none");
+		        $("#rbt").attr("style","display:inline");
+		        $("#ORD_NO_RESULT").attr("style","display:inline");
+		        $("#resultcontens").attr("style","display:inline");
+		        
+		         setText(result);
+		         setPackgCombo();
+            }           
+        }
     });
  }
 
