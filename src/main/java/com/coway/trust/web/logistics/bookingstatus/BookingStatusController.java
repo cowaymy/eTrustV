@@ -61,20 +61,8 @@ public class BookingStatusController {
 	public ResponseEntity<ReturnMessage> searchBookingStatusList(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO)
     throws Exception
 	{
-		if (!"".equals(params.get("smtype")) || null != params.get("smtype"))
-		{
-			logger.debug("smtype : {}", params.get("smtype"));
-
-			List<Object> tmp = (List<Object>) params.get("smtype");
-			params.put("smList", tmp);
-		}
 
 		List<EgovMap> list = bookingStatusService.searchBookingStatusList(params);
-
-		for (int i = 0; i < list.size(); i++)
-		{
-			logger.debug("list ??  : {}", list.get(i));
-		}
 
 		ReturnMessage message = new ReturnMessage();
 
