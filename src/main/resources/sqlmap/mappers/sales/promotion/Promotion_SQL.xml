@@ -424,6 +424,7 @@
              , T1.PROMO_ITM_RENT_PRIOD
              , T1.PROMO_ITM_OBLIG_PRIOD
              , T1.PROMO_ITM_PV_GST
+             , 'Y' AS SAVED_PV_YN
           FROM SAL0018D T1
           LEFT OUTER
           JOIN SYS0026M T2

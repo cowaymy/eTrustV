@@ -52,6 +52,7 @@
                           , { headerText : "<spring:message code='sales.pv'/>",        dataField : "promoItmPv",  editable : true,  width : 100 }]}
           , { headerText : "itmid",         dataField   : "promoItmStkId",    visible  : false, width : 80 }
           , { headerText : "promoItmId",    dataField   : "promoItmId",       visible  : false, width : 80 }
+          , { headerText : "savedPvYn",     dataField   : "savedPvYn",        visible  : false, width : 80 }
           ];
 
         //AUIGrid 칼럼 설정
@@ -221,10 +222,17 @@
         var addPvVal = FormUtil.isEmpty($('#promoAddDiscPv').val()) ? 0 : $('#promoAddDiscPv').val().trim();
         var newPvVal = 0;
         var gstPvVal = 0;
+        var savedPvYn;
         
         for(var i = 0; i < AUIGrid.getRowCount(stckGridID) ; i++) {
 
-            orgPvVal = AUIGrid.getCellValue(stckGridID, i, "prcPv");
+            savedPvYn = AUIGrid.getCellValue(stckGridID, i, "savedPvYn");
+            
+            if(savedPvYn == "Y") {
+                continue;
+            }
+            
+            orgPvVal  = AUIGrid.getCellValue(stckGridID, i, "prcPv");
 /*
             if($('#exTrade').val() == '1' && $('#promoAppTypeId').val() == '2284') {
                 orgPvVal = orgPvVal * (70/100);
@@ -541,7 +549,8 @@
                         itmname            : data[i].item.itemname,
                         amt                : 0,
                         prcRpf             : 0,
-                        prcPv              : 0
+                        prcPv              : 0,
+                        savedPvYn          : 'N'
                     }
                     aIdx++;
                 }
