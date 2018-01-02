@@ -82,6 +82,7 @@ public class WebInvoiceController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		model.addAttribute("pop", params.get("pop"));
+		model.addAttribute("call", params.get("call"));
 		return "eAccounting/webInvoice/costCenterSearchPop";
 	}
 	
@@ -231,7 +232,9 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/newCompletedMsgPop.do")
-	public String newCompletedMsgPop(ModelMap model) {
+	public String newCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callType", params.get("callType"));
+		model.addAttribute("clmNo", params.get("clmNo"));
 		return "eAccounting/webInvoice/newWebInvoiceCompletedMsgPop";
 	}
 	
