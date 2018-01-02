@@ -382,6 +382,9 @@ function fn_pBudgetCodePop(str){
   $("#pBudgetCode").val("");
   $("#pBudgetCodeName").val("");
   
+//add jgkim
+  var obj = {pop : 'pop'};
+  
   if(budgetStr == "send"){
       
       $("#sendBudgetCode").val("");
@@ -394,12 +397,21 @@ function fn_pBudgetCodePop(str){
               $("#recvBudgetCodeName").val("");
           }
       }
+      
+   // add jgkim
+      if("${mgrYn}" == "Y") {
+          obj.call = 'budgetAdj';
+      }
   }else{
       $("#recvBudgetCode").val("");
       $("#recvBudgetCodeName").val("");
+      
+      if($("#pAdjustmentType").val() == "04"){
+          obj.call = 'budgetAdj';
+      }
   }
   
-  Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do", {pop:'pop'}, null, true, "budgetCodeSearchPop");
+  Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do", obj, null, true, "budgetCodeSearchPop");
 }  
 
 
@@ -432,6 +444,9 @@ function fn_pGlAccountSearchPop(str){
   $("#pGlAccCode").val("");
   $("#pGlAccCodeName").val("");
   
+//add jgkim
+  var obj = {pop : 'pop'};
+  
   if(glStr =="send"){
       $("#sendGlAccCode").val("");
       $("#sendGlAccCodeName").val("");
@@ -443,12 +458,21 @@ function fn_pGlAccountSearchPop(str){
               $("#recvGlAccCodeName").val("");
           }         
       }
+      
+   // add jgkim
+      if("${mgrYn}" == "Y") {
+          obj.call = 'budgetAdj';
+      }
   }else{
       $("#recvGlAccCode").val("");
       $("#recvGlAccCodeName").val("");
+      
+      if($("#pAdjustmentType").val() == "05"){
+          obj.call = 'budgetAdj';
+      }
   }
   
-  Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", {pop:'pop'}, null, true, "glAccountSearchPop");
+  Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", obj, null, true, "glAccountSearchPop");
 }
 
 function fn_setPopGlData(){
@@ -479,6 +503,10 @@ function fn_pCostCenterSearchPop(str) {
 
   $("#search_costCentr").val("");
   $("#search_costCentrName").val("");
+  
+  // add jgkim
+var obj = {pop : 'pop'};
+  
  if(costStr =="send"){
       
       $("#sendCostCenter").val("");
@@ -491,11 +519,17 @@ function fn_pCostCenterSearchPop(str) {
               $("#recvCostCenterName").val("");
           }
       } 
+      
+   // add jgkim
+      if("${mgrYn}" == "Y") {
+          obj.call = 'budgetAdj';
+      }
   }else{
       $("#recvCostCenter").val("");
       $("#recvCostCenterName").val("");
   }
-  Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:'pop'}, null, true, "costCenterSearchPop");
+ 
+ Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", obj, null, true, "costCenterSearchPop");
 }
 
 function fn_setPopCostCenter (){

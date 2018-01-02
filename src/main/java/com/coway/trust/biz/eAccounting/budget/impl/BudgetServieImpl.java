@@ -77,6 +77,12 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 	}
 
 	@Override
+	public List<EgovMap> selectAdjustmentCBG(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectAdjustmentCBG(params);
+	}
+
+	@Override
 	public EgovMap selectAvailableBudgetAmt(Map<String, Object> params) throws Exception {
 		return budgetMapper.selectAvailableBudgetAmt(params);
 	}

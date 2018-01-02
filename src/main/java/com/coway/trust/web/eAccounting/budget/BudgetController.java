@@ -147,6 +147,7 @@ public class BudgetController {
 		
 		List<EgovMap> budgetList = null;
 		
+		// add jgkim
 		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
 		List<Object> roleIdList = new ArrayList<Object>();
 		for(int i = 0; i < roleIds.length; i++) {
@@ -157,13 +158,29 @@ public class BudgetController {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 		
-		LOGGER.debug("groupCd =====================================>>  " + params);
+		LOGGER.debug("params =====================================>>  " + params);
 		
 		budgetList = budgetService.selectMonthlyBudgetList(params);
 		
 		return ResponseEntity.ok(budgetList);
 		
-	}	
+	}
+	
+	// add jgkim
+	@RequestMapping(value = "/selectAdjustmentCBG.do", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectAdjustmentCBG (@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{	
+		
+		List<EgovMap> info = null;
+		
+		params.put("costCentr", sessionVO.getCostCentr());
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		info = budgetService.selectAdjustmentCBG(params);
+		
+		return ResponseEntity.ok(info);
+		
+	}
 	
 	@RequestMapping(value = "/availableBudgetDisplayPop.do")
 	public String availableBudgetDisplay (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
@@ -263,7 +280,7 @@ public class BudgetController {
 	}
 	
 	@RequestMapping(value = "/selectAdjustmentList")
-	public ResponseEntity <List<EgovMap>>  selectAdjustmentList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
+	public ResponseEntity <List<EgovMap>>  selectAdjustmentList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{
 		
 		LOGGER.debug("params =====================================>>  " + params);
 
@@ -272,6 +289,16 @@ public class BudgetController {
 
 		params.put("budgetAdjType", budgetAdjType);
 		params.put("appvStus", appvStus);
+		
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		List<Object> roleIdList = new ArrayList<Object>();
+		for(int i = 0; i < roleIds.length; i++) {
+			roleIdList.add(roleIds[i]);
+		}
+		
+		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+			params.put("costCentr", sessionVO.getCostCentr());
+		}
 		
 		List<EgovMap> adjustmentList = null; 
 		
@@ -310,9 +337,22 @@ public class BudgetController {
 	}
 		
 	@RequestMapping(value = "/budgetAdjustmentPop.do")
-	public String budgetAdjustment (@RequestParam Map<String, Object> params,   ModelMap model) throws Exception{
+	public String budgetAdjustment (@RequestParam Map<String, Object> params,   ModelMap model, SessionVO sessionVO) throws Exception{
 		
 		LOGGER.debug("params =====================================>>  " + params);
+		
+		// add jgkim
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		List<Object> roleIdList = new ArrayList<Object>();
+		for(int i = 0; i < roleIds.length; i++) {
+			roleIdList.add(roleIds[i]);
+		}
+		
+		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+			model.addAttribute("mgrYn", "Y");
+		} else {
+			model.addAttribute("mgrYn", "N");
+		}
 		
 		model.addAttribute("budgetStatus", "Y");
 		

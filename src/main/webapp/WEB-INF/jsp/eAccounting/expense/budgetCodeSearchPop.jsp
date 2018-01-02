@@ -68,6 +68,13 @@ $(document).ready(function() {
     	 $("#budgetCodeSearchPop").remove();
     });
     
+ // add jgkim
+    if("${call}" == "budgetAdj") {
+        $("#search_btn").click(fn_selectAdjustmentCBG);
+    } else {
+        $("#search_btn").click(fn_selectBudgetListAjax);
+    }
+    
 });
 
 //리스트 조회.
@@ -77,6 +84,14 @@ function fn_selectBudgetListAjax() {
          console.log("성공.");
          console.log( result);
          
+        AUIGrid.setGridData(bgGridID, result);
+    });
+}
+
+// add jgkim
+function fn_selectAdjustmentCBG() {
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#bgSForm").serializeJSON(), function(result) {
+        console.log(result);
         AUIGrid.setGridData(bgGridID, result);
     });
 }
@@ -94,7 +109,7 @@ function fn_selectBudgetListAjax() {
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectBudgetListAjax();"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
+	<li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span><spring:message code="expense.btn.Search" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->

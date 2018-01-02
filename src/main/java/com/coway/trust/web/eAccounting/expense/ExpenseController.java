@@ -83,12 +83,14 @@ public class ExpenseController {
 	@RequestMapping(value = "/budgetCodeSearchPop.do")
 	public String budgetCodeSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{	
 		model.addAttribute("pop", params.get("pop"));
+		model.addAttribute("call", params.get("call"));
 		return "eAccounting/expense/budgetCodeSearchPop";
 	}
 	
 	@RequestMapping(value = "/glAccountSearchPop.do")
 	public String glAccountSearchPop (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{		
 		model.addAttribute("pop", params.get("pop"));
+		model.addAttribute("call", params.get("call"));
 		return "eAccounting/expense/glAccountSearchPop";
 	}
 	

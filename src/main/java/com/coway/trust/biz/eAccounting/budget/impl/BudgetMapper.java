@@ -19,6 +19,8 @@ public interface BudgetMapper {
 	
 	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception;
 	
+	List<EgovMap> selectAdjustmentCBG( Map<String, Object> params) throws Exception; 
+	
 	EgovMap selectAvailableBudgetAmt( Map<String, Object> params) throws Exception;
 	
 	List<EgovMap> selectAdjustmentAmount( Map<String, Object> params) throws Exception;

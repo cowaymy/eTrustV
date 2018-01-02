@@ -15,7 +15,9 @@ public interface BudgetService {
 
     int udtBudgetSysMaintGrid(List<Object> addList, String loginId);
 
-	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception; 
+	List<EgovMap> selectMonthlyBudgetList( Map<String, Object> params) throws Exception;
+	
+	List<EgovMap> selectAdjustmentCBG( Map<String, Object> params) throws Exception; 
 	
 	EgovMap selectAvailableBudgetAmt ( Map<String, Object> params) throws Exception;
 

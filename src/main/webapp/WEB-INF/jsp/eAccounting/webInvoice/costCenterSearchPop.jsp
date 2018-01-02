@@ -49,11 +49,26 @@ $(document).ready(function () {
         
          $("#costCenterSearchPop").remove();
 	});
+	
+	// add jgkim
+	if("${call}" == "budgetAdj") {
+		$("#search_btn").click(fn_selectAdjustmentCBG);
+	} else {
+		$("#search_btn").click(fn_selectCostCenter);
+	}
 });
 
 function fn_selectCostCenter() {
-    Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do", $("#form_costCenter").serializeJSON(), function(result) {
+    Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), $("#form_costCenter").serializeJSON(), function(result) {
         AUIGrid.setGridData(costCenterGridID, result);
+    });
+}
+
+// add jgkim
+function fn_selectAdjustmentCBG() {
+    Common.ajax("GET", "/eAccounting/budget/selectAdjustmentCBG.do?_cacheId=" + Math.random(), $("#form_costCenter").serializeJSON(), function(result) {
+    	console.log(result);
+        AUIGrid.setGridData(costCenterGridID, result[0]);
     });
 }
 </script>
@@ -70,7 +85,7 @@ function fn_selectCostCenter() {
 <section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectCostCenter()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+	<li><p class="btn_blue"><a href="#" id="search_btn"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -89,7 +104,7 @@ function fn_selectCostCenter() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="w100p" name="costCenter" /></td>
+	<td><input type="text" title="" placeholder="" class="w100p" id="costCenter" name="costCenter" /></td>
 	<th scope="row"><spring:message code="costCentr.costCenterText" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" name="costCenterText" /></td>
 </tr>

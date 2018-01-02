@@ -346,6 +346,90 @@ SELECT BUDGET_PLAN_YEAR ,
          ORDER BY COST_CENTR
   </select>
   
+  <select id="selectAdjustmentCBG" parameterType="Map" resultType="egovMap">
+SELECT COST_CENTER, 
+       COST_CENTER_TEXT, 
+       GL_ACC_CODE, 
+       GL_ACC_DESC, 
+       BUDGET_CODE, 
+       BUDGET_CODE_TEXT, 
+       START_DT, 
+       END_DT 
+FROM   (SELECT COST_CENTR                             AS COST_CENTER, 
+               (SELECT B.COST_CENTER_TEXT 
+                FROM   FCM0008M B 
+                WHERE  B.COST_CENTER = A.COST_CENTR)  COST_CENTER_TEXT, 
+               GL_ACC_CODE, 
+               (SELECT B.GL_ACC_DESC 
+                FROM   FCM0009M B 
+                WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC, 
+               BUDGET_CODE, 
+               (SELECT B.BUDGET_CODE_TEXT 
+                FROM   FCM0010M B 
+                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT, 
+               (SELECT TO_CHAR(B.START_DT, 'DD-MM-YYYY') 
+                FROM   FCM0010M B 
+                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) START_DT, 
+               (SELECT TO_CHAR(B.END_DT, 'DD-MM-YYYY') 
+                FROM   FCM0010M B 
+                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) END_DT 
+        FROM   (SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR, 
+                       A.COST_CENTR, 
+                       A.GL_ACC_CODE, 
+                       A.BUDGET_CODE 
+                FROM   (SELECT * 
+                        FROM   (SELECT A.COST_CENTR, 
+                                       A.BUDGET_CODE, 
+                                       A.GL_ACC_CODE, 
+                                       A.BUDGET_ADJ_YEAR, 
+                                       A.BUDGET_ADJ_MONTH 
+                                FROM   FCM0103D A, 
+                                       FCM0102M B 
+                                WHERE  A.BUDGET_DOC_NO = B.BUDGET_DOC_NO 
+                                       AND B.APPV_STUS = 'C' 
+                                GROUP  BY A.BUDGET_ADJ_YEAR, 
+                                          A.BUDGET_ADJ_MONTH, 
+                                          A.COST_CENTR, 
+                                          A.BUDGET_CODE, 
+                                          A.GL_ACC_CODE) A) A 
+                UNION ALL 
+                SELECT A.BUDGET_PLAN_YEAR, 
+                       A.COST_CENTR, 
+                       A.GL_ACC_CODE, 
+                       A.BUDGET_CODE 
+                FROM   (SELECT * 
+                        FROM   FCM0101M A) A 
+                       LEFT OUTER JOIN FCM0104D C 
+                                    ON A.COST_CENTR = C.COST_CENTR 
+                                       AND A.BUDGET_CODE = C.BUDGET_CODE 
+                                       AND A.GL_ACC_CODE = C.GL_ACC_CODE) A 
+        WHERE  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND A.COST_CENTR = #{costCentr}
+        GROUP  BY BUDGET_PLAN_YEAR, 
+                  COST_CENTR, 
+                  GL_ACC_CODE, 
+                  BUDGET_CODE 
+        ORDER  BY COST_CENTR) T 
+WHERE 1=1 
+       <if test="costCenter != null and costCenter != '' " >
+            AND COST_CENTER = #{costCenter}
+       </if>
+       <if test="costCenterText != null and costCenterText != '' " >
+            AND COST_CENTER_TEXT = #{costCenterText}
+       </if>
+       <if test="budgetCode != null and budgetCode != '' " >
+            AND BUDGET_CODE = #{budgetCode}
+       </if>
+       <if test="budgetCodeText != null and budgetCodeText != '' " >
+            AND BUDGET_CODE_TEXT = #{budgetCodeText}
+       </if>
+       <if test="glAccCode != null and glAccCode != '' " >
+            AND GL_ACC_CODE = #{glAccCode}
+       </if>
+       <if test="glAccCodeDesc != null and glAccCodeDesc != '' " >
+            AND GL_ACC_DESC = #{glAccCodeDesc}
+       </if>
+  </select>
+  
   <select id="selectAvailableBudgetAmt" parameterType="Map" resultType="egovMap">
   <![CDATA[
       SELECT A.PLAN_AMT
