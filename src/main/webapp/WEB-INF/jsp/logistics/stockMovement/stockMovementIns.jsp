@@ -164,7 +164,10 @@ $(function(){
     });
     $('#save').click(function() {
     	var addedItems = AUIGrid.getColumnValues(reqGrid,"rqty");
-    	if (addedItems.length > 0){
+    	if (addedItems.length <= 0){
+    		Common.alert("Plese Check Request Item Grid Request Qty.");
+    		return false;
+        }else{
             for (var i = 0 ; i < addedItems.length ; i++){
                 if(""==addedItems[i] || 0==addedItems[i]){
                     Common.alert("Plese Check Request Item Grid Request Qty.");
