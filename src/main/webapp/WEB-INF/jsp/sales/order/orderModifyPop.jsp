@@ -1875,6 +1875,9 @@
     function fn_doSaveReferral() {
         console.log('!@# fn_doSaveReferral START');
         
+        // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+        AUIGrid.forceEditingComplete(modRfrGridID, null, false);
+        
         var orderModifyVO = {
             salesOrdId         : ORD_ID,
             gridReferralVOList : GridCommon.getEditData(modRfrGridID)
