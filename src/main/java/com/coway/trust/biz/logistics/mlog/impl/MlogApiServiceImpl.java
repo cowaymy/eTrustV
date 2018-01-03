@@ -397,7 +397,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		receiveMap.put("giptdate", MlogApiMapper.dateParsing(confirmReceiveMForm.getRequestDate()));
 		logger.debug("receiveMap : {}", receiveMap);
 
-		//MlogApiMapper.StockMovementIssue(receiveMap);
+		MlogApiMapper.StockMovementIssue(receiveMap);
 
 	}
 
