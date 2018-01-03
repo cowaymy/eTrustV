@@ -18,11 +18,10 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.util.CRJavaHelper;
+import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
@@ -62,19 +61,109 @@ public class ReportBatchController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@RequestMapping(value = "/view-proc/SQLColorGrid_NoRental-Out-Ins_Excel.do")
-	@Scheduled(cron = "0 0 5 * * *") //매일 5시에 실행 // sample : http://fmaker7.tistory.com/163
-	public void viewProcGet() {
+	@RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel.do")
+	@Scheduled(cron = "0 0 4 * * *") // 매일 4시에 실행 // sample : http://fmaker7.tistory.com/163
+	public void sqlColorGridNoRentalOutInsExcel() {
 		LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
 		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/SQLColorGrid_NoRental-Out-Ins_Excel.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME, uploadDirWeb + File.separator + "RawData" + File.separator
-				+ "ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xls");
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
+	}
+
+	@RequestMapping(value = "/SQLColorGrid_NoRental-Out-Ins_Excel_S.do")
+	@Scheduled(cron = "0 10 4 * * *")
+	public void sqlColorGridNoRentalOutInsExcelS() {
+		LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel_S...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/SQLColorGrid_NoRental-Out-Ins_Excel_S.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "ColorGrid_NonRentOutIns_S" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel_S...");
+	}
+
+	@RequestMapping(value = "/ColorGrid_Daily_2017_Jan_Dec_S.do")
+	@Scheduled(cron = "0 0 3 * * *")
+	public void colorGridDaily2017JanDecS() {
+		LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Daily_2017_Jan_Dec_S.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2017_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
+	}
+
+	@RequestMapping(value = "/RentalMembership_CCP.do")
+	@Scheduled(cron = "0 20 4 * * *")
+	public void rentalMembershipCCP() {
+		LOGGER.info("[START] RentalMembership_CCP...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RentalMembership_CCP.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "RentalMembership_CCP" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RentalMembership_CCP...");
+	}
+
+	@RequestMapping(value = "/Membership_OUT_REN_Raw.do")
+	@Scheduled(cron = "0 30 4 * * *")
+	public void membershipOutRenRaw() {
+		LOGGER.info("[START] Membership_OUT_REN_Raw...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/Membership_OUT_REN_Raw.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "Membership_OUT_REN_Raw" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] Membership_OUT_REN_Raw...");
+	}
+
+	@RequestMapping(value = "/RCM_Daily_2015_S.do")
+	@Scheduled(cron = "0 0 5 * * *")
+	public void rcmDaily2015S() {
+		LOGGER.info("[START] RCM_Daily_2015_S...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "RCM_Daily_2015_S" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RCM_Daily_2015_S...");
+	}
+
+	@RequestMapping(value = "/RCM_Daily_2015_S_2.do")
+	@Scheduled(cron = "0 0 5 * * *")
+	public void rcmDaily2015S2() {
+		LOGGER.info("[START] RCM_Daily_2015_S_2...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S_2.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "RCM_Daily_2015_S_2" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RCM_Daily_2015_S_2...");
 	}
 
 	private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
@@ -108,15 +197,46 @@ public class ReportBatchController {
 		}
 	}
 
-	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
-	public void viewGet() throws IOException {
+	@RequestMapping(value = "/HP_OwnPurchase.do")
+	@Scheduled(cron = "0 40 4 * * *") // 매일 5시에 실행 // sample : http://fmaker7.tistory.com/163
+	public void hPOwnPurchase() throws IOException {
+		LOGGER.info("[START] HP_OwnPurchase...");
 		Map<String, Object> params = new HashMap<>();
-		params.put(REPORT_FILE_NAME, "/visualcut/xxxxxxxxxx.rpt");
-		params.put(REPORT_VIEW_TYPE, "EXCEL");
-		params.put("V_TEMP", "TEMP");
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME, uploadDirWeb + File.separator + "RawData" + File.separator
-				+ "ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xls");
+		params.put(REPORT_FILE_NAME, "/visualcut/HP_OwnPurchase.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "HP_OwnPurchase" + CommonUtils.getNowDate() + ".xls");
+
 		this.view(null, null, params);
+		LOGGER.info("[END] HP_OwnPurchase...");
+	}
+
+	@RequestMapping(value = "/LCD_StockTransfer.do")
+	@Scheduled(cron = "0 50 4 * * *")
+	public void lcdStockTransfer() throws IOException {
+		LOGGER.info("[START] LCD_StockTransfer...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/LCD_StockTransfer.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "LCD_StockTransfer" + CommonUtils.getNowDate() + ".xls");
+
+		this.view(null, null, params);
+		LOGGER.info("[END] LCD_StockTransfer...");
+	}
+
+	@RequestMapping(value = "/RCM_Daily_Simplified.do")
+	@Scheduled(cron = "0 10 5 * * *")
+	public void rcmDailySimplified() throws IOException {
+		LOGGER.info("[START] RCM_Daily_Simplified...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "RCM_Daily_Simplified" + CommonUtils.getNowDate() + ".xls");
+
+		this.view(null, null, params);
+		LOGGER.info("[END] RCM_Daily_Simplified...");
 	}
 
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)

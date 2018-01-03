@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.util.CRJavaHelper;
+import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;

@@ -1,4 +1,4 @@
-package com.coway.trust.util;
+package com.coway.trust.cmmn;
 
 import java.io.*;
 import java.nio.file.StandardCopyOption;
@@ -14,12 +14,17 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.stereotype.Component;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileUtil;
 import com.crystaldecisions.sdk.occa.report.application.DataDefController;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.*;
@@ -36,6 +41,7 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 /**
  * crystal report helper
  */
+@Component
 public class CRJavaHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CRJavaHelper.class);
@@ -46,7 +52,11 @@ public class CRJavaHelper {
 	public static final String PDF = "pdf";
 	public static final String COL_WIDTH = "colWidth";
 
-	private CRJavaHelper() {
+	private static String uploadDirWeb;
+
+	@Autowired
+	private CRJavaHelper(@Value("${web.resource.upload.file}") String uploadDirWeb) {
+		this.uploadDirWeb = uploadDirWeb;
 	}
 
 	/**
@@ -801,10 +811,9 @@ public class CRJavaHelper {
 					name = "Report-" + extension;
 				}
 
-					response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
-					/// callback 호출시 필수.
-					response.setHeader("Content-Disposition",
-							"attachment; filename=\"" + name + "." + extension + "\"");
+				response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
+				/// callback 호출시 필수.
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "." + extension + "\"");
 			}
 
 			if (response != null) {
@@ -815,12 +824,23 @@ public class CRJavaHelper {
 			} else {
 				LOGGER.info("this line is batch call =>downFileName : {}, mimeType : {}", downFileName, mimeType);
 
-				File targetFile = new File(downFileName);
-				if (!targetFile.exists()) {
-					LOGGER.debug("make dir...");
-					targetFile.mkdirs();
+				File targetFile1 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Public"
+						+ File.separator + downFileName);
+				File targetFile2 = new File(uploadDirWeb + File.separator + "RawData" + File.separator + "Privacy"
+						+ File.separator + downFileName);
+				if (!targetFile1.exists()) {
+					LOGGER.debug("make dir1...");
+					targetFile1.mkdirs();
 				}
-				java.nio.file.Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				if (!targetFile2.exists()) {
+					LOGGER.debug("make dir2...");
+					targetFile2.mkdirs();
+				}
+
+				java.nio.file.Files.copy(is, targetFile1.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				java.nio.file.Files.copy(targetFile1.toPath(), targetFile2.toPath(),
+						StandardCopyOption.REPLACE_EXISTING);
+
 				IOUtils.closeQuietly(is);
 			}
 
