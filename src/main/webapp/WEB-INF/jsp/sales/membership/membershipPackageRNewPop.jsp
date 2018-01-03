@@ -483,7 +483,14 @@ function fn_ValidRequiredField_Master(){
   }
   
   if($('#SRV_CNTRCT_PAC_START_DT_POP').val() !="" && $('#SRV_CNTRCT_PAC_END_DT_POP').val() !=""){
-	  if($('#SRV_CNTRCT_PAC_START_DT_POP').val() > $('#SRV_CNTRCT_PAC_END_DT_POP').val()){
+	  
+	  var st = $("#SRV_CNTRCT_PAC_START_DT_POP").val().replace(/\//g,'');
+      var ed = $("#SRV_CNTRCT_PAC_END_DT_POP").val().replace(/\//g,'');
+      
+      var stDate = st.substring(4,8) +""+ st.substring(2,4) +""+ st.substring(0,2);
+      var edDate = ed.substring(4,8) +""+ ed.substring(2,4) +""+ ed.substring(0,2);
+                      
+      if(stDate > edDate ){	  
 	      valid = false;
 	      message += "* <spring:message code='commission.alert.dateGreaterCheck'/> <br />";
 	  }
