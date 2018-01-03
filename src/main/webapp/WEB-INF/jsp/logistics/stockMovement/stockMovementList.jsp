@@ -45,7 +45,7 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "reqstqty",headerText :"<spring:message code='log.head.requestedqty'/>"                  ,width:120    ,height:30                },                         
                      {dataField: "delvno",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},                       
                      {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },                         
-                     {dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipted'/>"                    ,width:120    ,height:30              },                        
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceipted'/>"                    ,width:120    ,height:30              },                        
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },                         
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
                      {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },                         
