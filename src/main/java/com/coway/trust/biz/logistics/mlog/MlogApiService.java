@@ -118,5 +118,7 @@ public interface MlogApiService {
 	void inputNonBarcode(InputNonBarcodeForm inputNonBarcodeForm);
 
 	void inputBarcode(List<InputBarcodePartsForm> inputBarcodePartsForm);
+	
+	Map<String, Object> selectDelvryGRcmplt(String delNo);
 
 }
