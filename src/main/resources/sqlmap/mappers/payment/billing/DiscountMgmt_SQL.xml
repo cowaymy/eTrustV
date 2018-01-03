@@ -216,10 +216,10 @@
 	       Extent1.DC_END_INSTLMT DC_END_INSTLMT  ,
 	       Extent1.CRT_DT CRT_DT  ,
 	       Extent1.CRT_USER_ID CRT_USER_ID  ,
-	       Extent4.USER_NAME USER_NAME  ,
+	       Extent4.USER_NAME CRT_USER_NAME  ,
 	       Extent1.UPD_DT UPD_DT  ,
 	       Extent1.UPD_USER_ID UPD_USER_ID  ,
-	       Extent3.USER_NAME USERNAME1  ,
+	       Extent3.USER_NAME UPD_USER_NAME  ,
 	       Extent1.DC_STUS_ID DC_STUS_ID  ,
 	       Extent7.NAME NAME1  ,
 	       Extent1.DC_START_INSTLMT ||' ~ '|| Extent1.DC_END_INSTLMT AS DISCOUNT_PERIOD
