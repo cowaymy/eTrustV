@@ -17,6 +17,7 @@ $(document).ready(function(){
 //리스트 조회.
 function fn_selectListAjax() {
 	
+	
 	if($("#stRsCnvrCrtDt").val() !=""){
         if($("#edRsCnvrCrtDt").val()==""){
              var msg = '<spring:message code="sales.CreateDate" />';
@@ -25,7 +26,14 @@ function fn_selectListAjax() {
                 });
                 return;
         }else{
-        	if($("#stRsCnvrCrtDt").val() >   $("#edRsCnvrCrtDt").val() ){
+        	
+        	   var st = $("#stRsCnvrCrtDt").val().replace(/\//g,'');
+        	    var ed = $("#edRsCnvrCrtDt").val().replace(/\//g,'');
+        	    
+        	    var stDate = st.substring(4,8) +""+ st.substring(2,4) +""+ st.substring(0,2);
+        	    var edDate = ed.substring(4,8) +""+ ed.substring(2,4) +""+ ed.substring(0,2);
+        	                    
+        	    if(stDate > edDate ){        	
             	 Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
                      $("#edRsCnvrCrtDt").focus();
                  });
@@ -43,7 +51,15 @@ function fn_selectListAjax() {
 
                 return;
         }else{
-        	if($("#stRsCnvrCnfmDt").val() >   $("#edRsCnvrCnfmDt").val() ){
+        	
+        	var st = $("#stRsCnvrCnfmDt").val().replace(/\//g,'');
+            var ed = $("#edRsCnvrCnfmDt").val().replace(/\//g,'');
+            
+            var stDate = st.substring(4,8) +""+ st.substring(2,4) +""+ st.substring(0,2);
+            var edDate = ed.substring(4,8) +""+ ed.substring(2,4) +""+ ed.substring(0,2);
+                            
+            if(stDate > edDate ){ 
+        	
             	 Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
                      $("#edRsCnvrCnfmDt").focus();
                  });
