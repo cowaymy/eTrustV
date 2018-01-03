@@ -328,7 +328,7 @@
 	          <if test="deptCode != null and deptCode != ''">
 	              AND F1.DEPT_CODE = #{deptCode}
 	          </if>
-	          <if test="memCode != null and memCode != ''">
+	          <if test="memCode != null and memCode != ''" >
                   AND F1.MEM_CODE = #{memCode}
               </if>
 	          <if test="ordNo != null and ordNo != ''">
