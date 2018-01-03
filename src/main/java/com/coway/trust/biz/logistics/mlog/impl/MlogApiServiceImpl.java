@@ -287,6 +287,13 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		// TODO Auto-generated method stub
 		return MlogApiMapper.selectStockMovementSerial(params);
 	}
+	
+	@Override 
+	public Map<String, Object> selectDelvryGRcmplt(String delNo) {
+		// TODO Auto-generated method stub
+		return MlogApiMapper.selectDelvryGRcmplt(delNo);
+	}
+	
 
 	@Override
 	public void stockMovementReqDelivery(List<StockTransferConfirmGiMForm> stockTransferConfirmGiMForm) {
@@ -321,6 +328,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 			}
 
 			if (i == 0) {
+				System.out.println("i ???  :  "+i);
 				MlogApiMapper.insertDeliveryStockMovement(insMap);
 				MlogApiMapper.updateRequestMovement(insMap);
 			}
@@ -389,7 +397,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		receiveMap.put("giptdate", MlogApiMapper.dateParsing(confirmReceiveMForm.getRequestDate()));
 		logger.debug("receiveMap : {}", receiveMap);
 
-		MlogApiMapper.StockMovementIssue(receiveMap);
+		//MlogApiMapper.StockMovementIssue(receiveMap);
 
 	}
 
