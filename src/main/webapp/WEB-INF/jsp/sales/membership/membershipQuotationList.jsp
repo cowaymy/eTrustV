@@ -122,7 +122,16 @@
    	                });
    	                return;
    	        }else{
-   	            if($("#CRT_SDT").val() >   $("#CRT_EDT").val() ){
+   	        	
+   	        	var st = $("#CRT_SDT").val().replace(/\//g,'');
+   	        	var ed = $("#CRT_EDT").val().replace(/\//g,'');
+   	        	
+   	        	var stDate = st.substring(4,8) +""+ st.substring(2,4) +""+ st.substring(0,2);
+   	        	var edDate = ed.substring(4,8) +""+ ed.substring(2,4) +""+ ed.substring(0,2);
+   	        	
+   	        	alert(stDate +" :: "+ edDate);
+   	        	
+   	            if(stDate > edDate ){
    	                 Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
    	                     $("#CRT_EDT").focus();
    	                 });
