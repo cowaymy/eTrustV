@@ -1033,7 +1033,7 @@ public class ClaimController {
 
 		try {			
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");			
-			sFile = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + "01.DIF";
+			sFile = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01.DIF";
 			
 			downloadHandler = getTextDownloadPBBHandler(sFile, claimFileColumns, null, filePath, "/PBB/ClaimBank/", claimMap);			
 			
@@ -1068,7 +1068,7 @@ public class ClaimController {
 		/*********************************************
 		 * Second file
 		 *********************************************/
-		String sFile2nd = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + "01.DTR";
+		String sFile2nd = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01.DTR";
 
 		// 파일 디렉토리
 		File file2nd = new File(filePath + "/PBB/ClaimBank/" + sFile2nd);

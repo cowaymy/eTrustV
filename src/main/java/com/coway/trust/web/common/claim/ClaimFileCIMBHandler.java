@@ -1,6 +1,7 @@
 package com.coway.trust.web.common.claim;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -45,6 +46,9 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 	String sHashTot = "";
 	int endIndex = 0;
 	String sTextBtn = "";
+	
+	BigDecimal amount = null;
+	BigDecimal hunred = new BigDecimal(100);
 
 	public ClaimFileCIMBHandler(FileInfoVO fileInfoVO, Map<String, Object> params) {
 		super(fileInfoVO, params);
@@ -110,7 +114,13 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 				? ((String) dataRow.get("bankDtlDrNric")).trim().substring(0, 16)
 				: StringUtils.rightPad((String) dataRow.get("bankDtlDrNric"), 16, " ");
 
-		sLimit = ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100;
+		//sLimit = ((java.math.BigDecimal) dataRow.get("bankDtlAmt")).longValue() * 100;
+		
+		//금액 계산
+		amount = (BigDecimal)dataRow.get("bankDtlAmt");						
+		sLimit = amount.multiply(hunred).longValue();
+				
+				
 		iTotalAmt = iTotalAmt + sLimit;
 		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(sDrAccNo.trim());
 		iTotalCnt++;

@@ -108,12 +108,12 @@ public class ClaimFileRHBHandler extends BasicTextDownloadHandler implements Res
     		amount = (BigDecimal)dataRow.get("bankDtlAmt");		
     		sLimit = StringUtils.leftPad(String.valueOf(amount.multiply(hunred).longValue()), 15, "0");
     		
-    		sDocno = StringUtils.rightPad((String.valueOf(dataRow.get("cntrctNOrdNo"))).trim(), 20, "0");
+    		sDocno = StringUtils.rightPad((String.valueOf(dataRow.get("cntrctNOrdNo"))).trim(), 20, " ");
     		iHashTot = this.CalculateCheckSum_RHB( amount.multiply(hunred).longValue()      ,sDrAccNo.trim(), iHashTot);
     		//iTotalAmt = iTotalAmt + Double.parseDouble(sLimit.trim());
-    		iTotalAmt = iTotalAmt + amount.multiply(hunred).longValue();
+    		iTotalAmt = iTotalAmt + amount.multiply(hunred).longValue(); 
     		
-    		stextDetails = CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "ddMMyyyy") + "00035" + "061" + "001"
+    		stextDetails = CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "ddMMyyyy") + "00035" + "400" + "001"
     								+ "1" + sDrAccNo + StringUtils.rightPad("", 16, " ") + sDrName
     								+ StringUtils.rightPad("", 12, " ") + sLimit + sDocno + StringUtils.rightPad("", 10, " ")
     								+ StringUtils.rightPad("0", 15, " ") + StringUtils.rightPad("0", 15, " ")
