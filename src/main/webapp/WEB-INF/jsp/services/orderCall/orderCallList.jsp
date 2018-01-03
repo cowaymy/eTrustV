@@ -12,8 +12,8 @@
 
 //Start AUIGrid
 $(document).ready(function() {
-	
-	
+    
+    
     // AUIGrid 그리드를 생성합니다.
     orderCallListGrid();
     
@@ -26,14 +26,14 @@ $(document).ready(function() {
         });
  */
  
-		 AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-			 callStusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
-		        callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
-		        salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
-		        callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
-		        salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
-		     Common.popupDiv("/callCenter/viewCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
-		 }); 
+         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+             callStusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
+                callStusId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusId");
+                salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+                callEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "callEntryId");
+                salesOrdNo = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdNo");
+             Common.popupDiv("/callCenter/viewCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
+         }); 
      AUIGrid.bind(myGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
         callStusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "callStusCode");
@@ -49,8 +49,8 @@ $(document).ready(function() {
      
  
  doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType',     'M', 'fn_multiCombo'); //Common Code
- doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDSCCode', 'S', ''); //Branch Code
- doGetProductCombo('/common/selectProductCodeList.do', '', '', 'product', 'S'); //Product Code
+ doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDSCCode', 'S', 'fn_multiCombo'); //Branch Code
+ //doGetProductCombo('/common/selectProductCodeList.do', '', '', 'product', 'S'); //Product Code
  
  
   doGetCombo('/callCenter/getstateList.do', '', '','ordStatus', 'S' ,  '');
@@ -72,36 +72,37 @@ $(document).ready(function() {
 });
 
     function fn_multiCombo(){
-    	 $('#listAppType').change(function() {
+         $('#listAppType').change(function() {
              //console.log($(this).val());
          }).multipleSelect({
              selectAll: true, // 전체선택 
              width: '100%'
          });
     }
-	function fn_orderCallList(){
-		  
-		
-		  if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ){
-	            
-	             Common.alert('Branch and Order Date are compulsory option to search');
-	             return ;
-	         }
-	         
-		
-		   
-		Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
-	        console.log("성공.");
-	        console.log("data : " + result);
-	        AUIGrid.setGridData(myGridID, result);
-	    });
-	}
-	
-	
-	
-	function fn_openAddCall(){
-		if(callStusId == "1" || callStusId == "19" || callStusId == "30"  ){ //1 10 19 20 30)
-		  //Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
+    function fn_orderCallList(){
+          
+          if($("#orderNo").val()==""){        
+        
+              if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ){
+                    
+                     Common.alert('Branch and Order Date are compulsory option to search');
+                     return ;
+                 }
+             
+          }
+           
+        Common.ajax("GET", "/callCenter/searchOrderCallList.do", $("#orderCallSearchForm").serialize(), function(result) {
+            console.log("성공.");
+            console.log("data : " + result);
+            AUIGrid.setGridData(myGridID, result);
+        });
+    }
+    
+    
+    
+    function fn_openAddCall(){
+        if(callStusId == "1" || callStusId == "19" || callStusId == "30"  ){ //1 10 19 20 30)
+          //Common.popupDiv("/callCenter/addCallResultPop.do?isPop=true&callStusCode=" + callStusCode+"&callStusId=" + callStusId+"&salesOrdId=" + salesOrdId+"&callEntryId=" + callEntryId+"&salesOrdNo=" + salesOrdNo+"&salesOrderId=" + salesOrdId);
             Common.popupDiv("/callCenter/addCallResultPop.do", {
                 callStusCode: callStusCode,
                 callStusId: callStusId,
@@ -110,14 +111,14 @@ $(document).ready(function() {
                 salesOrdNo: salesOrdNo,
                 salesOrderId: salesOrdId
             });
-		}else if(callStusId == "10" ){
-			Common.alert("<spring:message code='service.msg.callLogCan'/> ");
-		}else if(callStusId == "20" ){
-			Common.alert("<spring:message code='service.msg.callLogRDY'/> ");
+        }else if(callStusId == "10" ){
+            Common.alert("<spring:message code='service.msg.callLogCan'/> ");
+        }else if(callStusId == "20" ){
+            Common.alert("<spring:message code='service.msg.callLogRDY'/> ");
         } 
-	}
-	var myGridID;
-	function orderCallListGrid() {
+    }
+    var myGridID;
+    function orderCallListGrid() {
         //AUIGrid 칼럼 설정
         var columnLayout = [ {
             dataField : "callTypeCode",
@@ -160,7 +161,7 @@ $(document).ready(function() {
             width : 180
         }, {
             dataField : "isWaitCancl",
-            headerText : '<spring:message code="service.grid.WaitCancel" />',		
+            headerText : '<spring:message code="service.grid.WaitCancel" />',       
             width : 180
         }, {
             dataField : "callStusId",
@@ -321,6 +322,10 @@ function fn_excelDown(){
     <th scope="row"><spring:message code='service.title.Product'/></th>
     <td>
     <select class="w100p" id="product" name="product">
+    <option ></option>
+        <c:forEach var="list" items="${productList }" varStatus="status">
+           <option value="${list.stkId}">${list.c1}</option>
+        </c:forEach>
     </select>
     </td>
 </tr>
