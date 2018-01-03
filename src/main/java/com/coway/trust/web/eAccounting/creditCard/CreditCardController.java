@@ -458,7 +458,9 @@ public class CreditCardController {
 	}
 	
 	@RequestMapping(value = "/appvCompletedMsgPop.do")
-	public String expCompletedMsgPop(ModelMap model) {
+	public String expCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callType", params.get("callType"));
+		model.addAttribute("clmNo", params.get("clmNo"));
 		return "eAccounting/creditCard/appvCompletedMsgPop";
 	}
 	

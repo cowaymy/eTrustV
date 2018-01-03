@@ -29,7 +29,7 @@ function fn_closePop() {
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<p class="msg_txt"><spring:message code="newRgistReimMsg.compleMsg" /></p>
+<p class="msg_txt"><spring:message code="newRgistReimMsg.compleMsg" /><br><spring:message code="newWebInvoRegistMsg.clmNo" /> ${clmNo}</p>
 <ul class="center_btns">
     <li><p class="btn_blue2" id="ok"><a href="#"><spring:message code="newWebInvoRegistMsg.ok" /></a></p></li>
 </ul>

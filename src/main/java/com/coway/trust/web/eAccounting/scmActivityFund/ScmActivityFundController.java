@@ -276,7 +276,9 @@ public class ScmActivityFundController {
 	}
 	
 	@RequestMapping(value = "/completedMsgPop.do")
-	public String completedMsgPop(ModelMap model) {
+	public String completedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callType", params.get("callType"));
+		model.addAttribute("clmNo", params.get("clmNo"));
 		return "eAccounting/scmActivityFund/completedMsgPop";
 	}
 	

@@ -27,7 +27,7 @@ function fn_approveLineSubmit() {
     
     Common.ajax("POST", "/eAccounting/ctClaim/approveLineSubmit.do", obj, function(result) {
         console.log(result);
-        Common.popupDiv("/eAccounting/ctClaim/completedMsgPop.do", null, null, true, "completedMsgPop");
+        Common.popupDiv("/eAccounting/ctClaim/completedMsgPop.do", {callType:callType, clmNo:result.clmNo}, null, true, "completedMsgPop");
         //Common.alert("Your authorization request was successful.");
     });
 }
