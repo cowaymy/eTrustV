@@ -82,11 +82,16 @@ $(document).ready(function(){
 })
 */
 
+// 2018. 01. 03 add jgkim
+// before => selectedYear: 2017
+//			 => startYear: 2007
+//			 => finalYear: 2027
+var nowYear = new Date().getFullYear();
 var monthOptions = {//년월달력 세팅
 	pattern: 'mm/yyyy',
-	selectedYear: 2017,
-	startYear: 2007,
-	finalYear: 2027
+	selectedYear: nowYear,
+	startYear: Number(nowYear) - 10,
+	finalYear: Number(nowYear) + 10
 };
 
 $(document).on(//년월달력 실행
