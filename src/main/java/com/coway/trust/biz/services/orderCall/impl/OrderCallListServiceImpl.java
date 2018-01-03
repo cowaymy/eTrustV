@@ -111,8 +111,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			callEntry.put("updated", callMaster.get("updated"));
 			callEntry.put("updator", callMaster.get("updator"));
 			orderCallListMapper.updateCallEntry(callEntry);
-			
-			if(installMaster != null && Integer.parseInt(installMaster.get("callEntryId").toString()) > 0){
+			int callEntId = 0 ;
+			if(installMaster.get("callEntryId")!=null&&installMaster.get("callEntryId")!=""){
+				callEntId = Integer.parseInt(installMaster.get("callEntryId").toString());
+			}
+			if(installMaster != null && callEntId > 0){
 				
 				//INSERT INSTALL ENTRY
 				installNo = getDocNo("9");
@@ -151,7 +154,10 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			
 		}
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		String installationNo = installNo.get("docNo").toString();
+		String installationNo =""; 
+		if(installNo.get("docNo")!=null&&installNo.get("docNo")!=""){
+			installationNo = installNo.get("docNo").toString();
+		}
 		resultValue.put("installationNo", installationNo);
 		resultValue.put("salesOrdNo", salesOrdNo);
 		resultValue.put("spMap", logPram);
@@ -261,7 +267,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			feedbackId = Integer.parseInt(params.get("feedBackCode").toString());
 		}
 		int CTId = 0;
-		CTId = Integer.parseInt(params.get("CTID").toString());
+		if(params.get("CTID")!=null&&params.get("CTID")!=""){
+			CTId = Integer.parseInt(params.get("CTID").toString());
+		}
 		//if(params.get("CT").TO) CT 내용 가져오는거 해야함
 		callDetails.put("callResultId", 0);
 		callDetails.put("callEntryId", params.get("callEntryId"));
@@ -340,5 +348,8 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		return orderCallListMapper.getRdcInCdc(params);
 	}
 
-
+	@Override
+	public List<EgovMap> selectProductList() {
+		return orderCallListMapper.selectProductList();
+	}
 }

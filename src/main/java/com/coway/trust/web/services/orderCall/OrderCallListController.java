@@ -52,7 +52,9 @@ public class OrderCallListController {
 	public String orderCallList(@RequestParam Map<String, Object> params, ModelMap model) {
 		//FeedBack Code
 		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
+		List<EgovMap> productList = orderCallListService.selectProductList();
 		model.addAttribute("callStatus", callStatus);
+		model.addAttribute("productList", productList);
 		// 호출될 화면
 		return "services/orderCall/orderCallList";
 	}

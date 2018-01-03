@@ -222,7 +222,12 @@ function fn_doAllaction(){
         </td>
         <th scope="row">CDC Available Qty</th>
         <td>
-            <span><c:out value="${orderRdcInCdc.caqty}"/></span>
+            <c:if test="${orderRdcInCdc.rdc== orderRdcInCdc.cdc }">
+                <span>0</span>
+            </c:if>
+            <c:if test="${orderRdcInCdc.rdc!= orderRdcInCdc.cdc }">
+                <span><c:out value="${orderRdcInCdc.caqty}"/></span>
+            </c:if>
         </td>
     </tr>
     </tbody>

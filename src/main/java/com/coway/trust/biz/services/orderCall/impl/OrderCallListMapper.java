@@ -36,5 +36,7 @@ public interface OrderCallListMapper {
 	EgovMap selectRdcStock(Map<String, Object> params);
 	
 	EgovMap getRdcInCdc(Map<String, Object> params);
+	
+	List<EgovMap> selectProductList();
 
 }

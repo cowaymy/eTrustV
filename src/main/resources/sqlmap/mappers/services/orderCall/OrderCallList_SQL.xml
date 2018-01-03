@@ -631,7 +631,7 @@
 
         <select id="getRdcInCdc" parameterType="Map" resultType="egovMap">
       <![CDATA[
-      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB = '02' AND WH_LOC_STK_GRAD = 'A')
+      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB in ('02','05') AND WH_LOC_STK_GRAD = 'A')
         SELECT MAX(STK_CODE) stk_code , MAX(STK_DESC) stk_desc, MAX(RDC ) rdc , MAX(RAQTY) raqty, MAX(RINQTY) rinqty, MAX(CDC) cdc, MAX(CAQTY) caqty FROM (
         SELECT STK_CODE , STK_DESC ,  L.RDC , (QTY - NVL(BOOKQTY , 0) ) RAQTY , NVL(B.MOV_QTY,0) RINQTY  ,  0 CDC  , 0 CAQTY  
           FROM LOG0056M  B,L , (  SELECT LOC_ID,
@@ -659,5 +659,32 @@
          )
       ]]>
       </select>
+      
+      <select id="selectProductList" parameterType="Map" resultType="egovMap">
+        SELECT STK_ID
+             , C1
+             , CODE_NAME
+          FROM
+             (
+               SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , T3.CODE_NAME
+                 FROM SYS0026M T1
+                    , SYS0013M T3
+                WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T1.STUS_CODE_ID = 1
+                UNION
+               SELECT DISTINCT T1.STK_ID
+                    , T1.STK_CODE ||' - '||T1.STK_DESC C1
+                    , T3.CODE_NAME
+                 FROM SYS0026M T1
+                    , SYS0013M T3
+                WHERE T1.STK_CTGRY_ID = T3.CODE_ID
+                  AND 61 = T1.STK_TYPE_ID
+                  AND T1.STUS_CODE_ID = 1
+             )
+         ORDER BY CODE_NAME ASC, STK_ID ASC
+        </select>
 
  </mapper>
