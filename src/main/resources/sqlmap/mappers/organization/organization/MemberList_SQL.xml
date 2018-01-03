@@ -1478,7 +1478,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
   </insert>
 
     <select id="selectMiscList" parameterType="Map" resultType="egovMap">
+    <!--
      <![CDATA[
+     
 		  SELECT Extent1.MEM_ID MEM_ID  ,
 		       #{memberName} C1  ,
 		       #{membetFullName} C2  ,
@@ -1497,6 +1499,22 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		         LEFT JOIN SYS0030C Extent5   ON Extent1.POST_CODE = Extent5.POST_CODE_ID
 		 WHERE  Extent1.MEM_ID = #{memberId} AND ROWNUM <= 1
         ]]>
+        -->
+		SELECT A.MEM_ID MEM_ID  ,
+		             #{memberName} C1  ,
+		             #{membetFullName} C2  ,
+		             #{address1} C3  ,
+		             #{address2} C4  ,
+		             #{address3} C5  ,
+		             #{address4} C6  ,
+		               B.POSTCODE POST_CODE  ,
+		               B.STATE NAME  ,
+		               B.COUNTRY NAME1  ,
+		               #{memberNirc} C7
+		  FROM org0001d a, sys0064m b
+		 WHERE 1 = 1 
+    	 AND a.area_id = b.area_id
+		 AND A.MEM_ID = #{memberId}        
     </select>
 
       <insert id="insertInvMISC" parameterType="Map">
@@ -2881,7 +2899,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO 		
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
-		,MAIN_DEPT , SUB_DEPT, JOIN_DT 
+		,MAIN_DEPT , SUB_DEPT, JOIN_DT ,AREA_ID
 		)
 		select  
 		        ORG0001D_MEM_ID_SEQ.nextval, 
@@ -2921,7 +2939,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE UPD_DT, 
 		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT 
-		        ,SYSDATE JOIN_DT
+		        ,SYSDATE JOIN_DT, AREA_ID
 		from ORG0003D   d             
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
@@ -3498,5 +3516,21 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
          
 	     <select id="selectTypeGroupCode" parameterType="Map" resultType="String">
 	       SELECT B.TYPE_ID  FROM ORG0001D A, SYS0005M B WHERE   A.BRNCH = B.BRNCH_ID AND A.MEM_CODE = #{userName}
-	    </select>                          
+	    </select>
+	    
+	    <select id="selectORG001DInfo" parameterType="Map" resultType="egovMap">
+           SELECT NAME AS MEMBER_NM, 
+				      FULL_NAME AS FULL_NAME, 
+				      ADDR_DTL AS ADDRESS1, 
+				       B.STATE AS ADDRESS2,
+				       '' AS ADDRESS3,
+				       '' AS ADDRESS4,
+				       NRIC
+				FROM ORG0001D A, SYS0064M B 
+				WHERE 1=1 
+				AND MEM_ID = #{MemberId}
+				AND A.AREA_ID = B.AREA_ID
+        </select>
+	    
+	                              
 </mapper>

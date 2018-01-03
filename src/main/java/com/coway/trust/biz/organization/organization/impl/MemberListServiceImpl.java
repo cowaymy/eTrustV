@@ -1572,6 +1572,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			String hpBillNo="";
 			EgovMap selectInvoiceNo = null;
 			//AcBilling Save (for Hp)
+			
+			int userId = sessionVO.getUserId();
+			
+			params.put("creator", userId);
+			params.put("updator", userId);
 
 			//if(params.get("memberType").toString().equals("1")){
 
@@ -1645,16 +1650,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     			//GST 2015-01-06
     			selectInvoiceNo = getDocNoNumber("130");
     			updateDocNoNumber("130");
+    			
+    			EgovMap org001dInfo = null;
+    			org001dInfo = memberListMapper.selectORG001DInfo(MemberId) ;
+    			
+    			logger.debug("org001dInfo : {}",org001dInfo);
 
     			Map<String, Object> selectMiscValue = new HashMap<String, Object>();
     			selectMiscValue.put("memberId", MemberId);
-    			selectMiscValue.put("memberName", params.get("memberNm"));
-    			selectMiscValue.put("membetFullName", params.get("fulllName"));
-    			selectMiscValue.put("address1", params.get("address1"));
-    			selectMiscValue.put("address2", params.get("address2"));
-    			selectMiscValue.put("address3", params.get("address3"));
-    			selectMiscValue.put("address4", params.get("address4"));
-    			selectMiscValue.put("memberNirc", params.get("nric"));
+    			selectMiscValue.put("memberName", org001dInfo.get("memberNm"));
+    			selectMiscValue.put("membetFullName", org001dInfo.get("fulllName"));
+    			selectMiscValue.put("address1", org001dInfo.get("address1"));
+    			selectMiscValue.put("address2", org001dInfo.get("address2"));
+    			selectMiscValue.put("address3", org001dInfo.get("address3"));
+    			selectMiscValue.put("address4", org001dInfo.get("address4"));
+    			selectMiscValue.put("memberNirc", org001dInfo.get("nric"));
 
 
     			EgovMap selectMiscList = null;

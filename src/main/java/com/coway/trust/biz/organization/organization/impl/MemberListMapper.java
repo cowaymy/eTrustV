@@ -169,4 +169,6 @@ public interface MemberListMapper {
 	List<EgovMap> selectCoureCode(Map<String, Object> params);
 	
 	String selectTypeGroupCode(Map<String, Object> params);
+	
+	EgovMap selectORG001DInfo(String MemberId);
 }
