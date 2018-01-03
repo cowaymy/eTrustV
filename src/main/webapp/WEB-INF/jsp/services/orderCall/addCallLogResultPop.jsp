@@ -217,8 +217,25 @@ function fn_doAllaction(){
         <td></td>
     </tr>
       <tr>
-     
-        <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>        
+        <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>
+        <td>
+            <span><c:out value="${orderRdcInCdc.raqty}"/></span>
+        </td>
+        <th scope="row"><spring:message code='service.title.InTransitQty'/></th>
+        <td>
+           <span><c:out value="${orderRdcInCdc.rinqty}"/></span>
+        </td>
+        <th scope="row"><spring:message code='service.title.CDCAvailableQty'/></th>
+        <td>
+            <c:if test="${orderRdcInCdc.rdc== orderRdcInCdc.cdc }">
+                <span>0</span>
+            </c:if>
+            <c:if test="${orderRdcInCdc.rdc!= orderRdcInCdc.cdc }">
+                <span><c:out value="${orderRdcInCdc.caqty}"/></span>
+            </c:if>
+     <!-- 
+        <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>
+                
        <c:if test= "${rdcStock.availQty != null }" >
        <td>
          <span id='rdcStock'><c:out value="${rdcStock.availQty}"/></span>
@@ -253,6 +270,7 @@ function fn_doAllaction(){
         <span ><c:out value="${cdcAvaiableStock.availQty}"/></span>
         </td>
         </c:if>
+        -->
     </tr>
     </tbody>
     </table><!-- table end -->

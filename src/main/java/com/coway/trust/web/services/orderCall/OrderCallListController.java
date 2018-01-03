@@ -115,6 +115,9 @@ public class OrderCallListController {
 	@RequestMapping(value = "/addCallResultPop.do")
 	public String insertCallResultPop(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) throws Exception {
 		EgovMap orderCall = orderCallListService.getOrderCall(params);
+		
+		EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
+		
 		List<EgovMap> callStatus = orderCallListService.selectCallStatus();
 		
 		String productCode = orderCall.get("productCode").toString();
@@ -138,6 +141,7 @@ public class OrderCallListController {
 		model.addAttribute("orderCall", orderCall);
 		model.addAttribute("callStatus", callStatus);
 		model.addAttribute("orderDetail", orderDetail);
+		model.addAttribute("orderRdcInCdc", rdcincdc);
 		return "services/orderCall/addCallLogResultPop";
 	}
 	
