@@ -1,7 +1,5 @@
 package com.coway.trust.api.mobile.services;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,6 +34,7 @@ import com.coway.trust.api.mobile.services.as.ASRequestRegistForm;
 import com.coway.trust.api.mobile.services.as.ASRequestResultDto;
 import com.coway.trust.api.mobile.services.as.ASRequestResultForm;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobDto;
+import com.coway.trust.api.mobile.services.as.AfterServiceJobDto_b;
 import com.coway.trust.api.mobile.services.as.AfterServiceJobForm;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsDto;
 import com.coway.trust.api.mobile.services.as.AfterServicePartsForm;
@@ -198,7 +197,7 @@ public class ServiceApiController {
 	
 	@ApiOperation(value = "AfterServiceJob List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceJobList_b", method = RequestMethod.GET)
-	public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob_b(
+	public ResponseEntity<List<AfterServiceJobDto_b>> getHeartServiceJob_b(
 			@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
 
 		Map<String, Object> params = AfterServiceJobForm.createMap(AfterServiceJobForm);
@@ -210,7 +209,7 @@ public class ServiceApiController {
 
 		}
 		
-		List<AfterServiceJobDto> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto.create(r))
+		List<AfterServiceJobDto_b> list = AfterServiceJobList.stream().map(r -> AfterServiceJobDto_b.create(r))
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(list);
