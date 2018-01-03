@@ -720,8 +720,8 @@ function chgTab(tabNm) {
 <aside class="title_line"><!-- title_line start -->
 <h3>CCP Score Point</h3>
 <ul class="right_btns">
-    <li><p class="btn_blue2"><a href="#">FICO Report</a></p></li>
-    <li><p class="btn_blue2"><a href="#">CTOS Report</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_underDevelop()">FICO Report</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_underDevelop()">CTOS Report</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 

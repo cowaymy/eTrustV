@@ -192,7 +192,8 @@ function createCtosDetailGrid(){
                                           
                                     	  console.log("item.batchId : " + item.batchId);
                                     	//  alert("Fico View  batchId : " + item.batchId + " , ordNo : " + item.ordNo );
-                                    	  fn_displayReport("FICO_VIEW" , item.batchId , item.ordNo);
+                                    	//  fn_displayReport("FICO_VIEW" , item.batchId , item.ordNo);
+                                    	  fn_underDevelop();
                                           
                                     }
                              }
@@ -206,7 +207,7 @@ function createCtosDetailGrid(){
                                       labelText : "View", 
                                       onclick : function(rowIndex, columnIndex, value, item) {
                                           
-                                          alert("Ctos View");
+                                    	  fn_underDevelop();
                                           
                                     }
                              }
@@ -233,6 +234,11 @@ function createCtosDetailGrid(){
         };
     
 	ctosDetailGridID = GridCommon.createAUIGrid("#ctos_detail_grid_wrap", columnLayout,'', gridPros);
+}
+
+//TODO 미개발
+function fn_underDevelop(){
+    Common.alert('The program is under development.');
 }
 
 //Filter Clear
@@ -322,7 +328,11 @@ function fn_displayReport(viewType, batchId, ordNo){
 	if(rtnMap == null){
 		Common.alert("No result from CTOS");
 		return;
+	}else{
+		Common.alert("You Can Display CTOS Score!!!");
 	}
+	
+	
 	
 	//TODO Display CTSO View
 	
