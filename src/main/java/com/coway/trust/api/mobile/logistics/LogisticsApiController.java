@@ -952,20 +952,23 @@ public class LogisticsApiController {
 		
 		Map<String, Object> grlist = MlogApiService.selectDelvryGRcmplt(delNo);
 //		System.out.println("gr컴플리트??   :   "+grlist);
-//		LOGGER.debug("grlist    값 : {}", grlist);
-		
+		LOGGER.debug("grlist    값 : {}", grlist);
+//		LOGGER.debug("사이즈    값 : {}", grlist.size());
+		if(null == grlist){
+			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
+		}
 		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
 		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
 		
 		LOGGER.debug("grmplt    값 : {}", grmplt);
 		LOGGER.debug("gimplt    값 : {}", gimplt);
 		
-		if (grmplt !=null || !"Y".equals(grmplt) || !"N".equals(gimplt)){
-		//	System.out.println("YES");
-			MlogApiService.stockMovementConfirmReceive(confirmReceiveMForm);
-		}else{
-		//	System.out.println("NO");
+		if ( "Y".equals(grmplt) || "N".equals(gimplt)){
+			//System.out.println("NO");
 			throw new PreconditionException(AppConstants.FAIL, "Already processed.");
+		}else{
+			//System.out.println("YES");
+			MlogApiService.stockMovementConfirmReceive(confirmReceiveMForm);		
 		}	
 	}
 
