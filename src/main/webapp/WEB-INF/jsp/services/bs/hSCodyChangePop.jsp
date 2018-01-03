@@ -250,7 +250,7 @@
 
 
     function fn_getselectPopUpListAjax(){
-        Common.ajax("GET", "/services/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}'}, function(result) {
+        Common.ajax("GET", "/services/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}' ,Department : '${department}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
             

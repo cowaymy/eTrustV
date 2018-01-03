@@ -103,7 +103,7 @@ public class HsManualController {
 			model.addAttribute("brnchCdList",  params.get("BrnchId"));
 			model.addAttribute("ordCdList",  params.get("CheckedItems"));
 			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
-
+			model.addAttribute("department",  params.get("department"));
 			return "services/bs/hSCodyChangePop";
 		}
 
@@ -154,6 +154,7 @@ public class HsManualController {
 
     			params.put("saleOrdListSp", spl);
 			}
+			logger.debug("params1 : {}", params);
 
 			//brnch to CodyList
 			List<EgovMap> resultList = hsManualService.getCdList_1(params);

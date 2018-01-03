@@ -413,11 +413,17 @@
            $("#_openGb").val("codyChange");
 
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+          
 
             if(checkedItems.length <= 0) {
                 Common.alert('No data selected.');
                 return false;
             }else{
+            	
+            	
+            if(checkedItems.length > 1){
+            	 Common.alert('please choose one data selected.');
+            }
                 var str = "";
                 var custStr = "";
                 var rowItem;
@@ -426,6 +432,7 @@
                 var list = "";
                 var brnchCnt = 0;
                 var ctBrnchCodeOld = "";
+                var dept="";
 
                 //var saleOrdList = [];
                 var saleOrd = {
@@ -450,7 +457,7 @@
                         }
                     }
                     ctBrnchCodeOld = rowItem.codyBrnchCode;
-
+                    
                     if(i==0){
                          brnchId = rowItem.branchCd;
                     }
@@ -462,8 +469,8 @@
                      }
 
 
-
-
+                     dept = rowItem.deptCode;
+               
 
                 }
 
@@ -471,11 +478,13 @@
                          "SaleOrdList" : saleOrdList,
                          "BrnchId": brnchId,
                          "ManualCustId" : $("#manualCustomer").val(),
-                         "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
+                         "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
+                         "department" : dept
+                         
                 };
 
 
-                  Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  );
+                  Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  +"&department="+ dept );
 
             }
 

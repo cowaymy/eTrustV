@@ -194,7 +194,7 @@
                 SELECT ROWNUM AS rnum ,
                            a.*
                   FROM (
-                SELECT DISTINCT b.mem_id,
+                SELECT DISTINCT b.dept_code,b.mem_id,
                        d.mem_code AS cody_id,
                        d.name AS cody_name,
                        d.stus
@@ -219,6 +219,27 @@
                     AND b.mem_lvl = '4'
                     AND f.sales_ord_no IN (#{SaleOrdList})
                     ) a
+              union all
+SELECT ROWNUM AS rnum ,
+                           a.*
+                  FROM (
+                SELECT DISTINCT b.dept_code, 
+                       b.mem_id,
+                       d.mem_code AS cody_id,
+                       d.name AS cody_name,
+                       d.stus
+                  FROM sys0005m a,
+                       org0005d b,
+                       org0001d d,
+                       sys0038m extent2
+                 WHERE  a.brnch_id = d.brnch
+                    AND b.mem_id = d.mem_id
+                    AND d.stus = '1'
+                    AND d.mem_type = '2'
+                    AND b.mem_lvl = '4'
+                    AND b.dept_code =#{Department}
+                    ) a      
+                    
           </select>
 
 
