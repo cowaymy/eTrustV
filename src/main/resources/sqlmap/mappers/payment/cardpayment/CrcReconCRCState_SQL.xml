@@ -107,9 +107,7 @@
             PAY_ITM_CARD_MODE_ID, 
             CARD_MODE_NAME,
             AMOUNT,
-            CRC_MC_NAME,
-            OR_NO,
-            ORD_NO
+            CRC_MC_NAME
             FROM 
                 (
                 SELECT
@@ -121,17 +119,13 @@
                     B.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
                     C.CODE_NAME CARD_MODE_NAME,
                     NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
-                    E.ACC_DESC CRC_MC_NAME,
-                    F.OR_NO OR_NO,
-                    G.ORD_NO ORD_NO
+                    E.ACC_DESC CRC_MC_NAME
                 FROM 
                     PAY0252T A
                     JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
                     JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
                     JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
                     JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
-                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
-                    JOIN PAY0241T G ON A.GROUP_SEQ = G.ITM_SEQ
                 WHERE 
                     A.PAY_ITM_MODE_ID = 107
                     AND A.CRC_STATE_MAPPING_STUS_ID = 1
@@ -149,9 +143,8 @@
                     B.PAY_ITM_CARD_MODE_ID,
                     B.PAY_ITM_BANK_ACC_ID,
                     C.CODE_NAME,
-                    E.ACC_DESC,
-                    F.OR_NO,
-                    G.ORD_NO) TB1
+                    E.ACC_DESC
+                    ) TB1
                 
                     WHERE 1=1
                     AND (
