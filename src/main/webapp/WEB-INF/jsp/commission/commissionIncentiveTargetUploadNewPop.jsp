@@ -63,7 +63,7 @@ $(document).on(//인풋파일 삭제
 			        	document.newForm.reset();
 			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result.data+'" htmlEscape="false"/>');
 			        	//var cntId=result.data.uploadId;
-			           C//ommon.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
+			            //Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
 			        });
 				}
 			});
