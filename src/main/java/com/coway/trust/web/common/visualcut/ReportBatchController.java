@@ -63,7 +63,7 @@ public class ReportBatchController {
 	private MessageSourceAccessor messageAccessor;
 
 	@RequestMapping(value = "/view-proc/SQLColorGrid_NoRental-Out-Ins_Excel.do")
-	@Scheduled(cron = "0 0 6 * * *") //매일 6시에 실행 // sample : http://fmaker7.tistory.com/163
+	@Scheduled(cron = "0 0 5 * * *") //매일 5시에 실행 // sample : http://fmaker7.tistory.com/163
 	public void viewProcGet() {
 		LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
 		Map<String, Object> params = new HashMap<>();
