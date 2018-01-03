@@ -119,7 +119,7 @@
                 ) FL
                 JOIN SYS0047M Extent18   ON Extent18.USER_ID = FL.QOTAT_CRT_USER_ID
                 
-           <if test="userTypeId !=null and userTypeId!= '' ">
+           <if test='userTypeId =="1" or userTypeId == "2" '>
                    JOIN SYS0047M USR ON FL.SRV_CNTRCT_SALESMAN = USR.USER_ID   
                    JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
                                         <if test="memCode != null and memCode != '' ">

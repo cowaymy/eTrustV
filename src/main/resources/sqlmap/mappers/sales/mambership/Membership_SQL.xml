@@ -20,7 +20,7 @@
 		           A.CUST_IC  
 		   FROM SAL1004V A
 		   
-		   <if test="userTypeId !=null and userTypeId!= '' ">
+		   <if test='userTypeId =="1" or userTypeId == "2" '>
 		   		   
 		           JOIN SYS0047M USR ON A.SRV_MEM_SALES_MEM_ID = USR.USER_ID
 		           JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID

@@ -31,7 +31,7 @@
 	                JOIN SAL0029D E4   ON E4.CUST_ID = E3.CUST_ID
 	                JOIN SYS0047M E5   ON E5.USER_ID = E1.QOTAT_CRT_USER_ID
 	                
-           <if test="userTypeId !=null and userTypeId!= '' ">
+           <if test='userTypeId =="1" or userTypeId == "2" '>
                    JOIN SYS0047M USR ON E1.QOTAT_SALESMAN_ID = USR.USER_ID   
                    JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
                                         <if test="memCode != null and memCode != '' ">
