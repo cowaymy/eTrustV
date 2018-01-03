@@ -57,7 +57,14 @@ function fn_selectListAjax() {
                 });
                 return;
         }else{
-            if($("#stTrmnatCrtDt").val() >   $("#edTrmnatCrtDt").val() ){
+        	
+            var st = $("#stTrmnatCrtDt").val().replace(/\//g,'');
+            var ed = $("#edTrmnatCrtDt").val().replace(/\//g,'');
+            
+            var stDate = st.substring(4,8) +""+ st.substring(2,4) +""+ st.substring(0,2);
+            var edDate = ed.substring(4,8) +""+ ed.substring(2,4) +""+ ed.substring(0,2);
+                            
+            if(stDate > edDate ){        	
                  Common.alert("<spring:message code='commission.alert.dateGreaterCheck'/>", function(){
                      $("#edTrmnatCrtDt").focus();
                  });
