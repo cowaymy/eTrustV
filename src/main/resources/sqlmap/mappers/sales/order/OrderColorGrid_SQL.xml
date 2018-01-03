@@ -14,7 +14,8 @@
 			       D1.TOP_ORG_CODE   , 
 			       D1.ORG_CODE   ,     
 			       D1.GRP_CODE   ,     
-			       D1.DEPT_CODE   ,    
+			       D1.DEPT_CODE   , 
+			       D1.MEM_CODE ,   
 			       D1.IS_NET   ,       
 			       D1.NET_MONTH   ,    
 			       D1.INSTALL_STUS_ID ,
@@ -53,6 +54,7 @@
 	                   F1.ORG_CODE   ,
 	                   F1.GRP_CODE   ,
 	                   F1.DEPT_CODE   ,
+	                   F1.MEM_CODE   ,
 	                   F1.IS_NET   ,
 	                   F1.NET_MONTH   ,
 	                   F1.INSTALL_STUS_ID ,
@@ -101,6 +103,7 @@
 					                 E1.ORG_CODE  ,
 					                 E1.GRP_CODE  ,
 					                 E1.DEPT_CODE  ,
+					                 E1.MEM_CODE,
 					                 E1.IS_NET  ,
 					                 E1.NET_MONTH  ,
 					                 E1.PV_MONTH  ,
@@ -137,6 +140,7 @@
 								                   vC.ORG_CODE ,
 								                   vC.GRP_CODE ,
 								                   vC.DEPT_CODE ,
+								                   vC.MEM_CODE ,
 								                   vC.IS_NET ,
 								                   vC.NET_MONTH ,
 								                   vC.PV_MONTH ,
@@ -324,6 +328,9 @@
 	          <if test="deptCode != null and deptCode != ''">
 	              AND F1.DEPT_CODE = #{deptCode}
 	          </if>
+	          <if test="memCode != null and memCode != ''">
+                  AND F1.MEM_CODE = #{memCode}
+              </if>
 	          <if test="ordNo != null and ordNo != ''">
 	              AND F1.ORD_NO = #{ordNo}
 	          </if>
