@@ -61,8 +61,12 @@ $(document).ready(function(){
     doGetComboData('/common/selectCodeList.do', paramdata, 'US','sttype', 'S' , 'transferTypeFunc');
     //paramdata = { brnch : '${SESSION_INFO.userBranchId}' , locgb:'01'}; // session 정보 등록
    //2017-11-28 From Location : CDC , RDC, CDC & RDC 가 보일 수 있도록 처리
-    paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
-    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
+   /*
+    //paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
+     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
+    */
+    paramdata = {stoIn:'01,02,05,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요. 
+    doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
 
@@ -138,7 +142,8 @@ $(document).ready(function(){
 
 });
 function tlocationFunc(){
-	doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val(), grade:$("#locationType").val()}, '','flocation', 'S' , '');
+	//doGetComboCodeId('/common/selectStockLocationList.do', { locgb : '02' , cdcloc:$("#tlocation").val(), grade:$("#locationType").val()}, '','flocation', 'S' , '');
+	doGetComboCodeId('/common/selectStockLocationList.do', {stoIn:'01,02,05,07' , grade:$("#locationType").val()}, '','flocation', 'S' , '');
 }
 
 function transferTypeFunc(){
@@ -236,8 +241,11 @@ $(function(){
 });
 
 function fn_changeLocation() {
-	 paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
+	 /*paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
 	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
+	 */
+	 paramdata = {stoIn:'01,02,05,07', grade:$("#locationType").val() }; // session 정보 등록
+	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 }
 function locationList(){
 	$('#list').click();
