@@ -228,6 +228,7 @@ var crcStateLayout = [
             if(crcStateChkItem.length > 0){
                 
                 crcKeyInVal = keyInRowItem.item.groupSeq;
+                item.cardModeName = keyInRowItem.item.cardModeName;
                 item.crcMcName = stateRowItem.item.bankAccName;
                 item.crcTrnscDt = stateRowItem.item.crcTrnscDt;
                 item.crcTrnscNo = stateRowItem.item.crcTrnscNo; // crcNo no check?
