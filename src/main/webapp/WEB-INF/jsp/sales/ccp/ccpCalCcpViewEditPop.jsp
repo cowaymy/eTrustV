@@ -3,6 +3,11 @@
 <script type="text/javascript">
 
 var optionUnit = { isShowChoose: false};
+var optionModule = {
+        type: "S",                  
+        isShowChoose: false  
+};
+
 
 $(function() {
     $('#_updSmsMsg').keyup(function (e){
@@ -45,6 +50,8 @@ $(document).ready(function() {
     
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
+    console.log("applicantTypeId : " + applicantTypeId);
+    console.log("rentPayModeId : " + rentPayModeId);
     var selVal = '';
     if(rentPayModeId == 131){
         if(applicantTypeId == 964){
@@ -53,7 +60,9 @@ $(document).ready(function() {
             selVal = '22';
         }
     }
-    doGetCombo('/sales/ccp/getLoadIncomeRange', ccpId , selVal ,'_incomeRangeEdit', 'S');
+    //doGetCombo('/sales/ccp/getLoadIncomeRange', {editCcpId : ccpId} , selVal ,'_incomeRangeEdit', 'S');
+    CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , {editCcpId : ccpId}, selVal , optionModule);
+    
     //Ccp Status
     var ccpStus = $("#_ccpStusId").val();
     doGetCombo('/sales/ccp/getCcpStusCodeList', '', ccpStus,'_statusEdit', 'S'); 

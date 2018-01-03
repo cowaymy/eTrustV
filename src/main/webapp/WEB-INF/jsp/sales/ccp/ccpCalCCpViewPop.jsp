@@ -4,6 +4,10 @@
 
 var optionUnit = { isShowChoose: false};
 var optionUnitCh = { isShowChoose: true};
+var optionModule = {
+        type: "S",                  
+        isShowChoose: false  
+};
 
 $(document).ready(function() {
     
@@ -236,7 +240,8 @@ function loadIncomeRange(){
     
     var rentPayModeId = $("#_rentPayModeId").val();
     var applicantTypeId = $("#_applicantTypeId").val();
-    
+    console.log("applicantTypeId : " + applicantTypeId);
+    console.log("rentPayModeId : " + rentPayModeId);
     var selVal = '';
     
     if(rentPayModeId == 131){
@@ -248,7 +253,8 @@ function loadIncomeRange(){
         }
     }
     //param : editCcpId
-    CommonCombo.make("_incomeRangeEdit", "/sales/ccp/getLoadIncomeRange", paramObj , selVal , optionUnit); //Status
+  //  CommonCombo.make("_incomeRangeEdit", "/sales/ccp/getLoadIncomeRange", paramObj , selVal , optionUnit); //Status
+    CommonCombo.make('_incomeRangeEdit', '/sales/ccp/getLoadIncomeRange' , paramObj, selVal , optionModule);
 }
 
 
