@@ -93,9 +93,7 @@ var discountLayout = [
 	
 	function fn_orderInfo(ordNo, ordId){
         loadOrderInfo(ordNo, ordId);
-    }
-    
-	
+  }
 	
 	function loadOrderInfo(ordNo, ordId){
 
