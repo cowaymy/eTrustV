@@ -39,12 +39,61 @@
         });
         // 셀 클릭 이벤트 바인딩
         
-        if($("#memType").val() == 1){
-            $("#grpCode").removeAttr("readonly");
-        }else if($("#memType").val() == 2){
-            $("#grpCode").attr("readonly");
-            $("#grpCode").val($("#initGrpCode").val());
+//        if($("#memType").val() == 1){
+//            $("#grpCode").removeAttr("readonly");
+//        }else if($("#memType").val() == 2){
+//            $("#grpCode").attr("readonly");
+//            $("#grpCode").val($("#initGrpCode").val());
+//            $("#grpCode").attr("class", "w100p readonly");
+//        }
+        
+        if("${SESSION_INFO.memberLevel}" =="1"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            
+            $("#grpCode").val("${grpCode}");
             $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+                        
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+            
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+                        
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+            
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+             
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+            $("#memCode").val("${memCode}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
         }
         
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
@@ -254,6 +303,7 @@
     <input type="hidden" id="salesOrderId" name="salesOrderId">
     <input type="hidden" name="memType" id="memType" value="${memType }"/>
     <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
+    <input type="hidden" name="memCode" id="memCode" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
