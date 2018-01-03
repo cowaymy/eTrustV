@@ -363,7 +363,11 @@ function f_multiCombos() {
                     <td>
                         <select id="searchMoveType" name="searchMoveType" class="multy_select w100p" multiple="multiple"></select>
                     </td>
-                    <td colspan="2">&nbsp;</td>
+                   <!--  <td colspan="2">&nbsp;</td> -->
+                    <th scope="row">Mat. Doc</th>
+                     <td>
+                        <input type="text" id="searchMaterialDoc" name="searchMaterialDoc" title="" class="w100p" />
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">Posting Date</th>

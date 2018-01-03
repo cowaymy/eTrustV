@@ -66,7 +66,9 @@
         and l60.INVNTRY_MOV_TYPE = mt.code
         AND l60.rciv_issu_storg_loc = t28.wh_loc_id(+)
         AND l60.storg_loc = f28.wh_loc_id(+)
-
+        <if test="matdoc !=null and matdoc !=''">
+            and l59.matrl_doc_no like  #{matdoc} ||'%'
+        </if>
         <if test="frlocgrade !=null and frlocgrade !=''">
             and f28.WH_LOC_STK_GRAD = #{frlocgrade}
         </if>
