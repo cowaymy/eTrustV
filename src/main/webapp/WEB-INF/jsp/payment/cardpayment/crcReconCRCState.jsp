@@ -189,8 +189,12 @@ var crcStateLayout = [
                           dataField : "crcTrnscMid",
                           headerText : "<spring:message code='pay.head.crcTrnscMid'/>",
                           visible : false
-                      } , {
+                      },{
                           dataField : "crcStateAccCode",
+                          headerText : "",
+                          visible : false
+                      },{
+                          dataField : "crditCard",
                           headerText : "",
                           visible : false
                       }];
@@ -241,6 +245,7 @@ var crcStateLayout = [
                 item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
                 item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
                 item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
+                item.crditCard = stateRowItem.item.crditCard;//hidden field
                 
                 console.log(item);
                 AUIGrid.addRow(mappingGridId, item, "last");
