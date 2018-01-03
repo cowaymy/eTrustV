@@ -2,7 +2,7 @@ package com.coway.trust.biz.logistics.mlog.impl;
 
 import java.util.List;
 import java.util.Map;
-import com.coway.trust.biz.logistics.mlog.vo.StrockMovementVoForMobile;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -140,5 +140,7 @@ public interface MlogApiMapper {
 	int getUserLocId(Map<String, Object> receiveMap);
 	
 	String dateParsing(String param);
+	
+	Map<String, Object> selectDelvryGRcmplt(String delNo);
 
 }
