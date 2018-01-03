@@ -234,7 +234,7 @@ var gridPros = {
 <h2>Order Information</h2>
 </aside><!-- title_line end -->
 
-<input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId"/>
+<input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId"/>
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -621,6 +621,7 @@ var gridPros = {
 </aside><!-- title_line end -->
 
 <form action="#" id="addInstallForm" method="post">
+<input type="hidden" value="<c:out value="${installResult.installEntryId}"/>" id="installEntryId" name="installEntryId"/>
 <input type="hidden" value="${callType.typeId}" id="hidCallType" name="hidCallType"/>
 <input type="hidden" value="${installResult.installEntryId}" id="hidEntryId" name="hidEntryId"/>
 <input type="hidden" value="${installResult.custId}" id="hidCustomerId" name="hidCustomerId" />

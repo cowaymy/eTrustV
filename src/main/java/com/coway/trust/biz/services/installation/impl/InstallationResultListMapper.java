@@ -188,4 +188,6 @@ public interface InstallationResultListMapper {
 	// add by jgkim
 	EgovMap getUsePAY0033D_addr(Map<String, Object> params);
 	EgovMap getUsePAY0034D_addr(Map<String, Object> params);
+	
+	EgovMap getLocInfo(Map<String, Object> params);
 }

@@ -2071,5 +2071,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		return installationResultListMapper.validationInstallationResult(params);
 	}
 
-
+	@Override
+	public EgovMap getLocInfo(Map<String, Object> params) {
+		return installationResultListMapper.getLocInfo(params);
+	}
 }

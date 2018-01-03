@@ -333,33 +333,43 @@ public class InstallationResultListController {
 		logger.debug("params : {}", params);
 
 		boolean success = false;
-
-		EgovMap validMap =  installationResultListService.validationInstallationResult(params);
-		int resultCnt = ((BigDecimal)validMap.get("resultCnt")).intValue();
-
-		if(resultCnt > 0){
-			message.setMessage("There is complete sesult exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
-		} else {
-    		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
-
-
-    		if( null !=resultValue){
-    			HashMap   spMap =(HashMap)resultValue.get("spMap");
-    			logger.debug("spMap :"+ spMap.toString());
-    			if(!"000".equals(spMap.get("P_RESULT_MSG"))){
-
-    				resultValue.put("logerr","Y");
-    				message.setMessage("Error in Logistics Transaction !");
-
-    			}else{
-    				message.setData("Y");
-    				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
-
-    			}
-    			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+		EgovMap locInfo = installationResultListService.getLocInfo(installResult);
+		
+		if(locInfo==null){
+			message.setMessage("Can't complete the Installation without available stock in the CT");
+		}else{
+			if(Integer.parseInt(locInfo.get("availQty").toString())<1){
+				message.setMessage("Can't complete the Installation without available stock in the CT");
+			}else{    		
+        		EgovMap validMap =  installationResultListService.validationInstallationResult(params);
+        		int resultCnt = ((BigDecimal)validMap.get("resultCnt")).intValue();
+        
+        		if(resultCnt > 0){
+        			message.setMessage("There is complete sesult exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
+        		} else {
+            		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
+        
+        
+            		if( null !=resultValue){
+            			HashMap   spMap =(HashMap)resultValue.get("spMap");
+            			logger.debug("spMap :"+ spMap.toString());
+            			if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+        
+            				resultValue.put("logerr","Y");
+            				message.setMessage("Error in Logistics Transaction !");
+        
+            			}else{
+            				message.setData("Y");
+            				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
+        
+            			}
+            			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+            		}
+        
+        
+        		}
     		}
-
-
 		}
 		return ResponseEntity.ok(message);
 	}

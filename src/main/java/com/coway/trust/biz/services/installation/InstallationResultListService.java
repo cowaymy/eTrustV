@@ -76,4 +76,6 @@ public interface InstallationResultListService {
 	int isInstallAlreadyResult (Map<String, Object> params);
 
 	EgovMap validationInstallationResult(Map<String, Object> params);
+	
+	EgovMap getLocInfo(Map<String, Object> params);
 }
