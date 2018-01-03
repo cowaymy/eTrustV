@@ -1,9 +1,7 @@
 package com.coway.trust.util;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Locale;
@@ -12,6 +10,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -702,7 +701,7 @@ public class CRJavaHelper {
 
 	public static ExportOptions getExcelExportptionsDataOnly(Map<String, Object> params) {
 		DataOnlyExcelExportFormatOptions excelOptions = new DataOnlyExcelExportFormatOptions();
-//		excelOptions.setUseConstantColWidth(true);
+		// excelOptions.setUseConstantColWidth(true);
 		if (CommonUtils.isEmpty(params.get(COL_WIDTH))) {
 			excelOptions.setConstantColWidth(90);
 		} else {
@@ -784,8 +783,12 @@ public class CRJavaHelper {
 			is = new BufferedInputStream(clientDoc.getPrintOutputController().export(exportOptions));
 
 			byte[] data = new byte[1024];
-			response.setContentType(mimeType);
-			if (attachment) {
+
+			if (response != null) {
+				response.setContentType(mimeType);
+			}
+
+			if (response != null && attachment) {
 				String name = "";
 				if (StringUtils.isNotEmpty(downFileName)) {
 					name = downFileName;
@@ -798,20 +801,34 @@ public class CRJavaHelper {
 					name = "Report-" + extension;
 				}
 
-				response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
-																			   /// callback 호출시 필수.
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "." + extension + "\"");
+					response.setHeader("Set-Cookie", "fileDownload=true; path=/"); /// resources/js/jquery.fileDownload.js
+					/// callback 호출시 필수.
+					response.setHeader("Content-Disposition",
+							"attachment; filename=\"" + name + "." + extension + "\"");
 			}
-			OutputStream os = response.getOutputStream();
-			while (is.read(data) > -1) {
-				os.write(data);
+
+			if (response != null) {
+				OutputStream os = response.getOutputStream();
+				while (is.read(data) > -1) {
+					os.write(data);
+				}
+			} else {
+				LOGGER.info("this line is batch call =>downFileName : {}, mimeType : {}", downFileName, mimeType);
+
+				File targetFile = new File(downFileName);
+				if (!targetFile.exists()) {
+					LOGGER.debug("make dir...");
+					targetFile.mkdirs();
+				}
+				java.nio.file.Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				IOUtils.closeQuietly(is);
 			}
+
 		} finally {
 			if (is != null) {
 				is.close();
 			}
 		}
-
 	}
 
 	public static void exportToMail(ReportClientDocument clientDoc, ExportOptions exportOptions, String extension,

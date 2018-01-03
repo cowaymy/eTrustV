@@ -1,31 +1,32 @@
-package com.coway.trust.web.common;
+package com.coway.trust.web.common.visualcut;
 
 import static com.coway.trust.AppConstants.*;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
-import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CRJavaHelper;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
+import com.coway.trust.web.common.ReportController;
 import com.crystaldecisions.report.web.viewer.CrystalReportViewer;
 import com.crystaldecisions.sdk.occa.report.application.OpenReportOptions;
 import com.crystaldecisions.sdk.occa.report.application.ParameterFieldController;
@@ -35,10 +36,10 @@ import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
 
 @Controller
-@RequestMapping(value = "/report")
-public class ReportController {
+@RequestMapping(value = "/report/batch")
+public class ReportBatchController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ReportBatchController.class);
 
 	@Value("${report.datasource.driver-class-name}")
 	private String reportDriverClass;
@@ -55,40 +56,32 @@ public class ReportController {
 	@Value("${report.file.path}")
 	private String reportFilePath;
 
+	@Value("${web.resource.upload.file}")
+	private String uploadDirWeb;
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@Autowired
-	private SessionHandler sessionHandler;
+	@RequestMapping(value = "/view-proc/SQLColorGrid_NoRental-Out-Ins_Excel.do")
+	@Scheduled(cron = "0 0 6 * * *") //매일 6시에 실행 // sample : http://fmaker7.tistory.com/163
+	public void viewProcGet() {
+		LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/SQLColorGrid_NoRental-Out-Ins_Excel.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, uploadDirWeb + File.separator + "RawData" + File.separator
+				+ "ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xls");
 
-	@Autowired
-	private ServletContext context;
-
-	@RequestMapping(value = "/view-proc.do", method = RequestMethod.GET)
-	public void viewProcGet(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> params) {
-		this.viewProcedure(request, response, params);
-	}
-
-	@RequestMapping(value = "/view-proc-submit.do", method = RequestMethod.POST)
-	public void viewProcPostSubmit(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> params) {
-		this.viewProcedure(request, response, params);
-	}
-
-	@RequestMapping(value = "/view-proc.do", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity viewProcPost(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody Map<String, Object> params) {
-		this.viewProcedure(request, response, params);
-		return ResponseEntity.ok(HttpStatus.OK);
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
 	}
 
 	private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
 		this.checkArgument(params);
 		String reportFile = (String) params.get(REPORT_FILE_NAME);
 		String reportName = reportFilePath + reportFile;
-		ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+		ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 
 		try {
 			ReportAppSession ra = new ReportAppSession();
@@ -116,67 +109,46 @@ public class ReportController {
 	}
 
 	@RequestMapping(value = "/view.do", method = RequestMethod.GET)
-	public void viewGet(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> params) throws IOException {
-		this.view(request, response, params);
-	}
-
-	@RequestMapping(value = "/view-submit.do", method = RequestMethod.POST)
-	public void viewPostSubmit(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam Map<String, Object> params) throws IOException {
-		this.view(request, response, params);
-	}
-
-	@RequestMapping(value = "/view.do", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity viewPost(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody Map<String, Object> params) throws IOException {
-		this.view(request, response, params);
-		return ResponseEntity.ok(HttpStatus.OK);
+	public void viewGet() throws IOException {
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/xxxxxxxxxx.rpt");
+		params.put(REPORT_VIEW_TYPE, "EXCEL");
+		params.put("V_TEMP", "TEMP");
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, uploadDirWeb + File.separator + "RawData" + File.separator
+				+ "ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xls");
+		this.view(null, null, params);
 	}
 
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 			throws IOException {
 		checkArgument(params);
 		String reportFile = (String) params.get(REPORT_FILE_NAME);
-		ViewType viewType = ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
+		ReportController.ViewType viewType = ReportController.ViewType.valueOf((String) params.get(REPORT_VIEW_TYPE));
 
 		try {
 
-			HttpSession session = sessionHandler.getCurrentSession();
 			String reportName = reportFilePath + reportFile;
-			ReportClientDocument clientDoc = (ReportClientDocument) session.getAttribute(reportName);
+			ReportClientDocument clientDoc = new ReportClientDocument();
 
-			if (clientDoc == null) {
-				// Report can be opened from the relative location specified in the CRConfig.xml, or the report location
-				// tag can be removed to open the reports as Java resources or using an absolute path
-				// (absolute path not recommended for Web applications).
-				clientDoc = new ReportClientDocument();
-				clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
-				clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
-				{
-					String connectString = reportUrl;
-					String driverName = reportDriverClass;
-					String jndiName = "";
-					String userName = reportUserName;
-					String password = reportPassword;
+			// Report can be opened from the relative location specified in the CRConfig.xml, or the report location
+			// tag can be removed to open the reports as Java resources or using an absolute path
+			// (absolute path not recommended for Web applications).
+			clientDoc.setReportAppServer(ReportClientDocument.inprocConnectionString);
+			clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
+			{
+				String connectString = reportUrl;
+				String driverName = reportDriverClass;
+				String jndiName = "";
+				String userName = reportUserName;
+				String password = reportPassword;
 
-					// Switch all tables on the main report and sub reports
-					CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
-					// logon to database
-					CRJavaHelper.logonDataSource(clientDoc, userName, password);
-				}
-				// Store the report document in session
-				// session.setAttribute(reportName, clientDoc);
+				// Switch all tables on the main report and sub reports
+				CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
+				// logon to database
+				CRJavaHelper.logonDataSource(clientDoc, userName, password);
 			}
 
-			String reportSourceSessionKey = reportName + "ReportSource";
-			Object reportSource = session.getAttribute(reportSourceSessionKey);
-
-			if (reportSource == null) {
-				reportSource = clientDoc.getReportSource();
-				// session.setAttribute(reportSourceSessionKey, reportSource);
-			}
+			Object reportSource = clientDoc.getReportSource();
 
 			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
@@ -201,9 +173,9 @@ public class ReportController {
 				messageAccessor.getMessage(MSG_NECESSARY, new Object[] { REPORT_VIEW_TYPE }));
 	}
 
-	private void viewHandle(HttpServletRequest request, HttpServletResponse response, ViewType viewType,
-			ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer, Map<String, Object> params)
-			throws ReportSDKExceptionBase, IOException {
+	private void viewHandle(HttpServletRequest request, HttpServletResponse response,
+			ReportController.ViewType viewType, ReportClientDocument clientDoc, CrystalReportViewer crystalReportViewer,
+			Map<String, Object> params) throws ReportSDKExceptionBase, IOException {
 
 		String downFileName = (String) params.get(REPORT_DOWN_FILE_NAME);
 
@@ -226,22 +198,7 @@ public class ReportController {
 			ReportUtils.sendMail(clientDoc, viewType, params);
 			break;
 		default:
-			viewWindow(request, response, crystalReportViewer);
-			break;
+			throw new ApplicationException(AppConstants.FAIL, "wrong viewType....");
 		}
-	}
-
-	private void viewWindow(HttpServletRequest request, HttpServletResponse response,
-			CrystalReportViewer crystalReportViewer) throws ReportSDKExceptionBase {
-		crystalReportViewer.processHttpRequest(request, response, context, null);
-	}
-
-	public enum ViewType {
-		WINDOW, PDF, EXCEL, EXCEL_FULL, CSV, MAIL_PDF, MAIL_EXCEL, MAIL_CSV
-	}
-
-	public interface ExportFile {
-		void export(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
-				String downFileName) throws ReportSDKExceptionBase, IOException;
 	}
 }
