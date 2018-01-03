@@ -180,7 +180,7 @@
 		                   AND ( 1 = Extent2.STUS )
 		                   AND ( Extent2.MEM_TYPE = #{memberType} )
 		                   AND ( Extent1.MEM_LVL = #{memberLevel} ) ) Project1
-		  ORDER BY Project1.DEPT_CODE ASC
+		  ORDER BY Project1.C1
           ]]>
     </select>
     <select id="selectTransferList" parameterType="Map" resultType="egovMap">
@@ -197,7 +197,7 @@
 		                  )
 		                   AND ( Extent1.MEM_TYPE =  #{memberType} )
 		                   AND ( Extent2.MEM_UP_ID = #{memberUpId} ) ) Project1
-		  ORDER BY Project1.DEPT_CODE ASC
+		  ORDER BY Project1.MEM_CODE ASC
 		  </select>
 
 		  <select id="selectMemberModel" parameterType="String" resultType="egovMap">
@@ -536,6 +536,6 @@
 
          <select id="selectDeptCode"  parameterType="int" resultType="egovMap">
 			select  LAST_DEPT_CODE, LAST_GRP_CODE, LAST_ORG_CODE, BRNCH_ID, DEPT_CODE, MEM_ID
-            from org0005d where MEM_ID = #{memId} 
+            from org0005d where MEM_ID = #{memId}
 			</select>
 </mapper>
