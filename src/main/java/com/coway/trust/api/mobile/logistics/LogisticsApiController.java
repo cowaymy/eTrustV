@@ -947,7 +947,26 @@ public class LogisticsApiController {
 	@ApiOperation(value = "Receive Display - Confirm Receive", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/displayConfirmReceive", method = RequestMethod.POST)
 	public void confirmReceive(@RequestBody ConfirmReceiveMForm confirmReceiveMForm) throws Exception {
-		MlogApiService.stockMovementConfirmReceive(confirmReceiveMForm);
+		
+		String delNo =confirmReceiveMForm.getSmoNo();
+		
+		Map<String, Object> grlist = MlogApiService.selectDelvryGRcmplt(delNo);
+//		System.out.println("gr컴플리트??   :   "+grlist);
+//		LOGGER.debug("grlist    값 : {}", grlist);
+		
+		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
+		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
+		
+		LOGGER.debug("grmplt    값 : {}", grmplt);
+		LOGGER.debug("gimplt    값 : {}", gimplt);
+		
+		if (grmplt !=null || !"Y".equals(grmplt) || !"N".equals(gimplt)){
+		//	System.out.println("YES");
+			MlogApiService.stockMovementConfirmReceive(confirmReceiveMForm);
+		}else{
+		//	System.out.println("NO");
+			throw new PreconditionException(AppConstants.FAIL, "Already processed.");
+		}	
 	}
 
 	@ApiOperation(value = "Input result of Adjustment Stock Barcode", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
