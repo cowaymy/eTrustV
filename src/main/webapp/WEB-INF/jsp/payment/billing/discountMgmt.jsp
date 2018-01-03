@@ -50,7 +50,7 @@ var discountLayout = [
                            headerText : "<spring:message code='pay.head.discountPeriod'/>",
                            editable : false
                        }, {
-                           dataField : "crtUserId",
+                           dataField : "crtUserName",
                            headerText : "<spring:message code='pay.head.createdBy'/>",
                            editable : false
                        }, {
@@ -58,7 +58,7 @@ var discountLayout = [
                            headerText : "<spring:message code='pay.head.createdAy'/>",
                            editable : false
                        }, {
-                           dataField : "updUserId",
+                           dataField : "updUserName",
                            headerText : "<spring:message code='pay.head.updatedBy'/>",
                            editable : false
                        }, {
