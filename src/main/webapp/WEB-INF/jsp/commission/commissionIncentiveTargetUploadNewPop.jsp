@@ -61,7 +61,7 @@ $(document).on(//인풋파일 삭제
 			        Common.ajaxFile("/commission/csv/upload", formData, function (result) {
 			        	$("#search").click();
 			        	document.newForm.reset();
-			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result.data+'" htmlEscape="false"/>');
+			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>');
 			        	//var cntId=result.data.uploadId;
 			            //Common.alert("Your data has been posted.</br>Please confirm the batch for final setting.</br>Upload Batch ID : "+result);
 			        });
