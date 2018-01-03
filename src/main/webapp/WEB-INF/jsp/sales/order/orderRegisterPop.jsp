@@ -286,7 +286,16 @@
 
                 console.log("성공.");
                 console.log("gstChk : " + custInfo.gstChk);
-
+                console.log("custInfo.areaId.substring(0,2):"+custInfo.areaId.substring(0,2));
+                
+                if("DM" == custInfo.areaId.substring(0,2)) {
+        		    Common.alert("Invalid Address" + DEFAULT_DELIMITER + "<b>The customer address of Order is the old address.<br/>Change to the new address in the Customer Management.</b>");
+        		    fn_clearInstallAddr();
+                    $('#liInstNewAddr').removeClass("blind");
+                    $('#liInstSelAddr').removeClass("blind");
+        		    return;
+        	    }
+        	 
                 //
                 $("#hiddenCustAddId").val(custInfo.custAddId); //Customer Address ID(Hidden)
                 $("#instAddrDtl").val(custInfo.addrDtl); //Address
