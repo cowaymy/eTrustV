@@ -336,7 +336,7 @@
 				            <if test="bizType != null and bizType != ''">
 				            AND t1.EMPLY_BIZ_TYPE_ID = #{bizType}
 				            </if>
-				    join CMM0028D t4 on t1.EMPLY_ID = t4.EMPLY_ID AND t0.TASK_ID=t4.TASK_ID
+				    left join CMM0028D t4 on t1.EMPLY_ID = t4.EMPLY_ID AND t0.TASK_ID=t4.TASK_ID
 				    join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
 				    left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
         <![CDATA[       
@@ -422,7 +422,7 @@
 		                      <if test="bizType != null and bizType != ''">
 		                      AND t1.EMPLY_BIZ_TYPE_ID = #{bizType}
                               </if>
-		                join CMM0028T t4 on t1.EMPLY_ID = t4.EMPLY_ID  AND t0.TASK_ID=t4.TASK_ID
+		                left join CMM0028T t4 on t1.EMPLY_ID = t4.EMPLY_ID  AND t0.TASK_ID=t4.TASK_ID
 		                join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
 		                left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
 	        <![CDATA[       
@@ -578,7 +578,7 @@
         ]]>
                 FROM CMM0029D t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID and t0.task_id=#{taskId}
-                    join CMM0028D t4 on t1.EMPLY_ID = t4.EMPLY_ID  AND t0.TASK_ID=t4.TASK_ID
+                    left join CMM0028D t4 on t1.EMPLY_ID = t4.EMPLY_ID  AND t0.TASK_ID=t4.TASK_ID
                     join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
                     left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
         <![CDATA[
@@ -641,7 +641,7 @@
         ]]>
                 FROM CMM0029T t0 
                     join CMM0006T t1 on t0.EMPLY_ID  = t1.EMPLY_ID  and t1.COMM_TASK_ID=t0.TASK_ID and t0.task_id=#{taskId}
-                    join CMM0028T t4 on t1.EMPLY_ID = t4.EMPLY_ID  AND t0.TASK_ID=t4.TASK_ID
+                    left join CMM0028T t4 on t1.EMPLY_ID = t4.EMPLY_ID  AND t0.TASK_ID=t4.TASK_ID
                     join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
                     left join CMM0038T t3 on t3.F_MEM_ID =  t1.EMPLY_ID 
         <![CDATA[
@@ -942,7 +942,7 @@
 		        FROM CMM0006T t1
 		            join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
 		            join SYS0038M t3 on t2.STUS = t3.STUS_CODE_ID
-		            join CMM0028D t4 on t4.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t4.EMPLY_ID
+		            left join CMM0028D t4 on t4.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t4.EMPLY_ID
 		            join CMM0029D t5 on t5.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t5.EMPLY_ID
 		            join SYS0005M t6 on t6.BRNCH_ID = t2.BRNCH 
 		        WHERE t1.EMPLY_TYPE_CODE = 'CT'
@@ -987,7 +987,7 @@
 		        FROM CMM0006T t1
 		            join ORG0001D t2 on t2.MEM_ID = t1.EMPLY_ID
 		            join SYS0038M t3 on t2.STUS = t3.STUS_CODE_ID
-		            join CMM0028T t4 on t4.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t4.EMPLY_ID
+		            left join CMM0028T t4 on t4.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t4.EMPLY_ID
 		            join CMM0029T t5 on t5.TASK_ID = t1.COMM_TASK_ID and  t1.EMPLY_ID  =  t5.EMPLY_ID
 		            join SYS0005M t6 on t6.BRNCH_ID = t2.BRNCH 
 		         WHERE t1.EMPLY_TYPE_CODE = 'CT'
