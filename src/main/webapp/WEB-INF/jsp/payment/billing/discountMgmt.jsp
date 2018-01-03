@@ -54,7 +54,7 @@ var discountLayout = [
                            headerText : "<spring:message code='pay.head.createdBy'/>",
                            editable : false
                        }, {
-                           dataField : "",
+                           dataField : "crtDt",
                            headerText : "<spring:message code='pay.head.createdAy'/>",
                            editable : false
                        }, {
@@ -62,7 +62,7 @@ var discountLayout = [
                            headerText : "<spring:message code='pay.head.updatedBy'/>",
                            editable : false
                        }, {
-                           dataField : "",
+                           dataField : "updDt",
                            headerText : "<spring:message code='pay.head.lastUpdate'/>",
                            editable : false
                        }, {
@@ -95,10 +95,12 @@ var discountLayout = [
         loadOrderInfo(ordNo, ordId);
     }
     
-    function loadOrderInfo(ordNo, ordId){
+	
+	
+	function loadOrderInfo(ordNo, ordId){
 
     	Common.ajax("GET","/payment/selectBasicInfo.do", {"salesOrdId" : ordId}, function(result){
-            
+
             //BASIC INFO
             $('#salesOrdId').val(result.data.basicInfo.ordId);
             $('#orderNo').val(result.data.basicInfo.ordNo);
