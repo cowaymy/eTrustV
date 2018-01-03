@@ -431,6 +431,10 @@ var myDetailGridData = null;
                  Common.alert("Please Select 'Fail Reason'.");
                  return false;
              }
+             if (<c:out value="${basicinfo.cancReqNo}"/> == "" || <c:out value="${basicinfo.cancReqNo}"/> == null) {
+                 Common.alert("Can’t entry without Cancel Request Number");
+                 return false;
+             }
          }
     	 
     	 /* if ($("#cmbStatusType2").val() == 21) {    // Failed
