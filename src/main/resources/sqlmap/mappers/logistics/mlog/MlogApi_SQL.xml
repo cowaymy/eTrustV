@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
+    
+    
+    <select id="selectDelvryGRcmplt" parameterType="String" resultType="Map">
+    SELECT 
+    DELVRY_NO,
+    DELVRY_DT,
+    DELVRY_GI_DT,
+    DELVRY_GR_DT,
+    NVL(DELVRY_CMPLT,'N') DEL_CMPLT,
+    NVL(DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT,
+    NVL(DELVRY_GR_CMPLT,'N') DEL_GR_CMPLT
+    FROM LOG0054M 
+    WHERE DELVRY_NO=#{delNo}
+    </select>
+
 
     <select id="getInventoryOnHandStockNoSerial" parameterType="Map" resultType="egovMap">
         select 
@@ -407,14 +422,14 @@
     </select>
     
     <select id="StockReceiveList" parameterType="Map" resultType="egovMap">
-	    select L47.REQST_NO,
+	    select <!-- L47.REQST_NO, -->
 	       L54.DELVRY_GI_DT GI_DATE,
 	       L54.DELVRY_GR_DT GR_DATE,
 	       L54.DELVRY_NO SMO_NO,
 	       S28r.WH_LOC_DESC GI_LOCATION_NAME,
 	       S28r.WH_LOC_CODE GI_LOCATION_CODE,
-	       S28Q.WH_LOC_CODE LOCATION_CODE,
-	       S28Q.WH_LOC_DESC,
+	       <!-- S28Q.WH_LOC_CODE LOCATION_CODE, -->
+	       <!-- S28Q.WH_LOC_DESC, -->
 	       DECODE (l47.PRIDIC_FRQNCY,'A', 'Auto','M', 'Manual',l47.PRIDIC_FRQNCY) REQ_TYPE,
 	       NVL (S47.USER_FULL_NAME, L54.CRT_USER_ID) GI_CUST_NAME,
 	        (CASE                         WHEN l54.DELVRY_GI_CMPLT = 'Y' AND l54.DELVRY_GR_CMPLT = 'Y' THEN 'C'   ELSE 'P' END) req_Status,
@@ -458,7 +473,8 @@
         </if>
         <if test="searchToDate !=null and searchToDate !=''">
         AND L54.DELVRY_DT <![CDATA[ <= ]]>TO_CHAR (TO_DATE (#{searchToDate}, 'YYYYMMDD'),'yyyymmdd') 
-        </if>       
+        </if>
+        group by L54.DELVRY_GI_DT,L54.DELVRY_GR_DT,L54.DELVRY_NO,S28r.WH_LOC_DESC,S28r.WH_LOC_DESC,S28r.WH_LOC_CODE,l47.PRIDIC_FRQNCY,S47.USER_FULL_NAME,L54.CRT_USER_ID,l54.DELVRY_GI_CMPLT,l54.DELVRY_GR_CMPLT,S28r.rdc_code      
     </select>
 
 
