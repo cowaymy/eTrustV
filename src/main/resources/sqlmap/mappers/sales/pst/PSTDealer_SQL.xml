@@ -267,6 +267,7 @@
     FROM 
         SYS0064M
     WHERE STATUS_ID = 1 <!-- state -->
+        AND AREA_ID NOT LIKE 'DM%'
     <if test="null != country and '' != country"> <!-- city  -->
         AND COUNTRY = #{country} 
     </if>
@@ -359,7 +360,7 @@
              #{newDealerType})
      </insert>
      
-     <select id="dealerBrnchList" parameterType="Map" resultType="egovMap">
+    <select id="dealerBrnchList" parameterType="Map" resultType="egovMap">
             SELECT
                    Project1.BRNCH_ID  CODE_ID ,
                    Project1.CODE   ,
@@ -372,8 +373,8 @@
 	                     WHERE 1 = Extent1.STUS_ID
                              AND Extent1.TYPE_ID = 1160 ) Project1
                ORDER BY Project1.BRNCH_CODE_NAME ASC
-  </select>
-  
+    </select>
+    
   <select id="getUserIdSeq" resultType="Integer">
         SELECT SYS0047M_USER_ID_SEQ.NEXTVAL FROM DUAL    
   </select>
