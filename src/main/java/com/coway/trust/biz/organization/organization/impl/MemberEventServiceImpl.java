@@ -216,7 +216,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
             //MemberPromoEntry
 			Map<String, Object> mPromoEntry = new HashMap<String, Object>();
 			mPromoEntry.put("stusId", params.get("confirmStatus"));
-			mPromoEntry.put("deptCode", mQryMemOrg.get("deptCode"));
+			mPromoEntry.put("deptCode", formList.get("deptCodeTo"));
 			mPromoEntry.put("updDt", formList.get("updDt"));
 			mPromoEntry.put("updUserId", formList.get("updUserId"));
 			mPromoEntry.put("promoId", params.get("promoId"));
