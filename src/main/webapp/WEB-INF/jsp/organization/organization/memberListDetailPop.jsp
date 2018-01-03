@@ -666,7 +666,12 @@ function fn_winClose(){
     </td>
     <th scope="row">HP Type</th>
     <td>
+      <c:if test = "${memberView.memType =='1'}">
     <span><c:out value="${memberView.c59}"/></span>
+    </c:if>
+    <c:if test = "${memberView.memType =='2803'}">
+    <span><c:out value="${memberView.c59}"/></span>
+    </c:if>
     </td>
     <th scope="row">User Valid Date</th>
     <td>
@@ -791,6 +796,9 @@ function fn_winClose(){
 <tr>
     <th scope="row">Resign Date</th>
     <td>
+    <c:if test = "${memberView.c32 =='51'}">
+    <span><c:out value="${memberView.c48}"/></span>
+    </c:if>
      <span></span>
     </td>
     <th scope="row">Terminate Date</th>
@@ -809,11 +817,12 @@ function fn_winClose(){
     </td>
     <th scope="row">Issued Bank</th>
     <td colspan="3">
-    <select class="w100p" id="bankSelect" disabled="disabled">
+    <span><c:out value="${memberView.bankName}"/></span>
+    <%-- <select class="w100p" id="bankSelect" disabled="disabled">
         <c:forEach var="list" items="${issuedBank }" varStatus="status">
            <option value="${list.bankId}">${list.c1}</option>
            </c:forEach>
-    </select>
+    </select>--%>
     </td>
 </tr>
 <tr>
