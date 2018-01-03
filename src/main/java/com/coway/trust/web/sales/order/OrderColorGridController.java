@@ -53,6 +53,7 @@ public class OrderColorGridController {
 			model.put("orgCode", getUserInfo.get("lastOrgCode"));
 			model.put("grpCode", getUserInfo.get("lastGrpCode"));
 			model.put("deptCode", getUserInfo.get("lastDeptCode"));
+			model.put("memCode", getUserInfo.get("memCode"));
 			logger.info("memType ##### " + getUserInfo.get("memType"));
 		}
 		
