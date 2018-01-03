@@ -67,13 +67,14 @@ public class MembershipController {
 
 	@RequestMapping(value = "/selectMembershipList", method = RequestMethod.GET) 
 	public ResponseEntity<List<EgovMap>> selectMembershipList(@RequestParam Map<String, Object> params,
-			HttpServletRequest request, ModelMap model) {
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		logger.debug("in  selectMembershipList ");
 
 		String[] MBRSH_STUS_ID = request.getParameterValues("MBRSH_STUS_ID");
 
 		params.put("MBRSH_STUS_ID", MBRSH_STUS_ID);
+		params.put("userTypeId", sessionVO.getUserTypeId());
 
 		// MBRSH_ID
 		logger.debug("			pram set  log");

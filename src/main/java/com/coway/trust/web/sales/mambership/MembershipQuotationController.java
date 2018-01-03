@@ -147,18 +147,21 @@ public class  MembershipQuotationController {
 	
 
 	@RequestMapping(value = "/quotationList" ,method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>>  quotationList(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+	public ResponseEntity<List<EgovMap>>  quotationList(@RequestParam Map<String, Object> params,HttpServletRequest request, 
+			Model mode, SessionVO sessionVO)	throws Exception {
 
 
 		String[] VALID_STUS_ID = request.getParameterValues("VALID_STUS_ID");
 
 		params.put("VALID_STUS_ID", VALID_STUS_ID);
-		
+
+		params.put("userTypeId", sessionVO.getUserTypeId());
 		
 		logger.debug("in  PaymentConfig ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
+		
 		
 		List<EgovMap>  list = membershipQuotationService.quotationList(params);
 		

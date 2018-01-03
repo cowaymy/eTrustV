@@ -86,12 +86,14 @@ public class  MembershipRentalQuotationController {
 
 
 	@RequestMapping(value = "/quotationList" ,method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>>  quotationList(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+	public ResponseEntity<List<EgovMap>>  quotationList(@RequestParam Map<String, Object> params,HttpServletRequest request
+			, Model mode, SessionVO sessionVO)	throws Exception {
 
 
 		String[] STUS_ID = request.getParameterValues("STUS_ID");
 
 		params.put("STUS_ID", STUS_ID);
+		params.put("userTypeId", sessionVO.getUserTypeId());
 		
 		
 		logger.debug("in  quotationList ");

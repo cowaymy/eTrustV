@@ -240,7 +240,7 @@ public class  MembershipRentalController {
 
 	@RequestMapping(value = "/selectList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectList(@RequestParam Map<String, Object> params,
-			HttpServletRequest request, ModelMap model) {
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
 		logger.debug("in  selectList ");
 
@@ -251,6 +251,8 @@ public class  MembershipRentalController {
 		
 		String[]   cmbStatus =request.getParameterValues("cmbStatus");
 		String[]   cmbSRVCStatus =request.getParameterValues("cmbSRVCStatus");
+
+		params.put("userTypeId", sessionVO.getUserTypeId());
 		
 		params.put("cmbStatus", cmbStatus);
 		params.put("cmbSRVCStatus", cmbSRVCStatus);
