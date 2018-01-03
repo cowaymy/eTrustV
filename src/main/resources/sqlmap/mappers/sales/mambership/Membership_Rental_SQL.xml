@@ -118,14 +118,17 @@
                    </if>
                 ) FL
                 JOIN SYS0047M Extent18   ON Extent18.USER_ID = FL.QOTAT_CRT_USER_ID
-                <if test="orgCode != null and orgCode != '' ">
+                
+           <if test="userTypeId !=null and userTypeId!= '' ">
                    JOIN SYS0047M USR ON FL.SRV_CNTRCT_SALESMAN = USR.USER_ID   
                    JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
                                         <if test="memCode != null and memCode != '' ">
                                             AND B.MEM_CODE = #{memCode}
                                         </if>
                    JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
+                                        <if test="orgCode != null and orgCode != '' ">
                                           AND C.LAST_ORG_CODE = #{orgCode}
+                                          </if>
                                           <if test="grpCode != null and grpCode != '' ">
                                           AND C.LAST_GRP_CODE = #{grpCode}
                                           </if>

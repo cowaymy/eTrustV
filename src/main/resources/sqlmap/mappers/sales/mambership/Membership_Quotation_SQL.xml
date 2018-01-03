@@ -58,21 +58,24 @@
 			       A.REF_NO REF_NO  ,
 			       DECODE( (SELECT COUNT(SRV_MEM_QOTAT_ID) FROM   PAY0024D P   WHERE   P.SRV_MEM_QOTAT_ID = QUOT_ID ) ,'0' ,'0','1' ) HASBILL
            FROM SAL1005V A
-            		<if test="orgCode != null and orgCode != '' ">
+           
+           <if test="userTypeId !=null and userTypeId!= '' ">
 		                   JOIN SYS0047M USR ON A.SRV_SALES_MEM_ID = USR.USER_ID
 		                   JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
 		                                        <if test="memCode != null and memCode != '' ">
 		                                            AND B.MEM_CODE = #{memCode}
 		                                        </if>
 		                   JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
+                                                <if test="orgCode != null and orgCode != '' ">
 		                                          AND C.LAST_ORG_CODE = #{orgCode}
+                                                </if>         
 		                                          <if test="grpCode != null and grpCode != '' ">
 		                                          AND C.LAST_GRP_CODE = #{grpCode}
 		                                          </if>
 		                                          <if test="deptCode != null and deptCode != '' ">
 		                                          AND C.LAST_GRP_CODE = #{deptCode}
 		                                          </if>
-		            </if>           
+		   </if>         
         WHERE  1=1
       
         <if test="QUOT_NO != null and QUOT_NO != ''">
