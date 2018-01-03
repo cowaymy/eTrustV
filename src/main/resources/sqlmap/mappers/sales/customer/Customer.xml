@@ -134,35 +134,37 @@
                                                     JOIN SYS0013M T5 
                                                       ON T5.CODE_ID =  T1.RACE_ID
                                                     LEFT OUTER JOIN (SELECT
-			                                                                        ADD1.CUST_ADD_ID,
-			                                                                        ADD1.CUST_ID
-			                                                                    FROM( SELECT 
-				                                                                            CUST_ADD_ID,
-				                                                                            CUST_ID
-				                                                                          FROM 
-				                                                                            SAL0023D
-				                                                                          WHERE 
-				                                                                            (9 = STUS_CODE_ID) 
-				                                                                          ORDER BY
-				                                                                            UPD_DT DESC )ADD1
-			                                                                      WHERE ROWNUM <= 1
-			                                                                    ) T6 ON T6.CUST_ID = T1.CUST_ID
+		                                                                         ADDT.CUST_ID,
+		                                                                         ADDT.CUST_ADD_ID,
+		                                                                         ADDT.CNT
+		                                                                        FROM
+		                                                                        (
+		                                                                        SELECT
+		                                                                            CUST_ID,
+		                                                                            CUST_ADD_ID,
+		                                                                            ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
+		                                                                        FROM
+		                                                                           SAL0023D
+		                                                                        WHERE
+		                                                                            9 = STUS_CODE_ID
+		                                                                        )ADDT
+		                                                                        WHERE ADDT.CNT = 1
+		                                                                                ) T6 ON T6.CUST_ID = T1.CUST_ID
                                                     LEFT OUTER JOIN (SELECT 
-			                                                                        CNTC.CUST_CNTC_ID,
-			                                                                        CNTC.CUST_ID
+		                                                                        CNTC.CUST_CNTC_ID,
+		                                                                        CNTC.CUST_ID                                                                                    
 		                                                                     FROM(
 		                                                                             SELECT
 		                                                                                CUST_CNTC_ID,
-		                                                                                CUST_ID
+		                                                                                CUST_ID,
+		                                                                                ROW_NUMBER() OVER (PARTITION BY CUST_ID ORDER BY UPD_DT) CNT
 		                                                                             FROM 
 		                                                                                SAL0027D
 		                                                                             WHERE 
-		                                                                                (9 = STUS_CODE_ID)
-		                                                                             ORDER BY
-		                                                                                UPD_DT DESC )CNTC
-		                                                                      WHERE ROWNUM <= 1      
-                                                                       ) T7 
-                                                      ON T7.CUST_ID = T1.CUST_ID
+		                                                                                9 = STUS_CODE_ID
+		                                                                            )CNTC
+		                                                                      WHERE CNTC.CNT = 1
+		                                                                       ) T7 ON T7.CUST_ID = T1.CUST_ID
                                                     LEFT OUTER 
                                                     JOIN SAL0026D T8 
                                                       ON T8.CUST_ID = T1.CUST_ID AND (9 =   T8.STUS_CODE_ID)
