@@ -64,7 +64,7 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                        }
                      },
                      {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>"          ,width:120    ,height:30 , visible:false},                          
-                     {dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipted'/>"         ,width:120    ,height:30              },                        
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceipted'/>"         ,width:120    ,height:30              },                        
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },                         
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
                      {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"            ,width:120    ,height:30                },                         
