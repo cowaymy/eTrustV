@@ -25,7 +25,7 @@ $(document).ready(function(){
     
     doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
-    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=116', '', '','ddlFailReason', 'S' , '');    
+    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '','ddlFailReason', 'S' , '');    
     
    // doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , '');    
     //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
