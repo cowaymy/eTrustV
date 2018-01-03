@@ -592,21 +592,21 @@ function fn_ddlStatus_SelectedIndexChanged(){
     
     fn_clearPageField();
     
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+    $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+    $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    
+    
     switch ($("#ddlStatus").val()) {
         case "4":
             //COMPLETE
             fn_openField_Complete();
-            var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-            $("#ddlCTCode").val(selectedItems[0].item.asMemId);
-            $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
-                
             break;
             
         case "1":   //inhouse
             fn_openField_Complete();
-            var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-            $("#ddlCTCode").val(selectedItems[0].item.asMemId);
-            $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
             break;
             
         case "10":
@@ -716,6 +716,13 @@ function fn_clearPageField(){
     
     $("#txtLabourCharge").val("0.00").attr("disabled", true); 
     $("#txtFilterCharge").val("0.00").attr("disabled", true); 
+    
+    
+    $("#ddlCTCode").val("");
+    $("#ddlDSCCode").val("");
+    $("#ddlCTCodeText").val("");
+    $("#ddlDSCCodeText").val("");
+    
     
 }
 
@@ -1440,9 +1447,13 @@ function fn_productGroup_SelectedIndexChanged(){
          <td>
         <!--  <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' > -->  
         
-        
+         <!-- 
          <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
          <input type="text" title=""    placeholder="" class="readonly"   id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}''/>
+          -->
+          
+          <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode'  />
+          <input type="text" title=""    placeholder="" class="readonly"    disabled="disabled"  id='ddlDSCCodeText' name='ddlDSCCodeText'  />
          
         </td>
     </tr>
@@ -1455,8 +1466,14 @@ function fn_productGroup_SelectedIndexChanged(){
         </td>
         <th scope="row">CT Code <span class="must">*</span>  </th>
         <td>
+        
+         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' />
+         <input type="text" title=""    placeholder=""  disabled="disabled"     id='ddlCTCodeText' name='ddlCTCodeText' />
+         
+        <!-- 
          <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
          <input type="text" title=""    placeholder="" class="readonly"    id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
+          -->
         </td>
     </tr>
     <tr>

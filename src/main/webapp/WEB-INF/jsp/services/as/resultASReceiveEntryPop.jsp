@@ -110,9 +110,13 @@ function fn_setEditValue(){
             
             
             
-            $("#requestor").val(eOjb.asRemReqster);
+            
+            $("#txtRequestor").val(eOjb.asRemReqster);
+            $("#requestor").val(eOjb.asReqsterTypeId);
+           
+            
             $("#requestorCont").val(eOjb.asRemReqsterCntc);
-            $("#txtRequestor").val(eOjb.asReqsterTypeId);
+            $("#requestor").val(eOjb.asReqsterTypeId);
             $("#additionalCont").val(eOjb.asRemAddCntc);
             $("#CTSSessionCode").val(eOjb.asSesionCode);
             $("#perIncharge").val(eOjb.picName);
@@ -403,7 +407,7 @@ function fn_doUpDate(){
                  "AS_BRNCH_ID"              : $("#branchDSC").val(),
                  "AS_MALFUNC_ID"            : $("#errorCode").val(),
                  "AS_MALFUNC_RESN_ID"       : $("#errorDesc").val(),
-                 "AS_REM_REQSTER"           : $("#requestor").val(),
+                 "AS_REM_REQSTER"           :  $("#txtRequestor").val(),  
                  "AS_REM_REQSTER_CNTC"      : $("#requestorCont").val(),
                  "AS_CALLLOG_ID"            : '0',
                  "AS_STUS_ID"               : '1',
@@ -411,7 +415,7 @@ function fn_doUpDate(){
                  "AS_ENTRY_IS_SYNCH"        : '0',   
                  "AS_ENTRY_IS_EDIT"         : '0',
                  "AS_TYPE_ID"               : '674',
-                 "AS_REQSTER_TYPE_ID"       : $("#txtRequestor").val(),
+                 "AS_REQSTER_TYPE_ID"       : $("#requestor").val(),  
                  "AS_IS_BS_WITHIN_30DAYS"   : $("#checkBS").prop("checked")   ? '1': '0',
                  "AS_ALLOW_COMM"            : $("#checkComm").prop("checked") ? '1': '0',
                  "AS_PREV_MEM_ID"           : 0,
@@ -467,7 +471,8 @@ function  fn_doNewSave(){
                  "AS_BRNCH_ID"              : $("#branchDSC").val(),
                  "AS_MALFUNC_ID"            : $("#errorCode").val(),
                  "AS_MALFUNC_RESN_ID"       : $("#errorDesc").val(),
-                 "AS_REM_REQSTER"           : $("#requestor").val(),
+                 
+                 "AS_REM_REQSTER"           : $("#txtRequestor").val()  ,
                  "AS_REM_REQSTER_CNTC"      : $("#requestorCont").val(),
                  "AS_CALLLOG_ID"            : '0',
                  "AS_STUS_ID"               : '1',
@@ -475,7 +480,7 @@ function  fn_doNewSave(){
                  "AS_ENTRY_IS_SYNCH"        : '0',   
                  "AS_ENTRY_IS_EDIT"         : '0',
                  "AS_TYPE_ID"                     : $("#IN_AsResultId").val() ==  "" ? '674' : '2713'  ,
-                 "AS_REQSTER_TYPE_ID"       : $("#txtRequestor").val(),
+                 "AS_REQSTER_TYPE_ID"       :  $("#requestor").val(),
                  "AS_IS_BS_WITHIN_30DAYS"   : $("#checkBS").prop("checked")   ? '1': '0',
                  "AS_ALLOW_COMM"            : $("#checkComm").prop("checked") ? '1': '0',
                  "AS_PREV_MEM_ID"           : 0,
@@ -684,7 +689,7 @@ function fn_validRequiredField_Save(){
     
     
     if($("#branchDSC").val() == ""){
-        rtnMsg += "* Please select the DSC branch. <br />";
+         rtnMsg += "* Please select the DSC branch. <br />";
         rtnValue =false; 
     }
     
@@ -1201,7 +1206,7 @@ function fn_addRemark(){
 </tr>
 <tr>
     <td colspan="3">
-    <input type="text" title="" placeholder="" id='txtRequestor' name='txtRequestor' class="w100p" maxlength="10" onchage="fn_changetxtRequestor(this)"/>
+    <input type="text" title="" placeholder="" id='txtRequestor' name='txtRequestor' class="w100p" maxlength="4000" /> <!-- onchage="fn_changetxtRequestor(this)" -->
     </td>
     <th scope="row">Additional Contact</th>
     <td>

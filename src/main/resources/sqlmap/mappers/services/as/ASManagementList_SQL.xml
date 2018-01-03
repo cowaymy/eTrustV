@@ -37,7 +37,8 @@
                                    S.REF_REQST,
                                    S.AS_MALFUNC_ID,  
                                    S.AS_MALFUNC_RESN_ID,
-                                   DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,'') AS_IF_FLAG
+                                   DECODE(S.AS_IF_FLAG, 'E' ,'logistics err' ,'') AS_IF_FLAG,
+                                   MEM_CODE
 						  FROM ( SELECT DISTINCT E.AS_ID AS_ID  ,
 						                         E.AS_NO AS_NO  ,
 						                         E.ASSOID1 AS_SO_ID  ,  
@@ -75,7 +76,8 @@
                                                 E.REF_REQST,
                                                 E.AS_MALFUNC_ID,  
                                                 E.AS_MALFUNC_RESN_ID,
-                                                E.AS_IF_FLAG 
+                                                E.AS_IF_FLAG ,
+                                                E.MEM_CODE
 						         FROM ( SELECT Extent1.AS_ID AS_ID  ,
 						                       Extent1.AS_NO AS_NO  ,
 						                       Extent1.AS_SO_ID ASSOID1  ,
@@ -99,7 +101,8 @@
 						                       Extent1.REF_REQST ,
 						                       Extent1.AS_MALFUNC_ID,  
 						                       Extent1.AS_MALFUNC_RESN_ID,
-						                       Extent1.AS_IF_FLAG 
+						                       Extent1.AS_IF_FLAG ,
+						                       Extent8.MEM_CODE
 						                FROM SVC0001D Extent1
 						                       JOIN SYS0013M Extent2   ON Extent1.AS_TYPE_ID = Extent2.CODE_ID
 						                       JOIN SYS0038M Extent3   ON Extent1.AS_STUS_ID = Extent3.STUS_CODE_ID

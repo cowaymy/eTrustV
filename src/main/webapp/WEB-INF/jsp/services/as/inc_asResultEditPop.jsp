@@ -144,12 +144,18 @@ function  fn_setSVC0004dInfo(result){
         $("#ddlErrorDesc option").remove();
         doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
     }
-   
     
     
+    //$("#ddlCTCodeText").val( result[0].c12); 
+    //$("#ddlCTCode").val( result[0].c11);
     
-    $("#ddlCTCodeText").val( result[0].c12); 
-    $("#ddlCTCode").val( result[0].c11);
+    
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+    $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+    $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    
     
     $("#ddlWarehouse").val( result[0].asWhId); 
     $("#txtRemark").val( result[0].asResultRem); 
@@ -273,6 +279,14 @@ function fn_HasFilterUnclaim(){
 function fn_ddlStatus_SelectedIndexChanged(){
     
     fn_clearPageField();
+    
+
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+    $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+    $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    
     
     switch ($("#ddlStatus").val()) {
         case "4":

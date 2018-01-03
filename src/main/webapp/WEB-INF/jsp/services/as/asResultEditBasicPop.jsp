@@ -114,7 +114,6 @@ function  fn_setSVC0004dInfo(result){
     $("#dpSettleDate").val( result[0].asSetlDt); 
     $("#ddlFailReason").val( result[0].c2); 
     $("#tpSettleTime").val( result[0].asSetlTm); 
-    $("#ddlDSCCode").val( result[0].asBrnchId); 
     $("#ddlErrorCode").val( result[0].asMalfuncId); 
     $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
     asMalfuncResnId = result[0].asMalfuncResnId;
@@ -124,10 +123,18 @@ function  fn_setSVC0004dInfo(result){
         doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
     }
     
-    
+    /*
+    $("#ddlDSCCode").val( result[0].asBrnchId); 
     $("#ddlCTCodeText").val( result[0].c12); 
-    $("#CTID").val( result[0].c11); 
+    
     $("#ddlCTCode").val( result[0].c11);
+    */
+    var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+    $("#ddlCTCode").val(selectedItems[0].item.asMemId);
+    $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
+    $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
+    $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    $("#CTID").val( result[0].c11); 
     
     $("#ddlWarehouse").val( result[0].asWhId); 
     $("#txtRemark").val( result[0].asResultRem); 
@@ -971,7 +978,7 @@ function fn_chSeriaNo(){
     <td>
      <span id='txtDSCCode'></span> 
     </td>
-    <th scope="row">Incharge Technician</th>
+    <th scope="row"> Incharge Technician </th>
     <td colspan="3"><span id='txtInchargeCT'></span> </td>
 </tr>
 </tbody>
@@ -1081,11 +1088,13 @@ function fn_chSeriaNo(){
         <th scope="row">DSC Code <span class="must">*</span> </th>
         <td>
        <!-- <select  disabled="disabled" id='ddlDSCCode' name='ddlDSCCode' >  </select>-->
+       
+       <!--
          <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
          <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}'/>
-    
-        
-    
+        -->
+         <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' />
+         <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  />
         </td>
     </tr>
     <tr>
@@ -1096,16 +1105,20 @@ function fn_chSeriaNo(){
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
+        <!-- 
+        
+         <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' />
+         <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  />
+         
+         <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
+         -->
         
         
          <input type="hidden" title="" placeholder="" class=""  id='ddlCTCode' name='ddlCTCode' />
          <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  />
          
-         <!--   <select   id='ddlCTCode' name='ddlCTCode' class="readonly"  disabled="disabled" > -->
          <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
-        
-        
-    </select> 
+         
         </td>
     </tr>
     <tr>

@@ -804,6 +804,7 @@ function fn_AllocationConfirm(){
         $("#appDate").val(selectedItemsMain[0].item.dDate); 
         $("#branchDSC").val(selectedItemsMain[0].item.brnchId); 
         
+        console.log("branchDSC  =>"+selectedItemsMain[0].item.brnchId);
         
         $("#_doAllactionDiv").remove();
     	
