@@ -1094,7 +1094,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
         			promoEntry.put("promoId", 0);
         			promoEntry.put("requestNo", "");
-        			promoEntry.put("statusId", 4);
+        			promoEntry.put("statusId", 60);
         			promoEntry.put("promoTypeId", Integer.parseInt(params.get("action").toString()));
         			promoEntry.put("memTypeId",memberView.get("memType"));
         			promoEntry.put("memberId", memberView.get("memId"));
