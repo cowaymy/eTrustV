@@ -12,13 +12,57 @@ $(document).ready(function(){
 	
 	$("#table1").hide();
 	    
-    if("${SESSION_INFO.userTypeId}" == "1" ){
+	if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
         $("#table1").show();
-    }else if("${SESSION_INFO.userTypeId}" == "2"){
-        $("#table1").show();
+    }
+
+	if("${SESSION_INFO.memberLevel}" =="1"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+        
+    }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+        
         $("#grpCode").val("${grpCode}");
         $("#grpCode").attr("class", "w100p readonly");
         $("#grpCode").attr("readonly", "readonly");
+                    
+    }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+        
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+        $("#deptCode").val("${deptCode}");
+        $("#deptCode").attr("class", "w100p readonly");
+        $("#deptCode").attr("readonly", "readonly");
+                    
+    }else if("${SESSION_INFO.memberLevel}" =="4"){
+        
+        $("#orgCode").val("${orgCode}");
+        $("#orgCode").attr("class", "w100p readonly");
+        $("#orgCode").attr("readonly", "readonly");
+         
+        $("#grpCode").val("${grpCode}");
+        $("#grpCode").attr("class", "w100p readonly");
+        $("#grpCode").attr("readonly", "readonly");
+
+        $("#deptCode").val("${deptCode}");
+        $("#deptCode").attr("class", "w100p readonly");
+        $("#deptCode").attr("readonly", "readonly");
+
+        $("#memCode").val("${memCode}");
+        $("#memCode").attr("class", "w100p readonly");
+        $("#memCode").attr("readonly", "readonly");
     }
 	
     
@@ -339,7 +383,7 @@ function fn_goSVMDetails(){
 <tr>
     <th scope="row">Org Code</th>
     <td>
-       <input type="text" title="" id="orgCode" name="orgCode" class="w100p readonly" readonly="readonly"  value="${orgCode}" }/>
+       <input type="text" title="" id="orgCode" name="orgCode" class="w100p" />
     </td>
     <th scope="row">Grp Code</th>
     <td>
