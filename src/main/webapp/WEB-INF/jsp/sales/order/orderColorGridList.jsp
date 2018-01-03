@@ -318,7 +318,7 @@
 <tr>
     <th scope="row">Organization Code</th>
     <td>
-    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p readonly" />
+    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
     </td>
     <th scope="row">Group Code</th>
     <td>
