@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-
+<style>
+.aui-grid-user-custom-left {
+    list-style:none;
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+</style>
 
     <script type="text/javaScript" language="javascript">
 
@@ -136,17 +143,19 @@
     
     function createAUIGridCd(){
         // AUIGrid 칼럼 설정
-        var columnLayout = [ {
-                    dataField : "codyId",
-                    headerText : "Cody Code",
-                    width : 120
-           },{
+        var columnLayout = [ 
+                             {
                dataField : "deptCode",
                headerText : "Cody Manager",
                width : 120
-            }, {     
+            },{
+                    dataField : "codyId",
+                    headerText : "Cody Code",
+                    width : 120
+           }, {     
                     dataField : "codyName",
                     headerText : "Cody Name",
+                    style : "aui-grid-user-custom-left",
                     width : 220
            }, {     
                     dataField : "stus",

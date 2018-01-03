@@ -423,6 +423,7 @@
             	
             if(checkedItems.length > 1){
             	 Common.alert('please choose one data selected.');
+            	 return false;
             }
                 var str = "";
                 var custStr = "";
