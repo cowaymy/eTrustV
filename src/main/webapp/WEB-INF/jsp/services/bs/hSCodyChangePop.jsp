@@ -140,7 +140,11 @@
                     dataField : "codyId",
                     headerText : "Cody Code",
                     width : 120
-           }, {     
+           },{
+               dataField : "deptCode",
+               headerText : "Cody Manager",
+               width : 120
+            }, {     
                     dataField : "codyName",
                     headerText : "Cody Name",
                     width : 220
