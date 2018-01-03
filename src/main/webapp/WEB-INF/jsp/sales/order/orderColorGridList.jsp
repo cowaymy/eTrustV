@@ -270,8 +270,12 @@
             if (tag === 'form'){
                 return $(':input',this).clearForm();
             }
-            if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-                this.value = '';
+            if (type === 'text' || type === 'password'  || tag === 'textarea'){
+            	if($("#"+this.id).hasClass("readonly")){
+
+            	}else{
+                    this.value = '';
+            	}
             }else if (type === 'checkbox' || type === 'radio'){
                 this.checked = false;
             }else if (tag === 'select'){
