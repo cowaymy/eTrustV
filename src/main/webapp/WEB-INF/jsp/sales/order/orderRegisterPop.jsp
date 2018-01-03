@@ -290,10 +290,16 @@
                 
                 if("DM" == custInfo.areaId.substring(0,2)) {
         		    Common.alert("Invalid Address" + DEFAULT_DELIMITER + "<b>The customer address of Order is the old address.<br/>Change to the new address in the Customer Management.</b>");
+        		    /*
         		    fn_clearInstallAddr();
                     $('#liInstNewAddr').removeClass("blind");
                     $('#liInstSelAddr').removeClass("blind");
         		    return;
+                    */
+                    $("#validAreaIdYN").val("N");
+        	    }
+        	    else {
+        	        $("#validAreaIdYN").val("Y");
         	    }
         	 
                 //
@@ -1815,16 +1821,21 @@
     function fn_validInstallation() {
         var isValid = true, msg = "";
 
+        if($('#validAreaIdYN').val() == "N") {
+            isValid = false;
+            msg += "* The customer address of Order is the old address.<br/>Change to the new address in the Customer Management.<br>";
+        }
+        
         if(FormUtil.checkReqValue($('#hiddenCustAddId'))) {
             isValid = false;
             msg += "* Please select an installation address.<br>";
         }
-
+        /*
         if(FormUtil.checkReqValue($('#hiddenInstCntcId'))) {
             isValid = false;
             msg += "* Please select an installation contact person.<br>";
         }
-
+        */
         if($("#dscBrnchId option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select the DSC branch.<br>";
@@ -3154,6 +3165,7 @@
 ------------------------------------------------------------------------------->
 <form id="instAddrForm" name="instAddrForm" action="#" method="post">
     <input id="hiddenCustAddId" name="custAddId" type="hidden"/>
+    <input id="validAreaIdYN" name="validAreaIdYN" type="hidden" value="Y" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
