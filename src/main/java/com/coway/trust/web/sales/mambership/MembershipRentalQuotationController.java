@@ -76,6 +76,7 @@ public class  MembershipRentalQuotationController {
 			model.put("orgCode", result.get("lastOrgCode"));
 			model.put("grpCode", result.get("lastGrpCode"));
 			model.put("deptCode", result.get("lastDeptCode"));
+			model.put("memCode", result.get("memCode"));
 		}
 		
 		return "sales/membership/membershipRentalQuotationList";
