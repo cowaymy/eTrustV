@@ -38,7 +38,7 @@ $(document).ready(function() {
     CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', '' , optionUnitCh); //Status 
      
     var selReasonCode = $("#_ccpResnId").val();
-    CommonCombo.make("_reasonCodeEdit", "/sales/ccp/selectReasonCodeFbList", '', selReasonCode ,optionUnit ); //Status
+    CommonCombo.make("_reasonCodeEdit", "/sales/ccp/selectReasonCodeFbList", '', selReasonCode ,optionUnitCh ); //Status
  //   doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCodeEdit', 'S'); //Reason
     
     //Income Range ComboBox
