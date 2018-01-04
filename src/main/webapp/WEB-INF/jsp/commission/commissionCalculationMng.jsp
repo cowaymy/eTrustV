@@ -353,7 +353,7 @@
                 <tbody>
                     <tr>
                         <th scope="row"><spring:message code='commission.text.search.monthYear'/></th>
-                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" class="j_date2" value="${searchDt }" style="width: 200px;" <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}">readonly</c:if>/></td>
+                        <td><input type="text" id="searchDt" name="searchDt" title="Month/Year" value="${searchDt }" style="width: 99px;" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">class="j_date2"</c:if> <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}">readonly</c:if> /></td>
                         <th scope="row"><spring:message code='commission.text.search.orgGroup'/></th>
                         <td><select id="orgRgCombo" name="ItemGrCd" style="width: 100px;">
                                 <c:forEach var="list" items="${orgGrList }">
