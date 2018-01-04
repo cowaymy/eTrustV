@@ -34,34 +34,34 @@ var detailGridID;
 
 
 // AUIGrid 칼럼 설정                                                                            visible : false
-var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log.head.materialcode'/>"                ,width:120    ,height:30 , visible:true},                         
-							{dataField: "stkDesc",headerText :"<spring:message code='log.head.materialcodetext'/>"           ,width:120    ,height:30 , visible:true},                          
-							{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.fromsloc'/>"                     ,width:120    ,height:30 , visible:true},                         
-							{dataField: "revStorgNm",headerText :"<spring:message code='log.head.tosloc'/>"                     ,width:120    ,height:30 , visible:true},                       
-							{dataField: "trantype",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:true},                         
-							{dataField: "invntryMovType",headerText :"<spring:message code='log.head.movementype'/>"                   ,width:120    ,height:30 , visible:true},                        
-							{dataField: "movtype",headerText :"<spring:message code='log.head.movementtext'/>"                ,width:120    ,height:30 , visible:true},                         
-							{dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                           ,width: "8%"       ,height:30 , visible:true},                  
-							{dataField: "matrlDocNo",headerText :"<spring:message code='log.head.materialdocuments'/>"           ,width:120    ,height:30 , visible:true},                          
-							{dataField: "matrlDocItm",headerText :"<spring:message code='log.head.item'/>"                         ,width:120    ,height:30 , visible:true},                        
-							{dataField: "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"                  ,width:120    ,height:30 , visible:true},                        
-							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},                       
-							{dataField: "refDocNo",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30 , visible:true},                       
-							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},                       
-							{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"                 ,width:120    ,height:30 , visible:true},                        
-							{dataField: "autoCrtItm",headerText :"<spring:message code='log.head.auto/manual'/>"                    ,width:120    ,height:30 , visible:true},                       
-							{dataField: "codeName",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width: "15%"     ,height:30 , visible:true},               
-							{dataField: ""  ,headerText:    ""                             ,width:  "15%"     ,height:30 , visible:false},                  
-							{dataField: "dcfreqapproveremark",headerText :"<spring:message code='log.head.dcfreqapproveremark'/>"           ,width: "15%"     ,height:30 , visible:false},                  
-							{dataField: "dcfreqapproveby",headerText :"<spring:message code='log.head.dcfreqapproveby'/>"               ,width: "15%"     ,height:30 , visible:false},                  
-							{dataField: "reasondesc1",headerText :"<spring:message code='log.head.reason(approververified)'/>"   ,width:    "15%"     ,height:30 , visible:false},                  
-							{dataField: "c7",headerText :"<spring:message code='log.head.approvalstatus'/>"             ,width: "15%"     ,height:30 , visible:false},                  
-							{dataField: "c2",headerText :"<spring:message code='log.head.approveat'/>"                   ,width:    "15%"     ,height:30 , visible:false},                  
-							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false} 
+var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log.head.matcode'/>"                ,width:120    ,height:30 , visible:true},
+							{dataField: "stkDesc",headerText :"<spring:message code='log.head.materialcodetext'/>"           ,width:120    ,height:30 , visible:true},
+							{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.fromsloc'/>"                     ,width:120    ,height:30 , visible:true},
+							{dataField: "revStorgNm",headerText :"<spring:message code='log.head.tosloc'/>"                     ,width:120    ,height:30 , visible:true},
+							{dataField: "trantype",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:true},
+							{dataField: "invntryMovType",headerText :"<spring:message code='log.head.movementype'/>"                   ,width:120    ,height:30 , visible:true},
+							{dataField: "movtype",headerText :"<spring:message code='log.head.movementtext'/>"                ,width:120    ,height:30 , visible:true},
+							{dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                           ,width: "8%"       ,height:30 , visible:true},
+							{dataField: "matrlDocNo",headerText :"<spring:message code='log.head.materialdocuments'/>"           ,width:120    ,height:30 , visible:true},
+							{dataField: "matrlDocItm",headerText :"<spring:message code='log.head.item'/>"                         ,width:120    ,height:30 , visible:true},
+							{dataField: "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"                  ,width:120    ,height:30 , visible:true},
+							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},
+							{dataField: "refDocNo",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30 , visible:true},
+							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},
+							{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"                 ,width:120    ,height:30 , visible:true},
+							{dataField: "autoCrtItm",headerText :"<spring:message code='log.head.auto/manual'/>"                    ,width:120    ,height:30 , visible:true},
+							{dataField: "codeName",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width: "15%"     ,height:30 , visible:true},
+							{dataField: ""  ,headerText:    ""                             ,width:  "15%"     ,height:30 , visible:false},
+							{dataField: "dcfreqapproveremark",headerText :"<spring:message code='log.head.dcfreqapproveremark'/>"           ,width: "15%"     ,height:30 , visible:false},
+							{dataField: "dcfreqapproveby",headerText :"<spring:message code='log.head.dcfreqapproveby'/>"               ,width: "15%"     ,height:30 , visible:false},
+							{dataField: "reasondesc1",headerText :"<spring:message code='log.head.reason(approververified)'/>"   ,width:    "15%"     ,height:30 , visible:false},
+							{dataField: "c7",headerText :"<spring:message code='log.head.approvalstatus'/>"             ,width: "15%"     ,height:30 , visible:false},
+							{dataField: "c2",headerText :"<spring:message code='log.head.approveat'/>"                   ,width:    "15%"     ,height:30 , visible:false},
+							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false}
                    ];
 
 var resop = {
-        rowIdField : "rnum",            
+        rowIdField : "rnum",
         //editable : true,
         groupingFields : ["reqstno", "staname"],
         displayTreeOpen : true,
@@ -76,15 +76,15 @@ var paramdata;
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
 var paramdata;
 $(document).ready(function(){
-	
+
     // masterGrid 그리드를 생성합니다.
     myGridID = GridCommon.createAUIGrid("main_grid_wrap", columnLayout,"", gridoptions);
-	
+
     /**********************************
     * Header Setting
     **********************************/
     paramdata = { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''};
-    
+
     CommonCombo.make("searchTrcType", "/common/selectCodeList.do", { groupCode : '306' , orderValue : 'CRT_DT' , likeValue:''}, "", {
         id: "code",
         name: "codeName",
@@ -98,15 +98,15 @@ $(document).ready(function(){
     });
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'sfrLoctype', 'M','f_frloctype');
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'stoLoctype', 'M','f_toloctype');
-    
+
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'sfrLocgrade', 'A','');
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'stoLocgrade', 'A','');
-    
+
     doGetCombo('/common/selectCodeList.do', '15', '', 'smattype', 'M' ,'f_multiCombos');
     doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
-    
+
     doDefCombo(amdata, 'M' ,'sam', 'S', '');
-    
+
 //     CommonCombo.make("sfrLoctype", "/common/selectCodeList.do", { groupCode : 339 , orderValue : 'CODE'}, "", {
 //         id: "code",
 //         name: "codeName",
@@ -128,24 +128,24 @@ $(document).ready(function(){
 //         name: "codeName",
 //         type:"M"
 //     });
-    
+
     //doGetComboData('/common/selectCodeList.do', paramdata, '','searchTrcType', 'S' , '');
-    //doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','sstatus', 'S' , ''); 
+    //doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '','sstatus', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '','searchFromLoc', 'S' , 'SearchListAjax');//From Location 조회
 //     doGetCombo('/common/selectStockLocationList.do', '', '','searchToLoc', 'S' , '');//To Location 조회
 
-    
+
     AUIGrid.bind(myGridID, "cellClick", function( event ) {
 
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
 
     });
-    
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
+
 });
 
 
@@ -156,15 +156,15 @@ $(function(){
         SearchListAjax();
     });
     $("#clear").click(function() {
-    	
+
     });
-    
+
     $("#download").click(function() {
     	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Materia Document List");
     });
-    
+
     $("#searchTrcType").change(function(){
-    	
+
     	CommonCombo.make("searchMoveType", "/logistics/materialDoc/selectTrntype.do", $("#searchForm").serialize(), "", {
             id: "code",
             name: "codeName",
@@ -182,34 +182,34 @@ $(function(){
     });
     $('#sfrLocgrade').change(function(){
     	var searchlocgb = $('#sfrLoctype').val();
-        
+
         var locgbparam = "";
         for (var i = 0 ; i < searchlocgb.length ; i++){
             if (locgbparam == ""){
                 locgbparam = searchlocgb[i];
             }else{
-                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                locgbparam = locgbparam +"∈"+searchlocgb[i];
             }
         }
-        
+
         var param = {searchlocgb:locgbparam , grade:$('#sfrLocgrade').val()}
-        
+
         doGetComboData('/common/selectStockLocationList2.do', param , '', 'sfrLoc', 'M','f_multiComboType');
     });
     $('#stoLocgrade').change(function(){
         var searchlocgb = $('#stoLoctype').val();
-        
+
         var locgbparam = "";
         for (var i = 0 ; i < searchlocgb.length ; i++){
             if (locgbparam == ""){
                 locgbparam = searchlocgb[i];
             }else{
-                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                locgbparam = locgbparam +"∈"+searchlocgb[i];
             }
         }
-        
+
         var param = {searchlocgb:locgbparam , grade:$('#stoLocgrade').val()}
-        
+
         doGetComboData('/common/selectStockLocationList2.do', param , '', 'stoLoc', 'M','f_multiComboType');
     });
 });
@@ -219,48 +219,48 @@ function f_frloctype() {
         $('#sfrLoctype').change(function() {
             if ($('#sfrLoctype').val() != null && $('#sfrLoctype').val() != "" ){
                  var searchlocgb = $('#sfrLoctype').val();
-                    
+
                     var locgbparam = "";
                     for (var i = 0 ; i < searchlocgb.length ; i++){
                         if (locgbparam == ""){
                             locgbparam = searchlocgb[i];
                         }else{
-                            locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
                         }
                     }
-                    
+
                     var param = {searchlocgb:locgbparam , grade:$('#sfrLocgrade').val()}
-                    
+
                     doGetComboData('/common/selectStockLocationList2.do', param , '', 'sfrLoc', 'M','f_multiComboType');
               }
         }).multipleSelect({
             selectAll : true
-        });        
+        });
     });
 }
 
 function f_toloctype() {
     $(function() {
         $('#stoLoctype').change(function() {
-            
+
             if ($('#stoLoctype').val() != null && $('#stoLoctype').val() != "" ){
                  var searchlocgb = $('#stoLoctype').val();
-                    
+
                     var locgbparam = "";
                     for (var i = 0 ; i < searchlocgb.length ; i++){
                         if (locgbparam == ""){
                             locgbparam = searchlocgb[i];
                         }else{
-                            locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+                            locgbparam = locgbparam +"∈"+searchlocgb[i];
                         }
                     }
-                    
+
                     var param = {searchlocgb:locgbparam , grade:$('#stoLocgrade').val()}
                     doGetComboData('/common/selectStockLocationList2.do', param , '', 'stoLoc', 'M','f_multiComboType');
               }
         }).multipleSelect({
             selectAll : true
-        });        
+        });
     });
 }
 
@@ -283,11 +283,11 @@ function f_multiCombos() {
         $('#smattype').change(function() {
         }).multipleSelect({
             selectAll : true
-        }); /* .multipleSelect("checkAll"); */ 
+        }); /* .multipleSelect("checkAll"); */
         $('#smatcate').change(function() {
         }).multipleSelect({
             selectAll : true
-        }); /* .multipleSelect("checkAll"); */ 
+        }); /* .multipleSelect("checkAll"); */
     });
 }
 
@@ -295,24 +295,24 @@ function f_multiCombos() {
 	function fn_itempopList(data) {
 
 		var rtnVal = data[0].item;
-		
+
 		$("#searchMaterialCode").val(rtnVal.itemcode);
-		
+
 		$("#svalue").val('');
 	}
 
 	function SearchListAjax() {
-		
+
 		var url = "/logistics/materialDoc/MaterialDocSearchList.do";
 		var param = $('#searchForm').serialize();
-		
+
 		Common.ajax("GET", url, param, function(data) {
 			console.log(data);
 			AUIGrid.setGridData(myGridID, data.data);
 
 		});
 	}
-</script> 
+</script>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -332,7 +332,7 @@ function f_multiCombos() {
     <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-</c:if>    
+</c:if>
      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
@@ -342,7 +342,7 @@ function f_multiCombos() {
         <input type="hidden" id="svalue" name="svalue"/>
         <input type="hidden" id="sUrl"   name="sUrl"  />
         <input type="hidden" id="stype"  name="stype" />
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="rStcode" id="rStcode" />
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -373,15 +373,15 @@ function f_multiCombos() {
                     <th scope="row">Posting Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="PostingDt2" name="PostingDt2" type="text" title="Posting End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->                        
+                        </div><!-- date_set end -->
                     </td>
                     <th scope="row">Create Date</th>
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
@@ -389,7 +389,7 @@ function f_multiCombos() {
                     <th scope="row">Auto / Manual</th>
                     <td>
                         <select class="w100p" id="sam" name="sam"></select>
-                    </td>          
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">From Location Type</th>
@@ -404,7 +404,7 @@ function f_multiCombos() {
                     <td>
                         <select id="sfrLoc" name="sfrLoc" class="multy_select w100p" multiple="multiple"><option>Choose Type OR Grade</option></select>
                     </td>
-                </tr> 
+                </tr>
                 <tr>
                     <th scope="row">To Location Type</th>
                     <td>
@@ -418,7 +418,7 @@ function f_multiCombos() {
                     <td>
                         <select id="stoLoc" name="stoLoc" class="multy_select w100p" multiple="multiple"></select>
                     </td>
-                </tr> 
+                </tr>
                 <tr>
                     <th scope="row">Material Code</th>
                     <td>
@@ -446,7 +446,7 @@ function f_multiCombos() {
                     <td>
                         <input type="text" id="sdelvno" name="sdelvno" title="" placeholder="Delivery No" class="w100p" />
                     </td>
-                </tr>       
+                </tr>
             </tbody>
         </table><!-- table end -->
     </form>
@@ -458,15 +458,15 @@ function f_multiCombos() {
         <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
-            <!-- <li><p class="btn_grid"><a id="insert">INS</a></p></li> -->            
+</c:if>
+            <!-- <li><p class="btn_grid"><a id="insert">INS</a></p></li> -->
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:400px"></div>
-        
+
     <!--    <div id="sub_grid_wrap" class="mt10" style="height:350px"></div>  -->
 
     </section><!-- search_result end -->
-    
+
 </section>
 
