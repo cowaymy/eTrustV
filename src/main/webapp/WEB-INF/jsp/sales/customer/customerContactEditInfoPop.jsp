@@ -57,7 +57,8 @@ $(document).ready(function() {
 		}
 		//Nric
 		if("" != $("#cntcNric").val() && null != $("#cntcNric").val()){
-			if(FormUtil.checkNum($("#nric"))){
+			//console.log("log : " + FormUtil.checkNum($("#cntcNric")));
+			if(FormUtil.checkNum($("#cntcNric"))){
 				Common.alert("* Invalid nric number.");
 				return;
 			}
