@@ -428,7 +428,8 @@ $(function(){
     });
      $("#insTransType").change(function(){
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#insTransType").val()};
-        doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
+        //doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
+        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','insReqType', 'S' , '');
     });
 });
 

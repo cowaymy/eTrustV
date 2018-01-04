@@ -263,6 +263,7 @@ WHERE 1 = 1
         </if>
          <if test="likeValue != null and likeValue !=''">
            AND CODE LIKE #{likeValue}||'%'
+           AND UPPER(CODE_NAME) NOT LIKE '%'||UPPER('cancel') || '%'
         </if>
         <choose>
           <when test="orderValue !=null and orderValue !=''">
