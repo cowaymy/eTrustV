@@ -276,8 +276,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		
 		for (int i = 0 ; i < delvcd.length ; i ++){
 			String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
-			
-			if (receiptFlag != null && "N".equals(receiptFlag)){
+			logger.debug( "279 Line ::::: " + receiptFlag);
+			if (receiptFlag != null && "Y".equals(receiptFlag)){
 				formMap.put("retMsg" , "fail");
 				return formMap; 
 			}

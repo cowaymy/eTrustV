@@ -314,23 +314,7 @@ $(function(){
         			break;
         		}
         	}
-        	 $.ajax({
-        	        type : "GET",
-        	        url  : getContextPath() + url,
-        	        data : pdata,
-        	        dataType : "json",
-        	        //async : false,
-        	        contentType : "application/json;charset=UTF-8",
-        	        success : function(data) {
-        	            var rData = data;
-        	            doDefComboCode(rData, selCode, obj , type,  callbackFn);
-        	        },
-        	        error: function(jqXHR, textStatus, errorThrown){
-        	            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
-        	        },
-        	        complete: function(){
-        	        }
-        	    });
+        	
         	doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
         	$('#grForm #gtype').val("GR");
@@ -540,14 +524,11 @@ function grFunc(){
 
 
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-		var reparam = (result.rdata).split("∈");
-
-		//if (result.rdata == '000'){
-			
+		
 		if (result.message.code == '99'){
 			Common.alert(result.message.message + "<br/> Already Processed.");
 		}else{
-
+			var reparam = (result.rdata).split("∈");
 			if(reparam[0].trim() == '000'){
 				if ($('#grForm #gtype').val() == "RC"){
 					Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
