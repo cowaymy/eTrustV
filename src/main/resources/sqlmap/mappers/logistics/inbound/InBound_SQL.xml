@@ -11,6 +11,12 @@
 				        ,S28.WH_LOC_DESC
 				        ,L83.PLANT
 				        ,L83.BL_NO
+				        ,TO_DATE(L83.SHIP_DT, 'YYYY/MM/DD') shipDt
+				        ,TO_DATE(L83.GR_DT, 'YYYY/MM/DD') grDt
+				        ,L83.AP_CMPLT
+				        ,L83.GR_CMPLT
+				        ,L84.PUR_DOC_NO
+				        ,L.83.ACC_NO
 				        ,L84.ITM_SEQ
 				        ,L84.MATRL_NO
 				        ,S26.STK_TYPE_ID
@@ -62,6 +68,12 @@
 				     <if test="blno != null and blno != ''">
 				     AND L83.BL_NO LIKE #{blno}||'%'
                     </if>
+                    <if test="pono != null and pono != ''">
+                     AND L84.PUR_DOC_NO = #{pono}
+                    </if>
+                    <if test="vendorno != null and vendorno != ''">
+                     AND L83.ACC_NO = #{vendorno}
+                    </if>
 				     <if test="location != null and location != ''">
 				     AND S28.WH_LOC_ID =  #{location}
                     </if>
@@ -70,6 +82,21 @@
                     </if>
 				     <if test="blsdt != null and blsdt != '' and bledt != null and bledt != ''">
 				     AND L83.SHIP_DT BETWEEN TO_CHAR(TO_DATE(#{blsdt},'DD/MM/YYYY'),'YYYYMMDD') AND TO_CHAR(TO_DATE(#{bledt},'DD/MM/YYYY'),'YYYYMMDD')
+                    </if>
+                    <if test="materialcode != null and materialcode != '' ">
+                    AND L84.MATRL_NO = #{materialcode}
+                    </if>
+                    <if test="smattype !=null">
+                        and s26.STK_TYPE_ID in
+                        <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                               #{item}
+                        </foreach>
+                    </if>
+                    <if test="smatcate !=null">
+                        and s26.STK_CTGRY_ID in
+                        <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                               #{item}
+                        </foreach>
                     </if>
 			ORDER BY L83.BL_NO, L84.ITM_SEQ
 	</select>
