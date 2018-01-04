@@ -36,29 +36,24 @@ var listGrid;
 var serialGrid;
 var serialchk = false;
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
-                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },
-                     {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
-                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
-                     {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
-                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
-                     {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
-                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
-                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
-                     {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
-                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},
-                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },
+                     {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:200    ,height:30                },
+                     {dataField: "blno",headerText :"<spring:message code='log.head.blno'/>"                        ,width:200    ,height:30 },
+                     {dataField: "ttype",headerText :"Transaction Type"             ,width:220    ,height:30},
+                     {dataField: "mtype",headerText :"Movement Type"                   ,width:220    ,height:30},
+                     {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:250    ,height:30                },
+                     {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:250    ,height:30                },
                      {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
                      {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
-                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30},
-                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },
+                     {dataField: "grdt",headerText :"<spring:message code='log.head.grdate'/>"                        ,width:120    ,height:30 },
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:140    ,height:30},
+                     {dataField: "itmname",headerText :"Mat. Name"                 ,width:200    ,height:30                },
                      {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },
-                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"              ,width:120    ,height:30 , editable:true},
-                     {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
-                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },
-                     {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30},
-                     //{dataField:   "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 , visible:false}
-                     {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 },
-                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialy/n'/>"                     ,width:120    ,height:30 }
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.grqty'/>"              ,width:100    ,height:30 , editable:true},
+                     {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:80    ,height:30 , visible:false},
+                     {dataField: "uomnm",headerText :"<spring:message code='log.head.uom'/>"                ,width:100    ,height:30                },
+                     {dataField: "reqstno",headerText :"SMO No."        ,width:200    ,height:30},
+                     {dataField: "grcmplt",headerText :"GR Completed"                   ,width:110    ,height:30 },
+                     {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>"                     ,width:110    ,height:30 }
                      ];
 
 
@@ -454,65 +449,61 @@ function fn_itempopList_T(data){
             <caption>search table</caption>
             <colgroup>
                 <col style="width:150px" />
-                <col style="width:*" />
-                <col style="width:160px" />
-                <col style="width:*" />
-                <col style="width:160px" />
+                <col style="width:230px" />
+                <col style="width:150px" />
+                <col style="width:230px" />
+                <col style="width:120px" />
                 <col style="width:*" />
             </colgroup>
             <tbody>
                 <tr>
-                    <th scope="row">Delivery Number</th>
+                    <th scope="row">Delivery No.</th>
                     <td>
-                        <!-- <select class="w100p" id="seldelno" name="seldelno"></select> -->
                          <input type="text" class="w100p" id="seldelno" name="seldelno">
                     </td>
-<!--                     <th scope="row">Transfer Type</th>
+                    <th scope="row">B/L No.</th>
                     <td>
-                        <select class="w100p" id="sttype" name="sttype"></select>
+                         <input type="text" class="w100p" id="seldelno" name="seldelno">
                     </td>
-                    <th scope="row">Movement Type</th>
-                    <td>
-                        <select class="w100p" id="smtype" name="smtype"><option value=''>Choose One</option></select>
-                    </td>
+                    <th scope="row">Status</th>
+                        <td>
+                            <select  id="status" name="status" class="w100p" >
+                                <option value ="" selected>All</option>
+                                <option value = "Y">Complete</option>
+                                <option value="N">Open</option>
+                            </select>
+                        </td>
                 </tr>
-                <tr> -->
+                <tr>
+                    <th scope="row">GI Date</th>
+                    <td >
+                        <div class="date_set w100p">
+                        <p><input id="reqstsdt" name="reqstsdt" type="text" title="GI Start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <span> To </span>
+                        <p><input id="reqstedt" name="reqstedt" type="text" title="GI End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div>
+                    </td>
+                    <th scope="row">GR Date</th>
+                    <td >
+                        <div class="date_set w100p">
+                        <p><input id="rcivsdt" name="rcivsdt" type="text" title="GR Start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <span> To </span>
+                        <p><input id="rcivedt" name="rcivedt" type="text" title="GR End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
                     <th scope="row">From Location</th>
                     <td>
                          <select class="w100p" id="flocation" name="flocation"></select>
-                       <!--  <input type="hidden"  id="tlocation" name="tlocation">
-                        <input type="text" class="w100p" id="tlocationnm" name="tlocationnm"> -->
                     </td>
                     <th scope="row">To Location</th>
                     <td >
                         <select class="w100p" id="tlocation" name="tlocation"></select>
-                    <!--     <input type="hidden"  id="flocation" name="flocation">
-                        <input type="text" class="w100p" id="flocationnm" name="flocationnm"> -->
-                 <!--    </td>
-                    <td colspan="2">
-                    </td>  -->
+                    </td>
+                    <td colspan="2"></td>
                 </tr>
-    <!--
-                <tr>
-                    <th scope="row">Delivery Date</th>
-                    <td>
-                        <div class="date_set">date_set start
-                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        <span> ~ </span>
-                        <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div>date_set end
-                    </td>
-                    <th scope="row">Required Date</th>
-                    <td >
-                        <div class="date_set">date_set start
-                        <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
-                        <span> ~ </span>
-                        <p><input id="reqedt" name="reqedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div>date_set end
-                    </td>
-                    <td colspan="2">&nbsp;</td>
-                </tr>                 -->
-
             </tbody>
         </table><!-- table end -->
     </form>
@@ -526,7 +517,6 @@ function fn_itempopList_T(data){
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 </c:if>
             <li><p class="btn_grid"><a id="gissue">Receipt</a></p></li>
-            <!-- <li><p class="btn_grid"><a id="receiptcancel">Receipt Cancel</a></p></li> -->
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
@@ -562,41 +552,20 @@ function fn_itempopList_T(data){
                     <th scope="row">GR Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                 </tr>
-<!--                 <tr>
-                    <th scope="row">Header Text</th>
-                    <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
-                </tr> -->
             </tbody>
             </table>
             <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->
             <ul class="center_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li>
-</c:if>
+                <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                    <li><p class="btn_blue2 big"><a onclick="javascript:grFunc();">SAVE</a></p></li>
+                </c:if>
             </ul>
             </form>
 
         </section>
     </div>
-        <!-- Pop up: View Serial Of Delivery Number -->
-<!--        <div class="popup_wrap" id="serialopenwindow" style="display:none">popup_wrap start
-        <header class="pop_header">pop_header start
-            <h1 id="dataTitle">Good Receipt - Serial View</h1>
-            <ul class="right_opt">
-                <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
-            </ul>
-        </header>pop_header end
-        <form>
-        <section class="pop_body">pop_body start
-            <article class="grid_wrap">grid_wrap start
-            <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
-            </article>grid_wrap end
-        </section>
-          </form>
-    </div>
-     -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
     <input type="hidden" id="svalue" name="svalue">
