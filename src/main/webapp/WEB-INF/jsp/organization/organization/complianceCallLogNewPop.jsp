@@ -211,7 +211,7 @@ function fn_newOrder(){
 	 
         if(result != null){
         	success = false;
-        	Common.alert("<spring:message code='sys.common.alert.validation' arguments='' htmlEscape='false'/>");
+        	Common.alert("Order No already exists in list, please use other order no.");
         }
 	});
        if(success){
