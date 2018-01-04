@@ -298,7 +298,7 @@
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" method="post">
     <input type="hidden" id="salesOrderId" name="salesOrderId">
-    <input type="text" name="memType" id="memType" value="${memType }"/>
+    <input type="hidden" name="memType" id="memType" value="${memType }"/>
     <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
     <input type="hidden" name="memCode" id="memCode" />
 <table class="type1"><!-- table start -->
