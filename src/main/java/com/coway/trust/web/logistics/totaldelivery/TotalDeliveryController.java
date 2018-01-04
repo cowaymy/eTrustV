@@ -61,22 +61,7 @@ public class TotalDeliveryController
 	public ResponseEntity<Map> SearchTotalDeliveryList(@RequestBody Map<String, Object> params, Model model)
 	throws Exception
 	{
-		if (!"".equals(params.get("sttype")) || null != params.get("sttype")) {
-			logger.debug("sttype : {}", params.get("sttype"));
-			List<Object> tmp = (List<Object>) params.get("sttype");
-			params.put("stList", tmp);
-		}
-		if (!"".equals(params.get("smtype")) || null != params.get("smtype")) {
-			logger.debug("smtype : {}", params.get("smtype"));
-			List<Object> tmp = (List<Object>) params.get("smtype");
-			params.put("smList", tmp);
-		}
-
 		List<EgovMap> list = delivery.selectTotalDeliveryList(params);
-
-		for (int i = 0; i < list.size(); i++) {
-			logger.debug("list ??  : {}", list.get(i));
-		}
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
