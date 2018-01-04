@@ -31,23 +31,23 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/logistics/importbl")
 public class ImportController {
-	
+
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
-	
+
 	@Resource(name = "importService")
 	private ImportService importService;
-	
+
 	@RequestMapping(value = "/ImportBL.do")
 	public String importBL(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "logistics/importbl/importBL";
 	}
-	
+
 	@RequestMapping(value = "/ImportLocationList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> LocationList(@RequestParam Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
@@ -55,22 +55,23 @@ public class ImportController {
 		List<EgovMap> data = importService.importLocationList(params);
 		return ResponseEntity.ok(data);
 	}
-	
+
 	@RequestMapping(value = "/ImportBLList.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> importBLList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{
 		String invno = request.getParameter("invno");
 		String blno = request.getParameter("blno");
-		String location = request.getParameter("location");
+		String[] location = request.getParameterValues("location");
 		String grsdt = request.getParameter("grsdt");
 		String gredt = request.getParameter("gredt");
 		String blsdt = request.getParameter("blsdt");
 		String bledt = request.getParameter("bledt");
 		String pono = request.getParameter("pono");
+		String status = request.getParameter("status");
 		String materialcode  = request.getParameter("materialcode");
 		String[] smattype      = request.getParameterValues("smattype");
 		String[] smatcate      = request.getParameterValues("smatcate");
-		
-		
+
+
 		Map<String, Object> pmap = new HashMap();
 		pmap.put("invno", invno);
 		pmap.put("blno", blno);
@@ -80,10 +81,11 @@ public class ImportController {
 		pmap.put("blsdt", blsdt);
 		pmap.put("bledt", bledt);
 		pmap.put("pono", pono);
+		pmap.put("status", status);
 		pmap.put("materialcode"  , materialcode);
 		pmap.put("smattype"      , smattype    );
 		pmap.put("smatcate"      , smatcate    );
-		
+
 		List<EgovMap> list = importService.importBLList(pmap);
 
 		Map<String, Object> map = new HashMap();
@@ -111,5 +113,5 @@ public class ImportController {
 		return ResponseEntity.ok(message);
 	}
 
-	
+
 }
