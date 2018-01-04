@@ -469,8 +469,8 @@ function fn_itempopList_T(data){
                         <td>
                             <select  id="status" name="status" class="w100p" >
                                 <option value ="" selected>All</option>
-                                <option value = "Y">Complete</option>
-                                <option value="N">Open</option>
+                                <option value = "N" selected>GI Completed</option>
+                                <option value="Y">GR Completed</option>
                             </select>
                         </td>
                 </tr>
