@@ -304,6 +304,96 @@ public class ComplianceCallLogServiceImpl extends EgovAbstractServiceImpl implem
 		
 	}
 	
+	@Override
+	public boolean  saveOrderMaintenceSync(Map<String, Object> params,SessionVO sessionVo) {
+		
+			boolean success = false;
+    		Map<String, Object> cs =new HashMap<String, Object>();
+    		   		
+    		cs.put("complianceItemId",0);
+    		cs.put("complianceSOID",Integer.parseInt(params.get("orderId").toString()));
+    		cs.put("complianceActionId", params.get("action") != null && params.get("action") != "" ? Integer.parseInt(params.get("action").toString()) : 0);
+    		cs.put("complianceFollowUpId",params.get("comfup") != null && params.get("comfup") !=""  ? Integer.parseInt(params.get("comfup").toString()) : 0 );
+    		cs.put("complianceRemark",params.get("complianceRem").toString());
+    		cs.put("complianceCreateAt", new Date());
+    		cs.put("complianceCreateBy",sessionVo.getUserId());
+    		
+    		List<EgovMap> qrycclord = complianceCallLogMapper.selectComplianceSOID(params);
+    		
+    		//insert
+    		for(int i = 0; i<qrycclord.size(); i++){
+    			cs.put("complianceSOID",qrycclord.get(i).get("cmplncSoId"));
+    			complianceCallLogMapper.insertComCs(cs);
+    		}
+    		success = true;
+    		
+		return success;
+		
+	}
 	
 	
+	
+	@Override
+	public String insertComplianceReopen(Map<String, Object> params,SessionVO sessionVo) {
+		EgovMap caseNo = null; // 각가 docNo, docNoId, prefix구함 
+		String nextDocNo= "";
+		String complianceNo = "";
+		int ID = 0;
+		
+		caseNo = getDocNo("148");
+		complianceNo = caseNo.get("docNo").toString();
+		params.put("complianceNo", complianceNo);
+		ID=148;
+		nextDocNo = getNextDocNo("CCL",caseNo.get("docNo").toString());
+		logger.debug("nextDocNo : {}",nextDocNo);
+		caseNo.put("nextDocNo", nextDocNo);
+		memberListMapper.updateDocNo(caseNo);
+		
+		Map<String, Object> com =new HashMap<String, Object>();
+		
+		com.put("complianceId", 0);
+		com.put("complianceNo", complianceNo);
+		com.put("memberId", Integer.parseInt(params.get("memberId").toString()));
+		com.put("complianceStatusId", params.get("caseStatus") !=null && params.get("caseStatus") !="" ? Integer.parseInt(params.get("caseStatus").toString()) : 1);
+		com.put("complianceCreatAt", "");
+		com.put("complianceCreateBy", sessionVo.getUserId());
+		com.put("complianceUpdateAt", "");
+		com.put("complianceUpdateBy", sessionVo.getUserId());
+		 //insert
+		complianceCallLogMapper.insertCom(com);
+		
+		int complianceId = complianceCallLogMapper.selectComplianceId();
+		
+		
+		Map<String, Object> com_sub =new HashMap<String, Object>();
+		
+		//String NewFilename = "~/WebShare/ComplianceCallLog/ComplianceCallLog/" + complianceNo + ".zip";
+		logger.debug("PARAMS111 : {}",params.get("complianceRem").toString());
+		com_sub.put("complianceItemId", 0);
+		com_sub.put("complianceId", complianceId);
+		com_sub.put("complianceSOID", null);
+		com_sub.put("complianceStatusId", params.get("caseStatus") != null && params.get("caseStatus") !="" ? Integer.parseInt(params.get("caseStatus").toString()) : 0 );
+		com_sub.put("complianceActionId", params.get("action") != null && params.get("action") != "" ? Integer.parseInt(params.get("action").toString()) : 0 );
+		com_sub.put("complianceFollowUpId", params.get("comfup") != null && params.get("comfup") !=""  ? Integer.parseInt(params.get("comfup").toString()) : 0 );
+		com_sub.put("complianceReceivedDate", params.get("recevCaseDt") != null && params.get("recevCaseDt") !="" ? params.get("recevCaseDt").toString() : null );
+		com_sub.put("complianceClosedDate", params.get("recevCloDt") != null &&params.get("recevCloDt") !="" ? params.get("recevCloDt").toString() : null );
+		com_sub.put("complianceRemark", params.get("complianceRem").toString());
+		com_sub.put("complianceCaseCategory", params.get("caseCategory") != null &&  params.get("caseCategory") != "" ? Integer.parseInt(params.get("caseCategory").toString()) : 0 );
+		com_sub.put("complianceDocType", params.get("docType") != null && params.get("docType") != "" ? Integer.parseInt(params.get("docType").toString()) : 0 );
+		com_sub.put("complianceFinding", 0);
+		com_sub.put("complianceCollectAmt", 0);
+		com_sub.put("complianceFinalAction",  params.get("finalAction") != null &&  params.get("finalAction") !="" ? Integer.parseInt(params.get("finalAction").toString()) : 0 );
+		com_sub.put("complianceHasAttachment", true);
+		com_sub.put("complianceAttachmentFilename", "");
+		com_sub.put("complianceCreateAt", "");
+		com_sub.put("complianceCreateBy", sessionVo.getUserId());
+		com_sub.put("compliancePersonInCharge", 0);
+		com_sub.put("complianceGroupId",params.get("groupId") != "" && params.get("groupId") != null ? Integer.parseInt(params.get("groupId").toString()) : 0 );
+		
+		//insert
+		complianceCallLogMapper.insertComSub(com_sub);
+				
+		return complianceNo;
+		
+	}
 }

@@ -42,5 +42,7 @@ public interface ComplianceCallLogMapper {
 	
 	EgovMap selectAttachDownload(Map<String, Object> params);
 	
+	List<EgovMap> selectComplianceSOID(Map<String, Object> params);
+	
 }
 
