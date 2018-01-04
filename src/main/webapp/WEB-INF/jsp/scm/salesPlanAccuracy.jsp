@@ -157,7 +157,7 @@ function fnChangeEventPeriod(Obj)
     $(weekTh).val(weekThSeq);
     $(years).val(yearVal);
 
-    console.log("weekThSeq: " + weekThSeq + " /year: " + yearVal);
+    //console.log("weekThSeq: " + weekThSeq + " /year: " + yearVal);
   }
 
   //console.log("w1: " + $("#weekTh1").val() + " /w12: " + $("#weekTh12").val() + " /year: " + $("#year12").val());
@@ -618,10 +618,10 @@ function fnMonthlyCreate()
                 	  continue;
                        
                   fieldStr = "w"+ intToStrFieldCnt;
-                  //console.log("dataField: " + fieldStr +" /headerText: "+ result.selectWeekThAccuracy[0][fieldStr]);
+                  console.log("dataField: " + fieldStr +" /headerText: "+ result.selectWeekThAccuracy[0][fieldStr]);
 
                   monthlyGridLayout.push({
-                	                         dataField  : fieldStr
+                	                         dataField  : "w"+result.selectWeekThAccuracy[0][fieldStr]
                 	                        ,headerText : "W"+result.selectWeekThAccuracy[0][fieldStr]
                 	                        ,editable : false
                 	                        ,width : "7%" 

@@ -284,17 +284,17 @@ function auiCellEditignHandler(event)
         var editPoQty  = parseInt(event.value);
         var editPlanQty = parseInt($("#inPlanQty").val());
         var editInMoq   = parseInt($("#inMoq").val());
-        var newPoQty =   Math.ceil( ((editPlanQty - editPoQty) / editInMoq) );
+        var newPoQty =   Math.ceil( ((editPlanQty - editPoQty) / editInMoq) );  // 소수점이하 올림
 
         $("#inRoundUpPoQty").val(newPoQty); 
         
-        /* console.log("edit_poQty: "+ editPoQty + " /editPlanQty: "+ editPlanQty +" /editInMoq: "+ editInMoq+" /newPoQty: "+ newPoQty);
-        console.log("New_RoundUpMoq: "+ $("#inRoundUpPoQty").val() +" /fobPrice: " + fobPrice + " /fobAmount: " + (newPoQty * fobPrice) ); */
+         console.log("edit_poQty: "+ editPoQty + " /editPlanQty: "+ editPlanQty +" /editInMoq: "+ editInMoq+" /newPoQty: "+ newPoQty);
+        console.log("New_RoundUpMoq: "+ $("#inRoundUpPoQty").val() +" /fobPrice: " + fobPrice + " /fobAmount: " + (newPoQty * fobPrice) );
         
         var calculPoQty = (newPoQty * editInMoq) ;
         var lastAmount = (calculPoQty * fobPrice);
-        AUIGrid.setCellValue(myGridID2, event.rowIndex, 5, calculPoQty);
-        AUIGrid.setCellValue(myGridID2, event.rowIndex, 7, lastAmount);
+        AUIGrid.setCellValue(myGridID2, event.rowIndex, 5, editPoQty);
+        AUIGrid.setCellValue(myGridID2, event.rowIndex, 7, lastAmount);// FOB AMOUNT
         
     } 
     else if(event.type == "cellEditCancel") 
@@ -317,14 +317,14 @@ function fnMoveRight()
 		Common.alert("<spring:message code='sys.scm.poIssue.AllPlannedQty'/> ");
     return false;  
 	}
-   /*  console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
+     console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
             +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
             +" inStkTypeId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId")
             +" inPlanQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")
             +" inPoQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty")
             +" inMoq: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "moq")
             +" roundUpMoq: " + Math.ceil((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / $("#inMoq").val() )
-            );  */
+            );  
 
 	     $("#inStockCode").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode"));
 	     $("#inStkCtgryId").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId"));
