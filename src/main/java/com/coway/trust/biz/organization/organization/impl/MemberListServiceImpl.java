@@ -1776,5 +1776,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	public String selectTypeGroupCode(Map<String,Object> params){
 		return memberListMapper.selectTypeGroupCode(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params) {
+		
+		return memberListMapper.selectDepartmentCodeLit(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params) {
+		
+		return memberListMapper.selectBranchCodeLit(params);
 	}	
 }

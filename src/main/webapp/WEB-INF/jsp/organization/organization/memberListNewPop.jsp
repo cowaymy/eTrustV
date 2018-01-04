@@ -60,12 +60,17 @@ function fn_departmentCode(value){
          var spouseDob = "${spouseInfoView[0].dob}";
          var spouseTel = "${spouseInfoView[0].telMobile}";
      
+        $('#sponsorCd').val(spouseCode);
+        $('#sponsorNm').val(spouseName);
+        $('#sponsorNric').val(spouseNric); 
+        
+        /*
         $('#spouseCode').val(spouseCode);
         $('#spouseName').val(spouseName);
         $('#spouseNRIC').val(spouseNric); 
         $('#spouseDOB').val(spouseDob);
         $('#spouseContat').val(spouseTel);
-        
+
         $('#spouseCode', '#memberAddForm').attr("readonly", true );
         $('#spouseName', '#memberAddForm').attr("readonly",  true );
         $('#spouseNRIC', '#memberAddForm').attr("readonly", true );
@@ -77,7 +82,7 @@ function fn_departmentCode(value){
         $('#spouseNRIC', '#memberAddForm').attr('class','w100p readonly ');
         $('#spouseDOB', '#memberAddForm').attr('class','w100p readonly ');
         $('#spouseContat', '#memberAddForm').attr('class','w100p readonly ');
-
+        */
      } else {
         $('#spouseCode').val('');
         $('#spouseName').val('');
@@ -138,6 +143,13 @@ function fn_departmentCode(value){
 
 	   case "5" :
 	   
+           $("#branch").find('option').each(function() {
+               $(this).remove();
+           });	   
+           $("#deptCd").find('option').each(function() {
+               $(this).remove();
+           });    	   
+	   
            $("#traineeType1").change(function(){
 
         	   var traineeType =  $("#traineeType1").val();
@@ -185,7 +197,8 @@ function fn_departmentCode(value){
 		               };
 		
 		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		           });        	   
+		           });   
+		                	   
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
         		   
         		   //Training Course ajax콜 위치
@@ -210,19 +223,63 @@ function fn_departmentCode(value){
            doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 
-	   case "2803" :
-           Common.ajax("GET", "/organization/selectDeptCodeHp", null, function(result) {
-
-			$("#deptCd option").remove();
-			$("#deptCd option").remove();
-             console.log("-------------------------" + JSON.stringify(result));
-             if (result!= null) {
-                $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
-             }
-
-        });
-           
-           break;
+        case "2803" :
+	   
+	        if ( $("#userType").val() == "1" ) {
+		   
+	            Common.ajax("GET", "/organization/selectDeptCodeHp", null, function(result) {
+	
+					$("#deptCd").find('option').each(function() {
+					    $(this).remove();
+					});
+		           
+					console.log("------selectDeptCodeHp-------------------" + JSON.stringify(result));
+					if (result!= null) {
+					   $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
+					}
+	
+	            });
+	            
+				$("#branch").find('option').each(function() {
+				    $(this).remove();
+				});
+	            
+	            //branch combo 다시 그림.
+	            //doGetCombo('/organization/selectBranchCode', '', '','branch', '' , '');
+	            
+	            Common.ajax("GET", "/organization/selectBranchCode", null, function(result) {
+                   
+                    console.log("-----selectBranchCode--------------------" +result.length + JSON.stringify(result));
+                    if (result!= null) {
+                        for(var z=0; z< result.length;z++) {
+                            $("#branch").append("<option value="+result[z].codeId+">"+result[z].codeName+"</option>");
+                       }
+                    }
+    
+                });
+	            
+	            
+	        } else {
+	           //doGetCombo('/organization/selectDepartmentCode', '', '','deptCd', '' , '');
+	           
+                Common.ajax("GET", "/organization/selectDepartmentCode", null, function(result) {
+    
+                    $("#deptCd").find('option').each(function() {
+                        $(this).remove();
+                    });
+                   
+                    console.log("------selectDepartmentCode-------------------" + JSON.stringify(result));
+                    if (result!= null) {
+                       $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
+                        for(var z=0; z< result.length;z++) {
+                            $("#deptCd").append("<option value="+result[z].codeId+">"+result[z].codeName+"</option>");
+                       }                       
+                    }
+    
+                });	           
+	        }
+	             
+        break;
            
 	/*     case "2803" :   // this is temp code  that   add by hgham    
 	    
@@ -668,6 +725,8 @@ function fn_selectState(selVal){
 <input type="hidden" value ="addrDtl" id="addrDtl1" name="addrDtl">
 <input type="hidden" id="traineeType" name="traineeType">
 <input type="hidden" id="subDept" name="subDept">
+<input type="hidden" id="userType" name="userType" value="${userType}">
+
 
 <!--<input type="hidden" id = "memberType" name="memberType"> -->
 <table class="type1"><!-- table start -->
@@ -867,9 +926,9 @@ function fn_selectState(selVal){
    
     </select>
     </td>
-    <th scope="row">Transport Code<span class="must">*</span></th>
+    <th scope="row">Transport Code</th>
     <td>
-    <select class="w100p disabled"  id="transportCd" name="transportCd">
+    <select class="w100p"  id="transportCd" name="transportCd">
     </select>
     </td>
 </tr>

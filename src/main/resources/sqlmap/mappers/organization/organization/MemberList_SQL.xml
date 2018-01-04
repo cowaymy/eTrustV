@@ -3536,4 +3536,20 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 				AND A.AREA_ID = B.AREA_ID
         </select>
 
+    <select id="selectDepartmentCodeLit"  resultType="egovMap">
+		SELECT B.DEPT_CODE AS CODE_ID, B.DEPT_CODE AS CODE_NAME
+		  FROM ORG0001D A, ORG0005D B
+		 WHERE A.MEM_ID = B.MEM_ID
+		   AND A.STUS = '1'
+		   AND A.MEM_TYPE = '1'
+		   AND B.MEM_LVL = '3'
+    </select>
+    
+    <select id="selectBranchCodeLit"  resultType="egovMap">
+		SELECT BRNCH_ID CODE_ID
+		       , CODE ||'-'|| NAME  CODE_NAME 
+		FROM SYS0005M
+		WHERE TYPE_ID = '2841' 
+		ORDER BY CODE_ID 
+    </select>    
 </mapper>

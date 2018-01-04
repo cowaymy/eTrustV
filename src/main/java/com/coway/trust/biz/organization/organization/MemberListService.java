@@ -105,4 +105,8 @@ public interface MemberListService {
 	List<EgovMap> selectCoureCode(Map<String, Object> params);
 	
 	String selectTypeGroupCode(Map<String, Object> params);
+	
+	List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params);
+	
+	List<EgovMap> selectBranchCodeLit(Map<String, Object> params);	
 }

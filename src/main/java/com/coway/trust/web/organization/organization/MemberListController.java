@@ -958,5 +958,19 @@ public class MemberListController {
 		List<EgovMap> deptCode = memberListService.selectCoureCode(params);
 		return ResponseEntity.ok(deptCode);
 	}
+
+	@RequestMapping(value = "/selectDepartmentCode", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectDepartmentCode(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap> deptCode = memberListService.selectDepartmentCodeLit(params);
+		return ResponseEntity.ok(deptCode);
+	}	
+	
+	@RequestMapping(value = "/selectBranchCode", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranchCode(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap> deptCode = memberListService.selectBranchCodeLit(params);
+		return ResponseEntity.ok(deptCode);
+	}		
 	
 }

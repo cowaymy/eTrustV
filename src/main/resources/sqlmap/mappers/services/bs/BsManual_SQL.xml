@@ -54,7 +54,7 @@
 	             </choose>    
 	                         order by s005m.CODE ASC          
         </when>
-        <when test="userType == 4">
+        <when test="userType == 4 or userType == 6 ">
                 SELECT s005m.brnch_id AS code_id,
                        s005m.code || '-' || s005m.NAME AS code_name
                   FROM sys0005m s005m, sys0013m s0013m

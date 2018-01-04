@@ -171,4 +171,8 @@ public interface MemberListMapper {
 	String selectTypeGroupCode(Map<String, Object> params);
 	
 	EgovMap selectORG001DInfo(String MemberId);
+	
+	public List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params);
+	
+	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params);
 }
