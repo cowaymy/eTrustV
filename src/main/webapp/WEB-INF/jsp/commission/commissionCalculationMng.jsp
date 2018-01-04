@@ -106,7 +106,7 @@
                             }
                         },option);
                 } else {
-                        Common.alert("<spring:message code='commission.alert.calculation.runningWait' arguments='"+result.data[0].cd+" ; "+result.data[0].calYearMonth+"' htmlEscape='false' argumentSeparator=';' />");
+                        Common.alert("<spring:message code='commission.alert.calculation.runningWait' arguments='"+result.data[0].cd+"' htmlEscape='false' argumentSeparator=';' />");
                         //Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
                     }
 				});//runningPrdCheck
@@ -259,7 +259,7 @@
                                 },option); //callPrd
                                 
                             }else{
-                                Common.alert("<spring:message code='commission.alert.calculation.runningWait' arguments='"+result.data[0].cd+" ; "+result.data[0].calYearMonth+"' htmlEscape='false' argumentSeparator=';' />");
+                                Common.alert("<spring:message code='commission.alert.calculation.runningWait' arguments='"+result.data[0].cd+"' htmlEscape='false' argumentSeparator=';' />");
                                 //Common.alert(result.data[0].calYearMonth +" - "+result.data[0].calName+ " is running. </br> Please wait about 20 minutes ");
                             }
                         });//runningPrdCheck
