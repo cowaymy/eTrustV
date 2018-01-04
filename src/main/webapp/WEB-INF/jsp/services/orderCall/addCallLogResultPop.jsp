@@ -3,6 +3,15 @@
 <script type="text/javaScript">
 
 function fn_saveValidation(){
+	
+	
+	if   ('${orderRdcInCdc.raqty}'   == ''  || '${orderRdcInCdc.raqty}'  =="0"  || '${orderRdcInCdc.raqty}' == " " ){
+       
+		Common.alert("There is no available inventory in RDC to create installation order ");
+        return false;
+    }
+	
+	
 	if($("#callStatus").val() == ''){
         Common.alert("<spring:message code='service.msg.callLog'/> ");
         return false;
@@ -14,6 +23,9 @@ function fn_saveValidation(){
     }
     return true;
 }
+
+
+
 
 function fn_saveConfirm(){
     if(fn_saveValidation()){
