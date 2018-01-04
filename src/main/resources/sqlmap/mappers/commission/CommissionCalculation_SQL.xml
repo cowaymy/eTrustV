@@ -2824,10 +2824,9 @@
                       WHERE CODE_MASTER_ID= #{mstId}
                     </if>
                 ) C ON A.CAL_NAME=C.CODE_NAME
-        WHERE CD = #{ItemGrCd}
-          <if test="prdNm != null and prdNm != ''">
-              AND A.CAL_NAME = #{prdNm}
-          </if>
+        <if test="prdNm != null and prdNm != ''">
+        WHERE A.CAL_NAME = #{prdNm}
+        </if>
     </select>
     
     <select id="runPrdTimeValid"  parameterType="Map" resultType="EgovMap">
