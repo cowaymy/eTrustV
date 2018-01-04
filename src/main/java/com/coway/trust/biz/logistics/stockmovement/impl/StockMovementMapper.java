@@ -68,5 +68,7 @@ public interface StockMovementMapper {
 	List<EgovMap> selectGetSerialDataCall(Map<String, Object> params);
 	
 	void updateMovementSerialScan(String param);
+	
+	String getReceiptFlag(String delno);
 
 }

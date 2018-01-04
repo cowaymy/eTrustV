@@ -671,5 +671,9 @@
            SET SCANINFO_STUS = 'Y'
          WHERE SCAN_NO = #{scanno}
      </update>
+     
+     <select id="getReceiptFlag" parameterType="String" resultType="String">
+        select nvl(DELVRY_GR_CMPLT , 'N') as receiptyn from log0054m where delvry_no = #{delno}
+     </select>
 
 </mapper>

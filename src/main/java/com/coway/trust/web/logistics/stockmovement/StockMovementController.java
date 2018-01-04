@@ -398,8 +398,14 @@ public class StockMovementController {
 
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		if ("fail".equals((String)rmap.get("retMsg"))){
+			message.setCode(AppConstants.FAIL);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}else{
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
 
 		rmap.put("message", message);
 

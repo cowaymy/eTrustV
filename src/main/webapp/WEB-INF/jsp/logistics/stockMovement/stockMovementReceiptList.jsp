@@ -306,12 +306,31 @@ $(function(){
             return false;
         }else{
         	for (var i = 0 ; i < checkedItems.length ; i++){
+        		console.log(checkedItems[i].delyno);
+        		
         		if(checkedItems[i].grcmplt == 'Y'){
         			Common.alert('Already processed.');
         			return false;
         			break;
         		}
         	}
+        	 $.ajax({
+        	        type : "GET",
+        	        url  : getContextPath() + url,
+        	        data : pdata,
+        	        dataType : "json",
+        	        //async : false,
+        	        contentType : "application/json;charset=UTF-8",
+        	        success : function(data) {
+        	            var rData = data;
+        	            doDefComboCode(rData, selCode, obj , type,  callbackFn);
+        	        },
+        	        error: function(jqXHR, textStatus, errorThrown){
+        	            alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+        	        },
+        	        complete: function(){
+        	        }
+        	    });
         	doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
         	$('#grForm #gtype').val("GR");
@@ -524,35 +543,41 @@ function grFunc(){
 		var reparam = (result.rdata).split("∈");
 
 		//if (result.rdata == '000'){
-
-		if(reparam[0].trim() == '000'){
-			if ($('#grForm #gtype').val() == "RC"){
-				Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-	                Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
-	            },  function(jqXHR, textStatus, errorThrown) {
-	                try {
-	                } catch (e) {
-	                }
-	                Common.alert("Fail : " + jqXHR.responseJSON.message);
-	            });
-			}else{
-				//Common.alert(result.message.message);
-				Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
-			}
-
+			
+		if (result.message.code == '99'){
+			Common.alert(result.message.message + "<br/> Already Processed.");
 		}else{
-			if ($('#grForm #gtype').val() == "RC"){
-				Common.alert('GoodRecipt Cancel Fail.');
-			}else{
-				Common.alert('GoodRecipt Fail.');
-			}
-		}
 
-       	$("#giptdate").val("");
+			if(reparam[0].trim() == '000'){
+				if ($('#grForm #gtype').val() == "RC"){
+					Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
+		                
+						Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
+		            },  function(jqXHR, textStatus, errorThrown) {
+		                try {
+		                } catch (e) {
+		                }
+		                Common.alert("Fail : " + jqXHR.responseJSON.message);
+		            });
+				}else{
+					//Common.alert(result.message.message);
+					Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
+				}
+	
+			}else{
+				if ($('#grForm #gtype').val() == "RC"){
+					Common.alert('GoodRecipt Cancel Fail.');
+				}else{
+					Common.alert('GoodRecipt Fail.');
+				}
+			}
+			
+		}
+		$("#giptdate").val("");
         $("#gipfdate").val("");
         $("#doctext" ).val("");
         $("#gropenwindow").hide();
-
+        
         $('#search').click();
     },  function(jqXHR, textStatus, errorThrown) {
         try {
