@@ -567,48 +567,123 @@
         AND S26.STK_ID=#{partsId}
 	</select>
 	
-     <select id="getCommonQty" parameterType="Map" resultType="egovMap">
-		WITH CRDC
-	     AS (SELECT WH_LOC_CODE , CDC_CODE , RDC_CODE
-	                   FROM SYS0028M S28
-	                  WHERE 1 = 1 AND S28.WH_LOC_CODE = #{userId}
-	         )
-			SELECT STK_CODE,
-			       STK_DESC,
-			       S28.WH_LOC_CODE,
-			       S28.WH_LOC_GB,
-			       DECODE (S28.WH_LOC_GB,
-	                 '01', 'CDC',
-	                 '02', 'RDC',
-	                 '03', 'CT',
-	                 '04', 'CODY',
-	                 '05', 'CDC',
-	                 S28.WH_LOC_GB) LOCATION_TYPE,
-			       WH_LOC_DESC,
-			       WH_LOC_ID rdc_code,
-			       NVL(QTY , 0),
-			       NVL (BOOKQTY, 0) BOOKQTY,
-			       QTY -NVL(BOOKQTY , 0) AVAIL_QTY,
-			       <!-- L75.MOV_QTY INTRANSIT_QTY, -->
-			       NVL(L56.MOV_QTY,0) INTRANSIT_QTY,
-			       (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) loc_id
-			  FROM LOG0056M L56,
-			       SYS0028M S28,
-			       (  SELECT LOC_ID,
-			                 ITM_CODE,
-			                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
-			            FROM LOG0075M
-			           WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
-			        GROUP BY LOC_ID, ITM_CODE) L75 ,
-			        CRDC
-			 WHERE     1 = 1
-			       AND L56.LOC_ID = L75.LOC_ID(+)
-			       AND L56.STK_CODE = L75.ITM_CODE(+)
-			       AND S28.WH_LOC_ID = L56.LOC_ID(+)
-			       AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE)
-			       AND #{partsCode} = L56.STK_CODE(+)
-			       <!-- AND S28.WH_LOC_GB <![CDATA[<>]]> '05' -->
-     </select> 
+	<select id="getCommonQty" parameterType="Map" resultType="egovMap">
+	 WITH CRDC AS (SELECT WH_LOC_CODE, CDC_CODE, RDC_CODE
+                FROM SYS0028M S28
+               WHERE 1 = 1 AND S28.WH_LOC_CODE =#{userId})
+		SELECT STK_CODE,
+		       STK_DESC,
+		       S28.WH_LOC_CODE,
+		       S28.WH_LOC_GB,
+		       DECODE (S28.WH_LOC_GB,
+		               '01', 'CDC',
+		               '02', 'RDC',
+		               '03', 'CT',
+		               '04', 'CODY',
+		               '05', 'RDC',
+		               S28.WH_LOC_GB)
+		          LOCATION_TYPE,
+		       WH_LOC_ID rdc_code,
+		       NVL (QTY, 0),
+		       NVL (BOOKQTY, 0) BOOKQTY,
+		       QTY - NVL (BOOKQTY, 0) AVAIL_QTY,
+		       NVL (L56.MOV_QTY, 0) INTRANSIT_QTY,
+		       (SELECT WH_LOC_ID
+		          FROM sys0028m
+		         WHERE WH_LOC_CODE = S28.rdc_code)
+		          loc_id
+		  FROM LOG0056M L56,
+		       SYS0028M S28,
+		       (  SELECT LOC_ID,
+		                 ITM_CODE,
+		                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
+		            FROM LOG0075M
+		           WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
+		        GROUP BY LOC_ID, ITM_CODE) L75,
+		       CRDC
+		 WHERE     1 = 1
+		       AND L56.LOC_ID = L75.LOC_ID(+)
+		       AND L56.STK_CODE = L75.ITM_CODE(+)
+		       AND S28.WH_LOC_ID = L56.LOC_ID(+)
+		       AND S28.WH_LOC_CODE IN
+		              (CRDC.WH_LOC_CODE, CRDC.RDC_CODE)
+		       AND #{partsCode} = L56.STK_CODE(+)
+		       UNION ALL
+		       SELECT STK_CODE,
+		       STK_DESC,
+		       S28.WH_LOC_CODE,
+		       S28.WH_LOC_GB,
+		        'CDC'  LOCATION_TYPE,
+		       (case when CRDC.CDC_CODE = CRDC.RDC_CODE then 0 else   NVL (WH_LOC_ID, 0)  end) BOOKQTY,  
+		       NVL (QTY, 0),
+		        (case when CRDC.CDC_CODE = CRDC.RDC_CODE then 0 else   NVL (BOOKQTY, 0)  end) BOOKQTY,  
+		        (case when CRDC.CDC_CODE = CRDC.RDC_CODE then 0 else  QTY - NVL (BOOKQTY, 0)  end) AVAIL_QTY,    
+		       NVL (L56.MOV_QTY, 0) INTRANSIT_QTY,
+		       (SELECT WH_LOC_ID
+		          FROM sys0028m
+		         WHERE WH_LOC_CODE = S28.rdc_code)
+		          loc_id
+		  FROM LOG0056M L56,
+		       SYS0028M S28,
+		       (  SELECT LOC_ID,
+		                 ITM_CODE,
+		                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
+		            FROM LOG0075M
+		           WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y'
+		        GROUP BY LOC_ID, ITM_CODE) L75,
+		       CRDC
+		 WHERE     1 = 1
+		       AND L56.LOC_ID = L75.LOC_ID(+)
+		       AND L56.STK_CODE = L75.ITM_CODE(+)
+		       AND S28.WH_LOC_ID = L56.LOC_ID(+)
+		       AND S28.WH_LOC_CODE IN
+		              (CRDC.CDC_CODE)
+		       AND #{partsCode} = L56.STK_CODE(+)
+	</select>
+	
+	
+<!--      <select id="getCommonQty" parameterType="Map" resultType="egovMap"> -->
+<!-- 		WITH CRDC -->
+<!-- 	     AS (SELECT WH_LOC_CODE , CDC_CODE , RDC_CODE -->
+<!-- 	                   FROM SYS0028M S28 -->
+<!-- 	                  WHERE 1 = 1 AND S28.WH_LOC_CODE = #{userId} -->
+<!-- 	         ) -->
+<!-- 			SELECT STK_CODE, -->
+<!-- 			       STK_DESC, -->
+<!-- 			       S28.WH_LOC_CODE, -->
+<!-- 			       S28.WH_LOC_GB, -->
+<!-- 			       DECODE (S28.WH_LOC_GB, -->
+<!-- 	                 '01', 'CDC', -->
+<!-- 	                 '02', 'RDC', -->
+<!-- 	                 '03', 'CT', -->
+<!-- 	                 '04', 'CODY', -->
+<!-- 	                 '05', 'CDC', -->
+<!-- 	                 S28.WH_LOC_GB) LOCATION_TYPE, -->
+<!-- 			       WH_LOC_DESC, -->
+<!-- 			       WH_LOC_ID rdc_code, -->
+<!-- 			       NVL(QTY , 0), -->
+<!-- 			       NVL (BOOKQTY, 0) BOOKQTY, -->
+<!-- 			       QTY -NVL(BOOKQTY , 0) AVAIL_QTY, -->
+<!-- 			       L75.MOV_QTY INTRANSIT_QTY, -->
+<!-- 			       NVL(L56.MOV_QTY,0) INTRANSIT_QTY, -->
+<!-- 			       (select WH_LOC_ID from sys0028m where WH_LOC_CODE= S28.rdc_code) loc_id -->
+<!-- 			  FROM LOG0056M L56, -->
+<!-- 			       SYS0028M S28, -->
+<!-- 			       (  SELECT LOC_ID, -->
+<!-- 			                 ITM_CODE, -->
+<!-- 			                 SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY -->
+<!-- 			            FROM LOG0075M -->
+<!-- 			           WHERE NVL (FINAL_CMPLT, 'N') <![CDATA[<>]]> 'Y' -->
+<!-- 			        GROUP BY LOC_ID, ITM_CODE) L75 , -->
+<!-- 			        CRDC -->
+<!-- 			 WHERE     1 = 1 -->
+<!-- 			       AND L56.LOC_ID = L75.LOC_ID(+) -->
+<!-- 			       AND L56.STK_CODE = L75.ITM_CODE(+) -->
+<!-- 			       AND S28.WH_LOC_ID = L56.LOC_ID(+) -->
+<!-- 			       AND S28.WH_LOC_CODE IN ( CRDC.WH_LOC_CODE , CRDC.CDC_CODE , CRDC.RDC_CODE) -->
+<!-- 			       AND #{partsCode} = L56.STK_CODE(+) -->
+<!-- 			       AND S28.WH_LOC_GB <![CDATA[<>]]> '05' -->
+<!--      </select>  -->
 
 	<select id="getCt_CodyList" parameterType="Map" resultType="egovMap">      
         SELECT O01.MEM_CODE CT_CODY_ID ,O01.NAME CT_CODY_NAME 
