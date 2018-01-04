@@ -3851,24 +3851,30 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 
 
     <select id="assignCtList" parameterType="Map" resultType="egovMap">
-
-            SELECT DISTINCT   C.MEM_ID        CT_ID,
-                                       C.MEM_CODE   CT_CODE,
-                                       B.BRNCH_ID     BRNCH_ID,
-                                       B.CODE           BRANCH_CODE ,
-                                       B.NAME           BRANCH_NAME,
-                                       C.STUS           CT_STUS,
-                                       C.NAME           CT_NAME,
-                               D.CT_SUB_GRP CT_SUB_GRP
-                    FROM ORG0005D  A , SYS0005M B  , ORG0001D  C  ,SYS0064M D
-               WHERE  A.BRNCH_ID = #{BRNCH_ID}
-		                   AND A.BRNCH_ID = B.BRNCH_ID
-		                   AND A.MEM_ID =C.MEM_ID
-		                   AND C.MEM_TYPE = 3
-		                   AND A.MEM_LVL  = 4
-		                   AND B.CODE =D.CT_BRNCH_CODE
-		                   AND A.CT_SUB_GRP =D.CT_SUB_GRP
-		                   AND C.STUS =1
+    
+				    
+				    SELECT DISTINCT C.MEM_ID CT_ID,
+									       C.MEM_CODE CT_CODE,
+									       B.BRNCH_ID BRNCH_ID,
+									       B.CODE BRANCH_CODE ,
+									       B.NAME BRANCH_NAME,
+									       C.STUS CT_STUS,
+									       C.NAME CT_NAME,
+									       D.CT_SUB_GRP CT_SUB_GRP
+				  FROM ORG0005D A ,
+				       SYS0005M B ,
+				       ORG0001D C ,
+				       SYS0064M D ,
+				       SVC0054M E
+				 WHERE A.BRNCH_ID = #{BRNCH_ID}
+				   AND A.BRNCH_ID = B.BRNCH_ID
+				   AND E.MEM_ID = C.MEM_ID
+				   AND C.MEM_TYPE = 3
+				   AND A.MEM_LVL = 4
+				   AND B.CODE = D.CT_BRNCH_CODE
+				   AND E.CT_SUB_GRP = D.CT_SUB_GRP
+				   AND C.STUS =1
+				   AND E.MAJOR_GRP = '1'
      </select>
 
 
