@@ -96,13 +96,14 @@
         select
                l47.reqst_no reqstno
              , l55.delvry_no delyno
+             , l48.BL_NO blno
              , l55.delvry_no_itm
              , (l47.trnsc_type || ' - ' || tran.code_name) ttype
              , (l47.trnsc_type_dtl || ' - ' || trand.code_name) mtype
              , l47.ref_doc_no docno
-             , l54.delvry_dt delydt
-             , l54.delvry_gi_dt gidt
-             , l54.delvry_gr_dt grdt
+             , TO_CHAR(l54.delvry_dt, 'YYYY/MM/DD') delydt
+             , TO_CHAR(l54.delvry_gi_dt, 'YYYY/MM/DD') gidt
+             , TO_CHAR(l54.delvry_gr_dt, 'YYYY/MM/DD') grdt
              , l48.itm_code itmcd
              , l48.itm_name itmname
              , l55.delvry_qty delyqty
@@ -149,6 +150,24 @@
            </if>
            <if test="tlocation !=null and tlocation !=''">
               and l47.reqst_cdc_rdc = #{tlocation}
+           </if>
+           <if test="blno !=null and blno !=''">
+              and l48.BL_NO = #{blno}
+           </if>
+            <if test="reqstsdt !=null and reqstsdt !=''">
+              and l54.DELVRY_GI_DT <![CDATA[>=]]> to_char(to_date(#{reqstsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="reqstedt !=null and reqstedt !=''">
+              and l54.DELVRY_GI_DT <![CDATA[<=]]> to_char(to_date(#{reqstedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="rcivsdt !=null and rcivsdt !=''">
+              and l54.DELVRY_GR_DT <![CDATA[>=]]> to_char(to_date(#{rcivsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="rcivedt !=null and rcivedt !=''">
+              and l54.DELVRY_GR_DT <![CDATA[<=]]> to_char(to_date(#{rcivedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+            <if test="status !=null and status !=''">
+              and L54.DELVRY_GR_CMPLT = #{status}
            </if>
 <!--            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  = #{reqstno}
