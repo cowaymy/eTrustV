@@ -433,5 +433,68 @@ public class ComplianceCallLogController {
 			return ResponseEntity.ok(fileDownload);
 		}
 		
-	
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws ExceptionsaveCompliance
+		 */
+		@RequestMapping(value = "/saveOrderMaintenceSync.do", method = RequestMethod.POST)
+		public ResponseEntity<ReturnMessage> saveOrderMaintenceSync(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVo) {
+			boolean success = false;
+			logger.debug("params : {}",params);
+			success = complianceCallLogService.saveOrderMaintenceSync(params,sessionVo);
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(success);
+			return ResponseEntity.ok(message);
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/complianceCallReOpenPop.do", method = {RequestMethod.POST,RequestMethod.GET})
+		public String complianceCallReOpenPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) throws Exception {
+			logger.debug("params : {}",params);
+			model.addAttribute("complianceId", params.get("complianceId"));
+			model.addAttribute("memberId", params.get("memberId"));
+			return "organization/organization/complianceCallLogReOpenPop";
+		}
+		
+		/**
+		 * Compliance Call Log Search
+		 *
+		 * @param request
+		 * @param model
+		 * @return
+		 * @throws Exception
+		 */
+		@RequestMapping(value = "/saveComplianceReopen.do", method = RequestMethod.POST)
+		public ResponseEntity <ReturnMessage> saveComplianceReopen(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVo) {
+			
+			//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+			/*List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+			List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);*/
+			
+			/*logger.debug("updList : {}",updList);
+			logger.debug("remList : {}",remList);*/
+			
+			String comPlianceNo = complianceCallLogService.insertComplianceReopen(params,sessionVo);
+			
+			ReturnMessage message = new ReturnMessage();
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			message.setData(comPlianceNo);
+			return ResponseEntity.ok(message);
+		}
+		
 }
