@@ -195,7 +195,16 @@
         && FormUtil.isEmpty($('#listCustId').val())
         && FormUtil.isEmpty($('#listCustName').val())
         && FormUtil.isEmpty($('#listCustIc').val())
-        && FormUtil.isEmpty($('#listVaNo').val())) {
+        && FormUtil.isEmpty($('#listVaNo').val())
+        && FormUtil.isEmpty($('#listSalesmanCode').val())
+        && FormUtil.isEmpty($('#listPoNo').val())
+        && FormUtil.isEmpty($('#listContactNo').val())
+        && FormUtil.isEmpty($('#listSerialNo').val())
+        && FormUtil.isEmpty($('#listSirimNo').val())
+        && FormUtil.isEmpty($('#listRelatedNo').val())
+        && FormUtil.isEmpty($('#listCrtUserId').val())
+        && FormUtil.isEmpty($('#listPromoCode').val())
+        ) {
             
             if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
                 isValid = false;
