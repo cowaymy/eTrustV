@@ -38,18 +38,18 @@ var rescolumnLayout=[
                              {dataField:"whLocCode" ,headerText:"whLocCode",width:120 ,height:30,editable:false, visible:false},
                              {dataField:"whLocDesc" ,headerText:"Port",width:250 ,height:30,editable:false},
                              {dataField:"plant" ,headerText:"plant",width:120 ,height:30,editable:false, visible:false},
-                             {dataField:"blNo" ,headerText:"BL No.",width:200 ,height:30,editable:false},
+                             {dataField:"blNo" ,headerText:"B/L No.",width:200 ,height:30,editable:false},
                              {dataField:"itmSeq" ,headerText:"Seq.",width:120 ,height:30,editable:false},
                              {dataField:"stkid" ,headerText:"stkid",width:120 ,height:30,editable:false, visible:false},
-                             {dataField:"matrlNo" ,headerText:"Material Cd.",width:120 ,height:30,editable:false},
+                             {dataField:"matrlNo" ,headerText:"Mat. Code",width:120 ,height:30,editable:false},
                              {dataField:"stkTypeId" ,headerText:"stkTypeId",width:120 ,height:30,editable:false, visible:false},
-                             {dataField:"stkdesc" ,headerText:"Material",width:250,height:30,editable:false},
+                             {dataField:"stkdesc" ,headerText:"Mat. Name",width:250,height:30,editable:false},
                              {dataField:"uom" ,headerText:"uom",width:120 ,height:30,editable:false, visible:false},
                              {dataField:"uomnm" ,headerText:"UOM",width:120 ,height:30,editable:false},
                              {dataField:"typename" ,headerText:"Type",width:120 ,height:30,editable:false},
                              {dataField:"stkCtgryId" ,headerText:"stkCtgryId",width:120 ,height:30,editable:false, visible:false},
                              {dataField:"ctgryname" ,headerText:"Catagory",width:120 ,height:30,editable:false},
-                             {dataField:"qty" ,headerText:"BL Qty",width:120 ,height:30,editable:false,dataType : "numeric",style:"aui-grid-user-custom-right"},
+                             {dataField:"qty" ,headerText:"B/L Qty",width:120 ,height:30,editable:false,dataType : "numeric",style:"aui-grid-user-custom-right"},
                              {dataField:"avrqty" ,headerText:"Remain Qty",width:120 ,height:30,editable:false ,dataType : "numeric",style:"aui-grid-user-custom-right"},
                              {dataField:"reqedQty" ,headerText:"Moved Qty",width:120 ,height:30,editable:false ,dataType : "numeric",style:"aui-grid-user-custom-right"},
                              {dataField:"shipDt", headerText:"Shipping Date", width:120, height:30, editable:false},
@@ -115,15 +115,15 @@ var smoop = {
                  };
 
 $(document).ready(function(){
-    
-   doGetCombo('/logistics/importbl/ImportLocationList', 'port', '','location', 'S' , ''); 
-   
+
+   doGetCombo('/logistics/importbl/ImportLocationList', 'port', '','location', 'M' , 'f_multiCombos');
+
    doGetCombo('/common/selectCodeList.do', '15', '', 'smattype', 'M' ,'f_multiCombos');
    doGetCombo('/common/selectCodeList.do', '11', '', 'smatcate', 'M' ,'f_multiCombos');
-   
+
    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, reqop);
    subGrid  = AUIGrid.create("#sub_grid_wrap", smoLayout, smoop);
-    
+
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
     });
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
@@ -134,19 +134,19 @@ $(document).ready(function(){
     });
     AUIGrid.bind(listGrid, "cellEditEnd", function( event ) {
           AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
-          AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);               
+          AUIGrid.addUncheckedRowsByIds(listGrid, event.item.rnum);
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
         searchSMO(event.rowIndex);
         $("#sub_grid_wrap").show();
         AUIGrid.clearGridData(subGrid);
-        AUIGrid.resize(subGrid); 
+        AUIGrid.resize(subGrid);
     });
-    
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
+
 });
 $(function(){
     $('#search').click(function() {
@@ -156,18 +156,18 @@ $(function(){
            var to =  new Date( $("#gredt").datepicker("getDate"));
            if("" != $("#grsdt").val() &&  "" == $("#gredt").val()){
                    Common.alert("Please Check GR To Date.")
-                    $("#gredt").focus();   
+                    $("#gredt").focus();
                    return false;
            }else if("" == $("#grsdt").val() &&   "" != $("#gredt").val()){
                    Common.alert("Please Check GR From Date.")
-                    $("#grsdt").focus();   
+                    $("#grsdt").focus();
                    return false;
            }else if("" !=  $("#grsdt").val() && "" !=  $("#gredt").val() ){
                if(0>= to - from ){
                    Common.alert("Please Check GR Date.")
                    return false;
                }
-               
+
            }
            fromVal = $("#blsdt").val();
            toVal = $("#bledt").val();
@@ -175,18 +175,18 @@ $(function(){
            to =  new Date( $("#bledt").datepicker("getDate"));
            if("" != $("#blsdt").val() &&  "" == $("#bledt").val()){
                    Common.alert("Please Check B/L To Date.")
-                    $("#bledt").focus();   
+                    $("#bledt").focus();
                    return false;
            }else if("" == $("#blsdt").val() &&   "" != $("#bledt").val()){
                    Common.alert("Please Check B/L From Date.")
-                    $("#blsdt").focus();   
+                    $("#blsdt").focus();
                    return false;
            }else if("" !=  $("#blsdt").val() && "" !=  $("#bledt").val() ){
                if(0>= to - from ){
                    Common.alert("Please Check B/L Date.")
                    return false;
                }
-               
+
            }
         SearchListAjax();
     });
@@ -202,19 +202,23 @@ $(function(){
     $("#download").click(function() {
         GridCommon.exportTo("main_grid_wrap", 'xlsx', "Import B/L List");
     });
-    
+
 });
- 
+
 function f_multiCombos() {
     $(function() {
         $('#smattype').change(function() {
         }).multipleSelect({
             selectAll : true
-        }); /* .multipleSelect("checkAll"); */ 
+        }); /* .multipleSelect("checkAll"); */
         $('#smatcate').change(function() {
         }).multipleSelect({
             selectAll : true
-        }); /* .multipleSelect("checkAll"); */ 
+        }); /* .multipleSelect("checkAll"); */
+        $('#location').change(function() {
+        }).multipleSelect({
+            selectAll : true
+        }); /* .multipleSelect("checkAll"); */
     });
 }
 
@@ -257,7 +261,7 @@ function searchSMO(index){
 <h2>Import B/L</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
+    <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -273,47 +277,57 @@ function searchSMO(index){
             <caption>search table</caption>
             <colgroup>
                 <col style="width:150px" />
-                <col style="width:*" />
-                <col style="width:160px" />
-                <col style="width:*" />
-                <col style="width:160px" />
+                <col style="width:220px" />
+                <col style="width:150px" />
+                <col style="width:220px" />
+                <col style="width:150px" />
                 <col style="width:*" />
             </colgroup>
             <tbody>
                 <tr>
                     <th scope="row">Invoice No</th>
                     <td>
-                        <input type="text" class="w100p" id="invno" name="invno"> 
+                        <input type="text" class="w100p" id="invno" name="invno">
                     </td>
                     <th scope="row">B/L No</th>
                     <td>
-                        <input type="text" class="w100p" id="blno" name="blno"> 
+                        <input type="text" class="w100p" id="blno" name="blno">
                     </td>
-                    <th scope="row">Location</th>
+                    <th scope="row">PO No</th>
                     <td>
-                        <select class="w100p" id="location" name="location"></select>
+                        <input type="text" class="w100p" id="pono" name="pono" />
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">GR Date</th>
+                    <th scope="row">Location</th>
                     <td>
-                        <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="grsdt" name="grsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
-                        <span> To </span>
-                        <p><input id="gredt" name="gredt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->                        
+                        <select id="location" name="location" class="multy_select w100p" multiple="multiple"></select>
                     </td>
+                     <th scope="row">Status</th>
+                    <td>
+                        <select  id="status" name="status" class="w100p">
+                            <option value ="CMPLT" selected>CRTD</option>
+                            <option value = "AP" selected>AP Completed</option>
+                            <option value="GR">GR Completed</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <th scope="row">B/L Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="blsdt" name="blsdt" type="text" title="Create start Date"   placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="blsdt" name="blsdt" type="text" title="Create start Date"   placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="bledt" name="bledt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
-                     </td>
-                     <th scope="row">PO No</th>
-                     <td>
-                        <input type="text" class="w100p" id="pono" name="pono" />
+                    </td>
+                    <th scope="row">GR Date</th>
+                    <td>
+                        <div class="date_set w100p"><!-- date_set start -->
+                        <p><input id="grsdt" name="grsdt" type="text" title="GR Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <span> To </span>
+                        <p><input id="gredt" name="gredt" type="text" title="GR End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        </div><!-- date_set end -->
                     </td>
                 </tr>
                 <tr>
@@ -330,14 +344,14 @@ function searchSMO(index){
                         <select id="smatcate" name="smatcate" class="multy_select w100p" multiple="multiple"></select>
                     </td>
                 </tr>
-                
+
             </tbody>
         </table><!-- table end -->
     </form>
 
     </section><!-- search_table end -->
     <section class="search_result"><!-- search_result start -->
-     
+
     <!-- search_result & data body start -->
     <section class="search_result"><!-- search_result start -->
 
@@ -345,13 +359,13 @@ function searchSMO(index){
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
         </ul>
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
-        
+
 
     </section><!-- search_result end -->
     <section class="search_result" ><!-- search_result start -->
         <div id="sub_grid_wrap" class="mt10" style="height:300px; display: none;" ></div>
     </section><!-- search_result end -->
-        
-            
+
+
 </section>
 </section>
