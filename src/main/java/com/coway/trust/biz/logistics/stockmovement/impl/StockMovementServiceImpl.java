@@ -274,16 +274,6 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 		String[] delvcd = delyCd.split("∈");
 		
-		for (int i = 0 ; i < delvcd.length ; i ++){
-			String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
-			logger.debug( "279 Line ::::: " + receiptFlag);
-			if (receiptFlag != null && "Y".equals(receiptFlag)){
-				formMap.put("retMsg" , "fail");
-				return formMap; 
-			}
-				
-		}
-		
 		formMap.put("parray", delvcd);
 		formMap.put("userId", params.get("userId"));
 		// formMap.put("prgnm", params.get("prgnm"));
@@ -291,6 +281,13 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 		logger.debug("formMap : {}", formMap);
 		if ("RC".equals(formMap.get("gtype"))) {
+			for (int i = 0 ; i < delvcd.length ; i ++){
+				String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
+				if (receiptFlag != null && "Y".equals(receiptFlag)){
+					formMap.put("retMsg" , "fail");
+					return formMap; 
+				}	
+			}
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
 		} else {
 			Map<String, Object> grade = (Map<String, Object>) params.get("grade");
