@@ -34,4 +34,8 @@ public interface ComplianceCallLogService {
 	boolean saveOrderMaintence(Map<String, Object> params,SessionVO sessionVo);
 	
 	EgovMap selectAttachDownload(Map<String, Object> params);
+	
+	boolean saveOrderMaintenceSync(Map<String, Object> params,SessionVO sessionVo);
+	
+	String insertComplianceReopen(Map<String, Object> params,SessionVO sessionVo);
 }
