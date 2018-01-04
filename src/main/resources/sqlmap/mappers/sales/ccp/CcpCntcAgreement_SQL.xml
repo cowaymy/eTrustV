@@ -1003,7 +1003,7 @@
                            LEFT JOIN SYS0070M Extent8   ON Extent8.ATCH_FILE_GRP_ID = Extent2.ATCH_FILE_GRP_ID
                            LEFT JOIN SYS0071D Extent9   ON Extent9.ATCH_FILE_ID = Extent8.ATCH_FILE_ID
 					WHERE  Extent1.GOV_AG_ID = #{govAgId} 
-					ORDER BY Extent2.GOV_AG_MSG_CRT_DT
+					ORDER BY Extent2.GOV_AG_MSG_CRT_DT DESC
 					]]>
      </select>
     
