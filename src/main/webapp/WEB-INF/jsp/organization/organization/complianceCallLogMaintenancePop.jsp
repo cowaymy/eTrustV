@@ -6,6 +6,7 @@ var myGridID_order;
 var myGridID_remark;
 var complianceList;
 $(document).ready(function(){
+	$("#hiddenBtn").hide();
     fn_registerOrderGrid();
     fn_orderDetailCompliance();
     fn_complianceRemarkGrid()
@@ -23,10 +24,6 @@ $(document).ready(function(){
     	   orderNo =  AUIGrid.getCellValue(myGridID_order, event.rowIndex, "salesOrdNo");
        });
        
-       /* option value="60">In Progress</option>
-       <option value="87">Add New Attachment</option>
-       <option value="36">Closed</option>
-       <option value="10">Cancel</option> */
        
        $("#cmbCaseStatus").change(function(){ 
     	   //class="disabled" disabled="disabled"
@@ -136,6 +133,7 @@ $(document).ready(function(){
            } 
     	   
     	   if($("#cmbCaseStatus").val() == '87' ){
+    		   $("#hiddenBtn").show();
                $("#comfup").val("");
                
                $("select[name=comfup]").attr('disabled', 'disabled');
@@ -751,7 +749,7 @@ function fn_newOrder(){
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save()">Save</a></p></li>
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_clear()">Clear</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_uploadfile()">Upload Attachment</a></p></li>
+    <li id="hiddenBtn"><p class="btn_blue2 big"><a href="#" onclick="">Upload Attachment</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->

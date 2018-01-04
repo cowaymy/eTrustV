@@ -10,6 +10,12 @@ $(document).ready(function() {
 		 Common.popupDiv("/organization/compliance/complianceViewPop.do?complianceId="+complianceId,"");
      });
 	
+	AUIGrid.bind(myGridID_compliance, "cellClick", function(event) {
+       complianceIdValue = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncId");
+       memberId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "memId");
+        console.log("memberId " + memberId);
+     });
+	
 });
 var myGridID_compliance;
 function ComplianceListGrid() {
@@ -51,6 +57,11 @@ function ComplianceListGrid() {
         headerText : "Person In Charge",
         editable : false,
         width : 200
+    }, {
+        dataField : "memId",
+        headerText : "",
+        editable : false,
+        width : 0
     }];
 
 
@@ -124,21 +135,26 @@ function fn_complianceNew(){
 
 function fn_maintance(){
 	
-	Common.popupDiv("/organization/compliance/complianceLogMaintencePop.do?complianceId="+complianceId  , null, null , true , '');
+	Common.popupDiv("/organization/compliance/complianceLogMaintencePop.do?complianceId="+complianceIdValue  , null, null , true , '');
+}
+function fn_reOpenPop(){
+    
+    Common.popupDiv("/organization/compliance/complianceCallReOpenPop.do?complianceId="+complianceIdValue+"&memberId="+memberId  , null, null , true , '');
 }
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Organization</li>
-    <li>Compliance Call Log</li>
+    <li>Compliance Call Log</li>d
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Compliance Call Log</h2>
 <ul class="right_btns">
-    <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_maintance()"><span class="Maintance"></span>Maintance</a></p></li> -->
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_reOpenPop()"><span class="reOpen"></span>Re-Open</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_maintance()"><span class="Maintence"></span>Maintence</a></p></li> 
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>
