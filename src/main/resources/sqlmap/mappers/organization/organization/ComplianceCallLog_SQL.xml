@@ -447,4 +447,31 @@
 		FROM SYS0070M A LEFT JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
 		WHERE ATCH_FILE_GRP_ID = #{cmplncAtchFileGrpId}
      </select>
+     <select id="selectComplianceSOID" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+            SELECT Filter3.CMPLNC_SO_ID CMPLNC_SO_ID  
+					  FROM ( SELECT Extent1.CMPLNC_SO_ID CMPLNC_SO_ID  
+					         FROM MSC0006D Extent1
+					                LEFT JOIN ( SELECT Extent2.CMPLNC_ID CMPLNC_ID  
+					                            FROM MSC0006D Extent2
+					                             WHERE  ( Extent2.CMPLNC_SO_ID =#{orderId} )
+					                                      AND ( 1 = Extent2.CMPLNC_STUS_ID ) AND ROWNUM <= 1 ) Project1   ON 1 = 1
+					                LEFT JOIN ( SELECT Extent3.CMPLNC_ID CMPLNC_ID  
+					                            FROM MSC0006D Extent3
+					                             WHERE  ( Extent3.CMPLNC_SO_ID = #{orderId} )
+					                                      AND ( 1 = Extent3.CMPLNC_STUS_ID ) AND ROWNUM <= 1 ) Project2   ON 1 = 1
+					          WHERE  ( 1 = Extent1.CMPLNC_STUS_ID )
+					                   AND ( Extent1.CMPLNC_ID = (CASE 
+					                                                      WHEN ( Project1.CMPLNC_ID IS NULL ) THEN 0
+					                 ELSE Project2.CMPLNC_ID
+					                    END) ) ) Filter3
+					         JOIN ( SELECT Extent4.SALES_ORD_ID SALESORDERID1  ,
+					                       Limit3.CUST_ID CUSTOMERID1  
+					                FROM SAL0001D Extent4
+					                       JOIN ( SELECT Extent5.CUST_ID CUST_ID  
+					                              FROM SAL0001D Extent5
+					                               WHERE  Extent5.SALES_ORD_ID = #{orderId} AND ROWNUM <= 1 ) Limit3   ON Extent4.CUST_ID = Limit3.CUST_ID ) Join3   ON Join3.SALESORDERID1 = Filter3.CMPLNC_SO_ID
+					 WHERE  Filter3.CMPLNC_SO_ID <> #{orderId}
+					 ]]>
+     </select>
 </mapper>
