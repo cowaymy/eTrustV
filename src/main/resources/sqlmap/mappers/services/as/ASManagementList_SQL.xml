@@ -2077,7 +2077,7 @@
 							   AND A.MEM_LVL = 4
 							   AND B.CODE =D.CT_BRNCH_CODE
 							   AND E.CT_SUB_GRP =D.CT_SUB_GRP
-							   AND C.STUS =1
+							   AND C.STUS =1   
 							   AND E.MAJOR_GRP = '1'
 							   
      </select>
