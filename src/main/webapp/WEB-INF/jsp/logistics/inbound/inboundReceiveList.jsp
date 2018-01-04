@@ -463,7 +463,7 @@ function fn_itempopList_T(data){
                     </td>
                     <th scope="row">B/L No.</th>
                     <td>
-                         <input type="text" class="w100p" id="seldelno" name="seldelno">
+                         <input type="text" class="w100p" id="blno" name="blno">
                     </td>
                     <th scope="row">Status</th>
                         <td>
