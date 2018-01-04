@@ -56,7 +56,8 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },
                      {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
                      {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
-                     {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30}
+                     {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30},
+                     {dataField: "serialcheck",headerText :"<spring:message code='log.head.serialcheck'/>"        ,width:120    ,height:30, visible:false},
                      ];
 
 
@@ -306,15 +307,12 @@ $(function(){
             return false;
         }else{
         	for (var i = 0 ; i < checkedItems.length ; i++){
-        		console.log(checkedItems[i].delyno);
-        		
         		if(checkedItems[i].grcmplt == 'Y'){
         			Common.alert('Already processed.');
         			return false;
         			break;
         		}
         	}
-        	
         	doSysdate(0 , 'giptdate');
             doSysdate(0 , 'gipfdate');
         	$('#grForm #gtype').val("GR");
@@ -322,10 +320,21 @@ $(function(){
         	$("#gropenwindow").show();
 
         	if(checkedItems[0].mtype=="UM93"){
-        		fn_gradeSerial(checkedItems[0].delyno);
-        		$("#receipt_body").show();
-        	    //fn_gradComb();
-        		AUIGrid.resize(gradeGrid);
+        		//fn_gradeSerial(checkedItems[0].delyno);
+        		var yn= false;
+                for (var i = 0 ; i < checkedItems.length ; i++){
+                    if(checkedItems[i].serialcheck == 'Y'){
+                    	yn=true;
+                    }
+                }
+                if(yn){
+	        		$("#receipt_body").show();
+	        	    //fn_gradComb();
+	        		AUIGrid.resize(gradeGrid);
+                }else{
+                    $("#receipt_body").hide();
+                    AUIGrid.clearGridData(gradeGrid);
+                }
 
         	}else{
         		$("#receipt_body").hide();
@@ -494,7 +503,8 @@ function grFunc(){
 
 	var gradchk=false;
 	for(var i = 0 ; i < check.length ; i++){
-        if(check[i].item.mtype =="UM93"){
+        //if(check[i].item.mtype =="UM93" ){
+        if(check[i].item.mtype =="UM93" && check[i].item.serialcheck=="Y" ){
         	gradchk=true;
         }
    }
@@ -683,12 +693,12 @@ function fn_gradComb(){
                     <td>
                         <select class="w100p" id="sam" name="sam"></select>
                     </td>
-                    <th scope="row">Status</th>
+                    <th scope="row">GR Status</th>
                     <td>
                         <select  id="status" name="status" class="w100p" >
                             <option value ="" selected>All</option>
-                            <option value = "Y">Complete</option>
-                            <option value="N"> Open</option>
+                            <option value ="N">GR Not Yet</option>
+                            <option value ="Y">GR Complete</option>
                         </select>
                     </td>
                     <th scope="row">Ref Doc.No</th>
