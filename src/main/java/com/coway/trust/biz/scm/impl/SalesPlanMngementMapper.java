@@ -58,5 +58,6 @@ public interface SalesPlanMngementMapper {
 	
 	/* SALES PLAN ACCURACY */
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
+	String callSpCreateSalesAccuracy(Map<String, Object> params);
 	
 }
