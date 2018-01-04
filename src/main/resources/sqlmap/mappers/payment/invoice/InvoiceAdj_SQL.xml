@@ -897,8 +897,11 @@
 		        WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Outright' 
 		        ELSE type.CODE_MASTER_NAME END MEMO_ADJ_INVC_TYPE_NM , 
 		    CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_GRP_NO ELSE '-' END TAX_INVC_GRP_NO 
-		    , 0 ORD_ID 
-		    , '-' ORD_NO , 
+		    , 0 ORD_ID ,
+		    CASE 
+            WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN company2.INVC_ITM_ORD_NO 
+            WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN Extent1.INVC_ITM_ORD_NO 
+            ELSE misc2.INVC_ITM_ORD_NO END ORD_NO ,
 		    CASE WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_SVC_NO ELSE '-' END TAX_INVC_SVC_NO , 
 		    CASE 
 		        WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CUST_NAME 
@@ -932,10 +935,13 @@
 		    dept.DEPT_NAME
 		FROM 
 		    PAY0011D mst 
-		    /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */
+		    LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID
+		    LEFT JOIN PAY0032D misc2 ON sub.MEMO_ITM_INVC_ITM_ID = misc2.INVC_ITM_ID 
 		    LEFT JOIN PAY0029D company ON mst.MEMO_ADJ_INVC_NO = company.TAX_INVC_REF_NO 
 		    LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO 
 		    LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO 
+		    LEFT JOIN PAY0034D Extent1   ON out.TAX_INVC_ID = Extent1.TAX_INVC_ID
+		    LEFT JOIN PAY0030D company2 ON sub.MEMO_ITM_INVC_ITM_ID = company2.INVC_ITM_ID 
 		    LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID 
 		    LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID 
 		    LEFT JOIN SYS0032M rsn ON mst.MEMO_ADJ_RESN_ID = rsn.RESN_ID
@@ -944,7 +950,6 @@
 		    LEFT JOIN SYS0047M userinfo ON mst.MEMO_ADJ_CRT_USER_ID = userinfo.USER_ID
 		    LEFT JOIN SYS0040M dept   ON userinfo.USER_DEPT_ID = dept.DEPT_ID
 		WHERE mst.MEMO_ADJ_ID = #{adjId}    
-            
     </select>
     
     <select id="selectAdjDetailPopList" parameterType="Map" resultType="egovMap">
@@ -957,7 +962,7 @@
 		    CASE 
 		        WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN company.INVC_ITM_ORD_NO 
 		        WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO 
-		        ELSE misc.INVC_ITM_CODE END BILL_ITM_REF_NO , 
+		        ELSE misc.INVC_ITM_ORD_NO END BILL_ITM_REF_NO , 
 		    sub.MEMO_ITM_INVC_ITM_ID , 
 		    sub.MEMO_ITM_INVC_ITM_QTY , 
 		    sub.MEMO_ITM_CHRG , 

@@ -189,7 +189,7 @@ function fn_approve(process){
                     <td colspan="3" id="tDept"></td>
                 </tr>
                 <tr>
-                    <th scope="row">Memo Ref No.</th>
+                    <th scope="row">Adjustment Type</th>
                     <td id="tRefNo"></td>
                     <th scope="row">Report No.</th>
                     <td id="tReportNo"></td>
