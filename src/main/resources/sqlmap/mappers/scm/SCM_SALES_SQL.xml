@@ -681,10 +681,10 @@
              , ROUND(FN_GET_COMPNT_QTY_PLAN_SUM(#{scmYearCbBox},#{scmYearCbBox},STOCK_CODE)) M0_PLAN  
              , ROUND(FN_GET_COMPNT_QTY_ORD_SUM(#{scmYearCbBox},#{scmPeriodCbBox},STOCK_CODE)) M0_ORD  
               
-             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 1 )  M1
-             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 2 )  M2   
-             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 3 )  M3   
-             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 4 )  M4 
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 1 ) M1
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 2 ) M2   
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 3 ) M3   
+             , FN_GET_ADD_MONTH_SUM( #{scmYearCbBox},#{selectPlanMonth}, STOCK_CODE, 4 ) M4 
                
              , FN_GET_COUNT_SCM_WEEK_TH(STOCK_CODE,TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -4) ) BEF_4_WEEK_TH
              , FN_GET_COUNT_SCM_WEEK_TH(STOCK_CODE,TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -3) ) BEF_3_WEEK_TH
@@ -1905,6 +1905,81 @@ SELECT STK_ID
   
 </select> 
 
+<select id="selectAccuracyMonthlyReport" parameterType="Map" resultType="egovMap">
+  WITH HEAD_MONTHLY1
+  AS 
+    (
+	     SELECT AB.*
+	       FROM (
+	             SELECT *
+	               FROM (
+	                     SELECT GBN||'_TERM' GBN, TEAM,WEEK,ROUND(TERM_AVG/TERM_AVG_CNT) ACCRU_RAT
+	                       FROM (
+		                            SELECT 'MID' GBN, TEAM,WEEK, SUM(MID_TERM_AVG) TERM_AVG, COUNT(*) TERM_AVG_CNT
+		                              FROM GBL_TEMP_ACCURACY
+		                             WHERE (MID_TERM_AVG > 0 ) 
+		                             GROUP BY TEAM,WEEK
+		                              
+		                            UNION ALL
+		                              
+		                            SELECT 'SHORT' GBN,  TEAM,WEEK, SUM(SHORT_TERM_AVG) TERM_AVG, COUNT(*) TERM_AVG_CNT
+		                              FROM GBL_TEMP_ACCURACY
+		                             WHERE (SHORT_TERM_AVG > 0 ) 
+		                             GROUP BY TEAM,WEEK
+	                           )
+	                    )
+	                        
+	                      PIVOT
+	                            (
+	                              MAX(ACCRU_RAT) 
+	                                 FOR WEEK IN (   1 AS W1  , 2 AS W2   ,3 AS W3   ,4 AS W4   ,5 AS W5   ,6 AS W6   ,7 AS W7   ,8 AS W8   ,9 AS W9   ,10 AS W10
+	                                               ,11 AS W11 ,12 AS W12 ,13 AS W13 ,14 AS W14 ,15 AS W15 ,16 AS W16 ,17 AS W17 ,18 AS W18 ,19 AS W19 ,20 AS W20
+	                                               ,21 AS W21 ,22 AS W22 ,23 AS W23 ,24 AS W24 ,25 AS W25 ,26 AS W26 ,27 AS W27 ,28 AS W28 ,29 AS W29 ,30 AS W30 
+	                                               ,31 AS W31 ,32 AS W32 ,33 AS W33 ,34 AS W34 ,35 AS W35 ,36 AS W36 ,37 AS W37 ,38 AS W38 ,39 AS W39 ,40 AS W40 
+	                                               ,41 AS W41 ,42 AS W42 ,43 AS W43 ,44 AS W44 ,45 AS W45 ,46 AS W46 ,47 AS W47 ,48 AS W48 ,49 AS W49 ,50 AS W50 
+	                                               ,51 AS W51 ,52 AS W52)
+	                            )
+	            )  AB
+    )
+    
+  , HEAD_MONTHLY2
+    AS
+    (
+      SELECT 
+             TEAM
+            ,GBN||'_TERM' GBN
+            ,ROUND(SUM(ACCRU_RAT) / ( SELECT COUNT(1) CNT FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_MONTH = #{scmMonthCbBox} AND WEEK_TH_SN = 1) ) MONTHLY_ACCRURAY 
+        FROM(
+	             SELECT GBN, TEAM,WEEK, ROUND((SUM_TERM_AVG/TERM_AVG_CNT)) ACCRU_RAT
+	               FROM (
+		                     SELECT 'MID' GBN, TEAM,WEEK, SUM(MID_TERM_AVG) SUM_TERM_AVG, COUNT(*) TERM_AVG_CNT
+		                      FROM GBL_TEMP_ACCURACY
+		                     WHERE (MID_TERM_AVG > 0 ) 
+		                     GROUP BY TEAM,WEEK
+		                    
+		                    UNION ALL
+		                    
+		                    SELECT 'SHORT' GBN, TEAM,WEEK, SUM(SHORT_TERM_AVG) SUM_TERM_AVG, COUNT(*) TERM_AVG_CNT
+		                      FROM GBL_TEMP_ACCURACY
+		                     WHERE (SHORT_TERM_AVG > 0 ) 
+		                     GROUP BY TEAM,WEEK
+	                   )
+            ) 
+      GROUP BY ROLLUP ( GBN ,TEAM )
+      HAVING  TEAM IS NOT NULL
+    )    
+     SELECT  H1.TEAM
+            ,H1.GBN TERM 
+            ,H2.MONTHLY_ACCRURAY
+            ,H1.*
+       FROM HEAD_MONTHLY1 H1
+           ,HEAD_MONTHLY2 H2
+      WHERE H1.GBN  = H2.GBN  
+        AND H1.TEAM = H2.TEAM
+      ORDER BY DECODE(H1.TEAM,'ALL',1,'DST',2,3), DECODE(TERM,'SHORT_TERM',1,2)  
+  
+</select> 
+
 <resultMap id="salePlanDetailInsertMap" type="egovMap"></resultMap>
 <select id="callSpCreateSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
     { call SP_CREATE_SALES_PLAN_DETAIL(
@@ -1913,6 +1988,16 @@ SELECT STK_ID
 		                                  , #{scmPeriodCbBox}
 		                                  , #{scmTeamCbBox}
 		                                  , #{p1, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanDetailInsertMap})
+    }
+</select>
+
+<resultMap id="salePlanAccuracyInsertMap" type="egovMap"></resultMap>
+<select id="callSpCreateSalesAccuracy" statementType="CALLABLE" parameterType="Map">
+    { call SP_INS_SCM_ACCURACY(
+                                  #{scmYearCbBox}
+                                , #{scmMonthCbBox}
+                                , #{scmPeriodCbBox}
+                                , #{p1, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanAccuracyInsertMap})
     }
 </select>
 
