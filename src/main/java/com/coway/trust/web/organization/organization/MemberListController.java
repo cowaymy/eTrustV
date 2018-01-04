@@ -284,6 +284,8 @@ public class MemberListController {
 		model.addAttribute("Religion", Religion);
 		model.addAttribute("DeptCdList", DeptCdList);
 		
+		model.addAttribute("userType", sessionVO.getUserTypeId());
+		
 		model.addAttribute("spouseInfoView", list);
 
 
