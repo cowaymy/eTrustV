@@ -240,24 +240,6 @@ function fn_departmentCode(value){
 	
 	            });
 	            
-				$("#branch").find('option').each(function() {
-				    $(this).remove();
-				});
-	            
-	            //branch combo 다시 그림.
-	            //doGetCombo('/organization/selectBranchCode', '', '','branch', '' , '');
-	            
-	            Common.ajax("GET", "/organization/selectBranchCode", null, function(result) {
-                   
-                    console.log("-----selectBranchCode--------------------" +result.length + JSON.stringify(result));
-                    if (result!= null) {
-                        for(var z=0; z< result.length;z++) {
-                            $("#branch").append("<option value="+result[z].codeId+">"+result[z].codeName+"</option>");
-                       }
-                    }
-    
-                });
-	            
 	            
 	        } else {
 	           //doGetCombo('/organization/selectDepartmentCode', '', '','deptCd', '' , '');
@@ -278,6 +260,24 @@ function fn_departmentCode(value){
     
                 });	           
 	        }
+	        
+	        $("#branch").find('option').each(function() {
+                    $(this).remove();
+                });
+                
+                //branch combo 다시 그림.
+                //doGetCombo('/organization/selectBranchCode', '', '','branch', '' , '');
+                
+                Common.ajax("GET", "/organization/selectBranchCode", null, function(result) {
+                   
+                    console.log("-----selectBranchCode--------------------" +result.length + JSON.stringify(result));
+                    if (result!= null) {
+                        for(var z=0; z< result.length;z++) {
+                            $("#branch").append("<option value="+result[z].codeId+">"+result[z].codeName+"</option>");
+                       }
+                    }
+    
+                });
 	             
         break;
            
