@@ -620,9 +620,9 @@
 											                     ELSE 0
 											                END CUST_CRC_ID  ,
 											                CASE 
-											                     WHEN ( E7.CUST_CRC_ID IS NOT NULL ) THEN E7.CUST_CRC_NO
+											                     WHEN ( E7.CUST_CRC_ID IS NOT NULL ) THEN E7.CUST_ORI_CRC_NO
 											                     ELSE ' '
-											                END CUST_CRC_NO  ,
+											                END CUST_CRC_NO,
 											                CASE 
 											                     WHEN ( E7.CUST_CRC_ID IS NOT NULL ) THEN E7.CUST_CRC_OWNER
 											                     ELSE ' '

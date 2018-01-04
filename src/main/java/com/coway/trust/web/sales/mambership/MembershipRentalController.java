@@ -16,22 +16,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipRentalService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
-import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
-import com.rometools.rome.io.SyndFeedOutput;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -343,7 +338,7 @@ public class  MembershipRentalController {
 	
 
 	@RequestMapping(value = "/inc_mRPayListInfoData", method = RequestMethod.GET)
-	public ResponseEntity<Map>  inc_mRPayListInfoData(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	public ResponseEntity<Map>  inc_mRPayListInfoData(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
 
 		logger.debug("in  inc_mRPayListInfoData ");
 		
@@ -353,7 +348,7 @@ public class  MembershipRentalController {
 		logger.debug("			pram set end  ");
 		
 		
-		paysetInfo    = membershipRentalService.selectPatsetInfo(params);
+		paysetInfo    = membershipRentalService.selectPatsetInfo(params, sessionVO);
 		
 		
 		

@@ -78,7 +78,7 @@ public class  MembershipRentalPayChannelController {
 	
 
 	@RequestMapping(value = "/selectPatsetInfo", method = RequestMethod.GET)
-	public ResponseEntity<Map>  selectPatsetInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+	public ResponseEntity<Map>  selectPatsetInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sesseionVO) throws Exception {
 
 		logger.debug("in  selectPatsetInfo ");
 		
@@ -91,7 +91,7 @@ public class  MembershipRentalPayChannelController {
 		logger.debug("			pram set end  ");
 		
 		
-		paysetInfo =  membershipRentalService.selectPatsetInfo(params);
+		paysetInfo =  membershipRentalService.selectPatsetInfo(params, sesseionVO);
 		params.put("custId", paysetInfo.get("custId")); 
 		custBasicinfo =  customerService.selectCustomerViewBasicInfo(params);
 		

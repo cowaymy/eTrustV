@@ -7,6 +7,8 @@ import java.util.List;
 
 import java.util.Map;
 
+import com.coway.trust.cmmn.model.SessionVO;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 /**
@@ -28,7 +30,7 @@ public interface MembershipRentalService {
 	
 	EgovMap selectCcontactSalesInfo(Map<String, Object> params);
 	EgovMap selectConfigInfo(Map<String, Object> params);
-	EgovMap selectPatsetInfo(Map<String, Object> params);
+	EgovMap selectPatsetInfo(Map<String, Object> params, SessionVO sessionVO);
 	EgovMap selectPayThirdPartyInfo(Map<String, Object> params);
 
 	EgovMap selectPayBillingInfo(Map<String, Object> params);

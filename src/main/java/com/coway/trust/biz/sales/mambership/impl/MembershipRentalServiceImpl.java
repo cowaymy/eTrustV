@@ -3,14 +3,19 @@
  */
 package com.coway.trust.biz.sales.mambership.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang.StringUtils;
 
 import com.coway.trust.biz.sales.mambership.MembershipRentalService;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
+import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -24,7 +29,10 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 
 	
 	@Resource(name = "membershipRentalMapper")
-	private MembershipRentalMapper membershipRentalMapper;  
+	private MembershipRentalMapper membershipRentalMapper;
+	
+	@Resource(name = "orderRegisterMapper")
+	private OrderRegisterMapper orderRegisterMapper;  
 	 
 	
 	@Override
@@ -76,8 +84,27 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	@Override
-	public EgovMap selectPatsetInfo(Map<String, Object> params) {
-		return membershipRentalMapper.selectPatsetInfo(params);
+	public EgovMap selectPatsetInfo(Map<String, Object> params, SessionVO sessionVO) {
+		
+		EgovMap result = membershipRentalMapper.selectPatsetInfo(params);
+		
+		if(CommonUtils.isNotEmpty(result.get("custCrcNo"))) {
+			Map<String, Object> pMap = new HashMap<String, Object>();
+			
+			pMap.put("userId", sessionVO.getUserId());
+			pMap.put("moduleUnitId", "252");
+			
+			EgovMap rsltMap = orderRegisterMapper.selectCheckAccessRight(pMap);
+			
+			if(rsltMap == null) {
+				result.put("custCrcNo", CommonUtils.getMaskCreditCardNo(StringUtils.trim((String)result.get("custCrcNo")), "*", 6));
+			}
+		}
+		else {
+			result.put("custCrcNo", "-");
+		}
+		
+		return result;
 	}
 	
 	@Override
@@ -107,6 +134,5 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	public EgovMap selectQuotInfoInfo(Map<String, Object> params) {
 		return membershipRentalMapper.selectQuotInfoInfo(params);
 	}
-	
 	
 }
