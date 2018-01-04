@@ -12,8 +12,8 @@
              , l55.reqst_no AS reqstno
              , tran.code_name AS stktrans
              , trand.code_name AS stkactivity
-             , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) AS frmloc
-             , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) AS toloc
+             , (s28c.wh_loc_code || ' - ' || DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000)) AS frmloc
+             , (s28q.wh_loc_code || ' - ' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000)) AS toloc
              , NVL(TO_CHAR(TO_DATE(l54.delvry_dt, 'yyyy/mm/dd'), 'yyyy/mm/dd'), '-') AS deldate
              , NVL(TO_CHAR(TO_DATE(l54.delvry_gi_dt, 'yyyy/mm/dd'), 'yyyy/mm/dd'), '-') AS gidate
              , NVL(TO_CHAR(TO_DATE(l54.delvry_gr_dt, 'yyyy/mm/dd'), 'yyyy/mm/dd'), '-') AS grdate
@@ -22,7 +22,7 @@
              , uomt.code_name AS uom
              , (CASE WHEN (l48.reqst_qty - l55.delvry_qty = l48.reqst_qty) THEN 'Open'
                           WHEN ((l48.reqst_qty - (CASE WHEN L54.delvry_gr_cmplt = 'Y' THEN l55.delvry_qty ELSE 0 END) = 0)
-                          OR l48.final_cmplt = 'Y') THEN 'Complete'
+                          OR l48.final_cmplt = 'Y') THEN 'Completed'
                           ELSE 'Processing' END) AS status
              , l48.reqst_qty AS stkqty
              , l55.delvry_qty AS delqty
@@ -36,6 +36,7 @@
                LEFT JOIN sys0028m s28q ON l47.reqst_cdc_rdc = s28q.wh_loc_id
              , (SELECT reqst_no, delvry_no_itm, delvry_no, itm_code, itm_name, SUM(NVL(delvry_qty, 0)) DELVRY_QTY
                 FROM log0055d GROUP BY reqst_no, delvry_no_itm, delvry_no, itm_code, itm_name) l55
+               JOIN SYS0026M s26 ON l55.itm_code = s26.stk_code
                LEFT JOIN (SELECT * FROM
                                     (
                                      SELECT delvry_no, delvry_itm_no, debt_crdit_indict, NVL(qty, 0) QTY
@@ -57,17 +58,9 @@
            AND l48.reqst_no_itm = l55.delvry_no_itm
            AND l54.delvry_no = l55.delvry_no
            AND l47.reqst_no = l48.reqst_no
-           <if test="stkreqstno != null and stkreqstno != ''">
-               AND l47.reqst_no = #{stkreqstno}
-           </if>
+
            <if test="seldelno != null and seldelno != ''">
                AND l54.delvry_no = #{seldelno}
-           </if>
-           <if test="flocation !=null and flocation !=''">
-               AND l47.rciv_cdc_rdc = #{flocation}
-           </if>
-           <if test="tlocation !=null and tlocation !=''">
-               AND l47.reqst_cdc_rdc = #{tlocation}
            </if>
            <if test="crtsdt !=null and crtsdt !=''">
                AND l54.delvry_dt <![CDATA[>=]]> to_char(to_date(#{crtsdt},'dd/mm/yyyy'),'yyyymmdd')
@@ -75,23 +68,56 @@
            <if test="crtedt !=null and crtedt !=''">
                AND l54.delvry_dt <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
-           <if test="gtype !=null and gtype =='receipt'">
-               AND l54.delvry_gi_cmplt <![CDATA[=]]> 'Y'
-           </if>
-           <if test="gtype !=null and gtype =='receiptList'">
-               AND l54.delvry_gr_cmplt <![CDATA[=]]> 'Y'
-           </if>
            <if test="sttype != null">
-               AND  l47.trnsc_type IN
-               <foreach item="item" collection="stList" index="index" open="(" separator="," close=")">
+               AND l47.trnsc_type IN
+               <foreach item="item" collection="sttype" index="index" open="(" separator="," close=")">
                 #{item}
                </foreach>
            </if>
-           <if test="smtype != null">
-               AND l47.trnsc_type_dtl IN
-               <foreach item="item" collection="smList" index="index" open="(" separator="," close=")">
-                   #{item}
+           <if test="stkreqstno != null and stkreqstno != ''">
+               AND l47.reqst_no = #{stkreqstno}
+           </if>
+           <if test="status !=null and status =='GI'">
+               AND l54.delvry_gi_cmplt <![CDATA[=]]> 'Y'
+           </if>
+           <if test="status !=null and status =='GR'">
+               AND l54.delvry_gr_cmplt <![CDATA[=]]> 'Y'
+           </if>
+           <if test="status !=null and status =='CMPLT'">
+               AND l54.delvry_cmplt <![CDATA[=]]> 'Y'
+           </if>
+	        <if test="searchMaterialCode !=null and searchMaterialCode !=''">
+	            and l55.itm_code = #{searchMaterialCode}
+	        </if>
+           <if test="smattype != null">
+               AND s26.stk_type_id IN
+               <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                #{item}
                </foreach>
+           </if>
+           <if test="smatcate != null">
+               AND s26.stk_ctgry_id IN
+               <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                #{item}
+               </foreach>
+           </if>
+           <if test="gisdt !=null and gisdt !=''">
+               AND l54.delvry_gi_dt <![CDATA[>=]]> to_char(to_date(#{gisdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="giedt !=null and giedt !=''">
+               AND l54.delvry_gi_dt <![CDATA[<=]]> to_char(to_date(#{giedt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="grsdt !=null and grsdt !=''">
+               AND l54.delvry_gr_dt <![CDATA[>=]]> to_char(to_date(#{grsdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="gredt !=null and gredt !=''">
+               AND l54.delvry_gr_dt <![CDATA[<=]]> to_char(to_date(#{gredt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="flocation !=null and flocation !=''">
+               AND l47.rciv_cdc_rdc = #{flocation}
+           </if>
+           <if test="tlocation !=null and tlocation !=''">
+               AND l47.reqst_cdc_rdc = #{tlocation}
            </if>
            ORDER BY l55.delvry_no, l55.delvry_no_itm DESC) X
     </select>
