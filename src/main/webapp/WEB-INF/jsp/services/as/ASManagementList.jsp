@@ -381,7 +381,7 @@ function fn_assginCTTransfer(){
          }
     	 
     	 if(asBrnchId != selectedItems[i].item.asBrnchId ){
-    		 Common.alert("<b>동일한 브랜치 코드만 선택 가능합니다.</b>");
+    		 Common.alert("<b>Can't CT tranfer in multiple branch selection.</b>");
     		 return ;
     	 }
     }

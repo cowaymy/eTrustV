@@ -244,11 +244,14 @@ function fn_inHouseGetProductDetails(){
 
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) {
- 
+	//alert('추가');
 }
 
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) {
+	
+	
+//alert('삭제');
 
 }
 
@@ -459,8 +462,50 @@ function getASStockPrice(_PRC_ID){
 
 
 
-function fn_filterAddVaild(){
+
+
+function fn_chStock(){
     
+    var   ct = $("#ddlCTCodeText").val();
+    var   sk = $("#ddlFilterCode").val();
+
+
+    var  availQty =isstckOk(ct ,sk);
+
+    if(availQty == 0){
+        Common.alert('*<b> There are no available stocks.</b>');
+        fn_filterClear();
+        return  false;
+    }else{
+        
+        if  ( availQty  <  Number($("#ddlFilterQty").val()) ){
+            Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
+            fn_filterClear();
+            return false ;
+        }
+        return true;
+    }
+}
+
+
+function isstckOk(ct , sk){
+    
+    var availQty = 0;
+    
+    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
+            console.log("isstckOk.");
+            console.log( result);
+            availQty = result.availQty;
+    });
+    
+    
+    return availQty;
+}
+
+
+
+function fn_filterAddVaild(){
+	
      if(FormUtil.checkReqValue($("#ddlFilterCode option:selected")) ){    
         return false;
      }
@@ -481,6 +526,10 @@ function fn_filterAddVaild(){
 
 function fn_filterAdd(){
     
+	if(fn_chStock() ==false){
+		   return ;
+	}
+	
     if(fn_filterAddVaild() ==false){
         Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');
         return  false;

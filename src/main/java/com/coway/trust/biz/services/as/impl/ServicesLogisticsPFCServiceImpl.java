@@ -40,6 +40,14 @@ public class  ServicesLogisticsPFCServiceImpl  extends EgovAbstractServiceImpl i
 		 servicesLogisticsPFCMapper.install_Active_SP_LOGISTIC_REQUEST(params);
 	}  
 	 
+	
+	@Override
+	public EgovMap getFN_GET_SVC_AVAILABLE_INVENTORY(Map<String, Object> params) {
+		return (EgovMap) servicesLogisticsPFCMapper.getFN_GET_SVC_AVAILABLE_INVENTORY(params);
+	}  
+	 
+	
+	
 } 
 
 

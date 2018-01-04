@@ -46,15 +46,16 @@
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
-			        editRenderer : {
-			        	type : "NumberStepRenderer",
-			        	showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-			            min : 0,
-			            max : 50,
-			            step : 1,
-			            textEditable : false
-			        }
-			        //editable : false
+                    /*
+						        editRenderer : {
+						        	type : "NumberStepRenderer",
+						        	showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						            min : 0,
+						            max : 50,
+						            step : 1,
+						            textEditable : false
+						        }*/
+                editable : true
                 }, {                        
                     dataField : "SerialNo",
                     headerText : "Serial No",
@@ -107,9 +108,50 @@
             });
             
             // 에디팅 정상 종료 이벤트 바인딩
-            //AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditingHandler); 
+            AUIGrid.bind(myDetailGridID, "cellEditEnd", function (event){
+            	    console.log(event);
+            	 
+            	    //가용재고 체크 하기 
+	                if(event.columnIndex ==3){
+	                	
+	                	     //마스터 그리드 
+	                	     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+	                	     console.log(selectedItems);
+	                	     
+	                	     var ct = selectedItems[0].item.c5;
+	                	     var sk = event.item.stkId;
+	                	     
+		                	 var  availQty =isstckOk(ct ,sk);
+		                     
+		                     if(availQty == 0){
+		                         Common.alert('*<b> There are no available stocks.</b>');
+		                         AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+		                     }else{
+		                         if  ( availQty  <  Number(event.value) ){
+		                             Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
+		                             AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+		                         }
+		                     }
+	                }       
+            });
     }
-    
+        
+	
+	function fn_chStock(){
+	}
+	
+	
+	function isstckOk(ct , sk){
+	    var availQty = 0;
+	    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
+	            console.log("isstckOk.");
+	            console.log( result);
+	            availQty = result.availQty;
+	    });
+	    return availQty;
+	}
+
+
     
     $(document).ready(function() {
     	

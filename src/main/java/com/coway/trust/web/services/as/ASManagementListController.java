@@ -1304,6 +1304,16 @@ public class ASManagementListController {
 	}
 	
 	
+
+	@RequestMapping(value = "/getSVC_AVAILABLE_INVENTORY.do", method = RequestMethod.GET)
+	public ResponseEntity <EgovMap> getSVC_AVAILABLE_INVENTORY( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		EgovMap  logc= (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(params);
+		logger.debug("logc {}", logc);
+		return ResponseEntity.ok(logc);
+	}
+	
 	
 
 	

@@ -546,8 +546,6 @@ public class ServiceApiController {
 						MSvcLogApiService.updateSuccessStatus(transactionId);
 					}
 				}
-				 
-				 
 			}
 		}   		
 		
@@ -1213,7 +1211,6 @@ public class ServiceApiController {
         			}
         			
         			params.put("hidAppTypeId",installResult.get("codeId"));
-        			
         			
         			//API in
         			params.put("hidSirimNo",String.valueOf(insTransLogs.get(i).get("sirimNo")));
