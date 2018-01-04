@@ -61,8 +61,17 @@ function fn_closePop2() {
     $("#refundInfoKeyInPop").remove();
 }
 
-function fn_setAccNo() {
-    CommonCombo.make("rAccNo", "/payment/selectAccNoList.do", {payMode:$("#rRefMode").val()}, "", {
+function fn_setAccNo(payModeCode, bankAccId) {
+	var obj = {};
+	if(!FormUtil.isEmpty(payModeCode)) {
+		obj.payMode = payModeCode;
+	} else {
+		obj.payMode = $("#rRefMode").val();
+	}
+	
+	console.log(obj);
+	console.log(bankAccId);
+    CommonCombo.make("rAccNo", "/payment/selectAccNoList.do", obj, bankAccId, {
         id: "codeId",
         name: "codeName",
         type:"S"
@@ -160,7 +169,7 @@ function fn_updateGridData() {
 </tr>
 <tr>
     <th scope="row">Credit Card No.</th>
-    <td><input type="text" title="" placeholder="" class="" id="rCcNo" autocomplete="off"/></td>
+    <td><input type="text" title="" placeholder="" class="" id="rCcNo" autocomplete="off" value="${creditCardNo}"/></td>
     <th scope="row">Cheque No.</th>
     <td><input type="text" title="" placeholder="" class="" id="rChqNo" autocomplete="off"/></td>
 </tr>

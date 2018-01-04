@@ -129,6 +129,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(RefundController.cl
 	
 	@RequestMapping(value = "/refundInfoKeyInPop.do")
 	public String refundInfoKeyInPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("creditCardNo", params.get("creditCardNo"));
 		return "payment/refund/refundInfoKeyInPop";
 	}
 	

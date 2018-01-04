@@ -10,9 +10,12 @@
              SUM(a.AMT)  AMT  ,
              a.APP_TYPE APP_TYPE  ,
              a.CANCL_DT CANCL_DT  ,
+             a.PAY_MODE_CODE PAY_MODE_CODE,
              a.PAY_MODE PAY_MODE  ,
              a.ISSUEBANKCODE ISSUE_BANK_CODE  ,
              a.ISSUEBANK ISSUE_BANK  ,
+             a.BANK_ACC_ID BANK_ACC_ID,
+             a.BANK_ACC_NAME                     BANK_ACC_NAME,
              a.BANKACCNO BANK_ACC_NO  ,
              a.CC_HOLDER_NAME CC_HOLDER_NAME  ,
              a.CC_NO CC_NO  ,
@@ -47,9 +50,12 @@
                       TRUNC(pd.PAY_ITM_AMT,2) AMT  ,
                       cd.CODE_NAME APP_TYPE  ,
                       cr.SO_REQ_UPD_DT CANCL_DT  ,
+                      TO_CHAR(pdd.CODE_ID) PAY_MODE_CODE,
                       pdd.CODE_NAME PAY_MODE  ,
                       NVL(b.CODE, ' ') ISSUEBANKCODE  ,
                       NVL(b.NAME, ' ') ISSUEBANK  ,
+                      TO_CHAR(pd.PAY_ITM_BANK_ACC_ID)     BANK_ACC_ID,
+                      (SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = pd.PAY_ITM_BANK_ACC_ID)                     BANK_ACC_NAME,
                       (CASE 
                             WHEN acc.CUST_ACC_NO IS NULL THEN ' '
                             ELSE acc.CUST_ACC_NO
@@ -175,9 +181,12 @@
                       TRUNC(pd.PAY_ITM_AMT,2) AMT  ,
                       cd.CODE_NAME APP_TYPE  ,
                       term.TRMNAT_CRT_DT CANCL_DT  ,
+                      TO_CHAR(pdd.CODE_ID) PAY_MODE_CODE,
                       pdd.CODE_NAME PAY_MODE  ,
                       COALESCE(b.CODE, ' ') ISSUEBANKCODE  ,
                       COALESCE(b.NAME, ' ') ISSUEBANK  ,
+                      TO_CHAR(pd.PAY_ITM_BANK_ACC_ID)     BANK_ACC_ID,
+                      (SELECT ACC_DESC FROM SYS0001M WHERE ACC_ID = pd.PAY_ITM_BANK_ACC_ID)                     BANK_ACC_NAME,
                       (CASE 
                             WHEN acc.CUST_ACC_NO IS NULL THEN ' '
                             ELSE acc.CUST_ACC_NO
@@ -269,9 +278,12 @@
                       TRUNC((SUM(tl.TRADE_AMT)  * -1),2) AMT  ,
                       cd.CODE_NAME APP_TYPE  ,
                       soe.SO_EXCHG_CRT_DT CANCL_DT  ,
+                      ' ' PAY_MODE_CODE,
                       ' ' PAY_MODE  ,
                       ' ' ISSUEBANKCODE  ,
                       ' ' ISSUEBANK  ,
+                      ' ' BANK_ACC_ID,
+                      ' ' BANK_ACC_NAME,
                       ' ' BANKACCNO  ,
                       ' ' CC_HOLDER_NAME  ,
                       ' ' CC_NO  ,
@@ -357,7 +369,7 @@
                LEFT JOIN SYS0004M bank   ON bank.BANK_ID = rps.BANK_ID
                LEFT JOIN SAL0022D custacc   ON custacc.CUST_ACC_ID = rps.CUST_ACC_ID
                LEFT JOIN SAL0028D custcrc   ON custcrc.CUST_CRC_ID = rps.CUST_CRC_ID
-        GROUP BY a.ORD_ID,a.ORD_NO,a.WOR_NO,a.CUST_NAME,a.APP_TYPE,a.CANCL_DT,a.PAY_MODE,a.ISSUEBANKCODE,a.ISSUEBANK,a.BANKACCNO,a.CC_HOLDER_NAME,a.CC_NO,a.APPROVENO,a.REQUEST_STAGE,a.CANCELREASON,a.CANCELREASONDESC,a.REJECTID,a.INSTALL_STUS,a.OCRREMARK,a.MAILADDRESS,a.INSTADDRESS,a.PAY_TYPE,a.PAYBRANCHCODE,a.MOBILE_NO,a.HOUSENO,a.OFFICE_NO,a.ORD_REM,a.ATTACH,bank.NAME,custacc.CUST_ACC_NO,custcrc.CUST_CRC_OWNER,custcrc.CUST_ORI_CRC_NO
+        GROUP BY a.ORD_ID,a.ORD_NO,a.WOR_NO,a.CUST_NAME,a.APP_TYPE,a.CANCL_DT,a.PAY_MODE_CODE,a.PAY_MODE,a.ISSUEBANKCODE,a.ISSUEBANK,a.BANK_ACC_ID,a.BANK_ACC_NAME,a.BANKACCNO,a.CC_HOLDER_NAME,a.CC_NO,a.APPROVENO,a.REQUEST_STAGE,a.CANCELREASON,a.CANCELREASONDESC,a.REJECTID,a.INSTALL_STUS,a.OCRREMARK,a.MAILADDRESS,a.INSTADDRESS,a.PAY_TYPE,a.PAYBRANCHCODE,a.MOBILE_NO,a.HOUSENO,a.OFFICE_NO,a.ORD_REM,a.ATTACH,bank.NAME,custacc.CUST_ACC_NO,custcrc.CUST_CRC_OWNER,custcrc.CUST_ORI_CRC_NO
         ORDER BY a.ORD_ID
     </select>
     

@@ -48,6 +48,9 @@ var confirmColumnLayout = [ {
     headerText : "<spring:message code='pay.head.appType'/>",
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "payModeCode",
+    visible : false
+}, {
     dataField : "payMode",
     headerText : "<spring:message code='pay.head.payMode'/>",
     style : "aui-grid-user-custom-left"
@@ -55,6 +58,9 @@ var confirmColumnLayout = [ {
     dataField : "issuebankPaytChannel",
     headerText : "<spring:message code='pay.head.issueBank'/>",
     style : "aui-grid-user-custom-left"
+}, {
+    dataField : "bankAccId",
+    visible : false
 }, {
     dataField : "bankaccnoPaytChannel",
     headerText : "<spring:message code='pay.head.bankAccount'/>",
@@ -171,13 +177,21 @@ function fn_setConfirmGridEvent() {
     
     AUIGrid.bind(confirmGridID, "cellDoubleClick", function( event ) {
         console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
-        console.log("CellDoubleClick detId : " + event.item.detId);
+        console.log("CellDoubleClick ccNo : " + event.item.ccNo);
+        console.log("CellDoubleClick payModeCode : " + event.item.payModeCode);
+        console.log("CellDoubleClick bankAccId : " + event.item.bankAccId);
         // TODO pettyCash Expense Info GET
         if(FormUtil.isEmpty(event.item.validStusId)) {
             selectedRowIndex = event.rowIndex;
             selectedItem = event.item;
             
-            fn_refundInfoKeyInPop();
+            payModeCode = event.item.payModeCode;
+            if(payModeCode == "105" || payModeCode == "106" || payModeCode == "108") {
+            	bankAccId = "523";
+            } else {
+            	bankAccId = event.item.bankAccId;
+            }
+            fn_refundInfoKeyInPop(event.item.ccNo);
         } else {
             Common.alert("<spring:message code='pay.alert.eneterRefundInfo'/>");
         }
@@ -318,10 +332,15 @@ function fn_conversionForGridData(checkList, bRefundItem) {
     return checkList;
 }
 
-function fn_refundInfoKeyInPop() {
-    Common.popupDiv("/payment/refundInfoKeyInPop.do", null, null, true, "refundInfoKeyInPop", fn_showKeyInPop);
+function fn_refundInfoKeyInPop(creditCardNo) {
+	var obj = {
+			creditCardNo : creditCardNo
+	};
+	
+    Common.popupDiv("/payment/refundInfoKeyInPop.do", obj, null, true, "refundInfoKeyInPop", fn_showKeyInPop);
 }
 
+var payModeCode = null;
 function fn_showKeyInPop() {
     $("#rSalesOrdNo").val(selectedItem.ordNo);
     $("#rOrNo").val(selectedItem.worNo);
@@ -341,13 +360,13 @@ function fn_showKeyInPop() {
     $("#rAmt").val(str);
     $("#rRefAmt").val(str);
     
-    CommonCombo.make("rRefMode", "/payment/selectCodeList.do", null, "", {
+    CommonCombo.make("rRefMode", "/payment/selectCodeList.do", null, payModeCode, {
         id: "code",
         name: "codeName",
         type:"S"
     });
     
-    fn_setAccNo();
+    fn_setAccNo(payModeCode, bankAccId);
     
     selectedItem = null;
 }

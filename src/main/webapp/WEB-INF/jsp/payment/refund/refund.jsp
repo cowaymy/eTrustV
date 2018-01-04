@@ -49,6 +49,9 @@ var refundColumnLayout = [ {
     headerText : "<spring:message code='pay.head.appType'/>",
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "payModeCode",
+    visible : false
+}, {
     dataField : "payMode",
     headerText : "<spring:message code='pay.head.payMode'/>",
     style : "aui-grid-user-custom-left"
@@ -60,6 +63,12 @@ var refundColumnLayout = [ {
     dataField : "issueBank",
     headerText : "<spring:message code='pay.head.issueBank'/>",
     style : "aui-grid-user-custom-left"
+}, {
+    dataField : "bankAccId",
+    visible : false
+}, {
+    dataField : "bankAccName",
+    visible : false
 }, {
     dataField : "bankAccNo",
     headerText : "Bank Account No",
@@ -247,9 +256,29 @@ function fn_refundConfirmPop() {
     }
 }
 
-function fn_showConfirmPop(checkList) {
+function fn_showConfirmPop() {
     var checkList = AUIGrid.getItemsByValue(refundGridID, "isActive", "Active");
     //$("#conf_popup_wrap").show();
+    console.log(checkList);
+    
+    for(var i = 0; i < checkList.length; i++) {
+    	checkList[i].refAmt = checkList[i].amt;
+    	checkList[i].refModeCode = checkList[i].payModeCode;
+    	checkList[i].refModeName = checkList[i].payMode;
+    	checkList[i].bankAccCode = checkList[i].bankAccId;
+    	checkList[i].bankAccName = checkList[i].bankAccName;
+    	checkList[i].cardNo = checkList[i].ccNo;
+    	checkList[i].cardHolder = checkList[i].ccHolderName;
+    	
+    	if(checkList[i].payModeCode == "105") {
+            checkList[i].refModeCode = "108";
+            checkList[i].refModeName = "Online";
+        }
+    	if(checkList[i].payModeCode == "105" || checkList[i].payModeCode == "106" || checkList[i].payModeCode == "108") {
+            checkList[i].bankAccCode = "523";
+            checkList[i].bankAccName = "2710/010F - CIMB BHD (FINANCE)";
+        }
+    }
     
     fn_createConfirmAUIGrid();
     
