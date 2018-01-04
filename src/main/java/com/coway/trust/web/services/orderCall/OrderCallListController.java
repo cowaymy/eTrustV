@@ -22,6 +22,7 @@ import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.orderCall.OrderCallListService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -163,21 +164,26 @@ public class OrderCallListController {
 		resultValue = orderCallListService.insertCallResult(params,sessionVO);
 		
 		if( null !=resultValue){
-			HashMap   spMap =(HashMap)resultValue.get("spMap");
-			logger.debug("spMap :"+ spMap.toString());   
-			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-				resultValue.put("logerr","Y");
+			
+			
+			int  state =   CommonUtils.intNvl(params.get("callStatus")) ;
+			if(state ==20){
 				
-				message.setMessage("Error in Logistics Transaction");
-				message.setCode("99");
-				
-			}else{
-				message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
-				message.setCode("1");
+				HashMap   spMap =(HashMap)resultValue.get("spMap");
+				logger.debug("spMap :"+ spMap.toString());   
+				if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+					resultValue.put("logerr","Y");
+					
+					message.setMessage("Error in Logistics Transaction");
+					message.setCode("99");
+					
+				}else{
+					message.setMessage("success Installation No : " + resultValue.get("installationNo") +"</br>SELES ORDER NO : " +  resultValue.get("salesOrdNo"));
+					message.setCode("1");
+				}
+				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 			}
 			
-			
-			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 		}
 		
 		

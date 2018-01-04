@@ -77,14 +77,19 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 			
 			String returnNo="";
 			boolean success = false;
-			resultValue = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList ,salesOrdNo);
+			resultValue = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList ,salesOrdNo ,params);
 			
 		}
 		
 		return resultValue;
 	}
 	@Transactional
-	private  Map<String, Object> orderCallLogSave(Map<String, Object> callMaster,Map<String, Object> callDetails,Map<String, Object> installMaster,Map<String, Object> orderLogList,String salesOrdNo){
+	private  Map<String, Object> orderCallLogSave(Map<String, Object> callMaster
+																		,Map<String, Object> callDetails
+																		,Map<String, Object> installMaster
+																		,Map<String, Object> orderLogList
+																		,String salesOrdNo
+																		,Map<String, Object> params){
 		String returnNo="";
 		String maxId = "";  //각 테이블에 maxid 값 가져온다(다음 실행할 쿼리에 값을 넣기 위해 사용)
 		EgovMap maxIdValue = new EgovMap();
@@ -133,19 +138,23 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 				orderCallListMapper.insertInstallEntry(installMaster);
 				
 				
-				/////////////////////////물류 호출//////////////////////
-				logPram.put("ORD_ID", installNo.get("docNo"));
-				logPram.put("RETYPE", "SVO");  
-				logPram.put("P_TYPE", "OD01");  
-				logPram.put("P_PRGNM", "OCALL");  
-				logPram.put("USERID", Integer.parseInt(String.valueOf(callMaster.get("updator"))));   
+				if(Integer.parseInt(params.get("callStatus").toString()) ==20){
+					/////////////////////////물류 호출//////////////////////
+        			logPram.put("ORD_ID", installNo.get("docNo"));
+        			logPram.put("RETYPE", "SVO");  
+        			logPram.put("P_TYPE", "OD01");  
+        			logPram.put("P_PRGNM", "OCALL");  
+        			logPram.put("USERID", Integer.parseInt(String.valueOf(callMaster.get("updator"))));   
+        			
+        			logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
+        			servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
+        		 	logPram.put("P_RESULT_TYPE", "IN");
+            		logPram.put("P_RESULT_MSG", logPram.get("p1"));
+        			logger.debug("ORDERCALL 물류 호출 결과 ===>");
+        			/////////////////////////물류 호출 END //////////////////////   
+        			
+				}
 				
-				logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
-				servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
-			 	logPram.put("P_RESULT_TYPE", "IN");
-	    		logPram.put("P_RESULT_MSG", logPram.get("p1"));
-				logger.debug("ORDERCALL 물류 호출 결과 ===>");
-				/////////////////////////물류 호출 END //////////////////////   
 				
 			}
 			if(orderLogList != null && orderLogList.size() > 0 && Integer.parseInt(callMaster.get("statusCodeId").toString()) == 20){
