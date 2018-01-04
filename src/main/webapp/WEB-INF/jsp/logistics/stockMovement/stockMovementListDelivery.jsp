@@ -911,7 +911,7 @@ function fn_serialChck(rowindex , rowitem , str){
                 </tr>
                 <tr>    
                     <th scope="row">Header Text</th>
-                    <td colspan='2'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+                    <td colspan='2'><input type="text" name="doctext" id="doctext" class="w100p" maxlength="50"/></td>
                     <td><p class="btn_blue"><a id="ascall"><span class="search"></span>Auto Serial Call</a></p></td>
                 </tr>
             </tbody>

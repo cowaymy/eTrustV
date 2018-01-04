@@ -606,7 +606,7 @@ function grFunc(){
                 </tr>
                 <tr>
                     <th scope="row">Header Text</th>
-		            <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+		            <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p" maxlength="50"/></td>
 		        </tr>
 		    </tbody>
 		    </table>

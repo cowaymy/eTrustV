@@ -844,7 +844,7 @@ function f_addrow(){
                 </tr>
                 <tr>
                     <th scope="row">Header Text</th>
-		            <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
+		            <td colspan='3'><input type="text" name="doctext" id="doctext" maxlength="50" class="w100p"/></td>
 		        </tr>
 		    </tbody>
 		    </table>
