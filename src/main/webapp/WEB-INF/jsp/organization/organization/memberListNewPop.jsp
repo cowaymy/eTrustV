@@ -52,6 +52,10 @@ function fn_departmentCode(value){
         $("#trTrainee").hide();
      }
      
+     $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
+     
+     $("#joinDate").attr("readOnly", true);
+     
      if($("#memberType").val() == 2803){
      
          var spouseCode = "${spouseInfoView[0].memCode}";
@@ -783,7 +787,7 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">Joined Date<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date" />
+    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="w100p" />
     </td>
 </tr>
 <tr>
