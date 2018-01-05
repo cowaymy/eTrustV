@@ -3,36 +3,36 @@
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderColorGridMapper">
 
     <select id="colorGridList" parameterType="Map" resultType="egovMap">
- 
+
         SELECT D1.ORD_ID ,
-	               D1.ORD_NO ,         
-			       D1.APP_TYPE_CODE ,  
-			       D1.CUST_NAME ,      
-			       D1.CUST_IC   ,      
-			       D1.STK_CODE   ,     
+	               D1.ORD_NO ,
+			       D1.APP_TYPE_CODE ,
+			       D1.CUST_NAME ,
+			       D1.CUST_IC   ,
+			       D1.STK_CODE   ,
 			       D1.SALESMAN_CODE  ,
-			       D1.TOP_ORG_CODE  , 
-			       D1.ORG_CODE  ,     
-			       D1.GRP_CODE  ,     
-			       D1.DEPT_CODE  , 
-			       D1.MEM_CODE ,   
-			       D1.IS_NET  ,       
-			       D1.NET_MONTH   ,    
+			       D1.TOP_ORG_CODE  ,
+			       D1.ORG_CODE  ,
+			       D1.GRP_CODE  ,
+			       D1.DEPT_CODE  ,
+			       D1.MEM_CODE ,
+			       D1.IS_NET  ,
+			       D1.NET_MONTH   ,
 			       D1.INSTALL_STUS_ID ,
-			       D1.INSTALL_STUS ,   
+			       D1.INSTALL_STUS ,
 			       D1.INSTALL_FAIL_RESN,
-			       D1.COM_DT ,         
-			       D1.PAY_COM_DT ,     
-			       D1.PROMO_CODE ,     
-			       D1.PROMO_DESC ,     
-			       D1.MAIL_CNT_TEL_M , 
-			       D1.MAIL_CNT_TEL_O , 
-			       D1.MAIL_CNT_TEL_R , 
-			       D1.MAIL_CNT_TEL_F , 
-			       D1.INST_CNT_TEL_M , 
-			       D1.INST_CNT_TEL_O , 
-			       D1.INST_CNT_TEL_R , 
-			       D1.INST_CNT_TEL_F , 
+			       D1.COM_DT ,
+			       D1.PAY_COM_DT ,
+			       D1.PROMO_CODE ,
+			       D1.PROMO_DESC ,
+			       D1.MAIL_CNT_TEL_M ,
+			       D1.MAIL_CNT_TEL_O ,
+			       D1.MAIL_CNT_TEL_R ,
+			       D1.MAIL_CNT_TEL_F ,
+			       D1.INST_CNT_TEL_M ,
+			       D1.INST_CNT_TEL_O ,
+			       D1.INST_CNT_TEL_R ,
+			       D1.INST_CNT_TEL_F ,
 			       D1.CUST_ID ,
 			       D1.C1 ,
 			       D1.ORD_DT ,
@@ -42,7 +42,7 @@
 			       D1.C6 ,
 			       D1.C7 ,
 			       D1.C8 ,
-			       D1.C9 
+			       D1.C9
 	       FROM ( SELECT DISTINCT F1.OrderID1 ORD_ID  ,
 	                   F1.ORD_NO ,
 	                   F1.APP_TYPE_CODE ,
@@ -153,7 +153,7 @@
 								                   vC.TOT_CNT ,
 								                   vC.TOT_OTSTND ,
 								                   vC.PROMO_CODE ,
-								                   vC.PROMO_DESC 
+								                   vC.PROMO_DESC
 		                                   FROM SAL1008V vC ) E1
 										    JOIN ( SELECT vM.ORD_ID ,
 												                vM.MAIL_CNTY ,
@@ -176,7 +176,7 @@
 												                vM.MAIL_CNTC_ID ,
 												                vM.MAIL_ADDR_ID ,
 												                vM.MAIL_CNT_DEPT ,
-												                vM.MAIL_CNT_POST 
+												                vM.MAIL_CNT_POST
 		                                                FROM SAL1011V vM ) E2   ON E2.ORD_ID = E1.ORD_ID
 										 JOIN ( SELECT vI.ORD_ID ,
 											                vI.INST_COUNTRY ,
@@ -316,7 +316,7 @@
 		                                            vB.STK_CTGRY_NAME ,
 		                                            vB.CUST_TYPE_ID ,
 		                                            vB.CUST_BILL_ID ,
-		                                            vB.OBLIGT_YEAR   
+		                                            vB.OBLIGT_YEAR
 		                                     FROM SAL1006V vB ) E4   ON E4.ORD_ID = F1.OrderID1
 	          WHERE 1=1
 	          <if test="orgCode != null and orgCode != ''">
@@ -350,8 +350,10 @@
 	              AND F1.STK_ID = #{cmbProduct}
 	          </if>
 	          <if test="netSalesMonth != null and netSalesMonth != ''">
-	              AND F1.PV_YEAR = #{pvYear} 
-	              AND F1.PV_MONTH = #{pvMonth} 
+	              <!-- AND F1.PV_YEAR = #{pvYear}
+	              AND F1.PV_MONTH = #{pvMonth} -->
+	              AND F1.PV_YEAR = EXTRACT(YEAR FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
+                  AND F1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
 	          </if>
 	          <if test="salesmanCode != null and salesmanCode != ''">
 	              AND F1.SALESMAN_CODE = #{salesmanCode}
@@ -371,7 +373,7 @@
 	          </if>
                ) D1
         ORDER BY D1.ORD_ID DESC
-              
+
     </select>
-    
+
 </mapper>
