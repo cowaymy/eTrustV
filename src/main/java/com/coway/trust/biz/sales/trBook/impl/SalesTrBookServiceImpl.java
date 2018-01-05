@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.trBook.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,17 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.coway.trust.AppConstants;
+import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.trBook.SalesTrBookService;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -28,7 +35,14 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	private SalesTrBookMapper salesTrBookMapper;
 	
 	@Autowired
-	private MessageSourceAccessor messageSourceAccessor;
+	private MessageSourceAccessor messageSourceAccessor;	
+
+	@Autowired
+	private FileApplication fileApplication;
+	
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
+	
 
 	@Override
 	public List<EgovMap> selectTrBookList(Map<String, Object> params) {
@@ -224,7 +238,7 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public EgovMap updateReportLost(Map<String, Object> params) {
+	public EgovMap updateReportLost(Map<String, Object> params, MultipartHttpServletRequest request) throws Exception {
 
 		int cnt = salesTrBookMapper.selectTrBookDetails(params);
 		
@@ -246,6 +260,23 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		String docNo=salesTrBookMapper.getDocNo(params);
 		
 		params.put("docNo", docNo);
+		
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFilesNewName(request, uploadDir,
+				File.separator + "trBook" + File.separator + "DCF", 1024 * 1024 * 6, false, docNo+".zip");
+		
+		
+		params.put("list", list);	
+		
+		logger.debug("list SIZE=============" + list.size());
+		
+		if(list.size() > 0){
+			
+			params.put("hasAttach", 1);
+			params.put("fileName", "~/WebShare" + list.get(0).getServerSubPath()+ File.separator + list.get(0).getFileName());			
+			
+			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+		}
 		
 		
 		salesTrBookMapper.insertRequestMaster(params);

@@ -189,4 +189,74 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 		}
 		return fileList;
 	}
+	
+	public static List<EgovFormBasedFileVo> uploadFilesNewName(HttpServletRequest request, String uploadPath, String subPath,
+			final long maxFileSize, boolean addExtension, String tempFileName) throws Exception {
+		List<EgovFormBasedFileVo> list = new ArrayList<>();
+
+		MultipartHttpServletRequest mptRequest = (MultipartHttpServletRequest) request;
+		Iterator<?> fileIter = mptRequest.getFileNames();
+
+		while (fileIter.hasNext()) {
+			MultipartFile mFile = mptRequest.getFile((String) fileIter.next());
+
+			if (mFile.getSize() > maxFileSize) {
+				throw new ApplicationException(AppConstants.FAIL,
+						CommonUtils.getBean("messageSourceAccessor", MessageSourceAccessor.class).getMessage(
+								AppConstants.MSG_FILE_MAX_LIMT,
+								new Object[] { CommonUtils.formatFileSize(maxFileSize) }));
+			}
+
+			EgovFormBasedFileVo vo = new EgovFormBasedFileVo();
+
+			String tmp = tempFileName; //mFile.getOriginalFilename();
+
+			if (tmp.lastIndexOf("\\") >= 0) {
+				tmp = tmp.substring(tmp.lastIndexOf("\\") + 1);
+			}
+
+			String blackUploadPath = EgovWebUtil.filePathBlackList(uploadPath);
+			String blackSubPath = EgovWebUtil.filePathBlackList(subPath);
+
+			vo.setFileName(tmp);
+			vo.setContentType(mFile.getContentType());
+			vo.setServerPath(blackUploadPath);
+			vo.setServerSubPath(blackSubPath);
+
+			String physicalName = getPhysicalFileName();
+
+			if (addExtension) {
+				physicalName = physicalName + "." + FilenameUtils.getExtension(tmp).toLowerCase();
+			}
+
+			vo.setPhysicalName(physicalName);
+			vo.setSize(mFile.getSize());
+			vo.setExtension(FilenameUtils.getExtension(tmp).toLowerCase());
+
+			if (mFile.getSize() > 0) {
+				InputStream is = null;
+
+				try {
+					is = mFile.getInputStream();
+
+					if (MimeTypeUtil.isNotAllowFile(is)) {
+						throw new ApplicationException(AppConstants.FAIL,
+								mFile.getOriginalFilename() + AppConstants.MSG_IS_NOT_ALLOW);
+					}
+
+					saveFile(is, new File(EgovWebUtil.filePathBlackList(vo.getServerPath() + SEPERATOR
+							+ vo.getServerSubPath() + SEPERATOR + vo.getPhysicalName())));
+				} finally {
+					if (is != null) {
+						is.close();
+					}
+				}
+				list.add(vo);
+			}
+		}
+
+		return list;
+	}
+	
+	
 }

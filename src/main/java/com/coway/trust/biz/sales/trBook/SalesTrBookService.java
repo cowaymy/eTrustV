@@ -3,6 +3,8 @@ package com.coway.trust.biz.sales.trBook;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface SalesTrBookService {
@@ -40,7 +42,7 @@ public interface SalesTrBookService {
 
 	String saveReTrBook(Map<String, Object> params);
 
-	EgovMap updateReportLost(Map<String, Object> params);
+	EgovMap updateReportLost(Map<String, Object> params, MultipartHttpServletRequest request) throws Exception;
 
 	String saveTranSingle(Map<String, Object> params);
 

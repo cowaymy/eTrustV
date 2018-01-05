@@ -2,6 +2,7 @@ package com.coway.trust.web.sales.trBook;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -538,8 +539,11 @@ public class SalesTrBookController {
 		params.put("trBookId", params.get("trAttBookId")); 
 		params.put("trBookNo", params.get("trAttBookNo")); 
 		
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-				File.separator + "trBook" + File.separator + "DCF", 1024 * 1024 * 6);
+		/*List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
+				File.separator + "trBook" + File.separator + "DCF", 1024 * 1024 * 6);*/
+		
+		/*List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFilesNewName(request, uploadDir,
+				File.separator + "trBook" + File.separator + "DCF", 1024 * 1024 * 6, );
 		
 		//EgovMap result = new EgovMap();
 		
@@ -559,7 +563,18 @@ public class SalesTrBookController {
 			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
 		}
 		
-		EgovMap saveView = salesTrBookService.updateReportLost(params);		
+		EgovMap saveView = salesTrBookService.updateReportLost(params);	*/	
+		
+		
+		
+		//EgovMap result = new EgovMap();
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("branchId", sessionVO.getUserBranchId());
+		params.put("deptId", sessionVO.getUserDeptId());	
+		
+		
+		EgovMap saveView = salesTrBookService.updateReportLost(params, request);		
 		
 		return ResponseEntity.ok(saveView);
 	}
