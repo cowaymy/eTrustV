@@ -35,22 +35,22 @@ var detailGridID;
 
 // AUIGrid 칼럼 설정                                                                            visible : false
 var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log.head.matcode'/>"                ,width:120    ,height:30 , visible:true},
-							{dataField: "stkDesc",headerText :"<spring:message code='log.head.materialcodetext'/>"           ,width:120    ,height:30 , visible:true},
-							{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.fromsloc'/>"                     ,width:120    ,height:30 , visible:true},
-							{dataField: "revStorgNm",headerText :"<spring:message code='log.head.tosloc'/>"                     ,width:120    ,height:30 , visible:true},
-							{dataField: "trantype",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:true},
-							{dataField: "invntryMovType",headerText :"<spring:message code='log.head.movementype'/>"                   ,width:120    ,height:30 , visible:true},
+							{dataField: "stkDesc",headerText :"Material Name"           ,width:120    ,height:30 , visible:true},
+							{dataField: "reqStorgNm",headerText :"From SLoc"                     ,width:120    ,height:30 , visible:true},
+							{dataField: "revStorgNm",headerText :"To SLoc"                     ,width:120    ,height:30 , visible:true},
+							{dataField: "trantype",headerText :"<spring:message code='log.head.transactiontype'/>"        ,width:120    ,height:30 , visible:true},
+							{dataField: "invntryMovType",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:true},
 							{dataField: "movtype",headerText :"<spring:message code='log.head.movementtext'/>"                ,width:120    ,height:30 , visible:true},
 							{dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                           ,width: "8%"       ,height:30 , visible:true},
-							{dataField: "matrlDocNo",headerText :"<spring:message code='log.head.materialdocuments'/>"           ,width:120    ,height:30 , visible:true},
-							{dataField: "matrlDocItm",headerText :"<spring:message code='log.head.item'/>"                         ,width:120    ,height:30 , visible:true},
+							{dataField: "matrlDocNo",headerText :"Mat. Doc No."           ,width:120    ,height:30 , visible:true},
+							{dataField: "matrlDocItm",headerText :"Mat. Doc Item"                         ,width:120    ,height:30 , visible:true},
 							{dataField: "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"                  ,width:120    ,height:30 , visible:true},
 							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},
 							{dataField: "refDocNo",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30 , visible:true},
 							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"                 ,width:120    ,height:30 , visible:true},
 							{dataField: "autoCrtItm",headerText :"<spring:message code='log.head.auto/manual'/>"                    ,width:120    ,height:30 , visible:true},
-							{dataField: "codeName",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width: "15%"     ,height:30 , visible:true},
+							{dataField: "codeName",headerText :"<spring:message code='log.head.uom'/>"                ,width: "15%"     ,height:30 , visible:true},
 							{dataField: ""  ,headerText:    ""                             ,width:  "15%"     ,height:30 , visible:false},
 							{dataField: "dcfreqapproveremark",headerText :"<spring:message code='log.head.dcfreqapproveremark'/>"           ,width: "15%"     ,height:30 , visible:false},
 							{dataField: "dcfreqapproveby",headerText :"<spring:message code='log.head.dcfreqapproveby'/>"               ,width: "15%"     ,height:30 , visible:false},
@@ -146,9 +146,29 @@ $(document).ready(function(){
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
 
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
+
+    if(dd<10) { dd='0'+dd; }
+
+    if(mm<10) { mm='0'+mm; }
+
+    $("#PostingDt1").val(dd + '/' + mm + '/' + yyyy);
+
+    var today2 = new Date();
+    today2.setDate(today2.getDate() + 7);
+    var dd2 = today2.getDate();
+    var mm2 = today2.getMonth() + 1;
+    var yyyy2 = today2.getFullYear();
+
+    if(dd2 < 10) { dd2 = '0' + dd2; }
+
+    if(mm2 < 10) { mm2 ='0' + mm2; }
+
+    $("#PostingDt2").val(dd2 + '/' + mm2 + '/' + yyyy2);
 });
-
-
 
 
 $(function(){
@@ -306,11 +326,23 @@ function f_multiCombos() {
 		var url = "/logistics/materialDoc/MaterialDocSearchList.do";
 		var param = $('#searchForm').serialize();
 
-		Common.ajax("GET", url, param, function(data) {
-			console.log(data);
-			AUIGrid.setGridData(myGridID, data.data);
+		if($("#PostingDt1").val() == null || $("#PostingDt1").val() == "" )
+		{
+			Common.alert("Please input a 'From Posting Date'");
+		}
+		else if($("#PostingDt2").val() == null || $("#PostingDt2").val() == "" )
+        {
+            Common.alert("Please input a 'To Posting Date'");
+        }
+		else
+		{
 
-		});
+			Common.ajax("GET", url, param, function(data) {
+				console.log(data);
+				AUIGrid.setGridData(myGridID, data.data);
+
+			});
+		}
 	}
 </script>
 
@@ -323,7 +355,7 @@ function f_multiCombos() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>New-Material Document List</h2>
+<h2>Material Document No.</h2>
 
 </aside><!-- title_line end -->
 
@@ -373,7 +405,7 @@ function f_multiCombos() {
                     <th scope="row">Posting Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <p><input id="PostingDt1" name="PostingDt1" type="text" title="Posting Start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="PostingDt2" name="PostingDt2" type="text" title="Posting End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
@@ -381,7 +413,7 @@ function f_multiCombos() {
                     <th scope="row">Create Date</th>
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
+                        <p><input id="CreateDt1" name="CreateDt1" type="text" title="Create Start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="CreateDt2" name="CreateDt2" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
