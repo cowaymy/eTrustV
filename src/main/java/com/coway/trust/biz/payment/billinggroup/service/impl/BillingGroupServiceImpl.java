@@ -1912,7 +1912,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 								Map<String, Object> updChangeMap = new HashMap<String, Object>();
 								updChangeMap.put("addOrdFlag", "Y");
-								updChangeMap.put("custBillSoId", changeOrderId);
+								updChangeMap.put("salesOrdId", changeOrderId);
 								updChangeMap.put("custBillId", custBillId);
 								updChangeMap.put("userId", userId);
 								billingGroupMapper.updCustMaster(updChangeMap);
