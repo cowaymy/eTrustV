@@ -16,10 +16,13 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
        L56.QTY QTY,
        NVL(L56.MOV_QTY , 0) MOV_QTY ,
        NVL(L75.BOOKING_QTY , 0) BOOKING_QTY,
-       QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY  ,
-       S28.WH_LOC_GB WHLOCGB
+       QTY -NVL(L75.BOOKING_QTY , 0) AVAILABLE_QTY,
+       S28.WH_LOC_GB WHLOCGB,
+       S5.CODE BRNCH_CODE,
+       S5.NAME BRNCH_NAME
   FROM LOG0056M L56                                                      <!-- 재고 -->
-     , SYS0028M S28                                                      <!--  창고 -->
+     , SYS0028M S28
+     , SYS0005M S5                                                   <!--  창고 -->
      , SYS0026M S26                                                    <!-- ITEM -->
      , (SELECT *
           FROM SYS0013M
@@ -43,6 +46,8 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
        AND L56.STK_TYPE_ID = STYPE.CODE_ID
        AND L56.STK_CODE = S26.STK_CODE
        AND L56.LOC_ID = S28.WH_LOC_ID
+       AND S28.WH_LOC_BRNCH_ID = S5.BRNCH_ID
+
     <if test="searchMatCode != null and searchMatCode !=''">
       AND S26.STK_CODE = #{searchMatCode}
     </if>
@@ -58,7 +63,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
     <if test="sstocknm != null and sstocknm !=''">
       AND (UPPER(S26.STK_DESC) LIKE '%' || UPPER(#{sstocknm}) || '%' OR UPPER(S26.STK_CODE) LIKE UPPER(#{sstocknm}) || '%')
     </if>
-    
+
      <if test="searchType != null and searchType !=''">
       and S26.STK_TYPE_ID in
       <foreach item="item" collection="searchType" index="index" open="(" separator="," close=")">
@@ -78,8 +83,8 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
          </foreach>
      </if>
     <!-- AND L56.LOC_ID = #{LocCode} -->
-</select> 
+</select>
 
-     
+
 
 </mapper>
