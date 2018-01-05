@@ -114,5 +114,7 @@ public interface MemberListService {
 
 	List<EgovMap> checkNRIC2(Map<String, Object> params);
 
-	List<EgovMap> checkNRIC3(Map<String, Object> params);	
+	List<EgovMap> checkNRIC3(Map<String, Object> params);
+
+	List<EgovMap> checkSponsor(Map<String, Object> params);	
 }

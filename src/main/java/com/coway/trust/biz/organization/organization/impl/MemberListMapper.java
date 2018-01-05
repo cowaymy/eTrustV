@@ -188,4 +188,6 @@ public interface MemberListMapper {
 
 	List<EgovMap> checkNRIC3(Map<String, Object> params);
 
+	List<EgovMap> checkSponsor(Map<String, Object> params);
+	
 }

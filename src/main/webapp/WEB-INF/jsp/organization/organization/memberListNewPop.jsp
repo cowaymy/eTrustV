@@ -602,6 +602,10 @@ function fn_saveValidation(){
 	        return false;
 	    }
     }
+    
+    if (checkNRIC() == false) {
+    	return false;
+    }
 
 	return true;
 }
@@ -746,16 +750,33 @@ function fn_selectState(selVal){
 
 }
 
+function fn_sponsorCheck(){
+	if(event.keyCode == 13) {
+		fn_sponsorCd();
+	}
+}
+
+function fn_sponsorCd(){
+	Common.ajax("GET", "/organization/checkSponsor.do", $("#memberAddForm").serializeJSON(), function(result) {
+        console.log("data : " + result);
+        if (result.message != "ok") {
+        	Common.alert(result.message);
+        }
+	});
+}
+
 function checkNRIC(){
     
     if(event.keyCode == 13) {
     	var jsonObj = { "nric" : $("#nric").val() };
-    			 
+    	var check;
+    	
     	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
             console.log("data : " + result);
             if (result.message != "pass") {
             	Common.alert(result.message);
             	$("#nric").val('');
+            	return false;
             } else {    // 조건1 통과 -> 조건2 수행
             	
             	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
@@ -763,6 +784,7 @@ function checkNRIC(){
                     if (result.message != "pass") {
                         Common.alert(result.message);
                         $("#nric").val('');
+                        return false;
                     } else {    // 조건2 통과 -> 조건3 수행
                     	
                     	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
@@ -770,8 +792,10 @@ function checkNRIC(){
                             if (result.message != "pass") {
                                 Common.alert(result.message);
                                 $("#nric").val('');
+                                return false;
                             } else {    // 조건3 통과 -> 끝
                             	Common.alert("Available NRIC");
+                                return true;
                             }
                             
                         });
@@ -973,7 +997,7 @@ function checkNRIC(){
     <td>
 
     <div class="search_100p"><!-- search_100p start -->
-    <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="sponsorCd" name="sponsorCd"/>
+    <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="sponsorCd" name="sponsorCd" onKeyDown="fn_sponsorCheck()"/>
     <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </div><!-- search_100p end -->
 

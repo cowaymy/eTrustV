@@ -1045,4 +1045,23 @@ public class MemberListController {
     	return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/checkSponsor.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model) {
+
+		logger.debug("checkSponsor_params : {} " + params);
+		List<EgovMap> checkSponsor = memberListService.checkSponsor(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		
+		if (checkSponsor.size() == 0) {
+			message.setMessage("There is no member code that you entered");
+		} else {
+			message.setMessage("ok");
+		}
+		logger.debug("message : {}", message);
+    
+    	return ResponseEntity.ok(message);
+	}
+	
 }

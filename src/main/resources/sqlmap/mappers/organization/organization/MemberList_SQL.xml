@@ -3591,4 +3591,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		WHERE VALID > TO_CHAR(SYSDATE, 'YYMMDD')
     </select>
     
+    <select id="checkSponsor"  parameterType="Map" resultType="egovMap">
+        SELECT * 
+        FROM ORG0001D 
+        WHERE MEM_CODE = #{sponsorCd} 
+    </select>
+    
 </mapper>

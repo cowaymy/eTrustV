@@ -1843,4 +1843,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap> checkNRIC3(Map<String, Object> params) {
 		return memberListMapper.checkNRIC3(params);
 	}
+	
+	@Override
+	public List<EgovMap> checkSponsor(Map<String, Object> params) {
+		return memberListMapper.checkSponsor(params);
+	}
 }
