@@ -20,8 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.CRJavaHelper;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
@@ -166,6 +166,21 @@ public class ReportBatchController {
 		LOGGER.info("[END] RCM_Daily_2015_S_2...");
 	}
 
+	@RequestMapping(value = "/ColorGrid_Simplification_2014_2015.do")
+	//@Scheduled(cron = "0 0 6 * * *")
+	public void colorGridSimplification_2014_2015() {
+		LOGGER.info("[START] ColorGrid_Simplification_2014_2015...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Simplification_2014_2015.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "ColorGrid_Simplification_2014_2015" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] ColorGrid_Simplification_2014_2015...");
+	}
+
 	private void viewProcedure(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params) {
 		this.checkArgument(params);
 		String reportFile = (String) params.get(REPORT_FILE_NAME);
@@ -237,6 +252,21 @@ public class ReportBatchController {
 
 		this.view(null, null, params);
 		LOGGER.info("[END] RCM_Daily_Simplified...");
+	}
+
+	@RequestMapping(value = "/MemberRawDate_Excel.do")
+	@Scheduled(cron = "0 0 8 * * MON,WED,THU,FRI")
+	public void memberRawDateExcel() throws IOException {
+		LOGGER.info("[START] MemberRawDate_Excel...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/MemberRawDate_Excel.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("MemTypeID", "1"); // viewType
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"Member" + File.separator + "MemberRawDate_Excel" + CommonUtils.getNowDate() + ".xls");
+
+		this.view(null, null, params);
+		LOGGER.info("[END] MemberRawDate_Excel...");
 	}
 
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
