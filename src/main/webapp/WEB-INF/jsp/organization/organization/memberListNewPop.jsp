@@ -501,6 +501,7 @@ var gridPros = {
 
 //Validation Check
 function fn_saveValidation(){
+	
 	if($("#memberNm").val() == ''){
         Common.alert("Please key  in Member Name");
         return false;
@@ -541,10 +542,11 @@ function fn_saveValidation(){
         return false;
     }
 
-
 	if($("#nric").val() == ''){
         Common.alert("Please key  in NRIC");
         return false;
+    } else {
+    	checkNRIC();
     }
 
     if (  $("#nric").val().length != 12 ) {
@@ -603,10 +605,6 @@ function fn_saveValidation(){
 	    }
     }
     
-    if (checkNRIC() == false) {
-    	return false;
-    }
-
 	return true;
 }
 
@@ -765,46 +763,57 @@ function fn_sponsorCd(){
 	});
 }
 
-function checkNRIC(){
-    
+function checkNRICEnter(){
     if(event.keyCode == 13) {
-    	var jsonObj = { "nric" : $("#nric").val() };
-    	var check;
-    	
-    	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
-            console.log("data : " + result);
-            if (result.message != "pass") {
-            	Common.alert(result.message);
-            	$("#nric").val('');
-            	return false;
-            } else {    // 조건1 통과 -> 조건2 수행
-            	
-            	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
-                    console.log("data : " + result);
-                    if (result.message != "pass") {
-                        Common.alert(result.message);
-                        $("#nric").val('');
-                        return false;
-                    } else {    // 조건2 통과 -> 조건3 수행
-                    	
-                    	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
-                            console.log("data : " + result);
-                            if (result.message != "pass") {
-                                Common.alert(result.message);
-                                $("#nric").val('');
-                                return false;
-                            } else {    // 조건3 통과 -> 끝
-                            	Common.alert("Available NRIC");
-                                return true;
-                            }
-                            
-                        });
-                    }
-                    
-            	});
-            }
-        });
+    	checkNRIC();
     }
+}
+
+function checkNRIC(){
+	var returnValue;
+	
+   	var jsonObj = { "nric" : $("#nric").val() };
+   	var check;
+   	
+   	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+           console.log("data : " + result);
+           if (result.message != "pass") {
+           	Common.alert(result.message);
+           	$("#nric").val('');
+           	returnValue = false;
+           	return false;
+           } else {    // 조건1 통과 -> 조건2 수행
+           	
+           	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+                   console.log("data : " + result);
+                   if (result.message != "pass") {
+                       Common.alert(result.message);
+                       $("#nric").val('');
+                       returnValue = false;
+                       return false;
+                   } else {    // 조건2 통과 -> 조건3 수행
+                   	
+                   	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+                           console.log("data : " + result);
+                           if (result.message != "pass") {
+                               Common.alert(result.message);
+                               $("#nric").val('');
+                               returnValue = false;
+                               return false;
+                           } else {    // 조건3 통과 -> 끝
+                           	//Common.alert("Available NRIC");
+                           	returnValue = true;
+                               return true;
+                           }
+                           
+                       });
+                   }
+                   
+           	});
+           }
+       });
+    
+    return returnValue;
     
 }
 </script>
@@ -916,7 +925,7 @@ function checkNRIC(){
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRIC()"/>
+    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"/>
     </td>
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>
