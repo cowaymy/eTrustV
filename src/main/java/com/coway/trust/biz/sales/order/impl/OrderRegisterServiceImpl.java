@@ -265,9 +265,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             			msg = "-SVM End Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
             			
               			if(expYear <= nowYear || (expYear == nowYear && (expMonth - 4) <= nowMonth) || (calExt.compareTo(calNow) <= 0)) {
-            				
+            				logger.debug("@####:not InValid");
             			}
               			else {
+              				logger.debug("@####:InValid");
+              				
               				isInValid = "InValid";
               			}
               			
@@ -281,7 +283,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               					BigDecimal valiOutStanding = (BigDecimal)orderRegisterMapper.selectRentAmt(getOldOrderID);
               					valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-              					if(valiOutStanding.compareTo(BigDecimal.ZERO) == 0) {
+              					if(valiOutStanding.compareTo(BigDecimal.ZERO) > 0) {
                                     msg = msg + " -With Outstanding payment not allowed for Ex-Trade promo. <br/>";
                                     isInValid = "InValid";
               					}
