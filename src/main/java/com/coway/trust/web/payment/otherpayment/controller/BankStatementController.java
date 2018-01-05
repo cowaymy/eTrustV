@@ -114,10 +114,10 @@ public class BankStatementController {
 			
 				itemMap = new HashMap<String, Object>();
 				itemMap.put("fTrnscDt", formData.get("uploadTranDt"));			
-				itemMap.put("fTrnscTellerId", String.valueOf(gridMap.get("0")));	// Teller ID
-				itemMap.put("fTrnscRef3", String.valueOf(gridMap.get("1")));		// Transaction Code
-				itemMap.put("fTrnscRefChqNo", String.valueOf(gridMap.get("2")));		//Ref/Cheq No
-				itemMap.put("fTrnscRef1", String.valueOf(gridMap.get("3")));		//Description
+				itemMap.put("fTrnscTellerId", String.valueOf(gridMap.get("0")));	// Teller ID -> Ref / Cheq No 으로 title 변경
+				itemMap.put("fTrnscRef3", String.valueOf(gridMap.get("1")));		// Transaction Code -> Description1 으로 title 변경
+				itemMap.put("fTrnscRefChqNo", String.valueOf(gridMap.get("2")));		//Ref/Cheq No -> Description 2 으로 title 변경
+				itemMap.put("fTrnscRef1", String.valueOf(gridMap.get("3")));		//Description -> ref5 으로 title 변경
 				itemMap.put("fTrnscRef2", String.valueOf(gridMap.get("4")));		//ref6
 				itemMap.put("fTrnscRef6", String.valueOf(gridMap.get("5")));		//ref7
 				itemMap.put("fTrnscRem", String.valueOf(gridMap.get("6")));		//TYPE
