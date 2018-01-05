@@ -356,7 +356,7 @@ function cardStateDelete(){
        if(valid){
            var data = {};
            data.all = checkedItems;
-           Common.confirm("Are you sure you want to delete the selected uploaded CRC Statement?",function (){
+           Common.confirm("<spring:message code='pay.alert.uploadCardDelete'/>",function (){
               
              Common.ajax("POST", "/payment/deleteCardStatement.do", data, function(result) {
                

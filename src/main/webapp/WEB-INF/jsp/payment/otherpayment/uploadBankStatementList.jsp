@@ -370,7 +370,7 @@ function bankStateDelete(){
 			 if(valid){
 				   var data = {};
 				   data.all = checkedItems;
-					 Common.confirm("<spring:message code='pay.alert.uploadBankStateItems'/>",function (){
+					 Common.confirm("<spring:message code='pay.alert.uploadBankDelete'/>",function (){
 						  
 						 Common.ajax("POST", "/payment/deleteBankStatement.do", data, function(result) {
 							 
