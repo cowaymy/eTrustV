@@ -246,7 +246,7 @@ function fn_registerOrderGrid() {
         dataField : "cmplncId",
         headerText : "",
         editable : false,
-        width : 130
+        width : 0
     }, {
         dataField : "",
         headerText : "",
@@ -544,30 +544,35 @@ function fn_newOrder(){
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Order No' htmlEscape='false'/>");
         return false;
     }
-    Common.ajax("GET", "/organization/compliance/getCheckOrderNo.do", {orderNo : $("#orderNo").val()}, function(result) {
-        console.log("성공.");
-     
-        if(result != null){
-            success = false;
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='' htmlEscape='false'/>");
-        }
-    });
-       if(success){
-           Common.ajaxSync("GET", "/organization/compliance/getComplianceOrderDetail.do", {orderNo : $("#orderNo").val()}, function(result) {
-               AUIGrid.setGridData(myGridID_order, result);
-           });
-       }
-       
-       if(success){
-    	   var jsonObj={};
-    	   jsonObj.all =  AUIGrid.getGridData(myGridID_order);
-           $("#cmplncOrdId").val("${complianceValue.cmplncId }");
-           jsonObj.form =  $("#orderSearch").serializeArray(); ;
-           Common.ajax("POST", "/organization/compliance/saveComplianceOrderDetail.do", jsonObj, function(result) {
-               
-           });
-       }
-       
+    
+    if(AUIGrid.getGridData(myGridID_order).length > 0){
+    	
+    }else{
+		   
+		    Common.ajax("GET", "/organization/compliance/getCheckOrderNo.do", {orderNo : $("#orderNo").val()}, function(result) {
+		        console.log("성공.");
+		     
+		        if(result != null){
+		            success = false;
+		            Common.alert("Order No already in Case [" + $("#orderNo").val() + "], please use other order no..");
+		        }
+		    });
+		       if(success){
+		           Common.ajaxSync("GET", "/organization/compliance/getComplianceOrderDetail.do", {orderNo : $("#orderNo").val()}, function(result) {
+		               AUIGrid.setGridData(myGridID_order, result);
+		           });
+		       }
+		       
+		       if(success){
+		    	   var jsonObj={};
+		    	   jsonObj.all =  AUIGrid.getGridData(myGridID_order);
+		           $("#cmplncOrdId").val("${complianceValue.cmplncId }");
+		           jsonObj.form =  $("#orderSearch").serializeArray(); ;
+		           Common.ajax("POST", "/organization/compliance/saveComplianceOrderDetail.do", jsonObj, function(result) {
+		               
+		           });
+		       } 
+    }
 }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

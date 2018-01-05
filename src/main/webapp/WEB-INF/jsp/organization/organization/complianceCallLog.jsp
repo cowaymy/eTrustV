@@ -13,6 +13,7 @@ $(document).ready(function() {
 	AUIGrid.bind(myGridID_compliance, "cellClick", function(event) {
        complianceIdValue = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncId");
        memberId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "memId");
+       statusId = AUIGrid.getCellValue(myGridID_compliance, event.rowIndex, "cmplncStusId");
         console.log("memberId " + memberId);
      });
 	
@@ -59,6 +60,11 @@ function ComplianceListGrid() {
         width : 200
     }, {
         dataField : "memId",
+        headerText : "",
+        editable : false,
+        width : 0
+    }, {
+        dataField : "cmplncStusId",
         headerText : "",
         editable : false,
         width : 0
@@ -134,12 +140,18 @@ function fn_complianceNew(){
 }
 
 function fn_maintance(){
-	
-	Common.popupDiv("/organization/compliance/complianceLogMaintencePop.do?complianceId="+complianceIdValue  , null, null , true , '');
+	if(statusId == "60" || statusId == "1" ){
+		   Common.popupDiv("/organization/compliance/complianceLogMaintencePop.do?complianceId="+complianceIdValue  , null, null , true , '');
+	}else{
+		 Common.alert("Compliance call log unable to maintance. <br /> Current log already close/cancel.");
+	}
 }
 function fn_reOpenPop(){
-    
-    Common.popupDiv("/organization/compliance/complianceCallReOpenPop.do?complianceId="+complianceIdValue+"&memberId="+memberId  , null, null , true , '');
+	if(statusId == "36" || statusId == "10" ){
+	    Common.popupDiv("/organization/compliance/complianceCallReOpenPop.do?complianceId="+complianceIdValue+"&memberId="+memberId  , null, null , true , '');
+	}else{
+		 Common.alert("Only close or cancel compilance call log can reopen");
+	}
 }
 </script>
 <section id="content"><!-- content start -->

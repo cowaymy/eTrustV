@@ -211,12 +211,11 @@ function fn_newOrder(){
 	 
         if(result != null){
         	success = false;
-        	Common.alert("Order No already exists in list, please use other order no.");
+        	Common.alert("Order No already in Case [" + $("#orderNo").val() + "], please use other order no..");
         }
 	});
        if(success){
     	   Common.ajax("GET", "/organization/compliance/getComplianceOrderDetail.do", {orderNo : $("#orderNo").val()}, function(result) {
-              
                AUIGrid.setGridData(myGridID_order, result);
            });
        }
