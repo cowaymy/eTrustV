@@ -158,7 +158,7 @@ function fn_reOpenPop(){
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Organization</li>
-    <li>Compliance Call Log</li>d
+    <li>Compliance Call Log</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
