@@ -293,7 +293,6 @@
     <update id="updateCardStateDetail" parameterType="Map">
         UPDATE PAY0076D SET
             CRC_TRNSC_MID = #{crcTrnscMid},
-            F_TRNSC_REF3 = #{crditCard},
             CRC_TRNSC_NO = #{crcTrnscNo},
             CRC_TRNSC_APPV = #{crcTrnscAppv},
             CRC_GROS_AMT = #{crcGrosAmt},
