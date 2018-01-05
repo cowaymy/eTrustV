@@ -38,26 +38,27 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplete'/>"                   ,width:120    ,height:30 },
                      {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
-                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
+                     {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:220    ,height:30                },
                      {dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},
-                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },
-                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30 , visible:false},
-                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },
+                     {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:220    ,height:30                },
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30},
+                     {dataField: "itmname",headerText :"Mat. Name"                 ,width:120    ,height:30                },
                      {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
                      {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
                      {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
                      {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
                      {dataField: "grdt",headerText :"<spring:message code='log.head.grdate'/>"                        ,width:120    ,height:30 },
                      {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30 },
-                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"              ,width:120    ,height:30 , editalble:true},
+                     {dataField: "rciptqty",headerText :"<spring:message code='log.head.grqty'/>"              ,width:120    ,height:30 , editalble:true},
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30                },
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
-                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },
-                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
-                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
-                     {dataField: "reqstno",headerText :"<spring:message code='log.head.stockmovementrequest'/>"        ,width:120    ,height:30},
-                     {dataField: "serialcheck",headerText :"<spring:message code='log.head.serialcheck'/>"        ,width:120    ,height:30, visible:false},
+                     {dataField: "uomnm",headerText :"UOM"                ,width:120    ,height:30                },
+                     {dataField: "crtdt",headerText :"Reqst. Create Date"                ,width:120    ,height:30                },
+                     {dataField: "reqdt",headerText :"Reqst. Required Date"                ,width:120    ,height:30                },
+                     {dataField: "ttext",headerText :"Trans. Type"        ,width:120    ,height:30                },
+                     {dataField: "mtext",headerText :"Movement Type"                   ,width:120    ,height:30                },
+                     {dataField: "reqstno",headerText :"SMO No."        ,width:120    ,height:30}
                      ];
 
 
@@ -136,26 +137,29 @@ var paramdata;
 
 
 /* Required Date 초기화 */
-var date = new Date();
-var getdate = date.getDate();
-var datemonth = date.getMonth() + 1;
-if(getdate < 10) {
-    getdate = '0'+date.getDate();
-}
-if(datemonth < 10) {
-    datemonth = '0' + datemonth;
-}
-today = getdate + '/' + datemonth + '/' + date.getFullYear();
+   var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
 
-var nextdate = date.setDate(date.getDate()+6);
-var nextmonth = date.getMonth() + 1;
-if(date.getDate() < 10) {
-    getdate = '0'+date.getDate();
-}
-if(nextmonth < 10) {
-    nextmonth = '0' + nextmonth;
-}
-nextdate = getdate + '/' + nextmonth + '/' + date.getFullYear();
+    if(dd<10) { dd='0'+dd; }
+
+    if(mm<10) { mm='0'+mm; }
+
+    today = (dd + '/' + mm + '/' + yyyy);
+
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() +6);
+    var dd2 = nextDate.getDate();
+    var mm2 = nextDate.getMonth() + 1;
+    var yyyy2 = nextDate.getFullYear();
+
+    if(dd2 < 10) { dd2 = '0' + dd2; }
+
+    if(mm2 < 10) { mm2 ='0' + mm2; }
+
+    nextDate = (dd2 + '/' + mm2 + '/' + yyyy2);
+
 
 $(document).ready(function(){
 	/**********************************
@@ -274,7 +278,7 @@ $(document).ready(function(){
         }
     });
     $("#crtsdt").val(today);
-    $("#crtedt").val(nextdate);
+    $("#crtedt").val(nextDate);
     //SearchListAjax();
 
 });
@@ -534,7 +538,7 @@ function grFunc(){
 
 
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-		
+
 		if (result.message.code == '99'){
 			Common.alert(result.message.message + "<br/> Already Processed.");
 		}else{
@@ -542,7 +546,7 @@ function grFunc(){
 			if(reparam[0].trim() == '000'){
 				if ($('#grForm #gtype').val() == "RC"){
 					Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
-		                
+
 						Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
 		            },  function(jqXHR, textStatus, errorThrown) {
 		                try {
@@ -554,7 +558,7 @@ function grFunc(){
 					//Common.alert(result.message.message);
 					Common.alert(result.message.message + "<br/>MDN NO : "+reparam[1].trim());
 				}
-	
+
 			}else{
 				if ($('#grForm #gtype').val() == "RC"){
 					Common.alert('GoodRecipt Cancel Fail.');
@@ -562,13 +566,13 @@ function grFunc(){
 					Common.alert('GoodRecipt Fail.');
 				}
 			}
-			
+
 		}
 		$("#giptdate").val("");
         $("#gipfdate").val("");
         $("#doctext" ).val("");
         $("#gropenwindow").hide();
-        
+
         $('#search').click();
     },  function(jqXHR, textStatus, errorThrown) {
         try {
@@ -697,8 +701,8 @@ function fn_gradComb(){
                     <td>
                         <select  id="status" name="status" class="w100p" >
                             <option value ="" selected>All</option>
-                            <option value ="N">GR Not Yet</option>
-                            <option value ="Y">GR Complete</option>
+                            <option value ="N">Open</option>
+                            <option value ="Y">Completed</option>
                         </select>
                     </td>
                     <th scope="row">Ref Doc.No</th>
