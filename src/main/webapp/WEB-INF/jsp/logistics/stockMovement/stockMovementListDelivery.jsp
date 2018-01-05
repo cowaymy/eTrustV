@@ -164,26 +164,29 @@ var uomlist = f_getTtype('42' , '');
 var paramdata;
 
 /* Required Date 초기화 */
-var date = new Date();
-var getdate = date.getDate();
-var datemonth = date.getMonth() + 1;
-if(getdate < 10) {
-    getdate = '0'+date.getDate();
-} 
-if(datemonth < 10) {
-    datemonth = '0' + datemonth;
-}
-today = getdate + '/' + datemonth + '/' + date.getFullYear();
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
 
-var nextdate = date.setDate(date.getDate()+6);
-var nextmonth = date.getMonth() + 1;
-if(date.getDate() < 10) {
-    getdate = '0'+date.getDate();
-}
-if(nextmonth < 10) {
-    nextmonth = '0' + nextmonth;
-}
-nextdate = getdate + '/' + nextmonth + '/' + date.getFullYear();
+    if(dd<10) { dd='0'+dd; }
+
+    if(mm<10) { mm='0'+mm; }
+
+    today = (dd + '/' + mm + '/' + yyyy);
+
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() +6);
+    var dd2 = nextDate.getDate();
+    var mm2 = nextDate.getMonth() + 1;
+    var yyyy2 = nextDate.getFullYear();
+
+    if(dd2 < 10) { dd2 = '0' + dd2; }
+
+    if(mm2 < 10) { mm2 ='0' + mm2; }
+
+    nextDate = (dd2 + '/' + mm2 + '/' + yyyy2);
+
 
 $(document).ready(function(){
     /**********************************
