@@ -125,6 +125,25 @@ var refundColumnLayout = [ {
     headerText : "ORD Remark",
     style : "aui-grid-user-custom-left"
 }, {
+    dataField : "issuebankidPaytChannel",
+    visible : false
+}, {
+    dataField : "issuebankPaytChannel",
+    headerText : "Customer<br>IssueBank",
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "bankaccnoPaytChannel",
+    headerText : "Customer<br>Bank Account No",
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "ccnoPaytChannel",
+    headerText : "Customer<br>CRC No",
+    style : "aui-grid-user-custom-left"
+}, {
+    dataField : "ccholdernamePaytChannel",
+    headerText : "Customer<br>Crc Holder",
+    style : "aui-grid-user-custom-left"
+}, {
     dataField : "bankReconStus",
     headerText : "<spring:message code='pay.head.bankReconStatus'/>",
     style : "aui-grid-user-custom-left"
@@ -265,10 +284,13 @@ function fn_showConfirmPop() {
     	checkList[i].refAmt = checkList[i].amt;
     	checkList[i].refModeCode = checkList[i].payModeCode;
     	checkList[i].refModeName = checkList[i].payMode;
+    	checkList[i].custBankId = checkList[i].issuebankidPaytChannel;
+        checkList[i].custBankName = checkList[i].issuebankPaytChannel;
+        checkList[i].custBankNo = checkList[i].bankaccnoPaytChannel;
     	checkList[i].bankAccCode = checkList[i].bankAccId;
     	checkList[i].bankAccName = checkList[i].bankAccName;
-    	checkList[i].cardNo = checkList[i].ccNo;
-    	checkList[i].cardHolder = checkList[i].ccHolderName;
+    	checkList[i].cardNo = checkList[i].ccnoPaytChannel;
+    	checkList[i].cardHolder = checkList[i].ccholdernamePaytChannel;
     	
     	if(checkList[i].payModeCode == "105") {
             checkList[i].refModeCode = "108";

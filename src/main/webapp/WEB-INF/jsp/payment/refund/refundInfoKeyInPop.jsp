@@ -91,11 +91,14 @@ function fn_updateGridData() {
     AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "refAmt", $("#rRefAmt").val().replace(/,/gi, ""));
     AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "refModeCode", $("#rRefMode option:selected").val());
     AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "refModeName", $("#rRefMode option:selected").text());
+    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "custBankId", $("#rCustBankName option:selected").val());
+    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "custBankName", $("#rCustBankName option:selected").text());
+    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "custBankNo", $("#rCustBankAccountNo").val());
     AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "bankAccCode", $("#rAccNo option:selected").val());
     AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "bankAccName", $("#rAccNo option:selected").text());
-    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "cardNo", $("#rCcNo").val());
-    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "cardHolder", $("#rCcHolderName").val());
-    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "chqNo", $("#rChqNo").val());
+    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "cardNo", $("#rCustCcNo").val());
+    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "cardHolder", $("#rCustCcHolderName").val());
+    AUIGrid.setCellValue(confirmGridID, selectedRowIndex, "chqNo", $("#rCustChqNo").val());
     
     fn_rClear();
     fn_closePop2();
@@ -150,34 +153,30 @@ function fn_updateGridData() {
     <td>
     <select class="" id="rRefMode" onchange="javascript:fn_setAccNo()"></select>
     </td>
-    <th scope="row"></th>
-    <td></td>
-</tr>
-<tr>
-    <th scope="row">Bank Account</th>
+    <th scope="row">Refund Bank Account</th>
     <td>
     <select class="" id="rAccNo"></select>
     </td>
-    <th scope="row"></th>
-    <td></td>
 </tr>
 <tr>
     <th scope="row">Refund Amount</th>
     <td><input type="text" title="" placeholder="" class="" id="rRefAmt"/></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Customer Cheque No.</th>
+    <td><input type="text" title="" placeholder="" class="" id="rCustChqNo" autocomplete="off"/></td>
 </tr>
 <tr>
-    <th scope="row">Credit Card No.</th>
-    <td><input type="text" title="" placeholder="" class="" id="rCcNo" autocomplete="off" value="${creditCardNo}"/></td>
-    <th scope="row">Cheque No.</th>
-    <td><input type="text" title="" placeholder="" class="" id="rChqNo" autocomplete="off"/></td>
+    <th scope="row">Customer Credit Card No.</th>
+    <td><input type="text" title="" placeholder="" class="" id="rCustCcNo" autocomplete="off" value="${creditCardNo}"/></td>
+    <th scope="row">Customer<br>Credit Card Holder Name</th>
+    <td><input type="text" title="" placeholder="" class="" id="rCustCcHolderName" value="${creditCardHolder}"/></td>
 </tr>
 <tr>
-    <th scope="row">Credit Card Holder Name</th>
-    <td><input type="text" title="" placeholder="" class="" id="rCcHolderName"/></td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Customer Bank Name</th>
+    <td>
+    <select class="" id="rCustBankName" ></select>
+    </td>
+    <th scope="row">Customer<br>Bank Account No.</th>
+    <td><input type="text" title="" placeholder="" class="" id="rCustBankAccountNo"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -52,7 +52,7 @@ public class RefundApplicationImpl implements RefundApplication {
 			hm.put("payMode", "");
 			hm.put("payTypeId", 0);
 			hm.put("bankAccId", String.valueOf(vo.get("bankAccCode")));
-			hm.put("issBankId", 0);
+			hm.put("issBankId", String.valueOf(vo.get("custBankId")));
 			hm.put("chqNo", String.valueOf(vo.get("chqNo")));
 			hm.put("refNo", String.valueOf(vo.get("refNo")));
 			hm.put("ccHolderName", String.valueOf(vo.get("cardHolder")));
