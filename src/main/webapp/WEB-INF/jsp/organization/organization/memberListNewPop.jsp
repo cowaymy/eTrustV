@@ -542,11 +542,11 @@ function fn_saveValidation(){
         return false;
     }
 
+	checkNRIC();
+	
 	if($("#nric").val() == ''){
         Common.alert("Please key  in NRIC");
         return false;
-    } else {
-    	checkNRIC();
     }
 
     if (  $("#nric").val().length != 12 ) {
