@@ -122,7 +122,7 @@ var cnt =  -1;
             		Common.ajax("GET", "/sales/analysis/maintanceSession", "", function(result) {
                         console.log("getServerTime : " + result.currTime);
                     });
-            	} , 180000);  //3Min
+            	} , 120000);  //3Min
                 fn_procedureReport();
                 cnt++;
             } catch (e) {
