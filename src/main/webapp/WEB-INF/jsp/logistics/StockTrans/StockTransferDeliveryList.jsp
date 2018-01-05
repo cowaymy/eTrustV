@@ -802,7 +802,7 @@ function f_addrow(){
                     </td>
                     <th scope="row">Status</th>
                     <td>
-                        <select  id="status" name="status" class="w100p" >
+                        <select  id="outstatus" name="outstatus" class="w100p" >
                             <option value ="" selected>All</option>
                             <option value = "Y">Complete</option>
                             <option value="N"> Open</option>

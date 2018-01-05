@@ -525,7 +525,7 @@ function grFunc(){
                 <tr>
                     <th scope="row">Status</th>
                     <td>
-                        <select  id="status" name="status" class="w100p" >
+                        <select  id="instatus" name="instatus" class="w100p" >
                             <option value ="" selected>All</option>
                             <option value = "Y">Complete</option>
                             <option value="N"> Open</option>
