@@ -57,15 +57,15 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "mtext",headerText :"Movement Type"                   ,width:120    ,height:30                },
                      {dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30                },
                      {dataField: "crtdt",headerText :"Reqst. Create Date"            ,width:120    ,height:30                },
-                     {dataField: "reqdate",headerText :"Reqst. Required Date"          ,width:120    ,height:30 ,visible:false},
+                     {dataField: "reqdate",headerText :"Reqst. Required Date"          ,width:120    ,height:30},
                      {dataField: "userName",headerText :"Creator"        ,width:120    ,height:30 }
                      ];
 
 var reqcolumnLayout = [{dataField:  "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                    ,width:120    ,height:30                },
                        {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
-                       {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
+                       {dataField: "ttext",headerText :"Trans. Type"        ,width:120    ,height:30                },
                        {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
-                       {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
+                       {dataField: "mtext",headerText :"Movement Type"                   ,width:120    ,height:30                },
                        {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                        {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
                        {dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30                },
@@ -75,13 +75,14 @@ var reqcolumnLayout = [{dataField:  "delyno",headerText :"<spring:message code='
                        {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
                        {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
                        {dataField: "grdt",headerText :"<spring:message code='log.head.grdate'/>"                        ,width:120    ,height:30 },
-                       {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30 , visible:false},
-                       {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },
+                       {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30},
+                       {dataField: "itmname",headerText :"Mat. Name"                 ,width:120    ,height:30                },
                        {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                 ,width:120    ,height:30 },
-                       {dataField: "rciptqty",headerText :"<spring:message code='log.head.goodreceiptedqty'/>"           ,width:120    ,height:30                },
-                       {dataField: "reqstno",headerText :"<spring:message code='log.head.sto'/>"                            ,width:120    ,height:30},
+                       {dataField: "rciptqty",headerText :"<spring:message code='log.head.grqty'/>"           ,width:120    ,height:30                },
+                       {dataField: "reqstno",headerText :"STO No."                            ,width:120    ,height:30},
                        {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
-                       {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                }];
+                       {dataField: "uomnm",headerText :"UOM"                ,width:120    ,height:30                }
+                       ];
 
 var mtrcolumnLayout = [
 						{dataField: "matrlDocNo",headerText :"<spring:message code='log.head.matrldocno'/>"  ,width:200    ,height:30},
@@ -124,26 +125,28 @@ var uomlist = f_getTtype('42' , '');
 var paramdata;
 
 /* Required Date 초기화 */
-var date = new Date();
-var getdate = date.getDate();
-var datemonth = date.getMonth() + 1;
-if(getdate < 10) {
-    getdate = '0'+date.getDate();
-}
-if(datemonth < 10) {
-	datemonth = '0' + datemonth;
-}
-today = getdate + '/' + datemonth + '/' + date.getFullYear();
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
 
-var nextdate = date.setDate(date.getDate()+6);
-var nextmonth = date.getMonth() + 1;
-if(date.getDate() < 10) {
-    getdate = '0'+date.getDate();
-}
-if(nextmonth < 10) {
-	nextmonth = '0' + nextmonth;
-}
-nextdate = getdate + '/' + nextmonth + '/' + date.getFullYear();
+    if(dd<10) { dd='0'+dd; }
+
+    if(mm<10) { mm='0'+mm; }
+
+    today = (dd + '/' + mm + '/' + yyyy);
+
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() +6);
+    var dd2 = nextDate.getDate();
+    var mm2 = nextDate.getMonth() + 1;
+    var yyyy2 = nextDate.getFullYear();
+
+    if(dd2 < 10) { dd2 = '0' + dd2; }
+
+    if(mm2 < 10) { mm2 ='0' + mm2; }
+
+    nextDate = (dd2 + '/' + mm2 + '/' + yyyy2);
 
 
 
@@ -161,7 +164,7 @@ $(document).ready(function(){
     $("#crtsdt").val('${searchVal.crtsdt}');
     $("#crtedt").val('${searchVal.crtedt}');
     $("#reqsdt").val(today);
-    $("#reqedt").val(nextdate);
+    $("#reqedt").val(nextDate);
 
     /**********************************
      * Header Setting End
