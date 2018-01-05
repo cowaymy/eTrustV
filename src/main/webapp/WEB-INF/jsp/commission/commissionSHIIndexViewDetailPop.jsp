@@ -133,7 +133,7 @@
            
            <ul class="right_btns">
               <li><p class="btn_blue"><a href="#" id="searchD"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-              <li><p class="btn_blue"><a href="javascript:fn_downFile()" id="excel"><spring:message code='commission.button.generate'/></a></p></li>
+              <li><p class="btn_blue"><a href="#" id="excel"><spring:message code='commission.button.generate'/></a></p></li>
             </ul>
     
             <table class="type1 mt10"><!-- table start -->
