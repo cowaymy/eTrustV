@@ -158,7 +158,7 @@ $(document).ready(function(){
     $("#PostingDt1").val(dd + '/' + mm + '/' + yyyy);
 
     var today2 = new Date();
-    today2.setDate(today2.getDate() + 7);
+    today2.setDate(today2.getDate() + 6);
     var dd2 = today2.getDate();
     var mm2 = today2.getMonth() + 1;
     var yyyy2 = today2.getFullYear();
