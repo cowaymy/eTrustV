@@ -2141,8 +2141,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		   , 52366
 		   , #{deptCodeFrom}
 		   , #{deptCodeTo}
-		   , #{parentIdFrom}
-		   , #{parentIdTo}
+		   , #{parentIDFrom} 
+		   , #{parentIDTo}
 		   , #{statusIdFrom}
 		   , #{statusIdTo}
 		   , #{remark}

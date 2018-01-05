@@ -1059,9 +1059,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				promoEntry.put("deptCodeTo", selectSuperiorTeam.get(0).get("deptCode"));
 				
 				promoEntry.put("parentIdFrom", selectMemberOrgs.get("memUpId") != null ? Integer.parseInt(selectMemberOrgs.get("memUpId").toString()) : 0);
-				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode").toString() != null ? selectOrganization.get("deptCode").toString() : "");
+				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
-				promoEntry.put("PRCode", promoEntry.get("promoTypeId").toString().equals("747") ? selectOrganization.get("deptCode") != null? selectOrganization.get("deptCode").toString() : "" : "");
+				promoEntry.put("PRCode",selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
 				/*if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
 					promoEntry.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
 				}
@@ -1778,6 +1778,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public List<EgovMap> getSubDeptList(Map<String, Object> params) {
 		
+		 String isEmpty =(String) params.get("groupCode");
+		 if(isEmpty != null ){
+			 if(isEmpty.equals("Choose One")){
+				 params.put("groupCode", null);
+			 }
+		 }
+		 
 		return memberListMapper.selectSubDept(params);
 	}
 	
