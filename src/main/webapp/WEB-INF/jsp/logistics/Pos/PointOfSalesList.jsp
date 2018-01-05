@@ -38,49 +38,47 @@ var serialChkfalg;
 var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
 var comboDatas = [{"codeId": "OI","codeName": "OH_GI"},{"codeId": "OG","codeName": "OH_GR"}];
 var otherType;
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},                         
-								{dataField: "status",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30 , visible:false},                       
-								{dataField: "reqstno",headerText :"<spring:message code='log.head.othersrequestno'/>"         ,width:250    ,height:30                },                        
-								{dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:false              },                         
-								{dataField: "mtext",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30                },                       
-								{dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },                          
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
+								{dataField: "status",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30 , visible:false},
+								{dataField: "reqstno",headerText :"Other Reqst. No"         ,width:250    ,height:30                },
+								{dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30 , visible:false              },
+								{dataField: "mtext",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30                },
+								{dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },
 								{dataField: "reqitmno",headerText :"<spring:message code='log.head.stockmovementrequestitem'/>"  ,width:120    ,height:30 , visible:false},
-								{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},                          
-								{dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},                       
-								{dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30,        visible:false},                         
-								{dataField: "reqdate",headerText :"<spring:message code='log.head.requestrequireddate'/>"          ,width:120    ,height:30                },                       
-								{dataField: "crtdt",headerText :"<spring:message code='log.head.requestcreatedate'/>"            ,width:120    ,height:30                },                         
-								{dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},                       
-								{dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},                       
-								{dataField: "rcvlocdesc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 ,visible:false               },                         
-								{dataField: "reqloc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 , visible:false},                         
-								{dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},                         
-								{dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30 ,visible:false               },                       
-								{dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:130    ,height:30 , visible:true},                        
-								{dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:450    ,height:30                },                       
-								{dataField: "reqstqty",headerText :"<spring:message code='log.head.gi/grreqqty'/>"                   ,width:120    ,height:30                },                         
-								{dataField: "rciptqty",headerText :"<spring:message code='log.head.remainqty'/>"                     ,width:120    ,height:30                },                         
-								{dataField: "delvno",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},                       
-								{dataField: "delyqty",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},                          
-								{dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipt'/>"                  ,width:120    ,height:30,  visible:false  },                        
-								{dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},                         
-								{dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"                ,width:120    ,height:30                },                         
-								{dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                }];    
-                      
-                      
+								{dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
+								{dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
+								{dataField: "froncy",headerText :"<spring:message code='log.head.auto/manual'/>"                   ,width:120    ,height:30,        visible:false},
+								{dataField: "reqdate",headerText :"Reqst. Require Date"          ,width:120    ,height:30                },
+								{dataField: "crtdt",headerText :"Reqst. Create Date"            ,width:120    ,height:30                },
+								{dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30},
+								{dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
+								{dataField: "reqloc",headerText :"Reqst. Location"                  ,width:120    ,height:30},
+								{dataField: "reqlocnm",headerText :"<spring:message code='log.head.tolocation'/>"                    ,width:120    ,height:30 , visible:false},
+								{dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:130    ,height:30 , visible:true},
+								{dataField: "itmname",headerText :"Mat. Name"                 ,width:450    ,height:30                },
+								{dataField: "reqstqty",headerText :"<spring:message code='log.head.reqqty'/>"                   ,width:120    ,height:30                },
+								{dataField: "rciptqty",headerText :"<spring:message code='log.head.remainqty'/>"                     ,width:120    ,height:30                },
+								{dataField: "delvno",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},
+								{dataField: "delyqty",headerText :"<spring:message code='log.head.delvno'/>",width:120    ,height:30 , visible:false},
+								{dataField: "greceipt",headerText :"<spring:message code='log.head.goodreceipt'/>"                  ,width:120    ,height:30,  visible:false  },
+								{dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
+								{dataField: "serialChk",headerText :"Serial Check"                ,width:120    ,height:30                },
+								{dataField: "uomnm",headerText :"UOM"                ,width:120    ,height:30                }];
+
+
      var mtrcolumnLayout = [
-								{dataField:  "matrlDocNo",headerText :"<spring:message code='log.head.matrl_doc_no'/>"    ,width:200    ,height:30},                         
-								{dataField: "matrlDocItm",headerText :"<spring:message code='log.head.matrldocitm'/>"    ,width:100    ,height:30},                         
-								{dataField: "invntryMovType",headerText :"<spring:message code='log.head.move_type'/>"   ,width:100    ,height:30},                                             
-								{dataField: "movtype",headerText :"<spring:message code='log.head.move_text'/>"  ,width:120    ,height:30},                                                     
-								{dataField: "reqStorgNm",headerText :"<spring:message code='log.head.reqloc'/>"  ,width:150    ,height:30},                         
-								{dataField: "matrlNo",headerText :"<spring:message code='log.head.matrl_code'/>"     ,width:120    ,height:30},                         
-								{dataField: "stkDesc",headerText :"<spring:message code='log.head.matrlname'/>"  ,width:300    ,height:30},                         
+								{dataField:  "matrlDocNo",headerText :"Mat. Doc No."    ,width:200    ,height:30},
+								{dataField: "matrlDocItm",headerText :"Mat. Doc Item"    ,width:100    ,height:30},
+								{dataField: "invntryMovType",headerText :"MVT Type"   ,width:100    ,height:30},
+								{dataField: "movtype",headerText :"MVT Desc"  ,width:120    ,height:30},
+								{dataField: "reqStorgNm",headerText :"Req. Loc"  ,width:150    ,height:30},
+								{dataField: "matrlNo",headerText :"<spring:message code='log.head.matcode'/>"     ,width:120    ,height:30},
+								{dataField: "stkDesc",headerText :"Mat. Name"  ,width:300    ,height:30},
 								{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"   ,width:120    ,height:30
-                              ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
-                                    
+                              ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+
                                     var retStr = "";
-  
+
                                     for(var i=0,len=decedata.length; i<len; i++) {
 
                                         if(decedata[i]["code"] == value) {
@@ -89,43 +87,43 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                                         }
                                     }
                                     return retStr == "" ? value : retStr;
-                                },editRenderer : 
+                                },editRenderer :
                                 {
                                    type : "ComboBoxRenderer",
                                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                    list : decedata,
                                    keyField : "code",
                                    valueField : "code"
-                                }   
-                          
-                            },
-                            {dataField:    "autoCrtItm" ,headerText:    ""   ,width:100    ,height:30},                         
-                            {dataField:    "qty",headerText :"<spring:message code='log.head.qty'/>"    ,width:120    ,height:30},                         
-                            {dataField:    "trantype",headerText :"<spring:message code='log.head.tran_type'/>"     ,width:120    ,height:30},                         
-                            {dataField:    "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"    ,width:120    ,height:30},                                                     
-                            {dataField:    "codeName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120    ,height:30}          
-               ];                   
+                                }
 
-     var serialcolumn=[{dataField:  "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },               
-		                       {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },               
-		                       {dataField:    "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },                 
-		                       {dataField:    "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-		                       {dataField:    "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-		                       {dataField:    "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },                 
-		                       {dataField:    "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }  
-                      ];            
-     
-     
-     
+                            },
+                            {dataField:    "autoCrtItm" ,headerText:    "Auto"   ,width:100    ,height:30},
+                            {dataField:    "qty",headerText :"<spring:message code='log.head.qty'/>"    ,width:120    ,height:30},
+                            {dataField:    "trantype",headerText :"Trans. Type"     ,width:120    ,height:30},
+                            {dataField:    "postingdate",headerText :"Post Date"    ,width:120    ,height:30},
+                            {dataField:    "codeName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120    ,height:30}
+               ];
+
+     var serialcolumn=[{dataField:  "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },
+		                       {dataField:    "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },
+		                       {dataField:    "serial",headerText :"<spring:message code='log.head.serial'/>",width:  "30%"       ,height:30,editable:true },
+		                       {dataField:    "cnt61",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },
+		                       {dataField:    "cnt62",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },
+		                       {dataField:    "cnt63",headerText :"<spring:message code='log.head.serial'/>",width:   "30%"       ,height:30,visible:false },
+		                       {dataField:    "statustype",headerText :"<spring:message code='log.head.status'/>",width:  "30%"       ,height:30,visible:false }
+                      ];
+
+
+
 var options = {
         usePaging : false,
         editable : false,
         useGroupingPanel : false,
-        showStateColumn : false 
+        showStateColumn : false
         };
-        
+
 var resop = {
-        rowIdField : "rnum",            
+        rowIdField : "rnum",
         editable : false,
         fixedColumnCount : 6,
        // groupingFields : ["reqstno"],
@@ -137,7 +135,7 @@ var resop = {
         };
 
 var serialop = {
-        //rowIdField : "rnum",          
+        //rowIdField : "rnum",
         editable : true
         //displayTreeOpen : true,
         //showRowCheckColumn : true ,
@@ -146,7 +144,7 @@ var serialop = {
         //showBranchOnGrouping : false
         };
 
-        
+
 //var paramdata;
 
 $(document).ready(function(){
@@ -156,50 +154,71 @@ $(document).ready(function(){
        doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
        /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
 //        var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-//       doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
+//       doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');
       //doGetComboData('/common/selectCodeList.do', paramdata, '','searchReqType', 'S' , '');
       doDefCombo(comboDatas, '' ,'searchTransType', 'S', '');
-      
-      
-    
+
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth()+1;
+      var yyyy = today.getFullYear();
+
+      if(dd<10) { dd='0'+dd; }
+
+      if(mm<10) { mm='0'+mm; }
+
+      $("#reqsdt").val(dd + '/' + mm + '/' + yyyy);
+
+      var today2 = new Date();
+      today2.setDate(today2.getDate() + 7);
+      var dd2 = today2.getDate();
+      var mm2 = today2.getMonth() + 1;
+      var yyyy2 = today2.getFullYear();
+
+      if(dd2 < 10) { dd2 = '0' + dd2; }
+
+      if(mm2 < 10) { mm2 ='0' + mm2; }
+
+      $("#reqedt").val(dd2 + '/' + mm2 + '/' + yyyy2);
+
     /**********************************
      * Header Setting End
      ***********************************/
-    
+
     //listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, subgridpros);
-    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);    
+    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
     mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", options);
     serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
-    $("#mdc_grid").hide(); 
+    $("#mdc_grid").hide();
 
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
-     
+
         $("#rStcode").val(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno"));
         document.searchForm.action = '/logistics/pos/PosView.do';
         document.searchForm.submit();
     });
-    
+
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
-        
-        $("#mdc_grid").hide(); 
+
+        $("#mdc_grid").hide();
 
         if (event.dataField == "reqstno"){
             SearchMaterialDocListAjax(event.value)
         }
-        
+
 
     });
-    
-    
+
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
-    
+
+
     AUIGrid.bind(listGrid, "rowCheckClick", function( event ) {
-        
+
         var reqno = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqstno");
-        
+
         if (AUIGrid.isCheckedRowById(listGrid, event.item.rnum)){
             AUIGrid.addCheckedRowsByValue(listGrid, "reqstno" , reqno);
         }else{
@@ -209,8 +228,8 @@ $(document).ready(function(){
                 AUIGrid.addUncheckedRowsByIds(listGrid, AUIGrid.getCellValue(listGrid, rown[i], "rnum"));
             }
         }
-    });  
-    
+    });
+
 	 AUIGrid.bind(serialGrid, "cellEditEnd", function (event){
 		  var tvalue = true;
 		  var serial = AUIGrid.getCellValue(serialGrid, event.rowIndex, "serial");
@@ -229,7 +248,7 @@ $(document).ready(function(){
 	            }
 	        }
 	    }
-	    
+
 	    if (tvalue){
 	        fn_serialChck(event.rowIndex ,event.item , serial)
 	    }else{
@@ -242,20 +261,20 @@ $(document).ready(function(){
 	        AUIGrid.update(serialGrid);
 	    }
 	   if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-		   f_addrow(); 
-//	    var serialstus=$("#serialstus").val();      
+		   f_addrow();
+//	    var serialstus=$("#serialstus").val();
 // 	   if($("#serialstus").val() =="Y"){
-// 	      f_addrow();                  
+// 	      f_addrow();
 // 	      }
 	   }
-	   
+
 	}
 	});
-    
 
-    
+
+
  });
-    
+
     function test() {
     	alert($("#searchReqType").val());
     }
@@ -266,11 +285,11 @@ $(function(){
         SearchListAjax();
         }
     });
- 
+
     $("#download").click(function() {
     	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Other GI/GR Request List");
     });
-    
+
     $('#insert').click(function(){
          document.searchForm.action = '/logistics/pos/PosOfSalesIns.do';
          document.searchForm.submit();
@@ -293,25 +312,25 @@ $(function(){
                        Common.alert('Complete!');
                        return false;
                        break;
-                  }             
+                  }
               }
-              
+
          for (var i = 0 ; i < checkedItems.length ; i++){
-              
+
 	          if (checkedItems[i].item.serialChk == 'Y'){
 	        	   serialChkfalg="Y";
 	               break;
 	          }else{
 	        	  serialChkfalg ="N";
-	          } 
-  
-          } 
-         
+	          }
+
+          }
+
          // 2018.01.01 김덕호 요청사항
          // serial check 강제 처리
          serialChkfalg ="N";
-              
-         
+
+
          if(serialChkfalg =="Y"){
         	   document.giForm.gitype.value="GI";
                $("#dataTitle").text("GI/GR");
@@ -324,7 +343,7 @@ $(function(){
              $("#serial_grid_wrap").show();
              AUIGrid.clearGridData(serialGrid);
              AUIGrid.resize(serialGrid);
-             fn_itemSerialPopList(checkedItems);   
+             fn_itemSerialPopList(checkedItems);
          }else{
         	 document.giForm.gitype.value="GI"
             $("#dataTitle").text("GI/GR");
@@ -334,9 +353,9 @@ $(function(){
              doSysdate(0 , 'giptdate');
              doSysdate(0 , 'gipfdate');
              $("#giopenwindow").show();
-            $("#serial_grid_wrap").hide();       
+            $("#serial_grid_wrap").hide();
          }
-               
+
 //             document.giForm.gitype.value="GI";
 //             $("#dataTitle").text("Good Issue Posting Data");
 //             $("#giptdate").val("");
@@ -345,11 +364,11 @@ $(function(){
 //             doSysdate(0 , 'giptdate');
 //             doSysdate(0 , 'gipfdate');
 //             $("#giopenwindow").show();
-            
+
         }
     });
 
-    
+
     $("#issueCancel").click(function(){
         var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
         if(checkedItems.length <= 0) {
@@ -377,7 +396,7 @@ $(function(){
             $("#serial_grid_wrap").hide();
         }
     });
-    
+
     $("#tlocationnm").keypress(function(event) {
         $('#tlocation').val('');
         if (event.which == '13') {
@@ -392,7 +411,7 @@ $(function(){
         doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, 'O','searchStatus', 'S' , '');
         /* doGetCombo('/common/selectStockLocationList.do', '', '','searchLoc', 'S' , ''); */
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:'OH'};
-        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');     
+        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');
         $("#searchOthersReq1").val('');
         $("#tlocationnm").val('');
         $("#tlocation").val('');
@@ -405,7 +424,7 @@ $(function(){
         $("#searchReqType").val('');
         $("#searchTransType").val('');
     });
-    
+
 //     $("#flocationnm").keypress(function(event) {
 //         $('#flocation').val('');
 //         if (event.which == '13') {
@@ -416,19 +435,19 @@ $(function(){
 //             Common.searchpopupWin("searchForm", "/common/searchPopList.do","location");
 //         }
 //     });
-    
+
     $("#searchTransType").change(function(){
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#searchTransType").val()};
-        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , ''); 
+        doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');
     });
-    
-    
+
+
 });
 
     function fn_itempopList(data){
-    
+
     var rtnVal = data[0].item;
-   
+
     if ($("#stype").val() == "flocation" ){
         $("#flocation").val(rtnVal.locid);
         $("#flocationnm").val(rtnVal.locdesc);
@@ -436,43 +455,43 @@ $(function(){
         $("#tlocation").val(rtnVal.locid);
         $("#tlocationnm").val(rtnVal.locdesc);
     }
-    
+
     $("#svalue").val();
-} 
+}
 
 function SearchListAjax() {
-    
+
 //     if ($("#flocationnm").val() == ""){
 //          $("#flocation").val('');
 //      }
         if ($("#tlocationnm").val() == ""){
             $("#tlocation").val('');
         }
-        
+
 //      if ($("#flocation").val() == ""){
 //          $("#flocation").val($("#flocationnm").val());
 //      }
         if ($("#tlocation").val() == ""){
             $("#tlocation").val($("#tlocationnm").val());
         }
-    
+
     var url = "/logistics/pos/PosSearchList.do";
     var param = $('#searchForm').serializeJSON();
     Common.ajax("POST" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
-        
+
     });
 }
 
 function GiSaveAjax() {
-       
+
     var data = {};
     var checkdata = AUIGrid.getCheckedRowItems(listGrid);
     data.checked = checkdata;
     data.form = $("#giForm").serializeJSON();
     var serials   = AUIGrid.getAddedRowItems(serialGrid);
     data.add = serials;
-     
+
     if (serialChkfalg == 'Y' && otherType=='GI'){
 
            for (var i = 0 ; i < AUIGrid.getRowCount(serialGrid) ; i++){
@@ -480,13 +499,13 @@ function GiSaveAjax() {
                    Common.alert("Please check the serial.")
                    return false;
                }
-               
+
                if (AUIGrid.getCellValue(serialGrid , i , "serial") == undefined || AUIGrid.getCellValue(serialGrid , i , "serial") == "undefined"){
                    Common.alert("Please check the serial.")
                    return false;
                }
            }
-           
+
            if ($("#serialqty").val() != AUIGrid.getRowCount(serialGrid)){
                Common.alert("Please check the serial.")
                return false;
@@ -495,7 +514,7 @@ function GiSaveAjax() {
 
 
     Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
-        
+
         Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
 
         // AUIGrid.resetUpdatedItems(listGrid, "all");
@@ -510,7 +529,7 @@ function GiSaveAjax() {
         }
         Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
-    
+
 }
 
 
@@ -529,6 +548,18 @@ if(v=='search'){
 		 Common.alert("Please select the Transaction Type.");
 		 return false
 	 }
+
+	 if($("#reqsdt").val() == "" || $("#reqsdt").val() == null)
+	 {
+		 Common.alert("Please select the 'From Required Date''");
+		 return false;
+	 }
+
+     if($("#reqedt").val() == "" || $("#reqedt").val() == null)
+     {
+         Common.alert("Please select the 'To Required Date''");
+         return false;
+     }
 //     if ($("#searchReqType").val() == "") {
 //         ReqType = false;
 //     }else{
@@ -538,23 +569,23 @@ if(v=='search'){
 //         Location = false;
 //     }else{
 //         Location = true;
-//     } 
+//     }
 //     if ($("#searchStatus").val() == "") {
 //         Status = false;
 //     }else{
 //         Status = true;
-//     }   
+//     }
 
-//     if(ReqType == false && Location == false && Status == false){  
+//     if(ReqType == false && Location == false && Status == false){
 //         alert("Please select the Request Type. \nPlease select the Location.\nPlease key in the Status.");
 //         return false;
 //     }
-//     if(ReqType == true || Location == true || Status == true){  
+//     if(ReqType == true || Location == true || Status == true){
 //           return true;
 //     }
-    
+
 }else if(v=='save'){
-    
+
       if ($("#giptdate").val() == "") {
           Common.alert("Please select the GI Posting Date.");
           $("#giptdate").focus();
@@ -570,21 +601,21 @@ if(v=='search'){
           $("#doctext").focus();
           return false;
       }
-}   
+}
       return true;
-        
-} 
+
+}
 
 
 function SearchMaterialDocListAjax( reqno ) {
     var url = "/logistics/pos/MaterialDocumentList.do";
     var param = "reqstno="+reqno;
-    $("#mdc_grid").show(); 
-    
+    $("#mdc_grid").show();
+
     Common.ajax("GET" , url , param , function(data){
-        //AUIGrid.resize(mdcGrid,1620,150); 
-        AUIGrid.resize(mdcGrid); 
-        AUIGrid.setGridData(mdcGrid, data.data2);        
+        //AUIGrid.resize(mdcGrid,1620,150);
+        AUIGrid.resize(mdcGrid);
+        AUIGrid.setGridData(mdcGrid, data.data2);
     });
 }
 
@@ -612,9 +643,9 @@ function f_getTtype(g , v){
            complete: function(){
            }
        });
-    
+
     return rData;
-} 
+}
 
 
 function fn_serialChck(rowindex , rowitem , str){
@@ -624,32 +655,32 @@ function fn_serialChck(rowindex , rowitem , str){
     var data = { serial : str , locid : slocid};
     Common.ajaxSync("GET", "/logistics/pos/PointOfSalesSerialCheck.do", data, function(result) {
         console.log(result);
-    	
+
         if (result.data[0] == null){
-        
+
             AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , "" );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
             AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
-            
+
             schk = false;
             ichk = false;
-            
+
         }else{
-        	
+
              AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
              AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
              AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
-             
+
              if (result.data[0].L62CNT == 0 ){//63제외
                  schk = false;
              }else{
                  schk = true;
              }
-             
+
              var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
              for (var i = 0 ; i < checkedItems.length ; i++){
@@ -662,16 +693,16 @@ function fn_serialChck(rowindex , rowitem , str){
 
                      ichk = false;
                  }
-             }       
+             }
         }
-        
+
          if (schk && ichk){
              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
          }else{
              AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
          }
-          
-          
+
+
           AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
 
              $("#serialstus").val(item.statustype);
@@ -680,20 +711,20 @@ function fn_serialChck(rowindex , rowitem , str){
               }
           });
           AUIGrid.update(serialGrid);
-             
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
         } catch (e) {
         }
         Common.alert("Fail : " + jqXHR.responseJSON.message);
-       
+
     });
 }
 
 function fn_itemSerialPopList(data){
-    
+
     //checkedItems = AUIGrid.getCheckedRowItemsAll(reqGrid);
-    
+
     var rowPos = "first";
     var rowList = [];
     var reqQty;
@@ -701,17 +732,17 @@ function fn_itemSerialPopList(data){
     var itm_qty  = 0;
 
     for (var i = 0 ; i < data.length ; i++){
-        
+
         if (data[i].item.serialChk == 'Y'){
             reqQty =data[i].item.reqstqty;
             itm_qty +=parseInt(reqQty);
             $("#reqstno").val(data[i].item.reqstno)
-        }       
+        }
     }
     $("#serialqty").val(itm_qty);
-    
+
     f_addrow();
-    
+
 }
 
 function f_addrow(){
@@ -742,8 +773,8 @@ function f_addrow(){
     <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-</c:if>    
-      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
+</c:if>
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
@@ -752,7 +783,7 @@ function f_addrow(){
         <input type="hidden" name="rStcode" id="rStcode" />
         <input type="hidden" id="svalue" name="svalue"/>
         <input type="hidden" id="sUrl"   name="sUrl"  />
-        <input type="hidden" id="stype"  name="stype" />    
+        <input type="hidden" id="stype"  name="stype" />
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -765,12 +796,12 @@ function f_addrow(){
                 <tr>
                 <th scope="row">Others Request</th>
                    <td >
-                      <input type="text" class="w100p" id="searchOthersReq1" name="searchOthersReq1" />  
-                    </td> 
+                      <input type="text" class="w100p" id="searchOthersReq1" name="searchOthersReq1" />
+                    </td>
                     <th scope="row"></th>
                     <td>
                         <!-- <select class="w100p" id="searchReqType" name="searchReqType" onchange="test()"></select> -->
-                    </td> 
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">Transaction Type</th>
@@ -780,9 +811,9 @@ function f_addrow(){
                     <th scope="row">Movement Type</th>
                     <td>
                         <select class="w100p" id="searchReqType" name="searchReqType"><option value=''>Choose One</option></select>
-                    </td>         
+                    </td>
                 </tr>
-                
+
                 <tr>
                     <th scope="row">Location</th>
                     <td>
@@ -793,28 +824,28 @@ function f_addrow(){
                     <th scope="row">Status</th>
                     <td>
                         <select class="w100p" id="searchStatus" name="searchStatus"></select>
-                    </td>         
+                    </td>
                 </tr>
-                
+
                 <tr>
                     <th scope="row">Create Date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date"></p>
-                        </div><!-- date_set end -->                        
+                        </div><!-- date_set end -->
                     </td>
                     <th scope="row">Required Date</th>
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="reqsdt" name="reqsdt" type="text" title="Create start Date" value="${searchVal.reqsdt}" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="reqsdt" name="reqsdt" type="text" title="Create Start Date" value="${searchVal.reqsdt}" placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date" value="${searchVal.reqedt}" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
-                    </td>              
+                    </td>
                 </tr>
-                
+
             </tbody>
         </table><!-- table end -->
     </form>
@@ -823,24 +854,24 @@ function f_addrow(){
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
-    
+
         <ul class="right_btns">
 
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
          <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
+</c:if>
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-         <li><p class="btn_grid"><a id="insert">New</a></p></li>            
+         <li><p class="btn_grid"><a id="insert">New</a></p></li>
 </c:if>
          <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
          <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
         </ul>
 
-        <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
-        
+        <div id="main_grid_wrap" class="mt10" style="height:400px"></div>
+
 
     </section><!-- search_result end -->
-    
+
     <div class="popup_wrap" id="giopenwindow" style="display:none"><!-- popup_wrap start -->
         <header class="pop_header"><!-- pop_header start -->
             <h1 id="dataTitle">GI/GR Posting Date</h1>
@@ -848,11 +879,11 @@ function f_addrow(){
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
-        
+
         <section class="pop_body"><!-- pop_body start -->
         <form id="giForm" name="giForm" method="POST">
             <input type="hidden" name="gitype" id="gitype" value="GI"/>
-            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/> 
+            <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="reqstno" id="reqstno"/>
             <table class="type1">
@@ -866,11 +897,11 @@ function f_addrow(){
             <tbody>
                 <tr>
                     <th scope="row">GI/GR Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                     <th scope="row">GI/GR Doc Date</th>
-                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                    <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                 </tr>
-                <tr>    
+                <tr>
                     <th scope="row">Header Text</th>
                     <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p" maxlength="50"/></td>
                 </tr>
@@ -889,27 +920,27 @@ function f_addrow(){
             <ul class="center_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue2 big"><a onclick="javascript:giSave();">SAVE</a></p></li>
-</c:if>            
+</c:if>
             </ul>
             </form>
-        
+
         </section>
     </div>
 
     <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
-            <li><a href="#" class="on">Compliance Remark</a></li>
+            <li><a href="#" class="on">Material Document List</a></li>
         </ul>
-        
+
         <article class="tap_area"><!-- tap_area start -->
-        
+
             <article class="grid_wrap"><!-- grid_wrap start -->
                   <div id="mdc_grid" class="mt10" style="height:150px"></div>
             </article><!-- grid_wrap end -->
-        
+
         </article><!-- tap_area end -->
-            
-        
+
+
     </section><!-- tap_wrap end -->
 <form id='popupForm'>
     <input type="hidden" id="sUrl" name="sUrl">
