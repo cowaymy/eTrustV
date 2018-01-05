@@ -290,6 +290,26 @@ function fn_showConfirmPop() {
     $("#totRefAmt").text("-");
     $("#totValidAmt").text("-");
     $("#totInvalidAmt").text("-");
+    
+ // 검색(search) Not Found 이벤트 바인딩
+    AUIGrid.bind(confirmGridID, "notFound", function(event) {
+
+    var term = event.term; // 찾는 문자열
+    var wrapFound = event.wrapFound; // wrapSearch 한 경우 만족하는 term 이 그리드에 1개 있는 경우.
+    
+    console.log("notFound");
+    console.log(term);
+    console.log(wrapFound);
+    
+    if(wrapFound) {
+        //Common.alert('Please enter the order number you would like to find.');
+        Common.alert('The grid passed the last row, but the following string could not be found - ' + term );
+    } else {
+        //Common.alert('Please enter the order number you would like to find.');
+        Common.alert('The following string is missing. - "' + term + '"');
+    }
+
+   });
 }
 
 function fn_selectRefundList() {
