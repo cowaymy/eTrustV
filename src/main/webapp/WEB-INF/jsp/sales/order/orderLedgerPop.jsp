@@ -81,7 +81,7 @@
          editable                : false,        
          showStateColumn     : false,        
          showRowNumColumn    : false,   
-         selectionMode       : "singleRow"  //"multipleCells",   
+//         selectionMode       : "singleRow"  //"multipleCells",   
      };
      
      agreGridID = GridCommon.createAUIGrid("agre_grid", agreLayout, "", agreGridPros);
@@ -93,6 +93,36 @@
          $("#agreDiv").hide();
      }
  }   
+    
+    function fn_report1(){
+    	//CURRENT DATE
+        var date = new Date().getDate();
+        var mon = new Date().getMonth()+1;
+        
+        if(date.toString().length == 1){
+            date = "0" + date;
+        }
+        
+        if(mon.toString().length == 1){
+            mon = "0" + mon;
+        }
+        
+    	var inputDate = dataForm.cutOffDate.value;
+    	
+    	if($("#cutOffDate").val() == ""){
+    		$("#V_CUTOFFDATE").val('01/01/1900');
+    	}else{
+    		$("#V_CUTOFFDATE").val(inputDate.substring(0,2)+'/01'+inputDate.substring(3,7));
+    	}
+    	
+    	$("#reportDownFileName").val($("#V_ORDERNO").val()+"_"+date+mon+new Date().getFullYear());
+    	
+    	var option = {
+  	        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+  	    };
+    	
+    	Common.report("dataForm", option);
+    }
 </script>    
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 
@@ -108,6 +138,17 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>${orderInfo.custName}</h2>
 </aside><!-- title_line end -->
+
+<form id="dataForm" name="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/OrderLedger.rpt"/>
+    <input type="hidden" id="viewType" name="viewType" value="PDF"/>
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName"/>
+    <!--param  -->
+    <input type="hidden" id="V_ORDERID" name="V_ORDERID" value="${orderInfo.ordId}" />
+    <input type="hidden" id="V_ORDERNO" name="V_ORDERNO" value="${orderInfo.ordNo}" />
+    <input type="hidden" id="V_PAYREFNO" name="V_PAYREFNO" value="${orderInfo.jomPayRef}" />
+    <input type="hidden" id="V_CUSTTYPE" name="V_CUSTTYPE"  value="${orderInfo.custType}" />
+    <input type="hidden" id="V_CUTOFFDATE" name="V_CUTOFFDATE"  />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -199,9 +240,10 @@
 
 <ul class="right_btns mt20">
 	<li><p>Transaction Date</p></li>
-	<li><input type="text" title="기준년월" class="j_date2" /></li>
-	<li><p class="btn_blue"><a href="#">Print</a></p></li>
+	<li><input type="text" id="cutOffDate" name="cutOffDate" class="j_date2" /></li>
+	<li><p class="btn_blue"><a href="#" onclick="fn_report1()">Print</a></p></li>
 </ul>
+</form>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="ord_ledger_grid" style="width:100%; height:330px; margin:0 auto;"></div>
