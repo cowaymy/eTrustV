@@ -9,6 +9,17 @@ var optionArea = {chooseMessage: "4. Area"};
 
 var myGridID_Doc;
 function fn_memberSave(){
+                
+                if( $("#userType").val() == "1") {
+                    $('#memberType').attr("disabled", false);
+                    
+                    $('#searchdepartment').attr("disabled", false);
+                    $('#searchdepartment').attr("disabled", false);
+                    
+			        //$('#memberType').val("2803");
+			        
+			     }
+                
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
 	            $("#traineeType").val(($("#traineeType1").value));
@@ -56,6 +67,8 @@ function fn_departmentCode(value){
      
      $("#joinDate").attr("readOnly", true);
      
+     
+     
      if($("#memberType").val() == 2803){
      
          var spouseCode = "${spouseInfoView[0].memCode}";
@@ -64,9 +77,24 @@ function fn_departmentCode(value){
          var spouseDob = "${spouseInfoView[0].dob}";
          var spouseTel = "${spouseInfoView[0].telMobile}";
      
-        $('#sponsorCd').val(spouseCode);
+        /* $('#sponsorCd').val(spouseCode);
         $('#sponsorNm').val(spouseName);
-        $('#sponsorNric').val(spouseNric); 
+        $('#sponsorNric').val(spouseNric);  */
+        
+		$("#branch").find('option').each(function() {
+		    $(this).remove();
+		});
+        $("#branch").append("<option value=''>Choose One</option>");
+
+        $("#branch").attr("disabled", true);       
+        $("#transportCd").attr("disabled", true);    
+        $("#applicationStatus").attr("disabled", true);
+        $("#searchdepartment").attr("disabled", true);
+        $("#searchSubDept").attr("disabled", true);
+        
+        //$('#searchdepartment', '#memberAddForm').attr('class','w100p  readonly ');
+        //$('#searchSubDept', '#memberAddForm').attr('class','w100p  readonly ');
+        
         
         /*
         $('#spouseCode').val(spouseCode);
@@ -105,6 +133,13 @@ function fn_departmentCode(value){
         $('#spouseNRIC', '#memberAddForm').attr('class','w100p  ');
         $('#spouseDOB', '#memberAddForm').attr('class','w100p  ');
         $('#spouseContat', '#memberAddForm').attr('class','w100p  ');
+        
+        $("#branch").attr("disabled", false);
+        $("#transportCd").attr("disabled", false);
+        $("#applicationStatus").attr("disabled", false);
+        $("#searchdepartment").attr("disabled", false);
+        $("#searchSubDept").attr("disabled", false);
+        
      }
      
      
@@ -228,6 +263,8 @@ function fn_departmentCode(value){
            break;
 
         case "2803" :
+        
+            
 	   
 	        if ( $("#userType").val() == "1" ) {
 		   
@@ -264,7 +301,7 @@ function fn_departmentCode(value){
     
                 });	           
 	        }
-	        
+	        /*
 	        $("#branch").find('option').each(function() {
                     $(this).remove();
                 });
@@ -282,7 +319,7 @@ function fn_departmentCode(value){
                     }
     
                 });
-	             
+	           */  
         break;
            
 	/*     case "2803" :   // this is temp code  that   add by hgham    
@@ -354,6 +391,11 @@ $(document).ready(function() {
     
     //var cmbRacelStatusCd = "10";
     $("#cmbRace option[value=10]").attr('selected', 'selected');
+     
+     if( $("#userType").val() == "1") {
+        $("#memberType option[value=2803]").attr('selected', 'selected');
+        $('#memberType').attr("disabled", true);
+     }
      
      
      $('#memberType').trigger('click'); 
@@ -976,7 +1018,7 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Application Status</th>
     <td colspan="2">
-    <select class="w100p">
+    <select class="w100p" id="applicationStatus">
         <option value="">Choose One</option>    
         <option value="">Register</option>
         <option value="">Training</option>
