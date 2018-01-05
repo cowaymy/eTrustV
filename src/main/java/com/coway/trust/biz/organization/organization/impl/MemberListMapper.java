@@ -175,4 +175,6 @@ public interface MemberListMapper {
 	public List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params);
 	
 	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params);
+
+	EgovMap selectLastCode(Map<String, Object> lastCode);
 }

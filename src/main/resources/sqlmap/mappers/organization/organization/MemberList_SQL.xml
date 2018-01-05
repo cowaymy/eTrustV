@@ -2271,6 +2271,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                    AND ( 1 = Extent1.STUS )
                    AND ( Extent1.MEM_ID <> #{memberID} ) ) Distinct1
         ]]>
+        <if test="cmbSuperior != null and cmbSuperior != ''">        
+        WHERE Distinct1.MEM_ID = #{cmbSuperior}
+        </if>
 	     </select>
 	     <select id="selectDeptCode" parameterType="Map" resultType="egovMap">
 		        SELECT Distinct1.C1 C1  ,
@@ -3552,4 +3555,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		WHERE TYPE_ID = '2841' 
 		ORDER BY CODE_ID 
     </select>    
+    
+    <select id="selectLastCode" parameterType="Map" resultType="egovMap">
+        SELECT LAST_DEPT_CODE,
+		  LAST_GRP_CODE,
+		  LAST_ORG_CODE,
+		  BRNCH_ID
+		FROM ORG0005D
+		WHERE DEPT_CODE = #{deptCodeTo}
+		AND MEM_LVL     = #{memberLvl}
+    </select>
+    
 </mapper>

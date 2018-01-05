@@ -72,13 +72,13 @@ $(document).ready(function() {
     		   if($('#action1').val() == "747"){
     			   console.log("promote");
     			   //Promote
-    			  lvlTo = currentLvl - 1;
-                  superiorLvl = currentLvl - 2;
+    			  lvlTo = parseInt(currentLvl) - 1;
+                  superiorLvl = parseInt(currentLvl) - 2;
                   //$("select[name=cmbSuperior]").removeAttr('disabled');
     			   //desc =
     		   }else{
     			   console.log("demote");
-    			   lvlTo = currentLvl + 1;
+    			   lvlTo = parseInt(currentLvl) + 1;
                    superiorLvl = currentLvl;
                    //desc =
     		   }
@@ -105,6 +105,11 @@ $(document).ready(function() {
 
 	   }
 	});
+        
+        $('#cmbSuperior').change(function (){
+        	alert($("#cmbSuperior").val());
+        });
+        
 });
 function createAUIGrid4() {
     //AUIGrid 칼럼 설정

@@ -1002,7 +1002,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			promoEntry.put("updated", new Date());
 			promoEntry.put("updator", userId);
 			promoEntry.put("deptCodeFrom", "");
-			promoEntry.put("deptCodeTo", "");
+//			promoEntry.put("deptCodeTo", "");
 			promoEntry.put("parentIdFrom", 0);
 			promoEntry.put("parentIdTo", Integer.parseInt(params.get("cmbSuperior").toString()));
 			promoEntry.put("statusIdFrom", 1);
@@ -1041,24 +1041,51 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("selectOrganization_new : {}",selectOrganization_new);
 				promoEntry.put("requestNo", eventCode.get("docNo").toString());
 				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
-				if (params.get("lvlTo") .equals("3") ) {
+				/*if (params.get("lvlTo") .equals("3") ) {
 					promoEntry.put("deptCodeTo", selectMemberOrgs.get("deptCode"));
     			} else if (params.get("lvlTo") .equals("2") ) {
     				promoEntry.put("deptCodeTo", selectMemberOrgs.get("grpCode"));
     			} else if (params.get("lvlTo") .equals("1") ) {
     				promoEntry.put("deptCodeTo", selectMemberOrgs.get("orgCode"));
-    			}
+    			}*/
+				Map<String, Object>  superiorEntry = new HashMap<String, Object>();
+				superiorEntry.put("memberLvl", params.get("memberLvl"));
+				superiorEntry.put("memberType", params.get("memtype"));
+				superiorEntry.put("memberID", params.get("requestMemberId"));
+				superiorEntry.put("cmbSuperior", params.get("cmbSuperior"));
+				logger.debug("superiorEntry : {}",superiorEntry);
+				List<EgovMap> selectSuperiorTeam = memberListMapper.selectSuperiorTeam(superiorEntry);
+				logger.debug("selectSuperiorTeam : {}",selectSuperiorTeam);
+				promoEntry.put("deptCodeTo", selectSuperiorTeam.get(0).get("deptCode"));
+				
 				promoEntry.put("parentIdFrom", selectMemberOrgs.get("memUpId") != null ? Integer.parseInt(selectMemberOrgs.get("memUpId").toString()) : 0);
 				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("deptCode").toString() != null ? selectOrganization.get("deptCode").toString() : "");
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
 				promoEntry.put("PRCode", promoEntry.get("promoTypeId").toString().equals("747") ? selectOrganization.get("deptCode") != null? selectOrganization.get("deptCode").toString() : "" : "");
-				if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
+				/*if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
 					promoEntry.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
 				}
 				if ( !params.get("lvlTo") .equals("1") ) {
 					promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
 				}
-				promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+				promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));*/
+				
+				Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
+				lastCodeEntry.put("deptCodeTo", promoEntry.get("deptCodeTo"));
+				lastCodeEntry.put("memberLvl", params.get("memberLvl"));	
+				logger.debug("lastCodeEntry : {}",lastCodeEntry);
+				EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+				logger.debug("selectLastCode : {}",selectLastCode);
+//				promoEntry.put("deptCodeTo", selectLastCode.get("deptCode"));
+				if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
+					promoEntry.put("lastDeptCode", selectLastCode.get("lastDeptCode"));
+				}
+				if ( !params.get("lvlTo") .equals("1") ) {
+					promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
+				}
+				promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+				promoEntry.put("branchId", selectLastCode.get("brnchId"));
+				
 				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
 				logger.debug("promoEntry : {}",promoEntry);
 

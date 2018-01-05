@@ -79,7 +79,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 	
 	public EgovMap getMemberEventDetailPop(Map<String, Object> params) {
 		
-		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : " + params.get("pstSalesOrdId"));
+		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : " + params.get("promoId"));
 		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
 		
 		return memberEventMapper.getMemberEventDetailPop(params);
