@@ -510,9 +510,9 @@ function f_multiCombo() {
     <th scope="row">Location Type </th>
     <td>
     <select class="w100p" id="locationType" name="locationType" onchange="fn_changeLocation()">
-        <option> All </option>
-        <option selected> A </option>
-        <option> B </option>
+        <option value=""> All </option>
+        <option value="A" selected> A </option>
+        <option value="B"> B </option>
     </select></td>
     <th scope="row">From Location</th>
     <td colspan="2">
