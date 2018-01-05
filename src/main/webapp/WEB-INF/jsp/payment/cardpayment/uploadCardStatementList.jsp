@@ -416,9 +416,6 @@ function updateCardStateDetail(){
 <section id="content">
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-        <li>Payment</li>
-        <li>Credit Card Payment</li>
-        <li>Upload Credit Card Statement</li>
     </ul>
 
     <!-- title_line start -->
