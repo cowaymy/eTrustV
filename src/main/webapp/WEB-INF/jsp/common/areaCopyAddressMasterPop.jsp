@@ -12,7 +12,7 @@ var columnLayout2=[
  {dataField:"areaId", headerText:'<spring:message code="sys.areaId" />', width: 120, editable : false},
  {dataField:"area", headerText:'<spring:message code="sys.area" />', width: 200, editable : true},
  {dataField:"postcode", headerText:'<spring:message code="sys.title.postcode" />', width: 100, editable : false },
- {dataField:"city", headerText:'<spring:message code="sys.city" />', width: 100 , editable : false },
+ {dataField:"city", headerText:'<spring:message code="sys.city" />', width: 100 },
  {dataField:"state", headerText:'<spring:message code="sys.state" />', width: 100, editable : false },
  {dataField:"country", headerText:'<spring:message code="sys.country" />', width: 100, editable : false },
  {dataField:"statusId", headerText:'<spring:message code="sys.status" />', width: 100, editable : false},
@@ -49,6 +49,10 @@ $(document).ready(function(){
       
       //save
       $("#save_copy").click(function() {
+    	  
+    	    // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+    	    AUIGrid.forceEditingComplete(myGridID2, null, false);
+    	  
           if (validation_copy()) {
         	  if (("${popAreaId}").length == 10){
         		  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copy);

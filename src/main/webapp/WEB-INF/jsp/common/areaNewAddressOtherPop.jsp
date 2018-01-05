@@ -40,6 +40,10 @@ $(document).ready(function(){
       
       //save
       $("#save_other").click(function() {
+    	  
+    	  // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
+    	  AUIGrid.forceEditingComplete(myGridID4, null, false);
+    	  
           if (validation_other()) {
               Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_other);
            }
@@ -125,9 +129,10 @@ function validationCom_other(list){
                result = false;
                Common.alert("<spring:message code='sys.common.alert.validation' arguments='"+ oCountrycode +"' htmlEscape='false'/>");
                break;
-           } else if(lengthPostcode != 5){
+           } else if(lengthPostcode > 15){
         	   result = false;
-        	   Common.alert("<spring:message code='sys.msg.limitCharacter' arguments='" + oPostcode +" ; 5' htmlEscape='false' argumentSeparator=';' />");
+        	   //Common.alert("<spring:message code='sys.msg.limitCharacter' arguments='" + oPostcode +" ; 5' htmlEscape='false' argumentSeparator=';' />");
+               Common.alert("Postcode can not exceed 15 digits.");
                break;
            } else if(lengthCountrycode != 2){
                result = false;
