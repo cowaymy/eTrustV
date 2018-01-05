@@ -131,6 +131,10 @@ function SearchListAjax1(str) {
     	console.log(data);
     	AUIGrid.clearGridData(rawFileGrid1);
         AUIGrid.setGridData(rawFileGrid1, data);
+        var sortingInfo = [];
+        // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
+        sortingInfo[0] = { dataField : "updDt", sortType : -1 };
+        AUIGrid.setSorting(rawFileGrid1, sortingInfo);
         
     });
 }
@@ -141,6 +145,10 @@ function SearchListAjax2(str) {
     	console.log(data);
     	AUIGrid.clearGridData(rawFileGrid2);
         AUIGrid.setGridData(rawFileGrid2, data);
+        var sortingInfo = [];
+        // 차례로 Country, Name, Price 에 대하여 각각 오름차순, 내림차순, 오름차순 지정.
+        sortingInfo[0] = { dataField : "updDt", sortType : -1 };
+        AUIGrid.setSorting(rawFileGrid2, sortingInfo);
         
     });
 }
