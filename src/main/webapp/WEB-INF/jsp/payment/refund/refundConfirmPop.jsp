@@ -150,6 +150,8 @@ $(document).ready(function () {
     $("#pConfirm_btn").click(fn_refundConfirm);
     $("#pClear_btn").click(fn_pClear);
     $("#remove_btn").click(fn_refundItemDisab);
+    
+    $("#gridList_search_btn").click(fn_confirmGridDataSearch);
 });
 
 //AUIGrid 를 생성합니다.
@@ -226,8 +228,8 @@ function fn_gridDataGrouping(data) {
     var cheque = new Array();
     var creditCard = new Array();
     var online = new Array();
-    var eCash = new Array();
-    var autoDebit = new Array();
+    //var eCash = new Array();
+    //var autoDebit = new Array();
     
     for(var i = 0; i < data.length; i++) {
         if(data[i].refModeCode == "105"){
@@ -242,12 +244,12 @@ function fn_gridDataGrouping(data) {
         if(data[i].refModeCode == "108"){
             online.push(data[i]);
         }
-        if(data[i].refModeCode == "109"){
+        /* if(data[i].refModeCode == "109"){
             eCash.push(data[i]);
         }
         if(data[i].refModeCode == "110"){
             autoDebit.push(data[i]);
-        }
+        } */
     }
     
     var result = new Array();
@@ -255,8 +257,8 @@ function fn_gridDataGrouping(data) {
     result.push(cheque);
     result.push(creditCard);
     result.push(online);
-    result.push(eCash);
-    result.push(autoDebit);
+    //result.push(eCash);
+    //result.push(autoDebit);
     
     return result;
 }
@@ -498,6 +500,14 @@ function fn_setConfirmRefundHeader(result) {
     str = str2[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')+"."+str2[1];
     $("#totInvalidAmt").text(str);
 }
+
+function fn_confirmGridDataSearch() {
+	if(FormUtil.isEmpty($("#orderNo").val())) {
+		Common.alert('Please enter the order number you would like to find.');
+	} else {
+		AUIGrid.search(confirmGridID, "ordNo", $("#orderNo").val());
+	}
+}
 </script>
 
 <!-- <div id="conf_popup_wrap" class="popup_wrap" style="display: none;"> --><!-- popup_wrap start -->
@@ -544,6 +554,10 @@ function fn_setConfirmRefundHeader(result) {
     <td id="totValidAmt"></td>
     <th scope="row">Invalid Amount</th>
     <td id="totInvalidAmt"></td>
+</tr>
+<tr>
+    <th scope="row">Order No</th>
+    <td colspan="5"><input type="text" title="" placeholder="" class="" id="orderNo" name="orderNo"/><a href="#" class="search_btn" id="gridList_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 </tbody>
 </table><!-- table end -->
