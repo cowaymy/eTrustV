@@ -324,7 +324,7 @@ $(function(){
         	$("#gropenwindow").show();
 
         	if(checkedItems[0].mtype=="UM93"){
-        		//fn_gradeSerial(checkedItems[0].delyno);
+        		fn_gradeSerial(checkedItems[0].delyno);
         		var yn= false;
                 for (var i = 0 ; i < checkedItems.length ; i++){
                     if(checkedItems[i].serialcheck == 'Y'){
@@ -333,7 +333,7 @@ $(function(){
                 }
                 if(yn){
 	        		$("#receipt_body").show();
-	        	    //fn_gradComb();
+	        	    fn_gradComb();
 	        		AUIGrid.resize(gradeGrid);
                 }else{
                     $("#receipt_body").hide();
