@@ -3,14 +3,15 @@
 
 <script type="text/javascript">
 
-var sessionAuth = '${SESSION_INFO.userTypeId}';
+var sessionAuth = '${SESSION_INFO.userTypeId}';  //cody / hp
+var setM;
+
 //On Load 
 var cnt =  -1;
 
     $(document).ready(function() {
     	 
     	//console.log("sessionAuth : " + sessionAuth);
-    	
     	//View Report
     	$("#reportType").change(function() {
     		if($(this).val() == '0'){
@@ -19,9 +20,13 @@ var cnt =  -1;
     				$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
                     $("#viewType").val("WINDOW");
                     loader();	
-    			}else{
+    			}else if(sessionAuth == '2'){//auth Cody
     				$("#reportType").val('');
-    				Common.alert("access deny.");
+                    Common.alert("access deny.");
+                }else{
+                	$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
+                    $("#viewType").val("WINDOW");
+                    loader();
     			}
 			}else if($(this).val() == '1'){
 				
@@ -29,9 +34,13 @@ var cnt =  -1;
 					$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
 	                $("#viewType").val("WINDOW");
 	                loader();   
-				}else{
+				}else if(sessionAuth == '1'){ //auth HP
 					$("#reportType").val('');
-					Common.alert("access deny.");
+                    Common.alert("access deny.");   
+                }else{
+                	$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
+                    $("#viewType").val("WINDOW");
+                    loader();
 				} 
             }else{
             	$("#reportFileName").val('');
@@ -92,8 +101,11 @@ var cnt =  -1;
                     bodyId : "reportIframe"
                 };
     	}
-            
-            Common.report("dataForm", option);
+        
+    	
+    	
+    	
+        Common.report("dataForm", option);
     }
 
     function fn_onLoad(inputVal) {
@@ -108,6 +120,7 @@ var cnt =  -1;
             try {
             	//console.log("로더 생성...");
             	Common.showLoader();
+            	getMaintance();
                 fn_procedureReport();
                 cnt++;
             } catch (e) {
@@ -121,9 +134,25 @@ var cnt =  -1;
         	return;	
         }else{
             //console.log("로더 리무브....");
+            endMaintance();
         	Common.removeLoader();
             cnt = 0;
         }
+    }
+    
+    
+    function fn_maintanceSession(){
+    	Common.ajax("GET", "/sales/analysis/maintanceSession", "", function(result) {
+			console.log("getServerTime : " + result.sysdate);
+		});
+    }
+    
+    function getMaintance(){
+    	setM = setInterval(fn_maintanceSession() , 180000);  //3Min
+    }
+    
+    function endMaintance(){
+    	clearInterval(setM);
     }
 </script>
 
