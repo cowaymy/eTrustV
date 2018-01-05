@@ -3910,10 +3910,10 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 
      <insert id="updateAssignCT" parameterType="Map" >
                          UPDATE  SAL0046D
-						  SET CT_ID =   #{ctId} ,
+						  SET CT_ID =   #{insstallCtId} ,
 						      UPD_DT =SYSDATE   ,
 						      UPD_USER_ID = #{updator}
-						  WHERE INSTALL_ENTRY_ID = #{resultId}
+						  WHERE INSTALL_ENTRY_No = #{installEntryNo}
      </insert>
 
 <resultMap id="installationNoteListing" type="egovMap" />

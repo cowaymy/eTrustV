@@ -28,7 +28,7 @@ function createAssignCtListAUIGrid() {
                         { dataField : "ctName",    headerText  : "CT Name",  width  : 120 , editable       : false},
                         { dataField : "branchName", headerText  : "Branch Name ",  width  : 120  },
                         { dataField : "ctSubGrp", headerText  : "CT GRP",  width  : 120  },
-                        {dataField : "ctId", headerText  : "CT ID ",  width  : 120        ,visible : false}
+                        {dataField : "ctId", headerText  : "CT ID ",  width  : 120        ,visible : true}
    ];
 
 
@@ -65,7 +65,7 @@ function fn_getAssionCTListCheckedRowItems() {
 	  var rowItem = checkedItems[0].item;
 	 str[0] = rowItem.ctCode;
 	 str[1] = rowItem.ctId;
-
+	 
 	 return str;
 }
 
@@ -93,7 +93,7 @@ function createAssignCtOrderListAUIGrid() {
 	                                        }, rowIndex);
 	                                }else{
 	                                    AUIGrid.updateRow(assignCOrdtListGridID, {
-	                                         "memCode" : assiinCd[0],
+	                                         "memCode" :  assiinCd[0],
 	                                          "insstallCtId" : assiinCd[1]
 	                                      }, rowIndex);
 	                                }
@@ -105,8 +105,8 @@ function createAssignCtOrderListAUIGrid() {
                         { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 100},
                         { dataField : "memCode",        headerText  : "Ct Code",  width  : 80  },
                         { dataField : "custSubGrp",     headerText  : "Cust GRP",  width  : 100  },
-                        { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 100   ,     visible : false},
-                        { dataField : "insstallId",                headerText  : "install ID ",  width  : 100   ,     visible : false}
+                        { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 100   ,     visible : true},
+                        { dataField : "insstallId",        headerText  : "install ID ",  width  : 100   ,     visible : true}
 
 
    ];
@@ -144,8 +144,10 @@ function fn_ctChange(){
         console.log( result);
 
         if(result  !=""){
-            Common.alert("<b>AS result successfully saved.</b>");
-            fn_searchASManagement();
+            Common.alert("<b> successfully saved.</b>");
+            fn_installationListSearch();
+            
+            $("#_assginCTTransferDiv").remove();
         }
     });
 
