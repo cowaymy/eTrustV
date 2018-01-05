@@ -3,6 +3,6 @@
 <mapper namespace="com.coway.trust.biz.sales.analysis.impl.AnalysisMapper">
     
     <select id="maintanceSession" resultType="egovMap">
-        SELECT SYSDATE FROM DUAL
+        SELECT TO_CHAR(SYSDATE, 'DD/MM/YYYY HH24:MI:SS') CURR_TIME FROM DUAL
     </select>
 </mapper>

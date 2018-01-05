@@ -101,9 +101,6 @@ var cnt =  -1;
                     bodyId : "reportIframe"
                 };
     	}
-        
-    	
-    	
     	
         Common.report("dataForm", option);
     }
@@ -114,13 +111,18 @@ var cnt =  -1;
 
     function loader(){
         
-    	//console.log("cnt : " + cnt);
+    	console.log("cnt : " + cnt);
     	
     	if(cnt == 0){
             try {
             	//console.log("로더 생성...");
             	Common.showLoader();
-            	getMaintance();
+          //  	setM = setInterval("fn_maintanceSession()" , 60000);  //3Min
+            	setM = setInterval(function(){
+            		Common.ajax("GET", "/sales/analysis/maintanceSession", "", function(result) {
+                        console.log("getServerTime : " + result.currTime);
+                    });
+            	} , 180000);  //3Min
                 fn_procedureReport();
                 cnt++;
             } catch (e) {
@@ -134,26 +136,25 @@ var cnt =  -1;
         	return;	
         }else{
             //console.log("로더 리무브....");
-            endMaintance();
+            clearInterval(setM);
+            console.log("end MTNC....");
         	Common.removeLoader();
             cnt = 0;
         }
     }
     
     
-    function fn_maintanceSession(){
-    	Common.ajax("GET", "/sales/analysis/maintanceSession", "", function(result) {
-			console.log("getServerTime : " + result.sysdate);
-		});
-    }
+   /*  function fn_maintanceSession(){
+    	
+    } */
     
-    function getMaintance(){
-    	setM = setInterval(fn_maintanceSession() , 180000);  //3Min
+   /*  function getMaintance(){
+    	
     }
     
     function endMaintance(){
-    	clearInterval(setM);
-    }
+    	
+    } */
 </script>
 
 
