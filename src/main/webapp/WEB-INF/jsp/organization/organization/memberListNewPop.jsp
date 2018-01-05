@@ -392,6 +392,14 @@ $(document).ready(function() {
      
      
      $('#memberType').trigger('click'); 
+     
+     $('#nric').blur(function() {
+    	 checkNRIC();
+     });
+     
+     $('#sponsorCd').blur(function() {
+    	 fn_sponsorCd();
+     });
 
 });
 function createAUIGridDoc() {
