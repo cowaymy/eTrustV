@@ -3602,14 +3602,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
     
     <select id="checkNRIC3"  parameterType="Map" resultType="egovMap">
-        SELECT *
-		FROM (SELECT TO_NUMBER(SUBSTR(#{nric}, 0, 2))+18||SUBSTR(#{nric}, 3, 4) VALID
-		          FROM DUAL)
-		WHERE VALID > TO_CHAR(SYSDATE, 'YYMMDD')
+    SELECT *
+        FROM (SELECT TO_NUMBER(SUBSTR(#{nric}, 0, 2))+18||SUBSTR(#{nric}, 3, 4) VALID
+                  FROM DUAL)
+        WHERE VALID > TO_CHAR(SYSDATE, 'YYMMDD')
     </select>
     
     <select id="checkSponsor"  parameterType="Map" resultType="egovMap">
-        SELECT * 
+    <!-- modify jgkim -->
+        SELECT MEM_CODE, NAME, NRIC
         FROM ORG0001D 
         WHERE MEM_CODE = #{sponsorCd} 
     </select>

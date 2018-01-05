@@ -767,9 +767,15 @@ function fn_sponsorCheck(){
 
 function fn_sponsorCd(){
 	Common.ajax("GET", "/organization/checkSponsor.do", $("#memberAddForm").serializeJSON(), function(result) {
-        console.log("data : " + result);
+		// add jgkim
+        console.log("checkSponsor.do Action");
+        console.log(result);
         if (result.message != "ok") {
         	Common.alert(result.message);
+        } else {
+        	// add jgkim
+        	$("#sponsorNm").val(result.data.name);
+        	$("#sponsorNric").val(result.data.nric);
         }
 	});
 }

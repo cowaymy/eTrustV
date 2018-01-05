@@ -1049,7 +1049,8 @@ public class MemberListController {
 	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model) {
 
 		logger.debug("checkSponsor_params : {} " + params);
-		List<EgovMap> checkSponsor = memberListService.checkSponsor(params);
+		// modify jgkim
+		EgovMap checkSponsor = memberListService.checkSponsor(params);
 		
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
@@ -1057,6 +1058,7 @@ public class MemberListController {
 		if (checkSponsor.size() == 0) {
 			message.setMessage("There is no member code that you entered");
 		} else {
+			message.setData(checkSponsor);
 			message.setMessage("ok");
 		}
 		logger.debug("message : {}", message);

@@ -1,6 +1,7 @@
 package com.coway.trust.biz.organization.organization.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1849,11 +1850,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	
 	@Override
 	public List<EgovMap> checkNRIC3(Map<String, Object> params) {
-		return memberListMapper.checkNRIC3(params);
+		// add jgkim
+		String nric = String.valueOf(params.get("nric"));
+	    // 35 ~ 99가 아닐때 == 35 보다 작을때
+		// 99보다 큰 값은 100
+		if(Integer.parseInt(nric.substring(0, 2)) < 35) {
+			return memberListMapper.checkNRIC3(params);
+		} else {
+			return new ArrayList<EgovMap>();
+		}
 	}
 	
+	// modify jgkim
 	@Override
-	public List<EgovMap> checkSponsor(Map<String, Object> params) {
+	public EgovMap checkSponsor(Map<String, Object> params) {
 		return memberListMapper.checkSponsor(params);
 	}
 }
