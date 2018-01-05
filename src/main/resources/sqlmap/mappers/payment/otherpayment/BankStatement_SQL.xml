@@ -11,7 +11,9 @@
             C.ACC_CODE || ' - ' ||  C.ACC_DESC AS BANK_ACC_NAME,
             A.TRNSC_DT,
             A.F_BANK_JRNL_CRT_DT AS UPD_DT,
-            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID) AS COUNT,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1 
+                AND OTH_KEYIN_STUS_ID =1 
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT,
             A.F_BANK_JRNL_REM AS REMARK
         FROM 
             PAY0079D A
@@ -59,7 +61,10 @@
             B.F_TRNSC_DEBT_AMT,
             B.F_TRNSC_CRDIT_AMT,
             B.F_TRNSC_TELLER_ID,
-            B.F_TRNSC_NEW_CHQ_NO
+            B.F_TRNSC_NEW_CHQ_NO,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1 
+                AND OTH_KEYIN_STUS_ID =1 
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
         FROM
             PAY0079D A 
             JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID 
@@ -196,4 +201,32 @@
             #{fTrnscCrditAmt}
         )            
     </insert>
+    
+    <delete id="deleteBankStateMaster" parameterType="Map">
+        DELETE FROM PAY0079D
+        WHERE F_BANK_JRNL_ID =#{bsNo}
+    </delete>
+    
+    <delete id="deleteBankStateDetail" parameterType="Map">
+        DELETE FROM PAY0081D
+        WHERE F_BANK_JRNL_ID =#{bsNo}
+    </delete>
+    
+    <update id="updateBankStateDetail" parameterType="Map">
+        UPDATE PAY0081D SET
+            F_TRNSC_TELLER_ID = #{fTrnscTellerId},
+			      F_TRNSC_REF3 = #{fTrnscRef3},
+			      F_TRNSC_REF_CHQ_NO = #{fTrnscRefChqNo},
+			      F_TRNSC_REF1 = #{fTrnscRef1},
+			      F_TRNSC_REF2 = #{fTrnscRef2},
+			      F_TRNSC_REF6 = #{fTrnscRef6},
+			      F_TRNSC_REM = #{fTrnscRem},
+			      F_TRNSC_DEBT_AMT = #{fTrnscDebtAmt},
+			      F_TRNSC_CRDIT_AMT = #{fTrnscCrditAmt},
+			      F_TRNSC_REF4 = #{fTrnscRef4},
+			      F_TRNSC_NEW_CHQ_NO = #{fTrnscNewChqNo},
+			      F_TRNSC_REF_VA_NO = #{fTrnscRefVaNo}
+        WHERE
+            F_TRNSC_ID = #{fTrnscId}
+    </update>    
 </mapper>

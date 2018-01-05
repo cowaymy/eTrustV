@@ -15,7 +15,10 @@
             D.USER_NAME AS CRC_STATE_UPLOAD_USER_NM,
             A.CRC_BC_STUS_ID,
             E.CODE AS CRC_BC_STUS_CODE,
-            E.NAME AS CRC_BC_STUS_NAME
+            E.NAME AS CRC_BC_STUS_NAME,
+            (SELECT COUNT(1) FROM PAY0076D WHERE CRC_STATE_ID = A.CRC_STATE_ID AND BANK_MAPPING_STUS_ID = 1 
+                AND KEYIN_STUS_ID = 1 
+                AND BANK_STATE_MAPPING_ID IS NULL) AS COUNT
         FROM 
             PAY0075D A  
             LEFT JOIN SYS0001M C ON A.CRC_STATE_ACC_ID = C.ACC_ID AND C.IS_PAY_CRC = 1
@@ -56,7 +59,10 @@
             CRC_NET_AMT,
             CRC_TOT_BC_AMT,
             CRC_TOT_GST_AMT,
-            CRC_TOT_NET_AMT
+            CRC_TOT_NET_AMT,
+            (SELECT COUNT(1) FROM PAY0076D A, PAY0075D B   WHERE A.CRC_STATE_ID = B.CRC_STATE_ID AND A.BANK_MAPPING_STUS_ID = 1 
+                AND A.KEYIN_STUS_ID = 1 
+                AND A.BANK_STATE_MAPPING_ID IS NULL) AS COUNT
         FROM 
             PAY0076D
         WHERE 
@@ -273,6 +279,32 @@
             TO_CHAR(A.CRC_STATE_UPLOAD_DT,'YYYYMMDD'),
             A.CRC_STATE_REM
     </insert>
-            
+    
+    <delete id="deleteBankStateMaster" parameterType="Map">
+        DELETE FROM PAY0075D
+        WHERE CRC_STATE_ID =#{crcStateId}
+    </delete>
+    
+    <delete id="deleteBankStateDetail" parameterType="Map">
+        DELETE FROM PAY0076D
+        WHERE CRC_STATE_ID =#{crcStateId}
+    </delete>
+    
+    <update id="updateCardStateDetail" parameterType="Map">
+        UPDATE PAY0076D SET
+            CRC_TRNSC_MID = #{crcTrnscMid},
+            F_TRNSC_REF3 = #{crditCard},
+            CRC_TRNSC_NO = #{crcTrnscNo},
+            CRC_TRNSC_APPV = #{crcTrnscAppv},
+            CRC_GROS_AMT = #{crcGrosAmt},
+            CRC_BC_AMT = #{crcBcAmt},
+            CRC_GST_AMT = #{crcGstAmt},
+            CRC_NET_AMT = #{crcNetAmt},
+            CRC_TOT_BC_AMT = #{crcTotBcAmt},
+            CRC_TOT_GST_AMT = #{crcTotGstAmt},
+            CRC_TOT_NET_AMT = #{crcTotNetAmt}
+        WHERE
+            CRC_TRNSC_ID = #{crcTrnscId}
+    </update>
     
 </mapper>

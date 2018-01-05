@@ -78,5 +78,41 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
     	
     	return masterParamMap;
 	}
+
+	@Override
+	public boolean deleteBankStatement(List<Object> paramList) {
+		boolean result = false;
+		
+		if (paramList.size() > 0) {    		
+    		Map<String, Object> hm = null;    		
+    		for (Object map : paramList) {
+    			hm = (HashMap<String, Object>) map;  
+    			int mstResult = bankStatementMapper.deleteBankStateMaster(hm); 
+    			
+    			if(mstResult > 0){
+    				int dtResult = bankStatementMapper.deleteBankStateDetail(hm);
+    				if(dtResult > 0)
+    					result = true;
+    			}
+    		}
+    	}
+		
+		return result;
+	}
+
+	@Override
+	public boolean updateBankStateDetail(List<Object> paramList) {
+		boolean result = false;
+		
+		if (paramList.size() > 0) {
+			Map<String, Object> hm = null;    		
+    		for (Object map : paramList) {
+    			hm = (HashMap<String, Object>) map;  
+    			int updResult = bankStatementMapper.updateBankStateDetail(hm); 
+    			result = true;
+    		}
+		}
+		return result;
+	}
 	
 }

@@ -13,6 +13,7 @@
 	var myGridID;
 	var myDetailGridID;
 	var myUploadGridID;
+	var selectedGridValue;
 
 	//Grid Properties 설정
 	var gridPros = {
@@ -23,10 +24,29 @@
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
 	        
-	        softRemoveRowMode:false
+	        softRemoveRowMode:false,
+	        
+	        // 체크박스 표시 설정
+	        showRowCheckColumn : true,
+	        // 전체 체크박스 표시 설정
+	        showRowAllCheckBox : true,
+	        //independentAllCheckBox : true
 	
 	};
-
+	
+	var gridPros2 = {
+			
+			// 편집 가능 여부 (기본값 : false)
+      //editable : false,        
+      // 상태 칼럼 사용
+      showStateColumn : false,
+      // 기본 헤더 높이 지정
+      headerHeight : 35,
+	          
+      softRemoveRowMode:false
+			
+	}
+	
 	// AUIGrid 칼럼 설정
 	var columnLayout = [ 
 	    {dataField : "bsNo",headerText : "<spring:message code='pay.head.bsNo'/>",width : 100 , editable : false},
@@ -41,22 +61,23 @@
 	var detailColumnLayout = [
 	    {dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
 	    {dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
+	    {dataField : "count",headerText : "", editable : false, visible : false},
 	    {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},     
 	    {dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},                    
 	    {dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},                    
 	    {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
-	    {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
-	    {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
-	    {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
-	    {dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : false},
-	    {dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : false},
-        {dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},                    
-        {dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : false},
-        {dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-	    {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : false},
-	    {dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : false},
-	    {dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : false}
+	    {dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : true},
+	    {dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : true},
+	    {dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : true},
+	    {dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : true},
+	    {dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : true},
+        {dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : true},                    
+        {dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : true},
+        {dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+	    {dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : true},
+	    {dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : true},
+	    {dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : true}
 	    ];    
 
     //AUIGrid 칼럼 설정
@@ -89,12 +110,12 @@
 		
 		//그리드 생성
 	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	    myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros);
-	    myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros);
+	    myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros2);
+	    myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros2);
 	    
 	    // 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-        	
+        	selectedGridValue = event.rowIndex;
         	var bsNo = AUIGrid.getCellValue(myGridID , event.rowIndex , "bsNo");	
             Common.ajax("GET","/payment/selectBankStatementDetailList.do", {"bsNo" : bsNo}, function(result){
             	$("#detail_wrap").show();
@@ -329,7 +350,79 @@ function commitFormSubmit() {
 
 }  
 
+function bankStateDelete(){
+		var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+		var valid = true;
+		var message = "";
+		if (checkedItems.length > 0){
+			 console.log(checkedItems);
+			 
+			 for (var i = 0 ; i < checkedItems.length ; i++){
+				 
+					 var count = Number(checkedItems[i].count);
+					 var bsNo = checkedItems[i].bsNo;
+					 if(count == 0){
+							 message += "<b>BS No : ["+ bsNo +"] Mapped Data.<br><br></b>";
+							 valid = false;
+					 }
+			 }
+			 
+			 if(valid){
+				   var data = {};
+				   data.all = checkedItems;
+					 Common.confirm("<spring:message code='pay.alert.uploadBankStateItems'/>",function (){
+						  
+						 Common.ajax("POST", "/payment/deleteBankStatement.do", data, function(result) {
+							 
+							 Common.alert(result.message);
+							 searchList();
+							 
+						 });
+						 
+					 }); 
+			 }else{
+				  Common.alert(message);
+			 }
+		}else{
+			  Common.alert("<spring:message code='pay.alert.noRecord'/>");
+		}
+}
 
+function updateBankStateDetail(){
+	var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+	var message = "";
+	var valid = true;
+	if(editedRowItems.length  == 0  ||  editedRowItems == null) {
+        Common.alert("<b>No Updated Data.</b>");
+        return  false ;
+  }
+
+	if(editedRowItems.length > 0){
+		for (var i = 0 ; i < editedRowItems.length ; i++){
+			 var count = Number(editedRowItems[i].count);
+			 var tranxId = editedRowItems[i].fTrnscId;
+			 if(count == 0){
+				  message += "<b>Tranx ID : ["+ tranxId +"] Mapped Data.<br><br></b>";
+				  /* valid = false; */
+			 }
+		}
+	}
+	
+	if(valid){
+		  var  updateForm ={
+	            "update" : editedRowItems
+	            }
+	          
+		  Common.ajax("POST", "/payment/updateBankStateDetail.do", updateForm, function(result) {
+			  console.log(result);
+			  Common.alert(result.message);
+			  });
+		  
+	}else{
+		Common.alert(message);
+	}
+	
+}
 </script>
 <!-- content start -->
 <section id="content">
@@ -344,6 +437,7 @@ function commitFormSubmit() {
         <ul class="right_btns">
              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>
+                <li><p class="btn_blue"><a href="javascript:bankStateDelete();"><spring:message code='pay.btn.delete'/></a></p></li>
             </c:if>
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
@@ -435,6 +529,7 @@ POP-UP (DETAIL)
     <header class="pop_header" id="detail_pop_header">
         <h1>Bank Statement Item</h1>
         <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="updateBankStateDetail();"><spring:message code='sys.btn.save'/></a></p></li>
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#detail_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>

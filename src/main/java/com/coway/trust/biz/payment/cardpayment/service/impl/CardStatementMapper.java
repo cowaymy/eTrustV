@@ -72,4 +72,25 @@ public interface CardStatementMapper {
 	 */
 	void insertCrcStatementITF(Map<String, Object> params);
 	
+	
+	/**
+	 * Credit Card Statement Delete Master
+	 * @param params
+	 * @return
+	 */
+	int deleteBankStateMaster(Map<String, Object> params);
+	
+	/**
+	 * Credit Card Statement Delete Master Detail
+	 * @param params
+	 * @return
+	 */
+	int deleteBankStateDetail(Map<String, Object> params);
+	
+	/**
+	 * Credit Card Statement updateCardStateDetail
+	 * @param params
+	 * @return
+	 */
+	int updateCardStateDetail(Map<String, Object> params);
 }

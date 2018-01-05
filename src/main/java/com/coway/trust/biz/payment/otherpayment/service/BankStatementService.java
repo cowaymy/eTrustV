@@ -34,6 +34,19 @@ public interface BankStatementService
 	 */
     Map<String, Object> uploadBankStatement(Map<String, Object> masterParamMap, List<Object> detailParamList);
     
-   
+    
+    /**
+	 * Bank Statement Delete
+	 * @param params
+	 * @return
+	 */
+    boolean deleteBankStatement(List<Object> paramList);
+    
+    /**
+	 * Bank Statement Update Detail
+	 * @param params
+	 * @return
+	 */
+    boolean updateBankStateDetail(List<Object> paramList);
     
 }

@@ -48,6 +48,25 @@ public interface BankStatementMapper {
 	 */
 	void insertBankStatementITF(Map<String, Object> params);
 	
+	/**
+	 * Bank Statement 마스터 삭제
+	 * @param params
+	 * @return
+	 */
+	int deleteBankStateMaster(Map<String, Object> params);
 	
+	/**
+	 * Bank Statement 디테일 삭제
+	 * @param params
+	 * @return
+	 */
+	int deleteBankStateDetail(Map<String, Object> params);
+	
+	/**
+	 * Bank Statement 디테일 업데이트
+	 * @param params
+	 * @return
+	 */
+	int updateBankStateDetail(Map<String, Object> params);
 	
 }

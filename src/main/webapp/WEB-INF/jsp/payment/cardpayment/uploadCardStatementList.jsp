@@ -13,6 +13,7 @@
     var myGridID;
     var myDetailGridID;
     var myUploadGridID;
+    var selectedGridValue;
 
     //Grid Properties 설정
     var gridPros = {
@@ -26,7 +27,26 @@
             softRemoveRowMode:false
     
     };
-
+    
+    //Grid Properties 설정
+    var gridPros2 = {
+            // 편집 가능 여부 (기본값 : false)
+            editable : false,        
+            // 상태 칼럼 사용
+            showStateColumn : false,
+            // 기본 헤더 높이 지정
+            headerHeight : 35,
+            
+            softRemoveRowMode:false,
+            
+            // 체크박스 표시 설정
+            showRowCheckColumn : true,
+            // 전체 체크박스 표시 설정
+            showRowAllCheckBox : true,
+            //independentAllCheckBox : true
+    
+    };
+    
     // AUIGrid 칼럼 설정
     var columnLayout = [ 
         {dataField : "crcStateId",headerText : "<spring:message code='pay.head.crcNo'/>",width : 100 , editable : false},
@@ -36,11 +56,12 @@
         {dataField : "crcStateUploadDt",headerText : "<spring:message code='pay.head.uploadDate'/>",width : 100 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},        
         {dataField : "crcStateUploadUserNm",headerText : "<spring:message code='pay.head.uploadBy'/>",width : 240 , editable : false},
         {dataField : "crcBcStusName",headerText : "<spring:message code='pay.head.clearedStatus'/>",width : 240 , editable : false},
-        {dataField : "crcStateRem",headerText : "<spring:message code='pay.head.remark'/>",editable : false}
+        {dataField : "crcStateRem",headerText : "<spring:message code='pay.head.remark'/>",editable : false},
+        {dataField : "count",headerText : "",editable : false, visible : false}
         ];
         
     var detailColumnLayout = [
-        {dataField : "crcTrnscId",headerText : "<spring:message code='pay.head.crcTransactionId'/>",editable : false, visible : false},
+        {dataField : "crcTrnscId",headerText : "<spring:message code='pay.head.crcTransactionId'/>",editable : false},
         {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.mid'/>", editable : false},                    
         {dataField : "crcTrnscDt",headerText : "<spring:message code='pay.head.trDate'/>",editable : false, dataType:"date",formatString:"dd/mm/yyyy"},                    
         {dataField : "crcTrnscNo",headerText : "<spring:message code='pay.head.cardNo'/>", editable : false},
@@ -51,7 +72,8 @@
         {dataField : "crcNetAmt",headerText : "<spring:message code='pay.head.netRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "crcTotBcAmt",headerText : "<spring:message code='pay.head.totalBc'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},                    
         {dataField : "crcTotGstAmt",headerText : "<spring:message code='pay.head.totalGst'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcTotNetAmt",headerText : "<spring:message code='pay.head.totalNet'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
+        {dataField : "crcTotNetAmt",headerText : "<spring:message code='pay.head.totalNet'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "count",headerText : "",editable : false, visible : false}
         ];    
 
 
@@ -80,13 +102,13 @@
         doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'uploadBankAccount' , 'S', '');
         
         //그리드 생성
-        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
+        myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros2);
         myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros);
         myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros);
         
         // 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-            
+        	  selectedGridValue = event.rowIndex;
             var crcStateId = AUIGrid.getCellValue(myGridID , event.rowIndex , "crcStateId");    
             Common.ajax("GET","/payment/selectCardStatementDetailList.do", {"crcStateId" : crcStateId}, function(result){
                 $("#detail_wrap").show();
@@ -314,6 +336,80 @@ function commitFormSubmit() {
 }  
 
 
+function cardStateDelete(){
+    var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+    var valid = true;
+    var message = "";
+    if (checkedItems.length > 0){
+       console.log(checkedItems);
+       
+       for (var i = 0 ; i < checkedItems.length ; i++){
+         
+           var count = Number(checkedItems[i].count);
+           var crcNo = checkedItems[i].crcStateId;
+           if(count == 0){
+               message += "<b>CRC No : ["+ crcNo +"] Mapped Data.<br><br></b>";
+               valid = false;
+           }
+       }
+       
+       if(valid){
+           var data = {};
+           data.all = checkedItems;
+           Common.confirm("Are you sure you want to delete the selected uploaded CRC Statement?",function (){
+              
+             Common.ajax("POST", "/payment/deleteCardStatement.do", data, function(result) {
+               
+               Common.alert(result.message);
+               searchList();
+               
+             });
+             
+           }); 
+       }else{
+          Common.alert(message);
+       }
+    }else{
+        Common.alert("<spring:message code='pay.alert.noRecord'/>");
+    }
+}
+
+function updateCardStateDetail(){
+  var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+  var message = "";
+  var valid = true;
+  if(editedRowItems.length  == 0  ||  editedRowItems == null) {
+        Common.alert("<b>No Updated Data.</b>");
+        return  false ;
+  }
+
+  if(editedRowItems.length > 0){
+    for (var i = 0 ; i < editedRowItems.length ; i++){
+       var count = Number(editedRowItems[i].count);
+       var crcTrnscId = editedRowItems[i].crcTrnscId;
+       if(count == 0){
+          message += "<b>Tranx ID : ["+ crcTrnscId +"] Mapped Data.<br><br></b>";
+          /* valid = false; */
+       }
+    }
+  }
+  
+  if(valid){
+      var  updateForm ={
+              "update" : editedRowItems
+              }
+            
+      Common.ajax("POST", "/payment/updateCardStateDetail.do", updateForm, function(result) {
+        console.log(result);
+        Common.alert(result.message);
+        });
+      
+  }else{
+    Common.alert(message);
+  }
+  
+}
+
 </script>
 <!-- content start -->
 <section id="content">
@@ -330,7 +426,8 @@ function commitFormSubmit() {
         <h2>Upload Credit Card Statement</h2>
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>            
+                <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>
+                <li><p class="btn_blue"><a href="javascript:cardStateDelete();"><spring:message code='pay.btn.delete'/></a></p></li>         
            </c:if> 
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
@@ -422,6 +519,7 @@ POP-UP (DETAIL)
     <header class="pop_header" id="detail_pop_header">
         <h1>Credit Card Statement Item</h1>
         <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="updateCardStateDetail();"><spring:message code='sys.btn.save'/></a></p></li>
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#detail_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
     </header>

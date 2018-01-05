@@ -147,4 +147,52 @@ public class BankStatementController {
         return ResponseEntity.ok(returnMap);
 	}
 	
+	/**
+	* BBank Statement Delete
+	* @param params
+	* @param model
+	* @return
+	*/
+	@RequestMapping(value = "/deleteBankStatement.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deleteBankStatement(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model , SessionVO sessionVO) {	
+		
+		List<Object> deleteList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+		String resultMessage = "";
+		
+		//저장처리
+		boolean result = bankStatementService.deleteBankStatement(deleteList);
+		if(result)
+			resultMessage = "Completed Delete";
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(resultMessage);
+        return ResponseEntity.ok(message);
+	}
+	
+	/**
+	* BBank Statement Update Detail
+	* @param params
+	* @param model
+	* @return
+	*/
+	@RequestMapping(value = "/updateBankStateDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateBankStateDetail(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model , SessionVO sessionVO) {	
+		
+		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 그리드 데이터 가져오기
+		String resultMessage = "";
+		
+		//저장처리
+		boolean result = bankStatementService.updateBankStateDetail(updateList);
+		if(result)
+			resultMessage = "Completed Update";
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(resultMessage);
+        return ResponseEntity.ok(message);
+	}
+	
 }

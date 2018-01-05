@@ -53,6 +53,22 @@ public interface CardStatementService
 	 */
     void postCardStatement(Map<String, Object> params);
     
-   
+    /**
+	 * Credit Card Statement Delete
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+    boolean deleteCardStatement(List<Object> paramList);
+    
+    /**
+	 * Credit Card Statement updateCardStateDetail
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+    boolean updateCardStateDetail(List<Object> paramList);
     
 }

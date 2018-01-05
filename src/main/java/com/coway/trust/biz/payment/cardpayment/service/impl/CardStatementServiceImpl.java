@@ -96,4 +96,47 @@ public class CardStatementServiceImpl extends EgovAbstractServiceImpl implements
 		cardStatementMapper.insertCrcStatementITF(param);
 	}
 	
+	/**
+	 * Credit Card Statement Delete
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public boolean deleteCardStatement(List<Object> paramList) {
+		boolean result = false;
+		
+		if (paramList.size() > 0) {    		
+    		Map<String, Object> hm = null;    		
+    		for (Object map : paramList) {
+    			hm = (HashMap<String, Object>) map;  
+    			int mstResult = cardStatementMapper.deleteBankStateMaster(hm); 
+    			
+    			if(mstResult > 0){
+    				int dtResult = cardStatementMapper.deleteBankStateDetail(hm);
+    				if(dtResult > 0)
+    					result = true;
+    			}
+    		}
+    	}
+		
+		return result;
+	}
+
+	@Override
+	public boolean updateCardStateDetail(List<Object> paramList) {
+		boolean result = false;
+		
+		if (paramList.size() > 0) {
+			Map<String, Object> hm = null;    		
+    		for (Object map : paramList) {
+    			hm = (HashMap<String, Object>) map;  
+    			int updResult = cardStatementMapper.updateCardStateDetail(hm);
+    			result = true;
+    		}
+		}
+		return result;
+	}
+	
 }
