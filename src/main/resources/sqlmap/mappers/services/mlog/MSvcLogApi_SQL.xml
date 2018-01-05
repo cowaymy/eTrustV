@@ -468,6 +468,7 @@
                                                        sal0027d,
                                                        sal0029d,
                                                        sal0045d,
+                                                       sal0046d,
                                                        sal0047d,
                                                        sal0071d,
                                                        sal0095d,
@@ -488,10 +489,10 @@
                                                        AND sal0001d.cust_cnt_id = sal0027d.cust_cntc_id
                                                        AND sal0001d.cust_id = sal0029d.cust_id
                                                        AND sal0001d.sales_ord_id = sal0045d.sales_ord_id
-                                                       AND sal0045d.install_id = sal0047d.entry_id(+)
+                                                       AND sal0001d.sales_ord_id = sal0046d.SALES_ORD_ID(+)
+                                                       AND sal0046d.INSTALL_ENTRY_ID = sal0047d.entry_id(+)  
                                                        AND sal0071d.sales_ord_id(+) = sal0001d.sales_ord_id
-                                                       AND sal0001d.sales_ord_id =
-                                                              sal0095d.srv_sales_ord_id(+)
+                                                       AND sal0001d.sales_ord_id =   sal0095d.srv_sales_ord_id(+)
                                                        AND svc0001d.as_id = svc0004d.as_entry_id(+)
                                                        AND org0001d.brnch = sys0005m.brnch_id
                                                        AND sal0002d.itm_stk_id = sys0026m.stk_id
