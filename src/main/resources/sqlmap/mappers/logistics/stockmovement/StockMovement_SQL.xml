@@ -20,8 +20,8 @@
              , l47.trnsc_type_dtl mtype
              , trand.code_name    mtext
              , decode(l47.PRIDIC_FRQNCY , 'A' , 'Auto' , 'M' , 'Manual' ,l47.PRIDIC_FRQNCY) froncy
-             , to_char(l47.reqst_crt_dt , 'yyyy-mm-dd')     crtdt
-             , to_char(l47.reqst_require_dt , 'yyyy-mm-dd') reqdt
+             , to_char(l47.reqst_crt_dt , 'YYYY/MM/DD') crtdt
+             , to_char(l47.reqst_require_dt , 'YYYY/MM/DD') reqdt
              , l47.REF_DOC_NO docno
              , l47.DOC_HDER_TXT headtitle
              , l47.GOODS_RCIPT grcipt
