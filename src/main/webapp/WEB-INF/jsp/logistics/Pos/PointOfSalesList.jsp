@@ -587,12 +587,12 @@ if(v=='search'){
 }else if(v=='save'){
 
       if ($("#giptdate").val() == "") {
-          Common.alert("Please select the GI Posting Date.");
+          Common.alert("Please select the GI/GR Posting Date.");
           $("#giptdate").focus();
           return false;
       }
       if ($("#gipfdate").val() == "") {
-          Common.alert("Please select the GI Proof Date.");
+          Common.alert("Please select the GI/GR Doc Date.");
           $("#gipfdate").focus();
           return false;
       }

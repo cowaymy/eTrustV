@@ -528,7 +528,33 @@ function grFunc(){
 		}
 	graddata=GridCommon.getEditData(gradeGrid);
 	}
-
+    
+		if ($("#giptdate").val() == "") {
+	        Common.alert("Please select the GR Posting Date.");
+	        $("#giptdate").focus();
+	        return false;
+	    }
+	    
+	    if ($("#gipfdate").val() == "") {
+	        Common.alert("Please select the GR Doc Date.");
+	        $("#gipfdate").focus();
+	        return false;
+	    }
+	
+	 for (var i = 0 ; i < checkdata.length ; i++){
+	       if (checkdata[i].delydt == "" || checkdata[i].delydt == null){
+	          Common.alert("Please check the Delivery Date.")
+	          return false;
+	      }          
+	   } 
+	 
+	 for (var i = 0 ; i < checkdata.length ; i++){
+	     if (checkdata[i].gidt == "" || checkdata[i].gidt == null){
+	        Common.alert("Please check the GI Date.")
+	        return false;
+	    }          
+	 }
+	
 	data.check   = check;
 	data.checked = check;
 	data.grade    = graddata;

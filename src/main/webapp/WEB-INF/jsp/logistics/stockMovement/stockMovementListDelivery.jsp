@@ -668,6 +668,20 @@ function giFunc(){
             return false;
         }
     }
+    
+	    if ($("#giptdate").val() == "") {
+	        Common.alert("Please select the GI Posting Date.");
+	        $("#giptdate").focus();
+	        return false;
+	    }
+	    
+	    if ($("#gipfdate").val() == "") {
+	        Common.alert("Please select the GI Doc Date.");
+	        $("#gipfdate").focus();
+	        return false;
+	    }
+	    
+    
     data.check   = check;
     data.checked = check;
     data.add     = serials;
