@@ -437,7 +437,7 @@ function f_multiCombo() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">STO Number</th>
+    <th scope="row">STO No.</th>
     <td colspan="3"><input id="reqno" name="reqno" type="text" title="" placeholder="Automatic billing" class="readonly w100p" readonly="readonly" /></td>
     <th scope="row">Document Date</th>
     <td colspan="3"><input id="reqcrtdate" name="reqcrtdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
