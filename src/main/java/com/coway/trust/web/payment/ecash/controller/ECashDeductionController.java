@@ -280,6 +280,16 @@ public class ECashDeductionController {
     		for (Object map : gridList) {
     			hm = (HashMap<String, Object>) map;
 
+				// 첫번째 값이 없으면 skip
+				if (hm.get("0") == null || String.valueOf(hm.get("0")).equals("")
+						|| String.valueOf(hm.get("0")).trim().length() < 1) {
+					continue;
+				}
+
+				if(settleDate == "" || settleDate == null){
+					settleDate = String.valueOf(hm.get("9")).trim();
+				}
+
     			uploadMap = new HashMap<String, Object>();
 
 //				if ("3".equals(String.valueOf(eCashMap.get("fileBatchBankId")))) {
@@ -304,7 +314,7 @@ public class ECashDeductionController {
 					totalApproved++;
 				}
     		}
-    		settleDate = String.valueOf(hm.get("9")).trim();
+
     	}
 
     	eCashMap.put("totalItem", gridList.size());
