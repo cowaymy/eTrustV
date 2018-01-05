@@ -49,7 +49,7 @@
                       c.NAME CUST_NAME  ,
                       TRUNC(pd.PAY_ITM_AMT,2) AMT  ,
                       cd.CODE_NAME APP_TYPE  ,
-                      cr.SO_REQ_UPD_DT CANCL_DT  ,
+                      cr.SO_REQ_ACTUAL_CANCL_DT CANCL_DT  ,
                       TO_CHAR(pdd.CODE_ID) PAY_MODE_CODE,
                       pdd.CODE_NAME PAY_MODE  ,
                       NVL(b.CODE, ' ') ISSUEBANKCODE  ,
@@ -144,7 +144,7 @@
                       AND C.STATUS_ID = 1
                 WHERE  cr.SO_REQ_STUS_ID = 32
                         AND cr.SO_REQ_SO_ID NOT IN (SELECT SALES_ORD_ID FROM PAY0045D)
-                        <if test="startDt != null and startDt != ''">
+                        <!-- <if test="startDt != null and startDt != ''">
                         <![CDATA[
                         AND TRUNC(cr.SO_REQ_UPD_DT) >= TRUNC(TO_DATE(#{startDt}, 'DD/MM/YYYY') )
                         ]]>
@@ -152,6 +152,16 @@
                         <if test="endDt != null and endDt != ''">
                         <![CDATA[
                         AND TRUNC(cr.SO_REQ_UPD_DT) < TRUNC(TO_DATE(#{endDt}, 'DD/MM/YYYY') +1)
+                        ]]>
+                        </if> -->
+                        <if test="startDt != null and startDt != ''">
+                        <![CDATA[
+                        AND TRUNC(cr.SO_REQ_ACTUAL_CANCL_DT) >= TRUNC(TO_DATE(#{startDt}, 'DD/MM/YYYY') )
+                        ]]>
+                        </if>
+                        <if test="endDt != null and endDt != ''">
+                        <![CDATA[
+                        AND TRUNC(cr.SO_REQ_ACTUAL_CANCL_DT) < TRUNC(TO_DATE(#{endDt}, 'DD/MM/YYYY') +1)
                         ]]>
                         </if>
                         <if test="custName != null and custName != ''">
