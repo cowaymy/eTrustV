@@ -102,7 +102,7 @@ FROM   (SELECT T1.CRDIT_CARD_SEQ,
 
 <select id="selectBankCode" resultType="egovMap">
 /* creditCardMapper.selectBankCode */
-    SELECT CODE , NAME FROM SYS0004M
+    SELECT CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1
 </select>
 
 <select id="selectNextCrditCardSeq" resultType="int">
