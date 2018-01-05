@@ -177,4 +177,10 @@ public interface MemberListMapper {
 	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params);
 
 	EgovMap selectLastCode(Map<String, Object> lastCode);
+
+	List<EgovMap> checkNRIC1(Map<String, Object> params);
+
+	List<EgovMap> checkNRIC2(Map<String, Object> params);
+
+	List<EgovMap> checkNRIC3(Map<String, Object> params);
 }

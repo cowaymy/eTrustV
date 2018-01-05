@@ -742,19 +742,21 @@ public class MemberListController {
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		logger.debug("selectMemberListView : {}", selectMemberListView);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		logger.debug("issuedBank : {}", selectIssuedBank);
 		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		logger.debug("PAExpired : {}", PAExpired);
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
+		logger.debug("mainDeptList : {}", mainDeptList);
 		
 		params.put("groupCode", selectMemberListView.get("mainDept"));
+		logger.debug("params : {}", params);
 		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
+		logger.debug("subDeptList : {}", subDeptList);
 		
-		
-		logger.debug("PAExpired : {}", PAExpired);
-		logger.debug("selectMemberListView : {}", selectMemberListView);
-		logger.debug("issuedBank : {}", selectIssuedBank);
-		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);
@@ -974,5 +976,73 @@ public class MemberListController {
 		List<EgovMap> deptCode = memberListService.selectBranchCodeLit(params);
 		return ResponseEntity.ok(deptCode);
 	}		
+	
+	@RequestMapping(value = "/checkNRIC1.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkNRIC1(@RequestParam Map<String, Object> params, Model model) {
+
+//		logger.debug("nric : {} " + params.get("nric"));
+//		String nric = "";
+		logger.debug("nric_params : {} " + params);
+		List<EgovMap> checkNRIC1 = memberListService.checkNRIC1(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		
+		if (checkNRIC1.size() > 0) {
+			message.setMessage("This applicant had been registered");
+		} else {
+			message.setMessage("pass");
+		}
+		logger.debug("message : {}", message);
+    
+    	return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/checkNRIC2.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkNRIC2(@RequestParam Map<String, Object> params, Model model) {
+
+		logger.debug("nric_params : {} " + params);
+		List<EgovMap> checkNRIC2 = memberListService.checkNRIC2(params);
+		String memType = "";
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		
+		if (checkNRIC2.size() > 0) {
+			memType = checkNRIC2.get(0).get("memType").toString();
+			logger.debug("memType : " + memType);
+			
+			if (memType.equals("1") || memType.equals("2") || memType.equals("3") || memType.equals("4")) {
+				message.setMessage("This member is our existing HP/Cody/Staff/CT");
+			} else {
+				message.setMessage("pass");
+			}
+		} else {
+			message.setMessage("pass");
+		}
+		
+		logger.debug("message : {}", message);
+    
+    	return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/checkNRIC3.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkNRIC3(@RequestParam Map<String, Object> params, Model model) {
+
+		logger.debug("nric_params : {} " + params);
+		List<EgovMap> checkNRIC3 = memberListService.checkNRIC3(params);
+		
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		
+		if (checkNRIC3.size() > 0) {
+			message.setMessage("Member must 18 years old and above");
+		} else {
+			message.setMessage("pass");
+		}
+		logger.debug("message : {}", message);
+    
+    	return ResponseEntity.ok(message);
+	}
 	
 }

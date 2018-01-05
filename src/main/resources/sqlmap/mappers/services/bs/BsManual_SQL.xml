@@ -63,13 +63,13 @@
                 SELECT s005m.brnch_id AS code_id,
                        s005m.code || '-' || s005m.NAME AS code_name
                   FROM sys0005m s005m, sys0013m s0013m
-                 WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-22'            
+                 WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-28'            
         </when>
         <when test="userType == 3">
 				SELECT S005M.BRNCH_ID AS CODE_ID,
 				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME
 				  FROM SYS0005M S005M, SYS0013M S0013M
-				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-22'        
+				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-28'        
         </when>
     </choose>        
          

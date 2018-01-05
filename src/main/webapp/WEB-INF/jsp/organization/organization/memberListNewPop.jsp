@@ -745,6 +745,44 @@ function fn_selectState(selVal){
     }
 
 }
+
+function checkNRIC(){
+    
+    if(event.keyCode == 13) {
+    	var jsonObj = { "nric" : $("#nric").val() };
+    			 
+    	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+            console.log("data : " + result);
+            if (result.message != "pass") {
+            	Common.alert(result.message);
+            	$("#nric").val('');
+            } else {    // 조건1 통과 -> 조건2 수행
+            	
+            	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+                    console.log("data : " + result);
+                    if (result.message != "pass") {
+                        Common.alert(result.message);
+                        $("#nric").val('');
+                    } else {    // 조건2 통과 -> 조건3 수행
+                    	
+                    	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+                            console.log("data : " + result);
+                            if (result.message != "pass") {
+                                Common.alert(result.message);
+                                $("#nric").val('');
+                            } else {    // 조건3 통과 -> 끝
+                            	Common.alert("Available NRIC");
+                            }
+                            
+                        });
+                    }
+                    
+            	});
+            }
+        });
+    }
+    
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -854,7 +892,7 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12"/>
+    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRIC()"/>
     </td>
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>

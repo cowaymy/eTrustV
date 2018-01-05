@@ -1823,4 +1823,19 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		return memberListMapper.selectBranchCodeLit(params);
 	}	
+	
+	@Override
+	public List<EgovMap> checkNRIC1(Map<String, Object> params) {
+		return memberListMapper.checkNRIC1(params);
+	}
+	
+	@Override
+	public List<EgovMap> checkNRIC2(Map<String, Object> params) {
+		return memberListMapper.checkNRIC2(params);
+	}
+	
+	@Override
+	public List<EgovMap> checkNRIC3(Map<String, Object> params) {
+		return memberListMapper.checkNRIC3(params);
+	}
 }

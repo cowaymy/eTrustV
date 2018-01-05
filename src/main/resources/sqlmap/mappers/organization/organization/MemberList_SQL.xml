@@ -3567,4 +3567,23 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		AND MEM_LVL     = #{memberLvl}
     </select>
     
+    <select id="checkNRIC1"  parameterType="Map" resultType="egovMap">
+        SELECT * 
+		FROM ORG0003D 
+		WHERE APLICNT_NRIC = #{nric}
+    </select>
+    
+    <select id="checkNRIC2"  parameterType="Map" resultType="egovMap">
+        SELECT MEM_TYPE 
+		FROM ORG0001D 
+		WHERE NRIC = #{nric}
+    </select>
+    
+    <select id="checkNRIC3"  parameterType="Map" resultType="egovMap">
+        SELECT *
+		FROM (SELECT TO_NUMBER(SUBSTR(#{nric}, 0, 2))+18||SUBSTR(#{nric}, 3, 4) VALID
+		          FROM DUAL)
+		WHERE VALID > TO_CHAR(SYSDATE, 'YYMMDD')
+    </select>
+    
 </mapper>
