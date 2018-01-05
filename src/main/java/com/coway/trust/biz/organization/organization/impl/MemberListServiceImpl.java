@@ -201,9 +201,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
 			
 			//Department
-			MemApp.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
-			MemApp.put("searchSubDept"		,params.get("subDept").toString().trim()!=null ? params.get("subDept").toString().trim() : "");
-
+			//MemApp.put("searchdepartment",  params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
+			MemApp.put("searchdepartment",   "");
+			MemApp.put("searchSubDept"		,  "");
+			
 			logger.debug("MemApp : {}",MemApp);
 			EgovMap appNo = getDocNo("145");
 			MemApp.put("applicantCode", appNo.get("docNo"));
@@ -1545,13 +1546,17 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		String memberCode = selectMemberCode.get("docNo").toString();
 		params.put("memberCode", memberCode);
 		
+		
+		String   memId_seq =  String.valueOf(memberListMapper.getORG0001D_SEQ(params));
+		
+		params.put("memId" ,memId_seq );
 		int a =memberListMapper.hpMemRegister(params);
 
 		if(a> 0){
 			
 			Map<String, Object> memOrg = new HashMap<String, Object>();
 			CodeMap.put("code", "mem");
-			String MemberId = memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
+			String MemberId =    memId_seq; //memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
 
 			EgovMap selectOrganization = null;
 			selectOrganization = memberListMapper.selectHpOranization(params);//deptCode 가져가서 select

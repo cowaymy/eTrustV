@@ -2897,6 +2897,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </update>
 
 
+    <select id="getORG0001D_SEQ"  resultType="java.lang.String">
+         SELECT ORG0001D_MEM_ID_SEQ.nextval  seq  FROM DUAL
+    </select>
+
+
     <insert id="hpMemRegister" parameterType="Map">
 		INSERT INTO ORG0001D
 		(
@@ -2909,7 +2914,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,MAIN_DEPT , SUB_DEPT, JOIN_DT ,AREA_ID
 		)
 		select
-		        ORG0001D_MEM_ID_SEQ.nextval,
+		        #{memId},
 		        #{memberCode}  AS MEM_CODE,
 		        '1'  AS MEM_TYPE,
 		        APLICNT_NAME AS NAME,

@@ -178,9 +178,14 @@ public interface MemberListMapper {
 
 	EgovMap selectLastCode(Map<String, Object> lastCode);
 
+	
+	String  getORG0001D_SEQ(Map<String, Object> params);
+	
+
 	List<EgovMap> checkNRIC1(Map<String, Object> params);
 
 	List<EgovMap> checkNRIC2(Map<String, Object> params);
 
 	List<EgovMap> checkNRIC3(Map<String, Object> params);
+
 }
