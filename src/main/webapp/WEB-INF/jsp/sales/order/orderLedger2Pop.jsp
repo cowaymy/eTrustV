@@ -124,7 +124,7 @@
         if($("#cutOffDate").val() == ""){
             $("#V_CUTOFFDATE").val('01/01/1900');
         }else{
-            $("#V_CUTOFFDATE").val(inputDate.substring(0,2)+'/01'+inputDate.substring(3,7));
+            $("#V_CUTOFFDATE").val(inputDate.substring(0,2)+'/01/'+inputDate.substring(3,7));
         }
         
         $("#reportDownFileName").val($("#V_ORDERNO").val()+"_"+date+mon+new Date().getFullYear());
