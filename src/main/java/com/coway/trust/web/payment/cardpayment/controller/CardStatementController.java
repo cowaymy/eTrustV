@@ -228,4 +228,27 @@ public class CardStatementController {
         return ResponseEntity.ok(message);
 	}
 	
+	/**
+	* Credit Card Statement updateCardStateDetail
+	* @param params
+	* @param model
+	* @return
+	*/
+	@RequestMapping(value = "/updateCardStateDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCardStateDetail(@RequestBody Map<String, ArrayList<Object>> params, ModelMap model , SessionVO sessionVO) {	
+		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 그리드 데이터 가져오기
+		String resultMessage = "";
+		
+		//저장처리
+		boolean result = cardStatementService.updateCardStateDetail(updateList);
+		if(result)
+			resultMessage = "Completed Update";
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(resultMessage);
+        return ResponseEntity.ok(message);
+	}
+	
 }
