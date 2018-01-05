@@ -18,7 +18,7 @@
     //Grid Properties 설정
     var gridPros = {
             // 편집 가능 여부 (기본값 : false)
-            editable : false,        
+            //editable : false,        
             // 상태 칼럼 사용
             showStateColumn : false,
             // 기본 헤더 높이 지정
@@ -376,6 +376,7 @@ function cardStateDelete(){
 
 function updateCardStateDetail(){
   var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+  console.log(editedRowItems);
   var message = "";
   var valid = true;
   if(editedRowItems.length  == 0  ||  editedRowItems == null) {
@@ -389,7 +390,7 @@ function updateCardStateDetail(){
        var crcTrnscId = editedRowItems[i].crcTrnscId;
        if(count == 0){
           message += "<b>Tranx ID : ["+ crcTrnscId +"] Mapped Data.<br><br></b>";
-          /* valid = false; */
+          valid = false;
        }
     }
   }

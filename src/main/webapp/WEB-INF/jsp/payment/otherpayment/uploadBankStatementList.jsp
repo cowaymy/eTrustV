@@ -403,7 +403,7 @@ function updateBankStateDetail(){
 			 var tranxId = editedRowItems[i].fTrnscId;
 			 if(count == 0){
 				  message += "<b>Tranx ID : ["+ tranxId +"] Mapped Data.<br><br></b>";
-				  /* valid = false; */
+				  valid = false;
 			 }
 		}
 	}
