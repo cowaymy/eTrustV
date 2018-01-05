@@ -394,11 +394,15 @@ $(document).ready(function() {
      $('#memberType').trigger('click'); 
      
      $('#nric').blur(function() {
-    	 checkNRIC();
+    	 if ($('#nric').val().length > 0) {
+    		 checkNRIC();
+         }
      });
      
      $('#sponsorCd').blur(function() {
-    	 fn_sponsorCd();
+    	 if ($('#sponsorCd').val().length > 0) {
+    		 fn_sponsorCd();
+    	 }
      });
 
 });
