@@ -62,17 +62,17 @@
         
     var detailColumnLayout = [
         {dataField : "crcTrnscId",headerText : "<spring:message code='pay.head.crcTransactionId'/>",editable : false},
-        {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.mid'/>", editable : false},                    
+        {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.mid'/>", editable : true},                    
         {dataField : "crcTrnscDt",headerText : "<spring:message code='pay.head.trDate'/>",editable : false, dataType:"date",formatString:"dd/mm/yyyy"},                    
-        {dataField : "crcTrnscNo",headerText : "<spring:message code='pay.head.cardNo'/>", editable : false},
-        {dataField : "crcTrnscAppv",headerText : "<spring:message code='pay.head.approvalNo'/>", editable : false},                    
-        {dataField : "crcGrosAmt",headerText : "<spring:message code='pay.head.grossRM'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcBcAmt",headerText : "<spring:message code='pay.head.bcRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcGstAmt",headerText : "<spring:message code='pay.head.gstRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcNetAmt",headerText : "<spring:message code='pay.head.netRm'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcTotBcAmt",headerText : "<spring:message code='pay.head.totalBc'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},                    
-        {dataField : "crcTotGstAmt",headerText : "<spring:message code='pay.head.totalGst'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        {dataField : "crcTotNetAmt",headerText : "<spring:message code='pay.head.totalNet'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTrnscNo",headerText : "<spring:message code='pay.head.cardNo'/>", editable : true},
+        {dataField : "crcTrnscAppv",headerText : "<spring:message code='pay.head.approvalNo'/>", editable : true},                    
+        {dataField : "crcGrosAmt",headerText : "<spring:message code='pay.head.grossRM'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcBcAmt",headerText : "<spring:message code='pay.head.bcRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcGstAmt",headerText : "<spring:message code='pay.head.gstRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcNetAmt",headerText : "<spring:message code='pay.head.netRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTotBcAmt",headerText : "<spring:message code='pay.head.totalBc'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},                    
+        {dataField : "crcTotGstAmt",headerText : "<spring:message code='pay.head.totalGst'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "crcTotNetAmt",headerText : "<spring:message code='pay.head.totalNet'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "count",headerText : "",editable : false, visible : false}
         ];    
 
