@@ -30,35 +30,37 @@ var listGrid;
 var subGrid;
 var userCode;
 
-                      
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},                          
-                     {dataField: "stkCode",headerText :"<spring:message code='log.head.materialcode'/>"       ,width:120    ,height:30 },                        
-                     {dataField: "stkDesc",headerText :"<spring:message code='log.head.materialname'/>"       ,width:120    ,height:30                },                         
-                     {dataField: "ctgryId",headerText :"<spring:message code='log.head.categoryid'/>"            ,width:120    ,height:30,visible:false  },                          
-                     {dataField: "ctgryName",headerText :"<spring:message code='log.head.category'/>"              ,width:120    ,height:30                },                        
-                     {dataField: "typeId",headerText :"<spring:message code='log.head.typeid'/>"             ,width:120    ,height:30,visible:false },                       
-                     {dataField: "typeName",headerText :"<spring:message code='log.head.type'/>"               ,width:120    ,height:30 },                       
-                     {dataField: "whLocCode",headerText :"<spring:message code='log.head.locationcode'/>"     ,width :120 ,height : 30},                         
-                     {dataField: "locDesc",headerText :"<spring:message code='log.head.location'/>"            ,width:120    ,height:30 },                       
-                     {dataField: "whlocgb",headerText :"<spring:message code='log.head.locationgrade'/>"     ,width:120    ,height:30 },                         
-                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                  ,width:120    ,height:30},                       
-                     {dataField: "movQty",headerText :"<spring:message code='log.head.in-transitqty'/>"      ,width:120    ,height:30                },                          
-                     {dataField: "bookingQty",headerText :"<spring:message code='log.head.bookingqty'/>"        ,width:120    ,height:30                },                       
-                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30                }  
-                      ];                     
-                                    
+
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},
+                     {dataField: "stkCode",headerText :"<spring:message code='log.head.matcode'/>"       ,width:120    ,height:30 },
+                     {dataField: "stkDesc",headerText :"Mat. Name"       ,width:120    ,height:30                },
+                     {dataField: "ctgryId",headerText :"<spring:message code='log.head.categoryid'/>"            ,width:120    ,height:30,visible:false  },
+                     {dataField: "ctgryName",headerText :"<spring:message code='log.head.category'/>"              ,width:120    ,height:30                },
+                     {dataField: "typeId",headerText :"<spring:message code='log.head.typeid'/>"             ,width:120    ,height:30,visible:false },
+                     {dataField: "typeName",headerText :"<spring:message code='log.head.type'/>"               ,width:120    ,height:30 },
+                     {dataField: "whLocCode",headerText :"<spring:message code='log.head.locationcode'/>"     ,width :120 ,height : 30},
+                     {dataField: "locDesc",headerText :"<spring:message code='log.head.location'/>"            ,width:120    ,height:30 },
+                     {dataField: "whlocgb",headerText :"<spring:message code='log.head.locationgrade'/>"     ,width:120    ,height:30 },
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"                  ,width:120    ,height:30},
+                     {dataField: "movQty",headerText :"In-Transit Qty"      ,width:120    ,height:30                },
+                     {dataField: "bookingQty",headerText :"Book Qty"        ,width:120    ,height:30                },
+                     {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30                },
+                     {dataField: "brnchCode",headerText :"Branch Code"        ,width:120    ,height:30                },
+                     {dataField: "brnchName",headerText :"Branch Name"        ,width:120    ,height:30                }
+                      ];
+
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var gridoptions = {
-        showStateColumn : false , 
-        editable : false, 
+        showStateColumn : false ,
+        editable : false,
         useGroupingPanel : false
         };
-        
+
 var subgridpros = {
         // 페이지 설정
-        usePaging : true,                
-        pageRowCount : 20,                
-        editable : false,                
+        usePaging : true,
+        pageRowCount : 20,
+        editable : false,
         noDataMessage : "출력할 데이터가 없습니다.",
         enableSorting : true,
         //selectionMode : "multipleRows",
@@ -71,7 +73,7 @@ var subgridpros = {
         //softRemoveRowMode:false
         };
 var resop = {
-        rowIdField : "rnum",            
+        rowIdField : "rnum",
         editable : true,
         fixedColumnCount : 6,
         groupingFields : ["reqstno"],
@@ -84,11 +86,11 @@ var resop = {
         };
 
 
-        
+
 var paramdata;
 
 $(document).ready(function(){
-    
+
     SearchSessionAjax();
     /**********************************
     * Header Setting
@@ -96,34 +98,34 @@ $(document).ready(function(){
     var LocData = {sLoc : userCode};
     //doGetComboCodeId('/common/selectStockLocationList.do',LocData, '','searchLoc', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
-    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
-    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo'); 
+    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
+    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
     //
-    
+
     /**********************************
      * Header Setting End
      ***********************************/
-    
-    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);    
-    
-    
-    //$("#sub_grid_wrap").hide(); 
 
-    
+    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);
+
+
+    //$("#sub_grid_wrap").hide();
+
+
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
 
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
 
     });
-    
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-     
-    
-    
+
+
+
 });
 
 
@@ -141,10 +143,10 @@ $(function(){
     	//$('#searchCtgry').val('');
     	//$('#searchType').val('');
     	  doGetCombo('/common/selectCodeList.do', '15', '', 'searchType', 'M','f_multiComboType');
-    	    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos'); 
-    	    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');    
+    	    doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
+    	    doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     });
-    
+
     $('#searchMatName').keypress(function(event) {
     	$('#searchMatCode').val('');
         if (event.which == '13') {
@@ -156,20 +158,20 @@ $(function(){
     });
     $('#searchlocgrade').change(function(){
     	var searchlocgb = $('#searchlocgb').val();
-    	
+
     	var locgbparam = "";
     	for (var i = 0 ; i < searchlocgb.length ; i++){
     		if (locgbparam == ""){
     			locgbparam = searchlocgb[i];
     		}else{
-    			locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+    			locgbparam = locgbparam +"∈"+searchlocgb[i];
     		}
     	}
-    	
+
     	var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
     	doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
-    
+
     $("#download").click(function() {
     	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
     });
@@ -187,15 +189,15 @@ function SearchSessionAjax() {
 function SearchListAjax() {
     var url = "/logistics/totalstock/totStockSearchList.do";
     var param = $('#searchForm').serialize();
-    
+
     Common.ajax("GET" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
-        
+
     });
 }
 
 function f_validatation(v){
-             
+
              if ($("#searchlocgb").val() == null || $("#searchlocgb").val() == undefined || $("#searchlocgb").val() == ""){
                  Common.alert("Please Select Location Type.");
                  return false;
@@ -211,22 +213,22 @@ function f_multiCombo() {
         	console.log('1');
         	if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
         	     var searchlocgb = $('#searchlocgb').val();
-        	        
+
         	        var locgbparam = "";
         	        for (var i = 0 ; i < searchlocgb.length ; i++){
         	            if (locgbparam == ""){
         	                locgbparam = searchlocgb[i];
         	            }else{
-        	                locgbparam = locgbparam +"∈"+searchlocgb[i]; 
+        	                locgbparam = locgbparam +"∈"+searchlocgb[i];
         	            }
         	        }
-        	        
+
         	        var param = {searchlocgb:locgbparam , grade:$('#searchlocgrade').val()}
         	        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
         	  }
         }).multipleSelect({
             selectAll : true
-        });        
+        });
     });
 }
 function f_multiComboType() {
@@ -246,12 +248,12 @@ function f_multiCombos() {
         $('#searchCtgry').change(function() {
         }).multipleSelect({
             selectAll : true
-        }); /* .multipleSelect("checkAll"); */ 
+        }); /* .multipleSelect("checkAll"); */
     });
 }
 
 function fn_itempopList(data){
-    
+
     var rtnVal = data[0].item;
     console.log(rtnVal);
     if ($("#stype").val() == "stock" ){
@@ -259,11 +261,11 @@ function fn_itempopList(data){
         $("#searchMatName").val(rtnVal.itemname);
     }else{
     	$("#searchLoc").val(rtnVal.locid);
-        
+
     }
-    
+
     $("#svalue").val();
-} 
+}
 
 function searchlocationFunc(){
 	console.log('111');
@@ -281,7 +283,7 @@ function searchlocationFunc(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Total Stock List</h2>
+<h2>Inventory By Location</h2>
 </aside><!-- title_line end -->
 
 
@@ -291,8 +293,8 @@ function searchlocationFunc(){
     <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
       <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
-</c:if>    
-      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>  
+</c:if>
+      <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
     </ul>
 </aside><!-- title_line end -->
 
@@ -301,7 +303,7 @@ function searchlocationFunc(){
         <input type="hidden" id="sUrl" name="sUrl">
         <INPUT type="hidden" id="svalue" name="svalue">
         <INPUT type="hidden" id="stype" name="stype">
-        <input type="hidden" name="LocCode" id="LocCode" />    
+        <input type="hidden" name="LocCode" id="LocCode" />
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -316,10 +318,10 @@ function searchlocationFunc(){
                 <tr>
                    <th scope="row">Location Type</th>
                    <td>
-                        <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select>                        
+                        <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select>
 <!--                         <INPUT type="hidden" class="w100p" id="searchLoc" name="searchLoc"> -->
 <!--                         <INPUT type="text"   class="w100p" id="searchLocNm" name="searchLocNm"> -->
-                   </td> 
+                   </td>
                    <th scope="row">Location Grade</th>
                    <td>
                         <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
@@ -327,14 +329,14 @@ function searchlocationFunc(){
                    <th scope="row">Location</th>
                    <td>
                         <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
-                   </td> 
+                   </td>
                 </tr>
                 <tr>
                    <th scope="row">Material Code</th>
                    <td >
                       <input type="hidden" title="" placeholder=""  class="w100p" id="searchMatCode" name="searchMatCode"/>
                       <input type="text"   title="" placeholder=""  class="w100p" id="searchMatName" name="searchMatName"/>
-                   </td> 
+                   </td>
                     <th scope="row">Category</th>
                    <td>
                        <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
@@ -342,9 +344,9 @@ function searchlocationFunc(){
                    <th scope="row">Type</th>
                    <td>
                        <select class="w100p" id="searchType" name="searchType"></select>
-                   </td>    
+                   </td>
                 </tr>
-                             
+
             </tbody>
         </table><!-- table end -->
     </form>
@@ -353,16 +355,16 @@ function searchlocationFunc(){
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
-    
+
         <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
+</c:if>
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:500px"></div>
-        
+
 
     </section><!-- search_result end -->
 
