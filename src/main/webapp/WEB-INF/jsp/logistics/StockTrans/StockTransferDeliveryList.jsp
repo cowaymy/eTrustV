@@ -45,21 +45,21 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "reqlocdesc",headerText :"<spring:message code='log.head.tolocation'/>"                  ,width:120    ,height:30                },
                      {dataField: "delydt",headerText :"<spring:message code='log.head.deliverydate'/>"                  ,width:120    ,height:30 },
                      {dataField: "gidt",headerText :"<spring:message code='log.head.gidate'/>"                        ,width:120    ,height:30 },
-                     {dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:120    ,height:30 },
-                     {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:120    ,height:30                },
-                     {dataField: "delyqty",headerText :"<spring:message code='log.head.delivqty'/>"                 ,width:120    ,height:30 },
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30 },
+                     {dataField: "itmname",headerText :"Mat. Name"                 ,width:120    ,height:30                },
+                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                 ,width:120    ,height:30 },
                      {dataField: "rciptqty",headerText :"<spring:message code='log.head.giqty'/>"              ,width:120    ,height:30 , editalble:true},
                      {dataField: "docno",headerText :"<spring:message code='log.head.refdocno'/>"              ,width:120    ,height:30                },
                      {dataField: "uom",headerText :"<spring:message code='log.head.unitofmeasure'/>"              ,width:120    ,height:30 , visible:false},
-                     {dataField: "uomnm",headerText :"<spring:message code='log.head.unitofmeasure'/>"                ,width:120    ,height:30                },
-                     {dataField: "reqstno",headerText :"<spring:message code='log.head.sto'/>"                            ,width:120    ,height:30},
+                     {dataField: "uomnm",headerText :"UOM"                ,width:120    ,height:30                },
+                     {dataField: "reqstno",headerText :"STO No."                            ,width:120    ,height:30},
                      {dataField: "ttype",headerText :"<spring:message code='log.head.transactiontype'/>"             ,width:120    ,height:30 , visible:false},
-                     {dataField: "ttext",headerText :"<spring:message code='log.head.transactiontypetext'/>"        ,width:120    ,height:30                },
+                     {dataField: "ttext",headerText :"Trans. Type"        ,width:120    ,height:30                },
                      {dataField: "mtype",headerText :"<spring:message code='log.head.movementtype'/>"                   ,width:120    ,height:30 , visible:false},
-                     {dataField: "mtext",headerText :"<spring:message code='log.head.movementtext'/>"                   ,width:120    ,height:30                },
-                     {dataField: "reqitmno",headerText :"<spring:message code='log.head.stoitmno'/>"                     ,width:120    ,height:30 , visible:true},
-                     {dataField: "gicmplt",headerText :"<spring:message code='log.head.gicomplet'/>"                   ,width:120    ,height:30 , visible:true},
-                     {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplet'/>"                   ,width:120    ,height:30 , visible:true},
+                     {dataField: "mtext",headerText :"Movement Type"                   ,width:120    ,height:30                },
+                     {dataField: "reqitmno",headerText :"STO Item No."                     ,width:120    ,height:30 , visible:true},
+                     {dataField: "gicmplt",headerText :"GI Complt."                   ,width:120    ,height:30 , visible:true},
+                     {dataField: "grcmplt",headerText :"GR Complt."                   ,width:120    ,height:30 , visible:true},
                      {dataField: "serialchk",headerText :"<spring:message code='log.head.serialcheck'/>"                   ,width:120    ,height:30 , visible:true}
                      ];
 
@@ -95,26 +95,28 @@ var paramdata;
 
 
 /* Required Date 초기화 */
-var date = new Date();
-var getdate = date.getDate();
-var datemonth = date.getMonth() + 1;
-if(getdate < 10) {
-    getdate = '0'+date.getDate();
-}
-if(datemonth < 10) {
-    datemonth = '0' + datemonth;
-}
-today = getdate + '/' + datemonth + '/' + date.getFullYear();
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1;
+    var yyyy = today.getFullYear();
 
-var nextdate = date.setDate(date.getDate()+6);
-var nextmonth = date.getMonth() + 1;
-if(date.getDate() < 10) {
-    getdate = '0'+date.getDate();
-}
-if(nextmonth < 10) {
-    nextmonth = '0' + nextmonth;
-}
-nextdate = getdate + '/' + nextmonth + '/' + date.getFullYear();
+    if(dd<10) { dd='0'+dd; }
+
+    if(mm<10) { mm='0'+mm; }
+
+    today = (dd + '/' + mm + '/' + yyyy);
+
+    var nextDate = new Date();
+    nextDate.setDate(nextDate.getDate() +6);
+    var dd2 = nextDate.getDate();
+    var mm2 = nextDate.getMonth() + 1;
+    var yyyy2 = nextDate.getFullYear();
+
+    if(dd2 < 10) { dd2 = '0' + dd2; }
+
+    if(mm2 < 10) { mm2 ='0' + mm2; }
+
+    nextDate = (dd2 + '/' + mm2 + '/' + yyyy2);
 
 
 $(document).ready(function(){
@@ -249,7 +251,7 @@ $(document).ready(function(){
     });
 
     $("#crtsdt").val(today);
-    $("#crtedt").val(nextdate);
+    $("#crtedt").val(nextDate);
 });
 function f_change(){
 	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val() , codeIn:'US03,US93'};
@@ -567,27 +569,27 @@ function giFunc(){
 	            return false;
 	        }
 	    }
-	 
-	 
+
+
      if ($("#giptdate").val() == "") {
          Common.alert("Please select the GI Posting Date.");
          $("#giptdate").focus();
          return false;
      }
-     
+
      if ($("#gipfdate").val() == "") {
          Common.alert("Please select the GI Doc Date.");
          $("#gipfdate").focus();
          return false;
      }
- 
+
   for (var i = 0 ; i < checkdata.length ; i++){
         if (checkdata[i].delydt == "" || checkdata[i].delydt == null){
            Common.alert("Please check the Delivery Date.")
            return false;
-       }          
-    } 
-     
+       }
+    }
+
 	data.check   = check;
 	data.checked = check;
 	data.add = serials;
