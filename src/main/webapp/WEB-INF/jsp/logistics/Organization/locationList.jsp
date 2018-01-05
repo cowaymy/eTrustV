@@ -664,7 +664,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
     <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li>
+    <%-- <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li> --%>
 <%--     <li><p class="btn_grid"><a href="#"><spring:message code='sys.btn.ins' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
