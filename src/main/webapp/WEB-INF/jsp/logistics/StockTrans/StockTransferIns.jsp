@@ -212,23 +212,41 @@ $(function(){
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+        
+        var reqitms = AUIGrid.getGridData(reqGrid);
+        
         var bool = true;
         if (checkedItems.length > 0){
 	        var rowPos = "first";
 	        var item = new Object();
 	        var rowList = [];
+	        
+	        var boolitem = true;
+            var k = 0 ;
 
 	        for (var i = 0 ; i < checkedItems.length ; i++){
-
-	        	rowList[i] = {
+	        	
+	        	for (var j = 0 ; j < reqitms.length ; j++){
+	        		
+                    if (reqitms[j].itmid == checkedItems[i].stkid){
+                        boolitem = false;
+                        break;
+                    }
+                }
+	        	
+	        	if (boolitem){
+                    rowList[k] = {
                             itmid : checkedItems[i].stkid,
                             itmcd : checkedItems[i].stkcd,
                             itmname : checkedItems[i].stknm,
                             aqty : checkedItems[i].qty,
                             uom : checkedItems[i].uom
                         }
+                    k++;
+	        	}
 
 	            AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
+	            boolitem = true;
 	        }
 
 	        AUIGrid.addRow(reqGrid, rowList, rowPos);

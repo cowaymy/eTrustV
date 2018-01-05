@@ -384,6 +384,7 @@ $(function(){
     $("#rightbtn").click(function(){
 
        checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
+       var reqitms = AUIGrid.getGridData(reqGrid);
         var bool = true;
         
         if (checkedItems.length > 0){
@@ -391,10 +392,19 @@ $(function(){
             var rowPos = "first";
             var item = new Object();
             var rowList = [];
-            
+            var boolitem = true;
+            var k = 0 ;
             for (var i = 0 ; i < checkedItems.length ; i++){
-
-                rowList[i] = {itmrnum : checkedItems[i].rnum,
+                for (var j = 0 ; j < reqitms.length ; j++){
+                    
+                    if (reqitms[j].itmcode == checkedItems[i].stkCode){
+                        boolitem = false;
+                        break;
+                    }
+                }
+                
+                if (boolitem){
+                    rowList[k] =  {itmrnum : checkedItems[i].rnum,
                             itmtype : checkedItems[i].codeName,
                             itmcode : checkedItems[i].stkCode,
                             itmdesc : checkedItems[i].stkDesc,
@@ -403,8 +413,11 @@ $(function(){
                             itemuom : checkedItems[i].uom,
                             rqty:0
                         }
+                    k++;
+                 }
                 
                 AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
+                boolitem = true;
          
             } 
             
