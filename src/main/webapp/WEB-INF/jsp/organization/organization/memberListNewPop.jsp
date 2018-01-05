@@ -34,6 +34,7 @@ function fn_close(){
 	$("#popup_wrap").remove();
 }
 function fn_saveConfirm(){
+	
 	if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
     }
@@ -542,8 +543,6 @@ function fn_saveValidation(){
         return false;
     }
 
-	checkNRIC();
-	
 	if($("#nric").val() == ''){
         Common.alert("Please key  in NRIC");
         return false;
@@ -773,7 +772,6 @@ function checkNRIC(){
 	var returnValue;
 	
    	var jsonObj = { "nric" : $("#nric").val() };
-   	var check;
    	
    	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
            console.log("data : " + result);
