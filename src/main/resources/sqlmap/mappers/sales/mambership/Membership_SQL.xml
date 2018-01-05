@@ -680,7 +680,7 @@
 						       sL03.SRV_MEM_LG_ID   ,
 						       sL03.SRV_MEM_DOC_TYPE_ID   ,
 						       sL03.CODE_DESC   ,
-						       sL03.C3   ,
+						       CASE WHEN TO_CHAR(sL03.C3, 'dd/mm/yyyy') = '01/01/1900' THEN null ELSE TO_CHAR(sL03.C3, 'dd/mm/yyyy') END C3,
 						       sL03.C4   ,
 						       sL03.C5   ,
 						       sL03.C6   ,

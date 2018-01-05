@@ -18,7 +18,7 @@
 	 function createAUIGrid(){
 		 
 	        var columnLayout = [ 
-					             {dataField : "c3",            headerText : "Date",    width :100}, 
+					             {dataField : "c3",            headerText : "Date",    width :100, dataType : "date", formatString : "dd/mm/yyyy" ,editable : false},
 					             {dataField : "codeDesc",  headerText : "Type",    width : 300},
 					             {dataField : "c6",            headerText : "DocNo",  width : 100},
 					             {dataField : "c4",            headerText : "Debit",    width : 100},
