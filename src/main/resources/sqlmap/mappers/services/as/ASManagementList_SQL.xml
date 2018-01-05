@@ -1558,6 +1558,7 @@
 													       S.C4   ,
 													       S.ASR_ITM_PART_QTY  filter_Qty ,
 													       S.ASR_ITM_PART_PRC  filter_Price ,
+													       (S.ASR_ITM_PART_PRC   *  S.ASR_ITM_PART_QTY)  filter_Total ,
 													       S.ASR_ITM_CHRG_AMT   ,
 													       S.ASR_ITM_REM    filter_Remark ,
 													       S.SERIAL_NO        srv_Filter_Last_Serial

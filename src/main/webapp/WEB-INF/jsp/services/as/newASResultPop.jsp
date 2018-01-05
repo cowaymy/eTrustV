@@ -17,8 +17,40 @@ $(document).ready(function(){
     //add_CreateAUIGrid();
     // 행 추가 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
+    
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+
+    var isF= true;
+    AUIGrid.bind(myFltGrd10, "rowStateCellClick", function( event ) {
+    	
+    	console.log(event);
+        if(event.marker == "added") { 
+        	
+        	if( event.item.filterType =="CHG"){
+                var   fChage     = Number($("#txtFilterCharge").val());
+                var   totchrge  = Number($("#txtTotalCharge").val());
+                
+                $("#txtFilterCharge").val(fChage  -  Number(event.item.filterTotal));
+                $("#txtTotalCharge").val(totchrge  -  Number(event.item.filterTotal));
+        	}
+            console.log(event);
+
+        
+         }else if(event.marker == "removed"){
+        	 
+        	  if( event.item.filterType =="CHG"){
+	        	    var   fChage = Number($("#txtFilterCharge").val());
+	        	    var   totchrge  = Number($("#txtTotalCharge").val());
+	        	    
+	                $("#txtFilterCharge").val(fChage  +  Number(event.item.filterTotal));
+	                $("#txtTotalCharge").val(totchrge  +   Number(event.item.filterTotal));
+        	  }
+
+         }else if(  event.marker == "added-edited"){
+        	 
+         }
+  })
     
     
     fn_getErrMstList('${ORD_NO}');
@@ -43,7 +75,7 @@ $(document).ready(function(){
 
     AUIGrid.resize(myFltGrd10, 950,200);
     
-    
+
     //get inhouse close data
     if('${REF_REQST}' >0){
         fn_getASRulstSVC0004DInfo();
@@ -56,7 +88,6 @@ $(document).ready(function(){
     if('${IS_AUTO}' == "true"){
         $("#inHouseRepair_div").attr("style","display:none");
     }
-    
     
 });
 
@@ -242,17 +273,25 @@ function fn_inHouseGetProductDetails(){
 
 
 
+
+
 //행 추가 이벤트 핸들러
 function auiAddRowHandler(event) {
-	//alert('추가');
+
 }
 
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) {
-	
-	
-//alert('삭제');
-
+  
+    console.log(event);
+    if( event.items[0].filterType =="CHG"){
+        var   fChage     = Number($("#txtFilterCharge").val());
+        var   totchrge  = Number($("#txtTotalCharge").val());
+        
+        $("#txtFilterCharge").val(fChage  -  Number(event.items[0].filterTotal));
+        $("#txtTotalCharge").val(totchrge  -  Number(event.items[0].filterTotal));
+    }
+    
 }
 
 function createAUIGrid() {

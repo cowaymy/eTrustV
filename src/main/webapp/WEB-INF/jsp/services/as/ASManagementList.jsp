@@ -91,8 +91,9 @@ function fn_resultASPop(ordId,ordNo){
       }
       
       var pram = "?salesOrderId="+ordId+"&ordNo="+ordNo+"&mafuncId="+mafuncId+"&mafuncResnId="+mafuncResnId+"&AS_ID="+asId;
-      
+ 
 	Common.popupDiv("/services/as/resultASReceiveEntryPop.do"+pram  ,null, null , true , '_resultNewEntryPopDiv1');
+	
 }
 
 

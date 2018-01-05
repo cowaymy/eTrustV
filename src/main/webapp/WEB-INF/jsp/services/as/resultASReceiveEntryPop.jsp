@@ -552,7 +552,7 @@ function  fn_doNewSave(){
 			
 			                            var ordNo          = '${as_ord_basicInfo.ordNo}';
 			                            var ordId           = '${as_ord_basicInfo.ordId}';
-			                            var custName    = '${as_ord_basicInfo.custName}'.substring(0,49) ;
+			                            var custName    = "${as_ord_basicInfo.custName}".substring(0,49) ;
 			                            var custInstAdd  = $("#sms_CustFulladdr").val();
 			                            var pic               = $("#perIncharge").val();    
 			                            var piccontact    = $("#perContact").val();    
@@ -1250,8 +1250,8 @@ function fn_addRemark(){
 </tbody>
 </table><!-- table end -->
 
-<!--  <c:if test="${MOD eq 'VIEW'}">
-		<aside class="title_line"><!-- title_line start -->
+<!--  <c:if test="${MOD eq 'VIEW'}"><!-- title_line start -->
+		<aside class="title_line">
 		<h2>AS Call-Log Transaction</h2>
 		</aside><!-- title_line end -->
 		

@@ -46,6 +46,7 @@ $(document).ready(function(){
 	
 	fn_keyEvent();
 	
+	
 	if ('${ORD_NO}' !="" ){ 
 		$("#entry_orderNo").val('${ORD_NO}');
 		

@@ -20,6 +20,25 @@ $(document).ready(function(){
     // 행 삭제 이벤트 바인딩 
     AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
     
+    AUIGrid.bind(myFltGrd10, "rowStateCellClick", function( event ) {
+	        if(event.marker == "added") { 
+	            if( event.item.filterType =="CHG"){
+	                var   fChage     = Number($("#txtFilterCharge").val());
+	                var   totchrge  = Number($("#txtTotalCharge").val());
+	                $("#txtFilterCharge").val(fChage  -  Number(event.item.filterTotal));
+	                $("#txtTotalCharge").val(totchrge  -  Number(event.item.filterTotal));
+	            }       
+	         }else if(event.marker == "removed"){
+	              if( event.item.filterType =="CHG"){
+	                    var   fChage = Number($("#txtFilterCharge").val());
+	                    var   totchrge  = Number($("#txtTotalCharge").val());
+	                    $("#txtFilterCharge").val(fChage  +  Number(event.item.filterTotal));
+	                    $("#txtTotalCharge").val(totchrge  +   Number(event.item.filterTotal));
+	              }
+	         }
+    });
+    
+    
     doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '','ddlFailReason', 'S' , '');    
@@ -55,6 +74,26 @@ $(document).ready(function(){
 
 
 
+//행 추가 이벤트 핸들러
+function auiAddRowHandler(event) {
+
+}
+
+//행 삭제 이벤트 핸들러
+function auiRemoveRowHandler(event) {
+	if( event.items[0].filterType =="CHG"){
+	    var   fChage     = Number($("#txtFilterCharge").val());
+	    var   totchrge  = Number($("#txtTotalCharge").val());
+	    
+	    $("#txtFilterCharge").val(fChage  -  Number(event.items[0].filterTotal));
+	    $("#txtTotalCharge").val(totchrge  -  Number(event.items[0].filterTotal));
+	}
+
+}
+
+
+
+
 function fn_getErrMstList(_ordNo){
     
      var SALES_ORD_NO = _ordNo ;
@@ -72,20 +111,6 @@ function fn_errMst_SelectedIndexChanged(){
      doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
 }
 
-
-
-
-
-
-//행 추가 이벤트 핸들러
-function auiAddRowHandler(event) {
- 
-}
-
-//행 삭제 이벤트 핸들러
-function auiRemoveRowHandler(event) {
-
-}
 
 function createAUIGrid() {
     

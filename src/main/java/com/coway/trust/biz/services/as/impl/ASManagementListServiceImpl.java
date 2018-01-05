@@ -1622,8 +1622,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            								vo_filter32.setSparePartName(filterName);
            								vo_filter32.setSparePartSerial("");
            								vo_filter32.setSpareCharges(Double.toString(t_SpareCharges) );   //
-           								vo_filter32.setSpareTaxes("0");
-           								vo_filter32.setSpareAmountDue(Double.toString(t_SpareTaxes));   
+           								vo_filter32.setSpareTaxes(Double.toString(t_SpareTaxes));
+           								vo_filter32.setSpareAmountDue(Double.toString(ft));   
            								vo_filter32.setGstRate("6");
            								vo_filter32.setGstCode("32");
            								vewList.add(vo_filter32);   //   view.GSTCode = ZRLocationID.ToString() == "0" ? ZRLocationID.ToString() : ZRLocationID.ToString();

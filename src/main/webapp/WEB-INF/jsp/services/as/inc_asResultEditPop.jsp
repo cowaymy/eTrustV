@@ -22,6 +22,46 @@ $(document).ready(function(){
    doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');    
    fn_getErrMstList('${ORD_NO}') ;
    
+   
+   // 행 추가 이벤트 바인딩 
+   AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
+   
+   // 행 삭제 이벤트 바인딩 
+   AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
+   
+   var isF= true;
+   AUIGrid.bind(myFltGrd10, "rowStateCellClick", function( event ) {
+        
+		   console.log(event);
+	       if(event.marker == "added") { 
+	           
+	           if( event.item.filterType =="CHG"){
+	               var   fChage     = Number($("#txtFilterCharge").val());
+	               var   totchrge  = Number($("#txtTotalCharge").val());
+	               
+	               $("#txtFilterCharge").val(fChage  -  Number(event.item.filterTotal));
+	               $("#txtTotalCharge").val(totchrge  -  Number(event.item.filterTotal));
+	           }
+	           console.log(event);
+	
+	       
+	        }else if(event.marker == "removed"){
+	            
+	             if( event.item.filterType =="CHG"){
+	                   var   fChage = Number($("#txtFilterCharge").val());
+	                   var   totchrge  = Number($("#txtTotalCharge").val());
+	                   
+	                   $("#txtFilterCharge").val(fChage  +  Number(event.item.filterTotal));
+	                   $("#txtTotalCharge").val(totchrge  +   Number(event.item.filterTotal));
+	             }
+	
+	        }else if(  event.marker == "added-edited"){
+	            
+	        }
+    
+   });
+ 
+   
 });
 
 function createCFilterAUIGrid() {
@@ -62,6 +102,31 @@ function createCFilterAUIGrid() {
 
 
 
+
+
+//행 추가 이벤트 핸들러
+function auiAddRowHandler(event) {
+
+}
+
+//행 삭제 이벤트 핸들러
+function auiRemoveRowHandler(event) {
+
+  
+  console.log(event);
+  if( event.items[0].filterType =="CHG"){
+      var   fChage     = Number($("#txtFilterCharge").val());
+      var   totchrge  = Number($("#txtTotalCharge").val());
+      
+      $("#txtFilterCharge").val(fChage  -  Number(event.items[0].filterTotal));
+      $("#txtTotalCharge").val(totchrge  -  Number(event.items[0].filterTotal));
+  }
+  
+}
+
+
+
+
 function fn_setASRulstSVC0004DInfo(){
 	
 	
@@ -91,6 +156,8 @@ function fn_getASRulstEditFilterInfo(){
     Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {AS_RESULT_NO:$('#asData_AS_RESULT_NO').val() } , function(result) {
         console.log("fn_getASRulstEditFilterInfo.");
         console.log( result);
+        
+        
         AUIGrid.setGridData(myFltGrd10, result);        
     });  
 }
@@ -559,11 +626,11 @@ function fn_filterAdd(){
         
         var  chargeTotalPrice = 0;
         
-        chargeTotalPrice =  parseInt($("#ddlFilterQty").val(),10)  *  chargePrice;
+        chargeTotalPrice =  Number($("#ddlFilterQty").val())  *  chargePrice;
         fitem.filterTotal =   Number(chargeTotalPrice);
         
         
-        var v =  parseInt(  $("#txtFilterCharge").val() ,10) + chargeTotalPrice;
+        var v =  Number(  $("#txtFilterCharge").val()) + chargeTotalPrice;
         $("#txtFilterCharge").val( v); 
         
         
