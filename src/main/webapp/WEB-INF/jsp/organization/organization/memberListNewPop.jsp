@@ -12,13 +12,9 @@ function fn_memberSave(){
                 
                 if( $("#userType").val() == "1") {
                     $('#memberType').attr("disabled", false);
-                    
                     $('#searchdepartment').attr("disabled", false);
-                    $('#searchdepartment').attr("disabled", false);
-                    
-			        //$('#memberType').val("2803");
-			        
-			     }
+                    $('#searchSubDept').attr("disabled", false);
+			    }    
                 
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
@@ -91,10 +87,6 @@ function fn_departmentCode(value){
         $("#applicationStatus").attr("disabled", true);
         $("#searchdepartment").attr("disabled", true);
         $("#searchSubDept").attr("disabled", true);
-        
-        //$('#searchdepartment', '#memberAddForm').attr('class','w100p  readonly ');
-        //$('#searchSubDept', '#memberAddForm').attr('class','w100p  readonly ');
-        
         
         /*
         $('#spouseCode').val(spouseCode);
