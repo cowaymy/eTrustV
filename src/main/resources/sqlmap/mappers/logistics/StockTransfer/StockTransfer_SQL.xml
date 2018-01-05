@@ -354,7 +354,7 @@
            and l54.delvry_no = l55.delvry_no
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
-           AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y'
+           <!-- AND NVL(L54.DELVRY_GR_CMPLT,'N') <![CDATA[<>]]> 'Y' -->
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  LIKE #{reqstno}||'%'
            </if>
@@ -403,8 +403,11 @@
            <if test="gtype !=null and gtype =='receiptList'">
               and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
            </if>
-           <if test="status !=null and status !=''">
-              and L54.DELVRY_GR_CMPLT = #{status}
+           <if test="outstatus !=null and outstatus !=''">
+              and L54.DELVRY_GI_CMPLT = #{outstatus}
+           </if>
+           <if test="instatus !=null and instatus !=''">
+              and L54.DELVRY_GR_CMPLT = #{instatus}
            </if>
 
            ORDER BY l54.delvry_no DESC
