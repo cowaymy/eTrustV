@@ -9,11 +9,14 @@ var optionArea = {chooseMessage: "4. Area"};
 
 var myGridID_Doc;
 function fn_memberSave(){
+
+                $("#memberType").attr("disabled",false);
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
 	            $("#searchSt1").val(insAddressForm.searchSt.value);
                 $("#traineeType").val(($("#traineeType").value));
                 
+                $("#memberType").attr("disabled",false);
                 var jsonObj =  GridCommon.getEditData(myGridID_Doc);
                 jsonObj.form = $("#memberAddForm").serializeJSON();
                 Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
@@ -21,6 +24,7 @@ function fn_memberSave(){
                 Common.alert(result.message,fn_close);
                 
 				});
+                $("#memberType").attr("disabled",true);
 }
 
 function fn_close(){
@@ -40,11 +44,13 @@ function fn_saveConfirm(){
     }
 }
 function fn_docSubmission(){
+	   	$("#memberType").attr("disabled",false);
 	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
         AUIGrid.resize(myGridID_Doc,1000,400); 
+        $("#memberType").attr("disabled",true);
     });
 }
 
@@ -126,7 +132,7 @@ $("#cmbRace").load(function() {
 */
 
 $(document).ready(function() {
-  
+	
 	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
 	  
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
@@ -183,10 +189,10 @@ $(document).ready(function() {
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');  
     });
 	
-	$("#memberType").change(function (){
+	/* $("#memberType").change(function (){
         var memberType = $("#memberType").val();
         //fn_departmentCode(memberType);
-     });
+     }); */
 	
 	
 	fn_getMemInfo();
@@ -200,6 +206,7 @@ $(document).ready(function() {
 
 function fn_getMemInfo(){
 	console.log("fn_setMemInfo. sss");
+	$("#memberType").attr("disabled",false);
     Common.ajax("GET", "/organization/getMemberListMemberView", $("#memberAddForm").serialize(), function(result) {
         console.log("fn_setMemInfo.");
         if(result!=null){
@@ -208,6 +215,7 @@ function fn_getMemInfo(){
         	console.log("========result null=========");
         }
     });
+    $("#memberType").attr("disabled",true);
 }
 
 function fn_setMemInfo(data){
@@ -215,6 +223,11 @@ function fn_setMemInfo(data){
 	$("#memberType option[value="+ data.memType +"]").attr("selected", true);
 	console.log("1 : " +data.memType);
 	fn_departmentCode(data.memType);
+	
+	/* var memType = "${memberView.memType}";
+    alert("memType : " + memType);
+    $("#memberType option:eq("+memType+")").attr("selected", true);
+    $("#memberType").attr("disabled", true); */
 	
 	var jsonObj =  GridCommon.getEditData(myGridID_Doc);
     //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
@@ -898,11 +911,11 @@ function fn_selectState(selVal){
     <th scope="row">Member Type</th>
     <td>
     <select class="w100p" id="memberType" name="memberType">
-        <!-- <option value="1">Health Planner (HP)</option> -->
-        <!-- <option value="2">Coway Lady (Cody)</option> -->
-        <!-- <option value="3">Coway Technician (CT)</option> -->
+        <option value="1">Health Planner (HP)</option>
+        <option value="2">Coway Lady (Cody)</option>
+        <option value="3">Coway Technician (CT)</option>
         <option value="4">Coway Staff (Staff)</option>
-        <option value="5" selected="selected">Trainee</option>
+        <option value="5">Trainee</option>
         <option value="2803">HP Applicant</option>
     </select>
     </td>
@@ -1147,6 +1160,7 @@ function fn_selectState(selVal){
     <th scope="row">Main Department</th>
     <td colspan="2">
     <select class="w100p" id="searchdepartment" name="searchdepartment"  >
+        <option selected>Choose One</option>
          <c:forEach var="list" items="${mainDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName } </option>
         </c:forEach>  
@@ -1155,6 +1169,7 @@ function fn_selectState(selVal){
     <th scope="row">Sub Department</th>
     <td colspan="2">
     <select class="w100p" id="inputSubDept" name="inputSubDept">
+        <option selected>Choose One</option>
         <c:forEach var="list" items="${subDeptList}" varStatus="status">
              <option value="${list.codeId}">${list.codeName } </option>
         </c:forEach>  

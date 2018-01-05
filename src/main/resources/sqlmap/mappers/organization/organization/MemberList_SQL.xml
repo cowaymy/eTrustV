@@ -2868,6 +2868,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             <![CDATA[
               EDC_LEV = TO_NUMBER(TRIM(#{educationLvl})),
               LANG = TO_NUMBER(TRIM(#{language})),
+              BANK= #{issuedBank},
               BANK_ACC_NO = #{bankAccNo},
               SPONS_CODE = #{sponsorCd},
               AGRMNT_NO = #{agrmntNo},
