@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.pointofsales.impl.PointOfSalesMapper">
-  
+
 
 
 <select id="selectPosSeq" resultType="String">
    SELECT
-       'SOH' 
+       'SOH'
        ||TO_CHAR (SYSDATE, 'YYMMDD')
        || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
   FROM LOG0047M
-  WHERE SUBSTR (REQST_NO, 1, 9) =  'SOH'||TO_CHAR (SYSDATE, 'YYMMDD') 
+  WHERE SUBSTR (REQST_NO, 1, 9) =  'SOH'||TO_CHAR (SYSDATE, 'YYMMDD')
 </select>
 
 <select id="PosSearchList" parameterType="Map" resultType="egovMap">
@@ -28,12 +28,10 @@ select ROWNUM rnum , l47.REQST_STUS     status
              , l47.REF_DOC_NO docno
              , l47.DOC_HDER_TXT headtitle
              , l47.GOODS_RCIPT grcipt
-             , l47.RCIV_CDC_RDC rcvloc
+             , (l47.RCIV_CDC_RDC || ' - ' || DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000)) rcvloc
              , s28c.wh_loc_code rcvlocnm
-             , DBMS_LOB.SUBSTR (s28c.wh_loc_desc, 4000) rcvlocdesc
-             , l47.reqst_cdc_rdc reqloc
+             , (l47.reqst_cdc_rdc || ' - ' || DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000)) reqloc
              , s28q.wh_loc_code  reqlocnm
-             , DBMS_LOB.SUBSTR (s28q.wh_loc_desc, 4000) reqlocdesc
              , l48.itm_code      itmcd
              , l48.itm_name      itmname
              , l48.reqst_qty     reqstqty
@@ -57,7 +55,7 @@ select ROWNUM rnum , l47.REQST_STUS     status
              , sys0028m s28q
              , SYS0026M S26
              , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55
-         where 1 =1 
+         where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
            and l47.trnsc_type_dtl = trand.code(+)
@@ -75,12 +73,12 @@ select ROWNUM rnum , l47.REQST_STUS     status
          <otherwise>
             and l47.trnsc_type  in('OI','OG','OH')
          </otherwise>
-       </choose>     
+       </choose>
 <!--            <if test="searchOthersReq1 != null and searchOthersReq2 != null and searchOthersReq1 != '' and searchOthersReq2 != ''" > -->
 <!--              AND l47.reqst_no BETWEEN #{searchOthersReq1} AND #{searchOthersReq2} -->
 <!--            </if> -->
-           <if test="searchOthersReq1 != null and searchOthersReq1 != ''" > 
-             AND l47.reqst_no = #{searchOthersReq1} 
+           <if test="searchOthersReq1 != null and searchOthersReq1 != ''" >
+             AND l47.reqst_no = #{searchOthersReq1}
            </if>
 <!--     <if test="searchReqType != null and searchReqType !=''">
             AND l47.trnsc_type_dtl = #{searchReqType}
@@ -120,19 +118,19 @@ select ROWNUM rnum , l47.REQST_STUS     status
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
           ORDER by l47.reqst_no desc
-</select> 
+</select>
 
-   
+
 <!-- <select id="PosSearchList" parameterType="Map" resultType="egovMap">
-   SELECT  SAL57.POS_ID AS POS_ID, 
+   SELECT  SAL57.POS_ID AS POS_ID,
         SAL57.POS_NO AS POS_NO ,
         SAL57.POS_BILL_ID  AS POS_BILL_ID,
         SAL57.POS_CUST_NAME AS POS_CUST_NAME ,
-        SAL57.POS_DT1, 
-        TO_CHAR(SAL57.POS_DT , 'YYYY-MM-DD') POS_DT  , 
+        SAL57.POS_DT1,
+        TO_CHAR(SAL57.POS_DT , 'YYYY-MM-DD') POS_DT  ,
         SAL57.POS_TYPE_ID  AS POS_TYPE_ID  ,
         SAL57.POS_MODULE_TYPE_ID  AS  POS_MODULE_TYPE_ID ,
-        TO_CHAR(SAL57.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  , 
+        TO_CHAR(SAL57.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
         SAL57.POS_TOT_CHRG AS  POS_TOT_CHRG ,
         SAL57.POS_TOT_TXS  AS POS_TOT_TXS,
         SAL57.POS_TOT_DSCNT AS POS_TOT_DSCNT ,
@@ -141,16 +139,16 @@ select ROWNUM rnum , l47.REQST_STUS     status
         SAL57.POS_MTCH_ID  AS POS_MTCH_ID ,
         SAL57.POS_CUST_ID AS POS_CUST_ID,
         SAL57.POS_CRT_DT AS POS_CRT_DT,
-        TO_CHAR(SAL57.POS_CRT_DT , 'YYYY-MM-DD') POS_CRT_DT  , 
+        TO_CHAR(SAL57.POS_CRT_DT , 'YYYY-MM-DD') POS_CRT_DT  ,
         SAL57.POS_CRT_DEPT_ID AS POS_CRT_DEPT_ID,
         SAL57.CR_ACC_ID AS CR_ACC_ID,
         SAL57.DR_ACC_ID AS DR_ACC_ID,
         SAL57.POS_RESN_ID AS POS_RESN_ID,
         SAL57.POS_MEM_ID  AS POS_MEM_ID ,
-        SAL57.POS_CRT_USER_ID AS POS_CRT_USER_ID,  
+        SAL57.POS_CRT_USER_ID AS POS_CRT_USER_ID,
         MODT.CODE_NAME AS CODE_NAME ,
         TYPT.CODE_NAME CODE_NAME1 ,
-        S47M.USER_NAME  AS USER_NAME,    
+        S47M.USER_NAME  AS USER_NAME,
         SAL58.POS_ITM_STOCK_ID  AS POS_ITM_STOCK_ID,
         SAL58.POS_ITM_QTY AS POS_ITM_QTY ,
         S26.STK_CODE AS STK_CODE,
@@ -159,7 +157,7 @@ select ROWNUM rnum , l47.REQST_STUS     status
         CASE WHEN ( S28.WH_LOC_ID IS NOT NULL ) THEN S28.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
         CASE WHEN ( S28.WH_LOC_ID IS NOT NULL ) THEN S28.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
         CASE WHEN  (O01.MEM_ID IS NOT NULL) THEN  O01.MEM_CODE || ' - ' || O01.NAME ELSE 'CASH' END NAME ,
-        CASE WHEN ( NOT ( ( P31.TAX_INVC_ID IS NULL ) AND ( P31.TAX_INVC_REF_NO IS NULL ) ) ) THEN P31.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO  
+        CASE WHEN ( NOT ( ( P31.TAX_INVC_ID IS NULL ) AND ( P31.TAX_INVC_REF_NO IS NULL ) ) ) THEN P31.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO
   FROM SAL0057D SAL57 ,
       ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '143') MODT,
       ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '140') TYPT,
@@ -168,17 +166,17 @@ select ROWNUM rnum , l47.REQST_STUS     status
       SAL0058D SAL58,
       PAY0031D  P31,
       ORG0001D  O01,
-      SYS0026M S26, 
+      SYS0026M S26,
       SYS0028M S28
-WHERE 1 = 1 
+WHERE 1 = 1
   AND SAL57.POS_NO = P31.TAX_INVC_SVC_NO(+)
   AND SAL57.POS_WH_ID = S28.WH_LOC_ID(+)
   AND SAL57.POS_MEM_ID = O01.MEM_ID(+)
   AND SAL58.POS_ITM_STOCK_ID = S26.STK_ID(+)
   AND SAL57.POS_MODULE_TYPE_ID = MODT.CODE_ID
   AND SAL57.POS_TYPE_ID = TYPT.CODE_ID
-  AND SAL57.POS_CRT_USER_ID = S47M.USER_ID  
- 
+  AND SAL57.POS_CRT_USER_ID = S47M.USER_ID
+
 <if test="searchReqType != null and searchReqType !=''">
  AND TYPT.CODE = #{searchReqType}
 </if>
@@ -201,28 +199,28 @@ WHERE 1 = 1
       AND to_char((SAL57.POS_DT),'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'ddmmyyyy'),'yyyymmdd')
  </if>
   AND SAL57.POS_NO ='PSN0001993'  데이터가 많아서 임시로 하드코딩 함 반영할때는 삭제!
-  AND SAL57.POS_ID = SAL58.POS_ID       
+  AND SAL57.POS_ID = SAL58.POS_ID
 </select>  -->
-  
+
 
 <select id="posItemList" parameterType="Map" resultType="egovMap">
     SELECT rownum rnum,
-               S15.CODE_NAME AS CODE_NAME, 
-               L56.STK_CODE  AS STK_CODE , 
-               L56.STK_DESC AS STK_DESC, 
+               S15.CODE_NAME AS CODE_NAME,
+               L56.STK_CODE  AS STK_CODE ,
+               L56.STK_DESC AS STK_DESC,
                <!-- L56.QTY AS QTY,  -->
-               (L56.QTY - NVL(L75.BOOKQTY , 0)) AS QTY , S26.STK_ID STKID, 
+               (L56.QTY - NVL(L75.BOOKQTY , 0)) AS QTY , S26.STK_ID STKID,
                case when s26.stk_type_id= 61 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pd_chk = 'Y' then 'Y' else 'N' end
                when s26.stk_type_id= 62 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_ft_chk = 'Y'  then 'Y' else 'N' end
                when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28.serial_pt_chk = 'Y' then 'Y' else 'N' end
                else 'N' end AS SERIAL_CHK
-                ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM)  uom         
-    FROM  LOG0056M L56, 
-              SYS0026M S26, 
+                ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM)  uom
+    FROM  LOG0056M L56,
+              SYS0026M S26,
               sys0028m s28 ,
-             (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'  GROUP BY LOC_ID , ITM_CODE ) L75,  
+             (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'  GROUP BY LOC_ID , ITM_CODE ) L75,
              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) S15,
-             (select * from sys0013m where code_master_id = 11) s11 
+             (select * from sys0013m where code_master_id = 11) s11
     WHERE 1=1
         AND L56.STK_CODE = L75.ITM_CODE(+)
         AND L56.LOC_ID = L75.LOC_ID(+)
@@ -253,9 +251,9 @@ WHERE 1 = 1
      </if>
         AND L56.LOC_ID = #{reqLoc}
 </select>
-  
+
   <select id="selectTypeList" parameterType="Map" resultType="egovMap">
-  select code||'-'||code_name CODE_NAME, CODE_ID code_id 
+  select code||'-'||code_name CODE_NAME, CODE_ID code_id
   from sys0013m
   where DISAB = 0
         <if test="groupCode != null and groupCode !=''">
@@ -274,33 +272,33 @@ WHERE 1 = 1
           </otherwise>
         </choose>
   </select>
-  
+
   <select id="selectPointOfSalesSerial" parameterType="Map" resultType="Map">
          select max(serial_no)  serial_no , max(matnr) stkcode , max(stkdesc) stkdesc , max(l62cnt) l62cnt , max(l61cnt) l61cnt , max(l63cnt) l63cnt
-          from (  
+          from (
             SELECT serial_no , matnr , stk_desc stkdesc , count(1) l62cnt , 0 l61cnt , 0 l63cnt
-              FROM LOG0062M l62 , 
-                   sys0026m s26 
+              FROM LOG0062M l62 ,
+                   sys0026m s26
              WHERE l62.matnr = s26.stk_code
                 and l62.SERIAL_NO =  #{serial}
               group by serial_no , matnr , stk_desc
-             union 
-            select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt     
+             union
+            select l61.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  count(1) l61cnt ,0 l63cnt
               from log0061d l61 , (SELECT * FROM LOG0047M WHERE NVL(REQST_STUS , 'O') <![CDATA[<>]]> 'C') L47
               WHERE l61.SERIAL_NO = #{serial}
                 AND L61.DELVRY_NO = L47.REQST_NO
               group by l61.serial_no
-             union 
-            select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt  
-              from log0063d l63 
+             union
+            select l63.serial_no , '' matnr , '' stkdesc , 0 l62cnt ,  0 l61cnt ,  count(1) l63cnt
+              from log0063d l63
               WHERE l63.SERIAL_NO =  #{serial}
               <if test='locid != null and locid !=""'>
-               and l63.loc_id <![CDATA[<>]]> #{locid} 
+               and l63.loc_id <![CDATA[<>]]> #{locid}
               </if>
              group by l63.serial_no
          )
-     </select>     
-  
+     </select>
+
   <insert id="insOtherReceiptHead" parameterType="Map" >
         INSERT INTO LOG0047M(
                 REQST_NO,
@@ -319,7 +317,7 @@ WHERE 1 = 1
                 REQST_TYPE_DTL,
                 REQST_FILE
                 )
-        VALUES (  
+        VALUES (
                 #{reqno}
                 , #{insTransType}
                 , #{insReqType}
@@ -339,24 +337,24 @@ WHERE 1 = 1
     </insert>
     <insert id="insRequestItem" parameterType="Map">
             INSERT INTO LOG0048D(
-                    REQST_NO, 
+                    REQST_NO,
                     REQST_NO_ITM,
-                    ITM_CODE, 
-                    ITM_NAME, 
-                    REQST_QTY, 
-                    UOM, 
-                    CRT_USER_ID, 
+                    ITM_CODE,
+                    ITM_NAME,
+                    REQST_QTY,
+                    UOM,
+                    CRT_USER_ID,
                     CRT_DT)
-                VALUES ( 
-                    #{reqno} , 
+                VALUES (
+                    #{reqno} ,
                     (select decode(count(reqst_no_itm) , 0 , 1 , max(reqst_no_itm +1)) from log0048d where REQST_NO = #{reqno}),
-                    #{itmcode} , 
-                    #{itmdesc}, 
+                    #{itmcode} ,
+                    #{itmdesc},
                     #{rqty} ,
-                    #{itemuom} , 
-                    #{userId}, 
+                    #{itemuom} ,
+                    #{userId},
                     SYSDATE)
-    </insert> 
+    </insert>
     <insert id="insertSerial" parameterType="Map">
             INSERT INTO LOG0061D (
                  SERIAL_NO,
@@ -366,39 +364,39 @@ WHERE 1 = 1
                  CRT_DT,
                  CRT_USER_ID
                  )
-            VALUES ( 
-                #{serial} , 
-                #{reqno} ,      
+            VALUES (
+                #{serial} ,
+                #{reqno} ,
                 (select reqst_no_itm from log0048d where reqst_no  = #{reqno} and itm_code = #{itmcd}),
                 #{ttype} ,
                 SYSDATE,
                 #{userId}
-                 )                                                                          
+                 )
      </insert>
-     
+
       <update id="updateReqstStus" parameterType="Map">
            UPDATE log0047M
-                    SET      
-                            REQST_STUS              = 'S'                           
+                    SET
+                            REQST_STUS              = 'S'
                     WHERE  REQST_NO   =#{reqno}
-     </update>  
-   
+     </update>
+
     <resultMap id="GIDATA" type="egovMap" />
-    <select id="GIRequestIssue"  statementType="CALLABLE" parameterType="Map"> 
+    <select id="GIRequestIssue"  statementType="CALLABLE" parameterType="Map">
              { call SP_LOGISTIC_DELIVERY
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=GIDATA} )
-             } 
+             }
      </select>
      <resultMap id="GICANCLEDATA" type="egovMap" />
-     <select id="GICancelIssue"  statementType="CALLABLE" parameterType="Map"> 
+     <select id="GICancelIssue"  statementType="CALLABLE" parameterType="Map">
              { call SP_LOGISTIC_DELIVERY_CANCEL
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=GICANCLEDATA} )
-             } 
+             }
      </select>
-     
-     
+
+
       <select id="selectPosHead" parameterType="String" resultType="egovMap">
-        SELECT 
+        SELECT
            l47.REQST_NO REQNO,
            l47.TRNSC_TYPE TRNTYPE,
            l47.TRNSC_TYPE_DTL TRNDTL,
@@ -414,55 +412,55 @@ WHERE 1 = 1
         FROM LOG0047M l47,SYS0047M s47
          WHERE 1=1
          AND l47.CRT_USER_ID = s47.USER_ID
-         AND REQST_NO = #{param} 
+         AND REQST_NO = #{param}
        </select>
-     
+
        <select id="selectPosItem" parameterType="String" resultType="egovMap">
-        SELECT 
+        SELECT
              L48.REQST_NO_ITM RESNOITM ,
              L48.REQST_NO REQNO ,
-             L48.ITM_CODE ITMCD, 
-             L48.ITM_NAME ITMNAME, 
-             L48.REQST_QTY RQTY , 
+             L48.ITM_CODE ITMCD,
+             L48.ITM_NAME ITMNAME,
+             L48.REQST_QTY RQTY ,
              S26.STK_ID ITMID,
-             L48.UOM 
-         FROM 
+             L48.UOM
+         FROM
              LOG0048D L48,
              SYS0026M S26
          WHERE
-             L48.ITM_CODE = S26.STK_CODE 
+             L48.ITM_CODE = S26.STK_CODE
              AND l48.REQST_NO = #{param}
         </select>
-     
-     
+
+
       <select id="selectSerial" parameterType="String" resultType="egovMap">
-         SELECT 
+         SELECT
          L48.REQST_NO_ITM RESNOITM ,
          L48.REQST_NO REQNO ,
-         S26.STK_ID ITMID, 
-         L48.ITM_CODE ITMCD, 
-         L48.ITM_NAME ITMNAME, 
-         L48.REQST_QTY RQTY , 
+         S26.STK_ID ITMID,
+         L48.ITM_CODE ITMCD,
+         L48.ITM_NAME ITMNAME,
+         L48.REQST_QTY RQTY ,
          L48.UOM UOM,
          L61.SERIAL_NO
-          FROM LOG0048D L48, SYS0026M S26 , LOG0061D L61 
+          FROM LOG0048D L48, SYS0026M S26 , LOG0061D L61
          WHERE L48.ITM_CODE = S26.STK_CODE
            <!-- AND L48.REQST_NO_ITM=L61.PDELVRY_NO_ITM -->
            AND L48.REQST_NO = L61.DELVRY_NO(+)
-           AND L48.REQST_NO = #{reqno} 
-           AND L48.ITM_CODE =#{itmcd}       
-         ORDER BY L48.REQST_NO_ITM 
+           AND L48.REQST_NO = #{reqno}
+           AND L48.ITM_CODE =#{itmcd}
+         ORDER BY L48.REQST_NO_ITM
         </select>
-     
+
     <select id="selectPosToItem" parameterType="Map" resultType="egovMap">
-     SELECT S13.CODE_NAME AS typenm, 
-               L56.STK_CODE  AS stkcd , 
-               DBMS_LOB.SUBSTR (l56.stk_desc, 4000)  stknm, 
-               L56.QTY AS QTY, 
+     SELECT S13.CODE_NAME AS typenm,
+               L56.STK_CODE  AS stkcd ,
+               DBMS_LOB.SUBSTR (l56.stk_desc, 4000)  stknm,
+               L56.QTY AS QTY,
                S26.SERIAL_CHK AS SERIAL_CHK
                 ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM) UOM_NAME
-    FROM  LOG0056M L56, 
-              SYS0026M S26, 
+    FROM  LOG0056M L56,
+              SYS0026M S26,
              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) S13
     WHERE 1=1
         AND S26.STK_TYPE_ID = S13.CODE_ID(+)
@@ -471,32 +469,32 @@ WHERE 1 = 1
         AND S26.STK_TYPE_ID  in
   <foreach item="item" collection="ctype" index="index" open="(" separator="," close=")">
        #{item}
-  </foreach>            
-  </if>      
+  </foreach>
+  </if>
         AND L56.LOC_ID = 4
-    </select> 
-     
+    </select>
+
      <insert id="insertStockBooking" parameterType="Map">
         INSERT INTO LOG0075M (REQST_NO, SEQ, LOC_ID, TRNSC_TYPE_DTL, ITM_CODE, REQST_QTY, REQST_CRT_DT, CRT_DT)
                     SELECT L47.REQST_NO
                          , L48.REQST_NO_ITM
-                         , L47.REQST_CDC_RDC 
-                         , L47.TRNSC_TYPE_DTL 
-                         , L48.ITM_CODE 
-                         , L48.REQST_QTY 
-                         , REQST_CRT_DT 
+                         , L47.REQST_CDC_RDC
+                         , L47.TRNSC_TYPE_DTL
+                         , L48.ITM_CODE
+                         , L48.REQST_QTY
+                         , REQST_CRT_DT
                          , SYSDATE
                       FROM LOG0047M L47 , LOG0048D L48
                      WHERE 1 = 1
                        AND L47.REQST_NO = L48.REQST_NO
                        AND L47.REQST_NO = #{reqno}
      </insert>
-     
-     
+
+
      <select id="selectMaterialDocList" parameterType="Map" resultType="egovMap">
         select
         rownum rnum
-        , l59.matrl_doc_no 
+        , l59.matrl_doc_no
         , l59.matrl_doc_year
         , l59.trnsc_type_code
         , l60.MATRL_DOC_ITM
@@ -532,7 +530,7 @@ WHERE 1 = 1
         and l59.matrl_doc_no = l60.matrl_doc_no
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
-     
+
 
 
 </mapper>
