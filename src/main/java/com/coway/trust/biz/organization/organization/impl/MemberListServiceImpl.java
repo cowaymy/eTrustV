@@ -1551,14 +1551,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		params.put("memId" ,memId_seq );
 		int a =memberListMapper.hpMemRegister(params);
-
+		
+		EgovMap selectOrganization = null;
 		if(a> 0){
 			
 			Map<String, Object> memOrg = new HashMap<String, Object>();
 			CodeMap.put("code", "mem");
 			String MemberId =    memId_seq; //memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
 
-			EgovMap selectOrganization = null;
+		
 			selectOrganization = memberListMapper.selectHpOranization(params);//deptCode 가져가서 select
 			logger.debug("selectOrganization : {}",selectOrganization);
 			String deptParentID="", lastGroupCode="", lastOrgCode = "";
@@ -1709,7 +1710,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISC.put("taxInvoiceRefDate", new Date());
     				InvMISC.put("taxInvoiceServiceNo",memberCode);
     				InvMISC.put("taxInvoiceType", 117);
-    				InvMISC.put("taxInvoiceCustName",selectMiscList.get("c2"));
+    				InvMISC.put("taxInvoiceCustName",selectMiscList.get("c1"));
     				InvMISC.put("taxInvoiceContactPerson",selectMiscList.get("c1"));
     				InvMISC.put("taxInvoiceAddress1",selectMiscList.get("c3"));
     				InvMISC.put("taxInvoiceAddress2",selectMiscList.get("c4"));
@@ -1724,6 +1725,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(100 - ((double)100.00 * 100 / 106))));
     				InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)100));
     				InvMISC.put("taxInvoiceCreated",new Date());
+    				InvMISC.put("areaId",selectMiscList.get("areaId"));
+    				InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
+    				InvMISC.put("street",selectMiscList.get("street"));
     				InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
 
     				logger.debug("InvMISC : {}",InvMISC);
@@ -1736,8 +1740,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISCD.put("invoiceItemType",  1260);
     				InvMISCD.put("invoiceItemOrderNo", "");
     				InvMISCD.put("invoiceItemPONo", "");
-    				InvMISCD.put("invoiceItemCode", params.get("deptCode"));
-    				InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c2"));
+    				InvMISCD.put("invoiceItemCode", selectOrganization.get("deptCode"));
+    				InvMISCD.put("invoiceItemDescription1",selectMiscList.get("c1"));
     				InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
     				InvMISCD.put("invoiceItemSerialNo","");
     				InvMISCD.put("invoiceItemQuantity",1);
@@ -1751,6 +1755,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				InvMISCD.put("invoiceItemPostCode","");
     				InvMISCD.put("invoiceItemStateName","");
     				InvMISCD.put("invoiceItemCountry","");
+    				InvMISCD.put("invoiceItemBillRefNo","");
+    				InvMISCD.put("areaId",selectMiscList.get("areaId"));
+    				InvMISCD.put("addrDtl",selectMiscList.get("addrDtl"));
+    				InvMISCD.put("street",selectMiscList.get("street"));
 
     				logger.debug("InvMISCD : {}",InvMISCD);
     				memberListMapper.insertInvMISCD(InvMISCD);

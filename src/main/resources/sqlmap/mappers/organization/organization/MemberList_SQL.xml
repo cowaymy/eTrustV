@@ -1513,7 +1513,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		               B.POSTCODE POST_CODE  ,
 		               B.STATE NAME  ,
 		               B.COUNTRY NAME1  ,
-		               #{memberNirc} C7
+		               #{memberNirc} C7,
+					   a.AREA_ID,
+					   a.ADDR_DTL,      
+					   a.STREET
 		  FROM org0001d a, sys0064m b
 		 WHERE 1 = 1
     	 AND a.area_id = b.area_id
@@ -1542,7 +1545,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  , TAX_INVC_TXS
 		  , TAX_INVC_AMT_DUE
 		  , TAX_INVC_CRT_DT
-		  , TAX_INVC_CRT_USER_ID )
+		  , TAX_INVC_CRT_USER_ID 
+		  , AREA_ID
+		  , ADDR_DTL
+		  , STREET)
 		  VALUES (
 		  PAY0031D_SEQ.NEXTVAL
 		  , #{taxInvoiceRefNo}
@@ -1565,6 +1571,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  , #{taxInvoiceAmountDue}
 		  , SYSDATE
 		  , #{taxInvoiceCreator}
+          , #{areaId}
+          , #{addrDtl}    
+          , #{street}    
 		  )
       </insert>
       <insert id="insertInvMISCD" parameterType="Map">
@@ -1594,7 +1603,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	         , INVC_ITM_CNTY
 	         , INVC_ITM_INSTALL_DT
 	         , INVC_ITM_RETN_DT
-	         , INVC_ITM_BILL_REF_NO )
+	         , INVC_ITM_BILL_REF_NO 
+	         , AREA_ID
+	         , ADDR_DTL
+	         , STREET
+	         )
 	           VALUES (
 	            PAY0032D_SEQ.NEXTVAL
 	           , #{taxInvoiceID}
@@ -1621,7 +1634,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	           , #{invoiceItemCountry}
 	           , NULL
 	           , NULL
-	           , NULL )
+	           , NULL
+	          , #{areaId}
+	          , #{addrDtl}    
+	          , #{street}    
+	            )
 
 	  </insert>
 
