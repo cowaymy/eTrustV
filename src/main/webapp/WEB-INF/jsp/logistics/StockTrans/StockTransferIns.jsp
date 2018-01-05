@@ -33,9 +33,9 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "locid",headerText :"<spring:message code='log.head.location'/>"              ,width:120    ,height:30 ,visible:false},
                      {dataField: "stkid",headerText :"<spring:message code='log.head.itemcd'/>"             ,width:120    ,height:30 ,visible:false},
                      {dataField: "stkcd",headerText :"<spring:message code='log.head.matcode'/>"            ,width:120    ,height:30,editable:false},
-                     {dataField: "stknm",headerText :"<spring:message code='log.head.materialname'/>"             ,width:120    ,height:30,editable:false},
+                     {dataField: "stknm",headerText :"Mat. Name"             ,width:120    ,height:30,editable:false},
                      {dataField: "qty",headerText :"<spring:message code='log.head.availableqty'/>"       ,width:120    ,height:30, editable:false},
-                     {dataField: "serialchck" ,headerText:    ""       ,width:120    ,height:30, editable:false},
+                     {dataField: "serialchck" ,headerText:    "Serial Check"       ,width:120    ,height:30, editable:false},
                      {dataField: "typeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120    ,height:30,visible:false},
                      {dataField: "typenm",headerText :"<spring:message code='log.head.type'/>"            ,width:120    ,height:30,editable:false},
                      {dataField: "cateid",headerText :"<spring:message code='log.head.cateid'/>"            ,width:120    ,height:30,visible:false},
@@ -65,7 +65,7 @@ $(document).ready(function(){
     //paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
      doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     */
-    paramdata = {stoIn:'01,02,05,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요. 
+    paramdata = {stoIn:'01,02,05,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요.
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
@@ -77,7 +77,7 @@ $(document).ready(function(){
 
      reqcolumnLayout=[{dataField:    "itmid",headerText :"<spring:message code='log.head.itemid'/>"          ,width:120    ,height:30 , visible:false},
                       {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"         ,width:120    ,height:30 , editable:false},
-                      {dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"        ,width:120    ,height:30 , editable:false},
+                      {dataField: "itmname",headerText :"Mat. Name"        ,width:120    ,height:30 , editable:false},
                       {dataField: "aqty",headerText :"<spring:message code='log.head.availableqty'/>"     ,width:120    ,height:30 , editable:false},
                       {dataField: "rqty",headerText :"<spring:message code='log.head.requestqty'/>"       ,width:120    ,height:30},
                       {dataField: "uom",headerText :"<spring:message code='log.head.uom'/>"               ,width:120    ,height:30, editable:false
@@ -184,7 +184,7 @@ $(function(){
 		    	if (f_validatation('save')){
 			    	var dat = GridCommon.getEditData(reqGrid);
 			    	dat.form = $("#headForm").serializeJSON();
-		
+
 			    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
 		// 	    		Common.alert(result.message,locationList);
 			    		Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
@@ -193,7 +193,7 @@ $(function(){
 			            try {
 			            } catch (e) {
 			            }
-		
+
 			            Common.alert("Fail : " + jqXHR.responseJSON.message);
 			        });
 		    	}
@@ -201,7 +201,7 @@ $(function(){
     		 Common.alert("Please Check Request Material.");
     		 return false;
     	 }
-    	
+
     });
     $("#sttype").change(function(){
     	paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(), codeIn:'US03,US93'};
@@ -212,28 +212,28 @@ $(function(){
     });
     $("#rightbtn").click(function(){
         checkedItems = AUIGrid.getCheckedRowItemsAll(resGrid);
-        
+
         var reqitms = AUIGrid.getGridData(reqGrid);
-        
+
         var bool = true;
         if (checkedItems.length > 0){
 	        var rowPos = "first";
 	        var item = new Object();
 	        var rowList = [];
-	        
+
 	        var boolitem = true;
             var k = 0 ;
 
 	        for (var i = 0 ; i < checkedItems.length ; i++){
-	        	
+
 	        	for (var j = 0 ; j < reqitms.length ; j++){
-	        		
+
                     if (reqitms[j].itmid == checkedItems[i].stkid){
                         boolitem = false;
                         break;
                     }
                 }
-	        	
+
 	        	if (boolitem){
                     rowList[k] = {
                             itmid : checkedItems[i].stkid,
