@@ -4130,41 +4130,26 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
     
     <select id="getLocInfo" parameterType="Map" resultType="egovMap">    
     <![CDATA[
-    select 
-         L56.LOC_ID,
-         L56.STK_CODE PARTS_CODE,
-         L56.STK_DESC PARTS_NAME,
-         L56.STK_TYPE_ID PARTS_TYPE,
-         L56.STK_CTGRY_ID,
-         L56.QTY STOCK_QTY,
-         WH_LOC_DESC,
-         QTY - NVL (L75.BOOKING_QTY, 0) AVAIL_QTY,
-         S26.STK_ID PARTS_ID,
-         (SELECT WH_LOC_ID
-            FROM sys0028m
-           WHERE WH_LOC_CODE = S28.rdc_code)
-            rdc_code
-        From 
-        LOG0056M L56,
-        SYS0028M S28,
-        SYS0026m S26,
-        (  SELECT l75.loc_id,
-                   l75.itm_code,
-                   SUM (reqst_qty) - SUM (NVL (mov_qty, 0)) AS booking_qty
-              FROM log0075m l75
-             WHERE NVL (l75.final_cmplt, 'N') <> 'Y'
-                   AND l75.reqst_no IN (SELECT reqst_no
-                                          FROM log0047m
-                                         WHERE NVL (REQST_DEL, 'N') <> 'Y')
-          GROUP BY l75.loc_id, l75.itm_code) L75
-        where 1=1
-        AND L56.LOC_ID = S28.WH_LOC_ID
-        AND L56.STK_CODE = S26.STK_CODE
-        AND L56.STK_CODE = L75.ITM_CODE(+)
-        AND L56.LOC_ID = L75.LOC_ID(+)
-        AND L56.QTY > 0
-        AND S28.WH_LOC_ID =#{whLocId}
-        AND L56.STK_CODE=#{stkCode}
+    
+				 SELECT L56.STK_CODE,
+				       NVL (L56.QTY, 0) + NVL (L56.MOV_QTY, 0) AS TOTAL_QTY,
+				       NVL (L75.BOOKQTY, 0) AS IN_TRANSIT,
+				       NVL (L56.MOV_QTY, 0) AS BOOKING,
+				       NVL (L56.QTY, 0) - NVL (L75.BOOKQTY, 0) AS AVAIL_QTY
+				  FROM LOG0056M L56,
+				       SYS0026M S26,
+				       (SELECT loc_id,
+				               itm_code,
+				               SUM (NVL (reqst_qty, 0)) - SUM (NVL (mov_qty, 0)) AS bookqty
+				          FROM log0075m
+				         WHERE NVL (final_cmplt, 'N') <> 'Y'
+				         GROUP BY loc_id,
+				               itm_code) L75
+				 WHERE L56.LOC_ID = L75.LOC_ID(+)
+				   AND L56.STK_CODE = L75.ITM_CODE(+)
+				   AND S26.STK_CODE = L56.STK_CODE
+				        AND L56.LOC_ID =#{whLocId}
+		   AND S26.STK_CODE = #{stkCode}
         ]]>
         </select>
         
