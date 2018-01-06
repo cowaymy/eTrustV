@@ -1488,6 +1488,19 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 
     		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
+    			
+    			///////////////////////////////  고객 정보 및 주소 추가 /////////////////////////////////////////
+    			EgovMap   custInfoMap    = new EgovMap();
+    			//EgovMap   micgAddres    = new EgovMap();
+    			
+    			params.put("SALES_ORD_NO",params.get("hidTaxInvDSalesOrderNo")) ;
+    			custInfoMap = installationResultListMapper.getCustInfo(params);
+    			//custInfoMap = installationResultListMapper.getMAddressInfo(params);
+    			
+    			 ///////////////////////////////  고객 정보 및 주소 추가 /////////////////////////////////////////
+    			
+    			
+    			
 
     			if(ApptypeID.equals("1412")){
         			if(outright35dAmount > 200){
@@ -1563,8 +1576,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         					taxInvoiceOutright.put("TAX_INVC_ID",TAX_INVC_ID);
         					taxInvoiceOutright.put("TAX_INVC_REF_NO",invoiceNo);
         					taxInvoiceOutright.put("TAX_INVC_REF_DT", CommonUtils.getNowDate());
-        					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( params.get("hidCustomerName")));
-        	        		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(params.get("hidInatallation_ContactPerson")));
+        					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( custInfoMap.get("customer")));
+        	        		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(custInfoMap.get("contact")));
         	        		// set address
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",CommonUtils.nvl(addrM.get("taxInvcAddr2")));
@@ -1575,7 +1588,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	        		taxInvoiceOutright.put("TAX_INVC_CNTY",CommonUtils.nvl(addrM.get("taxInvcCnty")));
         	        		taxInvoiceOutright.put("TAX_INVC_TASK_ID",0);
         	        		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
-        	        		taxInvoiceOutright.put("TAX_INVC_REM",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_REM",params.get("hidTradeLedger_InstallNo"));
 
 
         	        		 if (TAXRATE > 0)  {
@@ -1616,7 +1629,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",outrightSubProcessing);
         	                	}
 
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
+        	            		 double  a =( outrightBalance - ( outrightBalance  * 100 / 106)) ;
+        	            		 double  b =(outrightBalance  * 100 / 106 );
+        	            		 
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",Double.toString (a+b));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",outrightSubProcessing);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
@@ -1628,8 +1644,6 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		taxInvoiceOutrightSub.put("INVC_ITM_POST_CODE",CommonUtils.nvl(addrD.get("invcItmPostCode")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_STATE_NAME",CommonUtils.nvl(addrD.get("invcItmStateName")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_CNTY",CommonUtils.nvl(addrD.get("invcItmCnty")));
-
-
 
         	            		taxInvoiceOutrightSub.put("AREA_ID",CommonUtils.nvl( params.get("hidInstallation_AreaID")));
         	            		taxInvoiceOutrightSub.put("ADDR_DTL",CommonUtils.nvl(params.get("hidInstallation_AddDtl")));
@@ -1655,10 +1669,15 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
         	                	}
 
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
+        	            		
+        	            		 double  a =( outrightBalance - ( outrightBalance  * 100 / 106)) ;
+        	            		 double  b =(outrightBalance  * 100 / 106 );
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",Double.toString (a+b));
+        	            		
+        	            		//taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE","0");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL","");
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(custInfoMap.get("codeDesc")));
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_MODEL",CommonUtils.nvl(custInfoMap.get("stkDesc")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_SERIAL_NO",CommonUtils.nvl((params.get("hidSerialNo"))));
         	            		// set address
         	              		taxInvoiceOutrightSub.put("INVC_ITM_ADD1",CommonUtils.nvl(addrD.get("invcItmAdd1")));
@@ -1711,7 +1730,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			AccOrderBill.put("ACC_BILL_STUS", 1);
 
         	    			if(null  !=params.get("hidTradeLedger_InstallNo") ){
-        	        			AccOrderBill.put("ACC_BILL_REM",  (String) params.get("hidTradeLedger_InstallNo") );
+        	        			AccOrderBill.put("ACC_BILL_REM",  invoiceNo);
         	    			}else{
         	    				AccOrderBill.put("ACC_BILL_REM",  " ");
         	    			}
@@ -1723,7 +1742,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			AccOrderBill.put("ACC_BILL_TAX_RATE", TAXRATE);
 
         	    			if(TAXRATE ==6){
-        	      	    		 AccOrderBill.put("ACC_BILL_TXS_AMT", Double.toString(  outrightBalance  * 100 / 106));
+        	      	    		 AccOrderBill.put("ACC_BILL_TXS_AMT", Double.toString( outrightBalance -( outrightBalance  * 100 / 106)));
         	    			}else{
         	    				AccOrderBill.put("ACC_BILL_TXS_AMT", 0);
         	    			}

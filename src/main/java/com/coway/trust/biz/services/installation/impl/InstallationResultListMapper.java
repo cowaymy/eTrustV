@@ -190,4 +190,17 @@ public interface InstallationResultListMapper {
 	EgovMap getUsePAY0034D_addr(Map<String, Object> params);
 	
 	EgovMap getLocInfo(Map<String, Object> params);
+	
+	
+	
+	//get bill custname  info
+	EgovMap getCustInfo(Map<String, Object> params); 
+	
+
+	//get bill address  info 
+	EgovMap getMAddressInfo(Map<String, Object> params); 
+
+	
+	
+	
 }

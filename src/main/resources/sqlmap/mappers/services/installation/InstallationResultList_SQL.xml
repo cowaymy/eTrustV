@@ -4167,4 +4167,56 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
         AND L56.STK_CODE=#{stkCode}
         ]]>
         </select>
+        
+        
+        
+        
+     <select id="getCustInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[	
+				SELECT B.NAME AS CUSTOMER,
+				           F.NAME AS CONTACT,
+				           D.STK_DESC,
+				           E.CODE_DESC
+				  FROM SAL0001D A,
+				       SAL0029D B,
+				       SAL0002D C,
+				       SYS0026M D,
+				       SYS0013M E,
+				       SAL0027D F
+				 WHERE A.SALES_ORD_ID = C.SALES_ORD_ID
+				   AND A.CUST_ID = B.CUST_ID
+				   AND C.ITM_STK_ID = D.STK_ID
+				   AND E.CODE_ID = D.STK_CTGRY_ID
+				   AND A.CUST_ID = F.CUST_ID
+				   AND A.SALES_ORD_NO =  #{SALES_ORD_NO} 
+				   
+        ]]>
+    </select>
+    
+    
+    
+     <select id="getMAddressInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+		          SELECT           B.ADDR_DTL            as ADDR_DTL        -- ASIS_ADDR1
+		                   ,B.STREET              as STREET -- ASIS_ADDR2
+		                   ,NVL(D.AREA, ' ')      as AREA-- ASIS_ADDR4
+		                   ,NVL(D.CITY, ' ')      as CITY-- ASIS_CITY
+		                   ,NVL(D.POSTCODE, ' ')  as POSTCODE -- ASIS_POST_CODE
+		                   ,NVL(D.STATE, ' ')     as STATE  -- ASIS_STATE_NAME
+		                   ,NVL(D.COUNTRY, ' ')   as COUNTRY -- ASIS_CNTY
+		                   ,B.ADDR_DTL ||' '||B.STREET||' '||D.AREA||' '||' '||D.POSTCODE||' '||D.CITY||' '||D.STATE||' '||D.COUNTRY AS FULL_ADDR
+		                   ,NVL(D.AREA_ID,' ')    as AREA_ID
+		              FROM  SAL0001D  A
+		                  , SAL0023D  B
+		                  , SAL0045D  C
+		                  , SYS0064M  D 
+		            WHERE   1=1
+		                AND  A.CUST_ID      = B.CUST_ID 
+		                AND  C.SALES_ORD_ID = A.SALES_ORD_ID
+		                AND  B.CUST_ADD_ID  = C.ADD_ID
+		                AND  B.AREA_ID      = D.AREA_ID
+		                AND  D.STATUS_ID    = 1
+		                AND  A.SALES_ORD_NO =  #{SALES_ORD_NO} 
+        ]]>
+    </select>
     </mapper>
