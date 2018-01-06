@@ -147,7 +147,7 @@
               CODE_NAME ,
               DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
         FROM SYS0013M
-        WHERE DISAB = 0
+        WHERE DISAB = 0 AND CODE != 'J1' AND CODE != 'R1'
         <if test="groupCode != null and groupCode !=''">
            AND CODE_MASTER_ID = #{groupCode}
         </if>
