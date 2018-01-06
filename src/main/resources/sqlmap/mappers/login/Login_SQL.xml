@@ -20,7 +20,7 @@
            ,CASE
               WHEN (ORG.BRNCH IS NOT NULL)
                  THEN ORG.BRNCH
-              ELSE 0
+              ELSE USR.USER_BRNCH_ID
            END AS userBranchId
            ,CASE
               WHEN (ORG.SUB_DEPT IS NOT NULL)
