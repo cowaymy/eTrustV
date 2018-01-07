@@ -1196,6 +1196,8 @@ public class ServiceApiController {
         			params.put("hidStockGrade",installResult.get("stkGrad"));
         			params.put("hidSirimTypeId",String.valueOf(installResult.get("stkCtgryId")));
         			params.put("hiddeninstallEntryNo",String.valueOf(installResult.get("installEntryNo")));
+        			params.put("hidTradeLedger_InstallNo",String.valueOf(installResult.get("installEntryNo")));
+        			
         			params.put("CTID",String.valueOf(userId));
         			params.put("installDate","");
         			params.put("updator", String.valueOf(userId)); 
