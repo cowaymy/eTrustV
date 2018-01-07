@@ -74,7 +74,18 @@ var refundColumnLayout = [ {
     headerText : "Bank Account No",
 }, {
     dataField : "ccNo",
-    headerText : "<spring:message code='pay.head.crcNo'/>"
+    headerText : "<spring:message code='pay.head.crcNo'/>",
+    labelFunction : function( rowIndex, columnIndex, value, headerText, item ) {
+        var ccNo1, ccNo2, ccNo3, ccNo4, ccNo;
+        if(!FormUtil.isEmpty(value)) {
+            ccNo1 = value.substr(0, 4);
+            ccNo2 = value.substr(4, 4);
+            ccNo3 = value.substr(8, 4);
+            ccNo4 = value.substr(12, 4);
+            ccNo = ccNo1 + "-" + ccNo2 + "-" + ccNo3 + "-" + ccNo4;
+        }
+        return ccNo;
+    }
 }, {
     dataField : "ccHolderName",
     headerText : "<spring:message code='pay.head.crcHolder'/>"
@@ -138,7 +149,18 @@ var refundColumnLayout = [ {
 }, {
     dataField : "ccnoPaytChannel",
     headerText : "Customer<br>CRC No",
-    style : "aui-grid-user-custom-left"
+    style : "aui-grid-user-custom-left",
+    labelFunction : function( rowIndex, columnIndex, value, headerText, item ) {
+        var ccNo1, ccNo2, ccNo3, ccNo4, ccNo;
+        if(!FormUtil.isEmpty(value)) {
+        	ccNo1 = value.substr(0, 4);
+            ccNo2 = value.substr(4, 4);
+            ccNo3 = value.substr(8, 4);
+            ccNo4 = value.substr(12, 4);
+            ccNo = ccNo1 + "-" + ccNo2 + "-" + ccNo3 + "-" + ccNo4;
+        }
+        return ccNo;
+    }
 }, {
     dataField : "ccholdernamePaytChannel",
     headerText : "Customer<br>Crc Holder",
