@@ -1696,9 +1696,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			double totalAASLeft = 0;
 			
 			if( null !=sumLeftMap ){
-				totalLgAmt =Double.parseDouble((String)sumLeftMap.get("totalLgAmt"));
-				totalUsedLgAmt=Double.parseDouble((String)sumLeftMap.get("totalUsedLgAmt"));
-				totalAASLeft=Double.parseDouble((String)sumLeftMap.get("totalAASLeft"));
+				totalLgAmt =Double.parseDouble(String.valueOf(sumLeftMap.get("totallgamt")));
+				totalUsedLgAmt=Double.parseDouble(String.valueOf(sumLeftMap.get("totalusedlgamt")));
+				totalAASLeft=Double.parseDouble(String.valueOf(sumLeftMap.get("totalaasleft")));
 			}
 			 
 			if(totalAASLeft >0) {
@@ -1707,7 +1707,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 	this.setPay0006dData(vewList ,svc0004dmap ,"B");
                 	
                 }else{
-                	svc0004dmap.put("totalAASLeft", (String)sumLeftMap.get("totalAASLeft"));
+                	svc0004dmap.put("totalAASLeft", String.valueOf(sumLeftMap.get("totalaasleft")));
                 	this.setPay0006dData(vewList ,svc0004dmap,"C");
                 }
 			}

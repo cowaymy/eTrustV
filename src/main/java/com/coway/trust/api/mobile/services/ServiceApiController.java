@@ -724,7 +724,7 @@ public class ServiceApiController {
                          				}
                      					
                      					map.put("filterRemark", "");
-                     					map.put("filterTotal",totPrc);
+                     					map.put("filterTotal",amt);
                      					
                      					paramsDetailCvt.add(map);
                      					 
@@ -1213,7 +1213,7 @@ public class ServiceApiController {
         			params.put("hidAppTypeId",installResult.get("codeId"));
         			
         			//API in
-        			params.put("hidSirimNo",String.valueOf(insTransLogs.get(i).get("sirimNo")));
+        			params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get("sirimNo")));
         			params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get("serialNo")));
         			params.put("remark",insTransLogs.get(i).get("resultRemark"));
         			
