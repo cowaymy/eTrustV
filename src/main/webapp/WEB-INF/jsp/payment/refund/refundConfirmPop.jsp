@@ -108,7 +108,7 @@ var confirmColumnLayout = [ {
     visible : false
 }, {
     dataField : "custBankName",
-    headerText : "Customer<br>Bank Account"
+    headerText : "Customer<br>Issue Bank"
 }, {
     dataField : "custBankNo",
     headerText : "Customer<br>Bank Account No"
@@ -134,7 +134,7 @@ var confirmColumnLayout = [ {
     }
 }, {
     dataField : "cardHolder",
-    headerText : "<spring:message code='pay.head.cardHolder'/>"
+    headerText : "Card Holder Name"
 }, {
     dataField : "chqNo",
     headerText : "<spring:message code='pay.head.chequeNo'/>"
