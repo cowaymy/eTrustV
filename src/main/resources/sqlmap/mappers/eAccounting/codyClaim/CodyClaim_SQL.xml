@@ -512,5 +512,28 @@ WHERE  T1.CLM_NO = #{clmNo}
    UPDATE FCM0019M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
 </update>
 
+<select id="selectSchemaOfMemType" parameterType="String" resultType="egovMap">
+/* codyClaimMapper.selectSchemaOfMemType */
+SELECT SCHEM_ID                           SCHEM_ID, 
+       CASE 
+         WHEN MEM_TYPE = 2 THEN 'CODY' 
+         ELSE 'CT' 
+       END                                MEM_TYPE, 
+       RANGE_FROM                         RANGE_FROM, 
+       RANGE_TO                           RANGE_TO, 
+       MILEAGE_AMT                        MILEAGE_AMT, 
+       DEDUCT_FLAG                        DEDUCT_FLAG, 
+       MULTI_RATE                         MULTI_RATE, 
+       EXT_CHARG                          EXT_CHARG, 
+       TO_CHAR(PERIOD_FROM, 'YYYY-MM-DD') APPLY_FROM, 
+       TO_CHAR(PERIOD_TO, 'YYYY-MM-DD')   APPLY_TO, 
+       ( ( #{carMilag} - NVL(DEDUCT_FLAG, 0) ) * NVL(MULTI_RATE, 0) + NVL(EXT_CHARG, 0) + NVL( MILEAGE_AMT, 0) )                CAR_MILAG_AMT 
+FROM   SVC0033M 
+WHERE  1 = 1 
+       AND MEM_TYPE = #{memType} 
+       AND RANGE_FROM <![CDATA[ <= ]]> #{carMilag} 
+       AND RANGE_TO <![CDATA[ >= ]]> #{carMilag}          
+</select>
+
 
 </mapper>

@@ -95,6 +95,7 @@ public class WebInvoiceController {
 		
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("costCentr", sessionVO.getCostCentr());
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
 		model.addAttribute("callType", params.get("callType"));
 		
@@ -597,5 +598,29 @@ public class WebInvoiceController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectWebInvoiceInfo.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectWebInvoiceInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		String clmNo = (String)params.get("clmNo");
+		
+		EgovMap info = webInvoiceService.selectWebInvoiceInfo(clmNo);
+		List<EgovMap> itemGrp = webInvoiceService.selectWebInvoiceItems(clmNo);
+		
+		info.put("itemGrp", itemGrp);
+		
+		String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
+		LOGGER.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+		// atchFileGrpId db column type number -> null인 경우 nullPointExecption (String.valueOf 처리)
+		// file add 하지 않은 경우 "null" -> StringUtils.isEmpty false return
+		if(atchFileGrpId != "null") {
+			List<EgovMap> attachList = webInvoiceService.selectAttachList(atchFileGrpId);
+			info.put("attachList", attachList);
+		}
+		
+		return ResponseEntity.ok(info);
 	}
 }

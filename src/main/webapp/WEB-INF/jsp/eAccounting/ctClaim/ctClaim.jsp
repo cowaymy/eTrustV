@@ -182,6 +182,15 @@ function fn_setEvent() {
                     }
                 });
             }
+        } else if(id == "gstRgistNo") {
+        	if($("#invcType").val() == "F") {
+                var gstRgistNo = $(this).val();
+                console.log(gstRgistNo);
+                if(gstRgistNo.length != 12) {
+                    Common.alert('Please insert 12 digits GST Registration No');
+                    $("#gstRgistNo").val("");
+                }
+            }
         }
    });
         
@@ -431,6 +440,11 @@ function fn_checkEmpty() {
             }
             if(FormUtil.isEmpty($("#invcNo").val())) {
                 Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
+                checkResult = false;
+                return checkResult;
+            }
+            if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+                Common.alert('Please enter GST Rgist No.');
                 checkResult = false;
                 return checkResult;
             }
@@ -1230,6 +1244,18 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
             appvPrcssNo : appvPrcssNo
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
+}
+
+function fn_mileageGridSetEvent() {
+    AUIGrid.bind(mileageGridID, "cellEditEnd", function( event ) {
+    	if(event.dataField == "carMilag") {
+            console.log("CT Claim Car Mileage Edit End Action");
+            Common.ajax("GET", "/eAccounting/codyClaim/selectSchemaOfMemType.do", {memType:"3",carMilag:event.item.carMilag}, function(result) {
+                console.log(result);
+                AUIGrid.setCellValue(mileageGridID, event.rowIndex, "carMilagAmt", result.data.carMilagAmt);
+            });
+        }
+  });
 }
 </script>
 

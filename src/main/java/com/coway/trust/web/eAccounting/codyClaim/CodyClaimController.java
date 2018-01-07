@@ -91,6 +91,7 @@ public class CodyClaimController {
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("costCentr", sessionVO.getCostCentr());
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		return "eAccounting/codyClaim/codyClaimNewExpensesPop";
 	}
@@ -297,6 +298,21 @@ public class CodyClaimController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(params);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectSchemaOfMemType.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectSchemaOfMemType(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		EgovMap result = codyClaimService.selectSchemaOfMemType(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(result);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);

@@ -140,8 +140,8 @@ function fn_saveNewMgmt() {
 	<th scope="row"><spring:message code="crditCardNewMgmt.cardType" /></th>
 	<td>
 		<select class="multy_select" id="crditCardType" name="crditCardType">
-		<option value="CC"><spring:message code="crditCardNewMgmt.crditCard" /></option>
-		<option value="DC"><spring:message code="crditCardNewMgmt.debitCard" /></option>
+		<option value="CC"><spring:message code="crditCardNewMgmt.visa" /></option>
+		<option value="DC"><spring:message code="crditCardNewMgmt.masterCard" /></option>
 		</select>
 	</td>
 </tr>

@@ -546,20 +546,112 @@ function fn_getTotTaxAmt(rowIndex) {
     return taxAmtCnt;
 }
 
-function fn_sameVenderCheck() {
+function fn_atchViewDown(fileGrpId, fileId) {
     var data = {
-            memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
-    }
-    Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        if(result.data) {
-            Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
-            return false;
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
         } else {
-            return true;
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
         }
     });
+}
+
+function fn_selectWebInvoiceInfo(clmNo) {
+    var obj = {
+            clmNo : clmNo
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceInfo.do?_cacheId=" + Math.random(), obj, fn_setWebInvoiceInfo);
+}
+
+function fn_setWebInvoiceInfo(result) {
+	$("#newClmNo").val(result.clmNo);
+	$("#atchFileGrpId").val(result.atchFileGrpId);
+	$("#newCostCenter").val(result.costCentr);
+    $("#newCostCenterText").val(result.costCentrName);
+    $("#newMemAccId").val(result.memAccId);
+    $("#newMemAccName").val(result.memAccName);
+    $("#bankCode").val(result.bankCode);
+    $("#bankName").val(result.bankName);
+    $("#bankAccNo").val(result.bankAccNo);
+    $("#totAmt").val(result.totAmt);
+    $("#crtUserId").val(result.crtUserId);
+    $("#invcDt").val(result.invcDt);
+    $("#keyDate").val(result.crtDt);
+    $("#invcType").val(result.invcType);
+    $("#invcNo").val(result.invcNo);
+    $("#gstRgistNo").val(result.gstRgistNo);
+    $("#payDueDt").val(result.payDueDt);
+    $("#utilNo").val(result.utilNo);
+    $("#invcRem").val(result.invcRem);
+    
+    AUIGrid.setGridData(newGridID, result.itemGrp);
+    
+    // TODO attachFile
+    attachList = result.attachList;
+    console.log(attachList);
+    console.log(attachList.length);
+    if(attachList.length > 0) {
+        $("#attachTd").html("");
+        for(var i = 0; i < attachList.length; i++) {
+            if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
+                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
+            } else {
+                $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+            }
+        }
+        
+        // 파일 다운
+        $(".input_text").dblclick(function() {
+            var oriFileName = $(this).val();
+            var fileGrpId;
+            var fileId;
+            for(var i = 0; i < attachList.length; i++) {
+                if(attachList[i].atchFileName == oriFileName) {
+                    fileGrpId = attachList[i].atchFileGrpId;
+                    fileId = attachList[i].atchFileId;
+                }
+            }
+            fn_atchViewDown(fileGrpId, fileId);
+        });
+        // 파일 수정
+        $("#form_newWebInvoice :file").change(function() {
+            var div = $(this).parents(".auto_file2");
+            var oriFileName = div.find(":text").val();
+            console.log(oriFileName);
+            for(var i = 0; i < attachList.length; i++) {
+                if(attachList[i].atchFileName == oriFileName) {
+                    update.push(attachList[i].atchFileId);
+                    console.log(JSON.stringify(update));
+                }
+            }
+        });
+        // 파일 삭제
+        $(".auto_file2 a:contains('Delete')").click(function() {
+            var div = $(this).parents(".auto_file2");
+            var oriFileName = div.find(":text").val();
+            console.log(oriFileName);   
+            for(var i = 0; i < attachList.length; i++) {
+                if(attachList[i].atchFileName == oriFileName) {
+                    remove.push(attachList[i].atchFileId);
+                    console.log(JSON.stringify(remove));
+                }
+            }
+        });
+    }
 }
 </script>
 

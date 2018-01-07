@@ -26,6 +26,10 @@ var newGridID;
 var selectRowIdx;
 var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
+//file action list
+var update = new Array();
+var remove = new Array();
+var attachList;
 var myColumnLayout = [ {
     dataField : "clamUn",
     headerText : '<spring:message code="newWebInvoice.seq" />'
@@ -223,22 +227,37 @@ function fn_approveLinePop() {
         return false;
     }
     
-    if(FormUtil.isEmpty($("#clmNo").val())) {
-        checkResult = fn_sameVenderCheck();
-        if(!checkResult) {
-            return false;
-        }
+    var data = {
+            memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
     }
     
-    // tempSave를 하지 않고 바로 submit인 경우
-    if(FormUtil.isEmpty($("#clmNo").val())) {
-        // 신규 상태에서 approve, 파일 업로드 후 info 인서트 처리
-        fn_attachmentUpload("");
+    // new
+    if(FormUtil.isEmpty($("#newClmNo").val())) {
+        Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+            console.log(result);
+            if(result.data) {
+                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+            } else {
+                fn_attachmentUpload("");
+                
+                Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+            }
+        });
     } else {
-        fn_updateWebInvoiceInfo("");
+        // update
+        Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+            console.log(result);
+            if(result.data && result.data != $("#newClmNo").val()) {
+                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+            } else {
+                fn_attachmentUpdate("");
+                
+                Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
+            }
+        });
     }
     
-    Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
 function fn_tempSave() {
@@ -248,14 +267,32 @@ function fn_tempSave() {
         return false;
     }
     
-    if(FormUtil.isEmpty($("#clmNo").val())) {
-    	checkResult = fn_sameVenderCheck();
-        if(!checkResult) {
-            return false;
-        }
+    var data = {
+            memAccId : $("#newMemAccId").val(),
+            invcNo : $("#invcNo").val()
     }
     
-    fn_attachmentUpload(callType);
+    // new
+    if(FormUtil.isEmpty($("#newClmNo").val())) {
+    	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+            console.log(result);
+            if(result.data) {
+                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+            } else {
+                fn_attachmentUpload(callType);
+            }
+        });
+    } else {
+    	// update
+    	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
+            console.log(result);
+            if(result.data && result.data != $("#newClmNo").val()) {
+                Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
+            } else {
+            	fn_attachmentUpdate(callType);
+            }
+        });
+    }
 }
 
 function fn_attachmentUpload(st) {
@@ -275,14 +312,31 @@ function fn_insertWebInvoiceInfo(st) {
     console.log(obj);
     Common.ajax("POST", "/eAccounting/webInvoice/insertWebInvoiceInfo.do", obj, function(result) {
         console.log(result);
-        $("#clmNo").val(result.data.clmNo);
-        fn_selectWebInvoiceItemList(result.data.clmNo);
+        $("#newClmNo").val(result.data.clmNo);
+        //fn_selectWebInvoiceItemList(result.data.clmNo);
+        fn_selectWebInvoiceInfo(result.data.clmNo);
         
         if(st == 'new') {
             Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#newWebInvoicePop").remove();
         }
         fn_selectWebInvoiceList();
+    });
+}
+
+function fn_attachmentUpdate(st) {
+    // 신규 add or 추가 add인지 update or delete인지 분기 필요
+    // 파일 수정해야 하는 경우 : delete 버튼 클릭 or file 버튼 클릭으로 수정
+    // delete 버튼의 파일이름 찾아서 저장
+    var formData = Common.getFormData("form_newWebInvoice");
+    formData.append("atchFileGrpId", $("#atchFileGrpId").val());
+    formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+    formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+    Common.ajaxFile("/eAccounting/webInvoice/attachmentUpdate.do", formData, function(result) {
+        console.log(result);
+        fn_updateWebInvoiceInfo(st);
     });
 }
 
@@ -293,10 +347,12 @@ function fn_updateWebInvoiceInfo(st) {
     console.log(obj);
     Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", obj, function(result) {
         console.log(result);
-        fn_selectWebInvoiceItemList(result.data.clmNo);
-        if(st == "view"){
+        //fn_selectWebInvoiceItemList(result.data.clmNo);
+        fn_selectWebInvoiceInfo(result.data.clmNo);
+        
+        if(st == "new"){
             Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-            $("#viewEditWebInvoicePop").remove();
+            $("#newWebInvoicePop").remove();
         }
         fn_selectWebInvoiceList();
     });
@@ -327,7 +383,7 @@ function fn_updateWebInvoiceInfo(st) {
 <section class="search_table"><!-- search_table start -->
 
 <form action="#" method="post" enctype="multipart/form-data" id="form_newWebInvoice">
-<input type="hidden" id="clmNo" name="clmNo">
+<input type="hidden" id="newClmNo" name="clmNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
 <input type="hidden" id="newCostCenterText" name="costCentrName">
 <input type="hidden" id="newMemAccName" name="memAccName">
@@ -352,7 +408,7 @@ function fn_updateWebInvoiceInfo(st) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
 </tr>
@@ -387,7 +443,7 @@ function fn_updateWebInvoiceInfo(st) {
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
-	<td colspan="3">
+	<td colspan="3" id="attachTd">
     <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
     <input type="file" title="file add" style="width:300px" />
     </div><!-- auto_file end -->

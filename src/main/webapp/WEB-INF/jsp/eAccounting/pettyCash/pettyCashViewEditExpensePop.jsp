@@ -515,7 +515,7 @@ function fn_tempSave() {
 <c:if test="${appvPrcssNo eq null or appvPrcssNo eq ''}">
 <ul class="right_btns mb10">
     <li><p class="btn_blue2"><a href="#" id="tempSave_btn"><spring:message code="newWebInvoice.btn.tempSave" /></a></p></li>
-    <li><p class="btn_blue2"><a href="#" id="request_btn"><spring:message code="webInvoice.select.request" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="request_btn"><spring:message code="newWebInvoice.btn.submit" /></a></p></li>
 </ul>
 </c:if>
 

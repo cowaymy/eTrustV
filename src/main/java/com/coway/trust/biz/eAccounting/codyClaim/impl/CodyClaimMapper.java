@@ -46,4 +46,6 @@ public interface CodyClaimMapper {
 	void updateCodyClaimExpTotAmt(Map<String, Object> params);
 	
 	List<EgovMap> selectCodyClaimItemGrp(Map<String, Object> params);
+	
+	EgovMap selectSchemaOfMemType(Map<String, Object> params);
 }

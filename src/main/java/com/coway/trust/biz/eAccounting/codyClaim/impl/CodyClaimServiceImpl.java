@@ -245,4 +245,10 @@ public class CodyClaimServiceImpl implements CodyClaimService {
 		return codyClaimMapper.selectCodyClaimItemGrp(params);
 	}
 
+	@Override
+	public EgovMap selectSchemaOfMemType(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return codyClaimMapper.selectSchemaOfMemType(params);
+	}
+
 }

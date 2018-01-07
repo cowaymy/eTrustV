@@ -182,6 +182,15 @@ function fn_setEvent() {
 	                    }
 	                });
 	            }
+	        } else if(id == "gstRgistNo") {
+	        	if($("#invcType").val() == "F") {
+	                var gstRgistNo = $(this).val();
+	                console.log(gstRgistNo);
+	                if(gstRgistNo.length != 12) {
+	                    Common.alert('Please insert 12 digits GST Registration No');
+	                    $("#gstRgistNo").val("");
+	                }
+	            }
 	        }
 	   });
 	    
@@ -325,6 +334,9 @@ function fn_createMileageAUIGrid() {
 
     // 실제로 #grid_wrap 에 그리드 생성
     mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
+    
+    fn_mileageGridSetEvent();
+    
     // AUIGrid 에 데이터 삽입합니다.
     //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
 }
@@ -431,6 +443,11 @@ function fn_checkEmpty() {
             }
             if(FormUtil.isEmpty($("#invcNo").val())) {
                 Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
+                checkResult = false;
+                return checkResult;
+            }
+            if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+                Common.alert('Please enter GST Rgist No.');
                 checkResult = false;
                 return checkResult;
             }
@@ -1243,6 +1260,55 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
             appvPrcssNo : appvPrcssNo
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
+}
+
+function fn_mileageGridSetEvent() {
+	AUIGrid.bind(mileageGridID, "cellEditEnd", function( event ) {
+        if(event.dataField == "carMilag") {
+        	var result = 0;
+            var oriCarMilag = event.item.carMilag;
+            var reCarMilag = 0;
+            var totCarMilag = fn_getTotCarMilag(event.rowIndex);
+            if(totCarMilag > 600) {
+                result = oriCarMilag * 0.5;
+            } else {
+            	if(totCarMilag == 0) {
+            		result = oriCarMilag * 0.7;
+            	} else {
+            		if((totCarMilag + oriCarMilag) > 600) {
+            			reCarMilag = 600 - totCarMilag;
+                        if(oriCarMilag > reCarMilag) {
+                            oriCarMilag = oriCarMilag - reCarMilag;
+                            result = (oriCarMilag * 0.5) + (reCarMilag * 0.7);
+                        } else {
+                            oriCarMilag = reCarMilag - oriCarMilag;
+                            result = (oriCarMilag * 0.5) + (reCarMilag * 0.7);
+                        }
+            		} else {
+            			result = oriCarMilag * 0.7;
+            		}
+            	}
+            }
+            AUIGrid.setCellValue(mileageGridID, event.rowIndex, "carMilagAmt", result);
+        }
+  });
+}
+
+function fn_getTotCarMilag(rowIndex) {
+    var totCarMilag = 0;
+    // 필터링이 된 경우 필터링 된 상태의 값만 원한다면 false 지정
+    var amtArr = AUIGrid.getColumnValues(mileageGridID, "carMilag", true);
+    console.log(amtArr);
+    for(var i = 0; i < amtArr.length; i++) {
+    	totCarMilag += amtArr[i];
+    }
+    // 0번째 행의 name 칼럼의 값 얻기
+    var value = AUIGrid.getCellValue(mileageGridID, rowIndex, "carMilag");
+    console.log(totCarMilag);
+    console.log(value);
+    totCarMilag -= value;
+    console.log("totCarMilag : " + totCarMilag);
+    return totCarMilag;
 }
 </script>
 

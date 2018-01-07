@@ -308,6 +308,15 @@ function fn_setEvent() {
                     }
                 });
             }
+        } else if(id == "gstRgistNo") {
+        	if($("#invcType").val() == "F") {
+                var gstRgistNo = $(this).val();
+                console.log(gstRgistNo);
+                if(gstRgistNo.length != 12) {
+                    Common.alert('Please insert 12 digits GST Registration No');
+                    $("#gstRgistNo").val("");
+                }
+            }
         }
    }); 
 }
@@ -375,6 +384,11 @@ function fn_checkEmpty() {
         }
         if(FormUtil.isEmpty($("#invcNo").val())) {
         	Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
+            checkResult = false;
+            return checkResult;
+        }
+        if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+            Common.alert('Please enter GST Rgist No.');
             checkResult = false;
             return checkResult;
         }

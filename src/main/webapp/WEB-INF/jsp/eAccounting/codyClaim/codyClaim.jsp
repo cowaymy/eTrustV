@@ -182,6 +182,15 @@ function fn_setEvent() {
                     }
                 });
             }
+        } else if(id == "gstRgistNo") {
+        	if($("#invcType").val() == "F") {
+                var gstRgistNo = $(this).val();
+                console.log(gstRgistNo);
+                if(gstRgistNo.length != 12) {
+                    Common.alert('Please insert 12 digits GST Registration No');
+                    $("#gstRgistNo").val("");
+                }
+            }
         }
    });
 	    
@@ -325,6 +334,9 @@ function fn_createMileageAUIGrid() {
 
     // 실제로 #grid_wrap 에 그리드 생성
     mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
+    
+    fn_mileageGridSetEvent();
+    
     // AUIGrid 에 데이터 삽입합니다.
     //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
 }
@@ -431,6 +443,11 @@ function fn_checkEmpty() {
             }
             if(FormUtil.isEmpty($("#invcNo").val())) {
                 Common.alert('<spring:message code="webInvoice.invcNo.msg" />');
+                checkResult = false;
+                return checkResult;
+            }
+            if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+                Common.alert('Please enter GST Rgist No.');
                 checkResult = false;
                 return checkResult;
             }
@@ -1230,6 +1247,18 @@ function fn_webInvoiceRequestPop(appvPrcssNo) {
             appvPrcssNo : appvPrcssNo
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
+}
+
+function fn_mileageGridSetEvent() {
+    AUIGrid.bind(mileageGridID, "cellEditEnd", function( event ) {
+        if(event.dataField == "carMilag") {
+        	console.log("Cody Claim Car Mileage Edit End Action");
+        	Common.ajax("GET", "/eAccounting/codyClaim/selectSchemaOfMemType.do", {memType:"2",carMilag:event.item.carMilag}, function(result) {
+                console.log(result);
+                AUIGrid.setCellValue(mileageGridID, event.rowIndex, "carMilagAmt", result.data.carMilagAmt);
+            });
+        }
+  });
 }
 </script>
 

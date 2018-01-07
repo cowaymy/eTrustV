@@ -91,6 +91,7 @@ public class ScmActivityFundController {
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute(CommonConstants.USER_ID, sessionVO.getUserId());
 		model.addAttribute("userName", sessionVO.getUserName());
+		model.addAttribute("costCentr", sessionVO.getCostCentr());
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		return "eAccounting/scmActivityFund/scmActivityFundNewExpensesPop";
 	}

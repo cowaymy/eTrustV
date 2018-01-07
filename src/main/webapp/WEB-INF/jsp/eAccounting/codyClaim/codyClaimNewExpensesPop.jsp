@@ -401,12 +401,7 @@ var mileageGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editRenderer : {
-        type : "InputEditRenderer",
-        onlyNumeric : true,
-        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-        allowPoint : true // 소수점(.) 입력 가능 설정
-    }
+    editable : false
 }, {
     dataField : "tollAmt",
     headerText : '<spring:message code="newStaffClaim.tollsBrRm" />',
@@ -617,7 +612,7 @@ function fn_tempSave() {
 <tbody>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 	<th scope="row"><spring:message code="codyClaim.codyCode" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
