@@ -412,10 +412,14 @@ public class SalesConstants {
 	public static final int ROS_CALLER_SYS_ORD_ID = 0;   //  det.SysOrderID = 0;
 	public static final int RSO_CALLER_SYS_USER_ID = 0;  //det.SysUserID = 0;
 	
+	/* Fico Score */
+	public static final String FICO_CTOS_REPORT_SUBPATH = "sales";
+	public static final String FICO_CTOS_REPORT_FILENAME = "response.html";
 	/*callerUpdateM.StatusCodeID = 1;
     callerUpdateM.TotalComplete = 0;
     callerUpdateM.TotalFail = 0;*/
-	
+	public static final String FICO_VIEW_TYPE = "FICO_VIEW";
+	public static final String CTOS_VIEW_TYPE = "CTOS_VIEW";
 	/**
 	 * 메세지 KEY
 	 */

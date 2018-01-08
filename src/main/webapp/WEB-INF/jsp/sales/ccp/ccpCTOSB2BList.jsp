@@ -192,8 +192,7 @@ function createCtosDetailGrid(){
                                           
                                     	  console.log("item.batchId : " + item.batchId);
                                     	//  alert("Fico View  batchId : " + item.batchId + " , ordNo : " + item.ordNo );
-                                    	//  fn_displayReport("FICO_VIEW" , item.batchId , item.ordNo);
-                                    	  fn_underDevelop();
+                                    	  fn_displayReport("FICO_VIEW" , item.batchId , item.ordNo);
                                           
                                     }
                              }
@@ -207,7 +206,7 @@ function createCtosDetailGrid(){
                                       labelText : "View", 
                                       onclick : function(rowIndex, columnIndex, value, item) {
                                           
-                                    	  fn_underDevelop();
+                                    	  fn_displayReport("CTOS_VIEW" , item.batchId , item.ordNo);
                                           
                                     }
                              }
@@ -311,33 +310,25 @@ function fn_detailPrev() {
 
 function fn_displayReport(viewType, batchId, ordNo){
 	
-	var rtnMap;
+	var isRe = false;
 	
-	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {batchId : batchId , ordNo : ordNo}, function(result){
+	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {viewType : viewType , batchId : batchId , ordNo : ordNo}, function(result){
 		
 		console.log("result : " + result);
 		console.log("content  :  " + JSON.stringify(result));
-		
-		if(result != null){
-			if(result.resultRaw != null){
-				rtnMap = result;	
-			}
+        console.log("DEFAULT_RESOURCE_FILE : " + DEFAULT_RESOURCE_FILE); 
+		 if(result != null){
+			 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+		}else{
+			isRe  = true;
 		}
-	});
+	},'',{async : false});
 	
-	if(rtnMap == null){
+	if(isRe == true){
 		Common.alert("No result from CTOS");
 		return;
-	}else{
-		Common.alert("You Can Display CTOS Score!!!");
 	}
-	
-	
-	
-	//TODO Display CTSO View
-	
 }
-
 
 </script>
 

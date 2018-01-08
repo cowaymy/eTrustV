@@ -79,4 +79,40 @@
 		 </if>
 </select>
 
+<resultMap id="resultRowMap" type="EgovMap">
+    <result property="resultRaw" column="RESULT_RAW" jdbcType="CLOB" javaType="java.lang.String"/>
+</resultMap>
+<select id="getResultRowForCTOSDisplay" parameterType="Map" resultMap="resultRowMap">
+  SELECT
+    BATCH_ID,
+    ORD_NO,
+    CUST_IC,
+    CUST_NAME,
+    PRCSS,
+    FICO_SCRE,
+    BATCH_NO,
+    RESULT_RAW,
+    CTOS_DT,
+    UPD_USER_ID,
+    CTOS_BANKRUPT,
+    ORD_ID,
+    CUST_ID,
+    MEM_ID
+  FROM 
+    SAL0107D
+  WHERE
+    BATCH_ID = #{batchId}
+  AND
+    ORD_NO = #{ordNo}
+  AND
+    <![CDATA[
+    PRCSS <> 0
+    ]]>
+  AND
+    FICO_SCRE > 0
+  AND
+    <![CDATA[
+    ROWNUM <= 1
+    ]]>
+</select>
 </mapper>

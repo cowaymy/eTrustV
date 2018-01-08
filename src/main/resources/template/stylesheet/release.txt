@@ -1,0 +1,32 @@
+xslt-v1.17.4 - Release Notes
+----------------------------
+section_c_subreport.xsl:
+1) Changed all occurences of /r:report/ to ancestor::r:report/
+
+
+xslt-v1.17.3 - Release Notes
+----------------------------
+section_b_subreport.xsl:
+1) Removed the % at line 1190
+2) Fixed the B2: Address logic, AND to OR
+
+section_c_subreport.xsl:
+1) Move the <xsl:key> element out from the <xsl:template>
+
+xslt-v1.17.2 - Release Notes
+----------------------------
+A: SNAPSHOT - ID Verification
+1. Fixed the format pattern of the "New ID / Old ID (Your Input)" field.
+2. Fixed the source displayed of the "Nationality", "Address 1" and "Address 2" fields.
+       
+A: SNAPSHOT - Credit Info at A Glance
+3. Remove the row of "Availability of Trade Referee Listing".
+
+C1: BANKING PAYMENT HISTORY
+4. Added data validation to the field of "Subject Status".
+
+C1: CCRIS DETAILS - Loan Information
+5. Added data validation to the column of "Total Outstanding Balance (RM)" and "Collateral Type".
+
+C1: CCRIS DETAILS - Special Attention Account & Credit Application
+6. Added an additional blank row if there are no data available.

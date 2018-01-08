@@ -11,4 +11,6 @@ public interface CcpCTOSB2BService {
 	List<EgovMap> selectCTOSB2BList(Map<String, Object> params)throws Exception;
 	
 	List<EgovMap> getCTOSDetailList(Map<String, Object> params)throws Exception;
+	
+	Map<String, Object> getResultRowForCTOSDisplay(Map<String, Object> params)throws Exception;
 }

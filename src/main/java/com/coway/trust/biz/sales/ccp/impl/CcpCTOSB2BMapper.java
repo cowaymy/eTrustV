@@ -14,4 +14,6 @@ public interface CcpCTOSB2BMapper {
 	
 	List<EgovMap> getCTOSDetailList(Map<String, Object> params);
 	
+	EgovMap getResultRowForCTOSDisplay(Map<String, Object> params);
+	
 }
