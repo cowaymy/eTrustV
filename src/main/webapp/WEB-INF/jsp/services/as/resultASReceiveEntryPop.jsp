@@ -458,7 +458,6 @@ function fn_sendSms(_telNo, _msg){
 
 function  fn_doNewSave(){
 	
-	
 	if( fn_validRequiredField_Save()){
 		var saveForm ={
 				 "AS_SO_ID"                  : '${as_ord_basicInfo.ordId}' ,
@@ -503,8 +502,8 @@ function  fn_doNewSave(){
 	                console.log( result);
 	                
 	                if( result.logerr =="Y"){
-	                	Common.alert("물류 오류 ..........." );
-	                	return ;
+	                	//Common.alert("물류 오류 ..........." );
+	                	//return ;
 	                }
 	                
 	                //인하우스 결과 등록 처리 
@@ -527,7 +526,6 @@ function  fn_doNewSave(){
 	                
 	                
 	                if(result.asNo !="" ){
-	                	
 	                	var  smsck_1 =false; 
 	                	var  smsck_2 =false; 
 	                	var  smsck_3=false; 
@@ -543,13 +541,10 @@ function  fn_doNewSave(){
 			                        var  branchDSC     =$("#branchDSC option:selected").text();
 			                        
 			                        if($("#checkSms").prop("checked")){
-			                            
-			                            
 			                            $("#sms_AsNo").val(asNo);
 			                            $("#sms_AsId").val(asId);
 			                            $("#sms_MemId").val(memId);
 			                            $("#sms_MemCode").val(memCode);
-			
 			                            var ordNo          = '${as_ord_basicInfo.ordNo}';
 			                            var ordId           = '${as_ord_basicInfo.ordId}';
 			                            var custName    = "${as_ord_basicInfo.custName}".substring(0,49) ;
@@ -572,48 +567,43 @@ function  fn_doNewSave(){
 			                            sMSMessage  += " /TQ";
 			                            
 			                            $("#sms_Message").val(sMSMessage);
-			                            
 			                            smsck_1 =true;
 			                        }
 			                        
 			                        if($("#checkSms1").prop("checked")){
-			                        
 			                               var  sMSMessage = "";
 			                               var  appDate =$("#appDate").val();
 			                               var branchDSC =$("#branchDSC option:selected").text();
-			                               
 			                               sMSMessage="Order="+ '${as_ord_basicInfo.ordNo}'+"   AS="+result.asNo+"  Appt Date="+appDate+"  DSC="+branchDSC+" TQ "; 
-			                               
 			                               var t = $("#additionalCont").val();
 			                               fn_sendSms(t ,sMSMessage);  
-			                               
 			                        }
 			                        
 			
 			                        if($("#checkSms2").prop("checked")){
-			                        	
-
                                         var  sMSMessage = "";
                                         sMSMessage = "COWAY RM0.00: Your order =" +  '${as_ord_basicInfo.ordNo}' + "  product issue had been successfully registered. Thank you!";
-                                        
                                         var t = $("#additionalCont").val();
                                         fn_sendSms(t ,sMSMessage);  
-                                        
 			                        }
 			                        
 			                        
 			                        $("#sFm").find("input, textarea, button, select").attr("disabled",true);
 			                        $("#save_bt_div").hide(); 
+			                        $("#_resultNewEntryPopDiv1").remove();
 			                        
-			                         
 			                        if(smsck_1) Common.popupDiv("/services/as/sendSMSPop.do" ,null, null , true , '_dosmsmDiv');
-	                		
-	                	});
+                        });
 	               }	
-	    });
+	    } , 'callbackClose' );
 	}
 }
 
+
+
+function callbackClose(){
+    $("#_resultNewEntryPopDiv1").remove();
+}
 
 function fn_validRequiredField_Save(){
 	

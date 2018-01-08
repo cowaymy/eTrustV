@@ -509,7 +509,8 @@ function fn_chStock(){
     var   sk = $("#ddlFilterCode").val();
 
 
-    var  availQty =isstckOk(ct ,sk);
+   var   availQty =isstckOk(ct ,sk);
+  
 
     if(availQty == 0){
         Common.alert('*<b> There are no available stocks.</b>');
@@ -949,9 +950,9 @@ function  fn_setSaveFormData(){
             Common.alert("<b>AS result successfully saved.</b>  New ResultNo["+result.data+"] </b>");
               $("#txtResultNo").html( "<font size='3' color='red'> <b> " +result.data+ " </b></font>");  
               fn_DisablePageControl();
-            
+              $("#_newASResultDiv1").remove();
         }
-    });
+    } , function (){  $("#_newASResultDiv1").remove(); });
     
 }
 
