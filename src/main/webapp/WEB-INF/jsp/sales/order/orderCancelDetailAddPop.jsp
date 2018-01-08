@@ -714,9 +714,6 @@
 <h2>Add Call Result</h2>
 </aside><!-- title_line end -->
 
-<ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
-</ul>
 <section class="search_table"><!-- search_table start -->
 <form id="addCallForm" name="addCallForm" action="#" method="post">
     <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
