@@ -304,7 +304,7 @@
            SET STUS_CODE_ID = #{stusCodeId}
              , REN_SCH_DT   = SYSDATE
              , IS_SYNC      = #{isSync}
-         WHERE IS_SYNC      = #{renSchId}
+         WHERE SALES_ORD_ID = #{salesOrdId}
     </update>
 
     <update id="updateSalesOrderM" parameterType="salesOrderMVO">

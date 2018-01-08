@@ -1777,6 +1777,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	if(stsMap != null) {
             	stsMap.put("stusCodeId", "RET");
             	stsMap.put("isSync", SalesConstants.IS_FALSE);
+            	stsMap.put("salesOrdId", params.get("salesOrdId"));
             	
             	orderRequestMapper.updateRentalScheme(stsMap);
         	}
