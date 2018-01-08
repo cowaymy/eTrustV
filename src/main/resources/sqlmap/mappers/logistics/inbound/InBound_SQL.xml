@@ -16,7 +16,7 @@
 				        ,L83.AP_CMPLT
 				        ,L83.GR_CMPLT
 				        ,L84.PUR_DOC_NO
-				        ,L.83.ACC_NO
+				        ,L83.ACC_NO
 				        ,L84.ITM_SEQ
 				        ,L84.MATRL_NO
 				        ,S26.STK_TYPE_ID

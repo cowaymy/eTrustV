@@ -281,13 +281,13 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 		logger.debug("formMap : {}", formMap);
 		if ("RC".equals(formMap.get("gtype"))) {
-			for (int i = 0 ; i < delvcd.length ; i ++){
-				String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
-				if (receiptFlag != null && "Y".equals(receiptFlag)){
-					formMap.put("retMsg" , "fail");
-					return formMap; 
-				}	
-			}
+//			for (int i = 0 ; i < delvcd.length ; i ++){
+//				String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
+//				if (receiptFlag != null && "Y".equals(receiptFlag)){
+//					formMap.put("retMsg" , "fail");
+//					return formMap; 
+//				}	
+//			}
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
 		} else {
 			Map<String, Object> grade = (Map<String, Object>) params.get("grade");
