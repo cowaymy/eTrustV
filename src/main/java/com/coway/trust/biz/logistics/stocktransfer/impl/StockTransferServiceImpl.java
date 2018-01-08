@@ -7,6 +7,7 @@
  */
 package com.coway.trust.biz.logistics.stocktransfer.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -256,21 +257,67 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 
 		List<Object> updList = (List<Object>) params.get("check");
 
-		String seq = stocktran.selectDeliveryStockTransferSeq();
-
+		String seq;
+		boolean dupCheck = true;
 		if (updList.size() > 0) {
 			Map<String, Object> insMap = null;
 			for (int i = 0; i < updList.size(); i++) {
 
 				logger.info(" updList.get(i) : {}", updList.get(i).toString());
 				insMap = (Map<String, Object>) updList.get(i);
-				insMap.put("delno", seq);
-				insMap.put("userId", params.get("userId"));
-				stocktran.deliveryStockTransferDetailIns(insMap);
-			}
-			stocktran.deliveryStockTransferIns(insMap);
-		}
+				List<EgovMap> list = stocktran.selectDeliverydupCheck(insMap);
+				logger.info(" list : {}", list.toString());
+				logger.info(" list.size : {}", list.size());
+				String ttmp1 = (String) insMap.get("reqstno");
+				String ttmp2 = (String) insMap.get("itmcd");
+				int ttmp3 = (int) insMap.get("reqstqty");
+				int ttmp4 = (int) insMap.get("delyqty");
+				logger.info(" ttmp1 :ttmp2 : ttmp3 : ttmp4 {} : {} : {} : {}", ttmp1, ttmp2, ttmp3, ttmp4);
+				if (list.size() > 0) {
+					Map<String, Object> checkmap = null;
+					checkmap = list.get(0);
+					String tmp1 = (String) checkmap.get("reqstNo");
+					String tmp2 = (String) checkmap.get("itmCode");
+					// int tmp3 = 1;
+					Integer count = ((BigDecimal) checkmap.get("delvryQty")).intValueExact();
+					int tmp3 = count;
+					// int tmp3 = Integer.parseInt((String) (checkmap.get("delvryQty")));
 
+					logger.info(" tmp1 :tmp2 : tmp3 {} : {} : {}", tmp1, tmp2, tmp3);
+
+					if (ttmp1.equals(tmp1) && ttmp2.equals(tmp2) && (ttmp4 + tmp3) > ttmp3) {
+						dupCheck = false;
+					}
+				}
+
+			}
+		}
+		if (dupCheck) {
+			seq = stocktran.selectDeliveryStockTransferSeq();
+			if (updList.size() > 0) {
+				Map<String, Object> insMap = null;
+				for (int i = 0; i < updList.size(); i++) {
+
+					logger.info(" updList.get(i) : {}", updList.get(i).toString());
+					insMap = (Map<String, Object>) updList.get(i);
+					insMap.put("delno", seq);
+					insMap.put("userId", params.get("userId"));
+					stocktran.deliveryStockTransferDetailIns(insMap);
+				}
+				stocktran.deliveryStockTransferIns(insMap);
+			}
+		} else {
+			seq = "dup";
+		}
+		/*
+		 * String seq = stocktran.selectDeliveryStockTransferSeq();
+		 * 
+		 * if (updList.size() > 0) { Map<String, Object> insMap = null; for (int i = 0; i < updList.size(); i++) {
+		 * 
+		 * logger.info(" updList.get(i) : {}", updList.get(i).toString()); insMap = (Map<String, Object>)
+		 * updList.get(i); insMap.put("delno", seq); insMap.put("userId", params.get("userId"));
+		 * stocktran.deliveryStockTransferDetailIns(insMap); } stocktran.deliveryStockTransferIns(insMap); }
+		 */
 		return seq;
 
 	}

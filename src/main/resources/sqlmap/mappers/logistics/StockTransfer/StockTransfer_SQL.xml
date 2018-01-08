@@ -292,6 +292,17 @@
 		             VALUES (  #{delno} , (select decode(count(DELVRY_NO_ITM) , 0 , 1 , max(DELVRY_NO_ITM +1)) from log0055d where DELVRY_NO = #{delno})
 		                     , #{itmcd} , #{itmname}, #{delyqty} , #{reqstno} , ${userId} , SYSDATE , #{reqitmno})
     </insert>
+      <select id="selectDeliverydupCheck" parameterType="Map" resultType="egovMap">
+            SELECT   REQST_NO
+                ,ITM_CODE
+                ,SUM (DELVRY_QTY) DELVRY_QTY
+                ,NVL(SUM (RCIPT_QTY),0) RCIPT_QTY
+            FROM LOG0055D
+           WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+         AND   REQST_NO= #{reqstno}
+         AND  ITM_CODE =#{itmcd}  
+         GROUP BY REQST_NO , ITM_CODE
+    </select>
     <delete id="deliveryStockTransferItmDel" parameterType="Map">
         delete from LOG0055D where DELVRY_NO = #{delyno} and ITM_CODE = #{itmcd}
     </delete>
@@ -529,4 +540,5 @@
      <delete id="updateRequestTransferStus" parameterType="Map">
         update LOG0047M set REQST_STUS = 'O' where REQST_NO = #{reqstno}
      </delete>
+     
 </mapper>

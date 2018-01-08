@@ -49,19 +49,21 @@ public interface StockTransferMapper {
 	void StockTransferCancelIssue(Map<String, Object> params);
 
 	List<EgovMap> selectStockTransferMtrDocInfoList(Map<String, Object> params);
-	
+
 	void updateRequestTransfer(String param);
-	
+
 	void insertStockBooking(Map<String, Object> params);
-	
+
 	void insertTransferSerial(Map<String, Object> params);
-	
+
 	void deliveryDelete54(Map<String, Object> params);
-	
+
 	void deliveryDelete55(Map<String, Object> params);
-	
+
 	void deliveryDelete61(Map<String, Object> params);
-	
+
 	void updateRequestTransfer(Map<String, Object> params);
-		
+
+	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
+
 }
