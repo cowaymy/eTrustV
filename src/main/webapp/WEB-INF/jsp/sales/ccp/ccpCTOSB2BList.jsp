@@ -311,13 +311,11 @@ function fn_detailPrev() {
 function fn_displayReport(viewType, batchId, ordNo){
 	
 	var isRe = false;
-	
+	console.log("DEFAULT_RESOURCE_FILE : " + DEFAULT_RESOURCE_FILE);
 	Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {viewType : viewType , batchId : batchId , ordNo : ordNo}, function(result){
-		
 		console.log("result : " + result);
 		console.log("content  :  " + JSON.stringify(result));
-        console.log("DEFAULT_RESOURCE_FILE : " + DEFAULT_RESOURCE_FILE); 
-		 if(result != null){
+		 if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
 			 window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
 		}else{
 			isRe  = true;
