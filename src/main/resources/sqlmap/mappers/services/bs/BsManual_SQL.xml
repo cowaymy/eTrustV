@@ -2770,8 +2770,6 @@ SELECT ROWNUM AS rnum ,
 
                     </select>
 
-                    </select>
-
                     <select id="selectCheckMemCode" parameterType="Map" resultType="egovMap">
                         SELECT MEM_CODE
                         FROM ORG0001D
