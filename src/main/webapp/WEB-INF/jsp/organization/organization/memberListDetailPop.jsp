@@ -106,10 +106,6 @@ $(document).ready(function() {
 	   }
 	});
         
-        $('#cmbSuperior').change(function (){
-        	alert($("#cmbSuperior").val());
-        });
-        
 });
 function createAUIGrid4() {
     //AUIGrid 칼럼 설정

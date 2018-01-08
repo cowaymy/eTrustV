@@ -16,12 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.MemberListService;
-import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.biz.organization.organization.vo.DocSubmissionVO;
+import com.coway.trust.biz.organization.organization.vo.MemberListVO;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.organization.organization.MemberListController;
-import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -1052,7 +1051,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				promoEntry.put("deptCodeTo", selectMemberOrgs.get("orgCode"));
     			}*/
 				Map<String, Object>  superiorEntry = new HashMap<String, Object>();
-				superiorEntry.put("memberLvl", params.get("memberLvl"));
+				logger.debug("params : {}", params);
+				superiorEntry.put("memberLvl", Integer.parseInt(params.get("memberLvl").toString())-2);
 				superiorEntry.put("memberType", params.get("memtype"));
 				superiorEntry.put("memberID", params.get("requestMemberId"));
 				superiorEntry.put("cmbSuperior", params.get("cmbSuperior"));
@@ -1075,18 +1075,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				
 				Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 				lastCodeEntry.put("deptCodeTo", promoEntry.get("deptCodeTo"));
-				lastCodeEntry.put("memberLvl", params.get("memberLvl"));	
+				lastCodeEntry.put("memberLvl", Integer.parseInt(params.get("memberLvl").toString())-2);	
 				logger.debug("lastCodeEntry : {}",lastCodeEntry);
 				EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
 				logger.debug("selectLastCode : {}",selectLastCode);
 //				promoEntry.put("deptCodeTo", selectLastCode.get("deptCode"));
-				if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
+				if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ||  !params.get("lvlTo") .equals("3") ) {	// lvlTo == 4 
 					promoEntry.put("lastDeptCode", selectLastCode.get("lastDeptCode"));
 				}
-				if ( !params.get("lvlTo") .equals("1") ) {
+				if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
 					promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
 				}
-				promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+				if ( !params.get("lvlTo") .equals("1")) {
+					promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+				}
 				promoEntry.put("branchId", selectLastCode.get("brnchId"));
 				
 				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
