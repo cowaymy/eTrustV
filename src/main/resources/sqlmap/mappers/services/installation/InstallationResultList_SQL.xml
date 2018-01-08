@@ -3870,7 +3870,7 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 				   AND A.BRNCH_ID = B.BRNCH_ID
 				   AND E.MEM_ID = C.MEM_ID
 				   AND C.MEM_TYPE = 3
-				   AND A.MEM_LVL = 4
+				   AND A.MEM_LVL  in ('4', '3')
 				   AND B.CODE = D.CT_BRNCH_CODE
 				   AND E.CT_SUB_GRP = D.CT_SUB_GRP
 				   AND C.STUS =1
@@ -4173,9 +4173,8 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 				   AND A.CUST_ID = B.CUST_ID
 				   AND C.ITM_STK_ID = D.STK_ID
 				   AND E.CODE_ID = D.STK_CTGRY_ID
-				   AND A.CUST_ID = F.CUST_ID
+				   AND A.CUST_CNT_ID = F.CUST_CNTC_ID
 				   AND A.SALES_ORD_NO =  #{SALES_ORD_NO} 
-				   
         ]]>
     </select>
     

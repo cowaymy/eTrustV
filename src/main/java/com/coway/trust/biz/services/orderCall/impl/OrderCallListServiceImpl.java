@@ -232,7 +232,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		int CTId = 0;
 		CTId = Integer.parseInt(params.get("CTID").toString());
 		//CT 받아오는거 다시 확인
-		String appointmentDate = "01/01/1900";
+		String appointmentDate = "";
 		if(params.get("appDate") != null){
 			appointmentDate = params.get("appDate").toString();
 		}
@@ -263,11 +263,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	private Map<String, Object> getSaveCallDetails(Map<String, Object> params,SessionVO sessionVO){
 		Map<String, Object> callDetails = new HashMap<String, Object>();
-		String recallDate = "01/01/1900";
+		String recallDate = "";
 		if(params.get("recallDate") != ""){
 			recallDate = params.get("recallDate").toString();
 		}
-		String appointmentDate = "01/01/1900";
+		String appointmentDate = "";
 		if(params.get("appDate") != null){
 			appointmentDate = params.get("appDate").toString();
 		}
@@ -306,7 +306,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		if(Integer.parseInt(params.get("callStatus").toString()) == 30){
 			IsWaitCancel = true;
 		}
-		String recallDate = "01/01/1900";
+		String recallDate = "";
 		if(params.get("recallDate") != ""){
 			recallDate = params.get("recallDate").toString();
 		}

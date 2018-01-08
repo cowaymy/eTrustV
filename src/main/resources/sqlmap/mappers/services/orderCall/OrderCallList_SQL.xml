@@ -473,11 +473,11 @@
 			                       Extent2.NAME NAME  ,
 			                      CASE
 			                          WHEN ( Extent1.CALL_DT IS NOT NULL ) THEN TO_CHAR(Extent1.CALL_DT,'DD-MM-YY')
-			                     ELSE TO_CHAR('1900-01-01','DD-MM-YY')
+			                     ELSE  ''
 			                        END C1  ,
 			                       CASE
 		                            WHEN ( Extent1.CALL_ACTN_DT IS NOT NULL ) THEN TO_CHAR(Extent1.CALL_ACTN_DT,'DD-MM-YY')
-		                       ELSE TO_CHAR('1900-01-01','DD-MM-YY')
+		                       ELSE  '' 
 		                          END C2  ,
 			                       CASE
 			                            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
@@ -493,7 +493,7 @@
 			                          END C5  ,
 			                       CASE
 			                            WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
-			                       ELSE ''
+			                       ELSE '' 
 			                          END C6  ,
 			                       CASE
 			                            WHEN ( Extent1.CALL_FDBCK_ID IS NOT NULL ) THEN Extent1.CALL_FDBCK_ID

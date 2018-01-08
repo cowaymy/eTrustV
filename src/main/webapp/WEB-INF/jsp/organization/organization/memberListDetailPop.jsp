@@ -706,7 +706,7 @@ function fn_winClose(){
 <tr>
      <th scope="row">Nationality</th>
     <td>
-    <span><c:out value="${memberView.c7}"/></span>
+    <span><c:out value="${memberView.country}"/></span>
     </td>
     <th scope="row">Race</th>
     <td>

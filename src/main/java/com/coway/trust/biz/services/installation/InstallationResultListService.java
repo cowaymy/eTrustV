@@ -78,4 +78,5 @@ public interface InstallationResultListService {
 	EgovMap validationInstallationResult(Map<String, Object> params);
 	
 	EgovMap getLocInfo(Map<String, Object> params);
+
 }
