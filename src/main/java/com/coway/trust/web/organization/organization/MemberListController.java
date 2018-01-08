@@ -850,6 +850,8 @@ public class MemberListController {
 		int resultUpc2 = 0;
 		int resultUpc3 = 0;
 		int resultUpc4 = 0;
+		int resultUpc5 = 0;
+		if( !formMap.get("memberType").toString().equals("2803") ){// hp가아닐때
 		resultUpc1 = memberListService.memberListUpdate_user(formMap);
 		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
 		resultUpc3 = memberListService.memberListUpdate_member(formMap);
@@ -868,7 +870,13 @@ public class MemberListController {
 		}
 		
 		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
-
+		}
+		
+		else {
+			resultUpc5 = memberListService.hpMemberUpdate(formMap);
+			
+			
+		}
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
 //    	message.setCode(AppConstants.SUCCESS);

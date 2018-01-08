@@ -196,5 +196,7 @@ public interface MemberListMapper {
 	List<EgovMap> selectHpMemberView(Map<String, Object> params);
 
 	EgovMap selectOneHPMember(Map<String, Object> params);
+
+	int updateHpMember(Map<String, Object> formMap);
 	
 }

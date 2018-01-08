@@ -323,6 +323,33 @@ function fn_setMemInfo(data){
 	        
 	        $("#memberNm").val(data.memName);
 	        $("#nric").val(data.nric);
+	        
+	        if(data.gender=="F"){
+	            $("#gender_f").prop("checked", true)
+	        }
+	        if(data.gender=="M"){
+	            $("#gender_m").prop("checked", true)
+	        }
+	        
+	        $("#email").val(data.email);
+	        
+	        $("#mobileNo").val(data.telMobile);
+	        
+	        $("#officeNo").val(data.telOffice);
+	        
+	        $("#sponsorCd").val(data.sponCd);
+	        
+	        $("#residenceNo").val(data.telHuse);
+	        
+	        if(data.bank !=null){
+	            $("#issuedBank option[value="+ data.bank +"]").attr("selected", true);
+	            $("#issuedBank").val(data.bank);	        
+	         }
+	        
+	        $("#marrital option[value="+ data.marrital +"]").attr("selected", true);
+	        $("#cmdRace").val(data.aplicntRace);
+	        $("#bankAccNo").val(data.bankAccNo);
+	        
 		
 	}
 	
@@ -653,11 +680,7 @@ function fn_saveValidation(){
                 valid = false;
                 message += "* Please select the transport code. \n ";
             }
-        	if($("#branch").val()=="")   //branch
-            {
-                valid = false;
-                message += "* Please select the branch code. \n ";
-            }
+        	
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
@@ -665,11 +688,7 @@ function fn_saveValidation(){
             //}
             break;
         case "3":
-        	if($("#branch").val()=="")   //branch
-            {
-                valid = false;
-                message += "* Please select the branch code. \n ";
-            }
+        
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
@@ -678,11 +697,7 @@ function fn_saveValidation(){
             break;
         case "4":
 
-        	if($("#branch").val()=="")   //branch
-            {
-                valid = false;
-                message += "* Please select the branch code. \n ";
-            }
+        	
             break;
         default:
             break;
@@ -898,7 +913,7 @@ function fn_selectState(selVal){
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="memberAddForm" method="post">
-
+<input type="hidden" id="areaId" name="areaId">
 <input type="hidden" id="searchSt1" name="searchSt1">
 <input type="hidden" id="streetDtl1" name="streetDtl1">
 <input type="hidden" id="addrDtl1" name="addrDtl1">
@@ -1100,7 +1115,7 @@ function fn_selectState(selVal){
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch<span class="must">*</span></th>
+    <th scope="row">Branch</th>
     <td>
      <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>
     </td>
@@ -1207,7 +1222,7 @@ function fn_selectState(selVal){
     <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck"/></span>
  </td>
  
- <th scope="row">PA expiry Date </th>
+ 
  <td>
  </td>
 </tr>

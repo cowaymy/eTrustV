@@ -3648,16 +3648,32 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     
      <select id="selectHpMemberView"  parameterType="Map" resultType="egovMap">
      
-		SELECT 
-		A.APLICNT_TYPE,
-		A.APLICNT_NAME MEM_NAME,
-		A.APLICNT_NRIC nric,
-		B.CODE_ID  MEM_TYPE
-		FROM
-		ORG0003D A, 
-		SYS0013M B 
-		WHERE  A.APLICNT_TYPE = B.CODE_ID 
-		AND      A.APLCTN_ID = #{MemberID}
+	  SELECT 
+        A.APLICNT_TYPE,
+        A.APLICNT_NAME MEM_NAME,
+        A.APLICNT_GENDER gender,    
+        C.NAME ,  
+        A.APLICNT_EMAIL email,
+        A.APLICNT_TEL_MOBILE tel_Mobile,
+        A.APLICNT_SPOUSE_CODE spon_Cd,
+        A.APLICNT_BANK_ID bank, 
+        A.APLICNT_NRIC nric,
+        B.CODE_ID  MEM_TYPE,
+        A.APLICNT_TEL_OFFICE tel_Office, 
+        A.DEPT_CODE ,
+        A. APLICNT_BANK_ACC_NO bank_Acc_No,
+        SYSDATE, 
+        A.APLICNT_TEL_HUSE tel_Huse ,
+        A.APLICNT_RACE,
+        APLICNT_MARTL marrital
+        
+        FROM
+        ORG0003D A, SYS0013M B,
+        SYS0015M C, SYS0004M F
+        WHERE  A.APLICNT_TYPE = B.CODE_ID(+) 
+        AND    A. APLICNT_NATION = C.CNTY_ID(+)
+        AND   A. APLICNT_BANK_ID  =  F.BANK_ID(+)
+        AND      A.APLCTN_ID  = #{MemberID}
      
      
      </select>
@@ -3668,15 +3684,75 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		 SELECT
 			A.ADDR_DTL,
 			A.Street,
+			A.DEPT_CODE c41,
+			C.NAME c36,
 			B.AREA area_Id,
 			B.COUNTRY,
 			B.CITY,
 			B.STATE,
 			B.POSTCODE
 			FROM ORG0003D A,  SYS0064M B
+			,SYS0015M C
 			WHERE A.AREA_ID = B.AREA_ID
+			 AND    A. APLICNT_NATION = C.CNTY_ID(+)
 			AND     A.APLCTN_ID = #{MemberID}
      
      </select>
+     
+     
+    
+     <update id="updateHpMember" parameterType="Map" >
+     update ORG0003D
+     SET APLCTN_ID = APLCTN_ID
+           <if test="areaId != null and areaId != '' ">
+           , AREA_ID = #{areaId}
+           </if>
+           <if test="streetDtl1 != null and streetDtl1 != '' ">
+           , STREET =#{streetDtl1}
+           </if>
+           <if test="addrDtl1 != null and addrDtl1 != '' ">
+           , ADDR_DTL =#{addrDtl1}
+           </if>
+            <if test="gender != null and gender != '' ">
+           , APLICNT_GENDER =#{gender}
+           </if>
+             <if test="memberNm != null and memberNm != '' ">
+           , APLICNT_NAME =#{memberNm}
+           </if>
+             <if test="nric != null and nric != '' ">
+           , APLICNT_NRIC =#{nric}
+           </if>
+             <if test="email != null and email != '' ">
+           , APLICNT_EMAIL =#{email}
+           </if>
+             <if test="mobileNo != null and mobileNo != '' ">
+           , APLICNT_TEL_MOBILE =#{mobileNo}
+           </if>
+             <if test="officeNo != null and officeNo != '' ">
+           , APLICNT_TEL_OFFICE =#{officeNo}
+           </if>
+           
+             <if test="officeNo != null and officeNo != '' ">
+           , APLICNT_TEL_OFFICE =#{officeNo}
+           </if>
+             <if test="cmbRace != null and cmbRace != '' ">
+           , APLICNT_RACE =#{cmbRace}
+           </if>
+             <if test="marrital != null and marrital != '' ">
+           , APLICNT_MARTL =#{marrital}
+           </if>
+            <if test="sponsorCd != null and sponsorCd != '' ">
+           , APLICNT_SPOUSE_CODE =#{sponsorCd}
+           </if>
+             <if test="bankAccNo != null and bankAccNo != '' ">
+           , APLICNT_BANK_ACC_NO =#{bankAccNo}
+           </if>
+             <if test="sponsorCd != null and sponsorCd != '' ">
+           , APLICNT_BANK_ID =#{issuedBank}
+           </if>
+     where  APLCTN_ID = #{MemberID}
+     
+     
+     </update>
     
 </mapper>

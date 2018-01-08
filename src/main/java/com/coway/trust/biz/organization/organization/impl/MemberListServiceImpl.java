@@ -1892,4 +1892,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		// TODO Auto-generated method stub
 		return memberListMapper.selectOneHPMember(params);
 	}
+
+	@Override
+	public int hpMemberUpdate(Map<String, Object> formMap) {
+		memberListMapper.updateHpMember(formMap);
+		return 0;
+	}
 }

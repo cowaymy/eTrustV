@@ -123,5 +123,7 @@ public interface MemberListService {
 
 	List<EgovMap> getHpMemberView(Map<String, Object> params);
 
-	EgovMap selectOneHPMember(Map<String, Object> params);	
+	EgovMap selectOneHPMember(Map<String, Object> params);
+
+	int hpMemberUpdate(Map<String, Object> formMap);	
 }
