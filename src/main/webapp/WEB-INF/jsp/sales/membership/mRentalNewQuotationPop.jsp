@@ -472,7 +472,7 @@ function fn_getFilterChargeList(){
                     	
                         if(result[0] !=null){
                             
-                            if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){
+                            if($("#zeroRatYn").val() == "N" || $("#eurCertYn").val() == "N"){
 
                                 $("#txtFilterCharge").val( Math.floor(result[0].amt * 100 / 106));
                             }else{
@@ -1078,7 +1078,7 @@ function fn_cPromotionpacChgEvt(){
                        
                        var t1 = oriprice - ( oriprice * ( promoPrcPrcnt /100 ) );
                        var t2 = 0;
-                       if($("#eurCertYn").val() == "Y"){
+                       if($("#eurCertYn").val() == "N"){
                            t2 =    (t1 -  promoAddDiscPrc) * 100 /106;
                        }else{
                            t2 = t1 -  promoAddDiscPrc;
@@ -1093,7 +1093,7 @@ function fn_cPromotionpacChgEvt(){
                      var t1 =  ( oriprice - promoPrcPrcnt) -promoAddDiscPrc;
                      var t2 = 0;
                      
-                     if($("#eurCertYn").val() == "Y"){
+                     if($("#eurCertYn").val() == "N"){
                          t2 = t1 *100 / 106;
                      }else{
                          t2 = t1;
@@ -1182,7 +1182,7 @@ function   fn_LoadRentalSVMPackage(_packId){
              $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
              $("#eurCertYn").val(result.packageInfo.eurCertYn);
              
-        	 if($("#eurCertYn").val() == "Y"){  
+        	 if($("#eurCertYn").val() == "N"){  
                  $("#hiddenOriFees").val(Math.floor(result.packageInfo.srvPacItmRental *100 /106));
                  $("#txtMonthlyFee").val(Math.floor(result.packageInfo.srvPacItmRental *100 /106));  
         	 }else{

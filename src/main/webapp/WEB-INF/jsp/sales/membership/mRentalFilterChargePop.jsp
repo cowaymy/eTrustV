@@ -28,8 +28,8 @@
                 
                 var amt = AUIGrid.getCellValue(gridFilterID, i, "prc");
                 
-                if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){                 
-                    AUIGrid.setCellValue(gridFilterID, i, "prc", Math.round(amt * 100 / 106))  
+                if($("#zeroRatYn").val() == "N" || $("#eurCertYn").val() == "N"){                 
+                    AUIGrid.setCellValue(gridFilterID, i, "prc", Math.floor(amt * 100 / 106))  
                 }
                 
             }

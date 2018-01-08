@@ -217,7 +217,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
 			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
 			 
-			 //srvMemPacNetAmt  = Math.round((double)(srvMemPacAmt  * 100 / 106 ));
+			 srvMemPacNetAmt  = Math.floor((double)(srvMemPacAmt  * 100 / 106 ));
 			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
 			 params.put("srvMemPacTaxes", srvMemPacAmt - srvMemPacNetAmt);
 		 }
@@ -237,7 +237,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			 srvMemBSNetAmt  	= CommonUtils.intNvl((String)params.get("srvMemBSNetAmt"));
 			 srvMemBSAmt			= CommonUtils.intNvl((String)params.get("srvMemBSAmt"));
 			 
-			 //srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 ));
+			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 ));
 			 params.put("srvMemBSNetAmt",srvMemBSNetAmt );
 			 params.put("srvMemBSTaxes",srvMemBSAmt - srvMemBSNetAmt );
 			
@@ -310,9 +310,12 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 						 
 					 }else*/
 					 if(!verifyGSTZeroRateLocation || !isVerifyGSTEURCertificate){
+
+						 double chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+						 double stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ));
 						 
-						 eFilterMap.put("StkNetAmt", rMap.get("prc"));
-						 eFilterMap.put("StkTaxes", rMap.get("0"));
+						 eFilterMap.put("StkNetAmt", stkNetAmt);
+						 eFilterMap.put("StkTaxes", "0");
 						 
 					 }else {
 						 

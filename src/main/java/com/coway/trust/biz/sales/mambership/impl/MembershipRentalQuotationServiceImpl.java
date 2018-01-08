@@ -195,6 +195,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		EgovMap  trnMap = new  EgovMap();
 		
 		String taxCode ="";
+		params.put("srvSalesOrderId", params.get("qotatOrdId"));
 		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
 		if(zeroRat > 0 ){
 			taxCode = "39";
@@ -233,9 +234,11 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		//1. insert 
 		membershipRentalQuotationMapper.insertQuotationInfo(params);
 		  
-		String isFilter =(String) params.get("isFilterCharge");
+		String isFilter =(String) params.get("isFilterChange");
 		 
-		 
+		logger.debug("isFilterCharge =============>" +(String) params.get("isFilterChange"));
+		 logger.debug("isFilter =============>" +isFilter);
+		
 		 if("true".equals(isFilter)){
 			 
 			 //2. get getMembershipFilterChargeList 프로시져 호출 
@@ -263,16 +266,20 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 eFilterMap.put("qotatItmExpDt", rMap.get("lastChngDt")); 
 					 eFilterMap.put("qotatItmChrg", rMap.get("prc"));
 					 
-					 if("39".equals(taxCode) ||"28".equals(taxCode) ){
-    				
-				 		eFilterMap.put("qotatItmAmt", "0");
+					 if("39".equals(taxCode) || "28".equals(taxCode) ){
+						                                 
+						double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+						double   amt  =Math.floor((float)(chargePrice  * 100 / 106 ));
+						 
+				 		eFilterMap.put("qotatItmAmt", amt);
 				 		eFilterMap.put("qotatItmGstRate", "0");
-				 		eFilterMap.put("ItmGstTaxCodeId", "39");
+				 		eFilterMap.put("qotatItmGstTaxCodeId", "39");
+				 		eFilterMap.put("qotatItmTxs", "0");
 
 					}else{
 
-					 	double   chargePrice =  CommonUtils.intNvl((String)rMap.get("prc"));
-					 	double   itemAmount  =  CommonUtils.intNvl((String)rMap.get("oriPrc"));
+					 	double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+					 	double   itemAmount  =  CommonUtils.intNvl(String.valueOf(rMap.get("oriPrc")));
 					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 ));
 					
 					 	eFilterMap.put("qotatItmChrg", amt);

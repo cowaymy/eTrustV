@@ -289,6 +289,7 @@ public class  MembershipRentalQuotationController {
 		params.put("qotatCrtUserId", sessionVO.getUserId());   
 		
 		Map  pmap = (Map)params.get("saveData");
+		pmap.put("isFilterChange",params.get("isFilterChange"));
 		pmap.put("qotatCrtUserId",  sessionVO.getUserId() );
 		
 		     

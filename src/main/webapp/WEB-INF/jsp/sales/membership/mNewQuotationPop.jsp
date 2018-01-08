@@ -490,7 +490,7 @@ function fn_onChange_cPromotionpac(o){
                              
                                var t1 = oriprice - ( oriprice * ( promoPrcPrcnt /100 ) );
                                var t2 = 0;
-                               if($("#eurCertYn").val() == "Y"){
+                               if($("#eurCertYn").val() == "N"){
                                    t2 =    (t1 -  promoAddDiscPrc) * 100 /106;
                                    $("#hiddenNomalPrice").val( Number( Math.floor(t1)));
                                }else{
@@ -504,7 +504,7 @@ function fn_onChange_cPromotionpac(o){
                         	 var t1 =  ( oriprice - promoPrcPrcnt) -promoAddDiscPrc;
                              var t2 = 0;
                              
-                        	 if($("#eurCertYn").val() == "Y"){
+                        	 if($("#eurCertYn").val() == "N"){
                         		 t2 = t1 *100 / 106;
                                  $("#hiddenNomalPrice").val(Number( Math.floor(t1)));
                         	 }else{
@@ -570,8 +570,8 @@ function fn_getMembershipPackageInfo(_id){
                $("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod );
 
                $("#hiddenNomalPrice").val(pacPrice);
-               
-               if($("#eurCertYn").val() == "Y"){
+                              
+               if($("#eurCertYn").val() == "N"){
                    $("#txtPackagePrice").html(Math.floor(pacPrice *100/106));
                    $("#hiddenPacOriPrice").val(Math.floor(pacPrice *100/106));
                }else{
@@ -740,7 +740,7 @@ function fn_getFilterChargeList(){
                  
                 if(null != result){
                      if(result[0] !=null){
-                    	 if($("#zeroRatYn").val() == "Y" || $("#eurCertYn").val() == "Y"){
+                    	 if($("#zeroRatYn").val() == "N" || $("#eurCertYn").val() == "N"){
                     		 
                              $("#txtFilterCharge").text( Math.floor(result[0].amt * 100 / 106));
 
@@ -1247,7 +1247,7 @@ function  fn_DoSaveProcess(_saveOption){
     
     $("#srvMemPacNetAmt").val($("#txtPackagePrice").text());  // 
     //$("#srvMemPacNetAmt").val($("#hiddenNomalPrice").text());  // nomalAmt
-    $("#srvMemPacAmt").val($("#hiddenNomalPrice").text()); //srvMemPacNetAmt
+    $("#srvMemPacAmt").val($("#hiddenNomalPrice").val()); //srvMemPacNetAmt
     
     $("#srvMemBSAmt").val($("#txtFilterCharge").text());
     $("#srvMemBSNetAmt").val($("#txtFilterCharge").text());  // srvMemBSNetAmt

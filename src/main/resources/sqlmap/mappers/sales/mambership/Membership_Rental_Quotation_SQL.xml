@@ -577,7 +577,7 @@
       <select id="getFilterCharge"  statementType="CALLABLE"   parameterType="Map">
        <![CDATA[ 
             {
-                  call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} ,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mFCMap})
+                  call SP_GET_ORD_MBRSH_FILTER_CHRG ( #{ORD_ID} ,  #{PROMO_ID} , '' ,#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=mFCMap})
             }
          ]]>
       </select>   
