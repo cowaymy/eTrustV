@@ -398,11 +398,12 @@ $(function(){
         }else{
 
         for(var i=0, len = checkedItems.length; i<len; i++) {
-          if (checkedItems[i].delyqty > 0 ){
+        	  if (checkedItems[i].delyqty > 0 ){
                   chkfalg="Y";
-                }else{
-                   chkfalg="N";
-                }
+              }else{
+                  chkfalg="N";
+                  break;
+              }
           }
         if(chkfalg=="Y"){
             var data = {};
