@@ -76,10 +76,10 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 				
 				LOGGER.info("________________________________params : " + params.toString());
 				if(SalesConstants.FICO_VIEW_TYPE.equals(params.get("viewType"))){
-					rePaht = resourceLoader.getResource("classpath:/template/stylesheet/fico_report.xsl").getURI().getPath();
+					rePaht = resourceLoader.getResource("classpath:template/stylesheet/fico_report.xsl").getURI().getPath();
 					LOGGER.info("_______________________________ FICO VIEW " + params.get("viewType"));
 				}else{
-					rePaht = resourceLoader.getResource("classpath:/template/stylesheet/ctos_report.xsl").getURI().getPath();
+					rePaht = resourceLoader.getResource("classpath:template/stylesheet/ctos_report.xsl").getURI().getPath();
 					LOGGER.info("_______________________________ CTOS_VIEW " + params.get("viewType"));
 				}
 				LOGGER.info("###################### Style Sheet Path :   " + rePaht);
