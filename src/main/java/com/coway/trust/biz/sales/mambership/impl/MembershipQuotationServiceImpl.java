@@ -141,8 +141,33 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
-	public List<EgovMap> getFilterChargeListSum(Map<String, Object> params) {
-		return membershipQuotationMapper.getFilterChargeListSum(params); 
+	public double getFilterChargeListSum(Map<String, Object> params) {
+		
+		membershipQuotationMapper.getFilterCharge(params);
+		
+		List<EgovMap> list = (List<EgovMap>) params.get("p1");
+		
+		int sum = 0;
+		
+		 logger.debug("zeroRat ==========================>>  " + params.get("zeroRatYn"));
+	     logger.debug("eurCertYn ==========================>>  " + params.get("eurCertYn"));
+		
+		for(EgovMap result : list ){
+			
+			double prc = CommonUtils.intNvl(String.valueOf(result.get("prc")));
+			
+			if("N".equals(params.get("zeroRatYn"))||"N".equals(params.get("eurCertYn"))){
+				
+				sum  += Math.floor((double)(prc  * 100 / 106 ));
+				
+			}else{
+				sum  += prc;
+			}
+			
+		}
+		
+		
+		return sum ;//membershipQuotationMapper.getFilterChargeListSum(params); 
 	}
 	
 	   

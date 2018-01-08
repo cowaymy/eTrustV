@@ -48,7 +48,7 @@ public interface MembershipRentalQuotationService {
 	
 	
 	List<EgovMap>   getFilterChargeList(Map<String, Object> params);
-	List<EgovMap>   getFilterChargeListSum(Map<String, Object> params);
+	double   getFilterChargeListSum(Map<String, Object> params);
 	
 	EgovMap		getFilterPromotionAmt(Map<String, Object> params);
 	

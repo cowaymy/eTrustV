@@ -343,18 +343,20 @@ public class  MembershipRentalQuotationController {
 	}
 	
 	@RequestMapping(value = "/getFilterChargeListSum.do" ,method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>>  getFilterChargeListSum(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
+	public ResponseEntity<Double>  getFilterChargeListSum(@RequestParam Map<String, Object> params,HttpServletRequest request, Model mode)	throws Exception {
 		
 		logger.debug("in  getFilterChargeListSum ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
 		
-		membershipRentalQuotationService.getFilterChargeListSum(params);	
+		double sum = membershipRentalQuotationService.getFilterChargeListSum(params);
 		
-		List<EgovMap>  list = (List<EgovMap>) params.get("p1");
+		/*List<EgovMap>  list = (List<EgovMap>) params.get("p1");*/
 		
-		return ResponseEntity.ok(list);
+		logger.debug("sum ==============>> " + sum); 
+		
+		return ResponseEntity.ok(sum);
 	}
 	
 	

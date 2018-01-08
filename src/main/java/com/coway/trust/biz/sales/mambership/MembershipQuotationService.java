@@ -31,7 +31,7 @@ public interface MembershipQuotationService {
 	
 	List<EgovMap>   getFilterChargeList(Map<String, Object> params);
 
-	List<EgovMap>   getFilterChargeListSum(Map<String, Object> params);
+	double   getFilterChargeListSum(Map<String, Object> params);
 
 	
 	
