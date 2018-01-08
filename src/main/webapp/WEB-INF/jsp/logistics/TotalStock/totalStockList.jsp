@@ -46,7 +46,9 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "bookingQty",headerText :"Book Qty"        ,width:120    ,height:30                },
                      {dataField: "availableQty",headerText :"<spring:message code='log.head.availableqty'/>"      ,width:120    ,height:30                },
                      {dataField: "brnchCode",headerText :"Branch Code"        ,width:120    ,height:30                },
-                     {dataField: "brnchName",headerText :"Branch Name"        ,width:120    ,height:30                }
+                     {dataField: "brnchName",headerText :"Branch Name"        ,width:120    ,height:30                },
+                     {dataField: "cdcCode",headerText :"CDC Code"        ,width:120    ,height:30                },
+                     {dataField: "cdcName",headerText :"CDC Name"        ,width:120    ,height:30                }
                       ];
 
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
@@ -101,6 +103,10 @@ $(document).ready(function(){
     doGetCombo('/common/selectCodeList.do', '11', '','searchCtgry', 'M' , 'f_multiCombos');
     doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
+    
+    doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+    
+    
     //
 
     /**********************************
@@ -174,6 +180,10 @@ $(function(){
 
     $("#download").click(function() {
     	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Total Stcok List");
+    });
+    $("#searchBranch").change(function(){
+        //doGetComboData('/common/selectCodeList.do', paramdata, '','insReqType', 'S' , '');
+        doGetComboData('/logistics/totalstock/selectCDCList.do', { groupCode : $("#searchBranch").val()}, '','searchCDC', 'S' , '');
     });
 });
 
@@ -315,6 +325,20 @@ function searchlocationFunc(){
                 <col style="width:*" />
             </colgroup>
             <tbody>
+              <tr>
+                   <th scope="row">Branch</th>
+                   <td>
+                   <select class="w100p" id="searchBranch"  name="searchBranch"></select>
+                   <!-- <select id="searchlocgb" name="searchlocgb" class="multy_select w100p"multiple="multiple"></select> -->
+                   </td>
+                   <th scope="row">CDC</th>
+                   <td>
+                        <select class="w100p" id="searchCDC" name="searchCDC"></select>
+                   </td>
+                   <!-- <th scope="row"></th> -->
+                   <td colspan="2">
+                   </td>
+                </tr>
                 <tr>
                    <th scope="row">Location Type</th>
                    <td>

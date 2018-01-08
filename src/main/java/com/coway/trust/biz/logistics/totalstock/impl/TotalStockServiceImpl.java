@@ -29,5 +29,17 @@ public class TotalStockServiceImpl extends EgovAbstractServiceImpl implements To
 		return TotalStockMapper.totStockSearchList(params);
 	}
 	
+	@Override
+	public List<EgovMap> selectBranchList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return TotalStockMapper.selectBranchList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectCDCList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return TotalStockMapper.selectCDCList(params);
+	}
+	
 
 }

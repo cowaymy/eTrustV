@@ -97,7 +97,9 @@ public class TotalStockController {
 		String[] searchCtgry = request.getParameterValues("searchCtgry");
 		String[] searchlocgb = request.getParameterValues("searchlocgb");
 		String[] searchLoc = request.getParameterValues("searchLoc");
-		String searchlocgrade = request.getParameter("searchlocgrade");
+		String searchlocgrade = request.getParameter("searchlocgrade");		
+		String searchBranch = request.getParameter("searchBranch");
+		String searchCDC = request.getParameter("searchCDC");
 		
 		String sstocknm = request.getParameter("searchMatName");
 
@@ -110,6 +112,8 @@ public class TotalStockController {
 		smap.put("searchlocgb", searchlocgb);
 		smap.put("searchlocgrade", searchlocgrade);
 		smap.put("sstocknm", sstocknm);
+		smap.put("searchBranch", searchBranch);
+		smap.put("searchCDC", searchCDC);
 		
 
 		List<EgovMap> list = TotalStockService.totStockSearchList(smap);
@@ -119,4 +123,20 @@ public class TotalStockController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/selectTotalBranchList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selecttotalBranchList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = TotalStockService.selectBranchList(params);
+		return ResponseEntity.ok(codeList);
+	}
+	
+	@RequestMapping(value = "/selectCDCList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCDCList(@RequestParam Map<String, Object> params) {
+		
+		//logger.debug("searchBranch@@@@@: {}", params.get("searchBranch"));
+		
+		List<EgovMap> codeList = TotalStockService.selectCDCList(params);
+		return ResponseEntity.ok(codeList);
+	}
+	
 }

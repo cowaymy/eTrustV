@@ -9,4 +9,8 @@ public interface TotalStockService {
 
 	List<EgovMap> totStockSearchList(Map<String, Object> params);
 		
+	List<EgovMap> selectBranchList(Map<String, Object> params);
+	
+	List<EgovMap> selectCDCList(Map<String, Object> params);
+	
 }
