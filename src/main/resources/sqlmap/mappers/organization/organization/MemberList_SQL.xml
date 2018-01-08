@@ -1813,8 +1813,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , TO_DATE(#{confirmDate},'DD-MM-YYYY')
 	  , #{deptCode}
 	  , #{areaId}
-	  , #{streetDtl}
 	  , #{addrDtl}
+	  , #{streetDtl}
 	  , #{searchdepartment}
 	  , #{searchSubDept}
 	  )
@@ -2862,9 +2862,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
               -->
               <![CDATA[
-              AREA_ID = #{searchSt1},
-              ADDR_DTL = #{addrDtl1},
-              STREET = #{streetDtl1},
+              AREA_ID = #{areaId},
+              ADDR_DTL = #{addrDtl},
+              STREET = #{streetDtl},
 
               TEL_OFFICE = #{officeNo},
               TEL_HUSE = #{residenceNo},

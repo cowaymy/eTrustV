@@ -396,6 +396,7 @@ public class MemberListController {
 
 		Boolean success = false;
 		String msg = "";
+		logger.debug("params : {}", params);
 		logger.debug("memberNm : {}", params.get("memberNm"));
 		logger.debug("memberType : {}", params.get("memberType"));
 		logger.debug("joinDate : {}", params.get("joinDate"));

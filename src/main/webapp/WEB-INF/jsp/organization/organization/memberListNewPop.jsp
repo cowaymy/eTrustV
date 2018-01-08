@@ -524,6 +524,11 @@ function fn_saveValidation(){
         Common.alert("Please select Joined Date");
         return false;
     }
+	
+	if($("#sponsorCd").val() == ''){
+        Common.alert("Please select 'Sponsor's Code'");
+        return false;
+    }
 
 	if($('input[name=gender]:checked', '#memberAddForm').val() == null){
 		  Common.alert("Please select Gender");
@@ -584,8 +589,13 @@ function fn_saveValidation(){
         return false;
     }
 
-	if($("#addrDtl").val() == ''){
+	if($("#areaId").val() == ''){
         Common.alert("Please key in the address.");
+        return false;
+    }
+	
+	if($("#addrDtl").val() == ''){
+        Common.alert("Please key in the address detail.");
         return false;
     }
 
@@ -941,7 +951,8 @@ function checkNRIC(){
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"/>
+    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p"  maxlength="12" onKeyDown="checkNRICEnter()"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>
@@ -1006,19 +1017,22 @@ function checkNRIC(){
 <tr>
     <th scope="row">Mobile No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="mobileNo" name="mobileNo"/>
+    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="mobileNo" name="mobileNo"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Office No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="officeNo" name="officeNo"/>
+    <input type="text" title="" placeholder="Numberic Only" class="w100p"  id="officeNo" name="officeNo"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Residence No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="residenceNo"  name="residenceNo"/>
+    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="residenceNo"  name="residenceNo"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Sponsor's Code</th>
+    <th scope="row">Sponsor's Code<span class="must">*</span></th>
     <td>
 
     <div class="search_100p"><!-- search_100p start -->
@@ -1033,7 +1047,8 @@ function checkNRIC(){
     </td>
     <th scope="row">Sponsor's NRIC</th>
     <td>
-    <input type="text" title="" placeholder="Sponsor's NRIC" class="w100p" id="sponsorNric" name="sponsorNric"/>
+    <input type="text" title="" placeholder="Sponsor's NRIC" class="w100p" id="sponsorNric" name="sponsorNric"
+        onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>
 <tr>

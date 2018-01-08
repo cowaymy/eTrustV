@@ -147,6 +147,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		String memCode = "";
 		Map<String, Object> codeMap1 = new HashMap<String, Object>();
 		Map<String, Object> MemApp = new HashMap<String, Object>();
+		logger.debug("params : {}", params);
 		if(Integer.parseInt((String) params.get("memberType")) == 2803){   //if HP Applicant
 
 			MemApp.put("applicationID", 0);
@@ -198,8 +199,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			//addr 주소 가져오기
 			//MemApp.put("areaId",params.get("searchSt1").toString());
 			MemApp.put("areaId",params.get("areaId").toString());
-			MemApp.put("streetDtl",params.get("streetDtl1")!= null ?params.get("streetDtl1").toString() : "");
-			MemApp.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
+			MemApp.put("streetDtl",params.get("streetDtl")!= null ?params.get("streetDtl").toString() : "");
+			MemApp.put("addrDtl",params.get("addrDtl")!= null ? params.get("addrDtl").toString() : "");
 			
 			//Department
 			//MemApp.put("searchdepartment",  params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
@@ -296,8 +297,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		//addr 가져오기
 		params.put("areaId",params.get("areaId").toString());
-		params.put("streetDtl",params.get("streetDtl1")!= null ?params.get("streetDtl1").toString() : "");
-		params.put("addrDtl",params.get("addrDtl1")!= null ? params.get("addrDtl1").toString() : "");
+		params.put("streetDtl",params.get("streetDtl")!= null ?params.get("streetDtl").toString() : "");
+		params.put("addrDtl",params.get("addrDtl")!= null ? params.get("addrDtl").toString() : "");
 		
 		//Department
 		params.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
