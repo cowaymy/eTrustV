@@ -408,6 +408,7 @@ public class InstallationReversalController {
                 params.put("adjCrAccID", adjCrAccID);
                 
                 SimpleDateFormat format = new SimpleDateFormat("YYYY-MMM-DD");
+                SimpleDateFormat format2 = new SimpleDateFormat("YY/MM/DD");
                 
                 String esalesDt = params.get("esalesDt").toString();
                 
@@ -415,7 +416,7 @@ public class InstallationReversalController {
                 Date mthapril = null;
                 
                 mthapril =  format.parse("2015-APR-01");
-                salesdate = format.parse(esalesDt);
+                salesdate = format2.parse(esalesDt);
                 System.out.println(salesdate);
                 
                 if (salesdate.compareTo(mthapril)<0){
@@ -593,15 +594,15 @@ public class InstallationReversalController {
                 		if(QryOutSList.size()>0){
                 			logger.debug("-------------11---------------");
                 			for(int i = 0 ; i<QryOutSList.size() ; i++){
-                				params.put("TaxInvoiceID",QryOutSList.get(0).get("taxInvcId"));
-                				params.put("InvoiceItemGSTTaxes",QryOutSList.get(0).get("invcItmGstTxs"));
-                				params.put("InvoiceItemAmountDue",QryOutSList.get(0).get("invcItmAmtDue"));
-                				params.put("InvocieItemID",QryOutSList.get(0).get("invcItmId"));
-                				params.put("InvoiceItemGSTRate",QryOutSList.get(0).get("invcItmGstRate"));
-                				params.put("InvoiceItemRentalFee",QryOutSList.get(0).get("invcItmRentalFee"));
-                				params.put("InvoiceItemOrderNo",QryOutSList.get(0).get("invcItmOrdNo"));
-                				params.put("InvoiceItemProductModel",QryOutSList.get(0).get("invcItmProductModel"));
-                				params.put("InvoiceItemProductSerialNo",QryOutSList.get(0).get("invcItmProductSerialNo"));
+                				params.put("TaxInvoiceID",QryOutSList.get(i).get("taxInvcId"));
+                				params.put("InvoiceItemGSTTaxes",QryOutSList.get(i).get("invcItmGstTxs"));
+                				params.put("InvoiceItemAmountDue",QryOutSList.get(i).get("invcItmAmtDue"));
+                				params.put("InvocieItemID",QryOutSList.get(i).get("invcItmId"));
+                				params.put("InvoiceItemGSTRate",QryOutSList.get(i).get("invcItmGstRate"));
+                				params.put("InvoiceItemRentalFee",QryOutSList.get(i).get("invcItmRentalFee"));
+                				params.put("InvoiceItemOrderNo",QryOutSList.get(i).get("invcItmOrdNo"));
+                				params.put("InvoiceItemProductModel",QryOutSList.get(i).get("invcItmProductModel"));
+                				params.put("InvoiceItemProductSerialNo",QryOutSList.get(i).get("invcItmProductSerialNo"));
                 				
                 				//,d.INVC_ITM_PRODUCT_MODEL,INVC_ITM_PRODUCT_SERIAL_NO
                 				
@@ -609,7 +610,7 @@ public class InstallationReversalController {
                 				EgovMap  qryAccBill = installationReversalService.getQryAccBill(params);
                 				params.put("AccBillID",qryAccBill.get("accBillId"));
                 				params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
-                				params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefNo"));
+                				params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefDt"));
                 				params.put("TaxInvoiceCustName",qryAccBill.get("taxInvcCustName"));
                 				params.put("TaxInvoiceContactPerson",qryAccBill.get("taxInvcCntcPerson"));
                 				
@@ -654,10 +655,10 @@ public class InstallationReversalController {
                 				
                 				int crid = 0;
                                 int drid = 0;
-                                boolean conv = (boolean)qryAccBill.get("accBillAcctCnvr");
+                                int conv = Integer.parseInt(qryAccBill.get("accBillAcctCnvr").toString());
                                 		//ACC_BILL_ACCT_CNVR; 
     
-                                if (conv == false)
+                                if (conv == 0)
                                 {
                                     crid = 38;
                                     drid = 535;
@@ -687,6 +688,8 @@ public class InstallationReversalController {
                                 params.put("docNoId",112);
                             	installationReversalService.updateDOCNumber(params);
                                 
+                            	
+                            	params.put("Updator",userId);
                             	installationReversalService.addAccOrderVoid_Invoice(params);
                             	params.put("adjEntryId",MemoAdjustID);
                             	params.put("TotalAmt",qryAccBill.get("taxInvcAmtDue"));
@@ -1059,7 +1062,7 @@ public class InstallationReversalController {
 	                			EgovMap  qryAccBill = installationReversalService.getQryAccBill(params);
                 				params.put("AccBillID",qryAccBill.get("accBillId"));
                 				params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
-                				params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefNo"));
+                				params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefDt"));
                 				params.put("TaxInvoiceCustName",qryAccBill.get("taxInvcCustName"));
                 				params.put("TaxInvoiceContactPerson",qryAccBill.get("taxInvcCntcPerson"));
                 				
@@ -1101,10 +1104,10 @@ public class InstallationReversalController {
                 				
                 				int crid = 0;
                                 int drid = 0;
-                                boolean conv = (boolean)qryAccBill.get("accBillAcctCnvr");
+                                int conv = Integer.parseInt(qryAccBill.get("accBillAcctCnvr").toString());
                                 		//ACC_BILL_ACCT_CNVR; 
     
-                                if (conv == false)
+                                if (conv == 0)
                                 {
                                     crid = 38;
                                     drid = 535;
@@ -1487,7 +1490,7 @@ public class InstallationReversalController {
 	                			EgovMap  qryAccBill = installationReversalService.getQryAccBill(params);
                 				params.put("AccBillID",qryAccBill.get("accBillId"));
                 				params.put("TaxInvoiceRefNo",qryAccBill.get("taxInvcRefNo"));
-                				params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefNo"));
+                				params.put("TaxInvoiceRefDate",qryAccBill.get("taxInvcRefDt"));
                 				params.put("TaxInvoiceCustName",qryAccBill.get("taxInvcCustName"));
                 				params.put("TaxInvoiceContactPerson",qryAccBill.get("taxInvcCntcPerson"));
                 				
@@ -1529,10 +1532,10 @@ public class InstallationReversalController {
                 				
                 				int crid = 0;
                                 int drid = 0;
-                                boolean conv = (boolean)qryAccBill.get("accBillAcctCnvr");
+                                int conv = Integer.parseInt(qryAccBill.get("accBillAcctCnvr").toString());
                                 		//ACC_BILL_ACCT_CNVR; 
     
-                                if (conv == false)
+                                if (conv == 0)
                                 {
                                     crid = 38;
                                     drid = 535;
@@ -1583,7 +1586,7 @@ public class InstallationReversalController {
 		
 		
 		ReturnMessage message = new ReturnMessage();
-		message.setMessage("controllend");
+		message.setMessage("reversal complete");
 		return ResponseEntity.ok(message);
 	}
 	

@@ -150,10 +150,11 @@ public class InstallationReversalServiceImpl extends EgovAbstractServiceImpl imp
 	
 	@Override
 	public List<EgovMap> getQryOutS(Map<String, Object> params) {
-		installationReversalMapper.getQryOutS(params);
+		//installationReversalMapper.getQryOutS(params);
 				
 		//return (List<EgovMap>) params.get("p1");
-		return (List<EgovMap>) params;
+		//return (List<EgovMap>) params;
+		return installationReversalMapper.getQryOutS(params);
 	}
 	
 	@Override

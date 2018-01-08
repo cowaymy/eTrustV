@@ -91,11 +91,14 @@ function fn_setdetail(result){
 	
 	$("#ectid").val(result.list1.c6);
 	$("#applicationTypeID").val(result.list1.codeId);
-	
-	if(CommonUtils.nvl(result.list5.whLocId)!=null){
-		   $("#inChargeCTWHID").val(result.list5.whLocId);
+	if(result.list5!=null){
+		if(result.list5.whLocId!=null){
+			   $("#inChargeCTWHID").val(result.list5.whLocId);
+		}else{
+		   $("#inChargeCTWHID").val(0);
+		}
 	}else{
-	   $("#inChargeCTWHID").val(0);
+		$("#inChargeCTWHID").val(0);
 	}
 	
 	if(result.list1.installStkId!=null){
@@ -103,7 +106,7 @@ function fn_setdetail(result){
  }
 	//$("#retWarehouseID").text(result.list1.brnchId);
 	
-	/*
+	
 	if(result.list1.stusCodeId==4){
 		if(result.list1.c3==null){
 			//$("#lblErrorMessage").text(result.list1.salesOrdNo);
@@ -129,7 +132,7 @@ function fn_setdetail(result){
 		$("#btnReverse").hide();
         $("#divResultReversal").hide();
 	}
-	*/
+	
 	$("#callTypeId").val(result.list1.codeid1);
 	$("#esalesDt").val(result.list1.salesDt);	
 	$("#eCustomerName").text(result.list1.name);
@@ -297,7 +300,6 @@ function fn_save(){
     $("#esalesOrdNo").val($("#salesOrdNo").val());
     $("#einstallEntryId").val($("#installEntryId").val());
     $("#esalesOrdId").val($("#salesOrdId").val());
-	alert($("#instalStrlDate").val());
 	Common.ajax("POST", "/services/saveResaval",  $("#editForm").serializeJSON(), function(result) {
         console.log("message : " + result.message );
         Common.alert(result.message,fn_close);

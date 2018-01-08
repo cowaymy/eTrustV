@@ -560,7 +560,7 @@ AND ROWNUM                    <= 1
     <![CDATA[
         SELECT DOC_RESULT
 	  FROM (
-	select DOC_NO_PREFIX ||DOC_NO_ID DOC_RESULT
+	select DOC_NO_PREFIX ||DOC_NO DOC_RESULT
 	  from SYS0022C
 	 where DOC_NO_id = #{docno}
 	 )
@@ -821,19 +821,19 @@ AND ROWNUM                    <= 1
         ,TAX_INVC_STATE_NAME,TAX_INVC_CNTY,TAX_INVC_AMT_DUE        
 		  from (
 		select ACC_BILL_ID, ACC_BILL_ACCT_CNVR,TAX_INVC_REF_NO,TAX_INVC_REF_DT,TAX_INVC_CUST_NAME,TAX_INVC_CNTC_PERSON
-		,TAX_INVC_ADDR1,TAX_INVC_ADDR2,TAX_INVC_ADDR3,TAX_INVC_ADDR4,TAX_INVC_POST_CODE,
+		,TAX_INVC_ADDR1,TAX_INVC_ADDR2,TAX_INVC_ADDR3,TAX_INVC_ADDR4,TAX_INVC_POST_CODE
 		,TAX_INVC_STATE_NAME,TAX_INVC_CNTY,TAX_INVC_AMT_DUE		
 		  from PAY0033D a
-		      ,PAY0016D b
+		      ,PAY0016D b		      
 		 where TAX_INVC_ID = #{TaxInvoiceID}
-		   and a.TAX_INVC_REF_NO = b.ACC_BILL_REM
+		   and a.TAX_INVC_REF_NO = b.ACC_BILL_REM		   
 		   )
 		  where rownum = 1 
     ]]>    
     </select>
     
     
-    <select id="getAccBillTaxCodeID" parameterType="Map" resultType="egovMap">
+    <select id="getAccBillTaxCodeID" parameterType="Map" resultType="String">
     <![CDATA[
         select ACC_BILL_TAX_CODE_ID
           from PAY0016D
@@ -852,7 +852,7 @@ AND ROWNUM                    <= 1
     <update id="updateDOCNumber_8Digit" parameterType="Map">
      <![CDATA[
         update sys0022c
-           set docno = lpad(doc_no+1,8,0)
+           set doc_no = lpad(doc_no+1,8,0)
          where doc_no_id = #{docNoId}
         ]]>
     </update>
@@ -897,14 +897,15 @@ AND ROWNUM                    <= 1
     <select id="getMemoAdjustID" parameterType="Map" resultType="int">
     <![CDATA[
         select max(MEMO_ADJ_ID) MEMO_ADJ_ID
-          from PAY00011D
+          from PAY0011D
     ]]>    
     </select>
     
     
     <insert id="addAccInvoiceAdjustment_Sub" parameterType="Map">
         insert into PAY0012D
-		(MEMO_ITM_ID,,MEMO_ADJ_ID
+		(MEMO_ITM_ID
+		,MEMO_ADJ_ID
 		,MEMO_ITM_INVC_ITM_ID
 		,MEMO_ITM_INVC_ITM_QTY
 		,MEMO_ITM_CRDIT_ACC_ID
@@ -965,12 +966,12 @@ AND ROWNUM                    <= 1
 		values
 		(PAY0027D_SEQ.nextval
 		,#{MemoAdjustID}
-		,'1293'
+		,1293
 		,#{InvoiceItemOrderNo}
 		,#{cnno}
 		,#{TaxInvoiceRefDate}
 		,#{TaxInvoiceRefNo}
-		,'127'
+		,127
 		,#{TaxInvoiceCustName}
 		,#{TaxInvoiceContactPerson}
 		,#{TaxInvoiceAddress1}
@@ -985,7 +986,7 @@ AND ROWNUM                    <= 1
 		,#{InvoiceItemRentalFee}
 		,#{InvoiceItemAmountDue}
 		,'INSTALLATION RESULT REVERSAL'
-		,'4'
+		,4
 		,SYSDATE
 		,#{userId}
 		)
@@ -994,7 +995,7 @@ AND ROWNUM                    <= 1
     <select id="getNoteID" parameterType="Map" resultType="int">
     <![CDATA[
         select max(NOTE_ID) NOTE_ID
-          from PAY00027D
+          from PAY0027D
     ]]>    
     </select>
     
@@ -1038,7 +1039,7 @@ AND ROWNUM                    <= 1
 		,''
 		,#{TaxInvoiceStateName}
 		,#{TaxInvoiceCountry}
-		,'1'
+		,1
 		,#{InvoiceItemAmountDue}
 		,#{InvoiceItemGSTRate}
 		,#{InvoiceItemGSTTaxes}
