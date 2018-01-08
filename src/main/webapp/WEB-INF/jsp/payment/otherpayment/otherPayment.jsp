@@ -2243,7 +2243,7 @@ function fn_outConfirm(){
 	    	}
 	    }else if(selPayType == '108'){
 	    	$("#online").find("#bankType").prop("disabled", false);
-	    	if($("#cheque").find("#bankType").val() == '2730'){
+	    	if($("#online").find("#bankType").val() == '2730'){
 	    		$("#online").find("#va").prop("disabled", false);
 	    	}else{
 	    		$("#online").find("#bankAccOnline").prop("disabled", false);

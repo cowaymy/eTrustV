@@ -222,7 +222,7 @@
             Extent2.CODE_NAME, 
             Extent1.PAY_ITM_REF_NO, 
             Extent1.PAY_ITM_CC_NO, 
-            CASE WHEN Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL THEN Extent1.PAY_ITM_ORI_CC_NO ELSE '' END AS C1, 
+            CASE WHEN Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL THEN Extent1.PAY_ITM_ORI_CC_NO ELSE ' ' END AS C1, 
 		    Extent1.PAY_ITM_ORI_CC_NO,
 		    Extent1.PAY_ITM_CC_TYPE_ID, 
 		    Extent3.CODE_NAME AS CODE_NAME1, 
@@ -230,12 +230,12 @@
 		    Extent1.PAY_ITM_CC_EXPR_DT, 
 		    Extent1.PAY_ITM_CHQ_NO, 
 		    Extent1.PAY_ITM_ISSU_BANK_ID, 
-		    CASE WHEN Extent4.BANK_ID IS NOT NULL THEN Extent4.CODE ELSE '' END AS C2, 
+		    CASE WHEN Extent4.BANK_ID IS NOT NULL THEN Extent4.CODE ELSE ' ' END AS C2, 
 		    Extent4.NAME, 
 		    Extent1.PAY_ITM_AMT, 
 		    Extent1.PAY_ITM_IS_ONLINE, 
 		    Extent1.PAY_ITM_BANK_ACC_ID AS PayItemBankAccID, 
-		    CASE WHEN Extent5.ACC_ID IS NOT NULL THEN Extent5.ACC_CODE ELSE '' END AS C3, 
+		    CASE WHEN Extent5.ACC_ID IS NOT NULL THEN Extent5.ACC_CODE ELSE ' ' END AS C3, 
 		    Extent5.ACC_DESC, 
 		    Extent1.PAY_ITM_REF_DT, 
 		    Extent1.PAY_ITM_APPV_NO, 
@@ -250,15 +250,15 @@
 		    Extent1.PAY_ITM_GRP_ID, 
 		    Extent1.PAY_ITM_REF_ITM_ID, 
 		    Extent1.ETC3, 
-		    CASE WHEN Extent1.PAY_ITM_EFT_NO IS NOT NULL THEN Extent1.PAY_ITM_EFT_NO ELSE '' END AS C4, 
-		    CASE WHEN Extent1.PAY_ITM_RUNNG_NO IS NOT NULL THEN Extent1.PAY_ITM_RUNNG_NO ELSE '' END AS C5, 
+		    CASE WHEN Extent1.PAY_ITM_EFT_NO IS NOT NULL THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END AS C4, 
+		    CASE WHEN Extent1.PAY_ITM_RUNNG_NO IS NOT NULL THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END AS C5, 
 		    CASE WHEN Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END AS C6, 
-		    CASE WHEN Extent7.CODE_ID IS NOT NULL THEN Extent7.CODE_NAME ELSE '' END AS C7, 
+		    CASE WHEN Extent7.CODE_ID IS NOT NULL THEN Extent7.CODE_NAME ELSE ' ' END AS C7, 
 		    CASE WHEN Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL THEN 
-		                                                            CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On' 
-		                                                                 WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off' 
-		                                                                 WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP' 
-		                                                                 ELSE '-' END 
+		                                                                  CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On' 
+                                                                         WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off' 
+                                                                         WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP' 
+                                                                         ELSE CARDMODE.CODE_NAME END
 		         WHEN 1 = Extent1.PAY_ITM_IS_ONLINE THEN 'On' 
 		         WHEN 0 = Extent1.PAY_ITM_IS_ONLINE THEN 'Off' ELSE '-' END AS C8
         FROM       
@@ -269,6 +269,7 @@
 		    LEFT OUTER JOIN SYS0001M Extent5 ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
 		    LEFT OUTER JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
 		    LEFT OUTER JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+		    LEFT OUTER JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
 		WHERE 
 		    Extent1.PAY_ITM_STUS_ID = 1
 		    AND Extent1.PAY_ID = #{payId}
@@ -499,10 +500,11 @@
 		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
 		       Extent2.CODE_NAME CODE_NAME  ,
 		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
-		       Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,
+		       /*Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,*/
+		       TRIM(LPAD(' ',LENGTH(Extent1.PAY_ITM_ORI_CC_NO) + 1,'*')) PAY_ITM_CC_NO  ,
 		       CASE 
 		            WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO
-		       ELSE ''
+		       ELSE ' '
 		          END C1  ,
 		       Extent1.PAY_ITM_ORI_CC_NO AS PAY_ITM_ENCRYPT_CC_NO   ,
 		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
@@ -554,12 +556,11 @@
 		       ELSE ' '
 		          END C7  ,
 		       CASE 
-		            WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE 
-		                                                                     WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
-		                                                                     WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
-		                                                                     WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP'
-		            ELSE '-'
-		               END
+		            WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN 		            
+		                                                                  CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On' 
+                                                                         WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off' 
+                                                                         WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP' 
+                                                                         ELSE CARDMODE.CODE_NAME END
 		            WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
 		            WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off'
 		       ELSE '-'
@@ -571,6 +572,7 @@
 		         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent1.PAY_ITM_BANK_ACC_ID
 		         LEFT JOIN SYS0038M Extent6   ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
 		         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
+		         LEFT JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
 		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 		          AND ( Extent1.PAY_ID = #{payId} )
      </select>
