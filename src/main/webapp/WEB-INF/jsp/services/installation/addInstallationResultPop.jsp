@@ -698,10 +698,16 @@ var gridPros = {
     <th scope="row"><spring:message code='service.title.InstallStatust'/></th>
     <td>
     <select class="w100p" id="installStatus" name="installStatus">
+    
+           <option value="4">Completed</option>
+           <option value="21">Failed</option>
+           
+        
+    </select>
+    <!-- 
         <c:forEach var="list" items="${installStatus }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
-        </c:forEach>
-    </select>
+        </c:forEach> -->
     </td>
     <th scope="row"><spring:message code='service.title.ActualInstallStatust'/></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="installDate"/></td>
