@@ -23,5 +23,7 @@ public interface LocationMapper {
 	List<EgovMap> selectLocationCodeList(Map<String, Object> params);
 	
 	int selectLocationChk(String params);
+	
+	List<EgovMap> selectLocStatusList(Map<String, Object> params);
 
 }

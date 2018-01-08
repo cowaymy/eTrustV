@@ -153,6 +153,7 @@
             , WH_LOC_MOBILE         = #{up_mobile}
             , PLANT                 = #{plant}
             , SL_PLANT              = #{slplant}
+            , WH_LOC_STUS_ID  = #{locstus}
         WHERE WH_LOC_ID = #{locid}
 	</update>
 	
@@ -233,6 +234,11 @@
     <select id="selectLocationChk" parameterType="String"  resultType="integer">
         select count(*) cnt from sys0028m where WH_LOC_CODE=#{loccode}
     </select>
+    
+    <select id="selectLocStatusList" parameterType="Map" resultType="egovMap">
+            SELECT STUS_CODE_ID code,NAME CODE_NAME  FROM SYS0038M
+    </select>
+   
     
     
 </mapper>

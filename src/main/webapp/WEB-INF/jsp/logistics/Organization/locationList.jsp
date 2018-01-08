@@ -264,7 +264,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
     
     function fn_modyWare(rowid){
     	
-    	$("#mstatus").text(AUIGrid.getCellValue(myGridID ,rowid,'statnm'));
+        //$("#mstatus").val(AUIGrid.getCellValue(myGridID ,rowid,'statnm')); 
     	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'loccd'));
     	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
     	$("#maddr1").val(AUIGrid.getCellValue(myGridID ,rowid,'locdtl'));
@@ -276,7 +276,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
     	$("#slplant").val(AUIGrid.getCellValue(myGridID ,rowid,'slplant'));
     	
     	doDefCombo(stockgradecomboData, AUIGrid.getCellValue(myGridID ,rowid,'locgrad') ,'mstockgrade', 'S', '');
-    	
+
     	var paramdata = { groupCode : '339' , orderValue : 'CODE'};
         doGetComboData('/common/selectCodeList.do', paramdata, AUIGrid.getCellValue(myGridID ,rowid,'whlocgb'),'locationtype', 'S' , '');
         
@@ -333,6 +333,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         }
     	
         $( "#editWindow" ).show();
+        doGetComboData('/logistics/organization/selectLocStatusList.do','',AUIGrid.getCellValue(myGridID ,rowid,'locstus'),'mstatus', 'S' , '');
     }
     
     
@@ -442,6 +443,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         item.locbranch2 = $("#mwarebranch2").val();
         item.locbranch3 = $("#mwarebranch3").val();
         item.whlocgb = $("#locationtype").val();
+        item.locstus = $("#mstatus").val();
         
         if ($("#pdchk").is(":checked")) item.serialpdchk = 'Y';else item.serialpdchk = '';
         if ($("#ftchk").is(":checked")) item.serialftchk = 'Y';else item.serialftchk = '';
@@ -699,7 +701,8 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
 <tbody>
 <tr>
     <th scope="row">Status</th>
-    <td colspan="3"><span  id="mstatus"  class="w100p"></span></td>
+    <td><select id="mstatus" name ="mstatus" class="w100p"></select></td>
+    <!-- <td colspan="3"><span  id="mstatus"  class="w100p"></span></td> -->
 </tr>
 <tr>
     <th scope="row">Location Code</th>

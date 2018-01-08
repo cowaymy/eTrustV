@@ -131,9 +131,11 @@ public class LocationController {
 		}
 
 		Map<String, Object> updateMap = (Map<String, Object>) updateList.get(0);
-
+		
 		updateMap.put("up_sync", up_sync);
 		updateMap.put("up_mobile", up_mobile);
+		
+		logger.debug("locstus    값 : {}", params.get("locstus"));
 
 		loc.updateLocationInfo(updateMap);
 
@@ -302,6 +304,13 @@ public class LocationController {
 
 		return ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/selectLocStatusList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectLocStatusList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> statusList = loc.selectLocStatusList(params);
+		return ResponseEntity.ok(statusList);
+	}
+	
 	
 
 }
