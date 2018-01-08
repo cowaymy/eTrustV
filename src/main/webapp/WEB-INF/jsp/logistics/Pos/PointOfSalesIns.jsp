@@ -570,6 +570,12 @@ function f_validatation(v){
             $("#insRemark").focus();
             return false;
         }
+        
+        if ($("#insRemark").val().length > 50){
+            Common.alert("Header Text can be up to 50 digits.");
+            return false;
+        }
+    
     }
     
     if (v == 'save'){
@@ -908,7 +914,7 @@ function locationList(){
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="7"><input id="insRemark" name="insRemark" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="7"><input id="insRemark" name="insRemark" type="text" title="" placeholder="" class="w100p" maxlength="50" /></td>
 </tr>
 
 </tbody>
