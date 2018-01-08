@@ -144,13 +144,13 @@
                             <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{createDate},  'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                    </if>
                     <if test="callStrDate != '' and callEndDate == '' ">
-                            <![CDATA[ AND  TO_DATE(Extent1.CALL_CRT_DT,'DD/MM/YYYY')  >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[ AND  TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')  >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="callEndDate != '' and callStrDate == '' ">
-                            <![CDATA[  AND TO_DATE(Extent1.CALL_CRT_DT,'DD/MM/YYYY')    <=  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    <=  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="callStrDate != '' and callEndDate != '' ">
-                            <![CDATA[  AND TO_DATE(Extent1.CALL_CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')    between TO_DATE(#{callStrDate},  'DD/MM/YYYY') and  TO_DATE(#{callEndDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="ordStatus != '' and ordStatus != '' ">
                      and Extent1.STATE = #{ordStatus}
@@ -346,7 +346,8 @@
 			   SET STUS_CODE_ID =#{statusCodeId},
 			       RESULT_ID = #{resultId},
 			       UPD_DT = SYSDATE,
-			       UPD_USER_ID = #{updator}
+			       UPD_USER_ID = #{updator},
+			       CALL_DT  = TO_dATE(#{callDate} ,'dd/mm/yyyy') 
 			 WHERE  ( CALL_ENTRY_ID = #{callEntryId} )
         </update>
         <insert id="insertInstallEntry" parameterType="Map">
