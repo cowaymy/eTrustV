@@ -3691,6 +3691,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			A.ADDR_DTL,
 			A.Street,
 			A.DEPT_CODE c41,
+		    to_char( A.APLICNT_DOB ,'DD/MM/YYYY' ) c29,
 			C.NAME c36,
 			B.AREA area_Id,
 			B.COUNTRY,
@@ -3737,10 +3738,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
              <if test="officeNo != null and officeNo != '' ">
            , APLICNT_TEL_OFFICE =#{officeNo}
            </if>
-           
-             <if test="officeNo != null and officeNo != '' ">
-           , APLICNT_TEL_OFFICE =#{officeNo}
-           </if>
              <if test="cmbRace != null and cmbRace != '' ">
            , APLICNT_RACE =#{cmbRace}
            </if>
@@ -3755,6 +3752,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            </if>
              <if test="sponsorCd != null and sponsorCd != '' ">
            , APLICNT_BANK_ID =#{issuedBank}
+           </if>
+           <if test="Birth != null and Birth != '' ">
+            ,APLICNT_DOB  =to_date( to_date(#{Birth}, 'DD/MM/YY') , 'YY/MM/DD' )
            </if>
      where  APLCTN_ID = #{MemberID}
      
