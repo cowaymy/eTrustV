@@ -41,26 +41,24 @@ function fn_doSaveAjax() {
 
 // Validation Check
 function fn_saveValidationCheck(){
-
-	
 	
     if($("#NEW_INITIALl").val() == ''){
-        Common.alert("Please select  inital type");
+        Common.alert("<spring:message code="sys.info.grid.selectMessage" />" +" "+"<spring:message code="sal.msg.initalType" />");
         return false;
     }
     
     if($("#NEW_RACE").val() == ''){
-        Common.alert("Please select  race type");
+        Common.alert("<spring:message code="sys.info.grid.selectMessage" />" +" "+"<spring:message code="sal.msg.raceType" />");
         return false;
     }
     
     if($("#NEW_NAME").val() == ''){
-        Common.alert("Please key in  name");
+        Common.alert("<spring:message code="sal.msg.keyIn" />" +" "+ "<spring:message code="sal.msg.name" />");
         return false;
     }
     
     if($("#NEW_GENDER").val() == ''){
-    	   Common.alert("Please select  gender type");
+    	   Common.alert("<spring:message code="sys.info.grid.selectMessage" />" +" "+"<spring:message code="sal.msg.genderType" />");
         return false;
     }
     
@@ -69,67 +67,78 @@ function fn_saveValidationCheck(){
         //return false;
     }else{
         if(FormUtil.checkNum($("#NEW_NRIC"))){
-            Common.alert("* Invalid nric number.");
+            Common.alert("<spring:message code="sal.msg.invalidNric" />");
             return;
         }
     }
         
     if($("#NEW_TELM1").val() == '' && $("#NEW_TELMR").val() == '' && $("#NEW_TELMF").val() == '' && $("#NEW_TELMO").val() == '' ){
-        Common.alert("Please key in at least one contact number");
+        Common.alert("<spring:message code="sal.msg.keyInContactNum" />");
         return false;
     }else{
         if($("#NEW_TELM1").val() != ''){
+
+            var msg = "<spring:message code="sal.text.mobile" />";
+        	
             if(FormUtil.checkNum($("#NEW_TELM1"))){
-                Common.alert("* Invalid telephone number (Mobile).");
+            	Common.alert("<spring:message code="sal.msg.invalidTel" arguments='"+msg+"' htmlEscape='false'/>");
                 return false;
             }
             if($("#NEW_TELM1").length > 20){
-                Common.alert("* Telephone number (Mobile) exceed length of 20.");
+                Common.alert("<spring:message code="sal.msg.telLength" arguments='"+msg+"' htmlEscape='false'/>");
                 return false;
             }
         }
         if($("#NEW_TELMO").val() != ''){
 
+            var msg = "<spring:message code="sal.text.office" />";
+
                if(FormUtil.checkNum($("#NEW_TELMO"))){
-                   Common.alert("* Invalid telephone number (Office).");
+            	   Common.alert("<spring:message code="sal.msg.invalidTel" arguments='"+msg+"' htmlEscape='false'/>");
                    return false;
                }
                if($("#NEW_TELMO").length > 20){
-                   Common.alert("* Telephone number (Office) exceed length of 20.");
+            	   Common.alert("<spring:message code="sal.msg.telLength" arguments='"+msg+"' htmlEscape='false'/>");
                    return false;
                }
            }
         if($("#NEW_TELMR").val() != ''){
+        	
+        	var msg = "<spring:message code="sal.text.residence" />";
+        	
                if(!FormUtil.checkNum($("#NEW_TELMR"))){
-                   Common.alert("* Invalid telephone number (Office).");
+                   Common.alert("<spring:message code="sal.msg.invalidTel" arguments='"+msg+"' htmlEscape='false'/>");
                    return false;
                }
                if($("#NEW_TELMR").length > 20){
-                   Common.alert("* Telephone number (Office) exceed length of 20.");
+                   Common.alert("<spring:message code="sal.msg.telLength" arguments='"+msg+"' htmlEscape='false'/>");
                    return false;
                }
            }
         if($("#NEW_TELMF").val() != ''){
+        	
+        	var msg = "<spring:message code="sal.text.fax" />"; 
+        	
                if(!FormUtil.checkNum($("#NEW_TELMF"))){
-                   Common.alert("* Invalid telephone number (Office).");
+                   Common.alert("<spring:message code="sal.msg.invalidTel" arguments='"+msg+"' htmlEscape='false'/>");
                    return false;
                }
                if($("#NEW_TELMF").length > 20){
-                   Common.alert("* Telephone number (Office) exceed length of 20.");
+                   Common.alert("<spring:message code="sal.msg.telLength" arguments='"+msg+"' htmlEscape='false'/>");
                    return false;
                }
            }
     }
     
     if($("#NEW_DOB").val() == ''){
-        Common.alert("* Please key in  DOB.");
+        Common.alert("* <spring:message code="sal.msg.keyIn" /> <spring:message code="sal.text.dob" />.");
         return false;
     }
     
     
     if( $("#NEW_EMAIL").val() !=""){
     	  if(FormUtil.checkEmail($("#NEW_EMAIL").val())){
-    	        Common.alert("* Invalid email address.");
+    	        Common.alert("<spring:message code="sal.msg.invalidEmail" />");
     	        return false;
     	    }
     }
@@ -154,9 +163,9 @@ function fn_doClear() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Contact Person Search</h1>
+<h1><spring:message code="sal.page.title.contactPersonSearch" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#" id="n_close">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="n_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -177,83 +186,83 @@ function fn_doClear() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Initial <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.initial" /> <span class="must">*</span></th>
     <td>
     <select class="w100p"  id='NEW_INITIALl' name='NEW_INITIALl'>
     </select>
     </td>
-    <th scope="row">Name <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.name" /> <span class="must">*</span></th>
     <td colspan="3">
     <input type="text" title=""  id='NEW_NAME' name ="NEW_NAME" placeholder="" class="w100p" />
     </td>
-    <th scope="row">Gender <span class="must">*</span> </th>
+    <th scope="row"><spring:message code="sal.text.gender" /> <span class="must">*</span> </th>
     <td>
     <select class="w100p"  id='NEW_GENDER'  name='NEW_GENDER'>
-        <option value='M'>M - Male </option>
-        <option value='F' >F - Female </option>
+        <option value='M'><spring:message code="sal.combo.text.male" /></option>
+        <option value='F' ><spring:message code="sal.combo.text.female" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">DOB <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.dob" /> <span class="must">*</span></th>
     <td>
       <input type="text" title="Create start Date"   id="NEW_DOB" name="NEW_DOB" placeholder="DD/MM/YYYY" class="j_date w100p" />
     
     </td>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sales.NRIC" /></th>
     <td colspan="3">
     <input type="text" title="" id='NEW_NRIC' name='NEW_NRIC' placeholder="" class="w100p" />
     </td>
-    <th scope="row">Race <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.race" /> <span class="must">*</span></th>
     <td>
     <select class="w100p" id='NEW_RACE' name='NEW_RACE' >
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Post</th>
+    <th scope="row"><spring:message code="sal.text.post" /></th>
     <td colspan="3">
     <input type="text" title="" placeholder="" class="w100p"  id='NEW_POST' name='NEW_POST' />
     </td>
-    <th scope="row">Department</th>
+    <th scope="row"><spring:message code="sal.text.dept" /></th>
     <td colspan="3">
     <input type="text" title="" placeholder="" class="w100p"   id='NEW_DEPT' name='NEW_DEPT'  />
     </td>
 </tr>
 <tr>
-    <th scope="row">Mobile No <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sales.MobileNo" /> <span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder="" class="w100p"   id='NEW_TELM1' name='NEW_TELM1'  />
     </td>
-    <th scope="row">Residence No <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.residenceNo" /> <span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder="" class="w100p"   id='NEW_TELMR' name='NEW_TELR'/>
     </td>
-    <th scope="row">Office No <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sales.OfficeNo" /> <span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder="" class="w100p"  id='NEW_TELMO' name='NEW_TELO'/>
     </td>
-    <th scope="row">Fax No <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.faxNo" /> <span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder="" class="w100p"   id='NEW_TELMF' name='NEW_TELF' />
     </td>
 </tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td colspan="7">
     <input type="text" title="" placeholder="" class="w100p"  id='NEW_EMAIL' name='NEW_EMAIL'/>
     </td>
 </tr>
 <tr>
     <td colspan="8" class="col_all">
-    <label><input type="checkbox"  id='NEW_MAIN_SET'   name='NEW_MAIN_SET'  /><span>Set As Main Contact Person</span></label>
-    <p class="fl_right"><span class="red_text">(* At least one contact number)</span></p>
+    <label><input type="checkbox"  id='NEW_MAIN_SET'   name='NEW_MAIN_SET'  /><span><spring:message code="sal.text.setAsMainContactPerson" /></span></label>
+    <p class="fl_right"><span class="red_text">(* <spring:message code="sal.text.atLeastOneContactNumber" />)</span></p>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue big"><a href="#"  onclick="javascript:fn_doSaveAjax() ">Save</a></p></li>
+    <li><p class="btn_blue big"><a href="#"  onclick="javascript:fn_doSaveAjax() "><spring:message code="sales.SAVE" /></a></p></li>
 </ul>
 
 

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <article class="tap_area"><!-- tap_area start -->
 
@@ -14,55 +15,55 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Quotation No</th>
+    <th scope="row"><spring:message code="sal.text.quotationNo" /></th>
     <td><span  id="inc_quotNo" >${quotInfo.quotNo}</span></td>
-    <th scope="row">Validity Status</th>
+    <th scope="row"><spring:message code="sal.text.validityStatus" /></th>
     <td><span id="inc_validStus" >${quotInfo.validStus}</span></td>
-    <th scope="row">Create Date</th>
+    <th scope="row"><spring:message code="sal.text.createDate" /></th>
     <td><span id="inc_crtDts" >${quotInfo.crtDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Membership Sales</th>
+    <th scope="row"><spring:message code="sal.text.memSales" /></th>
     <td><span id="inc_cnvrMemNo">${quotInfo.cnvrMemNo} </span></td>
-    <th scope="row">Valid Date</th>
+    <th scope="row"><spring:message code="sal.text.validDate" /></th>
     <td><span id="inc_validD" >${quotInfo.validDt}</span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td><span  id="inc_crtUserId" >${quotInfo.crtUserId}</span></td>
 </tr>
 <tr>
-    <th scope="row">Duration</th>
+    <th scope="row"><spring:message code="sales.Duration" /></th>
     <td><span  id="inc_dur">  <c:if test="${not empty quotInfo.dur}">  ${quotInfo.dur} month(s) </c:if> </span></td>
-    <th scope="row">Package</th>
+    <th scope="row"><spring:message code="sales.Package" /></th>
     <td><span id="inc_pacDesc">${quotInfo.pacDesc}</span></td>
-    <th scope="row">Deactivated by</th>
+    <th scope="row"><spring:message code="sal.text.deactivatedby" /></th>
     <td><span id="inc_pacDeacby" ></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Amount</th>
+    <th scope="row"><spring:message code="sal.text.totAmt" /></th>
     <td><span id="inc_totAmt" >${quotInfo.totAmt}</span></td>
-    <th scope="row">Package Amount</th>
+    <th scope="row"><spring:message code="sal.text.pacAmt" /></th>
     <td><span id="inc_pacAmt" >${quotInfo.pacAmt}</span></td>
-    <th scope="row">Filter Amount</th>
+    <th scope="row"><spring:message code="sal.text.filAmt" /></th>
     <td><span  id="inc_filterAmt">${quotInfo.filterAmt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Package Promotion</th>
+    <th scope="row"><spring:message code="sales.pakPro" /></th>
     <td colspan="5"><span id="inc_pacPromoDesc">${quotInfo.pacPromoDesc}  </span></td>
 </tr>
 <tr>
-    <th scope="row">Filter Promotion</th>
+    <th scope="row"><spring:message code="sales.filterPro" /></th>
     <td colspan="3"><span  id="inc_promeCode" >${quotInfo.promeCode}   ${quotInfo.promeDesc} </span></td>
-    <th scope="row">BS Frequency</th>
+    <th scope="row"><spring:message code="sales.bsFre" /></th>
     <td> <span  id="inc_bsFreq" > <c:if test="${not empty quotInfo.bsFreq}">  ${quotInfo.bsFreq} month(s)</c:if></span></td>
 </tr>
 <tr>
-    <th scope="row">Sales Person Code</th>
+    <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
     <td><span  id="inc_memCode">${quotInfo.memCode}  </span></td>
-    <th scope="row">Sales Person Name</th>
+    <th scope="row"><spring:message code="sal.text.salPersonName" /></th>
     <td colspan="3"><span  id="inc_memName">${quotInfo.memName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Reference Number</th>
+    <th scope="row"><spring:message code="sal.text.refNum" /></th>
     <td colspan="5"><span id="inc_refNo">${quotInfo.refNo}</span></td>
 </tr>
 </tbody>
@@ -71,24 +72,30 @@
 
 <script>
 
+var msg;
 
 if('${quotInfo.validStus}' == 'ACT' ){
+	msg = "<spring:message code="sal.text.readyToConvert" />";
 	
-	$("#inc_validStus").html("<font color='green'> Ready to convert </font>");
+	$("#inc_validStus").html("<font color='green'>" +msg+ "</font>");
 	$("#inc_pacDeacby").html("-");
 	
 }else if('${quotInfo.validStus}' == 'CON'){
+	msg ="<spring:message code="sal.text.convertedTosales" />";
 	
-	$("#inc_validStus").html("<font color='orange'> Converted to sales </font>");
+	$("#inc_validStus").html("<font color='orange'>"+msg+"</font>");
 	$("#inc_pacDeacby").html("-");
 	
 }else if('${quotInfo.validStus}' == 'EXP'){
+	msg ="<spring:message code="sal.text.expired" />";
 	
-	$("#inc_validStus").html("<font color='red'> Expired </font>");
+	$("#inc_validStus").html("<font color='red'>"+msg+"</font>");
 	$("#inc_pacDeacby").html("-");
 	
 }else if('${quotInfo.validStus}' == 'DEA'){
-    $("#inc_validStus").html("<font color=brown'> Deactivated </font>");
+	msg ="<spring:message code="sal.text.deacivated" />";
+	
+    $("#inc_validStus").html("<font color=brown'>"+msg+"</font>");
     $("#inc_pacDeacby").html("${quotInfo.updUserId}");
 }
 		

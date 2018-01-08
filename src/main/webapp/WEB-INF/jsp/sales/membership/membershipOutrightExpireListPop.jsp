@@ -57,7 +57,7 @@ function validRequiredField(){
 	
 	if(($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || ($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
         valid = false;
-        message += "* Please select the expired month (From & To).\n";
+        message += "<spring:message code="sal.alert.msg.expiredMonth" />";
     }
 	
 	var frArr = $("#mypExpireMonthFr").val().split("/");
@@ -68,11 +68,11 @@ function validRequiredField(){
 
 	if(mypExpireMonthFr < mypExpireMonthTo){		
 		valid = false;
-        message += "* The interval between expired month cannot be more than 3.\n";
+        message += "<spring:message code="sal.alert.msg.monthInterval3" />";
 	}
 	
 	if(valid == false){
-		Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+		Common.alert("<spring:message code="sal.alert.title.reportGenSummary" />" + DEFAULT_DELIMITER + message);
 	}
 	
 	return valid;
@@ -300,9 +300,9 @@ function btnGenerateExcel_Click(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Report - Key-In List</h1>
+<h1><spring:message code="sal.page.title.membershipReport" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -327,26 +327,26 @@ function btnGenerateExcel_Click(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="txtOrderNo"/></td>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbRentalStatus">
         <option value="REG" selected>REG</option>
         <option value="INV" selected>INV</option>
     </select>
     </td>
-    <th scope="row">Expire Month</th>
+    <th scope="row"><spring:message code="sal.text.expireMonth" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2 w100p" id="mypExpireMonthFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="MM/YYYY" class="j_date2 w100p" id="mypExpireMonthTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAppType" data-placeholder="Application Type">
         <option value="66" selected>Rental</option>
@@ -354,9 +354,9 @@ function btnGenerateExcel_Click(){
         <option value="68" selected>Installment</option>
     </select>
     </td>
-    <th scope="row">Only Expire ?</th>
-    <td><label><input type="checkbox" id="btnOnlyExpire"/><span>List only expired order</span></label></td>
-    <th scope="row">Cody Status</th>
+    <th scope="row"><spring:message code="sal.text.onlyExpire" /></th>
+    <td><label><input type="checkbox" id="btnOnlyExpire"/><span><spring:message code="sal.text.listOnlyExpiredOrder" /></span></label></td>
+    <th scope="row"><spring:message code="sal.text.codyStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbCodyStatus" data-placeholder="Cody Status">
         <option value="1" selected>Active</option>
@@ -367,18 +367,18 @@ function btnGenerateExcel_Click(){
     </td>
 </tr>
 <tr>
-    <td colspan="6"><p><span class="red_text">* Only list up the order which is expired & going to expire in 3 months.</span><p></td>
+    <td colspan="6"><p><span class="red_text"><spring:message code="sal.text.onlyListUp" /></span><p></td>
 </tr>
 <tr>
-    <td colspan="6"><p><span class="red_text">* Order Status : Completed</span><p></td>
+    <td colspan="6"><p><span class="red_text"><spring:message code="sal.text.orderStatusCom" /></span><p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()">Generate PDF</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()">Generate Excel</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

@@ -18,19 +18,19 @@ function validRequiredField(){
 	if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 		if(($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 			valid = false;
-            message += "* Please select the order date (From & To).\n";
+            message += "<spring:message code="sal.alert.msg.selectOrdDate" />";
 	    }
 	}
 	
 	if(!($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || !($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
         if(($("#mypExpireMonthFr").val() == null || $("#mypExpireMonthFr").val().length == 0) || ($("#mypExpireMonthTo").val() == null || $("#mypExpireMonthTo").val().length == 0)){
             valid = false;
-            message += "* Please select the expired month (From & To).\n";
+            message += "<spring:message code="sal.alert.msg.expiredMonth" />";
         }
     }
 	
 	if(valid == false){
-		Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+		Common.alert("<spring:message code="sal.alert.title.reportGenSummary" />" + DEFAULT_DELIMITER + message);
 	}
 	
 	return valid;
@@ -86,9 +86,9 @@ function btnGenerate_Click(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Report - Key-In List</h1>
+<h1><spring:message code="sal.page.title.membershipReport" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -113,33 +113,33 @@ function btnGenerate_Click(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="txtOrderNo"/></td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Expire Month</th>
+    <th scope="row"><spring:message code="sal.text.expireMonth" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2 w100p" id="mypExpireMonthFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="MM/YYYY" class="j_date2 w100p" id="mypExpireMonthTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <td colspan="6"><p><span class="red_text">* Only list up the order which is rental case more than 5 year and membership are expired</span><p></td>
+    <td colspan="6"><p><span class="red_text"><spring:message code="sal.text.onlyListUp5year" /></span><p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerate_Click()">Generate</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerate_Click()"><spring:message code="sal.btn.generate" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

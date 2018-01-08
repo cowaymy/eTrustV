@@ -98,7 +98,7 @@
 		 
         if( $("#MBRSH_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#MBRSH_CRT_DT").val() ==""  ){
             
-            Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
+            Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
              return ;
          }
 		 
@@ -135,17 +135,17 @@
 	        
 	        //AUIGrid 칼럼 설정
 	        var columnLayout = [
-               {     dataField  : "mbrshNo",     headerText  : "Membership<br/>No",   width          : 100,   editable       : false}, 
-               {     dataField  : "mbrshOtstnd",   headerText  : "Outstanding",  width          : 95,    editable       : false}, 
-               {     dataField  : "ordNo",   headerText  : "Order No",     width          : 75,  editable       : false}, 
-               {     dataField  : "custName",     headerText  : "Customer Name",      width          : 150,    editable       : false}, 
-               {     dataField  : "mbrshStusCode",    headerText   : "Status",    width           : 55,    editable        : false}, 
-               {     dataField  : "mbrshStartDt", headerText  : "Start Date",  width       : 90,  editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "mbrshExprDt",  headerText  : "Expire Date",   width       : 90,    editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "pacName",  headerText  : "Package",  width       : 150, editable    : false}, 
-               {     dataField   : "mbrshDur", headerText  : "Duration<br/>(Mth)", width       : 75,   editable    : false}, 
-               {     dataField   : "mbrshCrtDt",  headerText  : "Create Date",  width       : 90,  editable    : false,dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "mbrshCrtUserId",  headerText  : "Creator", width       : 100, editable    : false},
+               {     dataField  : "mbrshNo",     headerText  : "<spring:message code="sal.title.mbrshNo" />",   width          : 100,   editable       : false}, 
+               {     dataField  : "mbrshOtstnd",   headerText  : "<spring:message code="sal.title.outstanding" />",  width          : 95,    editable       : false}, 
+               {     dataField  : "ordNo",   headerText  : "<spring:message code="sal.title.ordNo" />",     width          : 75,  editable       : false}, 
+               {     dataField  : "custName",     headerText  : "<spring:message code="sal.title.custName" />",      width          : 150,    editable       : false}, 
+               {     dataField  : "mbrshStusCode",    headerText   : "<spring:message code="sal.title.status" />",    width           : 55,    editable        : false}, 
+               {     dataField  : "mbrshStartDt", headerText  : "<spring:message code="sal.title.stDate" />",  width       : 90,  editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
+               {     dataField   : "mbrshExprDt",  headerText  : "<spring:message code="sal.title.expireDate" />",   width       : 90,    editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
+               {     dataField   : "pacName",  headerText  : "<spring:message code="sal.title.package" />",  width       : 150, editable    : false}, 
+               {     dataField   : "mbrshDur", headerText  : "<spring:message code="sal.title.durationMth" />", width       : 75,   editable    : false}, 
+               {     dataField   : "mbrshCrtDt",  headerText  : "<spring:message code="sal.title.crtDate" />",  width       : 90,  editable    : false,dataType : "date", formatString : "dd/mm/yyyy"}, 
+               {     dataField   : "mbrshCrtUserId",  headerText  : "<spring:message code="sal.title.creator" />", width       : 100, editable    : false},
                {     dataField : "mbrshId", visible : false },
                {     dataField : "ordId",visible : false}	                            
 	       ];
@@ -163,9 +163,7 @@
 	            useGroupingPanel    : false,        //그룹핑 패널 사용
 	            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-	            noDataMessage       : "No order found.",
-	            groupingMessage     : "Here groupping"
+	            showRowNumColumn    : true         //줄번호 칼럼 렌더러 출력   
 	        };
 	        
 	        gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
@@ -178,7 +176,7 @@
 		  console.log(selectedItems);
 		  
 		  if(selectedItems.length <= 0) {
-		      Common.alert(" No membership  selected. ");
+		      Common.alert("<spring:message code="sal.alert.noMembershipSelect" /> ");
 			  return;  
 		  }
 		  Common.popupDiv("/sales/membership/selMembershipViewLeader.do?MBRSH_ID="+selectedItems[0].item.mbrshId, null, null , true, '_ViewLegder');
@@ -208,14 +206,14 @@
           var selectedItems = AUIGrid.getSelectedItems(gridID);
           
           if(selectedItems ==""){
-        	  Common.alert("No membership selected..");
+        	  Common.alert("<spring:message code="sal.alert.msg.noMembershipSelect" />");
         	  return ;
           }
           
 	      var v_mbrshOtstnd =selectedItems[0].item.mbrshOtstnd;
 	          
 	      if (parseInt(v_mbrshOtstnd,10) <= 0) {
-	    	  Common.alert("<b>[" + selectedItems[0].item.mbrshNo+ "] does not has any outstanding.<br />Payment is not necessary.</b>");
+	    	  Common.alert("<b>[" + selectedItems[0].item.mbrshNo+ "] <spring:message code="sal.alert.msg.notHasOut" /></b>");
 	    	  return ;
 	      }
           
@@ -316,18 +314,18 @@ function fn_clear(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Membership Management(Outright) </h2>
+<h2><spring:message code="sal.page.title.membershipOutright" /></h2>
 <ul class="right_btns">
       <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
-               <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMOutSPay();">Outstanding Payment</a></p></li>
+               <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMOutSPay();"><spring:message code="sal.btn.outstandingPayment" /></a></p></li>
      </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();">Free Membership</a></p></li>
+    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_doMFree();"><spring:message code="sal.btn.freeMembership" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -347,41 +345,41 @@ function fn_clear(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Membership No<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.membershipNo" /><span class="must">*</span></th>
 	<td>
 	   <input type="text" title="" id="MBRSH_NO" name="MBRSH_NO"placeholder="Membership Number" class="w100p" />
 	</td>
-	<th scope="row">Order No<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.ordNo" /><span class="must">*</span></th>
 	<td>
 	<input type="text" title=""  id="ORD_NO"  name="ORD_NO" placeholder="Order Number" class="w100p" />
 	</td>
-	<th scope="row">Create Date<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.createDate" /><span class="must">*</span></th>
 	<td>
 	<input type="text" title="Create start Date"   id="MBRSH_CRT_DT" name="MBRSH_CRT_DT" placeholder="DD/MM/YYYY" class="j_date w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Create By</th>
+	<th scope="row"><spring:message code="sal.text.createBy" /></th>
 	<td>
 	<input type="text" title=""  id="MBRSH_CRT_USER_ID"  name="MBRSH_CRT_USER_ID" placeholder="Creator" class="w100p" />
 	</td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>
     <select id="MBRSH_STUS_ID" name="MBRSH_STUS_ID" class="multy_select w100p" multiple="multiple" >
     </select>
 	</td>
-	<th scope="row">Outstanding</th>
+	<th scope="row"><spring:message code="sal.title.outstanding" /></th>
 	<td>
 	 <select class="w100p"  id="MBRSH_OTSTND" name="MBRSH_OTSTND" >
 	    <option value=""> </option>
-        <option value="1">With Outstanding</option>
-        <option value="2">Without Outstanding</option>
-        <option value="3">Over Paid</option>
+        <option value="1"><spring:message code="sal.combo.text.withOutstanding" /></option>
+        <option value="2"><spring:message code="sal.combo.text.withoutOutstanding" /></option>
+        <option value="3"><spring:message code="sal.combo.text.overPaid" /></option>
     </select>
 	</td>
 </tr>
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Creation date</span>  </th>
+    <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" /></span>  </th>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -399,19 +397,19 @@ function fn_clear(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Org Code</th>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
     <td>
        <input type="text" title="" id="orgCode" name="orgCode" class="w100p" />
     </td>
-    <th scope="row">Grp Code</th>
+    <th scope="row"><spring:message code="sal.text.grpCode" /></th>
     <td>
     <input type="text" title=""  id="grpCode"  name="grpCode" class="w100p" />
     </td>
-    <th scope="row">Dep Code</th>
+    <th scope="row"><spring:message code="sal.text.detpCode" /></th>
     <td>
     <input type="text" title=""   id="deptCode" name="deptCode" class="w100p" />
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td>
     <input type="text" title=""   id="memCode" name="memCode" class="w100p" />
     </td>
@@ -428,22 +426,22 @@ function fn_clear(){
 
 	<ul class="btns">
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-		<li><p class="link_btn"><a href="#" onclick="javascript: fn_doViewLegder()"> LEDGER</a></p></li>
+		<li><p class="link_btn"><a href="#" onclick="javascript: fn_doViewLegder()"> <spring:message code="sal.btn.link.ledger" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')">Invoice</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_report('Invoice')"><spring:message code="sal.btn.link.invoice" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" >Key-in List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_keyInList()" ><spring:message code="sal.btn.link.keyInList" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_YSListing()">YS List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_YSListing()"><spring:message code="sal.btn.link.ysList" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireList()">Expire List</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireList()"><spring:message code="sal.btn.link.expireList" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireListRental()">Expire List (Year)</a></p></li>
+		<li><p class="link_btn type2"><a href="#" onclick="javascript: fn_expireListRental()"><spring:message code="sal.btn.link.expireListYear" /></a></p></li>
 		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

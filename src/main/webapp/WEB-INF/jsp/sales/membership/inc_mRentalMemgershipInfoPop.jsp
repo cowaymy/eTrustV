@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10" >
@@ -17,68 +18,68 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Membership No.</th>
+    <th scope="row"><spring:message code="sales.MembershipNo" /></th>
     <td><span id='rental_txtMembershipNo'></span></td>
-    <th scope="row">Membership Type</th>
+    <th scope="row"><spring:message code="sales.memType" /></th>
     <td><span id='rental_txtMembershipType'></span></td>
-    <th scope="row">Membership Key-In Date</th>
+    <th scope="row"><spring:message code="sal.text.memKeyIndate" /></th>
     <td><span id='rental_txtMembeshipCreated'></span></td>
 </tr>
 <tr>
-    <th scope="row">Membership Status</th>
+    <th scope="row"><spring:message code="sales.memStus" /></th>
     <td><span id='rental_txtMembershipStatus'></span></td>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sales.RentalStatus" /></th>
     <td><span id='rental_txtRentalStatus'></span></td>
-    <th scope="row">PO Number</th>
+    <th scope="row"><spring:message code="sales.poNum" /></th>
     <td><span id='rental_txtPONo'></span></td>
 </tr>
 <tr>
    <!--  <th scope="row">Direct Debit Ref No</th>
     <td><span>text</span></td> -->
-    <th scope="row">Package</th>
+    <th scope="row"><spring:message code="sales.Package" /></th>
     <td colspan="3"><span id='rental_txtPackage'></span></td>
-    <th scope="row">Duration</th>
+    <th scope="row"><spring:message code="sales.Duration" /></th>
     <td><span id='rental_txtDuration'></span></td>
 </tr>
 <tr>
-    <th scope="row">Membership Fee</th>
+    <th scope="row"><spring:message code="sales.memFee" /></th>
     <td><span id='rental_txtRentalAmt'></span></td>
-    <th scope="row">Outstanding Amount</th>
+    <th scope="row"><spring:message code="sales.outAmt" /></th>
     <td><span id='rental_txtOutstandingAmt'></span></td>
-    <th scope="row">Unbill Amount</th>
+    <th scope="row"><spring:message code="sales.unbillAmt" /></th>
     <td><span id='rental_txtUnbillAmt'></span></td>
 </tr>
 <tr>
-    <th scope="row">Package Promotion</th>
+    <th scope="row"><spring:message code="sales.pakPro" /></th>
     <td colspan="5"><span id='rental_txtPacPromo'></span></td>
 </tr>
 <tr>
-    <th scope="row">Filter Promotion</th>
+    <th scope="row"><spring:message code="sales.filterPro" /></th>
     <td colspan="3"><span id='rental_txtFilPromo'></span></td>
-    <th scope="row">BS Frequency</th>
+    <th scope="row"><spring:message code="sales.bsFre" /></th>
     <td><span id='rental_txtBSFreq'></span></td>
 </tr>
 <tr>
-    <th scope="row">Updator</th>
+    <th scope="row"><spring:message code="sal.text.updator" /></th>
     <td><span id='rental_txtMembershipUpdator' ></span></td>
-    <th scope="row">Updated</th>
+    <th scope="row"><spring:message code="sal.text.updated" /></th>
     <td><span id='rental_txtMembershipUpdated'></span></td>
     <th scope="row"></th>
     <td><span></span></td>
 </tr>
 <tr>
-    <th scope="row">Membership F/B Code</th>
+    <th scope="row"><spring:message code="sal.text.memFBcode" /></th>
     <td colspan="5"><span id='rental_txtFeedbackCode' ></span></td>
 </tr>
 <tr>
-    <th scope="row">Membership Remark</th>
+    <th scope="row"><spring:message code="sal.text.memRem" /></th>
     <td colspan="5"><span id='rental_txtMembersipRemark' ></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Sales Person Information</h3>
+<h3><spring:message code="sal.text.salPersonInfo" /></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -89,7 +90,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Sales Person</th>
+    <th scope="row"><spring:message code="sal.text.salPerson" /></th>
     <td><span id='rental_txtSalesPerson' ></span></td>
 </tr>
 </tbody>
@@ -98,7 +99,7 @@
 
 
 <aside class="title_line viewQuotLay"><!-- title_line start -->
-<h3>Quotation Information</h3>
+<h3><spring:message code="sal.page.title.quotationInfo" /></h3>
 </aside><!-- title_line end -->
 <div id ="viewQuotLay">
 <table class="type1"><!-- table start -->
@@ -113,11 +114,11 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Quotation No</th>
+    <th scope="row"><spring:message code="sal.text.quotationNo" /></th>
     <td><span id='rental_txtQuotNo' ></span></td>
-    <th scope="row">Created</th>
+    <th scope="row"><spring:message code="sal.text.created" /></th>
     <td><span id ='rental_txtQuotCreated' ></span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td><span id='rental_txtQuotCreate'></span></td>
 </tr>
 </tbody>
@@ -194,6 +195,8 @@ function fn_setMRentalBillInfoData(srvCntrctId ){
 
 function fn_setMRentalMembershipInfoSet(){
 	
+	var month = "<spring:message code="sales.month" />";
+	
 	$("#rental_txtMembershipNo").html(vmrMemResultObj.srvCntrctRefNo);       
     $("#rental_txtMembershipType").html(vmrMemResultObj.codeName);
     $("#rental_txtMembeshipCreated").html(vmrMemResultObj.srvCntrctCrtDt);
@@ -201,7 +204,7 @@ function fn_setMRentalMembershipInfoSet(){
     $("#rental_txtRentalStatus").html(vmrMemResultObj.cntrctRentalStus);
     $("#rental_txtPONo").html(vmrMemResultObj.poRefNo);      
     $("#rental_txtPackage").html(vmrMemResultObj.srvCntrctPacDesc);
-    $("#rental_txtDuration").html(vmrMemResultObj.qotatCntrctDur  +" month(s)");
+    $("#rental_txtDuration").html(vmrMemResultObj.qotatCntrctDur  +" " + month);
     $("#rental_txtRentalAmt").html(vmrMemResultObj.srvCntrctRental);
     $("#rental_txtOutstandingAmt").html("");
     $("#rental_txtUnbillAmt").html("");

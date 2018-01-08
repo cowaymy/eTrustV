@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -13,44 +14,44 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><span id='rO_txtOrderNo'></span></td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sales.ordDt" /></th>
     <td><span id='rO_txtOrderDate'></span></td>
-    <th scope="row">Order Status</th>
+    <th scope="row"><spring:message code="sales.ordStus" /></th>
     <td><span id='rO_txtOrderStatus' ></span></td>
 </tr>
 <tr>
-    <th scope="row">Product Category</th>
+    <th scope="row"><spring:message code="sales.ProductCategory" /></th>
     <td colspan="3"><span id='rO_txtProductCategory'></span></td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td><span id='rO_txtAppType' ></span></td>
 </tr>
 <tr>
-    <th scope="row">Product Code</th>
+    <th scope="row"><spring:message code="sal.text.productCode" /></th>
     <td><span id='rO_txtProductCode'></span></td>
-    <th scope="row">Product Name</th>
+    <th scope="row"><spring:message code="sal.text.productName" /></th>
     <td colspan="3"><span id='rO_txtProductName'></span></td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span id='rO_txtCustID'></span></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sales.NRIC" />/<spring:message code="sales.CompanyNo" /></th>
     <td colspan="3"><span id='rO_txtCustIC'></span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sales.cusName" /></th>
     <td colspan="5"><span id='rO_txtCustName'></span></td>
 </tr>
 <tr>
-    <th scope="row">Last Nembership</th>
+    <th scope="row"><spring:message code="sal.text.lastMem" /></th>
     <td colspan="3"><span id='rO_txtLastMembership'></span></td>
-    <th scope="row">Expire Date</th>
+    <th scope="row"><spring:message code="sales.ExpireDate" /></th>
     <td><span id='rO_txtLastExpireDate'></span></td>
 </tr>
 <tr>
-    <th scope="row">Install Address</th>
-    <td colspan="5"><span id='rO_txtInstAddress' >text</span></td>
+    <th scope="row"><spring:message code="sal.text.insAddr" /></th>
+    <td colspan="5"><span id='rO_txtInstAddress' ></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

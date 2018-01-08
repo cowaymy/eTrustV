@@ -25,37 +25,37 @@ function createAUIGridCList() {
     //AUIGrid 칼럼 설정
     var columnLayout = [
                    {     dataField     : "name",                 
-                               headerText  : "Name",  
+                               headerText  : "<spring:message code="sal.text.name" />",  
                                width          : 120,               
                                editable       : false
                         }, 
                    {     dataField     : "nric",          
-                               headerText  : "NRIC",           
+                               headerText  : "<spring:message code="sales.NRIC" />",           
                                width          : 120,                
                                editable       : false
                         }, 
                    {     dataField     : "telM1",                     
-                               headerText  : "Mobile No",           
+                               headerText  : "<spring:message code="sales.MobileNo" />",           
                                width          :120,                 
                                editable       : false
                         }, 
                    {      dataField     : "telO",                
-                                headerText  : "Office No",           
+                                headerText  : "<spring:message code="sales.OfficeNo" />",           
                                 width          : 120,                 
                                 editable       : false
                         }, 
                    {      dataField       : "telR",      
-                               headerText   : "Residence No",           
+                               headerText   : "<spring:message code="sal.title.residenceNo" />",           
                                width           : 120,                 
                                editable        : false
                         }, 
                    {      dataField       : "telf",      
-                               headerText   : "Fax No",           
+                               headerText   : "<spring:message code="sal.title.faxNo" />",           
                                width           :100,                 
                                editable        : false
                         }, 
                    {      dataField       : "codename1",      
-                               headerText   : "Race",           
+                               headerText   : "<spring:message code="sal.title.race" />",           
                                width           : 100,                 
                                editable        : false
                         }, 
@@ -90,9 +90,7 @@ function createAUIGridCList() {
         useGroupingPanel      : false,         //그룹핑 패널 사용
         skipReadonlyColumns  : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove    : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn  : true,         //줄번호 칼럼 렌더러 출력    
-        noDataMessage         : "No order found.",
-        groupingMessage       : "Here groupping"
+        showRowNumColumn  : true         //줄번호 칼럼 렌더러 출력  
     };
     
     
@@ -137,11 +135,11 @@ function fn_doClear() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Contact Person Search</h1>
+<h1><spring:message code="sal.page.title.contactPersonSearch" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue"><a href="#"  onclick="javascript:fn_selectListAjax()"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#"  onclick="javascript:fn_doClear()"><span class="clear"></span>Clear</a></p></li>
-	<li><p class="btn_blue2"><a href="#" id="c_close">CLOSE</a></p></li>
+	<li><p class="btn_blue"><a href="#"  onclick="javascript:fn_selectListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_blue"><a href="#"  onclick="javascript:fn_doClear()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="c_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -155,15 +153,15 @@ function fn_doClear() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Name</th>
+	<th scope="row"><spring:message code="sal.text.name" /></th>
 	<td><input type="text" title=""  id="NAME"  name='NAME'  placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">NRIC</th>
+	<th scope="row"><spring:message code="sales.NRIC" /></th>
 	<td><input type="text" title="" id="NRIC"  name="NRIC"  placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Contact No</th>
+	<th scope="row"><spring:message code="sal.text.contactNo" /></th>
 	<td><input type="text" title="" placeholder="" id='CONTACT_NO' name='CONTACT_NO' class="w100p" /></td>
 </tr>
 </tbody>

@@ -48,7 +48,7 @@ function f_multiCombo(){
 		    		 $("#bsFreq").html ("");
                      $("#duration").html ("");
                      $("#toyymm").html ("");
-		    	     Common.alert("  Package Info Not Found <br> System unable to find the package info. Please try again later. ");
+		    	     Common.alert("  <spring:message code="sal.alert.msg.packageInfoNotFound" /> ");
 		    	}
 	    });
     });
@@ -74,7 +74,7 @@ function fn_doConfirm (){
 			 
 			 $("#resultcontens").attr("style","display:none");
               
-             Common.alert(" No order found or this order is not under complete status. ");
+             Common.alert(" <spring:message code="sal.alert.msg.noOrderFound" /> ");
              return ;
              
 		 }else{
@@ -227,15 +227,23 @@ function setText(result){
             	 $("#expire").html( result.srvconfig.exprtext);
             	 $("#IS_EXPIRE").val("0");
             }
-           
 	        
-	        var address  =  result.installation.instAddr1 +" "+  
+/* 	        var address  =  result.installation.instAddr1 +" "+  
 						            result.installation.instAddr2 +" "+
 						            result.installation.instAddr3 +" "+
 						            result.installation.instPostCode +" "+
 						            result.installation.instArea+" "+ 
 						            result.installation.instState +" "+ 
-						            result.installation. instCnty;
+						            result.installation. instCnty; */
+	        
+	        
+	        var address  =  result.installation.instAddrDtl +" "+  
+						            result.installation.instStreet +" "+
+						            result.installation.instArea+" "+ 
+						            result.installation.instPostcode +" "+
+						            result.installation.instCity +" " +                            
+						            result.installation.instState +" "+ 
+						            result.installation.instCountry;
 								
 			//$("#instalationAddress").html(address);
 			$("#firstInstallNo").html(result.installation.firstInstallNo);
@@ -309,9 +317,7 @@ function createAUIGridOList() {
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-        noDataMessage       : "No order found.",
-        groupingMessage     : "Here groupping"
+        showRowNumColumn    : true         //줄번호 칼럼 렌더러 출력    
     };
     
     oListGridID = GridCommon.createAUIGrid("oList_grid_wrap", columnLayout, "", gridPros);
@@ -325,47 +331,47 @@ function createAUIGridHList() {
     //AUIGrid 칼럼 설정
     var columnLayout = [
                         {     dataField     : "no",                 
-                               headerText  : "BS No",  
+                               headerText  : "<spring:message code="sal.title.bsNo" />",  
                                width          : 150,               
                                editable       : false
                         }, 
                         {     dataField     : "month",          
-                               headerText  : "BS Month",           
+                               headerText  : "<spring:message code="sal.title.bsMonth" />",           
                                width          : 100,                
                                editable       : false
                         }, 
                         {     dataField     : "code",                     
-                               headerText  : "Type",           
+                               headerText  : "<spring:message code="sal.title.type" />",           
                                width          : 100,                 
                                editable       : false
                         }, 
                         {      dataField     : "code1",                
-                                headerText  : "Status",           
+                                headerText  : "<spring:message code="sal.title.status" />",           
                                 width          :100,                 
                                 editable       : false
                         }, 
                         {      dataField       : "no1",      
-                            headerText   : "BSR No",           
+                            headerText   : "<spring:message code="sal.title.bsrNo" />",           
                             width           : 150,                 
                             editable        : false
                      },
                     {      dataField       : "c1",      
-                                headerText   : "Settle Date",           
+                                headerText   : "<spring:message code="sal.title.settleDate" />",           
                                 width           : 200,                 
                                 editable        : false
                          }, 
                          {      dataField       : "memCode",      
-                             headerText   : "Cody Code",           
+                             headerText   : "<spring:message code="sal.title.codyCode" />",           
                              width           : 100,                 
                              editable        : false
                       }, 
                       {      dataField       : "code3",      
-                          headerText   : "Fail Reason",           
+                          headerText   : "<spring:message code="sal.title.failReason" />",           
                           width           :100,                 
                           editable        : false
                    }, 
                    {      dataField       : "code2",      
-                       headerText   : "Collection Reason",           
+                       headerText   : "<spring:message code="sal.title.collectionReason" />",           
                        width           : 150,                 
                        editable        : false
                 }
@@ -380,14 +386,12 @@ function createAUIGridHList() {
         fixedColumnCount    : 1,            
         showStateColumn     : true,             
         displayTreeOpen     : false,            
-        selectionMode       : "singleRow",  //"multipleCells",            
+//        selectionMode       : "singleRow",  //"multipleCells",            
         headerHeight        : 30,       
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-        noDataMessage       : "No order found.",
-        groupingMessage     : "Here groupping"
+        showRowNumColumn    : true         //줄번호 칼럼 렌더러 출력  
     };
     
     bsHistoryGridID = GridCommon.createAUIGrid("hList_grid_wrap", columnLayout, "", gridPros);
@@ -440,12 +444,12 @@ function fn_doSave(){
 				 
 				    $("#SAVE_ORD_ID").val($("#ORD_ID").val());
 				    $("#SAVE_PAC_ID").val($("#PAC_ID").val());
-				    $("#SAVE_BS_FREQ").val(($("#bsFreq").text()).replace(" month(s)",""));    
+				    $("#SAVE_BS_FREQ").val(($("#bsFreq").text()).replace(" <spring:message code="sales.month" />",""));    
 				    
 				    aList = $("#mypStartDate").val().split("/");
 				    
 				    $("#SAVE_START_DATE").val(aList[1]+"-"+aList[0]+"-");
-				    $("#SAVE_DURATION").val(($("#duration").text()).replace(" month(s)",""));
+				    $("#SAVE_DURATION").val(($("#duration").text()).replace(" <spring:message code="sales.month" />",""));
 				 
 				    Common.ajax("GET", "/sales/membership/selectMembershipFree_save", $("#saveForm").serialize(), function(result) {
 				    	
@@ -454,21 +458,21 @@ function fn_doSave(){
 				    	
 					    
 					    if(resultFalge){
-					    	Common.alert("<b>Free membership successfully given to this order.</b>");
+					    	Common.alert("<b><spring:message code="sal.alert.msg.freeMemSuccess" /></b>");
 					    	fn_doConfirm ();
 					    
 					    }else {
-					    	Common.alert(" <b>Failed to save free membership. Please try again later.</b>");
+					    	Common.alert(" <b><spring:message code="sal.alert.msg.freeMemFail" /></b>");
 					    }
 				   });
 				   
 				   
 			 }else{
 				   if(  $("#IS_EXPIRE").val() == 0){
-							 Common.alert(" <b>Invalid start date.<br />Start date month must greater than last expired date.</b>");
+							 Common.alert(" <b><spring:message code="sal.alert.msg.invalidStartDate" /></b>");
 							 return ;
 					}else{
-							 Common.alert(" <b>Invalid start date.<br /> Start date month must greater than/equal to current month.</b>");
+							 Common.alert(" <b><spring:message code="sal.alert.msg.invalidStartDate2" /></b>");
 							 return ;
 					}
 			 }
@@ -479,12 +483,16 @@ function fn_doSave(){
 function fn_validReqField(){
 	 
 	 if($("#cTPackage").val() =="") {
-		 Common.alert(" You must fill up [Type of Package]  the required fields.  ");
+		 
+		 var arg = "<spring:message code="sal.text.typeOfPack" />";
+		 Common.alert("<spring:message code="sal.alert.msg.requiredField" arguments='"+arg+"' htmlEscape='false'/>");
 		 return false; 
 	 }
     
 	 if($("#mypStartDate").val() =="") {
-		 Common.alert(" You must fill up [Start Date] the required fields. ");
+		 
+		 var arg="<spring:message code="sal.text.startDate" />";
+         Common.alert("<spring:message code="sal.alert.msg.requiredField" arguments='"+arg+"' htmlEscape='false'/>");
          return false; 
      }
 	 return true;
@@ -543,9 +551,9 @@ function fn_close(){
 <div id="popup_wrap" class="popup_wrap  pop_win"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Management - Free Membership</h1>
+<h1><spring:message code="sal.page.title.freeMem" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_close()"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -573,7 +581,7 @@ function fn_close(){
 
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Select Order</h3>
+<h3><spring:message code="sal.page.subTitle.selectOrder" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -590,11 +598,11 @@ function fn_close(){
 </colgroup>
 <tbody>
 <tr >
-    <th scope="row"  >Order No</th>
+    <th scope="row"  ><spring:message code="sal.text.ordNo" /></th>
     <td >
  
-          <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()">Search</a></p>
-          <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()">Reselect</a></p>
+          <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> <spring:message code="sal.btn.confirm" /></a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()"><spring:message code="sal.btn.search" /></a></p>
+          <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()"><spring:message code="sal.btn.reselect" /></a></p>
     
 	    </div> 
     </td>
@@ -616,9 +624,9 @@ function fn_close(){
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <!--  <li><a href="#" class="on">Membership Info</a></li> -->
-	<li><a href="#"   class="on" id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" >Order Info</a></li>
-	<li><a href="#">Contact Person</a></li>
-	<li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1120,400); " >BS History</a></li>
+	<li><a href="#"   class="on" id='orderTab' onclick=" javascript:AUIGrid.resize(oListGridID, 1120,300);" ><spring:message code="sal.tap.title.ordInfo" /></a></li>
+	<li><a href="#"><spring:message code="sal.tap.title.contactPerson" /></a></li>
+	<li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 1120,400); " ><spring:message code="sal.tap.title.bsHis" /></a></li>
 	
 </ul>
 
@@ -640,61 +648,61 @@ function fn_close(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><span id="ordNo"></span></td>  
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sales.ordDt" /></th>
     <td><span id='ordDt'></span></td>
-    <th scope="row">Installment Period</th>
+    <th scope="row"><spring:message code="sal.text.insPeriod" /></th>
     <td><span id='InstallmentPeriod'></span></td>
 </tr>
 <tr>
-    <th scope="row">Order Status</th>
+    <th scope="row"><spring:message code="sales.ordStus" /></th>
     <td><span id='ordStusName'></span></td>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sales.RentalStatus" /></th>
     <td><span id='rentalStus'></span></td>
-    <th scope="row">Install No</th>
+    <th scope="row"><spring:message code="sal.text.insNo" /></th>
     <td><span id='firstInstallNo'></span></td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td><span id='appTypeDesc'></span></td>
-    <th scope="row">Reference No</th>
+    <th scope="row"><spring:message code="sal.text.refNo" /></th>
     <td><span id='ordRefNo'></span></td>
-    <th scope="row">Install Date</th>
+    <th scope="row"><spring:message code="sal.text.insDate" /></th>
     <td><span id='preferInstDt'></span></td>
 </tr>
 <tr>
-    <th scope="row">Stock Code</th>
+    <th scope="row"><spring:message code="sal.text.stockCode" /></th>
     <td><span id='stockCode'></span></td>
-    <th scope="row">Stock Name</th>
+    <th scope="row"><spring:message code="sal.text.stokName" /></th>
     <td colspan="3" id='stockDesc' ><span></span></td>
 </tr>
 <tr>
-    <th scope="row" rowspan="3">Instalation Address</th>
+    <th scope="row" rowspan="3"><spring:message code="sal.text.instAddr" /></th>
     <td colspan="3" rowspan="3"><span id='instalationAddress'></span></td>
-    <th scope="row">Order Outstanding</th> 
+    <th scope="row"><spring:message code="sal.text.ordOutstanding" /></th> 
     <td><span id="ordOtstnd"></span></td>
 </tr>
 <tr>
-    <th scope="row">AS Outstanding</th>
+    <th scope="row"><spring:message code="sal.text.asOutstanding" /></th>
     <td><span  id="asOtstnd"></span></td>
 </tr>
 <tr>
-    <th scope="row">Membership Expire</th>
+    <th scope="row"><spring:message code="sal.text.memExpire" /></th>
     <td><span id="expire"></span></td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span id='custId'></span></td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td colspan="3" id='custType'><span></span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="5" id='custName'><span></span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" /></th>
     <td colspan="5" id='custNric'><span></span></td>
 </tr>
 </tbody>
@@ -713,8 +721,8 @@ function fn_close(){
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="left_btns mb10">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()"><spring:message code="sal.btn.otherContactPerson" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()"><spring:message code="sal.btn.newContactPerson" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -731,29 +739,29 @@ function fn_close(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td colspan="5" id="name"><span></span></td>
     <th scope="row"></th>
     <td><span id="gender"></span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td colspan="5" id="nric"><span></span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.title.race" /></th>
     <td><span id="codename1"></span></td>
 </tr>
 <tr>
-    <th scope="row">Mobile No</th>
+    <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
     <td><span id="telM1"></span></td>
-    <th scope="row">Office No</th>
+    <th scope="row"><spring:message code="sal.text.officeNo" /></th>
     <td><span id="telO"></span></td>
-    <th scope="row">Residence No</th>
+    <th scope="row"><spring:message code="sal.text.residenceNo" /></th>
     <td><span id="telR" ></span></td>
-    <th scope="row">Fax No</th>
+    <th scope="row"><spring:message code="sal.text.faxNo" /></th>
     <td><span id="telf"></span></td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td colspan="7" id="email"><span></span></td>
 </tr>
 </tbody>
@@ -781,7 +789,7 @@ function fn_close(){
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Free Membership Information</h3>
+<h3><spring:message code="sal.page.subTitle.freeMemInfo" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -797,23 +805,23 @@ function fn_close(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Type of Package</th>
+	<th scope="row"><spring:message code="sal.text.typeOfPack" /></th>
 	<td>
 	    <select id="cTPackage" name="cTPackage" class="w100p" >
         </select>
 	</td>
-	<th scope="row">Start Date</th>
-	<td><input type="text" title="기준년월" placeholder="DD/MM/YYYY" class="j_date2 w100p"  id="mypStartDate"  name='mypStartDate'/></td>
+	<th scope="row"><spring:message code="sal.text.startDate" /></th>
+	<td><input type="text"  placeholder="DD/MM/YYYY" class="j_date2 w100p"  id="mypStartDate"  name='mypStartDate'/></td>
 </tr>
 <tr>
-	<th scope="row">Membership Duration</th>
+	<th scope="row"><spring:message code="sal.text.membershipDuration" /></th>
 	<td><span id='duration'></span></td>
-	<th scope="row">BS Frequency</th>
+	<th scope="row"><spring:message code="sal.text.bsFrequency" /></th>
 	<td><span id='bsFreq'></span></td>
 </tr>
 
 <tr>
-	<th scope="row">Remark</th>
+	<th scope="row"><spring:message code="sal.text.remark" /></th>
 	<td colspan="3"><textarea cols="20" rows="5" id='remark'  name='remark'></textarea></td>
 </tr>
 </tbody>
@@ -833,7 +841,7 @@ function fn_close(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doSave()">SAVE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" onclick="javascript:fn_doSave()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- content end -->

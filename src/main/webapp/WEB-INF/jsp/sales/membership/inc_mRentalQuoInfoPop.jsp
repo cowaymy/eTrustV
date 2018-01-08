@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
-
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -14,55 +14,55 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Quotation No</th>
+    <th scope="row"><spring:message code="sal.text.quotationNo" /></th>
     <td><span  id="inc_quotNo" ></span></td>
-    <th scope="row">Validity Status</th>
+    <th scope="row"><spring:message code="sal.text.validityStatus" /></th>
     <td><span id="inc_validStus" ></span></td>
-    <th scope="row">Create Date</th>
+    <th scope="row"><spring:message code="sal.text.createDate" /></th>
     <td><span id="inc_crtDts" ></span></td>
 </tr>
 <tr>
-    <th scope="row">Membership Sales</th>
+    <th scope="row"><spring:message code="sal.text.memSales" /></th>
     <td><span id="inc_cnvrMemNo"> </span></td>
-    <th scope="row">Valid Date</th>
+    <th scope="row"><spring:message code="sal.text.validDate" /></th>
     <td><span id="inc_validD" ></span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td><span  id="inc_crtUserId" ></span></td>
 </tr>
 <tr>
-    <th scope="row">Duration</th>
+    <th scope="row"><spring:message code="sales.Duration" /></th>
     <td><span  id="inc_dur">   </span></td>
-    <th scope="row">Package</th>
+    <th scope="row"><spring:message code="sales.Package" /></th>
     <td><span id="inc_pacDesc"></span></td>
-    <th scope="row">Deactivated by</th>
+    <th scope="row"><spring:message code="sal.text.deactivatedby" /></th>
     <td><span id="inc_pacDeacby" ></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Amount</th>
+    <th scope="row"><spring:message code="sal.text.totAmt" /></th>
     <td><span id="inc_totAmt" ></span></td>
-    <th scope="row">Package Amount</th>
-    <td><span id="inc_pacAmt" >$</span></td>
-    <th scope="row">Filter Amount</th>
+    <th scope="row"><spring:message code="sal.text.pacAmt" /></th>
+    <td><span id="inc_pacAmt" ></span></td>
+    <th scope="row"><spring:message code="sal.text.filAmt" /></th>
     <td><span  id="inc_filterAmt"></span></td>
 </tr>
 <tr>
-    <th scope="row">Package Promotion</th>
+    <th scope="row"><spring:message code="sales.pakPro" /></th>
     <td colspan="5"><span id="inc_pacPromoDesc"></span></td>
 </tr>
 <tr>
-    <th scope="row">Filter Promotion</th>
+    <th scope="row"><spring:message code="sales.filterPro" /></th>
     <td colspan="3"><span  id="inc_promeCode" > </span></td>
-    <th scope="row">BS Frequency</th>
+    <th scope="row"><spring:message code="sales.bsFre" /></th>
     <td> <span  id="inc_bsFreq" > </span></td>
 </tr>
 <tr>
-    <th scope="row">Sales Person Code</th>
+    <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
     <td><span  id="inc_memCode"> </span></td>
-    <th scope="row">Sales Person Name</th>
+    <th scope="row"><spring:message code="sal.text.salPersonName" /></th>
     <td colspan="3"><span  id="inc_memName"></span></td>
 </tr>
 <tr>
-    <th scope="row">Reference Number</th>
+    <th scope="row"><spring:message code="sal.text.refNum" /></th>
     <td colspan="5"><span id="inc_refNo"></span></td>
 </tr>
 </tbody>
@@ -123,44 +123,49 @@ function fn_setMRentalBillInfoData(srvCntrctId ){
 
 
 function fn_setMRentalQuoutInfoSet(){
+  
+	var msg;
+	var month = "<spring:message code="sales.month" />";
+	
+	if('${quotInfo.validStus}' == 'ACT' ){
+	    msg = "<spring:message code="sal.text.readyToConvert" />";
+	    
+	    $("#inc_validStus").html("<font color='green'>" +msg+ "</font>");
+	    $("#inc_pacDeacby").html("-");
+	    
+	}else if('${quotInfo.validStus}' == 'CON'){
+	    msg ="<spring:message code="sal.text.convertedTosales" />";
+	    
+	    $("#inc_validStus").html("<font color='orange'>"+msg+"</font>");
+	    $("#inc_pacDeacby").html("-");
+	    
+	}else if('${quotInfo.validStus}' == 'EXP'){
+	    msg ="<spring:message code="sal.text.expired" />";
+	    
+	    $("#inc_validStus").html("<font color='red'>"+msg+"</font>");
+	    $("#inc_pacDeacby").html("-");
+	    
+	}else if('${quotInfo.validStus}' == 'DEA'){
+	    msg ="<spring:message code="sal.text.deacivated" />";
+	    
+	    $("#inc_validStus").html("<font color=brown'>"+msg+"</font>");
+	    $("#inc_pacDeacby").html("${quotInfo.updUserId}");
+	} 
 	
 	
-
-if(vQResult.c6 == 'ACT' ){
-    
-    $("#inc_validStus").html("<font color='green'> Ready to convert </font>");
-    $("#inc_pacDeacby").html("-");
-    
-}else if(vQResult.c6 == 'CON'){
-    
-    $("#inc_validStus").html("<font color='orange'> Converted to sales </font>");
-    $("#inc_pacDeacby").html("-");
-    
-}else if(vQResult.c6 == 'EXP'){
-    
-    $("#inc_validStus").html("<font color='red'> Expired </font>");
-    $("#inc_pacDeacby").html("-");
-    
-}else if(vQResult.c6 == 'DEA'){
-	
-    $("#inc_validStus").html("<font color=brown'> Deactivated </font>");
-    $("#inc_pacDeacby").html(vQResult.userName);
-}
-        
-        
         
 	 $("#inc_quotNo").html(vQResult.qotatRefNo);  
      $("#inc_crtDts").html(vQResult.qotatCrtDt);  
 	 $("#inc_validD").html(vQResult.qotatValIdDt);
 	 $("#inc_crtUserId").html(vQResult.userName);
-	 $("#inc_dur").html(vQResult.qotatCntrctDur +"month(s)");
+	 $("#inc_dur").html(vQResult.qotatCntrctDur + " "+month);
 	 $("#inc_pacDesc").html(vQResult.srvCntrctPacDesc);
 	 $("#inc_totAmt").html(vQResult.qotatRentalAmt);
 	 $("#inc_pacAmt").html(vQResult.qotatRentalAmt);
 	 $("#inc_filterAmt").html(vQResult.qotatExpFilterAmt);
 	 $("#inc_pacPromoDesc").html(vQResult.c1);
 	 $("#inc_promeCode").html(vQResult.c2);
-	 $("#inc_bsFreq").html(vQResult.qotatCntrctFreq +"month(s)");
+	 $("#inc_bsFreq").html(vQResult.qotatCntrctFreq +" "+ month);
 	 $("#inc_memCode").html(vQResult.c3);
 	 $("#inc_memName").html(vQResult.c4);
 	 $("#inc_refNo").html(vQResult.c7); 

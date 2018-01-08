@@ -27,7 +27,7 @@ $.fn.clearForm = function() {
         if (tag === 'form'){
             return $(':input',this).clearForm();
         }
-        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+        if (type === 'text' || type === 'password' || tag === 'textarea'){
             this.value = '';
         }else if (tag === 'select'){
             this.selectedIndex = 0;
@@ -307,9 +307,9 @@ function cmbGrpCode_SelectedIndexChanged(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership YS Listing</h1>
+<h1><spring:message code="sal.page.title.ysListing" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -332,77 +332,77 @@ function cmbGrpCode_SelectedIndexChanged(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Membership Type</th>
+    <th scope="row"><spring:message code="sal.text.membershipType" /></th>
     <td>
     <select class="w100p" id="cmbMembershipType">
-        <option data-placeholder="true" hidden>Membership Type</option>
-        <option value="Rental Membership">Rental Membership</option>
-        <option value="Outright Membership">Outright Membership</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.text.membershipType" /></option>
+        <option value="Rental Membership"><spring:message code="sal.text.rentalMembership" /></option>
+        <option value="Outright Membership"><spring:message code="sal.text.outrightMembership" /></option>
     </select>
     </td>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
     <select class="w100p" id="cmbMemberType" onchange="cmbMemberType_SelectedIndexChanged()">
-        <option data-placeholder="true" hidden>Member Type</option>
-        <option value="1">Health Planner</option>
-        <option value="2">Coway Lady</option>
-        <option value="3">Coway Technician</option>
-        <option value="4">Staff</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.text.memtype" /></option>
+        <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+        <option value="2"><spring:message code="sal.text.cowayLady" /></option>
+        <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
+        <option value="4"><spring:message code="sal.text.staff" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">YS Aging</th>
+    <th scope="row"><spring:message code="sal.text.ysAging" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbYSAging" data-placeholder="YS Aging">
-        <option value="1">< 31 days</option>
-        <option value="2">31 - 60 days</option>
-        <option value="3">61 - 90 days</option>
-        <option value="4">> 90 days</option>
+        <option value="1"><spring:message code="sal.text.31Days" /></option>
+        <option value="2"><spring:message code="sal.text.60Days" /></option>
+        <option value="3"><spring:message code="sal.text.61Days" /></option>
+        <option value="4"><spring:message code="sal.text.90Days" /></option>
     </select>
     </td>
-    <th scope="row">Org Code</th>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
     <td>
     <select class="w100p disabled" disabled="disabled" id="cmbOrgCode" onchange="cmbOrgCode_SelectedIndexChanged()">
-        <option>Organization</option>
+        <option><spring:message code="sal.text.organization" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Created Date</th>
+    <th scope="row"><spring:message code="sal.text.crtDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpKeyDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpKeyDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Grp Code</th>
+    <th scope="row"><spring:message code="sal.text.grpCode" /></th>
     <td>
     <select class="w100p disabled" disabled="disabled" id="cmbGrpCode" onchange="cmbGrpCode_SelectedIndexChanged()">
-        <option>Department</option>
+        <option><spring:message code="sal.text.dept" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbBranch" data-placeholder="Branch"></select>
     </td>
-    <th scope="row">Dept Code</th>
+    <th scope="row"><spring:message code="sal.text.detpCode" /></th>
     <td>
     <select class="w100p disabled" disabled="disabled" id="cmbDeptCode">
-        <option>Department</option>
+        <option><spring:message code="sal.text.dept" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Outstanding</th>
+    <th scope="row"><spring:message code="sal.text.outstanding" /></th>
     <td>
     <select class="w100p" id="cmbOutstanding">
-        <option data-placeholder="true" hidden>Outstanding</option>
-        <option value="OUT">With Outstanding</option>
-        <option value="OVER">Overpaid</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.text.outstanding" /></option>
+        <option value="OUT"><spring:message code="sal.combo.text.withOutstanding" /></option>
+        <option value="OVER"><spring:message code="sal.combo.text.overPaid" /></option>
     </select>
     </td>
     <th scope="row"></th>
@@ -413,9 +413,9 @@ function cmbGrpCode_SelectedIndexChanged(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_PDF_Click()">Generate PDF</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Excel_Click()">Generate Excel</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_PDF_Click()"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Excel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

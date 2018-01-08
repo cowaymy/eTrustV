@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -13,55 +14,55 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Payment Mode</th>
+    <th scope="row"><spring:message code="sal.text.payMode" /></th>
     <td><span id='rP_txtPayMode'></span></td>
-    <th scope="row">Name On Card</th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
     <td colspan="3"><span id='rP_txtCrcName'></span></td>
 </tr>
 <tr>
-    <th scope="row">Credit Card No.</th>
+    <th scope="row"><spring:message code="sal.text.creditCardNo" /></th>
     <td><span id='rP_txtCrcNo'></span></td>
-    <th scope="row">Card Type</th>
+    <th scope="row"><spring:message code="sal.text.cardType" /></th>
     <td><span id='rP_txtCrcCardType'></span></td>
-    <th scope="row">Expiry Date</th>
+    <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
     <td><span id='rP_txtCrcExpiry'></span></td>
 </tr>
 <tr>
-    <th scope="row">Bank Acc No.</th>
+    <th scope="row"><spring:message code="sal.text.bankAccNo" /></th>
     <td><span id='rP_txtBankAccNo'></span></td>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td><span id='rP_txtIssueBank'></span></td>
-    <th scope="row">Account Name</th>
+    <th scope="row"><spring:message code="sal.text.accName" /></th>
     <td><span id='rP_txtAccName'></span></td>
 </tr>
 <tr>
-    <th scope="row">Pay By Third Party</th>
+    <th scope="row"><spring:message code="sal.text.payByThirdParty" /></th>
     <td><span id='rP_txtPTD'></span></td>
-    <th scope="row">Third Party ID</th>
-    <td><span id='rP_txtPTID'>text</span></td>
-    <th scope="row">Third Party Type</th>
+    <th scope="row"><spring:message code="sal.text.thirdPartyId" /></th>
+    <td><span id='rP_txtPTID'></span></td>
+    <th scope="row"><spring:message code="sal.text.thirdPartyType" /></th>
     <td><span id='rP_txtPTType'></span></td>
 </tr>
 <tr>
-    <th scope="row">Third Party Name</th>
+    <th scope="row"><spring:message code="sal.text.thirdPartyName" /></th>
     <td colspan="3"><span id='rP_txtPTName'></span></td>
-    <th scope="row">Third Party NRIC</th>
+    <th scope="row"><spring:message code="sal.text.thirdPartyNric" /></th>
     <td><span id='rP_txtPTDNRIC'></span></td>
 </tr>
 <tr>
-    <th scope="row">Apply Date</th>
+    <th scope="row"><spring:message code="sal.text.applyDate" /></th>
     <td><span id='rP_txtApplyDate'></span></td>
-    <th scope="row">Submit Date</th>
+    <th scope="row"><spring:message code="sal.text.submitDate" /></th>
     <td><span id='rP_txtSubmitDate'></span></td>
-    <th scope="row">Start Date</th>
+    <th scope="row"><spring:message code="sal.text.startDate" /></th>
     <td><span id='rP_txtStartDate'></span></td>
 </tr>
 <tr>
-    <th scope="row">Reject Date</th>
+    <th scope="row"><spring:message code="sal.text.rejectDate" /></th>
     <td><span id='rP_txtRejectDate'></span></td>
-    <th scope="row">Reject Code</th>
+    <th scope="row"><spring:message code="sal.text.rejectCode" /></th>
     <td><span  id='rP_txtRejectCode'></span></td>
-    <th scope="row">Payment Term</th>
+    <th scope="row"><spring:message code="sal.text.payTerm" /></th>
     <td><span  id='rP_txtPayTerm'></span></td>
 </tr>
 </tbody>
@@ -112,7 +113,7 @@ function fn_setMRentalPayThirdPartyInfoData(){
 
 
 function fn_setMRentalPayInfoSet(){
-	
+	var month = "<spring:message code="sales.month" />";
 
     $("#rP_txtPayMode").html(vmrPayResultObj.paysetInfo.codeDesc);  
     $("#rP_txtCrcName").html(vmrPayResultObj.paysetInfo.custCrcOwner);   
@@ -127,7 +128,7 @@ function fn_setMRentalPayInfoSet(){
     $("#rP_txtStartDate").html(vmrPayResultObj.paysetInfo.ddStartDt);     
     $("#rP_txtRejectDate").html(vmrPayResultObj.paysetInfo.ddRejctDt);    
     $("#rP_txtRejectCode").html(vmrPayResultObj.paysetInfo.codeDesc); 
-    $("#rP_txtPayTerm").html(vmrPayResultObj.paysetInfo.payTrm +" month(s)");        
+    $("#rP_txtPayTerm").html(vmrPayResultObj.paysetInfo.payTrm +" " + month);        
     
     if(  vmrPayResultObj.paysetInfo.is3rdParty >0){
         $("#rP_txtPTD").html("YES");       

@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
 
@@ -37,15 +38,15 @@ function createMRPayGridGrid(){
 			    }
 		}, 
 
-         {dataField : "orNo",headerText : "Receipt No", width : 100 ,editable : false},
-         {dataField : "stkDesc", headerText : "Reverse For", width : 100 ,editable : false},
-         {dataField : "payData", headerText : "Payment Date", width :100  ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false },
-         {dataField : "codeDesc", headerText : "Payment Type", width :240 ,editable : false},
-         {dataField : "accCode", headerText : "Debtor Acc", width :100 ,editable : false},
-         {dataField : "code", headerText : "Debtor AccDebtor Acc",width :100 ,editable : false},
-         {dataField : "name1", headerText : "Key-In Branch (Name)",width :100 ,editable : false},
-         {dataField : "totAmt", headerText : "Total Amount",width :100 ,editable : false},
-         {dataField : "userName", headerText : "Creator",width :100  ,dataType : "number", formatString : "#,000.00" ,editable : false }
+         {dataField : "orNo",headerText : "<spring:message code="sal.title.receiptNo" />", width : 100 ,editable : false},
+         {dataField : "stkDesc", headerText : "<spring:message code="sal.title.reverseFor" />", width : 100 ,editable : false},
+         {dataField : "payData", headerText : "<spring:message code="sal.title.payDate" />", width :100  ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false },
+         {dataField : "codeDesc", headerText : "<spring:message code="sal.title.payType" />", width :240 ,editable : false},
+         {dataField : "accCode", headerText : "<spring:message code="sal.title.debtorAcc" />", width :100 ,editable : false},
+         {dataField : "code", headerText : "<spring:message code="sal.title.keyInBranchCode" />",width :100 ,editable : false},
+         {dataField : "name1", headerText : "<spring:message code="sal.title.keyInBranchName" />",width :100 ,editable : false},
+         {dataField : "totAmt", headerText : "<spring:message code="sal.title.totAmt" />",width :100  ,dataType : "number", formatString : "#,000.00" ,editable : false},
+         {dataField : "userName", headerText : "<spring:message code="sal.title.creator" />",width :100, editable : false }
    ];
     
     var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
@@ -59,13 +60,13 @@ function createMRPayDetailGridGrid(){
         
     var cLayout = [
          
-         {dataField : "codeName",headerText : "Paymode", width : 100 ,editable : false},
-         {dataField : "payItmAmt", headerText : "Amount", width : 100 ,editable : false},
-         {dataField : "name", headerText : "Issue Bank", width :100  },
-         {dataField : "c2", headerText : "Acc Code", width :100 ,editable : false},
-         {dataField : "accDesc", headerText : "Acc Name", width :100 ,editable : false},
-         {dataField : "payItmRefDt", headerText : "Reference Date",width :100 ,editable : false ,dataType : "date", formatString : "dd-mm-yyyy"  },
-         {dataField : "payItmRem", headerText : "Remark",width :250 ,editable : false}
+         {dataField : "codeName",headerText : "<spring:message code="sal.title.paymode" />", width : 100 ,editable : false},
+         {dataField : "payItmAmt", headerText : "<spring:message code="sal.title.amount" />", width : 100 ,dataType : "number", formatString : "#,000.00" ,editable : false},
+         {dataField : "name", headerText : "<spring:message code="sal.title.issueBank" />", width :100  },
+         {dataField : "c2", headerText : "<spring:message code="sal.title.accCode" />", width :100 ,editable : false},
+         {dataField : "accDesc", headerText : "<spring:message code="sal.title.accName" />", width :100 ,editable : false},
+         {dataField : "payItmRefDt", headerText : "<spring:message code="sal.title.refDate" />",width :100 ,editable : false ,dataType : "date", formatString : "dd-mm-yyyy"  },
+         {dataField : "payItmRem", headerText : "<spring:message code="sal.title.remark" />",width :250 ,editable : false}
    ];
     
     var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
