@@ -734,12 +734,14 @@ function fn_getFilterChargeList(){
                 SALES_ORD_NO : $("#ORD_NO").val(),
                 ORD_ID : $("#ORD_ID").val(),
                 PROMO_ID: $('#cPromo').val() ,
-                SRV_PAC_ID :$('#cTPackage').val() 
+                SRV_PAC_ID :$('#cTPackage').val(), 
+                zeroRatYn :$("#zeroRatYn").val(),
+                eurCertYn :$("#eurCertYn").val() 
             }, function(result) {
                  console.log( result);
                  
                 if(null != result){
-                     if(result[0] !=null){
+                    /*  if(result[0] !=null){
                     	 if($("#zeroRatYn").val() == "N" || $("#eurCertYn").val() == "N"){
                     		 
                              $("#txtFilterCharge").text( Math.floor(result[0].amt * 100 / 106));
@@ -747,8 +749,8 @@ function fn_getFilterChargeList(){
                     	 }else{
                              $("#txtFilterCharge").text( result[0].amt);
                     	 }
-                    } 
-                	//$("#txtFilterCharge").text( result.amt);
+                    }  */
+                	$("#txtFilterCharge").text( result);
                 }
             });
         } 
