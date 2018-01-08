@@ -122,6 +122,8 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		
 		
 		int status = Integer.parseInt((String)params.get("addStatus"));	// recall, calcel, reversal cancel
+		int appTypeId = Integer.parseInt((String)params.get("appTypeId"));	
+		
 		int reqStageId = 0;	// before , after install
 		String reqStageIdValue = "";	// RET, CAN
 		
@@ -160,6 +162,19 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 			orderCancelMapper.updateCancelSAL0020D(saveParam);											// SalesReqCancel
 			
 			EgovMap salesReqCancel = orderCancelMapper.newSearchCancelSAL0020D(saveParam);
+			logger.info("####################### Recall cmbAppTypeId!! ######## "+ params.get("cmbAppTypeId"));
+			
+			if(appTypeId == 66){	//RENTAL
+				EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);	// RentalScheme
+				saveParam.put("renSchId", getRenSchId.get("renSchId"));
+				if(reqStageId == 25){	// after installation
+					reqStageIdValue = "RET";
+				}else{
+					reqStageIdValue = "CAN";
+				}
+				saveParam.put("rentalSchemeStusId", reqStageIdValue);
+				orderCancelMapper.updateCancelSAL0071D(saveParam);											// RentalScheme
+			}
 			
 			if(reqStageId == 25){
 				salesReqCancelParam.put("callEntryId", salesReqCancel.get("soReqPrevCallEntryId"));
@@ -207,15 +222,6 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 				EgovMap searchSAL0001D = orderCancelMapper.newSearchCancelSAL0001D(saveParam);	// SalesOrderM
 				orderCancelMapper.updateCancelSAL0001D(saveParam);											// SalesOrderM
 				
-				EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);	// RentalScheme
-				saveParam.put("renSchId", getRenSchId.get("renSchId"));
-				if(reqStageId == 25){	// after installation
-					reqStageIdValue = "RET";
-				}else{
-					reqStageIdValue = "CAN";
-				}
-				saveParam.put("rentalSchemeStusId", reqStageIdValue);
-				orderCancelMapper.updateCancelSAL0071D(saveParam);											// RentalScheme
 			}
 			
 			if(reqStageId == 25){
@@ -276,19 +282,21 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
     			saveParam.put("resultId", getCallResultIdMaxSeq);
     			orderExchangeMapper.updateResultIdCCR0006D(saveParam);
     			
-    			
-    			EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);
-    			saveParam.put("renSchId", getRenSchId.get("renSchId"));
-    			if(reqStageId == 24){
+    			logger.info("##### reqStageId ###############" +(String)params.get("reqStageId"));
+			}
+
+			if(appTypeId == 66){	//RENTAL
+				EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);	// RentalScheme
+				saveParam.put("renSchId", getRenSchId.get("renSchId"));
+				if(reqStageId == 24){
     				saveParam.put("rentalSchemeStusId", "ACT");
     			}else{
     				saveParam.put("rentalSchemeStusId", "REG");
     			}
-    			
-    			orderCancelMapper.updateCancelSAL0071D(saveParam);
-    			logger.info("##### reqStageId ###############" +(String)params.get("reqStageId"));
+				saveParam.put("rentalSchemeStusId", reqStageIdValue);
+				orderCancelMapper.updateCancelSAL0071D(saveParam);											// RentalScheme
 			}
-
+			
 			saveParam.put("salesOrderId", params.get("paramOrdId"));
 			EgovMap getRefId = orderExchangeMapper.firstSearchForCancel(saveParam);
 			if(reqStageId == 25){
