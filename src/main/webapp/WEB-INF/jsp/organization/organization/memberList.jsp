@@ -7,7 +7,7 @@ var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
 function fn_memberListNew(){
-	 Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true"+"&memType=" + memberType, "searchForm"  ,null , true  ,'fn_memberListNew');
+	 Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true", "searchForm"  ,null , true  ,'fn_memberListNew');
 }
 
 function fn_memberListSearch(){

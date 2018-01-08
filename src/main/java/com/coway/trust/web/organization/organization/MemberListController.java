@@ -445,7 +445,7 @@ public class MemberListController {
 
 		List<EgovMap> selectDocSubmission;
 		
-		if("2".equals(params.get("memType").toString())){//type가 Coway Lady면 쿼리가 살짝다름.....
+		if("2".equals((String)params.get("memType"))){//type가 Coway Lady면 쿼리가 살짝다름.....
 			selectDocSubmission = memberListService.selectCodyDocSubmission(params);
 		}else{
 			selectDocSubmission = memberListService.selectHpDocSubmission(params);
@@ -753,10 +753,15 @@ public class MemberListController {
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
 		logger.debug("mainDeptList : {}", mainDeptList);
 		
-		params.put("groupCode", selectMemberListView.get("mainDept"));
-		logger.debug("params : {}", params);
-		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
-		logger.debug("subDeptList : {}", subDeptList);
+		if(selectMemberListView != null){
+    		params.put("groupCode", selectMemberListView.get("mainDept"));
+    		logger.debug("params : {}", params);
+		}
+		else{
+			params.put("groupCode", "");
+		}
+    		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
+    		logger.debug("subDeptList : {}", subDeptList);
 		
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
