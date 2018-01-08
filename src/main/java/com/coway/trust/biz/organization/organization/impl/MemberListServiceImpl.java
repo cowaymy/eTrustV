@@ -1062,8 +1062,22 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
 						deptCode = getDocNo("65");
 					} 
-				} else {
-					
+				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 1) {
+					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
+						deptCode = getDocNo("60");
+					} else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
+						deptCode = getDocNo("61");
+					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
+						deptCode = getDocNo("62");
+					} 
+				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3) {
+					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
+						deptCode = getDocNo("105");
+					} else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
+						deptCode = getDocNo("104");
+					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
+						deptCode = getDocNo("103");
+					} 
 				}
 				
 				nextDocNo = "";
@@ -1088,11 +1102,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 //				promoEntry.put("parentIdFrom", selectMemberOrgs.get("memUpId") != null ? Integer.parseInt(selectMemberOrgs.get("memUpId").toString()) : 0);
 				
 				Map<String, Object>  parentEntry = new HashMap<String, Object>();
-				parentEntry.put("deptCode", selectMemberOrgs.get("deptCode"));
-				parentEntry.put("lvlTo", params.get("lvlTo"));
+				parentEntry.put("deptCode", selectOrganization_new.get("deptCode"));
+				parentEntry.put("lvlTo", (Integer.parseInt(params.get("lvlTo").toString())-1 > 0) ? Integer.parseInt(params.get("lvlTo").toString())-1 : "1" );
 				logger.debug("parentEntry : {}",parentEntry);
 				List<EgovMap> selectParentIdFrom = memberListMapper.selectParentIdFrom(parentEntry);
-				promoEntry.put("parentIdFrom", selectParentIdFrom.get(0).get("memId"));
+				promoEntry.put("parentIdFrom", (selectParentIdFrom.size() > 0) ? selectParentIdFrom.get(0).get("memId").toString() : "");
 				
 				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
