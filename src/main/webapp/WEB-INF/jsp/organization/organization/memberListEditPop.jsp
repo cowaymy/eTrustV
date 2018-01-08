@@ -347,7 +347,7 @@ function fn_setMemInfo(data){
 	         }
 	        
 	        $("#marrital option[value="+ data.marrital +"]").attr("selected", true);
-	        $("#cmdRace").val(data.aplicntRace);
+	        $("#cmbRace").val(data.aplicntRace);
 	        $("#bankAccNo").val(data.bankAccNo);
 	        
 		
