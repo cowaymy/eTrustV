@@ -100,10 +100,14 @@
     MEM_ID
   FROM 
     SAL0107D
-  WHERE
-    BATCH_ID = #{batchId}
-  AND
-    ORD_NO = #{ordNo}
+  WHERE 
+    1 = 1
+    <if test=" batchId != null and batchId != '' ">
+        AND BATCH_ID = #{batchId}
+    </if>
+    <if test="ordNo != null and ordNo != '' ">
+    AND ORD_NO = #{ordNo}
+    </if>
   AND
     <![CDATA[
     PRCSS <> 0

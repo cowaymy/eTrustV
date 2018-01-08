@@ -373,6 +373,26 @@ function chgTab(tabNm) {
    
 }
 
+function fn_displayReport(viewType){
+    
+    var isRe = false;
+    console.log("DEFAULT_RESOURCE_FILE : " + DEFAULT_RESOURCE_FILE);
+    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {viewType : viewType , ordNo : '${orderDetail.basicInfo.ordNo}'}, function(result){
+        console.log("result : " + result);
+        console.log("content  :  " + JSON.stringify(result));
+         if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
+             window.open(DEFAULT_RESOURCE_FILE+'/'+result.subPath+ '/' + result.fileName, 'report' , "width=800, height=600");
+        }else{
+            isRe  = true;
+        }
+    },'',{async : false});
+    
+    if(isRe == true){
+        Common.alert("No result from CTOS");
+        return;
+    }
+}
+
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -483,8 +503,8 @@ function chgTab(tabNm) {
 <aside class="title_line"><!-- title_line start -->
 <h3>CCP Score Point</h3>
 <ul class="right_btns">
-    <li><p class="btn_blue2"><a onclick="javascript: fn_underDevelop()">FICO Report</a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_underDevelop()">CTOS Report</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')">FICO Report</a></p></li>  
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')">CTOS Report</a></p></li> 
 </ul>
 </aside><!-- title_line end -->
 
