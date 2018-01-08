@@ -253,7 +253,7 @@ WHERE 1 = 1
 </select>
 
   <select id="selectTypeList" parameterType="Map" resultType="egovMap">
-  select code||'-'||code_name CODE_NAME, CODE_ID code_id
+  select code||'-'||code_name CODE_NAME, CODE_ID code_id,CODE
   from sys0013m
   where DISAB = 0
         <if test="groupCode != null and groupCode !=''">
