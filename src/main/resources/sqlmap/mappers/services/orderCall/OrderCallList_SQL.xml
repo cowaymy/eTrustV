@@ -412,15 +412,20 @@
                  </if>
          </select>
 
-
-
-          <select id="selectCallLogTransaction" parameterType="Map" resultType="egovMap">
+			
+			
+			<resultMap type="egovMap" id="call_logCLOBMap">
+			    <result property="CALL_REM" column="CALL_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+			</resultMap>
+			
+			
+          <select id="selectCallLogTransaction" parameterType="Map" resultMap="call_logCLOBMap">   
           <![CDATA[
             SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
 			       Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			       Project1.C1 C1  ,
 			       Project1.C2 C2  ,
-			       /* Project1.CALL_REM CALL_REM  , */
+			       Project1.CALL_REM CALL_REM  , 
 			       Project1.CALL_SMS CALL_SMS  ,
 			       Project1.CALL_SMS_REM CALL_SMS_REM  ,
 			       Project1.CALL_STUS_ID CALL_STUS_ID  ,
@@ -440,7 +445,7 @@
 			  FROM ( SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
 			                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			                Project1.CALL_STUS_ID CALL_STUS_ID  ,
-			              /*  Project1.CALL_REM CALL_REM  ,  */
+			                Project1.CALL_REM CALL_REM  ,  
 			                Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
 			                Project1.CALL_CRT_DT CALL_CRT_DT  ,
 			                Project1.CALL_HC_ID CALL_HC_ID  ,
@@ -462,7 +467,7 @@
 			         FROM ( SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID  ,
 			                       Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			                       Extent1.CALL_STUS_ID CALL_STUS_ID  ,
-			                      /*  Extent1.CALL_REM CALL_REM  , */
+			                       Extent1.CALL_REM CALL_REM  , 
 			                       Extent1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
 			                       TO_CHAR(Extent1.CALL_CRT_DT,'DD-MM-YY') CALL_CRT_DT  ,
 			                       Extent1.CALL_HC_ID CALL_HC_ID  ,
