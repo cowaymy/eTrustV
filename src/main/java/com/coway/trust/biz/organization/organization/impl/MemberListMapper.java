@@ -192,5 +192,9 @@ public interface MemberListMapper {
 	EgovMap checkSponsor(Map<String, Object> params);
 
 	List<EgovMap> selectBusinessType();
+
+	List<EgovMap> selectHpMemberView(Map<String, Object> params);
+
+	EgovMap selectOneHPMember(Map<String, Object> params);
 	
 }

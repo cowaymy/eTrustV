@@ -209,8 +209,11 @@ function fn_getMemInfo(){
 	$("#memberType").attr("disabled",false);
     Common.ajax("GET", "/organization/getMemberListMemberView", $("#memberAddForm").serialize(), function(result) {
         console.log("fn_setMemInfo.");
-        if(result!=null){
+        console.log(result);
+        if(result != null ){
         	fn_setMemInfo(result[0]);
+        	console.log("1111111111");
+        	console.log(result[0]);
         }else{
         	console.log("========result null=========");
         }
@@ -220,9 +223,12 @@ function fn_getMemInfo(){
 
 function fn_setMemInfo(data){
 	console.log("fn_setMemInfo");
-	$("#memberType option[value="+ data.memType +"]").attr("selected", true);
-	console.log("1 : " +data.memType);
-	fn_departmentCode(data.memType);
+	if(data.isHP == "NO"){
+		$("#memberType option[value="+ data.memType +"]").attr("selected", true);
+		console.log("1 : " +data.memType);
+		fn_departmentCode(data.memType);
+	
+	
 	
 	/* var memType = "${memberView.memType}";
     alert("memType : " + memType);
@@ -232,7 +238,7 @@ function fn_setMemInfo(data){
 	var jsonObj =  GridCommon.getEditData(myGridID_Doc);
     //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
     //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
-    doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
+
 
 	if(data.gender=="F"){
         $("#gender_f").prop("checked", true)
@@ -307,6 +313,21 @@ function fn_setMemInfo(data){
     $("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
     
     $("#course option[value='"+ data.course +"']").attr("selected", true);
+    
+    
+    }
+	else{
+		  $("#memberType option[value="+ data.memType +"]").attr("selected", true);
+	        console.log("1 : " +data.memType);
+	        fn_departmentCode(data.memType);
+	        
+	        $("#memberNm").val(data.memName);
+	        $("#nric").val(data.nric);
+		
+	}
+	
+	
+    doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
     
     
 }
@@ -883,10 +904,9 @@ function fn_selectState(selVal){
 <input type="hidden" id="addrDtl1" name="addrDtl1">
 <input type="hidden" id="traineeType" name="traineeType">
 <input type="hidden" id="memType" name="memType" value="${memType}">
+<input type="hidden"id="MemberID" name="MemberID" value="${memId}">
 
-<input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memType" name="memType"/>
 <input type="hidden" value="<c:out value="${memberView.gender}"/> "  id="gender" name="gender"/>
-<input type="hidden" value="<c:out value="${memberView.memId}"/>" id="MemberID" name="MemberID"/>
 <input type="hidden" value="<c:out value="${memberView.memCode}"/> "  id="memCode" name="memCode"/>
 <input type="hidden" value="<c:out value="${memberView.c64}"/> "  id="userId" name="userId"/>
 <input type="hidden" value="<c:out value="${memberView.rank}"/> "  id="rank" name="rank"/>

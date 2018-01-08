@@ -3644,4 +3644,39 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     
     </select>
     
+    
+    
+     <select id="selectHpMemberView"  parameterType="Map" resultType="egovMap">
+     
+		SELECT 
+		A.APLICNT_TYPE,
+		A.APLICNT_NAME MEM_NAME,
+		A.APLICNT_NRIC nric,
+		B.CODE_ID  MEM_TYPE
+		FROM
+		ORG0003D A, 
+		SYS0013M B 
+		WHERE  A.APLICNT_TYPE = B.CODE_ID 
+		AND      A.APLCTN_ID = #{MemberID}
+     
+     
+     </select>
+     
+         
+     <select id="selectOneHPMember"  parameterType="Map" resultType="egovMap">
+     
+		 SELECT
+			A.ADDR_DTL,
+			A.Street,
+			B.AREA area_Id,
+			B.COUNTRY,
+			B.CITY,
+			B.STATE,
+			B.POSTCODE
+			FROM ORG0003D A,  SYS0064M B
+			WHERE A.AREA_ID = B.AREA_ID
+			AND     A.APLCTN_ID = #{MemberID}
+     
+     </select>
+    
 </mapper>

@@ -119,5 +119,9 @@ public interface MemberListService {
 	// modify jgkim
 	EgovMap checkSponsor(Map<String, Object> params);
 
-	List<EgovMap> selectBusinessType();	
+	List<EgovMap> selectBusinessType();
+
+	List<EgovMap> getHpMemberView(Map<String, Object> params);
+
+	EgovMap selectOneHPMember(Map<String, Object> params);	
 }

@@ -1880,4 +1880,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		return memberListMapper.selectBusinessType();
 	}
+
+	@Override
+	public List<EgovMap> getHpMemberView(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectHpMemberView(params);
+	}
+
+	@Override
+	public EgovMap selectOneHPMember(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectOneHPMember(params);
+	}
 }

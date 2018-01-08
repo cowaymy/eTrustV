@@ -743,7 +743,14 @@ public class MemberListController {
 	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
-		EgovMap selectMemberListView = memberListService.selectMemberListView(params);
+		logger.debug("params123 : {}", params);
+		EgovMap selectMemberListView = null;
+		if(!params.get("memType").toString().equals("2803")){ //hp가 아닐때
+			selectMemberListView = memberListService.selectMemberListView(params);
+		}
+		else{
+			selectMemberListView = memberListService.selectOneHPMember(params);
+		}
 		logger.debug("selectMemberListView : {}", selectMemberListView);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
 		logger.debug("issuedBank : {}", selectIssuedBank);
@@ -757,6 +764,7 @@ public class MemberListController {
 		if(selectMemberListView != null){
     		params.put("groupCode", selectMemberListView.get("mainDept"));
     		logger.debug("params : {}", params);
+    		logger.debug("groupCode : {}", selectMemberListView.get("mainDept"));
 		}
 		else{
 			params.put("groupCode", "");
@@ -766,11 +774,12 @@ public class MemberListController {
 		
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
-		model.addAttribute("memberView", selectMemberListView);
-		model.addAttribute("issuedBank", selectIssuedBank);
+		model.addAttribute("memberView", selectMemberListView);// 있어
+		model.addAttribute("issuedBank", selectIssuedBank); //있어
 		model.addAttribute("mainDeptList", mainDeptList);
 		model.addAttribute("subDeptList", subDeptList);
 		model.addAttribute("memType", params.get("memType"));
+		model.addAttribute("memId", params.get("MemberID"));
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}
@@ -779,11 +788,20 @@ public class MemberListController {
 	public ResponseEntity<List<EgovMap>> getMemberListMemberView(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
 		logger.debug("in  getMemberListMemberView.....");
-		logger.debug("params : {}", params.toString());
-
-
-		List<EgovMap> list = memberListService.getMemberListView(params);
-		logger.debug("return_Values: " + list.toString());
+		logger.debug("params555 : {}", params.toString());
+		List<EgovMap> list =null;
+		if(!params.get("memType").toString().equals("2803") ){ // hp 가아닐떄
+    		 list = memberListService.getMemberListView(params);
+    		logger.debug("return_Values: " + list.toString());
+    		EgovMap map= list.get(0);
+    		map.put("isHP", "NO");
+		}
+		else{// hp 일때
+			 list = memberListService.getHpMemberView(params);
+			 logger.debug("return_Values: " + list.toString());
+				EgovMap map= list.get(0);
+				map.put("isHp", "YES");
+		}
 
 		return ResponseEntity.ok(list);
 	}
