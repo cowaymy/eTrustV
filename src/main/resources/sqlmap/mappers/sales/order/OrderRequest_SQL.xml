@@ -1902,13 +1902,9 @@
 	</update>
 	
     <select id="selectObligtPriod" parameterType="Map" resultType="egovMap">
-        SELECT T2.OBLIGT_PRIOD
-          FROM SAL0001D T1
-             , SAL0081D T2
-         WHERE T2.PAC_TYPE = 0
-           AND T1.SRV_PAC_ID = T2.SRV_CNTRCT_PAC_ID 
-           AND T1.APP_TYPE_ID = 66
-           AND T1.SALES_ORD_ID = #{salesOrdId}
+		SELECT CNTRCT_OBLIGT_PRIOD AS OBLIGT_PRIOD
+		  FROM SAL0003D
+		 WHERE CNTRCT_SALES_ORD_ID = #{salesOrdId}
     </select>
     
     <select id="selectPenaltyAmt" parameterType="Map" resultType="egovMap">

@@ -1544,16 +1544,16 @@
         }
         
         
-        if(IS_NEW_VER == 'Y') {
+//      if(IS_NEW_VER == 'Y') {
             var vObligtPriod = fn_getObligtPriod();
             
             $('#txtObPeriod').val(vObligtPriod);
-        }
-        else {
-            if(CNVR_SCHEME_ID == '1') {
-                $('#txtObPeriod').val('36');
-            }
-        }
+//      }
+//      else {
+//          if(CNVR_SCHEME_ID == '1') {
+//              $('#txtObPeriod').val('36');
+//          }
+//      }
         
         fn_loadOutstandingPenaltyInfo();
     }
