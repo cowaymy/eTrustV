@@ -1639,6 +1639,29 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public int  saveValidation(Map<String, Object> params) {
 		return hsManualMapper.saveValidation(params);
 	}
+
+	@Override
+	public EgovMap selectHsOrderInMonth(Map<String, Object> params) {
+		if(params.get("ManuaMyBSMonth") != null) {
+			StringTokenizer str1 = new StringTokenizer(params.get("ManuaMyBSMonth").toString());
+
+    		for(int i =0; i <= 1 ; i++) {
+    			str1.hasMoreElements();
+    			String result = str1.nextToken("/");            //특정문자로 자를시 사용
+
+    			logger.debug("iiiii: {}", i);
+
+    			if(i==0){
+    				params.put("myBSMonth", result);
+    				logger.debug("myBSMonth : {}", params.get("myBSMonth"));
+    			}else{
+    				params.put("myBSYear", result);
+    				logger.debug("myBSYear : {}", params.get("myBSYear"));
+    			}
+    		}
+		}
+		return hsManualMapper.selectHsOrderInMonth(params);
+	}
 	
 	
 }

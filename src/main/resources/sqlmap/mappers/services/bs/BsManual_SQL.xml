@@ -308,6 +308,9 @@ SELECT ROWNUM AS rnum ,
                                         ,SYS0038M STUS
                                         ,ORG0001D MEM
                                         ,SYS0038M STUS1
+                                          ,SAL0095D SAL95D
+                                        ,SYS0064M S64M
+                               
                                  WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
@@ -326,6 +329,10 @@ SELECT ROWNUM AS rnum ,
                                 AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
                                and mem.mem_id(+) = HSM.CODY_ID
                                and Stus1.STUS_CODE_ID(+) = mem.stus
+                               and SOM.SALES_ORD_ID = SAL95D.SRV_SALES_ORD_ID(+)
+                               and sal023.AREA_ID = S64M.AREA_ID
+                               
+                            
 
                       <!--      SELECT   distinct C.CUST_ID CUST_ID
                                         , C.NAME Name
@@ -3448,6 +3455,19 @@ SELECT ROWNUM AS rnum ,
                 ,#{BSResultFilterClaim}
                 )
           </insert>
+          
+          
+       <select id="selectHsOrderInMonth" parameterType="Map" resultType="egovMap">
+         SELECT  SALES_ORD_ID
+         FROM  SVC0008D 
+         WHERE 1=1
+         AND YEAR(+) = #{myBSYear}
+         AND Month(+) = #{myBSMonth}
+         AND SALES_ORD_ID IN(
+	         select SALES_ORD_ID
+	         from SAL0001D S1D 
+	         where S1D.SALES_ORD_NO= #{saleOrdList} 
+         )
 
-
+        </select>
 </mapper>

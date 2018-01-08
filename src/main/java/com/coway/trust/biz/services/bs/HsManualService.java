@@ -120,5 +120,7 @@ public interface HsManualService {
 	// Add HS Result - Save Validation
 	int saveValidation(Map<String, Object> params);
 
+	EgovMap selectHsOrderInMonth(Map<String, Object> params);
+
 
 }

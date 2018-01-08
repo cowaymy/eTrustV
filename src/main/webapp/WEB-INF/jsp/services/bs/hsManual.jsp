@@ -569,9 +569,21 @@
                          "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val()
                 };
 
+                Common.ajax("GET", "/services/bs/selectHsOrderInMonth.do?saleOrdList="+saleOrdList+"&ManuaMyBSMonth=" + $("#ManuaMyBSMonth").val(),"" , function(result){
+                	 console.log(result);
+                	if(result.message == "success"){
+                		Common.alert("There is already exist for HS order for this month");
+                		return;
+                	}
+                	else{
+                		Common.popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  );
+                	}
+                	
+                	
+                });
+                
 
-
-                  Common.popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  );
+                
 
             }
 

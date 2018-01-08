@@ -85,7 +85,7 @@ public class HsManualController {
 
 		@RequestMapping(value = "/selectHSConfigListPop.do")
 		public String selectHSConfigListPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
-
+			logger.debug("params 222 : {}", params);
 			model.addAttribute("brnchCdList",  params.get("BrnchId"));
 			model.addAttribute("ordCdList",  params.get("CheckedItems"));
 			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
@@ -990,6 +990,23 @@ public class HsManualController {
 		int resultValue = hsManualService.saveValidation(formMap);//hidSalesOrdCd
 		
 		return ResponseEntity.ok(resultValue);
+	}
+	
+	@RequestMapping(value = "/selectHsOrderInMonth.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkHsOrderInMonth(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("111params111 : {}", params);
+		
+		EgovMap hsOrderInMonth = hsManualService.selectHsOrderInMonth(params); 
+		
+		if(hsOrderInMonth != null && hsOrderInMonth.size() != 0  ){
+			message.setMessage("success");
+		}
+		else{
+			message.setMessage("fail");
+		}
+		
+		return ResponseEntity.ok(message);
 	}
 	
 }
