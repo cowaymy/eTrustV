@@ -236,7 +236,7 @@
     </select>
     
     <select id="selectLocStatusList" parameterType="Map" resultType="egovMap">
-            SELECT STUS_CODE_ID code,NAME CODE_NAME  FROM SYS0038M
+            SELECT STUS_CODE_ID code,NAME CODE_NAME  FROM SYS0038M where STUS_CODE_ID in('1','3','8','10','51')
     </select>
    
     
