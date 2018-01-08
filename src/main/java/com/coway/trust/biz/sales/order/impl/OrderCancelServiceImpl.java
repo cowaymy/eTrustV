@@ -123,7 +123,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		
 		int status = Integer.parseInt((String)params.get("addStatus"));	// recall, calcel, reversal cancel
 		int appTypeId = Integer.parseInt((String)params.get("appTypeId"));	
-		
+		logger.info("####################### appTypeId ######## "+ params.get("appTypeId"));
 		int reqStageId = 0;	// before , after install
 		String reqStageIdValue = "";	// RET, CAN
 		
@@ -162,7 +162,6 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 			orderCancelMapper.updateCancelSAL0020D(saveParam);											// SalesReqCancel
 			
 			EgovMap salesReqCancel = orderCancelMapper.newSearchCancelSAL0020D(saveParam);
-			logger.info("####################### Recall cmbAppTypeId!! ######## "+ params.get("cmbAppTypeId"));
 			
 			if(appTypeId == 66){	//RENTAL
 				EgovMap getRenSchId = orderInvestMapper.saveCallResultSearchFourth(saveParam);	// RentalScheme
