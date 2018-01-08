@@ -11,6 +11,7 @@ var state1;
 var holidaySeq1;
 var grpOrgList= new Array();
 var rData = new Array();
+var type, branchName, holidayDesc , holiday, branchId, state, holidaySeq , applCode;
 function holidayCTassignGrid() {
     
     var columnLayout = [
@@ -173,16 +174,24 @@ $(document).ready(function(){
 	 AUIGrid.bind(gridID1, "cellClick", function(event) {
 	        console.log(event.rowIndex);
 	        type= AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayType");
-	        branchName = AUIGrid.getCellValue(gridID1, event.rowIndex, "ctBrnchCode");
-	        holidayDesc = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayDesc");
-	        holiday = AUIGrid.getCellValue(gridID1, event.rowIndex, "holiday");
-	        branchId = AUIGrid.getCellValue(gridID1, event.rowIndex, "brnchId");
-	        state = AUIGrid.getCellValue(gridID1, event.rowIndex, "state");
-	        holidaySeq = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidaySeq");
+	         branchName = AUIGrid.getCellValue(gridID1, event.rowIndex, "ctBrnchCode");
+	         holidayDesc = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidayDesc");
+	          holiday = AUIGrid.getCellValue(gridID1, event.rowIndex, "holiday");
+	         branchId = AUIGrid.getCellValue(gridID1, event.rowIndex, "brnchId");
+	         state = AUIGrid.getCellValue(gridID1, event.rowIndex, "state");
+	         holidaySeq = AUIGrid.getCellValue(gridID1, event.rowIndex, "holidaySeq");
 	        applCode = AUIGrid.getCellValue(gridID1, event.rowIndex, "applCode");
 	        console.log(type + "      "+branchName + "     " + holidayDesc + "    " + holiday + "   " + branchId + "    " + holidaySeq + state);
+	
+	        	
+	       
+	        
 	        
 	    });
+	 
+  
+	
+	
 	 
 	
 	 doGetCombo('/services/holiday/selectState.do', '' , '', 'cmbState' , 'S', '');
@@ -396,8 +405,13 @@ $(document).ready(function(){
    }
     function fn_CTEntry(){  
     	if(applCode == "Working"){
+    		Common.alert("Working day");
     		return;
     	}
+    	 if(type == undefined){
+             Common.alert("Retry to click a column");
+             return;
+         }
     	 Common.popupDiv("/services/holiday/holidayReplacementCT.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq ,null, null , true , '_NewAddDiv1');
     }
     
@@ -406,12 +420,24 @@ $(document).ready(function(){
     } 
     
     function fn_ChangeApplType(){
-    	
-    
-    	 Common.ajax("GET", "/services/holiday/changeApplType.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode,"",  function(result) {
-    		 
-    		 
-    		 
+    	var objJson = GridCommon.getEditData(gridID1);
+        $("#type1").val(type1.substr(0,1));
+        $("#holidayDesc1").val(holidayDesc1);
+        $("#holiday1").val( holiday1);
+        $("#holidaySeq1").val(holidaySeq1);
+        $("#state1").val(state1);              
+        if(type == undefined){
+        	Common.alert("Retry to click a column");
+        	return;
+        }
+        
+    	 Common.ajax("GET", "/services/holiday/changeApplType.do?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode, objJson ,  function(result) {
+    	/*  ?holidayType=" + type +"&branchName=" +  branchName +  "&holidayDesc=" + holidayDesc + "&holiday=" + holiday + "&branchId=" + branchId + "&state=" + state + "&holidaySeq=" + holidaySeq+"&applCode=" + applCode */
+             
+    			
+    		  fn_holidayListSearch();     
+    		  fn_radioBtn(1);
+    		  $("#hList").prop("checked",true);
     	 });
     	
     }
@@ -540,7 +566,7 @@ $(document).ready(function(){
 <tr>
     <td>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <label><input type="radio" name="name" checked="checked" onclick="fn_radioBtn(1)"/><span>Holiday List Display</span></label>
+    <label><input id="hList" type="radio" name="name" checked="checked" onclick="fn_radioBtn(1)"/><span>Holiday List Display</span></label>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <label><input type="radio" name="name" onclick="fn_radioBtn(2)" /><span>Replacement CT Assign Status</span></label>

@@ -108,6 +108,7 @@ function CTListGrid2() {
         jsonObj.form = $("#assignSaveForm").serializeJSON();
     	Common.ajax("POST", "/services/holiday/CTAssignSave.do", jsonObj,  function(result) {
             console.log(result);
+            $("#popClose").click();
          });
     }
     
@@ -179,7 +180,7 @@ function CTListGrid2() {
 <header class="pop_header"><!-- pop_header start -->
 <h1>Replacement CT Entry</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="popClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

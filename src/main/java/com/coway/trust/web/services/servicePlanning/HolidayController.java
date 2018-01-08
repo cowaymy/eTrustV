@@ -320,14 +320,14 @@ public class HolidayController {
 	
 
 		
-		@RequestMapping(value = "/changeApplType.do")
+		@RequestMapping(value = "/changeApplType.do", method = RequestMethod.GET )
 		public ResponseEntity<ReturnMessage>changeApplType(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
        
 		logger.debug("params11111 {}", params);
 		
-		
-		
+		String  updList	= (String)  params.get("update[0][applCode]");
+		logger.debug("updList22222 {}", updList);
 		
 		holidayService.updateAppltype(params);
 		

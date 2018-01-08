@@ -109,6 +109,7 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 			insertValue.put("state", formMap.get("state"));
 			//holidaySeq1과 asignSeq 둘다 값이 있으면 inset 되어있다. 
 			List<EgovMap> CTInfo = holidayMapper.selectCTInfo(insertValue);
+		
 			if(CTInfo.size() >  0){
 				logger.debug("NO NO");
 			}else{
@@ -199,9 +200,9 @@ public class HolidayServiceImpl extends EgovAbstractServiceImpl implements Holid
 	@Override
 	public boolean updateAppltype(Map<String, Object> params) {
 		EgovMap isInput;
-		if(params.get("applCode")!= null ){
-    		if(params.get("applCode").equals("Working")){
-    			String applType = (params.get("applCode").toString()).substring(0, 1);
+		if(params.get("update[0][applCode]")!= null ){
+    		if(params.get("update[0][applCode]").equals("Working")){
+    			String applType = (params.get("update[0][applCode]").toString()).substring(0, 1);
     			params.put("applType", applType);
     			params.put("holidayType", (params.get("holidayType").toString()).substring(0, 1) );
     			 isInput = holidayMapper.selectApplType(params);
