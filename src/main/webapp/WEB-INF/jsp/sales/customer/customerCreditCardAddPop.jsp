@@ -7,7 +7,7 @@
 	
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do', '21',  '','cmbCreditCardType', 'S', ''); // Add Card Type Combo Box
-        doGetCombo('/sales/customer/selectAccBank.do', '', '', 'cmbIssBank',   'S', ''); //Issue Bank)
+        doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbIssBank',  'S', ''); //Issue Bank)
         doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType',       'S', ''); // Add Card Type Combo Box
     });
 

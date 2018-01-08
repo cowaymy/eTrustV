@@ -1664,8 +1664,11 @@
 						                Sub.CODE CODE  ,
 						                Sub.CODE || ' - ' || Sub.NAME CODE_NAME  
 						        FROM SYS0004M Sub
-						          WHERE  ( 1 = Sub.STUS_CODE_ID )
-				                      AND  ( 1 = Sub.IS_ALLOW_FOR_DD ) ) Mt
+						          WHERE ( 1 = Sub.STUS_CODE_ID )
+						          <if test='isAllowForDd != null and isAllowForDd == "1"'>
+				                    AND ( 1 = Sub.IS_ALLOW_FOR_DD ) 
+				                  </if>
+				                      ) Mt
 				  ORDER BY Mt.CODE ASC
     </select>
     

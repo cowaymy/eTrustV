@@ -7,7 +7,7 @@
 	
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do',       '20', '', 'cmbBankType', 'S', ''); //Add Bank Type Combo Box
-        doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbAccBank',  'S', ''); //Issue Bank)
+        doGetComboCodeId('/sales/customer/selectAccBank.do', {isAllowForDd : '1'}, '', 'cmbAccBank',   'S', ''); //Issue Bank)
     });
 
     $(function(){
