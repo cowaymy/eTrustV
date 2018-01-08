@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.xml.transform.stream.StreamResult;
 import com.coway.trust.biz.sales.ccp.CcpCTOSB2BService;
+import com.coway.trust.biz.sales.ccp.type.FicoTemplateType;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -76,10 +77,12 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 				
 				LOGGER.info("________________________________params : " + params.toString());
 				if(SalesConstants.FICO_VIEW_TYPE.equals(params.get("viewType"))){
-					rePaht = resourceLoader.getResource("classpath:template/stylesheet/fico_report.xsl").getURI().getPath();
+					//rePaht = resourceLoader.getResource("classpath:template/stylesheet/fico_report.xsl").getURI().getPath();
+					rePaht = FicoTemplateType.FICO_SCORE_TYPE.getFilePath();
 					LOGGER.info("_______________________________ FICO VIEW " + params.get("viewType"));
 				}else{
-					rePaht = resourceLoader.getResource("classpath:template/stylesheet/ctos_report.xsl").getURI().getPath();
+					//rePaht = resourceLoader.getResource("classpath:template/stylesheet/ctos_report.xsl").getURI().getPath();
+					rePaht = FicoTemplateType.CTOS_SCORE_TYPE.getFilePath();
 					LOGGER.info("_______________________________ CTOS_VIEW " + params.get("viewType"));
 				}
 				LOGGER.info("###################### Style Sheet Path :   " + rePaht);
