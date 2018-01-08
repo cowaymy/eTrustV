@@ -155,12 +155,14 @@ public class StockMovementController {
 			HttpServletResponse response) throws Exception {
 		// TODO type SQL.xml 다이나믹 처리 필요
 		String[] type = request.getParameterValues("cType");
+		String[] catetype = request.getParameterValues("catetype");
 		String toloc = request.getParameter("slocation");
 		String mcode = request.getParameter("materialCode");
 		
 		// logger.debug("type : {}", type);
 		Map<String, Object> smap = new HashMap();
 		smap.put("ctype", type);
+		smap.put("catetype", catetype);
 		smap.put("toloc", toloc);
 		smap.put("mcode", mcode);
 		
