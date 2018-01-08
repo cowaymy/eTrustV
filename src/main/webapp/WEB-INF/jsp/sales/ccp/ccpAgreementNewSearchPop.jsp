@@ -120,7 +120,7 @@ function fn_searchNewOrderPop(){
         <input type="text" style="display: none;" >
         <input type="text" title="" placeholder="" class="" id="_salesOrderNo" name="salesOrderNo" />
         <p class="btn_sky">
-            <a  id="_confirm">Cofirm</a>
+            <a  id="_confirm">Confirm</a>
         </p>
         <p class="btn_sky">
             <a  id="_ordSearch">Search</a>
