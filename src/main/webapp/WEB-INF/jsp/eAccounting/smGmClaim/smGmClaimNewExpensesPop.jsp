@@ -24,7 +24,6 @@ var callType = "${callType}";
 var keyValueList = $.parseJSON('${taxCodeList}');
 var selectRowIdx;
 var deleteRowIdx;
-var expTypeName;
 //file action list
 var update = new Array();
 var remove = new Array();
@@ -341,169 +340,7 @@ var myGridPros = {
 
 var myGridID;
 
-var mileageGridColumnLayout = [ {
-    dataField : "clamUn",
-    headerText : '<spring:message code="newWebInvoice.seq" />'
-}, {
-    dataField : "expGrp",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "clmSeq",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "carMilagDt",
-    headerText : '<spring:message code="pettyCashNewExp.date" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy",
-    editRenderer : {
-        type : "CalendarRenderer",
-        openDirectly : true, // 에디팅 진입 시 바로 달력 열기
-        onlyCalendar : true, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-        showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-        titles : [gridMsg["sys.info.grid.calendar.titles.sun"], gridMsg["sys.info.grid.calendar.titles.mon"], gridMsg["sys.info.grid.calendar.titles.tue"], gridMsg["sys.info.grid.calendar.titles.wed"], gridMsg["sys.info.grid.calendar.titles.thur"], gridMsg["sys.info.grid.calendar.titles.fri"], gridMsg["sys.info.grid.calendar.titles.sat"]], // 기본값: ["일", "월", "화", "수", "목", "금", "토"]
-        formatYearString : gridMsg["sys.info.grid.calendar.formatYearString"], // 기본값(default) : "yyyy년"
-        formatMonthString : gridMsg["sys.info.grid.calendar.formatMonthString"], // 기본값(default) : "yyyy년 mm월"
-        monthTitleString : gridMsg["sys.info.grid.calendar.monthTitleString"] // 기본값(default) : "m월"
-    }
-}, {
-
-    headerText : '<spring:message code="newStaffClaim.location" />',
-    children : [
-        {
-                dataField: "locFrom",
-                headerText: '<spring:message code="newStaffClaim.from" />',
-                style : "aui-grid-user-custom-left"
-        }, {
-                dataField: "locTo",
-                headerText: '<spring:message code="newStaffClaim.to" />',
-                style : "aui-grid-user-custom-left"
-        }
-    ]
-}, {
-    dataField : "cur",
-    headerText : '<spring:message code="newWebInvoice.cur" />',
-    editable : false
-}, {
-    dataField : "carMilag",
-    headerText : '<spring:message code="newStaffClaim.mileageBrKm" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    editRenderer : {
-        type : "InputEditRenderer",
-        onlyNumeric : true,
-        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-        allowPoint : true // 소수점(.) 입력 가능 설정
-    }
-}, {
-    dataField : "carMilagAmt",
-    headerText : '<spring:message code="newStaffClaim.mileageBrAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    editRenderer : {
-        type : "InputEditRenderer",
-        onlyNumeric : true,
-        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-        allowPoint : true // 소수점(.) 입력 가능 설정
-    }
-}, {
-    dataField : "tollAmt",
-    headerText : '<spring:message code="newStaffClaim.tollsBrRm" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    editRenderer : {
-        type : "InputEditRenderer",
-        onlyNumeric : true,
-        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-        allowPoint : true // 소수점(.) 입력 가능 설정
-    }
-}, {
-    dataField : "parkingAmt",
-    headerText : '<spring:message code="newStaffClaim.parkingBrRm" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
-    editRenderer : {
-        type : "InputEditRenderer",
-        onlyNumeric : true,
-        autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
-        allowPoint : true // 소수점(.) 입력 가능 설정
-    }
-}, {
-    dataField : "purpose",
-    headerText : '<spring:message code="newStaffClaim.purpose" />',
-    style : "aui-grid-user-custom-left"
-}, {
-    dataField : "expDesc",
-    headerText : '<spring:message code="newWebInvoice.remark" />',
-    style : "aui-grid-user-custom-left",
-    width : 150
-}, {
-    dataField : "atchFileGrpId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "atchFileId",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "atchFileName",
-    headerText : '<spring:message code="newWebInvoice.attachment" />',
-    width : 150,
-    editable : false,
-    labelFunction : function( rowIndex, columnIndex, value, headerText, item ) {
-        if(typeof value == "undefined" || value == "") {
-            return "";
-        }
-        return value;
-    },
-    colSpan : 2
-}, {
-    dataField : "",
-    headerText : '',
-    width: 30,
-    editable : false,
-    renderer : {
-    	type : "IconRenderer",
-        iconTableRef :  {
-            "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
-        iconWidth : 24,
-        iconHeight : 24,
-        onclick : function(rowIndex, columnIndex, value, item) {
-        	console.log("rowIndex : " + rowIndex);
-            selectRowIdx = rowIndex;
-            fn_myButtonClick(item);
-            }
-    },
-    colSpan : -1
-},{
-    dataField : "fileExtsn",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
-    dataField : "fileCnt",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}
-];
-
-//그리드 속성 설정
-var mileageGridPros = {
-    // 헤더 높이 지정
-    headerHeight : 20,
-    editable : true,
-    // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
-    height : 175,
-    showStateColumn : true,
-    softRemoveRowMode : false,
-    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
-    enableRestore : true,
-    rowIdField : "id",
-    // 셀 선택모드 (기본값: singleCell)
-    selectionMode : "multipleCells"
-};
-
 var newGridID;
-var mileageGridID;
 
 $(document).ready(function () {
     newGridID = AUIGrid.create("#newStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
@@ -515,7 +352,6 @@ $(document).ready(function () {
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
     $("#expenseType_search_btn").click(fn_PopExpenseTypeSearchPop);
     $("#sSupplier_search_btn").click(fn_popSubSupplierSearchPop);
-    $("#mileage_add").click(fn_mileageAdd);
     $("#clear_btn").click(fn_clearData);
     $("#add_btn").click(fn_addRow);
     $("#delete_btn").click(fn_deleteStaffClaimExp);
@@ -547,7 +383,6 @@ $(document).ready(function () {
                 deleteRowIdx = event.rowIndex;
                 clmSeq = event.item.clmSeq;
                 atchFileGrpId = event.item.atchFileGrpId;
-                expTypeName = event.item.expTypeName;
             });
     
     fn_setCostCenterEvent();
@@ -563,14 +398,6 @@ $(document).ready(function () {
 function setInputFile2(){//인풋파일 세팅하기
     $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
 }
-
-//그리드의 셀 버턴 클릭 처리
-function fn_myButtonClick(item){
-	console.log("fn_myButtonClick Action")
-    recentGridItem = item; // 그리드의 클릭한 행 아이템 보관
-    var input = $("#file");
-    input.trigger('click'); // 파일 브라우저 열기
-};
 
 function fn_tempSave() {
     fn_insertStaffClaimExp(callType);
@@ -630,11 +457,8 @@ function fn_tempSave() {
 <tr>
 	<th scope="row"><spring:message code="pettyCashExp.clmMonth" /></th>
 	<td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="newClmMonth" name="clmMonth"/></td>
-	<th scope="row"><spring:message code="newStaffClaim.expGrp" /></th>
-    <td>
-    <label><input type="radio" id="normalExp_radio" name="expGrp" checked="checked" value="0"/><span><spring:message code="newStaffClaim.normalExp" /></span></label>
-    <label><input type="radio" id="carMileage_radio" name="expGrp" value="1" /><span><spring:message code="newStaffClaim.carMileage" /></span></label>
-    </td>
+	<th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -115,7 +115,8 @@ public class CtClaimApplicationImpl implements CtClaimApplication {
 			// 저장된 파일 삭제 및 테이블 데이터 삭제
 			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
 			ctClaimService.deleteCtClaimExpItem(params);
-			if("Car Mileage Expense".equals(params.get("expTypeName"))) {
+			LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
+			if("1".equals(params.get("expGrp"))) {
 				ctClaimService.deleteCtClaimExpMileage(params);
 			}
 			ctClaimService.updateCtClaimExpTotAmt(params);

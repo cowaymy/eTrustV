@@ -115,7 +115,8 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 			// 저장된 파일 삭제 및 테이블 데이터 삭제
 			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
 			staffClaimService.deleteStaffClaimExpItem(params);
-			if("Car Mileage Expense".equals(params.get("expTypeName"))) {
+			LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
+			if("1".equals(params.get("expGrp"))) {
 				staffClaimService.deleteStaffClaimExpMileage(params);
 			}
 			staffClaimService.updateStaffClaimExpTotAmt(params);

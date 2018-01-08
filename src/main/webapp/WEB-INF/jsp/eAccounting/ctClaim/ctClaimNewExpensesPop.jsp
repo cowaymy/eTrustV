@@ -389,19 +389,19 @@ var mileageGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false
-}, {
-    dataField : "carMilagAmt",
-    headerText : '<spring:message code="newStaffClaim.mileageBrAmt" />',
-    style : "aui-grid-user-custom-right",
-    dataType: "numeric",
-    formatString : "#,##0.00",
     editRenderer : {
         type : "InputEditRenderer",
         onlyNumeric : true,
         autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
         allowPoint : true // 소수점(.) 입력 가능 설정
     }
+}, {
+    dataField : "carMilagAmt",
+    headerText : '<spring:message code="newStaffClaim.mileageBrAmt" />',
+    style : "aui-grid-user-custom-right",
+    dataType: "numeric",
+    formatString : "#,##0.00",
+    editable : false
 }, {
     dataField : "tollAmt",
     headerText : '<spring:message code="newStaffClaim.tollsBrRm" />',

@@ -748,7 +748,6 @@ function fn_deleteStaffClaimExp() {
 			clmNo : clmNo,
 			clmSeq : clmSeq,
 			atchFileGrpId : atchFileGrpId,
-			expTypeName : expTypeName,
 			allTotAmt : $("#allTotAmt_text").text().replace(/,/gi, "")
 	};
 	console.log(data);
