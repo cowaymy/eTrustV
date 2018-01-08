@@ -715,7 +715,7 @@ var gridPros = {
 <tr>
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:200px;" id="ctCode"  readonly="readonly" name="ctCode" />
-    <input type="hidden" title="" value="16495" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
+    <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
     <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
     <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td>
