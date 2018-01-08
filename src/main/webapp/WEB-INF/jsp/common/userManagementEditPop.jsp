@@ -252,18 +252,16 @@ function fn_editUser(){
     }
     var userIsExtrnl = 0;
     var userIsPartTm = 0;
-    var userIsCallCenter = N;
 
     if($("#userEditForm input[id=userIsPartTm]").is(":checked")) userIsPartTm = 1;
     if($("#userEditForm input[id=userIsExtrnl]").is(":checked")) userIsExtrnl = 1;
-    if($("#userEditForm input[id=userIsCallCenter]").is(":checked")) userIsCallCenter = Y;
 
     var saveParam = "";
 
     if(popDivCd == "branch"){
     	saveParam = "userId="+$("#userEditForm #userId").val()+"&userBrnchId="+$("#userEditForm #userBrnchId").val();
     }else{
-    	saveParam = $("#userEditForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl+"&userIsCallCenter="+userIsCallCenter;
+    	saveParam = $("#userEditForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl;
     }
 
 
@@ -362,7 +360,7 @@ function fn_updateUserRole(){
         Common.ajax(
                 "GET",
                 "/common/userManagement/saveUserRoleList.do",
-                "userId="+$("#userEditForm #userId").val()+"&roleId="+$("#roleEditForm #roleId3").val()+"&orgRoleId="+$("#roleEditForm #orgRoleId").val(), //deactive status is 8
+                "userId="+$("#userEditForm #userId").val()+"&roleId="+$("#roleEditForm #roleId3").val(), //deactive status is 8
                 function(data, textStatus, jqXHR){ // Success
                     Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
                 },
@@ -377,7 +375,7 @@ function fn_searchUser(_userId){
     Common.ajax(
             "GET",
             "/common/userManagement/selectUserList.do",
-            "userId="+_userId,
+            "userIdForEdit="+_userId,
             function(data, textStatus, jqXHR){ // Success
 
                 $("#userEditForm #userId").val(data[0].userId);
@@ -444,16 +442,12 @@ $(document).ready(function(){
     fn_roleCodesearchByEdit("1","");
     if(userRoleData.length > 0){
     	$("#roleEditForm #roleId1").val(userRoleData[0].roleId);
-    	//alert("roleId1::"+$("#roleEditForm #roleId1").val());
 
         fn_roleCodesearchByEdit("2",userRoleData[0].roleId);
         $("#roleEditForm #roleId2").val(userRoleData[1].roleId);
-        //alert("roleId2::"+$("#roleEditForm #roleId2").val());
 
         fn_roleCodesearchByEdit("3",userRoleData[1].roleId);
         $("#roleEditForm #roleId3").val(userRoleData[2].roleId);
-        $("#orgRoleId").val($("#roleEditForm #roleId3").val());
-        //alert("orgRoleId::"+$("#roleEditForm #orgRoleId").val());
     }
     //end progress icon
     Common.removeLoader();
@@ -510,7 +504,6 @@ $(document).ready(function(){
     <td colspan="4">
     <label><input id="userIsPartTm" type="checkbox" name="userExtType" value="" /><span>Part-Timer</span></label>
     <label><input id="userIsExtrnl" type="checkbox" name="userExtType" value="" /><span>External User</span></label>
-    <label><input id="userIsCallCenter" type="checkbox" name="userExtType" value="" /><span>Call Center User</span></label>
     </td>
 </tr>
 <tr>
@@ -608,7 +601,6 @@ $(document).ready(function(){
 
 <article class="tap_area"><!-- tap_area start -->
 <form id="roleEditForm" action="#" method="GET">
-<input type="hidden" id="orgRoleId" name="orgRoleId" /> 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

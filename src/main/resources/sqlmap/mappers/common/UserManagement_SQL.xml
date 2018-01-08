@@ -11,10 +11,13 @@
 	        , a.user_email
 	        , a.user_stus_id
 	        , d.code as user_stus_nm
-	        , a.user_brnch_id
-	        , (SELECT code FROM SYS0005M WHERE brnch_id = a.user_brnch_id) as user_brnch_nm
-	        , a.user_dept_id
-	        , (SELECT dept_name FROM SYS0040M WHERE dept_stus_id = 1 AND dept_id = a.user_dept_id) as user_dept_nm
+	        , e.brnch /* a.user_brnch_id 20180104 */
+	        , (SELECT code FROM SYS0005M WHERE brnch_id = e.brnch) as user_brnch_nm
+	        , NVL(e.sub_dept,e.main_dept) AS user_dept_cd
+	        , (SELECT dept_name FROM SYS0040M WHERE dept_code = NVL(e.sub_dept,e.main_dept)) as user_dept_nm
+	        , CASE WHEN e.sub_dept IS NULL
+                       THEN (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = 359 AND e.main_dept = Z.CODE)
+                        ELSE (SELECT CODE_NAME FROM SYS0013M Z WHERE Z.CODE_MASTER_ID = 360 AND e.sub_dept = Z.CODE) END AS deptName
 	        , a.user_upd_user_id
 	        , TO_CHAR(a.user_upd_dt,'DD/MM/YYYY') as user_upd_dt
 	        , a.user_sync_chk
@@ -40,13 +43,18 @@
 	        , SYS0045M b /* SystemRoleUser */
 	        , SYS0044M c /* SystemRole */
 	        , SYS0038M d /* Status_code */
+	        , ORG0001D e
     WHERE 1=1
         <!-- AND ROWNUM <![CDATA[<]]> 300 /* Temporary insert */ -->
         AND a.user_id = b.user_id(+)
 	    AND b.role_id = c.role_id(+)
 	    AND a.user_stus_id = d.stus_code_id
+	    AND a.hr_code = e.mem_code(+)
 	    <if test="userId != null and userId !=''">
         AND a.user_id LIKE #{userId} || '%'
+        </if>
+        <if test="userIdForEdit != null and userIdForEdit !=''">
+        AND a.user_id = TO_NUMBER(#{userIdForEdit})
         </if>
 	    <if test="userName != null and userName !=''">
 	    AND a.user_name LIKE '%' || #{userName} || '%'
@@ -76,7 +84,7 @@
 	    AND a.user_nric LIKE '%' || #{userNric} || '%'
 	    </if>
 	    <if test="roleId != null and roleId !=''">
-	    AND (b.role_id  LIKE #{roleId} || '%' or c.role_code  LIKE '%' || #{roleCode} || '%')
+	    AND (b.role_id  LIKE #{roleId} || '%' or c.role_code  LIKE '%' || #{roleId} || '%')
 	    </if>
 	    <if test="roleCode != null and roleCode !=''">
 	    AND c.role_code  LIKE '%' || #{roleCode} || '%'
@@ -195,7 +203,6 @@ MERGE INTO SYS0047M a
 				, #{userDeptId1} AS user_dept_id1
 				, #{userIsPartTm} AS user_is_part_tm
 				, #{userIsExtrnl} AS user_is_extrnl
-				, #{userIsCallCenter} AS callcenter_use_yn
           FROM dual
   ) b
      ON ( a.user_id = b.user_id )
@@ -277,9 +284,6 @@ MERGE INTO SYS0047M a
 	          <if test="userIsExtrnl != null and userIsExtrnl !=''">
 	          , a.user_is_extrnl          = b.user_is_extrnl
 	          </if>
-	          <if test="userIsCallCenter != null and userIsCallCenter !=''">
-              , a.callcenter_use_yn    = b.callcenter_use_yn
-              </if>
    WHEN NOT MATCHED THEN
         INSERT
         (
@@ -310,7 +314,6 @@ MERGE INTO SYS0047M a
 		  , a.user_dept_id1
 		  , a.user_is_part_tm
 		  , a.user_is_extrnl
-		  , a.callcenter_use_yn
         )
         VALUES
         (
@@ -341,7 +344,6 @@ MERGE INTO SYS0047M a
           , b.user_dept_id1
           , b.user_is_part_tm
           , b.user_is_extrnl
-          , b.callcenter_use_yn
         )
 </update>
 
@@ -385,36 +387,4 @@ MERGE INTO SYS0047M a
 	        , b.upd_user_id
         )
 </insert>
-
-<insert id="saveHistoryUserRoleList" parameterType="Map">
-INSERT INTO SYS0045H
-	(
-	    SEQ
-	    ,ROLE_ID
-	    ,USER_ID
-	    ,STUS_ID
-	    ,CRT_DT
-	    ,CRT_USER_ID
-	    ,UPD_DT
-	    ,UPD_USER_ID
-	)
-VALUES
-	(
-	    SYS0045H_SEQ.NEXTVAL,
-	    #{orgRoleId},
-	    #{userId},
-	    8,
-	    SYSDATE,
-	    #{crtUserId},
-	    SYSDATE,
-	    #{updUserId}
-	)
-</insert>
-
- <select id="selectUserNameInfoList" parameterType="Map" resultType="egovMap">
-    SELECT B.CODE AS BRANCH
-    FROM ORG0001D A, SYS0005M B
-	WHERE A.BRNCH = B.BRNCH_ID
-	    AND A.MEM_CODE = #{userName}
- </select>              
 </mapper>
