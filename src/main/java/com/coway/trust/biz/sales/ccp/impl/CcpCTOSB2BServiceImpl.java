@@ -3,26 +3,22 @@ package com.coway.trust.biz.sales.ccp.impl;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import javax.xml.transform.stream.StreamResult;
 import com.coway.trust.biz.sales.ccp.CcpCTOSB2BService;
-import com.coway.trust.biz.sales.ccp.type.FicoTemplateType;
 import com.coway.trust.web.sales.SalesConstants;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -33,14 +29,14 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CcpCTOSB2BServiceImpl.class);
 	
-	@Resource(name = "ccpCTOSB2BMapper")
+	@javax.annotation.Resource(name = "ccpCTOSB2BMapper")  
 	private CcpCTOSB2BMapper ccpCTOSB2BMapper;
 	
 	@Value("${web.resource.upload.file}")
 	private String webPath;
 	
-	@Autowired
-	private org.springframework.core.io.ResourceLoader resourceLoader;
+	/*@Autowired
+	private org.springframework.core.io.ResourceLoader resourceLoader;*/
 	
 	@Override
 	public List<EgovMap> selectCTOSB2BList(Map<String, Object> params) throws Exception {
@@ -74,19 +70,18 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 				
 				/*___Style Sheet___*/
 				String rePaht = "";
-				
+
 				LOGGER.info("________________________________params : " + params.toString());
 				if(SalesConstants.FICO_VIEW_TYPE.equals(params.get("viewType"))){
-					//rePaht = resourceLoader.getResource("classpath:template/stylesheet/fico_report.xsl").getURI().getPath();
-					rePaht = FicoTemplateType.FICO_SCORE_TYPE.getFilePath();
+					rePaht = "template/stylesheet/fico_report.xsl";
 					LOGGER.info("_______________________________ FICO VIEW " + params.get("viewType"));
 				}else{
-					//rePaht = resourceLoader.getResource("classpath:template/stylesheet/ctos_report.xsl").getURI().getPath();
-					rePaht = FicoTemplateType.CTOS_SCORE_TYPE.getFilePath();
+					rePaht = "template/stylesheet/ctos_report.xsl";
 					LOGGER.info("_______________________________ CTOS_VIEW " + params.get("viewType"));
 				}
 				LOGGER.info("###################### Style Sheet Path :   " + rePaht);
 				
+				Resource resource = new ClassPathResource(rePaht); 
 				//trim
 				rePaht.trim();
 				
@@ -95,7 +90,7 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 				}
 				
 				//StreamSource stylesource = new StreamSource("C:/works/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/etrust/WEB-INF/classes/template/stylesheet/ctos_report.xsl"); // xsl file...
-				StreamSource stylesource = new StreamSource(rePaht); // xsl file...
+				StreamSource stylesource = new StreamSource(resource.getFile()); // xsl file...
 				TransformerFactory factory = TransformerFactory.newInstance();
 				Transformer transformer = factory.newTransformer(stylesource);
 				
