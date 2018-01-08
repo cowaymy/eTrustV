@@ -714,6 +714,9 @@
 <h2>Add Call Result</h2>
 </aside><!-- title_line end -->
 
+<ul class="center_btns mt20">
+    <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
+</ul>
 <section class="search_table"><!-- search_table start -->
 <form id="addCallForm" name="addCallForm" action="#" method="post">
     <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
@@ -725,6 +728,7 @@
     <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
     <input id="paramStockId" name="paramStockId" type="hidden" value="${cancelReqInfo.stockId}">
     <input id="callStusId" name="callStusId" type="hidden" >
+    <input id="appTypeId" name="appTypeId" type="hidden" value="${cancelReqInfo.appTypeId}">
 
     <!--  add by hgham  -->
     <input id="ctId" name="ctId" type="hidden" >
