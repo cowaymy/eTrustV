@@ -410,9 +410,13 @@ $(function(){
             data.checked = checkedItems;
             console.log(data);
             Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
-            	Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
+            	if("dup"==result.data){
+	            	Common.alert( " Not enough Qty, Please search again. ");
+            	}else{
+	            	Common.alert(result.message+"</br> Created : "+result.data, SearchListAjax);
+	                AUIGrid.resetUpdatedItems(listGrid, "all");
+            	}
               //  Common.alert(result.message , SearchListAjax);
-                AUIGrid.resetUpdatedItems(listGrid, "all");
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {
