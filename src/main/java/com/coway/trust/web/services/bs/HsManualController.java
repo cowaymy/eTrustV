@@ -803,11 +803,14 @@ public class HsManualController {
 		logger.debug("params : {}", params);
         String srvCodyId = "";
         LinkedHashMap  hsResultM = (LinkedHashMap)params.get("hsResultM");
+        hsResultM.put("hscodyId", hsResultM.get("cmbServiceMem"));
         srvCodyId =  hsManualService.getSrvCodyIdbyMemcode(hsResultM);
+        logger.debug("srvCodyId : " + srvCodyId);
         hsResultM.put("cmbServiceMem", srvCodyId);
         hsResultM.put("hscodyId", srvCodyId);
+        logger.debug("hsResultM : {}", hsResultM);
         hsManualService.updateSrvCodyId(hsResultM);
-		logger.debug("params111111111 : {}", params);
+//		logger.debug("params111111111 : {}", params);
 //		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
 		

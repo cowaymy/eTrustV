@@ -2787,7 +2787,7 @@ SELECT ROWNUM AS rnum ,
                     </select> -->
                     
                     <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
-	                    SELECT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
+	                    SELECT DISTINCT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
 						FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
 						      FROM ORG0001D
 						      WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{entry_orderNo}))

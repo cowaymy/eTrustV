@@ -9,7 +9,7 @@
 
 	    	//doGetCombo('/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), custId : $("#custId").val()} , '', 'entry_cmbServiceMem' , 'S', '');
 
-	    	CommonCombo.make("entry_cmbServiceMem", '/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), entry_orderNo : $("#entry_orderNo").val()}, '', {isShowChoose: false});
+	    	CommonCombo.make("entry_cmbServiceMem", '/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), entry_orderNo : $("#entry_orderNo").val()}, '${configBasicInfo.c2}', {isShowChoose: false});
 
 	        //{ salesOrdNo :  $("#salesOrdNo").val() }
 	    	/* Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {
@@ -28,11 +28,9 @@
 	    
 	    
                var configBsGen = ${configBasicInfo.configBsGen}
-
-               $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);	    
+               $("#entry_availability option[value="+configBsGen +"]").attr("selected", true);
 	    
 	           //var srvMemId =  ${configBasicInfo.configBsMemId}
-	           //$("#entry_cmbServiceMem option[value="+ srvMemId +"]").attr("selected", true);     
              //$("#entry_cmbServiceMem").val($("entry_cmbServiceMem option:first").val());
 
              //$("#entry_cmbServiceMem option:eq(0)").remove();
