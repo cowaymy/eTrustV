@@ -83,7 +83,14 @@ public class CcpCTOSB2BServiceImpl extends EgovAbstractServiceImpl implements Cc
 					LOGGER.info("_______________________________ CTOS_VIEW " + params.get("viewType"));
 				}
 				LOGGER.info("###################### Style Sheet Path :   " + rePaht);
-				rePaht = rePaht.substring(1);
+				
+				//trim
+				rePaht.trim();
+				
+				if(rePaht.startsWith("/")){
+					rePaht = rePaht.substring(1);
+				}
+				
 				//StreamSource stylesource = new StreamSource("C:/works/workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp3/wtpwebapps/etrust/WEB-INF/classes/template/stylesheet/ctos_report.xsl"); // xsl file...
 				StreamSource stylesource = new StreamSource(rePaht); // xsl file...
 				TransformerFactory factory = TransformerFactory.newInstance();
