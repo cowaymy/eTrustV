@@ -136,54 +136,6 @@ function fn_search(){
 	)
 };
 
-function fn_detailSearch(authCode){
-    Common.ajax(
-            "GET",
-            "/common/selectAuthMenuMappingList.do",
-            "authCode="+authCode+"&menuCode="+$("#menuCode").val(),
-            function(data, textStatus, jqXHR){ // Success
-//             	alert(JSON.stringify(data));
-                AUIGrid.setGridData(grdMenuMapping, data);
-            },
-            function(jqXHR, textStatus, errorThrown){ // Error
-                alert("Fail : " + jqXHR.responseJSON.message);
-            }
-    )
-};
-
-function fn_save(){
-
-	var addList = AUIGrid.getAddedRowItems(grdMenuMapping);
-	if(addList.length > 0){
-		for(var idx = 0 ; idx < addList.length ; idx++){
-			if(addList[idx].mymenuCode == "" || typeof(addList[idx].mymenuCode) == "undefined"){
-				AUIGrid.selectRowsByRowId(grdMenuMapping, addList[idx].rowId);
-				Common.alert("<spring:message code='sys.msg.necessary' arguments='MyMenuCode' htmlEscape='false'/>");
-                return;
-            }
-			if(addList[idx].menuCode == "" || typeof(addList[idx].menuCode) == "undefined"){
-				AUIGrid.selectRowsByRowId(grdMenuMapping, addList[idx].rowId);
-				Common.alert("<spring:message code='sys.msg.necessary' arguments='MyMenuCode' htmlEscape='false'/>");
-				return;
-			}
-		}
-	}
-
-	Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
-        Common.ajax(
-                "POST",
-                "/common/saveAuthMenuMappingList.do",
-                GridCommon.getEditData(grdMenuMapping),
-                function(data, textStatus, jqXHR){ // Success
-                    Common.alert("<spring:message code='sys.msg.success'/>");
-                    fn_search();
-                },
-                function(jqXHR, textStatus, errorThrown){ // Error
-                    alert("Fail : " + jqXHR.responseJSON.message);
-                }
-        )
-    });
-};
 
 /****************************Transaction End**********************************/
 /**************************** Grid setting Start ********************************/
@@ -215,10 +167,17 @@ var gridAuthColumnLayout =
 
     },
     {
+        dataField : "roleId",
+        dataType : "string",
+        width : "7%",
+        headerText : "RoleId"
+
+    },
+    {
         dataField : "roleCode",
         dataType : "string",
         width : "10%",
-        headerText : "Role"
+        headerText : "RoleNm"
 
     },
     {
@@ -232,8 +191,6 @@ var gridAuthColumnLayout =
         dataField : "userBrnchNm",
         dataType : "string",
         headerText : "Branch"
-
-
     },
     {
         dataField : "userDeptNm",

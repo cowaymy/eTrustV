@@ -2,11 +2,6 @@ package com.coway.trust.web.common;
 
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,8 +21,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/common/userManagement")
 public class UserManagementController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AreaManagementController.class);
-	
 	@Autowired
 	private UserManagementService userManagementsService;
 
@@ -119,17 +112,10 @@ public class UserManagementController {
 	@RequestMapping(value = "/saveUserRoleList.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveUserRoleList(@RequestParam Map<String, Object> params, ModelMap model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		LOGGER.debug("params =====================================>>  " + params);
 		userManagementsService.saveUserRoleList(params, sessionVO);
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		return ResponseEntity.ok(message);
-	}
-	
-	@RequestMapping(value = "/selectUserNameInfoList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectUserNameInfoList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-		List<EgovMap> mList = userManagementsService.selectUserNameInfoList(params);
-		return ResponseEntity.ok(mList);
 	}
 
 

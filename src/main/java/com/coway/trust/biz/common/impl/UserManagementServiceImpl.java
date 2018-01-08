@@ -97,12 +97,6 @@ public class UserManagementServiceImpl implements UserManagementService {
 		params.put("updUserId", loginId);
 
 		userManagementMapper.saveUserRoleList(params);
-		userManagementMapper.saveHistoryUserRoleList(params);
-	}
-	
-	@Override
-	public List<EgovMap> selectUserNameInfoList(Map<String, Object> params) {
-		return userManagementMapper.selectUserNameInfoList(params);
 	}
 }
 
