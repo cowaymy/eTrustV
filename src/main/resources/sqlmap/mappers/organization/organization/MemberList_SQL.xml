@@ -2158,8 +2158,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		   , 52366
 		   , #{deptCodeFrom}
 		   , #{deptCodeTo}
-		   , #{parentIDFrom} 
-		   , #{parentIDTo}
+		   , #{parentIdFrom} 
+		   , #{parentIdTo}
 		   , #{statusIdFrom}
 		   , #{statusIdTo}
 		   , #{remark}
@@ -2288,9 +2288,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                    AND ( 1 = Extent1.STUS )
                    AND ( Extent1.MEM_ID <> #{memberID} ) ) Distinct1
         ]]>
-        <if test="cmbSuperior != null and cmbSuperior != ''">        
+        <!-- <if test="cmbSuperior != null and cmbSuperior != ''">        
         WHERE Distinct1.MEM_ID = #{cmbSuperior}
-        </if>
+        </if> -->
 	     </select>
 	     <select id="selectDeptCode" parameterType="Map" resultType="egovMap">
 		        SELECT Distinct1.C1 C1  ,
@@ -3642,6 +3642,12 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         where code_master_id = 146
         
     
+    </select>
+    
+    <select id="selectParentIdFrom"  resultType="egovMap">
+       SELECT MEM_ID FROM ORG0005D 
+       WHERE DEPT_CODE = #{deptCode}
+       AND MEM_LVL = #{lvlTo}
     </select>
     
     

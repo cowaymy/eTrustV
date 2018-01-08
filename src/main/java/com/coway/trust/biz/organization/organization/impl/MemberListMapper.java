@@ -193,6 +193,8 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectBusinessType();
 
+	List<EgovMap> selectParentIdFrom(Map<String, Object> parentEntry);
+
 	List<EgovMap> selectHpMemberView(Map<String, Object> params);
 
 	EgovMap selectOneHPMember(Map<String, Object> params);
