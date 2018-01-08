@@ -907,11 +907,13 @@ public class MemberListController {
 		logger.debug("params : {}", params);
 		logger.debug("resultValue : {}", resultValue);
 
-		if(null != resultValue){
+		if(resultValue.size() > 0){
 			message.setMessage((String)resultValue.get("memCode"));
+		} else if (resultValue.size() == 0) {
+			message.setMessage("There is no address information to the HP applicant code");
 		}
 
-
+		logger.debug("message : {}", message);
 		return ResponseEntity.ok(message);
 	}
 	

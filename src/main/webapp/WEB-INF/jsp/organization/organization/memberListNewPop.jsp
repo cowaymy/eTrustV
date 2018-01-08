@@ -1359,7 +1359,7 @@ function checkNRIC(){
             <tr>
                 <th scope="row" >Street</th>
                 <td colspan="3">
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Street" class="w100p"  />
                 </td>
             </tr>
             <tr>

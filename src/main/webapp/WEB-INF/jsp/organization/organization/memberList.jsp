@@ -121,9 +121,14 @@ function fn_hpMemRegisPop(){
 	         console.log( result);
 	
 	         if(result !="" ){
-	             Common.alert(" Health Planner registration has been completed. { "+membercode+" } to { "+ result.message +" }");
-	              fn_memberListSearch();
+	        	 if (result.message == "There is no address information to the HP applicant code") {
+	        		 Common.alert(result.message);
+	        	 } else {
+	        		 Common.alert(" Health Planner registration has been completed. { "+membercode+" } to { "+ result.message +" }");
+	        		 fn_memberListSearch();
+	        	 }
 	         }
+	         
 	     });
         } else {
 	        Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
