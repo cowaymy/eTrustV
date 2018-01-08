@@ -440,11 +440,11 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/selectHpDocSubmission", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHpDocSubmission(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug("memberType : {} "+params.get("memberType"));
+		logger.debug("memberType : {}"+params.get("memType")+"11111111111111");
 
 		List<EgovMap> selectDocSubmission;
-
-		if("2".equals(params.get("memberType").toString().trim())){//type가 Coway Lady면 쿼리가 살짝다름.....
+		
+		if("2".equals(params.get("memType").toString())){//type가 Coway Lady면 쿼리가 살짝다름.....
 			selectDocSubmission = memberListService.selectCodyDocSubmission(params);
 		}else{
 			selectDocSubmission = memberListService.selectHpDocSubmission(params);
@@ -763,6 +763,7 @@ public class MemberListController {
 		model.addAttribute("issuedBank", selectIssuedBank);
 		model.addAttribute("mainDeptList", mainDeptList);
 		model.addAttribute("subDeptList", subDeptList);
+		model.addAttribute("memType", params.get("memType"));
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}
@@ -1065,5 +1066,13 @@ public class MemberListController {
     
     	return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/selectBusinessType.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBusinessType(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+		List<EgovMap> course = memberListService.selectBusinessType();
+		return ResponseEntity.ok(course);
+	}
+
 	
 }
