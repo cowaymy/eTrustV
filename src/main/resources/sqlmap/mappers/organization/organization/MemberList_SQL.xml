@@ -2882,6 +2882,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              <if test="spouseDOB != null and spouseDOB != '' and spouseDOB == '01/01/1900'" >
             SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
             </if>
+            
+              <choose>
+             <when test="hsptlzCheck !=null and hsptlzCheck !='' ">
+               hsptlz = 1,
+             </when>
+             <otherwise>
+                hsptlz = 0,
+             </otherwise>
+             </choose>
             <![CDATA[
               EDC_LEV = TO_NUMBER(TRIM(#{educationLvl})),
               LANG = TO_NUMBER(TRIM(#{language})),
@@ -2898,7 +2907,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               JOIN_DT = TO_DATE(#{joinDate},'yyyy-mm-dd'),
               RANK = TO_NUMBER(TRIM(#{rank})),
               MAIN_DEPT = #{searchdepartment},
-              SUB_DEPT = #{inputSubDept}
+              SUB_DEPT = #{inputSubDept},
+              BIZ_TYPE =#{businessType}
+          
+             
+              
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
 
         ]]>
@@ -3620,6 +3633,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         SELECT MEM_CODE, NAME, NRIC
         FROM ORG0001D 
         WHERE MEM_CODE = #{sponsorCd} 
+    </select>
+    
+     
+    <select id="selectBusinessType"  resultType="egovMap">
+       select CODE_ID, CODE_NAME
+        from sys0013M
+        where code_master_id = 146
+        
+    
     </select>
     
 </mapper>

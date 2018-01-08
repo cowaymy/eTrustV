@@ -117,5 +117,7 @@ public interface MemberListService {
 	List<EgovMap> checkNRIC3(Map<String, Object> params);
 
 	// modify jgkim
-	EgovMap checkSponsor(Map<String, Object> params);	
+	EgovMap checkSponsor(Map<String, Object> params);
+
+	List<EgovMap> selectBusinessType();	
 }

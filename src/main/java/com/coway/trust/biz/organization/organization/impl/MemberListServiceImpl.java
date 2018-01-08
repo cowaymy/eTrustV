@@ -1866,4 +1866,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap checkSponsor(Map<String, Object> params) {
 		return memberListMapper.checkSponsor(params);
 	}
+
+	@Override
+	public List<EgovMap> selectBusinessType() {
+		
+		return memberListMapper.selectBusinessType();
+	}
 }

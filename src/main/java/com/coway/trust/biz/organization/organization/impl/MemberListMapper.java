@@ -190,5 +190,7 @@ public interface MemberListMapper {
 
 	// modify jgkim
 	EgovMap checkSponsor(Map<String, Object> params);
+
+	List<EgovMap> selectBusinessType();
 	
 }

@@ -45,7 +45,7 @@ function fn_saveConfirm(){
 }
 function fn_docSubmission(){
 	   	$("#memberType").attr("disabled",false);
-	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
+	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memType").serialize(), function(result) {
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
@@ -145,7 +145,7 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
     doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
-
+    doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
     /*fill edit field*/
     /*
     var memberType = "${memberView.memType}";
@@ -882,7 +882,7 @@ function fn_selectState(selVal){
 <input type="hidden" id="streetDtl1" name="streetDtl1">
 <input type="hidden" id="addrDtl1" name="addrDtl1">
 <input type="hidden" id="traineeType" name="traineeType">
-
+<input type="hidden" id="memType" name="memType" value="${memType}">
 
 <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memType" name="memType"/>
 <input type="hidden" value="<c:out value="${memberView.gender}"/> "  id="gender" name="gender"/>
@@ -1176,6 +1176,22 @@ function fn_selectState(selVal){
     </select>
     </td>
 </tr>   
+<tr>
+<th scope="row">Businesses Type</th>
+      <td>
+         <select class="w100p" id="businessType" name="businessType">
+    </select>
+    </td>
+  <th scope="row">Hospitalization</th>
+<td>
+    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck"/></span>
+ </td>
+ 
+ <th scope="row">PA expiry Date </th>
+ <td>
+ </td>
+</tr>
+
 </tbody>
 </table><!-- table end -->
 
