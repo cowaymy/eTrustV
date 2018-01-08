@@ -3590,15 +3590,22 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
     
     <select id="checkNRIC1"  parameterType="Map" resultType="egovMap">
+    <![CDATA[
         SELECT * 
 		FROM ORG0003D 
 		WHERE APLICNT_NRIC = #{nric}
+		AND STUS_ID <> '6'
+	]]>
     </select>
     
     <select id="checkNRIC2"  parameterType="Map" resultType="egovMap">
+    <![CDATA[
         SELECT MEM_TYPE 
 		FROM ORG0001D 
 		WHERE NRIC = #{nric}
+		AND STUS <> '51'
+        AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(RESIGN_DT, 'YYYYMMDD'), 'YYYYMMDD') > 180
+    ]]>
     </select>
     
     <select id="checkNRIC3"  parameterType="Map" resultType="egovMap">

@@ -1055,7 +1055,7 @@ public class MemberListController {
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 		
-		if (checkSponsor.size() == 0) {
+		if (checkSponsor == null) {
 			message.setMessage("There is no member code that you entered");
 		} else {
 			message.setData(checkSponsor);
