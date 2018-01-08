@@ -29,4 +29,6 @@ public interface HSReportMapper {
 	List<EgovMap> selectCodyCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectAreaCodeList(Map<String, Object> params);
+
+	List<EgovMap> selectCodyCodeList_1(Map<String, Object> params);
 }

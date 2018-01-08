@@ -74,4 +74,10 @@ public class HSReportServiceImpl extends EgovAbstractServiceImpl implements HSRe
 		// TODO Auto-generated method stub
 		return HSReportMapper.selectAreaCodeList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectCodyCodeList_1(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return HSReportMapper.selectCodyCodeList_1(params);
+	}
 }

@@ -14,10 +14,30 @@
      $('#hsMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 
 
+        $("#cmbDeptCode").change(function() {
 
+           if($("#cmbDeptCode option:selected").val() == 0 || $("#cmbDeptCode option:selected").val() == "undefined" ){
+                alert($("#cmbDeptCode option:selected").val());
+                doGetCombo('/services/bs/report/codyCode.do', 3, '','cmbCodyCode', 'S');
+            }else{
+                 doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');
+            } 
+
+            doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');	          
+
+        });  
+          
+          
 		$("#cmbContent").change(function() {
 
+            
 		  if($(this).val() ==3) {
+		    $("#cmbDSC").val("");
+            $("#cmbStatus").val("");
+            $("#cmbInsStatus").val("");
+            $("#cmbArea").val("");
+            
+            
 		    $('#cmbDSC').attr("disabled",true);
 		    $('#cmbStatus').attr("disabled",true);
 		    $('#cmbInsStatus').attr("disabled",true);
@@ -78,7 +98,8 @@ function fn_Generate(){
         
         
         if(cmid!=3){
-        
+            
+            
 	         var whereSql ="";
 	         if($("#hsMonth").val() != '' && $("#hsMonth").val() != null) {
 	             whereSql+= " and m.YEAR =  to_char(to_date('" +  $("#hsMonth").val() + "'" + ",'" + "mm/yyyy" + "')," + "'yyyy" +  "')" ;
@@ -232,8 +253,8 @@ function fn_Generate(){
     <td>
     <select id="cmbContent" name="cmbContent">
         <option value="">Choose one</option>
-        <option value="1">Monthly BS Summary Report</option>
-        <option value="2">Monthly BS Remark Listing</option>
+        <option value="1">Monthly HS Summary Report</option>
+        <option value="2">Monthly HS Remark Listing</option>
         <option value="3">Filter Replacement Particular</option>
         
     </select>

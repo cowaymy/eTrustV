@@ -209,6 +209,24 @@ public class HSReportController {
 		logger.debug("HSReportSingle {}", CodyCodeList);
 		return ResponseEntity.ok(CodyCodeList);
 	}	
+
+	
+	
+	
+	/**
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/codyCode_1.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodyCodeList_1(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		List<EgovMap>  CodyCodeList = HSReportService.selectCodyCodeList_1(params);
+		logger.debug("HSReportSingle {}", CodyCodeList);
+		return ResponseEntity.ok(CodyCodeList);
+	}	
 	
 	
 

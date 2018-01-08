@@ -328,6 +328,15 @@
         </select>
         
         
+       
+       <select id="selectCodyCodeList_1" parameterType="Map" resultType="egovMap">
+              SELECT A.MEM_CODE as CODE_ID , A.MEM_CODE   || '-' || a.NAME  as CODE_NAME
+			    FROM ORG0001D A, ORG0005D B
+			   WHERE A.MEM_ID = B.MEM_ID AND A.STUS = '1' AND B.DEPT_CODE = #{groupCode}
+			ORDER BY A.MEM_CODE 
+       </select>
+       
+        
         <select id="selectCodyCodeList" parameterType="Map" resultType="egovMap">
                 SELECT Project1.MEM_ID CODE_ID  ,
                         Project1.MEM_CODE   || '-' || Project1.NAME  as CODE_NAME,                     Project1.NAME NAME  ,
