@@ -40,7 +40,7 @@ function fn_saveConfirm(){
     }
 }
 function fn_docSubmission(){
-	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memberType").serialize(), function(result) {
+	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memType").serialize(), function(result) {
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
@@ -851,7 +851,7 @@ function checkNRIC(){
 <input type="hidden" id="traineeType" name="traineeType">
 <input type="hidden" id="subDept" name="subDept">
 <input type="hidden" id="userType" name="userType" value="${userType}">
-
+<input type="hidden" id="memType" name="memType" value="${memType}">
 
 <!--<input type="hidden" id = "memberType" name="memberType"> -->
 <table class="type1"><!-- table start -->

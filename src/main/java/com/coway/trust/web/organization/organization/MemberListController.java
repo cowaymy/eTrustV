@@ -287,6 +287,7 @@ public class MemberListController {
 		model.addAttribute("userType", sessionVO.getUserTypeId());
 		
 		model.addAttribute("spouseInfoView", list);
+		model.addAttribute("memType", params.get("memType"));
 
 
 		// 호출될 화면
