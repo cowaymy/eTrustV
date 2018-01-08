@@ -285,12 +285,21 @@ function f_validatation(v){
         Common.alert("Please select one of From Location.");
         return false;
     }
+
     if (v == 'save'){
+   	
     	if ($("#reqcrtdate").val() == null || $("#reqcrtdate").val() == undefined || $("#reqcrtdate").val() == ""){
     		Common.alert("Please enter Document Date.");
     		return false;
     	}
+        if ($("#dochdertxt").val().length > 50){
+            Common.alert("Header Text can be up to 50 digits.");
+            return false;
+        }
+    	
+    	
     }
+
     return true;
 
 }
@@ -474,7 +483,7 @@ function f_multiCombo() {
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="7"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="7"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" maxlength="50"/></td>
 </tr>
 <!-- <tr id="cancelTr">
     <th scope="row">Defect Reason</th>
