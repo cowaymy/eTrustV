@@ -624,8 +624,7 @@ SELECT ROWNUM AS rnum ,
                                         Project2.CODY_MANGR_USER_ID,
                                         Project2.Result as Result,
                                         project2.dept_code
-                         FROM (SELECT /*+ USE_HASH (so hr ins ad ) */
-                                             /*+ NO_INDEX (INS SAL0045D_IDX5) */
+                         FROM (SELECT /*+ use_nl(hs, br) */
                                             distinct
 								            hs.no AS no,
 								            hs.stus_code_id AS stus_code_id,
