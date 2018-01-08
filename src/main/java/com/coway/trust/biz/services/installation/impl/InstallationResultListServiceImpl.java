@@ -1994,6 +1994,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 				maxId = installationResultListMapper.selectMaxId(maxIdValue);
 				callEntry.put("callEntryId", maxId);
 				installationResultListMapper.updateCallEntry(callEntry);
+				
+				
+				Map m = new HashMap();
+				m.put("installEntryId", CommonUtils.nvl( installResult.get("entryId")));
+				m.put("stusCodeId", "21");
+				m.put("creator",installResult.get("creator"));
+				m.put("installResultId", maxId );
+        		installationResultListMapper.updateInstallEntry(m);
+		
+				
+				
 			}
 
         	installationResultListMapper.insertOrderLog(orderLog);

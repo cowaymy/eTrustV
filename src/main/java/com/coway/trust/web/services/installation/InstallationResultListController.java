@@ -368,7 +368,7 @@ public class InstallationResultListController {
 			}else{
 				if(Integer.parseInt(locInfo.get("availQty").toString())<1){
 					message.setMessage("Can't complete the Installation without available stock in the CT");
-				}else{    		
+			}else{    		
 	        	
 	        		if(resultCnt > 0){
 	        			message.setMessage("There is complete sesult exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
