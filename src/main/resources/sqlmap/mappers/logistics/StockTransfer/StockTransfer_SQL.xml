@@ -541,4 +541,22 @@
         update LOG0047M set REQST_STUS = 'O' where REQST_NO = #{reqstno}
      </delete>
      
+     <update id="updateStockHead" parameterType="Map">
+        UPDATE LOG0047M
+           SET REQST_DEL = 'Y'
+         WHERE REQST_NO = #{reqstono}
+     </update>
+     
+    <delete id="deleteStockDelete" parameterType="Map">
+        delete from LOG0048D where REQST_NO = #{reqstono}
+    </delete>
+    
+    <delete id="deleteStockBooking" parameterType="Map">
+        delete from log0075m where REQST_NO = #{reqstono} 
+    </delete>
+    
+    <select id="selectdeliveryHead" parameterType="Map" resultType="integer">
+        select count(*)cnt From log0055d where reqst_no=#{reqstono}
+    </select>
+     
 </mapper>

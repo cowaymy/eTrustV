@@ -233,7 +233,8 @@ $(function(){
 		     if(selectedItem[0].item.status != 'O'){
 		    	 Common.alert("No Delete SMO No.");
 		     }else{
-		    	 Common.confirm("<spring:message code='sys.common.alert.delete'/>",fn_delete); 
+		    	 var reqstono=selectedItem[0].item.reqstno;
+		    	 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
 		    	 //fn_deleteAjax(reqsmono);
 		     }
 		}     

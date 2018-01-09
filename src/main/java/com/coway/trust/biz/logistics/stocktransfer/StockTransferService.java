@@ -35,4 +35,8 @@ public interface StockTransferService {
 	void insertStockBooking(Map<String, Object> params);
 
 	void StocktransferDeliveryDelete(Map<String, Object> params);
+	
+	void deleteStoNo(Map<String, Object> param);
+	
+	int selectDelNo(Map<String, Object> param);
 }

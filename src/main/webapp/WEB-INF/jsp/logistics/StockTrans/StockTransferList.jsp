@@ -237,6 +237,32 @@ $(function(){
 /*     $('#com_rmk_info').click(function(){
         mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", reqcolumnLayout ,"", reqop);
     }); */
+    
+    $('#delete').click(function(){
+        var selectedItem = AUIGrid.getSelectedItems(listGrid);
+         if(selectedItem.length <= 0){
+            Common.alert("No data selected.");
+            return;
+        }else{
+             if(selectedItem[0].item.status != 'O'){
+                 Common.alert("No Delete STO No.");
+             }else{
+            	 var deliverychk;
+            	 var reqstono=selectedItem[0].item.reqstno;
+            	 //fn_selectdelivery(reqstono);
+            	 if(fn_selectdelivery(reqstono)){
+            		Common.alert("No Delete STO No.");
+            		return false;
+            	 }else{
+            		 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
+            		  
+            	 }	 
+                 //fn_deleteAjax(reqsmono);
+             }
+        }     
+    });
+    
+    
     $("#tlocationnm").keypress(function(event) {
     	$('#tlocation').val('');
         if (event.which == '13') {
@@ -351,6 +377,52 @@ function f_getTtype(g , v){
 
     return rData;
 }
+
+function fn_delete(){
+    var selectedItem = AUIGrid.getSelectedItems(listGrid);
+    var reqstono=selectedItem[0].item.reqstno;
+    //alert("reqsmono ???  "+reqsmono);
+    fn_deleteAjax(reqstono)
+         
+}
+
+function fn_deleteAjax(reqstono){
+    
+    var url = "/logistics/stocktransfer/deleteStoNo.do";
+    Common.ajax("GET", url , {"reqstono":reqstono} , function(result)    {
+        Common.alert(""+result.message+"</br> Delete : "+reqstono, locationList);
+    });
+         
+}
+
+function locationList(){
+    $('#search').click();
+}
+
+
+function fn_selectdelivery(reqstono){
+    
+	var chkflag = false;
+	
+    var url = "/logistics/stocktransfer/selectDelNo.do";
+    Common.ajaxSync("GET", url , {"reqstono":reqstono} , function(result)    {
+    	//alert("result.data?  :  "+result.data);
+    	deliverychk = result.data;
+    	
+        if(result.data > 0){
+            chkflag = true;
+        }else{
+            chkflag = false;
+        }  
+    	
+        //Common.alert(""+result.message+"</br> Delete : "+reqstono, locationList);
+    });
+    
+    return chkflag;
+         
+}
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -476,6 +548,7 @@ function f_getTtype(g , v){
 </c:if>
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
             <li><p class="btn_grid"><a id="insert">New</a></p></li>
+            <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
 </c:if>
         </ul>
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>

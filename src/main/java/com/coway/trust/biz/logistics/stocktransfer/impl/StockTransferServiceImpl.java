@@ -427,4 +427,31 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 	}
+	
+	@Override
+	public void deleteStoNo(Map<String, Object> params) {
+		
+		String reqstono = (String) params.get("reqstono");
+		logger.info(" reqstono ???? : {}", params.get("reqstono"));
+		if(!"".equals(reqstono) || null != reqstono){
+			stocktran.updateStockHead(reqstono);
+			stocktran.deleteStockDelete(reqstono);
+			stocktran.deleteStockBooking(reqstono);
+		}
+	}
+	
+	@Override
+	public int selectDelNo(Map<String, Object> params) {
+		int delchk =0;
+		String reqstono = (String) params.get("reqstono");
+		logger.info(" reqstono ???? : {}", params.get("reqstono"));
+		if(!"".equals(reqstono) || null != reqstono){
+			delchk = stocktran.selectdeliveryHead(reqstono);
+
+		}
+		
+		return delchk;
+	}
+	
+	
 }

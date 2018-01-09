@@ -481,5 +481,35 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/deleteStoNo.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> deleteStoNo(@RequestParam Map<String, Object> params,
+			Model model) {
 
+		stock.deleteStoNo(params);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectDelNo.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> selectDelNo(@RequestParam Map<String, Object> params,
+			Model model) {
+
+		int delchk = stock.selectDelNo(params);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(delchk);
+
+		return ResponseEntity.ok(message);
+	}
+	
 }
