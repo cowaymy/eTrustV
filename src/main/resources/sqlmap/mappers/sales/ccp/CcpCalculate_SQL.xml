@@ -1154,49 +1154,51 @@ INSERT INTO SAL0009D
     <result property="resultRaw" column="RESULT_RAW" jdbcType="CLOB" javaType="java.lang.String"/>
 </resultMap>
 <select id="getResultRowForCTOSDisplayForCCPCalculation" parameterType="Map" resultMap="resultRowMap">
-			SELECT
-					T1.BATCH_ID,
-					T1.ORD_NO,
-					T1.CUST_IC,
-					T1.CUST_NAME,
-					T1.PRCSS,
-					T1.FICO_SCRE,
-					T1.BATCH_NO,
-					T1.RESULT_RAW,
-					T1.CTOS_DT,
-					T1.UPD_USER_ID,
-					T1.CTOS_BANKRUPT,
-					T1.ORD_ID,
-					T1.CUST_ID,
-					T1.MEM_ID
-			FROM(
-					  SELECT
-							    BATCH_ID,
-							    ORD_NO,
-							    CUST_IC,
-							    CUST_NAME,
-							    PRCSS,
-							    FICO_SCRE,
-							    BATCH_NO,
-							    RESULT_RAW,
-							    CTOS_DT,
-							    UPD_USER_ID,
-							    CTOS_BANKRUPT,
-							    ORD_ID,
-							    CUST_ID,
-							    MEM_ID,
-							    ROW_NUMBER() OVER (PARTITION BY ORD_NO ORDER BY CTOS_DT DESC) CNT
-					  FROM 
-					            SAL0107D
-					  WHERE
-					            PRCSS = 1
-					  AND
-					            CTOS_DT IS NOT NULL 
-					  AND
-					            RESULT_RAW IS NOT NULL
-					 ) T1
-			WHERE T1.ORD_NO = #{ordNo}
-			AND CNT = 1
+SELECT
+		T1.BATCH_ID,
+		T1.ORD_NO,
+		T1.CUST_IC,
+		T1.CUST_NAME,
+		T1.PRCSS,
+		T1.FICO_SCRE,
+		T1.BATCH_NO,
+		T1.RESULT_RAW,
+		T1.CTOS_DT,
+		T1.UPD_USER_ID,
+		T1.CTOS_BANKRUPT,
+		T1.ORD_ID,
+		T1.CUST_ID,
+		T1.MEM_ID,
+		T1.CNT
+FROM(
+		  SELECT
+		        BATCH_ID,
+			    ORD_NO,
+			    CUST_IC,
+			    CUST_NAME,
+			    PRCSS,
+			    FICO_SCRE,
+			    BATCH_NO,
+			    RESULT_RAW,
+			    CTOS_DT,
+			    UPD_USER_ID,
+			    CTOS_BANKRUPT,
+			    ORD_ID,
+			    CUST_ID,
+			    MEM_ID,
+			    ROW_NUMBER() OVER (PARTITION BY ORD_NO ORDER BY CTOS_DT DESC) CNT
+		  FROM 
+		        SAL0107D
+		  WHERE
+		        PRCSS = 1
+		  AND
+		        CTOS_DT IS NOT NULL 
+		  AND
+		       RESULT_RAW IS NOT NULL
+		) T1
+WHERE 
+      T1.CUST_IC = #{nric}
+AND T1.CNT = 1
 </select>
 
 </mapper>
