@@ -462,6 +462,9 @@ public class InstallationResultListController {
 		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
 		logger.debug("asResultM ===>"+update.toString());
 
+		// Transfer 실행 여부 제어 로직 추가 예정
+		// 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
+		// Transfer 불가능한 경우, 메시지창을 띄워 알려줌
 		int   rtnValue = installationResultListService.updateAssignCT(params);
 
 		ReturnMessage message = new ReturnMessage();
