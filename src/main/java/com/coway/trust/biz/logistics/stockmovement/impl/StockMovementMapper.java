@@ -72,5 +72,12 @@ public interface StockMovementMapper {
 	String getReceiptFlag(String delno);
 
 	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
+	
+	void updateStockHead(String reqsmono);
+	
+	void deleteStockDelete(String reqsmono);
+	
+	void deleteStockBooking(String reqsmono);
+	
 
 }

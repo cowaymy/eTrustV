@@ -268,11 +268,11 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 					}
 
 					insMap.put("scanno", scanno);
+					stockMoveMapper.updateRequestMovement((String) insMap.get("reqstno"));
 
 				}
 
 				stockMoveMapper.insertDeliveryStockMovement(insMap);
-				stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
 			}
 			String[] delvcd = { deliSeq };
 
@@ -435,4 +435,18 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO Auto-generated method stub
 		return stockMoveMapper.selectGetSerialDataCall(params);
 	}
+	
+	@Override
+	public void deleteSmoNo(Map<String, Object> params) {
+		
+		String reqsmono = (String) params.get("reqsmono");
+		logger.info(" reqsmono ???? : {}", params.get("reqsmono"));
+		if(!"".equals(reqsmono) || null != reqsmono){
+			stockMoveMapper.updateStockHead(reqsmono);
+			stockMoveMapper.deleteStockDelete(reqsmono);
+			stockMoveMapper.deleteStockBooking(reqsmono);
+		}
+	}
+	
+	
 }

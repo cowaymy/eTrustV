@@ -223,6 +223,22 @@ $(function(){
         document.searchForm.action = '/logistics/stockMovement/StockMovementIns.do';
         document.searchForm.submit();
     });
+    
+    $('#delete').click(function(){
+	    var selectedItem = AUIGrid.getSelectedItems(listGrid);
+	     if(selectedItem.length <= 0){
+	        Common.alert("No data selected.");
+	        return;
+	    }else{
+		     if(selectedItem[0].item.status != 'O'){
+		    	 Common.alert("No Delete SMO No.");
+		     }else{
+		    	 Common.confirm("<spring:message code='sys.common.alert.delete'/>",fn_delete); 
+		    	 //fn_deleteAjax(reqsmono);
+		     }
+		}     
+    });
+    
 
     $("#tlocationnm").keypress(function(event) {
         $('#tlocation').val('');
@@ -338,6 +354,29 @@ function f_getTtype(g , v){
 
     return rData;
 }
+
+function fn_delete(){
+	var selectedItem = AUIGrid.getSelectedItems(listGrid);
+	var reqsmono=selectedItem[0].item.reqstno;
+	//alert("reqsmono ???  "+reqsmono);
+	fn_deleteAjax(reqsmono)
+         
+}
+
+function fn_deleteAjax(reqsmono){
+	
+	var url = "/logistics/stockMovement/deleteSmoNo.do";
+    Common.ajax("GET", url , {"reqsmono":reqsmono} , function(result)    {
+    	Common.alert(""+result.message+"</br> Delete : "+reqsmono, locationList);
+    });
+         
+}
+
+
+function locationList(){
+    $('#search').click();
+}
+
 
 </script>
 
@@ -463,6 +502,7 @@ function f_getTtype(g , v){
 </c:if>
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 		    <li><p class="btn_grid"><a id="insert">New</a></p></li>
+		    <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
 </c:if>
         </ul>
 

@@ -38,5 +38,7 @@ public interface StockMovementService {
 	void insertStockBooking(Map<String, Object> params);
 	
 	List<EgovMap> selectGetSerialDataCall(Map<String, Object> params);
+	
+	void deleteSmoNo(Map<String, Object> param);
 
 }
