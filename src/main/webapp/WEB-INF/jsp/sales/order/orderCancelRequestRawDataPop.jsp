@@ -162,11 +162,11 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:190px" />
-    <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:170px" />
+    <col style="width:140px" />
+    <col style="width:175px" />
+    <col style="width:140px" />
+    <col style="width:175px" />
+    <col style="width:135px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -212,10 +212,7 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 </tbody>
 </table><!-- table end -->
 
-<ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
-</ul>
+
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
 <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
@@ -225,6 +222,14 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 
 </form>
 
+
+
+<div style="height: 80px">
+</div>
+<ul class="right_btns">
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()">Generate</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+</ul>
 </section><!-- content end -->
      
 </section><!-- container end -->
