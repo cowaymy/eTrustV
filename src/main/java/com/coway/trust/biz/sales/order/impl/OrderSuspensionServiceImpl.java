@@ -1,5 +1,6 @@
 package com.coway.trust.biz.sales.order.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,6 +134,8 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 		Map<String, Object> saveParam = new HashMap<String, Object>();
 		Map<String, Object> saveRagularParam = new HashMap<String, Object>();	
 		
+		saveRagularParam.put("salesOrdId", params.get("ordId"));
+		
 		if(saveStatus == 2){
 			EgovMap newSuspendSearch1 = orderSuspensionMapper.newSuspendSearch1(params);
 			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
@@ -164,7 +167,7 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 			// getOderOutsInfo 프로시저 현재 오류.. 수정되면 적용해야함.
 			saveRagularParam.put("ORD_ID", params.get("ordId"));
 			membershipQuotationMapper.getOderOutsInfo(saveRagularParam);
-			EgovMap spOrdInfo = (EgovMap) saveRagularParam.get("p1");
+			EgovMap spOrdInfo = (EgovMap) ((ArrayList)saveRagularParam.get("p1")).get(0);
 			EgovMap newSuspendSearch1 = orderSuspensionMapper.newSuspendSearch1(params);
 			int getCallResultIdMaxSeq = orderExchangeMapper.getCallResultIdMaxSeq();
 			saveRagularParam.put("getCallResultIdMaxSeq", getCallResultIdMaxSeq);
