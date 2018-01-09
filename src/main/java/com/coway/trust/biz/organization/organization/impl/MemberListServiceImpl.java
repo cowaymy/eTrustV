@@ -1043,14 +1043,15 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				EgovMap selectOrganization_new = memberListMapper.selectOrganization(params);
 				logger.debug("selectOrganization_new : {}",selectOrganization_new);
 				promoEntry.put("requestNo", eventCode.get("docNo").toString());
-				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
-				/*if (params.get("lvlTo") .equals("3") ) {
-					promoEntry.put("deptCodeTo", selectMemberOrgs.get("deptCode"));
-    			} else if (params.get("lvlTo") .equals("2") ) {
-    				promoEntry.put("deptCodeTo", selectMemberOrgs.get("grpCode"));
+				
+				//promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
+				if (params.get("lvlTo") .equals("2") || params.get("lvlTo") .equals("3") ) {
+					promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
+					promoEntry.put("PRCode", selectMemberOrgs.get("deptCode"));
     			} else if (params.get("lvlTo") .equals("1") ) {
-    				promoEntry.put("deptCodeTo", selectMemberOrgs.get("orgCode"));
-    			}*/
+    				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("grpCode"));
+    				promoEntry.put("PRCode", selectMemberOrgs.get("grpCode"));
+    			}
 				
 				EgovMap deptCode = null;
 				logger.debug("params : {}", params);
@@ -1110,7 +1111,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				
 				promoEntry.put("parentDeptCodeFrom", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
-				promoEntry.put("PRCode", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
+				//promoEntry.put("PRCode", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
 				
 				/*if ( !params.get("lvlTo") .equals("1") ||  !params.get("lvlTo") .equals("2") ) {
 					promoEntry.put("lastDeptCode", selectMemberOrgs.get("deptCode"));
