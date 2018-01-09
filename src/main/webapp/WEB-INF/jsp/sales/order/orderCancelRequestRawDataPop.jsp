@@ -5,11 +5,15 @@
 <script type="text/javascript">
 
 var date = new Date().getDate();
+var mon = new Date().getMonth()+1;
 if(date.toString().length == 1){
     date = "0" + date;
 } 
-$("#dpRequestDtFrom").val("01/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-$("#dpRequestDtTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
+if(mon.toString().length == 1){
+    mon = "0" + mon;
+}
+$("#dpRequestDtFrom").val("01/"+mon+"/"+new Date().getFullYear());
+$("#dpRequestDtTo").val(date+"/"+mon+"/"+new Date().getFullYear());
 
 /* 멀티셀렉트 플러그인 start */
 $('.multy_select').change(function() {

@@ -94,7 +94,7 @@ function fn_report(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Cancellation Request Raw Data</h1>
+<h1>Order Conversion Raw Data</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
@@ -146,9 +146,7 @@ function fn_report(){
 </tbody>
 </table><!-- table end -->
 
-<ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: fn_report()">Generate</a></p></li>
-</ul>
+
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
 <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
@@ -158,7 +156,10 @@ function fn_report(){
 <input type="hidden" id="V_RENTALAGINGMONTH" name="V_RENTALAGINGMONTH" value="">
 
 </form>
-
+<div style="height : 150px"></div>
+<ul class="center_btns">
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: fn_report()">Generate</a></p></li>
+</ul>
 </section><!-- content end -->
      
 </section><!-- container end -->
