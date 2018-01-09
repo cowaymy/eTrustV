@@ -3764,7 +3764,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      </update>
      
      <select id="branch" parameterType="Map" resultType="egovMap">
-        SELECT BRNCH_ID,CODE BRANCH_CODE, NAME BRANCH_NAME FROM SYS0005M WHERE STUS_ID = 1
+        SELECT BRNCH_ID,CODE BRANCH_CODE, NAME BRANCH_NAME FROM SYS0005M WHERE STUS_ID = 1 order by branch_code
     </select>
     
     <update id="updateMemberBranch" parameterType="Map" >
