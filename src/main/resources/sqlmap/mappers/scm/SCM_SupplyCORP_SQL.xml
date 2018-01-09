@@ -168,6 +168,73 @@
              ,S06D.PSI_ID
   </select>
   
+<select id="selectPlanDatePlanByCdc" parameterType="Map" resultType="egovMap">
+  SELECT PLAN_YEAR || LPAD(PLAN_MONTH,2,'0') || '01' PLAN_DATE 
+    FROM SCM0005M 
+   WHERE PLAN_YEAR = #{paramYear}
+     AND PLAN_WEEK = #{paramWeekTh}
+     AND CDC = DECODE(#{paramCdc},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{paramCdc})  
+</select>  
+
+<select id="selectSupplyCdcPop" parameterType="Map" resultType="egovMap">
+      WITH ALIST
+             AS(
+                SELECT STOCK_CODE,STOCK_NAME,CDC,M3,M2,M1,ROUND(((M3+M2+M1)/3),0) AVG
+                FROM(                          
+                      SELECT DECODE(CDC,'ALL','TOT',STOCK_CODE) STOCK_CODE
+                            ,STOCK_NAME
+                            ,NVL(CDC,'ALL') CDC
+                            ,SUM(M_3) M3
+                            ,SUM(M_2) M2
+                            ,SUM(M_1) M1
+                      FROM(
+                            SELECT T0.STOCK_CODE
+                                 ,STK.STK_DESC AS STOCK_NAME
+                                 ,T0.CDC
+                                 ,NVL(T3.M3_TOTAL,0) AS M_3
+                                 ,NVL(T2.M2_TOTAL,0) AS M_2
+                                 ,NVL(T1.M1_TOTAL,0) AS M_1
+                             FROM (
+                                     SELECT DISTINCT T0.CDC_CODE AS CDC,T1.STOCK_CODE
+                                     FROM SCM0016M T0 
+                                     CROSS JOIN SCM0008M T1
+                                     CROSS JOIN (SELECT DISTINCT SCM_YEAR, SCM_MONTH FROM SCM0031S T1
+                                                  WHERE (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1))))
+                                                     OR (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2))))
+                                                     OR (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3))))
+                                                ) T2
+                                  ) T0 
+                             LEFT JOIN (
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M1_TOTAL
+                                 FROM SCM0031S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1)))
+                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+                             ) T1 ON T1.CDC=T0.CDC AND T1.STOCK_CODE=T0.STOCK_CODE
+                             LEFT JOIN (
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M2_TOTAL
+                                 FROM SCM0031S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2)))
+                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+                             ) T2 ON T2.CDC=T0.CDC AND T2.STOCK_CODE=T0.STOCK_CODE
+                             LEFT JOIN (
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M3_TOTAL
+                                 FROM SCM0031S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3)))
+                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+                             ) T3 ON T3.CDC=T0.CDC AND T3.STOCK_CODE=T0.STOCK_CODE
+                             JOIN SYS0026M STK ON STK.STK_CODE=T0.STOCK_CODE
+                             WHERE T0.STOCK_CODE= #{paramStockCode} 
+                       )
+                       GROUP BY ROLLUP (STOCK_CODE,STOCK_NAME,CDC)
+                       HAVING GROUPING(STOCK_CODE) = 0 AND STOCK_NAME IS NOT NULL  
+                      )
+              )
+                SELECT A.*
+                      ,DECODE(A.AVG,0,0,ROUND(((A.AVG / (SELECT  B.AVG FROM ALIST B WHERE A.STOCK_CODE = B.STOCK_CODE AND CDC ='ALL')) * 100),2)) RATING
+                FROM ALIST A
+               WHERE CDC != 'ALL'     
+</select>  
+  
 <insert id="insertSalesPlanMstCdc" parameterType="Map">
         <selectKey keyProperty="salesPlanMstCdcSeq" resultType="int" order="BEFORE">
             SELECT SCM0005M_PLAN_ID_SEQ.NEXTVAL FROM DUAL

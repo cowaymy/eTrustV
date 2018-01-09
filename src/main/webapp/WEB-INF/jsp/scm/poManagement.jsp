@@ -214,13 +214,18 @@ function fnCreatePO()
 {
   var rowCount = AUIGrid.getRowCount(myGridID2);
 
-	for(var i=0; i<rowCount; i++) 
+	for(var i=0; i<rowCount; i++)
 	  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
 
-  //var addList = AUIGrid.getAddedRowItems(myGridID2);
+	if ( parseInt(AUIGrid.getCellValue(myGridID2, 0, "fobAmount")) > 500000 
+			||  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 20000000 
+	)
+	{
+	   Common.alert("<spring:message code='sys.scm.planByCdc.amountExceeds'/> ");
+	   return false;  
+	}   
+	
   var udtList = AUIGrid.getEditedRowItems(myGridID2);
-  
-	//console.log("addList: " + addList.length + " /edtList: " + udtList.length);
 
 	if (udtList.length > 0)
 		fnUpdSaveCall();
@@ -279,22 +284,23 @@ function auiCellEditignHandler(event)
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
         
-        var roundUpMoq = AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundUpMoq");
+        //var roundUpMoq = AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundUpMoq");
         var fobPrice   = AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice");
         var editPoQty  = parseInt(event.value);
         var editPlanQty = parseInt($("#inPlanQty").val());
-        var editInMoq   = parseInt($("#inMoq").val());
-        var newPoQty =   Math.ceil( ((editPlanQty - editPoQty) / editInMoq) );  // 소수점이하 올림
+        //var editInMoq   = parseInt($("#inMoq").val());
+        var newPoQty =   Math.ceil( (editPlanQty - editPoQty)  );  // 소수점이하 올림
 
         $("#inRoundUpPoQty").val(newPoQty); 
         
-         console.log("edit_poQty: "+ editPoQty + " /editPlanQty: "+ editPlanQty +" /editInMoq: "+ editInMoq+" /newPoQty: "+ newPoQty);
-        console.log("New_RoundUpMoq: "+ $("#inRoundUpPoQty").val() +" /fobPrice: " + fobPrice + " /fobAmount: " + (newPoQty * fobPrice) );
+        //console.log("edit_poQty: "+ editPoQty + " /editPlanQty: "+ editPlanQty +" /newPoQty: "+ newPoQty);
+        //console.log("New_RoundUpMoq: "+ $("#inRoundUpPoQty").val() +" /fobPrice: " + fobPrice + " /fobAmount: " + (newPoQty * fobPrice) );
         
-        var calculPoQty = (newPoQty * editInMoq) ;
+        var calculPoQty = newPoQty ;
         var lastAmount = (calculPoQty * fobPrice);
-        AUIGrid.setCellValue(myGridID2, event.rowIndex, 5, editPoQty);
-        AUIGrid.setCellValue(myGridID2, event.rowIndex, 7, lastAmount);// FOB AMOUNT
+        AUIGrid.setCellValue(myGridID2, event.rowIndex, 4, editPoQty);  // price
+        AUIGrid.setCellValue(myGridID2, event.rowIndex, 6, lastAmount);// FOB AMOUNT
+        
         
     } 
     else if(event.type == "cellEditCancel") 
@@ -311,20 +317,19 @@ function fnMoveRight()
 	  return false;
 	}
 
-	if ( (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice")) <= 0)
-		|| (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")) <= parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty"))) )
+	if (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice")) <= 0)
 	{
 		Common.alert("<spring:message code='sys.scm.poIssue.AllPlannedQty'/> ");
     return false;  
 	}
-     console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
+/*      console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
             +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
             +" inStkTypeId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId")
             +" inPlanQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "planQty")
             +" inPoQty: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "poQty")
             +" inMoq: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "moq")
             +" roundUpMoq: " + Math.ceil((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / $("#inMoq").val() )
-            );  
+            );   */
 
 	     $("#inStockCode").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode"));
 	     $("#inStkCtgryId").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId"));
@@ -336,7 +341,7 @@ function fnMoveRight()
 	     $("#inPreYear").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preYear"));
 	     $("#inPreWeekTh").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preWeekTh"));
 
-	     $("#inRoundUpPoQty").val( Math.ceil( ((parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val())) / parseInt($("#inMoq").val()))) ); 
+	     $("#inRoundUpPoQty").val( ( parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val()))); 
 
 	     if ( $("#inMoq").val() <= 0)
 	     {
@@ -486,15 +491,15 @@ var SCMPrePOViewLayout =
             headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
             width : "33%"
         }, {
-            dataField : "stkTypeId",
+            dataField : "stkTypeName",
             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
-            visible  : false,
-            width : "10%"
+            visible  : true,
+            width : "16%"
         }, {
             dataField : "planQty",
             headerText : "<spring:message code='sys.scm.pomngment.planQty'/>",
             style : "aui-grid-right-column",
-            width : "15%"
+            width : "13%"
         }, {
             dataField : "poQty",
             headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
@@ -525,6 +530,11 @@ var SCMPrePOViewLayout =
         }, {
             dataField : "preWeekTh",
             headerText : "preWeekTh",   
+            editable : false,
+            visible  : false,
+        }, {
+            dataField : "stkTypeId",
+            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
             editable : false,
             visible  : false,
         }
@@ -572,12 +582,6 @@ var SCMPrePOViewLayout2 =
             headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
             visible  : false,
             width : "10%"
-        },{
-            dataField : "moq",
-            headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
-            style : "aui-grid-right-column",
-            width : "10%",
-            editable : false
         }, {
             dataField : "poQty",
             headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
@@ -627,6 +631,12 @@ var SCMPrePOViewLayout2 =
             headerText : "<spring:message code='sys.scm.poApproval.stockCategory'/>",   
             visible  : true,
             width : "13%",
+            editable : false
+        },{
+            dataField : "moq",
+            headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
+            style : "aui-grid-right-column",
+            width : "10%",
             editable : false
         },{
             dataField : "preYear",
@@ -793,8 +803,8 @@ function fnSearchBtnSCMPrePOView()
 	          , params
 	          , function(result) 
 	          {
-              console.log("성공 selectScmPoViewList: " + result.selectScmPoViewList.length);
-              console.log("성공 prePoitemCnt:    " + result.selectScmPoStatusCntList[0].prePoitemCnt);
+              //console.log("성공 selectScmPoViewList: " + result.selectScmPoViewList.length);
+              //console.log("성공 prePoitemCnt:    " + result.selectScmPoStatusCntList[0].prePoitemCnt);
 
               AUIGrid.setGridData(myGridID, result.selectScmPrePoItemViewList);
               AUIGrid.setGridData(SCMPOViewGridID, result.selectScmPoViewList);
@@ -1069,7 +1079,7 @@ $(document).ready(function()
 	</td>
 </tr>
 <tr>
-	<th scope="row">Stock</th>
+	<th scope="row">Mat.Code</th>
 	<td>
     <select class="w100p" multiple="multiple" id="stockCodeCbBox" name="stockCodeCbBox">
     </select>
@@ -1093,7 +1103,7 @@ $(document).ready(function()
 
 <div class="divine_auto type2 mt30"><!-- divine_auto start -->
 
-	<div style="width:50%;">
+	<div style="width:40%;">
 		<div class="border_box" style="min-height:150px"><!-- border_box start -->	
 			<article class="grid_wrap"><!-- grid_wrap start -->
 			  <!-- 그리드 영역1 -->
@@ -1103,7 +1113,7 @@ $(document).ready(function()
 	  </div><!-- border_box end -->
 	</div>
 
-	<div style="width:50%;">
+	<div style="width:60%;">
 	  <div class="border_box" style="min-height:150px"><!-- border_box start -->
 		 <article class="grid_wrap"><!-- grid_wrap start -->
 	    <!-- 그리드 영역2 -->

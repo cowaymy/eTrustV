@@ -5,24 +5,6 @@
 .aui-grid-right-column {
   text-align:right;
 }
-.aui-grid-left-column {
-  text-align:left;
-}
-
-/* 커스텀 칼럼 스타일 정의 */
-.my-column {  
-    text-align:right;
-    margin-top:-20px;
-}
-
-/* 커스텀 칼럼 스타일 정의*/
-.myLinkStyle {
-    text-decoration: underline;
-    color:#4374D9;
-}
-.myLinkStyle :hover{
-  color:#FF0000;
-}
 
 
 </style>
@@ -135,8 +117,6 @@ function fnChangeEventMonth(obj)
 
 function fnChangeEventPeriod(Obj)
 {
-  console.log("Week: " + Obj.value);
-  
   var weekTh = "";
   var years = "";
   var yearVal = $("#selectPlanYear").val();
@@ -159,50 +139,13 @@ function fnChangeEventPeriod(Obj)
 
     //console.log("weekThSeq: " + weekThSeq + " /year: " + yearVal);
   }
-
-  //console.log("w1: " + $("#weekTh1").val() + " /w12: " + $("#weekTh12").val() + " /year: " + $("#year12").val());
   
 }
 
 //행 삭제 메소드
 function removeRow() 
 {
-   console.log("removeRow Method MonthlyGridID ");    
-    AUIGrid.removeRow(MonthlyGridID,"selectedIndex");
-}
-
-function fnSelectMonthly()
-{
-  Common.ajax("GET"
-            , "/scm/selectOnTimeMonthly.do"
-            , $("#MainForm").serialize()
-            , function(result) 
-              {
-                 console.log("성공 fnSearchBtnList: " + result.selectOnTimeMonthlyList.length);
-                 
-                 AUIGrid.setGridData(MonthlyGridID, result.selectOnTimeMonthlyList);//selectAccuracyWeeklyDetail
-                 
-                 if(result != null && result.selectOnTimeMonthlyList.length > 0)
-                 {
-                   console.log("success: " + result.selectOnTimeMonthlyList[0].ScmMonth); 
-                 }
-              }
-            , function(jqXHR, textStatus, errorThrown)
-              {
-                try
-                {
-                  console.log("Fail Status : " + jqXHR.status);
-                  console.log("code : "        + jqXHR.responseJSON.code);
-                  console.log("message : "     + jqXHR.responseJSON.message);
-                  console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                }
-                catch (e)
-                {
-                  console.log(e);
-                }
-                
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-              });
+  AUIGrid.removeRow(MonthlyGridID,"selectedIndex");
 }
 
 function getTimeStamp() 
@@ -242,13 +185,10 @@ function fnWeeklySelectDataList()
             , $("#MainForm").serialize()
             , function(result) 
               {
-                 console.log("성공 fnSearchBtnList: " + result.accuracyWeeklyDetailList.length);
-                 
                  if(result.accuracyWeeklyDetailList.length > 0)
                  {
-                   console.log("Success_month: " + result.accuracyWeeklyDetailList[0].month);
                    //MainGrid 
-                   AUIGrid.setGridData(WeeklyGridID, result.accuracyWeeklyDetailList);
+                   AUIGrid.setGridData(WeeklyGridID, result.accuracyWeeklyDetailList);                   
                  }
               }
             , function(jqXHR, textStatus, errorThrown)
@@ -292,7 +232,7 @@ function fnSearchBtnClick()
 
    fnWeeklySelectDataList();
 
-   fnMonthlyCreate();
+   fnMonthlyGridCreate();
 }
 
 function auiCellEditignHandler(event) 
@@ -334,9 +274,7 @@ var WeeklyGridLayout =
            dataField : "month",
            headerText :  "<spring:message code='budget.Month'/>",
            width : "5%",
-           editable: false,
-           //cellMerge : true,
-           
+           editable: false,           
        }
       ,{
           dataField : "week",
@@ -519,10 +457,8 @@ function fnWeeklyGridCreate()
 	// cellClick event.
 	AUIGrid.bind(WeeklyGridID, "cellClick", function( event ) 
 	{
-	gSelRowIdx = event.rowIndex;
-	
-	console.log("cellClick_Status: " + AUIGrid.isAddedById(WeeklyGridID,AUIGrid.getCellValue(WeeklyGridID, event.rowIndex, 0)) );
-	console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
+	  gSelRowIdx = event.rowIndex;
+	  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
 	});
 	
 	// 셀 더블클릭 이벤트 바인딩
@@ -533,7 +469,7 @@ function fnWeeklyGridCreate()
 
 }
 
-function fnMonthlyCreate()
+function fnMonthlyGridCreate()
 {
   var monthlyGridLayout = [];
   var monthlyGridOptions = {}; 
@@ -553,14 +489,14 @@ function fnMonthlyCreate()
 									           enableRestore : true,
 									           softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
 									           headerHeight:33,
+                             // 그룹핑 후 셀 병함 실행
+                             enableCellMerge : true,
 									         };
 
 
 
   /************************************************************************************************/
-  
-  console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() );
-  
+    
   Common.ajax("GET", "/scm/selectAccuracyMonthlyHeaderList.do"
            , $("#MainForm").serialize()
            , function(result) 
@@ -568,23 +504,17 @@ function fnMonthlyCreate()
 				      if( result.selectWeekThAccuracy == null || result.selectWeekThAccuracy.length < 1) 
 				      {
 				        Common.alert("<spring:message code='expense.msg.NoData' />");
-				           /* if(AUIGrid.isCreated(WeeklyGridID)){
-				              AUIGrid.destroy(WeeklyGridID);
-				            }
-				            if(AUIGrid.isCreated(summaryGridID)){
-				               AUIGrid.destroy(summaryGridID);
-				            } */ 
 				        return false;  
 				       } 
 	             
-			    	   console.log("accuracyHeadCount: " + result.accuracyHeadCount[0].m0TotCnt + " /getField: " + result.selectWeekThAccuracy[0].w1 );
 				    	// setting   
 	             monthlyGridLayout.push(
 	                                       { 
-	                                         dataField : "salesOrg"
+	                                         dataField : "team"
 	                                        ,headerText : "<spring:message code='sys.scm.accuracy.SalesOrg' />"
 	                                        ,width : "10%"
 	                                        ,editable : false
+	                                        ,cellMerge: true
 	                                       }
 	                                      ,{ 
 	                                         dataField : "term"
@@ -593,10 +523,11 @@ function fnMonthlyCreate()
 	                                        ,editable : false
 	                                       }
 	                                      ,{ 
-	                                         dataField : "monthlyAccuracy"
+	                                         dataField : "monthlyAccruray"
 	                                        ,headerText : "<spring:message code='sys.scm.accuracy.MonthlyAccuracy' />"
 	                                        ,width : "10%"     
 	                                        ,editable : false
+	                                        ,postfix : "%"
 	                                       }
 	                                   
 	                                     ) //push
@@ -618,13 +549,14 @@ function fnMonthlyCreate()
                 	  continue;
                        
                   fieldStr = "w"+ intToStrFieldCnt;
-                  console.log("dataField: " + fieldStr +" /headerText: "+ result.selectWeekThAccuracy[0][fieldStr]);
+                  //console.log("dataField: " + fieldStr +" /headerText: "+ result.selectWeekThAccuracy[0][fieldStr]);
 
                   monthlyGridLayout.push({
                 	                         dataField  : "w"+result.selectWeekThAccuracy[0][fieldStr]
                 	                        ,headerText : "W"+result.selectWeekThAccuracy[0][fieldStr]
                 	                        ,editable : false
                 	                        ,width : "7%" 
+                	                        ,postfix : "%"
                 	                      });
                  iLoopCnt++; 
                }                                     
@@ -651,9 +583,7 @@ function fnMonthlyCreate()
 	              // cellClick event.
 	              AUIGrid.bind(MonthlyGridID, "cellClick", function( event ) 
 	              {
-	                gSelRowIdx = event.rowIndex;
-	              
-	                console.log("cellClick_Status: " + AUIGrid.isAddedById(MonthlyGridID,AUIGrid.getCellValue(MonthlyGridID, event.rowIndex, 0)) );
+	                gSelRowIdx = event.rowIndex;	              
 	                console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
 	              });
 	              
@@ -662,8 +592,11 @@ function fnMonthlyCreate()
 	              {
 	                console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
 	              });  
-	
-	             // fnSelectMonthly();
+
+	          	  /***************************************/
+	          	  /****** Monthly Report Grid Setting.****/
+	          	  /***************************************/
+	              AUIGrid.setGridData(MonthlyGridID, result.selectAccuracyMonthlyReport);
 					    	   
            }  //  true
          ,function(jqXHR, textStatus, errorThrown) 
@@ -684,17 +617,14 @@ function fnMonthlyCreate()
             
           }); 
 
-}  // fnMonthlyCreate
+}  // fnMonthlyGridCreate
 
 
 
 /****************************  Form Ready ******************************************/
 $(document).ready(function()
 {
-
-  //fnMonthlyCreate();
 	fnWeeklyGridCreate();
-  
 });   //$(document).ready
 
 </script>

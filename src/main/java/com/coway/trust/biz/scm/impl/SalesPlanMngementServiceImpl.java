@@ -64,6 +64,15 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		return salesPlanMngementMapper.selectSupplyCdcMainList(params);
 	}	
 	
+	@Override
+	public List<EgovMap> selectSupplyCdcPop(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectSupplyCdcPop(params);
+	}	
+	@Override
+	public List<EgovMap> selectPlanDatePlanByCdc(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectPlanDatePlanByCdc(params);
+	}	
+	
 	// Supply-Corp
 	@Override
 	public List<EgovMap> selectSupplyCorpList(Map<String, Object> params) {
@@ -196,10 +205,6 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		
 		salesPlanMngementMapper.insertSalesPlanMstCdc(params);
 		
-		//LOGGER.debug("SalesPlanMstId_SEQ: " + Integer.parseInt( String.valueOf(params.get("salesPlanMstSeq"))) );
-		
-		LOGGER.debug(" input_Params : {}", params.toString() );
-		
 		saveCnt++;
 		
 		salesPlanMngementMapper.insertSalesCdcDetail(params);
@@ -218,10 +223,6 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		
 		salesPlanMngementMapper.insertSalesPlanMaster(params);
 		
-		//LOGGER.debug("SalesPlanMstId_SEQ: " + Integer.parseInt( String.valueOf(params.get("salesPlanMstSeq"))) );
-		
-		LOGGER.debug(" input_Params : {}", params.toString() );
-		
 		saveCnt++;
 		
 		salesPlanMngementMapper.callSpCreateSalesPlanDetail(params);
@@ -229,6 +230,21 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		LOGGER.debug(" return_Params : {} , SaveCnt: {} ", params.toString(), saveCnt );
 		
 		return saveCnt;
+	}
+
+	@Override
+	public String callSpCreateMonthlyAccuracy(Map<String, Object> params)
+	{
+		String returnValue = "OkSP";
+		
+		salesPlanMngementMapper.callSpCreateMonthlyAccuracy(params);
+		
+		LOGGER.debug("Accruracy Return_Params : {} , returnValue: {} ", params.toString(), params.get("rtnVal").toString() );
+		
+		if (!"O.K".equals(params.get("rtnVal")))
+		  returnValue = "FailSP";
+		
+		return returnValue;
 	}
 	
 	@Override
@@ -331,6 +347,10 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	@Override
 	public List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectAccuracyWeeklyDetail(params);
+	}
+	@Override
+	public List<EgovMap> selectAccuracyMonthlyReport(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectAccuracyMonthlyReport(params);
 	}
 
 }

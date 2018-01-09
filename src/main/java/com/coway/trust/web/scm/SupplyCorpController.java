@@ -106,9 +106,32 @@ public class SupplyCorpController {
 
 		return ResponseEntity.ok(map);
 		
+	}
+	
+	// 
+	@RequestMapping(value = "/supplyPlanByCdcDetailPop.do")
+	public String supplyPlanByCdcDetailPopup(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
+	{
+		//model.addAttribute("languages", loginService.getLanguages());
+		return "/scm/supplyPlanByCdcDetailPop";  	
+	} 
+	
+	@RequestMapping(value = "/selectSupplyCdcPop.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyCdcPop(@RequestBody Map<String, Object> params)
+	{
+		LOGGER.debug("selectSupplyCdcPop_InpParams : {}", params.toString());
+		
+		String  selectPlanDate = salesPlanMngementService.selectPlanDatePlanByCdc(params).get(0).get("planDate").toString();
+		
+		params.put("planDate", selectPlanDate);   
+		
+		List<EgovMap> selectSupplyCdcPop = salesPlanMngementService.selectSupplyCdcPop(params);
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("selectSupplyCdcPopList", selectSupplyCdcPop);
+		return ResponseEntity.ok(map);
 	}	
-	
-	
 	
 	// Supply Plan Summary View
 	@RequestMapping(value = "/supplyPlanSummary.do")

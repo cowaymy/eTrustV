@@ -56,7 +56,7 @@ public class PoManagementController {
 	{
 		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/poManagement";  	
-	}  
+	}
 	
 	// search btn
 	@RequestMapping(value = "/selectScmPrePoItemView.do", method = RequestMethod.POST)

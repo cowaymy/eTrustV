@@ -42,6 +42,7 @@
 <script type="text/javaScript">
 
 var gWeekThValue ="";
+var gParamStockCode ="";
 
 $(function() 
 {
@@ -91,8 +92,8 @@ function fnCreate(obj)
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                fnSettiingHeader();
 	                
-	                console.log("성공." + JSON.stringify(result));
-	                console.log("data : " + result.data);
+	                //console.log("성공." + JSON.stringify(result));
+	                //console.log("data : " + result.data);
 	             } 
 	           , function(jqXHR, textStatus, errorThrown) 
 	            {
@@ -149,7 +150,7 @@ function fnSelectExcuteYear()
           {
             var $this = $(this);  // selected item , will use scmPeriodCbBox's input-parameter.
 
-            console.log("period_values: " + $this.val());
+            //console.log("period_values: " + $this.val());
                 
             CommonCombo.initById("scmPeriodCbBox");  // Period reset... 
 
@@ -206,8 +207,8 @@ function fnUpdateSave(Obj)
 	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	            fnSearchBtnList() ;
 	            
-	            console.log("성공." + JSON.stringify(result));
-	            console.log("data : " + result.data);
+	            //console.log("성공." + JSON.stringify(result));
+	            //console.log("data : " + result.data);
 	          }
 	             
 	        , function(jqXHR, textStatus, errorThrown) 
@@ -244,23 +245,17 @@ function fnSetStockComboBox()
                      }
                    , "");
 }
-function getTimeStamp() 
+
+function lpadZero(n, digits) 
 {
-  function leadingZeros(n, digits) {
-      var zero = '';
-      n = n.toString();
-      if (n.length < digits) {
-          for (i = 0; i < digits - n.length; i++)
-              zero += '0';
-      }
-      return zero + n;
+  var zero = '';
+  n = n.toString();
+  if (n.length < digits) 
+	{
+    for (i = 0; i < digits - n.length; i++)
+      zero += '0';
   }
-
-  var d = new Date();
-  var date = leadingZeros(d.getFullYear(), 4)+ leadingZeros(d.getMonth() + 1, 2)+ leadingZeros(d.getDate(), 2);
-  var time = leadingZeros(d.getHours(), 2)+leadingZeros(d.getMinutes(), 2) + leadingZeros(d.getSeconds(), 2);
-
-  return date+"_"+time
+  return zero + n;
 }
 
 //excel export
@@ -287,11 +282,12 @@ function fnSearchBtnList()
 	         , params
            , function(result) 
            {
+              /*
               console.log("성공 fnSearchBtnList: " + result.selectSupplyPlanCDCList.length);
               console.log("성공 selectSupplyCdcSaveFlag: " + result.selectSupplyCdcSaveFlag[0].saveFlag);
               console.log("성공 selectSalesPlanMasterList_Length: " + result.selectSalesPlanMasterList.length);
               console.log("성공 selectSupplyPlanMasterList_Length: " + result.selectSupplyPlanMasterList.length);
-              
+              */
               AUIGrid.setGridData(myGridID, result.selectSupplyPlanCDCList);
               if ( result != null && result.selectSupplyPlanCDCList.length > 0)
               {
@@ -448,7 +444,7 @@ function getItemsByCheckedField(selectedGrid)
 //특정 칼럼 값으로 체크하기 (기존 더하기)
 function addCheckedRowsByValue(selValue) 
 {
-  console.log("grouping Checked: " + selValue);
+  //console.log("grouping Checked: " + selValue);
   // rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
   // 행아이템의 code 필드 중 데이타가 selValue 인 것 모두 체크.
   AUIGrid.addCheckedRowsByValue(myGridID, "code", selValue);
@@ -459,9 +455,21 @@ function addCheckedRowsByValue(selValue)
 //특정 칼럼 값으로 체크 해제 하기
 function addUncheckedRowsByValue(selValue) 
 {
-	console.log("grouping UnChecked: " + selValue);
+	//console.log("grouping UnChecked: " + selValue);
   // 행아이템의 code 필드 중 데이타가 selValue인 것 모두 체크 해제함
   AUIGrid.addUncheckedRowsByValue(myGridID, "code", selValue);
+}
+
+function fnDetailPop(stockCode)
+{
+	gParamStockCode = stockCode;
+	
+  var popUpObj = Common.popupDiv("/scm/supplyPlanByCdcDetailPop.do"
+          , null
+          , null
+          , false // when doble click , Not close
+          , "supplyPlanByCdcDetailPop"  
+          );  
 }
 
 function fnSettiingHeader()
@@ -513,7 +521,7 @@ function fnSettiingHeader()
                     // 이 함수는 사용자가 체크박스를 클릭 할 때 1번 호출됩니다.
                     rowCheckableFunction : function(rowIndex, isChecked, item) 
                     {
-                    	console.log ("isChecked: " + isChecked + " /Checked value: " + AUIGrid.getCellValue(myGridID, rowIndex, "code"));
+                    	//console.log ("isChecked: " + isChecked + " /Checked value: " + AUIGrid.getCellValue(myGridID, rowIndex, "code"));
                     	
                     	if (isChecked == false) // for Checked 
                     	 addCheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
@@ -525,9 +533,6 @@ function fnSettiingHeader()
 
                             
                   };
-
-  console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /stock: " + $('#stockCodeCbBox').val()
-		         +"cdc: " + $('#cdcCbBox').val() );  
   
   Common.ajax("POST", "/scm/selectCalendarHeader.do"
           , $("#MainForm").serializeJSON()
@@ -646,6 +651,16 @@ function fnSettiingHeader()
                                                            return "my-backColumn0";
                                                          else 
                                                            return "my-backColumn1";
+                                                       }
+                                                      ,renderer : 
+                                                       {
+                                                          type : "LinkRenderer",
+                                                          baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+                                                          // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
+                                                          jsCallback : function(rowIndex, columnIndex, value, item) 
+                                                          {
+                                                            fnDetailPop(item.code);
+                                                          }
                                                        }
                                                        //,width : "5%"
                                                      }
@@ -798,7 +813,7 @@ function fnSettiingHeader()
 
                       sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq 
 
-                      console.log("sumWeekThStr: " + sumWeekThStr);
+                      //console.log("sumWeekThStr: " + sumWeekThStr);
                            
                       groupM_0.children.push(
                       {
@@ -869,7 +884,6 @@ function fnSettiingHeader()
                     
                     if (result.header[0][fieldStr] == "W52")
                     {
-                      console.log("M+0..W52..START");
                       nextRowFlag = "R2";
                     } 
                     
@@ -924,7 +938,6 @@ function fnSettiingHeader()
 
                     if (result.header[0][fieldStr] == "W52")
                     {
-                        console.log("M+1..W52..START");
                         nextRowFlag = "R2";
                     }                     
                     
@@ -981,7 +994,6 @@ function fnSettiingHeader()
                        
                    if (result.header[0][fieldStr] == "W52")
                    {
-                     console.log("M+2..W52..START");
                      nextRowFlag = "R2";
                    }  
 
@@ -1036,7 +1048,6 @@ function fnSettiingHeader()
 	
 	                  if (result.header[0][fieldStr] == "W52")
 	                  {
-	                    console.log("M+3..W52..START");
 	                    nextRowFlag = "R2";
 	                  }     
 	                   
@@ -1071,8 +1082,8 @@ function fnSettiingHeader()
                 {
                   var selGridCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
                	                      
-                  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " eventValue: " + event.value
-                          + " code: " + selGridCode + " headerText: " + event.headerText); 
+                  //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " eventValue: " + event.value
+                  //        + " code: " + selGridCode + " headerText: " + event.headerText); 
                 });
   
              // 셀 더블클릭 이벤트 바인딩

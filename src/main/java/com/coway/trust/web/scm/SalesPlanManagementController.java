@@ -110,6 +110,20 @@ public class SalesPlanManagementController {
 		
 		List<EgovMap> selectWeekThAccuracy = salesPlanMngementService.selectAccuracyMonthlyHeaderList(params);
 		List<EgovMap> seperaionCnt = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
+	
+		/* Stored Procedure Call (SP_INS_SCM_ACCURACY) */
+		String retval = salesPlanMngementService.callSpCreateMonthlyAccuracy(params);
+		LOGGER.debug("SPCall_Retvalue : {}", retval.toString());
+		
+		if ("OkSP".equals(retval))
+		{
+		  List<EgovMap> selectAccuracyMonthlyReport = salesPlanMngementService.selectAccuracyMonthlyReport(params);
+		  map.put("selectAccuracyMonthlyReport",selectAccuracyMonthlyReport);
+		}
+		else
+		{
+		  map.put("selectAccuracyMonthlyReport",null);
+		}
 		
 		map.put("selectWeekThAccuracy",selectWeekThAccuracy);
 		map.put("accuracyHeadCount",seperaionCnt);
@@ -172,7 +186,6 @@ public class SalesPlanManagementController {
 		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);	
 		
 		LOGGER.debug("addMonth_Param : {}", params.toString());
-		//LOGGER.debug("scmTeamCbBox : {}", params.get("scmTeamCbBox").toString() );
 		
 		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
 		
@@ -344,9 +357,6 @@ public class SalesPlanManagementController {
 	    tmpCnt = salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
 		totCnt = totCnt + tmpCnt;
 		
-		// 콘솔로 찍어보기
-		//LOGGER.info("insertBizPlanMaster_수정 : {}", addList.toString());
-		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -354,7 +364,7 @@ public class SalesPlanManagementController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
-	}		
+	}
 	
 	@RequestMapping(value = "/insertSalesPlanMstCdc.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertSalesPlanMstCdc(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
@@ -420,8 +430,6 @@ public class SalesPlanManagementController {
 		
 		return ResponseEntity.ok(message);
 	}
-	
-		
 	
 	@RequestMapping(value = "/deleteStockCodeList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> deleteStockCodeList(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO)

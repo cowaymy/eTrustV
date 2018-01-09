@@ -15,6 +15,8 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectComboSupplyCDC(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);  
+	List<EgovMap> selectSupplyCdcPop(Map<String, Object> params);  
+	List<EgovMap> selectPlanDatePlanByCdc(Map<String, Object> params);  
 	void updatePlanByCDC(Map<String, Object> params);
 	void insertSalesPlanMstCdc(Map<String, Object> params);
 	
@@ -58,6 +60,6 @@ public interface SalesPlanMngementMapper {
 	
 	/* SALES PLAN ACCURACY */
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
-	String callSpCreateSalesAccuracy(Map<String, Object> params);
-	
+	List<EgovMap> selectAccuracyMonthlyReport(Map<String, Object> params);
+	String callSpCreateMonthlyAccuracy(Map<String, Object> params);
 }

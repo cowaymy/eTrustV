@@ -15,6 +15,8 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectSalesPlanMaster(Map<String, Object> params);
 	List<EgovMap> selectComboSupplyCDC(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
+	List<EgovMap> selectSupplyCdcPop(Map<String, Object> params);
+	List<EgovMap> selectPlanDatePlanByCdc(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);  
 	int updatePlanByCDC(List<Object> addList, Integer updUserId);
 	
@@ -51,7 +53,8 @@ public interface SalesPlanMngementService
 	int updateSalesPlanConfirm(Map<String, Object> params, SessionVO sessionVO);
 	int insertSalesPlanMstCdc(Map<String, Object> params, SessionVO sessionVO);
 	int deleteStockCode(List<Object> delList, Integer updUserId);
-
+	String callSpCreateMonthlyAccuracy(Map<String, Object> params);	
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
+	List<EgovMap> selectAccuracyMonthlyReport(Map<String, Object> params);
 	
 }

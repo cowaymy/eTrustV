@@ -1992,12 +1992,12 @@ SELECT STK_ID
 </select>
 
 <resultMap id="salePlanAccuracyInsertMap" type="egovMap"></resultMap>
-<select id="callSpCreateSalesAccuracy" statementType="CALLABLE" parameterType="Map">
+<select id="callSpCreateMonthlyAccuracy" statementType="CALLABLE" parameterType="Map">
     { call SP_INS_SCM_ACCURACY(
                                   #{scmYearCbBox}
                                 , #{scmMonthCbBox}
                                 , #{scmPeriodCbBox}
-                                , #{p1, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanAccuracyInsertMap})
+                                , #{rtnVal,  mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanAccuracyInsertMap})
     }
 </select>
 
