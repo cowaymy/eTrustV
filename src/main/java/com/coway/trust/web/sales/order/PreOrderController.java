@@ -104,6 +104,18 @@ public class PreOrderController {
 		return ResponseEntity.ok(result);
 	}
 	
+	@RequestMapping(value = "/selectExistingMember.do")
+	public ResponseEntity<EgovMap> selectExistingMember(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		int cnt = preOrderService.selectExistingMember(params);
+		
+		EgovMap result = new EgovMap();
+		
+		result.put("IS_EXIST", cnt > 0 ? "true" : "false");
+		
+		return ResponseEntity.ok(result);
+	}
+	
 	@RequestMapping(value = "/preOrderRegisterPop.do")
 	public String preOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		

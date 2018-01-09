@@ -140,4 +140,9 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		}
 		return cvtTM;
 	}
+	
+	@Override
+	public int selectExistingMember(Map<String, Object> params) {
+		return preOrderMapper.selectExistingMember(params);
+	}
 }

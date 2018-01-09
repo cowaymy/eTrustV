@@ -15,7 +15,6 @@
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
-        doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
         doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
@@ -61,9 +60,10 @@
     $(function(){
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
+            if(fn_isExistMember() == 'true') return false;
             if(fn_isExistESalesNo() == 'true') return false;
             
-            $('#scPreOrdArea').removeClass("blind");
+          //$('#scPreOrdArea').removeClass("blind");
             
             $('#refereNo').val($('#sofNo').val().trim())
             
@@ -72,6 +72,7 @@
         $('#nric').keydown(function (event) {  
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
+                if(fn_isExistMember() == 'true') return false;
                 if(fn_isExistESalesNo() == 'true') return false;
                 
                 $('#refereNo').val($('#sofNo').val().trim())
@@ -82,6 +83,7 @@
         $('#sofNo').keydown(function (event) {  
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
+                if(fn_isExistMember() == 'true') return false;
                 if(fn_isExistESalesNo() == 'true') return false;
                 
                 $('#refereNo').val($('#sofNo').val().trim())
@@ -338,7 +340,8 @@
             var custTypeVal= $("#hiddenTypeId").val();
             var stkIdx     = $("#ordProudct option:selected").index();
             var stkIdVal   = $("#ordProudct").val();
-            var empChk     = $("#empChk").val();
+//          var empChk     = $("#empChk").val();
+            var empChk     = 0;
             var exTrade    = $("#exTrade").val();
 
             if(stkIdx > 0) {
@@ -599,6 +602,21 @@
         return isExist;
     }
     
+    function fn_isExistMember() {
+        var isExist = false, msg = "";
+
+        Common.ajaxSync("GET", "/sales/order/selectExistingMember.do", $("#frmCustSearch").serialize(), function(rsltInfo) {
+            if(rsltInfo != null) {
+                isExist = rsltInfo.isExist;
+            }
+            console.log('isExist:'+isExist);
+        });
+
+        if(isExist == 'true') Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* The member is our existing HP/Cody/Staff/CT.</b>");
+
+        return isExist;
+    }
+    
     function fn_validPaymentInfo() {
         var isValid = true, msg = "";
 
@@ -786,11 +804,6 @@
             msg = "* Please select an individual customer<br>(Outright Plus).<br>";
         }
 
-        if($("#empChk option:selected").index() <=0) {
-            isValid = false;
-            msg = "* Please select an employee.<br>";
-        }
-
         if(FormUtil.checkReqValue($('#hiddenCustCntcId'))) {
             isValid = false;
             msg += "* Please select a contact person.<br>";
@@ -838,7 +851,7 @@
             srvPacId             : $('#srvPacId').val(),
             instPriod            : $('#installDur').val().trim(),
             custId               : $('#hiddenCustId').val(),
-            empChk               : $('#empChk').val(),
+            empChk               : 0,
             gstChk               : $('#gstChk').val(),
 //          atchFileGrpId        :
             custCntcId           : $('#hiddenCustCntcId').val(),
@@ -1202,6 +1215,19 @@
                 console.log("성공.");
                 console.log("custId : " + result[0].custId);
                 console.log("userName1 : " + result[0].name);
+                
+                var dob = custInfo.dob;                
+                var dobY = dob.split("/")[2];
+                var nowDt = new Date();
+                var nowDtY = nowDt.getFullYear();
+
+                if(dobY != 1900) {
+                    if((nowDtY - dobY) < 18) {
+                        Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+                        $('#scPreOrdArea').addClass("blind");
+                        return false;
+                    }
+                }
 
                 //
                 $("#hiddenCustId").val(custInfo.custId); //Customer ID(Hidden)
@@ -1220,7 +1246,6 @@
                 $("#visaExpr").val(custInfo.visaExpr == '01/01/1900' ? '' : custInfo.visaExpr); //Visa Expiry
                 $("#custEmail").val(custInfo.email); //Email
 //              $("#custRem").val(custInfo.rem); //Remark
-                $("#empChk").val('0'); //Employee
 //              $("#gstChk").val('0').prop("disabled", true);
 
                 if(custInfo.corpTypeId > 0) {
@@ -1563,11 +1588,6 @@
 	<th scope="row">Ext No.</th>
 	<td><input id="custExt" name="custExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
-<tr>
-    <th scope="row">Employee<span class="must">*</span></th>
-    <td><select id="empChk" name="empChk" class="w100p"></select></select></td>
-    <td colspan="2">
-</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -1835,7 +1855,7 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="pop_list_gift_grid_wrap" style="width:100%; height:100px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
-<br>
+<br><br><br><br><br>
 </section><!-- search_table end -->
 
 </article><!-- tap_area end -->

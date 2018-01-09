@@ -23,7 +23,7 @@
     <th scope="row">Order No</th>
     <td>${orderDetail.basicInfo.ordNo}</td>
     <th scope="row">Order Date</th>
-    <td>${orderDetail.basicInfo.ordDt}</td>
+    <td>${fn:substring(orderDetail.basicInfo.ordDt, 0, 19)}</td>
     <th scope="row">Status</th>
     <td>${orderDetail.basicInfo.ordStusName}</td>
 </tr>

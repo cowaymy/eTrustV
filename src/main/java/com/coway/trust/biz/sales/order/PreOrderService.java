@@ -30,4 +30,6 @@ public interface PreOrderService {
 
 	void updatePreOrderStatus(PreOrderListVO preOrderListVO, SessionVO sessionVO);
 
+	int selectExistingMember(Map<String, Object> params);
+
 }

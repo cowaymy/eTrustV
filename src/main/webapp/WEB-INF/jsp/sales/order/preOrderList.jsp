@@ -5,6 +5,15 @@
 
 	var listGridID;
 	var keyValueList = [];
+	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
+	var CATE_ID  = "14";
+	
+    if(MEM_TYPE == '1') { //HP
+        CATE_ID = "29";
+    }
+    else if(MEM_TYPE == '2') { //CODY
+        CATE_ID = "28";
+    }
 	
     $(document).ready(function(){
 
@@ -19,14 +28,14 @@
         });
         
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
-        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 14, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
+        doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
 
     });
     
     function fn_statusCodeSearch(){
-        Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : 14, parmDisab : 0}, function(result) {
+        Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : CATE_ID, parmDisab : 0}, function(result) {
             keyValueList = result;
         });
     }
@@ -218,7 +227,7 @@
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Pre-Order Management</h2>
+<h2>eSales</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
 	<li><p class="btn_blue"><a id="_btnNew" href="#">NEW</a></p></li>

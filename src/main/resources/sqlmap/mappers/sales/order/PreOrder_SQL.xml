@@ -365,5 +365,12 @@
              , UPD_DT                     = SYSDATE
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
+    
+    <select id="selectExistingMember" parameterType="Map" resultType="int">
+		SELECT COUNT(1) AS CNT
+		  FROM ORG0001D
+		 WHERE STUS != 8
+		   AND SUBSTR(REPLACE(NRIC,'-',''), 0, 12) = #{nric}
+    </select>
 
 </mapper>
