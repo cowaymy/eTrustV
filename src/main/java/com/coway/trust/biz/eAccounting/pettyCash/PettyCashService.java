@@ -60,4 +60,6 @@ public interface PettyCashService {
 	void updatePettyCashExpTotAmt(Map<String, Object> params);
 	
 	List<EgovMap> selectExpenseItemGrp(Map<String, Object> params);
+	
+	List<EgovMap> selectExpenseItemGrpForAppv(Map<String, Object> params);
 }

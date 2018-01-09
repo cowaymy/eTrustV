@@ -621,54 +621,55 @@ function fn_selectStaffClaimInfo() {
         // TODO attachFile
         attachList = result.attachList;
         console.log(attachList);
-        console.log(attachList.length);
-        if(attachList.length > 0) {
-            $("#attachTd").html("");
-            for(var i = 0; i < attachList.length; i++) {
-                if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
-                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
-                } else {
-                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+        if(attachList) {
+        	if(attachList.length > 0) {
+                $("#attachTd").html("");
+                for(var i = 0; i < attachList.length; i++) {
+                    if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
+                    } else {
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                    }
                 }
+                
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            fileGrpId = attachList[i].atchFileGrpId;
+                            fileId = attachList[i].atchFileId;
+                        }
+                    }
+                    fn_atchViewDown(fileGrpId, fileId);
+                });
+                // 파일 수정
+                $("#form_newStaffClaim :file").change(function() {
+                    var div = $(this).parents(".auto_file2");
+                    var oriFileName = div.find(":text").val();
+                    console.log(oriFileName);
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            update.push(attachList[i].atchFileId);
+                            console.log(JSON.stringify(update));
+                        }
+                    }
+                });
+                // 파일 삭제
+                $(".auto_file2 a:contains('Delete')").click(function() {
+                    var div = $(this).parents(".auto_file2");
+                    var oriFileName = div.find(":text").val();
+                    console.log(oriFileName);   
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            remove.push(attachList[i].atchFileId);
+                            console.log(JSON.stringify(remove));
+                        }
+                    }
+                });
             }
-            
-            // 파일 다운
-            $(".input_text").dblclick(function() {
-                var oriFileName = $(this).val();
-                var fileGrpId;
-                var fileId;
-                for(var i = 0; i < attachList.length; i++) {
-                    if(attachList[i].atchFileName == oriFileName) {
-                        fileGrpId = attachList[i].atchFileGrpId;
-                        fileId = attachList[i].atchFileId;
-                    }
-                }
-                fn_atchViewDown(fileGrpId, fileId);
-            });
-            // 파일 수정
-            $("#form_newStaffClaim :file").change(function() {
-                var div = $(this).parents(".auto_file2");
-                var oriFileName = div.find(":text").val();
-                console.log(oriFileName);
-                for(var i = 0; i < attachList.length; i++) {
-                    if(attachList[i].atchFileName == oriFileName) {
-                        update.push(attachList[i].atchFileId);
-                        console.log(JSON.stringify(update));
-                    }
-                }
-            });
-            // 파일 삭제
-            $(".auto_file2 a:contains('Delete')").click(function() {
-                var div = $(this).parents(".auto_file2");
-                var oriFileName = div.find(":text").val();
-                console.log(oriFileName);   
-                for(var i = 0; i < attachList.length; i++) {
-                    if(attachList[i].atchFileName == oriFileName) {
-                        remove.push(attachList[i].atchFileId);
-                        console.log(JSON.stringify(remove));
-                    }
-                }
-            });
         }
     });
 }

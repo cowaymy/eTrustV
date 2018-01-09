@@ -564,6 +564,18 @@ function fn_setGridData(data) {
 	<td><input type="text" title="" placeholder="" class="w100p" id="utilNo" name="utilNo" value="${webInvoiceInfo.utilNo}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
+    <th scope="row">Billing Period</th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="bilPeriodF" name="bilPeriodF" value="${webInvoiceInfo.bilPeriodF}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></p>
+    <span><spring:message code="webInvoice.to" /></span>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="bilPeriodT" name="bilPeriodT" value="${webInvoiceInfo.bilPeriodT}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></p>
+    </div><!-- date_set end -->
+    </td>
+    <th scope="row">JomPAY No</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="jPayNo" name="jPayNo" value="${webInvoiceInfo.jPayNo}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
+</tr>
+<tr>
 	<th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
 	<td colspan="3">
 	<c:forEach var="files" items="${attachmentList}" varStatus="st">

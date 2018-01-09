@@ -586,6 +586,18 @@ function fn_tempSave() {
     <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
+    <th scope="row">Billing Period</th>
+    <td>
+    <div class="date_set w100p"><!-- date_set start -->
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="bilPeriodF" name="bilPeriodF" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></p>
+    <span><spring:message code="webInvoice.to" /></span>
+    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="bilPeriodT" name="bilPeriodT" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></p>
+    </div><!-- date_set end -->
+    </td>
+    <th scope="row">JomPAY No</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="jPayNo" name="jPayNo" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
     <td colspan="3" id="attachTd">
     <div class="auto_file2 auto_file3"><!-- auto_file start -->

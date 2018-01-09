@@ -6,6 +6,8 @@
     SELECT a.ORD_ID ORD_ID  ,
              a.ORD_NO ORD_NO  ,
              a.WOR_NO WOR_NO  ,
+             a.PAY_ID PAY_ID  ,
+             a.MTCH_ID MTCH_ID  ,
              a.CUST_NAME CUST_NAME  ,
              SUM(a.AMT)  AMT  ,
              a.APP_TYPE APP_TYPE  ,
@@ -46,6 +48,8 @@
         FROM ( SELECT cr.SO_REQ_SO_ID ORD_ID  ,
                       som.SALES_ORD_NO ORD_NO  ,
                       pm.OR_NO WOR_NO  ,
+                      pm.PAY_ID PAY_ID  ,
+                      pm.MTCH_ID MTCH_ID  ,
                       NVL(cr.SO_REQ_ATTACH, ' ') ATTACH  ,
                       c.NAME CUST_NAME  ,
                       TRUNC(pd.PAY_ITM_AMT,2) AMT  ,
@@ -187,6 +191,8 @@
                SELECT som.SALES_ORD_ID ORD_ID  ,
                       som.SALES_ORD_NO ORD_NO  ,
                       pm.OR_NO WOR_NO  ,
+                      pm.PAY_ID PAY_ID  ,
+                      pm.MTCH_ID MTCH_ID  ,
                       NVL(cr.SO_REQ_ATTACH, ' ') ATTACH  ,
                       c.NAME CUST_NAME  ,
                       TRUNC(pd.PAY_ITM_AMT,2) AMT  ,
@@ -278,12 +284,41 @@
                       LEFT OUTER JOIN SYS0064M C  ON C.AREA_ID = CA3.AREA_ID
                       AND C.STATUS_ID = 1
                 WHERE  pm.TYPE_ID = 1308
-                  AND ( TRUNC(term.TRMNAT_CRT_DT) = TRUNC(SYSDATE -1)
-                  AND term.TRMNAT_RESN_ID = 2127 )
+                  AND term.TRMNAT_RESN_ID = 2127
+                  <if test="startDt != null and startDt != ''">
+                        <![CDATA[
+                        AND TRUNC(term.TRMNAT_CRT_DT) >= TRUNC(TO_DATE(#{startDt}, 'DD/MM/YYYY') )
+                        ]]>
+                  </if>
+                  <if test="endDt != null and endDt != ''">
+                        <![CDATA[
+                        AND TRUNC(term.TRMNAT_CRT_DT) < TRUNC(TO_DATE(#{endDt}, 'DD/MM/YYYY') +1)
+                        ]]>
+                  </if>
+                  <if test="custName != null and custName != ''">
+                        AND c.NAME LIKE '%' || #{custName} || '%'
+                  </if>
+                  <if test="salesOrdNo != null and salesOrdNo != ''">
+                        AND som.SALES_ORD_NO = #{salesOrdNo}
+                  </if>
+                  <if test="payMode != null and payMode != ''">
+                        AND cd.CODE_ID IN
+                        <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
+                        #{item}
+                        </foreach>
+                  </if>
+                  <if test="cancelMode != null and cancelMode != ''">
+                        AND cr.SO_REQ_RESN_ID IN
+                        <foreach item="item" collection="cancelMode" index="index" open="(" separator="," close=")">
+                        #{item}
+                        </foreach>
+                  </if>
                UNION ALL 
                SELECT som.SALES_ORD_ID ORD_ID  ,
                       som.SALES_ORD_NO ORD_NO  ,
                       ' ' WOR_NO  ,
+                      pm.PAY_ID PAY_ID  ,
+                      pm.MTCH_ID MTCH_ID  ,
                       ' ' ATTACH  ,
                       c.NAME CUST_NAME  ,
                       TRUNC((SUM(tl.TRADE_AMT)  * -1),2) AMT  ,
@@ -329,7 +364,9 @@
                  FROM SAL0004D soe
                       JOIN SYS0038M sc   ON sc.STUS_CODE_ID = soe.SO_EXCHG_STUS_ID
                       JOIN SAL0001D som   ON som.SALES_ORD_ID = soe.SO_ID
+                      JOIN SAL0020D cr   ON cr.SO_REQ_SO_ID = som.SALES_ORD_ID
                       JOIN SYS0013M cd   ON cd.CODE_ID = som.APP_TYPE_ID
+                      JOIN PAY0064D pm   ON pm.SALES_ORD_ID = cr.SO_REQ_SO_ID
                       JOIN SAL0029D c   ON c.CUST_ID = som.CUST_ID
                       JOIN PAY0035D tl   ON TRADE_SO_ID = som.SALES_ORD_ID
                       JOIN SAL0045D i   ON i.SALES_ORD_ID = som.SALES_ORD_ID
@@ -367,9 +404,35 @@
                   AND soe.SO_EXCHG_OLD_APP_TYPE_ID IN ( 67,68 )
                   AND som.PV_MONTH <![CDATA[ > ]]> 0
                   AND som.PV_YEAR <![CDATA[ > ]]> 0
-                  AND TRUNC(soe.SO_EXCHG_CRT_DT) <![CDATA[ > ]]> TO_DATE('10/01/2014','MM/DD/YYYY')
-                  AND TRUNC(soe.SO_EXCHG_CRT_DT) <![CDATA[ < ]]> TRUNC(SYSDATE)
-                GROUP BY som.SALES_ORD_ID,som.SALES_ORD_NO,c.NAME,cd.CODE_NAME,soe.SO_EXCHG_CRT_DT,sc.NAME,rc.CODE,rc.RESN_DESC,u1.USER_NAME,ies.CODE,soe.SO_EXCHG_REM,som.APP_TYPE_ID
+                  <if test="startDt != null and startDt != ''">
+                        <![CDATA[
+                        AND TRUNC(soe.SO_EXCHG_CRT_DT) >= TRUNC(TO_DATE(#{startDt}, 'DD/MM/YYYY') )
+                        ]]>
+                  </if>
+                  <if test="endDt != null and endDt != ''">
+                        <![CDATA[
+                        AND TRUNC(soe.SO_EXCHG_CRT_DT) < TRUNC(TO_DATE(#{endDt}, 'DD/MM/YYYY') +1)
+                        ]]>
+                  </if>
+                  <if test="custName != null and custName != ''">
+                        AND c.NAME LIKE '%' || #{custName} || '%'
+                  </if>
+                  <if test="salesOrdNo != null and salesOrdNo != ''">
+                        AND som.SALES_ORD_NO = #{salesOrdNo}
+                  </if>
+                  <if test="payMode != null and payMode != ''">
+                        AND cd.CODE_ID IN
+                        <foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
+                        #{item}
+                        </foreach>
+                  </if>
+                  <if test="cancelMode != null and cancelMode != ''">
+                        AND cr.SO_REQ_RESN_ID IN
+                        <foreach item="item" collection="cancelMode" index="index" open="(" separator="," close=")">
+                        #{item}
+                        </foreach>
+                  </if>
+                GROUP BY som.SALES_ORD_ID,som.SALES_ORD_NO,pm.PAY_ID,pm.MTCH_ID,c.NAME,cd.CODE_NAME,soe.SO_EXCHG_CRT_DT,sc.NAME,rc.CODE,rc.RESN_DESC,u1.USER_NAME,ies.CODE,soe.SO_EXCHG_REM,som.APP_TYPE_ID
                        , CA1.ADDR_DTL, CA1.STREET, A.AREA, A.POSTCODE, A.CITY, A.STATE, A.COUNTRY
                        , CA2.ADDR_DTL, CA2.STREET, B.AREA, B.POSTCODE, B.CITY, B.STATE, B.COUNTRY
                        , CA3.ADDR_DTL, CA3.STREET, C.AREA, C.POSTCODE, C.CITY, C.STATE, C.COUNTRY
@@ -380,7 +443,14 @@
                LEFT JOIN SYS0004M bank   ON bank.BANK_ID = rps.BANK_ID
                LEFT JOIN SAL0022D custacc   ON custacc.CUST_ACC_ID = rps.CUST_ACC_ID
                LEFT JOIN SAL0028D custcrc   ON custcrc.CUST_CRC_ID = rps.CUST_CRC_ID
-        GROUP BY a.ORD_ID,a.ORD_NO,a.WOR_NO,a.CUST_NAME,a.APP_TYPE,a.CANCL_DT,a.PAY_MODE_CODE,a.PAY_MODE,a.ISSUEBANKCODE,a.ISSUEBANK,a.BANK_ACC_ID,a.BANK_ACC_NAME,a.BANKACCNO,a.CC_HOLDER_NAME,a.CC_NO,a.APPROVENO,a.REQUEST_STAGE,a.CANCELREASON,a.CANCELREASONDESC,a.REJECTID,a.INSTALL_STUS,a.OCRREMARK,a.MAILADDRESS,a.INSTADDRESS,a.PAY_TYPE,a.PAYBRANCHCODE,a.MOBILE_NO,a.HOUSENO,a.OFFICE_NO,a.ORD_REM,a.ATTACH,bank.BANK_ID,bank.NAME,custacc.CUST_ACC_NO,custcrc.CUST_CRC_OWNER,custcrc.CUST_ORI_CRC_NO
+        WHERE  NOT EXISTS (SELECT b.MTCH_ID, 
+                          SUM(b.TOT_AMT) 
+                   FROM   PAY0064D b 
+                   WHERE  a.PAY_ID = b.MTCH_ID 
+                   GROUP  BY b.MTCH_ID 
+                   HAVING SUM(b.TOT_AMT) <![CDATA[ <> ]]> a.AMT) 
+       AND WOR_NO NOT LIKE 'ROR%'
+        GROUP BY a.ORD_ID,a.ORD_NO,a.WOR_NO,a.PAY_ID,a.MTCH_ID,a.CUST_NAME,a.APP_TYPE,a.CANCL_DT,a.PAY_MODE_CODE,a.PAY_MODE,a.ISSUEBANKCODE,a.ISSUEBANK,a.BANK_ACC_ID,a.BANK_ACC_NAME,a.BANKACCNO,a.CC_HOLDER_NAME,a.CC_NO,a.APPROVENO,a.REQUEST_STAGE,a.CANCELREASON,a.CANCELREASONDESC,a.REJECTID,a.INSTALL_STUS,a.OCRREMARK,a.MAILADDRESS,a.INSTADDRESS,a.PAY_TYPE,a.PAYBRANCHCODE,a.MOBILE_NO,a.HOUSENO,a.OFFICE_NO,a.ORD_REM,a.ATTACH,bank.BANK_ID,bank.NAME,custacc.CUST_ACC_NO,custcrc.CUST_CRC_OWNER,custcrc.CUST_ORI_CRC_NO
         ORDER BY a.ORD_ID
     </select>
     

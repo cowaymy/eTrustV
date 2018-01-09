@@ -66,5 +66,7 @@ public interface CreditCardMapper {
 	List<EgovMap> selectCreditCardNoToMgmt();
 	
 	List<EgovMap> selectReimbursementItemGrp(Map<String, Object> params);
+	
+	List<EgovMap> selectReimbursementItemGrpForAppv(Map<String, Object> params);
 
 }

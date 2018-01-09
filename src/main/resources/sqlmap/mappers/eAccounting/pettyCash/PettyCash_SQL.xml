@@ -564,6 +564,9 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,EXP_DESC
         ,CLAM_UN
         ,UTIL_NO
+        ,J_PAY_NO
+        ,BIL_PERIOD_F
+        ,BIL_PERIOD_T
         ,CRT_DT
         ,CRT_USER_ID
         ,UPD_DT
@@ -593,6 +596,9 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{expDesc}
        ,#{clamUn}
        ,#{utilNo}
+       ,#{jPayNo}
+       ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -683,6 +689,9 @@ SELECT T1.CLM_SEQ,
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC,
        T1.UTIL_NO,
+       ,T1.J_PAY_NO
+       ,TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F
+       ,TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T
        T2.CRT_USER_ID,
        T5.USER_NAME 
 FROM   FCM0014D T1
@@ -739,6 +748,9 @@ SELECT T1.CLM_SEQ,
        T1.ATCH_FILE_GRP_ID, 
        T1.EXP_DESC,
        T1.UTIL_NO,
+       ,T1.J_PAY_NO
+       ,TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F
+       ,TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T
        T2.CRT_USER_ID,
        T5.USER_NAME 
 FROM   FCM0014D T1
@@ -770,6 +782,33 @@ SELECT T1.CLM_SEQ,
        T1.GST_BEFOR_AMT, 
        T1.GST_AMT, 
        T1.NON_CLM_GST_AMT, 
+       T1.TOT_AMT, 
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID
+FROM   FCM0014D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+WHERE  T1.CLM_NO = #{clmNo} 
+       AND CLAM_UN = #{clamUn}
+</select>
+
+<select id="selectExpenseItemGrpForAppv" parameterType="Map" resultType="egovMap">
+/* pettyCashMapper.selectExpenseItemGrpForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE, 
+       NVL2(T1.TAX_CODE, T2.INDUSTRY_CODE||' '||'('||T2.TAX_NAME||')', '') AS TAX_NAME, 
+       T2.TAX_RATE, 
+       'MYR' AS CUR, 
+       T1.GST_BEFOR_AMT, 
+       T1.GST_AMT, 
+       T1.NON_CLM_GST_AMT AS TAX_NON_CLM_AMT, 
        T1.TOT_AMT, 
        T1.CLAM_UN,
        T1.ATCH_FILE_GRP_ID
@@ -829,6 +868,9 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,UTIL_NO = #{utilNo}
+       ,J_PAY_NO = #{jPayNo}
+       ,BIL_PERIOD_F = TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,BIL_PERIOD_T = TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}     

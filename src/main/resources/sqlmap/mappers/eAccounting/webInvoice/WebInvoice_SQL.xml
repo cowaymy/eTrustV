@@ -164,6 +164,10 @@ SELECT   T.CLM_NO
        ,TOT_AMT
        ,APPV_PRCSS_NO
        ,UTIL_NO
+       ,KEY_IN_DT
+       ,J_PAY_NO
+       ,BIL_PERIOD_F
+       ,BIL_PERIOD_T
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -188,6 +192,10 @@ SELECT   T.CLM_NO
        ,#{totAmt}
        ,#{appvPrcssNo}
        ,#{utilNo}
+       ,TO_DATE(#{keyDate}, 'DD/MM/YYYY')
+       ,#{jPayNo}
+       ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,SYSDATE
        ,#{userId}
        ,SYSDATE
@@ -271,6 +279,10 @@ SELECT   T.CLM_NO
                    ,NVL(T1.TOT_AMT, 0) TOT_AMT
                    ,T1.APPV_PRCSS_NO
                    ,T1.UTIL_NO
+                   ,TO_CHAR(T1.KEY_IN_DT, 'DD/MM/YYYY') AS KEY_IN_DT
+                   ,T1.J_PAY_NO
+                   ,TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F
+                   ,TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T
                    ,T1.CRT_DT
                    ,T1.CRT_USER_ID
                    ,T3.USER_NAME AS CRT_USER_NAME
@@ -309,6 +321,10 @@ SELECT   T.CLM_NO
                    ,NVL(T1.TOT_AMT, 0) TOT_AMT
                    ,T1.APPV_PRCSS_NO
                    ,T1.UTIL_NO
+                   ,TO_CHAR(T1.KEY_IN_DT, 'DD/MM/YYYY') AS KEY_IN_DT
+                   ,T1.J_PAY_NO
+                   ,TO_CHAR(T1.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F
+                   ,TO_CHAR(T1.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T
                    ,T1.CRT_DT
                    ,T1.CRT_USER_ID
                    ,T3.USER_NAME AS CRT_USER_NAME
@@ -438,6 +454,10 @@ SELECT   T.CLM_NO
        ,INVC_REM = #{invcRem}
        ,TOT_AMT = #{totAmt}
        ,UTIL_NO = #{utilNo}
+       ,KEY_IN_DT = TO_DATE(#{keyDate}, 'DD/MM/YYYY')
+       ,J_PAY_NO = #{jPayNo}
+       ,BIL_PERIOD_F = TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,BIL_PERIOD_T = TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE CLM_NO = #{clmNo}       
@@ -860,9 +880,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
                       ,T3.BUDGET_CODE
                       ,T3.BUDGET_CODE_NAME
                       ,T3.TAX_CODE
-                      ,(CASE SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2)
-                      WHEN 'J1' THEN NVL2(T3.TAX_CODE, T5.INDUSTRY_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '')
-                      ELSE NVL2(T3.TAX_CODE, T3.TAX_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '') END)  AS TAX_NAME
+                      ,NVL2(T3.TAX_CODE, T5.INDUSTRY_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '')  AS TAX_NAME
                       ,'MYR'                                               AS CUR
                       ,T3.NET_AMT
                       ,T3.TAX_AMT

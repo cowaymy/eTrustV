@@ -32,5 +32,7 @@ public interface StaffClaimService {
 	void updateStaffClaimExpTotAmt(Map<String, Object> params);
 	
 	List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params);
+	
+	List<EgovMap> selectStaffClaimItemGrpForAppv(Map<String, Object> params);
 
 }

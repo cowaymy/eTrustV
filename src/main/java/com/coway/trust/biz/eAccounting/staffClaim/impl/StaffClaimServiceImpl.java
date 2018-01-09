@@ -250,6 +250,12 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 		// TODO Auto-generated method stub
 		return staffClaimMapper.selectStaffClaimItemGrp(params);
 	}
+
+	@Override
+	public List<EgovMap> selectStaffClaimItemGrpForAppv(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return staffClaimMapper.selectStaffClaimItemGrpForAppv(params);
+	}
 	
 	
 

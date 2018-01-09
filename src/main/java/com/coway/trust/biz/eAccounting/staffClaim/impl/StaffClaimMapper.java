@@ -49,5 +49,7 @@ public interface StaffClaimMapper {
 	
 	List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params);
 	
+	List<EgovMap> selectStaffClaimItemGrpForAppv(Map<String, Object> params);
+	
 	
 }

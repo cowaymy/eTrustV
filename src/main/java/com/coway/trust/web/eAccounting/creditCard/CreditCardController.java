@@ -497,7 +497,7 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		EgovMap info = creditCardService.selectReimburesementInfoForAppv(params);
-		List<EgovMap> itemGrp = creditCardService.selectReimbursementItemGrp(params);
+		List<EgovMap> itemGrp = creditCardService.selectReimbursementItemGrpForAppv(params);
 		
 		info.put("itemGrp", itemGrp);
 		

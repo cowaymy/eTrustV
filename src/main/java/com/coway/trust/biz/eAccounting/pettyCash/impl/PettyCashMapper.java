@@ -75,4 +75,6 @@ public interface PettyCashMapper {
 	
 	List<EgovMap> selectExpenseItemGrp(Map<String, Object> params);
 	
+	List<EgovMap> selectExpenseItemGrpForAppv(Map<String, Object> params);
+	
 }

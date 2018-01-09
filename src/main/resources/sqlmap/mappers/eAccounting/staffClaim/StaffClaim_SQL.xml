@@ -403,6 +403,44 @@ WHERE  T1.CLM_NO = #{clmNo}
        AND CLAM_UN = #{clamUn}
 </select>
 
+<select id="selectStaffClaimItemGrpForAppv" parameterType="Map" resultType="egovMap">
+/* staffClaimMapper.selectStaffClaimItemGrpForAppv */
+<!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
+SELECT T1.CLM_SEQ, 
+       T1.EXP_TYPE, 
+       T1.EXP_TYPE_NAME, 
+       T1.GL_ACC_CODE, 
+       T1.GL_ACC_CODE_NAME, 
+       T1.BUDGET_CODE, 
+       T1.BUDGET_CODE_NAME, 
+       T1.TAX_CODE, 
+       NVL2(T1.TAX_CODE, T2.INDUSTRY_CODE||' '||'('||T2.TAX_NAME||')', '') AS TAX_NAME, 
+       T2.TAX_RATE, 
+       'MYR' AS CUR, 
+       T1.NET_AMT AS GST_BEFOR_AMT, 
+       T1.TAX_AMT AS GST_AMT, 
+       T1.TAX_NON_CLM_AMT, 
+       T1.TOT_AMT, 
+       T1.CLAM_UN,
+       T1.ATCH_FILE_GRP_ID,
+       T3.CAR_MILAG_DT, 
+       T3.LOC_FROM, 
+       T3.LOC_TO, 
+       T3.CAR_MILAG, 
+       T3.CAR_MILAG_AMT, 
+       T3.TOLL_AMT, 
+       T3.PARKING_AMT, 
+       T3.PURPOSE,
+       T1.EXP_DESC
+FROM   FCM0020D T1 
+       LEFT JOIN FCM0007C T2 
+              ON T1.TAX_CODE = T2.TAX_CODE 
+       LEFT JOIN FCM0021D T3 
+              ON T1.CLM_NO = T3.CLM_NO AND T1.CLM_SEQ = T3.CLM_SEQ
+WHERE  T1.CLM_NO = #{clmNo} 
+       AND CLAM_UN = #{clamUn}
+</select>
+
 <select id="selectAttachList" parameterType="String" resultType="egovMap">
 /* staffClaimMapper.selectAttachList */
             SELECT T1.ATCH_FILE_GRP_ID

@@ -882,15 +882,16 @@ function fn_setStaffClaimInfo(result) {
         // TODO attachFile
         attachList = result.attachList;
         console.log(attachList);
-        console.log(attachList.length);
-        if(attachList.length > 0) {
-        	for(var i = 0; i < attachList.length; i++) {
-        		result.itemGrp[i].atchFileId = attachList[i].atchFileId;
-                result.itemGrp[i].atchFileName = attachList[i].atchFileName;
-                var str = attachList[i].atchFileName.split(".");
-                result.itemGrp[i].fileExtsn = str[1];
-                result.itemGrp[i].fileCnt = 1;
-        	}
+        if(attachList) {
+        	if(attachList.length > 0) {
+                for(var i = 0; i < attachList.length; i++) {
+                    result.itemGrp[i].atchFileId = attachList[i].atchFileId;
+                    result.itemGrp[i].atchFileName = attachList[i].atchFileName;
+                    var str = attachList[i].atchFileName.split(".");
+                    result.itemGrp[i].fileExtsn = str[1];
+                    result.itemGrp[i].fileCnt = 1;
+                }
+            }
         }
         console.log(result);
         
@@ -960,54 +961,55 @@ function fn_setStaffClaimInfo(result) {
         // TODO attachFile
         attachList = result.attachList;
         console.log(attachList);
-        console.log(attachList.length);
-        if(attachList.length > 0) {
-            $("#attachTd").html("");
-            for(var i = 0; i < attachList.length; i++) {
-                if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
-                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
-                } else {
-                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+        if(attachList) {
+        	if(attachList.length > 0) {
+                $("#attachTd").html("");
+                for(var i = 0; i < attachList.length; i++) {
+                    if(result.appvPrcssNo == null || result.appvPrcssNo == "") {
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span></div>");
+                    } else {
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                    }
                 }
+                
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            fileGrpId = attachList[i].atchFileGrpId;
+                            fileId = attachList[i].atchFileId;
+                        }
+                    }
+                    fn_atchViewDown(fileGrpId, fileId);
+                });
+                // 파일 수정
+                $("#form_newStaffClaim :file").change(function() {
+                    var div = $(this).parents(".auto_file2");
+                    var oriFileName = div.find(":text").val();
+                    console.log(oriFileName);
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            update.push(attachList[i].atchFileId);
+                            console.log(JSON.stringify(update));
+                        }
+                    }
+                });
+                // 파일 삭제
+                $(".auto_file2 a:contains('Delete')").click(function() {
+                    var div = $(this).parents(".auto_file2");
+                    var oriFileName = div.find(":text").val();
+                    console.log(oriFileName);   
+                    for(var i = 0; i < attachList.length; i++) {
+                        if(attachList[i].atchFileName == oriFileName) {
+                            remove.push(attachList[i].atchFileId);
+                            console.log(JSON.stringify(remove));
+                        }
+                    }
+                });
             }
-            
-            // 파일 다운
-            $(".input_text").dblclick(function() {
-                var oriFileName = $(this).val();
-                var fileGrpId;
-                var fileId;
-                for(var i = 0; i < attachList.length; i++) {
-                    if(attachList[i].atchFileName == oriFileName) {
-                        fileGrpId = attachList[i].atchFileGrpId;
-                        fileId = attachList[i].atchFileId;
-                    }
-                }
-                fn_atchViewDown(fileGrpId, fileId);
-            });
-            // 파일 수정
-            $("#form_newStaffClaim :file").change(function() {
-                var div = $(this).parents(".auto_file2");
-                var oriFileName = div.find(":text").val();
-                console.log(oriFileName);
-                for(var i = 0; i < attachList.length; i++) {
-                    if(attachList[i].atchFileName == oriFileName) {
-                        update.push(attachList[i].atchFileId);
-                        console.log(JSON.stringify(update));
-                    }
-                }
-            });
-            // 파일 삭제
-            $(".auto_file2 a:contains('Delete')").click(function() {
-                var div = $(this).parents(".auto_file2");
-                var oriFileName = div.find(":text").val();
-                console.log(oriFileName);   
-                for(var i = 0; i < attachList.length; i++) {
-                    if(attachList[i].atchFileName == oriFileName) {
-                        remove.push(attachList[i].atchFileId);
-                        console.log(JSON.stringify(remove));
-                    }
-                }
-            });
         }
     }
 }
@@ -1273,7 +1275,18 @@ function fn_mileageGridSetEvent() {
                 result = oriCarMilag * 0.5;
             } else {
             	if(totCarMilag == 0) {
-            		result = oriCarMilag * 0.7;
+            		if((totCarMilag + oriCarMilag) > 600) {
+                        reCarMilag = 600 - totCarMilag;
+                        if(oriCarMilag > reCarMilag) {
+                            oriCarMilag = oriCarMilag - reCarMilag;
+                            result = (oriCarMilag * 0.5) + (reCarMilag * 0.7);
+                        } else {
+                            oriCarMilag = reCarMilag - oriCarMilag;
+                            result = (oriCarMilag * 0.5) + (reCarMilag * 0.7);
+                        }
+                    } else {
+                        result = oriCarMilag * 0.7;
+                    }
             	} else {
             		if((totCarMilag + oriCarMilag) > 600) {
             			reCarMilag = 600 - totCarMilag;

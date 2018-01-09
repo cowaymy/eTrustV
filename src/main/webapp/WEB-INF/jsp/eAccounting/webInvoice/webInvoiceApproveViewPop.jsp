@@ -127,10 +127,10 @@ var mGridColumnLayout = [ {
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "taxCode",
-    headerText : '<spring:message code="newWebInvoice.taxCode" />'
+    visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "taxName",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
+    headerText : '<spring:message code="newWebInvoice.taxCode" />'
 }, {
     dataField : "taxRate",
     dataType: "numeric",
@@ -409,59 +409,77 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
     	console.log(result.data);
     	
     	console.log("expGrp : " + result.data.expGrp);
-    	if(result.data.expGrp == "0") {
-    		$("#noMileage").show();
-    		
-    		fn_destroyMileageGrid();
-    		fn_createMGrid(result.data.itemGrp);
-    		
-            $("#supplirName").text(result.supplirName);
-            $("#invcType").text(result.invcType);
-            $("#invcNo").text(result.invcNo);
-            $("#gstRgistNo").text(result.gstRgistNo);
-            $("#expDesc").text(result.expDesc);
-    		
-    		// TODO attachFile
+    	if(result.data.expGrp == "1") {
+    		$("#noMileage").hide();
+            
+            fn_destroyMGrid();
+            fn_createMileageAUIGrid(result.data.itemGrp);
+            
+            // TODO attachFile
             attachList = result.data.attachList;
             console.log(attachList);
-            console.log(attachList.length);
-            if(attachList.length > 0) {
-                $("#attachTd").html("");
-                for(var i = 0; i < attachList.length; i++) {
-                	$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
-                }
-                
-                // 파일 다운
-                $(".input_text").dblclick(function() {
-                    var oriFileName = $(this).val();
-                    var fileGrpId;
-                    var fileId;
+            if(attachList) {
+            	if(attachList.length > 0) {
                     for(var i = 0; i < attachList.length; i++) {
-                        if(attachList[i].atchFileName == oriFileName) {
-                            fileGrpId = attachList[i].atchFileGrpId;
-                            fileId = attachList[i].atchFileId;
-                        }
+                        result.data.itemGrp[i].atchFileId = attachList[i].atchFileId;
+                        result.data.itemGrp[i].atchFileName = attachList[i].atchFileName;
+                        var str = attachList[i].atchFileName.split(".");
+                        result.data.itemGrp[i].fileExtsn = str[1];
+                        result.data.itemGrp[i].fileCnt = 1;
                     }
-                    fn_atchViewDown(fileGrpId, fileId);
-                });
+                }
             }
     	} else {
-    		$("#noMileage").hide();
+    		$("#noMileage").show();
     		
-    		fn_destroyMGrid();
-    		fn_createMileageAUIGrid(result.data.itemGrp);
-    		
-    		// TODO attachFile
+    		if(clmType == "J1") {
+    			$("#supplirTh").html('');
+                $("#supplirTd").text("");
+                $("#payInfo1").show();
+                $("#payInfo2").show();
+                mGridColumnLayout[4].visible = false;
+            } else if(clmType == "J2") {
+            	$("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
+            	$("#supplirTd").text(result.data.supplirName);
+            	$("#payInfo1").show();
+                $("#payInfo2").show();
+            } else {
+            	$("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
+                $("#supplirTd").text(result.data.supplirName);
+                $("#payInfo1").hide();
+                $("#payInfo2").hide();
+            }
+            $("#invcType").text(result.data.invcType);
+            $("#invcNo").text(result.data.invcNo);
+            $("#gstRgistNo").text(result.data.gstRgistNo);
+            $("#expDesc").text(result.data.expDesc);
+            
+            fn_destroyMileageGrid();
+            fn_createMGrid(result.data.itemGrp);
+            
+            // TODO attachFile
             attachList = result.data.attachList;
             console.log(attachList);
-            console.log(attachList.length);
-            if(attachList.length > 0) {
-                for(var i = 0; i < attachList.length; i++) {
-                    result.data.itemGrp[i].atchFileId = attachList[i].atchFileId;
-                    result.data.itemGrp[i].atchFileName = attachList[i].atchFileName;
-                    var str = attachList[i].atchFileName.split(".");
-                    result.data.itemGrp[i].fileExtsn = str[1];
-                    result.data.itemGrp[i].fileCnt = 1;
+            if(attachList) {
+            	if(attachList.length > 0) {
+                    $("#attachTd").html("");
+                    for(var i = 0; i < attachList.length; i++) {
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                    }
+                    
+                    // 파일 다운
+                    $(".input_text").dblclick(function() {
+                        var oriFileName = $(this).val();
+                        var fileGrpId;
+                        var fileId;
+                        for(var i = 0; i < attachList.length; i++) {
+                            if(attachList[i].atchFileName == oriFileName) {
+                                fileGrpId = attachList[i].atchFileGrpId;
+                                fileId = attachList[i].atchFileId;
+                            }
+                        }
+                        fn_atchViewDown(fileGrpId, fileId);
+                    });
                 }
             }
     	}
@@ -483,7 +501,7 @@ function fn_createMileageAUIGrid(gridData) {
     // 실제로 #grid_wrap 에 그리드 생성
     mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
     // AUIGrid 에 데이터 삽입합니다.
-    AUIGrid.setGridData("#mileage_grid_wrap", gridData);
+    AUIGrid.setGridData(mileageGridID, gridData);
 }
 
 // 그리드를 제거합니다.
@@ -506,7 +524,7 @@ function fn_createMGrid(gridData) {
     // 실제로 #grid_wrap 에 그리드 생성
     mGridID = AUIGrid.create("#mGrid_wrap", mGridColumnLayout, mGridPros);
     // AUIGrid 에 데이터 삽입합니다.
-    AUIGrid.setGridData("#mGrid_wrap", gridData);
+    AUIGrid.setGridData(mGridID, gridData);
     
     //fn_myGridSetEvent();
 }
@@ -611,16 +629,28 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
-    <td id="supplirName"></td>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td id="gstRgistNo"></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
-    <td id="invcType"></td>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td id="invcNo"></td>
+    <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
+    <td id="invcType"></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
+    <td id="gstRgistNo"></td>
+    <th scope="row" id="supplirTh"></th>
+    <td id="supplirTd"></td>
+</tr>
+<tr id="payInfo1">
+    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
+    <td id="utilNo"></td>
+    <th scope="row">Billing Period</th>
+    <td id="bilPeriod"></td>
+</tr>
+<tr id="payInfo2" style="display: none;">
+    <th scope="row">JomPAY No</th>
+    <td id="jPayNo"></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="newWebInvoice.attachment" /></th>
