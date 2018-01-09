@@ -140,7 +140,7 @@ function fn_save(){
 
     Common.ajax("POST", "/sales/mPackages/insertPackage.do", saveForm, function(result) {
         
-           Common.alert("Product Item Saved "+DEFAULT_DELIMITER + "<b>Product item successfully saved.</b>");
+           Common.alert("<spring:message code="sal.alert.title.productItemSaved" /> "+DEFAULT_DELIMITER + "<b><spring:message code="sal.alert.msg.productItemSaved" /></b>");
            fn_DisableField();
 
            fn_selectDetailListAjax( '1');
@@ -149,7 +149,7 @@ function fn_save(){
            console.log("실패하였습니다.");
            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
            
-           Common.alert("Failed To Save "+DEFAULT_DELIMITER + "<b>Failed to save.Please try again later.</b>");
+           Common.alert("<spring:message code="sal.alert.title.saveFail" /> "+DEFAULT_DELIMITER + "<b><spring:message code="sal.alert.msg.saveFail" /></b>");
 
            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
            
@@ -169,17 +169,17 @@ function fn_ValidRequiredField_Master(){
 	if($('select[name="packcode"]').val()  ==""){
 	
 		  valid = false;
-	      message += "* Please key select a product item. <br />";
+	      message += "* <spring:message code="sal.alert.msg.productItemAdd" /> <br />";
 	}
 	
 	if($("#srvPacItmRental").val() ==""){
 		 valid = false;
-	        message += "* Please key in the monthly rental fee. <br />";
+	        message += "* <spring:message code="sal.alert.msg.keyInRentalFee" /> <br />";
 	}  
 	
     if($("#srvPacItmSvcFreq").val() ==""){
     	  valid = false;
-          message += "* Please key in the service frequency <br />";
+          message += "* <spring:message code="sal.alert.msg.keyInServiceFrequency" /> <br />";
     }  
     
     if("${modType}" ==  "ADD"){
@@ -189,14 +189,14 @@ function fn_ValidRequiredField_Master(){
             
             if($("#packcode").val() == AUIGrid.getCellValue(detailGridID, i, "srvPacItmProductId") ){
                 valid = false;
-                message+="* It is already registered contents.";
+                message+="* <spring:message code="sal.alert.msg.alreadyRegisteredContents" />";
                 break;
             }
         }
     }
     
     if (!valid)
-        Common.alert("Add Package  "+DEFAULT_DELIMITER + message);
+        Common.alert("<spring:message code="sal.alert.title.addPack" /> "+DEFAULT_DELIMITER + message);
 
     
     return valid;
@@ -267,9 +267,9 @@ function fn_DisableField(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT  PRODUCT ITEM </h1>
+<h1><spring:message code="sal.page.title.editProductItem" /> </h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -278,7 +278,7 @@ function fn_DisableField(){
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
 	
-	<li><a href="#">Product Infomation</a></li>
+	<li><a href="#"><spring:message code="sal.tap.tilte.productInfo" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -296,7 +296,7 @@ function fn_DisableField(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Product Item<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.productItem" /><span class="must">*</span></th>
 	<td> 
      <c:if test="${modType eq 'EDIT' }">
        <select class="w100p disabled"   disabled ="disabled"  id='packcode' name='packcode'    > </select>
@@ -305,25 +305,25 @@ function fn_DisableField(){
         <select class="w100p " id='packcode' name='packcode' > </select>
      </c:if>
     </td>    
-	<th scope="row">Monthly Rental <span class="must">*</span></th>
-	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Monthly Rental" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
+	<th scope="row"><spring:message code="sal.text.monthlyRental" /> <span class="must">*</span></th>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="<spring:message code="sal.text.monthlyRental" />" class="w100p" id="srvPacItmRental"  name="srvPacItmRental"/></td>
 </tr>
 <tr>
-	<th scope="row">Service Frequency <span class="must">*</span></th>
-	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="Service Frequency" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
-	<th scope="row">Package Type <span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.serviceFrequency" /> <span class="must">*</span></th>
+	<td><input type="text" onkeydown="javascript: numberCheck(this.event);" title="" placeholder="<spring:message code="sal.text.serviceFrequency" />" class=""  id="srvPacItmSvcFreq"  name="srvPacItmSvcFreq" /></td>
+	<th scope="row"><spring:message code="sal.text.packType" /> <span class="must">*</span></th>
     <td>    
     <select class="w40p disabled"  id='pacType' name ='pacType'  disabled ="disabled" >
     </select>
     </td> 
 </tr>
 <tr>
-	<th scope="row">DISCONTINUE<span class="must"></span></th>
+	<th scope="row"><spring:message code="sal.text.DISCONTINUE" /><span class="must"></span></th>
 	<td colspan="3"><input type="checkbox"  id="discontinue"  name="discontinue" onclick="fn_chk()"/></td>
 </tr>
 <tr>
-    <th scope="row">Remark </th>
-    <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
+    <th scope="row"><spring:message code="sal.text.remark" /> </th>
+    <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="<spring:message code="sal.text.remark" />" name='remark'></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -332,7 +332,7 @@ function fn_DisableField(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_save()">Save</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_save()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </article><!-- tap_area end -->

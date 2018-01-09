@@ -113,7 +113,7 @@ function fn_addRow() {
     AUIGrid.forceEditingComplete(newGridID, null, false);
 	 
 	if($('select[name="packcode"]').val() ==""){
-        Common.alert("Product Item ADD "+DEFAULT_DELIMITER + "<b>Please key select a product item. <br/>");
+        Common.alert("<spring:message code="sal.alert.title.productItemAdd" /> "+DEFAULT_DELIMITER + "<b><spring:message code="sal.alert.msg.productItemAdd" /><br/>");
 		return ;
 	}
 	 
@@ -150,7 +150,7 @@ function fn_addRow() {
     	 
           AUIGrid.addRow(newGridID, item, "first");
     }else{
-        Common.alert("<b>This product item is exist in list. </b>");
+        Common.alert("<b><spring:message code="sal.alert.msg.existProductItem" /></b>");
         return ;
     }
     
@@ -184,9 +184,9 @@ function createAUIGrid() {
         
         var columnLayout = [ 
                             {dataField : "rowId", dataType : "string", visible : false},     /* PK , rowid 용 칼럼*/
-                            {dataField : "stkId",     headerText  : "ID" ,editable       : false ,visible : true, editable : false } ,
-                            { dataField : "stkDesc", headerText  : "Product Name",    width : 200 ,editable : false},
-                            { dataField : "code",   headerText  : "Status",  width          : 100,   editable       : true
+                            {dataField : "stkId",     headerText  : "<spring:message code="sal.title.id" />" ,editable       : false ,visible : true, editable : false } ,
+                            { dataField : "stkDesc", headerText  : "<spring:message code="sal.title.productName" />",    width : 200 ,editable : false},
+                            { dataField : "code",   headerText  : "<spring:message code="sal.title.status" />",  width          : 100,   editable       : true
 			                                , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
 			                                 var retStr = "";
 			                                 for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -205,7 +205,7 @@ function createAUIGrid() {
 			                         }
 			                }, {
                                 dataField : "discontinue",
-                                headerText : 'DISCONTINUE',
+                                headerText : '<spring:message code="sal.title.DISCONTINUE" />',
                                 width : 120,
                                 renderer : {            
                                     type : "CheckBoxEditRenderer",
@@ -216,7 +216,7 @@ function createAUIGrid() {
                               } 
                             },   
                             
-                            { dataField : "srvItemPrice", headerText  : "Item Price",width : 100 ,editable       : true , dataType:"numeric", formatString : "#,##0.00",
+                            { dataField : "srvItemPrice", headerText  : "<spring:message code="sal.title.itemPrice" />",width : 100 ,editable       : true , dataType:"numeric", formatString : "#,##0.00",
                             	editRenderer : {
                                     type : "InputEditRenderer",
                                     onlyNumeric : true,
@@ -224,14 +224,14 @@ function createAUIGrid() {
                                     allowPoint : true // 소수점(.) 입력 가능 설정
                                 }	
                             },
-                            { dataField : "srvItemPeriod",       headerText  : "Service Frequency",  width  : 150  ,editable       : true ,dataType:"numeric",
+                            { dataField : "srvItemPeriod",       headerText  : "<spring:message code="sal.title.serviceFrequency" />",  width  : 150  ,editable       : true ,dataType:"numeric",
                             	editRenderer : {
                                     type : "InputEditRenderer",
                                     onlyNumeric : true,
                                     autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
                                 }
                             },
-                            { dataField : "srvRemark",     headerText  : "Remark",  width          :300,    editable       : true}
+                            { dataField : "srvRemark",     headerText  : "<spring:message code="sal.title.remark" />",  width          :300,    editable       : true}
        ];
 
         var gridPros = { usePaging : false,  pageRowCount: 20, editable: true, fixedColumnCount : 1,  showRowNumColumn : true, softRemovePolicy : "exceptNew" };  
@@ -327,12 +327,12 @@ function createFilterAUIGrid() {
         { dataField : "srvPacId", headerText  : "",  width : 50,  editable : false, visible : false},
         { dataField : "srvItmStkId", headerText  : "",  width : 50,  editable : false, visible : false},
         { dataField : "bom", headerText  : "",  width : 50,  editable : false, visible : false},
-        { dataField : "productName", headerText  : "Product Name",  width : 150,  editable : false},
-        { dataField : "bomCompnt", headerText  : "Filter Code",   width : 150,  editable : false},
-        { dataField : "bomCompntDesc", headerText  : "Filter Name",       width : 280,  editable : false , style :"my-left-style" },
-        { dataField : "compntQty", headerText  : "BOM QTY",    width : 80,  editable : false},
-        { dataField : "leadTmOffset", headerText  : "BOM Period",    width : 110,  editable: false},
-        { dataField : "changePreiod", headerText  : "Change Period",  width : 110,  editable : true}
+        { dataField : "productName", headerText  : "<spring:message code="sal.title.productName" />",  width : 150,  editable : false},
+        { dataField : "bomCompnt", headerText  : "<spring:message code="sal.title.filterCode" />",   width : 150,  editable : false},
+        { dataField : "bomCompntDesc", headerText  : "<spring:message code="sal.title.filterName" />",       width : 280,  editable : false , style :"my-left-style" },
+        { dataField : "compntQty", headerText  : "<spring:message code="sal.title.bomQty" />",    width : 80,  editable : false},
+        { dataField : "leadTmOffset", headerText  : "<spring:message code="sal.title.bomPeriod" />",    width : 110,  editable: false},
+        { dataField : "changePreiod", headerText  : "<spring:message code="sal.title.changePeriod" />",  width : 110,  editable : true}
    ];
   
     var gridPros = { usePaging : false,  editable: true,  showRowNumColumn : true};  
@@ -417,13 +417,13 @@ function fn_Save(){
         console.log(result);
         
         if(result !=""  && null !=result ){
-            Common.alert( "New General Code Saved" +DEFAULT_DELIMITER+"<b>New general code successfully saved.</b>"); 
+            Common.alert( "<spring:message code="sal.alert.title.newGenCodeSaved" />" +DEFAULT_DELIMITER+"<b><spring:message code="sal.alert.msg.newGenCodeSaved" /></b>"); 
 
             fn_selectListAjax();
             $("#_NewAddDiv1").remove();
             return true;
         }else{
-            Common.alert( "Failed To Save" +DEFAULT_DELIMITER+"<b>Failed to save.Please try again later.</b>"); 
+            Common.alert( "<spring:message code="sal.alert.title.saveFail" />" +DEFAULT_DELIMITER+"<b><spring:message code="sal.alert.msg.saveFail" /></b>"); 
 
         	return false;
         }
@@ -441,25 +441,25 @@ function fn_ValidRequiredField_Master(){
     
     if($('#txtServCode').val() ==""){
     	  valid = false;
-          message += "* Please key in the package code. <br />";
+          message += "<spring:message code="sal.alert.msg.keyInPackageCode" /><br />";
           
     }else{
     	
     	if(fn_IsExistSVMContractPackCode()){
     		valid = false;
-            message += "* This package code is existing. <br />";
+            message += "<spring:message code="sal.alert.msg.existPackCode" /><br />";
     	}
     }
     
     
    if($('#txtServDesc').val() ==""){
         valid = false;
-        message += "* Please key in the package description.  <br />";
+        message += "<spring:message code="sal.alert.msg.keyInPackDesc" />  <br />";
   }
   
   if($('#txtDuration').val() ==""){
        valid = false;
-       message += "* Please key in the package duration. <br />";
+       message += "<spring:message code="sal.alert.msg.KeyInPackDur" /> <br />";
   }
    
   var addedRowItems = AUIGrid.getAddedRowItems(newGridID);
@@ -469,11 +469,11 @@ function fn_ValidRequiredField_Master(){
   
   if (addedRowItems.length  ==0 &&  editedRowItems.length ==0 && removedRowItems.length ==0  ){
 	  valid = false;
-      message += "* You must add at least 1 product item. <br />";
+      message += "<spring:message code="sal.alert.msg.mustAddProduct" /><br />";
   }
   
   if (!valid)
-      Common.alert(" Add Package "+DEFAULT_DELIMITER + message );
+      Common.alert("<spring:message code="sal.alert.title.addPack" />"+DEFAULT_DELIMITER + message );
   
   return valid;
 }
@@ -520,16 +520,16 @@ function fn_filterNewAjax() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Add Package</h1>
+<h1><spring:message code="sal.page.title.addPack" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Package Information</h2>
+<h2><spring:message code="sal.page.subTitle.packInfo" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -552,22 +552,22 @@ function fn_filterNewAjax() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Package Code<span class="must">*</span></th>
-	<td><input type="text" title="" id='txtServCode' maxlength="12"   name='txtServCode'  placeholder="Package Code" class="w100p" /></td>
-	<th scope="row">Package Duration<span class="must">*</span></th>
-	<td><input type="text" title="" placeholder="Package Duration" id='txtDuration' name='txtDuration'   class="w100p" /></td>
+	<th scope="row"><spring:message code="sal.text.packCode" /><span class="must">*</span></th>
+	<td><input type="text" title="" id='txtServCode' maxlength="12"   name='txtServCode'  placeholder="<spring:message code="sal.text.packCode" />" class="w100p" /></td>
+	<th scope="row"><spring:message code="sal.text.packDuration" /><span class="must">*</span></th>
+	<td><input type="text" title="" placeholder="<spring:message code="sal.text.packDuration" />" id='txtDuration' name='txtDuration'   class="w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Package Description<span class="must">*</span></th>
-	<td colspan="3"><input type="text" title="" placeholder="Package Description" id='txtServDesc' name='txtServDesc' style="width: 284px" /></td>
+	<th scope="row"><spring:message code="sal.text.packDesc" /><span class="must">*</span></th>
+	<td colspan="3"><input type="text" title="" placeholder="<spring:message code="sal.text.packDesc" />" id='txtServDesc' name='txtServDesc' style="width: 284px" /></td>
 </tr>
 <tr>
-<th scope="row">Package Type<span class="must">*</span></th>
+<th scope="row"><spring:message code="sal.text.packType" /><span class="must">*</span></th>
     <td>
     <select class="w100p"  id='pacType' name ='pacType'  onchange="javascript:fn_chnPacType();">
     </select>
     </td>
-	<th scope="row">Free Membership</th>
+	<th scope="row"><spring:message code="sal.text.freeMembership" /></th>
 	<td >
 	<select class="w100p"  id='freeMemUse' name ='freeMemUse'  >
 	<option value="0" selected="selected">No</option>
@@ -582,7 +582,7 @@ function fn_filterNewAjax() {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Product Information</h2>
+<h2><spring:message code="sal.page.subTitle.productInfo" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -597,13 +597,13 @@ function fn_filterNewAjax() {
 <tbody>
 
 <tr>
-    <th scope="row">Product Item<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.productItem" /><span class="must">*</span></th>
     <td colspan="3">
     
     <select class=""  id='packcode' name ='packcode' >
     </select>
     
-    <p class="btn_sky ml5"><a href="#" onclick="javascript:fn_addRow()">Add Details</a></p></td>
+    <p class="btn_sky ml5"><a href="#" onclick="javascript:fn_addRow()"><spring:message code="sal.btn.addDetails" /></a></p></td>
 </tr>
 
 
@@ -616,7 +616,7 @@ function fn_filterNewAjax() {
 <section class="search_result mt10"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_removeRow()">DEL</a></p></li>
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_removeRow()"><spring:message code="sal.btn.del" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -631,7 +631,7 @@ function fn_filterNewAjax() {
 </section><!-- search_result end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Save()">Save</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Save()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

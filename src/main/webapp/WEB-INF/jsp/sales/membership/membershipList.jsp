@@ -283,6 +283,17 @@ function fn_clear(){
 	$("#MBRSH_CRT_DT").val("");
 	$("#MBRSH_CRT_USER_ID").val("");
 	$("#MBRSH_OTSTND").val("");
+	
+	   $("text").each(function(){
+	        
+	        if($(this).hasClass("readonly")){           
+	        }else{
+	            $(this).val("");
+	        }
+	    });
+
+	    $("#MBRSH_STUS_ID").multipleSelect("uncheckAll");
+	
 }
 
 	
