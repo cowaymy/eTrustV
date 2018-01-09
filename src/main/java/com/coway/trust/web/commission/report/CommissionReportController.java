@@ -610,6 +610,8 @@ public class CommissionReportController {
 		int sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
 		
 		params.put("taskId", sTaskID);
+		params.put("pvMonth", pvMonth);
+		params.put("pvYear", pvYear);
 		
 		List<EgovMap> rawList = null;
 		

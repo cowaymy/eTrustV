@@ -826,9 +826,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
     	
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
     	
-    	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
+		String dt = CommonUtils.getCalMonth(-1);
+		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
 		
-		int pvMonth = Integer.parseInt(dt.substring(0,2))-1;
+		int pvMonth = Integer.parseInt(dt.substring(0,2));
 		int pvYear = Integer.parseInt(dt.substring(3));
 		
 		Map<String, Object> delMap = new HashMap<String, Object>();

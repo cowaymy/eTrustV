@@ -175,6 +175,7 @@
 			    else 'GCM' 
 			    end) AS RANK ,
 			t5.NRIC as NRIC ,
+			t0.EMPLY_STUS_CODE STUS,
 			
 			T1.A_CRD_SUM_POINT ,
 			T1.A_HAPPYCALL_RATE,
@@ -197,6 +198,7 @@
 			T1.A_COLLECT_AMT,
 			T1.A_MEMBERSHIP_AMT,
 			T1.A_PE_AMT,
+			T1.A_PE_MARK,
 			T1.A_HEALTHY_FAMILY_AMT,
 			T1.A_NEWCODY_AMT,
 			T1.A_MONTHLY_ALLOWANCE,
@@ -241,6 +243,7 @@
 			T2.S_COLLECT_AMT,
 			T2.S_MEMBERSHIP_AMT,
 			T2.S_PE_AMT,
+			T2.S_PE_MARK,
 			T2.S_HEALTHY_FAMILY_AMT,
 			T2.S_NEWCODY_AMT,
 			T2.S_MONTHLY_ALLOWANCE,
@@ -293,6 +296,7 @@
 					    else 0 end) as A_Drop_Rate,
 					(case when t1.EMPLY_LEV>4 then t4.v13
 					    else 0 end) as A_Drop_mark,
+				    (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) A_PE_MARK,
 					    
 					t0.R1 as A_PER_AMT,
 					(t0.R2 + t0.R3+t0.R18 + t0.R19 + t0.R21 + t0.R22) as A_SALES_AMT,
@@ -379,6 +383,7 @@
                             else 0 end) as S_Drop_Rate,
                         (case when t1.EMPLY_LEV>4 then t4.v13
                             else 0 end) as S_Drop_mark,
+                        (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) S_PE_MARK,
                             
                         t0.R1 as S_PER_AMT,
                         (t0.R2 + t0.R3+t0.R18 + t0.R19 + t0.R21 + t0.R22) as S_SALES_AMT,
@@ -453,6 +458,10 @@
                         when t0.EMPLY_LEV=2 then 'SCM'
                         else 'GCM'  end) AS RANK ,
             t5.NRIC as NRIC ,
+            t0.EMPLY_STUS_CODE STUS,
+            T6.LAST_DEPT_CODE,
+            T6.LAST_GRP_CODE,
+            T6.LAST_ORG_CODE, 
             
             t1.A_HAPPYCALL_RATE,
             t1.A_HAPPYCALL_MARK,
@@ -461,11 +470,13 @@
             t1.A_RC_RATE,
             t1.A_RC_MARK,
             t1.A_REJOIN_MARK,
+            t1.A_REJOIN_RATE,
             t1.A_GROUP_SALES_PRODUCT,
             t1.A_GROUP_SALES_PRODUCT_MARK,
             t1.A_DROP_RATE,
             t1.A_DROP_MARK,
             t1.A_BS_PRODUCTIVITY_MARK,
+            t1.A_BS_PRODUCTIVITY_RATE,
             
             t1.A_BASIC_SALARY,
             t1.A_SALES_AMT,
@@ -486,6 +497,7 @@
             t1.A_OUTPLS_AMT, 
             t1.A_AMOUNT,
             T1.A_POS_DEDUCTION,
+            T1.A_PE_MARK,
             
             --t2.S_MEM_CODE , 
             --t2.S_MEM_NAME , 
@@ -499,11 +511,13 @@
             t2.S_RC_RATE,
             t2.S_RC_MARK,
             t2.S_REJOIN_MARK,
+            t2.S_REJOIN_RATE,
             t2.S_GROUP_SALES_PRODUCT,
             t2.S_GROUP_SALES_PRODUCT_MARK,
             t2.S_DROP_RATE,
             t2.S_DROP_MARK,
             t2.S_BS_PRODUCTIVITY_MARK,
+            t2.S_BS_PRODUCTIVITY_RATE,
             
             t2.S_BASIC_SALARY,
             t2.S_SALES_AMT,
@@ -523,11 +537,16 @@
             t2.S_RENTALMEMBERSHIP_AMT,
             t2.S_OUTPLS_AMT,
             t2.S_AMOUNT,
-            T2.S_POS_DEDUCTION
+            T2.S_POS_DEDUCTION,
+            T2.S_PE_MARK
         FROM CMM0006T T0 JOIN ORG0001D T5 
-	        ON T0.EMPLY_ID=T5.MEM_ID 
-	             AND T0.EMPLY_TYPE_ID=T5.MEM_TYPE
-	             AND T0.EMPLY_TYPE_ID=2
+		        ON T0.EMPLY_ID=T5.MEM_ID 
+		             AND T0.EMPLY_TYPE_ID=T5.MEM_TYPE
+		             AND T0.EMPLY_TYPE_ID=2
+            LEFT OUTER JOIN ORG0006D T6
+                ON  T0.EMPLY_ID=T6.MEM_ID
+                AND T6.HIST_YEAR=#{pvYear}
+                AND T6.HIST_MONTH=#{pvMonth}
             LEFT JOIN(
                 SELECT 
                         T0.TASK_ID,
@@ -546,6 +565,9 @@
 	                    t4.v12 A_DROP_RATE,
 	                    t4.v13 A_DROP_MARK,
 	                    t4.v30 A_BS_PRODUCTIVITY_MARK,
+	                    (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) A_PE_MARK,
+	                    t4.v31 A_REJOIN_RATE,
+	                    t4.v29 A_BS_PRODUCTIVITY_RATE,
 	                    
 	                    (t0.R20 + t0.R1) as A_BASIC_SALARY,
 	                    (t0.R2 + t0.R3 +t0.R18 + t0.R19 + t0.R21+ t0.R22) as A_SALES_AMT,
@@ -609,6 +631,9 @@
                         t4.v12 S_DROP_RATE,
                         t4.v13 S_DROP_MARK,
                         t4.v30 S_BS_PRODUCTIVITY_MARK,
+                        (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) S_PE_MARK,
+                        t4.v31 S_REJOIN_RATE,
+                        t4.v29 S_BS_PRODUCTIVITY_RATE,
                         
                         (t0.R20 + t0.R1) as S_BASIC_SALARY,
                         (t0.R2 + t0.R3 +t0.R18 + t0.R19 + t0.R21+ t0.R22) as S_SALES_AMT,

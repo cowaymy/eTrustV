@@ -969,51 +969,51 @@ public class CommissionExcelDownloadController {
 					}
 					map.put("level", CommissionConstants.COMIS_CD_CD_LEV);
 					if(actionType.equals("A")){
-						columns = new String[] { "memCode","memName","rank","nric",
+						columns = new String[] { "memCode","memName","rank","nric","stus",
 								"aCrdSumPoint","aHappycallRate","aHappycallMark",	"aHsRate","aHsMark",
 								"aRcRate","aRcMark","aNsRate","aNsMark","aOutplsAmt",
 								"aDropRate","aDropMark","aPerAmt","aSalesAmt","aBonusAmt",
-								"aCollectAmt","aMembershipAmt","aPeAmt","aHealthyFamilyAmt","aNewcodyAmt",
+								"aCollectAmt","aMembershipAmt","aPeAmt","aPeMark","aHealthyFamilyAmt","aNewcodyAmt",
 								"aIntroductionFees","aMobilePhone","aStaffPurchase","aTelephoneDeduct","aIncentive",
 								"aAdj","aCodyRegistrationFees","aShiAmt","aRentalmembershipAmt","aShiRentalmembershipAmt","aAmount"};
-						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
+						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC","STUS",
 								"CRD SUM POINT","HAPPYCALL RATE","HAPPYCALL MARK",	"HS RATE","HS MARK",
 								"RC RATE","RC MARK","NS RATE","NS MARK","OUTPLS AMT",
 								"DROP RATE","DROP MARK","PER AMT","SALES AMT","BONUS AMT",
-								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","HEALTHY FAMILY AMT","NEWCODY AMT",
+								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","PE MARK","HEALTHY FAMILY AMT","NEWCODY AMT",
 								"INTRODUCTION FEES","MOBILE PHONE","STAFF PURCHASE","TELEPHONE DEDUCT","INCENTIVE",
 								"ADJ","CODY REGISTRATION FEES","SHI AMT","RENTALMEMBERSHIP AMT","SHI RENTALMEMBERSHIP AMT" ,"Grand Total"};
 						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 					}else if(actionType.equals("S")){
-						columns = new String[] { "memCode","memName","rank","nric",
+						columns = new String[] { "memCode","memName","rank","nric","stus",
 								"sCrdSumPoint","sHappycallRate","sHappycallMark",	"sHsRate","sHsMark",
 								"sRcRate","sRcMark","sNsRate","sNsMark","sOutplsAmt",
 								"sDropRate","sDropMark","sPerAmt","sSalesAmt","sBonusAmt",
-								"sCollectAmt","sMembershipAmt","sPeAmt","sHealthyFamilyAmt","sNewcodyAmt",
+								"sCollectAmt","sMembershipAmt","sPeAmt","sPeMark","sHealthyFamilyAmt","sNewcodyAmt",
 								"sIntroductionFees","sMobilePhone","sStaffPurchase","sTelephoneDeduct","sIncentive",
 								"sAdj","sCodyRegistrationFees","sShiAmt","sRentalmembershipAmt","sShiRentalmembershipAmt","sAmount"};
-						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
+						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC","STUS",
 								"CRD SUM POINT","HAPPYCALL RATE","HAPPYCALL MARK",	"HS RATE","HS MARK",
 								"RC RATE","RC MARK","NS RATE","NS MARK","OUTPLS AMT",
 								"DROP RATE","DROP MARK","PER AMT","SALES AMT","BONUS AMT",
-								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","HEALTHY FAMILY AMT","NEWCODY AMT",
+								"COLLECT AMT","MEMBERSHIP AMT","PE AMT","PE MARK","HEALTHY FAMILY AMT","NEWCODY AMT",
 								"INTRODUCTION FEES","MOBILE PHONE","STAFF PURCHASE","TELEPHONE DEDUCT","INCENTIVE",
 								"ADJ","CODY REGISTRATION FEES","SHI AMT","RENTALMEMBERSHIP AMT","SHI RENTALMEMBERSHIP AMT" ,"Grand Total"};
 						downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 					}else if(actionType.equals("C")){
-						columns = new String[] { "memCode","memName","rank","nric",
+						columns = new String[] { "memCode","memName","rank","nric","stus",
 								"aCrdSumPoint","sCrdSumPoint","aHappycallRate","sHappycallRate","aHappycallMark","sHappycallMark",	"aHsRate",	"sHsRate","aHsMark","sHsMark",
 								"aRcRate","sRcRate","aRcMark","sRcMark","aNsRate","sNsRate","aNsMark","sNsMark","aOutplsAmt","sOutplsAmt",
 								"aDropRate","sDropRate","aDropMark","sDropMark","aPerAmt","sPerAmt","aSalesAmt","sSalesAmt","aBonusAmt","sBonusAmt",
-								"aCollectAmt","sCollectAmt","aMembershipAmt","sMembershipAmt","aPeAmt","sPeAmt","aHealthyFamilyAmt","sHealthyFamilyAmt","aNewcodyAmt","sNewcodyAmt",
+								"aCollectAmt","sCollectAmt","aMembershipAmt","sMembershipAmt","aPeAmt","sPeAmt","aPeMark","sPeMark","aHealthyFamilyAmt","sHealthyFamilyAmt","aNewcodyAmt","sNewcodyAmt",
 								"aIntroductionFees","sIntroductionFees","aMobilePhone","sMobilePhone","aStaffPurchase","sStaffPurchase","aTelephoneDeduct","sTelephoneDeduct","aIncentive","sIncentive",
 								"aAdj","sAdj","aCodyRegistrationFees","sCodyRegistrationFees","aShiAmt","sShiAmt","aRentalmembershipAmt","sRentalmembershipAmt","aShiRentalmembershipAmt","sShiRentalmembershipAmt"
 								,"aAmount","sAmount"};
-						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC",
+						titles = new String[] { "MEMCODE","MEMNAME","RANK","NRIC","STUS",
 								"(A)CRD SUM POINT","(S)CRD SUM POINT","(A)HAPPYCALL RATE","(S)HAPPYCALL RATE","(A)HAPPYCALL MARK","(S)HAPPYCALL MARK",	"(A)HS RATE",	"(S)HS RATE","(A)HS MARK","(S)HS MARK",
 								"(A)RC RATE","(S)RC RATE","(A)RC MARK","(S)RC MARK","(A)NS RATE","(S)NS RATE","(A)NS MARK","(S)NS MARK","(A)OUTPLS AMT","(S)OUTPLS AMT",
 								"(A)DROP RATE","(S)DROP RATE","(A)DROP MARK","(S)DROP MARK","(A)PER AMT","(S)PER AMT","(A)SALES AMT","(S)SALES AMT","(A)BONUS AMT","(S)BONUS AMT",
-								"(A)COLLECT AMT","(S)COLLECT AMT","(A)MEMBERSHIP AMT","(S)MEMBERSHIP AMT","(A)PE AMT","(S)PE AMT","(A)HEALTHY FAMILY AMT","(S)HEALTHY FAMILY AMT","(A)NEWCODY AMT","(S)NEWCODY AMT",
+								"(A)COLLECT AMT","(S)COLLECT AMT","(A)MEMBERSHIP AMT","(S)MEMBERSHIP AMT","(A)PE AMT","(S)PE AMT","(A)PE MARK","(S)PE MARK","(A)HEALTHY FAMILY AMT","(S)HEALTHY FAMILY AMT","(A)NEWCODY AMT","(S)NEWCODY AMT",
 								"(A)INTRODUCTION FEES","(S)INTRODUCTION FEES","(A)MOBILE PHONE","(S)MOBILE PHONE","(A)STAFF PURCHASE","(S)STAFF PURCHASE","(A)TELEPHONE DEDUCT","(S)TELEPHONE DEDUCT","(A)INCENTIVE","(S)INCENTIVE",
 								"(A)ADJ","(S)ADJ","(A)CODY REGISTRATION FEES","(S)CODY REGISTRATION FEES","(A)SHI AMT","(S)SHI AMT","(A)RENTALMEMBERSHIP AMT","(S)RENTALMEMBERSHIP AMT","(A)SHI RENTALMEMBERSHIP AMT","(S)SHI RENTALMEMBERSHIP AMT" 
 								,"(A) Grand Total" , "(S) Grand Total"};
@@ -1021,52 +1021,54 @@ public class CommissionExcelDownloadController {
 					}
 					largeExcelService.downLoadCDResultIndex(map, downloadHandler);
 				}else{
+					map.put("pvYear", pvYear);
+					map.put("pvMonth", pvMonth);
 					if(CommissionConstants.COMIS_CD_CM_CD.equals(orgCombo)){
 						map.put("level", CommissionConstants.COMIS_CD_CM_LEV);
 						if(actionType.equals("A")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"aHappycallRate","aHappycallMark","aBsRate","aBsMark","aRcRate",
-									"aRcMark","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityMark",
-									"aDropRate","aDropMark","aBasicSalary","aSalesAmt","aBonusAmt",
+									"aRcMark","aRejoinRate","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark","aBsProductivityRate", "aBsProductivityMark",
+									"aDropRate","aDropMark","aPeMark","aBasicSalary","aSalesAmt","aBonusAmt",
 									"aCollectAmt","aMembershipAmt","aHpAmt","aTransportAmt","aMonthlyAllowance",
 									"aMobilePhone","aIntroductionFees","aStaffPurchase","aTelephoneDeduct","aIncentive",
 									"aAdj","aShiAmt","aRentalmembershipAmt","aOutplsAmt","aAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
-									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
-									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"RC Mark","Rejoin Rate", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Rate", "BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "PE MARK","Basic Salary","Sales AMT","Bonus AMT",
 									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
 									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
 									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" ,"Grand Total"};
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}else if(actionType.equals("S")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"sHappycallRate","sHappycallMark","sBsRate","sBsMark","sRcRate",
-									"sRcMark","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityMark",
-									"sDropRate","sDropMark","sBasicSalary","sSalesAmt","sBonusAmt",
+									"sRcMark","sRejoinRate","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark","sBsProductivityRate", "sBsProductivityMark",
+									"sDropRate","sDropMark","sPeMark","sBasicSalary","sSalesAmt","sBonusAmt",
 									"sCollectAmt","sMembershipAmt","sHpAmt","sTransportAmt","sMonthlyAllowance",
 									"sMobilePhone","sIntroductionFees","sStaffPurchase","sTelephoneDeduct","sIncentive",
 									"sAdj","sShiAmt","sRentalmembershipAmt","sOutplsAmt","sAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
-									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
-									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"RC Mark","Rejoin Rate", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Rate","BS Productivity Mark", 
+									"Drop Rate","Drop Mark","PE MARK", "Basic Salary","Sales AMT","Bonus AMT",
 									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
 									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
 									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" ,"Grand Total"};
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}else if(actionType.equals("C")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"aHappycallRate","sHappycallRate", "aHappycallMark","sHappycallMark", "aBsRate","sBsRate", "aBsMark","sBsMark", "aRcRate","sRcRate",
-									"aRcMark","sRcMark", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityMark","sBsProductivityMark",
-									"aDropRate","sDropRate", "aDropMark","sDropMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
+									"aRcMark","sRcMark","aRejoinRate","sRejoinRate", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark","aBsProductivityRate","sBsProductivityRate", "aBsProductivityMark","sBsProductivityMark",
+									"aDropRate","sDropRate", "aDropMark","sDropMark","aPeMark","sPeMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
 									"aCollectAmt","sCollectAmt", "aMembershipAmt","sMembershipAmt", "aHpAmt","sHpAmt", "aTransportAmt","sTransportAmt", "aMonthlyAllowance","sMonthlyAllowance",
 									"aMobilePhone","sMobilePhone", "aIntroductionFees","sIntroductionFees", "aStaffPurchase","sStaffPurchase", "aTelephoneDeduct","sTelephoneDeduct", "aIncentive","sIncentive",
 									"aAdj","sAdj", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", "aOutplsAmt","sOutplsAmt","aAmount","sAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric","STUS", "DEPT CODE","GROUP CODE","ORG CODE",
 									"(A) Happycall Rate","(S) Happycall Rate", "(A) Happycall Mark","(S) Happycall Mark", "(A) HS Rate","(S) HS Rate", "(A) HS Mark","(S) HS Mark",  "(A) RC Rate", "(S) RC Rate", 
-									"(A) RC Mark","(S) RC Mark", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
-									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
+									"(A) RC Mark","(S) RC Mark","(A)Rejoin Rate","(S)Rejoin Rate", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A)BS Productivity Rate","(S)BS Productivity Rate","(A) BS Productivity Mark","(S) BS Productivity Mark", 
+									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A)PE MARK","(S)PE MARK","(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
 									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
 									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
 									"(A) ADJ","(S) ADJ","(A)SHI AMT","(S)SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt","(A) Grand Total","(S)Grand Total" };
@@ -1075,49 +1077,49 @@ public class CommissionExcelDownloadController {
 					}else if(CommissionConstants.COMIS_CD_SCM_CD.equals(orgCombo)){
 						map.put("level", CommissionConstants.COMIS_CD_SCM_LEV);
 						if(actionType.equals("A")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"aHappycallRate","aHappycallMark","aBsRate","aBsMark","aRcRate",
-									"aRcMark","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityMark",
-									"aDropRate","aDropMark","aBasicSalary","aSalesAmt","aBonusAmt",
+									"aRcMark","aRejoinRate","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityRate","aBsProductivityMark",
+									"aDropRate","aDropMark","aPeMark","aBasicSalary","aSalesAmt","aBonusAmt",
 									"aCollectAmt","aMembershipAmt","aHpAmt","aTransportAmt","aMonthlyAllowance",
 									"aMobilePhone","aIntroductionFees","aStaffPurchase","aTelephoneDeduct","aIncentive",
 									"aAdj","aShiAmt","aRentalmembershipAmt","aOutplsAmt","aAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
-									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
-									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"RC Mark","Rejoin Rate", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Rate","BS Productivity Mark", 
+									"Drop Rate","Drop Mark","PE MARK", "Basic Salary","Sales AMT","Bonus AMT",
 									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
 									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
 									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt","Grand Total" };
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}else if(actionType.equals("S")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"sHappycallRate","sHappycallMark","sBsRate","sBsMark","sRcRate",
-									"sRcMark","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityMark",
-									"sDropRate","sDropMark","sBasicSalary","sSalesAmt","sBonusAmt",
+									"sRcMark","sRejoinRate","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark","sBsProductivityRate","sBsProductivityMark",
+									"sDropRate","sDropMark","sPeMark","sBasicSalary","sSalesAmt","sBonusAmt",
 									"sCollectAmt","sMembershipAmt","sHpAmt","sTransportAmt","sMonthlyAllowance",
 									"sMobilePhone","sIntroductionFees","sStaffPurchase","sTelephoneDeduct","sIncentive",
 									"sAdj","sShiAmt","sRentalmembershipAmt","sOutplsAmt","sAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
-									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
-									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"RC Mark","Rejoin Rate", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Rate","BS Productivity Mark", 
+									"Drop Rate","Drop Mark", "PE MARK","Basic Salary","Sales AMT","Bonus AMT",
 									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
 									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
 									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" ,"Grand Total"};
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}else if(actionType.equals("C")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"aHappycallRate","sHappycallRate", "aHappycallMark","sHappycallMark", "aBsRate","sBsRate", "aBsMark","sBsMark", "aRcRate","sRcRate",
-									"aRcMark","sRcMark", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityMark","sBsProductivityMark",
-									"aDropRate","sDropRate", "aDropMark","sDropMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
+									"aRcMark","sRcMark","aRejoinRate","sRejoinRate", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityRate","sBsProductivityRate","aBsProductivityMark","sBsProductivityMark",
+									"aDropRate","sDropRate", "aDropMark","sDropMark","aPeMark","sPeMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
 									"aCollectAmt","sCollectAmt", "aMembershipAmt","sMembershipAmt", "aHpAmt","sHpAmt", "aTransportAmt","sTransportAmt", "aMonthlyAllowance","sMonthlyAllowance",
 									"aMobilePhone","sMobilePhone", "aIntroductionFees","sIntroductionFees", "aStaffPurchase","sStaffPurchase", "aTelephoneDeduct","sTelephoneDeduct", "aIncentive","sIncentive",
 									"aAdj","sAdj", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", "aOutplsAmt","sOutplsAmt","aAmount","sAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"(A) Happycall Rate","(S) Happycall Rate", "(A) Happycall Mark","(S) Happycall Mark", "(A) HS Rate","(S) HS Rate", "(A) HS Mark","(S) HS Mark",  "(A) RC Rate", "(S) RC Rate", 
-									"(A) RC Mark","(S) RC Mark", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
-									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
+									"(A) RC Mark","(S) RC Mark","(A)Rejoin Rate","(S)Rejoin Rate", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark","(A)BS Productivity Rate","(S)BS Productivity Rate", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
+									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark","(A)PE MARK","(S)PE MARK", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
 									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
 									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
 									"(A) ADJ","SHI AMT","(S) ADJ","SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" ,"(A) Grand Total", "(S) Grand Total"};
@@ -1126,49 +1128,49 @@ public class CommissionExcelDownloadController {
 					}else if(CommissionConstants.COMIS_CD_GCM_CD.equals(orgCombo)){
 						map.put("level", CommissionConstants.COMIS_CD_GCM_LEV);
 						if(actionType.equals("A")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"aHappycallRate","aHappycallMark","aBsRate","aBsMark","aRcRate",
-									"aRcMark","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark", "aBsProductivityMark",
-									"aDropRate","aDropMark","aBasicSalary","aSalesAmt","aBonusAmt",
+									"aRcMark","aRejoinRate","aRejoinMark","aGroupSalesProduct","aGroupSalesProductMark","aBsProductivityRate", "aBsProductivityMark",
+									"aDropRate","aDropMark","aPeMark","aBasicSalary","aSalesAmt","aBonusAmt",
 									"aCollectAmt","aMembershipAmt","aHpAmt","aTransportAmt","aMonthlyAllowance",
 									"aMobilePhone","aIntroductionFees","aStaffPurchase","aTelephoneDeduct","aIncentive",
 									"aAdj","aShiAmt","aRentalmembershipAmt","aOutplsAmt","aAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
-									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
-									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"RC Mark","Rejoin Rate", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Rate","BS Productivity Mark", 
+									"Drop Rate","Drop Mark","PE MARK", "Basic Salary","Sales AMT","Bonus AMT",
 									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
 									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
 									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt","Grand Total" };
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}else if(actionType.equals("S")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"sHappycallRate","sHappycallMark","sBsRate","sBsMark","sRcRate",
-									"sRcMark","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityMark",
-									"sDropRate","sDropMark","sBasicSalary","sSalesAmt","sBonusAmt",
+									"sRcMark","sRejoinRate","sRejoinMark","sGroupSalesProduct","sGroupSalesProductMark", "sBsProductivityRate","sBsProductivityMark",
+									"sDropRate","sDropMark","sPeMark","sBasicSalary","sSalesAmt","sBonusAmt",
 									"sCollectAmt","sMembershipAmt","sHpAmt","sTransportAmt","sMonthlyAllowance",
 									"sMobilePhone","sIntroductionFees","sStaffPurchase","sTelephoneDeduct","sIncentive",
 									"sAdj","sShiAmt","sRentalmembershipAmt","sOutplsAmt","sAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"Happycall Rate","Happycall Mark","HS Rate","HS Mark", "RC Rate", 
-									"RC Mark", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Mark", 
-									"Drop Rate","Drop Mark", "Basic Salary","Sales AMT","Bonus AMT",
+									"RC Mark","Rejoin Rate", "Rejoin Mark", "Group Sales Product","Group Sales Product Mark","BS Productivity Rate","BS Productivity Mark", 
+									"Drop Rate","Drop Mark","PE MARK", "Basic Salary","Sales AMT","Bonus AMT",
 									"Collect AMT", "Membership AMT", "HP AMT","Transport AMT","Monthly Allowance",
 									"Mobile Phone", "Introduction Fees", "Staff Purchase", "Telephone Deduct","Incentive", 
 									"ADJ","SHI AMT","Rentalmembership AMT","Outpls Amt" ,"Grand Total"};
 							downloadHandler = getExcelDownloadHandler(response, fileName, columns, titles);
 						}else if(actionType.equals("C")){
-							columns = new String[] {"memCode","memName","rank","nric",
+							columns = new String[] {"memCode","memName","rank","nric","stus","lastDeptCode","lastGrpCode","lastOrgCode",
 									"aHappycallRate","sHappycallRate", "aHappycallMark","sHappycallMark", "aBsRate","sBsRate", "aBsMark","sBsMark", "aRcRate","sRcRate",
-									"aRcMark","sRcMark", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark", "aBsProductivityMark","sBsProductivityMark",
-									"aDropRate","sDropRate", "aDropMark","sDropMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
+									"aRcMark","sRcMark","aRejoinRate","sRejoinRate", "aRejoinMark","sRejoinMark", "aGroupSalesProduct","sGroupSalesProduct", "aGroupSalesProductMark","sGroupSalesProductMark","aBsProductivityRate","sBsProductivityRate", "aBsProductivityMark","sBsProductivityMark",
+									"aDropRate","sDropRate", "aDropMark","sDropMark","aPeMark","sPeMark", "aBasicSalary","sBasicSalary", "aSalesAmt","sSalesAmt", "aBonusAmt","sBonusAmt",
 									"aCollectAmt","sCollectAmt", "aMembershipAmt","sMembershipAmt", "aHpAmt","sHpAmt", "aTransportAmt","sTransportAmt", "aMonthlyAllowance","sMonthlyAllowance",
 									"aMobilePhone","sMobilePhone", "aIntroductionFees","sIntroductionFees", "aStaffPurchase","sStaffPurchase", "aTelephoneDeduct","sTelephoneDeduct", "aIncentive","sIncentive",
 									"aAdj","sAdj", "aShiAmt","sShiAmt", "aRentalmembershipAmt","sRentalmembershipAmt", "aOutplsAmt","sOutplsAmt","aAmount","sAmount"};
-							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", 
+							titles = new String[] { "Mem Code", "Mem Name","Rank", "Nric", "STUS","DEPT CODE","GROUP CODE","ORG CODE",
 									"(A) Happycall Rate","(S) Happycall Rate", "(A) Happycall Mark","(S) Happycall Mark", "(A) HS Rate","(S) HS Rate", "(A) HS Mark","(S) HS Mark",  "(A) RC Rate", "(S) RC Rate", 
-									"(A) RC Mark","(S) RC Mark", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A) BS Productivity Mark","(S) BS Productivity Mark", 
-									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
+									"(A) RC Mark","(S) RC Mark","(A)Rejoin Rate","(S)Rejoin Rate", "(A) Rejoin Mark","(S) Rejoin Mark", "(A) Group Sales Product","(S) Group Sales Product", "(A) Group Sales Product Mark","(S) Group Sales Product Mark", "(A)BS Productivity Rate","(S)BS Productivity Rate","(A) BS Productivity Mark","(S) BS Productivity Mark", 
+									"(A) Drop Rate","(S) Drop Rate", "(A) Drop Mark","(S) Drop Mark", "(A)PE MARK","(S)PE MARK","(A) Basic Salary","(S) Basic Salary", "(A) Sales AMT","(S) Sales AMT", "(A) Bonus AMT","(S) Bonus AMT",
 									"(A) Collect AMT","(S) Collect AMT", "(A) Membership AMT","(S) Membership AMT", "(A) HP AMT","(S) HP AMT", "(A) Transport AMT","(S) Transport AMT", "(A) Monthly Allowance","(S) Monthly Allowance",
 									"(A) Mobile Phone","(S) Mobile Phone", "(A) Introduction Fees","(S) Introduction Fees", "(A) Staff Purchase","(S) Staff Purchase", "(A) Telephone Deduct","(S) Telephone Deduct", "(A) Incentive","(S) Incentive", 
 									"(A) ADJ","SHI AMT","(S) ADJ","SHI AMT", "(A) Rentalmembership AMT","(S) Rentalmembership AMT", "(A) Outpls Amt","(S) Outpls Amt" ,"(A) Grand Total" ,"(S) Grand Total"};

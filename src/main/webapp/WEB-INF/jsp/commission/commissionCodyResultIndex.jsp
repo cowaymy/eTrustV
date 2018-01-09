@@ -210,6 +210,7 @@
 	    {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+	    {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
 	    
 	    {dataField : "aCrdSumPoint",      headerText : "<spring:message code='commissiom.text.excel.crdSumPoint'/>",        style : "my-column", editable : false },
 	    {dataField : "aHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
@@ -221,18 +222,19 @@
 	    {dataField : "aRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
 	    {dataField : "aNsRate",              headerText : "<spring:message code='commissiom.text.excel.nsRate'/>",        style : "my-column", editable : false },
 	    {dataField : "aNsMark",              headerText : "<spring:message code='commissiom.text.excel.nsMark'/>",        style : "my-column", editable : false },
-	    {dataField : "aOutplsAmt",         headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
 	    
 	    {dataField : "aDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
 	    {dataField : "aDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
 	    
 	    {dataField : "aPerAmt",              headerText : "<spring:message code='commissiom.text.excel.perAmt'/>",        style : "my-column", editable : false },
 	    {dataField : "aSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+	    {dataField : "aOutplsAmt",         headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
 	    {dataField : "aBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
 	    {dataField : "aCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
 	    {dataField : "aMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false },
 	    
 	    {dataField : "aPeAmt",               headerText : "<spring:message code='commission.text.grid.peAmt'/>",        style : "my-column", editable : false },
+	    {dataField : "aPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
 	    {dataField : "aHealthyFamilyAmt",headerText : "<spring:message code='commissiom.text.excel.healthFamAmt'/>",        style : "my-column", editable : false },
 	    {dataField : "aNewcodyAmt",      headerText : "<spring:message code='commissiom.text.excel.newcodyAmt'/>",        style : "my-column", editable : false },
 	    /* {dataField : "aMonthlyAllowance",headerText : "<spring:message code='commissiom.text.excel.monthlyAllowance'/>",        style : "my-column", editable : false }, */
@@ -257,6 +259,11 @@
         {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+        
+        {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
         
         {dataField : "aHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "aHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -266,15 +273,19 @@
         
         {dataField : "aRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "aRejoinMark",         headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        style : "my-column", editable : false },
+        {dataField : "aRejoinRate",         headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        style : "my-column", editable : false },
         {dataField : "aGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "aGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
+        {dataField : "aBsProductivityRate",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",        style : "my-column", editable : false },
         {dataField : "aBsProductivityMark",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",        style : "my-column", editable : false },
  
         {dataField : "aDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
         {dataField : "aDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
+        {dataField : "aPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         
         {dataField : "aBasicSalary",              headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",        style : "my-column", editable : false },
         {dataField : "aSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "aOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "aBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "aCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "aMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false }, 
@@ -292,7 +303,6 @@
         {dataField : "aShiAmt",                         headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",        style : "my-column", editable : false },
 
         {dataField : "aRentalmembershipAmt",     headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "aPosDeduction",                   headerText : "<spring:message code='commission.text.grid.posDeduction'/>",        style : "my-column", editable : false },
         {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",        style : "my-column", editable : false }
     ];
@@ -302,6 +312,11 @@
         {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+        
+        {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
         
         {dataField : "aHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "aHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -311,15 +326,19 @@
         
         {dataField : "aRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "aRejoinMark",         headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        style : "my-column", editable : false },
+        {dataField : "aRejoinRate",         headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        style : "my-column", editable : false },
         {dataField : "aGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "aGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
+        {dataField : "aBsProductivityRate",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",        style : "my-column", editable : false },
         {dataField : "aBsProductivityMark",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",        style : "my-column", editable : false },
  
         {dataField : "aDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
         {dataField : "aDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
+        {dataField : "aPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         
         {dataField : "aBasicSalary",              headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",        style : "my-column", editable : false },
         {dataField : "aSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "aOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "aBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "aCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "aMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false }, 
@@ -337,7 +356,6 @@
         {dataField : "aShiAmt",                         headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",        style : "my-column", editable : false },
 
         {dataField : "aRentalmembershipAmt",     headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "aPosDeduction",                   headerText : "<spring:message code='commission.text.grid.posDeduction'/>",        style : "my-column", editable : false },
         {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",        style : "my-column", editable : false }
     ];
@@ -347,6 +365,11 @@
         {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+        
+        {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
         
         {dataField : "aHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "aHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -356,15 +379,19 @@
         
         {dataField : "aRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "aRejoinMark",         headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        style : "my-column", editable : false },
+        {dataField : "aRejoinRate",         headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        style : "my-column", editable : false },
         {dataField : "aGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "aGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
+        {dataField : "aBsProductivityRate",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",        style : "my-column", editable : false },
         {dataField : "aBsProductivityMark",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",        style : "my-column", editable : false },
  
         {dataField : "aDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
         {dataField : "aDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
+        {dataField : "aPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         
         {dataField : "aBasicSalary",              headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",        style : "my-column", editable : false },
         {dataField : "aSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "aOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "aBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "aCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "aMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false }, 
@@ -382,7 +409,6 @@
         {dataField : "aShiAmt",                         headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",        style : "my-column", editable : false },
 
         {dataField : "aRentalmembershipAmt",     headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "aPosDeduction",                   headerText : "<spring:message code='commission.text.grid.posDeduction'/>",        style : "my-column", editable : false },
         {dataField : "aAmount",                   headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",        style : "my-column", editable : false }
     ];
@@ -396,7 +422,7 @@
 		{dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
 		{dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
 		{dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
-		
+		{dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
 		{dataField : "sCrdSumPoint",      headerText : "CRD Sum Point",        style : "my-column", editable : false },
         {dataField : "sHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -407,7 +433,6 @@
         {dataField : "sRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "sNsRate",              headerText : "<spring:message code='commissiom.text.excel.nsRate'/>",        style : "my-column", editable : false },
         {dataField : "sNsMark",              headerText : "<spring:message code='commissiom.text.excel.nsMark'/>",        style : "my-column", editable : false },
-        {dataField : "aOutplsAmt",         headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         
         /* {dataField : "sGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
@@ -417,11 +442,13 @@
         
         {dataField : "sPerAmt",              headerText : "Per AMT",        style : "my-column", editable : false },
         {dataField : "sSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "sOutplsAmt",         headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "sCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "sMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false },
         
         {dataField : "sPeAmt",               headerText : "<spring:message code='commission.text.grid.peAmt'/>",        style : "my-column", editable : false },
+        {dataField : "sPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         {dataField : "sHealthyFamilyAmt",headerText : "<spring:message code='commissiom.text.excel.healthFamAmt'/>",        style : "my-column", editable : false },
         {dataField : "sNewcodyAmt",      headerText : "<spring:message code='commissiom.text.excel.newcodyAmt'/>",        style : "my-column", editable : false },
         /* {dataField : "sMonthlyAllowance",headerText : "<spring:message code='commissiom.text.excel.monthlyAllowance'/>",        style : "my-column", editable : false }, */
@@ -446,6 +473,11 @@
         {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+        
+        {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
 		
         {dataField : "sHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -455,15 +487,19 @@
         
         {dataField : "sRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "sRejoinMark",         headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        style : "my-column", editable : false },
+        {dataField : "sRejoinRate",         headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
+        {dataField : "sBsProductivityRate",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",        style : "my-column", editable : false },
         {dataField : "sBsProductivityMark",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",        style : "my-column", editable : false },
  
         {dataField : "sDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
         {dataField : "sDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
+        {dataField : "sPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         
         {dataField : "sBasicSalary",              headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",        style : "my-column", editable : false },
         {dataField : "sSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "sOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "sCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "sMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false }, 
@@ -481,7 +517,6 @@
         {dataField : "sShiAmt",                         headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",        style : "my-column", editable : false },
 
         {dataField : "sRentalmembershipAmt",     headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",        style : "my-column", editable : false },
-        {dataField : "sOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sPosDeduction",                   headerText : "<spring:message code='commission.text.grid.posDeduction'/>",        style : "my-column", editable : false },
         {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",        style : "my-column", editable : false }
 	];
@@ -491,6 +526,11 @@
         {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+        
+        {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
 		
         {dataField : "sHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -500,15 +540,19 @@
         
         {dataField : "sRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "sRejoinMark",         headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        style : "my-column", editable : false },
+        {dataField : "sRejoinRate",         headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
+        {dataField : "sBsProductivityRate",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",        style : "my-column", editable : false },
         {dataField : "sBsProductivityMark",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",        style : "my-column", editable : false },
  
         {dataField : "sDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
         {dataField : "sDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
+        {dataField : "sPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         
         {dataField : "sBasicSalary",              headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",        style : "my-column", editable : false },
         {dataField : "sSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "sOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "sCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "sMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false }, 
@@ -526,7 +570,6 @@
         {dataField : "sShiAmt",                         headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",        style : "my-column", editable : false },
 
         {dataField : "sRentalmembershipAmt",     headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",        style : "my-column", editable : false },
-        {dataField : "sOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sPosDeduction",                   headerText : "<spring:message code='commission.text.grid.posDeduction'/>",        style : "my-column", editable : false },
         {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",        style : "my-column", editable : false }
 	];
@@ -536,6 +579,11 @@
         {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",     style : "my-column", editable : false, width : 260 },
         {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",             style : "my-column", editable : false },
         {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+        
+        {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
 		
         {dataField : "sHappycallRate",    headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",        style : "my-column", editable : false },
         {dataField : "sHappycallMark",    headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",        style : "my-column", editable : false },
@@ -545,15 +593,19 @@
         
         {dataField : "sRcMark",              headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",        style : "my-column", editable : false },
         {dataField : "sRejoinMark",         headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        style : "my-column", editable : false },
+        {dataField : "sRejoinRate",         headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProduct",              headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",        style : "my-column", editable : false },
         {dataField : "sGroupSalesProductMark",        headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",        style : "my-column", editable : false },
+        {dataField : "sBsProductivityRate",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",        style : "my-column", editable : false },
         {dataField : "sBsProductivityMark",            headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",        style : "my-column", editable : false },
  
         {dataField : "sDropRate",                           headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",        style : "my-column", editable : false },
         {dataField : "sDropMark",                           headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",        style : "my-column", editable : false },
+        {dataField : "sPeMark",               headerText : "<spring:message code='commissiom.text.excel.peMark'/>",        style : "my-column", editable : false },
         
         {dataField : "sBasicSalary",              headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",        style : "my-column", editable : false },
         {dataField : "sSalesAmt",           headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",        style : "my-column", editable : false },
+        {dataField : "sOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sBonusAmt",          headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",        style : "my-column", editable : false },
         {dataField : "sCollectAmt",         headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",        style : "my-column", editable : false },
         {dataField : "sMembershipAmt",   headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",        style : "my-column", editable : false }, 
@@ -571,7 +623,6 @@
         {dataField : "sShiAmt",                         headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",        style : "my-column", editable : false },
 
         {dataField : "sRentalmembershipAmt",     headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",        style : "my-column", editable : false },
-        {dataField : "sOutplsAmt", headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        style : "my-column", editable : false },
         {dataField : "sPosDeduction",                   headerText : "<spring:message code='commission.text.grid.posDeduction'/>",        style : "my-column", editable : false },
         {dataField : "sAmount",                   headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",        style : "my-column", editable : false }
 	];
@@ -584,6 +635,7 @@
 	    {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.crdSumPoint'/>",   children: [{dataField: "aCrdSumPoint", headerText: "A", editable : false}, {dataField: "sCrdSumPoint", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
@@ -595,7 +647,6 @@
 	    {headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",            children: [{dataField: "aRcMark", headerText: "A", editable : false}, {dataField: "sRcMark", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.nsRate'/>",            children: [{dataField: "aNsRate", headerText: "A", editable : false}, {dataField: "sNsRate", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.nsMark'/>",            children: [{dataField: "aNsMark", headerText: "A", editable : false}, {dataField: "sNsMark", headerText: "S", editable : false}]},
-	    {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]}, 
 	    
 	    /* {headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",          children: [{dataField: "aGroupSalesProduct", headerText: "A", editable : false}, {dataField: "sGroupSalesProduct", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",   children: [{dataField: "aGroupSalesProductMark", headerText: "A", editable : false}, {dataField: "sGroupSalesProductMark", headerText: "S", editable : false}]},
@@ -605,11 +656,13 @@
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.perAmt'/>",                children: [{dataField: "aPerAmt", headerText: "A", editable : false}, {dataField: "sPerAmt", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",             children: [{dataField: "aSalesAmt", headerText: "A", editable : false}, {dataField: "sSalesAmt", headerText: "S", editable : false}]},
+	    {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",        children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]}, 
 	    {headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",            children: [{dataField: "aBonusAmt", headerText: "A", editable : false}, {dataField: "sBonusAmt", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",           children: [{dataField: "aCollectAmt", headerText: "A", editable : false}, {dataField: "sCollectAmt", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",     children: [{dataField: "aMembershipAmt", headerText: "A", editable : false}, {dataField: "sMembershipAmt", headerText: "S", editable : false}]},
 	    
 	    {headerText : "<spring:message code='commission.text.grid.peAmt'/>",                 children: [{dataField: "aPeAmt", headerText: "A", editable : false}, {dataField: "sPeAmt", headerText: "S", editable : false}]},
+	    {headerText : "<spring:message code='commissiom.text.excel.peMark'/>",                 children: [{dataField: "aPeMark", headerText: "A", editable : false}, {dataField: "sPeMark", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.healthFamAmt'/>", children: [{dataField: "aHealthyFamilyAmt", headerText: "A", editable : false}, {dataField: "sHealthyFamilyAmt", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.newcodyAmt'/>",        children: [{dataField: "aNewcodyAmt", headerText: "A", editable : false}, {dataField: "sNewcodyAmt", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.introducFees'/>",   children: [{dataField: "aIntroductionFees", headerText: "A", editable : false}, {dataField: "sIntroductionFees", headerText: "S", editable : false}]},
@@ -633,6 +686,11 @@
 	    {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+	    
+	    {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",   children: [{dataField: "aHappycallMark", headerText: "A", editable : false}, {dataField: "sHappycallMark", headerText: "S", editable : false}]},
@@ -641,16 +699,20 @@
 	    {headerText : "<spring:message code='commissiom.text.excel.rcRate'/>",            children: [{dataField: "aRcRate", headerText: "A", editable : false}, {dataField: "sRcRate", headerText: "S", editable : false}]},
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",            children: [{dataField: "aRcMark", headerText: "A", editable : false}, {dataField: "sRcMark", headerText: "S", editable : false}]},
-        {headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        children: [{dataField: "aRejoinMark", headerText: "A", editable : false}, {dataField: "sRejoinMark", headerText: "S", editable : false}]},
+	    {headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        children: [{dataField: "aRejoinMark", headerText: "A", editable : false}, {dataField: "sRejoinMark", headerText: "S", editable : false}]},
+	    {headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        children: [{dataField: "aRejoinRate", headerText: "A", editable : false}, {dataField: "sRejoinRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",          children: [{dataField: "aGroupSalesProduct", headerText: "A", editable : false}, {dataField: "sGroupSalesProduct", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",   children: [{dataField: "aGroupSalesProductMark", headerText: "A", editable : false}, {dataField: "sGroupSalesProductMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",          children: [{dataField: "aBsProductivityRate", headerText: "A", editable : false}, {dataField: "sBsProductivityRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",          children: [{dataField: "aBsProductivityMark", headerText: "A", editable : false}, {dataField: "sBsProductivityMark", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",                        children: [{dataField: "aDropRate", headerText: "A", editable : false}, {dataField: "sDropRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",                        children: [{dataField: "aDropMark", headerText: "A", editable : false}, {dataField: "sDropMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.peMark'/>",                 children: [{dataField: "aPeMark", headerText: "A", editable : false}, {dataField: "sPeMark", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",                children: [{dataField: "aBasicSalary", headerText: "A", editable : false}, {dataField: "sBasicSalary", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",             children: [{dataField: "aSalesAmt", headerText: "A", editable : false}, {dataField: "sSalesAmt", headerText: "S", editable : false}]},
+	    {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",            children: [{dataField: "aBonusAmt", headerText: "A", editable : false}, {dataField: "sBonusAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",           children: [{dataField: "aCollectAmt", headerText: "A", editable : false}, {dataField: "sCollectAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",     children: [{dataField: "aMembershipAmt", headerText: "A", editable : false}, {dataField: "sMembershipAmt", headerText: "S", editable : false}]}, 
@@ -668,7 +730,6 @@
 	    {headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-	    {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commission.text.grid.posDeduction'/>",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
 	    {headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
@@ -678,6 +739,11 @@
 	    {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                 headerText : "<spring:message code='commissiom.text.excel.rank'/>",                    style : "my-column", editable : false },
 	    {dataField : "nric",                  headerText : "<spring:message code='commissiom.text.excel.nric'/>",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+	    
+	    {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",   children: [{dataField: "aHappycallMark", headerText: "A", editable : false}, {dataField: "sHappycallMark", headerText: "S", editable : false}]},
@@ -687,15 +753,19 @@
         
         {headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",            children: [{dataField: "aRcMark", headerText: "A", editable : false}, {dataField: "sRcMark", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        children: [{dataField: "aRejoinMark", headerText: "A", editable : false}, {dataField: "sRejoinMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        children: [{dataField: "aRejoinRate", headerText: "A", editable : false}, {dataField: "sRejoinRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",          children: [{dataField: "aGroupSalesProduct", headerText: "A", editable : false}, {dataField: "sGroupSalesProduct", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",   children: [{dataField: "aGroupSalesProductMark", headerText: "A", editable : false}, {dataField: "sGroupSalesProductMark", headerText: "S", editable : false}]},
-        {headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",          children: [{dataField: "aBsProductivityMark", headerText: "A", editable : false}, {dataField: "sBsProductivityMark", headerText: "S", editable : false}]},
         
+        {headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",          children: [{dataField: "aBsProductivityRate", headerText: "A", editable : false}, {dataField: "sBsProductivityRate", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",          children: [{dataField: "aBsProductivityMark", headerText: "A", editable : false}, {dataField: "sBsProductivityMark", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",                        children: [{dataField: "aDropRate", headerText: "A", editable : false}, {dataField: "sDropRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",                        children: [{dataField: "aDropMark", headerText: "A", editable : false}, {dataField: "sDropMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.peMark'/>",                 children: [{dataField: "aPeMark", headerText: "A", editable : false}, {dataField: "sPeMark", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",                children: [{dataField: "aBasicSalary", headerText: "A", editable : false}, {dataField: "sBasicSalary", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",             children: [{dataField: "aSalesAmt", headerText: "A", editable : false}, {dataField: "sSalesAmt", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",            children: [{dataField: "aBonusAmt", headerText: "A", editable : false}, {dataField: "sBonusAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",           children: [{dataField: "aCollectAmt", headerText: "A", editable : false}, {dataField: "sCollectAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",     children: [{dataField: "aMembershipAmt", headerText: "A", editable : false}, {dataField: "sMembershipAmt", headerText: "S", editable : false}]}, 
@@ -713,7 +783,6 @@
         {headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-        {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commission.text.grid.posDeduction'/>",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
@@ -723,6 +792,11 @@
 	    {dataField : "memName",          headerText : "<spring:message code='commissiom.text.excel.memNm'/>",            style : "my-column", editable : false, width : 260 },
 	    {dataField : "rank",                  headerText : "<spring:message code='commissiom.text.excel.rank'/>",                    style : "my-column", editable : false },
 	    {dataField : "nric",                   headerText : "<spring:message code='commissiom.text.excel.nric'/>",             style : "my-column", editable : false, width : 110 },
+	    {dataField : "stus",                  headerText : "<spring:message code='commissiom.text.excel.emplyStusCd'/>",              style : "my-column", editable : false, width : 110 },
+	    
+	    {dataField : "lastDeptCode",                  headerText : "<spring:message code='commissiom.text.excel.deptCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastGrpCode",                  headerText : "<spring:message code='commissiom.text.excel.grpCd'/>",              style : "my-column", editable : false, width : 110 },
+        {dataField : "lastOrgCode",                  headerText : "<spring:message code='commissiom.text.excel.orgCd'/>",              style : "my-column", editable : false, width : 110 },
 	    
 	    {headerText : "<spring:message code='commissiom.text.excel.happyCallRate'/>",  children: [{dataField: "aHappycallRate", headerText: "A", editable : false}, {dataField: "sHappycallRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.happyCallMarks'/>",   children: [{dataField: "aHappycallMark", headerText: "A", editable : false}, {dataField: "sHappycallMark", headerText: "S", editable : false}]},
@@ -732,15 +806,19 @@
         
         {headerText : "<spring:message code='commissiom.text.excel.rcMark'/>",            children: [{dataField: "aRcMark", headerText: "A", editable : false}, {dataField: "sRcMark", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.rejoinMark'/>",        children: [{dataField: "aRejoinMark", headerText: "A", editable : false}, {dataField: "sRejoinMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.rejoinRate'/>",        children: [{dataField: "aRejoinRate", headerText: "A", editable : false}, {dataField: "sRejoinRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grpSalesProductivity'/>",          children: [{dataField: "aGroupSalesProduct", headerText: "A", editable : false}, {dataField: "sGroupSalesProduct", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grpSalesProducMark'/>",   children: [{dataField: "aGroupSalesProductMark", headerText: "A", editable : false}, {dataField: "sGroupSalesProductMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.bsProductivityRate'/>",          children: [{dataField: "aBsProductivityRate", headerText: "A", editable : false}, {dataField: "sBsProductivityRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.bsProductivityMark'/>",          children: [{dataField: "aBsProductivityMark", headerText: "A", editable : false}, {dataField: "sBsProductivityMark", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.dropRate'/>",                        children: [{dataField: "aDropRate", headerText: "A", editable : false}, {dataField: "sDropRate", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.dropMark'/>",                        children: [{dataField: "aDropMark", headerText: "A", editable : false}, {dataField: "sDropMark", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.peMark'/>",                 children: [{dataField: "aPeMark", headerText: "A", editable : false}, {dataField: "sPeMark", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.basicSalary'/>",                children: [{dataField: "aBasicSalary", headerText: "A", editable : false}, {dataField: "sBasicSalary", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.salesAmt'/>",             children: [{dataField: "aSalesAmt", headerText: "A", editable : false}, {dataField: "sSalesAmt", headerText: "S", editable : false}]},
+        {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.bonusAmt'/>",            children: [{dataField: "aBonusAmt", headerText: "A", editable : false}, {dataField: "sBonusAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.collectAmt'/>",           children: [{dataField: "aCollectAmt", headerText: "A", editable : false}, {dataField: "sCollectAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.membershipAmt'/>",     children: [{dataField: "aMembershipAmt", headerText: "A", editable : false}, {dataField: "sMembershipAmt", headerText: "S", editable : false}]}, 
@@ -758,7 +836,6 @@
         {headerText : "<spring:message code='commissiom.text.excel.shiAmt'/>",                    children: [{dataField: "aShiAmt", headerText: "A", editable : false}, {dataField: "sShiAmt", headerText: "S", editable : false}]},
         
         {headerText : "<spring:message code='commissiom.text.excel.rentalmembershipAmt'/>",       children: [{dataField: "aRentalmembershipAmt", headerText: "A", editable : false}, {dataField: "sRentalmembershipAmt", headerText: "S", editable : false}]},
-        {headerText : "<spring:message code='commissiom.text.excel.outplaAmt'/>",   children: [{dataField: "aOutplsAmt", headerText: "A", editable : false}, {dataField: "sOutplsAmt", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commission.text.grid.posDeduction'/>",                     children: [{dataField: "aPosDeduction", headerText: "A", editable : false}, {dataField: "sPosDeduction", headerText: "S", editable : false}]},
         {headerText : "<spring:message code='commissiom.text.excel.grandTot'/>",                     children: [{dataField: "aAmount", headerText: "A", editable : false}, {dataField: "sAmount", headerText: "S", editable : false}]}
 	];
