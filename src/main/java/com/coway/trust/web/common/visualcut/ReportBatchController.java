@@ -327,7 +327,7 @@ public class ReportBatchController {
 		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/BSReport.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-		params.put("V_CODYDEPTCODE", "2"); // parameter //TODO : 파라미터 변경해야 함.
+		params.put("V_CODYDEPTCODE", "ORG0005D"); // parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + ".xls");
 
