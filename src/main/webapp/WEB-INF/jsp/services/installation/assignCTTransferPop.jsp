@@ -103,10 +103,11 @@ function createAssignCtOrderListAUIGrid() {
                         },
                         {dataField : "custName",         headerText  : "Customer" ,width  : 150 } ,
                         { dataField : "salesOrdNo",      headerText  : "SalesOrder",  width  : 100},
-                        { dataField : "memCode",        headerText  : "Ct Code",  width  : 80  },
+                        { dataField : "memCode",        headerText  : "CT Code",  width  : 80  },
                         { dataField : "custSubGrp",     headerText  : "Cust GRP",  width  : 100  },
                         { dataField : "insstallCtId",      headerText  : "CT ID ",  width  : 100   ,     visible : true},
-                        { dataField : "insstallId",        headerText  : "install ID ",  width  : 100   ,     visible : true}
+                        { dataField : "ctId",        headerText  : "Old CT ID",  width  : 100   ,     visible : false},
+                        { dataField : "installEntryNo",        headerText  : "Install No ",  width  : 100   ,     visible : false}
 
 
    ];
@@ -144,10 +145,14 @@ function fn_ctChange(){
         console.log( result);
 
         if(result  !=""){
-            Common.alert("<b> successfully saved.</b>");
-            fn_installationListSearch();
-            
-            $("#_assginCTTransferDiv").remove();
+        	if (result.message == "") {
+	            Common.alert("<b> successfully saved.</b>");
+	            fn_installationListSearch();
+	            $("#_assginCTTransferDiv").remove();
+        	} else {
+        		Common.alert(result.message);
+                $("#_assginCTTransferDiv").remove();
+        	}
         }
     });
 

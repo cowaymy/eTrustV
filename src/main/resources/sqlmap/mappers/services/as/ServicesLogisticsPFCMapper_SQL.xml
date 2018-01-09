@@ -38,6 +38,12 @@
             call SP_LOGISTIC_REQUEST_REVERSE( #{ORD_ID},#{RETYPE},#{P_TYPE},#{P_PRGNM},#{USERID},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
       }
      </select>     
+     
+     <select id="SP_LOGISTIC_REQUEST_TRANS" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_LOGISTIC_REQUEST_TRANS( #{SVONO}, #{F_CT},#{T_CT},#{P_PRGNM},#{P_USER},#{p1 , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=rtnCode} )
+      }
+     </select>
       
       
 </mapper>

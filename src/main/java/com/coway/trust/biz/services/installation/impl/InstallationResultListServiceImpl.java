@@ -2065,7 +2065,33 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 			for (int i = 0; i < updateItemList.size(); i++) {
 				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
-				rtnValue= installationResultListMapper.updateAssignCT(updateMap) ;
+				logger.debug("updateMap : {}"+updateMap);
+				
+				// Transfer 실행 여부 제어 로직 추가 (프로시저 호출)
+				// 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
+				// Transfer 불가능한 경우, 메시지창을 띄워 알려줌
+				String procResult;
+				/////////////////////////물류 호출//////////////////////
+                Map<String, Object>  transProc = null ;
+            	transProc =new HashMap<String, Object>();
+            	transProc.put("SVONO",  updateMap.get("installEntryNo") );
+            	transProc.put("F_CT", updateMap.get("ctId") );
+            	transProc.put("T_CT", updateMap.get("insstallCtId") );
+            	transProc.put("P_PRGNM", "TRNSFR");
+            	transProc.put("P_USER", "9999999999");
+            
+                logger.debug("Transfer 물류 호출 PRAM ===> "+ transProc.toString());
+                servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
+                procResult = transProc.get("p1").toString();
+                logger.debug("Transfer 물류 호출 결과 ===> " +procResult);
+                /////////////////////////물류 호출 END //////////////////////
+
+                if (procResult.equals("000")) {
+                	rtnValue = installationResultListMapper.updateAssignCT(updateMap) ;
+                } else {
+                	// rtnValue  =-1;
+                }
+				
 			}
 		}
 		return rtnValue;
