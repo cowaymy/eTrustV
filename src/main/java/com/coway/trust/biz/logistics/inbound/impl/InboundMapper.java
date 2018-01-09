@@ -39,4 +39,6 @@ public interface InboundMapper {
 
 	List<EgovMap> selectDeliveryList(Map<String, Object> formMap);
 
+	List<EgovMap> selectDeliverydupCheck(Map<String, Object> setMap);
+
 }

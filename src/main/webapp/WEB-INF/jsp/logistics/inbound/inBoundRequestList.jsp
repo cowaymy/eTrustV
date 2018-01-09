@@ -140,7 +140,7 @@ $(document).ready(function(){
             var del = AUIGrid.getCellValue(listGrid, event.rowIndex, "reqQty");
             if (del > 0){
                 if ((Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "avrqty")) < Number(AUIGrid.getCellValue(listGrid, event.rowIndex, "reqQty")))){
-                	Common.alert('Req Qty can not be greater than Available Qty.');
+                	Common.alert('Req Qty can not be greater than Remain Qty.');
                     AUIGrid.restoreEditedRows(listGrid, "selectedIndex");
                 }else{
 
@@ -265,6 +265,10 @@ function setToCdc(){
 	$("#popup_wrap").show();
 }
 function createSMO(){
+	if(""==$('#tlocation').val() || null == $('#tlocation').val()){
+		  Common.alert("Please Check To Lcation");
+		return false;
+	}
 	var data = {};
 	var check   = AUIGrid.getCheckedRowItems(listGrid);
 	data.checked = check;
@@ -272,9 +276,15 @@ function createSMO(){
     var url = "/logistics/inbound/reqSMO.do";
     Common.ajax("POST" , url , data , function(data){
     	console.log(data);
-    	Common.alert(data.message+"</br> Created : "+data.data.reqNo+"</br> Created : "+data.data.deliveryNo);
-        $("#popup_wrap").hide();
-        SearchListAjax();
+    	if("dup"==data.data.reqNo){
+    		 Common.alert( " Not enough Qty, Please search again. ");
+	        $("#popup_wrap").hide();
+    	}else{
+	    	Common.alert(data.message+"</br> Created : "+data.data.reqNo+"</br> Created : "+data.data.deliveryNo);
+	        $("#popup_wrap").hide();
+	        SearchListAjax();
+    	}
+    	
     });
 }
 

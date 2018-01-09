@@ -473,5 +473,19 @@
                      (#{parray , mode=IN,typeHandler=com.coway.trust.util.OracleCallBackHandler}, #{gtype}, #{doctext}, #{gipfdate}, #{giptdate}, #{prgnm}, #{refdocno}, #{salesorder}, #{userId} , #{rdata , mode=OUT , jdbcType=VARCHAR , javaType=String , resultMap=BLISSUECACELL} )
              }
      </select>  -->
+	<select id="selectDeliverydupCheck" parameterType="Map" resultType="egovMap">
+		SELECT  
+		         BL_NO
+		        ,BL_ITM_SEQ
+		        ,ITM_CODE
+		        ,SUM (REQST_QTY) REQST_QTY
+		        ,NVL (SUM (RCIPT_QTY), 0) RCIPT_QTY
+		    FROM LOG0048D
+		   WHERE BL_NO = #{blNo}
+		       AND BL_ITM_SEQ = #{itmSeq}
+		       AND ITM_CODE = #{matrlNo}
+		GROUP BY BL_NO, BL_ITM_SEQ, ITM_CODE
+		ORDER BY BL_NO, BL_ITM_SEQ, ITM_CODE
+	</select>
 </mapper>
 
