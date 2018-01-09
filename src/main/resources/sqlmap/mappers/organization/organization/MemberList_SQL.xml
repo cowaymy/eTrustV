@@ -933,7 +933,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </select>
 
     <select id="selectDocSubmission" parameterType="Map" resultType="egovMap">
-                    SELECT Project1.DOC_TYPE_ID DOC_TYPE_ID  ,
+                  SELECT Project1.DOC_TYPE_ID DOC_TYPE_ID  ,
 			       Project1.CODE_NAME CODE_NAME  ,
 			       Project1.DOC_COPY_QTY DOC_COPY_QTY
 			        FROM ( SELECT Extent1.DOC_TYPE_ID DOC_TYPE_ID  ,
@@ -1290,33 +1290,50 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </select>
 
     <select id="selectHpDocSubmission" parameterType="Map" resultType="egovMap">
+      
+       <!--  SELECT Project1.DOC_TYPE_ID CODE_ID  ,
+                   Project1.CODE_NAME CODE_NAME  ,
+                   Project1.DOC_COPY_QTY DOC_QTY
+                    FROM ( SELECT Extent1.DOC_TYPE_ID DOC_TYPE_ID  ,
+                            Extent1.DOC_COPY_QTY DOC_COPY_QTY  ,
+                            Extent2.CODE_NAME CODE_NAME
+                   FROM ORG0010D Extent1
+                            JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.DOC_TYPE_ID
+                   WHERE  ( 247 = Extent1.DOC_SUB_TYPE_ID )
+                               AND ( Extent1.DOC_MEM_ID =  #{memberID})
+                               AND ( 1 = Extent1.STUS_ID ) ) Project1
+                     ORDER BY Project1.CODE_NAME ASC -->
+      
       <![CDATA[
-        SELECT Project1.CODE_ID CODE_ID  ,
-           Project1.TYPE_ID TYPE_ID  ,
-           Project1.CODE_DESC CODE_NAME  ,
-           Project1.C1 C1  ,
-           Project1.C2 C2
-        FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
-                    Extent1.CODE_DESC CODE_DESC ,
-                    Extent2.TYPE_ID TYPE_ID  ,
-                    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ  ,
-                    0 C1  ,
-                    CASE
-                         WHEN ( 252 = Extent1.CODE_ID ) THEN UTILS.CONVERT_TO_NUMBER(1,1,0)
-                    ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
-                       END C2
-             FROM SYS0013M Extent1
-                    JOIN ORG0013C Extent2   ON Extent1.CODE_ID = Extent2.TYPE_ID
-              WHERE  ( Extent2.TYPE_CODE_ID = 247 )
-                       AND ( 1 = Extent2.STUS_ID )
-                       AND ( Extent2.TYPE_GRP_ID = 247 ) ) Project1
-           ORDER BY Project1.TYPE_DT_SEQ
+        
+			         
+			         
+		SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+            FROM (
+                 SELECT Extent1.CODE_ID CODE_ID ,
+                    Extent1.CODE_DESC CODE_NAME,
+                    Extent2.TYPE_ID TYPE_ID ,
+                    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ
+                  FROM SYS0013M Extent1
+                  JOIN ORG0013C Extent2
+                  ON Extent1.CODE_ID           = Extent2.TYPE_ID
+                  WHERE ( Extent2.TYPE_CODE_ID = 247 )
+                  AND ( 1                      = Extent2.STUS_ID )
+                  AND ( Extent2.TYPE_GRP_ID    = 247 )
+                  ORDER BY Extent2.TYPE_DT_SEQ ASC
+                ) DOCLIST , (
+                SELECT B.*
+                FROM ORG0001D A,
+                  ORG0010D B
+                WHERE A.MEM_ID    = B.DOC_MEM_ID
+                AND  A.MEM_ID    = #{memberID}) MEMINFO 
+                WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
                ]]>
   </select>
 
 
   <select id="selectCodyDocSubmission" parameterType="Map" resultType="egovMap">
-		        SELECT Project1.CODE_ID CODE_ID  ,
+		<!--         SELECT Project1.CODE_ID CODE_ID  ,
 		       Project1.TYPE_ID TYPE_ID  ,
 		       Project1.CODE_DESC CODE_NAME,
 		       Project1.C1 C1  ,
@@ -1335,7 +1352,27 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		          WHERE  ( Extent2.TYPE_CODE_ID = 1417 )
 		                   AND ( 1 = Extent2.STUS_ID )
 		                   AND ( Extent2.TYPE_GRP_ID = 1417 ) ) Project1
-		  ORDER BY Project1.TYPE_DT_SEQ ASC
+		  ORDER BY Project1.TYPE_DT_SEQ ASC -->
+		  SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+			FROM (
+				 SELECT Extent1.CODE_ID CODE_ID ,
+				    Extent1.CODE_DESC CODE_NAME,
+				    Extent2.TYPE_ID TYPE_ID ,
+				    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ
+				  FROM SYS0013M Extent1
+				  JOIN ORG0013C Extent2
+				  ON Extent1.CODE_ID           = Extent2.TYPE_ID
+				  WHERE ( Extent2.TYPE_CODE_ID = 1417 )
+				  AND ( 1                      = Extent2.STUS_ID )
+				  AND ( Extent2.TYPE_GRP_ID    = 1417 )
+				  ORDER BY Extent2.TYPE_DT_SEQ ASC
+				) DOCLIST , (
+				SELECT B.*
+				FROM ORG0001D A,
+				  ORG0010D B
+				WHERE A.MEM_ID    = B.DOC_MEM_ID
+				AND  A.MEM_ID    = #{memberID}) MEMINFO 
+				WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
 
   </select>
 
@@ -3754,7 +3791,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
              <if test="bankAccNo != null and bankAccNo != '' ">
            , APLICNT_BANK_ACC_NO =#{bankAccNo}
            </if>
-             <if test="sponsorCd != null and sponsorCd != '' ">
+             <if test="issuedBank != null and issuedBank != '' ">
            , APLICNT_BANK_ID =#{issuedBank}
            </if>
            <if test="Birth != null and Birth != '' ">
@@ -3788,4 +3825,51 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           WHERE MEM_ID = #{MemberID}
     </update>
     
+     <select id="selectOneDocSub" parameterType="Map" resultType="egovMap">
+       SELECT B.*
+       FROM ORG0001D A,
+      ORG0010D B
+      WHERE A.MEM_ID    = B.DOC_MEM_ID
+       AND A.MEM_ID   = #{memId}
+       AND B.DOC_TYPE_ID = #{codeId}
+       
+       
+    </select>
+    
+    <update id="updateDocSub" parameterType="Map">
+    UPDATE ORG0010D
+    SET UPD_USER_ID =#{userId}
+    , UPD_DT = SYSDATE
+    , DOC_COPY_QTY = #{docQty}
+    
+    WHERE DOC_MEM_ID = #{memId}
+    AND DOC_TYPE_ID = #{codeId}
+    
+    </update>
+    <insert id="insertDocSub" parameterType="Map">
+    INSERT INTO ORG0010D (
+         DOC_SUB_ID, DOC_SUB_TYPE_ID , DOC_TYPE_ID
+       , DOC_SO_ID, DOC_MEM_ID, DOC_SUB_DT
+       , DOC_COPY_QTY, STUS_ID , CRT_USER_ID
+       , CRT_DT, UPD_USER_ID, UPD_DT
+         , DOC_SUB_BATCH_ID
+       )
+      VALUES (
+      ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL , #{subTypeId}  , #{codeId}  
+      , 0, #{memId}, SYSDATE
+      , #{docQty}, 1 , #{userId}
+      , SYSDATE
+      , #{userId}
+      , SYSDATE
+      , #{docSubBatchId}
+      )
+    </insert>
+    
+    <delete id="deleteDocSub" parameterType="Map">
+    DELETE FROM ORG0010D
+    WHERE DOC_MEM_ID = #{memId}
+    AND DOC_TYPE_ID = #{codeId}
+    
+    </delete>
+
 </mapper>

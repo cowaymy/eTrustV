@@ -205,5 +205,13 @@ public interface MemberListMapper {
 	
 	void updateMemberBranch(Map<String, Object> params);
 	void updateMemberBranch2(Map<String, Object> params);
+
+	EgovMap selectOneDocSub(Map<String, Object> oneDocSub);
+
+	void updateDocSub(Map<String, Object> oneDocSub);
+
+	void insertDocSub(Map<String, Object> oneDocSub);
+
+	void deleteDocSub(Map<String, Object> oneDocSub);
 	
 }

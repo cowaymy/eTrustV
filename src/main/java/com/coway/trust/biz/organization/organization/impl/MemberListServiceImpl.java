@@ -1990,4 +1990,53 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		
 	}
+
+	@Override
+	public void updateDocSub(List<Object> updList, String memId, int userId,  String memType) {
+	
+		if(updList !=null){
+    		for(int i=0 ; i < updList.size(); i++ ){
+    			 //udtList : [{codeId=1414, codeName=Cody PA Copy, typeId=1414, typeDtSeq=4, docQty=0 , 
+    			//하나씩 받아와서 
+    			Map<String, Object> oneDocSub = (Map<String, Object>) updList.get(i);
+    			oneDocSub.put("memId", memId);
+    			oneDocSub.put("userId", userId);
+    			oneDocSub.put("memType", memType);
+    			//이미들어가있나 확인
+    			EgovMap isCheckDoc = memberListMapper.selectOneDocSub(oneDocSub);
+    			
+    			int docQty= Integer.parseInt(String.valueOf( oneDocSub.get("docQty") ) );
+    			
+    			if (  docQty != 0 ){// doc가 0이아니면
+    				//있으면 인서트 없으면 업데이트 
+    				if(isCheckDoc != null){
+    					memberListMapper.updateDocSub(oneDocSub);
+    				}
+    				
+    				else{
+    					if(memType.equals("2")){
+    						oneDocSub.put("subTypeId", 1417);	
+    					}
+    					else{
+    						oneDocSub.put("subTypeId", 247);	
+    					}
+    					
+    					memberListMapper.insertDocSub(oneDocSub);
+    				}
+    			}
+    			
+    			else{//docQty가 0이면 delete
+    				if( isCheckDoc != null){
+    					memberListMapper.deleteDocSub(oneDocSub);
+    					
+    				}
+    				
+    				
+    			} 
+    			
+    			
+    			
+    		}
+		}
+	}
 }

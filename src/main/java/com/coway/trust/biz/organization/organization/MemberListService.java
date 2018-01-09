@@ -131,6 +131,8 @@ public interface MemberListService {
 	
 	void updateMemberBranch(Map<String, Object> params) throws Exception;
 	void updateMemberBranch2(Map<String, Object> params) throws Exception;
+
+	void updateDocSub(List<Object> updList, String memId, int userId , String memType);
 	
 	
 }

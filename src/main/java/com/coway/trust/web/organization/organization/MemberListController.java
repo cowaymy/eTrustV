@@ -443,7 +443,7 @@ public class MemberListController {
 	@RequestMapping(value = "/selectHpDocSubmission", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHpDocSubmission(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
 		logger.debug("memberType : {}"+params.get("memType")+"11111111111111");
-
+		logger.debug("params : {}"+params);
 		List<EgovMap> selectDocSubmission;
 		
 		if("2".equals((String)params.get("memType"))){//type가 Coway Lady면 쿼리가 살짝다름.....
@@ -828,7 +828,7 @@ public class MemberListController {
 
 		int userId = sessionVO.getUserId();
 		formMap.put("user_id", userId);
-
+		logger.debug("udtparam11111 : {}", params);
 		logger.debug("udtList : {}", updList);
 		logger.debug("formMap : {}", formMap);
 
@@ -840,6 +840,8 @@ public class MemberListController {
 		logger.debug("myGridID : {}", formMap.get("params"));
 
 		String memCode = "";
+		String memId="";
+		String memberType ="";
 		boolean update = false;
 
 		logger.debug("memCode : {}", formMap.get("memCode"));
@@ -851,7 +853,13 @@ public class MemberListController {
 		//update
 		
 		memCode =  (String)formMap.get("memCode");
-
+		memId =(String) formMap.get("MemberID"); 
+		memberType = (String) formMap.get("memberType");
+		//doc 공통업데이트 
+		memberListService.updateDocSub(updList, memId, userId,memberType);
+		
+		
+		
 		int resultUpc1 = 0;
 		int resultUpc2 = 0;
 		int resultUpc3 = 0;
@@ -883,6 +891,7 @@ public class MemberListController {
 			
 			
 		}
+		
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
 //    	message.setCode(AppConstants.SUCCESS);
