@@ -33,6 +33,7 @@ import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * CAUTION : 135 Server only //////@Scheduled of ReportBatchController should be uncommented. Then the report batch is
@@ -321,13 +322,13 @@ public class ReportBatchController {
     }
 
 	@RequestMapping(value = "/BSReport.do")
-	//@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
-	public void bsReport() {
+    // Handle periodic execution manually rather than automatically.
+	//(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
+	public void bsReport(@RequestParam Map<String, Object> params) {
 		LOGGER.info("[START] BSReport...");
-		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/BSReport.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-		params.put("V_CODYDEPTCODE", "ORG0005D"); // parameter
+		params.put("V_CODYDEPTCODE", params.get("V_CODYDEPTCODE")); // parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + ".xls");
 
@@ -336,13 +337,13 @@ public class ReportBatchController {
 	}
 
 	@RequestMapping(value = "/BSReportCT.do")
-	//@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
-	public void bsReportCT() {
+    // Handle periodic execution manually rather than automatically.
+	//(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
+	public void bsReportCT(@RequestParam Map<String, Object> params) {
 		LOGGER.info("[START] BSReportCT...");
-		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/BSReportCT.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-		params.put("V_CTCODEASC", "3"); // parameter //TODO : 파라미터 변경해야 함.
+		params.put("V_CTCODEASC", params.get("V_CTCODEASC")); // parameter //TODO : 파라미터 변경해야 함.
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"BSReport" + File.separator + "BSReportCT" + CommonUtils.getNowDate() + ".xls");
 
