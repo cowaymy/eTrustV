@@ -295,8 +295,6 @@ $(document).ready(function () {
 		fn_attendeeSave(attendeeGridID);
 	});
 	$("#result_btn").click(fn_courseResultPop);
-	$("#courseReport_pdf_btn").click(fn_courseReporPdf);
-	$("#courseReport_excel_btn").click(fn_courseReporExcel);
 	
 	fn_setToDay();
 });
