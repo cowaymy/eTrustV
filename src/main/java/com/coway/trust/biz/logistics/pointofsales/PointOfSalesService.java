@@ -29,5 +29,6 @@ public interface PointOfSalesService {
 	
 	List<EgovMap> selectMaterialDocList(Map<String, Object> params);
 	
-	
+	int selectOtherReqChk(Map<String, Object> params);
+		
 }

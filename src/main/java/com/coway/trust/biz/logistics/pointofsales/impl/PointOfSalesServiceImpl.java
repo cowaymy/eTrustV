@@ -216,5 +216,46 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		// TODO Auto-generated method stub
 		return PointOfSalesMapper.selectMaterialDocList(params);
 	}
+	
+	@Override
+	public int selectOtherReqChk(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		List<EgovMap> GIList = (List<EgovMap>) params.get(AppConstants.AUIGRID_CHECK);
+		String reqno ="";
+		String reqstatus ="";
+		int reqcnt = 0;
+		
+		if (GIList.size() > 0) {
+			
+			for (int i = 0; i < GIList.size(); i++) {
+				Map<String, Object> tmpMap = GIList.get(i);
+				Map<String, Object> imap = new HashMap();
+				imap = (Map<String, Object>) tmpMap.get("item");
+				reqno = (String) imap.get("reqstno");	
+				reqstatus = (String) imap.get("status");	
+			}
+			
+			if("O".equals(reqstatus)){
+				logger.debug("cancle NO 값 : {}");
+				reqcnt= PointOfSalesMapper.selectOtherReqChk(reqno);
+				if(reqcnt == 0){
+					reqcnt = 0;
+				}else{
+					reqcnt = 1;
+				}
+			}else if("C".equals(reqstatus)){
+				logger.debug("cancle YES 값 : {}");
+				reqcnt= PointOfSalesMapper.selectOtherReqCancleChk(reqno);
+				if(reqcnt == 0){
+					reqcnt = 0;
+				}else{
+					reqcnt = 1;
+				}
+			}
+			
+		}
+		
+		return reqcnt;
+	}
 
 }

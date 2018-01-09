@@ -278,16 +278,31 @@ public class PointOfSalesController {
 
 //		List<Object> GIList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 //		Map<String, Object> GIMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		String reVal="";
+	
+		int poschk= PointOfSalesService.selectOtherReqChk(params);
+		
+		logger.debug("poschk@: {}", poschk);
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
-		String reVal = PointOfSalesService.insertGiInfo(params);
-
+		
+		if(poschk > 0 ){
+			logger.debug("이미진행중입니다.");	
+		}else{
+			 reVal = PointOfSalesService.insertGiInfo(params);
+		}
+		
+		Map<String, Object> map = new HashMap();
+		map.put("reVal", reVal);
+		map.put("poschk", poschk);
+		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
-		message.setData(reVal);
+//		message.setData(reVal);
+		message.setData(map);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);

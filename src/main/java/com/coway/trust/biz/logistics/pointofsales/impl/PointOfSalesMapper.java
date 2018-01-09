@@ -42,5 +42,9 @@ public interface PointOfSalesMapper {
 	void insertStockBooking(Map<String, Object> params);
 
 	List<EgovMap> selectMaterialDocList(Map<String, Object> params);
+	
+	int selectOtherReqChk(String reqno);
+	
+	int selectOtherReqCancleChk(String reqno);
 
 }

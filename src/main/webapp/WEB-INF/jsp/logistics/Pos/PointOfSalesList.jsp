@@ -515,7 +515,12 @@ function GiSaveAjax() {
 
     Common.ajaxSync("POST", "/logistics/pos/PosGiSave.do", data, function(result) {
 
-        Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
+    	  if(result.data.poschk == 0){
+	        Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data.reVal);		  
+    	  }else{
+    		Common.alert("Already processed!"); 
+    		return false;
+    	  }
 
         // AUIGrid.resetUpdatedItems(listGrid, "all");
         $("#giptdate").val("");

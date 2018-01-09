@@ -120,89 +120,6 @@ select ROWNUM rnum , l47.REQST_STUS     status
           ORDER by l47.reqst_no desc
 </select>
 
-
-<!-- <select id="PosSearchList" parameterType="Map" resultType="egovMap">
-   SELECT  SAL57.POS_ID AS POS_ID,
-        SAL57.POS_NO AS POS_NO ,
-        SAL57.POS_BILL_ID  AS POS_BILL_ID,
-        SAL57.POS_CUST_NAME AS POS_CUST_NAME ,
-        SAL57.POS_DT1,
-        TO_CHAR(SAL57.POS_DT , 'YYYY-MM-DD') POS_DT  ,
-        SAL57.POS_TYPE_ID  AS POS_TYPE_ID  ,
-        SAL57.POS_MODULE_TYPE_ID  AS  POS_MODULE_TYPE_ID ,
-        TO_CHAR(SAL57.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
-        SAL57.POS_TOT_CHRG AS  POS_TOT_CHRG ,
-        SAL57.POS_TOT_TXS  AS POS_TOT_TXS,
-        SAL57.POS_TOT_DSCNT AS POS_TOT_DSCNT ,
-        SAL57.POS_WH_ID AS POS_WH_ID,
-        SAL57.POS_REM AS POS_REM ,
-        SAL57.POS_MTCH_ID  AS POS_MTCH_ID ,
-        SAL57.POS_CUST_ID AS POS_CUST_ID,
-        SAL57.POS_CRT_DT AS POS_CRT_DT,
-        TO_CHAR(SAL57.POS_CRT_DT , 'YYYY-MM-DD') POS_CRT_DT  ,
-        SAL57.POS_CRT_DEPT_ID AS POS_CRT_DEPT_ID,
-        SAL57.CR_ACC_ID AS CR_ACC_ID,
-        SAL57.DR_ACC_ID AS DR_ACC_ID,
-        SAL57.POS_RESN_ID AS POS_RESN_ID,
-        SAL57.POS_MEM_ID  AS POS_MEM_ID ,
-        SAL57.POS_CRT_USER_ID AS POS_CRT_USER_ID,
-        MODT.CODE_NAME AS CODE_NAME ,
-        TYPT.CODE_NAME CODE_NAME1 ,
-        S47M.USER_NAME  AS USER_NAME,
-        SAL58.POS_ITM_STOCK_ID  AS POS_ITM_STOCK_ID,
-        SAL58.POS_ITM_QTY AS POS_ITM_QTY ,
-        S26.STK_CODE AS STK_CODE,
-        S26.STK_DESC AS STK_DESC,
-        S26.SERIAL_CHK AS SERIAL_CHK,
-        CASE WHEN ( S28.WH_LOC_ID IS NOT NULL ) THEN S28.WH_LOC_CODE ELSE '' END WH_LOC_CODE ,
-        CASE WHEN ( S28.WH_LOC_ID IS NOT NULL ) THEN S28.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
-        CASE WHEN  (O01.MEM_ID IS NOT NULL) THEN  O01.MEM_CODE || ' - ' || O01.NAME ELSE 'CASH' END NAME ,
-        CASE WHEN ( NOT ( ( P31.TAX_INVC_ID IS NULL ) AND ( P31.TAX_INVC_REF_NO IS NULL ) ) ) THEN P31.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO
-  FROM SAL0057D SAL57 ,
-      ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '143') MODT,
-      ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '140') TYPT,
-      ( SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = '309') Status,
-      SYS0047M S47M ,
-      SAL0058D SAL58,
-      PAY0031D  P31,
-      ORG0001D  O01,
-      SYS0026M S26,
-      SYS0028M S28
-WHERE 1 = 1
-  AND SAL57.POS_NO = P31.TAX_INVC_SVC_NO(+)
-  AND SAL57.POS_WH_ID = S28.WH_LOC_ID(+)
-  AND SAL57.POS_MEM_ID = O01.MEM_ID(+)
-  AND SAL58.POS_ITM_STOCK_ID = S26.STK_ID(+)
-  AND SAL57.POS_MODULE_TYPE_ID = MODT.CODE_ID
-  AND SAL57.POS_TYPE_ID = TYPT.CODE_ID
-  AND SAL57.POS_CRT_USER_ID = S47M.USER_ID
-
-<if test="searchReqType != null and searchReqType !=''">
- AND TYPT.CODE = #{searchReqType}
-</if>
-<if test="searchLoc != null and searchLoc !=''">
- AND SAL57.POS_WH_ID = #{searchLoc}
-</if>
-<if test="searchStatus != null and searchStatus !=''">
- AND Status.code = #{searchStatus}
-</if>
-<if test="crtsdt !=null and crtsdt !=''">
-      AND to_char((SAL57.POS_CRT_DT),'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{crtsdt},'ddmmyyyy'),'yyyymmdd')
- </if>
- <if test="crtedt !=null and crtedt !=''">
-      AND to_char((SAL57.POS_CRT_DT),'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{crtedt},'ddmmyyyy'),'yyyymmdd')
- </if>
-<if test="reqsdt !=null and reqsdt !=''">
-      AND to_char((SAL57.POS_DT),'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{reqsdt},'ddmmyyyy'),'yyyymmdd')
- </if>
- <if test="reqedt !=null and reqedt !=''">
-      AND to_char((SAL57.POS_DT),'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{reqedt},'ddmmyyyy'),'yyyymmdd')
- </if>
-  AND SAL57.POS_NO ='PSN0001993'  데이터가 많아서 임시로 하드코딩 함 반영할때는 삭제!
-  AND SAL57.POS_ID = SAL58.POS_ID
-</select>  -->
-
-
 <select id="posItemList" parameterType="Map" resultType="egovMap">
     SELECT rownum rnum,
                S15.CODE_NAME AS CODE_NAME,
@@ -530,7 +447,14 @@ WHERE 1 = 1
         and l59.matrl_doc_no = l60.matrl_doc_no
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
-
-
+    
+    <select id="selectOtherReqChk" parameterType="String" resultType="integer">
+        select count(*) cnt  from log0047m where reqst_no=#{reqno} and reqst_stus='C'
+    </select>
+    
+    <select id="selectOtherReqCancleChk" parameterType="String" resultType="integer">
+        select count(*) cnt  from log0047m where reqst_no=#{reqno} and reqst_stus='O'
+    </select>
+    
 
 </mapper>
