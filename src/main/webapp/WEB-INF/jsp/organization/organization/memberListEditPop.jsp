@@ -314,6 +314,8 @@ function fn_setMemInfo(data){
     
     $("#course option[value='"+ data.course +"']").attr("selected", true);
     
+    $("#selectBranch option[value='"+ data.branchCode +"']").attr("selected", true);
+    
     
     }
 	else{
@@ -352,6 +354,7 @@ function fn_setMemInfo(data){
 	        
 		
 	}
+	
 	
 	
     doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
@@ -1117,7 +1120,12 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Branch</th>
     <td>
-     <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>
+     <!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
+     <select class="w100p"  id="selectBranch" name="selectBranch">
+        <c:forEach var="list" items="${branch}" varStatus="status">
+           <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
+        </c:forEach>
+    </select>
     </td>
     <!-- 
     <td>

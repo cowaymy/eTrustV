@@ -125,5 +125,12 @@ public interface MemberListService {
 
 	EgovMap selectOneHPMember(Map<String, Object> params);
 
-	int hpMemberUpdate(Map<String, Object> formMap);	
+	int hpMemberUpdate(Map<String, Object> formMap);
+	
+	List<EgovMap> branch();
+	
+	void updateMemberBranch(Map<String, Object> params) throws Exception;
+	void updateMemberBranch2(Map<String, Object> params) throws Exception;
+	
+	
 }

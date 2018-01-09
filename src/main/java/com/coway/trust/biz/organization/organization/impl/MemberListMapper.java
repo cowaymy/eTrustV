@@ -201,4 +201,9 @@ public interface MemberListMapper {
 
 	int updateHpMember(Map<String, Object> formMap);
 	
+	List<EgovMap> branch();
+	
+	void updateMemberBranch(Map<String, Object> params);
+	void updateMemberBranch2(Map<String, Object> params);
+	
 }

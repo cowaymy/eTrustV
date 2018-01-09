@@ -2836,6 +2836,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
      <![CDATA[
         UPDATE ORG0005D
         SET ORG_UPD_DT = SYSDATE
+            ,BRNCH_ID = #{selectBranch}
         WHERE  ( MEM_ID = #{MemberID} )
         ]]>
     </update>
@@ -2898,7 +2899,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               BANK_ACC_NO = #{bankAccNo},
               SPONS_CODE = #{sponsorCd},
               AGRMNT_NO = #{agrmntNo},
-              BRNCH = TO_NUMBER(TRIM(#{branch})),
+              
               SYNC_CHK = TO_NUMBER(TRIM(#{syncChk})),
               TRNSPRT = TO_NUMBER(TRIM(#{transportCd})),
               TR_NO = #{trNo},
@@ -2908,7 +2909,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               RANK = TO_NUMBER(TRIM(#{rank})),
               MAIN_DEPT = #{searchdepartment},
               SUB_DEPT = #{inputSubDept},
-              BIZ_TYPE =#{businessType}
+              BIZ_TYPE =#{businessType},
+              BRNCH =#{selectBranch}
           
              
               
@@ -3760,5 +3762,25 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      
      
      </update>
+     
+     <select id="branch" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID,CODE BRANCH_CODE, NAME BRANCH_NAME FROM SYS0005M WHERE STUS_ID = 1
+    </select>
+    
+    <update id="updateMemberBranch" parameterType="Map" >
+        UPDATE ORG0001D
+		   SET BRNCH = #{selectBranch}
+			    ,UPD_DT = SYSDATE
+	            ,UPD_USER_ID = #{user_id}
+		  WHERE MEM_ID = #{MemberID}
+    </update>
+    
+    <update id="updateMemberBranch2" parameterType="Map" >
+        UPDATE ORG0005D
+           SET BRNCH_ID = #{selectBranch}
+                ,ORG_UPD_DT = SYSDATE
+                ,ORG_UPD_USER_ID = #{user_id}
+          WHERE MEM_ID = #{MemberID}
+    </update>
     
 </mapper>

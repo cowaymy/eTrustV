@@ -742,6 +742,9 @@ public class MemberListController {
 	@RequestMapping(value = "/memberListEditPop.do")
 	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
+		List<EgovMap> branch = memberListService.branch();
+		logger.debug("branchList : {}", branch);
+		
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 		logger.debug("params123 : {}", params);
 		EgovMap selectMemberListView = null;
@@ -780,6 +783,7 @@ public class MemberListController {
 		model.addAttribute("subDeptList", subDeptList);
 		model.addAttribute("memType", params.get("memType"));
 		model.addAttribute("memId", params.get("MemberID"));
+		model.addAttribute("branch", branch);
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}
@@ -841,6 +845,8 @@ public class MemberListController {
 		logger.debug("memCode : {}", formMap.get("memCode"));
 
 		//update = memberListService.updateMember(formMap, updList,sessionVO);
+//		memberListService.updateMemberBranch(formMap);
+//		memberListService.updateMemberBranch2(formMap);
 
 		//update
 		

@@ -1968,4 +1968,25 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		memberListMapper.updateHpMember(formMap);
 		return 0;
 	}
+	
+	@Override
+	public List<EgovMap> branch() {
+		return memberListMapper.branch();
+	}
+	
+	@Override
+	public void updateMemberBranch(Map<String, Object> params) throws Exception {
+		
+		memberListMapper.updateMemberBranch(params);
+		
+		
+	}
+	
+	@Override
+	public void updateMemberBranch2(Map<String, Object> params) throws Exception {
+		
+		memberListMapper.updateMemberBranch2(params);
+		
+		
+	}
 }
