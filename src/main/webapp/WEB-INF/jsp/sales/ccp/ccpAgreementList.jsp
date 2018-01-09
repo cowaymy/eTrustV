@@ -302,7 +302,7 @@ function popup(location){
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('rowData')">ROW Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('rowData')">RAW Data</a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
