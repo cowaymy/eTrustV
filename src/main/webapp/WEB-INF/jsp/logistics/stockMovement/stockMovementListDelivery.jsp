@@ -688,11 +688,17 @@ function giFunc(){
     data.form    = $("#giForm").serializeJSON();
 
     Common.ajax("POST", "/logistics/stockMovement/StockMovementReqDelivery.do", data, function(result) {
-            var msg = result.message + "<br>MDN NO : "+result.data[1];
+        if("dup"==result.data[1]){
+            Common.alert( " Not enough Qty, Please search again. ");
+           $("#giopenwindow").hide();
+        }else{
+    	   var msg = result.message + "<br>MDN NO : "+result.data[1];
             Common.alert(msg , SearchListAjax);
             AUIGrid.resetUpdatedItems(listGrid, "all");
-        $("#giopenwindow").hide();
-        $('#search').click();
+           $("#giopenwindow").hide();
+           $('#search').click();
+        	
+        }
 
     },  function(jqXHR, textStatus, errorThrown) {
         try {

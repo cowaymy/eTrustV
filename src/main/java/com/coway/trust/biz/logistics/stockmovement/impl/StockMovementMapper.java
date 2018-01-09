@@ -60,15 +60,17 @@ public interface StockMovementMapper {
 	void updateRequestMovement(String param);
 
 	void insertStockBooking(Map<String, Object> params);
-	
+
 	int selectDelvryNoItmQeury(Map<String, Object> params);
 
 	void insertReturnGrade(Map<String, Object> setmap);
-	
+
 	List<EgovMap> selectGetSerialDataCall(Map<String, Object> params);
-	
+
 	void updateMovementSerialScan(String param);
-	
+
 	String getReceiptFlag(String delno);
+
+	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
 
 }

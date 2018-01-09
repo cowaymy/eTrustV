@@ -679,4 +679,16 @@
         select nvl(DELVRY_GR_CMPLT , 'N') as receiptyn from log0054m where delvry_no = #{delno}
      </select>
 
+          <select id="selectDeliverydupCheck" parameterType="Map" resultType="egovMap">
+            SELECT   REQST_NO
+                ,ITM_CODE
+                ,SUM (DELVRY_QTY) DELVRY_QTY
+                ,NVL(SUM (RCIPT_QTY),0) RCIPT_QTY
+            FROM LOG0055D
+           WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+         AND   REQST_NO= #{reqstno}
+         AND  ITM_CODE =#{itmcd}  
+         GROUP BY REQST_NO , ITM_CODE
+    </select>
+
 </mapper>

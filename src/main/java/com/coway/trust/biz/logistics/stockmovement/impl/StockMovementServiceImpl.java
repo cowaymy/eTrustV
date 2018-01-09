@@ -1,5 +1,6 @@
 package com.coway.trust.biz.logistics.stockmovement.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -174,14 +175,13 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
-		String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
-		
-		String scanno = "";
-
+		logger.info(" checkList : {}", checkList.toString());
+		logger.info(" checkList.size : {}", checkList.size());
+		logger.info(" formMap : {}", formMap);
+		boolean dupCheck = true;
 		if (checkList.size() > 0) {
 
 			Map<String, Object> insMap = null;
-
 			for (int i = 0; i < checkList.size(); i++) {
 
 				Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
@@ -190,52 +190,144 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 				logger.info(" item : {}", tmpMap.get("item"));
 				logger.info(" reqstno : {}", insMap.get("reqstno"));
+				logger.info(" itmcd : {}", insMap.get("itmcd"));
+				logger.info(" reqstqty : {}", insMap.get("reqstqty"));
+				logger.info(" indelyqty : {}", insMap.get("indelyqty"));
+				List<EgovMap> list = stockMoveMapper.selectDeliverydupCheck(insMap);
+				logger.info(" list : {}", list.toString());
+				logger.info(" list.size : {}", list.size());
+				String ttmp1 = (String) insMap.get("reqstno");
+				String ttmp2 = (String) insMap.get("itmcd");
+				int ttmp3 = (int) insMap.get("reqstqty");
+				int ttmp4 = (int) insMap.get("indelyqty");
+				logger.info(" ttmp1 :ttmp2 : ttmp3 : ttmp4 {} : {} : {} : {}", ttmp1, ttmp2, ttmp3, ttmp4);
+				if (list.size() > 0) {
+					Map<String, Object> checkmap = null;
+					checkmap = list.get(0);
+					String tmp1 = (String) checkmap.get("reqstNo");
+					String tmp2 = (String) checkmap.get("itmCode");
+					// int tmp3 = 1;
+					Integer count = ((BigDecimal) checkmap.get("delvryQty")).intValueExact();
+					int tmp3 = count;
+					// int tmp3 = Integer.parseInt((String) (checkmap.get("delvryQty")));
 
-				insMap.put("delno", deliSeq);
-				insMap.put("userId", params.get("userId"));
-				stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
-				
-				if (serialList.size() > 0) {
-					int uCnt = 0;
-					for (int j = 0; j < serialList.size(); j++) {
+					logger.info(" tmp1 :tmp2 : tmp3 {} : {} : {}", tmp1, tmp2, tmp3);
 
-						Map<String, Object> insSerial = null;
-						insSerial = (Map<String, Object>) serialList.get(j);
-						insSerial.put("delno"  , deliSeq);
-						insSerial.put("reqstno", insMap.get("reqstno"));
-						insSerial.put("userId" , params.get("userId"));
-						int icnt = stockMoveMapper.insertMovementSerial(insSerial);
-						logger.info(" :::: " + icnt);
-						if (icnt > 0 ){
-							uCnt = uCnt +icnt;
-							if (uCnt == (int)insMap.get("indelyqty")){
-								break;
-							}
-						}
-						scanno = (String)insSerial.get("scanno");
+					if (ttmp1.equals(tmp1) && ttmp2.equals(tmp2) && (ttmp4 + tmp3) > ttmp3) {
+						dupCheck = false;
 					}
-					if (scanno != null) stockMoveMapper.updateMovementSerialScan(scanno);
 				}
-				
-				insMap.put("scanno" , scanno);
-				
+
 			}
 
-			stockMoveMapper.insertDeliveryStockMovement(insMap);
-			stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
 		}
-		String[] delvcd = { deliSeq };
 
-		formMap.put("parray", delvcd);
-		formMap.put("userId", params.get("userId"));
-		// formMap.put("prgnm", params.get("prgnm"));
-		formMap.put("refdocno", "");
-		formMap.put("salesorder", "");
+		if (dupCheck) {
+			String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
 
-		stockMoveMapper.StockMovementIssue(formMap);
+			String scanno = "";
 
+			if (checkList.size() > 0) {
+
+				Map<String, Object> insMap = null;
+
+				for (int i = 0; i < checkList.size(); i++) {
+
+					Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
+
+					insMap = (Map<String, Object>) tmpMap.get("item");
+
+					logger.info(" item : {}", tmpMap.get("item"));
+					logger.info(" reqstno : {}", insMap.get("reqstno"));
+
+					insMap.put("delno", deliSeq);
+					insMap.put("userId", params.get("userId"));
+					stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+
+					if (serialList.size() > 0) {
+						int uCnt = 0;
+						for (int j = 0; j < serialList.size(); j++) {
+
+							Map<String, Object> insSerial = null;
+							insSerial = (Map<String, Object>) serialList.get(j);
+							insSerial.put("delno", deliSeq);
+							insSerial.put("reqstno", insMap.get("reqstno"));
+							insSerial.put("userId", params.get("userId"));
+							int icnt = stockMoveMapper.insertMovementSerial(insSerial);
+							logger.info(" :::: " + icnt);
+							if (icnt > 0) {
+								uCnt = uCnt + icnt;
+								if (uCnt == (int) insMap.get("indelyqty")) {
+									break;
+								}
+							}
+							scanno = (String) insSerial.get("scanno");
+						}
+						if (scanno != null)
+							stockMoveMapper.updateMovementSerialScan(scanno);
+					}
+
+					insMap.put("scanno", scanno);
+
+				}
+
+				stockMoveMapper.insertDeliveryStockMovement(insMap);
+				stockMoveMapper.updateRequestMovement((String) formMap.get("reqstno"));
+			}
+			String[] delvcd = { deliSeq };
+
+			formMap.put("parray", delvcd);
+			formMap.put("userId", params.get("userId"));
+			// formMap.put("prgnm", params.get("prgnm"));
+			formMap.put("refdocno", "");
+			formMap.put("salesorder", "");
+
+			stockMoveMapper.StockMovementIssue(formMap);
+		} else {
+			formMap.put("rdata", "8282∈dup");
+		}
+		/*
+		 * String deliSeq = stockMoveMapper.selectDeliveryStockMovementSeq();
+		 * 
+		 * String scanno = "";
+		 * 
+		 * if (checkList.size() > 0) {
+		 * 
+		 * Map<String, Object> insMap = null;
+		 * 
+		 * for (int i = 0; i < checkList.size(); i++) {
+		 * 
+		 * Map<String, Object> tmpMap = (Map<String, Object>) checkList.get(i);
+		 * 
+		 * insMap = (Map<String, Object>) tmpMap.get("item");
+		 * 
+		 * logger.info(" item : {}", tmpMap.get("item")); logger.info(" reqstno : {}", insMap.get("reqstno"));
+		 * 
+		 * insMap.put("delno", deliSeq); insMap.put("userId", params.get("userId"));
+		 * stockMoveMapper.insertDeliveryStockMovementDetail(insMap);
+		 * 
+		 * if (serialList.size() > 0) { int uCnt = 0; for (int j = 0; j < serialList.size(); j++) {
+		 * 
+		 * Map<String, Object> insSerial = null; insSerial = (Map<String, Object>) serialList.get(j);
+		 * insSerial.put("delno" , deliSeq); insSerial.put("reqstno", insMap.get("reqstno")); insSerial.put("userId" ,
+		 * params.get("userId")); int icnt = stockMoveMapper.insertMovementSerial(insSerial); logger.info(" :::: " +
+		 * icnt); if (icnt > 0 ){ uCnt = uCnt +icnt; if (uCnt == (int)insMap.get("indelyqty")){ break; } } scanno =
+		 * (String)insSerial.get("scanno"); } if (scanno != null) stockMoveMapper.updateMovementSerialScan(scanno); }
+		 * 
+		 * insMap.put("scanno" , scanno);
+		 * 
+		 * }
+		 * 
+		 * stockMoveMapper.insertDeliveryStockMovement(insMap); stockMoveMapper.updateRequestMovement((String)
+		 * formMap.get("reqstno")); } String[] delvcd = { deliSeq };
+		 * 
+		 * formMap.put("parray", delvcd); formMap.put("userId", params.get("userId")); // formMap.put("prgnm",
+		 * params.get("prgnm")); formMap.put("refdocno", ""); formMap.put("salesorder", "");
+		 * 
+		 * stockMoveMapper.StockMovementIssue(formMap);
+		 * 
+		 */
 		return formMap;
-
 	}
 
 	@Override
@@ -273,7 +365,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		}
 
 		String[] delvcd = delyCd.split("∈");
-		
+
 		formMap.put("parray", delvcd);
 		formMap.put("userId", params.get("userId"));
 		// formMap.put("prgnm", params.get("prgnm"));
@@ -281,13 +373,13 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		formMap.put("salesorder", "");
 		logger.debug("formMap : {}", formMap);
 		if ("RC".equals(formMap.get("gtype"))) {
-//			for (int i = 0 ; i < delvcd.length ; i ++){
-//				String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
-//				if (receiptFlag != null && "Y".equals(receiptFlag)){
-//					formMap.put("retMsg" , "fail");
-//					return formMap; 
-//				}	
-//			}
+			// for (int i = 0 ; i < delvcd.length ; i ++){
+			// String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
+			// if (receiptFlag != null && "Y".equals(receiptFlag)){
+			// formMap.put("retMsg" , "fail");
+			// return formMap;
+			// }
+			// }
 			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
 		} else {
 			Map<String, Object> grade = (Map<String, Object>) params.get("grade");
@@ -312,8 +404,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 
 			stockMoveMapper.StockMovementIssue(formMap);
 		}
-		formMap.put("retMsg" , "succ");
-		//}
+		formMap.put("retMsg", "succ");
+		// }
 
 		return formMap;
 
@@ -337,7 +429,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		// return stocktran.selectStockTransferMtrDocInfoList(params);
 		stockMoveMapper.insertStockBooking(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectGetSerialDataCall(Map<String, Object> params) {
 		// TODO Auto-generated method stub
