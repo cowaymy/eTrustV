@@ -396,6 +396,9 @@
             
             Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
                 
+            	if(result != null){
+            		$("._custMakeBtn").css("display" , "none");
+            	}
                 Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
 
                 if('${callPrgm}' == 'ORD_REGISTER') {
@@ -750,9 +753,9 @@
     
     function fn_nricChkAndSuggDob(inputVal){
         
-    	if($("#_cmbTypeId_").val() != '964'){
+    	/* if($("#_cmbTypeId_").val() != '964'){
     		return;
-    	}
+    	} */
     	
     	//Dup Check
     	//Init Field
@@ -997,7 +1000,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
 </ul>
 
 
@@ -1074,7 +1077,7 @@
     </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -1138,7 +1141,7 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -1153,7 +1156,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
 </ul>
 </article><!-- tap_area end -->
 
@@ -1167,7 +1170,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
