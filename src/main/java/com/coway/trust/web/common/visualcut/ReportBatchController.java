@@ -33,10 +33,9 @@ import com.crystaldecisions.sdk.occa.report.application.ReportAppSession;
 import com.crystaldecisions.sdk.occa.report.application.ReportClientDocument;
 import com.crystaldecisions.sdk.occa.report.data.Fields;
 import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * CAUTION : 135 Server only //////@Scheduled of ReportBatchController should be uncommented. Then the report batch is
+ * CAUTION : 135 Server only ////////@Scheduled of ReportBatchController should be uncommented. Then the report batch is
  * executed. Note: If another instance is uncommented, it will be executed multiple times.
  */
 @Controller
@@ -299,55 +298,87 @@ public class ReportBatchController {
 		params.put(REPORT_FILE_NAME, "/visualcut/StockBalanceListingByLocCodeRAW_CDB.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP"); // parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"StockBalance" + File.separator + "StockBalanceListingByLocCodeRAW_CDB" + CommonUtils.getNowDate() + ".xls");
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "StockBalance" + File.separator
+				+ "StockBalanceListingByLocCodeRAW_CDB" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] StockBalanceListingByLocCodeRAW_CDB...");
 	}
 
-    @RequestMapping(value = "/StockBalanceListingByLocCodeRAW_DSC.do")
-    //@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
-    public void stockBalanceListingByLocCodeRawDsc() {
-        LOGGER.info("[START] StockBalanceListingByLocCodeRAW_DSC...");
-        Map<String, Object> params = new HashMap<>();
-        params.put(REPORT_FILE_NAME, "/visualcut/StockBalanceListingByLocCodeRAW_DSC.rpt");// visualcut rpt file name.
-        params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-        params.put("V_TEMP", "TEMP");// parameter
-        params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-                "StockBalance" + File.separator + "StockBalanceListingByLocCodeRAW_DSC" + CommonUtils.getNowDate() + ".xls");
-
-        this.viewProcedure(null, null, params);
-        LOGGER.info("[END] StockBalanceListingByLocCodeRAW_DSC...");
-    }
-
-	@RequestMapping(value = "/BSReport.do")
-    // Handle periodic execution manually rather than automatically.
-	//(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
-	public void bsReport(@RequestParam Map<String, Object> params) {
-		LOGGER.info("[START] BSReport...");
-		params.put(REPORT_FILE_NAME, "/visualcut/BSReport.rpt");// visualcut rpt file name.
+	@RequestMapping(value = "/StockBalanceListingByLocCodeRAW_DSC.do")
+	//@Scheduled(cron = "0 30 3 * * *")//Daily (3:30am)
+	public void stockBalanceListingByLocCodeRawDsc() {
+		LOGGER.info("[START] StockBalanceListingByLocCodeRAW_DSC...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/StockBalanceListingByLocCodeRAW_DSC.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-		params.put("V_CODYDEPTCODE", params.get("V_CODYDEPTCODE")); // parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + ".xls");
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "StockBalance" + File.separator
+				+ "StockBalanceListingByLocCodeRAW_DSC" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] StockBalanceListingByLocCodeRAW_DSC...");
+	}
+
+	@RequestMapping(value = "/BSReport.do")
+	//@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
+	public void bsReport() {
+		LOGGER.info("[START] BSReport...");
+		String[] deptCodes = { "CCS3013", "CCS3015", "CCS3016", "CCS3017", "CCS3022", "CCS3026", "CCS3031", "CCS3032",
+				"CCS3035", "CCS3036", "CCS3050", "CCS3058", "CCS3062", "CCS3067", "CCS3069", "CCS3070", "CCS3073",
+				"CCS3075", "CCS3079", "CCS3081", "CCS3082", "CCS3083", "CCS3085", "CCS3086", "CCS3087", "CCS3088",
+				"CCS3089", "CCS3092", "CCS3094", "CCS3096", "CCS3097", "CCS3100", "CCS3102", "CCS3103", "CCS3104",
+				"CCS3105", "CCS3106", "CCS3107", "CCS3109", "CCS3110", "CCS3111", "CCS3112", "CCS3113", "CCS3114",
+				"CCS3115", "CCS3116", "CCS3117", "CCS3118", "CCS3119", "CCS3120", "CCS3121", "CCS3123", "CCS3124",
+				"CCS3125", "CCS3126", "CCS3128", "CCS3129", "CCS3130", "CCS3131", "CCS3132", "CCS3133", "CCS3134",
+				"CCS3135", "CCS3136", "CCS3137", "CCS3139", "CCS3140", "CCS3141", "CCS3142", "CCS3143", "CCS3144",
+				"CCS3145", "CCS3147", "CCS3148", "CCS3149", "CCS3150", "CCS3151", "CCS3152", "CCS3153", "CCS3154",
+				"CCS3155", "CCS3156", "CCS3157", "CCS3158", "CCS3159", "CCS3160", "CCS3161", "CCS3162", "CCS3163",
+				"CCS3164", "CCS3165", "CCS3166", "CCS3167", "CCS3168", "CCS3169", "CCS3170", "CCS3171", "CCS3172",
+				"CCS3173", "CCS3175", "CCS3176", "CCS3177", "CCS3178", "CCS3179", "CCS3180", "CCS3181", "CCS3182",
+				"CCS3183", "CCS3184", "CCS3185", "CCS3186", "CCS3187", "CCS3189", "CCS3190", "CCS3191", "CCS3192",
+				"CCS3194", "CCS3195", "CCS3196", "CCS3197", "CCS3198", "CCS3199", "CCS3200", "CCS3201", "CCS3202",
+				"CCS3203", "CCS3204", "CCS3205", "CCS3206", "CCS3207", "CCS3209", "CCS3210", "CCS3211", "CCS3212",
+				"CCS3213", "CCS3214", "CCS3215", "CCS3216", "CCS3217", "CCS3218", "CCS3219", "CCS3221", "CCS3222",
+				"CCS3223", "CCS3224", "CCS3225", "CCS3226", "CCS3227", "CCS3228", "CCS3229", "CCS3230", "CCS3231",
+				"CCS3232", "CCS3233", "CCS3234", "CCS3235", "CCS3236", "CCS3237", "CCS3238", "CCS3239", "CCS3240",
+				"CCS3241", "CCS3242", "CCS3243", "CCS3244", "CCS3245", "CCS3246", "CCS3247", "CCS3248", "CCS3249",
+				"CCS3254", "CCS3255", "CCS3256", "CCS3257", "CCS3258", "CCS3259", "CCS3260", "CCS3261", "CCS3262",
+				"CCS3263" };
+
+		for (String param : deptCodes) {
+			Map<String, Object> params = new HashMap<>();
+			params.put(REPORT_FILE_NAME, "/visualcut/BSReport.rpt");// visualcut rpt file name.
+			params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+			params.put("V_CODYDEPTCODE", param); // parameter
+			params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+					"BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + ".xls");
+
+			this.viewProcedure(null, null, params);
+		}
+
 		LOGGER.info("[END] BSReport...");
 	}
 
 	@RequestMapping(value = "/BSReportCT.do")
-    // Handle periodic execution manually rather than automatically.
-	//(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
-	public void bsReportCT(@RequestParam Map<String, Object> params) {
+	//@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
+	public void bsReportCT() {
 		LOGGER.info("[START] BSReportCT...");
-		params.put(REPORT_FILE_NAME, "/visualcut/BSReportCT.rpt");// visualcut rpt file name.
-		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
-		params.put("V_CTCODEASC", params.get("V_CTCODEASC")); // parameter //TODO : 파라미터 변경해야 함.
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"BSReport" + File.separator + "BSReportCT" + CommonUtils.getNowDate() + ".xls");
 
-		this.viewProcedure(null, null, params);
+		String[] ctCodes = { "CT100049", "CT100052", "CT100370", "CT100374", "CT100401", "CT100410", "CT100420",
+				"CT100430", "CT100435", "CT100485", "CT100575", "CT100577", "CT100726" };
+
+		for (String param : ctCodes) {
+			Map<String, Object> params = new HashMap<>();
+			params.put(REPORT_FILE_NAME, "/visualcut/BSReportCT.rpt");// visualcut rpt file name.
+			params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+			params.put("V_CTCODEASC", param);
+			params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+					"BSReport" + File.separator + "BSReportCT" + CommonUtils.getNowDate() + ".xls");
+
+			this.viewProcedure(null, null, params);
+		}
+
 		LOGGER.info("[END] BSReportCT...");
 	}
 
