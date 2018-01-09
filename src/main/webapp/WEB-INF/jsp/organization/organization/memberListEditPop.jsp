@@ -314,7 +314,7 @@ function fn_setMemInfo(data){
     
     $("#course option[value='"+ data.course +"']").attr("selected", true);
     
-    $("#selectBranch option[value='"+ data.branchCode +"']").attr("selected", true);
+    $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
     
     
     }
