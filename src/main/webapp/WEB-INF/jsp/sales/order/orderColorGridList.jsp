@@ -228,9 +228,12 @@
     }
     
     function fn_searchListAjax(){
+
         if( $("#netSalesMonth").val() ==""  &&  $("#createStDate").val() ==""  &&  $("#createEnDate").val() ==""  ){
-            Common.alert("You must key-in at least one of Order Date / Net Sales Month");
-             return ;
+        	if($("#ordNo").val() == "" && $("#custName").val() == "" && $("#custIc").val() == "" && $("#salesmanCode").val() == "" && $("#contactNum").val() == "" && $("#promoCode").val() == ""){
+        		Common.alert("You must key-in at least one of Order Date / Net Sales Month");
+                return ;
+        	}
          }
          
         Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
@@ -388,7 +391,7 @@
     <th scope="row">Promotion Code</th>
     <td>
     <input type="text" title="" id="promoCode" name="promoCode" placeholder="Promotion Code" class="w100p" />
-    </td>
+    </td>       
     <th scope="row"></th>
     <td></td>
 </tr>
