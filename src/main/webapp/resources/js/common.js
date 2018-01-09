@@ -645,6 +645,8 @@ var Common = {
 
         $("body").append($obj);
 
+        $("#_alertOk").find('a').focus();
+
         $obj.find('#_popClose').on('click', function () {
             $obj.remove();
         });
@@ -770,6 +772,8 @@ var Common = {
 
         $("body").append($obj);
 
+        $("#_confirmOk").find('a').focus();
+
         $obj.find('#_popClose').on('click', function () {
             $obj.remove();
         });
@@ -850,6 +854,8 @@ var Common = {
         var $obj = $(msgHtml);
 
         $("body").append($obj);
+
+        $("#_promptOk").find('a').focus();
 
         $obj.find('#_promptClose').on('click', function () {
             $obj.remove();
