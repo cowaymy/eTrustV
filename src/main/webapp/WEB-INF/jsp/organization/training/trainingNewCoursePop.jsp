@@ -245,7 +245,7 @@ CommonCombo.make("generalCodeNew", "/common/selectCodeList.do", {groupCode : '32
 });
 
 // Member Type
-CommonCombo.make("memTypeNew", "/common/selectCodeList.do", {groupCode : '1'}, "${courseInfo.coursMemTypeId}", {
+CommonCombo.make("memTypeNew", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST'}, "${courseInfo.coursMemTypeId}", {
     id: "codeId",
     name: "codeName",
     type:"S"
