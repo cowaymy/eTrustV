@@ -398,6 +398,9 @@
                 
             	if(result != null){
             		$("._custMakeBtn").css("display" , "none");
+            	}else{
+            		Common.alert("Duplicate NRIC Number.");
+            		return;
             	}
                 Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
 

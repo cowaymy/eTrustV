@@ -596,6 +596,13 @@ public class CustomerController {
 		insmap.put("asEmail", vo.getAsEmail());
 		insmap.put("asCustName", vo.getAsCustName());
 		
+		/* NRIC Dup Check*/
+		
+		EgovMap nricDupMap = customerService.nricDupChk(insmap);
+		if(nricDupMap != null){
+			return null;
+		}
+		
 		customerService.insertCustomerInfo(insmap);
 		customerService.insertAddressInfo(insmap);
 		customerService.insertContactInfo(insmap);
