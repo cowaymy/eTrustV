@@ -351,6 +351,7 @@ function fn_setMemInfo(data){
 	        $("#marrital option[value="+ data.marrital +"]").attr("selected", true);
 	        $("#cmbRace").val(data.aplicntRace);
 	        $("#bankAccNo").val(data.bankAccNo);
+	        $("#statusID").val(data.stusId);
 	        
 		
 	}
@@ -1164,10 +1165,11 @@ function fn_selectState(selVal){
     </td>
     <th scope="row">e-Approval Status</th>
     <td colspan="2">
-    <select class="w100p">
-        <option value="">Pending</option>
-        <option value="">Approved</option>
-        <option value="">Rejected</option>
+    <select class="w100p" id=statusID name=statusID>
+        <option value="1">Active</option>
+        <option value="44">Pending</option>
+        <option value="5">Approved</option>
+        <option value="6">Rejected</option>
     </select>
     </td>
 </tr>

@@ -3673,8 +3673,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         SYSDATE, 
         A.APLICNT_TEL_HUSE tel_Huse ,
         A.APLICNT_RACE,
-        APLICNT_MARTL marrital
-        
+        APLICNT_MARTL marrital,
+        A.STUS_ID
         FROM
         ORG0003D A, SYS0013M B,
         SYS0015M C, SYS0004M F
@@ -3695,11 +3695,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			A.DEPT_CODE c41,
 		    to_char( A.APLICNT_DOB ,'DD/MM/YYYY' ) c29,
 			C.NAME c36,
+		
 			B.AREA area_Id,
 			B.COUNTRY,
 			B.CITY,
 			B.STATE,
-			B.POSTCODE
+			B.POSTCODE,
+			 to_char( SYSDATE ,'DD/MM/YYYY' ) c30
 			FROM ORG0003D A,  SYS0064M B
 			,SYS0015M C
 			WHERE A.AREA_ID = B.AREA_ID
@@ -3757,6 +3759,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            </if>
            <if test="Birth != null and Birth != '' ">
             ,APLICNT_DOB  =to_date( to_date(#{Birth}, 'DD/MM/YY') , 'YY/MM/DD' )
+           </if>
+            <if test="statusID != null and statusID != '' ">
+            , STUS_ID = #{statusID}
            </if>
      where  APLCTN_ID = #{MemberID}
      
