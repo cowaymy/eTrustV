@@ -89,8 +89,8 @@ var FormUtil = {
 	},
 
 	isEmpty : function(str) {
-		return typeof str == 'string' && !str.trim()
-				|| typeof str == 'undefined' || str === null;
+		return typeof str == 'undefined' || str === null
+				|| typeof str == 'string' && !str.trim();
 	},
 	
 	isNotEmpty : function(str) {
