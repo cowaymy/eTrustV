@@ -2,6 +2,7 @@ package com.coway.trust.web.services.installation;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -462,20 +463,60 @@ public class InstallationResultListController {
 		List<EgovMap>  update 	= (List<EgovMap>)  params.get("update");
 		logger.debug("asResultM ===>"+update.toString());
 
-		int   rtnValue = installationResultListService.updateAssignCT(params);
+		Map<String, Object> returnValue = new HashMap<String, Object>();
+		returnValue = installationResultListService.updateAssignCT(params);
+		
+		logger.debug("rtnValue ===> "+returnValue);
+		
+		String content = "";
+		String successCon = "";
+		String failCon = "";
+		
+		int successCnt = 0;
+		int failCnt = 0;
+		successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
+		failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
+		content = "[ Complete Count : " + successCnt + ", Fail Count : " + failCnt + " ]";
+		
+		List<String> successList = new ArrayList<String>();
+		List<String> failList = new ArrayList<String>();
+		successList =  (List<String>) returnValue.get("successList");
+		failList =  (List<String>) returnValue.get("failList");
+		
+		if (successCnt > 0) {
+			content += "<br/>Complete INS Number : ";
+			for (int i=0; i<successCnt; i++) {
+				successCon += successList.get(i) + ", ";
+			}
+			successCon = successCon.substring(0, successCon.length()-2);
+			content += successCon;
+		}
+		
+		if (failCnt > 0) {
+			content += "<br/>Fail INS Number : ";
+			for (int i=0; i<failCnt; i++) {
+				failCon += failList.get(i) + ", ";
+			}
+			failCon = failCon.substring(0, failCon.length()-2);
+			content += failCon;
+			content += "<br/>Can't transfer CT to the Installation order";
+		}
 		
 		ReturnMessage message = new ReturnMessage();
-		logger.debug("rtnValue ===>"+rtnValue);
-		if (rtnValue == -1) {
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(99);
+		message.setMessage(content);
+		
+		/*if (rtnValue == -1) {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Can't transfer CT to the Installation order");
 		} else {
 			message.setCode(AppConstants.SUCCESS);
 			message.setData(99);
 			message.setMessage("");
-		}
+		}*/
 		
-		logger.debug("message : {}" + message);
+		logger.debug("message : {}", message);
 		return ResponseEntity.ok(message);
 
 	}

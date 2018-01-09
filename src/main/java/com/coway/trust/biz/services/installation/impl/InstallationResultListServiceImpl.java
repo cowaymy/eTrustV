@@ -2,6 +2,7 @@ package com.coway.trust.biz.services.installation.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +22,6 @@ import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
-import com.coway.trust.biz.services.installation.InstallationReversalService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.services.installation.InstallationResultListController;
@@ -2057,15 +2057,20 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 
 	@Override
-	public int  updateAssignCT(Map<String, Object> params) {
+	public Map<String, Object>  updateAssignCT(Map<String, Object> params) {
 		List <EgovMap> updateItemList = (List<EgovMap>) params.get(AppConstants.AUIGRID_UPDATE);
-		int rtnValue  =-1;
+		Map<String, Object> resultValue = new HashMap<String, Object>();
+		int rtnValue  = 0;
+		int successCnt = 0;
+		int failCnt = 0;
+		List<String> successList = new ArrayList<String>();
+		List<String> failList = new ArrayList<String>();
 
 		if (updateItemList.size() > 0) {
 
 			for (int i = 0; i < updateItemList.size(); i++) {
 				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
-				logger.debug("updateMap : {}"+updateMap);
+				logger.debug("updateMap : {}", updateMap);
 				
 				// Transfer 실행 여부 제어 로직 추가 (프로시저 호출)
 				// 프로시저 호출하여 그 결과에 따라 updateAssignCT 실행
@@ -2088,13 +2093,22 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
                 if (procResult.equals("000")) {
                 	rtnValue = installationResultListMapper.updateAssignCT(updateMap) ;
+                	successCnt += rtnValue;
+                	successList.add(updateMap.get("installEntryNo").toString());
                 } else {
-                	// rtnValue  =-1;
+                	failCnt++;
+                	failList.add(updateMap.get("installEntryNo").toString());
                 }
 				
 			}
 		}
-		return rtnValue;
+		resultValue.put("successCnt", successCnt);
+		resultValue.put("successList", successList);
+		resultValue.put("failCnt", failCnt);
+		resultValue.put("failList", failList);
+		
+		logger.debug("resultValue : {}", resultValue);
+		return resultValue;
 	}
 
 	//@Override

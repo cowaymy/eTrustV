@@ -61,7 +61,7 @@ public interface InstallationResultListService {
 	 Map<String, Object> insertInstallationResult(Map<String, Object> params,SessionVO sessionVO) throws ParseException;
 
 	 //ctassion
-	int updateAssignCT (Map<String, Object> params);
+	Map<String, Object> updateAssignCT (Map<String, Object> params);
 	List<EgovMap> assignCtOrderList(Map<String, Object> params);
 	List<EgovMap> assignCtList(Map<String, Object> params);
 

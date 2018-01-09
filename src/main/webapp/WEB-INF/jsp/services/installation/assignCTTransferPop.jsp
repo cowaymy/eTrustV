@@ -145,14 +145,9 @@ function fn_ctChange(){
         console.log( result);
 
         if(result  !=""){
-        	if (result.message == "") {
-	            Common.alert("<b> successfully saved.</b>");
-	            fn_installationListSearch();
-	            $("#_assginCTTransferDiv").remove();
-        	} else {
-        		Common.alert(result.message);
-                $("#_assginCTTransferDiv").remove();
-        	}
+        	Common.alert(result.message);
+        	fn_installationListSearch();
+            $("#_assginCTTransferDiv").remove();
         }
     });
 
