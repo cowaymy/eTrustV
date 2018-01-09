@@ -373,10 +373,10 @@ function chgTab(tabNm) {
    
 }
 
-function fn_displayReport(viewType){
+ function fn_displayReport(viewType){
     
     var isRe = false;
-    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}', function(result){
+    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
         console.log("result : " + result);
         console.log("content  :  " + JSON.stringify(result));
          if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){
@@ -390,7 +390,7 @@ function fn_displayReport(viewType){
         Common.alert("No result from CTOS");
         return;
     }
-}
+} 
 
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->

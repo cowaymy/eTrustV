@@ -610,7 +610,7 @@ function chgTab(tabNm) {
 }
 
 
-function fn_displayReport(viewType){
+ function fn_displayReport(viewType){
     
     var isRe = false;
     Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , nric : '${orderDetail.basicInfo.custNric}'}, function(result){
@@ -627,7 +627,7 @@ function fn_displayReport(viewType){
         Common.alert("No result from CTOS");
         return;
     }
-}
+} 
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
