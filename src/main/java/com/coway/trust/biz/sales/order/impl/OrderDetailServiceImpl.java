@@ -477,7 +477,7 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     			installationInfo.put("preferInstTm", "-");
     		}
     		
-    		if(CommonUtils.isEmpty(installationInfo.get("firstInstallDt")) || SalesConstants.DEFAULT_DATE2.equals(installationInfo.get("firstInstallDt"))) {
+    		if(CommonUtils.isEmpty(installationInfo.get("firstInstallDt")) || SalesConstants.DEFAULT_DATE.equals(installationInfo.get("firstInstallDt"))) {
     			installationInfo.put("firstInstallDt", "-");
     		}
     		else {

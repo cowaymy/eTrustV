@@ -79,7 +79,7 @@
     <th scope="row">Sirim Number</th>
     <td>${orderDetail.installationInfo.lastInstallSirimNo}</td>
     <th scope="row">Update At(By)</th>
-    <td>${orderDetail.basicInfo.updDt}( ${orderDetail.basicInfo.updUserId})</td>
+    <td>${fn:substring(orderDetail.basicInfo.updDt, 0, 19)}<br>( ${orderDetail.basicInfo.updUserId})</td>
 </tr>
 <tr>
     <th scope="row">Obligation Period</th>
