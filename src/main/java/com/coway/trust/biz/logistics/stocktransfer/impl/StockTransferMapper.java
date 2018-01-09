@@ -65,5 +65,13 @@ public interface StockTransferMapper {
 	void updateRequestTransfer(Map<String, Object> params);
 
 	List<EgovMap> selectDeliverydupCheck(Map<String, Object> insMap);
+	
+	void updateStockHead(String reqstono);
+	
+	void deleteStockDelete(String reqstono);
+	
+	void deleteStockBooking(String reqstono);
+	
+	int selectdeliveryHead(String reqstono);
 
 }
