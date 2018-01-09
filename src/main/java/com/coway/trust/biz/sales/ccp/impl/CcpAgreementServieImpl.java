@@ -299,9 +299,7 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		EmailVO email = new EmailVO();
 		List<String> toList = new ArrayList<String>();
 		toList.add("nurul@coway.com.my");
-		//toList.add("amira.crt@coway.com.my");
-		//TODO 테스트
-		toList.add("dandanhead1@naver.com");
+		toList.add("amira.crt@coway.com.my");
 		
 		String subject = "Agreement No (" + params.get("docNo") + ") - Closed With Status Approved ";
 		String content = "Please to inform you that Agreement No (" + params.get("docNo") + ") has been closed with status active by [" + params.get("fullName") + "] on " + getCurTime()  + ".<br />" +
@@ -748,9 +746,6 @@ public class CcpAgreementServieImpl extends EgovAbstractServiceImpl implements C
 		
 		//List
 		toList.add("nurul@coway.com.my");
-		//TODO 테스트
-		toList.add("dandanhead1@naver.com");
-		//toList.add("wkdrhkd119@naver.com");
 		
 		if(prgId.equals("7")){
 			

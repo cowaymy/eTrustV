@@ -403,9 +403,7 @@ public class CcpCalculateController {
 			
 			LOGGER.info(" Message Contents : " + (String)params.get("hiddenUpdSmsMsg"));
 			LOGGER.info(" Mobile Phone Number : " + (String)params.get("hiddenSalesMobile"));
-			//mobileNumList.add((String) params.get("hiddenSalesMobile"));
-			//TODO Test Phone Number (주석해제)
-			mobileNumList.add("11111111");  
+			mobileNumList.add((String) params.get("hiddenSalesMobile"));
 			
 			sms.setMessage((String) params.get("hiddenUpdSmsMsg"));
 			sms.setMobiles(mobileNumList);  

@@ -238,9 +238,7 @@ public class ROSCallLogController {
 			
 			LOGGER.info(" Message Contents : " + (String)params.get("fullSms"));
 			LOGGER.info(" Mobile Phone Number : " + (String)params.get("salesManMemTelMobile"));
-			//mobileNumList.add((String) params.get("salesManMemTelMobile"));
-			//TODO Test Phone Number (주석해제)
-			mobileNumList.add("11111111");  
+			mobileNumList.add((String) params.get("salesManMemTelMobile"));
 			
 			sms.setMessage((String) params.get("fullSms"));
 			sms.setMobiles(mobileNumList);  
