@@ -1120,14 +1120,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				}
 				promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));*/
 				
-				if ( params.get("lvlTo") .equals("1") ) {	
+				if ( params.get("lvlTo") .equals("3") ) {	
 					promoEntry.put("lastDeptCode", deptCode.get("docNo"));
 					promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
 					promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
 				} else  if ( params.get("lvlTo") .equals("2") ) {
 					promoEntry.put("lastGrpCode", deptCode.get("docNo"));
 					promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
-				} else if ( params.get("lvlTo") .equals("3") ) {
+				} else if ( params.get("lvlTo") .equals("1") ) {
 					promoEntry.put("lastOrgCode", deptCode.get("docNo"));
 				}
 				
