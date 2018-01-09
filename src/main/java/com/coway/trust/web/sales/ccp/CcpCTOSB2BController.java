@@ -95,8 +95,6 @@ public class CcpCTOSB2BController {
 	@RequestMapping(value = "/getResultRowForCTOSDisplay")
 	public ResponseEntity<Map<String, Object>> getResultRowForCTOSDisplay(@RequestParam Map<String, Object> params) throws Exception{
 		
-		LOGGER.info("####################ResultRow Chk################");
-		
 		 Map<String, Object> rtnMap =	ccpCTOSB2BService.getResultRowForCTOSDisplay(params);
 		 
 		LOGGER.info("####################ResultRow Chk RESULT : " + rtnMap.toString());

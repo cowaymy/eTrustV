@@ -92,4 +92,6 @@ public interface CcpCalculateMapper {
 	void insertLog(Map<String, Object>params) throws Exception;
 	
 	EgovMap chkECash(Map<String, Object> params);
+	
+	EgovMap getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params);
 }

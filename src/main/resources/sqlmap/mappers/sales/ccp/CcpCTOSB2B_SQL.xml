@@ -108,15 +108,11 @@
     <if test="ordNo != null and ordNo != '' ">
     AND ORD_NO = #{ordNo}
     </if>
-  AND
+    <!-- AND FICO_SCRE > 0 -->
     <![CDATA[
-    PRCSS <> 0
-    ]]>
-  AND
-    FICO_SCRE > 0
-  AND
-    <![CDATA[
-    ROWNUM <= 1
+        AND  PRCSS <> 0
+        AND RESULT_RAW IS NOT NULL
+        AND  ROWNUM <= 1
     ]]>
 </select>
 </mapper>

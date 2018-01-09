@@ -444,6 +444,16 @@ public class CcpCalculateController {
 		return "sales/ccp/ccpCalCcpCustInfoLimitEditPop";
 	}
 	
+	
+	@RequestMapping(value = "/getResultRowForCTOSDisplayForCCPCalculation")
+	public ResponseEntity<Map<String, Object>> getResultRowForCTOSDisplayForCCPCalculation(@RequestParam Map<String, Object> params) throws Exception{
+		 
+		Map<String, Object> rtnMap =	ccpCalculateService.getResultRowForCTOSDisplayForCCPCalculation(params);
+		
+		LOGGER.info("####################ResultRow Chk RESULT : " + rtnMap.toString());
+		return ResponseEntity.ok(rtnMap);
+	}
+	
 	/* RPT */
 	
 	@RequestMapping(value = "/goCcpPerformancePop.do")
@@ -458,8 +468,6 @@ public class CcpCalculateController {
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
 		model.put("toMonth", toMonth);
-		
-		
 		
 		return "sales/ccp/ccpCalPerformancePop";
 	}

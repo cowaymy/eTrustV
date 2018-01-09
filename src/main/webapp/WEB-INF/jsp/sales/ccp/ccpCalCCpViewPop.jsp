@@ -376,8 +376,7 @@ function chgTab(tabNm) {
 function fn_displayReport(viewType){
     
     var isRe = false;
-    console.log("DEFAULT_RESOURCE_FILE : " + DEFAULT_RESOURCE_FILE);
-    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplay", {viewType : viewType , ordNo : '${orderDetail.basicInfo.ordNo}'}, function(result){
+    Common.ajax("GET", "/sales/ccp/getResultRowForCTOSDisplayForCCPCalculation", {viewType : viewType , ordNo : '${orderDetail.basicInfo.ordNo}'}, function(result){
         console.log("result : " + result);
         console.log("content  :  " + JSON.stringify(result));
          if(result.subPath != null && result.subPath !='' && result.fileName != null && result.fileName != ''){

@@ -2,9 +2,6 @@ package com.coway.trust.biz.sales.ccp;
 
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.web.bind.annotation.RequestParam;
-
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface CcpCalculateService {
@@ -38,5 +35,7 @@ public interface CcpCalculateService {
 	EgovMap countCallEntry(Map<String, Object> params) throws Exception;
 	
 	void calSave (Map<String, Object> params) throws Exception;
+	
+	Map<String, Object> getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params) throws Exception;
 	
 }
