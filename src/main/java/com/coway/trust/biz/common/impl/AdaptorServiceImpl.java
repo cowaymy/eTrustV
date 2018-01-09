@@ -168,6 +168,10 @@ public class AdaptorServiceImpl implements AdaptorService {
 	@Override
 	public SmsResult sendSMS(SmsVO smsVO, SMSTemplateType templateType, Map<String, Object> templateParams) {
 
+		if (smsVO.getMobiles().size() == 0) {
+			throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
+		}
+
 		Map<String, String> reason = new HashMap<>();
 		SmsResult result = new SmsResult();
 		result.setReqCount(smsVO.getMobiles().size());
@@ -193,8 +197,8 @@ public class AdaptorServiceImpl implements AdaptorService {
 								.replaceAll("%5F", "_").replaceAll("%7B", "{").replaceAll("%7D", "}")
 								.replaceAll("%7C", "|").replaceAll("%5B", "[").replaceAll("%5D", "]")
 								.replaceAll("%3F", "?").replaceAll("%0A", "\n")
-						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo + "&Concatenated=1&MsgID="
-						+ msgId;
+						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo
+						+ "&Concatenated=1&MsgID=" + msgId;
 			} catch (UnsupportedEncodingException e) {
 				throw new ApplicationException(e, AppConstants.FAIL);
 			}
@@ -251,6 +255,10 @@ public class AdaptorServiceImpl implements AdaptorService {
 	@Override
 	public SmsResult sendSMSByBulk(BulkSmsVO bulkSmsVO, SMSTemplateType templateType,
 			Map<String, Object> templateParams) {
+
+		if (CommonUtils.isEmpty(bulkSmsVO.getMobile())) {
+			throw new ApplicationException(AppConstants.FAIL, "required mobiles.....");
+		}
 
 		SmsResult result = new SmsResult();
 		Map<String, String> reason = new HashMap<>();
