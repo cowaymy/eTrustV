@@ -352,7 +352,7 @@ public class ReportBatchController {
 			params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 			params.put("V_CODYDEPTCODE", param); // parameter
 			params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-					"BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + ".xls");
+					"BSReport" + File.separator + "BSReport" + CommonUtils.getNowDate() + "_" + param + ".xls");
 
 			this.viewProcedure(null, null, params);
 		}
@@ -374,7 +374,7 @@ public class ReportBatchController {
 			params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 			params.put("V_CTCODEASC", param);
 			params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-					"BSReport" + File.separator + "BSReportCT" + CommonUtils.getNowDate() + ".xls");
+					"BSReport" + File.separator + "BSReportCT" + CommonUtils.getNowDate() + "_" + param + ".xls");
 
 			this.viewProcedure(null, null, params);
 		}
