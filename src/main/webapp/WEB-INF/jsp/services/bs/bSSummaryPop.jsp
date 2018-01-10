@@ -111,23 +111,23 @@ function fn_Generate(){
 	         }
 	
 	         if($("#cmbCodyCode").val() != '' && $("#cmbCodyCode").val() != null) {
-	            whereSql+= " AND mr.MEM_ID = " + $("#cmbCodyCode").val() + "";
+	            whereSql+= " AND mr.MEM_code = '" + $("#cmbCodyCode").val() + "'";
 	         }
 	         
 	         if($("#cmbDSC").val() != '' && $("#cmbDSC").val() != null) {
-	            whereSql+= " AND i.BRNCH_ID = " + $("#cmbDSC").val() + "";
+	            whereSql+= " AND i.BRNCH_ID = '" + $("#cmbDSC").val() + "'";
 	         }
 	         
 	         if($("#cmbStatus").val() != '' && $("#cmbStatus").val() != null) {
-	            whereSql+= " AND m.STUS_CODE_ID = " + $("#cmbStatus").val() + "";
+	            whereSql+= " AND m.STUS_CODE_ID = '" + $("#cmbStatus").val() + "'";
 	         }
 	         
 	         if($("#cmbInsStatus").val() != '' && $("#cmbInsStatus").val() != null) {
-	            whereSql+= " AND a.STUS_CODE_ID = " + $("#cmbInsStatus").val() + "";
+	            whereSql+= " AND a.STUS_CODE_ID = '" + $("#cmbInsStatus").val() + "'";
 	         }                           
 	
 	         if($("#cmbArea").val() != '' && $("#cmbArea").val() != null) {
-	            whereSql+= " AND a.AREA_ID = " + $("#cmbArea").val() + "";
+	            whereSql+= " AND a.AREA_ID = '" + $("#cmbArea").val() + "'";
 	         }                           
 	            
 	         $("#summaryform #V_SELECTSQL").val("");
