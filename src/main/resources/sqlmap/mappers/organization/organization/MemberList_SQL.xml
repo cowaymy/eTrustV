@@ -3684,12 +3684,17 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
     
     <select id="selectParentIdFrom"  resultType="egovMap">
-       SELECT MEM_ID FROM ORG0005D 
-       WHERE DEPT_CODE = #{deptCode}
-       AND MEM_LVL = #{lvlTo}
+	    SELECT MEM_UP_ID FROM ORG0005D 
+	   WHERE MEM_ID = #{memberId}
     </select>
     
-    
+    <select id="selectParentDCFrom"  resultType="egovMap">
+        SELECT B.DEPT_CODE 
+		FROM ORG0005D A
+		JOIN ORG0005D B ON A.MEM_UP_ID = B.MEM_ID
+		WHERE A.MEM_ID = #{memberId}
+		AND B.MEM_LVL = #{lvlTo}
+    </select>
     
      <select id="selectHpMemberView"  parameterType="Map" resultType="egovMap">
      

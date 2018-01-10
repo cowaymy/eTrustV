@@ -194,6 +194,8 @@ public interface MemberListMapper {
 	List<EgovMap> selectBusinessType();
 
 	List<EgovMap> selectParentIdFrom(Map<String, Object> parentEntry);
+	
+	List<EgovMap> selectParentDCFrom(Map<String, Object> parentDCFEntry);
 
 	List<EgovMap> selectHpMemberView(Map<String, Object> params);
 
@@ -213,5 +215,5 @@ public interface MemberListMapper {
 	void insertDocSub(Map<String, Object> oneDocSub);
 
 	void deleteDocSub(Map<String, Object> oneDocSub);
-	
+
 }
