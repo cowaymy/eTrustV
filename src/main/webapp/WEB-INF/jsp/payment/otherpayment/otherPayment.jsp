@@ -137,11 +137,12 @@ $(document).ready(function(){
      $("#searchBankAcc").find('option:first').attr('selected', 'selected');
      $('#searchBankAcc').prop("disabled", true);
      $('#searchVa').prop("disabled", true);
-     
-     
+   
+     //화면init시에 cash라서 jompay 삭제
+     $("#searchBankType option[value='2728']").remove(); 
      
 	 $('#payMode').change(function() {
-		
+		 
 		 //cash일때, online<div>감추고 Cash에 대한 Bank Acc불러옴
 		 if($('#payMode').val() == '105'){
 			 fn_setSearchPayType();
@@ -152,11 +153,14 @@ $(document).ready(function(){
 			 $("#cash").hide();
 			 $("#cashForm")[0].reset();
 			 fn_clearRequiredType();
-             $("#cash").show();
-             
-             $("#cash").find("#payType").val($('#payMode').val());
-             
-             doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
+			 $("#cash").show();
+			 $("#cash").find("#payType").val($('#payMode').val());
+			 doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
+			 $("#searchBankType option").remove();
+			 $("#searchBankType").append("<option value=''>Choose One</option>");
+			 $("#searchBankType").append("<option value='2730'>MBB CDM</option>");
+			 $("#searchBankType").append("<option value='2730'>VA</option>");
+			 $("#searchBankType").append("<option value='2731'>Others</option>");
 	     }else if($('#payMode').val() == '106'){//cheque
 	    	 fn_setSearchPayType();
 	    	 $("#online").hide();
@@ -172,6 +176,10 @@ $(document).ready(function(){
 	         $("#cheque").find("#payType").val($('#payMode').val());
 
 	         doGetCombo('/common/getAccountList.do', 'CHQ','', 'searchBankAcc', 'S', '' );
+	         $("#searchBankType option").remove();
+	         $("#searchBankType").append("<option value=''>Choose One</option>");
+	         $("#searchBankType").append("<option value='2730'>VA</option>");
+	         $("#searchBankType").append("<option value='2731'>Others</option>");
 	     }else if($('#payMode').val() == '108'){//online
 	    	 fn_setSearchPayType();
 	    	 $("#online").hide();
@@ -186,6 +194,11 @@ $(document).ready(function(){
              $("#online").find("#payType").val($('#payMode').val());
 
              doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
+             $("#searchBankType option").remove();
+             $("#searchBankType").append("<option value=''>Choose One</option>");
+             $("#searchBankType").append("<option value='2728'>JomPay</option>");
+             $("#searchBankType").append("<option value='2730'>VA</option>");
+             $("#searchBankType").append("<option value='2731'>Others</option>");
         }
 		 
 	 });
@@ -2338,12 +2351,35 @@ function fn_outConfirm(){
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
 			  $('#searchVa').val("");
 			  $('#searchBankAcc').prop("disabled", true);
-	          $('#searchVa').prop("disabled", false);
+			  $('#searchVa').prop("disabled", false);
 		  }else{
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
 			  $('#searchVa').val("");
 			  $('#searchBankAcc').prop("disabled", false);
-	          $('#searchVa').prop("disabled", true);
+			  $('#searchVa').prop("disabled", true);
+			  
+			  if(selected == '2729' && $('#payMode').val() == '105'){
+				  $('#searchBankAcc').val('84');
+			  }else{
+				  $('#searchBankAcc').val('');
+			  }
+			  
+			  if(selected == '2731' && $('#payMode').val() == '106'){
+				  $('#searchBankAcc').val('');
+        }else{
+		          
+        }
+			  
+			  if(selected == '2728' && $('#payMode').val() == '108'){
+				  $("#searchBankAcc option").remove();
+				  $("#searchBankAcc").append("<option value=''>Choose One</option>");
+				  $("#searchBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
+				  $("#searchBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+		    }else{
+		    	$("#searchBankAcc option").remove();
+		    	doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );       
+		    }
+			  
 		  }
 	  }else{
 		  $('#searchBankAcc').prop("disabled", true);
