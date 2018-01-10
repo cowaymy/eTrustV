@@ -575,6 +575,12 @@ function f_validatation(v){
             Common.alert("Header Text can be up to 50 digits.");
             return false;
         }
+
+        if ($('#insReqType').val() == "OI21" && $("#insSmo").val() == ""){
+            Common.alert("Ref.Doc No. field is mandatory");
+            return false;
+        }
+        
     
     }
     
@@ -894,7 +900,7 @@ function locationList(){
     <td colspan="3">
     <input id="insRequestor" name="insRequestor" type="text" title="" placeholder=""  class="readonly w100p" readonly="readonly" />
     </td>
-    <th scope="row">Stock Movement No</th>
+    <th scope="row">Ref.Doc No.</th>
      <td colspan="3">
     <input id="insSmo" name="insSmo" type="text" title="" placeholder="" class="w100p" />
     </td> 
