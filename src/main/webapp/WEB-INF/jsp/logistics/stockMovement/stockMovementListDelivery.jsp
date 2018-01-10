@@ -415,10 +415,6 @@ $(function(){
     		  Common.alert("Not Allow to Check All rows");
     		  return false;
     	}
-    		
-    
-    	
-    	
         var checkDelqty= false;
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
