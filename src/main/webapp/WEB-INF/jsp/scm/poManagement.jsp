@@ -247,8 +247,6 @@ function fnSetStockComboBox()
 
 function fnCheckedDelete(Obj) 
 {
-  //console.log($(Obj).parents().hasClass("btn_disabled"))
-  
   if ($(Obj).parents().hasClass("btn_disabled") == true)
     return false;
 

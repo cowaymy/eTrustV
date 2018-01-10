@@ -434,8 +434,7 @@ MERGE INTO SCM0011D
                   ,#{stockCode}
                   ,#{preCdc} 
                   ,#{poQty} 
-                 ) 
-			                        
+                 ) 			                        
 </update>
 
 <delete id="deletePOMaster" parameterType="Map"> 

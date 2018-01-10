@@ -2000,6 +2000,5 @@ SELECT STK_ID
                                 , #{rtnVal,  mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanAccuracyInsertMap})
     }
 </select>
-
   
 </mapper>
