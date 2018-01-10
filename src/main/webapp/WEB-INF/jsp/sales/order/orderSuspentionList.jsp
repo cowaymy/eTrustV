@@ -37,32 +37,31 @@
         var columnLayout = [ {
                 dataField : "susNo",
                 headerText : "Suspend Number",
-                width : 210,
+                width : 220,
                 editable : false
             }, {
                 dataField : "name",
                 headerText : "Status",
-                width : 200,
+                width : 140,
                 editable : false
             }, {
                 dataField : "salesOrdNo",
                 headerText : "Order No",
-                width : 200,
+                width : 150,
                 editable : false
             }, {
                 dataField : "susCrtDt",
                 headerText : "Create Date",
-                width : 210,
+                width : 150,
                 editable : false
             }, {
                 dataField : "susCrtUserName",
                 headerText : "Creator",
-                width : 200,
+                width : 180,
                 editable : false
             },{
                 dataField : "invNo",
                 headerText : "Investigate Number",
-                width : 210,
                 editable : false
             },{
                 dataField : "salesOrdId",

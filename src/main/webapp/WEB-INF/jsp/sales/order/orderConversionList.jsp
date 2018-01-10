@@ -27,7 +27,7 @@
         var columnLayout = [ {
                 dataField : "rsCnvrNo",
                 headerText : "Batch No",
-                width : 140,
+                width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
@@ -38,25 +38,25 @@
             }, {
                 dataField : "rsCnvrStusFrom",
                 headerText : "Status (From)",
-                width : 170,
+                width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "rsCnvrStusTo",
                 headerText : "Status (To)",
-                width : 160,
+                width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "code1",
                 headerText : "Convert Status",
-                width : 170,
+                width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "rsCnvrDt",
                 headerText : "Convert Date",
-                width : 170,
+                width : 110,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
                 editable : false,
@@ -70,9 +70,9 @@
             }, {
                 dataField : "rsCnvrCrtDt",
                 headerText : "Create Date",
-                width : 140,
+                width : 110,
                 dataType : "date",
-                formatString : "ddmm/yyyy" ,
+                formatString : "dd/mm/yyyy" ,
                 editable : false,
                 style: 'left_style'
             }, {
@@ -84,7 +84,7 @@
             }, {
                 dataField : "rsCnvrCnfmDt",
                 headerText : "Confirm Date",
-                width : 140,
+                width : 110,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
                 editable : false,
