@@ -177,22 +177,22 @@
            if ($("#cmbStatusType1").val() == 4) {    // Completed
         	   $("input[name='settleDate']").attr('disabled', false);
                $("select[name='failReason'] option").remove();
-               doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
-               $("select[name=cmbCollectType]").attr('disabled', false);
+               //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+               //$("select[name=cmbCollectType]").attr('disabled', false);
            } else if ($("#cmbStatusType1").val() == 21) {    // Failed
         	   //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
-               $("select[name='cmbCollectType'] option").remove();
-               $("select[name=cmbCollectType]").attr('disabled', true);
+               //$("select[name='cmbCollectType'] option").remove();
+               //$("select[name=cmbCollectType]").attr('disabled', true);
            } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
         	   //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
-               $("select[name='cmbCollectType'] option").remove();
-               $("select[name=cmbCollectType]").attr('disabled', true);
+               //$("select[name='cmbCollectType'] option").remove();
+               //$("select[name=cmbCollectType]").attr('disabled', true);
            }
            
        });
@@ -253,10 +253,10 @@
                  Common.alert("Please Select 'Fail Reason'.");
                  return false;
              }
-             if (<c:out value="${hsDefaultInfo.cancReqNo}"/> == "" || <c:out value="${hsDefaultInfo.cancReqNo}"/> == null) {
+             /* if (<c:out value="${hsDefaultInfo.cancReqNo}"/> == "" || <c:out value="${hsDefaultInfo.cancReqNo}"/> == null) {
             	 Common.alert("Can’t entry without Cancel Request Number");
                  return false;
-             }
+             } */
          }
             
             
@@ -295,7 +295,7 @@
             console.log(resultList);
             jsonObj.add = resultList;        
             $("input[name='settleDate']").removeAttr('disabled');
-            //$("select[name=cmbCollectType]").removeAttr('disabled');
+            $("select[name=cmbCollectType]").removeAttr('disabled');
             jsonObj.form = $("#addHsForm").serializeJSON();
             //$("input[name='settleDate']").attr('disabled', true);
             //$("select[name=cmbCollectType]").attr('disabled', true);
@@ -359,8 +359,8 @@
             $("#genderForm").attr('checked', false); */
         }else if ($("#cmbStatusType1").val() == '21') {
 
-            $("select[name=cmbCollectType]").attr('disabled', 'disabled');
-           // $("select[name=failReason]").attr("enabled",true);
+            //$("select[name=cmbCollectType]").attr('disabled', 'disabled');
+            //$("select[name=failReason]").attr("enabled",true);
             $("select[name=failReason]").attr('disabled',false);
         }
         
@@ -460,7 +460,7 @@
     <th scope="row">Collection Code</th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
-        <option value="" selected>Choose One</option>
+        <option value="0" selected>Choose One</option>
             <c:forEach var="list" items="${ cmbCollectTypeComboList}" varStatus="status">
                  <option value="${list.code}">${list.c1 } </option>
             </c:forEach>

@@ -277,12 +277,12 @@ var myDetailGridData = null;
            $("#cmbServiceMem option[value='"+codyIdCd +"']").attr("selected", true);
 
            var renColctCd = "${basicinfo.renColctId}";
-           if(renColctCd != "0" ){
+           /* if(renColctCd != "0" ){
         	   $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
            }else{
                $("#cmbCollectType").find("option").remove();
-           }
-           /* $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true); */
+           } */
+           $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
 
              if($("#_openGb").val() == "view"){
                     $("#btnSave").hide();
@@ -311,21 +311,21 @@ var myDetailGridData = null;
                     $("input[name='settleDt']").attr('disabled', false);
                     $("select[name='failReason'] option").remove();
                     //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
-                    $("select[name=cmbCollectType]").attr('disabled', false);
+                    //$("select[name=cmbCollectType]").attr('disabled', false);
                 } else if ($("#cmbStatusType2").val() == 21) {    // Failed
                     //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                     //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
                     $('#settleDt').val('');
                     $("input[name='settleDt']").attr('disabled', true);
-                    $("select[name='cmbCollectType'] option").remove();
-                    $("select[name=cmbCollectType]").attr('disabled', true);
+                    //$("select[name='cmbCollectType'] option").remove();
+                    //$("select[name=cmbCollectType]").attr('disabled', true);
                 } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
                     //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                     //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
                     $('#settleDt').val('');
                     $("input[name='settleDt']").attr('disabled', true);
-                    $("select[name='cmbCollectType'] option").remove();
-                    $("select[name=cmbCollectType]").attr('disabled', true);
+                    //$("select[name='cmbCollectType'] option").remove();
+                    //$("select[name=cmbCollectType]").attr('disabled', true);
                 }
             
             $("#cmbStatusType2").change(function(){
@@ -336,22 +336,22 @@ var myDetailGridData = null;
                 if ($("#cmbStatusType2").val() == 4) {    // Completed
                     $("input[name='settleDt']").attr('disabled', false);
                     $("select[name='failReason'] option").remove();
-                    doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
-                    $("select[name=cmbCollectType]").attr('disabled', false);
+                    //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+                    //$("select[name=cmbCollectType]").attr('disabled', false);
                 } else if ($("#cmbStatusType2").val() == 21) {    // Failed
                     //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                     doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
                     $('#settleDt').val('');
                     $("input[name='settleDt']").attr('disabled', true);
-                    $("select[name='cmbCollectType'] option").remove();
-                    $("select[name=cmbCollectType]").attr('disabled', true);
+                    //$("select[name='cmbCollectType'] option").remove();
+                    //$("select[name=cmbCollectType]").attr('disabled', true);
                 } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
                     //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
                     doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
                     $('#settleDt').val('');
                     $("input[name='settleDt']").attr('disabled', true);
-                    $("select[name='cmbCollectType'] option").remove();
-                    $("select[name=cmbCollectType]").attr('disabled', true);
+                    //$("select[name='cmbCollectType'] option").remove();
+                    //$("select[name=cmbCollectType]").attr('disabled', true);
                 }
                 
             });
@@ -431,10 +431,10 @@ var myDetailGridData = null;
                  Common.alert("Please Select 'Fail Reason'.");
                  return false;
              }
-             if (<c:out value="${basicinfo.cancReqNo}"/> == "" || <c:out value="${basicinfo.cancReqNo}"/> == null) {
+             /* if (<c:out value="${basicinfo.cancReqNo}"/> == "" || <c:out value="${basicinfo.cancReqNo}"/> == null) {
                  Common.alert("Can’t entry without Cancel Request Number");
                  return false;
-             }
+             } */
          }
     	 
     	 /* if ($("#cmbStatusType2").val() == 21) {    // Failed
@@ -623,6 +623,7 @@ var myDetailGridData = null;
     <th scope="row" style="width: 244px; ">Collection Code<span class="must">*</span></th>
     <td>
     <select class="w100p"  id ="cmbCollectType" name = "cmbCollectType">
+        <option value="0" selected>Choose One</option>
             <c:forEach var="list" items="${cmbCollectTypeComboList}" varStatus="status">
                  <option value="${list.code}">${list.c1 } </option>
             </c:forEach>

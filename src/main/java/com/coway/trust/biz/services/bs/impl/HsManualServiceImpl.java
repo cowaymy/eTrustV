@@ -443,7 +443,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			if (status == 4) {	// Completed
 				insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
 			} else if (status == 21 || status == 10) {	// Fail & Cancelled
-				insertHsResultfinal.put("renColctId", null);
+				insertHsResultfinal.put("renColctId", params.get("cmbCollectType"));
 			}
 			
 			insertHsResultfinal.put("whId", params.get("wareHouse"));

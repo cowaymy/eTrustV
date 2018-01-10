@@ -904,6 +904,11 @@
 	            $('#cmdCdManager1', '#searchForm').attr('class','w100p readonly ');
 	        }            
         }        
+        
+        function fn_excelDown(){
+            GridCommon.exportTo("grid_wrap", "xlsx", "HS Order Search");
+        }
+        
     </script>
 
 
@@ -1153,12 +1158,14 @@
 </form>
 </div>
 
+
                 <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
-                <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label><br><br>
+                <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label>
 
     <ul class="right_btns">
-
-
+		<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+		    <!-- <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">GENERATE</a></p></li> -->
+		</c:if>    
     </ul>
 
 <section class="search_result"><!-- search_result start -->
