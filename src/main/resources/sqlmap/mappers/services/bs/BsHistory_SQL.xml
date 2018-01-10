@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper
+     namespace="com.coway.trust.biz.services.bs.impl.BsHistoryMapper">
+
+
+    <select id="selectOrderList" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+            SELECT                  
+                                 Distinct1.SCHDUL_ID SCHDUL_ID ,
+                                 Distinct1.NO BSNO ,
+                                 Distinct1.MONTH ||' - '||Distinct1.YEAR  as BS_DATE,                                 
+                                 Distinct1.CODY_ID CODY_ID ,
+                                 Distinct1.STUS_CODE_ID STUS_CODE_ID ,
+                                 Distinct1.CODE CODE ,
+                                 Distinct1.SALES_ORD_ID SALES_ORD_ID ,
+                                 Distinct1.SALES_ORD_NO SALES_ORD_NO ,
+                                 Distinct1.NAME NAME ,
+                                 Distinct1.NRIC NRIC ,
+                                 Distinct1.CODE1 CODE1 ,
+                                 Distinct1.C1 C1 ,
+                                 Distinct1.C2 BSR_ID ,
+                                 Distinct1.C3 BSR_NO ,
+                                 Distinct1.C4 MEM_TYPE ,
+                                 Distinct1.C5 MEM_CODE ,
+                                 Distinct1.C6 MEM_STATUS ,
+                                 Distinct1.C7 INSTALL_DATE ,
+                                 Distinct1.CODY_CODE CODY_CODE,
+                                 Distinct1.SETL_DT SETL_DT,
+                                 Distinct1.FAIL_RESN FAIL_RESN,
+                                 Distinct1.COLL_RESN COLL_RESN,
+                                 Distinct1.STOCK_ID,
+                                 Distinct1.STOCK_CODE,
+                                 Distinct1.STOCK_DESC,
+                                 Distinct1.CUSTOMER_ADDRESS,
+                                 Distinct1.INSTALL_ADDRESS,
+                                 Distinct1.MAIL_CNT_TEL_M,
+                                 Distinct1.MAIL_CNT_TEL_R,
+                                 Distinct1.MAIL_CNT_TEL_O,
+                                 Distinct1.MAIL_CNT_TEL_F,
+                                 Distinct1.CUST_VA_NO,
+                                 Distinct1.JOM_PAY_REF,
+                                 Distinct1.CUST_TYPE
+                        FROM  
+                            (SELECT   /*+  leading(Extent1) use_nl( Extent7, Extent1, Extent3, Extent4, Extent6, Extent8, Extent9, Extent2,  Extent5)   */
+                             DISTINCT Extent1.SCHDUL_ID SCHDUL_ID ,
+                                 Extent1.NO NO ,
+                                 Extent1.MONTH MONTH ,
+                                 Extent1.YEAR YEAR ,
+                                 Extent1.CODY_ID CODY_ID ,
+                                 Extent1.STUS_CODE_ID STUS_CODE_ID ,
+                                 Extent2.CODE CODE ,
+                                 Extent3.SALES_ORD_ID SALES_ORD_ID ,
+                                 Extent3.SALES_ORD_NO SALES_ORD_NO ,
+                                 Extent4.NAME NAME ,
+                                 Extent4.NRIC NRIC ,
+                                 Extent5.CODE CODE1 ,
+                                 Extent10.SETL_DT SETL_DT ,
+                                 Extent11.RESN_DESC FAIL_RESN ,
+                                 Extent12.RESN_DESC COLL_RESN ,
+                                 vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+                                 vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+                                 vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+                                 vOrderMailingInfo.ADDR_DTL||' '||vOrderMailingInfo.STREET||' '||vOrderMailingInfo.MAIL_POST_CODE||' '||vOrderMailingInfo.MAIL_AREA||' '||vOrderMailingInfo.MAIL_STATE||' '||vOrderMailingInfo.MAIL_CNTY AS CUSTOMER_ADDRESS,
+                                 Extent6.INST_ADDR_DTL||' '||Extent6.INST_STREET||' '||Extent6.INST_POSTCODE||' '||Extent6.INST_STATE||' '||Extent6.INST_COUNTRY AS INSTALL_ADDRESS,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_M,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_R,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_O,
+                                 vOrderMailingInfo.MAIL_CNT_TEL_F,
+                                 vOrderBasicInfo.CUST_VA_NO,
+                                 vOrderBasicInfo.JOM_PAY_REF,
+                                 vOrderBasicInfo.CUST_TYPE,
+                                 1 C1 ,     
+                                CASE
+                                WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
+                                Extent7.RESULT_ID
+                                ELSE 0
+                                END C2 ,
+                                CASE
+                                WHEN ( Extent7.RESULT_ID IS NOT NULL ) THEN
+                                Extent7.NO
+                                ELSE ''
+                                END C3 ,
+                                CASE
+                                WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                                Extent8.MEM_TYPE
+                                ELSE 0
+                                END C4 ,
+                                CASE
+                                WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                                Extent8.MEM_CODE
+                                ELSE ''
+                                END C5 ,
+                                CASE
+                                WHEN ( Extent8.MEM_ID IS NOT NULL ) THEN
+                                Extent8.STUS
+                                ELSE 0
+                                END C6 ,
+                                CASE
+                                WHEN ( Extent6.FIRST_INSTALL_DT IS NOT NULL ) THEN
+                                Extent6.FIRST_INSTALL_DT
+                                ELSE '1900-01-01'
+                                END C7 ,
+                                CASE
+                                WHEN ( Extent9.MEM_ID IS NOT NULL ) THEN
+                                Extent9.MEM_CODE
+                                ELSE ''
+                                END CODY_CODE
+                            FROM SVC0008D Extent1
+                            JOIN SYS0038M Extent2
+                            ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
+                            JOIN SAL0001D Extent3                                
+                                ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
+                            JOIN SAL0029D Extent4
+                                ON Extent4.CUST_ID = Extent3.CUST_ID
+                            JOIN SYS0013M Extent5
+                                ON Extent5.CODE_ID = Extent3.APP_TYPE_ID
+                            JOIN SVC0006D Extent10
+                                ON Extent10.SCHDUL_ID = Extent1.SCHDUL_ID
+                            JOIN SAL1006V vOrderBasicInfo
+                                    ON vOrderBasicInfo.ORD_ID = Extent1.SALES_ORD_ID 
+                            LEFT JOIN SYS0032m Extent11
+                                ON Extent11.RESN_ID = Extent10.FAIL_RESN_ID
+                            LEFT JOIN SYS0032m Extent12
+                                ON Extent12.RESN_ID = Extent10.REN_COLCT_ID
+                            JOIN 
+                                (SELECT  /*+ use_nl( vOrderInstallationInfo.som, vOrderInstallationInfo.ma1 ) full(vOrderInstallationInfo.ir1) parallel(vOrderInstallationInfo.ir1, 4)  */
+                                 vOrderInstallationInfo.ORD_ID ORD_ID ,
+                                 vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME ,
+                                 vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC ,
+                                 vOrderInstallationInfo.INST_CNT_EMAIL INST_CNT_EMAIL ,
+                                 vOrderInstallationInfo.INST_CNT_TEL_M INST_CNT_TEL_M ,
+                                 vOrderInstallationInfo.INST_CNT_TEL_O INST_CNT_TEL_O ,
+                                 vOrderInstallationInfo.INST_CNT_TEL_R INST_CNT_TEL_R ,
+                                 vOrderInstallationInfo.INST_CNT_TEL_F INST_CNT_TEL_F ,
+                                 vOrderInstallationInfo.INST_CNT_GENDER INST_CNT_GENDER ,
+                                 vOrderInstallationInfo.INST_ADDR_DTL INST_ADDR_DTL ,
+                                 vOrderInstallationInfo.INST_STREET INST_STREET ,
+                                 vOrderInstallationInfo.INST_AREA INST_AREA ,
+                                 vOrderInstallationInfo.INST_POSTCODE INST_POSTCODE ,
+                                 vOrderInstallationInfo.INST_CITY INST_CITY ,
+                                 vOrderInstallationInfo.INST_STATE INST_STATE ,
+                                 vOrderInstallationInfo.INST_COUNTRY INST_COUNTRY ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_NO FIRST_INSTALL_NO ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_CT_CODE FIRST_INSTALL_CT_CODE ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_CT_NAME FIRST_INSTALL_CT_NAME ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_DT FIRST_INSTALL_DT ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_REM FIRST_INSTALL_REM ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_SIRIM_NO FIRST_INSTALL_SIRIM_NO ,
+                                 vOrderInstallationInfo.FIRST_INSTALL_SERIAL_NO FIRST_INSTALL_SERIAL_NO ,
+                                 vOrderInstallationInfo.LAST_INSTALL_NO LAST_INSTALL_NO ,
+                                 vOrderInstallationInfo.LAST_INSTALL_CT_CODE LAST_INSTALL_CT_CODE ,
+                                 vOrderInstallationInfo.LAST_INSTALL_CT_NAME LAST_INSTALL_CT_NAME ,
+                                 vOrderInstallationInfo.LAST_INSTALL_DT LAST_INSTALL_DT ,
+                                 vOrderInstallationInfo.LAST_INSTALL_REM LAST_INSTALL_REM ,
+                                 vOrderInstallationInfo.LAST_INSTALL_SIRIM_NO LAST_INSTALL_SIRIM_NO ,
+                                 vOrderInstallationInfo.LAST_INSTALL_SERIAL_NO LAST_INSTALL_SERIAL_NO ,
+                                 vOrderInstallationInfo.DSC_ID DSC_ID ,
+                                 vOrderInstallationInfo.DSC_CODE DSC_CODE ,
+                                 vOrderInstallationInfo.DSC_NAME DSC_NAME ,
+                                 vOrderInstallationInfo.PREFER_INST_DT PREFER_INST_DT ,
+                                 vOrderInstallationInfo.PREFER_INST_TM PREFER_INST_TM ,
+                                 vOrderInstallationInfo.VRIFY_REM VRIFY_REM                                 
+                                FROM SAL1010V vOrderInstallationInfo ) Extent6
+                                    ON Extent6.ORD_ID = Extent1.SALES_ORD_ID                                
+                                LEFT JOIN SVC0006D Extent7
+                                    ON ( Extent7.SCHDUL_ID = Extent1.SCHDUL_ID )
+                                        AND ( 306 = Extent7.TYPE_ID )
+                                        AND ( 1 = Extent7.RESULT_IS_CURR )
+                                LEFT JOIN ORG0001D Extent8
+                                    ON Extent8.MEM_ID = Extent1.CODY_ID
+                                LEFT JOIN ORG0001D Extent9
+                                    ON Extent9.MEM_ID = Extent7.CODY_ID
+                                JOIN
+                                    ( SELECT vOrderMailingInfo.ORD_ID ORD_ID  ,
+                                        --vOrderMailingInfo.MAIL_ADD1 MAIL_ADD1  ,
+                                        --vOrderMailingInfo.MAIL_ADD2 MAIL_ADD2  ,
+                                       -- vOrderMailingInfo.MAIL_ADD3 MAIL_ADD3  ,
+                                        vOrderMailingInfo.MAIL_CNTY MAIL_CNTY  ,
+                                        vOrderMailingInfo.MAIL_STATE MAIL_STATE  ,
+                                        vOrderMailingInfo.MAIL_AREA MAIL_AREA  ,
+                                        vOrderMailingInfo.STREET STREET  ,
+                                        vOrderMailingInfo.ADDR_DTL ADDR_DTL  ,
+                                        vOrderMailingInfo.MAIL_POST_CODE MAIL_POST_CODE  ,
+                                        vOrderMailingInfo.MAIL_CNT_NAME MAIL_CNT_NAME  ,
+                                        vOrderMailingInfo.MAIL_CNT_NRIC MAIL_CNT_NRIC  ,
+                                        vOrderMailingInfo.MAIL_CNT_EMAIL MAIL_CNT_EMAIL  ,
+                                        vOrderMailingInfo.MAIL_CNT_TEL_M MAIL_CNT_TEL_M  ,
+                                        vOrderMailingInfo.MAIL_CNT_TEL_O MAIL_CNT_TEL_O  ,
+                                        vOrderMailingInfo.MAIL_CNT_TEL_R MAIL_CNT_TEL_R  ,
+                                        vOrderMailingInfo.MAIL_CNT_TEL_F MAIL_CNT_TEL_F  ,
+                                        vOrderMailingInfo.MAIL_CNT_GENDER MAIL_CNT_GENDER  ,
+                                        vOrderMailingInfo.BILL_GRP_NO BILL_GRP_NO  ,
+                                        vOrderMailingInfo.BILL_STATE_EMAIL BILL_STATE_EMAIL  ,
+                                        vOrderMailingInfo.BILL_STATE BILL_STATE  ,
+                                        vOrderMailingInfo.BILL_SMS BILL_SMS  ,
+                                        vOrderMailingInfo.BILL_POST BILL_POST  ,
+                                        vOrderMailingInfo.MAIL_CNTC_ID MAIL_CNTC_ID  ,
+                                        vOrderMailingInfo.MAIL_ADDR_ID MAIL_ADDR_ID  ,
+                                        vOrderMailingInfo.MAIL_CNT_DEPT MAIL_CNT_DEPT  ,
+                                        vOrderMailingInfo.MAIL_CNT_POST MAIL_CNT_POST
+                                 FROM SAL1011V vOrderMailingInfo) vOrderMailingInfo
+                                 ON      Extent1.SALES_ORD_ID =  vOrderMailingInfo.ORD_ID
+                                 JOIN
+                                    (SELECT vOrderBasicInfo.ORD_ID ORD_ID  ,
+                                   vOrderBasicInfo.ORD_NO ORD_NO  ,
+                                   vOrderBasicInfo.RENTAL_STUS RENTAL_STUS  ,
+                                   vOrderBasicInfo.ORD_STUS_ID ORD_STUS_ID  ,
+                                   vOrderBasicInfo.ORD_STUS_CODE ORD_STUS_CODE  ,
+                                   vOrderBasicInfo.ORD_STUS_NAME ORD_STUS_NAME  ,
+                                   vOrderBasicInfo.ORD_DT ORD_DT  ,
+                                   vOrderBasicInfo.INSTLMT_PRIOD INSTLMT_PRIOD  ,
+                                   vOrderBasicInfo.ORD_AMT ORD_AMT  ,
+                                   vOrderBasicInfo.ORD_MTH_RENTAL ORD_MTH_RENTAL  ,
+                                   vOrderBasicInfo.ORD_PV ORD_PV  ,
+                                   vOrderBasicInfo.ORD_PV_MONTH ORD_PV_MONTH  ,
+                                   vOrderBasicInfo.ORD_PV_YEAR ORD_PV_YEAR  ,
+                                   vOrderBasicInfo.ORD_REF_NO ORD_REF_NO  ,
+                                   vOrderBasicInfo.ORD_PO_NO ORD_PO_NO  ,
+                                   vOrderBasicInfo.ORD_DEPT_CODE ORD_DEPT_CODE  ,
+                                   vOrderBasicInfo.ORD_GRP_CODE ORD_GRP_CODE  ,
+                                   vOrderBasicInfo.ORD_ORG_CODE ORD_ORG_CODE  ,
+                                   vOrderBasicInfo.ORD_CRT_USER_ID ORD_CRT_USER_ID  ,
+                                   vOrderBasicInfo.ORD_CRT_DT ORD_CRT_DT  ,
+                                   vOrderBasicInfo.APP_TYPE_ID APP_TYPE_ID  ,
+                                   vOrderBasicInfo.APP_TYPE_CODE APP_TYPE_CODE  ,
+                                   vOrderBasicInfo.APP_TYPE_DESC APP_TYPE_DESC  ,
+                                   vOrderBasicInfo.STOCK_ID STOCK_ID  ,
+                                   vOrderBasicInfo.STOCK_CODE STOCK_CODE  ,
+                                   vOrderBasicInfo.STOCK_DESC STOCK_DESC  ,
+                                   vOrderBasicInfo.CUST_ID CUST_ID  ,
+                                   vOrderBasicInfo.CUST_TYPE CUST_TYPE  ,
+                                   vOrderBasicInfo.CUST_NAME CUST_NAME  ,
+                                   vOrderBasicInfo.CUST_NRIC CUST_NRIC  ,
+                                   vOrderBasicInfo.CUST_DOB CUST_DOB  ,
+                                   vOrderBasicInfo.CUST_NATION CUST_NATION  ,
+                                   vOrderBasicInfo.CUST_GENDER CUST_GENDER  ,
+                                   vOrderBasicInfo.CUST_RACE CUST_RACE  ,
+                                   vOrderBasicInfo.CUST_EMAIL CUST_EMAIL  ,
+                                   vOrderBasicInfo.CUST_VA_NO CUST_VA_NO  ,
+                                   vOrderBasicInfo.CUST_PASSPORT_EXPR CUST_PASSPORT_EXPR  ,
+                                   vOrderBasicInfo.CUST_VISA_EXPR CUST_VISA_EXPR  ,
+                                   vOrderBasicInfo.ORD_PROMO_ID ORD_PROMO_ID  ,
+                                   vOrderBasicInfo.ORD_PROMO_CODE ORD_PROMO_CODE  ,
+                                   vOrderBasicInfo.ORD_PROMO_DESC ORD_PROMO_DESC  ,
+                                   vOrderBasicInfo.ORD_MEM_ID ORD_MEM_ID  ,
+                                   vOrderBasicInfo.ORD_MEM_CODE ORD_MEM_CODE  ,
+                                   vOrderBasicInfo.ORD_MEM_NAME ORD_MEM_NAME  ,
+                                   vOrderBasicInfo.ORD_MEM_NRIC ORD_MEM_NRIC  ,
+                                   vOrderBasicInfo.ORD_MEM_TYPE_ID ORD_MEM_TYPE_ID  ,
+                                   vOrderBasicInfo.ORD_MEM_TYPE_CODE ORD_MEM_TYPE_CODE  ,
+                                   vOrderBasicInfo.ORD_MEM_TYPE_NAME ORD_MEM_TYPE_NAME  ,
+                                   vOrderBasicInfo.COOL_OFF_PRIOD COOL_OFF_PRIOD  ,
+                                   vOrderBasicInfo.KEYIN_BRNCH_ID KEYIN_BRNCH_ID  ,
+                                   vOrderBasicInfo.KEYIN_BRNCH_CODE KEYIN_BRNCH_CODE  ,
+                                   vOrderBasicInfo.KEYIN_BRNCH_NAME KEYIN_BRNCH_NAME  ,
+                                   vOrderBasicInfo.ORD_REM ORD_REM  ,
+                                   vOrderBasicInfo.RENT_CHK_ID RENT_CHK_ID  ,
+                                   vOrderBasicInfo.ORD_HM_ID ORD_HM_ID  ,
+                                   vOrderBasicInfo.ORD_SM_ID ORD_SM_ID  ,
+                                   vOrderBasicInfo.ORD_GM_ID ORD_GM_ID  ,
+                                   vOrderBasicInfo.ORD_ADDR_ID ORD_ADDR_ID  ,
+                                   vOrderBasicInfo.ORD_CNTC_ID ORD_CNTC_ID  ,
+                                   vOrderBasicInfo.ORD_PROMO_RELATED_NO ORD_PROMO_RELATED_NO  ,
+                                   vOrderBasicInfo.UPD_DT UPD_DT  ,
+                                   vOrderBasicInfo.UPD_USER_ID UPD_USER_ID  ,
+                                   vOrderBasicInfo.JOM_PAY_REF JOM_PAY_REF  ,
+                                   vOrderBasicInfo.STK_CTGRY_ID STK_CTGRY_ID  ,
+                                   vOrderBasicInfo.STK_CTGRY_NAME STK_CTGRY_NAME  ,
+                                   vOrderBasicInfo.CUST_TYPE_ID CUST_TYPE_ID  ,
+                                   vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID  ,
+                                   vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
+                            FROM SAL1006V vOrderBasicInfo) vOrderBasicInfo
+                            ON      Extent1.SALES_ORD_ID =  vOrderBasicInfo.ORD_ID                         
+                                WHERE 1=1
+                                             AND Extent3.Sales_Ord_No = #{orderNumber}
+                                                 ) Distinct1 
+                  ORDER BY Distinct1.SCHDUL_ID ASC
+                  ]]>
+        </select>
+        
+        <select id="selectFilterCnt" parameterType="Map" resultType="int">
+        select count(*) cnt
+		  from SVC0007D a
+		      ,SYS0026M b
+		 where a.BS_RESULT_PART_ID = b.STK_ID
+		   and a.BS_RESULT_PART_QTY>0
+		   and a.BS_RESULT_PART_ID !=0
+		   and a.BS_RESULT_ID = #{bsrId}
+        </select>
+        
+        <select id="filterInfo" parameterType="Map" resultType="egovMap">
+            select srv_filter_id,srv_filter_stk_id,stk_code,stk_desc,SRV_FILTER_UPD_DT,user_name,srv_filter_stus_id
+		      ,to_char(SRV_FILTER_PRV_CHG_DT,'YYYY-MM-DD') SRV_FILTER_PRV_CHG_DT 
+		      ,to_char(SRV_FILTER_PRV_NEXT_DT,'YYYY-MM-DD') SRV_FILTER_PRV_NEXT_DT
+		      from (
+		 select rownum no, b.srv_filter_id
+		                ,b.srv_filter_stk_id
+		                ,c.stk_code
+		                ,c.stk_desc
+		                ,b.SRV_FILTER_UPD_DT
+		                ,d.user_name
+		                ,b.srv_filter_stus_id
+		                ,b.SRV_FILTER_PRV_CHG_DT
+		                ,case when b.SRV_FILTER_PRV_CHG_DT is not null then add_months(b.SRV_FILTER_PRV_CHG_DT,  SRV_FILTER_PRIOD) else null end SRV_FILTER_PRV_NEXT_DT
+		          from SAL0090D a
+		              ,SAL0087D b
+		              ,SYS0026M c
+		              ,SYS0047M d
+		          where 1=1
+		            and SRV_SO_ID = #{orderId}
+		            and SRV_STUS_ID = 1
+		            and a.SRV_CONFIG_ID = b.SRV_CONFIG_ID
+		            and b.SRV_FILTER_STK_ID = C.STK_ID
+		            and d.USER_ID = b.SRV_FILTER_UPD_USER_ID
+		            )
+        </select>
+    </mapper>
