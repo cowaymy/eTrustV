@@ -18,14 +18,12 @@ public interface PoMngementMapper
 	List<EgovMap> selectInterfaceList(Map<String, Object> params);
 	List<EgovMap> selectInterfaceLastState(Map<String, Object> params);
 	
-	
 	/* PO Approval */
 	List<EgovMap> selectPoApprovalSummary(Map<String, Object> params);
 	List<EgovMap> selectPoApprovalSummaryHidden(Map<String, Object> params);
 	List<EgovMap> selectPoApprovalMainList(Map<String, Object> params);
 	int updatePoApprovalDetail(Map<String, Object> params);
-	String callSpPoApprovalINF155(Map<String, Object> params);
-	
+	String callSpPoApprovalINF155(Map<String, Object> params);	
 	
 	/* PO Management - PO Issue */
 	List<EgovMap> selectScmPrePoItemView(Map<String, Object> params);

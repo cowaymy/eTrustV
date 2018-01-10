@@ -247,13 +247,11 @@ public class PoManagementController {
 		LOGGER.debug("selectOtdStatusView_Input : {}", params.toString());
 		
 		List<EgovMap> selectOtdStatusViewList = poMngementService.selectOtdStatusView(params);
-		//List<EgovMap> selectInterfaceLastState = poMngementService.selectInterfaceLastState(params);
 		
 		Map<String, Object> map = new HashMap<>();
 		
 		//main Data
 		map.put("selectOtdStatusViewList", selectOtdStatusViewList);
-		//map.put("selectInterfaceLastState", selectInterfaceLastState);
 
 		return ResponseEntity.ok(map);
 		

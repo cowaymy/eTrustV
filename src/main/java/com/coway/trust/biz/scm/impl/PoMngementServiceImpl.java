@@ -115,10 +115,8 @@ public class PoMngementServiceImpl implements PoMngementService {
 		
 		return saveCnt;
 	}
-		
-	
-	// PO Management - PO Issue
-	
+			
+	// PO Management - PO Issue	
 	@Override
 	public List<EgovMap> selectScmPoView(Map<String, Object> params) {
 		return poMngementMapper.selectScmPoView(params);
