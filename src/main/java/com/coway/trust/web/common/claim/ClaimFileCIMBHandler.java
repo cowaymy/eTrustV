@@ -78,10 +78,10 @@ public class ClaimFileCIMBHandler extends BasicTextDownloadHandler implements Re
 
 		// 헤더 작성
 		inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
-		sbatchNo = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + "01";
+		sbatchNo = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01";
 		sSecCode = StringUtils.leftPad(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), 10, " ");
 
-		sText = "01" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + "01" + "2120"
+		sText = "01" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01" + "2120"
 				+ StringUtils.rightPad("WOONGJIN COWAY", 40, " ")
 				+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + sSecCode
 				+ StringUtils.rightPad("", 128, " ");

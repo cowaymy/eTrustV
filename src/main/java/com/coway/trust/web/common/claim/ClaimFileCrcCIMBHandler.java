@@ -58,13 +58,14 @@ public class ClaimFileCrcCIMBHandler extends BasicTextDownloadHandler implements
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 		
-		// 본문 작성
+		// 본문 작성 
 		crcOwner = (String.valueOf(dataRow.get("bankDtlDrName"))).trim();
 
 		// ISSUE : 암호화 RULE 규정
 		// String CrcNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
 		crcNo = String.valueOf(dataRow.get("bankDtlDrAccNo")).trim();
-		crcExpiry = "0000";
+		//crcExpiry = "0000";
+		crcExpiry = dataRow.get("rentPayCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("rentPayCrcExpr")).trim();
 		amount = CommonUtils.getNumberFormat(String.valueOf(dataRow.get("bankDtlAmt")), "0.00");
 		serviceCode = String.valueOf(dataRow.get("cntrctNOrdNo"));
 		remarks = String.valueOf(dataRow.get("bankDtlId"));
