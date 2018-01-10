@@ -631,7 +631,7 @@ SELECT ROWNUM AS rnum ,
                                         Project2.CODY_MANGR_USER_ID,
                                         Project2.Result as Result,
                                         project2.dept_code
-                         FROM (SELECT /*+ use_nl(hs, br) */
+                         FROM (SELECT /*+ use_hash(br, hs) */
                                             distinct
 								            hs.no AS no,
 								            hs.stus_code_id AS stus_code_id,
