@@ -201,6 +201,31 @@ public class PoMngementServiceImpl implements PoMngementService {
 		return saveCnt;
 	}
 	
+	// delete POMaster(SCM0009M) & PODetail(SCM0010D), Update SCM0011D.PO_QTY
+	@Override
+	public int deletePOMaster(List<Object> delList, Integer crtUserId) 
+	{
+    	int saveCnt = 0;
+    	int delCnt = 0;
+    	
+    	for (Object obj : delList) 
+    	{
+    		LOGGER.debug(" delList : {} ", delList.toString() );
+    		
+    		poMngementMapper.deletePOMaster((Map<String, Object>) obj);
+    		poMngementMapper.deletePODetail((Map<String, Object>) obj);
+    		poMngementMapper.updatePOQtinty((Map<String, Object>) obj);
+    		
+    		saveCnt++;
+    		
+    		delCnt = delCnt + saveCnt;
+    		
+    		LOGGER.debug(" delCnt : {} ", delCnt);
+    	}
+    	
+        return delCnt;
+	}
+	
 	// Insert SCMPODetail
 	@Override
 	public int insertPOIssueDetail(List<Object> addList, Integer crtUserId) 

@@ -33,5 +33,6 @@ public interface PoMngementService
 	
 	int updatePOIssuItem(List<Map<String, Object>> updList, Integer updUserId);
 	int insertPOIssueDetail(List<Object> addList, Integer crtUserId);
+	int deletePOMaster(List<Object> delList, Integer updUserId);
 	
 }

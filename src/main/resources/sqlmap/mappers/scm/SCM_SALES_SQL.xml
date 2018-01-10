@@ -550,7 +550,7 @@
     <select id="selectStockCode" parameterType="Map" resultType="egovMap">
 			SELECT SYS26M.STK_ID   
 			     , SYS26M.STK_CODE 
-			     , SYS26M.STK_DESC  
+			     , SYS26M.STK_CODE ||' - '|| SYS26M.STK_DESC  STK_DESC 
 			     , Extent2.CODE_ID   
 			     , Extent2.CODE CODE 
 			     , Extent3.CODE_ID CODE_ID2  

@@ -218,8 +218,7 @@ function fnCreatePO()
 	  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
 
 	if ( parseInt(AUIGrid.getCellValue(myGridID2, 0, "fobAmount")) > 500000 
-			||  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 20000000 
-	)
+			&&  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 20000000 )
 	{
 	   Common.alert("<spring:message code='sys.scm.planByCdc.amountExceeds'/> ");
 	   return false;  
@@ -245,6 +244,63 @@ function fnSetStockComboBox()
                      }
                    , "");
 }
+
+function fnCheckedDelete(Obj) 
+{
+  //console.log($(Obj).parents().hasClass("btn_disabled"))
+  
+  if ($(Obj).parents().hasClass("btn_disabled") == true)
+    return false;
+
+  var checkedItemsList = AUIGrid.getCheckedRowItemsAll(SCMPOViewGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
+
+  console.log("chkList: " + checkedItemsList.length);
+
+  if(checkedItemsList.length < 1) 
+  {
+    Common.alert("<spring:message code='expense.msg.NoData' htmlEscape='false'/>");
+    return false;
+  }
+
+  if (checkedItemsList.length > 0)
+  {
+	  var data = {};
+	  
+    for (var icnt = 0; icnt < checkedItemsList.length; icnt++)
+      console.log("poNo: " + checkedItemsList[icnt].poNo + " /poItmNo: "+ checkedItemsList[icnt].poItmNo+ " /estWeek: "+ checkedItemsList[icnt].estWeek );
+
+    data.checked = checkedItemsList;
+
+    Common.ajax("POST"
+            ,"/scm/deletePOMaster.do"
+            , data
+            , function(result) 
+              {
+                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");  
+                fnSearchBtnSCMPrePOView() ;
+                console.log("성공." + JSON.stringify(result));
+                console.log("data : " + result.data);
+              } 
+           ,  function(jqXHR, textStatus, errorThrown) 
+              {
+                try 
+                {
+                  console.log("Fail Status : " + jqXHR.status);
+                  console.log("code : "        + jqXHR.responseJSON.code);
+                  console.log("message : "     + jqXHR.responseJSON.message);
+                  console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+                } 
+                catch (e) 
+                {
+                  console.log(e);
+                }
+                
+                Common.alert("Fail : " + jqXHR.responseJSON.message);
+             })
+     }
+
+}
+
 
 function getTimeStamp() 
 {
@@ -287,9 +343,12 @@ function auiCellEditignHandler(event)
         //var roundUpMoq = AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundUpMoq");
         var fobPrice   = AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice");
         var editPoQty  = parseInt(event.value);
+        if (editPoQty <= 0)
+        	editPoQty = 0;
+    	   
         var editPlanQty = parseInt($("#inPlanQty").val());
         //var editInMoq   = parseInt($("#inMoq").val());
-        var newPoQty =   Math.ceil( (editPlanQty - editPoQty)  );  // 소수점이하 올림
+        var newPoQty =   Math.ceil( editPoQty );  // 소수점이하 올림
 
         $("#inRoundUpPoQty").val(newPoQty); 
         
@@ -366,13 +425,11 @@ function fnMoveRight()
 	               }
 	             , function(result) 
 	               {
-	                  console.log("성공 fnSearchBtnList: " + result.selectPoRightMoveList.length);
+	                  console.log("성공: " + result.selectPoRightMoveList.length);
 	                  AUIGrid.setGridData(myGridID2, result.selectPoRightMoveList);
 
 	                  if (result.selectPoRightMoveList.length > 0 )
 	                  {
-                      //if(result.selectPoRightMoveList[0].reqDate.length )
-		                  
 	                      $('#clearBtn').removeClass("btn_disabled");
 	                      $('#createPoBtn').removeClass("btn_disabled");
 	                  }
@@ -762,6 +819,10 @@ var SCMPOViewLayout =
           dataField : "poAppvStus",
           headerText : "<spring:message code='sys.scm.pomngment.poapproval'/>",
           //width : "20%"
+      },{
+          dataField : "cbBoxFlag",
+          headerText : "cbBoxFlag",
+          visible : false
       }
 
     ];
@@ -829,7 +890,9 @@ function fnSearchBtnSCMPrePOView()
                		   $("#appRoval").attr('class','circle circle_blue');
                	   else
                		   $("#appRoval").attr('class','circle circle_red');
-           		   
+
+                 	 $('#delBtn').removeClass("btn_disabled");
+               	 
 	                }
 	             }
 	           });	  
@@ -957,6 +1020,31 @@ $(document).ready(function()
             editable : false,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
            // selectionMode : "multipleRows",
+
+            // 체크박스 표시 설정
+            showRowCheckColumn : true,              
+            // 전체 선택 체크박스가 독립적인 역할을 할지 여부
+            independentAllCheckBox : true,   
+
+            // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
+            rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+            {
+              if(item.cbBoxFlag == 5) { // Approve시 disabled
+                return false; // false 반환하면 disabled 처리됨
+              }
+              
+              return true;
+            }
+
+           ,rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+            {
+              if(item.cbBoxFlag == 5) { // Approve시 disabled
+                 return false; // false 반환하면 disabled 처리됨
+              }
+              
+              return true;
+            } 
+            
           };
 
   // masterGrid 그리드를 생성합니다.
@@ -995,6 +1083,18 @@ $(document).ready(function()
   {
     console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
   }); 
+
+
+  // 전체 체크박스 클릭 이벤트 바인딩
+  AUIGrid.bind(SCMPOViewGridID, "rowAllChkClick", function( event ) 
+  {
+    if(event.checked ) {  // name 의 값들 얻기  Active(1)/Approved(5)
+      AUIGrid.setCheckedRowsByValue(event.pid, "cbBoxFlag",1); 
+    } else {
+      AUIGrid.setCheckedRowsByValue(event.pid, "cbBoxFlag",0);
+    }
+
+  });
          
 });   //$(document).ready
 
@@ -1143,6 +1243,9 @@ $(document).ready(function()
 
 
 <article class="grid_wrap mt30" style=""><!-- grid_wrap start --> 
+<ul class="right_btns">
+  <li><p id='delBtn' class="btn_blue btn_disabled"><a onclick="fnCheckedDelete(this);">DELETE</a></p></li>
+</ul>
 <!-- 그리드 영역3 -->
   <div id="SCMPOViewGridDiv"></div>
 </article><!-- grid_wrap end -->

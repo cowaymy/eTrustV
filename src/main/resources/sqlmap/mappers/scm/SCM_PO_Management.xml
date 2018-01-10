@@ -223,6 +223,7 @@
 	       ,STK_TYPE_ID
 	       ,PO_ITM_APPV_STUS   
 	       ,GR_DT   
+	       ,(DECODE(PO_APPV_STUS,'Active',1,5)) CB_BOX_FLAG
 	   FROM SCM0041V 
 	  WHERE BAS_YEAR = #{scmYearCbBox}  
 	    AND EST_WEEK = #{scmPeriodCbBox}
@@ -318,10 +319,10 @@
           (
               SELECT MATRL_MST STOCK_CODE
                     , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{inStockCode} AND STK_CTGRY_ID = #{inStkCtgryId} AND STK_TYPE_ID = #{inStkTypeId}) STOCK_NAME
-                    , (#{inPlanQty} - #{inPoQty}) PLAN_QTY   
+                    , (#{inPlanQty}) PLAN_QTY   
                     , #{inMoq} MOQ
-                    , CEIL (#{inPlanQty} - #{inPoQty} )  ROUND_UP_MOQ
-                    , CEIL (#{inPlanQty} - #{inPoQty} )  CALCUL_PO_QTY
+                    , CEIL (#{inPlanQty}  )  ROUND_UP_MOQ
+                    , CEIL (#{inPlanQty}  )  CALCUL_PO_QTY
                     , ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3) FOB_PRICE
                     , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '94' AND CODE_ID = LOG78M.CUR ) CURRENCY
                     , VENDOR
@@ -398,16 +399,61 @@
 				   FROM DUAL   
 
 </select>
- 
+
 <update id="updatePOIssuItem" parameterType="Map"> 
-			UPDATE SCM0011D
-			   SET PO_QTY      = #{poQty}
-			 WHERE PRE_YEAR    = #{preYear}
-			   AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
-			   AND PRE_WEEK_TH = #{preWeekTh}
-			   AND PRE_STOCK_CODE = #{stockCode}
-			   AND PRE_CDC        = #{preCdc} 
+MERGE INTO SCM0011D 
+      USING DUAL
+         ON (PRE_YEAR = #{preYear} AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1')
+             AND  PRE_WEEK_TH = #{preWeekTh} AND PRE_STOCK_CODE = #{stockCode} AND PRE_CDC  = #{preCdc} 
+            )
+           
+         WHEN MATCHED THEN
+              UPDATE 
+                 SET PO_QTY      = (PO_QTY + #{poQty})
+               WHERE PRE_YEAR    = #{preYear}
+                 AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
+                 AND PRE_WEEK_TH = #{preWeekTh}
+                 AND PRE_STOCK_CODE = #{stockCode}
+                 AND PRE_CDC        = #{preCdc} 
+
+          WHEN NOT MATCHED THEN
+               INSERT
+                  (
+                    PRE_YEAR           
+                   ,PRE_MONTH         
+                   ,PRE_WEEK_TH       
+                   ,PRE_STOCK_CODE    
+                   ,PRE_CDC           
+                   ,PO_QTY           
+                  )
+              VALUES
+                 ( 
+                   #{preYear}
+                  ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
+                  ,#{preWeekTh}
+                  ,#{stockCode}
+                  ,#{preCdc} 
+                  ,#{poQty} 
+                 ) 
 			                        
+</update>
+
+<delete id="deletePOMaster" parameterType="Map"> 
+ DELETE FROM SCM0009M WHERE PO_NO = #{poNo}
+</delete>
+
+<delete id="deletePODetail" parameterType="Map"> 
+ DELETE FROM SCM0010D WHERE PO_NO = #{poNo} AND PO_ITM_NO= #{poItmNo} AND STOCK_CODE= #{stockCode} 
+</delete>
+
+<update id="updatePOQtinty" parameterType="Map"> 
+ UPDATE SCM0011D 
+    SET PO_QTY    = ( PO_QTY - #{qty} )
+  WHERE PRE_YEAR  = #{basYear} 
+    AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{basYear} AND WEEK_TH= #{estWeek} AND WEEK_TH_SN='1' )
+    AND PRE_WEEK_TH    = #{estWeek}
+    AND PRE_STOCK_CODE = #{stockCode} 
+    AND PRE_CDC = #{cdc} 
 </update>
 
 <select id="selectPOIssueNewPoNo" parameterType="Map" resultType="egovMap">
@@ -613,43 +659,6 @@ WITH PO_APPROVAL_SUMMARY
      ORDER BY STOCK_CTGRY
 </select>
 
-<select id="selectPoApprovalSummary_TEMP" parameterType="Map" resultType="egovMap">
-WITH PO_APPROVAL_SUMMARY
-  AS
-   (
-      SELECT 
-             NVL(STOCK_CTGRY,'ZZ_SUM') STOCK_CTGRY
-           , NVL(CDC,'ALL_SUM') CDC
-           , SUM(QTY) QTY
-           , SUM(FOB_AMT) FOB_AMT
-       FROM SCM0043V
-      WHERE BAS_YEAR = #{scmYearCbBox} 
-        AND EST_WEEK = #{scmPeriodCbBox} 
-        <if test="scmStockType != null and scmStockType !=''"> 
-        AND STK_TYPE_ID = #{scmStockType}
-        </if>    
-      GROUP BY ROLLUP (STOCK_CTGRY,CDC)
-    )
-    SELECT STOCK_CTGRY
-          ,JB_QTY
-          ,JB_FOB_AMT
-          ,KC_QTY
-          ,KC_FOB_AMT
-          ,KK_QTY
-          ,KK_FOB_AMT
-          ,KL_QTY
-          ,KL_FOB_AMT
-          ,PN_QTY
-          ,PN_FOB_AMT
-          ,ALL_SUM_QTY
-          ,ALL_SUM_FOB_AMT
-      FROM PO_APPROVAL_SUMMARY
-      PIVOT
-           ( SUM (QTY) QTY ,SUM(FOB_AMT) FOB_AMT FOR CDC IN ('KC' AS KC ,'KK' AS KK ,'KL' AS KL ,'JB' AS JB ,'PN' AS PN ,'ALL_SUM' AS ALL_SUM ) )
-     WHERE STOCK_CTGRY <![CDATA[ <> ]]> 'ZZ_SUM'
-     ORDER BY STOCK_CTGRY
-</select>
- 
 <select id="selectPoApprovalSummaryHidden" parameterType="Map" resultType="egovMap">
   SELECT CODE
     FROM SYS0013M 

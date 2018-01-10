@@ -144,6 +144,31 @@ public class PoManagementController {
 		return ResponseEntity.ok(message);
 	}	
 	
+	@RequestMapping(value = "/deletePOMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> deletePOMaster(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO)
+	{                                                   
+        List<Object> checkList = params.get(AppConstants.AUIGRID_CHECK);
+		
+		LOGGER.info("deletePOMasterList : {}", checkList.toString());
+		
+		int totCnt = 0;
+		
+		if (checkList.size() > 0) {  
+			totCnt = poMngementService.deletePOMaster(checkList, sessionVO.getUserId());
+		}
+		
+		// 콘솔로 찍어보기
+		LOGGER.info("deletePOMaster카운트 : {}", totCnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}	
+	
 	   /**************************************/
 	   /************* PO Approval*************/
 	   /**************************************/

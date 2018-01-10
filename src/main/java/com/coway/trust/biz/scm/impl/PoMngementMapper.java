@@ -38,4 +38,7 @@ public interface PoMngementMapper
 	int updatePOIssuItem(Map<String, Object> params);
 	int insertPOIssueDetail(Map<String, Object> params);
 	int insertPOIssueMaster(Map<String, Object> params);
+	int deletePODetail(Map<String, Object> params);
+	int deletePOMaster(Map<String, Object> params);
+	int updatePOQtinty(Map<String, Object> params);
 }
