@@ -19,6 +19,12 @@ var myColumnLayout = [ {
     dataField : "clamUn",
     headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
+    dataField : "clmSeq",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "expGrp",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "expGrp",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -344,14 +350,14 @@ $(document).ready(function () {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + $("#viewClmNo").text());
                 console.log("CellDoubleClick clamUn : " + event.item.clamUn);
-                console.log("CellDoubleClick appvItmSeq : " + event.item.appvItmSeq);
+                console.log("CellDoubleClick clmSeq : " + event.item.clmSeq);
                 console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
                 console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId);
                 // TODO detail popup open
                 //appvPrcssNo = event.item.appvPrcssNo;
                 //atchFileGrpId = event.item.atchFileGrpId;
                 
-                fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.appvItmSeq, event.item.clamUn);
+                fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.clmSeq, event.item.clamUn);
             });
     
     $("#fileListPop_btn").click(fn_fileListPop);
@@ -386,11 +392,11 @@ function fn_RejectSubmit() {
     fn_rejectRegistPop();
 }
 
-function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
+function fn_getAppvItemOfClmUn(clmNo, clmSeq, clamUn) {
 	var url = "";
 	var obj = {
             clmNo : clmNo
-            ,clmSeq : appvItmSeq
+            ,clmSeq : clmSeq
             ,clamUn : clamUn
     };
 	var clmType = clmNo.substr(0, 2);
@@ -440,12 +446,12 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 mGridColumnLayout[4].visible = false;
             } else if(clmType == "J2") {
             	$("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
-            	$("#supplirTd").text(result.data.supplirName);
+            	$("#supplirTd").text(result.data.supplier);
             	$("#payInfo1").show();
                 $("#payInfo2").show();
             } else {
             	$("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
-                $("#supplirTd").text(result.data.supplirName);
+                $("#supplirTd").text(result.data.supplier);
                 $("#payInfo1").hide();
                 $("#payInfo2").hide();
             }

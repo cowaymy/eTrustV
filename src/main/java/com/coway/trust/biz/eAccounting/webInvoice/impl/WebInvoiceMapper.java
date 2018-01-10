@@ -61,11 +61,11 @@ public interface WebInvoiceMapper {
 	
 	List<EgovMap> selectApproveList(Map<String, Object> params);
 	
-	List<EgovMap> selectAppvLineInfo(String appvPrcssNo);
+	List<EgovMap> selectAppvLineInfo(Map<String, Object> params);
 	
 	String selectRejectOfAppvPrcssNo(Map<String, Object> params);
 	
-	List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo);
+	List<EgovMap> selectAppvInfoAndItems(Map<String, Object> params);
 	
 	int selectAppvLineCnt(String appvPrcssNo);
 	

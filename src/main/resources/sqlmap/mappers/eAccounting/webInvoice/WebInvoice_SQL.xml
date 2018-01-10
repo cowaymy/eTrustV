@@ -830,7 +830,7 @@ SELECT T.APPV_PRCSS_NO
         ORDER BY T.APPV_PRCSS_NO, T.REQST_DT           
 </select>
 
-<select id="selectAppvLineInfo" parameterType="String" resultType="egovMap">
+<select id="selectAppvLineInfo" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectAppvLineInfo */
 SELECT T1.APPV_PRCSS_NO, 
        T1.APPV_LINE_SEQ,
@@ -852,7 +852,7 @@ FROM   FCM0005D
 WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 </select>
 
-<select id="selectAppvInfoAndItems" parameterType="String" resultType="egovMap">
+<select id="selectAppvInfoAndItems" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectAppvInfoAndItems */
             SELECT T1.APPV_PRCSS_NO
                       ,T1.APPV_PRCSS_STUS
@@ -889,12 +889,33 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
                       ,T7.TOT_AMT
                       ,T3.EXP_DESC
                       ,T3.CLAM_UN
+                      <if test="clmType != 'R1'">
+                      ,T9.CLM_SEQ
+                      </if>
           FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
           LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
           LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
           LEFT JOIN FCM0007C T5 ON T3.TAX_CODE = T5.TAX_CODE
           LEFT JOIN FCM0006M T6 ON T3.MEM_ACC_ID = T6.MEM_ACC_ID
           LEFT JOIN (SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT FROM FCM0015D GROUP BY APPV_PRCSS_NO) T7 ON T1.APPV_PRCSS_NO = T7.APPV_PRCSS_NO
+          <choose>
+          <when test="clmType == 'J1'">
+             JOIN FCM0002M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+             JOIN FCM0003D T9 ON T8.CLM_NO = T9.CLM_NO AND T3.CLAM_UN = T9.CLAM_UN
+          </when>
+          <when test="clmType == 'J2'">
+             JOIN FCM0013M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+             JOIN FCM0014D T9 ON T8.CLM_NO = T9.CLM_NO AND T3.CLAM_UN = T9.CLAM_UN          
+          </when>
+          <when test="clmType == 'J3'">
+             JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+             JOIN FCM0018D T9 ON T8.CLM_NO = T9.CLM_NO AND T3.CLAM_UN = T9.CLAM_UN
+          </when>
+          <when test="clmType == 'J4' or clmType == 'J5' or clmType == 'J6' or clmType == 'J7' or clmType == 'J8'">
+             JOIN FCM0019M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+             JOIN FCM0020D T9 ON T8.CLM_NO = T9.CLM_NO AND T3.CLAM_UN = T9.CLAM_UN   
+          </when>
+          </choose>
           WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
           ORDER BY T3.APPV_ITM_SEQ         
 </select>
@@ -1087,6 +1108,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
              AND END_DT  >= SYSDATE
         ]]> -->
         AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
+        OR T1.COST_CENTR = 'G9901' 
+        AND T1.BUDGET_CODE != '99999'
         <if test="budgetCodeText != null and budgetCodeText != ''">
            AND T2.BUDGET_CODE_TEXT LIKE '%'|| #{budgetCodeText} || '%'
         </if>

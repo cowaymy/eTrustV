@@ -75,9 +75,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 	
 	@Override
-	public List<EgovMap> selectAppvLineInfo(String appvPrcssNo) {
+	public List<EgovMap> selectAppvLineInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectAppvLineInfo(appvPrcssNo);
+		return webInvoiceMapper.selectAppvLineInfo(params);
 	}
 
 	@Override
@@ -87,9 +87,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	}
 
 	@Override
-	public List<EgovMap> selectAppvInfoAndItems(String appvPrcssNo) {
+	public List<EgovMap> selectAppvInfoAndItems(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+		return webInvoiceMapper.selectAppvInfoAndItems(params);
 	}
 
 	@Override
@@ -292,7 +292,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				LOGGER.debug("clmType =====================================>>  " + clmType);
 				if("J1".equals(clmType) || "J2".equals(clmType) || "J3".equals(clmType) || "J4".equals(clmType) || "J5".equals(clmType) || "J6".equals(clmType)) {
 					// appvPrcssNo의 items get
-					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(invoAppvInfo);
 					for(int j = 0; j < appvInfoAndItems.size(); j++) {
 						String ifKey = webInvoiceMapper.selectNextAppvIfKey();
 						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);
@@ -303,7 +303,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 					}
 				} else if("R1".equals(clmType)) {
 					// appvPrcssNo의 items get
-					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(appvPrcssNo);
+					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(invoAppvInfo);
 					for(int j = 0; j < appvInfoAndItems.size(); j++) {
 						String ifKey = webInvoiceMapper.selectNextReqstIfKey();
 						Map<String, Object> invoAppvItems = (Map<String, Object>) appvInfoAndItems.get(j);

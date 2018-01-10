@@ -19,6 +19,7 @@
 <script type="text/javascript">
 var appvPrcssNo;
 var atchFileGrpId;
+var clmType;
 //그리드에 삽입된 데이터의 전체 길이 보관
 var gridDataLength = 0;
 var invoAprveGridColLayout = [ {
@@ -204,6 +205,8 @@ $(document).ready(function () {
                 // TODO detail popup open
                 appvPrcssNo = event.item.appvPrcssNo;
                 atchFileGrpId = event.item.atchFileGrpId;
+                var clmNo = event.item.clmNo;
+                clmType = clmNo.substr(0, 2);
                 
                 fn_webInvoiceAppvViewPop();
             });
@@ -359,7 +362,8 @@ function fn_fileListPop() {
 
 function fn_webInvoiceAppvViewPop() {
     var data = {
-            appvPrcssNo : appvPrcssNo
+    		clmType : clmType
+            ,appvPrcssNo : appvPrcssNo
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceAppvViewPop.do", data, null, true, "webInvoiceAppvViewPop");
 }

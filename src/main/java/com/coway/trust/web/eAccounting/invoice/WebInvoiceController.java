@@ -134,10 +134,8 @@ public class WebInvoiceController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		String appvPrcssNo = (String)params.get("appvPrcssNo");
-		
-		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(appvPrcssNo);
-		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(appvPrcssNo);
+		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
+		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 		
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
@@ -154,9 +152,7 @@ public class WebInvoiceController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		String appvPrcssNo = (String)params.get("appvPrcssNo");
-		
-		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(appvPrcssNo);
+		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
 		for(int i = 0; i < appvLineInfo.size(); i++) {
 			EgovMap info = appvLineInfo.get(i);
 			if("J".equals(info.get("appvStus"))) {
@@ -164,7 +160,7 @@ public class WebInvoiceController {
 				model.addAttribute("rejctResn", rejctResn);
 			}
 		}
-		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(appvPrcssNo);
+		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 		
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);

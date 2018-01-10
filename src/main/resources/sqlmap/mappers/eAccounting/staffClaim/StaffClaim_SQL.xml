@@ -336,7 +336,7 @@ SELECT T1.CLM_SEQ,
        T1.BUDGET_CODE, 
        T1.BUDGET_CODE_NAME, 
        T5.MEM_ACC_ID                                       AS SUPPLIR, 
-       T1.SUPPLIR                                          AS SUPPLIR_NAME, 
+       T1.SUPPLIR                                          AS SUPPLIER, 
        (CASE T1.INVC_TYPE
             WHEN 'F'
                 THEN 'Full Tax invoice'
