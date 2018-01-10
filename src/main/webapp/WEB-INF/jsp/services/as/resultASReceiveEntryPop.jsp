@@ -449,10 +449,14 @@ function fn_sendSms(_telNo, _msg){
 	var smsMag =_msg;
 	var rTelNo    = _telNo;
 	
-    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :smsMag} , function(result) {
-        console.log("sms.");
-        console.log( result);
-    });
+	 if(_telNo !="" ){
+		 Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :smsMag} , function(result) {
+		        console.log("sms.");
+		        console.log( result);
+		    });
+	 }
+	
+   
     
 }
 
@@ -924,7 +928,7 @@ function fn_changeCTCode(_obj){
 
 
 function fn_addRemark(){
-    Common.popupDiv("/services/as/addASRemarkPop.do" ,{asId: $("#AS_ID").val()}, null , true , '_addASRemarkPopDiv');
+	Common.popupDiv("/services/as/addASRemarkPop.do" ,{AS_ID: $("#AS_ID").val()}, null , true , '_addASRemarkPopDiv');
 }
 
 </script>
