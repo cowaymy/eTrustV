@@ -135,9 +135,7 @@
 <h2>Order Investigation Call/Result Search</h2>
 <ul class="right_opt">
     <!-- <li><p class="btn_blue"><a href="#">Call/Result Detail</a></p></li> -->
-    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" onClick="fn_investCallResultListAjax()"><span class="search"></span>Search</a></p></li>
-    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
