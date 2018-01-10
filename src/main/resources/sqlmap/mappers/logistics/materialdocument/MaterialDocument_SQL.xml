@@ -51,6 +51,7 @@
         , (select (wh_loc_code || ' - ' || wh_loc_desc) from sys0028m where wh_loc_id = l60.rciv_issu_storg_loc) rev_storg_nm
         , to_char(to_date(L60.DOC_POSTNG_DT , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
         ,l59.CRT_DT
+        ,l60.sales_ord_no sales_ord_no
         from log0059m l59
         , log0060d l60
         , sys0026m s26

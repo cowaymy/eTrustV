@@ -57,7 +57,9 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "reasondesc1",headerText :"<spring:message code='log.head.reason(approververified)'/>"   ,width:    "15%"     ,height:30 , visible:false},
 							{dataField: "c7",headerText :"<spring:message code='log.head.approvalstatus'/>"             ,width: "15%"     ,height:30 , visible:false},
 							{dataField: "c2",headerText :"<spring:message code='log.head.approveat'/>"                   ,width:    "15%"     ,height:30 , visible:false},
-							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false}
+							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false},
+							{dataField: "salesOrdNo",headerText :"Ref.DOC.no_2"                ,width: "15%"     ,height:30 , visible:true}
+							
                    ];
 
 var resop = {
@@ -480,7 +482,7 @@ function f_multiCombos() {
                     </td>
                 </tr>
                  <tr>
-                    <th scope="row">Sales.Ord No</th>
+                    <th scope="row">Ref.DOC.no_2</th>
                     <td>
                         <input type="text" id="sordno" name="sordno" title="" placeholder="Material Document No" class="w100p" />
                     </td>
