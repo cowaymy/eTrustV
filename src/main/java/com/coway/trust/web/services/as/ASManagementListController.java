@@ -207,6 +207,10 @@ public class ASManagementListController {
 		model.put("AS_ID", (String)params.get("as_Id"));   
 		model.put("AS_NO", (String)params.get("as_No")); 
 		
+		EgovMap AsEventInfo = ASManagementListService.getAsEventInfo(params);
+		logger.debug("AsEventInfo {}", AsEventInfo);
+		model.put("AsEventInfo", AsEventInfo);
+		
 		// 호출될 화면
 		return "services/as/asResultViewPop";
 	}

@@ -39,6 +39,8 @@ $(document).ready(function(){
         $("#errorDesc").val('${mafuncResnId}' ); 
         $("#ISRAS").val("RAS");
     }
+    
+    $("#checkComm").prop("checked",true);
    
 });
 

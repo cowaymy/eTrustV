@@ -1018,7 +1018,7 @@
 							       S.AS_REM_REQSTER AS_REM_REQSTER  ,
 							       S.AS_REM_REQSTER_CNTC AS_REM_REQSTER_CNTC  ,
 							       S.CODE CODE  ,
-							       S.AS_REQST_DT AS_REQST_DT  ,
+							      TO_char( S.AS_REQST_DT, 'YYYY/MM/DD')  AS_REQST_DT  ,
 							       S.AS_REQST_TM AS_REQST_TM  ,
 							       S.AS_APPNT_DT AS_APPNT_DT  ,
 							       S.AS_APPNT_TM AS_APPNT_TM  ,
@@ -1290,7 +1290,7 @@
     
     
     <select id="getASFilterInfo" parameterType="Map" resultType="egovMap">
-          SELECT      S.C1 C1  ,
+         <!--  SELECT      S.C1 C1  ,
 					       S.C2 code_Id  ,
 					       S.C3 C3  ,
 					       S.C4 C4  ,
@@ -1355,7 +1355,19 @@
 					                        WHERE  ( 64 = Extent11.STK_TYPE_ID )
 					                                 AND ( 1 = Extent11.STUS_CODE_ID )
 					                                 AND ( 1 = Extent11.IS_SVC_STK ) ) UnionAll2 ) D ) S
-					  ORDER BY  S.C5 ASC
+					  ORDER BY  S.C5 ASC -->
+				<![CDATA[  	   SELECT D.STK_ID code_Id ,D.STK_CODE||'-'||D.STK_DESC code_Name
+						FROM LOG0043M A, LOG0044D B, SYS0026M C, SYS0026M D 
+						WHERE A.BOM = B.BOM
+						AND   A.MATRL_NO = C.STK_CODE
+						AND   B.BOM_COMPNT = D.STK_CODE
+						AND   C.STK_CODE = #{prdctCd}
+						AND   B.VALID_FROM_DT < SYSDATE 
+						AND   B.VALID_TO_DT > SYSDATE
+						ORDER BY D.STK_TYPE_ID
+						         ]]>
+					          
+					          
 					          
     </select>
     
@@ -3776,5 +3788,20 @@
                       and  A.MEM_ID =  #{MEM_ID}
       </select>
       
-   
+     <select id="getAsEventInfo" parameterType="Map" resultType="egovMap">
+    SELECT 
+    B.DEFECT_TYPE_CODE_DESC malfu_code, 
+    B.DEFECT_DTL_CODE_DESC malfu_reason, 
+    D.CODE|| '-' || D.NAME DSC,
+    A. AS_APPNT_TM Req_tm
+    FROM SVC0001D A, SVC0056M B, ORG0001D C,  SYS0005M D
+    WHERE A.AS_MALFUNC_ID = B.DEFECT_TYPE_CODE
+   AND A.AS_MALFUNC_RESN_ID = B.DEFECT_DTL_CODE
+   AND A.AS_MEM_ID = C.MEM_ID
+   AND C.BRNCH = D.BRNCH_ID
+   AND A.AS_NO = #{as_No}
+ 
+ 
+ 
+    </select>
 </mapper>

@@ -82,7 +82,7 @@ function fn_getASEvntsInfo(){
         $("#txtMalfunctionCode").text(result[0].asMalfuncId);
         $("#txtMalfunctionReason").text(result[0].asMalfuncResnId);
         
-        $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 );
+        /* $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 ); */
         $("#txtInchargeCT").text(result[0].c10 +"-" +result[0].c11 );
         
         $("#txtRequestor").text(result[0].c3);
@@ -287,20 +287,20 @@ function fn_getCallLog(){
     <th scope="row">Request Date</th>
     <td>    <span id='txtRequestDate'></span> </td>
     <th scope="row">Request Time</th>
-    <td><span id='txtRequestTime'></span> </td>
+    <td><span id='txtRequestTime'><c:out value="${AsEventInfo.reqTm}"/></span> </td>
 </tr>
 <tr>
     <th scope="row">Malfunction Code</th>
     <td>
-      <span id='txtMalfunctionCode'></span> 
+      <span id='txtMalfunctionCode'><c:out value="${AsEventInfo.malfuCode}"/></span> 
     </td>
     <th scope="row">Malfunction Reason</th>
-    <td colspan="3"><span id='txtMalfunctionReason'></span>  </td>
+    <td colspan="3"><span id='txtMalfunctionReason'><c:out value="${AsEventInfo.malfuReason}"/></span>  </td>
 </tr>
 <tr>
     <th scope="row">DSC Code</th>
     <td>
-     <span id='txtDSCCode'></span> 
+     <span id='txtDSCCode'><c:out value="${AsEventInfo.dsc}"/></span> 
     </td>
     <th scope="row">Incharge Technician</th>
     <td colspan="3"><span id='txtInchargeCT'></span> </td>

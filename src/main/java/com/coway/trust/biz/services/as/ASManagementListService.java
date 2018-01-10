@@ -107,6 +107,8 @@ public interface ASManagementListService {
 	EgovMap   getSmsCTMemberById(Map<String, Object> params);
 	EgovMap   getSmsCTMMemberById(Map<String, Object> params);
 	EgovMap   getMemberByMemberIdCode(Map<String, Object> params);
+
+	EgovMap getAsEventInfo(Map<String, Object> params);
 	
 	
 	

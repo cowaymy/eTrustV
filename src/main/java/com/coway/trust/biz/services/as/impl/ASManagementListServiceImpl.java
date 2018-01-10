@@ -2591,4 +2591,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		// TODO Auto-generated method stub
 		return ASManagementListMapper.selectCTByDSC(params);
 	}
+
+	@Override
+	public EgovMap getAsEventInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return ASManagementListMapper.getAsEventInfo(params);
+	}
 }

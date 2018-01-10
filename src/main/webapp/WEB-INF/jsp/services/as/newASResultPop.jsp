@@ -50,12 +50,12 @@ $(document).ready(function(){
          }else if(  event.marker == "added-edited"){
         	 
          }
-  })
+  });
     
     
     fn_getErrMstList('${ORD_NO}');
     
-    doGetCombo('/services/as/getASFilterInfo.do?AS_ID='+'${AS_ID}', '', '','ddlFilterCode', 'S' , '');            // Customer Type Combo Box
+        // Customer Type Combo Box
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '','ddlFailReason', 'S' , '');    
     
@@ -70,6 +70,7 @@ $(document).ready(function(){
     fn_getASEvntsInfo();
     fn_getASHistoryInfo();
     
+ 
     fn_DisablePageControl();
     $("#ddlStatus").attr("disabled", false); 
 
@@ -384,6 +385,10 @@ function fn_getASOrderInfo(){
             $("#txtInstruction").text(result[0].instct);
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
+            
+            var prdctCd=$("#txtProductCode").text();
+            doGetCombo('/services/as/getASFilterInfo.do?prdctCd='+prdctCd, '', '','ddlFilterCode', 'S' , '');     
+            
             
            
             
