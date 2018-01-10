@@ -440,7 +440,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- pop_header start -->
 <header class="pop_header">
-<h1>Order Cancellation - View</h1>
+<h1>Order Cancellation - New</h1>
 <ul class="right_opt">
 <!--
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
@@ -823,11 +823,11 @@
 </form>
 </section><!-- search_table end -->
 
-<div id="_basicUpdBtn">
+
 <ul class="center_btns mt20">
     <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
 </ul>
-</div>
+
 </div>
 </section><!-- pop_body end -->
 </div>
