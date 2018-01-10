@@ -216,4 +216,6 @@ public interface MemberListMapper {
 
 	void deleteDocSub(Map<String, Object> oneDocSub);
 
+	EgovMap selectNricExist(Map<String, Object> params);
+
 }

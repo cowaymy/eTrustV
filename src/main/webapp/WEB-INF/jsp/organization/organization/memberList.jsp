@@ -116,15 +116,17 @@ function fn_hpMemRegisPop(){
     if (memberType == "2803" ) {
     	if ( statusName == "Pending" ) {
     
-	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType }, function(result) {
+	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
 	         console.log("성공.");
 	         console.log( result);
 	
 	         if(result !="" ){
 	        	 if (result.message == "There is no address information to the HP applicant code") {
 	        		 Common.alert(result.message);
+	        	 } else if (result.message.substr(0, 33) == "This member is already registered") {
+	        		 Common.alert(result.message);
 	        	 } else {
-	        		 Common.alert(" Health Planner registration has been completed. { "+membercode+" } to { "+ result.message +" }");
+	        		 Common.alert(" Health Planner registration has been completed. <br/>{ "+membercode+" } to { "+ result.message +" }");
 	        		 fn_memberListSearch();
 	        	 }
 	         }
@@ -164,6 +166,7 @@ $(document).ready(function() {
         membercode = AUIGrid.getCellValue(myGridID, event.rowIndex, "membercode");
         statusName = AUIGrid.getCellValue(myGridID, event.rowIndex, "statusName");
         traineeType = AUIGrid.getCellValue(myGridID, event.rowIndex, "traineeType");
+        nric = AUIGrid.getCellValue(myGridID, event.rowIndex, "nric");
         
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });

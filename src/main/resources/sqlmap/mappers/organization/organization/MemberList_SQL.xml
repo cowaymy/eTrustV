@@ -3876,5 +3876,11 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     AND DOC_TYPE_ID = #{codeId}
     
     </delete>
+    
+    <select id="selectNricExist"  parameterType="Map" resultType="egovMap">
+	    SELECT MEM_CODE FROM ORG0001D
+		WHERE NRIC = #{nric}
+		AND MEM_TYPE = '1'
+     </select>
 
 </mapper>

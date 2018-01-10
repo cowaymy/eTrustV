@@ -949,7 +949,12 @@ public class MemberListController {
 		logger.debug("resultValue : {}", resultValue);
 
 		if(resultValue.size() > 0){
-			message.setMessage((String)resultValue.get("memCode"));
+			if (resultValue.get("duplicMemCode") != null) {
+				message.setMessage("This member is already registered<br/>as member code : "
+						+ resultValue.get("duplicMemCode").toString());
+			} else {
+				message.setMessage((String)resultValue.get("memCode"));
+			}
 		} else if (resultValue.size() == 0) {
 			message.setMessage("There is no address information to the HP applicant code");
 		}
