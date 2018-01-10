@@ -62,9 +62,6 @@ var newGridColumnLayout = [ {
     dataField : "chrgUserName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
-    dataField : "costCentr",
-    visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
     dataField : "sCostCentr",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
@@ -76,6 +73,9 @@ var newGridColumnLayout = [ {
 }, {
     dataField : "invcDt",
     headerText : '<spring:message code="crditCardNewReim.invcBrDt" />'
+}, {
+    dataField : "costCentr",
+    headerText : '<spring:message code="pettyCashCustdn.costCentrCode" />'
 }, {
     dataField : "costCentrName",
     headerText : '<spring:message code="pettyCashCustdn.costCentrName" />',
