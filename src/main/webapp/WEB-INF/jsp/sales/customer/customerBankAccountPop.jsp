@@ -23,7 +23,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
             Common.alert("Please select the account type");
             return false;
         }
-        if(accBank == ''){alert("??");
+        if(accBank == ''){
             Common.alert("Please select issue bank");
             return false;
         }
