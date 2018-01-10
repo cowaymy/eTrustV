@@ -1052,7 +1052,7 @@
                 <dd>
                     <ul class="btns">
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
-                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS History</a></p></li>
+                        <!-- <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS History</a></p></li> -->
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportGroup()">HS Report(Group)</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsSummary()">HS Summary Listing</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_filterForecastList()">HS Filter Forecast Listring</a></p></li>
