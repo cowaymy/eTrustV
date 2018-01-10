@@ -115,7 +115,7 @@
                     ) Project1
             WHERE 1=1
                   <if test="pstRefNo != null and pstRefNo != ''">
-                      AND Project1.PST_REF_NO = #{pstRefNo}
+                      AND UPPER(Project1.PST_REF_NO) = UPPER(#{pstRefNo})
                   </if>
                   <if test="createStDate != null and createStDate != '' ">
                        AND Project1.CRT_DT <![CDATA[  >= ]]>  TO_DATE( #{createStDate} , 'DD-MM-YYYY')
@@ -133,10 +133,10 @@
                       AND UPPER(Project1.DEALER_NRIC) LIKE '%'|| UPPER(#{pstNric})||'%'
                   </if>
                   <if test="pstCustPo != null and pstCustPo != ''">
-                      AND Project1.PST_CUST_PO = #{pstCustPo}
+                      AND UPPER(Project1.PST_CUST_PO) = UPPER(#{pstCustPo})
                   </if>
                   <if test="pInCharge != null and pInCharge != ''">
-                      AND Project1.USER_NAME = #{pInCharge}
+                      AND UPPER(Project1.USER_NAME) = #UPPER({pInCharge})
                   </if>
                   <if test="pstTypeList != null and pstTypeList != ''">
                       AND Project1.PST_TYPE IN
