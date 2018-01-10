@@ -128,9 +128,9 @@
              , (l47.trnsc_type || ' - ' || tran.code_name) ttype
              , (l47.trnsc_type_dtl || ' - ' || trand.code_name) mtype
              , l47.ref_doc_no docno
-             , TO_CHAR(l54.delvry_dt, 'YYYY/MM/DD') delydt
-             , TO_CHAR(l54.delvry_gi_dt, 'YYYY/MM/DD') gidt
-             , TO_CHAR(l54.delvry_gr_dt, 'YYYY/MM/DD') grdt
+             , TO_CHAR(TO_DATE(l54.delvry_dt, 'YYYY/MM/DD'), 'YYYY/MM/DD') delydt
+             , TO_CHAR(TO_DATE(l54.delvry_gi_dt, 'YYYY/MM/DD'), 'YYYY/MM/DD') gidt
+             , TO_CHAR(TO_DATE(l54.delvry_gr_dt, 'YYYY/MM/DD'), 'YYYY/MM/DD') grdt
              , l48.itm_code itmcd
              , l48.itm_name itmname
              , l55.delvry_qty delyqty
@@ -168,7 +168,6 @@
            and l47.reqst_no  = l48.reqst_no
            AND S26.STK_code  = l55.itm_code
             and l47.REQST_TYPE = 'PO'
-            and L54.DELVRY_GI_CMPLT <![CDATA[=]]> 'Y'
             <if test="seldelno != null and seldelno != ''">
               and l54.delvry_no  = #{seldelno}
            </if>
@@ -474,7 +473,7 @@
              }
      </select>  -->
 	<select id="selectDeliverydupCheck" parameterType="Map" resultType="egovMap">
-		SELECT  
+		SELECT
 		         BL_NO
 		        ,BL_ITM_SEQ
 		        ,ITM_CODE
