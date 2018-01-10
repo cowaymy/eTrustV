@@ -235,14 +235,15 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			    params.put("srvMemBSTaxes", "0");*/
 			    
 		 }else {
-			 
+			 			 
 			 double   srvMemPacAmt =  0;  
-			 double   srvMemPacNetAmt  =  0;
+			 double   srvMemPacNetAmt  =  0; 
 			 
 			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
 			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
 			 
-			 srvMemPacNetAmt  = Math.floor((double)(srvMemPacAmt  * 100 / 106 ));
+			 srvMemPacNetAmt  = Math.floor((double)(srvMemPacAmt  * 100 / 106  )*100)/100;
+			 
 			 params.put("srvMemPacNetAmt", srvMemPacNetAmt);
 			 params.put("srvMemPacTaxes", srvMemPacAmt - srvMemPacNetAmt);
 		 }
@@ -262,7 +263,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			 srvMemBSNetAmt  	= CommonUtils.intNvl((String)params.get("srvMemBSNetAmt"));
 			 srvMemBSAmt			= CommonUtils.intNvl((String)params.get("srvMemBSAmt"));
 			 
-			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 ));
+			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 )*100)/100;
 			 params.put("srvMemBSNetAmt",srvMemBSNetAmt );
 			 params.put("srvMemBSTaxes",srvMemBSAmt - srvMemBSNetAmt );
 			
@@ -337,20 +338,27 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 					 if(!verifyGSTZeroRateLocation || !isVerifyGSTEURCertificate){
 
 						 double chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
-						 double stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ));
-						 
+						 double stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ) *100)/100;
+
+						 eFilterMap.put("StkChargePrice", stkNetAmt);						 
 						 eFilterMap.put("StkNetAmt", stkNetAmt);
 						 eFilterMap.put("StkTaxes", "0");
+						 
+
+						 logger.debug("stkNetAmt 111 =============>" +stkNetAmt);
 						 
 					 }else {
 						 
 						 double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 						 double   stkNetAmt  =  0;
 						 
-						 stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ));
+						 stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;
 						 
 						 eFilterMap.put("StkNetAmt", stkNetAmt);
-						 eFilterMap.put("StkTaxes", chargePrice -stkNetAmt  );
+						 eFilterMap.put("StkTaxes", chargePrice -stkNetAmt  );						 
+
+						 logger.debug("stkNetAmt 222 =============>" +stkNetAmt);
+						 
 					 }
 					 
 					 membershipQuotationMapper.insertSrvMembershipQuot_Filter(eFilterMap);

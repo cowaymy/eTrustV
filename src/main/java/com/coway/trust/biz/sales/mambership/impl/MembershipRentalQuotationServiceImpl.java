@@ -304,12 +304,13 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 
 					 	double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 					 	double   itemAmount  =  CommonUtils.intNvl(String.valueOf(rMap.get("oriPrc")));
-					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 ));
-					
+					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;
+
+					 	eFilterMap.put("qotatItmAmt", chargePrice);
 					 	eFilterMap.put("qotatItmChrg", amt);
 					 	eFilterMap.put("qotatItmTxs", (itemAmount  -amt ));
 					 	eFilterMap.put("qotatItmGstRate", "6");
-					 	eFilterMap.put("ItmGstTaxCodeId", "32");
+					 	eFilterMap.put("qotatItmGstTaxCodeId", "32");
 					}
 					 
 					 membershipRentalQuotationMapper.insertSrvMembershipQuot_Filter(eFilterMap);
