@@ -106,6 +106,8 @@ public class InstallationResultListController {
 		EgovMap callType = installationResultListService.selectCallType(params);
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 		EgovMap orderInfo = null;
+		logger.debug("params1111111 {}",params);
+		
 		if(params.get("codeId").toString().equals("258")){
 			orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
 		}else{
@@ -227,7 +229,11 @@ public class InstallationResultListController {
 				promotionView.put("swapPormoPrice","0");
 			}
 		}
-		EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo == null ?installResult.get("custId") :  orderInfo.get("custId"));
+		
+		logger.debug("paramsqqqq {}",params);
+		Object custId =( orderInfo == null ? installResult.get("custId") :  orderInfo.get("custId") );
+		params.put("custId", custId);
+		EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
 		//EgovMap customerAddress = installationResultListService.getCustomerAddressInfo(customerInfo);
 		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
 		EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);

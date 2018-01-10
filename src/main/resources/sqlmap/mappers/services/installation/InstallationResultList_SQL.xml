@@ -567,7 +567,7 @@
     </select>
 
      <select id="getcustomerInfo" parameterType="Object" resultType="egovMap">
-	     SELECT Extent1.CUST_ID CUST_ID  ,
+<!-- 	     SELECT Extent1.CUST_ID CUST_ID  ,
 	       CASE
 	            WHEN ( 964 = Extent1.TYPE_ID ) THEN TO_NUMBER(0)
 	       ELSE TO_NUMBER(1)
@@ -607,7 +607,48 @@
               ON extend23.AREA_ID = extend64.AREA_ID
 	 WHERE  ( Extent1.CUST_ID = #{custId} )
 	          and extend23.stus_code_id = '9'
-	          AND (TO_NUMBER(Extent1.STUS_CODE_ID,99999) = 1 )
+	          AND (TO_NUMBER(Extent1.STUS_CODE_ID,99999) = 1 ) -->
+	SELECT Extent1.CUST_ID CUST_ID ,
+       CASE
+         WHEN ( 964 = Extent1.TYPE_ID ) THEN TO_NUMBER(0)
+         ELSE TO_NUMBER(1)
+       END C1 ,
+       Extent1.NAME NAME ,
+       Extent1.NRIC NRIC ,
+       Extent1.NATION NATION ,
+       Extent3.NAME NAME1 ,
+       Extent1.DOB DOB ,
+       Extent1.EMAIL EMAIL ,
+       Extent1.GENDER GENDER ,
+       Extent1.RACE_ID RACE_ID ,
+       Extent1.TYPE_ID TYPE_ID ,
+       Extent2.CODE_NAME CODE_NAME ,
+       Extent1.STUS_CODE_ID STUS_CODE_ID ,
+       Extent1.UPD_USER_ID UPD_USER_ID ,
+       Extent1.UPD_DT UPD_DT ,
+       Extent1.REN_GRP REN_GRP ,
+       Extent1.PST_TERMS PST_TERMS ,
+       Extent1.ID_OLD ID_OLD ,
+       Extent1.CRT_USER_ID CRT_USER_ID ,
+       Extent1.CRT_DT CRT_DT ,
+       CASE
+         WHEN ( 966 = Extent1.TYPE_ID ) THEN TO_NUMBER(1)
+         ELSE TO_NUMBER(0)
+       END C2,
+       extend64.city,
+       extend64.STATE,
+       extend64.COUNTRY,
+       extend64.AREA
+    FROM SAL0029D Extent1 LEFT JOIN SYS0013M Extent2 ON TO_NUMBER(Extent1.RACE_ID, 99999) = Extent2.CODE_ID 
+                        LEFT JOIN SYS0015M Extent3 ON TO_NUMBER(Extent1.NATION, 99999) = Extent3.CNTY_ID 
+                        join SAL0023D extend23 ON Extent1.CUST_ID = extend23.CUST_ID 
+                        join sys0064m extend64 ON extend23.AREA_ID = extend64.AREA_ID
+                        join sal0045d S45 ON S45.ADD_ID = extend23.cust_add_id  
+                        join sal0001d S01 ON s01.sales_ord_id = S45.sales_ord_id 
+                        
+    WHERE s01.sales_ord_no = #{salesOrderNO}
+   AND extend23.cust_id = #{custId}
+   AND (TO_NUMBER(Extent1.STUS_CODE_ID, 99999) = 1 ) 
 
      </select>
      <select id="getCustomerAddressInfo" parameterType="Map" resultType="egovMap">

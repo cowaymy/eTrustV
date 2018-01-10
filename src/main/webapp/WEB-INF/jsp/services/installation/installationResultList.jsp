@@ -72,22 +72,14 @@ function fn_addInstallation(codeid1){//active 일때만 열림
 	var docId =  selectedItems[0].item.c1;
 	var  statusCode =  selectedItems[0].item.code1;
 	var  salesOrderId =  selectedItems[0].item.salesOrdId;
+	var salesOrdNo1 =  selectedItems[0].item.salesOrdNo;
 
 
 	if(statusCode == "ACT"){
 		if(codeid1 == 257){
-	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1
-	        		  , ""
-        	          , null
-        	          , "false"
-        	          , "addInstallationPopupId");
+	           Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1 +"&salesOrderNO="+salesOrdNo1 , "" , null, "false", "addInstallationPopupId");
 	    }else{
-	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId
-	        		 , ""
-                     , null
-                     , "false"
-                     , "addinstallationResultProductDetailPopId"
-	         );
+	         Common.popupDiv("/services/addinstallationResultProductDetailPop.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1+"&orderId=" +orderId+"&docId=" +docId+"&salesOrderId="+salesOrderId , "" , null , "false", "addinstallationResultProductDetailPopId" );
 	    }
 	}else{
 		//Common.alert("Installation is no longer active. Add new installatio result is disallowed.");
