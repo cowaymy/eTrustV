@@ -9,7 +9,8 @@ SELECT A.ORD_ID                          ORD_ID,
        A.CUST_NAME                       CUST_NAME, 
        SUM(A.AMT)                        AMT, 
        A.APP_TYPE                        APP_TYPE, 
-       A.CANCL_DT                        CANCL_DT, 
+       A.CANCL_DT                        CANCL_DT,
+       A.CANCL_MODE_CODE                 CANCL_MODE_CODE, 
        A.PAY_MODE_CODE                   PAY_MODE_CODE, 
        A.PAY_MODE                        PAY_MODE, 
        A.ISSUEBANKCODE                   ISSUE_BANK_CODE, 
@@ -50,12 +51,14 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                C.NAME                                   CUST_NAME, 
                TRUNC(PD.PAY_ITM_AMT, 2)                 AMT, 
                CD.CODE_NAME                             APP_TYPE, 
-               CR.SO_REQ_UPD_DT                         CANCL_DT, 
-               TO_CHAR(PDD.CODE_ID)                     PAY_MODE_CODE, 
+               <!-- CR.SO_REQ_UPD_DT                         CANCL_DT, --> 
+               CR.SO_REQ_ACTUAL_CANCL_DT                CANCL_DT,
+               CR.SO_REQ_RESN_ID                        CANCL_MODE_CODE,
+               PDD.CODE_ID                               PAY_MODE_CODE, 
                PDD.CODE_NAME                            PAY_MODE, 
                NVL(B.CODE, ' ')                         ISSUEBANKCODE, 
                NVL(B.NAME, ' ')                         ISSUEBANK, 
-               TO_CHAR(PD.PAY_ITM_BANK_ACC_ID)          BANK_ACC_ID, 
+               PD.PAY_ITM_BANK_ACC_ID          BANK_ACC_ID, 
                (SELECT ACC_DESC 
                 FROM   SYS0001M 
                 WHERE  ACC_ID = PD.PAY_ITM_BANK_ACC_ID) BANK_ACC_NAME, 
@@ -216,10 +219,10 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                                WHERE  PM.PAY_ID = B.MTCH_ID 
                                GROUP  BY B.MTCH_ID 
                                HAVING SUM(B.TOT_AMT) <![CDATA[ <> ]]> PM.TOT_AMT) 
-               AND ( ( TRUNC(CR.SO_REQ_UPD_DT) = TRUNC(SYSDATE) 
+               <!-- AND ( ( TRUNC(CR.SO_REQ_UPD_DT) = TRUNC(SYSDATE) 
                        AND CR.SO_REQ_RESN_ID IN ( 1798, 1997 ) ) 
                       OR ( TRUNC(CR.SO_REQ_UPD_DT) = TRUNC(SYSDATE - 1) 
-                           AND CR.SO_REQ_RESN_ID IN ( 1996, 1998 ) ) ) 
+                           AND CR.SO_REQ_RESN_ID IN ( 1996, 1998 ) ) ) --> 
         UNION ALL 
         SELECT SOM.SALES_ORD_ID                         ORD_ID, 
                SOM.SALES_ORD_NO                         ORD_NO, 
@@ -229,11 +232,12 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                TRUNC(PD.PAY_ITM_AMT, 2)                 AMT, 
                CD.CODE_NAME                             APP_TYPE, 
                TERM.TRMNAT_CRT_DT                       CANCL_DT, 
-               TO_CHAR(PDD.CODE_ID)                     PAY_MODE_CODE, 
+               CR.SO_REQ_RESN_ID                        CANCL_MODE_CODE,
+               PDD.CODE_ID                               PAY_MODE_CODE, 
                PDD.CODE_NAME                            PAY_MODE, 
                COALESCE(B.CODE, ' ')                    ISSUEBANKCODE, 
                COALESCE(B.NAME, ' ')                    ISSUEBANK, 
-               TO_CHAR(PD.PAY_ITM_BANK_ACC_ID)          BANK_ACC_ID, 
+               PD.PAY_ITM_BANK_ACC_ID              BANK_ACC_ID, 
                (SELECT ACC_DESC 
                 FROM   SYS0001M 
                 WHERE  ACC_ID = PD.PAY_ITM_BANK_ACC_ID) BANK_ACC_NAME, 
@@ -388,8 +392,9 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                                WHERE  PM.PAY_ID = B.MTCH_ID 
                                GROUP  BY B.MTCH_ID 
                                HAVING SUM(B.TOT_AMT) <![CDATA[ <> ]]> PM.TOT_AMT) 
-               AND ( TRUNC(TERM.TRMNAT_CRT_DT) = TRUNC(SYSDATE - 1) 
-                     AND TERM.TRMNAT_RESN_ID = 2127 ) 
+               <!-- AND ( TRUNC(TERM.TRMNAT_CRT_DT) = TRUNC(SYSDATE - 1) 
+                     AND TERM.TRMNAT_RESN_ID = 2127 )  -->
+               AND TERM.TRMNAT_RESN_ID = 2127
         UNION ALL 
         SELECT SOM.SALES_ORD_ID                     ORD_ID, 
                SOM.SALES_ORD_NO                     ORD_NO, 
@@ -398,12 +403,13 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                C.NAME                               CUST_NAME, 
                TRUNC(( SUM(TL.TRADE_AMT) * -1 ), 2) AMT, 
                CD.CODE_NAME                         APP_TYPE, 
-               SOE.SO_EXCHG_CRT_DT                  CANCL_DT, 
-               ' '                                  PAY_MODE_CODE, 
+               SOE.SO_EXCHG_CRT_DT                  CANCL_DT,
+               0                                   CANCL_MODE_CODE, 
+               0                                   PAY_MODE_CODE, 
                ' '                                  PAY_MODE, 
                ' '                                  ISSUEBANKCODE, 
                ' '                                  ISSUEBANK, 
-               ' '                                  BANK_ACC_ID, 
+               0                                  BANK_ACC_ID, 
                ' '                                  BANK_ACC_NAME, 
                ' '                                  BANKACCNO, 
                ' '                                  CC_HOLDER_NAME, 
@@ -534,8 +540,8 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                AND SOE.SO_EXCHG_OLD_APP_TYPE_ID IN ( 67, 68 ) 
                AND SOM.PV_MONTH <![CDATA[ > ]]> 0 
                AND SOM.PV_YEAR <![CDATA[ > ]]> 0 
-               AND TRUNC(SOE.SO_EXCHG_CRT_DT) <![CDATA[ > ]]> TO_DATE('10/01/2014', 'MM/DD/YYYY') 
-               AND TRUNC(SOE.SO_EXCHG_CRT_DT) <![CDATA[ < ]]> TRUNC(SYSDATE) 
+               <!-- AND TRUNC(SOE.SO_EXCHG_CRT_DT) <![CDATA[ > ]]> TO_DATE('10/01/2014', 'MM/DD/YYYY') 
+               AND TRUNC(SOE.SO_EXCHG_CRT_DT) <![CDATA[ < ]]> TRUNC(SYSDATE)  -->
         GROUP  BY SOM.SALES_ORD_ID, 
                   SOM.SALES_ORD_NO, 
                   C.NAME, 
@@ -587,12 +593,42 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
        LEFT JOIN SAL0028D CUSTCRC 
               ON CUSTCRC.CUST_CRC_ID = RPS.CUST_CRC_ID 
 WHERE  A.WOR_NO NOT LIKE 'ROR%' 
+       AND A.ORD_ID NOT IN (SELECT SALES_ORD_ID FROM   PAY0045D)
+       <if test="startDt != null and startDt != ''">
+            <![CDATA[
+            AND TRUNC(A.CANCL_DT) >= TRUNC(TO_DATE(#{startDt}, 'DD/MM/YYYY') )
+            ]]>
+       </if>
+       <if test="endDt != null and endDt != ''">
+            <![CDATA[
+            AND TRUNC(A.CANCL_DT) < TRUNC(TO_DATE(#{endDt}, 'DD/MM/YYYY') +1)
+            ]]>
+       </if>
+       <if test="custName != null and custName != ''">
+            AND A.CUST_NAME LIKE '%' || #{custName} || '%'
+       </if>
+       <if test="salesOrdNo != null and salesOrdNo != ''">
+            AND A.ORD_NO = #{salesOrdNo}
+        </if>
+        <if test="payMode != null and payMode != ''">
+		    AND A.PAY_MODE_CODE IN
+		<foreach item="item" collection="payMode" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	    </if>
+	    <if test="cancelMode != null and cancelMode != ''">
+		    AND A.CANCL_MODE_CODE IN
+		<foreach item="item" collection="cancelMode" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		</if>
 GROUP  BY A.ORD_ID, 
           A.ORD_NO, 
           A.WOR_NO, 
           A.CUST_NAME, 
           A.APP_TYPE, 
           A.CANCL_DT, 
+          A.CANCL_MODE_CODE,
           A.PAY_MODE_CODE, 
           A.PAY_MODE, 
           A.ISSUEBANKCODE, 
