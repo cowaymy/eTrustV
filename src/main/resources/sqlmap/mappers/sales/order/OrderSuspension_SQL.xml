@@ -82,16 +82,16 @@
 		         LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Filter1.SUS_UPD_USER_ID
 		 WHERE  1=1
 		 <if test="susNo != null and susNo != ''">
-		     AND Filter1.SUS_NO = #{susNo}
+		     AND UPPER(Filter1.SUS_NO) = UPPER(#{susNo})
 		 </if>
          <if test="salesOrdNo != null and salesOrdNo != ''">
              AND Filter1.SALES_ORD_NO = #{salesOrdNo}
          </if>
          <if test="susCrtUserName != null and susCrtUserName != ''">
-             AND SUS_CRT_USER_NAME = #{susCrtUserName}
+             AND UPPER(SUS_CRT_USER_NAME) = UPPER(#{susCrtUserName})
          </if>
          <if test="invNo != null and invNo != ''">
-             AND Filter1.INV_NO = #{invNo}
+             AND UPPER(Filter1.INV_NO) = UPPER(#{invNo})
          </if>
          <if test="startCrtDt != null and startCrtDt != '' ">
               AND Filter1.SUS_CRT_DT <![CDATA[  >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')

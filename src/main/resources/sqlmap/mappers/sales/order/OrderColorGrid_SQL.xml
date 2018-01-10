@@ -356,7 +356,7 @@
                   AND F1.PV_MONTH = EXTRACT(MONTH FROM TO_DATE(#{netSalesMonth},'MM/YYYY'))
 	          </if>
 	          <if test="salesmanCode != null and salesmanCode != ''">
-	              AND F1.SALESMAN_CODE = #{salesmanCode}
+	              AND UPPER(F1.SALESMAN_CODE) = UPPER(#{salesmanCode})
 	          </if>
 	          <if test="contactNum != null and contactNum != ''">
 	              AND (F1.MAIL_CNT_TEL_M = #{contactNum}
@@ -369,7 +369,7 @@
 	                      OR F1.INST_CNT_TEL_R = #{contactNum})
 	          </if>
 	          <if test="promoCode != null and promoCode != ''">
-	              AND F1.PROMO_CODE = #{promoCode}
+	              AND UPPER(F1.PROMO_CODE) = UPPER(#{promoCode})
 	          </if>
                ) D1
         ORDER BY D1.ORD_ID DESC

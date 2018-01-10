@@ -82,7 +82,7 @@
 			         JOIN SAL0001D Extent5   ON Extent5.SALES_ORD_ID = Filter1.SO_ID
 			    WHERE 1=1
 			        <if test="invReqNo != null and invReqNo != ''">
-			             AND Filter1.INV_REQ_NO LIKE '%' || #{invReqNo} || '%'
+			             AND UPPER(Filter1.INV_REQ_NO) LIKE '%' || UPPER(#{invReqNo}) || '%'
 			        </if>
 			        <if test="startCrtDt != null and startCrtDt != ''">
 			             <![CDATA[
@@ -101,7 +101,7 @@
 			             AND Filter1.INV_REQ_PARTY_ID = #{invReqPartyId}
 			        </if>
 			        <if test="invReqCrtUserName != null and invReqCrtUserName != ''">
-			             AND Filter1.INV_REQ_CRT_USER_NAME LIKE '%' || #{invReqCrtUserName} || '%'
+			             AND UPPER(Filter1.INV_REQ_CRT_USER_NAME) LIKE '%' || UPPER(#{invReqCrtUserName}) || '%'
 			        </if>
 			        <if test="orgCode != null and orgCode != ''">
                          AND Filter1.LAST_ORG_CODE = #{orgCode}
@@ -553,7 +553,7 @@
 		     LEFT JOIN SYS0038M Extent5   ON Filter1.INV_STUS_ID = Extent5.STUS_CODE_ID
 		  WHERE 1=1
 		      <if test="invNo != null and invNo != ''">
-		      AND Filter1.INV_NO LIKE '%' || #{invNo} || '%'
+		      AND UPPER(Filter1.INV_NO) LIKE '%' || UPPER(#{invNo}) || '%'
 		      </if>
 		      <if test="startCrtDt != null and startCrtDt != ''">
 		      <![CDATA[

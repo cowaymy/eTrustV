@@ -210,13 +210,13 @@
                          AND Filter1.SALES_ORD_NO = #{salesOrdNo}
                     </if>
                     <if test="crtUserName != null and crtUserName != ''">
-                         AND Filter1.USERNAME1 = #{crtUserName}
+                         AND UPPER(Filter1.USERNAME1) = UPPER(#{crtUserName})
                     </if>
                     <if test="custIc != null and custIc != ''">
-                         AND Filter1.NRIC1 LIKE '%' || #{custIc} || '%'
+                         AND UPPER(Filter1.NRIC1) LIKE '%' || UPPER(#{custIc}) || '%'
                     </if>
                     <if test="custName != null and custName != ''">
-                         AND Filter1.NAME5 LIKE '%' || #{custName} || '%'
+                         AND UPPER(Filter1.NAME5) LIKE '%' || UPPER(#{custName}) || '%'
                     </if>
     </select>
     

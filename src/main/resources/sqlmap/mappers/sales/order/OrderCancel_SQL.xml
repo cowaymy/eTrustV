@@ -163,19 +163,19 @@
                  AND A.ORD_NO = #{ordNo}
              </if>
              <if test="reqNo != null and reqNo != ''">
-                 AND A.REQ_NO = #{reqNo}
+                 AND UPPER(A.REQ_NO) = UPPER(#{reqNo})
              </if>
              <if test="crtUserId != null and crtUserId != ''">
-                 AND A.CRT_USER_ID like '%'|| #{crtUserId} ||'%'
+                 AND UPPER(A.CRT_USER_ID) like '%'|| UPPER(#{crtUserId}) ||'%'
              </if>
              <if test="custId != null and custId != ''">
-                 AND A.CUST_ID = #{custId}
+                 AND UPPER(A.CUST_ID) = UPPER(#{custId})
              </if>
              <if test="custName != null and custName != ''">
-                 AND A.CUST_NAME like '%'|| #{custName} ||'%'
+                 AND UPPER(A.CUST_NAME) like '%'|| UPPER(#{custName}) ||'%'
              </if>
              <if test="custIc != null and custIc != ''">
-                 AND A.CUST_IC = #{custIc}
+                 AND UPPER(A.CUST_IC) = UPPER(#{custIc})
              </if>
              <if test="startCrtDt != null and startCrtDt != '' ">
                 AND CRT_DT <![CDATA[   >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') 

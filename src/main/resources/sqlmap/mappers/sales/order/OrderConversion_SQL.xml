@@ -102,7 +102,7 @@
 			        LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Filter1.RS_CNVR_UPD_USER_ID
 			     WHERE 1=1
 			     <if test="convNo != null and convNo != ''">
-                     AND Filter1.RS_CNVR_NO = #{convNo}
+                     AND UPPER(Filter1.RS_CNVR_NO) = UPPER(#{convNo})
                  </if>
 			     <if test="createStDate != null and createStDate != ''">
 		             AND Filter1.RS_CNVR_CRT_DT <![CDATA[>=]]> TO_DATE(#{createStDate}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
