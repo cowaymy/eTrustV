@@ -368,6 +368,21 @@ $(document).ready(function(){
         AUIGrid.resetUpdatedItems(listGrid, "all");
     });
     //SearchListAjax();
+    AUIGrid.bind(listGrid, "rowAllChkClick", function( event ) {
+     //alert("전체 선택  checked 111 : " + event.checked);
+	     if(true==event.checked){
+	    	 //alert(111);
+	    	$("#allChk").val(event.checked); 
+	     }else{
+	    	 //alert(222);
+	    	$("#allChk").val(event.checked); 
+	     }
+    });
+    /*
+    AUIGrid.bind(listGrid, "rowAllCheckClick", function( checked ) {
+        alert("전체 선택  checked 222 : " + checked);
+    });
+    */
 });
 function f_change(){
     paramdata = { groupCode : '308' , orderValue : 'CODE_ID' , likeValue:$("#sttype").val(),codeIn:'UM03,UM93'};
@@ -395,6 +410,15 @@ $(function(){
     });
 
     $('#delivery').click(function(){
+    	if("true" == $("#allChk").val()){
+    		  //alert($("#allChk").val());
+    		  Common.alert("Not Allow to Check All rows");
+    		  return false;
+    	}
+    		
+    
+    	
+    	
         var checkDelqty= false;
         var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 
@@ -810,6 +834,7 @@ function fn_serialChck(rowindex , rowitem , str){
         <input type="hidden" id="sUrl"   name="sUrl"  />
         <input type="hidden" id="stype"  name="stype" />
         <input type="hidden" name="rStcode" id="rStcode" />
+        <input type="hidden" name="allChk" id="allChk"  value="false"/>
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
