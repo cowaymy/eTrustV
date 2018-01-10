@@ -253,6 +253,16 @@ function fn_clear(){
     $("#CRT_EDT").val("");
     $("#STUS_ID").val("");
     $("#CRT_USER_ID").val("");
+    
+    $("text").each(function(){
+        
+        if($(this).hasClass("readonly")){           
+        }else{
+            $(this).val("");
+        }
+    });
+
+    $("#STUS_ID").multipleSelect("uncheckAll");
 }
 
 

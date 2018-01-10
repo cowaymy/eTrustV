@@ -153,6 +153,18 @@ function fn_clear(){
 	$("#custId").val("");
 	$("#custName").val("");
 	$("#custNRIC").val("");
+	
+    $("text").each(function(){
+        
+        if($(this).hasClass("readonly")){           
+        }else{
+            $(this).val("");
+        }
+    });
+
+    $("#cmbStatus").multipleSelect("uncheckAll");
+    $("#cmbSRVCStatus").multipleSelect("uncheckAll");
+	
 }
 
 
@@ -161,7 +173,7 @@ function fn_selectListAjax() {
 	
     if( $("#sRVContrtNo").val() ==""  &&  $("#salesDate").val() ==""  &&  $("#orderNo").val() ==""  ){
         
-        Common.alert("You must key-in at least one of Membership number / Order number / Sales date");
+        Common.alert("<spring:message code="sal.text.mustKeyIn3" />");
          return ;
      }
      
@@ -193,17 +205,17 @@ function f_multiCombo(){
 function createAUIGrid() {
         
         var columnLayout = [
-                            { dataField : "srvCntrctRefNo", headerText  : "Membership<br/>No.",    width : 100,  editable : false},
-                            { dataField : "salesOrdNo", headerText  : "Order No.",width : 80,  editable: false },
-                            { dataField : "code",   headerText  : "Status",  width          : 60,   editable       : false},
-                            { dataField : "cntrctRentalStus", headerText  : "Rent<br/>Status",  width          : 60, editable       : false },
-                            { dataField : "srvCntrctNetMonth",headerText  : "Net Mth",  width          : 65,   editable       : false},
-                            { dataField : "srvCntrctNetYear",         headerText  : "Net Year",   width          : 70,     editable       : false },
-                            { dataField : "srvPrdStartDt",       headerText  : "Start Date",  width          : 90, editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
-                            { dataField : "srvCntrctPacDesc",     headerText  : "Package",  width          : 130,    editable       : false },
-                            { dataField : "name",      headerText  : "Customer Name",   width          : 150,    editable       : false },
-                            { dataField : "srvCntrctCrtDt",     headerText  : "Created",    width          : 90,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
-                            { dataField : "userName",     headerText  : "Creator",    width : 100,       editable  : false}
+                            { dataField : "srvCntrctRefNo", headerText  : "<spring:message code="sal.title.mbrshNo" />.",    width : 100,  editable : false},
+                            { dataField : "salesOrdNo", headerText  : "<spring:message code="sal.title.ordNo" />.",width : 80,  editable: false },
+                            { dataField : "code",   headerText  : "<spring:message code="sal.title.status" />",  width          : 60,   editable       : false},
+                            { dataField : "cntrctRentalStus", headerText  : "<spring:message code="sal.title.rentStatus" />",  width          : 60, editable       : false },
+                            { dataField : "srvCntrctNetMonth",headerText  : "<spring:message code="sal.title.netMth" />",  width          : 65,   editable       : false},
+                            { dataField : "srvCntrctNetYear",         headerText  : "<spring:message code="sal.title.netYear" />",   width          : 70,     editable       : false },
+                            { dataField : "srvPrdStartDt",       headerText  : "<spring:message code="sal.title.stDate" />",  width          : 90, editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
+                            { dataField : "srvCntrctPacDesc",     headerText  : "<spring:message code="sal.title.package" />",  width          : 130,    editable       : false },
+                            { dataField : "name",      headerText  : "<spring:message code="sal.title.custName" />",   width          : 150,    editable       : false },
+                            { dataField : "srvCntrctCrtDt",     headerText  : "<spring:message code="sal.title.created" />",    width          : 90,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
+                            { dataField : "userName",     headerText  : "<spring:message code="sal.title.creator" />",    width : 100,       editable  : false}
                                
        ];
 
@@ -220,7 +232,7 @@ function  fn_goPayChannel(){
     var selectedItems = AUIGrid.getSelectedItems(gridID);
     
     if(selectedItems ==""){
-       Common.alert("Membership Missing"+DEFAULT_DELIMITER+"No membership  selected. ");
+       Common.alert("<spring:message code="sal.alert.title.membershipMissing" />"+DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.membershipMissing" /> ");
        return ;
     }
     
@@ -268,7 +280,7 @@ function fn_goSVMDetails(){
 	  var selectedItems = AUIGrid.getSelectedItems(gridID);
       
       if(selectedItems ==""){
-          Common.alert("Membership Missing"+DEFAULT_DELIMITER+"No membership  selected. ");
+          Common.alert("<spring:message code="sal.alert.title.membershipMissing" />"+DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.membershipMissing" /> ");
           return ;
       }
       

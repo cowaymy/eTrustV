@@ -459,9 +459,8 @@ function fn_doSelectBank_Click(){
     }else{
         _custId = $("#txtThirdPartyID").val();
     }
-    
-    alert('공통 미개발 .... 차후 연결 ');
-    //Common.popupDiv("/sales/customer/customer/customerAddBankAccountPop.do", {custId : _custId}, null, true ,'_SelectCardDiv1');
+    alert("확인필요!!!");
+    Common.popupDiv("/sales/customer/customer/customerAddBankAccountPop.do", {custId : _custId}, null, true ,'_SelectCardDiv1');
 }
 
 

@@ -252,7 +252,7 @@ function fn_saveContractCancellation(){
 	<td><span>${ordInfo.ordPoNo }</span></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="sales.ProductCode" /></th>
+	<th scope="row"><spring:message code="sal.text.productCode" /></th>
 	<td><span>${ordInfo.stockCode }</span></td>
 	<th scope="row"><spring:message code="sales.pakName" /></th>
 	<td colspan="3"><span>${ordInfo.stockDesc }</span></td>

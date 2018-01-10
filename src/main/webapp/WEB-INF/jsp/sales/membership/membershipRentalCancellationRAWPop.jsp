@@ -192,9 +192,9 @@ function btnGenerate_Excel_Click(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Member Applicant Listing</h1>
+<h1><spring:message code="sal.page.title.memberApplicantListing" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -217,27 +217,27 @@ function btnGenerate_Excel_Click(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Cancellation No.</th>
+    <th scope="row"><spring:message code="sal.text.cancellationNo" /></th>
     <td><input type="text" title="" placeholder="Cancellation No." class="w100p" id="txtCanNo"/></td>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
     <select class="w100p disabled" id="cmbMemberType" onchange="cmbMemberType_SelectedIndexChanged()"  disabled>
-        <option value="1">Health Planner</option>
-        <option value="2" selected>Coway Lady</option>
-        <option value="3">Coway Technician</option>
+        <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+        <option value="2" selected><spring:message code="sal.text.cowayLady" /></option>
+        <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Requested Date</th>
+    <th scope="row"><spring:message code="sal.text.requestedDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateFr"/></p>
+    <p><input type="text" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateFr"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateTo"/></p>
+    <p><input type="text" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Org Code</th>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
     <td>
     <select class="w100p disabled" id="cmbOrgCode" onchange="cmbOrgCode_SelectedIndexChanged()" disabled>
         <option data-placeholder="true" hidden>Organization</option>
@@ -245,9 +245,9 @@ function btnGenerate_Excel_Click(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" />.</th>
     <td><input type="text" title="" placeholder="Order No" class="w100p" id="txtOrderNo"/></td>
-    <th scope="row">Grp Code</th>
+    <th scope="row"><spring:message code="sal.text.grpCode" /></th>
     <td>
     <select class="w100p disabled" id="cmbGrpCode" onchange="cmbGrpCode_SelectedIndexChanged()" disabled>
         <option data-placeholder="true" hidden>Department</option>
@@ -255,9 +255,9 @@ function btnGenerate_Excel_Click(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Membership No.</th>
+    <th scope="row"><spring:message code="sal.text.membershipNo" />.</th>
     <td><input type="text" title="" placeholder="Membership No." class="w100p" id="txtSrvContract"/></td>
-    <th scope="row">Dept Code</th>
+    <th scope="row"><spring:message code="sal.text.detpCode" /></th>
     <td>
     <select class="w100p" id="cmbDeptCode">
         <option data-placeholder="true" hidden>Department</option>
@@ -265,16 +265,16 @@ function btnGenerate_Excel_Click(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Cancellation Reason</th>
+    <th scope="row"><spring:message code="sal.text.cancellationReason" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbReason" data-placeholder="Cancellation Reason"></select>
     </td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
     <select class="w100p" id="cmbCustType">
         <option data-placeholder="true" hidden>Customer Type</option>
-        <option value="965">Company</option>
-        <option value="964">Individual</option>
+        <option value="965"><spring:message code="sal.text.company" /></option>
+        <option value="964"><spring:message code="sal.text.individual" /></option>
     </select>
     </td>
 </tr>
@@ -283,8 +283,8 @@ function btnGenerate_Excel_Click(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Excel_Click()">Generate Excel</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Excel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

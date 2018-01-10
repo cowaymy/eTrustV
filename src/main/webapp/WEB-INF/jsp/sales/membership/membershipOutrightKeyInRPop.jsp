@@ -244,7 +244,7 @@ function fn_multy(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('PDF');"><spring:message code="sal.btn.genToPdf" /></a></p></li>
-    <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('EXCEL');"><spring:message code="sal.btn.getToExcel" /></a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('EXCEL');"><spring:message code="sal.btn.genToExcel" /></a></p></li>
     <li><p class="btn_blue2 big"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 

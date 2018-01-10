@@ -183,9 +183,9 @@ function fn_multy(){
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Key In List</h1>
+<h1><spring:message code="sal.page.title.keyInList" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -207,29 +207,29 @@ function fn_multy(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Membership No</th>
+    <th scope="row"><spring:message code="sal.text.membershipNo" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="" placeholder="" class="w100p" id="_fromMemNo"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="" placeholder="" class="w100p" id="_toMemNo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Key-In Date</th>
+    <th scope="row"><spring:message code="sal.text.keyInDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  id="_frDate" readonly="readonly"/></p>
+    <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date"  id="_frDate" readonly="readonly"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="_toDate" readonly="readonly"/></p>
+    <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="_toDate" readonly="readonly"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Key-In Branch</th>
+    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_cmbBranch"></select>
     </td>
-    <th scope="row">Key-In User</th>
+    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
      <td>
         <div class="search_100p"><!-- search_100p start -->
         <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="w100p" readonly="readonly"/>
@@ -239,14 +239,14 @@ function fn_multy(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Sorting By</th>
+    <th scope="row"><spring:message code="sal.text.sortingBy" /></th>
     <td>
     <select class="w100p" id="_sortBy">
-        <option value="1">Order Number</option>
-        <option value="2">Customer Name</option>
-        <option value="3">Key-In Branch</option>
-        <option value="4">Key-In Date</option>
-        <option value="5">Key-In User</option>
+        <option value="1"><spring:message code="sal.text.ordNum" /></option>
+        <option value="2"><spring:message code="sal.text.custName" /></option>
+        <option value="3"><spring:message code="sal.text.keyInBranch" /></option>
+        <option value="4"><spring:message code="sal.text.keyInDate" /></option>
+        <option value="5"><spring:message code="sal.text.keyInUser" /></option>
     </select>
     </td>
     <th scope="row"></th>
@@ -257,9 +257,9 @@ function fn_multy(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('PDF')">Generate To PDF</a></p></li>
-    <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('EXCEL')">Generate To Excel</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('PDF')"><spring:message code="sal.btn.genToPdf" /></a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('EXCEL')"><spring:message code="sal.btn.getToExcel" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 </form>

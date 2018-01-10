@@ -74,10 +74,10 @@ $(document).ready(function(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Member Applicant Listing</h2>
+<h2><spring:message code="sal.page.title.memberApplicantListing" /></h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#">Generate Excel</a></p></li>
-	<li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#"><spring:message code="sal.btn.genExcel" /></a></p></li>
+	<li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -94,57 +94,57 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Cancellation No.</th>
+	<th scope="row"><spring:message code="sal.text.cancellationNo" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Member Type</th>
+	<th scope="row"><spring:message code="sal.text.memtype" /></th>
 	<td>
 	<select class="w100p disabled" id="memType" name="memType">
-        <option value="1">Health Planner</option>
-        <option value="2" selected="selected">Coway Lady</option>
-        <option value="3">Coway Technician</option>
+        <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+        <option value="2" selected="selected"><spring:message code="sal.text.cowayLady" /></option>
+        <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
 	</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Requested Date</th>
+	<th scope="row"><spring:message code="sal.text.requestedDate" /></th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<p><input type="text" placeholder="DD/MM/YYYY" class="j_date" /></p>
+	<span><spring:message code="sal.title.to" /></span>
+	<p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
-	<th scope="row">Org Code</th>
+	<th scope="row"><spring:message code="sal.text.orgCode" /></th>
 	<td>
 	<select class="w100p" id="orgCode" name="orgCode">
 	</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Order No.</th>
+	<th scope="row"><spring:message code="sal.text.ordNo" />.</th>
 	<td><input type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Grp Code</th>
+	<th scope="row"><spring:message code="sal.text.grpCode" /></th>
 	<td>
 	<select class="w100p" id="grpCode" name="grpCode">
 	</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Membership No.</th>
+	<th scope="row"><spring:message code="sal.text.membershipNo" />.</th>
 	<td><input type="text" title="" placeholder="" class="w100p" /></td>
-	<th scope="row">Dept Code</th>
+	<th scope="row"><spring:message code="sal.text.detpCode" /></th>
 	<td>
 	<select class="w100p" id="deptCode" name ="deptCode">
 	</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Cancellation Reason</th>
+	<th scope="row"><spring:message code="sal.text.cancellationReason" /></th>
 	<td>
 	<select class="multy_select w100p" multiple="multiple" id="reason" name="reason">
 	</select>
 	</td>
-	<th scope="row">Customer Type</th>
+	<th scope="row"><spring:message code="sal.text.custType" /></th>
 	<td>
 	<select class="w100p"  >
 		

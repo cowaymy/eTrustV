@@ -1249,7 +1249,8 @@ function  fn_DoSaveProcess(_saveOption){
     
     $("#srvMemPacNetAmt").val($("#txtPackagePrice").text());  // 
     //$("#srvMemPacNetAmt").val($("#hiddenNomalPrice").text());  // nomalAmt
-    $("#srvMemPacAmt").val($("#hiddenNomalPrice").val()); //srvMemPacNetAmt
+    //$("#srvMemPacAmt").val($("#hiddenNomalPrice").val()); //srvMemPacNetAmt
+    $("#srvMemPacAmt").val($("#txtPackagePrice").text()); //srvMemPacNetAmt
     
     $("#srvMemBSAmt").val($("#txtFilterCharge").text());
     $("#srvMemBSNetAmt").val($("#txtFilterCharge").text());  // srvMemBSNetAmt

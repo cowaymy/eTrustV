@@ -1084,7 +1084,7 @@ function fn_cPromotionpacChgEvt(){
                            t2 = t1 -  promoAddDiscPrc;
                        }
                        var t3 = Math.floor( t2);
-                       $("#txtMonthlyFee").html( Number(t3)); 
+                       $("#txtMonthlyFee").val( Number(t3)); 
                        
                       
                  }else if(result[0].promoDiscType =="1"){  //amt 
@@ -1100,7 +1100,7 @@ function fn_cPromotionpacChgEvt(){
                      }
                      var t3 = Math.floor( t2);
 
-                     $("#txtPackagePrice").html( Number(t3)); 
+                     $("#txtMonthlyFee").val( Number(t3)); 
                  
                  }else{
                      Common.alert('promoDiscType err ');
@@ -1468,7 +1468,7 @@ function fn_cTPackageChanged(){
         </colgroup>
         <tr>
             <th scope="row">Membership Package</th>
-            <td colspan="3"><span>text</span></td>
+            <td colspan="3"><span></span></td>
             <th scope="row">Membership Expire</th>
             <td><span id='expire'> </span></td>
         </tr>
