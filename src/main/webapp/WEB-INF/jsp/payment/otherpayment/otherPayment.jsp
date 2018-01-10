@@ -158,7 +158,7 @@ $(document).ready(function(){
 			 doGetCombo('/common/getAccountList.do', 'CASH','', 'searchBankAcc', 'S', '' );
 			 $("#searchBankType option").remove();
 			 $("#searchBankType").append("<option value=''>Choose One</option>");
-			 $("#searchBankType").append("<option value='2730'>MBB CDM</option>");
+			 $("#searchBankType").append("<option value='2729'>MBB CDM</option>");
 			 $("#searchBankType").append("<option value='2730'>VA</option>");
 			 $("#searchBankType").append("<option value='2731'>Others</option>");
 	     }else if($('#payMode').val() == '106'){//cheque
@@ -2350,35 +2350,51 @@ function fn_outConfirm(){
 			  //console.log(selected);
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
 			  $('#searchVa').val("");
-			  $('#searchBankAcc').prop("disabled", true);
+			  $('#searchBankAcc').prop("disabled", false);
 			  $('#searchVa').prop("disabled", false);
+			  
+			  if($('#payMode').val() == '108'){
+		          $("#searchBankAcc option").remove();
+		          doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
+		        }
+			  
+			  $('#searchBankAcc').val("525");
+			  
 		  }else{
 			  $("#searchBankAcc").find('option:first').prop('selected', 'selected');
 			  $('#searchVa').val("");
 			  $('#searchBankAcc').prop("disabled", false);
 			  $('#searchVa').prop("disabled", true);
+			  $('#searchBankAcc').val("");
 			  
-			  if(selected == '2729' && $('#payMode').val() == '105'){
-				  $('#searchBankAcc').val('84');
-			  }else{
-				  $('#searchBankAcc').val('');
+			  if($('#payMode').val() == '105'){
+				  if(selected == '2729'){
+			          $('#searchBankAcc').val("84");
+			        }else{
+			          $('#searchBankAcc').val('');
+			        }
 			  }
 			  
-			  if(selected == '2731' && $('#payMode').val() == '106'){
+			  /* if($('#payMode').val() == '106'){
 				  $('#searchBankAcc').val('');
         }else{
 		          
-        }
+        } */
 			  
-			  if(selected == '2728' && $('#payMode').val() == '108'){
-				  $("#searchBankAcc option").remove();
-				  $("#searchBankAcc").append("<option value=''>Choose One</option>");
-				  $("#searchBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
-				  $("#searchBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
-		    }else{
-		    	$("#searchBankAcc option").remove();
-		    	doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );       
-		    }
+			  if($('#payMode').val() == '108'){
+				  
+				  if(selected == '2728'){
+			          $("#searchBankAcc option").remove();
+			          $("#searchBankAcc").append("<option value=''>Choose One</option>");
+			          $("#searchBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
+			          $("#searchBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+			        }else{
+			          $("#searchBankAcc option").remove();
+			          doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );       
+			        }
+			  }
+			  
+			  
 			  
 		  }
 	  }else{
