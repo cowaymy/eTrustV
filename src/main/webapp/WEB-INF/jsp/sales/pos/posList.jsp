@@ -674,6 +674,10 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
 
         if(memInfo == null) {
             Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+            $("#salesmanPopCd").val('');
+            $("#hiddenSalesmanPopId").val('');
+            //Clear Grid
+            fn_clearAllGrid();
         }
         else {
            // console.log("멤버정보 가꼬옴");
@@ -691,7 +695,11 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                 		$("#_payBrnchCode").val(result.brnch);
                         getLocIdByBrnchId(result.brnch);	
                 	}else{
-                		Common.alert("This member has no Brahch.");
+                		Common.alert("This member has no Branch.");
+                		$("#salesmanPopCd").val('');
+                        $("#hiddenSalesmanPopId").val('');
+                		//Clear Grid
+                        fn_clearAllGrid();
                 		return;
                 	}
                 });

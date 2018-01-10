@@ -159,7 +159,7 @@
                     AND  UPPER(Extent1.CUST_NAME) LIKE '%'||UPPER(#{custName}) ||'%'
                  </if>
                  <if test=" custNric != null and custNric != '' ">
-                    AND  Extent1.CUST_NRIC LIKE '%'||#{custNric}||'%'
+                    AND  UPPER(Extent1.CUST_NRIC LIKE) '%'||UPPER(#{custNric})||'%'
                  </if>
                  <if test=" rentalArr != null and rentalArr.length > 0  ">
                     AND Extent1.RENTAL_STUS IN

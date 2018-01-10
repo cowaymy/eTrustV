@@ -198,7 +198,7 @@
                                                 AND S1.CUST_ID1 = #{custId}
                                             </if>
                                             <if test="nric != null and nric !=''">
-                                                AND S1.NRIC1 = #{nric}
+                                                AND UPPER(S1.NRIC1) = UPPER(#{nric})
                                             </if>
                                             <if test="raceId != null and raceId !=''">
                                                 AND S1.RACE_ID1 = #{raceId}
@@ -207,7 +207,7 @@
                                                 AND UPPER(S1.Name1) like '%'|| UPPER(#{name}) || '%'
                                             </if>
                                             <if test="custVaNo != null and custVaNo !=''">
-                                                AND S1.CUST_VA_NO = #{custVaNo}
+                                                AND UPPER(S1.CUST_VA_NO) = UPPER(#{custVaNo})
                                             </if>
                                             <if test="dob != null and dob !=''">
                                                 AND S1.DOB1 =   TO_DATE( #{dob} , 'DD/MM/YYYY')

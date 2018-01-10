@@ -92,6 +92,9 @@ $(document).ready(function() {
     $("#_cmbWhBrnchIdPop").change(function() {
     	getLocIdByBrnchId($(this).val());
     	$("#_payBrnchCode").val($(this).val());
+    	
+    	//Clear Grid
+    	fn_clearAllGrid();
     });
     
     //_insPosModuleType Change Func
@@ -1083,7 +1086,7 @@ function fn_inputAmt(obj){
 <tbody>
 <tr>
     <th scope="row">Member Code</th>
-    <td> 
+    <td>  
         <div class="search_100p"><!-- search_100p start -->
 	        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memCode}"/>
 	        <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>

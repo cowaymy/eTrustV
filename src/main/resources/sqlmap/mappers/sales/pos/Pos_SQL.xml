@@ -125,7 +125,7 @@
                 </if>
               
                 <if test="posNo != nul and posNo != '' ">
-                    AND  Extent1.POS_NO = #{posNo}
+                    AND  UPPER(Extent1.POS_NO) = UPPER(#{posNo})
                 </if>
                 
                 <if test="sDate != null and sDate != '' ">   
@@ -152,12 +152,12 @@
                 
                 <if test="deducMem != null and deducMem != '' ">    
                     AND Extent1.POS_MODULE_TYPE_ID = 2391
-                    AND Extent8.MEM_CODE = #{deducMem}
+                    AND UPPER(Extent8.MEM_CODE) = UPPER(#{deducMem})
                 </if>
                 
                 <if test="deducMemNric != null and deducMemNric != '' ">
                     AND Extent1.POS_MODULE_TYPE_ID = 2391
-                    AND Extent8.NRIC = #{deducMemNric}
+                    AND UPPER(Extent8.NRIC) = UPPER(#{deducMemNric})
                 </if>
                 
                 ORDER BY Extent1.POS_NO DESC  

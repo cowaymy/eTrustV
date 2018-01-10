@@ -36,7 +36,7 @@
                          WHERE  1 = 1
                          
                          <if test=" '' != refNo and null != refNo">
-                            AND Extent2.SRV_CNTRCT_REF_NO = #{refNo}   
+                            AND UPPER(Extent2.SRV_CNTRCT_REF_NO) =  UPPER(#{refNo})   
                          </if>
                            
                          <if test=" '' != sDate and null != sDate">
@@ -68,11 +68,11 @@
                          </if>
                         
                         <if test=" '' != nric and null != nric">
-                             AND Extent7.NRIC = #{nric}
+                             AND UPPER(Extent7.NRIC) = UPPER(#{nric})
                         </if>
                         
                         <if test=" '' != custName and null != custName">
-                            AND Extent7.NAME LIKE '%' || #{custName} || '%'
+                            AND UPPER(Extent7.NAME) LIKE '%' || UPPER(#{custName}) || '%'
                         </if>
                          
                          <if test=" '' != custType and null != custType">
@@ -90,7 +90,7 @@
                          </if>
                          
                          <if test=" '' != updUser and null != updUser">
-                            AND Extent5.USER_NAME = #{updUser}
+                            AND UPPER(Extent5.USER_NAME) = UPPER(#{updUser})
                          </if>
                             
                          ORDER BY Extent2.SRV_CNTRCT_ID DESC

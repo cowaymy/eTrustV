@@ -76,7 +76,7 @@
 		        
 		        <!--   Agreement No.  -->
 		        <if test="null != govAgBatchNo and '' !=  govAgBatchNo ">
-		              AND Project2.GOV_AG_BATCH_NO LIKE  '%'|| #{govAgBatchNo} || '%'
+		              AND UPPER(Project2.GOV_AG_BATCH_NO) LIKE  '%'|| UPPER(#{govAgBatchNo}) || '%'
 		        </if>
 		        
 		        <!-- CRT_DT // FROM -->		        
@@ -157,11 +157,11 @@
 		          </if>
 		          
 		          <if test=" null != memCode and '' != memCode">
-		              AND Project2.MEM_CODE LIKE '%' || #{memCode} || '%'
+		              AND UPPER(Project2.MEM_CODE) LIKE '%' || UPPER(#{memCode}) || '%'
 		          </if> 
 		           
 		          <if test=" null != userName and '' != userName">
-		              AND Project2.USER_NAME LIKE '%' || #{userName} || '%'  
+		              AND UPPER(Project2.USER_NAME LIKE) '%' || UPPER(#{userName}) || '%'  
 		          </if>
 		          
 			  ORDER BY Project2.GOV_AG_ID DESC

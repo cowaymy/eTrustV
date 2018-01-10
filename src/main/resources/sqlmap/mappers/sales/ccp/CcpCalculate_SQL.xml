@@ -197,7 +197,7 @@ ORDER BY Project1.CODE_NAME ASC
 			               </if>
 			               
 			               <if test=" '' != calNric and null != calNric"> 
-			                 AND  Filter1.NRIC1 LIKE '%'||#{calNric}||'%'  
+			                 AND  UPPER(Filter1.NRIC1) LIKE '%'||UPPER(#{calNric})||'%'  
 			               </if>
 			               
 			               <if test=" '' != calProductId and null != calProductId"> 
@@ -213,7 +213,7 @@ ORDER BY Project1.CODE_NAME ASC
 			               </if>
 			               
 			               <if test=" '' != calOrdRefNo and null != calOrdRefNo"> 
-			                 AND  Filter1.REF_NO LIKE '%'||#{calOrdRefNo}||'%'  
+			                 AND  UPPER(Filter1.REF_NO) LIKE '%'||UPPER(#{calOrdRefNo})||'%'  
 			               </if>
 			              
 			              <if test=" '' != calRegion and null != calRegion"> 
@@ -221,7 +221,7 @@ ORDER BY Project1.CODE_NAME ASC
 			              </if>
 			               
 			               <if test=" '' != calUpdator and null != calUpdator">
-			                  AND  Filter1.USERNAME3 =  #{calUpdator}
+			                  AND  UPPER(Filter1.USERNAME3) =  UPPER(#{calUpdator})
 			               </if>
 			              <!--End Condition  -->                      
 			  ORDER BY Filter1.CCP_ID ASC
