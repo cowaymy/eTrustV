@@ -479,6 +479,20 @@ function f_multiCombos() {
                         <input type="text" id="sdelvno" name="sdelvno" title="" placeholder="Delivery No" class="w100p" />
                     </td>
                 </tr>
+                 <tr>
+                    <th scope="row">Sales.Ord No</th>
+                    <td>
+                        <input type="text" id="sordno" name="sordno" title="" placeholder="Material Document No" class="w100p" />
+                    </td>
+                    <th scope="row"></th>
+                    <td>
+                        
+                    </td>
+                    <th scope="row"></th>
+                    <td>
+                        
+                    </td>
+                </tr>
             </tbody>
         </table><!-- table end -->
     </form>

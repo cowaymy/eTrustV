@@ -153,6 +153,9 @@
           <if test="sam !=null and sam !=''">
             and  l60.AUTO_CRT_ITM= #{sam}
         </if>
+        <if test="sordno !=null and sordno !=''">
+            and l60.SALES_ORD_NO = #{sordno}
+        </if>
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
 
