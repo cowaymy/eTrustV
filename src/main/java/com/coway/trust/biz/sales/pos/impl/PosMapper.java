@@ -222,4 +222,6 @@ public interface PosMapper {
 	EgovMap chkMemIdByMemCode(Map<String, Object> params);
 	
 	EgovMap chkUserIdByUserName(Map<String, Object> params);
+	
+	List<EgovMap> chkOldReqSerial(Map<String, Object> params);
 }

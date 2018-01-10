@@ -431,13 +431,18 @@ public class PosController {
 		
 		LOGGER.info("############################# pgvo : " + pgvo.toString());
 		
-		posService.updatePosMStatus(pgvo , Integer.parseInt(String.valueOf(session.getUserId())));
+		boolean isErr = posService.updatePosMStatus(pgvo , Integer.parseInt(String.valueOf(session.getUserId())));
 		
 		//Return MSG
     	ReturnMessage message = new ReturnMessage();
     	
-        message.setCode(AppConstants.SUCCESS);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	if(isErr == false){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
     	
     	return ResponseEntity.ok(message);
 	}
@@ -449,13 +454,18 @@ public class PosController {
 		LOGGER.info("############################# pgvo : " + pgvo.toString());
 		
 		int userId = session.getUserId();
-		posService.updatePosDStatus(pgvo, userId);
+		boolean isErr = posService.updatePosDStatus(pgvo, userId);
 		
 		//Return MSG
     	ReturnMessage message = new ReturnMessage();
     	
-        message.setCode(AppConstants.SUCCESS);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	if(isErr == false){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
     	
     	return ResponseEntity.ok(message);
 	}
@@ -466,13 +476,18 @@ public class PosController {
 		
 		LOGGER.info("############################# pgvo : " + pgvo.toString());
 		int userId = session.getUserId();
-		posService.updatePosMemStatus(pgvo, userId);
+		boolean isErr = posService.updatePosMemStatus(pgvo, userId);
 		
 		//Return MSG
     	ReturnMessage message = new ReturnMessage();
     	
-        message.setCode(AppConstants.SUCCESS);
-    	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+    	if(isErr == false){
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
     	
     	return ResponseEntity.ok(message);
 	}

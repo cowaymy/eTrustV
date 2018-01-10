@@ -288,7 +288,7 @@ $(document).ready(function() { //***********************************************
         var PosGridVO = {posStatusDataSetList : GridCommon.getEditData(posGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
         
          Common.ajax("POST", "/sales/pos/updatePosMStatus", PosGridVO, function(result) {
-            
+        	 
             Common.alert(result.message);
             AUIGrid.clearGridData(posItmDetailGridID);  
             AUIGrid.clearGridData(deductionCmGridID);
@@ -403,14 +403,6 @@ $(document).ready(function() { //***********************************************
          return true;
      });
     
-     
-     //Delivery Check
-     function fn_chkDeliveryItems(){
-    	 
-    	 
-    	 
-     }
-     
      
      /***  Report ***/
      $("#_posRawDataBtn").click(function() {

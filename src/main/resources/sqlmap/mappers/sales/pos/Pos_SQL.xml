@@ -3030,4 +3030,21 @@
 		    ROWNUM <=1
 		    ]]>
      </select>
+     
+     <select id="chkOldReqSerial" parameterType="Map" resultType="egovMap">
+			SELECT 
+			    POS_SERIAL_ID,
+			    POS_ID,
+			    POS_ITM_STOCK_ID,
+			    POS_SERIAL_NO,
+			    POS_ITM_STUS_ID,
+			    CRT_DT,
+			    CRT_USER_ID,
+			    UPD_DT,
+			    UPD_USER_ID
+			FROM
+			    SAL0147M
+			WHERE
+			    POS_ID = #{rePosId}
+     </select>
 </mapper>

@@ -51,11 +51,11 @@ public interface PosService {
 	
 	List<EgovMap> getPurchMemList(Map<String, Object> params)throws Exception;
 	
-	void  updatePosMStatus (PosGridVO pgvo, int userId) throws Exception;
+	Boolean  updatePosMStatus (PosGridVO pgvo, int userId) throws Exception;
 	
-	void  updatePosDStatus (PosGridVO pgvo, int userId) throws Exception;
+	Boolean  updatePosDStatus (PosGridVO pgvo, int userId) throws Exception;
 	
-	void updatePosMemStatus(PosGridVO pgvo, int userId) throws Exception;
+	Boolean updatePosMemStatus(PosGridVO pgvo, int userId) throws Exception;
 	
 	/*EgovMap chkPosType(Map<String, Object> params) throws Exception;*/
 	

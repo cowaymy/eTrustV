@@ -264,6 +264,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		posMap.put("posMtchId", 0);
 		posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
 		posMap.put("userId", params.get("userId"));
+		if(params.get("userDeptId") == null){
+			params.put("userDeptId", 0);
+		}
 		posMap.put("userDeptId", params.get("userDeptId"));
 		
 		//Status Setting
@@ -959,6 +962,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			posMap.put("salesmanPopId", params.get("rePosMemId"));
 			posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
 			posMap.put("userId", params.get("userId"));
+			
+			if(params.get("userDeptId") == null){
+				params.put("userDeptId", 0);
+			}
 			posMap.put("userDeptId", params.get("userDeptId"));
 			posMap.put("crAccId", params.get("rePosCrAccId"));
 			posMap.put("drAccId", params.get("rePosDrAccId"));
@@ -1030,7 +1037,31 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 						LOGGER.info("############### 2 - ["+idx+"]  POS DETAIL REVERSAL INSERT END  ################");
 					}
 				}
+				//2 - 1 . ********************************************************************************************************* POS DETAIL
+				List<EgovMap> oldSerialList = null;
+				oldSerialList = posMapper.chkOldReqSerial(params);
 				
+				if(oldSerialList != null && oldSerialList.size() > 0){
+					//Serial Insert
+					for (int idx = 0; idx < oldSerialList.size(); idx++) {
+						int serialSeq =  posMapper.getSeqSal0147M();
+						EgovMap oldSerialMap = oldSerialList.get(idx);
+						
+						Map<String, Object> serialMap = new HashMap<String, Object>();
+						
+						serialMap.put("serialSeq", serialSeq);
+						serialMap.put("posMasterSeq", posMasterSeq);
+						serialMap.put("stkId", oldSerialMap.get("posItmStockId")); //POS_ITM_STOCK_ID
+						serialMap.put("serialNo", oldSerialMap.get("posSerialNo")); //POS_SERIAL_NO
+						serialMap.put("userId", params.get("userId"));
+						
+						LOGGER.info("############### 2 - Serial - " + idx + "  POS SERIAL INSERT START  ################");
+        				LOGGER.info("############### 2 - Serial - " + idx + "  POS SERIAL INSERT param : " + serialMap.toString());
+        				posMapper.insertSerialNo(serialMap);
+        				LOGGER.info("############### 2 - Serial - " + idx + "  POS SERIAL INSERT END  ################");
+						
+					}
+				}
 			}
 			
 			EgovMap billInfoMap = null;
@@ -1568,7 +1599,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
 	@Override
 	@Transactional
-	public void updatePosMStatus(PosGridVO pgvo, int userId) throws Exception {
+	public Boolean updatePosMStatus(PosGridVO pgvo, int userId) throws Exception {
+		
+		boolean isErr = false;
 		
 		GridDataSet<PosMasterVO> posMGridDataSetList = pgvo.getPosStatusDataSetList();
 		
@@ -1609,27 +1642,42 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					
 					LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + rtnResult);
 					
+					if(!"000".equals(rtnResult)){
+						isErr = true;
+						break;
+					}
+					
 				}
 				
-			//Complete to Update Pos Detail  
-			if(pvo.getStusId() == SalesConstants.POS_SALES_STATUS_COMPLETE){  // to 4
-				pvo.setChangeStatus(SalesConstants.POS_DETAIL_RECEIVE); //to Detail Status  85
-				posMapper.updatePosDStatus(pvo);
-			}
-			}//Detail Condition
+				if(isErr == true){
+					break;
+				}
+				
+    			//Complete to Update Pos Detail  
+    			if(pvo.getStusId() == SalesConstants.POS_SALES_STATUS_COMPLETE){  // to 4
+    				pvo.setChangeStatus(SalesConstants.POS_DETAIL_RECEIVE); //to Detail Status  85
+    				posMapper.updatePosDStatus(pvo);
+    			}
+    			
+    		}//Detail Condition
 		}//Main Loop
+		
+		return isErr;
 	}
 	
 	
 	@Override
 	@Transactional
-	public void updatePosDStatus(PosGridVO pgvo, int userId) throws Exception {
+	public Boolean updatePosDStatus(PosGridVO pgvo, int userId) throws Exception {
+		
+		boolean isErr = false;
 		
 		GridDataSet<PosDetailVO> posDGridDataSetList = pgvo.getPosDetailStatusDataSetList();
 		
 		List<PosDetailVO> updateList = posDGridDataSetList.getUpdate();
 		
 		//Update Pos Detail by PosItemID
+		
 		for(PosDetailVO pdvo : updateList){
 			
 			posMapper.updatePosDStatusByPosItmId(pdvo);
@@ -1654,6 +1702,15 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			
 			LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + rtnResult);
 			
+			if(!"000".equals(rtnResult)){
+				isErr = true;
+				break;
+			}
+			
+		}
+		
+		if(isErr == true){
+			return isErr;
 		}
 		
 		//Check Detail Status
@@ -1690,10 +1747,14 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 				posMapper.updatePosMStatus(pvo);
 			}
 		}
+		
+		return isErr;
 	}
 
 	@Override
-	public void updatePosMemStatus(PosGridVO pgvo, int userId) throws Exception {
+	public Boolean updatePosMemStatus(PosGridVO pgvo, int userId) throws Exception {
+		
+		boolean isErr = false;
 		
 		GridDataSet<PosMemberVO> posMemGridDataSetList = pgvo.getPosMemberStatusDataSetList();
 		
@@ -1729,8 +1790,20 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 				
 				LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + rtnResult);
 				
-			}
+				if(!"000".equals(rtnResult)){
+					isErr = false;
+					break;
+				}
+				
+			}// 2th loop
 			
+			if(isErr == true){
+				break;
+			}
+		}// 1st loop
+		
+		if(isErr == true){
+			return isErr;
 		}
 		
 		//Check Detail Status
@@ -1767,6 +1840,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 				posMapper.updatePosMStatus(pvo);
 			}
 		}
+		
+		return isErr;
 		
 	}
 
