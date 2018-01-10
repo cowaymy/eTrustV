@@ -2355,7 +2355,32 @@ function fn_outConfirm(){
 			  
 			  if($('#payMode').val() == '108'){
 		          $("#searchBankAcc option").remove();
-		          doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
+		          //doGetCombo('/common/getAccountList.do', 'ONLINE','', 'searchBankAcc', 'S', '' );
+		          $("#searchBankAcc").append("<option value=''>Choose One</option>");
+		          $("#searchBankAcc").append("<option value='83'>2710/001 - ALB-01</option>");
+		          $("#searchBankAcc").append("<option value='84'>2710/002 - MBB</option>");
+		          $("#searchBankAcc").append("<option value='85'>2710/003 - HLBB </option>");
+		          $("#searchBankAcc").append("<option value='86'>2710/004 - HSBC</option>");
+		          $("#searchBankAcc").append("<option value='88'>2710/006 - PBB</option>");
+		          $("#searchBankAcc").append("<option value='90'>2710/008 - AMB</option>");
+		          $("#searchBankAcc").append("<option value='91'>2710/009 - RHB BANK </option>");
+		          $("#searchBankAcc").append("<option value='92'>2710/010 - CIMB 1</option>");
+		          $("#searchBankAcc").append("<option value='526'>2710/010A - CIMB 2</option>");
+		          $("#searchBankAcc").append("<option value='525'>2710/010B - CIMB VA</option>");
+		          $("#searchBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
+		          $("#searchBankAcc").append("<option value='523'>2710/010F - CIMB BHD (FINANCE)</option>");
+		          $("#searchBankAcc").append("<option value='93'>2710/011 - BSN</option>");
+		          $("#searchBankAcc").append("<option value='94'>2710/012 - MBB - I</option>");
+		          $("#searchBankAcc").append("<option value='547'>2710/016 - CITI</option>");
+		          $("#searchBankAcc").append("<option value='551'>2710/017 - UOB</option>");
+		          $("#searchBankAcc").append("<option value='554'>2710/201 - PBB 2</option>");
+		          $("#searchBankAcc").append("<option value='555'>2710/202 - RHB-I 3</option>");
+		          $("#searchBankAcc").append("<option value='557'>2710/204 - CIMB CRC</option>");
+		          $("#searchBankAcc").append("<option value='558'>2710/205 - CIMB 7</option>");
+		          $("#searchBankAcc").append("<option value='559'>2710/206 - CIMB 8</option>");
+		          $("#searchBankAcc").append("<option value='560'>2710/207 - MBB 2</option>");
+		          $("#searchBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+
 		        }
 			  
 			  $('#searchBankAcc').val("525");
