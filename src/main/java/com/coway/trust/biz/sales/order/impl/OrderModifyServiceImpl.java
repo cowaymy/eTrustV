@@ -394,7 +394,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			MI = TM.substring(3, 5);
 			
 			if(Integer.parseInt(HH) > 12) {
-				cvtTM = String.valueOf(Integer.parseInt(HH) - 12) + ":" + String.valueOf(MI) + " PM";
+				cvtTM = CommonUtils.getFillString(String.valueOf(Integer.parseInt(HH) - 12), "0", 2) + ":" + String.valueOf(MI) + " PM";
 			}
 			else {
 				cvtTM = HH + ":" + String.valueOf(MI) + " AM";

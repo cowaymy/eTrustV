@@ -66,10 +66,10 @@
              </foreach>
          </if>
          <if test='_nric != null and _nric != ""'>
-		   AND T5.NRIC = #{_nric}
+		   AND UPPER(T5.NRIC) = UPPER(#{_nric})
          </if>
          <if test='_sofNo != null and _sofNo != ""'>
-		   AND T1.SOF_NO = #{_sofNo}
+		   AND UPPER(T1.SOF_NO) = UPPER(#{_sofNo})
          </if>
          <if test='arrCustType != null and arrCustType != ""'>
            AND T5.TYPE_ID IN
@@ -78,7 +78,7 @@
              </foreach>
          </if>
          <if test='_name != null and _name != ""'>
-		   AND T5.NAME LIKE #{_name}||'%'
+		   AND UPPER(T5.NAME) LIKE UPPER(#{_name})||'%'
          </if>
          ORDER BY T1.PRE_ORD_ID ASC
     </select>

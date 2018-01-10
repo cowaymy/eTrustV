@@ -128,16 +128,16 @@
                   AND V1.CUST_ID = #{custId}
                 </if>
                 <if test='custName != null and custName != ""'>
-                  AND V1.CUST_NAME LIKE '%'||#{custName}||'%'
+                  AND UPPER(V1.CUST_NAME) LIKE '%'||UPPER(#{custName})||'%'
                 </if>
                 <if test='custIc != null and custIc != ""'>
-                  AND V1.CUST_IC LIKE '%'||#{custIc}||'%'
+                  AND UPPER(V1.CUST_IC) LIKE '%'||UPPER(#{custIc})||'%'
                 </if>
                 <if test='productId != null and productId != ""'>
                   AND V1.PRODUCT_ID = #{productId}
                 </if>
                 <if test='salesmanCode != null and salesmanCode != ""'>
-                  AND V1.SALESMAN_CODE = #{salesmanCode}
+                  AND UPPER(V1.SALESMAN_CODE) = UPPER(#{salesmanCode})
                 </if>
                 <if test='arrRentStus != null and arrRentStus != ""'>
                   AND V1.RENT_STUS IN
@@ -146,31 +146,31 @@
                   </foreach>
                 </if>
                 <if test='refNo != null and refNo != ""'>
-                  AND V1.REF_NO = #{refNo}
+                  AND UPPER(V1.REF_NO) = UPPER(#{refNo})
                 </if>
                 <if test='poNo != null and poNo != ""'>
-                  AND V1.PO_NO = #{poNo}
+                  AND UPPER(V1.PO_NO) = UPPER(#{poNo})
                 </if>
                 <if test='contactNo != null and contactNo != ""'>
                   AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
                 </if>
                 <if test='vaNo != null and vaNo != ""'>
-                  AND V1.CUST_VA_NO = #{vaNo}
+                  AND UPPER(V1.CUST_VA_NO) = UPPER(#{vaNo})
                 </if>
                 <if test='serialNo != null and serialNo != ""'>
-                  AND V1.SERIAL_NO = #{serialNo}
+                  AND UPPER(V1.SERIAL_NO) = UPPER(#{serialNo})
                 </if>
                 <if test='sirimNo != null and sirimNo != ""'>
-                  AND V1.SIRIM_NO = #{sirimNo}
+                  AND UPPER(V1.SIRIM_NO) = UPPER(#{sirimNo})
                 </if>
                 <if test='crtUserId != null and crtUserId != ""'>
-                  AND V1.CRT_USER_ID = #{crtUserId}
+                  AND UPPER(V1.CRT_USER_ID) = UPPER(#{crtUserId})
                 </if>
                 <if test='promoCode != null and promoCode != ""'>
-                  AND V1.PROMO_CODE = #{promoCode}
+                  AND UPPER(V1.PROMO_CODE) = UPPER(#{promoCode})
                 </if>
                 <if test='relatedNo != null and relatedNo != ""'>
-                  AND V1.RELATED_NO = #{relatedNo}
+                  AND UPPER(V1.RELATED_NO) = UPPER(#{relatedNo})
                 </if>
                 <if test='invoicePoNo != null and invoicePoNo != ""'>
                   AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID  

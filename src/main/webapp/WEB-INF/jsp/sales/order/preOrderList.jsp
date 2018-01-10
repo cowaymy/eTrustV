@@ -144,8 +144,42 @@
         $('#_btnSave').click(function() {
             fn_doSaveStatus();
         });
+        $('#_memBtn').click(function() {
+            //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
+            Common.popupDiv("/common/memberPop.do", $("#_frmPreOrdSrch").serializeJSON(), null, true);
+        });
+        $('#_memCode').change(function(event) {
+            var memCd = $('#_memCode').val().trim();
+
+            if(FormUtil.isNotEmpty(memCd)) {
+                fn_loadOrderSalesman(memCd);
+            }
+        });
+        $('#_memCode').keydown(function (event) {  
+            if (event.which === 13) {    //enter
+                var memCd = $('#_memCode').val().trim();
+    
+                if(FormUtil.isNotEmpty(memCd)) {
+                    fn_loadOrderSalesman(memCd);
+                }
+                return false;
+            }
+        });
     });
 
+    function fn_loadOrderSalesman(memCode) {
+
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : memCode}, function(memInfo) {
+
+            if(memInfo == null) {
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+            }
+            else {
+                $('#_memCode').val(memInfo.memCode);
+                $('#_memName').val(memInfo.name);            }
+        });
+    }
+    
     function fn_convToOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
         if(selIdx > -1) {
@@ -239,7 +273,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post">
-
+<input id="callPrgm" name="callPrgm" value="PREORD_LIST" type="hidden" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -254,10 +288,9 @@
 <tr>
 	<th scope="row">SalesMan Code</th>
 	<td>
-		<div class="search_100p"><!-- search_100p start -->
-		<input id="_memCode" name="_memCode" type="text" title="" placeholder="" class="w100p" />
-		<a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-		</div><!-- search_100p end -->
+		<p><input id="_memCode" name="_memCode" type="text" title="" placeholder="" style="width:80px;" class="" /></p>
+		<p><a id="_memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></p>
+		<p><input id="_memName" name="_memName" type="text" title="" placeholder="" style="width:90px;" class="readonly" readonly/></p>
 	</td>
 	<th scope="row">Application Type</th>
 	<td><select id="_appTypeId" name="_appTypeId" class="multy_select w100p" multiple="multiple"></select></td>

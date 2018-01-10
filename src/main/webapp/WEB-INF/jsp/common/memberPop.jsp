@@ -29,7 +29,11 @@
         			    AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"),
         			    AUIGrid.getCellValue(myGridID , event.rowIndex , "name"));
                 
-            }else {
+            }
+        	if(callPrgm=="PREORD_LIST"){
+        		fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"));
+            }
+            else {
                 fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"), callPrgm);
             }
             
