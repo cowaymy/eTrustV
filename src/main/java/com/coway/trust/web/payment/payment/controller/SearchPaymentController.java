@@ -77,6 +77,85 @@ public class SearchPaymentController {
 		return "payment/payment/searchPayment";
 	}
 	
+	/******************************************************
+	 * Search Payment  View Details POPUP
+	 *****************************************************/	
+	/**
+	 * SearchPayment View Details 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initSearchPaymentViewPop.do")
+	public String initSearchPaymentViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callPrgm", params.get("callPrgm"));
+		model.addAttribute("payId", params.get("payId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		return "payment/payment/searchPaymentViewPop";
+	}
+	
+	/******************************************************
+	 * Search Payment  Edit Details POPUP
+	 *****************************************************/	
+	/**
+	 * SearchPayment Edit Details 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initSearchPaymentEditPop.do")
+	public String initSearchPaymentEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callPrgm", params.get("callPrgm"));
+		model.addAttribute("payId", params.get("payId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		return "payment/payment/searchPaymentEditPop";
+	}
+	
+	/******************************************************
+	 * Search Payment  View History POPUP
+	 *****************************************************/	
+	/**
+	 * SearchPayment View History 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initViewHistoryPop.do")
+	public String initViewHistoryPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("payId", params.get("payId"));
+		return "payment/payment/viewHistoryPop";
+	}
+	
+	/******************************************************
+	 * Search Payment  View Detail History POPUP
+	 *****************************************************/	
+	/**
+	 * SearchPayment View Detail History 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initDetailHistoryPop.do")
+	public String initDetailHistoryPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("payItemId", params.get("payItemId"));
+		return "payment/payment/detailHistoryPop";
+	}
+	
+	/******************************************************
+	 * Search Payment  Item Edit Cheque POPUP
+	 *****************************************************/	
+	/**
+	 * SearchPayment Item Edit Cheque 초기화 화면 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initItemEditChequePop.do")
+	public String initItemEditChequePop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("payItemId", params.get("payItemId"));
+		return "payment/payment/itemEditChequePop";
+	}
+	
 	/**
 	 * SearchPayment Order List(Master Grid) 조회
 	 * @param searchVO
