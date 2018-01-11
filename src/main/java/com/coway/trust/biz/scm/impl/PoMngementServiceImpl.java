@@ -143,6 +143,7 @@ public class PoMngementServiceImpl implements PoMngementService {
 	{
 		int saveCnt = 0;
 		int poItemNo = 0;
+		int scmMst9MCnt = 0;
 		
 		LOGGER.debug(" updatePOIssuItem_IMPLE {} ", addList.toString() );
 		
@@ -163,16 +164,15 @@ public class PoMngementServiceImpl implements PoMngementService {
 			throw new ApplicationException(AppConstants.FAIL, "필수값 오류 입니다.");
 		}
 		
+		params.put("preYear", preYear);
+		params.put("preCdc" , preCdc);
+		EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
+		String selectNewPoNo = (String)newPonoMap.get("newPono");
+		
 		for (Map<String, Object> obj : addList) 
 		{
 			preCdc =  (String) addList.get(saveCnt).get("preCdc");
 			stockCode = (String) addList.get(saveCnt).get("stockCode");
-			
-			params.put("preYear", preYear);
-			params.put("preCdc" , preCdc);
-			  
-			EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
-			String selectNewPoNo = (String)newPonoMap.get("newPono");
 			
 			poItemNo++;
 			
@@ -192,12 +192,21 @@ public class PoMngementServiceImpl implements PoMngementService {
 			poMngementMapper.updatePOIssuItem(obj);
 			// Insert SCMPODetail
 			poMngementMapper.insertPOIssueDetail(obj);
-			// INSERT SCMPOMASTER
-			poMngementMapper.insertPOIssueMaster(obj);
+			
+			// INSERT SCMPOMASTER SCM0009M Only 1
+			if (scmMst9MCnt == 0)
+			{
+			  scmMst9MCnt = poMngementMapper.insertPOIssueMaster(obj);
+			}
+			else
+			{
+			  LOGGER.debug(" >>>>>scmMst9MCnt {} ", scmMst9MCnt);
+			}
 			
 			saveCnt++;
-			
 		}
+		
+
 		
 		return saveCnt;
 	}
