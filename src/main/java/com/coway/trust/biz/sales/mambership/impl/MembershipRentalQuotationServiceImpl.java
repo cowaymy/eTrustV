@@ -274,7 +274,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 			 //3. 프로시져 result foreach 
 			 
 			 params.put("ORD_ID" , params.get("qotatOrdId"));
-			 params.put("PROMO_ID" , params.get("qotatProductId"));
+			 params.put("PROMO_ID" , params.get("qotatFilPromoId"));
 			 
 			 membershipRentalQuotationMapper.getFilterCharge(params) ;
 			
@@ -295,10 +295,17 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 eFilterMap.put("qotatItmExpDt", rMap.get("lastChngDt")); 
 					 eFilterMap.put("qotatItmChrg", Math.floor(Double.parseDouble(rMap.get("prc").toString())));
 					 
+
+					 logger.debug("aaaaaaa =============>" +Math.floor(Double.parseDouble(rMap.get("prc").toString())));
+					 
+					 
 					 if("39".equals(taxCode) || "28".equals(taxCode) ){
 						                                 
 						double   chargePrice = Math.floor(Double.parseDouble(rMap.get("prc").toString()));
 						double   amt  =Math.floor((float)(chargePrice  * 100 / 106 ));
+						
+
+						 logger.debug("bbbbbbbb =============>" +chargePrice);
 						 
 				 		eFilterMap.put("qotatItmAmt", amt);
 				 		eFilterMap.put("qotatItmGstRate", "0");
@@ -311,6 +318,9 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 	//double   itemAmount  =  Math.floor(Double.parseDouble(rMap.get("prc").toString())); 
 					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;
 
+
+						 logger.debug("cccccccc =============>" +chargePrice);
+					 	
 					 	eFilterMap.put("qotatItmAmt", chargePrice);
 					 	eFilterMap.put("qotatItmChrg", amt);
 					 	eFilterMap.put("qotatItmTxs", (chargePrice  -amt ));
