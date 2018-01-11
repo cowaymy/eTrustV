@@ -345,7 +345,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 					 }else*/
 					 if(!verifyGSTZeroRateLocation || !isVerifyGSTEURCertificate){
 
-						 double chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+						 double chargePrice =  Math.floor(Double.parseDouble(rMap.get("prc").toString())); //CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+						 
 						 double stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ) *100)/100;
 
 						 eFilterMap.put("StkChargePrice", stkNetAmt);						 
@@ -357,7 +358,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 						 
 					 }else {
 						 
-						 double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+						 double   chargePrice =  Math.floor(Double.parseDouble(rMap.get("prc").toString())); //CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 						 double   stkNetAmt  =  0;
 						 
 						 stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;

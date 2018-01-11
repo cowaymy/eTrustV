@@ -151,7 +151,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		
 		for(EgovMap result : list ){
 			
-			double prc = Double.parseDouble(result.get("prc").toString());
+			double prc = Math.floor(Double.parseDouble(result.get("prc").toString()));
 
 			logger.debug("PRC ==========================>>  " + prc);
 			
@@ -297,7 +297,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 
 					 if("39".equals(taxCode) || "28".equals(taxCode) ){
 						                                 
-						double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
+						double   chargePrice = Math.floor(Double.parseDouble(rMap.get("prc").toString()));
 						double   amt  =Math.floor((float)(chargePrice  * 100 / 106 ));
 						 
 				 		eFilterMap.put("qotatItmAmt", amt);
@@ -307,8 +307,8 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 
 					}else{
 
-					 	double   chargePrice =  CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
-					 	double   itemAmount  =  CommonUtils.intNvl(String.valueOf(rMap.get("oriPrc")));
+					 	double   chargePrice =  Math.floor(Double.parseDouble(rMap.get("prc").toString()));
+					 	double   itemAmount  =  Math.floor(Double.parseDouble(rMap.get("oriPrc").toString())); 
 					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;
 
 					 	eFilterMap.put("qotatItmAmt", chargePrice);
