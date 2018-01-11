@@ -30,7 +30,7 @@
         			    AUIGrid.getCellValue(myGridID , event.rowIndex , "name"));
                 
             }
-        	if(callPrgm=="PREORD_LIST"){
+        	else if(callPrgm=="PREORD_LIST"){
         		fn_loadOrderSalesman(AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"));
             }
             else {
