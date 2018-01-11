@@ -1122,16 +1122,19 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 </select>
   
 <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
-      SELECT T1.GL_ACC_CODE
-                ,T2.GL_ACC_DESC
-        FROM   FCM0104D T1
-        LEFT JOIN FCM0009M T2 
-        ON T1.GL_ACC_CODE = T2.GL_ACC_CODE
-         WHERE 1=1
-         AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
-         OR T1.COST_CENTR = 'G9901'
-         AND T1.BUDGET_CODE != '99999'
-         AND T1.BUDGET_CODE = #{budgetCode}
+SELECT GL_ACC_CODE, 
+       GL_ACC_DESC 
+FROM   (SELECT T1.BUDGET_CODE, 
+               T1.GL_ACC_CODE, 
+               T2.GL_ACC_DESC 
+        FROM   FCM0104D T1 
+               LEFT JOIN FCM0009M T2 
+                      ON T1.GL_ACC_CODE = T2.GL_ACC_CODE 
+        WHERE  1 = 1 
+               AND Upper(T1.COST_CENTR) = Upper(#{costCentr}) 
+                OR T1.COST_CENTR = 'G9901' 
+                   AND T1.BUDGET_CODE != '99999') A 
+WHERE  A.BUDGET_CODE = #{budgetCode}          
 </select>
 
 <select id="selectTaxRate" parameterType="Map" resultType="egovMap">
