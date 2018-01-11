@@ -139,6 +139,11 @@ function createInstallationListAUIGrid() {
         dataField : "brnchId",
         headerText : '<spring:message code="service.grid.AppBrnchId" />',
         editable : false,
+        width : 0
+    },{
+        dataField : "brnchCode",
+        headerText : 'App brnchCode',
+        editable : false,
         width : 100
     }, {
         dataField : "code1",

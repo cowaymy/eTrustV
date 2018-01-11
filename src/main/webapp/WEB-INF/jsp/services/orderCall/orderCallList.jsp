@@ -82,7 +82,7 @@ $(document).ready(function() {
     function fn_orderCallList(){
           
           if($("#orderNo").val()==""){        
-        
+            console.log($("#orderNo").val());
               if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ){
                     
                      Common.alert('Branch and Order Date are compulsory option to search');

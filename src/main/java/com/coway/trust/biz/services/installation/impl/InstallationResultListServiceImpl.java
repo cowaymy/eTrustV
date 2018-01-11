@@ -1777,13 +1777,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			callEntry.put("updator", sessionVO.getUserId());
 			callEntry.put("oriCallDate", nextDateCall);
 
-			logger.debug("callEntry : {}", callEntry);
+			logger.debug("callEntry1111 : {}", callEntry);
 			//installationResultListMapper.insertCallEntry(callEntry);
 
 			callResult.put("callResultId", 0);
 			callResult.put("callEntryId", 0);
 			callResult.put("callStatusId", 19);
-			callResult.put("callCallDate", "01/01/1900");
+			callResult.put("callCallDate", nextDateCall);
 			callResult.put("callActionDate", "01/01/1900");
 			callResult.put("callFeedBackId", 0);
 			callResult.put("callCTID", 0);
@@ -1796,7 +1796,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			callResult.put("callSMS",false);
 			callResult.put("callSMSRemark","");
 
-			logger.debug("callResult : {}", callResult);
+			logger.debug("callResultJInmu : {}", callResult);
 			//installationResultListMapper.insertCallResult(callResult);
 
 			//callEntry.put("resultId", "위에 쿼리 시퀀스");
