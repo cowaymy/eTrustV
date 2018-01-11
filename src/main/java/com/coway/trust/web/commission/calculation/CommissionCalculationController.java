@@ -444,8 +444,8 @@ public class CommissionCalculationController {
 					empType = CommissionConstants.COMIS_CT_GRCD;
 				}
 				params.put("ItemGrCd", empType);
-				params.put("year", callDt.substring(3,7));
-				params.put("month", callDt.substring(0,2));
+				params.put("year", callDt.substring(0,4));
+				params.put("month", callDt.substring(4,6));
 				
 				commissionCalculationService.prdBatchSuccessHistory(params);
 			}
