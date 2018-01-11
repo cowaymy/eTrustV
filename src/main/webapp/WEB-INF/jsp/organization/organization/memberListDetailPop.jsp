@@ -848,6 +848,11 @@ function fn_winClose(){
     <th scope="row">Hospitalization</th>
     <td>
     <span><input type="checkbox" disabled="disabled" id="hsptlzCheck"/></span>
+    </td>
+    <th scope="row">Religion</th>
+    <td>
+    <span><c:out value="${memberView.religion}"/></span>
+    </td>
 </tr>
 <tr>
     <th scope="row">Applicant Confirm Date</th>

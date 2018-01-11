@@ -9,7 +9,7 @@
 
 	    	//doGetCombo('/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), custId : $("#custId").val()} , '', 'entry_cmbServiceMem' , 'S', '');
 
-	    	CommonCombo.make("entry_cmbServiceMem", '/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), entry_orderNo : $("#entry_orderNo").val()}, '${configBasicInfo.c2}', {isShowChoose: false});
+	    	CommonCombo.make("entry_cmbServiceMem", '/services/bs/selectHSCodyList.do', { codyMangrUserId : $("#codyMangrUserId").val(), entry_orderNo : $("#entry_orderNo").val()}, '${configBasicInfo.c2}', {isShowChoose: true});
 
 	        //{ salesOrdNo :  $("#salesOrdNo").val() }
 	    	/* Common.ajax("GET",'/services/bs/getHSCody.do?&SRV_SO_ID='+'${configBasicInfo.ordNo}', ' ',function(result) {

@@ -292,6 +292,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("Hospitalization",false);
 		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
 		params.put("codyPaExpr",params.get("codyPaExpr")!=null ? params.get("codyPaExpr").toString().trim() : "");
+		params.put("religion",params.get("religion")!=null ? params.get("religion") : "");
 		//params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
 
 		//addr 가져오기

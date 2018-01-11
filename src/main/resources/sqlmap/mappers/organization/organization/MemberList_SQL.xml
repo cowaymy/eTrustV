@@ -390,7 +390,7 @@
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
                     ]]>
                         WHERE 1=1
-                        AND Extent1.APLICNT_TYPE =1
+                        AND Extent1.APLICNT_TYPE IN ('1', '2803')
                          <if test="code != null and code != ''">
                            AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{code} || '%')
                          </if>
@@ -525,6 +525,8 @@
        Limit1.RANK RANK  ,
        Limit1.C60 C60  ,
        Limit1.HSPTLZ  HSPTLZ,
+       Limit1.RELIGION,
+       Limit1.CNFM_DT,
        Limit1.MAIN_DEPT,
        Limit1.SUB_DEPT,
       Limit1.BANK_NAME,
@@ -856,6 +858,14 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                      WHEN ( Extent24.CODE_NAME IS NULL ) THEN ''
                 ELSE Extent24.CODE_NAME
                    END C60,
+                CASE
+			         WHEN ( Extent27.CODE_NAME IS NULL ) THEN ''
+			      ELSE Extent27.CODE_NAME
+			    END RELIGION,
+			    CASE -- 추가
+			         WHEN ( Extent28.CNFM_DT IS NULL ) THEN ''
+			      ELSE TO_CHAR(Extent28.CNFM_DT,'yyyy-mm-dd')
+			    END CNFM_DT,
                 EXTENT1.MAIN_DEPT,
                 EXTENT1.SUB_DEPT,
                 BANK.NAME AS BANK_NAME
@@ -897,6 +907,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 LEFT JOIN SYS0047M Extent25   ON Extent25.USER_FULL_NAME = Extent1.FULL_NAME
                 LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
                  left join SYS0004M BANK  ON BANK.BANK_ID = Extent1.BANK
+                LEFT JOIN SYS0013M Extent27   ON Extent27.CODE_ID = Extent1.RELIGION
+                LEFT JOIN ORG0003D Extent28   ON Extent28.APLCTN_ID = Extent1.APLICNT_ID
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
@@ -1160,6 +1172,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ,TRAINEE_TYPE
         ,MAIN_DEPT
         ,SUB_DEPT
+        , RELIGION
         )
             VALUES (
             ORG0001D_MEM_ID_SEQ.NEXTVAL
@@ -1220,6 +1233,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
              , #{traineeType}
              , #{searchdepartment}
              , #{searchSubDept}
+             , #{religion}
              )
     </insert>
 
@@ -2472,6 +2486,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        Limit1.C68 c68,
        Limit1.MAIN_DEPT,
        Limit1.SUB_DEPT,
+       Limit1.RELIGION,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
@@ -2817,6 +2832,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent1.AGRMNT_NO c66,
                  Extent1.SYNC_CHK c67,
                  Extent26.AREA_ID c68,
+                 Extent1.RELIGION, 
                  EXTENT1.MAIN_DEPT,
                  EXTENT1.SUB_DEPT
          FROM ORG0001D Extent1
@@ -2922,6 +2938,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
             </if>
             
+            <if test="religion != null and religion != '' " >
+            RELIGION = #{religion},
+            </if>
+            
               <choose>
              <when test="hsptlzCheck !=null and hsptlzCheck !='' ">
                hsptlz = 1,
@@ -2930,7 +2950,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 hsptlz = 0,
              </otherwise>
              </choose>
-            <![CDATA[
+             
               EDC_LEV = TO_NUMBER(TRIM(#{educationLvl})),
               LANG = TO_NUMBER(TRIM(#{language})),
               BANK= #{issuedBank},
@@ -2947,14 +2967,15 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               RANK = TO_NUMBER(TRIM(#{rank})),
               MAIN_DEPT = #{searchdepartment},
               SUB_DEPT = #{inputSubDept},
+              <if test="businessType != null and businessType != '' " >
               BIZ_TYPE =#{businessType},
+              </if>
               BRNCH =#{selectBranch}
           
              
               
         WHERE  ( MEM_ID = TO_NUMBER(TRIM(#{MemberID})) )
 
-        ]]>
     </update>
 
     <update id="updateDocSubmissionDel" parameterType="docSubmissionVO">
@@ -3648,7 +3669,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		FROM ORG0003D 
 		WHERE APLICNT_NRIC = #{nric}
 		AND STUS_ID <> '6'
-		AND APLICNT_TYPE = '1'
+		AND APLICNT_TYPE IN ('1', '2803')
 	]]>
     </select>
     

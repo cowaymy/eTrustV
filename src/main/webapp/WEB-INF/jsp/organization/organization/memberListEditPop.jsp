@@ -301,6 +301,10 @@ function fn_setMemInfo(data){
         $("#language option[value="+ data.c10 +"]").attr("selected", true);
     }
     
+    if(data.religion!=null&&jQuery.trim(data.religion).length>0){
+        $("#religion option[value="+ data.religion +"]").attr("selected", true);
+    }
+    
     $("#trNo").val(data.trNo);
     
     $("#userId").val(data.c64);
@@ -1187,7 +1191,11 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row">Religion</th>
     <td colspan="2">
-    <select class="w100p">
+    <select class="w100p" id="religion" name="religion">
+            <option value="">Choose One</option>
+        <c:forEach var="list" items="${Religion}" varStatus="status">
+            <option value="${list.detailcodeid}">${list.detailcodename } </option>
+        </c:forEach>        
     </select>
     </td>
     <th scope="row">e-Approval Status</th>

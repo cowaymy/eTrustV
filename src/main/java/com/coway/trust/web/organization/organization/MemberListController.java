@@ -417,19 +417,19 @@ public class MemberListController {
 		memCode = memberListService.saveMember(formMap, updList);
 		logger.debug("memCode : {}", memCode);
 		// 결과 만들기.
-   	ReturnMessage message = new ReturnMessage();
-//    	message.setCode(AppConstants.SUCCESS);
-//    	message.setData(map);
-   	if(memCode.equals("") && memCode.equals(null)){
-   		message.setMessage("fail saved");
-   	}else{
-   		message.setMessage("Compelete to Create a Member Code : " +memCode);
-   	}
-   	logger.debug("message : {}", message);
-
-   	System.out.println("msg   " + success);
-//
-	return ResponseEntity.ok(message);
+       	ReturnMessage message = new ReturnMessage();
+//        	message.setCode(AppConstants.SUCCESS);
+//        	message.setData(map);
+       	if(memCode.equals("") && memCode.equals(null)){
+       		message.setMessage("fail saved");
+       	}else{
+       		message.setMessage("Compelete to Create a Member Code : " +memCode);
+       	}
+       	logger.debug("message : {}", message);
+    
+       	System.out.println("msg   " + success);
+    
+    	return ResponseEntity.ok(message);
 	}
 
 	/**
@@ -764,6 +764,10 @@ public class MemberListController {
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
 		logger.debug("mainDeptList : {}", mainDeptList);
 		
+		params.put("mstCdId",377);
+		List<EgovMap> Religion = commonService.getDetailCommonCodeList(params);
+		logger.debug("Religion : {} "+Religion);
+		
 		if(selectMemberListView != null){
     		params.put("groupCode", selectMemberListView.get("mainDept"));
     		logger.debug("params : {}", params);
@@ -784,6 +788,7 @@ public class MemberListController {
 		model.addAttribute("memType", params.get("memType"));
 		model.addAttribute("memId", params.get("MemberID"));
 		model.addAttribute("branch", branch);
+		model.addAttribute("Religion", Religion);
 		// 호출될 화면
 		return "organization/organization/memberListEditPop";
 	}
