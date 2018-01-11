@@ -29,6 +29,8 @@
                 
                 if($("#zeroRatYn").val() == "N" || $("#eurCertYn").val() == "N"){                 
                     AUIGrid.setCellValue(gridFilterID, i, "prc", Math.floor(amt * 100 / 106))  
+                }else{
+                	AUIGrid.setCellValue(gridFilterID, i, "prc", Math.floor(amt))  
                 }
                 
             }
@@ -57,8 +59,8 @@
 	                       {dataField :"filterDesc",  headerText : "Descrption",    width: 250, editable : false },
 	                       {dataField :"lifePriod", headerText : "LifePeriod",   width: 150, editable : false },
 	                       {dataField :"lastChngDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
-	                       {dataField :"oriPrc", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0.00"},
-	                       {dataField :"prc", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
+	                       {dataField :"oriPrc", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0"},
+	                       {dataField :"prc", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0"}
 	   ]; 	   
 
 	   
@@ -96,7 +98,7 @@
 	                               dataField : "prc",
 	                               positionField : "prc",
 	                               operation : "SUM",
-	                               formatString : "#,##0.00"
+	                               formatString : "#,##0"
 	                           }
 	         ];
 	     
