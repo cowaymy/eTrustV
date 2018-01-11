@@ -314,6 +314,7 @@
              , INSTCT       = #{instct}
              , UPD_DT       = SYSDATE
              , UPD_USER_ID  = #{updUserId}
+             , BRNCH_ID     = #{dscBrnchId}
          WHERE INSTALL_ID   = #{installId}
     </update>
     

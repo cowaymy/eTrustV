@@ -1527,14 +1527,17 @@
             fn_tabOnOffSetOwnt('REN_PAY', 'SHOW');
             fn_tabOnOffSetOwnt('BIL_GRP', 'SHOW');
         }
-        
-        var vInstct = "${orderDetail.installationInfo.instct}"
-        
-        vInstct = vInstct.replace(/<br\s*\/?>/mg,"\n");
-        
+
         $('#dpPreferInstDateOwnt').val("${orderDetail.installationInfo.preferInstDt}");
         $('#tpPreferInstTimeOwnt').val("${orderDetail.installationInfo.preferInstTm}");
-        $('#txtInstSpecialInstructionOwnt').val(vInstct);
+//      $('#txtInstSpecialInstructionOwnt').val(vInstct);
+        
+        Common.ajax("GET", "/sales/order/selectInstallInfo.do", {salesOrderId : ORD_ID}, function(instInfo) {
+
+            if(instInfo != null) {
+                $("#txtInstSpecialInstructionOwnt").val(instInfo.instct);
+            }
+        });
     }
             
     function fn_loadOrderInfoCanc() {
