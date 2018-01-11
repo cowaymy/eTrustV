@@ -469,7 +469,7 @@ function fn_updateWebInvoiceInfo(st) {
     Common.ajax("POST", "/eAccounting/webInvoice/updateWebInvoiceInfo.do", obj, function(result) {
         console.log(result);
         //fn_selectWebInvoiceItemList(result.data.clmNo);
-        fn_setWebInvoiceInfo(result.data.clmNo);
+        fn_selectWebInvoiceInfo(result.data.clmNo);
         if(st == "view"){
             Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#viewEditWebInvoicePop").remove();

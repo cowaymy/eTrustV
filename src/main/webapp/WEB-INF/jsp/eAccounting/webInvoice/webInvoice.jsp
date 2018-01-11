@@ -581,6 +581,8 @@ function fn_selectWebInvoiceInfo(clmNo) {
 }
 
 function fn_setWebInvoiceInfo(result) {
+	console.log("fn_setWebInvoiceInfo Action");
+	console.log(result);
 	$("#newClmNo").val(result.clmNo);
 	$("#atchFileGrpId").val(result.atchFileGrpId);
 	$("#newCostCenter").val(result.costCentr);
@@ -593,12 +595,16 @@ function fn_setWebInvoiceInfo(result) {
     $("#totAmt").val(result.totAmt);
     $("#crtUserId").val(result.crtUserId);
     $("#invcDt").val(result.invcDt);
-    $("#keyDate").val(result.crtDt);
+    $("#keyDate").val(result.keyInDt);
     $("#invcType").val(result.invcType);
     $("#invcNo").val(result.invcNo);
+    $("#invcRem").val(result.invcRem);
     $("#gstRgistNo").val(result.gstRgistNo);
     $("#payDueDt").val(result.payDueDt);
     $("#utilNo").val(result.utilNo);
+    $("#jPayNo").val(result.jPayNo);
+    $("#bilPeriodF").val(result.bilPeriodF);
+    $("#bilPeriodF").val(result.bilPeriodF);
     $("#invcRem").val(result.invcRem);
     
     AUIGrid.setGridData(newGridID, result.itemGrp);

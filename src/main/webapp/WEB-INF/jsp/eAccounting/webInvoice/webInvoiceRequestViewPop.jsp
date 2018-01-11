@@ -441,12 +441,21 @@ function fn_getAppvItemOfClmUn(clmNo, clmSeq, clamUn) {
                 $("#supplirTd").text("");
                 $("#payInfo1").show();
                 $("#payInfo2").show();
+                $("#expDesc").text(result.data.invcRem);
+                $("#utilNo").text(result.data.utilNo);
+                $("#jPayNo").text(result.data.jPayNo);
+                var bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                $("#bilPeriod").text(bilPeriod);
                 mGridColumnLayout[4].visible = false;
             } else if(clmType == "J2") {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
                 $("#payInfo1").show();
                 $("#payInfo2").show();
+                $("#utilNo").text(result.data.utilNo);
+                $("#jPayNo").text(result.data.jPayNo);
+                var bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                $("#bilPeriod").text(bilPeriod);
             } else {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
