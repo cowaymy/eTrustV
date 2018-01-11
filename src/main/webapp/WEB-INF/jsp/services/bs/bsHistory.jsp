@@ -147,6 +147,7 @@ function fn_orderSearch(){
         
         $("#name").text(orderList.name);
         $("#orderNumber").text(orderList.salesOrdNo);
+        $("#orderNumber2").text(orderList.salesOrdNo);
         $("#product").text("("+orderList.stockCode+") "+orderList.stockDesc);
         $("#installationDate").text(orderList.installDate);
         $("#customerAddress").text(orderList.customerAddress);
@@ -232,7 +233,7 @@ function fn_filterInfo(){
     <th colspan="2" scope="row"><spring:message code='service.title.Name'/></th>
     <td colspan="2"><span id="name"></span></td>
     <th colspan="2" scope="row"><spring:message code='service.title.OrderNumber'/></th>
-    <td colspan="2"><span id="orderNumber"></span></td>
+    <td colspan="2"><span id="orderNumber2"></span></td>
 </tr>
 
 <tr>
