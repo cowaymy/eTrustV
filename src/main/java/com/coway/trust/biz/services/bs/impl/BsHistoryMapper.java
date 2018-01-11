@@ -9,7 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("bsHistoryMapper")
 public interface BsHistoryMapper {
 	
-	EgovMap selectOrderList(Map<String, Object> params);
+	List<EgovMap> selectOrderList(Map<String, Object> params);
 	
 	int selectFilterCnt(Map<String, Object> params);
 	

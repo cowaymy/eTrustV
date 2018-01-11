@@ -23,10 +23,12 @@ public class BsHistoryServiceImpl extends EgovAbstractServiceImpl implements BsH
 	@Resource(name = "bsHistoryMapper")
 	private BsHistoryMapper bsHistoryMapper;
 	
-	public EgovMap selectOrderList(Map<String, Object> params) {
+	@Override
+	public List<EgovMap> selectOrderList(Map<String, Object> params) {
 		return bsHistoryMapper.selectOrderList(params);
 	}
 	
+	@Override
 	public int selectFilterCnt(Map<String, Object> params) {
 		return bsHistoryMapper.selectFilterCnt(params);
 	}

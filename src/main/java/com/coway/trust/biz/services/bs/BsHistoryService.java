@@ -7,7 +7,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface BsHistoryService {
 
-	EgovMap selectOrderList(Map<String, Object> params);
+	List<EgovMap> selectOrderList(Map<String, Object> params);
 	int selectFilterCnt(Map<String, Object> params);
 	List<EgovMap> filterInfo(Map<String, Object> params);
 }

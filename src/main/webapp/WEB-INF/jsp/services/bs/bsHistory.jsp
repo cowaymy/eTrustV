@@ -10,7 +10,14 @@ $(document).ready(function() {
     AUIGrid.setSelectionMode(myGridID, "singleRow");
     
     AUIGrid.bind(myGridID, "cellClick", function(event) {
-        //code =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
+        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "slaesOrdId"));
+        salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+        if(salesOrdId.length<1){        
+        	salesOrdId =$("#orderId").val(); 
+        }
+        
+        $("#orderId").val(salesOrdId);
+        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 });
 
@@ -80,6 +87,11 @@ function createAUIGrid() {
         //headerText : "installentryid",
         headerText : '<spring:message code="service.grid.HasFilter" />',
         width : 100
+    },
+    {
+        dataField : "salesOrdId",
+        headerText : "salesOrdId",
+        width : 100
     }    
     ];
 
@@ -87,7 +99,7 @@ function createAUIGrid() {
      // 그리드 속성 설정
     var gridPros = {
 
-             usePaging           : false,         //페이징 사용
+             usePaging           : true,         //페이징 사용
              pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
              editable            : false,
              fixedColumnCount    : 1,
@@ -142,32 +154,44 @@ var gridPros = {
 function fn_orderSearch(){
     Common.ajax("GET", "/services/bs/bsHistorySearch", $("#searchForm").serialize(), function(orderList) {
         console.log("성공.");
-        //console.log("data : " + orderList);
+//        console.log("data : " + orderList[0]);
         AUIGrid.setGridData(myGridID, orderList);
         
-        $("#name").text(orderList.name);
-        $("#orderNumber").text(orderList.salesOrdNo);
-        $("#orderNumber2").text(orderList.salesOrdNo);
-        $("#product").text("("+orderList.stockCode+") "+orderList.stockDesc);
-        $("#installationDate").text(orderList.installDate);
-        $("#customerAddress").text(orderList.customerAddress);
-        $("#installationAddress").text(orderList.installAddress);
-        $("#mobile").text(orderList.mailCntTelM);
-        $("#residence").text(orderList.mailCntTelR);
-        $("#office").text(orderList.mailCntTelO);
-        $("#fax").text(orderList.mailCntTelF);
-        $("#bankAccount").text(orderList.jomPayRef);
-        $("#customerType").text(orderList.custType);
-        $("#orderId").val(orderList.salesOrdId);
+        $("#name").text(orderList[0].name);
+        $("#orderNumber").text(orderList[0].salesOrdNo);
+        $("#orderNumber2").text(orderList[0].salesOrdNo);
+        $("#product").text("("+orderList[0].stockCode+") "+orderList[0].stockDesc);
+        $("#installationDate").text(orderList[0].installDate);
+        $("#customerAddress").text(orderList[0].customerAddress);
+        $("#installationAddress").text(orderList[0].installAddress);
+        $("#mobile").text(orderList[0].mailCntTelM);
+        $("#residence").text(orderList[0].mailCntTelR);
+        $("#office").text(orderList[0].mailCntTelO);
+        $("#fax").text(orderList[0].mailCntTelF);
+        $("#bankAccount").text(orderList[0].jomPayRef);
+        $("#customerType").text(orderList[0].custType);
+        //$("#orderId").val(orderList.salesOrdId);
     });
+    
+//    fn_orderSearch2();
 
 }
-
+/*
+function fn_orderSearch(){
+    Common.ajax("GET", "/services/bs/bsHistorySearch", $("#searchForm").serialize(), function(orderList) {
+        console.log("성공.");
+        //console.log("data : " + orderList);
+        AUIGrid.setGridData(myGridID, orderList);
+    });
+}
+*/
 function fn_filterInfo(){
 	var orderId = $("#orderId").val();
 	console.log(orderId);
-	if(orderId!=null ||orderId!=""||orderId!=" "){
+	if(orderId.length>1){
 	 Common.popupDiv("/services/bs/filterInfoPop2.do?orderId="+orderId );
+		//Common.popupDiv("/services/bs/filterInfoPop2.do?orderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId") );
+		
 	}else{
 		return;
 	}
@@ -216,22 +240,7 @@ function fn_filterInfo(){
 </tr>
 </tbody>
 </table><!-- table end -->
-<article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap_memList" style="width: 100%; height: 60px; margin: 0 auto;"></div>
-</article><!-- grid_wrap end -->
-<!-- <p class="btn_grid"><a href="javascript:fn_filterInfo();"><span class="search"></span><spring:message code='service.btn.FilterInfo'/></a></p> -->
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-<dl class="link_list">
-    <dt>Link</dt>
-    <dd>
-    <ul class="btns">
-        <li><p class="link_btn"><a href="javascript:fn_filterInfo()" id="filterInfo"><spring:message code='service.btn.FilterInfo'/></a></p></li>
-    </ul>
-    </dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
-    
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -289,7 +298,25 @@ function fn_filterInfo(){
 
 </tbody>
 </table>
-<input type="hidden" name="orderId"  id="orderId"/>
+
+<!-- <p class="btn_grid"><a href="javascript:fn_filterInfo();"><span class="search"></span><spring:message code='service.btn.FilterInfo'/></a></p> -->
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="javascript:fn_filterInfo()" id="filterInfo"><spring:message code='service.btn.FilterInfo'/></a></p></li>
+    </ul>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="grid_wrap_memList" style="width: 100%; height: 300px; margin: 0 auto;"></div>
+</article><!-- grid_wrap end -->   
+<input type="hidden"  id="orderId" name="orderId"/>
+
 </form>
 </section><!-- search_table end -->
     

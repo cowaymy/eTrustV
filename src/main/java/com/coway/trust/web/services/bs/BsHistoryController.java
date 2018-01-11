@@ -58,18 +58,38 @@ public class BsHistoryController {
 	}
 	
 	@RequestMapping(value = "/bsHistorySearch", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> bsHistorySearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
-		EgovMap orderList = bsHistoryService.selectOrderList(params);
-		int filter = bsHistoryService.selectFilterCnt(orderList);
-		if(filter>0){
-			orderList.put("hasFilter", 'O');
-		}else{
-			orderList.put("hasFilter", 'X');
+	public ResponseEntity<List<EgovMap>> bsHistorySearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> orderList = bsHistoryService.selectOrderList(params);
+		for(int i=0;i<orderList.size();i++){
+			int filter = bsHistoryService.selectFilterCnt(orderList.get(i));
+			if(filter>0){
+				orderList.get(i).put("hasFilter", 'O');
+			}else{
+				orderList.get(i).put("hasFilter", 'X');
+			}
 		}
+		
 		
 		
 		return ResponseEntity.ok(orderList);
 	}		
+	
+	@RequestMapping(value = "/bsHistorySearch2", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> bsHistorySearch2(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		List<EgovMap> orderList = bsHistoryService.selectOrderList(params);
+		for(int i=0;i<orderList.size();i++){
+			int filter = bsHistoryService.selectFilterCnt(orderList.get(i));
+			if(filter>0){
+				orderList.get(i).put("hasFilter", 'O');
+			}else{
+				orderList.get(i).put("hasFilter", 'X');
+			}
+		}
+		
+		
+		
+		return ResponseEntity.ok(orderList.get(0));
+	}
 	
 	
 	@RequestMapping(value = "/filterInfoPop2.do")
