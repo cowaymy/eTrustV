@@ -305,6 +305,9 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 					stocktran.deliveryStockTransferDetailIns(insMap);
 				}
 				stocktran.deliveryStockTransferIns(insMap);
+				String reqstNo = (String) insMap.get("reqstno");
+				logger.info(" reqstNo ??? : {}", reqstNo);
+				stocktran.updateRequestTransfer(reqstNo);
 			}
 		} else {
 			seq = "dup";
@@ -352,8 +355,8 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 					}
 					iCnt++;
 				}
-				String reqstNo = (String) imap.get("reqstno");
-				stocktran.updateRequestTransfer(reqstNo);
+				//String reqstNo = (String) imap.get("reqstno");
+				//stocktran.updateRequestTransfer(reqstNo);
 			}
 		}
 
