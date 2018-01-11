@@ -113,7 +113,7 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 		
 		for(EgovMap result : resultList){
 			
-			c7  += Integer.parseInt(result.get("c4").toString()) - Integer.parseInt(result.get("c5").toString());
+			c7  += Float.parseFloat(result.get("c4").toString()) - Float.parseFloat(result.get("c5").toString());
 			
 			result.put("c7" , c7);  
 			
