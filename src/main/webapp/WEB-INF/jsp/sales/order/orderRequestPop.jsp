@@ -1528,9 +1528,13 @@
             fn_tabOnOffSetOwnt('BIL_GRP', 'SHOW');
         }
         
+        var vInstct = "${orderDetail.installationInfo.instct}"
+        
+        vInstct = vInstct.replace(/<br\s*\/?>/mg,"\n");
+        
         $('#dpPreferInstDateOwnt').val("${orderDetail.installationInfo.preferInstDt}");
         $('#tpPreferInstTimeOwnt').val("${orderDetail.installationInfo.preferInstTm}");
-        $('#txtInstSpecialInstructionOwnt').val("${orderDetail.installationInfo.instct}");
+        $('#txtInstSpecialInstructionOwnt').val(vInstct);
     }
             
     function fn_loadOrderInfoCanc() {

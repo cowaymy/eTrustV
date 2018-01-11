@@ -501,6 +501,8 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
     		
     		String instct = StringUtils.replace((String)installationInfo.get("instct"), "<", "(");
     		
+    		instct = StringUtils.replace(instct, System.getProperty("line.separator"), "<br>");
+    		
     		installationInfo.put("instct", instct);
 		}
 	}
