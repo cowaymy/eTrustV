@@ -2758,7 +2758,7 @@ SELECT ROWNUM AS rnum ,
                     </select>
 
                     <select id="selectCTMByDSC_id" parameterType="Map" resultType="egovMap">
-	                    SELECT  A.MEM_ID CODE_ID, b.dept_code  AS CODE_NAME
+	                    SELECT  A.MEM_ID CODE_ID, b.dept_code || '-' || a.NAME  AS CODE_NAME
 	                    FROM ORG0001D A, ORG0005D B, SYS0005M C
 	                    WHERE  A.MEM_ID = B.MEM_ID
 	                    AND    A.BRNCH  =  C.BRNCH_ID
