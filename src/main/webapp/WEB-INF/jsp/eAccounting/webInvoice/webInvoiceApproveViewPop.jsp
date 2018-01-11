@@ -350,14 +350,14 @@ $(document).ready(function () {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + $("#viewClmNo").text());
                 console.log("CellDoubleClick clamUn : " + event.item.clamUn);
-                console.log("CellDoubleClick clmSeq : " + event.item.clmSeq);
+                console.log("CellDoubleClick appvItmSeq : " + event.item.appvItmSeq);
                 console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
                 console.log("CellDoubleClick atchFileGrpId : " + event.item.atchFileGrpId);
                 // TODO detail popup open
                 //appvPrcssNo = event.item.appvPrcssNo;
                 //atchFileGrpId = event.item.atchFileGrpId;
                 
-                fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.clmSeq, event.item.clamUn);
+                fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.appvItmSeq, event.item.clamUn);
             });
     
     $("#fileListPop_btn").click(fn_fileListPop);
@@ -392,11 +392,11 @@ function fn_RejectSubmit() {
     fn_rejectRegistPop();
 }
 
-function fn_getAppvItemOfClmUn(clmNo, clmSeq, clamUn) {
+function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
 	var url = "";
 	var obj = {
             clmNo : clmNo
-            ,clmSeq : clmSeq
+            ,clmSeq : appvItmSeq
             ,clamUn : clamUn
     };
 	var clmType = clmNo.substr(0, 2);
