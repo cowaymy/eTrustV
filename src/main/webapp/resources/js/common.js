@@ -207,6 +207,7 @@ var Common = {
             + '<p>'
             + '<span><img src="' + contextPath + '/resources/images/common/logo_coway2.gif" alt="Coway" /></span>'
             + '<span><img src="' + contextPath + '/resources/images/common/proge.gif" alt="loding...." /></span>'
+            + '<a href="javascript:void(0);"></a>'
             + '</p>'
             + '</div>';
 
@@ -224,6 +225,7 @@ var Common = {
         }
 
         _loading_count += 1;
+        $("#_loading").find('a').focus();
     },
 
     /**
