@@ -1128,7 +1128,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         LEFT JOIN FCM0009M T2 
         ON T1.GL_ACC_CODE = T2.GL_ACC_CODE
          WHERE 1=1
-         AND T1.COST_CENTR = #{costCentr}
+         AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
          OR T1.COST_CENTR = 'G9901'
          AND T1.BUDGET_CODE != '99999'
          AND T1.BUDGET_CODE = #{budgetCode}
