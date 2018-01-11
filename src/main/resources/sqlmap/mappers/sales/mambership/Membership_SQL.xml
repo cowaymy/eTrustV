@@ -47,7 +47,7 @@
 	    </if>
 	              
 	    <if test="MBRSH_NO != null and MBRSH_NO != ''">
-	        AND A.MBRSH_NO = #{MBRSH_NO}
+	        AND A.MBRSH_NO = UPPER(#{MBRSH_NO})
 	    </if>
 	         
 	    <if test="ORD_NO != null and ORD_NO != ''">

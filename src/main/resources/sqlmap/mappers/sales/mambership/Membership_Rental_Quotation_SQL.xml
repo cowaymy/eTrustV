@@ -51,15 +51,15 @@
 	          WHERE 1=1
 	          
 	            <if test="QUOT_NO != null and QUOT_NO != ''">
-                           AND ( E1.QOTAT_REF_NO = #{QUOT_NO} )
+                           AND  E1.QOTAT_REF_NO = UPPER(#{QUOT_NO}) 
                  </if>
                  
                  <if test="ORD_NO != null and ORD_NO != ''">
-                            AND ( E3.SALES_ORD_NO = #{ORD_NO } )
+                            AND  E3.SALES_ORD_NO = #{ORD_NO } 
                  </if>    
                  
                  <if test="CRT_USER_ID != null and CRT_USER_ID != ''">
-                               AND ( E5.USER_NAME = #{CRT_USER_ID} )
+                               AND  E5.USER_NAME = #{CRT_USER_ID}
                  </if>       
 	              
 	            

@@ -47,7 +47,7 @@
                 JOIN PAY0031D H   ON H.TAX_INVC_SVC_NO = A.TRMNAT_REF_NO
           WHERE 1=1
           <if test="trmnatRefNo != null and trmnatRefNo != '' ">
-               AND A.TRMNAT_REF_NO = #{trmnatRefNo}
+               AND A.TRMNAT_REF_NO = UPPER(#{trmnatRefNo})
           </if> 
           <if test="srvCntrctRefNo != null and srvCntrctRefNo != '' ">
                AND B.SRV_CNTRCT_REF_NO = #{srvCntrctRefNo}

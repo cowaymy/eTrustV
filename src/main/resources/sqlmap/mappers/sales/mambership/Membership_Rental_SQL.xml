@@ -110,11 +110,11 @@
                     </if>
                     
                     <if test="custId != null and custId != ''">
-                        AND ( E17.CUST_ID =  #{custId} ) 
+                        AND  E17.CUST_ID =  #{custId}  
                     </if>
                    
                    <if test="custNRIC != null and custNRIC != ''">
-                            AND (E17.NRIC LIKE '%'||#{NRIC}||'%')  
+                            AND UPPER(E17.NRIC) LIKE '%'||UPPER(#{NRIC})||'%')  
                    </if>
                 ) FL
                 JOIN SYS0047M Extent18   ON Extent18.USER_ID = FL.QOTAT_CRT_USER_ID
@@ -138,7 +138,7 @@
             </if>   
             WHERE 1=1
                 <if test="sRVContrtNo != null and sRVContrtNo != ''">
-                    AND ( FL.SRV_CNTRCT_REF_NO = #{sRVContrtNo} )
+                    AND FL.SRV_CNTRCT_REF_NO = UPPER(#{sRVContrtNo})
                 </if>
  
                 <if test="salesDate != null and salesDate != ''">
@@ -146,15 +146,15 @@
                 </if>
                       
                 <if test="orderNo != null and orderNo != ''">
-                    AND ( FL.SALES_ORD_NO = #{orderNo} )
+                    AND FL.SALES_ORD_NO = #{orderNo} 
                 </if>
                       
                 <if test="creator != null and creator != ''">
-                    AND ( FL.USERNAME1 =  #{creator} )
+                    AND UPPER(FL.USERNAME1) =  UPPER(#{creator})
                 </if>
                       
                 <if test="custName != null and custName != ''">
-                    AND ( FL.NAME2 LIKE  #{custName}||'%' ) 
+                    AND  UPPER(FL.NAME2) LIKE  UPPER(#{custName})||'%' 
                 </if>                     
             ORDER BY FL.SRVCONTRACTID1 ASC
     </select>

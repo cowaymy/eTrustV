@@ -79,7 +79,7 @@
         WHERE  1=1
       
         <if test="QUOT_NO != null and QUOT_NO != ''">
-            AND  A.QUOT_NO = #{QUOT_NO}
+            AND  A.QUOT_NO = UPPER(#{QUOT_NO})
         </if>
               
         <if test="L_ORD_NO != null and L_ORD_NO != ''">
