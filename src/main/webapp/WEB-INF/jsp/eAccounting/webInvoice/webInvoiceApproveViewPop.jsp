@@ -439,18 +439,27 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
     		$("#noMileage").show();
     		
     		if(clmType == "J1") {
-    			$("#supplirTh").html('');
+                $("#supplirTh").html('');
                 $("#supplirTd").text("");
                 $("#payInfo1").show();
                 $("#payInfo2").show();
+                $("#expDesc").text(result.data.invcRem);
+                $("#utilNo").text(result.data.utilNo);
+                $("#jPayNo").text(result.data.jPayNo);
+                var bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                $("#bilPeriod").text(bilPeriod);
                 mGridColumnLayout[4].visible = false;
             } else if(clmType == "J2") {
-            	$("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
-            	$("#supplirTd").text(result.data.supplier);
-            	$("#payInfo1").show();
+                $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
+                $("#supplirTd").text(result.data.supplier);
+                $("#payInfo1").show();
                 $("#payInfo2").show();
+                $("#utilNo").text(result.data.utilNo);
+                $("#jPayNo").text(result.data.jPayNo);
+                var bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                $("#bilPeriod").text(bilPeriod);
             } else {
-            	$("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
+                $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
                 $("#supplirTd").text(result.data.supplier);
                 $("#payInfo1").hide();
                 $("#payInfo2").hide();
