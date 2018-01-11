@@ -157,21 +157,23 @@ public class PoMngementServiceImpl implements PoMngementService {
 		if(addList != null && addList.size() > 0)
 		{
 		  preYear = (String) addList.get(0).get("preYear");
-		  preWeekTh =  (String) addList.get(poItemNo).get("preWeekTh");
+		  preWeekTh =  (String) addList.get(0).get("preWeekTh");
+		  preCdc =  (String) addList.get(0).get("preCdc");
+		  
+		  params.put("preYear", preYear);
+		  params.put("preCdc" , preCdc);
 		}
 			
 		if(StringUtils.isEmpty(preYear)){
 			throw new ApplicationException(AppConstants.FAIL, "필수값 오류 입니다.");
 		}
-		
-		params.put("preYear", preYear);
-		params.put("preCdc" , preCdc);
+
 		EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
 		String selectNewPoNo = (String)newPonoMap.get("newPono");
 		
 		for (Map<String, Object> obj : addList) 
 		{
-			preCdc =  (String) addList.get(saveCnt).get("preCdc");
+			
 			stockCode = (String) addList.get(saveCnt).get("stockCode");
 			
 			poItemNo++;
