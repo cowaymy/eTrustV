@@ -117,18 +117,18 @@ public class PoManagementController {
 	@RequestMapping(value = "/savePOIssuItem.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePOIssuItem(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO)
 	{
-		//List<Map<String, Object>> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		List<Map<String, Object>> updList = params.get(AppConstants.AUIGRID_UPDATE); // Get grid addList
+		List<Map<String, Object>> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
+		//List<Map<String, Object>> updList = params.get(AppConstants.AUIGRID_UPDATE); // Get grid addList
 
 		int tmpCnt = 0;
 		int totCnt = 0;
 		
-		LOGGER.info("InsUpdPoIssueItem_수정 >> Add_Size: {}, Upd_Size: {}, params: {}", updList.size(), params.toString());
+		LOGGER.info("InsUpdPoIssueItem_수정 >> Add_Size: {}, params: {}", addList.size(),  params.toString());
 		
-		if (updList.size() > 0) 
+		if (addList.size() > 0 ) 
 		{
 			// Step1. Update SCMPrePOItem   Step2. Insert SCMPODetail
-			tmpCnt = poMngementService.updatePOIssuItem(updList, sessionVO.getUserId());
+			tmpCnt = poMngementService.updatePOIssuItem(addList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
 		}
 

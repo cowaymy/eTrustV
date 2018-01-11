@@ -31,7 +31,7 @@ public interface PoMngementService
 	List<EgovMap> selectScmPoStatusCnt(Map<String, Object> params);
 	EgovMap selectPOIssueNewPoNo(Map<String, Object> params);
 	
-	int updatePOIssuItem(List<Map<String, Object>> updList, Integer updUserId);
+	int updatePOIssuItem(List<Map<String, Object>> addList, Integer updUserId);
 	int insertPOIssueDetail(List<Object> addList, Integer crtUserId);
 	int deletePOMaster(List<Object> delList, Integer updUserId);
 	

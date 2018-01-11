@@ -139,38 +139,41 @@ public class PoMngementServiceImpl implements PoMngementService {
 	
 	// update SCMPrePOItem && Insert SCMPODetail
 	@Override
-	public int updatePOIssuItem(List<Map<String, Object>> updList, Integer crtUserId) 
+	public int updatePOIssuItem(List<Map<String, Object>> addList, Integer crtUserId) 
 	{
 		int saveCnt = 0;
 		int poItemNo = 0;
 		
-		LOGGER.debug(" updatePOIssuItem_IMPLE {} ", updList.toString() );
+		LOGGER.debug(" updatePOIssuItem_IMPLE {} ", addList.toString() );
 		
 		String preCdc = "";
 		String preYear = "";
 		String preWeekTh = "";
 		String stockCode = "";
 		
-		if(updList != null && updList.size() > 0)
-		{
-		  preCdc =  (String) updList.get(0).get("preCdc");
-		  preYear = (String) updList.get(0).get("preYear");
-		  preWeekTh =  (String) updList.get(0).get("preWeekTh");
-		  stockCode = (String) updList.get(0).get("stockCode");
-		}
+		Map<String, Object> params = new HashMap<>();
 		
-		if(StringUtils.isEmpty(preCdc) || StringUtils.isEmpty(preYear)){
+		if(addList != null && addList.size() > 0)
+		{
+		  preYear = (String) addList.get(0).get("preYear");
+		  preWeekTh =  (String) addList.get(poItemNo).get("preWeekTh");
+		}
+			
+		if(StringUtils.isEmpty(preYear)){
 			throw new ApplicationException(AppConstants.FAIL, "필수값 오류 입니다.");
 		}
 		
-		Map<String, Object> params = new HashMap<>();
-		params.put("preCdc", preCdc);
-		params.put("preYear", preYear);
-		EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
-		String selectNewPoNo = (String)newPonoMap.get("newPono");
-		
-		for (Map<String, Object> obj : updList) 
+		for (Map<String, Object> obj : addList) 
 		{
+			preCdc =  (String) addList.get(saveCnt).get("preCdc");
+			stockCode = (String) addList.get(saveCnt).get("stockCode");
+			
+			params.put("preYear", preYear);
+			params.put("preCdc" , preCdc);
+			  
+			EgovMap newPonoMap =  selectPOIssueNewPoNo( params );
+			String selectNewPoNo = (String)newPonoMap.get("newPono");
+			
 			poItemNo++;
 			
 			obj.put("crtUserId", crtUserId);
@@ -183,8 +186,6 @@ public class PoMngementServiceImpl implements PoMngementService {
 			obj.put("preWeekTh", preWeekTh);
 			obj.put("stockCode", stockCode);						
 			
-			saveCnt++;
-			
 			LOGGER.debug(" >>>>> PO_Issue_Input_Params {} ", obj);
 			
 			//update SCMPrePOItem 
@@ -193,6 +194,8 @@ public class PoMngementServiceImpl implements PoMngementService {
 			poMngementMapper.insertPOIssueDetail(obj);
 			// INSERT SCMPOMASTER
 			poMngementMapper.insertPOIssueMaster(obj);
+			
+			saveCnt++;
 			
 		}
 		
