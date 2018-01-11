@@ -89,7 +89,9 @@ $(document).ready(function () {
                 if(event.item.appvPrcssStusCode == "T") {
                 	fn_viewStaffClaimPop(event.item.clmNo);
                 } else {
-                	fn_webInvoiceRequestPop(event.item.appvPrcssNo);
+                	var clmNo = event.item.clmNo;
+                    var clmType = clmNo.substr(0, 2);
+                	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
                 }
                 
             });
@@ -892,7 +894,7 @@ function fn_getTotTaxAmt(rowIndex) {
     return taxAmtCnt;
 }
 
-function fn_webInvoiceRequestPop(appvPrcssNo) {
+function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
     var data = {
             appvPrcssNo : appvPrcssNo
     };
