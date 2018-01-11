@@ -165,7 +165,8 @@ function fn_orderSearch(){
 
 function fn_filterInfo(){
 	var orderId = $("#orderId").val();
-	if(orderId!=null ||orderId!=""){
+	console.log(orderId);
+	if(orderId!=null ||orderId!=""||orderId!=" "){
 	 Common.popupDiv("/services/bs/filterInfoPop2.do?orderId="+orderId );
 	}else{
 		return;
@@ -210,7 +211,7 @@ function fn_filterInfo(){
     <td><input type="text" title="" id="orderNumber" name="orderNumber" placeholder="" class="" />
         <!-- <a href="javascript:fn_orderSearch();" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
         <p class="btn_grid"><a href="javascript:fn_orderSearch();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p>
-        <p class="btn_grid"><a href="javascript:fn_filterInfo();"><span class="search"></span><spring:message code='service.btn.FilterInfo'/></a></p>
+        
     </td>
 </tr>
 </tbody>
@@ -218,7 +219,19 @@ function fn_filterInfo(){
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_memList" style="width: 100%; height: 60px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
-
+<!-- <p class="btn_grid"><a href="javascript:fn_filterInfo();"><span class="search"></span><spring:message code='service.btn.FilterInfo'/></a></p> -->
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+        <li><p class="link_btn"><a href="javascript:fn_filterInfo()" id="filterInfo"><spring:message code='service.btn.FilterInfo'/></a></p></li>
+    </ul>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+    
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
