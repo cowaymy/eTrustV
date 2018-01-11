@@ -151,7 +151,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 		
 		for(EgovMap result : list ){
 			
-			double prc = CommonUtils.intNvl(String.valueOf(result.get("prc")));
+			double prc = CommonUtils.intNvl(result.get("prc"));
 
 			logger.debug("PRC ==========================>>  " + prc);
 			
