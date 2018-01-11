@@ -2034,4 +2034,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		}
 		}
 	}
+
+	@Override
+	public void memberCodyPaUpdate(Map<String, Object> params) {
+		memberListMapper.updateCodyPaDate(params);
+		
+	}
 }

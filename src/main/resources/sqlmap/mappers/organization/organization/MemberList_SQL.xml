@@ -481,7 +481,7 @@
        Limit1.BANK BANK  ,
        Limit1.BANK_ACC_NO BANK_ACC_NO  ,
        Limit1.C29 C29  ,
-       Limit1.C30 C30  ,
+       to_Char(SYSDATE , 'DD/MM/YYYY') C30  ,
        Limit1.C31 C31  ,
        Limit1.C32 C32  ,
        Limit1.NAME1 NAME  ,
@@ -1073,7 +1073,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
     <select id="selectCodyPAExpired" parameterType="Map" resultType="egovMap">
      <![CDATA[
-          SELECT Extent1.AG_EXPR_DT AG_EXPR_DT
+          SELECT TO_CHAR(Extent1.AG_EXPR_DT, 'DD/MM/YYYY') AG_EXPR_DT
 		  FROM ORG0002D Extent1
 		 WHERE  ( Extent1.MEM_ID = #{MemberID} )
           AND ( 1 = Extent1.AG_STUS_ID ) AND ROWNUM <= 1
@@ -2902,8 +2902,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               -->
               <![CDATA[
               AREA_ID = #{areaId},
-              ADDR_DTL = #{addrDtl},
-              STREET = #{streetDtl},
+              ADDR_DTL = #{addrDtl1},
+              STREET = #{streetDtl1},
 
               TEL_OFFICE = #{officeNo},
               TEL_HUSE = #{residenceNo},
@@ -2943,7 +2943,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               TR_NO = #{trNo},
               UPD_DT = SYSDATE,
               UPD_USER_ID = TO_NUMBER(TRIM(#{user_id})),
-              JOIN_DT = TO_DATE(#{joinDate},'yyyy-mm-dd'),
+              JOIN_DT = TO_DATE(#{joinDate},'DD-MM-YYYY'),
               RANK = TO_NUMBER(TRIM(#{rank})),
               MAIN_DEPT = #{searchdepartment},
               SUB_DEPT = #{inputSubDept},
@@ -3884,5 +3884,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		WHERE NRIC = #{nric}
 		AND MEM_TYPE = '1'
      </select>
+     
+       <update id="updateCodyPaDate" parameterType="Map">
+         <![CDATA[
+          UPDATE ORG0002D Extent1
+          set  Extent1.AG_EXPR_DT = TO_DATE(#{codyPaExpr}, 'DD-MM-YYYY')
+         WHERE  ( Extent1.MEM_ID = #{MemberID} )
+          AND ( 1 = Extent1.AG_STUS_ID ) AND ROWNUM <= 1
+        ]]>
+       </update>
 
 </mapper>

@@ -775,7 +775,7 @@ function fn_saveValidation(){
     //region Check Cody PA Date  codyPaExpr
     if (action == "2") //cyc 01/03/2017
     {
-    	if ((jQuery.trim($("#codyPaExpr").val())).length>0)
+    	if ((jQuery.trim($("#codyPaExpr").val())).length<0)
         {
             valid = false;
             message = "Cody agreement PA date are compulsory";
@@ -1356,8 +1356,8 @@ function fn_selectState(selVal){
 <tr>
     <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
     <td  class="hideContent">
-    <span><span><c:out value="${PAExpired.agExprDt}"/></span></span> 
-    <!-- <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"/> -->
+    <%-- <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>  --%>
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"  value="${PAExpired.agExprDt}"/> 
     </td>
 </tr>
 </tbody>

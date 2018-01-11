@@ -218,4 +218,6 @@ public interface MemberListMapper {
 
 	EgovMap selectNricExist(Map<String, Object> params);
 
+	void updateCodyPaDate(Map<String, Object> params);
+
 }

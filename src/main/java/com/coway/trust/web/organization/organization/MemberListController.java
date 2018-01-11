@@ -869,8 +869,9 @@ public class MemberListController {
 		resultUpc1 = memberListService.memberListUpdate_user(formMap);
 		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
 		resultUpc3 = memberListService.memberListUpdate_member(formMap);
-		
-		
+		if(formMap.get("memberType").toString().equals("2")){ 
+			memberListService.memberCodyPaUpdate(formMap);
+		}
 		String memType = (String)formMap.get("memType");
 		logger.debug("================================================================================");
 		logger.debug("=============== memType {} ",  memType);

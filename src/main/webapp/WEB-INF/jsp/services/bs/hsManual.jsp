@@ -288,12 +288,12 @@
                 var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
                 if (radioVal == 1 ){ //hs_no  Create before
-                	
-                    if ($("#cmdBranchCode").val() == '' || $("#cmdBranchCode").val() == null) {
-                    	Common.alert("Please Select 'Cody Branch'");
-                        return false;
-                    }
-                    
+                	if($("#userType").val() != "4" && $("#userType").val() != "6"){
+	                    if ($("#cmdBranchCode").val() == '' || $("#cmdBranchCode").val() == null) {
+	                    	Common.alert("Please Select 'Cody Branch'");
+	                        return false;
+	                    }
+                	}
                     if ( $("#userType").val() == "2") {
 	                    if ( $("#memberLevel").val()  == "3" ||  $("#memberLevel").val()  == "4") {
 		                    if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == null) {
@@ -321,10 +321,11 @@
                     if ($("#memId1").val().substring(0,3) != "CCS"){
                         memId = "";
                     }
-
-                    if ($("#cmdBranchCode1").val() == '' || $("#cmdBranchCode1").val() == null) {
-                        Common.alert("Please Select 'Branch'");
-                        return false;
+                    if($("#userType").val() != "4" && $("#userType").val() != "6"){
+	                    if ($("#cmdBranchCode1").val() == '' || $("#cmdBranchCode1").val() == null) {
+	                        Common.alert("Please Select 'Branch'");
+	                        return false;
+	                    }
                     }
                     if ( $("#userType").val() == "2") {
 	                    if ( $("#memberLevel").val()  == "3" ||  $("#memberLevel").val()  == "4") {
