@@ -351,6 +351,8 @@ function SearchListAjax() {
 
     var url = "/logistics/stockMovement/StockMovementTolocationItemList.do";
     var param = $('#searchForm').serialize();
+    
+    console.log(param);
 
 //     Common.ajax("GET" , url , param , function(result){
 //         AUIGrid.setGridData(resGrid, result.data);

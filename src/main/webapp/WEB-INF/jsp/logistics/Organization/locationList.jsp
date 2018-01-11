@@ -156,7 +156,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
 	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	    {
 	    	pagestate = "m";
-            
+            console.log(event);
             if (event.rowIndex > -1){
                 fn_modyWare(event.rowIndex);
             }else{
@@ -214,7 +214,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         	
         	pagestate = "m";
             var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-            console.log(selectedItem);
+            
             if (selectedItem[0] > -1){
                 fn_modyWare(selectedItem[0]);
             }else{
@@ -263,7 +263,7 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
     });
     
     function fn_modyWare(rowid){
-    	
+    	console.log(AUIGrid.getCellValue(myGridID ,rowid,'locstus'));
         //$("#mstatus").val(AUIGrid.getCellValue(myGridID ,rowid,'statnm')); 
     	$("#mwarecd").val(AUIGrid.getCellValue(myGridID ,rowid,'loccd'));
     	$("#mwarenm").val(AUIGrid.getCellValue(myGridID ,rowid,'locdesc'));
