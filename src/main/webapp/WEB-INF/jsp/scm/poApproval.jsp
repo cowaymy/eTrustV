@@ -825,17 +825,16 @@ function fnMainGridCreate()
             // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
             rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
             {
-              if(item.poItmAppvStus == "Approved") { // 이름이 Anna 인 경우 사용자 체크 못하게 함.
-                return false; // false 반환하면 disabled 처리됨
+              if(item.cbBoxFlag == 5) { //5(Approved) 면 false고 disabled 처리됨
+                return false; 
               }
-              
               return true;
             }
 
 					 ,rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
 					  {
-					    if(item.poItmAppvStus == "Approved") { //Confirm
-					       return false; // false 반환하면 disabled 처리됨
+					    if(item.cbBoxFlag == 5) { //5(Approved) 면 false고 disabled 처리됨
+					       return false; 
 					    }
 					    
 					    return true;
@@ -871,18 +870,10 @@ function fnMainGridCreate()
   // 전체 체크박스 클릭 이벤트 바인딩
   AUIGrid.bind(MainGridID, "rowAllChkClick", function( event ) 
   {
-
-    if(event.checked ) {  // name 의 값들 얻기  Active(1)/Approved(5)
-      var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "poItmAppvStus");
-      // Anna 제거하기
-      //uniqueValues.splice(uniqueValues.indexOf("Approved"),1);   
-
-      console.log("uniqueValues: " + uniqueValues + " /length: " + uniqueValues.length );  
-      AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus", 1);
-    } else {
-      AUIGrid.setCheckedRowsByValue(event.pid, "poItmAppvStus",0);
-    }
-
+    if(event.checked )
+      AUIGrid.setCheckedRowsByValue(event.pid, "cbBoxFlag",1);
+    else 
+      AUIGrid.setCheckedRowsByValue(event.pid, "cbBoxFlag",0);
   });
   
   
