@@ -155,13 +155,19 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		for(EgovMap result : list ){
 			
 			double prc = CommonUtils.intNvl(String.valueOf(result.get("prc")));
+
+		     logger.debug("PRC ==========================>>  " + prc);
 			
 			if("N".equals(params.get("zeroRatYn"))||"N".equals(params.get("eurCertYn"))){
 				
 				sum  += Math.floor((double)(prc  * 100 / 106 ));
+
+			     logger.debug("SUM 111 :: ==========================>>  " + sum);
 				
 			}else{
 				sum  += prc;
+
+			     logger.debug("SUM 222 :: ==========================>>  " + sum);
 			}
 			
 		}
