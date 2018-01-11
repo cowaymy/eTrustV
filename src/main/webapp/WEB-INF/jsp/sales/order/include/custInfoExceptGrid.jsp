@@ -1,3 +1,5 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <article class="tap_area"><!-- tap_area start -->
 
 <table class="type1"><!-- table start -->
@@ -13,7 +15,11 @@
 <tbody>
 <tr>
     <th scope="row">Customer ID</th>
-    <td><span>${orderDetail.basicInfo.custId}</span></td>
+    <td><span>${orderDetail.basicInfo.custId}
+    <c:if test="${not empty orderDetail.basicInfo.crtDur}">
+        (${orderDetail.basicInfo.crtDur} month)    
+    </c:if>
+    </span></td>
     <th scope="row">Customer Name</th>
     <td colspan="3"><span>${orderDetail.basicInfo.custName}</span></td>
 </tr>

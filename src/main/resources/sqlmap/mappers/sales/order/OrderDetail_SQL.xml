@@ -87,6 +87,7 @@
              , V1.DISC_RNT_FEE
              , V1.SRV_PAC_ID
              , V1.ADV_BILL
+             , V1.CRT_DUR
           FROM SAL1006V V1
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>
