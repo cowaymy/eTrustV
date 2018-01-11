@@ -29,6 +29,7 @@
 
 <script type="text/javaScript">
 
+var gMovingStockCode ="";
 var gMyGridSelRowIdx ="";
 var gWeekThValue ="";
 var gScmMonth = 0; 
@@ -214,8 +215,8 @@ function fnCreatePO()
 {
   var rowCount = AUIGrid.getRowCount(myGridID2);
 
-	for(var i=0; i<rowCount; i++)
-	  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
+	//for(var i=0; i<rowCount; i++)
+	//  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
 
 	if ( parseInt(AUIGrid.getCellValue(myGridID2, 0, "fobAmount")) > 500000 
 			&&  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 20000000 )
@@ -225,9 +226,18 @@ function fnCreatePO()
 	}   
 	
   var udtList = AUIGrid.getEditedRowItems(myGridID2);
-
-	if (udtList.length > 0)
+  var addList = AUIGrid.getAddedRowItems(myGridID2);
+  
+	if (addList.length > 0 || udtList.length > 0 )
+	{
 		fnUpdSaveCall();
+	}
+	else
+	{
+	 Common.alert("<spring:message code='pay.alert.noItem'/> ");
+   return false;
+	}
+		
 }
 
 function fnSetStockComboBox()
@@ -274,7 +284,7 @@ function fnCheckedDelete(Obj)
             , data
             , function(result) 
               {
-                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");  
+                Common.alert("Save " + "<spring:message code='sys.msg.success'/>");  
                 fnSearchBtnSCMPrePOView() ;
                 console.log("성공." + JSON.stringify(result));
                 console.log("data : " + result.data);
@@ -379,6 +389,14 @@ function fnMoveRight()
 		Common.alert("<spring:message code='sys.scm.poIssue.AllPlannedQty'/> ");
     return false;  
 	}
+
+  if(addMoveChecked(gMovingStockCode) == false)
+	{
+	  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Stock Code' htmlEscape='false'/>");
+	  return false;
+	}
+
+	
 /*      console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
             +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
             +" inStkTypeId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkTypeId")
@@ -424,7 +442,8 @@ function fnMoveRight()
 	             , function(result) 
 	               {
 	                  console.log("성공: " + result.selectPoRightMoveList.length);
-	                  AUIGrid.setGridData(myGridID2, result.selectPoRightMoveList);
+	                  
+	                  AUIGrid.addRow(myGridID2, result.selectPoRightMoveList, "last");
 
 	                  if (result.selectPoRightMoveList.length > 0 )
 	                  {
@@ -481,6 +500,30 @@ function addRow(selFieldObj)
     
   //  $('#clearBtn').removeClass("btn_disabled");
   //  $('#createPoBtn').removeClass("btn_disabled");
+}
+
+function addMoveChecked(moveStockCode)
+{
+  var rowCnt = AUIGrid.getRowCount(myGridID2);
+  var rtBooled = true;
+  
+   if(rowCnt > 0)
+	 {
+     for(i = 0 ; i < rowCnt ; i++)
+	   {
+       var AddedStockCode = AUIGrid.getCellValue(myGridID2, i ,"stockCode");
+       if(AddedStockCode.length > 0)
+	     {
+          if (moveStockCode == AddedStockCode)
+	        {
+            console.log(AddedStockCode + " / " + moveStockCode + "Already Exists...");
+            rtBooled =  false;
+		      }
+        }
+      }
+   }
+
+	 return rtBooled
 }
 
 //행 추가 이벤트 핸들러
@@ -942,14 +985,17 @@ $(document).ready(function()
 	{
 		gMyGridSelRowIdx = event.rowIndex;
 	
-	  console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
-	  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
+	  console.log("myGridID_cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
+	  console.log("myGridID_CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " /value1: "+ AUIGrid.getCellValue(myGridID, event.rowIndex, 0));
+	  gMovingStockCode = AUIGrid.getCellValue(myGridID, event.rowIndex, 0);        
 	});
 	
 	// 셀 더블클릭 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
 	{
-	  console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+	  console.log("myGridID_DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
+	  gMovingStockCode = AUIGrid.getCellValue(myGridID, event.rowIndex, 0);
+	  fnMoveRight();
 	});  
 
 	/*******************************
