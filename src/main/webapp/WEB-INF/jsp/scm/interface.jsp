@@ -32,12 +32,6 @@ $(function()
   fnSelectStockTypeComboList('15');  
 });
 
-function fnClick()
-{
-	$('#btn11').removeClass("btn_disabled");
-	//$('#btn11').addClass("btn_disabled");
-}
-
 function fnSelectStockTypeComboList(codeId)
 {
     CommonCombo.make("scmStockType"
@@ -187,18 +181,17 @@ function auiCellEditignHandler(event)
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 
-        if (event.columnIndex == 2 && event.headerText == "SEQ NO") // SEQ NO
+        if (event.columnIndex == 2 && event.headerText == "SEQ NO")
         {
           if (parseInt(event.value) < 1)
           {
-            //Common.alert("Menu Level is not more than 4. ");
-                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
-                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
-                return false;
+            Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
+            AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
+            return false;
           }  
         }
 
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
+        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME")
         {
           if (parseInt(event.value) < 1)
           {
@@ -263,15 +256,11 @@ var InterfaceLayout =
         }, {
             dataField : "stockType",
             headerText : "<spring:message code='sys.scm.interface.stockType'/>",
-            //style : "aui-grid-right-column",
             width : "10%",
-            //editable : false
         }, {
             dataField : "stkTypeId",
             headerText : "<spring:message code='sys.scm.inventory.stockTypeId'/>",
-            //style : "aui-grid-right-column",
             width : "10%",
-            //editable : false
         },{
             dataField : "ctgry",
             headerText : "<spring:message code='sys.scm.interface.ctgry'/>",
@@ -296,7 +285,6 @@ var InterfaceLayout =
         }, {
             dataField : "waersSub",
             headerText : "<spring:message code='sys.scm.interface.waersSub'/>",
-            //style : "aui-grid-right-column",
             width : "10%"
         }, {
             dataField : "cnt",
@@ -339,9 +327,8 @@ $(document).ready(function()
            // selectionMode : "multipleRows",
           };
 
-  // masterGrid 그리드를 생성합니다.
-  myGridID = GridCommon.createAUIGrid("InterfaceGridDiv", InterfaceLayout,"", InterfaceLayoutOptions);
   // AUIGrid 그리드를 생성합니다.
+  myGridID = GridCommon.createAUIGrid("InterfaceGridDiv", InterfaceLayout,"", InterfaceLayoutOptions);
   
   // 푸터 객체 세팅
   //AUIGrid.setFooter(myGridID, footerObject);
@@ -365,9 +352,7 @@ $(document).ready(function()
   AUIGrid.bind(myGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
     console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩

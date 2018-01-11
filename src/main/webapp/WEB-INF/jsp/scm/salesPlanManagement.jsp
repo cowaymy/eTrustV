@@ -119,10 +119,8 @@ var options = {
                   showRowNumColumn : false, // 순번 칼럼 숨김
                 };
     
-    // masterGrid 그리드를 생성합니다.
-    gInsertGridID = GridCommon.createAUIGrid("insertGridDivID", mstColumnLayout,"codeMasterId", options);
     // AUIGrid 그리드를 생성합니다.
-    
+    gInsertGridID = GridCommon.createAUIGrid("insertGridDivID", mstColumnLayout,"codeMasterId", options);
 
     // 푸터 객체 세팅
     //AUIGrid.setFooter(myGridID, footerObject);
@@ -152,7 +150,7 @@ var options = {
         if (AUIGrid.isAddedById(gInsertGridID ,AUIGrid.getCellValue(gInsertGridID, event.rowIndex, 0)) == true
                 || String(event.value).length < 1)
             {
-                    return false;
+              return false;
             } 
 
             $("#mstCdId").val( event.value);
@@ -164,8 +162,7 @@ var options = {
  // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(gInsertGridID, "cellDoubleClick", function(event) 
     {
-        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-
+      console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
     });   
 
 
@@ -299,8 +296,6 @@ function fnDelete(obj)
 {
 	  var data = {};
 	  var checkedItemsList = AUIGrid.getCheckedRowItemsAll(myGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
-
-	  console.log("chkList: " + checkedItemsList.length);
 
 	  if(checkedItemsList.length <= 0) 
 	  {
@@ -680,22 +675,16 @@ function fnInsertAddRow(Obj)
     return false;
   }
 
-
-  console.log($("#stockCategoryCbBox").val() + " /stockCodeCbBox: " + $("#stockCodeCbBox").val() + " /StockType: " + $("#scmStockType").val() );
-	
-	
-	//AUIGrid.hideColumnByDataField(myGridID, "team" );
   AUIGrid.showColumnByDataField(myGridID, insertVisibleFields );
 	
 	var addStockCode = $("#stockCodeCbBox").val();   
-	//fnGetDetailAndSeqMstId();
 	
   var item = new Object();
   
-  item.scmGrYear     = $("#scmYearCbBox").val() ; /*not null   searchbtndata_dtlseq : 8194 */  
-  item.scmGrWeek     = $("#scmPeriodCbBox").val() ; /*pk 174  */   
-  item.team            = $("#scmTeamCbBox").val() ; /*pk*/
-  item.code            = "" ; //String(addStockCode);  /*pk*/
+  item.scmGrYear     = $("#scmYearCbBox").val() ;   
+  item.scmGrWeek     = $("#scmPeriodCbBox").val() ;    
+  item.team            = $("#scmTeamCbBox").val() ; 
+  item.code            = "" ; 
 
   item.category        = "" ;  
   
@@ -704,7 +693,7 @@ function fnInsertAddRow(Obj)
   item.newStockTypeId  = "";
   item.newStockCode    = "";
   
-  item.m1Ord          ="0" ;   /* default 0 */
+  item.m1Ord          ="0" ;   
   item.m2Ord          ="" ;
   item.m3Ord          ="" ;
   item.m3             ="" ;
@@ -764,7 +753,6 @@ function fnInsertAddRow(Obj)
   $('#btnUpdate').removeClass("btn_disabled");
   $('#btnInsert').removeClass("btn_disabled");
 
-
   gAddrowCnt++;
 
 }
@@ -777,7 +765,6 @@ function auiRemoveRowHandler(event)
 {
   console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
   gAddrowCnt = 0;
-  //$("#delCancel").show();
 }
 
 //행 삭제 이벤트 핸들러
@@ -1101,7 +1088,7 @@ function fnSettiingHeader()
 	                  }                
 		              };
 
-  console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /team: " + $('#scmTeamCbBox').val());
+  
   Common.ajax("POST", "/scm/selectCalendarHeader.do"
            , $("#MainForm").serializeJSON()
            , function(result) 
@@ -1141,13 +1128,12 @@ function fnSettiingHeader()
             	 return false;  
              }
 
-            //  AUIGrid.setGridData(myGridID, result);
               if(result.header != null && result.header.length > 0)
               {
 		            	  dynamicLayout.push({ 
 		                			                 headerText : "Stock"
 		                			               , children : [
-																													{ 
+																													 { 
 																													    dataField : result.header[0].planMasterIdH
 																													   ,headerText :"<spring:message code='sys.scm.salesplan.PlanMasterId' />"
 																													   ,editable : true
@@ -1486,17 +1472,6 @@ function fnSettiingHeader()
 		               }
 		               dynamicLayout.push(groupM_0);
 		
-		  /*               // Grid Child_Field Insert
-		           for(var i=0; i < (iM0LoopCnt + 1); i++)
-		                {
-		          	     groupM_0.children.splice(0+i , 0, {                            
-		                                     dataField : "salesCnt"//result.add[i].month
-		                                    ,headerText : "w"+(i+1) //+ result.add[i].month
-		                                    ,editable : true
-		                                    //,width : "5%"
-		                                   }); 
-		                
-		               } */
 
 	                 /////////////////////////////////
 			             
@@ -1605,7 +1580,6 @@ function fnSettiingHeader()
 
                      if (result.header[0][fieldStr] == "W52")
                      {
-                      // console.log("M+2..W52..START");
                        nextRowFlag = "R2";
                      }
 		                 
@@ -1702,17 +1676,20 @@ function fnSettiingHeader()
 		         	    }); 
 
 		         	   // 전체 체크박스 클릭 이벤트 바인딩
-		         	   AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) {
-		         	     if(event.checked) {
-		         	       // name 의 값들 얻기
+		         	   AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) 
+				         {
+		         	     if(event.checked) 
+			         	   {
 		         	       var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "checkFlag");
-		         	       // Anna 제거하기
 		         	       AUIGrid.setCheckedRowsByValue(event.pid, "checkFlag", 1);
-		         	     } else {
+		         	     } 
+		         	     else 
+			         	   {
 		         	       AUIGrid.setCheckedRowsByValue(event.pid, "checkFlag", 0);
 		         	     }
 		         	   });  
-		
+
+		       		//////////////////////////////////////////////////////////////////
 			            fnSearchBtnList();
 		              // summaryHead Setting.
 		         	    fnSelectSummaryHeadList(result.header[0], result.header[1]);
@@ -1877,9 +1854,7 @@ function removeAllCancel()
 
 function fnValidationCheck(params) 
 {
-    var result = true;
-   
-   // var delList = AUIGrid.getRemovedItems(myGridID);
+   var result = true;
    
    if (params == "Add")
 	 {
@@ -1899,7 +1874,6 @@ function fnValidationCheck(params)
 	      if (newStockCode == "" || newStockCode.length == 0) 
 	      {
 	        result = false;
-	        // {0} is required.
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='NEW_STOCK_CODE' htmlEscape='false'/>");
 	        break;
 	      }

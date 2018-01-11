@@ -69,13 +69,11 @@ function fnSelectPeriodReset()
 
 function fnChangeEventPeriod(object)
 {
-  console.log("version: " + object.value);
 	gWeekThValue = object.value;
 }
 
 function fnChangeEventTeam(object)
 {
-  console.log("team: "+  object.value);  //object.length
 
   CommonCombo.initById("scmPeriodCbBox");  // reset... 
   
@@ -111,8 +109,7 @@ function fnSetSCMTeamComboBox()
 function fnValidationCheck(flag) 
 {
 	if (flag == "INS")
-	{   //scmYearCbBox=2016, scmTeamCbBox=DST, scmPeriodCbBox=11
-
+	{   
 		 if ($("#scmYearCbBox").val().length < 1)
 		 {
 		   Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
@@ -207,14 +204,11 @@ function fnChangeEventYear()
 function fn_uploadFile() 
 {
    var formData = new FormData();
-   //console.log("read_file: " + $("input[name=uploadfile]")[0].files[0]);
    
    formData.append("excelFile", $("input[name=uploadfile]")[0].files[0]);
    formData.append("paramYear", $("#scmYearCbBox").val() );
    formData.append("paramTeam", $("#scmTeamCbBox").val() );
    formData.append("paramVer",  $("#scmPeriodCbBox").val() );
-
-   //alert('read');
 
    Common.ajaxFile("/scm/excel/upload"
 		             , formData
@@ -237,9 +231,7 @@ function fnExcelExport()
 // search
 function fnSearchBtnList()
 {
-
-   console.log( "Year: " + $("#scmYearCbBox").val() +" /Team: " + $("#scmTeamCbBox").val() +" /Version: " + $("#scmPeriodCbBox").val()
-       + " // Index: " + $("#scmPeriodCbBox option").index($("#scmPeriodCbBox option:selected")));
+   //console.log( "MulTi_Index: " + $("#scmPeriodCbBox option").index($("#scmPeriodCbBox option:selected")));
 
    if (fnValidationCheck("INS") == false)
    {
@@ -257,14 +249,12 @@ function fnSearchBtnList()
              , params
              , function(result) 
                {
-                  console.log("성공 fnSearchBtnList: " + result.selectBizPlanMngerList.length);
-                  
                   AUIGrid.setGridData(myGridID, result.selectBizPlanMngerList);    //bizPlanManager
                   AUIGrid.setGridData(stockGridID, result.selectBizPlanStockList); //bizPlanstock
                   
                   if(result != null && result.selectBizPlanMngerList.length > 0)
                   {
-                      console.log("success: " + result.selectBizPlanMngerList[0].stockCtgry); 
+                      console.log("success: " + result.selectBizPlanMngerList.length +" /stockCtgry: "+  result.selectBizPlanMngerList[0].stockCtgry); 
                   }
                }
              , function(jqXHR, textStatus, errorThrown)
@@ -299,14 +289,13 @@ function auiCellEditignHandler(event)
         {
           if (parseInt(event.value) < 1)
           {
-            //Common.alert("Menu Level is not more than 4. ");
                 Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
                 AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
                 return false;
           }  
         }
 
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
+        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") 
         {
           if (parseInt(event.value) < 1)
           {
@@ -319,7 +308,6 @@ function auiCellEditignHandler(event)
             AUIGrid.setCellValue(myGridID, event.rowIndex, 2, AUIGrid.getCellValue(myGridID, event.rowIndex, "stusCtgryName"));
           }  
         }
-        
     } 
     else if(event.type == "cellEditCancel") 
     {
@@ -782,9 +770,7 @@ $(document).ready(function()
   AUIGrid.bind(myGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
-    console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
+    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + "getValue: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );     
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -832,9 +818,7 @@ $(document).ready(function()
   AUIGrid.bind(stockGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
-    console.log("cellClick_Status: " + AUIGrid.isAddedById(stockGridID,AUIGrid.getCellValue(stockGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
+    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + "_Status: " + AUIGrid.isAddedById(stockGridID,AUIGrid.getCellValue(stockGridID, event.rowIndex, 0)) );
   });
   
   // 셀 더블클릭 이벤트 바인딩

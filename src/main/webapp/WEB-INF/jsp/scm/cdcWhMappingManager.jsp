@@ -109,7 +109,6 @@ function fnValidationCheck(chkGridId)
       if (whId == "" || whId.length == 0) 
       {
         result = false;
-        // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='WH_ID' htmlEscape='false'/>");
         break;
       }
@@ -122,7 +121,6 @@ function fnValidationCheck(chkGridId)
       if (whId == "" || whId.length == 0) 
       {
         result = false;
-        // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='WH_ID' htmlEscape='false'/>");
         break;
       }
@@ -135,7 +133,6 @@ function fnValidationCheck(chkGridId)
       if (whId == "" || whId.length == 0) 
       {
         result = false;
-        // {0} is required.
         Common.alert("<spring:message code='sys.msg.necessary' arguments='WH_ID' htmlEscape='false'/>");
         break;
       }
@@ -274,14 +271,13 @@ function auiCellEditignHandler(event)
         {
           if (parseInt(event.value) < 1)
           {
-            //Common.alert("Menu Level is not more than 4. ");
-                Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
-                AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
-                return false;
+             Common.alert("<spring:message code='sys.msg.mustMore' arguments='SEQ NO ; 0' htmlEscape='false' argumentSeparator=';' />");
+             AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
+             return false;
           }  
         }
 
-        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") // CATEGORY NAME
+        if (event.columnIndex == 1 && event.headerText == "CATEGORY NAME") 
         {
           if (parseInt(event.value) < 1)
           {
@@ -316,8 +312,6 @@ function auiRemoveRowHandler(event)
 }
 
 
-
-
 /*************************************
  **********  Grid-LayOut  ************
  *************************************/
@@ -334,13 +328,12 @@ var MstGridLayout =
            renderer : 
 					            {
 					               type : "LinkRenderer",
-					               baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+					               baseUrl : "javascript", 
 					               // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
 					               jsCallback : function(rowIndex, columnIndex, value, item) 
-					                 {
-					                  // alert("( " + rowIndex + ", " + columnIndex + ", " + item.whId + " , " + value + ") " );
-					                	 removeRow();
-					                 }
+				                 {
+				                	 removeRow();
+				                 }
 					            }
        }
       ,{
@@ -431,7 +424,6 @@ $(document).ready(function()
 
   // masterGrid 그리드를 생성합니다.
   myGridID = GridCommon.createAUIGrid("MasterGridDiv", MstGridLayout,"", MstGridLayoutOptions);
-  // AUIGrid 그리드를 생성합니다.
   
   // 푸터 객체 세팅
   //AUIGrid.setFooter(myGridID, footerObject);

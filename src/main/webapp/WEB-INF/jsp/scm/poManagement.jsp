@@ -384,18 +384,18 @@ function fnMoveRight()
 	  return false;
 	}
 
-	if (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice")) <= 0)
+ 	if (parseInt(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "fobPrice")) <= 0)
 	{
 		Common.alert("<spring:message code='sys.scm.poIssue.AllPlannedQty'/> ");
     return false;  
-	}
+	}  
 
   if(addMoveChecked(gMovingStockCode) == false)
 	{
 	  Common.alert("<spring:message code='sys.msg.already.Registered' arguments='Stock Code' htmlEscape='false'/>");
 	  return false;
 	}
-
+  
 	
 /*      console.log("inStockCode: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stockCode")
             +" inStkCtgryId: " + AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "stkCtgryId")
@@ -418,11 +418,11 @@ function fnMoveRight()
 
 	     $("#inRoundUpPoQty").val( ( parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val()))); 
 
-	     if ( $("#inMoq").val() <= 0)
+ 	     if ( $("#inMoq").val() <= 0)
 	     {
 	       Common.alert("<spring:message code='sys.scm.poissue.zeroDivisible'/> ");
 	       return false;
-	     }
+	     } 
 	
 	   Common.ajax("GET"
 	             , "/scm/selectPoRightMove.do"
