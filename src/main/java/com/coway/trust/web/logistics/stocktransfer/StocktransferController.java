@@ -222,11 +222,17 @@ public class StocktransferController {
 		param.put("form", formMap);
 		param.put("userId", userId);
 		String reqNo = stock.insertStockTransferInfo(param);
+		
 		logger.debug("reqNo!!!!! : {}", reqNo);
-		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
+		if (reqNo != null && !"".equals(reqNo)){
+		// 결과 만들기 예.
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 		message.setData(reqNo);
 		return ResponseEntity.ok(message);
 	}

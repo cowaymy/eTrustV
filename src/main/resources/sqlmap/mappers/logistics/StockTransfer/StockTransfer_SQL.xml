@@ -558,5 +558,18 @@
     <select id="selectdeliveryHead" parameterType="Map" resultType="integer">
         select count(*)cnt From log0055d where reqst_no=#{reqstono}
     </select>
+    
+    <select id="selectAvaliableStockQty" parameterType="Map" resultType="integer">
+        SELECT CASE WHEN (L56.QTY - NVL(L75.BOOKQTY , 0)) <![CDATA[<]]> #{rqty}  THEN 1 ELSE 0 END RESULT
+		 FROM 
+		  LOG0056M L56 ,
+		 (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'
+		                GROUP BY LOC_ID , ITM_CODE) L75
+		WHERE 1 = 1
+		AND L56.STK_CODE = L75.ITM_CODE(+)
+		AND L56.LOC_ID = L75.LOC_ID(+)
+		AND L56.STK_CODE = #{itmcd}
+		AND L56.LOC_ID = #{tlocation}
+    </select>
      
 </mapper>

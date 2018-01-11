@@ -45,10 +45,24 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public String insertStockTransferInfo(Map<String, Object> params) {
 		List<Object> insList = (List<Object>) params.get("add");
+		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+		
+		if (insList.size() > 0) {
+			for (int i = 0; i < insList.size(); i++) {
+				Map<String, Object> insMap = (Map<String, Object>) insList.get(i);
+				
+				insMap.put("tlocation", fMap.get("tlocation"));
+				
+				int iCnt = stocktran.selectAvaliableStockQty(insMap);
+				if (iCnt == 1 ){
+					return "";
+				}
+			}
+		}
 		/* 2017-11-30 김덕호 위원 채번 변경 요청 */
 		String seq = stocktran.selectStockTransferSeq();
 
-		Map<String, Object> fMap = (Map<String, Object>) params.get("form");
+		
 
 		// String reqNo = fMap.get("headtitle") + seq;
 		String reqNo = seq;

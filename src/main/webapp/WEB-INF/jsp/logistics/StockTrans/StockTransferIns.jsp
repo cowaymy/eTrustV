@@ -187,8 +187,14 @@ $(function(){
 
 			    	Common.ajax("POST", "/logistics/stocktransfer/StocktransferAdd.do", dat, function(result) {
 		// 	    		Common.alert(result.message,locationList);
-			    		Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
-			            AUIGrid.resetUpdatedItems(reqGrid, "all");
+		                if (result.code == '99'){
+		                	AUIGrid.clearGridData(reqGrid);
+		                	Common.alert(result.message , SearchListAjax);
+		                }else{
+		                	   Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
+		                	   AUIGrid.resetUpdatedItems(reqGrid, "all");
+		                }
+			            
 			        },  function(jqXHR, textStatus, errorThrown) {
 			            try {
 			            } catch (e) {

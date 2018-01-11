@@ -73,5 +73,7 @@ public interface StockTransferMapper {
 	void deleteStockBooking(String reqstono);
 	
 	int selectdeliveryHead(String reqstono);
+	
+	int selectAvaliableStockQty(Map<String, Object> param);
 
 }
