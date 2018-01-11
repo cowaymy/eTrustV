@@ -140,11 +140,8 @@
     function fn_inCharge(obj , value , tag , selvalue){
     	var robj= '#'+obj;
     	$(robj).attr("disabled",false);
-    	if(value == 3){
+
     		getCmbChargeNm('/sales/order/inchargeJsonList.do', value , '' , selvalue,obj, 'S', '');
-    	}else{
-    		
-    	}
     }
     
     function getCmbChargeNm(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){

@@ -117,6 +117,12 @@
 
 	// 리스트 조회.
 	function fn_orderInvestigationListAjax() {
+		
+//		if( $("#salesOrdNo").val() ==""  &&  $("#invReqNo").val() ==""  &&  $("#invReqCrtUserName").val() ==""  ){
+//            Common.alert("You must key-in at least one of Order No / Request No / Request User");
+//            return ;
+//        }
+		
 		Common.ajax("GET", "/sales/order/orderInvestJsonList", $("#searchForm").serialize(), function(result) {
 			AUIGrid.setGridData(myGridID, result);
 		}
@@ -240,7 +246,7 @@
 								<!-- date_set start -->
 								<p>
 									<input type="text" id="startCrtDt" name="startCrtDt"
-										value="${bfDay}" title="Create start Date"
+										title="Create start Date"
 										placeholder="DD/MM/YYYY" class="j_date" />
 								</p>
 								<span>To</span>
