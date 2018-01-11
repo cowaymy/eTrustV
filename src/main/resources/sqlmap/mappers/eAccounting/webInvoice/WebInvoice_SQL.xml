@@ -1123,6 +1123,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         ON T1.GL_ACC_CODE = T2.GL_ACC_CODE
          WHERE 1=1
          AND T1.COST_CENTR = #{costCentr}
+         OR T1.COST_CENTR = 'G9901'
+         AND T1.BUDGET_CODE != '99999'
          AND T1.BUDGET_CODE = #{budgetCode}
 </select>
 
