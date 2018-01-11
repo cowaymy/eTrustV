@@ -293,7 +293,7 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					 eFilterMap.put("qotatId", SAL0083D_SEQ);
 					 eFilterMap.put("qotatItmStkId", rMap.get("filterId"));
 					 eFilterMap.put("qotatItmExpDt", rMap.get("lastChngDt")); 
-					 eFilterMap.put("qotatItmChrg", rMap.get("prc"));
+					 eFilterMap.put("qotatItmChrg", Math.floor(Double.parseDouble(rMap.get("prc").toString())));
 					 
 					 if("39".equals(taxCode) || "28".equals(taxCode) ){
 						                                 
