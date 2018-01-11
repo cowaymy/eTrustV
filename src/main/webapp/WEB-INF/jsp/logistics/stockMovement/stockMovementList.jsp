@@ -230,12 +230,18 @@ $(function(){
 	        Common.alert("No data selected.");
 	        return;
 	    }else{
-		     if(selectedItem[0].item.status != 'O'){
+	    	var docno= selectedItem[0].item.docno;
+	    	if(docno !=null || docno !=undefined){
+	    	docno = docno.substr(0,3);	    		
+	    	}
+		     if('INS'== docno){
+		    	 Common.alert("It cannot delete for INS.");
+		     }else if(selectedItem[0].item.status != 'O' ){
 		    	 Common.alert("No Delete SMO No.");
 		     }else{
-		    	 var reqstono=selectedItem[0].item.reqstno;
-		    	 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
-		    	 //fn_deleteAjax(reqsmono);
+                var reqstono=selectedItem[0].item.reqstno;
+                Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
+                //fn_deleteAjax(reqsmono);
 		     }
 		}     
     });
