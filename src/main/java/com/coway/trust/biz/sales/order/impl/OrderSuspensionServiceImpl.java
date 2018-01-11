@@ -197,7 +197,7 @@ public class OrderSuspensionServiceImpl extends EgovAbstractServiceImpl implemen
 			orderSuspensionMapper.spInsertOrderReactiveFees(saveRagularParam);
 			
 			saveRagularParam.put("rentalSchemeStusId", "REG");
-			saveRagularParam.put("renSchId", rentalSchemeInfo.get("renSchID"));
+			saveRagularParam.put("renSchId", rentalSchemeInfo.get("renSchId"));
 			orderInvestMapper.updateSAL0071D(saveRagularParam);
 			
 			saveRagularParam.put("susId", params.get("susId"));
