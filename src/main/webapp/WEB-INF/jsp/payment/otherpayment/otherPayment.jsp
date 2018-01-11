@@ -2242,25 +2242,25 @@ function fn_outConfirm(){
 	    var selPayType=$("#payMode").val();
 	    if(selPayType == '105'){
 	    	$("#cash").find("#bankType").prop("disabled", false);
-		    if($("#cash").find("#bankType").val() == '2730'){
+		    //if($("#cash").find("#bankType").val() == '2730'){
 		    	$("#cash").find("#va").prop("disabled", false);
-		    }else{
+		    //}else{
 		    	$("#cash").find("#bankAccCash").prop("disabled", false);
-		    }
+		    //}
 	    }else if(selPayType=='106'){
 	    	$("#cheque").find("#bankType").prop("disabled", false);
-	    	if($("#cheque").find("#bankType").val() == '2730'){
+	    	//if($("#cheque").find("#bankType").val() == '2730'){
 	    		$("#cheque").find("#va").prop("disabled", false);
-	    	}else{
+	    	//}else{
 	    		$("#cheque").find("#bankAccCheque").prop("disabled", false);
-	    	}
+	    	//}
 	    }else if(selPayType == '108'){
 	    	$("#online").find("#bankType").prop("disabled", false);
-	    	if($("#online").find("#bankType").val() == '2730'){
+	    	//if($("#online").find("#bankType").val() == '2730'){
 	    		$("#online").find("#va").prop("disabled", false);
-	    	}else{
+	    	//}else{
 	    		$("#online").find("#bankAccOnline").prop("disabled", false);
-	    	}
+	    	//}
 	    }
 	    
 	    
