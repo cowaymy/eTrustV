@@ -2664,7 +2664,7 @@
 			       Extent1.PAY_ITM_STUS_ID   ,
 			       Extent1.PAY_ITM_IS_LOK   ,
 			       Extent1.PAY_ITM_CC_HOLDER_NAME   ,
-			       TO_CHAR(Extent1.PAY_ITM_CC_EXPR_DT, 'DD/MM/YYYY')  PAY_ITM_CC_EXPR_DT ,
+			       PAY_ITM_CC_EXPR_DT,
 			       NVL(Extent1.PAY_ITM_BANK_CHRG_AMT , 0)  PAY_ITM_BANK_CHRG_AMT ,
 			       Extent1.PAY_ITM_IS_THRD_PARTY   ,
 			       Extent1.PAY_ITM_THRD_PARTY_IC   ,
