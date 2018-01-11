@@ -2171,17 +2171,16 @@
                    S.AS_RESULT_REM result_Remark,
                    TO_NUMBER ('') collection_Code,
                    TO_CHAR ('') collection_Name,
-                   C.ASR_ITM_PART_ID filter_Code,
-                   C.ASR_ITM_PART_DESC filter_Name,
-                   TO_CHAR (E.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD')
-                      AS last_Change_Date,
-                   E.SRV_FILTER_PRIOD filter_Period,
-                   C.ASR_ITM_PART_QTY change_Qty,
-                   '' next_Change_Date,
-                   G.STK_CODE AS part_Code,
-                   G.STK_DESC part_Name,
-                   BOM_DTL.COMPNT_QTY part_Change_Qty,
-                   c.AS_RESULT_ID
+	               to_char(C.ASR_ITM_PART_ID) filter_Code,
+	               to_char(C.ASR_ITM_PART_DESC) filter_Name,
+                   TO_CHAR (E.SRV_FILTER_PRV_CHG_DT, 'YYYYMMDD') AS last_Change_Date,
+	               to_char(E.SRV_FILTER_PRIOD) filter_Period,
+	               to_char(C.ASR_ITM_PART_QTY) change_Qty,
+	               '' next_Change_Date,
+	               G.STK_CODE AS part_Code,
+	               G.STK_DESC part_Name,
+	               BOM_DTL.COMPNT_QTY part_Change_Qty,
+	               to_char(c.AS_RESULT_ID) as AS_RESULT_ID
               FROM SVC0004D S,
                    SAL0001D B,
                    SAL0002D H,
@@ -2197,7 +2196,7 @@
                    AND C.ASR_ITM_PART_ID = E.SRV_FILTER_ID(+)
                    AND B.SALES_ORD_ID = H.SALES_ORD_ID
                    AND G.STK_ID = H.ITM_STK_ID
-                   AND G.STK_CODE = BOM_DTL.MATRL_NO
+                   AND G.STK_CODE = BOM_DTL.MATRL_NO(+)
                    AND B.SALES_ORD_ID = H.AS_SO_ID
                    AND B.SALES_ORD_NO = #{salesOrderNo}
                    AND ROWNUM <![CDATA[ < ]]> 4)
@@ -2222,16 +2221,16 @@
              WHERE Extent1.resn_type_id = 174 AND resn_id = REN_COLCT_ID)
               AS collection_Name,
            RESULT_REM AS result_Remark,
-           BS_RESULT_PART_ID AS filter_Code,
-           BS_RESULT_PART_DESC AS filter_Name,
-           BS_RESULT_CRT_DT AS last_Change_Date,
-           SRV_FILTER_PRIOD AS filter_Period,
-           TO_CHAR (next_Change_Date) next_Change_Date,
-           BS_RESULT_PART_QTY change_Qty,
-           part_Code,
-           part_Name,
-           part_Change_Qty,
-           BS_RESULT_ID
+	       to_char(BS_RESULT_PART_ID) AS filter_Code,
+	       to_char(BS_RESULT_PART_DESC) AS filter_Name,
+	       BS_RESULT_CRT_DT AS last_Change_Date,
+	       to_char(SRV_FILTER_PRIOD) AS filter_Period,
+	       TO_CHAR (next_Change_Date) next_Change_Date,
+	       to_char(BS_RESULT_PART_QTY) change_Qty,
+	       part_Code,
+	       part_Name,
+	       part_Change_Qty,
+	       to_char(BS_RESULT_ID) as  BS_RESULT_ID
       FROM (  SELECT DISTINCT
                      b.STUS_CODE_ID,
                      b.SCHDUL_ID,
@@ -2245,23 +2244,23 @@
                      a.FAIL_RESN_ID,
                      a.RESULT_REM,
                      a.REN_COLCT_ID,
-                     e.BS_RESULT_PART_ID,
-                     e.BS_RESULT_PART_DESC,
-                     TO_CHAR (e.BS_RESULT_CRT_DT, 'YYYYMMDD') AS BS_RESULT_CRT_DT,
-                     F.SRV_FILTER_PRIOD,
-                     E.BS_RESULT_PART_QTY,
-                     '' next_Change_Date,
-                     G.STK_CODE AS part_Code,
-                     G.STK_DESC part_Name,
-                     BOM_DTL.COMPNT_QTY part_Change_Qty,
-                     e.BS_RESULT_ID
+	                 '' as BS_RESULT_PART_ID,
+	                 '' as BS_RESULT_PART_DESC,
+	                 TO_CHAR (b.crt_dt, 'YYYYMMDD') AS BS_RESULT_CRT_DT,
+	                 '' as SRV_FILTER_PRIOD,
+	                 '' as BS_RESULT_PART_QTY,
+	                 '' next_Change_Date,
+	                 G.STK_CODE AS part_Code,
+	                 G.STK_DESC part_Name,
+	                 BOM_DTL.COMPNT_QTY part_Change_Qty,
+	                 '' as BS_RESULT_ID
                 FROM SVC0006D a,
                      SVC0008D b,
                      sal0001d c,
                      SAL0002D H,
                      org0001d d,
-                     SVC0007D e,
-                     sal0087d f,
+<!--                      SVC0007D e,
+                     sal0087d f, -->
                      (SELECT LOG43.MATRL_NO, LOG44.*
                         FROM LOG0043M LOG43, LOG0044D LOG44
                        WHERE LOG43.BOM = LOG44.BOM) BOM_DTL,
@@ -2271,9 +2270,9 @@
                      AND a.SCHDUL_ID = b.SCHDUL_ID
                      AND a.sales_ord_id = c.sales_ord_id
                      AND C.SALES_ORD_ID = H.SALES_ORD_ID
-                     AND a.CODY_ID = d.mem_id
-                     AND a.RESULT_ID = e.BS_RESULT_ID
-                     AND e.BS_RESULT_ITM_ID = f.SRV_FILTER_ID(+)
+                      AND a.CODY_ID = d.mem_id
+<!--                     AND a.RESULT_ID = e.BS_RESULT_ID
+                     AND e.BS_RESULT_ITM_ID = f.SRV_FILTER_ID(+) -->
                      AND G.STK_ID = H.ITM_STK_ID
                      AND G.STK_CODE = BOM_DTL.MATRL_NO
                      AND B.SALES_ORD_ID = I.AS_SO_ID
