@@ -308,12 +308,12 @@ public class MembershipRentalQuotationServiceImpl extends EgovAbstractServiceImp
 					}else{
 
 					 	double   chargePrice =  Math.floor(Double.parseDouble(rMap.get("prc").toString()));
-					 	double   itemAmount  =  Math.floor(Double.parseDouble(rMap.get("oriPrc").toString())); 
+					 	//double   itemAmount  =  Math.floor(Double.parseDouble(rMap.get("prc").toString())); 
 					 	double   amt  =Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;
 
 					 	eFilterMap.put("qotatItmAmt", chargePrice);
 					 	eFilterMap.put("qotatItmChrg", amt);
-					 	eFilterMap.put("qotatItmTxs", (itemAmount  -amt ));
+					 	eFilterMap.put("qotatItmTxs", (chargePrice  -amt ));
 					 	eFilterMap.put("qotatItmGstRate", "6");
 					 	eFilterMap.put("qotatItmGstTaxCodeId", "32");
 					}
