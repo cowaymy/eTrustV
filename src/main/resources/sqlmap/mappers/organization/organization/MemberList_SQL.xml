@@ -390,6 +390,7 @@
                     INNER JOIN SYS0038M Extent3 ON Extent1.STUS_ID = Extent3.STUS_CODE_ID   /*StatusCode    eg.active, not active*/
                     ]]>
                         WHERE 1=1
+                        AND Extent1.APLICNT_TYPE =1
                          <if test="code != null and code != ''">
                            AND  UPPER(Extent1.APLICNT_CODE) LIKE  UPPER('%' ||  #{code} || '%')
                          </if>
@@ -3647,6 +3648,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		FROM ORG0003D 
 		WHERE APLICNT_NRIC = #{nric}
 		AND STUS_ID <> '6'
+		AND APLICNT_TYPE = '1'
 	]]>
     </select>
     

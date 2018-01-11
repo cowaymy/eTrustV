@@ -357,6 +357,11 @@ $(document).ready(function() {
         var area = $("#area").val();
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
+	
+	// Member Type 바꾸면 입력한 NRIC 비우기
+	$("#memberType").change(function (){
+		$("#nric").val('');
+    });
 
 	$("#memberType").click(function (){
 	
@@ -801,43 +806,46 @@ function checkNRIC(){
 	
    	var jsonObj = { "nric" : $("#nric").val() };
    	
-   	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
-           console.log("data : " + result);
-           if (result.message != "pass") {
-           	Common.alert(result.message);
-           	$("#nric").val('');
-           	returnValue = false;
-           	return false;
-           } else {    // 조건1 통과 -> 조건2 수행
-           	
-           	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
-                   console.log("data : " + result);
-                   if (result.message != "pass") {
-                       Common.alert(result.message);
-                       $("#nric").val('');
-                       returnValue = false;
-                       return false;
-                   } else {    // 조건2 통과 -> 조건3 수행
-                   	
-                   	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
-                           console.log("data : " + result);
-                           if (result.message != "pass") {
-                               Common.alert(result.message);
-                               $("#nric").val('');
-                               returnValue = false;
-                               return false;
-                           } else {    // 조건3 통과 -> 끝
-                           	//Common.alert("Available NRIC");
-                           	returnValue = true;
-                               return true;
-                           }
-                           
-                       });
-                   }
-                   
-           	});
-           }
-       });
+   	if ($("#memberType").val() == '2803') {
+	   	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
+	           console.log("data : " + result);
+	           if (result.message != "pass") {
+	           	Common.alert(result.message);
+	           	$("#nric").val('');
+	           	returnValue = false;
+	           	return false;
+	           } else {    // 조건1 통과 -> 조건2 수행
+	           	
+	           	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
+	                   console.log("data : " + result);
+	                   if (result.message != "pass") {
+	                       Common.alert(result.message);
+	                       $("#nric").val('');
+	                       returnValue = false;
+	                       return false;
+	                   } else {    // 조건2 통과 -> 조건3 수행
+	                   	
+	                   	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
+	                           console.log("data : " + result);
+	                           if (result.message != "pass") {
+	                               Common.alert(result.message);
+	                               $("#nric").val('');
+	                               returnValue = false;
+	                               return false;
+	                           } else {    // 조건3 통과 -> 끝
+	                           	//Common.alert("Available NRIC");
+	                           	returnValue = true;
+	                               return true;
+	                           }
+	                           
+	                       });
+	                   }
+	                   
+	           	});
+	           }
+	       });
+   	}
+   	
     
     return returnValue;
     
