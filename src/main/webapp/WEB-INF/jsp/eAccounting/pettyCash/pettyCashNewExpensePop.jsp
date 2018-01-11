@@ -40,6 +40,15 @@ var newGridColumnLayout = [ {
     dataField : "utilNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
+    dataField : "jPayNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "bilPeriodF",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "bilPeriodT",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
     dataField : "clmSeq",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {

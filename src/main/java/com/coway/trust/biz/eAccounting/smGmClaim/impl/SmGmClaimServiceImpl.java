@@ -206,8 +206,8 @@ public class SmGmClaimServiceImpl implements SmGmClaimService {
 			for (Object map : newGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
-				int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
-				hm.put("appvItmSeq", appvItmSeq);
+				//int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
+				//hm.put("appvItmSeq", appvItmSeq);
 				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertApproveItems =====================================>>  " + hm);

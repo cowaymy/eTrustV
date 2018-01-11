@@ -906,6 +906,9 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,ATCH_FILE_GRP_ID
        ,CLAM_UN
        ,UTIL_NO
+       ,J_PAY_NO
+       ,BIL_PERIOD_F
+       ,BIL_PERIOD_T
        ,CRT_DT
        ,CRT_USER_ID
        ,UPD_DT
@@ -914,7 +917,7 @@ WHERE  T1.CLM_NO = #{clmNo}
     values
     (
         #{appvPrcssNo}
-       ,#{appvItmSeq}
+       ,#{clmSeq}
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}
@@ -937,6 +940,9 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{atchFileGrpId}
        ,#{clamUn}
        ,#{utilNo}
+       ,#{jPayNo}
+       ,TO_DATE(#{bilPeriodF}, 'DD/MM/YYYY')
+       ,TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,SYSDATE
        ,#{userId}
        ,SYSDATE

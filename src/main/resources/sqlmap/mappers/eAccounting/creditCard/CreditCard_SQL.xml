@@ -772,7 +772,7 @@ WHERE  T1.CLM_NO = #{clmNo}
     values
     (
         #{appvPrcssNo}
-       ,#{appvItmSeq}
+       ,#{clmSeq}
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}

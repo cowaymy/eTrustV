@@ -465,6 +465,9 @@ function fn_addRow() {
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
                     ,utilNo : $("#utilNo").val()
+                    ,jPayNo : $("#jPayNo").val()
+                    ,bilPeriodF : $("#bilPeriodF").val()
+                    ,bilPeriodT : $("#bilPeriodT").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
             
@@ -519,6 +522,9 @@ function fn_addRow() {
                     ,cur : "MYR"
                     ,expDesc : $("#expDesc").val()
                     ,utilNo : $("#utilNo").val()
+                    ,jPayNo : $("#jPayNo").val()
+                    ,bilPeriodF : $("#bilPeriodF").val()
+                    ,bilPeriodT : $("#bilPeriodT").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
             

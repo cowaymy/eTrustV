@@ -548,7 +548,7 @@ WHERE  T1.CLM_NO = #{clmNo}
     values
     (
         #{appvPrcssNo}
-       ,#{appvItmSeq}
+       ,#{clmSeq}
        ,#{invcNo}
        ,NVL(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), SYSDATE)
        ,#{invcType}

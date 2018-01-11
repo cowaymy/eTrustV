@@ -233,8 +233,8 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			for (Object map : newGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
-				int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
-				hm.put("appvItmSeq", appvItmSeq);
+				//int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
+				//hm.put("appvItmSeq", appvItmSeq);
 				hm.put("invcNo", params.get("invcNo"));
 				hm.put("invcDt", params.get("invcDt"));
 				hm.put("invcType", params.get("invcType"));
@@ -244,6 +244,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				hm.put("costCentrName", params.get("costCentrName"));
 				hm.put("atchFileGrpId", params.get("atchFileGrpId"));
 				hm.put("utilNo", params.get("utilNo"));
+				hm.put("jPayNo", params.get("jPayNo"));
+				hm.put("bilPeriodF", params.get("bilPeriodF"));
+				hm.put("bilPeriodT", params.get("bilPeriodT"));
 				hm.put("userId", params.get("userId"));
 				hm.put("userName", params.get("userName"));
 				LOGGER.debug("insertApproveItems =====================================>>  " + hm);
