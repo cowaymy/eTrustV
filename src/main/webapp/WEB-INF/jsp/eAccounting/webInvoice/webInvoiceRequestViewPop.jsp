@@ -356,8 +356,11 @@ $(document).ready(function () {
                 // TODO detail popup open
                 //appvPrcssNo = event.item.appvPrcssNo;
                 //atchFileGrpId = event.item.atchFileGrpId;
-                
-                fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.clmSeq, event.item.clamUn);
+                var clmNo = $("#viewClmNo").text();
+                var clmType = clmNo.substr(0, 2);
+                if(clmType != "R1") {
+                	fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.clmSeq, event.item.clamUn);
+                }
             });
     
     $("#viewClmNo").text(myGridData[0].clmNo);
