@@ -23,6 +23,7 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.trBook.SalesTrBookRecvService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -55,7 +56,9 @@ public class SalesTrBookRecvController {
 		logger.debug("params ======================================>>> " + params);
 		
 		params.put("trnsitTo", sessionVO.getCode());
-		params.put("trnsitTo", "HQ");
+		if(CommonUtils.isEmpty(params.get("trnsitTo"))){
+			params.put("trnsitTo", "HQ");
+		}
 		 
 		List<EgovMap> list = salesTrBookRecvService.selectTrBookRecvList(params);
 
