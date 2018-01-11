@@ -429,5 +429,26 @@
 	     
      </select>
      
-	 
+	 <select id="rentalStatusListForBadAcc" parameterType="Map" resultType="egovMap">
+	   SELECT  B.STUS_CODE_ID
+                           ,C.CODE
+                           ,C.NAME CODE_NAME
+                           ,B.SEQ_NO
+                           ,DECODE(B.DISAB, 0,'N',1,'Y','N') CODE_DISAB
+                      FROM SYS0036M A
+                          ,SYS0037M B
+                          ,SYS0038M C
+                     WHERE A.STUS_CTGRY_ID = B.STUS_CTGRY_ID
+                       AND B.STUS_CODE_ID = C.STUS_CODE_ID
+       <if test="selCategoryId !=null and selCategoryId != ''">
+             AND A.STUS_CTGRY_ID = #{selCategoryId}
+       </if>
+       <if test="codes != null and codes.length > 0">
+            AND B.STUS_CODE_ID IN 
+            <foreach collection="codes" item="item" open="(" separator="," close=")" >
+                  #{item}
+            </foreach>
+       </if>
+       ORDER BY B.SEQ_NO
+	 </select>
 </mapper>

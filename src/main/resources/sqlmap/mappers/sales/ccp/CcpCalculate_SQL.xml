@@ -193,7 +193,7 @@ ORDER BY Project1.CODE_NAME ASC
 			               </if>
 			               
 			               <if test=" '' != calCustName and null != calCustName"> 
-			                 AND  Filter1.NAME3 LIKE '%'||#{calCustName}||'%' 
+			                 AND  UPPER(Filter1.NAME3) LIKE '%'||UPPER(#{calCustName})||'%' 
 			               </if>
 			               
 			               <if test=" '' != calNric and null != calNric"> 

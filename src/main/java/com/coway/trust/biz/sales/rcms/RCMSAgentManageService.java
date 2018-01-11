@@ -35,4 +35,6 @@ public interface RCMSAgentManageService {
 	List<EgovMap> selectAssignedList(Map<String, Object> params);
 
 	List<EgovMap> selectRosCallDetailList(Map<String, Object> params);
+	
+	List<EgovMap> rentalStatusListForBadAcc(Map<String, Object> params);
 }

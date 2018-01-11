@@ -284,5 +284,10 @@ public class RCMSAgentManageServiceImpl extends EgovAbstractServiceImpl  impleme
 	public List<EgovMap> selectRosCallDetailList(Map<String, Object> params) {
 		return rcmsAgentManageMapper.selectRosCallDetailList(params);
 	}
-	
+
+	@Override
+	public List<EgovMap> rentalStatusListForBadAcc(Map<String, Object> params) {
+		
+		return rcmsAgentManageMapper.rentalStatusListForBadAcc(params);
+	}
 }

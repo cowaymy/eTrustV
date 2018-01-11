@@ -313,4 +313,18 @@ public class RCMSAgentManageController {
 		
 	}
 	
+	@RequestMapping(value = "/badAccReportPop.do")
+	public String badAccReportPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/rcms/badAccReportPop";
+	}
+	
+	@RequestMapping(value = "/rentalStatusListForBadAcc")
+	public ResponseEntity<List<EgovMap>> rentalStatusListForBadAcc(@RequestParam Map<String, Object> params, @RequestParam(value="codeIn[]") String codeIn[]) throws Exception{
+		
+		params.put("codes", codeIn);
+		List<EgovMap> rtnList = null;
+		rtnList = rcmsAgentService.rentalStatusListForBadAcc(params);
+		
+		return ResponseEntity.ok(rtnList);
+	}
 }

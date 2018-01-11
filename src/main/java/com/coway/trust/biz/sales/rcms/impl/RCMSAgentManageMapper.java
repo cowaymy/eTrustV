@@ -43,4 +43,5 @@ public interface RCMSAgentManageMapper {
 
 	List<EgovMap> selectRosCallDetailList(Map<String, Object> params);
 	
+	List<EgovMap> rentalStatusListForBadAcc(Map<String, Object> params);
 }

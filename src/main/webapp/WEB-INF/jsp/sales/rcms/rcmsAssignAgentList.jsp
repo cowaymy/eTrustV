@@ -397,6 +397,10 @@ function fn_edit(){
 	Common.popupDiv("/sales/rcms/updateRemarkPop.do",null, fn_selectListAjax, true, "updateRemarkPop");
 }
 
+/* Report */
+function fn_badAccReport(){
+	Common.popupDiv("/sales/rcms/badAccReportPop.do",null, null , true, "badReportPop");
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -502,7 +506,7 @@ function fn_edit(){
         <dt>Link</dt>
         <dd>
         <ul class="btns">
-            <li><p class="link_btn"><a href="#" id="_custVALetterBtn">Bad Account RAW</a></p></li>
+            <li><p class="link_btn type2"><a onclick="javascript: fn_badAccReport()">Bad Account RAW</a></p></li>
         </ul>
         <ul class="btns">
         </ul>
