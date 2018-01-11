@@ -3,6 +3,10 @@
 
 <script type="text/javascript">
 
+var instDtMM = new Date().getMonth()+1;
+
+instDtMM = FormUtil.lpad(instDtMM, 2, "0");
+        
 $("#dataForm").empty();
 
 /* 멀티셀렉트 플러그인 start */
@@ -28,8 +32,8 @@ $.fn.clearForm = function() {
             this.selectedIndex = 0;
         }
         
-        $("#dpInstallDateFrom").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
-        $("#dpInstallDateTo").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
+        $("#dpInstallDateFrom").val(instDtMM+"/"+new Date().getFullYear());
+        $("#dpInstallDateTo").val(instDtMM+"/"+new Date().getFullYear());
 
         $("#cmbOrgCode").empty();
         $("#cmbGrpCode").empty();
@@ -379,8 +383,10 @@ function btnGenerateExcel_Click(){
 	}
 }
 
-$("#dpInstallDateFrom").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
-$("#dpInstallDateTo").val(new Date().getMonth()+1+"/"+new Date().getFullYear());
+
+        
+$("#dpInstallDateFrom").val(instDtMM+"/"+new Date().getFullYear());
+$("#dpInstallDateTo").val(instDtMM+"/"+new Date().getFullYear());
 CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memType : $("#cmbMemberType :selected").val()} , '');
 
 </script>
