@@ -715,7 +715,8 @@ SELECT
      , SN   
      , STOCK_ID   
      , PO_APPV_STUS 
-     , IF56.EBELN ||'_'|| IF56.EBELP ECC_PO_NO
+     , IF56.EBELN ||'_'|| IF56.EBELP ECC_PO_NO 
+     , DECODE(PO_ITM_APPV_STUS,'Approved',5,1) CB_BOX_FLAG
   FROM SCM0043V S43V
       ,ITF0156M IF56
  WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
