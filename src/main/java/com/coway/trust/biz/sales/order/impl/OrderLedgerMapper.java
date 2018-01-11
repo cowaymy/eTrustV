@@ -19,5 +19,6 @@ public interface OrderLedgerMapper {
 	void getOderLdgr2(Map<String, Object> params);
 	List<EgovMap> selectPaymentDetailView(Map<String, Object> param);
 	List<EgovMap> selectPaymentDetailViewCndn(Map<String, Object> param);
+	EgovMap selectPayInfo(Map<String, Object> params);
 	
 }

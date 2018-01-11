@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
+import com.coway.trust.biz.payment.payment.service.PayDVO;
 import com.coway.trust.biz.sales.order.OrderLedgerService;
+import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.google.gson.Gson;
 
@@ -176,6 +180,14 @@ public class OrderLedgerController {
 			model.addAttribute("ordLdgDetailInfoList", new Gson().toJson(ordLdgDetailInfoList ));
 
 			return "sales/order/orderLedger2DetailPop";
+	}
+	
+	@RequestMapping(value = "/selectPayInfo", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectPayInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+	
+		EgovMap result = orderLedgerService.selectPayInfo(params);
+		
+		return ResponseEntity.ok(result);
 	}
 	
 	

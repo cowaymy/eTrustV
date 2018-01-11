@@ -265,7 +265,7 @@
                        A.PAY_ITM_CC_TYPE_ID   ,
                        D.CODE_NAME ITM_CC_TYPE_NAME   ,
                        A.PAY_ITM_CC_HOLDER_NAME   ,
-                       TO_CHAR(A.PAY_ITM_CC_EXPR_DT, 'dd/mm/yyyy')  PAY_ITM_CC_EXPR_DT  ,
+                       A.PAY_ITM_CC_EXPR_DT,
                        A.PAY_ITM_CHQ_NO   ,
                        A.PAY_ITM_ISSU_BANK_ID   ,
                        CASE WHEN ( E.BANK_ID IS NOT NULL ) THEN E.CODE ELSE ' ' END ITM_ISSU_BANK_CODE  ,
@@ -309,6 +309,15 @@
 		  FROM PAY0002D A
 		         LEFT JOIN SYS0032M B   ON B.RESN_ID = A.ADJ_ENTRY_RESN_ID
 		 WHERE  A.ADJ_ENTRY_NOTE_NO = #{docNo} 
+    </select> 
+    
+	<select id="selectPayInfo" parameterType="Map" resultType="egovMap">
+		SELECT PAY_ID PAY_ID  ,
+		       OR_NO OR_NO  ,
+		       SALES_ORD_ID SALES_ORD_ID
+		  FROM PAY0064D 
+		 WHERE  OR_NO = #{docNo}
+		 AND ROWNUM <![CDATA[<= ]]>1 
     </select> 
     
 </mapper>

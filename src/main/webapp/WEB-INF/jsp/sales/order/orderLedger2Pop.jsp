@@ -70,6 +70,11 @@
           
      });
      
+     // 셀 더블클릭 이벤트 바인딩
+     AUIGrid.bind(ordLedgerGridID, "cellClick", function(event){         
+          $("#docNo").val(AUIGrid.getCellValue(ordLedgerGridID , event.rowIndex , "docNo"));
+     });
+     
      
      if(orderLdgrList != '' ){
          AUIGrid.setGridData(ordLedgerGridID, orderLdgrList);
@@ -94,7 +99,7 @@
          editable                : false,        
          showStateColumn     : false,        
          showRowNumColumn    : false,   
-         selectionMode       : "singleRow"  //"multipleCells",   
+         //selectionMode       : "singleRow"  //"multipleCells",   
      };
      
      agreGridID = GridCommon.createAUIGrid("agre_grid", agreLayout, "", agreGridPros);
@@ -133,6 +138,30 @@
         };
         
         Common.report("dataForm", option);
+    }
+    
+    function fn_openDivPop(str){
+    	   
+    	if( $("#docNo").val() == null ||  $("#docNo").val() == ''){
+    		Common.alert("Select one of the data in the grid.");
+    		return;
+    	}else{
+    		Common.ajax("GET", "/sales/order/selectPayInfo", {docNo :$("#docNo").val() }, function(result) {
+                
+                console.log(result);
+                
+                if(result == null){                 
+                    Common.alert("Invalid Item" +DEFAULT_DELIMITER+ "This is not payment record.<br />Payment view is disallowed.");                
+                }else{
+
+                    if(str == 'VIEW'){
+                        Common.popupDiv('/payment/initSearchPaymentViewPop.do', {"payId":result.payId, "salesOrdId" : result.salesOrdId,"callPrgm" : "SEARCH_PAYMENT_VIEW"}, null , true);
+                    }else{
+                        Common.popupDiv('/payment/initSearchPaymentEditPop.do', {"payId":result.payId, "salesOrdId" :  result.salesOrdId,"callPrgm" : "SEARCH_PAYMENT_EDIT"}, null , true);
+                    }                   
+                }
+            });
+    	}
     }
 </script>    
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
@@ -257,6 +286,12 @@
 	<li><p>Transaction Date</p></li>
 	<li><input type="text" id="cutOffDate" name="cutOffDate" class="j_date2" /></li>
 	<li><p class="btn_blue"><a href="#" onclick="fn_report2()">Print</a></p></li>
+	<%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
+<li><p class="btn_blue"><a href="javascript:fn_openDivPop('VIEW');">View Payment</a></p></li>
+<%-- </c:if>
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
+<li><p class="btn_blue"><a href="javascript:fn_openDivPop('EDIT');">Edit Payment</a></p></li>
+<%-- </c:if> --%>
 </ul>
 </form>
 

@@ -69,5 +69,10 @@ public class OrderLedgerServiceImpl  extends EgovAbstractServiceImpl implements 
 	public List<EgovMap> selectPaymentDetailView(Map<String, Object> param) {
 		return orderLedgerMapper.selectPaymentDetailView(param);
 	}
+	@Override
+	public EgovMap selectPayInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return orderLedgerMapper.selectPayInfo(params);
+	}
 	
 }
