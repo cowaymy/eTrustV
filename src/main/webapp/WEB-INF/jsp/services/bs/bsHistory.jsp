@@ -183,7 +183,7 @@ function fn_filterInfo(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2><spring:message code='service.title.InstallationResultReversalList'/></h2>
+<h2><spring:message code='service.title.HsHistory'/></h2>
 </aside><!-- title_line end -->
 
 
