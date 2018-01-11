@@ -94,8 +94,8 @@
                          AND Filter1.INV_REQ_CRT_DT <= TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                          ]]>
                     </if>
-			        <if test="salesOrdId != null and salesOrdId != ''">
-			             AND Extent5.SALES_ORD_ID LIKE '%' || #{salesOrdId} || '%'
+			        <if test="salesOrdNo != null and salesOrdNo != ''">
+			             AND Extent5.SALES_ORD_NO LIKE '%' || #{salesOrdNo} || '%'
 			        </if>
 			        <if test="invReqPartyId != null and invReqPartyId != ''">
 			             AND Filter1.INV_REQ_PARTY_ID = #{invReqPartyId}
