@@ -466,9 +466,13 @@ var respondlogLayout = [{dataField: "c2",headerText :"<spring:message code='log.
     	var subPath = AUIGrid.getCellValue(myGridID,  selectedItem[0], "c8");
 //    	alert("subPath  :  "+subPath);
     	var orignlFileNm = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno")+".zip";
-    	subPath =subPath.substr(0,14);
+    	subPath =subPath.substr(10,5);
+    	subPath=subPath.replace("~","");
+    	fileName =fileName+".zip";
+    	
 //     	alert("fileName  :  "+fileName);
-//     	alert("subPath  :  "+subPath);
+//     	alert("subPath???  :  "+subPath);
+//     	alert("orignlFileNm???  :  "+orignlFileNm);
 //    	alert(subPath.substr(0,14));
     	    	
      if( "N"== subPath || ""==subPath || null==subPath ||""==fileName || null==fileName){
