@@ -164,7 +164,7 @@ function fn_doSave(){
 		    		Common.alert("<spring:message code='pay.alert.requiredPeriod'/>");
 		    		return;
 		    	}else{
-		    		if(startPeriod > endPeriod){
+		    		if(Number(startPeriod) > Number(endPeriod)){
 		    			Common.alert("<spring:message code='pay.alert.periodNotFulfilled'/>");
 		    			return;
 		    		}
