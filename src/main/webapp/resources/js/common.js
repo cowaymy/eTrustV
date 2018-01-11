@@ -325,7 +325,12 @@ var Common = {
                 });
 
                 /* 팝업 드래그 start */
-                $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
+                try{
+                    $("#popup_wrap, .popup_wrap").draggable({handle: '.pop_header',containment: "html"});
+                }catch(e){
+                    console.log("[popup.draggable...] " + e);
+                }
+
                 /* 팝업 드래그 end */
 
             },
