@@ -896,7 +896,8 @@ function fn_getTotTaxAmt(rowIndex) {
 
 function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
     var data = {
-            appvPrcssNo : appvPrcssNo
+    		clmType : clmType
+            ,appvPrcssNo : appvPrcssNo
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
