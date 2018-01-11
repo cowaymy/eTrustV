@@ -42,7 +42,7 @@
                                  Distinct1.JOM_PAY_REF,
                                  Distinct1.CUST_TYPE
                         FROM  
-                            (SELECT   /*+  leading(Extent1) use_nl( Extent7, Extent1, Extent3, Extent4, Extent6, Extent8, Extent9, Extent2,  Extent5)   */
+                            (SELECT   /*+ leading(Extent3) use_hash( vOrderMailingInfo,  vOrderBasicInfo, Extent6 , Extent3  )   */
                              DISTINCT Extent1.SCHDUL_ID SCHDUL_ID ,
                                  Extent1.NO NO ,
                                  Extent1.MONTH MONTH ,
