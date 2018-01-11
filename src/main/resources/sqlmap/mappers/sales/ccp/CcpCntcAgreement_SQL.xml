@@ -120,7 +120,7 @@
                  
                  
 		         <if test=" null != name and '' != name ">
-	                   AND Project2.NAME1 LIKE '%' || #{name} || '%'
+	                   AND UPPER(Project2.NAME1) LIKE '%' || UPPER(#{name}) || '%'
 		         </if>
 		        
 		       
