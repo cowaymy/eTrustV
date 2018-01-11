@@ -5,11 +5,11 @@
     $(function(){
         $('#btnLedger1').click(function() {
             //Common.popupDiv("/sales/order/orderLedgerViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
-            Common.popupWin("frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "780", resizable: "no", scrollbars: "no"});
+            Common.popupWin("frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnLedger2').click(function() {
             //Common.popupDiv("/sales/order/orderLedger2ViewPop.do", {ordId : '${orderDetail.basicInfo.ordId}'});
-            Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "780", resizable: "no", scrollbars: "no"});
+            Common.popupWin("frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnOrdDtlClose').click(function() {
             $('#_divIdOrdDtl').remove();
