@@ -286,10 +286,8 @@ var myGridPros = {
     pageRowCount : 20,
     editable : true,
     showStateColumn : true,
-    // 셀, 행 수정 후 원본으로 복구 시키는 기능 사용 가능 여부 (기본값:true)
-    enableRestore : true,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-    softRemoveRowMode : true,
+    softRemoveRowMode : false,
     rowIdField : "clmSeq",
     headerHeight : 40,
     height : 160,

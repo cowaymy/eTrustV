@@ -187,6 +187,8 @@ var myGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     editable : true,
+    showStateColumn : true,
+    softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
     softRemoveRowMode : false,
     rowIdField : "clmSeq",
     headerHeight : 40,
