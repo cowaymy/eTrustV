@@ -201,15 +201,20 @@ var crcStateLayout = [
 
 	
 	function fn_getCrcReconStateList(ordNo, ordId){
-	
-	    Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
-	        console.log(result);
+		  
+		if($("#transDateFr").val() != '' && $("#transDateTo").val() != ''){
+			
+			Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
+		          console.log(result);
 
-	        AUIGrid.setGridData(mappingGridId, result.mappingList);
-	        AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
-	        AUIGrid.setGridData(crcStateGridId, result.stateList);
-	        
-	    });
+		          AUIGrid.setGridData(mappingGridId, result.mappingList);
+		          AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
+		          AUIGrid.setGridData(crcStateGridId, result.stateList);
+		          
+		      });
+		}else{
+			Common.alert("Select Transaction Date.");
+		}
 	}
 	
 	function fn_clear(){
