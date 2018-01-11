@@ -242,12 +242,6 @@ function  fn_goPayChannel(){
 	
 }
 
-function fn_goRetPromo(){
-	 alert('The program is under development');  
-	 
-}
-
-
 function fn_goLEDGER(){
 	
 
@@ -267,12 +261,6 @@ function fn_goLEDGER(){
 function fn_goKey_in_List(){
 	Common.popupDiv("/sales/membershipRental/membershipRentalKeyInListPop.do" ,null, null , true , '_rptDiv1');
 }
-
-function fn_goYSList(){
-	 alert('The program is under development');  
-}
-
-
 
 function fn_goSVMDetails(){
 
@@ -315,9 +303,6 @@ function fn_goSVMDetails(){
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_goPayChannel();">Payment Channel</a></p></li>
-    </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_goRetPromo();">Rental Promotion</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	<li><p class="btn_blue"><a href="#" onClick="javascript:fn_selectListAjax();" ><span class="search"></span>Search</a></p></li>
@@ -430,9 +415,6 @@ function fn_goSVMDetails(){
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()" href="#">Key-in List</a></p></li>
-		</c:if>
-		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn type2"><a onclick="javascript:fn_goYSList()" href="#">YS List</a></p></li>
 		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
