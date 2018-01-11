@@ -334,7 +334,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 					 eFilterMap.put("StkLastChangeDate", rMap.get("lastChngDt")); 
 					 
 					 eFilterMap.put("StkFilterPrice", rMap.get("oriPrc"));
-					 eFilterMap.put("StkChargePrice", rMap.get("prc"));
+					 eFilterMap.put("StkChargePrice", Math.floor(Double.parseDouble(rMap.get("prc").toString())));
 					 
 //					 if(verifyGSTZeroRateLocation){
 					/* if(isVerifyGSTEURCertificate){
