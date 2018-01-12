@@ -92,10 +92,18 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		return installationResultListMapper.getOrderInfo(params);
 	}
 
+//	@Override
+//	public EgovMap getcustomerInfo(Object cust_id) {
+//		return installationResultListMapper.getcustomerInfo(cust_id);
+//	}
+//	
+	
+
 	@Override
-	public EgovMap getcustomerInfo(Object cust_id) {
-		return installationResultListMapper.getcustomerInfo(cust_id);
+	public EgovMap getcustomerInfo(Map<String, Object> params) {
+		return installationResultListMapper.getcustomerInfo(params);
 	}
+
 
 
 	@Override
