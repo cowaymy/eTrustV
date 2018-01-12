@@ -582,13 +582,19 @@ var MainGridLayout =
             dataField : "poItmNo",
             headerText : "<spring:message code='sys.scm.onTimeDelivery.poitem'/>",
             style : "aui-grid-right-column",
-            width : "4%",
+            width : "5%",
+            editable : false
+        }, {
+            dataField : "eccPoNo", 
+            headerText : "<spring:message code='sys.scm.poapproval.eccPoNo'/>",
+            formatString : "dd-mm-yyyy",
+            width : "10%",
             editable : false
         }, {
             dataField : "grWeek",
             headerText : "<spring:message code='sys.scm.pomngment.grWeek'/>",
             style : "aui-grid-right-column",
-            width : "4%",
+            width : "5%",
             editable : false
         }, {
             dataField : "poIssuDt",
@@ -635,12 +641,6 @@ var MainGridLayout =
         }, {
             dataField : "ifDt",
             headerText : "<spring:message code='sys.scm.poapproval.sboINFDate'/>",
-            formatString : "dd-mm-yyyy",
-            width : "10%",
-            editable : false
-        }, {
-            dataField : "eccPoNo", 
-            headerText : "<spring:message code='sys.scm.poapproval.eccPoNo'/>",
             formatString : "dd-mm-yyyy",
             width : "10%",
             editable : false
