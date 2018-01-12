@@ -369,7 +369,7 @@
     <select id="selectExistingMember" parameterType="Map" resultType="int">
 		SELECT COUNT(1) AS CNT
 		  FROM ORG0001D
-		 WHERE STUS != 8
+		 WHERE STUS = 1
 		   AND SUBSTR(REPLACE(NRIC,'-',''), 0, 12) = #{nric}
     </select>
 
