@@ -681,6 +681,59 @@ WITH PO_APPROVAL_SUMMARY
 </select>
  
 <select id="selectPoApprovalMainList" parameterType="Map" resultType="egovMap">
+SELECT DISTINCT
+       PO_ITM_APPV_STUS  
+     , STK_TYPE_ID 
+     , S43V.PO_NO 
+     , S43V.PO_ITM_NO   
+     , GR_WEEK    
+     , TO_CHAR(PO_ISSU_DT,'DD-MM-YYYY') PO_ISSU_DT
+     , STOCK_CTGRY   
+     , STOCK_CODE       
+     , STK_DESC   
+     , QTY   
+     , FOB_AMT       
+     , CDC     
+     , TO_CHAR(IF_DT ,'DD-MM-YYYY') IF_DT
+              
+     , PRE_SCM_YEAR   
+     , PRE_EST_WEEK   
+     , PRE_CDC   
+     , PRE_STOCK_CODE   
+     , PRE_STOCK_DESC   
+     , PRE_QTY   
+     , PRE_FOB_PRC   
+     , S43V.PO_ID              
+     , BAS_YEAR   
+     , EST_WEEK   
+     , RTPGR_WEEK   
+     , PO_STUS   
+     , CRT_DT   
+     , CRT_USER_ID   
+     , UPD_DT   
+     , UPD_USER_ID   
+     , SN   
+     , STOCK_ID   
+     , PO_APPV_STUS 
+     , IF56.EBELN ||'_'||S43V.PO_ITM_NO  ECC_PO_NO 
+     , DECODE(PO_ITM_APPV_STUS,'Approved',5,1) CB_BOX_FLAG
+  FROM SCM0043V S43V
+      ,ITF0156M IF56
+ WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
+   AND S43V.EST_WEEK = #{scmPeriodCbBox}
+   AND S43V.PO_NO = IF56.PO_NO
+	<choose>
+	  <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+	   AND S43V.STK_TYPE_ID IN
+	      <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+	          #{item}
+	      </foreach>
+	  </when>
+	</choose>     
+  
+</select>
+
+<select id="selectPoApprovalMainList_TEMP" parameterType="Map" resultType="egovMap">
 SELECT 
        PO_ITM_APPV_STUS  
      , STK_TYPE_ID 
