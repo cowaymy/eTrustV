@@ -248,7 +248,7 @@ function fn_goLEDGER(){
     var selectedItems = AUIGrid.getSelectedItems(gridID);
     
     if(selectedItems ==""){
-        Common.alert("Membership Missing"+DEFAULT_DELIMITER+"No membership  selected. ");
+        Common.alert("<spring:message code="sal.alert.title.membershipMissing" />"+DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.membershipMissing" /> ");
         return ;
     }
     
@@ -286,10 +286,6 @@ function fn_goSVMDetails(){
 </script>
 
 
-
-
-
-
 <section id="content"><!-- content start -->
 <ul class="path">
 	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -299,15 +295,15 @@ function fn_goSVMDetails(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Membership Management(Rental)</h2>
+<h2><spring:message code="sal.page.title.membershipMgmtRental" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_goPayChannel();">Payment Channel</a></p></li>
+    <li><p class="btn_blue"><a id="btnSrch" href="#" onClick="javascript:fn_goPayChannel();"><spring:message code="sal.btn.payChannel" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-	<li><p class="btn_blue"><a href="#" onClick="javascript:fn_selectListAjax();" ><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onClick="javascript:fn_selectListAjax();" ><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
 	</c:if>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -327,39 +323,39 @@ function fn_goSVMDetails(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Membership No.<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.membershipNo" />.<span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Rental Membership Number" class="w100p"   id="sRVContrtNo"  name="sRVContrtNo"/></td>
-	<th scope="row">Membership Status</th>
+	<th scope="row"><spring:message code="sal.text.membershipStatus" /></th>
 	<td>
 	       <select class="multy_select w100p" multiple="multiple"  id ="cmbStatus" name="cmbStatus"  >
             </select>
 			
 	</td>
-	<th scope="row">Sales Date<span class="must">*</span></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"   id="salesDate" name="salesDate" /></td>
+	<th scope="row"><spring:message code="sal.text.salesDate" /><span class="must">*</span></th>
+	<td><input type="text" placeholder="DD/MM/YYYY" class="j_date w100p"   id="salesDate" name="salesDate" /></td>
 </tr>
 <tr>
-	<th scope="row">Rental Status</th>
+	<th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
 	<td>
 			<select class="multy_select w100p" multiple="multiple"  id="cmbSRVCStatus"  name="cmbSRVCStatus">
             </select>
 		    
 	</td>
-	<th scope="row">Order No.<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.ordNo" />.<span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Order No" class="w100p"  id="orderNo" name="orderNo"/></td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="sal.text.creator" /></th>
 	<td><input type="text" title="" placeholder="Creator" class="w100p"  id="creator" name="creator" /></td>
 </tr>
 <tr>
-	<th scope="row">Customer ID</th>
+	<th scope="row"><spring:message code="sal.text.customerId" /></th>
 	<td><input type="text" title="" placeholder="Customer ID (Numberic)" class="w100p"  id="custId"  name="custId"/></td>
-	<th scope="row">Customer Name</th>
+	<th scope="row"><spring:message code="sal.text.custName" /></th>
 	<td><input type="text" title="" placeholder="Customer Name" class="w100p"  id="custName"  name="custName"/></td>
-	<th scope="row">NRIC/Company No.</th>
+	<th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" />.</th>
 	<td><input type="text" title="" placeholder="NRIC/Company No." class="w100p" id="custNRIC"  name="custNRIC"  /></td>
 </tr>
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Sales date</span>  </th>
+    <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.text.mustKeyIn3" /></span>  </th>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -378,19 +374,19 @@ function fn_goSVMDetails(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Org Code</th>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
     <td>
        <input type="text" title="" id="orgCode" name="orgCode" class="w100p" />
     </td>
-    <th scope="row">Grp Code</th>
+    <th scope="row"><spring:message code="sal.text.grpCode" /></th>
     <td>
     <input type="text" title=""  id="grpCode"  name="grpCode" class="w100p" />
     </td>
-    <th scope="row">Dep Code</th>
+    <th scope="row"><spring:message code="sal.text.detpCode" /></th>
     <td>
     <input type="text" title=""   id="deptCode" name="deptCode" class="w100p" />
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td>
     <input type="text" title=""   id="memCode" name="memCode" class="w100p" />
     </td>
@@ -401,7 +397,7 @@ function fn_goSVMDetails(){
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-	<dt>Link</dt>
+	<dt><spring:message code="sales.Link" /></dt>
 	<dd>
 	<ul class="btns">
 	
@@ -411,10 +407,10 @@ function fn_goSVMDetails(){
 		<!-- <li><p class="link_btn"><a onclick="javascript:fn_goSVMDetails()" href="#">View Rental SVM Details</a></p></li> -->
 
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn"><a onclick="javascript:fn_goLEDGER()" href="#">LEDGER</a></p></li>
+		<li><p class="link_btn"><a onclick="javascript:fn_goLEDGER()" href="#"><spring:message code="sal.btn.link.ledger" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()" href="#">Key-in List</a></p></li>
+		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()" href="#"><spring:message code="sal.btn.link.keyInList" /></a></p></li>
 		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

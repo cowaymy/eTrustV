@@ -130,7 +130,7 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+            Common.alert('<b><spring:message code="sal.alert.msg.memNotFound" /> '+memCode+'</b>');
         }
         else {
            // console.log("멤버정보 가꼬옴");

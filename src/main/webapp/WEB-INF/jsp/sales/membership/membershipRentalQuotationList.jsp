@@ -111,7 +111,7 @@ function fn_selectListAjax() {
 
     if( $("#QUOT_NO").val() ==""  &&  $("#ORD_NO").val() ==""  &&  $("#CRT_SDT").val() ==""  ){
         
-          Common.alert("You must key-in at least one of Membership number / Order number / Creation date");
+          Common.alert("<spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" />");
               
            return ;
        }
@@ -154,15 +154,15 @@ function fn_selectListAjax() {
    function createAUIGrid() {
            var columnLayout = [ 
                      {dataField :"qotatId",  headerText : "",      width: 150 ,visible : false },
-                     {dataField :"qotatRefNo",  headerText : "Quotation No",      width: 110 ,editable : false },
-                     {dataField :"salesOrdNo",  headerText : "Order No",    width: 80, editable : false },
-                     {dataField :"name", headerText : "Customer Name",   width: 140, editable : false },
-                     {dataField :"c2", headerText : "Status",  width: 70, editable : false },
-                     {dataField :"qotatValIdDt", headerText : "Valid Date",width: 90, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
-                     {dataField :"srvCntrctPacDesc", headerText : "Package", width: 150, editable : false },
-                     {dataField :"qotatCntrctDur", headerText : "Duration<br/>(Mth)",width: 80, editable : false },
-                     {dataField :"qotatCrtDt", headerText : "Create Date", width: 90,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
-                     {dataField :"userName", headerText : "Creator" , width: 130, editable : false }
+                     {dataField :"qotatRefNo",  headerText : "<spring:message code="sal.title.quotationNo" />",      width: 110 ,editable : false },
+                     {dataField :"salesOrdNo",  headerText : "<spring:message code="sal.title.ordNo" />",    width: 80, editable : false },
+                     {dataField :"name", headerText : "<spring:message code="sal.title.custName" />",   width: 140, editable : false },
+                     {dataField :"c2", headerText : "<spring:message code="sal.title.status" />",  width: 70, editable : false },
+                     {dataField :"qotatValIdDt", headerText : "<spring:message code="sal.title.validDate" />",width: 90, dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false },
+                     {dataField :"srvCntrctPacDesc", headerText : "<spring:message code="sal.title.package" />", width: 150, editable : false },
+                     {dataField :"qotatCntrctDur", headerText : "<spring:message code="sal.title.durationMth" />",width: 80, editable : false },
+                     {dataField :"qotatCrtDt", headerText : "<spring:message code="sal.title.crtDate" />", width: 90,  dataType : "date", formatString : "dd-mm-yyyy" ,editable : false},
+                     {dataField :"userName", headerText : "<spring:message code="sal.title.creator" />" , width: 130, editable : false }
           ];
 
            //그리드 속성 설정
@@ -178,7 +178,7 @@ function fn_selectListAjax() {
        var selectedItems = AUIGrid.getSelectedItems(gridID);
        
        if(selectedItems ==""){
-           Common.alert("No quotation selected. ");
+           Common.alert("<spring:message code="sal.alert.noQuotationSelected" /> ");
            return ;
        }
        
@@ -201,7 +201,7 @@ function fn_goConvertSale(){
    var selectedItems = AUIGrid.getSelectedItems(gridID);
    
    if(selectedItems ==""){
-       Common.alert("No quotation selected. ");
+       Common.alert("<spring:message code="sal.alert.noQuotationSelected" /> ");
        return ;
    }
    
@@ -210,7 +210,7 @@ function fn_goConvertSale(){
    
    
    if(v_stus !="ACT"){
-	   Common.alert("["+v_quotId + "] Convert this quotation to sales is disallowed.");
+	   Common.alert("["+v_quotId + "] <spring:message code="sal.alert.disallowed" />");
 	   return false;
    }
    // status = expired면 접근불가 alert
@@ -234,11 +234,11 @@ function fn_goConvertSale(){
 function fn_getStatusActionByCode(code){ 
     
     if( code =="CON"){
-        return "has been converted to sales";
+        return "<spring:message code="sal.text.convToSales" />";
     }else if(code =="DEA"){
-        return "has been deactivated";
+        return "<spring:message code="sal.text.deactivated" />";
     }else if(code =="EXP"){
-        return "was expired";
+        return "<spring:message code="sal.text.wasExpired" />";
     }else{
         return "";
     }
@@ -271,13 +271,13 @@ function fn_doPrint(){
     var selectedItems = AUIGrid.getSelectedItems(gridID);
     
     if(selectedItems ==""){
-           Common.alert("No quotation selected. ");
+           Common.alert("<spring:message code="sal.alert.noQuotationSelected" /> ");
            return ;
     }
     
     
     if("ACT" != selectedItems[0].item.c2 ){
-          Common.alert("cat not print["+selectedItems[0].item.c2+"]");
+          Common.alert("<spring:message code="sal.alert.msg.canNotPrint" />["+selectedItems[0].item.c2+"]");
         return ;
     }
       
@@ -296,7 +296,7 @@ function fn_doPrint(){
 
 function fn_updateStus(){
     
-	Common.confirm("Are you sure you want to deactivate "+ $("#deActQotatRefNo").val() +"(orderNo." + $("#deActOrdNo").val() +")?",function(){
+	Common.confirm("<spring:message code="sal.conf.deactivate" /> "+ $("#deActQotatRefNo").val() +"(orderNo." + $("#deActOrdNo").val() +")?",function(){
             
             Common.ajax("GET", "/sales/membershipRentalQut/updateStus", $("#listSForm").serialize(), function(result) {
                 console.log( result);
@@ -325,18 +325,18 @@ function fn_updateStus(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Rental Membership - Quotation List</h2>
+<h2><spring:message code="sal.page.title.rentalMembershipQuotationList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goNewQuotation()">NEW Quotation</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goNewQuotation()"><spring:message code="sal.btn.newQuotation" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goConvertSale()">Convert to Sale</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_goConvertSale()"><spring:message code="sal.btn.convertToSale" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
- 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"><span class="search"></span>Search</a></p></li>
+ 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
  	</c:if>
-	<li><p class="btn_blue"><a href="#"  onclick="javascirpt:fn_clear()"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#"  onclick="javascirpt:fn_clear()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -358,11 +358,11 @@ function fn_updateStus(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Quotation No  <span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.quotationNo" />  <span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Quotation No."  id='QUOT_NO' name='QUOT_NO' class="w100p" /></td>
-	<th scope="row">Order No  <span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.ordNo" />  <span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Order No" class="w100p"  id='ORD_NO' name='ORD_NO'/></td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>
 		
 		<select class="multy_select w100p" multiple="multiple" id="STUS_ID" name="STUS_ID">
@@ -372,14 +372,14 @@ function fn_updateStus(){
 	</td>
 </tr>
 <tr>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="sal.text.creator" /></th>
 	<td><input type="text" title="" placeholder="Creator (Username)" class="w100p"   id='CRT_USER_ID' name='CRT_USER_ID'/></td>
-	<th scope="row">Create Date  <span class="must">*</span> </th>
+	<th scope="row"><spring:message code="sal.text.createDate" />  <span class="must">*</span> </th>
 	<td>
 	<div class="date_set w100p"><!-- date_set start -->
-	<p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" id='CRT_SDT'   name='CRT_SDT'   class="j_date" /></p>
-	<span>To</span>
-	<p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY"  id='CRT_EDT' name='CRT_EDT'  class="j_date" /></p>
+	<p><input type="text"  placeholder="DD/MM/YYYY" id='CRT_SDT'   name='CRT_SDT'   class="j_date" /></p>
+	<span><spring:message code="sal.text.to" /></span>
+	<p><input type="text" placeholder="DD/MM/YYYY"  id='CRT_EDT' name='CRT_EDT'  class="j_date" /></p>
 	</div><!-- date_set end -->
 	</td>
 	<th scope="row"></th>
@@ -388,7 +388,7 @@ function fn_updateStus(){
 
 
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Membership number / Order number / Creation date</span>  </th>
+    <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.keyInMemNoOrdNoCrtDt" /></span>  </th>
 </tr>
 
 </tbody>
@@ -408,19 +408,19 @@ function fn_updateStus(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Org Code</th>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
     <td>
        <input type="text" title="" id="orgCode" name="orgCode" class="w100p" />
     </td>
-    <th scope="row">Grp Code</th>
+    <th scope="row"><spring:message code="sal.text.grpCode" /></th>
     <td>
     <input type="text" title=""  id="grpCode"  name="grpCode" class="w100p" />
     </td>
-    <th scope="row">Dep Code</th>
+    <th scope="row"><spring:message code="sal.text.detpCode" /></th>
     <td>
     <input type="text" title=""   id="deptCode" name="deptCode" class="w100p" />
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td>
     <input type="text" title=""   id="memCode" name="memCode" class="w100p" />
     </td>
@@ -438,10 +438,10 @@ function fn_updateStus(){
 	</ul>
 	<ul class="btns">
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn"><a href="#" onclick="javascript:fn_doPrint()">Quotation Download</a></p></li>
+		<li><p class="link_btn"><a href="#" onclick="javascript:fn_doPrint()"><spring:message code="sal.btn.link.quotationDown" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn"><a href="#"  onclick="javascript:fn_doViewQuotation()">View Quotation</a></p></li>
+		<li><p class="link_btn"><a href="#"  onclick="javascript:fn_doViewQuotation()"><spring:message code="sal.btn.link.viewQuotation" /></a></p></li>
 		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -456,7 +456,7 @@ function fn_updateStus(){
 
 
 <ul class="right_btns">
-<li><p class="btn_grid"><a href="#" id="btnDeactive" onclick="javascript:fn_updateStus()">Deactive</a></p></li>
+<li><p class="btn_grid"><a href="#" id="btnDeactive" onclick="javascript:fn_updateStus()"><spring:message code="sal.btn.deactive" /></a></p></li>
 </ul>
 
 
