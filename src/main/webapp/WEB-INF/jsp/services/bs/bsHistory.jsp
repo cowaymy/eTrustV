@@ -11,19 +11,58 @@ $(document).ready(function() {
     
     AUIGrid.bind(myGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "slaesOrdId"));
-        salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
+        //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, 10));
+        /*
+        var salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, 8);
+        
         if(salesOrdId.length<1){        
         	salesOrdId =$("#orderId").val(); 
         }
-        
-        $("#orderId").val(salesOrdId);
+        */
+        //$("#orderId").val(AUIGrid.getCellValue(myGridID, event.rowIndex, 10));
+        /*
+        AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+        	alert(AUIGrid.getCellValue(myGridID, event.rowIndex, 10));
+        	alert(AUIGrid.getCellValue(myGridID, event.rowIndex, 11));
+        	
+        	 Common.popupDiv("/services/bs/filterTreePop2.do?orderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, 10)+"&bsrId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, 11));
+        });
+        */
+        /*
+        bsrId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "bsrId");
+        if(bsrId.length<1){        
+            bsrId =$("#bsrId").val(); 
+        }
+        $("#bsrId").val(bsrId);
+        */
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 });
 
 function createAUIGrid() {
-    //AUIGrid 칼럼 설정
+    
+	
+     
+	//AUIGrid 칼럼 설정
+    
     var columnLayout = [ {
+	dataField : "bsrId",
+    headerText : "<spring:message code='service.btn.FilterList'/>",
+    
+    renderer : {
+        type : "ButtonRenderer",
+        labelText : "<spring:message code='service.btn.FilterList'/>",
+        onclick : function(rowIndex, columnIndex, value, item) {
+        	var orderId = $("#orderId").val();
+        	var bsrId = value;
+            console.log("orderId : "+orderId);
+            console.log("value : "+value);
+        	//alert("/services/bs/filterTreePop2.do?orderId="+"salesOrdId"+"&bsrId="+value);
+        	Common.popupDiv("/services/bs/filterTreePop2.do?orderId="+orderId+"&bsrId="+bsrId );
+        }
+    },
+    width : 150
+    }, {
         dataField : "bsno",
         //headerText : "No.",
         headerText : '<spring:message code="service.grid.BSNo" />',
@@ -36,13 +75,13 @@ function createAUIGrid() {
         editable : false,
         width : 120
     }, {
-        dataField : "memType",
+        dataField : "code1",
         //headerText : "install No",
         headerText : '<spring:message code="service.grid.Type" />',
         editable : false,
         width : 130
     }, {
-        dataField : "memStatus",
+        dataField : "code",
         //headerText : "Order No",
         headerText : '<spring:message code="service.grid.Status" />',
         editable : false,
@@ -90,8 +129,13 @@ function createAUIGrid() {
     },
     {
         dataField : "salesOrdId",
-        headerText : "salesOrdId",
-        width : 100
+        headerText : "salesOrdId2",
+        width : 0
+    },
+    {
+        dataField : "bsrId",
+        headerText : "bsrId2",
+        width : 0
     }    
     ];
 
@@ -152,6 +196,7 @@ var gridPros = {
 };
 
 function fn_orderSearch(){
+	
     Common.ajax("GET", "/services/bs/bsHistorySearch", $("#searchForm").serialize(), function(orderList) {
         console.log("성공.");
 //        console.log("data : " + orderList[0]);
@@ -170,7 +215,7 @@ function fn_orderSearch(){
         $("#fax").text(orderList[0].mailCntTelF);
         $("#bankAccount").text(orderList[0].jomPayRef);
         $("#customerType").text(orderList[0].custType);
-        //$("#orderId").val(orderList.salesOrdId);
+        $("#orderId").val(orderList[0].salesOrdId);
     });
     
 //    fn_orderSearch2();
@@ -195,6 +240,23 @@ function fn_filterInfo(){
 	}else{
 		return;
 	}
+}
+
+
+function fn_filterTree(){
+    var orderId = $("#orderId").val();
+    var bsrId = $("#bsrId").val();
+    
+    console.log("orderId : "+orderId);
+    console.log("bsrId : "+bsrId);
+    
+    if(bsrId.length>1){
+     Common.popupDiv("/services/bs/filterTreePop2.do?orderId="+orderId+"&bsrId="+bsrId );
+        //Common.popupDiv("/services/bs/filterInfoPop2.do?orderId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId") );
+        
+    }else{
+        return;
+    }
 }
 
 </script>
@@ -307,6 +369,7 @@ function fn_filterInfo(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="javascript:fn_filterInfo()" id="filterInfo"><spring:message code='service.btn.FilterInfo'/></a></p></li>
+        
     </ul>
     </dd>
 </dl>
@@ -316,6 +379,7 @@ function fn_filterInfo(){
 <div id="grid_wrap_memList" style="width: 100%; height: 300px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->   
 <input type="hidden"  id="orderId" name="orderId"/>
+<input type="hidden"  id="bsrId" name="bsrId"/>
 
 </form>
 </section><!-- search_table end -->

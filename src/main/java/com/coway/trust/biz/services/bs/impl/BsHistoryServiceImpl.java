@@ -37,4 +37,9 @@ public class BsHistoryServiceImpl extends EgovAbstractServiceImpl implements BsH
 	public List<EgovMap> filterInfo(Map<String, Object> params) {
 		return bsHistoryMapper.filterInfo(params);
 	}
+	
+	@Override
+	public List<EgovMap> filterTree(Map<String, Object> params) {
+		return bsHistoryMapper.filterTree(params);
+	}
 }

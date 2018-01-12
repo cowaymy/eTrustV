@@ -10,4 +10,6 @@ public interface BsHistoryService {
 	List<EgovMap> selectOrderList(Map<String, Object> params);
 	int selectFilterCnt(Map<String, Object> params);
 	List<EgovMap> filterInfo(Map<String, Object> params);
+	List<EgovMap> filterTree(Map<String, Object> params);
+	
 }

@@ -113,4 +113,19 @@ public class BsHistoryController {
 		List<EgovMap> filterInfo = bsHistoryService.filterInfo(params);
 		return ResponseEntity.ok(filterInfo);
 	}
+	
+	@RequestMapping(value = "/filterTreePop2.do")
+	public String filterTreePop2(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("orderId", params.get("orderId"));
+		model.addAttribute("bsrId", params.get("bsrId"));
+		return "services/bs/bsFilterTreePop";
+	}
+	
+	@RequestMapping(value = "/filterTreePop", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> filterTreePop(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
+		logger.debug("params : {}",params);
+		List<EgovMap> filterTree = bsHistoryService.filterTree(params);
+		
+		return ResponseEntity.ok(filterTree);
+	}
 }

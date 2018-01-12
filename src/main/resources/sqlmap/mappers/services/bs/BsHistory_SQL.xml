@@ -202,4 +202,38 @@ SELECT
 		            and d.USER_ID = b.SRV_FILTER_UPD_USER_ID
 		            )
         </select>
+        
+        <select id="filterTree" parameterType="Map" resultType="egovMap">
+            select srv_filter_id,srv_filter_stk_id,stk_code,stk_desc,SRV_FILTER_UPD_DT,user_name,srv_filter_stus_id
+              ,to_char(SRV_FILTER_PRV_CHG_DT,'YYYY-MM-DD') SRV_FILTER_PRV_CHG_DT 
+              ,to_char(SRV_FILTER_PRV_NEXT_DT,'YYYY-MM-DD') SRV_FILTER_PRV_NEXT_DT
+              ,BS_RESULT_PART_QTY
+              from (
+         select rownum no, b.srv_filter_id
+                        ,b.srv_filter_stk_id
+                        ,c.stk_code
+                        ,c.stk_desc
+                        ,b.SRV_FILTER_UPD_DT
+                        ,d.user_name
+                        ,b.srv_filter_stus_id
+                        ,b.SRV_FILTER_PRV_CHG_DT
+                        ,case when b.SRV_FILTER_PRV_CHG_DT is not null then add_months(b.SRV_FILTER_PRV_CHG_DT,  SRV_FILTER_PRIOD) else null end SRV_FILTER_PRV_NEXT_DT
+                        ,e.BS_RESULT_PART_QTY
+                  from SAL0090D a
+                      ,SAL0087D b
+                      ,SYS0026M c
+                      ,SYS0047M d
+                      ,svc0007d e
+                  where 1=1
+                    and SRV_SO_ID = #{orderId}
+                    and SRV_STUS_ID = 1
+                    and a.SRV_CONFIG_ID = b.SRV_CONFIG_ID
+                    and b.SRV_FILTER_STK_ID = C.STK_ID
+                    and d.USER_ID = b.SRV_FILTER_UPD_USER_ID
+                    and b.SRV_FILTER_STK_ID = e.BS_RESULT_PART_ID
+                    and e.BS_RESULT_PART_QTY>0
+                    and e.BS_RESULT_PART_ID !=0
+                    and e.BS_RESULT_ID = #{bsrId}
+                    )
+        </select>
     </mapper>

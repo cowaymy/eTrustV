@@ -11,7 +11,7 @@ $(document).ready(function() {
 });
 
 function fn_setFilterInfo() {
-    Common.ajax("GET", "/services/bs/filterInfoPop.do", $("#frm").serialize(), function(result) {
+    Common.ajax("GET", "/services/bs/filterTreePop.do", $("#frm").serialize(), function(result) {
     	
         AUIGrid.setGridData(myGridID, result);
     });
@@ -20,23 +20,18 @@ function fn_setFilterInfo() {
 function createAUIGrid() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
-        dataField : "no",
-        headerText : '<spring:message code="service.grid.No" />',
-        editable : false,
-        width : 0
-    }, {
         dataField : "stkDesc",
-        headerText : '<spring:message code="service.grid.FilterDesc" />',
-        editable : false,
-        width : 300
-    }, {
-        dataField : "srvFilterPrvChgDt",
-        headerText : '<spring:message code="service.grid.LastChgDate" />',
+        headerText : '<spring:message code="service.grid.FilterName" />',
         editable : false,
         width : 200
     }, {
-        dataField : "srvFilterPrvNextDt",
-        headerText : '<spring:message code="service.grid.NextChgDate" />',
+        dataField : "stkCode",
+        headerText : '<spring:message code="service.grid.FilterCode" />',
+        editable : false,
+        width : 300
+    }, {
+        dataField : "bsResultPartQty",
+        headerText : '<spring:message code="service.grid.Quantity" />',
         editable : false,
         width : 200
     }];
@@ -73,10 +68,7 @@ function createAUIGrid() {
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
 }
 
-function fn_close(){	
-    $("#popup_wrap").remove();
-    fn_orderSearch();
-}
+
 
 function fn_winClose(){
 
@@ -89,7 +81,7 @@ function fn_winClose(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>BS FILTER - HISTORY</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_close()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -102,12 +94,13 @@ function fn_winClose(){
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Filter Replacement Particulars</h2>
+<h2>Filter List</h2>
 </aside><!-- title_line end -->
 <div id="grid_wrap" style="width: 100%; height:430px; margin: 0 auto;"></div>
 </article><!-- tap_area end -->
 <form name="frm" id="frm">
 <input type="hidden" name="orderId"  id="orderId" value="${orderId}"/>
+<input type="hidden" name="bsrId"  id="bsrId" value="${bsrId}"/>
 </form>
 </div>
 </section><!-- pop_body end -->

@@ -14,4 +14,6 @@ public interface BsHistoryMapper {
 	int selectFilterCnt(Map<String, Object> params);
 	
 	List<EgovMap> filterInfo(Map<String, Object> params);
+	
+	List<EgovMap> filterTree(Map<String, Object> params);
 }
