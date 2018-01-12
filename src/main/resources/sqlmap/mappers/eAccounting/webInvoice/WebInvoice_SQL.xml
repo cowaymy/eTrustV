@@ -492,7 +492,7 @@ SELECT   T.CLM_NO
 
 <select id="budgetCheck" parameterType="Map" resultType="String">
 /* webInvoiceMapper.budgetCheck */
-    SELECT FN_GET_BUDGET_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}, #{netAmt}) FROM DUAL
+    SELECT FN_GET_BUDGET_AMT(#{year}, TO_CHAR(TO_NUMBER(#{month})), #{costCentr}, #{budgetCode}, #{glAccCode}, #{netAmt}) FROM DUAL
 </select>
 
 <select id="selectNextAppvPrcssNo" resultType="String">
