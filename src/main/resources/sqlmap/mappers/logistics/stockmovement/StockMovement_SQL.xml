@@ -68,8 +68,14 @@
            and l47.reqst_stus     = reqs.code(+)
            and l47.trnsc_type     <![CDATA[<>]]> 'US'
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
+           <if test='sscancel !="Y"'>
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
+           </if>
+           <if test='sscancel =="Y"'>
+           AND l47.REQST_DEL  = 'Y'
+           AND l47.REQST_TYPE = 'OD'
+           </if>
            <if test="streq !=null and streq !=''">
               and l47.reqst_no = #{streq}
            </if>

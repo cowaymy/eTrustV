@@ -118,6 +118,7 @@ var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var paramdata;
 
 var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
+var servicecanceldata = [{"codeId": "Y","codeName": "Y"},{"codeId": "N","codeName": "N"}];
 var uomlist = f_getTtype('42' , '');
 var paramdata;
 
@@ -156,6 +157,8 @@ $(document).ready(function(){
     //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
+    
+    doDefCombo(servicecanceldata, 'N' ,'sscancel', 'S', '');
     //doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.flocation}','flocation', 'S' , 'SearchListAjax');
@@ -476,7 +479,8 @@ function locationList(){
                         <p><input id="reqedt" name="reqedt" type="text" title="Create End Date" value="${searchVal.reqedt}" placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
                     </td>
-                    <td colspan="2">&nbsp;</td>
+                    <th scope="row">Service Cancel</th>
+                    <td><select class="w100p" id="sscancel" name="sscancel"></select></td>
                 </tr>
 
                 <tr>
