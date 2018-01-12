@@ -35,12 +35,6 @@ $(function()
 	fnSelectStockTypeComboList('15');  	 
 });
 
-function fnClick()
-{
-  $('#btn11').removeClass("btn_disabled");
-  //$('#btn11').addClass("btn_disabled");
-}
-
 function fnCallInterface()
 {
   $("#intfTypeCbBox option:eq(1)").prop("selected",true);
@@ -91,7 +85,6 @@ function fnSetStockDropDownList()
                  , $("#MainForm").serialize()
                  , function(result)
                  {
-                   //keyValueList.push({id:"" ,value:""});
                     for (var i = 0; i < result.length; i++)
                     {
                       var list = new Object();
@@ -100,8 +93,7 @@ function fnSetStockDropDownList()
                           keyValueList.push(list);
                     }
 
-                    console.log("keyValueList_length: " + keyValueList.length);
-                    console.log("keyValueList_sktCode: " + keyValueList[0]["id"] );  // view
+                    //console.log("keyValueList_sktCode: " + keyValueList[0]["id"] );  // view
 
                   });
     return keyValueList;
@@ -116,8 +108,6 @@ function fnSetStockCategoryComboBox()
         {
           var $this = $(this);
 
-          console.log("values: " + $this.val());
-              
           CommonCombo.initById("stockCodeCbBox");
 
           if (FormUtil.isNotEmpty($this.val())) 
@@ -165,8 +155,6 @@ function fnExcelExport()
 // search
 function fnSearchBtnList()
 {
-   console.log( "selectBox: " + $("#stockCategoryCbBox").val() 
-       + " // Index: " + $("#stockCategoryCbBox option").index($("#stockCategoryCbBox option:selected")));
    AUIGrid.clearGridData(myGridID);
 
    var params = {
@@ -264,31 +252,11 @@ function isValidDate(param)
 {
 	console.log("param: " + param);  // 03-07-2017 
 	var succDate = "";
-  //자리수가 맞지않을때
-/*   if( isNaN(param) || param.length!=10 ) {
-    return false;
-  } */
-  
-  //var arySrtDt = param.split("\/"); // ex) 시작일자(2007-10-09)
-  //var aryEndDt = endDt.split("-"); // ex) 종료일자(2007-12-05)
-  //var startDt = new Date(Number(arySrtDt[0]),Number(arySrtDt[1])-1,Number(arySrtDt[2]));
-  // var endDt = new Date(Number(aryEndDt[0]),Number(aryEndDt[1])-1,Number(aryEndDt[2]));
-   
-  console.log("/0: " + param.split("\/")[0]+" /1: " +param.split("\/")[1] +" /2: " +param.split("\/")[2]);
-  /*
-  var year = Number(param.substring(0, 4)); 
-  var month = Number(param.substring(4, 6));
-  var day = Number(param.substring(6, 8)); 	  
-   */
+
   var day = Number(param.split("\/")[0]);
   var month   = Number(param.split("\/")[1]);
   var year  = Number(param.split("\/")[2]);
- /*
-  var year = Number(param.substring(0, 4));
-  var month = Number(param.substring(4, 6));
-  var day = Number(param.substring(6, 8)); */
 
-  console.log("year: " + year + " /month: " + month + " /day: " + day);
   
   if( month<1 || month>12 ) {
 	  console.log("error1");
@@ -315,7 +283,6 @@ function isValidDate(param)
 	  month = '0'+month;
 
   succDate = (day+'-'+month+'-'+year);
-  console.log("succDate: " +succDate )
   
   return succDate;
 }
@@ -326,14 +293,10 @@ function auiCellEditignHandler(event)
     if(event.type == "cellEditBegin") 
     {
         console.log("Click_에디팅 시작(cellEditBegin) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-        console.log("formatDate: " +  AUIGrid.formatDate(event.value, "yyyymmdd") );
     } 
     else if(event.type == "cellEditEnd") 
     {
         console.log("Click_에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-
-        //console.log("formatDate_StrDT: " +  AUIGrid.formatDate(event.value, "dd-mm-yyyy") );
-        //console.log("startDt: " +  AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt") ) ;
 
         if (event.headerText == "Start")
         {
@@ -415,15 +378,8 @@ var masterManagerLayout =
 		                            },
 		                            keyField : "id",       
 	                              valueField : "value",  
-
-		                            //keyField : "id",       // sktDesc == display
-	                              //valueField : "value",  // stkCode == true value
-
-		                            
-		                            //list.id = result[i].stkDesc ;  // display 
-		                            //list.value = result[i].stkCode;  // true value
-		                        },
-		                        labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
+		                        }
+		                       ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
 	                            {  // as click excute.
 	                               var retStr = value;
 	                               var iCnt = keyValueList.length;

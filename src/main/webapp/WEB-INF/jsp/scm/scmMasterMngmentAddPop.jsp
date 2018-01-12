@@ -62,13 +62,11 @@ function fnClose()
 
 function fnStockTypeCbBoxChangeEvent(obj)
 {
-	console.log("StockCB: " + obj.value);
 	fnSelectCategoryData();
 }
 
 function fnCategoryCbBoxChangeEvent(obj)
 {
-	console.log("categoryCB: " + obj.value);
 	fnSelectCategoryData();
 }
 
@@ -79,14 +77,11 @@ function fnSelectCategoryData()
                , $("#PopForm").serialize()
                , function(result) 
                  {
-                    console.log("성공 scmMstInvenByCategoryList: " + result.scmMstInvenByCategoryList.length);
-
                     AUIGrid.setGridData(MasterGridID, result.scmMstInvenByCategoryList);
                     
                     if(result.scmMstInvenByCategoryList.length > 0 )
                     {
-                        console.log("success_stockCode: " + result.scmMstInvenByCategoryList[0].stkCode
-                                   +"success_stockName: " + result.scmMstInvenByCategoryList[0].stkName); 
+                    //console.log("Length: " + result.scmMstInvenByCategoryList.length + " /stockCode: " + result.scmMstInvenByCategoryList[0].stkCode ); 
                     }
                  }
                , function(jqXHR, textStatus, errorThrown)
@@ -140,7 +135,6 @@ function fnSaveAsIns()
 		             fnSelectCategoryData();
 		             
 		             console.log("성공." + JSON.stringify(result));
-		             console.log("data : " + result.data);
 		          } 
 		        , function(jqXHR, textStatus, errorThrown) 
 		         {
@@ -191,7 +185,6 @@ var MasterGridLayout =
 
 var MainGridOptions = {
 		    usePaging : true,
-		    //pageRowCount : 20,
         pagingMode : "simple",// 페이징을 간단한 유형으로 나오도록 설정
         useGroupingPanel : false,
         editable : false,
@@ -227,22 +220,11 @@ $(document).ready(function()
       // cellClick event.
       AUIGrid.bind(MasterGridID, "cellClick", function( event ) 
       {
-          console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " EVENT_VALUE: " + event.value);
-          console.log("stkCode: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkCode")
-                     +" stkName: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkName") 
-                     +" stkId: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkId") 
-        		         +" categoryId: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryId")
-        		         +" stkTypeCode: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkTypeCode")
-        		         +" categoryCode: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryCode")
-        		         +" stkType: " + AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkType")
-                     ); 
-          
-            $("#stockCodeTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkCode"));
-            $("#stockTypeTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkType"));
-            $("#categoryTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryCode"));
-            $("#descriptionTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkName"));
-            $("#stkId").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkId"));
-           
+        $("#stockCodeTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkCode"));
+        $("#stockTypeTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkType"));
+        $("#categoryTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "categoryCode"));
+        $("#descriptionTxt").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkName"));
+        $("#stkId").val(AUIGrid.getCellValue(MasterGridID, event.rowIndex, "stkId"));
       });
 
       // 셀 더블클릭 이벤트 바인딩

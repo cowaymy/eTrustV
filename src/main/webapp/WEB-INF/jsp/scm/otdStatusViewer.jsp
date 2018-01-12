@@ -164,10 +164,6 @@ function fnExcelExport(fileNm)
 // search
 function fnSearchBtnList()
 {
-   console.log( "selectBox: " + $("#statusSelBox").val() 
-		   + " // Index: " + $("#statusSelBox option").index($("#statusSelBox option:selected")));
-
-   
    var startDT = $("#startDate").val();
    var endDT = $("#endDate").val();
 
@@ -318,8 +314,7 @@ var OTDViewerLayout =
                               },
                               // dataField 로 정의된 필드 값이 HTML 이라면 labelFunction 으로 처리할 필요 없음.
                               labelFunction : function (rowIndex, columnIndex, value, headerText, item ) 
-                              { // HTML 템플릿 작성
-                            	  //console.log("Renderer: ( " + rowIndex + ", " + columnIndex + " ) " + "item.poStus: " + item.poStus + " /value: " + value);
+                              { 
                             	  if (item.poStus == "Approved" )  // Completed == 1
                                 {
 	                                var template = "<div class='closeDiv'>";
@@ -488,9 +483,7 @@ $(document).ready(function()
   AUIGrid.bind(myGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
     console.log("cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩

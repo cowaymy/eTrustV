@@ -137,7 +137,6 @@ function fnChangeEventPeriod(Obj)
     $(weekTh).val(weekThSeq);
     $(years).val(yearVal);
 
-    //console.log("weekThSeq: " + weekThSeq + " /year: " + yearVal);
   }
   
 }
@@ -436,9 +435,6 @@ function fnWeeklyGridCreate()
 	// AUIGrid 그리드를 생성합니다.
 	WeeklyGridID = GridCommon.createAUIGrid("WeeklyGridDiv", WeeklyGridLayout,"", WeeklyGridOptions);
 	
-	// 푸터 객체 세팅
-	//AUIGrid.setFooter(WeeklyGridID, bizPlanGridFooterLayout); 
-	
 	// 에디팅 시작 이벤트 바인딩
 	AUIGrid.bind(WeeklyGridID, "cellEditBegin", auiCellEditignHandler);
 	
@@ -458,7 +454,6 @@ function fnWeeklyGridCreate()
 	AUIGrid.bind(WeeklyGridID, "cellClick", function( event ) 
 	{
 	  gSelRowIdx = event.rowIndex;
-	  console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
 	});
 	
 	// 셀 더블클릭 이벤트 바인딩

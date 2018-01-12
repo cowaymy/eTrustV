@@ -194,12 +194,10 @@ function fnSettiingHeader()
                     editable : false,
                     showStateColumn : false, // 행 상태 칼럼 보이기
                     showEditedCellMarker : false, // 셀 병합 실행
-                    //enableCellMerge : true,
                     // 고정칼럼 카운트 지정
                     fixedColumnCount : 5               
                   };
 
-  console.log("year: " + $('#scmYearCbBox').val() + " /week_th: " + $('#scmPeriodCbBox').val() + " /stock: " + $('#stockCodeCbBox').val());  
   Common.ajax("POST", "/scm/selectCalendarHeader.do"
           , $("#MainForm").serializeJSON()
           , function(result) 
@@ -217,7 +215,6 @@ function fnSettiingHeader()
               return false;  
             }
                             
-           //  AUIGrid.setGridData(myGridID, result);
              if(result.header != null && result.header.length > 0)
              {
                    dynamicLayout.push( 
@@ -290,7 +287,6 @@ function fnSettiingHeader()
                                        ,{                            
                                             headerText : "Monthly"
                                           , style : "my-header" 
-                                        //	, width : 7
                                           , children : [
 																												  {                            
 																													   dataField : result.header[0].todayH2  // m0
@@ -424,7 +420,6 @@ function fnSettiingHeader()
 										                              else 
 										                                return "my-backColumn1";
 										                            } 
-										                            // result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn // w1WeekSeq  == W02-1  
 										                       }); 
     
                        continue;
@@ -732,7 +727,6 @@ function fnSettiingHeader()
 	
 	                   if (result.header[0][fieldStr] == "W52")
 	                   {
-	                     console.log("M+3..W52..START");
 	                     nextRowFlag = "R2";
 	                   }                     
 	                    
@@ -743,22 +737,6 @@ function fnSettiingHeader()
    
                  //Dynamic Grid Event Biding
                  myGridID = AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
-   
-                 // 에디팅 시작 이벤트 바인딩
-                 //AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-                 
-                 // 에디팅 정상 종료 이벤트 바인딩
-                 //AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-                 
-                 // 에디팅 취소 이벤트 바인딩
-                 //AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-                 
-                 // 행 추가 이벤트 바인딩 
-                 //AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-                 
-                 // 행 삭제 이벤트 바인딩 
-                 //AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
-   
    
                  // cellClick event.
                  AUIGrid.bind(myGridID, "cellClick", function( event ) 

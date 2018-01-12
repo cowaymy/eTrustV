@@ -456,7 +456,7 @@ function fnSelectExcuteYear()
           {
             var $this = $(this);  // selected item , will use scmPeriodCbBox's input-parameter.
 
-            console.log("period_values: " + $this.val());
+            //console.log("period_values: " + $this.val());
                 
             CommonCombo.initById("scmPeriodCbBox");  // reset... 
 
@@ -531,7 +531,7 @@ function fnSetStockCategoryComboBox()
           {
             var $this = $(this);
 
-            console.log("values: " + $this.val());
+            //console.log("values: " + $this.val());
     	          
             CommonCombo.initById("stockCodeCbBox");
 
@@ -1881,16 +1881,13 @@ function fnValidationCheck(params)
 	      if (newStkTypeId == "" || newStkTypeId.length == 0) 
 	      {
 	        result = false;
-	        // {0} is required.
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='NEW_STOCK_TYPE_ID' htmlEscape='false'/>");
 	        break;
 	      }
-	      //여기
 
 	      if (fnSelectStockIdByStCode(newStockCode, newStkTypeId).length == 0 )
 	      {
 	          result = false;
-	          // {0} is required.
 	          Common.alert("<spring:message code='sys.msg.necessary' arguments='Corrected STOCK_CODE or STOCK_TYPE_ID' htmlEscape='false'/>");
 	          break;
 	      }
@@ -1899,7 +1896,6 @@ function fnValidationCheck(params)
 	      if (team == "" || team.length == 0) 
 	      {
 	        result = false;
-	        // {0} is required.
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
 	        break;
 	      }
@@ -1911,43 +1907,14 @@ function fnValidationCheck(params)
 	 {
 	   var udtList = AUIGrid.getEditedRowItems(myGridID);
 
-	   if (udtList.length == 0 ) //&& delList.length == 0) 
+	   if (udtList.length == 0 )  
      {
       Common.alert("No Change");
       return false;
      }
 	    
 	 }
-   
-    
-
-  /*   
-    for (var i = 0; i < udtList.length; i++) 
-    {
-        var zreExptId  = udtList[i].zreExptId;
-
-        if (zreExptId == "" || zreExptId.length == 0) 
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='zreExptId' htmlEscape='false'/>");
-          break;
-        }
-        
-    }// udtlist
-
-    for (var i = 0; i < delList.length; i++) 
-    {
-        var zreExptId  = delList[i].zreExptId;
-        
-        if (zreExptId == "" || zreExptId.length == 0 ) 
-        {
-          result = false;
-          Common.alert("<spring:message code='sys.msg.necessary' arguments='zreExptId' htmlEscape='false'/>");
-          break;
-        }
-        
-     } //delete
-     */
+  
     return result;
   }
 
@@ -1967,8 +1934,6 @@ function fnSelectStockIdByStCode(paramStockCode, paramStockTypeId)
              }
            , function(result) 
            {
-              console.log("fnSelectStockIdByStCode_Length : " + result.selectStockIdByStCode.length);
-              //AUIGrid.setGridData(myGridID, result);
               if(result.selectStockIdByStCode.length > 0)
               {
             	  stkId = String(result.selectStockIdByStCode[0].stkId); 
@@ -1976,8 +1941,6 @@ function fnSelectStockIdByStCode(paramStockCode, paramStockTypeId)
               }
               
            });
-
-   console.log("성공 return_getStkId : " + stkId);
 
    return stkId;
 }
@@ -1990,11 +1953,10 @@ function fnGetDetailAndSeqMstId()
            {
               var gplanDtlIdSeq = parseInt(result.selectPlanDetailIdSeq[0].scm0002dPlanDtlIdSeq);  // seq
               var gplanMasterId = parseInt(result.selectPlanMasterId[0].planMasterId);
-              console.log("성공 SearchBtnData_dtlSeq : " + gplanDtlIdSeq);
-              console.log("성공 SearchBtnData_planId : " + gplanMasterId);
-              //AUIGrid.setGridData(myGridID, result);
+              
               if(result != null && result.length > 0)
               {
+            	  //console.log("성공 SearchBtnData_dtlSeq : " + gplanDtlIdSeq);
               }
            });
 }
@@ -2005,13 +1967,10 @@ function fnGetMonthInfo()
            , $("#MainForm").serialize()
            , function(result) 
            {
-              console.log("성공 SearchBtnData_planId : " + result.planMonth);
-              //AUIGrid.setGridData(myGridID, result);
+              //console.log("성공 SearchBtnData_planId : " + result.planMonth);
               if(result != null && result.length > 0)
               {
                $("#selectPlanMonth").val(result.planMonth);
-               //gPlanId = result[0].planId;
-               console.log("select Plan Month: " +  $("#selectPlanMonth").val() );
               }
            });
 }

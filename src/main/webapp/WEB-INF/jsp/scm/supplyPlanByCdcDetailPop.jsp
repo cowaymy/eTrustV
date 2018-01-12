@@ -35,7 +35,6 @@ function fnSelectCdcDetailInfoData()
                  }
                , function(result) 
                  {
-                 //console.log("성공 selectSupplyCdcPop: " + result.selectSupplyCdcPopList.length);
                     AUIGrid.setGridData(PopUpGridID, result.selectSupplyCdcPopList);
                  }
                , function(jqXHR, textStatus, errorThrown)
@@ -102,8 +101,6 @@ var popUpGridLayout =
 
 var popUpGridOptions = {
 		    usePaging : false,
-		    //pageRowCount : 20,
-        //pagingMode : "simple",// 페이징을 간단한 유형으로 나오도록 설정
         useGroupingPanel : false,
         editable : false,
         showStateColumn : false, // 행 상태 칼럼 보이기

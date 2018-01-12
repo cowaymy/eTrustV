@@ -100,7 +100,6 @@ function fnSetWeeklyGridCreate(DynamicFieldNameSetData, DynamicWeeklyListDataLis
 	  {
 	      AUIGrid.destroy(WeeklyGridID);
 	  }
-	  
 
 	  var WeeklyGridLayoutOptions = {
 	            usePaging : false,
@@ -165,9 +164,7 @@ function fnSetWeeklyGridCreate(DynamicFieldNameSetData, DynamicWeeklyListDataLis
 	  AUIGrid.bind(WeeklyGridID, "cellClick", function( event ) 
 	  {
 	    gSelRowIdx = event.rowIndex;
-	  
 	    console.log("cellClick_Status: " + AUIGrid.isAddedById(WeeklyGridID,AUIGrid.getCellValue(WeeklyGridID, event.rowIndex, 0)) );
-	    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
 	  });
 	  
 	  // 셀 더블클릭 이벤트 바인딩
@@ -189,13 +186,11 @@ function fnSelectMonthly()
             , $("#MainForm").serialize()
             , function(result) 
               {
-                 console.log("성공 fnSearchBtnList: " + result.selectOnTimeMonthlyList.length);
-                 
-                 AUIGrid.setGridData(MonthlyGridID, result.selectOnTimeMonthlyList);//selectOnTimeWeeklyStartPoint
+                 AUIGrid.setGridData(MonthlyGridID, result.selectOnTimeMonthlyList);
                  
                  if(result != null && result.selectOnTimeMonthlyList.length > 0)
                  {
-                   console.log("success: " + result.selectOnTimeMonthlyList[0].ScmMonth); 
+                   console.log("success: " + result.selectOnTimeMonthlyList.length + " /ScmMonth: "+result.selectOnTimeMonthlyList[0].ScmMonth); 
                  }
               }
             , function(jqXHR, textStatus, errorThrown)
@@ -279,13 +274,11 @@ function fnSearchBtnList()
                   
                   if(result != null && result.selectOnTimeWeeklyStartPoint.length > 0)
                   {
-                    console.log("Success_HeadCnt: " + result.selectOnTimeWeeklyStartPoint[0].headCnt);
-                    console.log("Success_Calcul: " + result.selectOnTimeCalculStatusList[0].completeCnt);
+                    //console.log("Success_HeadCnt: " + result.selectOnTimeWeeklyStartPoint[0].headCnt);
                     
                     dynamicWeeklyHeadStartPoint = result.selectOnTimeWeeklyStartPoint[0];
                     dynamicWeeklyHeadDataList = result.selectOnTimeWeeklyList;
                     fnSetWeeklyGridCreate(dynamicWeeklyHeadStartPoint, dynamicWeeklyHeadDataList); 
-
                     
                     $("#issuedPO").text(result.selectOnTimeCalculStatusList[0].totalCnt);   // Issued PO count
                     $("#onTime").text(result.selectOnTimeCalculStatusList[0].completeCnt);     // complete Count
@@ -450,7 +443,6 @@ function fnMonthlyCreate()
 {
 	var MonthlyGridLayoutOptions = {
             usePaging : false,
-            //editable: false,
             useGroupingPanel : false,
             showRowNumColumn : false,  // 그리드 넘버링
             showStateColumn : false, // 행 상태 칼럼 보이기
@@ -483,9 +475,7 @@ function fnMonthlyCreate()
   AUIGrid.bind(MonthlyGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
     console.log("cellClick_Status: " + AUIGrid.isAddedById(MonthlyGridID,AUIGrid.getCellValue(MonthlyGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -702,9 +692,7 @@ function fnMainGridCreate()
   AUIGrid.bind(MainGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
     console.log("cellClick_Status: " + AUIGrid.isAddedById(MainGridID,AUIGrid.getCellValue(MainGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩

@@ -245,7 +245,6 @@ function fnDrawChart(data) {
 
     if (PSDChatData) {
         PSDChatData.destroy();
-        console.log("PSDChatData destroy......");
     }
 
     PSDChatData = new Chart(ctx, chartOption);
@@ -293,14 +292,11 @@ function fn_closeNetSalesCharPop()
     PSDChatData.destroy();
     console.log("fn_closeNetSalesCharPop : PSDChatData destroy......");
   }
-   // $("#netSalesChartDivPop").remove();
 }
 
 // search
 function fnSearchBtnList()
 {
-   console.log( "Year: " + $("#scmYearCbBox").val() );
-
    if ($("#scmYearCbBox").val().length < 1)
    {
      Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
@@ -419,13 +415,7 @@ function fnSelectQtMonthlyGrid(quarterNo)
 }
 
 function fnTabClick(flag)
-{
-	  console.log("tabClick: " + flag + "  aa :" + $("#QuarterGridDiv").width());
-	  //$( ".tap_type1>li:eq(1)>a" ).trigger( "click" );
-	  //fnMonthlyGridCreate(QuarterGridIDLayout,QuarterGridFooterLayout,QuarterGridLayoutOptions);
-	  //AUIGrid.setGridData(gMonthlyGridID, gDashListData); 
-	  //AUIGrid.resize(gMonthlyGridID, $("#QuarterGridDiv").width(), $("#QuarterGridDiv").height());
-   
+{   
 	  if (flag == 'monthly')
 		{
 			  if(!AUIGrid.isCreated(gMonthlyGridID)) 
@@ -542,7 +532,6 @@ var rateGridIDLayout =
          editable : false,
          dataType : "numeric",
          postfix : "%",
-        // formatString : "#,##0"
       }
      ,{
          dataField : "viewDetail",
@@ -557,7 +546,6 @@ var rateGridIDLayout =
                        // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
                        jsCallback : function(rowIndex, columnIndex, value, item) 
 						                        {
-						                          //alert("( " + rowIndex + ", " + columnIndex + ", " + item.whId + " , " + value + ") " );
 						                          var scmQuarter = AUIGrid.getCellValue(gRateGridID, rowIndex, 0);
 						                          fnSelectQtMonthlyGrid(scmQuarter);
 						                        }
@@ -641,7 +629,6 @@ var rateGridFooterLayout = [
   AUIGrid.bind(gRateGridID, "cellClick", function( event ) 
   {
     console.log("cellClick_Status: " + AUIGrid.isAddedById(gRateGridID,AUIGrid.getCellValue(gRateGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -1357,7 +1344,6 @@ function fnQuarterGridCreate()
   AUIGrid.bind(gQuarterGridID, "cellClick", function( event ) 
   {
     console.log("cellClick_Status: " + AUIGrid.isAddedById(gQuarterGridID,AUIGrid.getCellValue(gQuarterGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -1428,7 +1414,7 @@ function getMyCntValue(dataField, rowIndex, ownDepth) {
 }
 
 /*************************************
- ********* Monthly Grid *********   fnMonthlyGridCreate(QuarterGridIDLayout,QuarterGridFooterLayout,QuarterGridLayoutOptions);
+ ********* Monthly Grid **************   
 **************************************/
 function fnMonthlyGridCreate()
 {
@@ -2034,7 +2020,6 @@ function fnMonthlyGridCreate()
             // 그룹핑 패널 사용
             useGroupingPanel : false,
             
-            // 차례로 country, product, 순으로 그룹핑을 합니다.
             // 즉, 각 나라별, 각 제품으로 그룹핑
             groupingFields : ["grp"],
             
@@ -2058,8 +2043,6 @@ function fnMonthlyGridCreate()
                               ,"m12BizPlan", "m12SalesPlan",  "m12Orded", "m12Rate"
                              ],
                 
-                // "country", "product",  순으로 그룹핑을 했을 때 해당 항목 아래에 출력되는 텍스트 지정
-                //labelTexts : ["∑" ]
             },
          // 최초 보여질 때 모두 열린 상태로 출력 여부
             displayTreeOpen : true,
@@ -2105,7 +2088,6 @@ function fnMonthlyGridCreate()
   AUIGrid.bind(gMonthlyGridID, "cellClick", function( event ) 
   {
     console.log("cellClick_Status: " + AUIGrid.isAddedById(gMonthlyGridID,AUIGrid.getCellValue(gMonthlyGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -2275,7 +2257,6 @@ function fnChartGridCreate()
   AUIGrid.bind(gChartGridID, "cellClick", function( event ) 
   {
     console.log("cellClick_Status: " + AUIGrid.isAddedById(gChartGridID,AUIGrid.getCellValue(gChartGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -2381,7 +2362,6 @@ var bizPlanStockGridFooterLayout =
 
 $(document).ready(function()
 {
-	//$( ".tap_type1>li:eq(1)>a" ).trigger( "click" );
 
 });   //$(document).ready
 

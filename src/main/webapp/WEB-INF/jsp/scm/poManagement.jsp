@@ -150,7 +150,6 @@ function fnSelectExcuteYear()
 function fnChangeEventPeriod(object)
 {
   gWeekThValue = object.value;
-  //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
 
   Common.ajax("GET", "/scm/selectMonthCombo.do"
 	       ,  { scmYearCbBox: $("#scmYearCbBox").val(),
@@ -262,8 +261,6 @@ function fnCheckedDelete(Obj)
 
   var checkedItemsList = AUIGrid.getCheckedRowItemsAll(SCMPOViewGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
 
-  console.log("chkList: " + checkedItemsList.length);
-
   if(checkedItemsList.length < 1) 
   {
     Common.alert("<spring:message code='expense.msg.NoData' htmlEscape='false'/>");
@@ -348,14 +345,12 @@ function auiCellEditignHandler(event)
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
         
-        //var roundUpMoq = AUIGrid.getCellValue(myGridID2, event.rowIndex, "roundUpMoq");
         var fobPrice   = AUIGrid.getCellValue(myGridID2, event.rowIndex, "fobPrice");
         var editPoQty  = parseInt(event.value);
         if (editPoQty <= 0)
         	editPoQty = 0;
     	   
         var editPlanQty = parseInt($("#inPlanQty").val());
-        //var editInMoq   = parseInt($("#inMoq").val());
         var newPoQty =   Math.ceil( editPoQty );  // 소수점이하 올림
 
         $("#inRoundUpPoQty").val(newPoQty); 
@@ -490,16 +485,7 @@ function addRow(selFieldObj)
     newFieldObj.preWeekTh  = gWeekThValue;
     newFieldObj.preCdc     = $("#cdcCbBox").val();
 
-    console.log ("stockCode: " + newFieldObj.stockCode + " /planQty: " + newFieldObj.planQty+ " /preYear: " + newFieldObj.preYear
-    	         + " /preMonth: " + newFieldObj.preMonth + " /preWeekTh: " + newFieldObj.preWeekTh+ " /preCdc: " + newFieldObj.preCdc);
-    
-    // fieldObj : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
-    // rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
     AUIGrid.addRow(myGridID2, newFieldObj, "last");
-    //AUIGrid.setSorting(myGridID, [{ dataField : "TYPE", sortType : 1 }]);
-    
-  //  $('#clearBtn').removeClass("btn_disabled");
-  //  $('#createPoBtn').removeClass("btn_disabled");
 }
 
 function addMoveChecked(moveStockCode)
@@ -955,16 +941,12 @@ $(document).ready(function()
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-            selectionMode : "singleRow"  //"multipleRows",
+            selectionMode : "singleRow"  
           };
 
 	// masterGrid 그리드를 생성합니다.
 	myGridID = GridCommon.createAUIGrid("SCMPrePOViewGridDiv", SCMPrePOViewLayout,"", SCMPrePOViewLayoutOptions);
-	// AUIGrid 그리드를 생성합니다.
-	
-	// 푸터 객체 세팅
-	//AUIGrid.setFooter(myGridID, footerObject);
-	
+		
 	// 에디팅 시작 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
 	
@@ -983,10 +965,7 @@ $(document).ready(function()
 	// cellClick event.
 	AUIGrid.bind(myGridID, "cellClick", function( event ) 
 	{
-		gMyGridSelRowIdx = event.rowIndex;
-	
-	  console.log("myGridID_cellClick_Status: " + AUIGrid.isAddedById(myGridID,AUIGrid.getCellValue(myGridID, event.rowIndex, 0)) );
-	  console.log("myGridID_CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " /value1: "+ AUIGrid.getCellValue(myGridID, event.rowIndex, 0));
+		gMyGridSelRowIdx = event.rowIndex;	
 	  gMovingStockCode = AUIGrid.getCellValue(myGridID, event.rowIndex, 0);        
 	});
 	
@@ -1013,7 +992,7 @@ $(document).ready(function()
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-            selectionMode : "singleRow"  //"multipleRows",
+            selectionMode : "singleRow"  
           };
 
   // masterGrid 그리드를 생성합니다.
@@ -1063,7 +1042,6 @@ $(document).ready(function()
             enableRestore : true,
             editable : false,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
-           // selectionMode : "multipleRows",
 
             // 체크박스 표시 설정
             showRowCheckColumn : true,              
@@ -1093,10 +1071,6 @@ $(document).ready(function()
 
   // masterGrid 그리드를 생성합니다.
   SCMPOViewGridID = GridCommon.createAUIGrid("SCMPOViewGridDiv", SCMPOViewLayout,"", SCMPOViewLayoutOptions);
-  // AUIGrid 그리드를 생성합니다.
-  
-  // 푸터 객체 세팅
-  //AUIGrid.setFooter(SCMPOViewGridID, footerObject);
   
   // 에디팅 시작 이벤트 바인딩
   AUIGrid.bind(SCMPOViewGridID, "cellEditBegin", auiCellEditignHandler);
@@ -1119,7 +1093,6 @@ $(document).ready(function()
     gSelRowIdx = event.rowIndex;
   
     console.log("cellClick_Status: " + AUIGrid.isAddedById(SCMPOViewGridID,AUIGrid.getCellValue(SCMPOViewGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex );        
   });
    
   // 셀 더블클릭 이벤트 바인딩

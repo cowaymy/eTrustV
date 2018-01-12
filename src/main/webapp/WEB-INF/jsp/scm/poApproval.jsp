@@ -134,7 +134,6 @@ function fnSelectExcuteYear()
 function fnChangeEventPeriod(object)
 {
   gWeekThValue = object.value;
-  //fnSelectCDC( $("#scmYearCbBox").val() , object.value);
 }
 
 String.prototype.fnTrim = function()
@@ -298,7 +297,7 @@ function getItemsByCheckedField(selectedGrid)
   for(var i=0, len = activeItems.length; i<len; i++) 
   {
       checkedRowItem = activeItems[i];
-      str += "chkRowIdx : " + checkedRowItem.rowIndex ;//+ ", chkId :" + checkedRowItem.stusCodeId + ", chkName : " + checkedRowItem.codeName  + "\n";
+      str += "chkRowIdx : " + checkedRowItem.rowIndex ;
   }
 }
 
@@ -786,10 +785,8 @@ function fnSummaryGridCreate()
   // cellClick event.
   AUIGrid.bind(SummaryGridID, "cellClick", function( event ) 
   {
-    gSelRowIdx = event.rowIndex;
-  
+    gSelRowIdx = event.rowIndex;  
     console.log("cellClick_Status: " + AUIGrid.isAddedById(SummaryGridID,AUIGrid.getCellValue(SummaryGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex  );        
   });
   
   // 셀 더블클릭 이벤트 바인딩
@@ -844,13 +841,6 @@ function fnMainGridCreate()
 
   // masterGrid 그리드를 생성합니다.
   MainGridID = GridCommon.createAUIGrid("MainGrid_DIV", MainGridLayout,"", MainGridLayoutOptions);
-  // AUIGrid 그리드를 생성합니다.
-  
-  // 푸터 객체 세팅
-  //AUIGrid.setFooter(MainGridID, footerObject);
-  
- // 헤더 클릭 핸들러 바인딩
- // AUIGrid.bind(MainGridID, "headerClick", headerClickHandler);    
   
   // 에디팅 시작 이벤트 바인딩
   AUIGrid.bind(MainGridID, "cellEditBegin", auiCellEditignHandler);
@@ -881,9 +871,7 @@ function fnMainGridCreate()
   AUIGrid.bind(MainGridID, "cellClick", function( event ) 
   {
     gSelRowIdx = event.rowIndex;
-  
     console.log("cellClick_Status: " + AUIGrid.isAddedById(MainGridID,AUIGrid.getCellValue(MainGridID, event.rowIndex, 0)) );
-    console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex );        
   });
   
   // 셀 더블클릭 이벤트 바인딩

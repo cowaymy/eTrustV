@@ -91,7 +91,6 @@ function fnCreate(obj)
 	             {
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                fnSettiingHeader();
-	                
 	                //console.log("성공." + JSON.stringify(result));
 	                //console.log("data : " + result.data);
 	             } 
@@ -150,8 +149,6 @@ function fnSelectExcuteYear()
           {
             var $this = $(this);  // selected item , will use scmPeriodCbBox's input-parameter.
 
-            //console.log("period_values: " + $this.val());
-                
             CommonCombo.initById("scmPeriodCbBox");  // Period reset... 
 
             if (FormUtil.isNotEmpty($this.val())) 
@@ -206,9 +203,6 @@ function fnUpdateSave(Obj)
 	          {
 	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	            fnSearchBtnList() ;
-	            
-	            //console.log("성공." + JSON.stringify(result));
-	            //console.log("data : " + result.data);
 	          }
 	             
 	        , function(jqXHR, textStatus, errorThrown) 
@@ -373,7 +367,6 @@ function auiCellEditignHandler(event)
     else if(event.type == "cellEditEnd") 
     {
         console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-       // AUIGrid.restoreEditedCells(myGridID, [event.rowIndex, "seqNo"] );
     } 
     else if(event.type == "cellEditCancel") 
     {
@@ -385,11 +378,10 @@ function auiCellEditignHandler(event)
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) 
 {
-  // checkFlag 칼럼 클릭 한 경우
   if(event.dataField == "checkFlag") 
   {
     if(event.orgEvent.target.id == "allCheckbox") 
-    { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
+    { 
       var  isChecked = document.getElementById("allCheckbox").checked;
       checkAll(isChecked);
     }
@@ -434,29 +426,19 @@ function getItemsByCheckedField(selectedGrid)
   for(var i=0, len = activeItems.length; i<len; i++) 
   {
       checkedRowItem = activeItems[i];
-      str += "chkRowIdx : " + checkedRowItem.rowIndex ;//+ ", chkId :" + checkedRowItem.stusCodeId + ", chkName : " + checkedRowItem.codeName  + "\n";
-  }
-
-  //alert("checked items: " + str);
-  
+      str += "chkRowIdx : " + checkedRowItem.rowIndex ;
+  }  
 }
 
-//특정 칼럼 값으로 체크하기 (기존 더하기)
+// rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
+// 행아이템의 code 필드 중 데이타가 selValue 인 것 모두 체크.
 function addCheckedRowsByValue(selValue) 
 {
-  //console.log("grouping Checked: " + selValue);
-  // rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
-  // 행아이템의 code 필드 중 데이타가 selValue 인 것 모두 체크.
   AUIGrid.addCheckedRowsByValue(myGridID, "code", selValue);
-  
-  // 만약 복수 값(Emma, Steve) 체크 하고자 한다면 다음과 같이 배열로 삽입
-  //AUIGrid.addCheckedRowsByValue(myGridID, "name", ["Emma", "Steve"]);
 }
-//특정 칼럼 값으로 체크 해제 하기
+// 행아이템의 code 필드 중 데이타가 selValue인 것 모두 체크 해제함
 function addUncheckedRowsByValue(selValue) 
 {
-	//console.log("grouping UnChecked: " + selValue);
-  // 행아이템의 code 필드 중 데이타가 selValue인 것 모두 체크 해제함
   AUIGrid.addUncheckedRowsByValue(myGridID, "code", selValue);
 }
 
@@ -521,9 +503,7 @@ function fnSettiingHeader()
                     // 이 함수는 사용자가 체크박스를 클릭 할 때 1번 호출됩니다.
                     rowCheckableFunction : function(rowIndex, isChecked, item) 
                     {
-                    	//console.log ("isChecked: " + isChecked + " /Checked value: " + AUIGrid.getCellValue(myGridID, rowIndex, "code"));
-                    	
-                    	if (isChecked == false) // for Checked 
+                    	if (isChecked == false) 
                     	 addCheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
                     	else
                     	 addUncheckedRowsByValue(AUIGrid.getCellValue(myGridID, rowIndex, "code"));
@@ -554,7 +534,6 @@ function fnSettiingHeader()
               return false;  
             }
                             
-           //  AUIGrid.setGridData(myGridID, result);
              if(result.header != null && result.header.length > 0)
              {
                dynamicLayout.push( 
@@ -563,7 +542,7 @@ function fnSettiingHeader()
                                      ,style : "my-header" 
                                     // , width : 13
                                      ,children : [
-                                                    {                            
+                                                   {                            
                                                       dataField : result.header[0].isSaved
                                                      ,headerText : "<spring:message code='sys.scm.salescdc.IsSaved' />"
                                                      ,editable : false
@@ -574,7 +553,6 @@ function fnSettiingHeader()
                                                         else 
                                                           return "my-backColumn1";
                                                       } 
-                                                       //,width : "5%"
                                                      ,renderer : 
 																			                {
 	                                                      type : "CheckBoxEditRenderer"
@@ -655,14 +633,13 @@ function fnSettiingHeader()
                                                       ,renderer : 
                                                        {
                                                           type : "LinkRenderer",
-                                                          baseUrl : "javascript", // 자바스크립 함수 호출로 사용하고자 하는 경우에 baseUrl 에 "javascript" 로 설정
+                                                          baseUrl : "javascript", 
                                                           // baseUrl 에 javascript 로 설정한 경우, 링크 클릭 시 callback 호출됨.
                                                           jsCallback : function(rowIndex, columnIndex, value, item) 
                                                           {
                                                             fnDetailPop(item.code);
                                                           }
                                                        }
-                                                       //,width : "5%"
                                                      }
                                                      
                                                   ]// children
@@ -673,7 +650,6 @@ function fnSettiingHeader()
                                    ,{                            
                                       headerText : "Monthly"
                                      ,style : "my-header" 
-                                     //, width : 7
                                      ,children : [
                                                     {                            
                                                        dataField : result.header[0].todayH2  // m0 == M0_PLAN_ORDER
@@ -686,7 +662,6 @@ function fnSettiingHeader()
                                                          else 
                                                            return "my-backColumn1";
                                                        } 
-                                                        //,width : "5%"
                                                     }
                                                   , {                            
                                                        dataField : result.header[0].m1H2
@@ -699,7 +674,6 @@ function fnSettiingHeader()
                                                          else 
                                                            return "my-backColumn1";
                                                        } 
-                                                      //,width : "5%"
                                                     }
                                                   , {                            
                                                        dataField : result.header[0].m2H2
@@ -712,7 +686,6 @@ function fnSettiingHeader()
                                                          else 
                                                            return "my-backColumn1";
                                                        } 
-                                                        //,width : "5%"
                                                     }
                                                   , {                            
                                                        dataField : result.header[0].m3H3
@@ -725,7 +698,6 @@ function fnSettiingHeader()
                                                          else 
                                                            return "my-backColumn1";
                                                        } 
-                                                        //,width : "5%"
                                                     }
                                                   , {                            
                                                        dataField : result.header[0].m4H4
@@ -738,7 +710,6 @@ function fnSettiingHeader()
                                                          else 
                                                            return "my-backColumn1";
                                                        } 
-                                                        //,width : "5%"
                                                     }
                                                   , {                            
                                                        dataField : result.header[0].supplyCorpHOverdue
@@ -812,8 +783,6 @@ function fnSettiingHeader()
                       }
 
                       sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq 
-
-                      //console.log("sumWeekThStr: " + sumWeekThStr);
                            
                       groupM_0.children.push(
                       {
@@ -1082,8 +1051,6 @@ function fnSettiingHeader()
                 {
                   var selGridCode = AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
                	                      
-                  //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " eventValue: " + event.value
-                  //        + " code: " + selGridCode + " headerText: " + event.headerText); 
                 });
   
              // 셀 더블클릭 이벤트 바인딩
@@ -1253,21 +1220,18 @@ $(document).ready(function()
 <ul class="left_btns">
 	<li>
 	 <p class="btn_grid">
-	   <!-- <a href="javascript:void(0);">Change Selected Items' Status To Saved</a> -->
 	     <input type='button' id='SaveBtn' value="Change Selected Items' Status To Saved" disabled />
 	 </p>
 	</li>
 	
 	<li>
 	 <p class="btn_grid">
-	  <!--  <a href="javascript:void(0);">Confirm</a> -->
 	   <input type='button' id='ConfirmBtn' name='ConfirmBtn' value='Confirm' disabled />
 	 </p>
 	</li>
 	
 	<li>
 	 <p class="btn_grid">
-	   <!-- <a href="javascript:void(0);">Update M0 Data</a> -->
 	   <input type='button' id='UpdateBtn' name='UpdateBtn' value='Update M0 Data' disabled />
 	 </p>
 	</li>
@@ -1288,7 +1252,6 @@ $(document).ready(function()
   
 	<li>
 	 <p class="btn_grid">
-	   <!-- <a href="javascript:void(0);">Re-Calculate</a> -->
 	   <input type='button' id='Re-CalculateBtn' name='Re-CalculateBtn' value='Re-Calculate' disabled />
 	 </p>
 	</li>
