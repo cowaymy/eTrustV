@@ -148,14 +148,14 @@ function searchNotFoundHandler(event) {
 function createCtosGrid(){
 	var  columnLayout = [
 	                     {dataField : "batchId", headerText : "Batch No", width : "7%" , editable : false},
-	                     {dataField : "fileName", headerText : "File Name", width : "14%" , editable : false},
-	                     {dataField : "rowCnt", headerText : "Total", width : "8%" , editable : false},
-	                     {dataField : "comple", headerText : "Complete", width : "8%" , editable : false},
-	                     {dataField : "act", headerText : "Act", width : "8%" , editable : false},
-	                     {dataField : "zero", headerText : "ZERO", width : "8%" , editable : false},
-	                     {dataField : "lt500", headerText : "LT500", width : "8%" , editable : false},
-	                     {dataField : "gt501", headerText : "GT501", width : "8%" , editable : false},
-	                     {dataField : "stus", headerText : "STATUS", width : "9%" , editable : false},
+	                     {dataField : "fileName", headerText : "File Name", width : "25%" , editable : false},
+	                     {dataField : "rowCnt", headerText : "Total", width : "7%" , editable : false},
+	                     {dataField : "comple", headerText : "Complete", width : "7%" , editable : false},
+	                     {dataField : "act", headerText : "Act", width : "7%" , editable : false},
+	                     {dataField : "zero", headerText : "ZERO", width : "6%" , editable : false},
+	                     {dataField : "lt500", headerText : "LT500", width : "6%" , editable : false},
+	                     {dataField : "gt501", headerText : "GT501", width : "6%" , editable : false},
+	                     {dataField : "stus", headerText : "STATUS", width : "6%" , editable : false},
 	                     {dataField : "updDt", headerText : "Upload Time", width : "13%" , editable : false},
 	                     {dataField : "updUserId", headerText : "Upload User", width : "9%" , editable : false}
 	               ]
@@ -187,13 +187,13 @@ function createCtosGrid(){
 
 function createCtosDetailGrid(){
 	var  columnLayout = [
-                         {dataField : "batchId", headerText : "Batch No", width : "9%" , editable : false},
-                         {dataField : "ordNo", headerText : "Order No", width : "9%" , editable : false},
+                         {dataField : "batchId", headerText : "Batch No", width : "8%" , editable : false},
+                         {dataField : "ordNo", headerText : "Order No", width : "8%" , editable : false},
                          {dataField : "custIc", headerText : "Customer IC", width : "10%" , editable : false},
-                         {dataField : "custName", headerText : "Customer Name", width : "9%" , editable : false},
-                         {dataField : "prcName", headerText : "Status", width : "9%" , editable : false},
-                         {dataField : "ficoScre", headerText : "Score", width : "9%" , editable : false},
-                         {dataField : "codeName", headerText : "Bankrupt", width : "9%" , editable : false},
+                         {dataField : "custName", headerText : "Customer Name", width : "16%" , editable : false},
+                         {dataField : "prcName", headerText : "Status", width : "7%" , editable : false},
+                         {dataField : "ficoScre", headerText : "Score", width : "7%" , editable : false},
+                         {dataField : "codeName", headerText : "Bankrupt", width : "8%" , editable : false},
                          {dataField : "ctosDt", headerText : "Update Time", width : "9%" , editable : false},
                          {dataField : "updUserId", headerText : "Update User", width : "9%" , editable : false},
                          {
@@ -262,7 +262,8 @@ function clearDetailFilterAll() {
 };
 // score == 0
 function fn_scoreZero() {
-    AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
+	clearDetailFilterAll();
+	AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
     	if(item.ficoScre == 0){
     		return true;
     	}
@@ -272,7 +273,8 @@ function fn_scoreZero() {
 
 //score > 500
 function fn_scoreGT() {  
-    AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
+	clearDetailFilterAll();
+	AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
         if(item.ficoScre > 500){
             return true;
         }
@@ -282,7 +284,8 @@ function fn_scoreGT() {
 
 //score <= 500 and score != 0
 function fn_scoreLT() { 
-    AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
+	clearDetailFilterAll();
+	AUIGrid.setFilter(ctosDetailGridID, "ficoScre",  function(dataField, value, item) {
         if(item.ficoScre <= 500 && item.ficoScre > 0){
             return true;
         }
@@ -292,7 +295,8 @@ function fn_scoreLT() {
 
 //Active
 function fn_detailAct() { 
-    AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
+	clearDetailFilterAll();
+	AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
         if(item.prcss  == '0'){
             return true;
         }
@@ -302,7 +306,8 @@ function fn_detailAct() {
 
 //Complete
 function fn_detailComplete() {
-    AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
+	clearDetailFilterAll();
+	AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
         if(item.prcss  == '1'){
             return true;
         }
@@ -312,7 +317,8 @@ function fn_detailComplete() {
 
 //Previous Score
 function fn_detailPrev() {
-    AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
+	clearDetailFilterAll();
+	AUIGrid.setFilter(ctosDetailGridID, "prcss",  function(dataField, value, item) {
         if(item.prcss  == '2'){
             return true;
         }
