@@ -109,5 +109,24 @@ public class SalesTrBookRecvServiceImpl  extends EgovAbstractServiceImpl impleme
 			}
 		}
 	}
+
+	@Override
+	public List<EgovMap> getbrnchList() {
+		
+		return salesTrBookRecvMapper.getbrnchList();
+	}
+
+	@Override
+	public List<EgovMap> getTransitListByTransitNo(Map<String, Object> params) {
+		
+		return salesTrBookRecvMapper.getTransitListByTransitNo(params);
+	}
+
+	@Override
+	public List<EgovMap> trBookSummaryListing(Map<String, Object> params) {
+		
+		return salesTrBookRecvMapper.trBookSummaryListing(params);
+	}
+	
 	
 }

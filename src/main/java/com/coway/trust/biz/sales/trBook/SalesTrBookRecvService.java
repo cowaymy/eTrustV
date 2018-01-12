@@ -15,5 +15,10 @@ public interface SalesTrBookRecvService {
 
 	void updateTransit(Map<String, Object> params);
 
+	List<EgovMap> getbrnchList();
+	
+	List<EgovMap> getTransitListByTransitNo(Map<String, Object> params);
+	
+	List<EgovMap> trBookSummaryListing(Map<String, Object> params);
 	
 }

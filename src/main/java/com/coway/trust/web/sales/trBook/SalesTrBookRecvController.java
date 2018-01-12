@@ -23,7 +23,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.trBook.SalesTrBookRecvService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.util.CommonUtils;
 import com.google.gson.Gson;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -56,9 +55,7 @@ public class SalesTrBookRecvController {
 		logger.debug("params ======================================>>> " + params);
 		
 		params.put("trnsitTo", sessionVO.getCode());
-		if(CommonUtils.isEmpty(params.get("trnsitTo"))){
-			params.put("trnsitTo", "HQ");
-		}
+		params.put("trnsitTo", "HQ");
 		 
 		List<EgovMap> list = salesTrBookRecvService.selectTrBookRecvList(params);
 
@@ -261,5 +258,38 @@ public class SalesTrBookRecvController {
     	message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
     
     	return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/trBookSummaryPop.do")
+	public String trBookSummaryPop(@RequestParam Map<String, Object> params) throws Exception{
+		
+		logger.info("################################################## [ Tr Book Summary Pop(Report) Start ]");
+		return "sales/trBookRecv/trBookSummaryPop";
+	}
+	
+	
+	@RequestMapping(value = "/getbrnchList")
+	public ResponseEntity<List<EgovMap>> getbrnchList() throws Exception{
+		List<EgovMap> brnchList = null;
+		brnchList = salesTrBookRecvService.getbrnchList();
+		
+		return ResponseEntity.ok(brnchList);
+	}
+	
+	
+	@RequestMapping(value = "/getTransitListByTransitNo")
+	public ResponseEntity<List<EgovMap>> getTransitListByTransitNo(@RequestParam Map<String, Object> params) throws Exception{
+		List<EgovMap> transitList = null;
+		transitList = salesTrBookRecvService.getTransitListByTransitNo(params);
+		return ResponseEntity.ok(transitList);
+	}
+	
+	
+	@RequestMapping(value = "/trBookSummaryListing")
+	public ResponseEntity<List<EgovMap>> trBookSummaryListing(@RequestParam Map<String, Object> params) throws Exception{
+		List<EgovMap> trBookSumList = null;
+		trBookSumList = salesTrBookRecvService.trBookSummaryListing(params);
+		return ResponseEntity.ok(trBookSumList);
 	}
 }
