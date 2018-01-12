@@ -199,10 +199,16 @@ $(function(){
             var dat = GridCommon.getEditData(reqGrid);
             dat.form = $("#headForm").serializeJSON();
             Common.ajax("POST", "/logistics/stockMovement/StockMovementAdd.do", dat, function(result) {
-            	Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
-            	//Common.alert(result.message , locationList);
-                AUIGrid.resetUpdatedItems(reqGrid, "all");
-                //location.href = '/logistics/stockMovement/StockMovementList.do';
+            	if (result.code == '99'){
+                    AUIGrid.clearGridData(reqGrid);
+                    Common.alert(result.message , SearchListAjax);
+                }else{
+                	Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
+                    //Common.alert(result.message , locationList);
+                    AUIGrid.resetUpdatedItems(reqGrid, "all");
+                    //location.href = '/logistics/stockMovement/StockMovementList.do';
+                }
+            	
             },  function(jqXHR, textStatus, errorThrown) {
                 try {
                 } catch (e) {

@@ -79,5 +79,6 @@ public interface StockMovementMapper {
 	
 	void deleteStockBooking(String reqsmono);
 	
+	int selectAvaliableStockQty(Map<String, Object> param);
 
 }
