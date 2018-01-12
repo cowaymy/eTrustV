@@ -247,6 +247,7 @@
     		Common.alert("Please select the Status");
     		return false;
     	}
+    	console.log("status : " + $("#reqStageId").val());
     	if($("#addStatus").val() == '19'){     // Recall
 //    		if($("#reqStageId").val() == '24'){     // before installl
     			if(addCallForm.cmbFeedbackCd.value == ""){
@@ -264,7 +265,9 @@
 //    		}
     	}
     	if($("#addStatus").val() == '32'){     // Confirm To Cancel
+    		
           if($("#reqStageId").val() == '24'){     // before installl
+        	  console.log("before : " + $("#reqStageId").val());
                 if(addCallForm.cmbFeedbackCd.value == ""){
                     Common.alert("Please select the Feedback Code");
                     return false;
@@ -273,7 +276,8 @@
                     Common.alert("Please key in the remark");
                     return false;
                 }
-            }else{
+            }else if($("#reqStageId").val() == '25'){
+            	console.log("after : " + $("#reqStageId").val());
             	if(addCallForm.cmbFeedbackCd.value == ""){
                     Common.alert("Please select the Feedback Code");
                     return false;
@@ -291,6 +295,16 @@
                     return false;
                 }
                 if(addCallForm.addRem.value == ""){
+                    Common.alert("Please key in the remark");
+                    return false;
+                }
+            }else{
+            	console.log("else : " + $("#reqStageId").val());
+            	if(addCallForm.cmbFeedbackCd.value == ""){
+                    Common.alert("Please select the Feedback Code");
+                    return false;
+                }
+            	if(addCallForm.addRem.value == ""){
                     Common.alert("Please key in the remark");
                     return false;
                 }
@@ -719,7 +733,7 @@
     <input id="paramdocId" name="paramdocId" type="hidden" value="${paramDocId}">
     <input id="paramtypeId" name="paramtypeId" type="hidden" value="${paramTypeId}">
     <input id="paramrefId" name="paramrefId" type="hidden" value="${paramRefId}">
-    <input id="reqStageId" name="reqStageId" type="hidden" value="${reqStageId}">
+    <input id="reqStageId" name="reqStageId" type="hidden" value="${cancelReqInfo.reqStageId}">
     <input id="paramCallEntryId" name="paramCallEntryId" type="hidden" value="${cancelReqInfo.callEntryId}">
     <input id="paramReqId" name="paramReqId" type="hidden" value="${cancelReqInfo.reqId}">
     <input id="paramOrdId" name="paramOrdId" type="hidden" value="${cancelReqInfo.ordId}">
