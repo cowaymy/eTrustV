@@ -580,15 +580,15 @@ var MainGridLayout =
             width : "10%"
         },{
             dataField : "poItmNo",
-            headerText : "<spring:message code='sys.scm.onTimeDelivery.poitem'/>",
+            headerText : "<spring:message code='sys.scm.pomngment.POItemNo'/>",
             style : "aui-grid-right-column",
-            width : "5%",
+            width : "7%",
             editable : false
         }, {
             dataField : "eccPoNo", 
             headerText : "<spring:message code='sys.scm.poapproval.eccPoNo'/>",
             formatString : "dd-mm-yyyy",
-            width : "10%",
+            width : "8%",
             editable : false
         }, {
             dataField : "grWeek",
