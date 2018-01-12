@@ -1,6 +1,21 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<style type="text/css">
+
+/* Cell -셀력션 백그라운드 스타일 재정의 */
+#ctos_detail_grid_wrap .aui-grid-selection-bg {
+    background: #99CCFF !important;
+    color:#000 !important;
+    font-weight:normal !important;
+}
+
+/* 셀렉션의 대표 셀 보더 색상 스타일 재정의*/
+#ctos_detail_grid_wrap .aui-grid-selection-cell-border-lines {
+    ackground: #2e6da4; 
+}
+</style>
+
 <script type="text/javascript">
 
 var ctosListGridID;
