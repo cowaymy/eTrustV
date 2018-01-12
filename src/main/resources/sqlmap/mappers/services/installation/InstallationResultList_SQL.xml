@@ -646,7 +646,7 @@
                         join sal0045d S45 ON S45.ADD_ID = extend23.cust_add_id  
                         join sal0001d S01 ON s01.sales_ord_id = S45.sales_ord_id 
                         
-    WHERE s01.sales_ord_no = #{salesOrderNO}
+    WHERE s01.sales_ord_no = #{salesOrdNo}
    AND extend23.cust_id = #{custId}
    AND (TO_NUMBER(Extent1.STUS_CODE_ID, 99999) = 1 ) 
 

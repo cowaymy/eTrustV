@@ -20,7 +20,9 @@ public interface InstallationResultListService {
 
 	EgovMap getOrderInfo(Map<String, Object> params);
 
-	EgovMap getcustomerInfo(Object cust_id);
+	//EgovMap getcustomerInfo(Object cust_id);
+	
+	EgovMap getcustomerInfo( Map<String, Object> params);
 
 	EgovMap getCustomerAddressInfo(Map<String, Object> params);
 

@@ -114,7 +114,10 @@ public class InstallationResultListController {
 			orderInfo = installationResultListService.getOrderInfo(params);
 		}
 
-		EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo == null ?installResult.get("custId") :  orderInfo.get("custId"));
+		//EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo == null ?installResult.get("custId") :  orderInfo.get("custId"));
+		
+		
+		EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo);
 		//EgovMap customerAddress = installationResultListService.getCustomerAddressInfo(customerInfo);
 		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
 		EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
