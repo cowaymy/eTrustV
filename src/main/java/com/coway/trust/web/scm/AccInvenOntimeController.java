@@ -8,7 +8,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.scm.AccInvenOntimeService;
-import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -30,12 +28,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterMngmentCon
 	
 	@Autowired
 	private AccInvenOntimeService accInvenOntimeService;
-
-	@Autowired
-	private SessionHandler sessionHandler;
-
-	@Autowired
-	private MessageSourceAccessor messageAccessor;
 	
 	// view
 	@RequestMapping(value = "/onTimeDelivery.do")
@@ -107,7 +99,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterMngmentCon
 	@RequestMapping(value = "/inventoryReport.do")
 	public String doInventory(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
 	{
-		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/inventoryReport";  	
 	}  
 

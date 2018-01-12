@@ -22,8 +22,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.util.Precondition;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -32,13 +30,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SupplyCorpController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SupplyCorpController.class);
-	//private static final Logger LOGGER  = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private SalesPlanMngementService salesPlanMngementService;
-
-	@Autowired
-	private SessionHandler sessionHandler;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -105,14 +99,12 @@ public class SupplyCorpController {
 		map.put("selectSupplyPlanMasterList", selectSupplyPlanMasterList);
 
 		return ResponseEntity.ok(map);
-		
 	}
 	
 	// 
 	@RequestMapping(value = "/supplyPlanByCdcDetailPop.do")
 	public String supplyPlanByCdcDetailPopup(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
 	{
-		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/supplyPlanByCdcDetailPop";  	
 	} 
 	
@@ -136,7 +128,6 @@ public class SupplyCorpController {
 	// Supply Plan Summary View
 	@RequestMapping(value = "/supplyPlanSummary.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
-		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/supplyPlanSummaryView";  
 	}  
 	
@@ -160,8 +151,8 @@ public class SupplyCorpController {
 	@RequestMapping(value = "/saveUpdatePlanByCDC.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveUpdatePlanByCDC(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
 	{
-		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-		// 콘솔로 찍어보기
+		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); 
+
 		LOGGER.info("updatePlanByCDC_수정 : {}", udtList.toString());
 		
 		int tmpCnt = 0;

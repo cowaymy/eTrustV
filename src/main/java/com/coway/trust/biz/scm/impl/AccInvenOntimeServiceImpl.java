@@ -18,20 +18,15 @@ package com.coway.trust.biz.scm.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.scm.AccInvenOntimeService;
-import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("AccInvenOntimeService")
 public class AccInvenOntimeServiceImpl implements AccInvenOntimeService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AccInvenOntimeServiceImpl.class);
 
 	@Autowired
 	private AccInvenOntimeMapper accInvenOntimeMapper;

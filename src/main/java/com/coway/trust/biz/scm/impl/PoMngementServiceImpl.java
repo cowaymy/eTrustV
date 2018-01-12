@@ -35,9 +35,6 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class PoMngementServiceImpl implements PoMngementService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PoMngementServiceImpl.class);
-
-	@Autowired
-	private SalesPlanMngementMapper salesPlanMngementMapper;
 	
 	@Autowired
 	private PoMngementMapper poMngementMapper;
@@ -190,9 +187,9 @@ public class PoMngementServiceImpl implements PoMngementService {
 			
 			LOGGER.debug(" >>>>> PO_Issue_Input_Params {} ", obj);
 			
-			//update SCMPrePOItem 
+			//merge SCMPrePOItem SCM0011D
 			poMngementMapper.updatePOIssuItem(obj);
-			// Insert SCMPODetail
+			// Insert SCMPODetail SCM0010D
 			poMngementMapper.insertPOIssueDetail(obj);
 			
 			// INSERT SCMPOMASTER SCM0009M Only 1

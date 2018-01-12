@@ -58,10 +58,7 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 		int saveCnt = 0;
 		
 		for (Object obj : updList) 
-		{
-			/*((Map<String, Object>) obj).put("crtUserId", crtUserId);
-			((Map<String, Object>) obj).put("updUserId", crtUserId);*/
-			
+		{			
 			LOGGER.debug(" >>>>> updateMasterMngment_imple: {} ", updList.toString() );
 			LOGGER.debug(" startDt : {}", String.valueOf(((Map<String, Object>) obj).get("startDt")));
 			LOGGER.debug(" endDt : {}", String.valueOf(((Map<String, Object>) obj).get("endDt")));
@@ -149,8 +146,6 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 		int looCnt = 0;
 		
 		LOGGER.debug(" insertMstMngMasterCDC_Imple_params : {}", params);
-		//params.put("crtUserId", sessionVO.getUserId());
-		//params.put("updUserId", sessionVO.getUserId());
 		
 		//SCM0017M
 		if ("1".equals(String.valueOf(params.get("klChkbox")))) {
@@ -245,11 +240,8 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			LOGGER.debug(" >>>>> insetCdcWhMapping ");
-			LOGGER.debug(" hidden_Whid : {}", ((Map<String, Object>) obj).get("whId"));
+			LOGGER.debug(" insetCdcWhMapping_Whid : {}", ((Map<String, Object>) obj).get("whId"));
 			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("whId");
-
 			saveCnt++;
 
 			scmMasterMngMentMapper.insetCdcWhMapping((Map<String, Object>) obj);
@@ -268,10 +260,7 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			LOGGER.debug(" >>>>> deleteCdcWhMapping ");
-			LOGGER.debug(" hidden_Whid : {}", ((Map<String, Object>) obj).get("whId"));
-			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("whId");
+			LOGGER.debug(" deleteCdcWhMapping_Whid : {}", ((Map<String, Object>) obj).get("whId"));
 			
 			saveCnt++;
 			
@@ -307,10 +296,7 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			LOGGER.debug(" >>>>> updatePlanStock ");
 			LOGGER.debug(" updatePlanStock_PlanId : {}", ((Map<String, Object>) obj).get("planId"));
-			
-			//String tmpStr =  (String) ((Map<String, Object>) obj).get("whId");
 			
 			saveCnt++;
 			
@@ -354,7 +340,7 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService {
    			  detailList.get(i).put("planDetailIdSeq", detailSeqGet);
     			
     		  iLoopCnt = iLoopCnt +1;
-    		  LOGGER.debug("detailList=== "+ iLoopCnt +"번째 === "+detailList.get(i));
+    		  
     		  scmMasterMngMentMapper.insertDetailExcel(detailList.get(i));
 			}
 		}

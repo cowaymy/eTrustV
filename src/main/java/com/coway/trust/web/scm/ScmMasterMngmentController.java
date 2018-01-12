@@ -24,7 +24,6 @@ import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.biz.scm.ScmMasterMngMentService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -40,9 +39,6 @@ public class ScmMasterMngmentController {
 	private SalesPlanMngementService salesPlanMngementService;
 
 	@Autowired
-	private SessionHandler sessionHandler;
-
-	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
 	// view
@@ -56,8 +52,6 @@ public class ScmMasterMngmentController {
 	@RequestMapping(value = "/scmMasterMngmentAddPop.do")
 	public String scmMasterMngmentAddPop(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
 	{
-		// model.addAttribute("url", params);
-		// 호출될 화면
 		return "/scm/scmMasterMngmentAddPop";	
 	}  
 
@@ -140,27 +134,11 @@ public class ScmMasterMngmentController {
 
 		int tmpCnt = 0;
 		int totCnt = 0;
-	/*	
-		if (addList.size() > 0) {
-			tmpCnt = salesPlanMngementService.insertGSTExportation(addList, sessionVO.getUserId()); 
-			totCnt = totCnt + tmpCnt;
-		}
-		
-		update=[{stkCtgryCode=POE, stockCode=620002, stockDesc=POE-15A (BAMBOO), defautStockName=POE-15A (BAMBOO), isTrget=1, startDt=01-05-2015, endDt=01-01-1900, klTarget=false, jbTarget=true, kkTarget=true, pnTarget=0, kcTarget=0, klMoq=50, jbMoq=50, kkMoq=50, pnMoq=50, kcMoq=50, safetyStock=90, leadTm=8, loadingQty=0, minOrdQty=0, stkCtgryId=400, stkCtgryName=Point Of Entry , stkTypeId=61, stkTypeName=Stock, stockId=860, dfltStock=620002, _$uid=F69C1AD9-A7D7-0194-D108-9FC320B872E7}]
-		update=[{stkCtgryCode=POE, stockCode=620002, stockDesc=POE-15A (BAMBOO), defautStockName=POE-15A (BAMBOO), isTrget=1, startDt=01-05-2015, endDt=01-01-1900, klTarget=true, jbTarget=true, kkTarget=true, pnTarget=0, kcTarget=0, klMoq=50, jbMoq=50, kkMoq=50, pnMoq=50, kcMoq=50, safetyStock=90, leadTm=8, loadingQty=0, minOrdQty=0, stkCtgryId=400, stkCtgryName=Point Of Entry , stkTypeId=61, stkTypeName=Stock, stockId=860, dfltStock=620002, _$uid=F69C1AD9-A7D7-0194-D108-9FC320B872E7}]
-*/
-		//{add=[], 
+
 		if (udtList.size() > 0) {
 			tmpCnt = scmMasterMngMentService.updateMasterMngment(udtList, sessionVO.getUserId());
 			totCnt = totCnt + tmpCnt;
-			//tmpCnt = scmMasterMngMentService.updateMasterMngmentCDC(udtList, sessionVO.getUserId());
-			//totCnt = totCnt + tmpCnt;
 		}
-		/*
-		if (delList.size() > 0) {
-			tmpCnt = salesPlanMngementService.deleteGSTExportation(delList, sessionVO.getUserId());
-			totCnt = totCnt + tmpCnt;
-		}*/
 
 		// 콘솔로 찍어보기
 		LOGGER.info("scmMasterMngMentService_수정 : {}", udtList.toString());
@@ -181,18 +159,12 @@ public class ScmMasterMngmentController {
 	public ResponseEntity<ReturnMessage> insertMstMngMasterHeader(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		
 		LOGGER.debug("insertMstMngMasterHeader_params : {}", params);
-		
-		
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+
 		int tmpCnt = 0;
 		int totCnt = 0;
 		
-		
 	    tmpCnt = scmMasterMngMentService.insertMstMngMasterHeader(params, sessionVO);
 		totCnt = totCnt + tmpCnt;
-		
-		// 콘솔로 찍어보기
-		//LOGGER.info("insertBizPlanMaster_수정 : {}", addList.toString());
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
@@ -207,17 +179,12 @@ public class ScmMasterMngmentController {
 	public ResponseEntity<ReturnMessage> insertMstMngMasterCDC(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) 
 	{
 		LOGGER.debug("insertMstMngMasterCDC_params : {}", params);
-		//{stkId=768, scmStockTypeCbBox=61, scmCategoryCbBox=56, scmStockNameTxt=, stockCodeTxt=111873, stockTypeTxt=STK, categoryTxt=BT, descriptionTxt=BAS16-A, targetYNRadio=on, StartedDateTxt=01/11/2017, EndDateTxt=30/11/2017, memoTxt=test memo, klChkbox=on, kkChkbox=on, jbChkbox=on, kcChkbox=on, supplyPlanStockTxt=60, supplyPlanLTtxt=8, supplyPlanMoqTxt=50, supplyPlanLoadingQtyTxt=0, supplyPlanRemarkTxt=test remark}
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		
 		int tmpCnt = 0;
 		int totCnt = 0;
 		
-		
 		tmpCnt = scmMasterMngMentService.insertMstMngMasterCDC(params, sessionVO);
 		totCnt = totCnt + tmpCnt;
-		
-		// 콘솔로 찍어보기
-		//LOGGER.info("insertBizPlanMaster_수정 : {}", addList.toString());
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();

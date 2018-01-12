@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.PoMngementService;
-import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -33,15 +31,9 @@ public class PoManagementController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PoManagementController.class);
 	//private static final Logger LOGGER  = LoggerFactory.getLogger(this.getClass());
-
-	@Autowired
-	private SalesPlanMngementService salesPlanMngementService;
 	
 	@Autowired
 	private PoMngementService poMngementService;
-
-	@Autowired
-	private SessionHandler sessionHandler;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;

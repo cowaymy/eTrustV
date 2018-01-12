@@ -23,7 +23,6 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
-import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -37,9 +36,6 @@ public class SalesPlanManagementController {
 
 	@Autowired
 	private SalesPlanMngementService salesPlanMngementService;
-
-	@Autowired
-	private SessionHandler sessionHandler;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
