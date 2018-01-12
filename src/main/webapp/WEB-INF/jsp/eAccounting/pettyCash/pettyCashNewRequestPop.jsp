@@ -71,7 +71,11 @@ function setInputFile2(){//인풋파일 세팅하기
 
 function fn_tempSave() {
 	if(fn_checkEmpty()) {
-		fn_saveNewRequest(callType);
+		if(FormUtil.isEmpty($("#clmNo").val())) {
+			fn_saveNewRequest(callType);
+		} else {
+			fn_saveUpdateRequest(callType);
+		}
 	}
 }
 
@@ -131,9 +135,9 @@ function fn_saveUpdateRequest(st) {
         console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         Common.ajaxFile("/eAccounting/pettyCash/updatePettyCashReqst.do", formData, function(result) {
             console.log(result);
-            if(st == "view") {
+            if(st == "new") {
                 Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
-                $("#viewRequestPop").remove();
+                $("#newRequestPop").remove();
             }
             fn_selectRequestList();
         });
