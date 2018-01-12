@@ -686,6 +686,7 @@ SELECT DISTINCT
      , STK_TYPE_ID 
      , S43V.PO_NO 
      , S43V.PO_ITM_NO   
+     , IF56.EBELN   ECC_PO_NO 
      , GR_WEEK    
      , TO_CHAR(PO_ISSU_DT,'DD-MM-YYYY') PO_ISSU_DT
      , STOCK_CTGRY   
@@ -715,13 +716,12 @@ SELECT DISTINCT
      , SN   
      , STOCK_ID   
      , PO_APPV_STUS 
-     , IF56.EBELN ||'_'||S43V.PO_ITM_NO  ECC_PO_NO 
      , DECODE(PO_ITM_APPV_STUS,'Approved',5,1) CB_BOX_FLAG
-  FROM SCM0043V S43V
-      ,ITF0156M IF56
- WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
-   AND S43V.EST_WEEK = #{scmPeriodCbBox}
-   AND S43V.PO_NO = IF56.PO_NO
+ FROM SCM0043V S43V
+     ,ITF0156M IF56
+WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
+  AND S43V.EST_WEEK = #{scmPeriodCbBox}
+  AND S43V.PO_NO = IF56.PO_NO
 	<choose>
 	  <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
 	   AND S43V.STK_TYPE_ID IN
@@ -730,7 +730,7 @@ SELECT DISTINCT
 	      </foreach>
 	  </when>
 	</choose>     
-  
+   ORDER BY PO_NO, PO_ITM_NO
 </select>
 
 <select id="selectPoApprovalMainList_TEMP" parameterType="Map" resultType="egovMap">
