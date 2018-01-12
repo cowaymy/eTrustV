@@ -33,7 +33,7 @@ function fn_generateClick(){
 		
 		Common.ajax("GET", "/payment/countMonthlyRawData.do", $("#searchForm").serialize(), function(result) {
 	       var cnt = result;
-		   alert(cnt);
+
 	       if(cnt > 0){
 
 				Common.showLoader();

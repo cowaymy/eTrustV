@@ -9,19 +9,46 @@ $(document).ready(function(){
    
 });
 
+
 function fn_genDocument(){
-	
-	if(FormUtil.checkReqValue($('#V_PAYDATEFROM')) || FormUtil.checkReqValue($('#V_PAYDATETO'))){
+
+	if(FormUtil.checkReqValue($('#payDateFr')) || FormUtil.checkReqValue($('#payDateTo'))){
 		Common.alert("<spring:message code='pay.alert.payDateFromTo'/>");
 		return;
 	}
-   
-	var option = {
-            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-    };
 
-    Common.report("searchForm", option);	
+	//report 안쓴다.
+	//var option = {
+	//        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+	//};
+
+	//Common.report("searchForm", option);
+
+	var payDateFr = $("#payDateFr").val();
+	var payDateTo = $("#payDateTo").val();
+
+	Common.ajax("GET", "/payment/countDailyCollectionData.do", $("#searchForm").serialize(), function(result) {
+		var cnt = result;
+
+		console.log("dailyCollection cnt : " + cnt);
+
+		if(cnt > 0){
+			Common.showLoader();
+			$.fileDownload("/payment/selectDailyCollectionData.do?payDateFr=" + payDateFr + "&payDateTo="+payDateTo)
+				.done(function () {
+					Common.alert("<spring:message code='pay.alert.downSuccess'/>");
+					Common.removeLoader();            
+				})
+				.fail(function () {
+					Common.alert("<spring:message code='pay.alert.downFail'/>");
+					Common.removeLoader();            
+				});
+		}else{
+			Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
+		}
+	});
 }
+
    
 function fn_clear(){
     $("#searchForm")[0].reset();
@@ -65,10 +92,10 @@ function fn_clear(){
 				        <th scope="row">Payment Date</th>
 					    <td>
 					           <div class="date_set  w100p"><!-- date_set start -->
-					           <p><input id="V_PAYDATEFROM" name="V_PAYDATEFROM" type="text" title="Pay start Date" placeholder="DD/MM/YYYY" class="j_date" readonly />					               
+					           <p><input id="payDateFr" name="payDateFr" type="text" title="Pay start Date" placeholder="DD/MM/YYYY" class="j_date" readonly />					               
 					           </p>
 					           <span>~</span>
-					           <p><input id="V_PAYDATETO" name="V_PAYDATETO"  type="text" title="Pay end Date" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+					           <p><input id="payDateTo" name="payDateTo"  type="text" title="Pay end Date" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
 					           </div><!-- date_set end -->
 					    </td>
 					    <td>

@@ -500,12 +500,16 @@
 		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
 		       Extent2.CODE_NAME CODE_NAME  ,
 		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
-		       /*Extent1.PAY_ITM_CC_NO PAY_ITM_CC_NO  ,*/
-		       TRIM(LPAD(' ',LENGTH(Extent1.PAY_ITM_ORI_CC_NO) + 1,'*')) PAY_ITM_CC_NO  ,
-		       CASE 
-		            WHEN ( Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL ) THEN Extent1.PAY_ITM_ORI_CC_NO
-		       ELSE ' '
-		          END C1  ,
+		       (CASE 
+                  WHEN Extent1.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
+                  WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6) 
+                                              || '******' || SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,13,LENGTH(Extent1.PAY_ITM_ORI_CC_NO))            
+                                                                ELSE Extent1.PAY_ITM_ORI_CC_NO END) PAY_ITM_CC_NO,
+                (CASE 
+                  WHEN Extent1.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
+                  WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6) 
+                                              || '******' || SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,13,LENGTH(Extent1.PAY_ITM_ORI_CC_NO))            
+                                                                ELSE Extent1.PAY_ITM_ORI_CC_NO END) C1,                   
 		       Extent1.PAY_ITM_ORI_CC_NO AS PAY_ITM_ENCRYPT_CC_NO   ,
 		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
 		       Extent3.CODE_NAME CODENAME1  ,

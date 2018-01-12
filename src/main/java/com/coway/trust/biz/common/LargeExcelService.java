@@ -129,6 +129,8 @@ public interface LargeExcelService {
 	void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downloadMonthlyBillRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler);
+	
+	void downloadDailyCollectionRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
