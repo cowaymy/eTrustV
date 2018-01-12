@@ -756,8 +756,8 @@
              , MBRSH_STUS_CODE
              , PAC_NAME
              , MBRSH_CRT_DT
-             , MBRSH_START_DT
-             , MBRSH_EXPR_DT
+             , DECODE(MBRSH_START_DT, '01-JAN-00', '-', MBRSH_START_DT) AS MBRSH_START_DT
+             , DECODE(MBRSH_EXPR_DT,  '01-JAN-00', '-', MBRSH_EXPR_DT)  AS MBRSH_EXPR_DT
              , MBRSH_DUR
           FROM
              ( SELECT DECODE(V1.MBRSH_START_DT, '01-JAN-00', 1, 0) AS SORT_NO
