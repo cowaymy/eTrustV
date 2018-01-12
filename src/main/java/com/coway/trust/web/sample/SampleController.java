@@ -300,7 +300,7 @@ public class SampleController {
 		String token = "279BhJNk22i80c339b8kc8ac29";
 		String userName = "coway";
 		String password = "coway";
-		String msg = "test message by MVGate...";
+		String msg = "test message by MVGate...!@#$";
 		String trId = UUIDGenerator.get();
 
 		BulkSmsVO bulkSmsVO = new BulkSmsVO(sessionVO.getUserId(), 976);

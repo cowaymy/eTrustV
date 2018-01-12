@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -31,8 +29,10 @@ import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
 import com.coway.trust.util.CommonUtils;
-import com.coway.trust.util.RestTemplateFactory;
 import com.coway.trust.util.UUIDGenerator;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -189,30 +189,30 @@ public class AdaptorServiceImpl implements AdaptorService {
 				smsUrl = "http://" + gensuiteHost + gensuitePath + "?" + "ClientID=" + gensuiteClientId + "&Username="
 						+ gensuiteUserName + "&Password=" + gensuitePassword + "&Type=" + gensuiteType + "&Message="
 						+ URLEncoder.encode("RM0.00 " + smsVO.getMessage(), StandardCharsets.UTF_8.name())
-								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
-								.replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%3A", ":")
-								.replaceAll("%28", "(").replaceAll("%2F", "/").replaceAll("%29", ")")
-								.replaceAll("%26", "&").replaceAll("%3C", "<").replaceAll("%60", "`")
-								.replaceAll("%7E", "~").replaceAll("%24", "$").replaceAll("%5E", "^")
-								.replaceAll("%5F", "_").replaceAll("%7B", "{").replaceAll("%7D", "}")
-								.replaceAll("%7C", "|").replaceAll("%5B", "[").replaceAll("%5D", "]")
-								.replaceAll("%3F", "?").replaceAll("%0A", "\n")
+//								.replaceAll("\\+", " ").replaceAll("%40", "@").replaceAll("%21", "!")
+//								.replaceAll("%23", "#").replaceAll("%24", "$").replaceAll("%3A", ":")
+//								.replaceAll("%28", "(").replaceAll("%2F", "/").replaceAll("%29", ")")
+//								.replaceAll("%26", "&").replaceAll("%3C", "<").replaceAll("%60", "`")
+//								.replaceAll("%7E", "~").replaceAll("%24", "$").replaceAll("%5E", "^")
+//								.replaceAll("%5F", "_").replaceAll("%7B", "{").replaceAll("%7D", "}")
+//								.replaceAll("%7C", "|").replaceAll("%5B", "[").replaceAll("%5D", "]")
+//								.replaceAll("%3F", "?").replaceAll("%0A", "\n")
 						+ "&SenderID=" + gensuiteSenderId + "&Phone=" + gensuiteCountryCode + mobileNo
 						+ "&Concatenated=1&MsgID=" + msgId;
 			} catch (UnsupportedEncodingException e) {
 				throw new ApplicationException(e, AppConstants.FAIL);
 			}
 
-			ResponseEntity<String> response = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
-
-			LOGGER.debug("[sendSMS]getStatusCode : {}", response.getStatusCode());
-			LOGGER.debug("[sendSMS]getBody : {}", response.getBody());
+			Client client = Client.create();
+			WebResource webResource = client.resource(smsUrl);
+			ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+			String output = response.getEntity(String.class);
 
 			int statusId;
 			String body;
 
-			if (response.getStatusCode() == HttpStatus.OK) {
-				body = response.getBody();
+			if (response.getStatus() == 200) {
+				body = output;
 
 				if (GENSUITE_SUCCESS.equals(body)) {
 					statusId = 4;
@@ -227,13 +227,12 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 			} else {
 				statusId = 1;
-				body = response.getStatusCode().getReasonPhrase();
+				body = output;
 				result.setErrorCount(result.getErrorCount() + 1);
 			}
 
 			insertSMS(mobileNo, smsVO.getMessage(), smsVO.getUserId(), smsVO.getPriority(), smsVO.getExpireDayAdd(),
-					smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, response.getBody(),
-					msgId, vendorId);
+					smsVO.getSmsType(), smsVO.getRemark(), statusId, smsVO.getRetryNo(), body, output, msgId, vendorId);
 		});
 
 		return result;
@@ -271,21 +270,27 @@ public class AdaptorServiceImpl implements AdaptorService {
 		String trId = UUIDGenerator.get();
 		int vendorId = 1;
 		result.setMsgId(trId);
-		String smsUrl = "http://" + mvgateHost + mvgatePath + "?to=" + mvgateCountryCode + bulkSmsVO.getMobile()
-				+ "&token=" + mvgateToken + "&username=" + mvgateUserName + "&password=" + mvgatePassword + "&code="
-				+ mvgateCode + "&mt_from=" + mvgateMtFrom + "&text=" + bulkSmsVO.getMessage() + "&lang=0&trid=" + trId;
+		String smsUrl;
+		try {
+			smsUrl = "http://" + mvgateHost + mvgatePath + "?to=" + mvgateCountryCode + bulkSmsVO.getMobile()
+					+ "&token=" + mvgateToken + "&username=" + mvgateUserName + "&password=" + mvgatePassword + "&code="
+					+ mvgateCode + "&mt_from=" + mvgateMtFrom + "&text="
+					+ URLEncoder.encode(bulkSmsVO.getMessage(), "UTF-8") + "&lang=0&trid=" + trId;
+		} catch (UnsupportedEncodingException e) {
+			throw new ApplicationException(e);
+		}
 
-		ResponseEntity<String> response = RestTemplateFactory.getInstance().getForEntity(smsUrl, String.class);
-
-		LOGGER.debug("[sendSMSByBulk]getStatusCode : {}", response.getStatusCode());
-		LOGGER.debug("[sendSMSByBulk]getBody : {}", response.getBody());
+		Client client = Client.create();
+		WebResource webResource = client.resource(smsUrl);
+		ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+		String output = response.getEntity(String.class);
 
 		int statusId;
 		String body;
 		String retCode;
-		if (response.getStatusCode() == HttpStatus.OK) {
+		if (response.getStatus() == 200) {
 
-			body = response.getBody();
+			body = output;
 			String[] resArray = body.split(","); // <SUCCESS CODE>,<MSG ID>,<TRID>
 
 			if (MVGATE_SUCCESS.equals(resArray[0])) {
@@ -303,8 +308,8 @@ public class AdaptorServiceImpl implements AdaptorService {
 
 		} else {
 			statusId = 1;
-			body = response.getStatusCode().getReasonPhrase();
-			retCode = response.getStatusCode().toString();
+			body = output;
+			retCode = String.valueOf(response.getStatus());
 			result.setErrorCount(result.getErrorCount() + 1);
 		}
 
