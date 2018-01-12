@@ -848,6 +848,8 @@ function fn_rentalBillingInfoRental(){
             var  excludeRPF = (rpf > 0 && rpfPaid >= rpf) ? "N" : "Y";
             if (rpf == 0) excludeRPF = "N";
 
+			console.log("excludeRPF : " + excludeRPF);
+
             //Rental : Order 정보 조회
             Common.ajax("GET", "/payment/common/selectBillInfoRental.do", {orderId : salesOrdId, excludeRPF : excludeRPF}, function(result) {
                 //Rental : Bill Info 세팅
