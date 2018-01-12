@@ -362,8 +362,6 @@ function auiCellEditignHandler(event)
         var lastAmount = (calculPoQty * fobPrice);
         AUIGrid.setCellValue(myGridID2, event.rowIndex, 4, editPoQty);  // price
         AUIGrid.setCellValue(myGridID2, event.rowIndex, 6, lastAmount);// FOB AMOUNT
-        
-        
     } 
     else if(event.type == "cellEditCancel") 
     {
