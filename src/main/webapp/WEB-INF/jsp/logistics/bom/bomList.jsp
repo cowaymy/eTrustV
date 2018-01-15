@@ -243,9 +243,21 @@
     	   }
        });
        
+       $("#srchmtrcd").keypress(function(event) {
+           if (event.which == '13') {
+               $("#svalue").val($("#srchmtrcd").val());
+               $("#sUrl").val("/logistics/material/materialcdsearch.do");
+               Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
+           }
+       });
+       
         
     });
     
+    function fn_itempopList(data){
+        console.log(data);
+        $("#srchmtrcd").val(data[0].item.itemcode);        
+    }
     
     /* function Start*/
    function doGetComboCDC(url, groupCd ,codevalue ,  selCode, obj , type, callbackFn){
@@ -420,7 +432,8 @@
 			<!-- search_table start -->
 		<section class="search_table">
 			<form id="searchForm" name="searchForm">
-				<input type="hidden" id="sUrl" name="sUrl">
+			    <input type="hidden" id="svalue" name="svalue"/>
+                <input type="hidden" id="sUrl"   name="sUrl"  />
 				<table class="type1">
 					<!-- table start -->
 					<caption>table</caption>
