@@ -387,7 +387,7 @@ function fn_setGridDataByUploadData(pType) {
 	        Common.alert("Already registered NRIC.");
 	    }
 	}
-	
+
 	var nricArray = [];
 	var gridArray = [];
     $.each(atteRgistGridData, function(key , value) {
@@ -418,127 +418,171 @@ function fn_setGridDataByUploadData(pType) {
         gridArray.push(keyValue);
     });
 
-    console.log(gridArray);
-	
+    console.log("gridArray : "+JSON.stringify(gridArray));
     var jsonParam = { nricArray : nricArray};
-    Common.ajax("GET", "/organization/training/getUploadMemList", jsonParam , function(result) {
-        console.log(result)
-    	
-        if(result == null){
-            Common.alert('<b>Member not found.</br>');
-            $("#fileSelector").val("");
-            return;
-        }else{
-        	
-       var resultArray = [];
-       $.each(result, function(key , value) {
-    	   var resultMap = {};
-           $.each(value, function(k, v) {
-             console.log("key..... : " + k)
-             if(k.trim() == "coursDMemNric") {
-//            	 if(value[k] == gridArray[key][k]) {  //Template
-            		 resultMap[k] = v;
-                     resultMap.coursMemShirtSize = gridArray[key].coursMemShirtSize;
-//                 }
-             } else {
-            	 resultMap[k] = v;
-             }
-           });
-           resultArray.push(resultMap);
-       });
-       console.log("shirt : "+JSON.stringify(resultArray));
-       console.log(pType);
-       if(pType == "new") {
-    	   var newAttendeeGridData = AUIGrid.getGridData(newAttendeeGridID);
-    	    console.log(newAttendeeGridData);
-    	    var addArray = [];
-            var updateArray = [];
-    	   
-          //Params Setting
-            var strArr = [];
-            for (var idx = 0; idx < newAttendeeGridData.length; idx++) {
-               strArr.push(newAttendeeGridData[idx].coursDMemNric);   
-            }
-            
-            $.each(resultArray, function(i , o) {
-                var data = null;
-                $.each(o, function(k, v) {
-                  //console.log("keyoooooo : " + k)
-                  if(k.trim() == "coursDMemNric") {
-                      if(strArr.indexOf(v) == -1){
-                          //console.log("el : " + el);
-                          data = o;
-                          addArray.push(data);
-                      } else {
-                          data = o;
-                          updateArray.push(data);
-                      }
-                  }
-                });
-            });
-            
-    	    if(addArray.length > 0) {
-                console.log("add");
-                console.log(addArray);
-                AUIGrid.addRow(newAttendeeGridID, addArray, "last");
-            }
-            if(updateArray.length > 0) {
-            	console.log("update");
-                console.log(updateArray);
-                for (var idx = 0; idx < updateArray.length; idx++) {
-                	console.log("updateArray[idx]");
-                	console.log(updateArray[idx]);
-                	var rows = AUIGrid.getRowIndexesByValue(newAttendeeGridID, "coursDMemNric", updateArray[idx].coursDMemNric);
-                	console.log("rows");
-                	console.log(rows);
-                	AUIGrid.updateRow(newAttendeeGridID, updateArray[idx], rows[0]);
-                }
-            }
-            
-    	   $("#attendeePop").remove();
-       } else {
-    	   var atteRgistGridData = AUIGrid.getGridData(atteRgistGridID);
-    	    console.log("data: "+atteRgistGridData);
-    	    var addArray = [];
-            var updateArray = [];
 
-          //Params Setting
-            var strArr = [];
-            for (var idx = 0; idx < atteRgistGridData.length; idx++) {
-               strArr.push(atteRgistGridData[idx].coursDMemNric);   
-            }
+    if($("#memTypeYN").val() == 2318){
+    	
+    	Common.ajax("GET", "/organization/training/getUploadMemList", jsonParam , function(result) {
+            console.log("result : "+result)
             
-            $.each(resultArray, function(i , o) {
-                var data = null;
-                $.each(o, function(k, v) {
-                  //console.log("keyeeeeeeeeee : " + k)
-//                  if(k.trim() == "coursDMemNric") {
-                      if(strArr.indexOf(v) == -1){
-                          //console.log("el : " + el);
-                          data = o;
-                          addArray.push(data);
-                      } else {
-                          data = o;
-                          updateArray.push(data);
+            if(result == null){
+                Common.alert('<b>Member not found.</br>');
+                $("#fileSelector").val("");
+                return;
+            }else{
+                
+           var resultArray = [];
+           $.each(result, function(key , value) {
+               var resultMap = {};
+               $.each(value, function(k, v) {
+                 console.log("key..... : " + k)
+                 if(k.trim() == "coursDMemNric") {
+//                   if(value[k] == gridArray[key][k]) {  //Template
+                         resultMap[k] = v;
+                         resultMap.coursMemShirtSize = gridArray[key].coursMemShirtSize;
+//                     }
+                 } else {
+                     resultMap[k] = v;
+                 }
+               });
+               resultArray.push(resultMap);
+           });
+           console.log("shirt : "+JSON.stringify(resultArray));
+           console.log(pType);
+           if(pType == "new") {
+               var newAttendeeGridData = AUIGrid.getGridData(newAttendeeGridID);
+                console.log(newAttendeeGridData);
+                var addArray = [];
+                var updateArray = [];
+               
+              //Params Setting
+                var strArr = [];
+                for (var idx = 0; idx < newAttendeeGridData.length; idx++) {
+                   strArr.push(newAttendeeGridData[idx].coursDMemNric);   
+                }
+                
+                $.each(resultArray, function(i , o) {
+                    var data = null;
+                    $.each(o, function(k, v) {
+                      console.log("keyoooooo : " + k)
+                      if(k.trim() == "coursDMemNric") {
+                          if(strArr.indexOf(v) == -1){
+                              //console.log("el : " + el);
+                              data = o;
+                              addArray.push(data);
+                          } else {
+                              data = o;
+                              updateArray.push(data);
+                          }
                       }
-  //                }
+                    });
                 });
-            });
-            
-            if(addArray.length > 0) {
-            	console.log("add");
-                console.log(addArray);
-            	AUIGrid.addRow(newAttendeeGridID, resultArray, "last");
-            }
-            if(updateArray.length > 0) {
-            	console.log("update");
-            	console.log(updateArray);
-            }
-            
-    	   $("#attendeePop").remove();
-       }
+                
+                if(addArray.length > 0) {
+                    console.log("add");
+                    console.log(addArray);
+                    AUIGrid.addRow(newAttendeeGridID, addArray, "last");
+                }
+                if(updateArray.length > 0) {
+                    console.log("update");
+                    console.log(updateArray);
+                    for (var idx = 0; idx < updateArray.length; idx++) {
+                        console.log("updateArray[idx]");
+                        console.log(updateArray[idx]);
+                        var rows = AUIGrid.getRowIndexesByValue(newAttendeeGridID, "coursDMemNric", updateArray[idx].coursDMemNric);
+                        console.log("rows");
+                        console.log(rows);
+                        AUIGrid.updateRow(newAttendeeGridID, updateArray[idx], rows[0]);
+                    }
+                }
+                
+               $("#attendeePop").remove();
+           } else {
+               var atteRgistGridData = AUIGrid.getGridData(atteRgistGridID);
+                console.log("data: "+atteRgistGridData);
+                var addArray = [];
+                var updateArray = [];
+
+              //Params Setting
+                var strArr = [];
+                for (var idx = 0; idx < atteRgistGridData.length; idx++) {
+                   strArr.push(atteRgistGridData[idx].coursDMemNric);   
+                }
+                
+                $.each(resultArray, function(i , o) {
+                    var data = null;
+                    $.each(o, function(k, v) {
+                      console.log("keyeeeeeeeeee : " + k)
+//                      if(k.trim() == "coursDMemNric") {
+                          if(strArr.indexOf(v) == -1){
+                              //console.log("el : " + el);
+                              data = o;
+                              addArray.push(data);
+                          } else {
+                              data = o;
+                              updateArray.push(data);
+                          }
+      //                }
+                    });
+                });
+                
+                if(addArray.length > 0) {
+                    console.log("add");
+                    console.log(addArray);
+                    AUIGrid.addRow(newAttendeeGridID, resultArray, "last");
+                }
+                if(updateArray.length > 0) {
+                    console.log("update");
+                    console.log(updateArray);
+                }
+                
+               $("#attendeePop").remove();
+           }
+        }
+      });
+      
+    }else{
+    	var atteRgistGridData2 = AUIGrid.getGridData(atteRgistGridID);
+        console.log("data2: "+atteRgistGridData2);
+        
+        var addArray = [];
+        var updateArray = [];
+       
+        var strArr = [];
+        for (var idx = 0; idx < atteRgistGridData.length; idx++) {
+           strArr.push(atteRgistGridData[idx].coursDMemNric);   
+        }
+        
+    	$.each(gridArray, function(key , value) {
+    		var keyValue = {};
+
+    		$.each(value, function(k, v) {
+    			if(strArr.indexOf(v) == -1){
+                    //console.log("el : " + el);
+                    data = value;
+                    addArray.push(data);
+                } else {
+                    data = value;
+                    updateArray.push(data);
+                }
+    			
+    		});
+    	});
+    	if(addArray.length > 0) {
+            console.log("add2");
+            console.log("addArray : "+JSON.stringify(addArray));
+            AUIGrid.addRow(newAttendeeGridID, gridArray, "last");
+        }
+        if(updateArray.length > 0) {
+            console.log("update2");
+            console.log("updateArray : "+JSON.stringify(updateArray));
+        }
+        
+        $("#attendeePop").remove();
     }
-  });
+    
+    
 	
 }
 </script>

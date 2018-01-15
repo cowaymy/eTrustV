@@ -186,8 +186,10 @@ function fn_checkMemberTypeNew(){
     var val = $("#generalCodeNew").val();
     if(val == "2318") {
         $("#memTypeNew").removeAttr("disabled");
-    } else {
+        $("#newAddRow_btn").css("display", "");
+    } else {alert("a");
         $("#memTypeNew").attr("disabled", "disabled");
+        $("#newAddRow_btn").css("display", "none");
     }
 }
 

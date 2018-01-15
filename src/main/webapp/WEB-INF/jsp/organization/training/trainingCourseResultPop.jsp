@@ -410,7 +410,7 @@ function fn_courseResultSave() {
 		<div class="auto_file"><!-- auto_file start -->
 		<input type="file" id="fileSelector" title="file add" accept=".csv" />
 		</div><!-- auto_file end -->
-		<p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/organization/training/ResultKeyInUploadTemplate.xlsx">Download Format</a></p>
+		<p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/organization/training/ResultKeyInUploadTemplate.csv">Download Format</a></p>
 	</td>
 </tr>
 </tbody>
