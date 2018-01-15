@@ -2891,6 +2891,17 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         UPDATE ORG0005D
         SET ORG_UPD_DT = SYSDATE
             ,BRNCH_ID = #{selectBranch}
+            ,ORG_UPD_USER_ID = #{user_id}
+        WHERE  ( MEM_ID = #{MemberID} )
+        ]]>
+    </update>
+    
+    <update id="memberListUpdate_memorg2" parameterType="Map">
+     <![CDATA[
+        UPDATE ORG0001D
+        SET UPD_DT = SYSDATE
+            ,BRNCH = #{selectBranch}
+            ,UPD_USER_ID = #{user_id}
         WHERE  ( MEM_ID = #{MemberID} )
         ]]>
     </update>
