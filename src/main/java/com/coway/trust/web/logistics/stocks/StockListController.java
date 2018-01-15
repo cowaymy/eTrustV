@@ -195,8 +195,16 @@ public class StockListController {
 		// sampleService.saveTransaction(params);
 		String retMsg = AppConstants.MSG_SUCCESS;
 
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId;
+		if (sessionVO == null) {
+			loginId = 99999999;
+		} else {
+			loginId = sessionVO.getUserId();
+		}
+		
 		// loginId
-		params.put("upd_user", 99999999);
+		params.put("upd_user", loginId);
 
 		Map<String, Object> map = new HashMap();
 		map.put("revalue", params.get("revalue"));

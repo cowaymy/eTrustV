@@ -120,10 +120,10 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 				smap2.put("pricepv", params.get("dPV"));
 				smap2.put("tradeinpv", params.get("dTradeInPV"));
 				smap2.put("pricerpf", params.get("dRentalDeposit"));
-
+				
 				stockMapper.insertSalePriceInfoHistory(smap);
 				stockMapper.insertSalePriceInfoHistory(smap2);
-
+						
 				stockMapper.updateSalePriceInfo(smap);
 				stockMapper.updateSalePriceInfo(smap2);
 
@@ -131,14 +131,16 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 
 				smap.put("stockid", params.get("stockId"));
 				smap.put("amt", params.get("dNormalPrice"));
-				smap.put("apptypeid", "69");
+				smap.put("apptypeid", "67");
 				smap.put("pricecharges", params.get("dPenaltyCharge"));
 				smap.put("pricecosting", params.get("dCost"));
 				smap.put("statuscodeid", 1);
 
 				stockMapper.insertSalePriceInfoHistory(smap);
-
+				
 				stockMapper.updateSalePriceInfo(smap);
+
+
 			}
 		}
 	}

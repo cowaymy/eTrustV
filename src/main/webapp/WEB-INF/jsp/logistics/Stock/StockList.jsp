@@ -180,13 +180,16 @@
                           {dataField:    "cuser",headerText :"<spring:message code='log.head.cuser'/>"        ,width:120 , visible : false}];
     
     var pricehiscolumn=[
-                        {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "14%"    , visible : true},                 
-                        {dataField:    "amt",headerText :"<spring:message code='log.head.normalprice'/>"        ,width:    "14%"    , visible : true},                 
-                        {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "15%"    , visible : true},                 
-                        {dataField:    "mrental"   ,headerText:    "<spring:message code='log.head.monthlyrental'/>"        ,width:    "14%"    , visible : true},                 
-                        {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "14%"    , visible : true},                 
-                        {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "14%"    , visible : true},                 
-                        {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "15%"    , visible : true}, 
+                        {dataField:    "rowNo"   ,headerText:    "SeqNo"     ,width:    "10%"    , visible : true},    
+                        {dataField:    "mrental"   ,headerText:    "<spring:message code='log.head.monthlyrental'/>"        ,width:    "10%"    , visible : true},                 
+                        {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "10%"    , visible : true},                 
+                        {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "10%"    , visible : true},                 
+                        {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "10%"    , visible : true}, 
+                        {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "10%"    , visible : true},                 
+                        {dataField:    "amt",headerText :"<spring:message code='log.head.normalprice'/>"        ,width:    "10%"    , visible : true},                 
+                        {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "10%"    , visible : true},                 
+                        {dataField:    "crtDt"   ,headerText:    "CREATE Date"     ,width:    "10%"    , visible : true},    
+                        {dataField:    "crtUserId"   ,headerText:    " CREATE User"     ,width:    "10%"    , visible : true}   
                                ];
 
  // 그리드 속성 설정

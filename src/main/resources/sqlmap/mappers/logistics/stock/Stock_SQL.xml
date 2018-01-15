@@ -273,7 +273,7 @@
 	           </if>
 	           <if test="typeId !=null and typeId != '61'">
 	              and op.STK_ID = #{stockId}
-	              and op.APP_TYPE_ID = 69
+	              and op.APP_TYPE_ID = 67
 	              and op.MEM_PAC_ID = 0
 	              and op.STUS_CODE_ID = 1
 	           </if>
@@ -290,7 +290,8 @@
 					NVL(op.PRIOD, 0) ,
 					op.STUS_CODE_ID, 
 					op.CRT_USER_ID, 
-					op.CRT_DT,
+					<!-- op.CRT_DT, -->
+					to_char(op.CRT_DT,'YYYY/MM/DD') CRT_DT,
                    <if test="typeId !=null and typeId == '61'">
                    <![CDATA[
                    nvl(op.PRC_COSTING , 0) pricecost,
@@ -334,7 +335,7 @@
                </if>
                <if test="typeId !=null and typeId != '61'">
                   and op.STK_ID = #{stockId}
-                  and op.APP_TYPE_ID = 69
+                  and op.APP_TYPE_ID = 67
                   and op.MEM_PAC_ID = 0
                   and op.STUS_CODE_ID = 1
                </if>
@@ -400,7 +401,7 @@
 			 WHERE 1 = 1
 		]]>
 			   AND SP.STK_ID = #{stockId} 
-			   AND SP.APP_TYPE_ID = 69
+			   AND SP.APP_TYPE_ID = 67
 			   AND SP.MEM_PAC_ID <![CDATA[<>]]> 0
 			   AND SP.MEM_PAC_ID = PM.SRV_MEM_PAC_ID
 			 ORDER BY PACKAGENAME
