@@ -27,7 +27,7 @@ function fn_approveLineSubmit() {
     
     Common.ajax("POST", "/eAccounting/pettyCash/expApproveLineSubmit.do", obj, function(result) {
         console.log(result);
-        Common.popupDiv("/eAccounting/pettyCash/expCompletedMsgPop.do", {callType:callType,clmNo:result.clmNo}, null, true, "expCompletedMsgPop");
+        Common.popupDiv("/eAccounting/pettyCash/expCompletedMsgPop.do", {callType:callType,clmNo:result.data.clmNo}, null, true, "expCompletedMsgPop");
         //Common.alert("Your authorization request was successful.");
     });
 }
