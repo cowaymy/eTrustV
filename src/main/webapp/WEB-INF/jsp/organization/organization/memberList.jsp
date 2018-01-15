@@ -142,7 +142,7 @@ function fn_hpMemRegisPop(){
 	         
 	     });
         } else {
-	        Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
+	        Common.alert("Only available to entry Pending is in a case of Status");
 	    }     
     } else {
     	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
@@ -157,10 +157,10 @@ function fn_RejectHPMem(){
 							}
 						});
 	        } else {
-	            Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
+	            Common.alert("Only available to entry Pending is in a case of Status");
 	        }     
 	    } else {
-	        Common.alert("Only available to entry Pending is in a case of Status");
+	        Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
 	    }
 }
 
