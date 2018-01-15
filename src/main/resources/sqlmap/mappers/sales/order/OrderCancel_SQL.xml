@@ -810,6 +810,7 @@
     <update id="updateCancelSAL0001D" parameterType="Map">
         UPDATE SAL0001D
 			 SET REM = #{callRem},
+			       STUS_CODE_ID = #{salesMstusCodeId},
 			       UPD_DT = SYSDATE,
 			       UPD_USER_ID = #{userId}
 		 WHERE SALES_ORD_ID = #{salesOrdId}
