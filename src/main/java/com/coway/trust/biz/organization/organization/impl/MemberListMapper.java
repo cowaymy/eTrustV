@@ -141,6 +141,8 @@ public interface MemberListMapper {
 	int memberListUpdate_user(Map<String, Object> params);
 
 	int memberListUpdate_memorg(Map<String, Object> params);
+	
+	int memberListUpdate_memorg2(Map<String, Object> params);
 
 	int memberListUpdate_member(Map<String, Object> params);
 	

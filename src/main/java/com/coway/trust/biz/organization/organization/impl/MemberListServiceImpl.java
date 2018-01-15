@@ -1389,6 +1389,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public  int    memberListUpdate_memorg(Map<String, Object> params) {
 		return memberListMapper.memberListUpdate_memorg(params);
 	}
+	
+	@Override
+	public  int    memberListUpdate_memorg2(Map<String, Object> params) {
+		return memberListMapper.memberListUpdate_memorg2(params);
+	}
 
 	@Override
 	public  int    memberListUpdate_member(Map<String, Object> params) {

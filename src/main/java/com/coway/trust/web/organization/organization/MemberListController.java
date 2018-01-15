@@ -1135,6 +1135,128 @@ public class MemberListController {
 		return ResponseEntity.ok(course);
 	}
 	
+	
+	/**
+	 * MemberList Edit Pop open
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+
+	@RequestMapping(value = "/memberListBranchEditPop.do")
+	public String memberListBranchEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		List<EgovMap> branch = memberListService.branch();
+		logger.debug("branchList : {}", branch);
+		
+		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+		logger.debug("params123 : {}", params);
+		EgovMap selectMemberListView = null;
+		if(!params.get("memType").toString().equals("2803")){ //hp가 아닐때
+			selectMemberListView = memberListService.selectMemberListView(params);
+		}
+		else{
+			selectMemberListView = memberListService.selectOneHPMember(params);
+		}
+		logger.debug("selectMemberListView : {}", selectMemberListView);
+		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
+		logger.debug("issuedBank : {}", selectIssuedBank);
+		EgovMap ApplicantConfirm = memberListService.selectApplicantConfirm(params);
+		logger.debug("ApplicantConfirm : {}", ApplicantConfirm);
+		EgovMap PAExpired = memberListService.selectCodyPAExpired(params);
+		logger.debug("PAExpired : {}", PAExpired);
+		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
+		logger.debug("mainDeptList : {}", mainDeptList);
+		
+		if(selectMemberListView != null){
+    		params.put("groupCode", selectMemberListView.get("mainDept"));
+    		logger.debug("params : {}", params);
+    		logger.debug("groupCode : {}", selectMemberListView.get("mainDept"));
+		}
+		else{
+			params.put("groupCode", "");
+		}
+    		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
+    		logger.debug("subDeptList : {}", subDeptList);
+		
+		model.addAttribute("PAExpired", PAExpired);
+		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
+		model.addAttribute("memberView", selectMemberListView);// 있어
+		model.addAttribute("issuedBank", selectIssuedBank); //있어
+		model.addAttribute("mainDeptList", mainDeptList);
+		model.addAttribute("subDeptList", subDeptList);
+		model.addAttribute("memType", params.get("memType"));
+		model.addAttribute("memId", params.get("MemberID"));
+		model.addAttribute("branch", branch);
+		// 호출될 화면
+		return "organization/organization/memberListBranchEditPop";
+	}
+	
+	
+	@RequestMapping(value = "/memberBranchUpdate", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateBranchMemberl(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
+
+		//memberListService.saveDocSubmission(memberListVO,params, sessionVO);
+
+		Boolean success = false;
+		String msg = "";
+
+
+
+		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+
+		int userId = sessionVO.getUserId();
+		formMap.put("user_id", userId);
+
+		logger.debug("udtList : {}", updList);
+		logger.debug("formMap : {}", formMap);
+
+		logger.debug("memberNm : {}", formMap.get("memberNm"));
+		logger.debug("memberType : {}", formMap.get("memberType"));
+		logger.debug("joinDate : {}", formMap.get("joinDate"));
+		logger.debug("gender : {}", formMap.get("gender"));
+		logger.debug("update : {}", formMap.get("docType"));
+		logger.debug("myGridID : {}", formMap.get("params"));
+
+		String memCode = "";
+		boolean update = false;
+
+		logger.debug("memCode : {}", formMap.get("memCode"));
+
+		//update
+		
+		memCode =  (String)formMap.get("memCode");
+
+		int resultUpc1 = 0;
+		int resultUpc2 = 0;
+		int resultUpc3 = 0;
+		int resultUpc4 = 0;
+		int resultUpc5 = 0;
+		if( !formMap.get("memberType").toString().equals("2803") ){// hp가아닐때
+		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
+		resultUpc3 = memberListService.memberListUpdate_memorg2(formMap);
+		
+		}
+		// 결과 만들기.
+   	ReturnMessage message = new ReturnMessage();
+   	if(memCode.equals("") && memCode.equals(null)){
+   		message.setMessage("fail saved");
+   	}else{
+   		message.setMessage("Compelete to Edit a Member Code : " +memCode);
+   	}
+   	logger.debug("message : {}", message);
+
+   	System.out.println("msg   " + success);
+//
+	return ResponseEntity.ok(message);
+	}
+
 	@RequestMapping(value = "/hpMemReject.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> rejectHPApproval(@RequestParam Map<String, Object> params, Model model){
 		ReturnMessage message = new ReturnMessage();
@@ -1149,6 +1271,4 @@ public class MemberListController {
 		
 		return ResponseEntity.ok(message);
 	}
-
-	
 }

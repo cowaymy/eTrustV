@@ -339,6 +339,12 @@ function fn_memberEditPop(){
 	     //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 }
 
+function fn_branchEditPop(){
+    //Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
+    Common.popupDiv("/organization/memberListBranchEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+    //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+}
+
 
 
 
@@ -398,6 +404,9 @@ function fn_searchPosition(selectedData){
 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
 </c:if>    
+<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_branchEditPop()">Branch Edit</a></p></li>
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
 </c:if>   
