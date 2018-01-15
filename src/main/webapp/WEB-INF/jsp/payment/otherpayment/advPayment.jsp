@@ -288,7 +288,7 @@ $(document).ready(function(){
     targetSrvcMstGridID = GridCommon.createAUIGrid("target_srvc_grid_wrap", targetSrvcMstColumnLayout,null,gridPros);
     targetSrvcDetGridID = GridCommon.createAUIGrid("target_srvcD_grid_wrap", targetSrvcDetColumnLayout,null,gridPros);
     targetBillMstGridID = GridCommon.createAUIGrid("target_bill_grid_wrap", targetBillMstColumnLayout,null,gridPros);
-	targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros);
+    targetOutSrvcMstGridID = GridCommon.createAUIGrid("target_outSrvc_grid_wrap", targetOutSrvcMstColumnLayout,null,gridPros);
     targetFinalBillGridID = GridCommon.createAUIGrid("target_finalBill_grid_wrap", targetFinalBillColumnLayout,null,targetGridPros);
     
     //Rental Billing Grid 에서 체크/체크 해제시
@@ -418,6 +418,8 @@ $(document).ready(function(){
     doGetCombo('/common/getAccountList.do', 'CHQ','', 'chequeBankAcc', 'S', '' );
     doGetCombo('/common/getAccountList.do', 'ONLINE','', 'onlineBankAcc', 'S', '' );
     
+    fn_payTypeChange();
+    
 });
 
 function fn_chgAppType(){
@@ -428,14 +430,14 @@ function fn_chgAppType(){
      $("#outSearch").hide();
      $("#srvcSearch").hide();
      $("#billSearch").hide();
-	 $("#outSrvcSearch").hide();	 
+     $("#outSrvcSearch").hide();	 
      
      //Form 초기화
      $("#rentalSearchForm")[0].reset();
      $("#outSearchForm")[0].reset();
      $("#srvcSearchForm")[0].reset();
      $("#billSearchForm")[0].reset();
- 	 $("#outSrvcSearchForm")[0].reset();
+     $("#outSrvcSearchForm")[0].reset();
      
      //그리드 초기화
      resetRentalGrid();
@@ -2158,14 +2160,31 @@ function fn_payTypeChange(){
         $("#cashSearch").show();
         $("#chequeSearch").hide();
         $("#onlineSearch").hide();
+        
+        $("#cashBankType option").remove();
+        $("#cashBankType").append("<option value=''>Choose One</option>");
+        $("#cashBankType").append("<option value='2729'>MBB CDM</option>");
+        $("#cashBankType").append("<option value='2730'>VA</option>");
+        $("#cashBankType").append("<option value='2731'>Others</option>");
     }else if(payType == "106"){//Cheque
         $("#cashSearch").hide();
         $("#chequeSearch").show();
         $("#onlineSearch").hide();
+        
+        $("#chequeBankType option").remove();
+        $("#chequeBankType").append("<option value=''>Choose One</option>");
+        $("#chequeBankType").append("<option value='2730'>VA</option>");
+        $("#chequeBankType").append("<option value='2731'>Others</option>");
     }else if(payType == "108"){//Online
         $("#cashSearch").hide();
         $("#chequeSearch").hide();
         $("#onlineSearch").show();
+        
+        $("#onlineBankType option").remove();
+        $("#onlineBankType").append("<option value=''>Choose One</option>");
+        $("#onlineBankType").append("<option value='2728'>JomPay</option>");
+        $("#onlineBankType").append("<option value='2730'>VA</option>");
+        $("#onlineBankType").append("<option value='2731'>Others</option>");
     }
 }
 
@@ -2179,11 +2198,17 @@ function fn_bankChange(bankVal){
             $("#cashVAAccount").attr('readonly', true);
             $("#cashBankAcc").attr('disabled', false);
             $("#cashBankAcc").removeClass("disabled");
+            
+            if(cashBankType == '2729'){
+                $('#cashBankAcc').val("84");
+            }else{
+                $('#cashBankAcc').val('');
+            }
         }else{
             $("#cashVAAccount").removeClass("readonly");
             $("#cashVAAccount").attr('readonly', false);
-            $("#cashBankAcc").attr('disabled', true);
-            $("#cashBankAcc").addClass("w100p disabled");
+            $("#cashBankAcc").attr('disabled', false);
+            //$("#cashBankAcc").addClass("w100p disabled");
         }
     }else if(bankVal == "CHQ"){
         var chequeBankType = $("#chequeBankType").val();
@@ -2191,14 +2216,14 @@ function fn_bankChange(bankVal){
         $("#chequeBankAcc").val('');
         if(chequeBankType != "2730"){
             $("#chequeVAAccount").addClass("readonly");
-            $("#chequeVAAccount").attr("readonly", true);
+            $("#chequeVAAccount").attr("readonly", false);
             $("#chequeBankAcc").attr('disabled', false);
             $("#chequeBankAcc").removeClass("disabled");
         }else{
             $("#chequeVAAccount").removeClass("readonly");
             $("#chequeVAAccount").attr("readonly", false);
-            $("#chequeBankAcc").attr('disabled', true);
-            $("#chequeBankAcc").addClass("w100p disabled");
+            $("#chequeBankAcc").attr('disabled', false);
+            //$("#chequeBankAcc").addClass("w100p disabled");
         }
     }else if(bankVal == "ONL"){
         var onlineBankType = $("#onlineBankType").val();
@@ -2206,14 +2231,28 @@ function fn_bankChange(bankVal){
         $("#onlineBankAcc").val('');
         if(onlineBankType != "2730"){
             $("#onlineVAAccount").addClass("readonly");
-            $("#onlineVAAccount").attr('readonly', true);
+            $("#onlineVAAccount").attr('readonly', false);
             $("#onlineBankAcc").attr('disabled', false);
             $("#onlineBankAcc").removeClass("disabled");
+            
+            if(onlineBankType == '2728'){
+                $("#onlineBankAcc option").remove();
+                $("#onlineBankAcc").append("<option value=''>Choose One</option>");
+                $("#onlineBankAcc").append("<option value='546'>2710/010C - CIMB 641</option>");
+                $("#onlineBankAcc").append("<option value='561'>2710/208 - ALB 2</option>");
+              }else{
+                $("#onlineBankAcc option").remove();
+                doGetCombo('/common/getAccountList.do', 'ONLINE','', 'onlineBankAcc', 'S', '' );       
+              }
+            
         }else{
             $("#onlineVAAccount").removeClass("readonly");
             $("#onlineVAAccount").attr('readonly', false);
-            $("#onlineBankAcc").attr('disabled', true);
-            $("#onlineBankAcc").addClass("w100p disabled");
+            $("#onlineBankAcc").attr('disabled', false);
+            //$("#onlineBankAcc").addClass("w100p disabled");
+            $("#onlineBankAcc option").remove();
+            $("#onlineBankAcc").append("<option value='525'>2710/010B - CIMB VA</option>");
+            $('#onlineBankAcc').val("525");
         }
     }
 }
