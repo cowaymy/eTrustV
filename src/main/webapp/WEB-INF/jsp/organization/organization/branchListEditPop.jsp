@@ -87,6 +87,7 @@
         function fn_branchSave() {
 
             if (validRequiredField()){
+            	$("select[name=branchType]").removeAttr("disabled");
                 Common.ajax("GET","/organization/branchListUpdate.do", $("#branchForm").serialize(), function(result){
                     console.log(result);
                     Common.alert("Branch Save successfully.",fn_close);
@@ -330,7 +331,7 @@
 <tr>
     <th scope="row">Branch Type<span class="must">*</span></th>
     <td>
-    <select id="branchType" name="branchType" class="w100p">
+    <select id="branchType" name="branchType" class="w100p" disabled="true">
         <%-- <option value="${branchDetail.typeId}"  selected></option> --%>
            <c:forEach var="list" items="${branchType }" varStatus="status">
            <option value="${list.branchId}">${list.c1}</option>
