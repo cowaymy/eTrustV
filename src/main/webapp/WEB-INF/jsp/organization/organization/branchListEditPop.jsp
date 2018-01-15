@@ -69,11 +69,10 @@
         //Start AUIGrid
         $(document).ready(function() {
         	
-             $("#branchType option[value="+ branchId +"]").attr("selected", true);
-	         doGetCombo('/common/selectCodeList.do', '49', '','cmRegion', 'S' , ''); //region
         	 var branchId = "${branchDetail.typeId}";
+             $("#branchType option[value='"+ branchId +"']").attr("selected", true);
              var codeId= $("#regionValue").val();
-             $("#cmRegion option[value="+ codeId + "]").attr("selected", true); 
+             CommonCombo.make('cmRegion', "/common/selectCodeList.do", '49' , codeId, '');
 	         var tempState = $("#getState").val();
 	         var tempCity = $("#getCity").val();
 	         var tempPostCode = $("#getPostCode").val();
@@ -331,7 +330,7 @@
 <tr>
     <th scope="row">Branch Type<span class="must">*</span></th>
     <td>
-    <select id="branchType" name="branchType" class="w100p" disabled="disabled">
+    <select id="branchType" name="branchType" class="w100p">
         <%-- <option value="${branchDetail.typeId}"  selected></option> --%>
            <c:forEach var="list" items="${branchType }" varStatus="status">
            <option value="${list.branchId}">${list.c1}</option>
