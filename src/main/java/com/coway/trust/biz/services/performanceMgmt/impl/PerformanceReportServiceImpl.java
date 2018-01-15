@@ -41,6 +41,12 @@ public class PerformanceReportServiceImpl  implements PerformanceReportService{
 		return performanceReportMapper.selectPfReportSales(params);
 	}
 
+	@Override
+	public List<EgovMap> selectBranchList(Map<String, Object> params)  {
+		// TODO Auto-generated method stub
+		return performanceReportMapper.selectBranchList(params);
+	}
+
 	
 	
 	

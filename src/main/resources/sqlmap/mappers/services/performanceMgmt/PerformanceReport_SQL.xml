@@ -215,7 +215,17 @@
 
 
 
+    <select id="selectBranchList" parameterType="Map" resultType="egovMap">
 
+        SELECT s005m.brnch_id AS CODE_ID
+                , s005m.code || '-' || s005m.name AS CODE_NAME
+            from SYS0005M s005m
+                    ,SYS0013M s0013m
+            where s005m.type_id = s0013m.code_id
+            and s005m.type_id in ( 42)
+            order by s005m.CODE ASC
+
+    </select>
 
 
 

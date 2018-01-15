@@ -45,11 +45,14 @@ public class PerformanceReportController {
 	
 	@RequestMapping(value = "/performanceReport.do")
 	public String performanceReport(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
-		List<EgovMap> branchList = hsManualService.selectBranchList(params);
+		List<EgovMap> branchList = performanceReportService.selectBranchList(params);
 		model.addAttribute("branchList", branchList);
 		
 		return "services/performanceMgmt/performanceReport";
 	}
+	
+	
+	
 	
 	
 	
@@ -101,6 +104,31 @@ public class PerformanceReportController {
 		}
 		
 	
-	
+
+
+		
+		
+		@RequestMapping(value = "/performanceReportCT.do")
+		public String performanceReportCT(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+			List<EgovMap> branchList = hsManualService.selectBranchList(params);
+			model.addAttribute("branchList", branchList);
+			
+			return "services/performanceMgmt/performanceReportCt";
+		}
+		
+		
+		
+		
+		@RequestMapping(value = "/hqDashboard.do")
+		public String performanceReportHQ(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+			List<EgovMap> branchList = hsManualService.selectBranchList(params);
+			model.addAttribute("branchList", branchList);
+			
+			return "services/performanceMgmt/performanceReportHQ";
+		}		
+		
+		
+		
+		
 	
 }

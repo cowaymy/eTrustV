@@ -15,4 +15,6 @@ public interface PerformanceReportService {
 
 	List<EgovMap> selectPfReportSales(Map<String, Object> params) throws Exception;
 
+	List<EgovMap> selectBranchList(Map<String, Object> params) ;
+
 }

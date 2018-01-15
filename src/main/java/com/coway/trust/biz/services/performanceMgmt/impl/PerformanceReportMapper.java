@@ -17,4 +17,6 @@ public interface PerformanceReportMapper {
 
 	List<EgovMap> selectPfReportCollection(Map<String, Object> params);
 
+	List<EgovMap> selectBranchList(Map<String, Object> params);
+
 }
