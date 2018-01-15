@@ -393,8 +393,10 @@ function fn_approveLinePop() {
             // 고려하여 update 후 approve
             // file 업로드를 하지 않은 상태라면 atchFileGrpId가 없을 수 있다
             if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+            	console.log("fn_attachmentUpload Action");
                 fn_attachmentUpload("");
             } else {
+            	console.log("fn_attachmentUpdate Action");
                 fn_attachmentUpdate("");
             }
         	
@@ -423,8 +425,10 @@ function fn_tempSave() {
             return false;
         } else {
         	if(FormUtil.isEmpty($("#atchFileGrpId").val())) {
+        		console.log("fn_attachmentUpload Action");
                 fn_attachmentUpload(callType);
             } else {
+            	console.log("fn_attachmentUpdate Action");
                 fn_attachmentUpdate(callType);
             }
         }
