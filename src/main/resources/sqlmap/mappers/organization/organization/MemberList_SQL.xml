@@ -3914,5 +3914,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           AND ( 1 = Extent1.AG_STUS_ID ) AND ROWNUM <= 1
         ]]>
        </update>
+       
+       
+     <update id="updateHpApprovalReject" parameterType="Map">
+		   
+		update org0003d
+		set STUS_ID = 6
+		where APLCTN_ID = #{memberId}
+     
+     </update>  
 
 </mapper>

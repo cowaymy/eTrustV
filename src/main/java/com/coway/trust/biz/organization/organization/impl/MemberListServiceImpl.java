@@ -2041,4 +2041,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		memberListMapper.updateCodyPaDate(params);
 		
 	}
+
+	@Override
+	public boolean updateHpApprovalReject(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.updateHpApprovalReject(params) > 0;
+	}
 }

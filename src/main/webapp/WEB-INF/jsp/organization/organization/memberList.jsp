@@ -107,6 +107,15 @@ function fn_requestVacationPop(){
     }
 }
 
+function fn_clickHpApproval(){
+	
+    Common.confirm("Do you want to approve the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_hpMemRegisPop );
+}
+
+function fn_clickHpReject(){
+	  Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_RejectHPMem );
+}
+
 function fn_hpMemRegisPop(){
      var jsonObj = {
              MemberID :memberid,
@@ -138,7 +147,21 @@ function fn_hpMemRegisPop(){
     } else {
     	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
     }
-
+}
+function fn_RejectHPMem(){
+	 if (memberType == "2803" ) {
+	        if ( statusName == "Pending" ) {
+	        	   Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
+						if(result.message == "success"){
+							  Common.alert("Success to Reject to the HP Applicant :" + membercode);
+							}
+						});
+	        } else {
+	            Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
+	        }     
+	    } else {
+	        Common.alert("Only available to entry Pending is in a case of Status");
+	    }
 }
 
 /*By KV end - traineeToMemberRegistPop*/
@@ -167,7 +190,7 @@ $(document).ready(function() {
         statusName = AUIGrid.getCellValue(myGridID, event.rowIndex, "statusName");
         traineeType = AUIGrid.getCellValue(myGridID, event.rowIndex, "traineeType");
         nric = AUIGrid.getCellValue(myGridID, event.rowIndex, "nric");
-        
+        memberName = AUIGrid.getCellValue(myGridID, event.rowIndex, "name");
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 
@@ -188,7 +211,7 @@ function createAUIGrid() {
 		    dataField : "memberid",
 		    headerText : "MemberID",
 		    editable : false,
-		    width : 130
+		    width : 0
 		}, {
 		    dataField : "membercode",
 		    headerText : "Member Code",
@@ -382,7 +405,10 @@ function fn_searchPosition(selectedData){
     <li><p class="btn_blue"><a href="javascript:fn_confirmMemRegisPop()">Confirm Member Registration </a></p></li>
 </c:if>  
  <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">  
-    <li><p class="btn_blue"><a href="javascript:fn_hpMemRegisPop()">HP Approval</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:fn_clickHpApproval()">HP Approval</a></p></li>
+</c:if> 
+ <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">  
+    <li><p class="btn_blue"><a href="javascript:fn_clickHpReject()">HP Reject</a></p></li>
 </c:if>    
 </ul>
 </aside><!-- title_line end -->

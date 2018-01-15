@@ -135,4 +135,7 @@ public interface MemberListService {
 	void updateDocSub(List<Object> updList, String memId, int userId , String memType);
 
 	void memberCodyPaUpdate(Map<String, Object> formMap);
+
+	boolean updateHpApprovalReject(Map<String, Object> params);
+
 }

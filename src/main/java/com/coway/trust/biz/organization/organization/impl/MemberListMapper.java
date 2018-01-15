@@ -220,4 +220,6 @@ public interface MemberListMapper {
 
 	void updateCodyPaDate(Map<String, Object> params);
 
+	int updateHpApprovalReject(Map<String, Object> params);
+
 }

@@ -1134,6 +1134,21 @@ public class MemberListController {
 		List<EgovMap> course = memberListService.selectBusinessType();
 		return ResponseEntity.ok(course);
 	}
+	
+	@RequestMapping(value = "/hpMemReject.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> rejectHPApproval(@RequestParam Map<String, Object> params, Model model){
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params {}", params);
+		boolean isHPApprovalReject = memberListService.updateHpApprovalReject(params);
+		
+		if(isHPApprovalReject){
+			message.setMessage("success");
+		}
+		
+		
+		
+		return ResponseEntity.ok(message);
+	}
 
 	
 }
