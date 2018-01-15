@@ -113,7 +113,11 @@
                     WHEN LENGTH(#{item.refNo}) <![CDATA[   < ]]> 7 THEN LPAD(#{item.refNo},7,'0')
                     WHEN LENGTH(#{item.refNo}) <![CDATA[   > ]]> 7 THEN LPAD(#{item.refNo},14,'0')
                     ELSE #{item.refNo} END),
-            #{item.refCode},
+            (CASE
+                    WHEN #{item.refCode} IS NULL THEN #{item.refCode}
+                    WHEN #{item.refCode} = 'A' THEN LPAD(#{item.refCode},3,'0')
+                    WHEN LENGTH(#{item.refCode}) <![CDATA[   < ]]> 2 THEN  LPAD(#{item.refCode},2,'0')
+                    ELSE #{item.refCode} END),
             #{item.id},
             #{item.itemId}
         FROM DUAL

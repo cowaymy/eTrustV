@@ -282,6 +282,7 @@
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
                 JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+                
                 LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
                 LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
                 LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
@@ -303,28 +304,13 @@
         FROM
             (
             SELECT
-                Extent1.RENT_AMT BILL_AMT  ,           
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID                        
+                Extent1.RENT_AMT BILL_AMT  ,   
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID                                     
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             )
@@ -365,29 +351,14 @@
                 Extent1.RENT_DOC_NO BILL_NO  ,       
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent1.RENT_INST_NO AS INSTALLMENT,   
+                Extent1.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM  
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             ) LED
@@ -412,29 +383,14 @@
                 Extent1.RENT_DOC_NO BILL_NO  ,       
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent1.RENT_INST_NO AS INSTALLMENT,  
+                Extent1.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM  
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             ) LED
@@ -478,29 +434,14 @@
                 Extent1.RENT_DOC_NO BILL_NO  ,       
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent1.RENT_INST_NO AS INSTALLMENT,   
+                Extent1.RENT_DOC_TYPE_ID AS  BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM  
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             ) LED
@@ -541,29 +482,14 @@
                 Extent1.RENT_DOC_NO BILL_NO  ,       
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM 
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             ) LED
@@ -605,28 +531,13 @@
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
                 Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM  
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             ) LED
@@ -651,28 +562,13 @@
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
                 Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
-                    WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
-                                (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
-                                (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
-                    ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM  
             FROM 
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
-                LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
-                LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
             WHERE 
                 Extent1.RENT_SO_ID = #{orderId} 
             ) LED
