@@ -245,7 +245,7 @@ var billingTargetLayout = [
 			  var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
 			  var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
 			  var billingTargetItems = AUIGrid.getGridData(billingTargetGridId);
-            
+			  var billingScheduleItems = AUIGrid.getGridData(billingscheduleGridId);    
             
 			  if(currentDay >= 26 || currentDay == 1){
 				  Common.alert("<spring:message code='pay.alert.unable26And1'/>");
@@ -286,25 +286,20 @@ var billingTargetLayout = [
 							  var chkRow = true;
 							  for (var i = 0 ; i  < rowList.length ; i++){
 								  var installment = rowList[i].installment;
-                  
-								  for (var j = 0 ; j  < billingScheduleItems.length ; j++){
-                    
-									  if(installment == billingScheduleItems[j].installment){
-                    
-										  chkRow = false;
-                      
+								  for (var j = 0 ; j  < billingTargetItems.length ; j++){
+									  if(salesOrdNo ==  billingTargetItems[j].salesOrdNo){
+										  if(installment == billingTargetItems[j].installment){
+											  chkRow = false;
+										  }
 									  }
 								  }
 								  
 								  if(chkRow){
-									  AUIGrid.addRow(billingscheduleGridId, rowList[i], "first");
+									  AUIGrid.addRow(billingTargetGridId, rowList[i], "first");
+									  AUIGrid.removeCheckedRows(billingscheduleGridId);
 								  }
 							  }
-                
-							  AUIGrid.setSorting(billingscheduleGridId, sortingInfo);
 						  }
-              
-						  AUIGrid.removeCheckedRows(billingTargetGridId);
               
 					  }else{
             

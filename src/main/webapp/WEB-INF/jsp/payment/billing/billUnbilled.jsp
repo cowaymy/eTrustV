@@ -246,6 +246,7 @@ var billingTargetLayout = [
 			  var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
 			  var checkedItems = AUIGrid.getCheckedRowItemsAll(billingscheduleGridId);
 			  var billingTargetItems = AUIGrid.getGridData(billingTargetGridId);
+			  
 			  if(currentDay >= 26 || currentDay == 1){
 				  Common.alert("<spring:message code='pay.alert.unable26And1'/>");
 				  return;
