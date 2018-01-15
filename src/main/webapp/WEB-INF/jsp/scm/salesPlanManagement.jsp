@@ -144,7 +144,7 @@ var options = {
     // cellClick event.
     AUIGrid.bind(gInsertGridID, "cellClick", function( event ) 
     {
-        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+        //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
 
         if (AUIGrid.isAddedById(gInsertGridID ,AUIGrid.getCellValue(gInsertGridID, event.rowIndex, 0)) == true
@@ -220,8 +220,7 @@ function fnConfirm(flag)
 	              {
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                fnSearchBtnList();
-	                console.log("성공." + JSON.stringify(result));
-	                console.log("data : " + result.data);
+	                console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
 	              } 
 	            , function(jqXHR, textStatus, errorThrown) 
 	              {
@@ -269,8 +268,7 @@ function fnUnConfirm(obj)
 	              {
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                fnSearchBtnList();
-	                console.log("성공." + JSON.stringify(result));
-	                console.log("data : " + result.data);
+	                console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
 	              } 
 	            , function(jqXHR, textStatus, errorThrown) 
 	              {
@@ -305,8 +303,9 @@ function fnDelete(obj)
 
 	  if (checkedItemsList.length > 0)
 	  {
-	    for (var icnt = 0; icnt < checkedItemsList.length; icnt++)
+	    for (var icnt = 0; icnt < checkedItemsList.length; icnt++){
 	      console.log("code: " + checkedItemsList[icnt].code + " /team: "+ checkedItemsList[icnt].team+ " /PLAN_MASTER_ID: "+ checkedItemsList[icnt].planMasterId );
+	    }
 
 	    data.checked = checkedItemsList;
 
@@ -318,8 +317,7 @@ function fnDelete(obj)
 	                   Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                   fnSearchBtnList() ;
 	                     
-	                   console.log("성공." + JSON.stringify(result));
-	                   console.log("data : " + result.data);
+	                   console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
 	                 } 
 	              ,  function(jqXHR, textStatus, errorThrown) 
 	                 {
@@ -366,9 +364,7 @@ function fnCreate(obj)
 	           {
 	              Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	              fnSettiingHeader();
-	              
-	              console.log("성공." + JSON.stringify(result));
-	              console.log("data : " + result.data);
+	              console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
 	           } 
 	         , function(jqXHR, textStatus, errorThrown) 
 	          {
@@ -600,7 +596,7 @@ function fnSetSelectedColumn(selGrdidID, rowIdx)
 {     
  $("#selAuthId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "zreExptId"));
   
- console.log("selAuthId: "+ $("#selAuthId").val() + " dealerName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "dealerName") );                
+ //console.log("selAuthId: "+ $("#selAuthId").val() + " dealerName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "dealerName") );                
 }
 
 function auiCellEditignHandler(event) 
@@ -777,7 +773,6 @@ function auiRemoveRowHandlerDetail(event)
 //행 삭제 메소드
 function fnRemoveRow() 
 {
-  console.log("fnRemoveRowMst: " + gSelMainRowIdx);    
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 
@@ -797,7 +792,7 @@ function fnSetParamAuthCd(myGridID, rowIndex)
   $("#zreExptId").val(AUIGrid.getCellValue(myGridID, rowIndex, "zreExptId"));
   $("#dealerName").val(AUIGrid.getCellValue(myGridID, rowIndex, "dealerName"));
    
-  console.log("zreExptId: "+ $("#zreExptId").val() + "dealerName: "+ $("#dealerName").val() );     
+  //console.log("zreExptId: "+ $("#zreExptId").val() + "dealerName: "+ $("#dealerName").val() );     
 }
 
 function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
@@ -1014,7 +1009,6 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
            
           if (dynamicSummaryHeadList[fieldStr] == "W52")
           {
-               console.log("<<<summary Header W52>>>>");
                nextRowFlag = "R2";
           }
 
@@ -1464,7 +1458,6 @@ function fnSettiingHeader()
 
                       if (result.header[0][fieldStr] == "W52")
                       {
-                    	  console.log("M+0..W52..START");
                         nextRowFlag = "R2";
                       } 
 
@@ -1525,7 +1518,6 @@ function fnSettiingHeader()
 
                       if (result.header[0][fieldStr] == "W52")
                       {
-                          console.log("M+1..W52..START");
                           nextRowFlag = "R2";
                       }
 		                 
@@ -1634,7 +1626,6 @@ function fnSettiingHeader()
 
                      if (result.header[0][fieldStr] == "W52")
                      {
-                       console.log("M+3..W52..START");
                        nextRowFlag = "R2";
                      }		                 
 			
@@ -1740,8 +1731,7 @@ function fnInsertSave(Obj)
 	            AUIGrid.clearGridData(myGridID);
 	            fnSearchBtnList() ;
 	            
-	            console.log("성공." + JSON.stringify(result));
-	            console.log("data : " + result.data);
+	            console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
 	          }
 	             
 	        , function(jqXHR, textStatus, errorThrown) 
@@ -1821,8 +1811,7 @@ function fnSaveScmSalesPlan(Obj)
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSearchBtnList() ;
             
-            console.log("성공." + JSON.stringify(result));
-            console.log("data : " + result.data);
+            console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
           }
 	           
         , function(jqXHR, textStatus, errorThrown) 
@@ -1937,7 +1926,6 @@ function fnSelectStockIdByStCode(paramStockCode, paramStockTypeId)
               if(result.selectStockIdByStCode.length > 0)
               {
             	  stkId = String(result.selectStockIdByStCode[0].stkId); 
-                console.log("성공 getStkId : " + stkId);
               }
               
            });
@@ -1991,7 +1979,7 @@ function selectStockCtgrySummaryList()
 	           , params
 	           , function(result) 
 	           {
-	              console.log("성공 selectStockCtgrySummary: " + result.selectSalesSummaryList);
+	              //console.log("성공 selectStockCtgrySummary: " + result.selectSalesSummaryList);
 	              AUIGrid.setGridData(summaryGridID, result.selectSalesSummaryList);
 	              if(result != null && result.length > 0)
 	              {
@@ -2047,7 +2035,7 @@ function fnSelectSalesCnt(inputCode)
            , { stockCode: inputCode }  
            , function(result) 
            {
-              console.log("성공 selectSalesCnt: " + result[0].saleCnt );
+              //console.log("성공 selectSalesCnt: " + result[0].saleCnt );
               if(result != null && result.length > 0)
               {
               }
@@ -2057,7 +2045,6 @@ function fnSelectSalesCnt(inputCode)
 function fnChangeEventPeriod(object)
 {
 	gWeekThValue = object.value;
-	console.log("gWeekThValue: " + gWeekThValue);
 }
 
 
