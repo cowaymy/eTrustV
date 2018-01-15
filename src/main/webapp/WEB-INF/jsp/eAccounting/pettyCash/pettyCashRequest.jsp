@@ -27,6 +27,9 @@ var pettyCashReqstColumnLayout = [ {
     dataField : "clmNo",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
+    dataField : "appvPrcssNo",
+    visible : false // Color 칼럼은 숨긴채 출력시킴
+},{
     dataField : "costCentr",
     headerText : '<spring:message code="webInvoice.costCenter" />'
 }, {
@@ -185,7 +188,13 @@ $(document).ready(function () {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
                 
-                fn_viewRequestPop(event.item.clmNo);
+                if(event.item.appvPrcssStusCode == "T") {
+                	fn_viewRequestPop(event.item.clmNo);
+                } else {
+                	var clmNo = event.item.clmNo;
+                    var clmType = clmNo.substr(0, 2);
+                    fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
+                }
             });
     
     $("#appvPrcssStus").multipleSelect("checkAll");
@@ -351,6 +360,14 @@ function fn_viewRequestPop(clmNo) {
             callType : 'view'
     };
 	Common.popupDiv("/eAccounting/pettyCash/viewRequestPop.do", data, null, true, "viewRequestPop");
+}
+
+function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
+    var data = {
+            clmType : clmType
+            ,appvPrcssNo : appvPrcssNo
+    };
+    Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
 </script>
 
