@@ -49,7 +49,7 @@ function fn_approveLineSubmit() {
             
             Common.ajax("POST", "/eAccounting/webInvoice/approveLineSubmit.do", obj, function(result) {
                 console.log(result);
-                Common.popupDiv("/eAccounting/webInvoice/newCompletedMsgPop.do", {callType:callType, clmNo:result.clmNo}, null, true, "completedMsgPop");
+                Common.popupDiv("/eAccounting/webInvoice/newCompletedMsgPop.do", {callType:callType, clmNo:result.data.clmNo}, null, true, "completedMsgPop");
                 //Common.alert("Your authorization request was successful.");
             });
         }
