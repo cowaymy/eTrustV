@@ -165,6 +165,13 @@ $(document).ready(function(){
     });
 
     AUIGrid.bind(listGrid, "ready", function(event) {
+        var rowCnt = AUIGrid.getRowCount(listGrid);
+        for (var i = 0 ; i < rowCnt ; i++){
+            var qty = AUIGrid.getCellValue(listGrid , i , 'avrqty');
+            
+            AUIGrid.setCellValue(listGrid, i, 'reqQty', qty);
+        }
+        //AUIGrid.resetUpdatedItems(listGrid, "all");   	
     });
 
 });
