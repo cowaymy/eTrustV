@@ -421,7 +421,8 @@
                                 DELVRY_QTY,
                                 REQST_NO,
                                 CRT_USER_ID,
-                                CRT_DT
+                                CRT_DT,
+                                REQST_NO_ITM
                                 )
                      SELECT
                                 #{deliveryNo} ,
@@ -431,7 +432,8 @@
                                REQST_QTY ,
                                REQST_NO ,
                                #{userId} ,
-                               SYSDATE
+                               SYSDATE,
+                               #{reqstNoItm}
                      FROM LOG0048D
                      WHERE REQST_NO= #{reqstNo}
                          AND REQST_NO_ITM = #{reqstNoItm}
