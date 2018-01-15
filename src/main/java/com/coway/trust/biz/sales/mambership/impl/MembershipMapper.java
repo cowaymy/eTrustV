@@ -156,4 +156,6 @@ public interface MembershipMapper {
 	int  membershipNewContatUpdate(Map<String, Object> params);
 	
 	List<EgovMap> getOGDCodeList(Map<String, Object> params);
+	
+	List<EgovMap> getBrnchCodeListByBrnchId(Map<String, Object> params);
 }

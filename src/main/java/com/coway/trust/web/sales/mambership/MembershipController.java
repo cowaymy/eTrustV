@@ -626,4 +626,20 @@ public class MembershipController {
 		
 		return "sales/membership/membershipOutrightExpireYearListPop";
 	}
+	
+	
+	@RequestMapping(value = "/getBrnchCodeListByBrnchId")
+	public ResponseEntity<List<EgovMap>> getBrnchCodeListByBrnchId (@RequestParam Map<String, Object> params, @RequestParam(value="brnchArr[]") String brnchArr[]) throws Exception{
+		//params
+		int inputLang = brnchArr.length;
+		params.put("brnchList", brnchArr);
+		
+		List<EgovMap> codeList = null;
+		codeList = membershipService.getBrnchCodeListByBrnchId(params);
+		if(inputLang == codeList.size()){
+			return ResponseEntity.ok(codeList);
+		}else{
+			return null;
+		}
+	}
 }

@@ -55,24 +55,41 @@ function fn_generate(method){
         
     }
     
+    var brnchArr = [];
+    
     if($("#_cmbBranch :selected").length > 0){
         whereSQL += " AND (";
         $('#_cmbBranch :selected').each(function(i, e){ 
             
             if(runNo > 0){
-                
-                keyInBranch += "," + $(e).val();
+            	brnchArr.push($(e).val());
                 whereSQL += " OR sm.SRV_MEM_BRNCH_ID = " + $(e).val();
             }else{
-                keyInBranch +=  $(e).val();
+            	brnchArr.push($(e).val()); 
                 whereSQL += "  sm.SRV_MEM_BRNCH_ID = " + $(e).val();
             }
             runNo += 1;
         });
         whereSQL += ") ";
+        
+        //keyInBranch
+        /*** get Branch Code*/
+	    Common.ajax("GET", "/sales/membership/getBrnchCodeListByBrnchId", {brnchArr : brnchArr},function(result){
+	    	if(result != null){
+	    		  $(result).each(function(idx, el){
+					
+					if(idx > 0){
+						keyInBranch += "," + el.code; 
+					}else{
+						keyInBranch += el.code;
+					}
+				  });
+	    	 }
+	    },'',{async : false});
+        
      }
      runNo = 0;
-        
+     
      if($("#hiddenSalesmanId").val() != null && $("#hiddenSalesmanId").val() != ''){
          WhereSQL += "AND sm.SRV_CRT_USER_ID = " + $("#hiddenSalesmanId").val() + " ";
      }
@@ -108,6 +125,8 @@ function fn_generate(method){
         $("#reportDownFileName").val('MembershipKeyInList_'+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
 
         //params
+        console.log("keyInBranch : " + keyInBranch);
+        
         $("#V_KEYINMEMNO").val(keyInMemNo);
         $("#V_KEYINBRANCH").val(keyInBranch);
         $("#V_KEYINDATE").val(keyInDate);
@@ -241,7 +260,7 @@ function fn_multy(){
 </tr>
 </tbody>
 </table><!-- table end -->
-
+<div style="height: 300px"></div>
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('PDF');"><spring:message code="sal.btn.genToPdf" /></a></p></li>
     <li><p class="btn_blue2 big"><a onclick="javascript:fn_generate('EXCEL');"><spring:message code="sal.btn.genToExcel" /></a></p></li>

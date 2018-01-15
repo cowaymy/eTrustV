@@ -97,5 +97,7 @@ public interface MembershipService {
 	
 	List<EgovMap> getOGDCodeList(Map<String, Object> params);
 	
+	List<EgovMap> getBrnchCodeListByBrnchId(Map<String, Object> params);
+	
 }
   

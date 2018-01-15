@@ -300,8 +300,12 @@ public class MembershipServiceImpl extends EgovAbstractServiceImpl implements Me
 		return a;
 	//	return membershipMapper.getOGDCodeList(params);
 	}
-	
-	
-	
+
+	@Override
+	public List<EgovMap> getBrnchCodeListByBrnchId(Map<String, Object> params) {
+		
+		
+		return membershipMapper.getBrnchCodeListByBrnchId(params);
+	}
 	
 }
