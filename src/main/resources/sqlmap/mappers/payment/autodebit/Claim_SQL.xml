@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.autodebit.service.impl.ClaimMapper">
-    
+
     <!--Auto Debit - Claim List 리스트 조회 -->
     <select id="selectClaimList" parameterType="Map" resultType="egovMap">
         SELECT
@@ -16,9 +16,9 @@
             Extent1.CRT_USER_ID,
             Extent1.UPD_USER_ID,
             TO_CHAR(Extent1.CRT_DT,'DD-MM-YYYY hh:mi:ss A.M.') AS CRT_DT,
-            NVL(TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT,            
+            NVL(TO_CHAR(Extent1.UPD_DT,'DD-MM-YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS UPD_DT,
             Extent1.CTRL_IS_CRC,
-            (CASE 
+            (CASE
                     WHEN 1 = Extent1.CTRL_IS_CRC THEN 'Credit Card'
                     WHEN 134 = Extent1.CTRL_IS_CRC THEN 'FPX'
                     ELSE 'Direct Debit' END) AS CTRL_IS_CRC_NAME,
@@ -34,14 +34,14 @@
 			CASE WHEN Extent3.BANK_ID IS NOT NULL THEN Extent3.CODE ELSE ' ' END BANK_CODE  ,
 			CASE WHEN Extent3.BANK_ID IS NOT NULL THEN Extent3.NAME ELSE ' ' END BANK_NAME  ,
 			NVL(Extent4.USER_NAME,' ') AS CRT_USER_NAME,
-			NVL(Extent5.USER_NAME,' ')  AS UPD_USER_NAME    
-        FROM 
+			NVL(Extent5.USER_NAME,' ')  AS UPD_USER_NAME
+        FROM
             PAY0041D Extent1
             JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.CTRL_STUS_ID
             LEFT JOIN SYS0004M Extent3   ON Extent3.BANK_ID = Extent1.CTRL_BANK_ID
             LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
             LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
-        WHERE 
+        WHERE
             1=1
             <if test="batchId != null and batchId != ''">
             AND Extent1.CTRL_ID = #{batchId}
@@ -50,13 +50,13 @@
             AND EXTENT4.USER_NAME =#{creator}
             </if>
             <if test="createDt1 != null and createDt2 != null and createDt1 != '' and createDt2 != '' ">
-                AND Extent1.CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')                              
+                AND Extent1.CRT_DT <![CDATA[   >= ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
                 AND Extent1.CRT_DT <![CDATA[   <   ]]>  TO_DATE(TO_CHAR(TO_DATE(#{createDt2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
             </if>
             <if test="claimType != null and claimType != ''">
                  <choose>
                     <when test='claimType == "132" '>
-                        AND Extent1.CTRL_IS_CRC = 0 
+                        AND Extent1.CTRL_IS_CRC = 0
                     </when>
                     <when test='claimType == "131" '>
                         AND Extent1.CTRL_IS_CRC = 1
@@ -70,7 +70,7 @@
                 AND Extent1.CTRL_STUS_ID = #{status}
             </if>
             <if test="debitDt1 != null and debitDt2 != null and debitDt1 != '' and debitDt2 != '' ">
-                AND Extent1.CTRL_BATCH_DT <![CDATA[   >= ]]>  TO_DATE(#{debitDt1},'DD/MM/YYYY')                              
+                AND Extent1.CTRL_BATCH_DT <![CDATA[   >= ]]>  TO_DATE(#{debitDt1},'DD/MM/YYYY')
                 AND Extent1.CTRL_BATCH_DT <![CDATA[   <= ]]>  TO_DATE(#{debitDt2},'DD/MM/YYYY')
             </if>
             <if test="smsSend != null and smsSend != ''">
@@ -79,97 +79,97 @@
             <if test="issueBank != null and issueBank != ''">
                 AND Extent1.CTRL_BANK_ID = #{issueBank}
             </if>
-         ORDER BY Extent1.CTRL_ID             
+         ORDER BY Extent1.CTRL_ID
     </select>
-    
-    
+
+
     <!--Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제 -->
     <delete id="deleteClaimResultItem" parameterType="Map" >
         DELETE FROM PAY0037D WHERE ID = #{ctrlId}
     </delete>
-    
+
     <!--Auto Debit - Claim Result Deactivate 처리 : 마스터 수정 -->
     <update id="updateClaimResultStatus" parameterType="Map" >
-        UPDATE PAY0041D SET 
+        UPDATE PAY0041D SET
             CTRL_STUS_ID = 8
             , UPD_DT = SYSDATE
             , UPD_USER_ID = #{userId}
         WHERE
-            CTRL_ID = #{ctrlId}     
+            CTRL_ID = #{ctrlId}
     </update>
-    
+
     <!--Auto Debit - Claim Result Update : 아이템 등록 -->
     <insert id="insertClaimResultItem" parameterType="Map" >
         INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID)
         VALUES (#{refNo},#{refCode},#{id},#{itemId})
     </insert>
-    
+
     <!--Auto Debit - Claim Result Update : 아이템 등록 -->
     <insert id="insertClaimResultItemBulk" parameterType="Map" >
         INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID)
         <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
         SELECT
-            (CASE 
-                    WHEN LENGTH(#{item.refNo}) <![CDATA[   < ]]> 7 THEN LPAD(#{item.refNo},7,'0') 
+            (CASE
+                    WHEN LENGTH(#{item.refNo}) <![CDATA[   < ]]> 7 THEN LPAD(#{item.refNo},7,'0')
                     WHEN LENGTH(#{item.refNo}) <![CDATA[   > ]]> 7 THEN LPAD(#{item.refNo},14,'0')
-                    ELSE #{item.refNo} END),  
+                    ELSE #{item.refNo} END),
             #{item.refCode},
             #{item.id},
             #{item.itemId}
-        FROM DUAL    
+        FROM DUAL
         </foreach>
     </insert>
-    
+
     <!--Auto Debit - Claim Result Update : 아이템 등록 -->
     <update id="removeItmId" parameterType="Map" >
         UPDATE PAY0037D SET ITM_ID = '' WHERE ID = #{ctrlId}
     </update>
-    
+
     <!--Auto Debit - Claim Result Update : 결과 조회 -->
     <select id="selectUploadResultBank" parameterType="Map" resultType="egovMap">
         SELECT
-            ID AS CTRL_ID, 
+            ID AS CTRL_ID,
             COUNT(1)  AS TOTAL_ITEM,
             SUM(CASE WHEN REF_CODE IS NULL THEN 1 ELSE 0 END) AS TOTAL_SUCCESS,
-            SUM(CASE WHEN REF_CODE IS NOT NULL THEN 1 ELSE 0 END)  AS TOTAL_FAIL 
-        FROM 
-            PAY0037D 
-        WHERE 
+            SUM(CASE WHEN REF_CODE IS NOT NULL THEN 1 ELSE 0 END)  AS TOTAL_FAIL
+        FROM
+            PAY0037D
+        WHERE
             ID = #{ctrlId}
-        GROUP BY ID                                
+        GROUP BY ID
     </select>
-    
+
     <!--Auto Debit - Claim Result Update : 결과 조회 -->
     <select id="selectUploadResultCRC" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             ID AS CTRL_ID,
 			COUNT(1) AS TOTAL_ITEM,
 			SUM(CASE WHEN REF_CODE = '00' THEN 1 ELSE 0 END) AS TOTAL_SUCCESS,
-			SUM(CASE WHEN REF_CODE != '00' THEN 1 ELSE 0 END) AS TOTAL_FAIL 
-        FROM 
+			SUM(CASE WHEN REF_CODE != '00' THEN 1 ELSE 0 END) AS TOTAL_FAIL
+        FROM
             PAY0037D
-        WHERE 
+        WHERE
             ID = #{ctrlId}
-        GROUP BY ID            
+        GROUP BY ID
     </select>
 
     <update id="updateClaimResultLive" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_AUTO_DEBT_UPD_RESULT(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId})        
+            call SP_AUTO_DEBT_UPD_RESULT(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId})
         }
     </update>
-    
-    
+
+
     <!--Auto Debit - Claim Result Update NEXT DAY -->
     <update id="updateClaimResultNextDay" parameterType="Map" >
-        UPDATE PAY0041D SET 
+        UPDATE PAY0041D SET
             CTRL_WAIT_SYNC = 1
             , UPD_DT = SYSDATE
             , UPD_USER_ID = #{userId}
         WHERE
-            CTRL_ID = #{ctrlId}     
+            CTRL_ID = #{ctrlId}
     </update>
-    
+
     <!--Auto Debit - Claim 조회 -->
     <select id="selectClaimById" parameterType="Map" resultType="egovMap">
         SELECT
@@ -191,15 +191,15 @@
 			, CTRL_TOT_SUCCES
 			, CTRL_TOT_FAIL
 			, CTRL_WAIT_SYNC
-        FROM 
-            PAY0041D             
-        WHERE 
-            CTRL_ID = #{ctrlId}             
+        FROM
+            PAY0041D
+        WHERE
+            CTRL_ID = #{ctrlId}
     </select>
-    
+
     <!--Auto Debit - Claim Detail 조회 -->
     <select id="selectClaimDetailById" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.BANK_DTL_ID,
             Extent1.BANK_DTL_CTRL_ID,
             Extent1.SALES_ORD_ID,
@@ -229,61 +229,61 @@
             (CASE WHEN Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN Extent1.BANK_DTL_REN_AMT ELSE 0 END) AS  BANK_DTL_REN_AMT  ,
             (CASE WHEN Extent1.BANK_DTL_CRC_EXPR IS NOT NULL THEN Extent1.BANK_DTL_CRC_EXPR ELSE ' ' END) AS  BANK_DTL_CRC_EXPR  ,
             (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS  SRV_CNTRCT_REF_NO  ,
-            (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL 
-             THEN SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) || TRIM(Extent3.SALES_ORD_NO) 
+            (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
+             THEN SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) || TRIM(Extent3.SALES_ORD_NO)
              ELSE TRIM(Extent3.SALES_ORD_NO) END) AS  BILL_NO,
               (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
-                                        (CASE 
-                                            WHEN LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]> 7 THEN 
-                                                SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent3.SALES_ORD_NO) 
+                                        (CASE
+                                            WHEN LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]> 7 THEN
+                                                SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent3.SALES_ORD_NO)
                                             ELSE
                                                 SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent3.SALES_ORD_NO)
-                                            END                                        
+                                            END
                                         )
                   ELSE
                     (CASE WHEN LENGTH(Extent3.SALES_ORD_NO) = 7 AND SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
-                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))                    
+                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))
                     ELSE
                         TRIM(Extent3.SALES_ORD_NO)
                     END)
-                  END) AS CNTRCT_N_ORD_NO               
-        FROM 
+                  END) AS CNTRCT_N_ORD_NO
+        FROM
             PAY0042D Extent1
             LEFT JOIN SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
             JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
             LEFT JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
             LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
-        WHERE  
-            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} 
-        ORDER BY 
+        WHERE
+            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId}
+        ORDER BY
             Extent1.BANK_DTL_DR_ACC_NO ASC
     </select>
-    
-    
-    
+
+
+
     <!--Auto Debit - Claim Detail 조회 -->
-    <select id="selectClaimDetailByIdCnt" parameterType="Map" resultType="int">    
-        SELECT 
-           COUNT(1) AS CNT            
-        FROM 
+    <select id="selectClaimDetailByIdCnt" parameterType="Map" resultType="int">
+        SELECT
+           COUNT(1) AS CNT
+        FROM
             PAY0042D Extent1
             LEFT JOIN SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
             JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
             LEFT JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
             LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
-        WHERE  
-            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} 
-        
+        WHERE
+            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId}
+
     </select>
-    
-    
+
+
     <!--Auto Debit - Claim Detail 조회 -->
     <select id="selectClaimDetailByIdPaging" parameterType="Map" resultType="egovMap">
      SELECT *
         FROM (SELECT ROWNUM AS RNUM
                                 ,Z.*
-                    FROM ( 
-        SELECT 
+                    FROM (
+        SELECT
             Extent1.BANK_DTL_ID,
             Extent1.BANK_DTL_CTRL_ID,
             Extent1.SALES_ORD_ID,
@@ -313,32 +313,32 @@
             (CASE WHEN Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN Extent1.BANK_DTL_REN_AMT ELSE 0 END) AS  BANK_DTL_REN_AMT  ,
             (CASE WHEN Extent1.BANK_DTL_CRC_EXPR IS NOT NULL THEN Extent1.BANK_DTL_CRC_EXPR ELSE ' ' END) AS  BANK_DTL_CRC_EXPR  ,
             (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS  SRV_CNTRCT_REF_NO  ,
-            (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL 
-             THEN SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) || TRIM(Extent3.SALES_ORD_NO) 
+            (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
+             THEN SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) || TRIM(Extent3.SALES_ORD_NO)
              ELSE TRIM(Extent3.SALES_ORD_NO) END) AS  BILL_NO,
               (CASE WHEN NVL( Extent1.SVC_CNTRCT_ID,0) > 0 THEN
-                                        (CASE 
-                                            WHEN LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]> 7 THEN 
-                                                SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent3.SALES_ORD_NO) 
+                                        (CASE
+                                            WHEN LENGTH(Extent3.SALES_ORD_NO) <![CDATA[   < ]]> 7 THEN
+                                                SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || '0' || TRIM(Extent3.SALES_ORD_NO)
                                             ELSE
                                                 SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO),5,7) || TRIM(Extent3.SALES_ORD_NO)
-                                            END                                        
+                                            END
                                         )
                   ELSE
                     (CASE WHEN LENGTH(Extent3.SALES_ORD_NO) = 7 AND SUBSTR(Extent3.SALES_ORD_NO,0,1) = '0' THEN
-                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))                    
+                        TRIM(SUBSTR(Extent3.SALES_ORD_NO,2,LENGTH(Extent3.SALES_ORD_NO)))
                     ELSE
                         TRIM(Extent3.SALES_ORD_NO)
                     END)
                   END) AS CNTRCT_N_ORD_NO ,
              (
-                SELECT                    
-                    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR 
-                FROM 
+                SELECT
+                    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
+                FROM
                     SAL0001D som
                     JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
                     LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[   <> ]]> 0
-                WHERE 
+                WHERE
                     som.STUS_CODE_ID <![CDATA[   <> ]]> 10
                     AND rs.MODE_ID = 131
                     AND som.APP_TYPE_ID = 66
@@ -346,36 +346,36 @@
                     AND som.SALES_ORD_ID = Extent3.SALES_ORD_ID
                     AND ROWNUM = 1
                 ) AS RENT_PAY_CRC_EXPR
-        FROM 
+        FROM
             PAY0042D Extent1
             LEFT JOIN SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
             JOIN SAL0001D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
             LEFT JOIN SAL0077D Extent4 ON Extent4.SRV_CNTRCT_ID = Extent1.SVC_CNTRCT_ID
-            LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID                       
-        WHERE  
-            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId} 
-        ORDER BY 
-            Extent1.BANK_DTL_DR_ACC_NO ASC
+            LEFT JOIN PAY0090C Extent5 ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
+        WHERE
+            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId}
+        <!-- ORDER BY
+            Extent1.BANK_DTL_DR_ACC_NO ASC -->
              ) Z
-                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY BANK_DTL_DR_ACC_NO ASC)
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
-  
+
     <resultMap id="resultClaimMap" type="egovMap" />
     <select id="createClaim" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},#{userId},#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})            
+            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},#{userId},#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})
         }
     </select>
-    
+
     <!--Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회 -->
     <select id="selectFailClaimDetailList" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.BANK_DTL_ID  ,
 			Extent1.BANK_DTL_CTRL_ID  ,
 			Extent1.SALES_ORD_ID ,
 			Extent1.BANK_DTL_DR_DT ,
-			Extent1.BANK_DTL_DR_BANK_TYPE_ID  ,			
+			Extent1.BANK_DTL_DR_BANK_TYPE_ID  ,
 			Extent1.BANK_DTL_DR_ACC_NO AS BANK_DTL_DR_ACC_NO,
 			Extent1.BANK_DTL_DR_NAME ,
 			Extent1.BANK_DTL_AMT ,
@@ -391,8 +391,8 @@
 			Extent1.SVC_CNTRCT_ID ,
 			Extent1.BANK_DTL_BANK_ID ,
 			NVL(Extent1.BANK_APPV,0) AS BANK_APPV,
-			NVL(Extent1.BANK_DTL_APPR_DT,TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'),'YYYY-MM-DD')) AS BANK_DTL_APPR_DT,			
-			NVL(Extent2.BIC,'') AS BIC,			
+			NVL(Extent1.BANK_DTL_APPR_DT,TO_CHAR(TO_DATE('1900-01-01', 'YYYY-MM-DD'),'YYYY-MM-DD')) AS BANK_DTL_APPR_DT,
+			NVL(Extent2.BIC,'') AS BIC,
 			NVL(Extent1.BANK_DTL_FPX_ID,0) AS BANK_DTL_FPX_ID,
 			NVL(Extent5.F_PX_ID,'') AS F_PX_ID,
 			LTRIM(RTRIM(Extent3.SALES_ORD_NO)) SALES_ORD_NO  ,
@@ -401,8 +401,8 @@
 			NVL(Extent1.BANK_DTL_CRC_EXPR,'') AS BANK_DTL_CRC_EXPR,
 			CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN LTRIM(RTRIM(Extent4.SRV_CNTRCT_REF_NO)) ELSE ' ' END SRV_CNTRCT_REF_NO  ,
 			CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN SUBSTR(LTRIM(RTRIM(Extent4.SRV_CNTRCT_REF_NO)), 4 + 1, 7) || LTRIM(RTRIM(Extent3.SALES_ORD_NO))
-			ELSE LTRIM(RTRIM(Extent3.SALES_ORD_NO)) END CNTRCT_N_ORD_NO  
-        FROM 
+			ELSE LTRIM(RTRIM(Extent3.SALES_ORD_NO)) END CNTRCT_N_ORD_NO
+        FROM
             PAY0042D Extent1
             LEFT JOIN SYS0004M Extent2   ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
             JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
@@ -410,21 +410,21 @@
             LEFT JOIN PAY0090C Extent5   ON Extent5.F_PX_ID = Extent1.BANK_DTL_FPX_ID
         WHERE
             Extent1.BANK_APPV = 2
-            AND Extent1.BANK_DTL_CTRL_ID = #{batchId} 
-        ORDER BY BANK_DTL_CTRL_ID          
+            AND Extent1.BANK_DTL_CTRL_ID = #{batchId}
+        ORDER BY BANK_DTL_CTRL_ID
     </select>
-    
+
     <resultMap id="resultSMS" type="egovMap" />
     <select id="sendFaileDeduction" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} , #{userId},#{returnData, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultSMS})            
+            call SP_AUTO_DEBT_FAIL_DEDUCT_SMS(#{ctrlId} , #{userId},#{returnData, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=resultSMS})
         }
     </select>
-    
-    
+
+
     <!--Claim List - Schedule Claim Batch Pop-up 리스트 조회  -->
     <select id="selectScheduleClaimBatchPop" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.SCHDUL_CLM_ID SCHDUL_CLM_ID  ,
             Extent1.STUS_ID STUS_ID  ,
             Extent1.SCHDUL_ID SCHDUL_ID  ,
@@ -441,7 +441,7 @@
             Extent3.NAME STUS_NM,
             CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE ELSE ' ' END BANK_CODE  ,
             CASE WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.NAME ELSE ' ' END BANK_NAME
-        FROM 
+        FROM
             PAY0040D Extent1
             JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
             JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.STUS_ID
@@ -474,17 +474,17 @@
             </if>
              <if test="debitDt1 != null and debitDt1 != '' and debitDt2 != null and debitDt2 != '' ">
              AND Extent1.DEBT_DT BETWEEN TO_DATE(#{debitDt1},'DD/MM/YYYY') AND TO_DATE(#{debitDt2},'DD/MM/YYYY')
-             </if>             
+             </if>
              <if test="createDt1 != null and createDt1 != '' and createDt2 != null and createDt2 != '' ">
              AND NVL(Extent1.SCHDUL_CLM_DT,TO_DATE('19000101','YYYYMMDD')) <![CDATA[   >= ]]>  TO_DATE(#{createDt1},'DD/MM/YYYY')
              AND NVL(Extent1.SCHDUL_CLM_DT,TO_DATE('19000101','YYYYMMDD')) <![CDATA[   < ]]>  TO_DATE(#{createDt2},'DD/MM/YYYY') + 1
              </if>
-         ORDER BY Extent1.SCHDUL_CLM_ID             
+         ORDER BY Extent1.SCHDUL_CLM_ID
     </select>
-    
+
     <!--Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회   -->
     <select id="selectScheduleClaimSettingPop" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
 	        Extent1.SCHDUL_ID SCHDUL_ID  ,
 	        Extent1.STUS_ID STUS_ID  ,
 	        Extent1.PAY_MODE_ID PAY_MODE_ID  ,
@@ -501,14 +501,14 @@
 	        CASE WHEN ( Extent3.BANK_ID IS NOT NULL ) THEN Extent3.CODE ELSE '' END BANK_CODE  ,
 	        CASE WHEN ( Extent3.BANK_ID IS NOT NULL ) THEN Extent3.NAME ELSE '' END BANK_NAME  ,
 	        CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END CRT_USER_NAME  ,
-	        CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END UPD_USER_NAME  
-        FROM 
+	        CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END UPD_USER_NAME
+        FROM
             PAY0039D Extent1
             JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_MODE_ID
             LEFT JOIN SYS0004M Extent3   ON Extent3.BANK_ID = Extent1.BANK_ID
             LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CRT_USER_ID
             LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.UPD_USER_ID
-        WHERE  
+        WHERE
             Extent1.STUS_ID = 1
             AND Extent1.SCHDUL_DT BETWEEN TRUNC(TO_DATE(#{batchMonth},'MM/YYYY')) AND LAST_DAY(TRUNC(TO_DATE(#{batchMonth},'MM/YYYY')))
             <if test="claimType != null and claimType != '' ">
@@ -517,25 +517,25 @@
             <if test="issueBank != null and issueBank != '' ">
             AND Extent1.BANK_ID = #{issueBank}
             </if>
-        ORDER BY   Extent1.SCHDUL_DT ASC,   Extent1.SCHDUL_ID DESC     
+        ORDER BY   Extent1.SCHDUL_DT ASC,   Extent1.SCHDUL_ID DESC
     </select>
-    
-    
+
+
     <!--Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회   -->
     <select id="isScheduleClaimSettingPop" parameterType="Map" resultType="int">
-        SELECT 
-            COUNT(1) AS CNT  
-        FROM 
+        SELECT
+            COUNT(1) AS CNT
+        FROM
             PAY0039D Extent1
-        WHERE  
-            Extent1.STUS_ID = 1            
+        WHERE
+            Extent1.STUS_ID = 1
             AND Extent1.SCHDUL_DT =  TO_DATE(#{new_scheduleDt},'DD/MM/YYYY')
             AND Extent1.PAY_MODE_ID = #{new_claimType}
             <if test="new_issueBank != null and new_issueBank != '' ">
             AND Extent1.BANK_ID = #{new_issueBank}
-            </if> 
+            </if>
     </select>
-    
+
     <!--Claim List - Schedule Claim Batch Setting Pop-up 저장 -->
     <insert id="saveScheduleClaimSettingPop" parameterType="Map" >
         INSERT INTO PAY0039D (
@@ -564,7 +564,7 @@
             TO_DATE(#{new_debitDt},'DD/MM/YYYY')
         )
     </insert>
-    
+
     <!--Claim List - Schedule Claim Batch Setting Pop-up 저장 -->
     <update id="removeScheduleClaimSettingPop" parameterType="Map" >
         UPDATE PAY0039D SET
