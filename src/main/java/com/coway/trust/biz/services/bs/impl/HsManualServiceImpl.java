@@ -582,7 +582,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 				
 				EgovMap callMas = new EgovMap();
 				callMas.put("hcsoid",  getHsResultMList.get("salesOrdId") );
-				callMas.put("hcTypeNo", params.get("hidSalesOrdCd") );
+//				callMas.put("hcTypeNo", params.get("hidSalesOrdCd") );
+				callMas.put("hcTypeNo", params.get("serviceNo") );
 				callMas.put("crtUserId",  sessionVO.getUserId());
 				callMas.put("updUserId",  sessionVO.getUserId());
 				
