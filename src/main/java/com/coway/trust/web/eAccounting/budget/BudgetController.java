@@ -140,7 +140,7 @@ public class BudgetController {
 		
 		model.addAttribute("year", year);
 		return "eAccounting/budget/monthlyBudgetList";
-	}
+	}	
 	
 	@RequestMapping(value = "/selectMonthlyBudgetList", method = RequestMethod.GET) 
 	public ResponseEntity<List<EgovMap>> selectMonthlyBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{	
@@ -756,5 +756,38 @@ public class BudgetController {
 		return ResponseEntity.ok(message);
 		
 	}	
+	
+	@RequestMapping(value = "/availableBudgetList.do")
+	public String availableBudgetList (@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+		
+		//String year = CommonUtils.getNowDate().substring(0,4);
+		
+		//model.addAttribute("year", year);
+		return "eAccounting/budget/availableBudgetList";
+	}	
+	
+	@RequestMapping(value = "/selectAvailableBudgetList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selectAvailableBudgetList (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) throws Exception{	
+		
+		List<EgovMap> budgetList = null;
+		
+		// add jgkim
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		List<Object> roleIdList = new ArrayList<Object>();
+		for(int i = 0; i < roleIds.length; i++) {
+			roleIdList.add(roleIds[i]);
+		}
+		
+		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+			params.put("costCentr", sessionVO.getCostCentr());
+		}
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		budgetList = budgetService.selectAvailableBudgetList(params);
+		
+		return ResponseEntity.ok(budgetList);
+		
+	}
 }
 

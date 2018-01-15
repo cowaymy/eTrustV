@@ -50,4 +50,6 @@ public interface BudgetService {
 	void saveApproval(Map<String, Object> params) throws Exception;
 
 	String selectCloseMonth(Map<String, Object> params);
+
+	List<EgovMap> selectAvailableBudgetList(Map<String, Object> params) throws Exception;
 }

@@ -454,4 +454,10 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
 		// TODO Auto-generated method stub
 		return budgetMapper.selectCloseMonth(params);
 	}
+
+	@Override
+	public List<EgovMap> selectAvailableBudgetList(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return budgetMapper.selectAvailableBudgetList(params);
+	}
 }
