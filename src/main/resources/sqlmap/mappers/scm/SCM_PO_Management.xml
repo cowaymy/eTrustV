@@ -721,7 +721,7 @@ SELECT DISTINCT
      ,ITF0156M IF56
 WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
   AND S43V.EST_WEEK = #{scmPeriodCbBox}
-  AND S43V.PO_NO = IF56.PO_NO
+  AND S43V.PO_NO = IF56.PO_NO(+)
 	<choose>
 	  <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
 	   AND S43V.STK_TYPE_ID IN
