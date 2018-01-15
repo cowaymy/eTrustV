@@ -410,7 +410,7 @@ function fn_goSVMDetails(){
 		<li><p class="link_btn"><a onclick="javascript:fn_goLEDGER()" href="#"><spring:message code="sal.btn.link.ledger" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()" href="#"><spring:message code="sal.btn.link.keyInList" /></a></p></li>
+		<li><p class="link_btn type2"><a onclick="javascript:fn_goKey_in_List()"><spring:message code="sal.btn.link.keyInList" /></a></p></li>
 		</c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
