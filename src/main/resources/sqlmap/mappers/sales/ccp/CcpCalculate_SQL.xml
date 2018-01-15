@@ -1138,7 +1138,7 @@ INSERT INTO SAL0009D
 </insert>
 
 <select id="chkECash" parameterType="Map" resultType="egovMap">
-    SELECT
+<!--     SELECT
          ECASH
     FROM 
         SAL0001D
@@ -1147,7 +1147,25 @@ INSERT INTO SAL0009D
     AND
         <![CDATA[
         ROWNUM <= 1
-        ]]>    
+        ]]>     -->
+        
+		SELECT 
+		    SALES_ORD_ID,
+		    MODE_ID
+		FROM
+		    SAL0074D
+		WHERE
+		    1 = 1
+		AND
+		<![CDATA[
+		    MODE_ID <> 131
+		]]>
+		AND
+		    SALES_ORD_ID = #{saveOrdId}
+		AND
+		<![CDATA[
+		    ROWNUM <= 1
+		]]>            
 </select>
 
 <resultMap id="resultRowMap" type="EgovMap">
