@@ -329,5 +329,28 @@ public class StaffClaimController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/checkOnceAMonth.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> checkOnceAMonth(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		params.put("userName", sessionVO.getUserName());
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		int cnt = staffClaimService.checkOnceAMonth(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		
+		if(cnt > 0) {
+			message.setCode(AppConstants.FAIL);
+			message.setData(cnt);
+			message.setMessage("You can only request once a month.");
+		} else {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(cnt);
+		}
+		
+		return ResponseEntity.ok(message);
+	}
 
 }

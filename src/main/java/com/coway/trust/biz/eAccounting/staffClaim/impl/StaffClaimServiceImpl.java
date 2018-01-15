@@ -256,6 +256,12 @@ public class StaffClaimServiceImpl implements StaffClaimService {
 		// TODO Auto-generated method stub
 		return staffClaimMapper.selectStaffClaimItemGrpForAppv(params);
 	}
+
+	@Override
+	public int checkOnceAMonth(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return staffClaimMapper.checkOnceAMonth(params);
+	}
 	
 	
 

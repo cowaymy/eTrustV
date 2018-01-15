@@ -601,5 +601,17 @@ WHERE  T1.CLM_NO = #{clmNo}
    UPDATE FCM0019M SET TOT_AMT = #{allTotAmt} WHERE CLM_NO = #{clmNo}
 </update>
 
+<select id="checkOnceAMonth" parameterType="Map" resultType="int">
+/* staffClaimMapper.checkOnceAMonth */
+SELECT Count(*) AS CNT 
+FROM   (SELECT SUBSTR(APPV_REQ_KEY_NO, 0, 2) AS CLM_TYPE, 
+               REQST_USER_ID, 
+               REQST_DT 
+        FROM   FCM0004M 
+        WHERE  SUBSTR(APPV_REQ_KEY_NO, 0, 2) = #{clmType}
+               AND TO_DATE(TO_CHAR(REQST_DT, 'MM'), 'MM') = TO_DATE(TO_CHAR(SYSDATE, 'MM'), 'MM')) T 
+WHERE  T.REQST_USER_ID = #{userName}         
+</select>
+
 
 </mapper>

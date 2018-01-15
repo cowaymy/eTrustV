@@ -1058,15 +1058,23 @@ function fn_updateStaffClaimExp(st) {
 }
 
 function fn_approveLinePop() {
-    // tempSave를 하지 않고 바로 submit인 경우
-    if(FormUtil.isEmpty(clmNo)) {
-    	fn_insertStaffClaimExp("");
-    } else {
-        // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-        fn_updateStaffClaimExp("");
-    }
-    
-    Common.popupDiv("/eAccounting/ctClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+	// check request - Request once per user per month
+    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J8"}, function(result) {
+        console.log(result);
+        if(result.data > 0) {
+            Common.alert(result.message);
+        } else {
+        	// tempSave를 하지 않고 바로 submit인 경우
+            if(FormUtil.isEmpty(clmNo)) {
+                fn_insertStaffClaimExp("");
+            } else {
+                // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
+                fn_updateStaffClaimExp("");
+            }
+            
+            Common.popupDiv("/eAccounting/ctClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+        }
+    });
 }
 
 function fn_deleteStaffClaimExp() {

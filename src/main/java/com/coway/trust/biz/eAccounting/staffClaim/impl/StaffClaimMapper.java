@@ -51,5 +51,7 @@ public interface StaffClaimMapper {
 	
 	List<EgovMap> selectStaffClaimItemGrpForAppv(Map<String, Object> params);
 	
+	int checkOnceAMonth(Map<String, Object> params);
+	
 	
 }
