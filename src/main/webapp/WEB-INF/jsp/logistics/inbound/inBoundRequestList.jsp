@@ -171,7 +171,7 @@ $(document).ready(function(){
             
             AUIGrid.setCellValue(listGrid, i, 'reqQty', qty);
         }
-        //AUIGrid.resetUpdatedItems(listGrid, "all");   	
+        AUIGrid.resetUpdatedItems(listGrid, "all");   	
     });
 
 });
