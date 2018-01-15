@@ -98,5 +98,28 @@ public class TagMgmtServiceImpl implements TagMgmtService {
 		return tagMgmtMapper.selectSubInquiryList(params);
 	}
 	
+	@Override
+	public EgovMap getOrderInfo(Map<String, Object> params) {
+		
+		return tagMgmtMapper.getOrderInfo(params);
+	}
+	
+	@Override
+	public EgovMap getCallerInfo(Map<String, Object> params) {
+		
+		return tagMgmtMapper.getCallerInfo(params);
+	}
+	
+	@Override
+	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params) {
+		
+		return tagMgmtMapper.selectOrderSalesmanViewByOrderID(params);
+	}
+	
+	@Override
+	public EgovMap selectOrderServiceMemberViewByOrderID(Map<String, Object> params) {
+		
+		return tagMgmtMapper.selectOrderServiceMemberViewByOrderID(params);
+	}
 	
 }

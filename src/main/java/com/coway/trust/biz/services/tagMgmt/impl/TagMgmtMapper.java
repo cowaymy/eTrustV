@@ -31,6 +31,12 @@ public interface TagMgmtMapper {
 
 	public List<EgovMap> selectSubInquiryList(Map<String, Object> params);
 
+	public EgovMap getOrderInfo(Map<String, Object> params);
 	
+	public EgovMap getCallerInfo(Map<String, Object> params);
+	
+	public EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
+	
+	public EgovMap selectOrderServiceMemberViewByOrderID(Map<String, Object> params);
 
 }

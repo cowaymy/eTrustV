@@ -48,10 +48,23 @@ public class TagMgmtController {
 		logger.debug("paramsJINMU1 {}", params);
 		EgovMap tagMgmtDetail = tagMgmtService.getDetailTagStatus(params);
 		model.addAttribute("tagMgmtDetail" , tagMgmtDetail );
+		
 		logger.debug("paramsJINMU1 {}", tagMgmtDetail );
 		
 		List<EgovMap> remarks = tagMgmtService.getTagRemark(params);
 		model.addAttribute("remarks" , remarks );
+		
+		EgovMap orderInfo = tagMgmtService.getOrderInfo(tagMgmtDetail);
+		model.addAttribute("orderInfo" , orderInfo );
+		
+		EgovMap callerInfo = tagMgmtService.getOrderInfo(tagMgmtDetail);
+		model.addAttribute("callerInfo" , callerInfo );
+		
+		EgovMap salesmanInfo 	 = tagMgmtService.selectOrderSalesmanViewByOrderID(orderInfo);
+		model.addAttribute("salesmanInfo" , salesmanInfo);
+		
+		EgovMap codyInfo     	 = tagMgmtService.selectOrderServiceMemberViewByOrderID(orderInfo);
+		model.addAttribute("codyInfo" , codyInfo);
 		return "services/tagMgmt/tagLogListPop";
 	}
 	

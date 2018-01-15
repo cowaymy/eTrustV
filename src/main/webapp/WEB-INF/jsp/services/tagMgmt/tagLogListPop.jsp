@@ -246,15 +246,15 @@ function fn_saveRemarkResult(){
                     <th scope="row">Order No</th>
                     <td><span><c:out value="${tagMgmtDetail.ordNo }"/></span></td>
                     <th scope="row">App Type</th>
-                    <td>Text</td>
+                    <td><span><c:out value="${orderInfo.codeDesc }"/></span></td>
                     <th scope="row">Product</th>    
-                    <td>Text</td>
+                    <td><span><c:out value="${orderInfo.stkDesc }"/></span></td>
                 </tr>
                 <tr>
                     <th scope="row">Customer Name</th>
-                    <td>Text</td>
+                    <td><span><c:out value="${orderInfo.name }"/></span></td>
                     <th scope="row">NRC Company No</th>
-                    <td colspan="3">Text</td>
+                    <td colspan="3"><span><c:out value="${orderInfo.nric }"/></span></td>
                 </tr>
                 </tbody>
                 </table><!-- table end -->
@@ -278,39 +278,39 @@ function fn_saveRemarkResult(){
                             </colgroup>
                             <tbody>
                             <tr>
-                                <th scope="row" rowspan="3">Order Made By</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Salesman Code</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Salesman Name</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Salesman NRIC</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Mobile No</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Office No</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">House No</th>
-                                <td>Text</td>
-                            </tr>
+    <th rowspan="3" scope="row">Order Made By</th>
+    <td><span class="txt_box">${salesmanInfo.orgCode} (Organization Code)<i>(${salesmanInfo.memCode1}) ${salesmanInfo.name1} - ${salesmanInfo.telMobile1}</i></span></td>
+</tr>
+<tr>
+    <td><span class="txt_box">${salesmanInfo.grpCode} (Group Code)<i>(${salesmanInfo.memCode2}) ${salesmanInfo.name2} - ${salesmanInfo.telMobile2}</i></span></td>
+</tr>
+<tr>
+    <td><span class="txt_box">${salesmanInfo.deptCode} (Department Code)<i>(${salesmanInfo.memCode3}) ${salesmanInfo.name3} - ${salesmanInfo.telMobile3}</i></span></td>
+</tr>
+<tr>
+    <th scope="row">Salesman Code</th>
+    <td><span>${salesmanInfo.memCode}</span></td>
+</tr>
+<tr>
+    <th scope="row">Salesman Name</th>
+    <td><span>${salesmanInfo.name}</span></td>
+</tr>
+<tr>
+    <th scope="row">Salesman NRIC</th>
+    <td><span>${salesmanInfo.nric}</span></td>
+</tr>
+<tr>
+    <th scope="row">Mobile No</th>
+    <td><span>${salesmanInfo.telMobile}</span></td>
+</tr>
+<tr>
+    <th scope="row">Office No</th>
+    <td><span>${salesmanInfo.telOffice}</span></td>
+</tr>
+<tr>
+    <th scope="row">House No</th>
+    <td><span>${salesmanInfo.telHuse}</span></td>
+</tr>
                             </tbody>
                             </table><!-- table end -->
                         </div>
@@ -327,39 +327,39 @@ function fn_saveRemarkResult(){
                             </colgroup>
                             <tbody>
                             <tr>
-                                <th scope="row" rowspan="3">Service By</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cody Code</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cody Name</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Cody NRIC</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Mobile No</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Office No</th>
-                                <td>Text</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">House No</th>
-                                <td>Text</td>
-                            </tr>
+    <th rowspan="3" scope="row">Service By</th>
+    <td><span class="txt_box">${codyInfo.orgCode} (Organization Code)<i>(${codyInfo.memCode1}) ${codyInfo.name1} - ${codyInfo.telMobile1}</i></span></td>
+</tr>
+<tr>
+    <td><span class="txt_box">${codyInfo.grpCode} (Group Code)<i>(${codyInfo.memCode2}) ${codyInfo.name2} - ${codyInfo.telMobile2}</i></span></td>
+</tr>
+<tr>
+    <td><span class="txt_box">${codyInfo.deptCode} (Department Code)<i>(${codyInfo.memCode3}) ${codyInfo.name3} - ${codyInfo.telMobile3}</i></span></td>
+</tr>
+<tr>
+    <th scope="row">Cody Code</th>
+    <td><span>${codyInfo.memCode}</span></td>
+</tr>
+<tr>
+    <th scope="row">Cody Name</th>
+    <td><span>${codyInfo.name}</span></td>
+</tr>
+<tr>
+    <th scope="row">Cody NRIC</th>
+    <td><span>${codyInfo.nric}</span></td>
+</tr>
+<tr>
+    <th scope="row">Mobile No</th>
+    <td><span>${codyInfo.telMobile}</span></td>
+</tr>
+<tr>
+    <th scope="row">Office No</th>
+    <td><span>${codyInfo.telOffice}</span></td>
+</tr>
+<tr>
+    <th scope="row">House No</th>
+    <td><span>${codyInfo.telHuse}</span></td>
+</tr>
                             </tbody>
                             </table><!-- table end -->
                         </div>
@@ -383,19 +383,19 @@ function fn_saveRemarkResult(){
         <tbody>
         <tr>
             <th scope="row">Name</th>
-            <td>Text</td>
+            <td><span><c:out value="${callerInfo.name }"/></span></td>
             <th scope="row">NRIC</th>
-            <td>Text</td>
+            <td><span><c:out value="${callerInfo.nric }"/></span></td>
             <th scope="row">Company Name</th>
-            <td>Text</td>
+            <td><span><c:out value="${callerInfo.name }"/></span></td>
         </tr>
         <tr>
             <th scope="row">Contact(1)</th>
-            <td>Text</td>
+            <td><span><c:out value="${callerInfo.telM1 }"/></span></td>
             <th scope="row">Contact(2)</th>
-            <td>Text</td>
+            <td><span><c:out value="${callerInfo.telR }"/></span></td>
             <th scope="row">Email</th>
-            <td>Text</td>
+            <td><span><c:out value="${callerInfo.email }"/></span></td>
         </tr>
         </tbody>
         </table><!-- table end -->

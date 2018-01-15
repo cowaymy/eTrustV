@@ -298,5 +298,157 @@
 		
 		</select>
 		
+		<select id="getOrderInfo" parameterType="Map"  resultType="egovMap">
+		      SELECT C.NAME, C.NRIC, D.STK_DESC, F.CODE_DESC,A.SALES_ORD_ID FROM 
+				SAL0001D A, 
+				SAL0002D B,
+				SAL0029D C,
+				SYS0026M D,
+				SYS0013M F
+				WHERE A.SALES_ORD_ID = B.SALES_ORD_ID
+				AND   A.CUST_ID = C.CUST_ID
+				AND   B.ITM_STK_ID = D.STK_ID
+				AND   A.APP_TYPE_ID = F.CODE_ID
+				AND   A.SALES_ORD_NO = #{ordNo}
+		</select>
+		
+		<select id="getCallerInfo" parameterType="Map"  resultType="egovMap">
+              SELECT B.NAME, B.NRIC, B.TEL_M1, B.TEL_R, B.EMAIL FROM 
+				SAL0001D A,
+				SAL0027D B
+				WHERE A.CUST_CNT_ID = B.CUST_CNTC_ID
+				AND   A.SALES_ORD_NO = #{ordNo}
+        </select>
+        
+        <select id="selectOrderSalesmanViewByOrderID" parameterType="Map" resultType="egovMap">
+        SELECT T1.SALES_ORD_ID SALES_ORD_ID
+             , T1.DEPT_CODE DEPT_CODE
+             , T1.GRP_CODE GRP_CODE
+             , T1.ORG_CODE ORG_CODE
+             , T2.MEM_ID MEM_ID
+             , T2.MEM_CODE MEM_CODE
+             , T2.MEM_TYPE MEM_TYPE
+             , T2.NAME NAME
+             , T2.NRIC NRIC
+             , T2.TEL_OFFICE TEL_OFFICE
+             , T2.TEL_HUSE TEL_HUSE
+             , T2.TEL_MOBILE TEL_MOBILE
+             , T3.MEM_ID MEM_ID1
+             , T3.MEM_CODE MEM_CODE1
+             , T3.NAME NAME1
+             , T3.TEL_MOBILE TEL_MOBILE1
+             , T4.MEM_ID MEM_ID2
+             , T4.MEM_CODE MEM_CODE2
+             , T4.NAME NAME2
+             , T4.TEL_MOBILE TEL_MOBILE2
+             , T5.MEM_ID MEM_ID3
+             , T5.MEM_CODE MEM_CODE3
+             , T5.NAME NAME3
+             , T5.TEL_MOBILE TEL_MOBILE3
+          FROM SAL0001D T1
+          LEFT
+          JOIN ORG0001D T2
+            ON T2.MEM_ID = T1.MEM_ID
+          LEFT
+          JOIN ORG0001D T3
+            ON T3.MEM_ID = T1.SALES_GM_ID
+          LEFT
+          JOIN ORG0001D T4
+            ON T4.MEM_ID = T1.SALES_SM_ID
+          LEFT
+          JOIN ORG0001D T5
+            ON T5.MEM_ID = T1.SALES_HM_ID
+         WHERE  T1.SALES_ORD_ID = #{salesOrdId}
+    </select>
+    
+    <select id="selectOrderServiceMemberViewByOrderID" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+        SELECT T1.SALES_ORD_ID SALES_ORD_ID
+             , T3.MEM_CODE MEM_CODE
+             , T3.NAME NAME
+             , T3.NRIC NRIC
+             , T3.TEL_OFFICE TEL_OFFICE
+             , T3.TEL_HUSE TEL_HUSE
+             , T3.TEL_MOBILE TEL_MOBILE
+             , T4.DEPT_CODE DEPT_CODE
+             , T4.GRP_CODE GRP_CODE
+             , T4.ORG_CODE ORG_CODE
+             , T5.MEM_ID MEM_ID1
+             , T5.MEM_CODE MEM_CODE1
+             , T5.NAME NAME1
+             , T5.TEL_MOBILE TEL_MOBILE1
+             , T7.MEM_ID MEM_ID2
+             , T7.MEM_CODE MEM_CODE2
+             , T7.NAME NAME2
+             , T7.TEL_MOBILE TEL_MOBILE2
+             , T9.MEM_ID MEM_ID3
+             , T9.MEM_CODE MEM_CODE3
+             , T9.NAME NAME3
+             , T9.TEL_MOBILE TEL_MOBILE3
+          FROM SAL0001D T1
+          JOIN SAL0090D T2
+            ON T2.SRV_SO_ID = T1.SALES_ORD_ID
+           AND 1 = T2.SRV_STUS_ID
+          JOIN ORG0001D T3
+            ON T3.MEM_ID = T2.SRV_CODY_ID
+          JOIN
+             ( SELECT V1.MEM_ID MEM_ID
+                    , V1.MEM_CODE MEM_CODE
+                    , V1.MEM_LVL MEM_LVL
+                    , V1.DEPT_CODE DEPT_CODE
+                    , V1.GRP_CODE GRP_CODE
+                    , V1.ORG_CODE ORG_CODE
+                    , V1.TOP_ORG_CODE TOP_ORG_CODE
+                    , V1.MEM_UP_ID MEM_UP_ID
+                    , V1.LVL3_UP_ID LVL3_UP_ID
+                    , V1.LVL2_UP_ID LVL2_UP_ID
+                    , V1.LVL1_UP_ID LVL1_UP_ID
+                    , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T4
+            ON T4.MEM_ID = T3.MEM_ID
+          LEFT
+          JOIN ORG0001D T5
+            ON T5.MEM_ID = T4.MEM_UP_ID
+          LEFT
+          JOIN
+             ( SELECT V1.MEM_ID MEM_ID
+                    , V1.MEM_CODE MEM_CODE
+                    , V1.MEM_LVL MEM_LVL
+                    , V1.DEPT_CODE DEPT_CODE
+                    , V1.GRP_CODE GRP_CODE
+                    , V1.ORG_CODE ORG_CODE
+                    , V1.TOP_ORG_CODE TOP_ORG_CODE
+                    , V1.MEM_UP_ID MEM_UP_ID
+                    , V1.LVL3_UP_ID LVL3_UP_ID
+                    , V1.LVL2_UP_ID LVL2_UP_ID
+                    , V1.LVL1_UP_ID LVL1_UP_ID
+                    , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T6
+            ON T6.MEM_ID = T4.MEM_UP_ID
+          LEFT
+          JOIN ORG0001D T7
+            ON T7.MEM_ID = T6.MEM_UP_ID
+          LEFT
+          JOIN
+             ( SELECT V1.MEM_ID MEM_ID
+                    , V1.MEM_CODE MEM_CODE
+                    , V1.MEM_LVL MEM_LVL
+                    , V1.DEPT_CODE DEPT_CODE
+                    , V1.GRP_CODE GRP_CODE
+                    , V1.ORG_CODE ORG_CODE
+                    , V1.TOP_ORG_CODE TOP_ORG_CODE
+                    , V1.MEM_UP_ID MEM_UP_ID
+                    , V1.LVL3_UP_ID LVL3_UP_ID
+                    , V1.LVL2_UP_ID LVL2_UP_ID
+                    , V1.LVL1_UP_ID LVL1_UP_ID
+                    , V1.LVL0_UP_ID LVL0_UP_ID
+                 FROM ORG1001V V1 ) T8
+            ON T8.MEM_ID = T6.MEM_UP_ID
+          LEFT JOIN ORG0001D T9
+            ON T9.MEM_ID = T8.MEM_UP_ID
+         WHERE T1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1
+    ]]>
+    </select>
+		
     
 </mapper>

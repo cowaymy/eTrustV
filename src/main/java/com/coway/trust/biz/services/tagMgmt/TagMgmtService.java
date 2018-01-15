@@ -26,5 +26,13 @@ public interface TagMgmtService {
 
 	List<EgovMap> getSubInquiryList(Map<String, Object> params);
 	
+	EgovMap getOrderInfo(Map<String, Object> params);
+	
+	EgovMap getCallerInfo(Map<String, Object> params);
+	
+	EgovMap selectOrderSalesmanViewByOrderID(Map<String, Object> params);
+	
+	EgovMap selectOrderServiceMemberViewByOrderID(Map<String, Object> params);
+	
 
 }
