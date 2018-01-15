@@ -192,6 +192,10 @@ $.fn.clearForm = function() {
         }
     });
 };
+
+function fn_feedbackList(){
+	Common.popupDiv("/sales/rcms/feedbackPop.do", null ,  null , true, '_feedbackPop');
+}
 </script>
 
 
@@ -284,7 +288,7 @@ $.fn.clearForm = function() {
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a onclick="javascript:fn_underDevelop()">Feedback List</a></p></li>
+        <li><p class="link_btn"><a onclick="javascript:fn_feedbackList()">Feedback List</a></p></li>
         <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%> 
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

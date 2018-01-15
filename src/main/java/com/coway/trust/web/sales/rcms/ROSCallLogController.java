@@ -532,5 +532,11 @@ public class ROSCallLogController {
 		
 		return ResponseEntity.ok(callerDetList);
 	}
+	
+	
+	@RequestMapping(value = "/feedbackPop.do")
+	public String feedbackPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "/sales/rcms/feedbackPop";
+	}
 }
 

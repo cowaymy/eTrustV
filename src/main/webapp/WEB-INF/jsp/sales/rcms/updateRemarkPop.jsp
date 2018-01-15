@@ -92,7 +92,7 @@ function fn_save(){
 </colgroup>
 <tbody>         
 <tr>
-	<th scope="row">Order No.</span></th>
+	<th scope="row">Order No.</th>
 	<td><input type="text" title="" class="readonly" readonly="readonly" style="width: 100%" id="popOrderNo"  name="popOrderNo"/></td>
 	<th scope="row">Sensitive<span class="must"></span></th>
 	<td><input type="checkbox"  id="chkSensitiveFg"  name="chkSensitiveFg" onclick="fn_chk()"/></td>
