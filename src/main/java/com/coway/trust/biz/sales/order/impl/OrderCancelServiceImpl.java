@@ -219,6 +219,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 				orderCancelMapper.insertCancelLOG0038D(saveParam);
 			}else{
 				EgovMap searchSAL0001D = orderCancelMapper.newSearchCancelSAL0001D(saveParam);	// SalesOrderM
+				saveParam.put("salesMstusCodeId", 10);
 				orderCancelMapper.updateCancelSAL0001D(saveParam);											// SalesOrderM
 				
 			}
