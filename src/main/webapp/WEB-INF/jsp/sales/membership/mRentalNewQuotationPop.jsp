@@ -89,7 +89,8 @@ function  fn_isActiveMembershipQuotationInfoByOrderNo(){
         
          if(result.length > 0 ){
              rtnVAL =true;
-             Common.alert(" <b>This order already has an active quotation.<br />Quotation number : [" + result[0].srvMemQuotNo +"]</b>");
+/*              Common.alert(" <b>This order already has an active quotation.<br />Quotation number : [" + result[0].srvMemQuotNo +"]</b>"); */
+             Common.alert(" <b>This order already has an active quotation.<br />Quotation number : [" + result[0].qotatRefNo +"]</b>");
              return true; 
          }
     });
