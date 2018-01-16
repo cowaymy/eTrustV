@@ -317,7 +317,7 @@
              , BRNCH_ID     = #{dscBrnchId}
          WHERE INSTALL_ID   = #{installId}
     </update>
-    
+
     <update id="updateInstallUpdateInfo" parameterType="Map">
         UPDATE SAL0001D
            SET UPD_USER_ID  = #{updUserId}
