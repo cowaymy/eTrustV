@@ -132,7 +132,7 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/webInvoiceAppvViewPop.do")
-	public String webInvoiceAppvViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String webInvoiceAppvViewPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		

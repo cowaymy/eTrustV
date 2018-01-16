@@ -382,6 +382,8 @@ $(document).ready(function () {
     fn_setGridData(myGridID, myGridData);
     
     $("#pExcelDown_btn").click(fn_getAppvExcelInfo);
+    
+    console.log("${PAGE_AUTH.funcUserDefine1}");
 });
 
 function fn_approvalSubmit() {
@@ -863,9 +865,9 @@ function fn_makeGrid(){
     <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
     </c:if>
     </c:if>
-    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+    <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
     <li><p class="btn_blue2"><a href="#" id="pExcelDown_btn">EXCEL DW</a></p></li>
-    </c:if>
+    <%-- </c:if> --%>
 </ul>
 
 </section><!-- pop_body end -->
