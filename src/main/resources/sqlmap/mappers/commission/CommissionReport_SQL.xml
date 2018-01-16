@@ -296,8 +296,11 @@
 					    else 0 end) as A_Drop_Rate,
 					(case when t1.EMPLY_LEV>4 then t4.v13
 					    else 0 end) as A_Drop_mark,
-				    (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) A_PE_MARK,
-					    
+				 --   (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) A_PE_MARK,  update 20180116
+				  (case when t1.EMPLY_LEV= 1 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11-t4.v13)
+				           when t1.EMPLY_LEV= 4 then  (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13)
+				           when t1.EMPLY_LEV= 2 or t1.EMPLY_LEV= 3 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11+t4.v30-t4.v13)
+              else 0 end)  A_PE_MARK ,
 					t0.R1 as A_PER_AMT,
 					(t0.R2 + t0.R3+t0.R18 + t0.R19 + t0.R21 + t0.R22) as A_SALES_AMT,
 					t0.R4 as A_BONUS_AMT,
@@ -383,8 +386,11 @@
                             else 0 end) as S_Drop_Rate,
                         (case when t1.EMPLY_LEV>4 then t4.v13
                             else 0 end) as S_Drop_mark,
-                        (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) S_PE_MARK,
-                            
+                       -- (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) S_PE_MARK,
+                        (case when t1.EMPLY_LEV= 1 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11-t4.v13)
+                   when t1.EMPLY_LEV= 4 then  (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13)
+                   when t1.EMPLY_LEV= 2 or t1.EMPLY_LEV= 3 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11+t4.v30-t4.v13)
+              else 0 end)  S_PE_MARK ,
                         t0.R1 as S_PER_AMT,
                         (t0.R2 + t0.R3+t0.R18 + t0.R19 + t0.R21 + t0.R22) as S_SALES_AMT,
                         t0.R4 as S_BONUS_AMT,
@@ -565,7 +571,11 @@
 	                    t4.v12 A_DROP_RATE,
 	                    t4.v13 A_DROP_MARK,
 	                    t4.v30 A_BS_PRODUCTIVITY_MARK,
-	                    (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) A_PE_MARK,
+	                  --  (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) A_PE_MARK,
+	                   (case when t1.EMPLY_LEV= 1 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11-t4.v13)
+                   when t1.EMPLY_LEV= 4 then  (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13)
+                   when t1.EMPLY_LEV= 2 or  t1.EMPLY_LEV= 3 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11+t4.v30-t4.v13)
+              else 0 end)  A_PE_MARK ,
 	                    t4.v31 A_REJOIN_RATE,
 	                    t4.v29 A_BS_PRODUCTIVITY_RATE,
 	                    
@@ -631,7 +641,11 @@
                         t4.v12 S_DROP_RATE,
                         t4.v13 S_DROP_MARK,
                         t4.v30 S_BS_PRODUCTIVITY_MARK,
-                        (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) S_PE_MARK,
+                       -- (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13) S_PE_MARK,
+                         (case when t1.EMPLY_LEV= 1 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11-t4.v13)
+                   when t1.EMPLY_LEV= 4 then  (t4.v3+t4.v5+t4.v7+t4.v9-t4.v13)
+                   when t1.EMPLY_LEV= 2 or t1.EMPLY_LEV= 3 then (t4.v3+t4.v5+t4.v7+t4.v9+t4.v11+t4.v30-t4.v13)
+              else 0 end)  S_PE_MARK ,
                         t4.v31 S_REJOIN_RATE,
                         t4.v29 S_BS_PRODUCTIVITY_RATE,
                         
