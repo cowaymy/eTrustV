@@ -132,17 +132,20 @@
                 $('#cmbPromotion').prop("disabled", true);                
                 
                 if($('#hiddenCurrentPromotionID').val() > 0) {
+                    console.log('@#### 000');
                     //$('#cmbPromotion').text($('#hiddenCurrentPromotion').val());
                     $('#cmbPromotion option').remove();
                     $('#cmbPromotion').append("<option value=''>"+$('#hiddenCurrentPromotion').val()+"</option>");
                     fn_loadPromotionPrice($("#hiddenCurrentPromotionID").val(), $("#cmbOrderProduct").val());
                 }
                 else {
+                    console.log('@#### 111');
                     fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
                     fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
                 }
             }
             else {
+                console.log('@#### 222');
                 fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
                 fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
             }
@@ -1076,7 +1079,7 @@
                 $("#ordPv").val(promoPriceInfo.orderPVPromo);
                 $("#ordPvGST").val(promoPriceInfo.orderPVPromoGST);
                 $("#ordRentalFees").val(promoPriceInfo.orderRentalFeesPromo);
-                $("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
+              //$("#orgOrdRentalFees").val(promoPriceInfo.normalRentalFees);
 
                 $("#promoDiscPeriodTp").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);

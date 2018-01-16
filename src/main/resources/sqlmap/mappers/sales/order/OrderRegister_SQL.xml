@@ -154,7 +154,7 @@
              , T1.PROMO_ID
              , T1.BINDING_NO
              , T1.CC_PROMO_ID
-             , T1.TOT_PV
+             , NVL(T1.TOT_PV, 0) AS TOT_PV
              , T1.REM
              , T1.PV_MONTH
              , T1.PV_YEAR
@@ -172,7 +172,7 @@
              , T1.SALES_ORD_ID_OLD
              , T1.EDIT_TYPE_ID
              , T1.CUST_BILL_ID
-             , T1.MTH_RENT_AMT
+             , NVL(T1.MTH_RENT_AMT, 0) AS MTH_RENT_AMT
              , T1.LOK
              , T1.AEON_STUS_ID
              , T1.COMM_DT
@@ -194,9 +194,9 @@
          <!--, T1.STK_LOC-->
              , T1.PROMO_DISC_PERIOD_TP
              , T1.PROMO_DISC_PERIOD
-             , T1.NOR_AMT
-             , T1.NOR_RNT_FEE
-             , T1.DISC_RNT_FEE
+             , NVL(T1.NOR_AMT,      0) AS NOR_AMT
+             , NVL(T1.NOR_RNT_FEE,  0) AS NOR_RNT_FEE
+             , NVL(T1.DISC_RNT_FEE, 0) AS DISC_RNT_FEE
              , T1.GST_CHK
           FROM SAL0001D T1
          WHERE T1.SALES_ORD_ID = #{salesOrdId}

@@ -303,19 +303,19 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     private void preprocSalesOrderM(SalesOrderMVO salesOrderMVO, Map<String, Object> params, SessionVO sessionVO, String ordReqType) throws Exception {
     	
     	if(SalesConstants.ORDER_REQ_TYPE_CD_PEXC.equals(ordReqType)) {
-            salesOrderMVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
-            salesOrderMVO.setTotAmt(new BigDecimal((String)params.get("ordPrice")));
-            salesOrderMVO.setTotPv(new BigDecimal((String)params.get("ordPv")));
-            salesOrderMVO.setMthRentAmt(new BigDecimal((String)params.get("ordRentalFees")));
-            salesOrderMVO.setDefRentAmt(new BigDecimal((String)params.get("ordRentalFees")));
-            salesOrderMVO.setPromoId("1".equals((String)params.get("btnCurrentPromo")) ? CommonUtils.intNvl((String)params.get("hiddenCurrentPromotionID"))
-                    																   : CommonUtils.intNvl((String)params.get("cmbPromotion")));
+            salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
+            salesOrderMVO.setTotAmt(new BigDecimal(String.valueOf(params.get("ordPrice"))));
+            salesOrderMVO.setTotPv(new BigDecimal(String.valueOf(params.get("ordPv"))));
+            salesOrderMVO.setMthRentAmt(new BigDecimal(String.valueOf(params.get("ordRentalFees"))));
+            salesOrderMVO.setDefRentAmt(new BigDecimal(String.valueOf(params.get("ordRentalFees"))));
+            salesOrderMVO.setPromoId("1".equals((String)params.get("btnCurrentPromo")) ? CommonUtils.intNvl(params.get("hiddenCurrentPromotionID"))
+                    																   : CommonUtils.intNvl(params.get("cmbPromotion")));
             salesOrderMVO.setUpdUserId(sessionVO.getUserId());
-            salesOrderMVO.setPromoDiscPeriodTp(CommonUtils.intNvl((String)params.get("promoDiscPeriodTp")));
-            salesOrderMVO.setPromoDiscPeriod(CommonUtils.intNvl((String)params.get("promoDiscPeriod")));
-            salesOrderMVO.setNorAmt(new BigDecimal((String)params.get("orgOrdPrice")));
-            salesOrderMVO.setNorRntFee(new BigDecimal((String)params.get("orgOrdRentalFees")));
-            salesOrderMVO.setDiscRntFee(new BigDecimal((String)params.get("ordRentalFees")));
+            salesOrderMVO.setPromoDiscPeriodTp(CommonUtils.intNvl(params.get("promoDiscPeriodTp")));
+            salesOrderMVO.setPromoDiscPeriod(CommonUtils.intNvl(params.get("promoDiscPeriod")));
+            salesOrderMVO.setNorAmt(new BigDecimal(String.valueOf(params.get("orgOrdPrice"))));
+            salesOrderMVO.setNorRntFee(new BigDecimal(String.valueOf(params.get("orgOrdRentalFees"))));
+            salesOrderMVO.setDiscRntFee(new BigDecimal(String.valueOf(params.get("ordRentalFees"))));
     /*
             SalesOrderM.TotalAmt = double.Parse(txtPrice.Text.Trim());
             SalesOrderM.TotalPV = double.Parse(txtPV.Text.Trim());
@@ -329,7 +329,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     		Date defaultDate = sdf.parse(SalesConstants.DEFAULT_DATE2);
     		
-    		salesOrderMVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
+    		salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
     		salesOrderMVO.setRefNo("");
     		salesOrderMVO.setSalesDt(defaultDate);
 //          salesOrderMaster.CustomerID = int.Parse(hiddenCustomerID.Value);
@@ -337,10 +337,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		salesOrderMVO.setCustAddId(0);
     		salesOrderMVO.setMemId(0);
     		salesOrderMVO.setBrnchId(0);
-    		salesOrderMVO.setAppTypeId(CommonUtils.intNvl((String)params.get("cmbAppType")));
+    		salesOrderMVO.setAppTypeId(CommonUtils.intNvl(params.get("cmbAppType")));
     		salesOrderMVO.setDscntAmt(BigDecimal.ZERO);
     		salesOrderMVO.setTaxAmt(BigDecimal.ZERO);
-    		salesOrderMVO.setPromoId(CommonUtils.intNvl((String)params.get("cmbPromotion")));
+    		salesOrderMVO.setPromoId(CommonUtils.intNvl(params.get("cmbPromotion")));
     		salesOrderMVO.setBindingNo("");
     		salesOrderMVO.setCcPromoId(0);
     		salesOrderMVO.setRem("");
@@ -351,7 +351,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		salesOrderMVO.setSyncChk(SalesConstants.IS_FALSE);
     		salesOrderMVO.setCustPoNo("");
     		salesOrderMVO.setRenChkId(0);
-    		salesOrderMVO.setInstPriod(CommonUtils.intNvl((String)params.get("cmbAppType")) == 68 ? CommonUtils.intNvl((String)params.get("txtInstallmentDuration")) : 0);
+    		salesOrderMVO.setInstPriod(CommonUtils.intNvl(params.get("cmbAppType")) == 68 ? CommonUtils.intNvl(params.get("txtInstallmentDuration")) : 0);
     		salesOrderMVO.setDoNo("");
     		salesOrderMVO.setDeptCode("");;
     		salesOrderMVO.setGrpCode("");
@@ -377,16 +377,16 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     		Date defaultDate = sdf.parse(SalesConstants.DEFAULT_DATE2);
     		
-    		salesOrderMVO.setSalesOrdId(CommonUtils.intNvl((String)params.get("salesOrdId")));
+    		salesOrderMVO.setSalesOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
     		salesOrderMVO.setSalesOrdNo("");    		
     		salesOrderMVO.setRefNo("");    		
     	  //salesOrderMVO.setSalesDt(defaultDate); //DateTime.Now;
-    		salesOrderMVO.setCustId(CommonUtils.intNvl((String)params.get("txtHiddenCustID")));
-    		salesOrderMVO.setCustCntId(CommonUtils.intNvl((String)params.get("txtHiddenContactID")));
-    		salesOrderMVO.setCustAddId(CommonUtils.intNvl((String)params.get("txtHiddenAddressID")));
+    		salesOrderMVO.setCustId(CommonUtils.intNvl(params.get("txtHiddenCustID")));
+    		salesOrderMVO.setCustCntId(CommonUtils.intNvl(params.get("txtHiddenContactID")));
+    		salesOrderMVO.setCustAddId(CommonUtils.intNvl(params.get("txtHiddenAddressID")));
     		salesOrderMVO.setMemId(0);
     		salesOrderMVO.setBrnchId(0);
-    		salesOrderMVO.setAppTypeId(CommonUtils.intNvl((String)params.get("hiddenAppTypeID")));
+    		salesOrderMVO.setAppTypeId(CommonUtils.intNvl(params.get("hiddenAppTypeID")));
     		salesOrderMVO.setDscntAmt(BigDecimal.ZERO);
     		salesOrderMVO.setTaxAmt(BigDecimal.ZERO);
     		salesOrderMVO.setTotAmt(BigDecimal.ZERO);
