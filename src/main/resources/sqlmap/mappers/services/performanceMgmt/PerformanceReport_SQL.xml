@@ -49,44 +49,55 @@
 
 
     <select id="selectPfReportCollection"  parameterType="Map" resultType="egovMap">
-		 <![CDATA[ select memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE, ' ' AS collection_target_percent
-		, count(accDept.ACC_DEBT_ORD_ID) AS NO_OF_ACCT, SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) TARGET,SUM(accDept_sub.ACC_DEBT_CURR_TOT_COLCT ) as COLLECTION 
-		,(case WHEN (SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) >0) then (SUM(accDept_sub.ACC_DEBT_CURR_TOT_COLCT )/SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)*100) ELSE 0 END) AS COLLECTION_PERCENT
-		,(CASE WHEN count(PD1.PAY_ITM_ID) >0 THEN (count(PD.PAY_ITM_ID)/count(PD1.PAY_ITM_ID) * 100) ELSE 0 END) ADD_PERCENT
-		from PAY0052S accDept
-		join PAY0053S accDept_sub on accDept_sub.ACC_DEBT_ORD_ID = accDept.ACC_DEBT_ORD_ID
-		join SVC0008D sch on sch.SALES_ORD_ID =accDept.ACC_DEBT_ORD_ID 
-		join ORG0005D memOrg on memOrg.MEM_ID = sch.CODY_ID AND memOrg.ORG_STUS_CODE_ID = 1 and memOrg.LAST_DEPT_CODE <> ' '
-		left join PAY0064D PM on PM.SALES_ORD_ID = accDept.ACC_DEBT_ORD_ID
-		left join PAY0065D PD on PD.PAY_ID = PM.PAY_ID AND PD.PAY_ITM_MODE_ID IN (106,107,108)
-		left join PAY0065D PD1 ON PD1.PAY_ID = PM.PAY_ID 
-		WHERE sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
-          AND sch.YEAR = to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
-           ]]>
-           <if test="cmdBranchCode != null and cmdBranchCode != ''">
-             and memOrg.BRNCH_ID =  #{cmdBranchCode}
-            </if> 
-             <if test="cmdCdManager != null and cmdCdManager != ''">
-             and memOrg.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
-                                            FROM ORG0005D A,
-                                                 ORG0001D B,
-                                                 SYS0005M C
-                                           WHERE A.MEM_ID = B.MEM_ID
-                                                 AND A.BRNCH_ID =  C.BRNCH_ID
-                                                 AND A.DEPT_CODE  IS NOT NULL
-                                                 AND B.STUS IN (1, 8)
-                                                 AND B.MEM_TYPE = 2
-                                                 AND A.BRNCH_ID = #{cmdBranchCode}
-                                                 and a.MEM_ID = #{cmdCdManager}
-		                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
-		                                          and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
-		                                         </if>
-                                                                                            )
-             </if>
-             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
-              and memOrg.LAST_DEPT_CODE = #{txtAssigncodyCode}
-             </if>
-		group by memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
+		 <![CDATA[ 
+		 select LAST_ORG_CODE,
+            LAST_GRP_CODE,
+            LAST_DEPT_CODE,
+            collection_target_percent,
+            NO_OF_ACCT,
+            TARGET,
+            COLLECTION,
+            COLLECTION_PERCENT,
+            to_char(ADD_PERCENT, 'FM90D00') as ADD_PERCENT
+	from (select memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE, ' ' AS collection_target_percent
+			, count(accDept.ACC_DEBT_ORD_ID) AS NO_OF_ACCT, SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) TARGET,SUM(accDept_sub.ACC_DEBT_CURR_TOT_COLCT ) as COLLECTION 
+			,(case WHEN (SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) >0) then (SUM(accDept_sub.ACC_DEBT_CURR_TOT_COLCT )/SUM(accDept_sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)*100) ELSE 0 END) AS COLLECTION_PERCENT
+			,(CASE WHEN count(PD1.PAY_ITM_ID) >0 THEN (count(PD.PAY_ITM_ID)/count(PD1.PAY_ITM_ID) * 100) ELSE 0 END) ADD_PERCENT
+			from PAY0052S accDept
+			join PAY0053S accDept_sub on accDept_sub.ACC_DEBT_ORD_ID = accDept.ACC_DEBT_ORD_ID
+			join SVC0008D sch on sch.SALES_ORD_ID =accDept.ACC_DEBT_ORD_ID 
+			join ORG0005D memOrg on memOrg.MEM_ID = sch.CODY_ID AND memOrg.ORG_STUS_CODE_ID = 1 and memOrg.LAST_DEPT_CODE <> ' '
+			left join PAY0064D PM on PM.SALES_ORD_ID = accDept.ACC_DEBT_ORD_ID
+			left join PAY0065D PD on PD.PAY_ID = PM.PAY_ID AND PD.PAY_ITM_MODE_ID IN (106,107,108)
+			left join PAY0065D PD1 ON PD1.PAY_ID = PM.PAY_ID 
+			WHERE sch.MONTH = to_char(to_date(#{myBSMonth},'mm/yyyy'),'mm')
+	          AND sch.YEAR = to_char(to_date(#{myBSMonth},'mm/yyyy'),'yyyy')
+	           ]]>
+	           <if test="cmdBranchCode != null and cmdBranchCode != ''">
+	             and memOrg.BRNCH_ID =  #{cmdBranchCode}
+	            </if> 
+	             <if test="cmdCdManager != null and cmdCdManager != ''">
+	             and memOrg.LAST_DEPT_CODE  IN   ( SELECT  A.DEPT_CODE
+	                                            FROM ORG0005D A,
+	                                                 ORG0001D B,
+	                                                 SYS0005M C
+	                                           WHERE A.MEM_ID = B.MEM_ID
+	                                                 AND A.BRNCH_ID =  C.BRNCH_ID
+	                                                 AND A.DEPT_CODE  IS NOT NULL
+	                                                 AND B.STUS IN (1, 8)
+	                                                 AND B.MEM_TYPE = 2
+	                                                 AND A.BRNCH_ID = #{cmdBranchCode}
+	                                                 and a.MEM_ID = #{cmdCdManager}
+			                                         <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+			                                          and a.LAST_DEPT_CODE = #{txtAssigncodyCode}
+			                                         </if>
+	                                                                                            )
+	             </if>
+	             <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
+	              and memOrg.LAST_DEPT_CODE = #{txtAssigncodyCode}
+	             </if>
+			group by memOrg.LAST_ORG_CODE ,memOrg.LAST_GRP_CODE , memOrg.LAST_DEPT_CODE
+			)
     </select>
     
     
@@ -94,7 +105,11 @@
 
 
     <select id="selectPfReportHeartService"  parameterType="Map" resultType="egovMap">
-			 <![CDATA[ select  
+			 <![CDATA[ 
+			 select SCM,CM,CODY,No_of_Acct,Active,Complete,Fail,Cancel,Other
+		        ,to_char(Complete_percent, 'FM90D00')
+		from (
+        select  
 			f.mem_code as SCM,
 			d.mem_code as CM,
 			(case when b.mem_lvl = 4 then c.mem_code  else null end ) as CODY, 
@@ -141,6 +156,7 @@
              and b.LAST_DEPT_CODE = #{txtAssigncodyCode}
              </if>
 			group by b.mem_lvl,c.mem_code,d.mem_code, f.mem_code
+			)
     </select>
     
     
