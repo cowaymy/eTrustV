@@ -25,16 +25,16 @@
         
        var columnLayoutRejoin = [ {
                             dataField:"lastOrgCode",
-                            headerText:"SCM",
+                            headerText:"GM",
                             width:120,
                             height:30
                         }, {
                             dataField : "lastGrpCode",
-                            headerText : "CM",
+                            headerText : "SCM",
                             width : 120
                         }, {
                             dataField : "lastDeptCode",
-                            headerText : "CODY",
+                            headerText : "CM",
                             width : 120
                         }, {
                             dataField : "rejoinTargetPercent",
@@ -69,16 +69,16 @@
 
        var columnLayoutCollection = [ {
                             dataField:"lastorgCode",
-                            headerText:"SCM",
+                            headerText:"GM",
                             width:120,
                             height:30
                         }, {
                             dataField : "lastGrpCode",
-                            headerText : "CM",
+                            headerText : "SCM",
                             width : 120
                         }, {
                             dataField : "lastDeptCode",
-                            headerText : "CODY",
+                            headerText : "CM",
                             width : 120
                         }, {
                             dataField : "collectionTargetPercent",
@@ -116,16 +116,16 @@
                     
        var columnLayoutHeartService = [ {
                             dataField:"scm",
-                            headerText:"SCM",
+                            headerText:"GM",
                             width:120,
                             height:30
                         }, {
                             dataField : "cm",
-                            headerText : "CM",
+                            headerText : "SCM",
                             width : 120
                         }, {
                             dataField : "cody",
-                            headerText : "CODY",
+                            headerText : "CM",
                             width : 120
                         }, {
                             dataField : "",
@@ -159,16 +159,16 @@
                      
        var columnLayoutSales = [ {
                             dataField:"scm",
-                            headerText:"SCM",
+                            headerText:"GM",
                             width:120,
                             height:30
                         }, {
                             dataField : "cm",
-                            headerText : "CM",
+                            headerText : "SCM",
                             width : 120
                         }, {
                             dataField : "cody",
-                            headerText : "CODY",
+                            headerText : "CM",
                             width : 120
                         }, {
                             dataField : "salesTarget",
