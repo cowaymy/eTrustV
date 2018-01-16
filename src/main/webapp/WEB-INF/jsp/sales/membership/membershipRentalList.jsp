@@ -213,7 +213,7 @@ function createAUIGrid() {
                             { dataField : "srvCntrctNetYear",         headerText  : "<spring:message code="sal.title.netYear" />",   width          : 70,     editable       : false },
                             { dataField : "srvPrdStartDt",       headerText  : "<spring:message code="sal.title.stDate" />",  width          : 90, editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
                             { dataField : "srvCntrctPacDesc",     headerText  : "<spring:message code="sal.title.package" />",  width          : 130,    editable       : false },
-                            { dataField : "name",      headerText  : "<spring:message code="sal.title.custName" />",   width          : 150,    editable       : false },
+                            { dataField : "name1",      headerText  : "<spring:message code="sal.title.custName" />",   width          : 150,    editable       : false },
                             { dataField : "srvCntrctCrtDt",     headerText  : "<spring:message code="sal.title.created" />",    width          : 90,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
                             { dataField : "userName",     headerText  : "<spring:message code="sal.title.creator" />",    width : 100,       editable  : false}
                                
