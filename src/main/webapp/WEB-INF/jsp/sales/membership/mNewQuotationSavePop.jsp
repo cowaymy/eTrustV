@@ -20,9 +20,9 @@
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Save Option</h1>
+<h1><spring:message code="sal.page.title.saveOption" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2" ><a href="#" id="ms_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2" ><a href="#" id="ms_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -37,18 +37,18 @@
 <tbody>
 
 <tr>
-    <th scope="row">Save Option</th>
+    <th scope="row"><spring:message code="sal.text.saveOption" /></th>
     <td>
     <select id="saveOption" name="saveOption" >
-        <option value="1" selected>Save & proceed to payment</option>
-        <option value="2">Save quotation only</option>
+        <option value="1" selected><spring:message code="sal.text.saveProceedPayment" /></option>
+        <option value="2"><spring:message code="sal.text.saveQuotation" /></option>
     </select>
     </td>
 </tr>
 </tbody>
 </table>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#"  onclick="javascript:fn_goProcess()">Proceed</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#"  onclick="javascript:fn_goProcess()"><spring:message code="sal.btn.proceed" /></a></p></li>
 </ul>
 
 

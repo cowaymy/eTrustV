@@ -55,12 +55,12 @@
 	                       {dataField :"disamt", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0.00"}
 	   ]; */
 	  var columnLayout = [ 
-	                       {dataField :"filterCode",  headerText : "Code",      width: 150 ,editable : false },
-	                       {dataField :"filterDesc",  headerText : "Descrption",    width: 250, editable : false },
-	                       {dataField :"lifePriod", headerText : "LifePeriod",   width: 150, editable : false },
-	                       {dataField :"lastChngDt", headerText : "LastChangeDate", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
-	                       {dataField :"oriPrc", headerText : "OriPrice",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0"},
-	                       {dataField :"prc", headerText : "ChargePrice", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0"}
+	                       {dataField :"filterCode",  headerText : "<spring:message code="sal.title.code" />",      width: 150 ,editable : false },
+	                       {dataField :"filterDesc",  headerText : "<spring:message code="sal.title.description" />",    width: 250, editable : false },
+	                       {dataField :"lifePriod", headerText : "<spring:message code="sal.title.lifePeriod" />",   width: 150, editable : false },
+	                       {dataField :"lastChngDt", headerText : "<spring:message code="sal.title.lastChangeDate" />", dataType : "date", formatString : "dd-mm-yyyy"  ,editable : false},
+	                       {dataField :"oriPrc", headerText : "<spring:message code="sal.title.oriPrice" />",width: 100 ,editable : false , dataType:"numeric", formatString : "#,##0"},
+	                       {dataField :"prc", headerText : "<spring:message code="sal.title.changePrice" />", width: 100, editable : false  , dataType:"numeric", formatString : "#,##0"}
 	   ]; 	   
 
 	   
@@ -81,7 +81,7 @@
 	     //푸터 설정
 	     var footerObject = [ 
 	                             {
-	                                 labelText : "COUNT :",
+	                                 labelText : "<spring:message code="sal.title.count" /> :",
 	                                 positionField : "filterDesc"
 	                             },
 	                           {
@@ -91,7 +91,7 @@
 	                                formatString : "#,##0"
 	                           },
 	                           {
-	                        	   labelText : "Total :",
+	                        	   labelText : "<spring:message code="sal.title.total" /> :",
                                    positionField : "oriPrc"
                               },
 	                           {
@@ -125,9 +125,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>FILTER CHARGE DETAILS-NO PROMOTION</h1>
+<h1><spring:message code="sal.page.title.filterChargeDetailsNoPromo" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#"   onclick="javascript:fn_close()">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"   onclick="javascript:fn_close()"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

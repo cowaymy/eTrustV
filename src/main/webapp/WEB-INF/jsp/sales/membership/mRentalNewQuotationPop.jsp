@@ -862,6 +862,9 @@ function  fn_DoSaveProcess(_saveOption){
 
              }else{
                   Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data.qotatRefNo + "<br /> ");
+
+                  $("#_NewQuotDiv1").remove();
+                  fn_selectListAjax();
              }
          }else{
               Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");

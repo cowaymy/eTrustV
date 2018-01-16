@@ -43,9 +43,9 @@ function auiRemoveRowHandler(event) {}
 function tr_CreateAUIGrid(){
         
            var columnLayout = [ 
-                                {dataField : "type",       headerText : "Type",    width :300}, 
-                                {dataField : "trNo",       headerText : "TR No",    width : 100},
-                                {dataField : "issDate",   headerText : "Issued Date",  width : 200},
+                                {dataField : "type",       headerText : "<spring:message code="sal.title.type" />",    width :300}, 
+                                {dataField : "trNo",       headerText : "<spring:message code="sal.title.trNo" />",    width : 100},
+                                {dataField : "issDate",   headerText : "<spring:message code="sal.title.issueDate" />",  width : 200},
                                 {
                                        dataField : "undefined",
                                        headerText : " ",
@@ -104,7 +104,7 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
                    $("#convt_create").html(result[0].crtUserId); 
                    $("#convt_sales").html("");
                    $("#convt_validDt").html(result[0].validDt);  
-                   $("#convt_dur").html(result[0].dur+" month(s) ");     
+                   $("#convt_dur").html(result[0].dur+" <spring:message code="sal.text.month" /> ");     
                    
                    $("#convt_package").html(result[0].pacDesc);     
                    $("#convt_totAmt").html(result[0].totAmt);
@@ -112,7 +112,7 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
                    $("#convt_filterAmt").html(result[0].filterAmt);  
                    $("#convt_packPromo").html(result[0].pacPromoCode +" "+ result[0].pacPromoDesc);
                    $("#convt_filterPromo").html(result[0].promoCode + " " +result[0].promoDesc);  
-                   $("#convt_bsFreq").html(result[0].bsFreq +" month(s) ");  
+                   $("#convt_bsFreq").html(result[0].bsFreq +" <spring:message code="sal.text.month" /> ");  
                    
                    
                    //Contact Person Tab //MembershipQuotInfo
@@ -207,7 +207,7 @@ function fn_goColleConfirm() {
     
     if($("#COLL_MEM_CODE").val() =="") {
             
-            Common.alert("Please key in the collector code before you confirm the payment collector ");
+            Common.alert("<spring:message code="sal.alert.msg.keyInCollectorCode" /> ");
             return ;
     }
         
@@ -228,7 +228,7 @@ function fn_goColleConfirm() {
              }else {
                  
                  $("#COLL_MEM_NAME").html("");
-                 Common.alert(" Unable to find [" +$("#COLL_MEM_CODE").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
+                 Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +$("#COLL_MEM_CODE").val() +"] <spring:message code="sal.alert.msg.unableToFind2" />   ");
                  return ;
              }
      });

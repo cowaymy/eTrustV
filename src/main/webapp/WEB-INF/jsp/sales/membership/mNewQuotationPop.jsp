@@ -60,7 +60,7 @@ function fn_doConfirm (){
              
              $("#resultcontens").attr("style","display:none");
               
-             Common.alert(" No order found or this order is not under complete status. ");
+             Common.alert(" <spring:message code="sal.alert.msg.noOrderFound" /> ");
              return ;
              
          }else{
@@ -90,7 +90,7 @@ function  fn_isActiveMembershipQuotationInfoByOrderNo(){
         
          if(result.length > 0 ){
              rtnVAL =true;
-             Common.alert(" <b>This order already has an active quotation.<br />Quotation number : [" + result[0].srvMemQuotNo +"]</b>");
+             Common.alert(" <b><spring:message code="sal.alert.msg.hasActQuotation" />[" + result[0].srvMemQuotNo +"]</b>");
              return true; 
          }
     });
@@ -106,7 +106,7 @@ function fn_getDataInfo (){
         	 
         	 if("DM" == result.installation.areaId.substring(0,2)){        		 
         		 
-        		 Common.alert("The customer address of Order is the old address.<br/>Change to the new address in the Customer Management.");
+        		 Common.alert("<spring:message code="sal.alert.msg.customerAddrChange" />");
         		 
         		 return;
         		 
@@ -341,18 +341,18 @@ function fn_newGetExpDate(old_result){
          if(result.expDate.expint <= 0){
              $("#HiddenIsCharge").val(0);
              $("#isCharge").html("No");
-             $("#term").html("<font color='green'> Under membership </font>");
+             $("#term").html("<font color='green'> <spring:message code="sal.text.underMembership" /> </font>");
              
          }else if(result.expDate.expint > 0 && old_result.basic.coolOffPriod >= result.expDate.expint){
              
                $("#HiddenIsCharge").val(0);
                $("#isCharge").html("No");
-               $("#term").html("<font color='brown'> Under cooling off period </font>");
+               $("#term").html("<font color='brown'> <spring:message code="sal.text.underCoolingOff" /> </font>");
                
          }else{
               $("#HiddenIsCharge").val(1);
               $("#isCharge").html("YES");
-              $("#term").html("<font color='red'> Passed cooling off period </font>");
+              $("#term").html("<font color='red'> <spring:message code="sal.text.passedCoolingOff" /> </font>");
          }
 
          if($("#HiddenIsCharge").val() != "0"){
@@ -516,14 +516,14 @@ function fn_onChange_cPromotionpac(o){
                             // $("#txtPackagePrice").html( Number(   Math.floor(   ( oriprice - promoPrcPrcnt) -promoAddDiscPrc  ))); 
                          
                          }else{
-                             Common.alert('promoDiscType err ');
+                             Common.alert('<spring:message code="sal.alert.promDiscountTypeError" /> ');
                              return ;
                          }
                      }
                 });
                 
             }else {
-                Common.alert(   "Promotion Not Entitled"+DEFAULT_DELIMITER+" This order is not entitled in this promotion.");
+                Common.alert(   "<spring:message code="sal.alert.title.promoNotEntitled" />"+DEFAULT_DELIMITER+" <spring:message code="sal.alert.msg.promoNotEntitled" />");
             }
     }
     
@@ -566,7 +566,7 @@ function fn_getMembershipPackageInfo(_id){
                $("#eurCertYn").val(result.packageInfo.eurCertYn);
                
                $("#HiddenHasPackage").val(1);
-               $("#txtBSFreq").html(result.packageInfo.srvMemItmPriod +" month(s)");
+               $("#txtBSFreq").html(result.packageInfo.srvMemItmPriod +" <spring:message code="sal.text.month" />");
                $("#hiddentxtBSFreq").val(result.packageInfo.srvMemItmPriod );
 
                $("#hiddenNomalPrice").val(pacPrice);
@@ -814,7 +814,7 @@ function fn_getFilterCharge(_cPromotion){
                }
             
                if( $("#cPromotionpac").val() > 0){
-                   $("#FCPOPTITLE").val("Filter Charge Details - Promotion Applied");
+                   $("#FCPOPTITLE").val("<spring:message code="sal.page.title.filterChargeDetailsPromoApplied" />");
                }else{
                   $("#FCPOPTITLE").val("Filter Charge Details - No Promotion"); 
                }
@@ -922,7 +922,7 @@ function fn_goSalesConfirm(){
                  }else {
                      
                      $("#SALES_PERSON_DESC").html("");
-                     Common.alert(" Unable to find [" +$("#SALES_PERSON").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
+                     Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +$("#SALES_PERSON").val() +"] <spring:message code="sal.alert.msg.unableToFind2" />   ");
                      return ;
                  }
                  
@@ -1049,19 +1049,19 @@ function  fn_validRequiredField_Save(){
     
     
     if(FormUtil.checkReqValue($("#cPromotionpac"))){
-           rtnMsg  +="Please select the type of package <br>" ;
+           rtnMsg  +="<spring:message code="sal.alert.msg.selectPackType" /> <br>" ;
            rtnValue =false; 
     }
     
     
     if(FormUtil.checkReqValue($("#cYear"))){
-        rtnMsg += "Please select the subscription year.";
+        rtnMsg += "<spring:message code="sal.alert.msg.selectSubscriptionYear" /><br>";
         rtnValue =false; 
      }else{
             if($("#cYear").val() =="12" 
                    && $("#cPromotionpac").val() =="544" ){
                 
-                  rtnMsg += "Not allow to choose 2 Years Advance Promotion (10% Discount) Promotion. <br>" ;
+                  rtnMsg += "<spring:message code="sal.alert.msg.notAllowPromotionDiscount" /> <br>" ;
                  rtnValue =false; 
             }
     }
@@ -1087,7 +1087,7 @@ function  fn_validRequiredField_Save(){
                          var month =  parseInt(nowDate ,10)   -   parseInt(expDate ,10);
                          
                          if(month > 0){
-                              rtnMsg += "Membership is expired. Not allow to choose Early Bird Promotion.<br>";
+                              rtnMsg += "<spring:message code="sal.alert.msg.membershipIsExpired" /><br>";
                               rtnValue =false; 
                          }
                          
@@ -1104,19 +1104,19 @@ function  fn_validRequiredField_Save(){
     
                          if( resultBasicObject.stkCategoryId == 54){
                              if(month > 7 ){
-                                  rtnMsg +="Membership is expired over 7 month. Not allow to choose Fresh Expired Promotion.<br>";
+                                  rtnMsg +="<spring:message code="sal.alert.msg.membershipIsExpiredOver7" /><br>";
                                   rtnValue =false; 
                              }
                          } else {
                             if(month > 5){
-                                 rtnMsg +="Membership is expired over 5 month. Not allow to choose Fresh Expired Promotion.<br>";
+                                 rtnMsg +="<spring:message code="sal.alert.msg.membershipIsExpiredOver5" /><br>";
                                  rtnValue =false; 
                             }
                          }
                          
                          
                      }else{
-                         rtnMsg +="Membership is haven't expired. Not allow to choose Fresh Expired Promotion.<br>";
+                         rtnMsg +="<spring:message code="sal.alert.msg.membershipIsHaventExpired" /><br>";
                          rtnValue =false; 
                      }          
            }
@@ -1133,7 +1133,7 @@ function  fn_validRequiredField_Save(){
       
       
       if( rtnValue ==false ){
-          Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +rtnMsg );
+          Common.alert("<spring:message code="sal.alert.title.saveQuotationSummary" />" +DEFAULT_DELIMITER +rtnMsg );
       }
       
       return  rtnValue;
@@ -1155,7 +1155,7 @@ function fn_CheckRentalOrder(billMonth){
                             console.log(result);
                             if(result.length >0 ){
                                 if(result.ordTotOtstnd > 0){
-                                     rtnMsg += "Not allow to choose 2 Years Advance Promotion   Promotion. <br>" ;
+                                     rtnMsg += "<spring:message code="sal.alert.msg.notAllowPromotion" /><br>" ;
                                      rtnValue =false; 
                                 }
                             }
@@ -1177,14 +1177,14 @@ function fn_CheckRentalOrder(billMonth){
                   
                   
         }else {
-             rtnMsg += "Only [REG] or [INV] rental order is allowed to purchase membership.<br>";
+             rtnMsg += "<spring:message code="sal.alert.msg.onlyRegOrINV" /><br>";
              rtnValue =false; 
         }
     }
     
     
     if( rtnValue ==false ){
-        Common.alert("Rental Order Validation" +DEFAULT_DELIMITER +rtnMsg );
+        Common.alert("<spring:message code="sal.alert.title.rentalOrderValidation" />" +DEFAULT_DELIMITER +rtnMsg );
     }
     
     return  rtnValue;
@@ -1196,7 +1196,7 @@ function fn_CheckSalesPersonCode(){
     
     if($("#SALES_PERSON").val() =="") {
         
-             Common.alert("Please Key-In Sales Person Code. ");
+             Common.alert("<spring:message code="sal.alert.msg.keyInSalesPersonCode" /> ");
              return   false;
      }
      return true;
@@ -1206,7 +1206,7 @@ function fn_CheckSalesPersonCode(){
 function fn_unconfirmSalesPerson(){
     
     if($("#hiddenSalesPersonID").val() =="") {
-         Common.alert("Sales Person Confirmation" +DEFAULT_DELIMITER+"You must confirm the sales person since you have key-in sales person code.");
+         Common.alert("<spring:message code="sal.alert.title.salesPersonConfirmation" />" +DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.salesPersonConfirmation" />");
          return   false;
     
     }else{
@@ -1293,16 +1293,21 @@ function  fn_DoSaveProcess(_saveOption){
              
              if(_saveOption == "1"){
                  
-                  Common.alert("Quotation Saved & Proceed To Payment" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br/> Quotation number : " + result.message + "<br/> System will auto redirect to payment process after 3 seconds. ");
+                  Common.alert("<spring:message code="sal.alert.title.quotationSaveProceedToPayment" />"  +DEFAULT_DELIMITER
+                		               +" <b> <spring:message code="sal.alert.msg.quotationSaveProceedToPayment" /> " 
+                		               + result.message + "<br/> <spring:message code="sal.alert.msg.quotationSaveProceedToPayment2" /> ");
 
                   setTimeout(function(){ fn_saveResultTrans(result.data) ;}, 3000); 
                   
              }else{
-                  Common.alert("Quotation Saved" +DEFAULT_DELIMITER+" <b> Quotation successfully saved.<br /> Quotation number : " + result.data + "<br /> ");
+                  Common.alert("<spring:message code="sal.alert.title.quotationSaved" />" +DEFAULT_DELIMITER+" <b> <spring:message code="sal.alert.msg.quotationSaved" />" + result.data + "<br /> ");
+
+                  $("#_NewQuotDiv1").remove();
+                  fn_selectListAjax();
              }
              
          }else{
-              Common.alert("Failed To Save" +DEFAULT_DELIMITER+" b>Failed to save. Please try again later.</b> ");
+              Common.alert("<spring:message code="sal.alert.title.saveFail" />" +DEFAULT_DELIMITER+" <b><spring:message code="sal.alert.msg.saveFail" /></b> ");
          }
     });
 }
@@ -1362,51 +1367,15 @@ function createAUIGridHList() {
     
     //AUIGrid 칼럼 설정
     var columnLayout = [
-                        {     dataField     : "no",                 
-                               headerText  : "BS No",  
-                               width          : 90,               
-                               editable       : false
-                        }, 
-                        {     dataField     : "month",          
-                               headerText  : "BS Month",           
-                               width          : 80,                
-                               editable       : false
-                        }, 
-                        {     dataField     : "code",                     
-                               headerText  : "Type",           
-                               width          : 70,                 
-                               editable       : false
-                        }, 
-                        {      dataField     : "code1",                
-                                headerText  : "Status",           
-                                width          :70,                 
-                                editable       : false
-                        }, 
-                        {      dataField       : "no1",      
-                            headerText   : "BSR No",           
-                            width           : 100,                 
-                            editable        : false
-                     },
-                    {      dataField       : "c1",      
-                                headerText   : "Settle Date",           
-                                width           : 170,                 
-                                editable        : false
-                         }, 
-                         {      dataField       : "memCode",      
-                             headerText   : "Cody Code",           
-                             width           : 90,                 
-                             editable        : false
-                      }, 
-                      {      dataField       : "code3",      
-                          headerText   : "Fail Reason",           
-                          width           :105,                 
-                          editable        : false
-                   }, 
-                   {      dataField       : "code2",      
-                       headerText   : "Collection<br/> Reason",           
-                       width           : 100,                 
-                       editable        : false
-                }
+         {     dataField    : "no",  headerText  : "<spring:message code="sal.title.bsNo" />", width : 90, editable : false }, 
+         {     dataField    : "month", headerText  : "<spring:message code="sal.title.bsMonth" />", width : 80, editable : false }, 
+         {     dataField    : "code", headerText  : "<spring:message code="sal.title.type" />", width : 70, editable : false }, 
+         {     dataField    : "code1", headerText  : "<spring:message code="sal.title.status" />", width :70, editable : false }, 
+         {     dataField    : "no1", headerText   : "<spring:message code="sal.title.bsrNo" />", width : 100, editable : false },
+         {     dataField    : "c1", headerText   : "<spring:message code="sal.title.settleDate" />", width : 170, editable : false }, 
+         {     dataField    : "memCode", headerText   : "<spring:message code="sal.title.codyCode" />", width : 90, editable : false }, 
+         {     dataField    : "code3", headerText   : "<spring:message code="sal.title.failReason" />", width :105, editable : false }, 
+         {     dataField    : "code2", headerText   : "<spring:message code="sal.title.collectionReason2" />", width : 100, editable : false }
                         
    ];
 
@@ -1433,32 +1402,11 @@ function createAUIGridOList() {
     
     //AUIGrid 칼럼 설정
     var columnLayout = [
-                        {     dataField     : "stkCode",                 
-                               headerText  : "Code",  
-                               width          : "12%",               
-                               editable       : false
-                        }, 
-                        {     dataField     : "stkDesc",          
-                               headerText  : "Name",           
-                               width          : "50%",                
-                               editable       : false,     
-                               style           : 'left_style'
-                        }, 
-                        {     dataField     : "code",                     
-                               headerText  : "Type",           
-                               width          : "12%",                 
-                               editable       : false
-                        }, 
-                        {      dataField     : "srvFilterPriod",                
-                                headerText  : "Change Period",           
-                                width          : "12%",                 
-                                editable       : false
-                        }, 
-                    {      dataField       : "srvFilterPrvChgDt",      
-                                headerText   : "Last Change",           
-                                width           : "12%",                 
-                                editable        : false
-                         }
+           {     dataField     : "stkCode",  headerText  : "Code", width          : "12%", editable       : false }, 
+           {     dataField     : "stkDesc",  headerText  : "Name", width          : "50%", editable       : false, style           : 'left_style' }, 
+           {     dataField     : "code",      headerText  : "Type",  width          : "12%", editable       : false  }, 
+           {     dataField     : "srvFilterPriod",   headerText  : "Change Period",  width          : "12%", editable       : false }, 
+           {     dataField     : "srvFilterPrvChgDt", headerText   : "Last Change", width           : "12%", editable        : false }
                         
    ];
 
@@ -1574,9 +1522,9 @@ function createAUIGridOList() {
 <div id="popup_wrap" class="popup_wrap "><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Management -New Quotation  </h1>
+<h1><spring:message code="sal.page.title.membershipMgmtNewQuotation" />  </h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="nc_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="nc_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -1596,10 +1544,13 @@ function createAUIGridOList() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
-           <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> Confirm</a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()">Search</a></p>
-           <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()">Reselect</a></p>
+           <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" />
+           <p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> <spring:message code="sal.btn.confirm" /></a></p>   
+           <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()"><spring:message code="sal.btn.search" /></a></p>
+           <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" />
+           <p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()"><spring:message code="sal.btn.reselect" /></a></p>
     </td>
 </tr>
 </tbody>
@@ -1615,10 +1566,10 @@ function createAUIGridOList() {
         
         <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
-            <li><a href="#" class="on"  >Order Info</a></li>
-            <li><a href="#">Contact Person</a></li>
-            <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 950,380);">BS History</a></li>
-            <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 950,380);">Order Product Filter</a></li>
+            <li><a href="#" class="on"  ><spring:message code="sal.tap.title.ordInfo" /></a></li>
+            <li><a href="#"><spring:message code="sal.tap.title.contactPerson" /></a></li>
+            <li><a href="#" onclick="javascript:AUIGrid.resize(bsHistoryGridID, 950,380);"><spring:message code="sal.tap.title.bsHis" /></a></li>
+            <li><a href="#"  onclick="javascript:AUIGrid.resize(oListGridID, 950,380);"><spring:message code="sal.tap.title.orderProductFilter" /></a></li>
         </ul>
         
         <article class="tap_area"><!-- tap_area start -->
@@ -1635,82 +1586,82 @@ function createAUIGridOList() {
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row">Order No</th>
+            <th scope="row"><spring:message code="sal.text.ordNo" /></th>
             <td><span id='ordNo' ></span></td>
-            <th scope="row">Order Date</th>
+            <th scope="row"><spring:message code="sal.text.ordDate" /></th>
             <td><span id='ordDt'></span></td>
-            <th scope="row">Installment Period</th>
+            <th scope="row"><spring:message code="sal.text.insPeriod" /></th>
             <td><span id='InstallmentPeriod'></span></td>
         </tr>
         <tr>
-            <th scope="row">Order Status</th>
+            <th scope="row"><spring:message code="sal.text.orderStatus" /></th>
             <td><span id='ordStusName'></span></td>
-            <th scope="row">Rental Status</th>
+            <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
             <td><span id='rentalStus'></span></td>
-            <th scope="row">Install No</th>
+            <th scope="row"><spring:message code="sal.text.insNo" /></th>
             <td><span id='installNo'></span></td>
         </tr>
         <tr>
-            <th scope="row">Application Type</th>
+            <th scope="row"><spring:message code="sal.text.appType" /></th>
             <td><span id='appTypeDesc'></span></td>
-            <th scope="row">Reference No</th>
+            <th scope="row"><spring:message code="sal.text.refNo" /></th>
             <td><span id='ordRefNo'></span></td>
-            <th scope="row">Install Date</th>
+            <th scope="row"><spring:message code="sal.text.insDate" /></th>
             <td><span id='installDate'></span></td>
         </tr>
         <tr>
-            <th scope="row">Stock Code</th>
+            <th scope="row"><spring:message code="sal.text.stockCode" /></th>
             <td><span id='stockCode'></span></td>
-            <th scope="row">Stock Name</th>
+            <th scope="row"><spring:message code="sal.text.stokName" /></th>
             <td colspan="3" id='stockDesc'><span></span></td>
         </tr>
         <tr>
-            <th scope="row">Cooling Off Period</th>
-            <td><span id='coolingOffPeriod'>text</span></td>
-            <th scope="row">Term</th>
+            <th scope="row"><spring:message code="sal.text.coolingOffPeriod" /></th>
+            <td><span id='coolingOffPeriod'></span></td>
+            <th scope="row"><spring:message code="sal.text.term" /></th>
             <td><span id='term'></span></td>
-            <th scope="row">Is Charge</th>
+            <th scope="row"><spring:message code="sal.text.isCharge" /></th>
             <td><span id='isCharge'></span></td>
         </tr>
         <tr>
-            <th scope="row" rowspan="3">Instalation Address</th>
+            <th scope="row" rowspan="3"><spring:message code="sal.text.instAddr" /></th>
             <td rowspan="3" colspan="3" id='address'><span></span></td>
-            <th scope="row">Order Outstanding</th>
+            <th scope="row"><spring:message code="sal.text.ordOutstanding" /></th>
             <td><span id='ordoutstanding'></span></td>
         </tr>
         <tr>
-            <th scope="row">AS Outstanding</th>
+            <th scope="row"><spring:message code="sal.text.asOutstanding" /></th>
             <td><span id='asoutstanding'></span></td>
         </tr>
         <tr>
-            <th scope="row">Membership Expire</th>
+            <th scope="row"><spring:message code="sal.text.memExpire" /></th>
             <td><span id='expire'></span></td>
         </tr>
     
         <tr>
-            <th scope="row">Customer ID</th>
+            <th scope="row"><spring:message code="sal.text.customerId" /></th>
             <td><span id='custId'></span></td>
-            <th scope="row">Customer Type</th>
+            <th scope="row"><spring:message code="sal.text.custType" /></th>
             <td colspan="3" id='custType'><span></span></td>
         </tr>
         <tr>
-            <th scope="row">Customer Name</th>
+            <th scope="row"><spring:message code="sal.text.custName" /></th>
             <td colspan="5" id='custName'><span></span></td>
         </tr>
         <tr>
-            <th scope="row">NRIC/Company No</th>
+            <th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" /></th>
             <td colspan="5" id='custNric' ><span></span></td>
         </tr>
         </tbody>
         </table><!-- table end -->
-        <p class="brown_text mt10">(Is Charge = Yes : Filter service charges is depends on the filter expiration date)</p>
+        <p class="brown_text mt10">(<spring:message code="sal.text.isChargeFilter" />)</p>
         </article><!-- tap_area end -->
         
         <article class="tap_area"><!-- tap_area start -->
         
         <ul class="left_btns mb10">
-            <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()">Other Contact Person</a></p></li>
-           <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()">New Contact Person</a></p></li>
+            <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_goContactPersonPop()"><spring:message code="sal.btn.otherContactPerson" /></a></p></li>
+           <li><p class="btn_blue2"><a href="#" onclick="fn_goNewContactPersonPop()"><spring:message code="sal.btn.newContactPerson" /></a></p></li>
         </ul>
         
         <table class="type1"><!-- table start -->
@@ -1727,29 +1678,29 @@ function createAUIGridOList() {
         </colgroup>
         <tbody>
                  <tr>
-                    <th scope="row">Name</th>
+                    <th scope="row"><spring:message code="sal.text.name" /></th>
                     <td colspan="5" id="name"><span></span></td>
                     <th scope="row"></th>
                     <td><span id="gender"></span></td>
                 </tr>
                 <tr>
-                    <th scope="row">NRIC</th>
+                    <th scope="row"><spring:message code="sal.text.nric" /></th>
                     <td colspan="5" id="nric"><span></span></td>
-                    <th scope="row">Race</th>
+                    <th scope="row"><spring:message code="sal.text.race" /></th>
                     <td><span id="codename1"></span></td>
                 </tr>
                 <tr>
-                    <th scope="row">Mobile No</th>
+                    <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
                     <td><span id="telM1"></span></td>
-                    <th scope="row">Office No</th>
+                    <th scope="row"><spring:message code="sal.text.officeNo" /></th>
                     <td><span id="telO"></span></td>
-                    <th scope="row">Residence No</th>
+                    <th scope="row"><spring:message code="sal.text.residenceNo" /></th>
                     <td><span id="telR" ></span></td>
-                    <th scope="row">Fax No</th>
+                    <th scope="row"><spring:message code="sal.text.faxNo" /></th>
                     <td><span id="telf"></span></td>
                 </tr>
                 <tr>
-                    <th scope="row">Email</th>
+                    <th scope="row"><spring:message code="sal.text.email" /></th>
                     <td colspan="7" id="email"><span></span></td>
                 </tr>
         </tbody>
@@ -1794,11 +1745,11 @@ function createAUIGridOList() {
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row">Type of Package</th>
+            <th scope="row"><spring:message code="sal.text.typeOfPack" /></th>
             <td>
             <select class="w100p" id='cTPackage' name='cTPackage'   onChange="fn_cTPackage_onchangeEvt()"></select>
             </td>
-            <th scope="row">Subscription Year</th>
+            <th scope="row"><spring:message code="sal.text.subscriptionYear" /></th>
             <td width='80px'>
             <select  id="cYear"   name= "cYear" style="width:80px"  disabled="disabled"  onChange="fn_cYear_onChageEvent()" >
                 <option value="12" >1</option>
@@ -1808,7 +1759,7 @@ function createAUIGridOList() {
             </select>
             </td>
             
-              <th scope="row">Employee </th>
+              <th scope="row"><spring:message code="sal.text.employee" /> </th>
                 <td>
                 <select  style="width:80px"  id="cEmplo"   onChange="fn_cYear_onChageEvent()">
                     <option value="1">Y</option>
@@ -1819,7 +1770,7 @@ function createAUIGridOList() {
                 
         </tr>
         <tr>
-            <th scope="row">Package Promotion</th>
+            <th scope="row"><spring:message code="sal.text.packPromotion" /></th>
             <td>
           
                      <div  style='display:none'>
@@ -1828,41 +1779,41 @@ function createAUIGridOList() {
                      </div>
                     <select   id="cPromotionpac" name="cPromotionpac"  onChange="fn_onChange_cPromotionpac()"> </select>
             </td>
-            <th scope="row">Package Price</th>
+            <th scope="row"><spring:message code="sal.text.packPrice" /></th>
             <td  colspan="3"><span id='txtPackagePrice'></span></td>
         </tr>
         <tr>
-            <th scope="row">Filter Promotion</th>
+            <th scope="row"><spring:message code="sal.text.filterPromo" /></th>
             <td>
           <div  style='display:none'>
             <label><input type="checkbox" disabled="disabled"  id="cPromoCombox"   name="cPromoCombox" onclick="fn_doPromoCombox(this)" /><span></span></label>
           </div>
             <select  id="cPromo" name='cPromo'  onchange="fn_getFilterChargeList()"></select>
             </td>
-            <th scope="row">Filter Price</th>  
+            <th scope="row"><spring:message code="sal.text.filterPrice" /></th>  
             <td colspan="2">
                   <span id="txtFilterCharge"></span>
              </td>
             <td>
                   <div  id="btnViewFilterCharge" class="right_btns"  style="display:none" >  
-                        <p class="btn_sky"><a href="#" onclick="javascript:fn_LoadMembershipFilter()">Detail</a></p>
+                        <p class="btn_sky"><a href="#" onclick="javascript:fn_LoadMembershipFilter()"><spring:message code="sal.text.detail" /></a></p>
                    </div>
         </tr>
         
         <tr>
-            <th scope="row">Sales Person Code</th>
+            <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
             <td><input type="text" title="" placeholder="" class=""  style="width:100px" id="SALES_PERSON" name="SALES_PERSON"  />
-                <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()">Confirm</a></p>    
-                <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" >Search</a></p>  
-                <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Reset</a></p>
+                <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()"><spring:message code="sal.btn.confirm" /></a></p>    
+                <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" ><spring:message code="sal.btn.search" /></a></p>  
+                <p class="btn_sky"  id="sale_resetbt" style="display:none"><a href="#" onclick="javascript:fn_goSalesPersonReset()" ><spring:message code="sal.btn.reset" /></a></p>
             </td>
-            <th scope="row">Sales Person Code</th>
+            <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
             <td colspan="3"><span id="SALES_PERSON_DESC"  name="SALES_PERSON_DESC"></span></td>
         </tr>
         <tr>
-            <th scope="row">Remark</th>
+            <th scope="row"><spring:message code="sal.text.remark" /></th>
             <td><textarea cols="20" rows="5" id='txtRemark' name=''></textarea></td>
-            <th scope="row">BS Frequency</th>
+            <th scope="row"><spring:message code="sal.text.bsFrequency" /></th>
             <td colspan="3" ><span id='txtBSFreq'></span></td>
         </tr>
         </tbody>
@@ -1872,7 +1823,7 @@ function createAUIGridOList() {
         
 
         <ul class="center_btns">
-            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()">Save</a></p></li>
+            <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_save()"><spring:message code="sal.btn.save" /></a></p></li>
             
          <!--  <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_saveResultTrans()">test</a></p></li> -->
         </ul>
