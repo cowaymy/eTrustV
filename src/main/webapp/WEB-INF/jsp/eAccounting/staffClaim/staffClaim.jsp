@@ -1072,7 +1072,7 @@ function fn_updateStaffClaimExp(st) {
 
 function fn_approveLinePop() {
 	// check request - Request once per user per month
-    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J4"}, function(result) {
+    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J4",userName:$("#newMemAccId").val()}, function(result) {
         console.log(result);
         if(result.data > 0) {
         	Common.alert(result.message);
