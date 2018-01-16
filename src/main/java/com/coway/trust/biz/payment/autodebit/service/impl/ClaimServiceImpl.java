@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.biz.payment.autodebit.service.ClaimService;
 import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
+import com.coway.trust.util.BeanConverter;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -123,6 +124,20 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		
 		//cvs 파일 저장 처리
 		List<ClaimResultUploadVO> vos = (List<ClaimResultUploadVO>)cvsParam.get("voList");		
+		
+		
+		List<Map> list = vos.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			
+			map.put("refNo", r.getRefNo());
+			map.put("refCode", r.getRefCode());
+			map.put("id", claimMap.get("ctrlId"));
+			map.put("itemId", r.getItemId());
+			
+			return map;
+		})	.collect(Collectors.toList());
+		
+		/*
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		
 		for (int idx = 0; idx < vos.size(); idx++) {
@@ -135,6 +150,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 			
 			list.add(idx, map);
 		}
+		*/
 		
 		int size = 1000;
 		int page = list.size() / size;
