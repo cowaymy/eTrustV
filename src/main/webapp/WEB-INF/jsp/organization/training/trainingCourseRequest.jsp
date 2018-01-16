@@ -555,7 +555,7 @@ function fn_courseCancel() {
 <tr>
 	<th scope="row">Member CODE</th>
 	<td>
-	<input type="text" title="Member CODE" placeholder="" class="w100p" id="memberCode" name="memberCode" />
+	<input type="text" title="Member CODE" placeholder="" class="w100p readonly" id="memberCode" name="memberCode" value="${coursMemCode}"/>
 	</td>
 	<th scope="row">Effective date(from)</th>
 	<td>

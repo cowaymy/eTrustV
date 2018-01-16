@@ -187,9 +187,11 @@ function fn_checkMemberTypeNew(){
     if(val == "2318") {
         $("#memTypeNew").removeAttr("disabled");
         $("#newAddRow_btn").css("display", "");
+        $("#attendanceNew").removeAttr("disabled");
     } else {
         $("#memTypeNew").attr("disabled", "disabled");
         $("#newAddRow_btn").css("display", "none");
+        $("#attendanceNew").attr("disabled", "disabled");
     }
 }
 
@@ -262,6 +264,7 @@ CommonCombo.make("attendanceNew", "/common/selectCodeList.do", {groupCode : '327
 });
 
 function fn_insertCourseAttendee() {
+	$("#attendanceNew").removeAttr("disabled");
 	var obj = $("#form_newCours").serializeJSON();
 	obj.gridData = GridCommon.getEditData(newAttendeeGridID);
 	console.log(obj);

@@ -143,9 +143,11 @@ var attendeeColumnLayout = [ {
 }, {
     dataField : "memTypeName",
     headerText : 'Member Type',
+    editable : false
 }, {
     dataField : "memCode",
     headerText : 'Member Code',
+    editable : false,
     colSpan : 2
 }, {
     dataField : "",
@@ -172,15 +174,18 @@ var attendeeColumnLayout = [ {
 }, {
     dataField : "coursDMemNric",
     headerText : 'NRIC',
+    editable : false
 }, {
     dataField : "brnchId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "code",
     headerText : 'Branch',
+    editable : false
 }, {
     dataField : "coursAttendDay",
     headerText : 'Attend Day',
+    editable : true
 }, {
     dataField : "coursTestResult",
     headerText : 'Result',
@@ -227,6 +232,7 @@ var attendeeGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     showRowNumColumn : false,
+    editable : true,
     softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
     softRemoveRowMode : false
 };
