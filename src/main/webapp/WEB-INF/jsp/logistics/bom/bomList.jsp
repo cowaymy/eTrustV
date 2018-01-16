@@ -251,6 +251,14 @@
            }
        });
        
+       $("#srchmtrcd").dblclick(function() {
+           
+               $("#svalue").val($("#srchmtrcd").val());
+               $("#sUrl").val("/logistics/material/materialcdsearch.do");
+               Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
+           
+       });
+       
         
     });
     
