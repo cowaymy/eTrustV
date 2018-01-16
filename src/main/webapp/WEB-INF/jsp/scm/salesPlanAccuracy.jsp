@@ -66,9 +66,10 @@ function fnSelectStockTypeComboList(codeId)
 		               , {  
 		                   id  : "codeId",     // use By query's parameter values(real value)               
 		                   name: "codeName",   // display
+		                   type: "M",
 		                   chooseMessage: "All"
-		                 }
-		               , "");     
+		                  }
+		               , "");      
 }
 
 function fnChangeEventMonth(obj)
@@ -179,9 +180,17 @@ function fnExcelExport(fileNm)
 
 function fnWeeklySelectDataList()
 {
-	Common.ajax("GET"
+
+	  var params = {
+		               scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+  		           };
+
+		  params = $.extend($("#MainForm").serializeJSON(), params);
+
+	
+	Common.ajax("POST"
             , "/scm/selectAccuracyWeeklyDetail.do"
-            , $("#MainForm").serialize()
+            , params
             , function(result) 
               {
                  if(result.accuracyWeeklyDetailList.length > 0)
@@ -489,11 +498,16 @@ function fnMonthlyGridCreate()
 									         };
 
 
+  var params = {
+          scmStockTypes : $('#scmStockType').multipleSelect('getSelects')
+        };
 
+      params = $.extend($("#MainForm").serializeJSON(), params);
+ 
   /************************************************************************************************/
     
-  Common.ajax("GET", "/scm/selectAccuracyMonthlyHeaderList.do"
-           , $("#MainForm").serialize()
+  Common.ajax("POST", "/scm/selectAccuracyMonthlyHeaderList.do"
+           , params
            , function(result) 
            {  
 				      if( result.selectWeekThAccuracy == null || result.selectWeekThAccuracy.length < 1) 

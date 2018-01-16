@@ -1544,7 +1544,7 @@ SELECT STK_ID
                                   PIVOT
                                        (
                                          MAX(WEEK_00) WEEK_00 ,  MAX(ACCURACY_RATTING) RATTING
-                                             FOR SEQ IN ( 1 AS W1  ,2 AS W2 ,3 AS W3 ,4 AS W4   ,5 AS W5   ,6 AS W6  
+                                             FOR SEQ IN ( 1 AS W1  ,2 AS W2 ,3 AS W3 , 4 AS W4  , 5 AS W5  , 6 AS W6  
                                                          ,7 AS W7  ,8 AS W8 ,9 AS W9 ,10 AS W10 ,11 AS W11 ,12 AS W12
                                                         )
                                        )  
@@ -1554,6 +1554,15 @@ SELECT STK_ID
                   )STEP6_DATA
 
                ) STEP7_DATA
+		       <choose>
+		        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+		        WHERE  STK_TYPE_ID IN
+		            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+		                #{item}
+		            </foreach>
+		
+		        </when>
+		      </choose>
           GROUP BY  TEAM ,STOCK_CODE,STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID
 
         /******************************/
@@ -1900,7 +1909,15 @@ SELECT STK_ID
            ) SUM_TEMP3
            
       ) WEEKLY_DETAIL
- 
+       <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+        WHERE  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+
+        </when>
+      </choose>
   ORDER BY STOCK_CODE, DECODE(TEAM,'CODY',1,'DST',2 ,3)   
   
 </select> 
@@ -1917,14 +1934,32 @@ SELECT STK_ID
 	                       FROM (
 		                            SELECT 'MID' GBN, TEAM,WEEK, SUM(MID_TERM_AVG) TERM_AVG, COUNT(*) TERM_AVG_CNT
 		                              FROM GBL_TEMP_ACCURACY
-		                             WHERE (MID_TERM_AVG > 0 ) 
+		                             WHERE (MID_TERM_AVG > 0 )
+		                           <choose>
+												        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+												           AND  STK_TYPE_ID IN
+												            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+												                #{item}
+												            </foreach>
+												
+												        </when>
+												      </choose> 
 		                             GROUP BY TEAM,WEEK
 		                              
 		                            UNION ALL
 		                              
 		                            SELECT 'SHORT' GBN,  TEAM,WEEK, SUM(SHORT_TERM_AVG) TERM_AVG, COUNT(*) TERM_AVG_CNT
 		                              FROM GBL_TEMP_ACCURACY
-		                             WHERE (SHORT_TERM_AVG > 0 ) 
+		                             WHERE (SHORT_TERM_AVG > 0 )
+                               <choose>
+                                <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+                                   AND  STK_TYPE_ID IN
+                                    <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                                        #{item}
+                                    </foreach>
+                        
+                                </when>
+                              </choose> 		                              
 		                             GROUP BY TEAM,WEEK
 	                           )
 	                    )
@@ -1954,14 +1989,32 @@ SELECT STK_ID
 	               FROM (
 		                     SELECT 'MID' GBN, TEAM,WEEK, SUM(MID_TERM_AVG) SUM_TERM_AVG, COUNT(*) TERM_AVG_CNT
 		                      FROM GBL_TEMP_ACCURACY
-		                     WHERE (MID_TERM_AVG > 0 ) 
+		                     WHERE (MID_TERM_AVG > 0 )
+                       <choose>
+                        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+                           AND  STK_TYPE_ID IN
+                            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                
+                        </when>
+                      </choose> 		                      
 		                     GROUP BY TEAM,WEEK
 		                    
 		                    UNION ALL
 		                    
 		                    SELECT 'SHORT' GBN, TEAM,WEEK, SUM(SHORT_TERM_AVG) SUM_TERM_AVG, COUNT(*) TERM_AVG_CNT
 		                      FROM GBL_TEMP_ACCURACY
-		                     WHERE (SHORT_TERM_AVG > 0 ) 
+		                     WHERE (SHORT_TERM_AVG > 0 )
+                       <choose>
+                        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+                           AND  STK_TYPE_ID IN
+                            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                                #{item}
+                            </foreach>
+                
+                        </when>
+                      </choose>   		                      
 		                     GROUP BY TEAM,WEEK
 	                   )
             ) 

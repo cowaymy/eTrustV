@@ -97,8 +97,8 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(map);
 	}
 	
-	@RequestMapping(value = "/selectAccuracyMonthlyHeaderList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectAccuracyMonthlyHeaderList(@RequestParam Map<String, Object> params) 
+	@RequestMapping(value = "/selectAccuracyMonthlyHeaderList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectAccuracyMonthlyHeaderList(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectAccuracyMonthlyHeaderList : {}", params.toString());
 		
@@ -457,9 +457,10 @@ public class SalesPlanManagementController {
 	
 	
 	// SALES PLAN ACCURACY	
-	@RequestMapping(value = "/selectAccuracyWeeklyDetail.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectAccuracyWeeklyDetail(@RequestParam Map<String, Object> params) 
+	@RequestMapping(value = "/selectAccuracyWeeklyDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectAccuracyWeeklyDetail(@RequestBody Map<String, Object> params) 
 	{
+		
 		LOGGER.debug("selectAccuracyWeeklyDetail_Params : {}", params.toString());
 		
 		Map<String, Object> map = new HashMap<>();
