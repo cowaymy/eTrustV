@@ -548,7 +548,7 @@ function fn_courseCancel() {
 <colgroup>
 	<col style="width:130px" />
 	<col style="width:*" />
-	<col style="width:130px" />
+	<col style="width:160px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
@@ -557,9 +557,9 @@ function fn_courseCancel() {
 	<td>
 	<input type="text" title="Member CODE" placeholder="" class="w100p" id="memberCode" name="memberCode" />
 	</td>
-	<th scope="row">Start Date</th>
+	<th scope="row">Effective date(from)</th>
 	<td>
-	   <input type="text" title="Start Date" placeholder="DD/MM/YYYY" class="j_date" id="coursStart" name="coursStart"/>
+	   <input type="text" title="Start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="coursStart" name="coursStart"/>
 	</td>
 </tr>
 </tbody>
