@@ -86,7 +86,12 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("deptCodeTo", deptCode.get("deptCode"));
 			memberPromoEntry.put("parentDeptCodeFrom", parentFrom.get("deptCode"));
 			memberPromoEntry.put("parentIDFrom", parentFrom.get("memId"));
-			memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
+			if (memberModel.get("memberlvl1").toString().equals("4")) {
+				memberPromoEntry.put("parentDeptCodeTo", deptCode.get("deptCode"));
+			} else {
+				memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
+			}
+//			memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
 			memberPromoEntry.put("parentIDTo", deptCode.get("memId"));
 			memberPromoEntry.put("statusIDFrom", 1);
 			memberPromoEntry.put("statusIDTo", 1);
@@ -95,7 +100,12 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("toMemberId", toMemberId);
 			memberPromoEntry.put("branchId", branchId);
 
-			memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
+			if (memberModel.get("memberlvl1").toString().equals("4")) {
+				memberPromoEntry.put("lastDeptCode",deptCode.get("deptCode"));
+			} else {
+				memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
+			}
+//			memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
 			memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
 			memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
 			memberPromoEntry.put("evtApplyDt", transferDate);
