@@ -583,11 +583,11 @@
 </tbody>
 </table><!-- table end -->
 </form>
-<div id="_basicUpdBtn">
+
 <ul class="center_btns">
     <li><p class="btn_blue2"><a href="#" onclick="fn_callResultSave()">SAVE</a></p></li>
 </ul>
-</div>
+
 </div>
 
 </section><!-- pop_body end -->
