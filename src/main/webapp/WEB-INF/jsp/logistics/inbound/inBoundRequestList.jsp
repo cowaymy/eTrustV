@@ -471,8 +471,8 @@ function f_multiCombos() {
             <input type="hidden" name="gtype" id="gtype" value="GI"/>
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="reqstno" id="reqstno"/>
-            <input type="hidden" name="giptdate" id="giptdate"  class="j_date" />
-            <input type="hidden" name="gipfdate" id="gipfdate"  class="j_date" />
+<!--             <input type="hidden" name="giptdate" id="giptdate"  class="j_date" />
+            <input type="hidden" name="gipfdate" id="gipfdate"  class="j_date" /> -->
             <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
             <table class="type1">
             <caption>search table</caption>
@@ -493,7 +493,15 @@ function f_multiCombos() {
                         <select class="w100p" id="tlocation" name="tlocation"></select>
                     </td>
                 </tr>
-            </tbody>
+					<tr>
+						<th scope="row">GI Posting Date</th>
+						<td><input id="giptdate" name="giptdate" type="text"
+							title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+						<th scope="row">GI Doc Date</th>
+						<td><input id="gipfdate" name="gipfdate" type="text"
+							title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+					</tr>
+				</tbody>
             </table>
             </form>
             <ul class="center_btns">
