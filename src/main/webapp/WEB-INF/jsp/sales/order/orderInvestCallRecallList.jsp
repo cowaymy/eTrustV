@@ -88,7 +88,7 @@
 	    };
 	    
 	    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-	    myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
+	    myGridID = AUIGrid.create("#list_grid_wrap", columnLayout,"", gridPros);
 	}
 	
 	// 리스트 조회.
