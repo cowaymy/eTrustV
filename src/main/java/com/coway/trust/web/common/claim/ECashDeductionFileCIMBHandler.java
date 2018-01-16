@@ -64,7 +64,8 @@ public class ECashDeductionFileCIMBHandler extends BasicTextDownloadHandler impl
 		// ISSUE : 암호화 RULE 규정
 		// String CrcNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
 		crcNo = String.valueOf(dataRow.get("fileItmAccNo")).trim();
-		crcExpiry = "0000";
+		//crcExpiry = "0000";
+		crcExpiry = dataRow.get("fileItmAccExpr") == null ? "0000" : String.valueOf(dataRow.get("fileItmAccExpr")).trim();
 		amount = CommonUtils.getNumberFormat(String.valueOf(dataRow.get("fileItmAmt")), "0.00");
 		salesOrdNo = String.valueOf(dataRow.get("salesOrdNo"));
 		remarks = String.valueOf(dataRow.get("fileItmId"));

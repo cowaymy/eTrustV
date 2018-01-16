@@ -92,7 +92,21 @@
         EXTENT2.SALES_ORD_NO,
         EXTENT1.FILE_ITM_ACC_NO,
         EXTENT1.FILE_ITM_AMT,
-        EXTENT1.FILE_ITM_ACC_EXPR,
+        (
+                SELECT
+                    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) FILE_ITM_ACC_EXPR
+                FROM
+                    SAL0001D som
+                    JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                    LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[   <> ]]> 0
+                WHERE
+                    som.STUS_CODE_ID <![CDATA[   <> ]]>  10
+                    AND rs.MODE_ID = 131
+                    AND som.APP_TYPE_ID = 66
+                    AND rs.BANK_ID IN (19,34,17,28)
+                    AND som.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+                    AND ROWNUM = 1
+                ) AS FILE_ITM_ACC_EXPR,
         EXTENT1.FILE_ITM_REF,
         EXTENT4.CUST_CRC_OWNER,
         EXTENT3.ISSU_NRIC
