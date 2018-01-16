@@ -188,6 +188,11 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     	//Request F/T 정보 등록
     	paymentListMapper.requestFT(paramMap);
     	
+    	//Group Payment 정보 수정
+    	paramMap.put("ftStusId", "1");
+    	paymentListMapper.updateGroupPaymentFTStatus(paramMap);
+    			
+    	
     	//WOR 번호 조회
     	EgovMap returnMap = new EgovMap();
     	returnMap.put("returnKey", paramMap.get("ftReqId"));
@@ -233,9 +238,8 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
 		params.put("ftStusId", "6");
 		paymentListMapper.updateStatusFT(params);
 		
-		//Group Payment 정보 수정
-		//params.put("revStusId", "6");
-		//paymentListMapper.updateGroupPaymentRevStatus(params);
+		//Group Payment 정보 수정		
+    	paymentListMapper.updateGroupPaymentFTStatus(params);
 		
 	}
 	

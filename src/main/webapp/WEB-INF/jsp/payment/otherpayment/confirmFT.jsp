@@ -40,7 +40,9 @@
         {dataField : "ftCrtUserNm",headerText : "<spring:message code='pay.head.requestor'/>",width : 180 , editable : false},
         {dataField : "ftCrtDt",headerText : "<spring:message code='pay.head.requestDate'/>",width : 180 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
         {dataField : "ftStusId",headerText : "<spring:message code='pay.head.statusId'/>",width : 100 , editable : false, visible : false},
-        {dataField : "ftStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 150 , editable : false}
+        {dataField : "ftStusNm",headerText : "<spring:message code='pay.head.status'/>",width : 150 , editable : false},
+		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 150 , editable : false, visible : false},
+		{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 150 , editable : false, visible : false}
 	];
 	
     
@@ -92,8 +94,10 @@
 
 			var ftReqId = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "ftReqId");
 			var ftStusId = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "ftStusId");
+			var payId = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "payId");
+			var groupSeq = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "groupSeq");
 			
-			Common.popupDiv('/payment/initConfirmFTPop.do', {"ftReqId" : ftReqId, "ftStusId" : ftStusId}, null , true ,'_confirmFTPop');
+			Common.popupDiv('/payment/initConfirmFTPop.do', {"ftReqId" : ftReqId, "ftStusId" : ftStusId, "payId" : payId , "groupSeq" : groupSeq}, null , true ,'_confirmFTPop');
 			
 		}else{
              Common.alert("<spring:message code='pay.alert.transListSelected'/>");

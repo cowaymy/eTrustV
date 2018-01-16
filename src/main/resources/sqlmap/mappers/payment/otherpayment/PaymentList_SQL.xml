@@ -20,12 +20,13 @@
             (CASE WHEN E.SALES_ORD_NO IS NOT NULL THEN E.SALES_ORD_NO ELSE I.SALES_ORD_NO END) AS SALES_ORD_NO,            
             MAX(D.PAY_ITM_REF_DT) AS PAY_ITM_REF_DT,
             C.OR_NO,
-            C.BRNCH_ID,
+            J.CODE AS BRNCH_ID,
             A.CRC_STATE_MAPPING_ID,        
             A.CRC_STATE_MAPPING_DT,
             A.BANK_STATE_MAPPING_ID,
             A.BANK_STATE_MAPPING_DT,
             NVL(A.REV_STUS_ID,0) AS REV_STUS_ID,
+            NVL(A.FT_STUS_ID,0) AS FT_STUS_ID,
             G.NAME AS REV_STUS_NM,
             A.REV_DT,
             C.PAY_ID,
@@ -38,7 +39,8 @@
             JOIN SYS0013M F ON D.PAY_ITM_MODE_ID = F.CODE_ID
             LEFT JOIN SYS0038M G ON A.REV_STUS_ID = G.STUS_CODE_ID
             LEFT JOIN PAY0007D H ON C.BILL_ID = H.BILL_ID
-            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID         
+            LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID
+            LEFT JOIN SYS0005M J ON C.BRNCH_ID = J.BRNCH_ID
         WHERE 
             A.GROUP_SEQ IN (
                 SELECT 
@@ -70,12 +72,13 @@
             I.CUST_ID,                        
             I.SALES_ORD_NO,
             C.OR_NO,
-            C.BRNCH_ID,
+            J.CODE,
             A.CRC_STATE_MAPPING_ID,        
             A.CRC_STATE_MAPPING_DT,
             A.BANK_STATE_MAPPING_ID,
             A.BANK_STATE_MAPPING_DT,
             A.REV_STUS_ID,
+            A.FT_STUS_ID,
             G.NAME,
             A.REV_DT,
             C.PAY_ID,
@@ -123,7 +126,7 @@
             LEFT JOIN SAL0001D I ON H.BILL_SO_ID = I.SALES_ORD_ID                 
         WHERE 
             A.GROUP_SEQ = #{groupSeq}
-            AND A.REV_STUS_ID IS NULL
+            AND (A.REV_STUS_ID IS NULL OR A.REV_STUS_ID = 6)
          GROUP BY 
             A.GROUP_SEQ,
             A.LDGR_TYPE,
@@ -257,7 +260,7 @@
     </insert>
     
     <update id="updateGroupPaymentRevStatus" parameterType="Map">
-        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId} WHERE GROUP_SEQ = #{groupSeq} AND REV_STUS_ID IS NULL
+        UPDATE PAY0252T SET REV_STUS_ID = #{revStusId} WHERE GROUP_SEQ = #{groupSeq} AND (REV_STUS_ID IS NULL OR REV_STUS_ID = 6)
     </update> 
     
     <update id="rejectGroupPaymentRevStatus" parameterType="Map">
@@ -388,6 +391,10 @@
             )
     </insert>
     
+    <update id="updateGroupPaymentFTStatus" parameterType="Map">
+        UPDATE PAY0252T SET FT_STUS_ID = #{ftStusId} WHERE GROUP_SEQ = #{groupSeq} AND PAY_ID = #{payId} 
+    </update>
+    
     <select id="selectRequestFTList" parameterType="Map" resultType="egovMap">
         SELECT  
             A.FT_REQ_ID,            
@@ -397,7 +404,9 @@
             B.NAME AS FT_STUS_NM,
             A.FT_CRT_USER_ID,
             D.USER_NAME AS FT_CRT_USER_NM,
-            A.FT_CRT_DT    
+            A.FT_CRT_DT,
+            A.SRC_GRP_SEQ AS GROUP_SEQ,
+            A.SRC_PAY_ID AS PAY_ID   
         FROM 
             PAY0260D A
             LEFT JOIN SYS0038M B ON A.FT_STUS_ID = B.STUS_CODE_ID

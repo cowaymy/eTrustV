@@ -139,6 +139,17 @@ public interface PaymentListMapper {
 	 */		
 	void updateStatusFT(Map<String, Object> params);
 	
+	
+	/**
+	 * Payment List - Group Payment FT Status 변경
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */		
+	void updateGroupPaymentFTStatus(Map<String, Object> params);
+	
+	
 	/**
 	 * Payment List - Approval FT 처리 
 	 * @param params

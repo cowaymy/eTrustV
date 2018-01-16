@@ -45,6 +45,7 @@
 		{dataField : "bankStateMappingId",headerText : "<spring:message code='pay.head.bankStateId'/>",width : 110,editable : false},
 		{dataField : "bankStateMappingDt",headerText : "<spring:message code='pay.head.bankMappingDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 		{dataField : "revStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
+		{dataField : "ftStusId",headerText : "<spring:message code='pay.head.reverseStatusId'/>",width : 110,editable : false, visible : false},
 		{dataField : "revStusNm",headerText : "<spring:message code='pay.head.reverseStatus'/>",width : 110,editable : false},
 		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : false}
@@ -154,9 +155,14 @@
 
 
 			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
+			var ftStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ftStusId");
 
-			if (revStusId == 0) {
-				Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
+			if (revStusId == 0 || revStusId == 6) {
+				if(ftStusId == 0 || ftStusId == 6) {
+					Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
+				}else{
+					Common.alert("<b>This has already been Fund Transfer processing Requested. </b>");   
+				}
 			} else {
 				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");   
 			} 

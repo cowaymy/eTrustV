@@ -357,7 +357,7 @@ public class PaymentListController {
 	
 	/**
 	 * Payment List - Request FT 리스트 조회 
-	 * @param params
+	 * @param paramsinitConfirmFTPopinitConfirmFTPop
 	 * @param model
 	 * @return
 	 */
@@ -383,6 +383,8 @@ public class PaymentListController {
 		
 		model.put("ftReqId", params.get("ftReqId"));
 		model.put("ftStusId", params.get("ftStusId"));
+		model.put("payId", params.get("payId"));
+		model.put("groupSeq", params.get("groupSeq"));
 		
 		LOGGER.debug("payment List params : {} ", params);       
         

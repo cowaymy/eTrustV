@@ -99,6 +99,8 @@ function fn_reject(){
 			<form name="_ftSearchForm" id="_ftSearchForm"  method="post">
 				<input id="ftReqId" name="ftReqId" value="${ftReqId}" type="hidden" />
 				<input id="ftStusId" name="ftStusId" value="${ftStusId}" type="hidden" />
+				<input id="payId" name="payId" value="${payId}" type="hidden" />
+				<input id="groupSeq" name="groupSeq" value="${groupSeq}" type="hidden" />
 
 				<!-- title_line start -->
 				<aside class="title_line">
