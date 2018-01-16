@@ -1530,7 +1530,6 @@
 
         $('#dpPreferInstDateOwnt').val("${orderDetail.installationInfo.preferInstDt}");
         $('#tpPreferInstTimeOwnt').val("${orderDetail.installationInfo.preferInstTm}");
-//      $('#txtInstSpecialInstructionOwnt').val(vInstct);
         
         Common.ajax("GET", "/sales/order/selectInstallInfo.do", {salesOrderId : ORD_ID}, function(instInfo) {
 
