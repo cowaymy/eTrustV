@@ -579,7 +579,7 @@
          AND S28.WH_LOC_ID = L56.LOC_ID
          AND S28.wh_loc_stk_grad = 'A'
          AND L56.STK_CODE = #{productCode}
-         AND S28.WH_LOC_CODE IN ('2010')
+         AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
          AND S28.WH_LOC_GB = '01'
 
 	   </select>
@@ -610,10 +610,10 @@
                (  SELECT LOC_ID,
                          ITM_CODE,
                          SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY,
-                         MOV_QTY
+                         SUM (NVL (MOV_QTY, 0)) MOV_QTY
                     FROM LOG0075M
            <![CDATA[        WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]>
-                GROUP BY LOC_ID, ITM_CODE, MOV_QTY ) L75,
+                GROUP BY LOC_ID, ITM_CODE ) L75,
                CRDC
                WHERE     1 = 1
                AND L56.LOC_ID = L75.LOC_ID(+)
