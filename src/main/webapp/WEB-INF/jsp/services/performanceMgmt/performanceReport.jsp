@@ -68,7 +68,7 @@
                     
 
        var columnLayoutCollection = [ {
-                            dataField:"lastorgCode",
+                            dataField:"lastOrgCode",
                             headerText:"GM",
                             width:120,
                             height:30
