@@ -3099,11 +3099,25 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </update>
 
     <select id="selectMainDept"  resultType="egovMap">
-         SELECT DEPT_ID, DEPT_NAME FROM SYS0040M WHERE DEPT_PARENT_ID = '1'
+         <!-- SELECT DEPT_ID, DEPT_NAME FROM SYS0040M WHERE DEPT_PARENT_ID = '1' -->
+          SELECT CODE DEPT_ID
+                             , CODE_DESC DEPT_NAME
+                          FROM GBSLCVD.SYS0013M 
+                         WHERE CODE_MASTER_ID = 359
+                         ORDER BY CODE
     </select>
 
     <select id="selectSubDept"  resultType="egovMap">
-         SELECT DEPT_ID AS CODE_ID, DEPT_NAME AS CODE_NAME FROM SYS0040M WHERE DEPT_PARENT_ID IN ( #{groupCode} )
+                    SELECT CODE CODE_ID
+                         , CODE_DESC CODE_NAME
+                      FROM GBSLCVD.SYS0013M
+                     WHERE CODE_MASTER_ID = 360
+                    
+                          <if test = "groupCode != null and groupCode != '' ">
+                                   AND CODE IN (SELECT SUB_DEPT_CODE FROM SVC0063C WHERE MAIN_DEPT_CODE = #{groupCode})
+                         </if>
+                         
+                          ORDER BY CODE
     </select>
 
      <update id="traineeUpdateInfo" parameterType="Map">
