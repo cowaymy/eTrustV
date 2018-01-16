@@ -44,7 +44,11 @@
                     dataField : "memOrgDescCode",
                     headerText : "Position",
                     width : 120                                                                                                                   
-             }];
+             }, {
+                 dataField : "evtApplyDt",
+                 headerText : "Plan Month",
+                 width : 120                                                                                                                   
+          }];
             
             // 그리드 속성 설정
             var gridPros = {
@@ -145,7 +149,10 @@ function fn_excelDown(){
                                      orgId :  $("#cmbOrganizationId").val() , 
                                     gropId :  $("#cmbGroupId").val(),
                                   deptCode :  $("#cmbDepartmentCode").val(),
-                                  memLvl   :  memLvl
+                                  memLvl   :  memLvl ,
+                                  evntDate : $("#searchDt").val(),
+                                  srchDate : $("#searchDt").val(),
+                                  nowDate : $("#searchDt").val()
                                   };
             
 	        Common.ajax("GET", "/organization/selectOrgChartDetList.do",paramsDetdata, function(result) {
@@ -226,9 +233,10 @@ function fn_excelDown(){
             <option value="4">HP / CD / CT</option>
     </select>
     </td>
-    <th scope="row"></th>
-    <td >
-    </td>
+    <th scope="row">Plan Month</th>
+	    <td>
+	    <input type="text" title="Create start Date" placeholder="MM/YYYY" name="searchDt" id="searchDt" class="j_date2" value="" />
+	    </td>
 </tr>  
 </tbody>
 </table><!-- table end -->

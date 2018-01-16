@@ -883,17 +883,40 @@
         
         
         <select id="selectOrgChartDetList" parameterType="Map" resultType="egovMap">
-        
+        SELECT * 
+        FROM(
             SELECT Project1.MEM_ID MEM_ID  ,
                    Project1.C1 C1  ,
                    Project1.MEM_CODE MEM_CODE  ,
                    Project1.NRIC NRIC  ,
                    Project1.NAME NAME  ,
-                   Project1.DEPT_CODE DEPT_CODE  ,
-                   Project1.GRP_CODE GRP_CODE  ,
-                   Project1.ORG_CODE ORG_CODE  ,
+                   case when (project2.LAST_DEPT_CODE is not null 
+                            and project2.LAST_GRP_CODE is not null 
+                            and project2.LAST_ORG_CODE is not null)
+                        THEN project2.LAST_DEPT_CODE
+                   Else
+                   Project1.DEPT_CODE   
+                  
+                   end DEPT_CODE,
+                    case when (project2.LAST_DEPT_CODE is not null 
+                            and project2.LAST_GRP_CODE is not null 
+                            and project2.LAST_ORG_CODE is not null)
+                          THEN project2.LAST_GRP_CODE
+                    ELSE   Project1.GRP_CODE
+                    END GRP_CODE  ,
+                    case when (project2.LAST_DEPT_CODE is not null 
+                            and project2.LAST_GRP_CODE is not null 
+                            and project2.LAST_ORG_CODE is not null)
+                          then project2.LAST_ORG_CODE
+                    else Project1.ORG_CODE 
+                    end ORG_CODE  ,
                    Project1.MEM_LVL MEM_LVL  ,
-                   Project1.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  
+                   case when (project2.code is not null) then project2.code
+                   else Project1.MEM_ORG_DESC_CODE 
+                   end MEM_ORG_DESC_CODE ,
+               case when project2.EVT_APPLY_DT is not null then  to_char(project2.EVT_APPLY_DT, 'MM/YYYY') 
+               else to_char(SYSDATE, 'MM/YYYY')
+              end EVT_APPLY_DT
               FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                             Extent1.MEM_CODE MEM_CODE  ,
                             Extent1.NAME NAME  ,
@@ -925,19 +948,35 @@
                             AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
                       WHERE   1 = Extent1.STUS
                                AND  Extent1.MEM_TYPE IN ( 1,2,3 )
+                              
+                              ) Project1 , 
+                            (
+                              SELECT  A.* , b.code 
+                             FROM ORG0007D A ,sys0013M  B
+                             where promo_ID in(SELECT max(promo_ID) FROM ORG0007D B  where b.mem_ID = A.mem_ID  and stus_id = 4 )
+                             and A.MEM_LVL_TO = b.code_id 
+                             <if test="evntDate != null and evntDate != '' ">
+                                   and to_char(A.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate}
+                                
+                             </if>
+                           )  Project2 
+                           where 1=1 
+                           and project1.mem_id = project2.mem_id(+)
+                           )  search1  
+                           where 1=1
                               <if test="codeList != null and codeList != '' ">
-                                     AND  Extent2.MEM_LVL IN
+                                     AND  search1.MEM_LVL IN
                                        <foreach item="item" collection="codeList" index="index" open="(" separator="," close=")">
                                             #{item}
                                       </foreach>
                                </if>
                                <if test="memType != null and memType != ''">
                                AND  CASE 
-                                    WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
+                                    WHEN ( search1.C1 IS NOT NULL ) THEN search1.C1
                                     ELSE 0 END = #{memType}
                                 </if>
                                 <if test="orgId != null and orgId != ''">                                    
-                               AND  Extent2.ORG_CODE =  (select DEPT_CODE
+                               AND  search1.ORG_CODE =  (select DEPT_CODE
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND (Extent1.MEM_LVL = 1)
@@ -945,26 +984,29 @@
                                                                              and   mem_id  = #{orgId})
                                </if>
                                <if test="gropId != null and gropId != ''">                                    
-                               AND  Extent2.GRP_CODE = (select DEPT_CODE
+                               AND  search1.GRP_CODE = (select DEPT_CODE
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND Extent1.MEM_LVL = 2                                                                                    
                                                                              and   mem_id  = #{gropId})
                                </if>
                                <if test="deptCode != null and deptCode != ''">                                    
-                               AND  Extent2.DEPT_CODE = (select DEPT_CODE
+                               AND  search1.DEPT_CODE = (select DEPT_CODE
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND Extent1.MEM_LVL = 3                                                                                    
                                                                              and   mem_id  = #{deptCode})  
                                </if>
-                              ) Project1
-                  ORDER BY Project1.C1 ASC,
-                           Project1.ORG_CODE ASC,
-                           Project1.GRP_CODE ASC,
-                           Project1.DEPT_CODE ASC,
-                           Project1.MEM_LVL ASC,
-                           Project1.MEM_CODE ASC
+                               <if test="srchDate != null and srchDate != '' "> 
+                                AND search1.EVT_APPLY_DT = #{srchDate}
+                               </if>
+                              
+                  ORDER BY search1.C1 ASC,
+                           search1.ORG_CODE ASC,
+                           search1.GRP_CODE ASC,
+                           search1.DEPT_CODE ASC,
+                           search1.MEM_LVL ASC,
+                           search1.MEM_CODE ASC
         
         </select>
         
