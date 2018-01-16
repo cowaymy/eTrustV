@@ -157,7 +157,7 @@ function fnSearchBtnList()
 		  		    , params
 		          , function(result) 
 		          {
-		             console.log("성공 fnSearchBtnList: " + result.length);
+		             //console.log("성공 fnSearchBtnList: " + result.length);
 		             AUIGrid.setGridData(myGridID, result.selectSupplyCorpList);
 		             if(result != null && result.length > 0)
 		             {
