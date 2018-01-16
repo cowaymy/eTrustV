@@ -890,6 +890,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,INVC_DT
        ,INVC_TYPE
        ,MEM_ACC_ID
+       ,SUPPLIR
        ,PAY_DUE_DT
        ,EXP_TYPE
        ,EXP_TYPE_NAME
@@ -924,6 +925,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
        ,#{invcType}
        ,#{memAccId}
+       ,#{sMemAccName}
        ,TO_DATE(#{payDueDt}, 'DD/MM/YYYY')
        ,#{expType}
        ,#{expTypeName}
