@@ -3741,7 +3741,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		FROM ORG0005D A
 		JOIN ORG0005D B ON A.MEM_UP_ID = B.MEM_ID
 		WHERE A.MEM_ID = #{memberId}
-		AND B.MEM_LVL = #{lvlTo}
     </select>
     
      <select id="selectHpMemberView"  parameterType="Map" resultType="egovMap">

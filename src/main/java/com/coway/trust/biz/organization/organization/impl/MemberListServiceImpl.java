@@ -1046,10 +1046,18 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				promoEntry.put("requestNo", eventCode.get("docNo").toString());
 				
 				//promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
-				if (params.get("lvlTo") .equals("2") || params.get("lvlTo") .equals("3") ) {
+				/*if (params.get("lvlTo") .equals("2") || params.get("lvlTo") .equals("3") || params.get("lvlTo") .equals("4") ) {
 					promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
     			} else if (params.get("lvlTo") .equals("1") ) {
     				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("grpCode"));
+    			}*/
+				
+				if (params.get("memberLvl") .equals("3") || params.get("memberLvl") .equals("4") ) {
+					promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
+    			} else if (params.get("memberLvl") .equals("2") ) {
+    				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("grpCode"));
+    			} else if (params.get("memberLvl") .equals("1") ) {
+    				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("orgCode"));
     			}
 				
 				EgovMap deptCode = null;
@@ -1102,14 +1110,19 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					} 
 				}
 				
-				nextDocNo = "";
-				nextDocNo = getNextDocNo(deptCode.get("prefix").toString(), deptCode.get("docNo").toString());
-				deptCode.put("nextDocNo", nextDocNo);
-				logger.debug("deptCode : {}",deptCode);
-				// 채번 +1
-				memberListMapper.updateDocNo(deptCode);
 				
-				promoEntry.put("deptCodeTo", deptCode.get("docNo"));
+				if (params.get("lvlTo").equals("4")) {
+					promoEntry.put("deptCodeTo", selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
+				} else {
+					nextDocNo = "";
+					nextDocNo = getNextDocNo(deptCode.get("prefix").toString(), deptCode.get("docNo").toString());
+					deptCode.put("nextDocNo", nextDocNo);
+					logger.debug("deptCode : {}",deptCode);
+					// 채번 +1
+					memberListMapper.updateDocNo(deptCode);
+					promoEntry.put("deptCodeTo", deptCode.get("docNo"));
+				}
+				
 				/*Map<String, Object>  superiorEntry = new HashMap<String, Object>();
 				logger.debug("params : {}", params);
 				superiorEntry.put("memberLvl", Integer.parseInt(params.get("memberLvl").toString())-2);
@@ -1131,13 +1144,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				List<EgovMap> selectParentIdFrom = memberListMapper.selectParentIdFrom(parentEntry);
 				promoEntry.put("parentIdFrom", (selectParentIdFrom.size() > 0) ? selectParentIdFrom.get(0).get("memUpId").toString() : "");
 				
-				if ( params.get("lvlTo").toString().equals("3") ) {
+				if ( params.get("memberLvl").toString().equals("4") ) {
 					promoEntry.put("parentDeptCodeFrom", promoEntry.get("deptCodeFrom"));
 					promoEntry.put("PRCode", promoEntry.get("deptCodeFrom"));
-				} else if ( params.get("lvlTo").toString().equals("1") || params.get("lvlTo").toString().equals("2") ) {
+				} else if ( params.get("memberLvl").toString().equals("1") || params.get("memberLvl").toString().equals("2") || params.get("memberLvl").toString().equals("3") ) {
 					Map<String, Object>  parentDCFEntry = new HashMap<String, Object>();
 					parentDCFEntry.put("memberId", params.get("requestMemberId"));
-					parentDCFEntry.put("lvlTo", params.get("lvlTo"));
 					logger.debug("parentDCFEntry : {}",parentDCFEntry);
 					List<EgovMap> selectParentDCFrom = memberListMapper.selectParentDCFrom(parentDCFEntry);
 					promoEntry.put("parentDeptCodeFrom", (selectParentDCFrom.size() > 0) ? selectParentDCFrom.get(0).get("deptCode").toString() : "");
@@ -1147,15 +1159,47 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
 //				promoEntry.put("PRCode", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
 				
-				if ( params.get("lvlTo") .equals("3") ) {	
-					promoEntry.put("lastDeptCode", deptCode.get("docNo"));
-					promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
-					promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
-				} else  if ( params.get("lvlTo") .equals("2") ) {
-					promoEntry.put("lastGrpCode", deptCode.get("docNo"));
-					promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
-				} else if ( params.get("lvlTo") .equals("1") ) {
-					promoEntry.put("lastOrgCode", deptCode.get("docNo"));
+				if ( params.get("action1").equals("747") ) {	// promote
+					if ( params.get("lvlTo") .equals("3") ) {	
+						promoEntry.put("lastDeptCode", deptCode.get("docNo"));
+						promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
+						promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+					} else  if ( params.get("lvlTo") .equals("2") ) {
+						promoEntry.put("lastGrpCode", deptCode.get("docNo"));
+						promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+					} else if ( params.get("lvlTo") .equals("1") ) {
+						promoEntry.put("lastOrgCode", deptCode.get("docNo"));
+					}
+				} else {		// demote
+					if ( params.get("lvlTo") .equals("4") ) {	
+						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
+						lastCodeEntry.put("deptCodeTo", promoEntry.get("deptCodeTo"));
+						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
+						logger.debug("lastCodeEntry : {}",lastCodeEntry);
+						EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+						promoEntry.put("lastDeptCode", selectLastCode.get("lastDeptCode"));
+						promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
+						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+					} else if ( params.get("lvlTo") .equals("3") ) {	
+						promoEntry.put("lastDeptCode", deptCode.get("docNo"));
+						
+						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
+						lastCodeEntry.put("deptCodeTo", promoEntry.get("parentDeptCodeTo"));
+						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
+						logger.debug("lastCodeEntry : {}",lastCodeEntry);
+						EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+						promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
+						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+					} else  if ( params.get("lvlTo") .equals("2") ) {
+						promoEntry.put("lastGrpCode", deptCode.get("docNo"));
+						
+						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
+						lastCodeEntry.put("deptCodeTo", promoEntry.get("parentDeptCodeTo"));
+						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
+						logger.debug("lastCodeEntry : {}",lastCodeEntry);
+						EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+					}
 				}
 				
 				Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
